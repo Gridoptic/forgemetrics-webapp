@@ -1,4 +1,4 @@
-/* ForgeMetrics Mini App — стили */
+
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,7 +34,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== ШАПКА ===== */
 .app-header {
   background: var(--bg-card);
   padding: 14px 16px 12px;
@@ -71,7 +70,6 @@ body {
 }
 .help-btn:active { background: var(--accent); color: #fff; }
 
-/* ===== TRIAL БАННЕР ===== */
 .trial-banner {
   background: linear-gradient(90deg, #1a3a5c, #2b5278);
   padding: 10px 16px;
@@ -94,7 +92,6 @@ body {
   cursor: pointer;
 }
 
-/* ===== ВКЛАДКИ ===== */
 .tabs-nav {
   display: flex;
   background: var(--bg-card);
@@ -125,7 +122,6 @@ body {
 .tab-label { font-size: 9px; color: var(--text-tertiary); font-weight: 500; }
 .tab-btn.active .tab-label { color: var(--accent); }
 
-/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
 .app-main { padding: 0 0 40px; }
 .tab-pane { display: none; }
 .tab-pane.active { display: block; animation: fadeIn .2s ease; }
@@ -151,7 +147,6 @@ body {
   margin-left: 6px;
 }
 
-/* ===== КНОПКА i (info) ===== */
 .info-circle {
   width: 22px; height: 22px;
   border-radius: 50%;
@@ -182,7 +177,6 @@ body {
   vertical-align: middle;
 }
 
-/* ===== ВКЛАДКА: СОЗДАТЬ ===== */
 .post-types-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -231,7 +225,6 @@ body {
 }
 .hint-icon { font-size: 12px; }
 
-/* ===== ОСНОВНАЯ КНОПКА (СВЕТЛАЯ) ===== */
 .btn-primary {
   width: 100%;
   background: linear-gradient(135deg, #5dade2, #3498db);
@@ -263,7 +256,6 @@ body {
 }
 .limits-row strong { color: var(--text-secondary); font-weight: 600; }
 
-/* ===== РЕЗУЛЬТАТЫ ГЕНЕРАЦИИ ===== */
 .results-section { padding-top: 8px; }
 .variant-card {
   background: var(--bg-card);
@@ -335,7 +327,6 @@ body {
   margin-right: auto;
 }
 
-/* ===== АНАЛИТИКА ===== */
 .metrics-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -359,7 +350,6 @@ body {
   color: var(--text-tertiary);
 }
 
-/* ===== ДЕНЬГИ - ЗАБЛОКИРОВАНО ===== */
 .money-locked {
   text-align: center;
   padding: 30px 20px;
@@ -381,7 +371,6 @@ body {
   margin-bottom: 16px;
 }
 
-/* ===== НАСТРОЙКИ ===== */
 .settings-list {
   background: var(--bg-card);
   border-radius: 12px;
@@ -441,7 +430,6 @@ body {
 input:checked + .slider { background: var(--accent); }
 input:checked + .slider:before { transform: translateX(16px); }
 
-/* ===== ТАРИФЫ ===== */
 .tap-hint {
   font-size: 11px;
   color: var(--text-tertiary);
@@ -592,7 +580,6 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .plan-btn.disabled { opacity: .5; cursor: not-allowed; }
 
-/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .modal {
   display: none;
   position: fixed;
@@ -650,7 +637,6 @@ input:checked + .slider:before { transform: translateX(16px); }
 .modal-body li { margin-bottom: 6px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 .modal-body em { color: var(--text-tertiary); font-style: italic; }
 
-/* ===== ВАУ-БЛОК "Сделай пост лучше" ===== */
 .wow-block {
   background: linear-gradient(135deg, #1e3a5f, #2b5278);
   border-radius: 16px;
@@ -690,7 +676,6 @@ input:checked + .slider:before { transform: translateX(16px); }
   font-weight: 600;
 }
 
-/* ===== РАЗДЕЛИТЕЛЬ ===== */
 .section-divider {
   display: flex;
   align-items: center;
@@ -711,7 +696,6 @@ input:checked + .slider:before { transform: translateX(16px); }
   padding: 0 12px;
 }
 
-/* ===== INSIGHT BLOCK (анализ канала) ===== */
 .insight-block {
   background: linear-gradient(135deg, #2c1f3d, #3d2c5c);
   border-radius: 14px;
@@ -741,7 +725,6 @@ input:checked + .slider:before { transform: translateX(16px); }
   font-size: 14px;
 }
 
-/* ===== ПОД-ВКЛАДКИ (Источники / Конкуренты) ===== */
 .subtabs {
   display: flex;
   gap: 4px;
@@ -767,7 +750,6 @@ input:checked + .slider:before { transform: translateX(16px); }
 .subtab-pane { display: none; }
 .subtab-pane.active { display: block; }
 
-/* ===== ДЕНЬГИ - КАРТОЧКИ ===== */
 .money-card {
   background: var(--bg-card);
   border-radius: 12px;
@@ -809,7 +791,6 @@ input:checked + .slider:before { transform: translateX(16px); }
   font-style: italic;
 }
 
-/* ===== КОНКУРЕНТЫ ===== */
 .competitor-card {
   background: var(--bg-card);
   border-radius: 12px;
@@ -842,7 +823,6 @@ input:checked + .slider:before { transform: translateX(16px); }
   line-height: 1.4;
 }
 
-/* ===== БЛОКИРОВКА (Pro fences) ===== */
 .pro-locked {
   background: var(--bg-deep);
   border: 1px dashed var(--border);
@@ -896,7 +876,6 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .empty-state-mini .empty-desc { font-size: 11px; color: var(--text-tertiary); }
 
-/* ===== PAYWALL HERO (новый) ===== */
 .paywall-hero {
   text-align: center;
   padding: 8px 0 18px;

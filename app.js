@@ -9,7 +9,6 @@ if (tg) {
   tg.setBackgroundColor('#17212b');
 }
 
-// === СОСТОЯНИЕ ПРИЛОЖЕНИЯ ===
 const state = {
   user: null,
   tier: 'free',
@@ -21,7 +20,6 @@ const state = {
   currentTopic: '',
 };
 
-// === ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===
 function switchTab(tabName) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -32,7 +30,6 @@ function switchTab(tabName) {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// === ВЫБОР ТИПА ПОСТА ===
 function pickType(el) {
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
@@ -40,7 +37,6 @@ function pickType(el) {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// === ГЕНЕРАЦИЯ ПОСТА ===
 async function generatePost() {
   const topic = document.getElementById('topic-input').value.trim();
 
@@ -63,8 +59,6 @@ async function generatePost() {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
   try {
-    // === ЗАГЛУШКА: симуляция API-запроса ===
-    // В реальности здесь будет fetch на наш backend
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const variants = generateMockVariants(topic, state.selectedPostType, state.variantsCount);
@@ -84,7 +78,6 @@ async function generatePost() {
   }
 }
 
-// === МОК-ВАРИАНТЫ (заглушка для UI-теста) ===
 function generateMockVariants(topic, type, count) {
   const samples = {
     news: [
@@ -118,7 +111,6 @@ function generateMockVariants(topic, type, count) {
   return pool.slice(0, count);
 }
 
-// === ОТОБРАЖЕНИЕ ВАРИАНТОВ ===
 function showVariants(variants) {
   const section = document.getElementById('results-section');
   const list = document.getElementById('variants-list');
@@ -155,13 +147,11 @@ function regeneratePost() {
   generatePost();
 }
 
-// === РАСКРЫТИЕ ОПИСАНИЯ ФУНКЦИИ ===
 function toggleFeat(featureEl) {
   featureEl.classList.toggle('expanded');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// === МОДАЛЬНЫЕ ОКНА ===
 function openModal(modalId) {
   document.getElementById(modalId)?.classList.add('open');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -171,18 +161,15 @@ function closeModal(modalId) {
   document.getElementById(modalId)?.classList.remove('open');
 }
 
-// Закрытие модалки по клику на фон
 document.querySelectorAll('.modal').forEach(modal => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) modal.classList.remove('open');
   });
 });
 
-// === ТАРИФЫ ===
 function upgradePlan(tier) {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-  // Отправляем сообщение боту через Telegram WebApp
   if (tg?.sendData) {
     tg.sendData(JSON.stringify({ action: 'upgrade', tier: tier }));
     tg.close();
@@ -191,7 +178,6 @@ function upgradePlan(tier) {
   }
 }
 
-// === АЛЕРТЫ ===
 function showAlert(message) {
   if (tg?.showAlert) {
     tg.showAlert(message);
@@ -200,7 +186,6 @@ function showAlert(message) {
   }
 }
 
-// === ОБНОВЛЕНИЕ UI ПО СОСТОЯНИЮ ===
 function updateRequestsCounter() {
   document.getElementById('requests-used').textContent = state.requestsToday;
   document.getElementById('requests-limit').textContent = state.requestsLimit;
@@ -240,39 +225,32 @@ function declension(num, one, two, five) {
   return five;
 }
 
-// === ЭКРАНИРОВАНИЕ HTML ===
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML.replace(/\n/g, '<br>');
 }
 
-// === ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ ===
 async function loadUserData() {
-  // Получаем initData от Telegram
   const initData = tg?.initDataUnsafe;
   if (initData?.user) {
     state.user = initData.user;
   }
 
-  // === ЗАГЛУШКА: симуляция загрузки с backend ===
-  // В реальности здесь будет fetch на наш API
   state.tier = 'free';
   state.trialDaysLeft = 7;
-  state.variantsCount = 3;  // во время trial = Pro
+  state.variantsCount = 3;
   state.requestsLimit = 100;
   state.requestsToday = 0;
 
   updateUserUI();
 }
 
-// === СТАРТ ===
 window.addEventListener('DOMContentLoaded', () => {
   loadUserData();
   console.log('ForgeMetrics Mini App ready');
 });
 
-// === ПОД-ВКЛАДКИ (Источники / Конкуренты) ===
 function switchSubtab(name, el) {
   document.querySelectorAll('.subtab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
@@ -281,7 +259,6 @@ function switchSubtab(name, el) {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// === УЛУЧШИТЬ ПОСТ (вау-блок) ===
 function openImproveModal() {
   openModal('improve-modal');
 }
@@ -299,7 +276,6 @@ async function runImprove() {
 
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-  // Заглушка — в реальности fetch на backend /api/improve
   await new Promise(r => setTimeout(r, 1500));
 
   const improved = mockImprove(original);
@@ -325,7 +301,6 @@ function mockImprove(text) {
   return text + "\n\n[Улучшенная версия будет тут — это заглушка для UI-теста. На бэкенде будет реальный AI-улучшитель.]";
 }
 
-// === СБРОС ГОЛОСА КАНАЛА ===
 async function resetVoice() {
   const confirmed = await confirmDialog(
     'Пересоздать голос канала?',
@@ -333,7 +308,6 @@ async function resetVoice() {
   );
   if (!confirmed) return;
 
-  // В реальности — fetch на backend
   if (tg?.sendData) {
     tg.sendData(JSON.stringify({ action: 'reset_voice' }));
     tg.close();
@@ -342,7 +316,6 @@ async function resetVoice() {
   }
 }
 
-// === АУДИТ ===
 async function runAudit() {
   showAlert('Запуск AI-аудита канала. Результат придёт в чат.');
   if (tg?.sendData) {
@@ -351,7 +324,6 @@ async function runAudit() {
   }
 }
 
-// === ИСТОЧНИКИ И КОНКУРЕНТЫ ===
 function addSource() {
   if (tg?.sendData) {
     tg.sendData(JSON.stringify({ action: 'add_source' }));
@@ -370,7 +342,6 @@ function addCompetitor() {
   }
 }
 
-// === ДИАЛОГ ПОДТВЕРЖДЕНИЯ ===
 function confirmDialog(title, text) {
   return new Promise((resolve) => {
     if (tg?.showConfirm) {

@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<!-- ШАПКА -->
 <header class="app-header">
   <div class="header-left">
     <div class="logo">FM</div>
@@ -21,13 +20,11 @@
   <button class="help-btn" onclick="openModal('help-modal')" title="Помощь">i</button>
 </header>
 
-<!-- БАННЕР TRIAL -->
 <div class="trial-banner" id="trial-banner">
   <div class="trial-text">🎉 <strong>Pro доступ:</strong> <span id="trial-days">осталось 7 дней</span></div>
   <button class="trial-cta" onclick="switchTab('plans')">оплатить →</button>
 </div>
 
-<!-- ВКЛАДКИ -->
 <nav class="tabs-nav">
   <button class="tab-btn active" data-tab="create" onclick="switchTab('create')">
     <span class="tab-icon">✍️</span><span class="tab-label">Создать</span>
@@ -54,10 +51,10 @@
 
 <main class="app-main">
 
-  <!-- =================== ВКЛАДКА: СОЗДАТЬ =================== -->
+  
   <section class="tab-pane active" id="pane-create">
 
-    <!-- Вау-блок: Сделай пост лучше -->
+    
     <div class="wow-block">
       <div class="wow-title">⚡ Сделай свой пост лучше</div>
       <div class="wow-desc">Вставь любой свой пост — покажу как он будет выглядеть в твоём же стиле, но с лучшей подачей</div>
@@ -123,7 +120,7 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: ОЧЕРЕДЬ =================== -->
+  
   <section class="tab-pane" id="pane-queue">
     <div class="section">
       <div class="section-header">
@@ -138,9 +135,9 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: АНАЛИТИКА =================== -->
+  
   <section class="tab-pane" id="pane-analytics">
-    <!-- Инсайт-блок (то самое "удар по реальности") -->
+    
     <div class="section">
       <div class="insight-block" id="insight-block">
         <div class="insight-title">📊 Анализ канала</div>
@@ -175,7 +172,7 @@
       </div>
     </div>
 
-    <!-- Расширенная аналитика (Light + Pro + Free trial) -->
+    
     <div class="section" id="extended-analytics">
       <div class="section-header">
         <div class="section-title">Лучшее время публикации</div>
@@ -208,7 +205,7 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: ДЕНЬГИ =================== -->
+  
   <section class="tab-pane" id="pane-money">
     <div class="section">
       <div class="section-header">
@@ -216,7 +213,7 @@
         <button class="info-circle" onclick="openModal('money-help-modal')">i</button>
       </div>
 
-      <!-- Калькулятор стоимости рекламы -->
+      
       <div class="money-card">
         <div class="money-card-header">
           <div class="money-card-title">💰 Стоимость рекламы в твоём канале</div>
@@ -239,7 +236,7 @@
         <div class="money-note">Подключи канал чтобы увидеть реальные цены</div>
       </div>
 
-      <!-- Этап монетизации -->
+      
       <div class="money-card">
         <div class="money-card-header">
           <div class="money-card-title">🗺 Твой этап монетизации</div>
@@ -250,7 +247,7 @@
         </div>
       </div>
 
-      <!-- Аудит готовности -->
+      
       <div class="money-card">
         <div class="money-card-header">
           <div class="money-card-title">🎯 AI-аудит готовности к рекламе</div>
@@ -262,7 +259,7 @@
         <button class="btn-mini" onclick="runAudit()">Запустить аудит</button>
       </div>
 
-      <!-- Шаблоны рекламных постов -->
+      
       <div class="money-card">
         <div class="money-card-header">
           <div class="money-card-title">📝 Шаблоны рекламных постов</div>
@@ -276,15 +273,15 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: ИСТОЧНИКИ И КОНКУРЕНТЫ =================== -->
+  
   <section class="tab-pane" id="pane-sources">
-    <!-- Под-вкладки -->
+    
     <div class="subtabs">
       <button class="subtab-btn active" onclick="switchSubtab('sources-list', this)">📡 Источники</button>
       <button class="subtab-btn" onclick="switchSubtab('competitors-list', this)">🎯 Конкуренты</button>
     </div>
 
-    <!-- Источники -->
+    
     <div class="subtab-pane active" id="sub-sources-list">
       <div class="section">
         <div class="section-header">
@@ -300,7 +297,7 @@
       </div>
     </div>
 
-    <!-- Конкуренты (Pro только) -->
+    
     <div class="subtab-pane" id="sub-competitors-list">
       <div class="section">
         <div class="section-header">
@@ -333,7 +330,7 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: НАСТРОЙКИ =================== -->
+  
   <section class="tab-pane" id="pane-settings">
     <div class="section">
       <div class="section-title">Канал</div>
@@ -382,10 +379,10 @@
     </div>
   </section>
 
-  <!-- =================== ВКЛАДКА: ТАРИФЫ (ПЕРЕДЕЛАНА) =================== -->
+  
   <section class="tab-pane" id="pane-plans">
     <div class="section">
-      <!-- Шапка с эмоциональным заголовком -->
+      
       <div class="paywall-hero">
         <div class="paywall-title">Начни зарабатывать на канале</div>
         <div class="paywall-sub">Окупается с одного рекламного поста</div>
@@ -627,7 +624,7 @@
         <button class="plan-btn" onclick="upgradePlan('pro')">Перейти на Pro · 990₽</button>
       </div>
 
-      <!-- Снижение риска -->
+      
       <div class="paywall-bottom">
         <div class="trust-row">✓ Можно отменить в любой момент</div>
         <div class="trust-row">✓ Уже используют админы Telegram-каналов</div>
@@ -636,8 +633,6 @@
   </section>
 
 </main>
-
-<!-- ============== МОДАЛЬНЫЕ ОКНА ============== -->
 
 <div class="modal" id="help-modal">
   <div class="modal-content">
@@ -911,7 +906,6 @@
   </div>
 </div>
 
-<!-- Модалка "Улучшить пост" -->
 <div class="modal" id="improve-modal">
   <div class="modal-content">
     <div class="modal-header">
