@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ForgeMetrics</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header class="app-header">
+  <div class="header-left">
+    <div class="logo">FM</div>
+    <div class="header-info">
+      <div class="app-name">ForgeMetrics</div>
+      <div class="app-sub" id="user-tier-line">Free · 7 дней Pro доступа</div>
+    </div>
+  </div>
+  <button class="help-btn" onclick="openModal('help-modal')" title="Помощь">i</button>
+</header>
+
+<!-- БАННЕР TRIAL -->
+<div class="trial-banner" id="trial-banner">
+  <div class="trial-text">🎉 <strong>Pro доступ:</strong> <span id="trial-days">осталось 7 дней</span></div>
+  <button class="trial-cta" onclick="switchTab('plans')">оплатить →</button>
+</div>
+
+<!-- ВКЛАДКИ -->
+<nav class="tabs-nav">
+  <button class="tab-btn active" data-tab="create" onclick="switchTab('create')">
+    <span class="tab-icon">✍️</span><span class="tab-label">Создать</span>
+  </button>
+  <button class="tab-btn" data-tab="queue" onclick="switchTab('queue')">
+    <span class="tab-icon">📅</span><span class="tab-label">Очередь</span>
+  </button>
+  <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">
+    <span class="tab-icon">📊</span><span class="tab-label">Аналитика</span>
+  </button>
+  <button class="tab-btn" data-tab="money" onclick="switchTab('money')">
+    <span class="tab-icon">💰</span><span class="tab-label">Деньги</span>
+  </button>
+  <button class="tab-btn" data-tab="sources" onclick="switchTab('sources')">
+    <span class="tab-icon">🔍</span><span class="tab-label">Источники</span>
+  </button>
+  <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">
+    <span class="tab-icon">⚙️</span><span class="tab-label">Настройки</span>
+  </button>
+  <button class="tab-btn" data-tab="plans" onclick="switchTab('plans')">
+    <span class="tab-icon">💎</span><span class="tab-label">Тариф</span>
+  </button>
+</nav>
+
+<main class="app-main">
+
+  <!-- =================== ВКЛАДКА: СОЗДАТЬ =================== -->
+  <section class="tab-pane active" id="pane-create">
+
+    <!-- Вау-блок: Сделай пост лучше -->
+    <div class="wow-block">
+      <div class="wow-title">⚡ Сделай свой пост лучше</div>
+      <div class="wow-desc">Вставь любой свой пост — покажу как он будет выглядеть в твоём же стиле, но с лучшей подачей</div>
+      <button class="btn-primary btn-wow" onclick="openImproveModal()">
+        Улучшить пост →
+      </button>
+    </div>
+
+    <div class="section-divider"><span>или создай новый</span></div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Тип поста</div>
+        <button class="info-circle" onclick="openModal('post-types-modal')" title="О типах постов">i</button>
+      </div>
+      <div class="post-types-grid">
+        <button class="type-card active" data-type="news" onclick="pickType(this)">
+          <span class="type-emoji">📰</span>
+          <span class="type-name">Новость с реакцией</span>
+        </button>
+        <button class="type-card" data-type="opinion" onclick="pickType(this)">
+          <span class="type-emoji">💭</span>
+          <span class="type-name">Личное мнение</span>
+        </button>
+        <button class="type-card" data-type="analysis" onclick="pickType(this)">
+          <span class="type-emoji">🔍</span>
+          <span class="type-name">Разбор / анализ</span>
+        </button>
+        <button class="type-card" data-type="freethought" onclick="pickType(this)">
+          <span class="type-emoji">✨</span>
+          <span class="type-name">Свободная мысль</span>
+        </button>
+        <button class="type-card" data-type="fact" onclick="pickType(this)">
+          <span class="type-emoji">💡</span>
+          <span class="type-name">Полезный факт</span>
+        </button>
+        <button class="type-card" data-type="list" onclick="pickType(this)">
+          <span class="type-emoji">📋</span>
+          <span class="type-name">Список / советы</span>
+        </button>
+      </div>
+
+      <div class="section-header" style="margin-top:18px;">
+        <div class="section-title">Тема или контекст</div>
+        <button class="info-circle" onclick="openModal('topic-help-modal')" title="Как писать тему">i</button>
+      </div>
+      <textarea class="topic-input" id="topic-input"
+        placeholder="Опиши о чём пост. Чем больше деталей — тем точнее результат."></textarea>
+
+      <button class="btn-primary" id="generate-btn" onclick="generatePost()">
+        <span>✨</span>
+        <span>Сгенерировать (<span id="variants-count">3</span> варианта)</span>
+      </button>
+
+      <div class="limits-row">
+        <span>Запросов сегодня: <strong id="requests-used">0</strong> / <span id="requests-limit">100</span></span>
+      </div>
+    </div>
+
+    <div class="section results-section" id="results-section" style="display:none;">
+      <div class="section-title">Готовые варианты</div>
+      <div class="variants-list" id="variants-list"></div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: ОЧЕРЕДЬ =================== -->
+  <section class="tab-pane" id="pane-queue">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Ожидают одобрения</div>
+        <button class="info-circle" onclick="openModal('queue-help-modal')">i</button>
+      </div>
+      <div class="empty-state">
+        <div class="empty-emoji">📭</div>
+        <div class="empty-title">Очередь пуста</div>
+        <div class="empty-desc">Создай пост и запланируй публикацию — появится здесь</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: АНАЛИТИКА =================== -->
+  <section class="tab-pane" id="pane-analytics">
+    <!-- Инсайт-блок (то самое "удар по реальности") -->
+    <div class="section">
+      <div class="insight-block" id="insight-block">
+        <div class="insight-title">📊 Анализ канала</div>
+        <div class="insight-text" id="insight-text">
+          Подключи канал в Настройках — покажу что мешает расти и как это исправить
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">За последние 7 дней</div>
+        <button class="info-circle" onclick="openModal('analytics-help-modal')">i</button>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value">—</div>
+          <div class="metric-label">просмотров</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">—</div>
+          <div class="metric-label">подписчиков</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">—</div>
+          <div class="metric-label">реакций</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">—</div>
+          <div class="metric-label">постов</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Расширенная аналитика (Light + Pro + Free trial) -->
+    <div class="section" id="extended-analytics">
+      <div class="section-header">
+        <div class="section-title">Лучшее время публикации</div>
+        <button class="info-circle" onclick="openModal('time-help-modal')">i</button>
+      </div>
+      <div class="empty-state-mini">
+        <div class="empty-desc">Появится после 7+ опубликованных постов</div>
+      </div>
+    </div>
+
+    <!-- Pro-аналитика -->
+    <div class="section" id="pro-analytics">
+      <div class="section-header">
+        <div class="section-title">🔮 Прогноз охвата</div>
+        <span class="pro-badge">Pro</span>
+      </div>
+      <div class="pro-locked">
+        <div class="pro-locked-text">Перед публикацией бот покажет: "наберёт примерно X просмотров"</div>
+        <button class="btn-mini" onclick="switchTab('plans')">Подключить →</button>
+      </div>
+
+      <div class="section-header" style="margin-top:14px;">
+        <div class="section-title">🎯 Еженедельный AI-аудит</div>
+        <span class="pro-badge">Pro</span>
+      </div>
+      <div class="pro-locked">
+        <div class="pro-locked-text">Раз в неделю отчёт: что работает, что нет, на чём фокусироваться</div>
+        <button class="btn-mini" onclick="switchTab('plans')">Подключить →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: ДЕНЬГИ =================== -->
+  <section class="tab-pane" id="pane-money">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Помощь в монетизации</div>
+        <button class="info-circle" onclick="openModal('money-help-modal')">i</button>
+      </div>
+
+      <!-- Калькулятор стоимости рекламы -->
+      <div class="money-card">
+        <div class="money-card-header">
+          <div class="money-card-title">💰 Стоимость рекламы в твоём канале</div>
+          <button class="info-circle" onclick="openModal('calc-help-modal')">i</button>
+        </div>
+        <div class="money-stats" id="ad-prices">
+          <div class="money-stat-row">
+            <span class="money-k">За 1 пост (24 часа)</span>
+            <span class="money-v">— ₽</span>
+          </div>
+          <div class="money-stat-row">
+            <span class="money-k">За 1 пост (48 часов)</span>
+            <span class="money-v">— ₽</span>
+          </div>
+          <div class="money-stat-row">
+            <span class="money-k">Закреп на неделю</span>
+            <span class="money-v">— ₽</span>
+          </div>
+        </div>
+        <div class="money-note">Подключи канал чтобы увидеть реальные цены</div>
+      </div>
+
+      <!-- Этап монетизации -->
+      <div class="money-card">
+        <div class="money-card-header">
+          <div class="money-card-title">🗺 Твой этап монетизации</div>
+          <button class="info-circle" onclick="openModal('roadmap-help-modal')">i</button>
+        </div>
+        <div class="money-desc" id="money-stage">
+          Подключи канал — определю на каком ты этапе и что делать дальше
+        </div>
+      </div>
+
+      <!-- Аудит готовности -->
+      <div class="money-card">
+        <div class="money-card-header">
+          <div class="money-card-title">🎯 AI-аудит готовности к рекламе</div>
+          <button class="info-circle" onclick="openModal('audit-help-modal')">i</button>
+        </div>
+        <div class="money-desc">
+          Бот честно скажет готов ли канал к продаже рекламы и что улучшить
+        </div>
+        <button class="btn-mini" onclick="runAudit()">Запустить аудит</button>
+      </div>
+
+      <!-- Шаблоны рекламных постов -->
+      <div class="money-card">
+        <div class="money-card-header">
+          <div class="money-card-title">📝 Шаблоны рекламных постов</div>
+          <button class="info-circle" onclick="openModal('ad-templates-help-modal')">i</button>
+        </div>
+        <div class="money-desc">
+          Когда найдёшь рекламодателя — бот напишет рекламный пост в стиле твоего канала, чтобы реклама не сломала подачу
+        </div>
+        <button class="btn-mini" onclick="switchTab('create')">Создать рекламу</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: ИСТОЧНИКИ И КОНКУРЕНТЫ =================== -->
+  <section class="tab-pane" id="pane-sources">
+    <!-- Под-вкладки -->
+    <div class="subtabs">
+      <button class="subtab-btn active" onclick="switchSubtab('sources-list', this)">📡 Источники</button>
+      <button class="subtab-btn" onclick="switchSubtab('competitors-list', this)">🎯 Конкуренты</button>
+    </div>
+
+    <!-- Источники -->
+    <div class="subtab-pane active" id="sub-sources-list">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">Подключённые источники <span class="counter" id="sources-counter">0 из 0</span></div>
+          <button class="info-circle" onclick="openModal('sources-help-modal')">i</button>
+        </div>
+        <div class="empty-state" id="sources-empty">
+          <div class="empty-emoji">📡</div>
+          <div class="empty-title">Источники для тем</div>
+          <div class="empty-desc">Подключи каналы или RSS — бот следит за новостями и предлагает темы для постов</div>
+          <button class="btn-mini" onclick="addSource()">+ Добавить источник</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Конкуренты (Pro только) -->
+    <div class="subtab-pane" id="sub-competitors-list">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">Конкуренты <span class="counter" id="competitors-counter">0 из 5</span></div>
+          <button class="info-circle" onclick="openModal('competitors-help-modal')">i</button>
+        </div>
+
+        <div class="pro-locked-card" id="competitors-locked">
+          <div class="lock-emoji">🔒</div>
+          <div class="lock-title">Доступно в Pro</div>
+          <div class="lock-desc">Добавляй до 5 каналов конкурентов — бот покажет какие темы и форматы работают у них лучше всего</div>
+          <button class="btn-primary btn-light" onclick="switchTab('plans')">Перейти на Pro →</button>
+        </div>
+
+        <div id="competitors-active" style="display:none;">
+          <div class="competitor-card">
+            <div class="comp-header">
+              <span class="comp-name">@example_channel</span>
+              <span class="comp-views">12.5K avg</span>
+            </div>
+            <div class="comp-insights">
+              <div class="comp-insight">📈 Топ-тема: разборы кейсов (+45% вовлечённости)</div>
+              <div class="comp-insight">⏰ Лучшее время: 19:00-20:00</div>
+              <div class="comp-insight">💡 Идея: "5 ошибок которые совершает каждый новичок"</div>
+            </div>
+          </div>
+          <button class="btn-mini" onclick="addCompetitor()">+ Добавить конкурента</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: НАСТРОЙКИ =================== -->
+  <section class="tab-pane" id="pane-settings">
+    <div class="section">
+      <div class="section-title">Канал</div>
+      <div class="settings-list">
+        <div class="settings-row" onclick="openModal('voice-modal')">
+          <span class="settings-label">Голос канала</span>
+          <span class="settings-value" id="voice-status">не настроен</span>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="resetVoice()">
+          <span class="settings-label">🔄 Пересоздать голос канала</span>
+          <span class="settings-value">в любой момент</span>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="openModal('channels-modal')">
+          <span class="settings-label">Подключённые каналы</span>
+          <span class="settings-value" id="channels-status">0 из 1</span>
+          <span class="settings-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="openModal('business-modal')">
+          <span class="settings-label">Описание канала</span>
+          <span class="settings-value">изменить</span>
+          <span class="settings-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:18px;">Уведомления</div>
+      <div class="settings-list">
+        <div class="settings-row">
+          <span class="settings-label">Превью перед публикацией</span>
+          <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Еженедельный отчёт</span>
+          <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Идеи из источников</span>
+          <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Лучшее время постинга</span>
+          <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== ВКЛАДКА: ТАРИФЫ (ПЕРЕДЕЛАНА) =================== -->
+  <section class="tab-pane" id="pane-plans">
+    <div class="section">
+      <!-- Шапка с эмоциональным заголовком -->
+      <div class="paywall-hero">
+        <div class="paywall-title">Начни зарабатывать на канале</div>
+        <div class="paywall-sub">Окупается с одного рекламного поста</div>
+      </div>
+
+      <div class="tap-hint">👆 Нажми на кружок <span class="info-mini">i</span> чтобы узнать о функции подробнее</div>
+
+      <!-- FREE -->
+      <div class="plan-card current" id="plan-free">
+        <span class="plan-tag tag-current">Текущий</span>
+        <div class="plan-header">
+          <div class="plan-name">Free</div>
+          <div class="plan-price free">0₽</div>
+        </div>
+        <div class="plan-tagline">Попробовать продукт</div>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">7 дней полного Pro доступа</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Первую неделю получаешь все функции без ограничений: Premium AI, полная аналитика, монетизация, мониторинг конкурентов. После — переходишь на Free.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">1 пост в день навсегда</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">После trial можно публиковать 1 пост в сутки бесплатно. Лимит обнуляется в полночь.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">1 канал</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Можно подключить один Telegram-канал.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon partial">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Базовая аналитика</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">После trial — только базовые метрики: просмотры, реакции, подписчики. Расширенные инсайты — в Light/Pro.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon no">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Без монетизации</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Помощь в заработке на канале — только в Pro.</div>
+          </div>
+        </div>
+        <button class="plan-btn outline disabled">Текущий план</button>
+      </div>
+
+      <!-- LIGHT -->
+      <div class="plan-card featured" id="plan-light">
+        <span class="plan-tag tag-popular">Базовый</span>
+        <div class="plan-header">
+          <div class="plan-name">Light</div>
+          <div class="plan-price">390₽<span class="plan-period"> /мес</span></div>
+        </div>
+        <div class="plan-tagline">Для активного ведения канала</div>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Веди канал в комфортном темпе</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">До 10 постов в день — этого хватает для активного ведения. Большинству хватает 2-3 постов в день для роста.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Управляй до 2 каналами</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Подключи 2 Telegram-канала. Бот будет спрашивать куда публиковать каждый пост.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Выбирай из 2 вариантов</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">На каждую тему бот сделает 2 разных подачи — ты выбираешь лучшую.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Планируй публикации</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">До 5 постов в очереди на автопостинг. За 4 часа до публикации бот пришлёт превью на одобрение.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Расширенная аналитика</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Просмотры, реакции, динамика подписчиков, лучшее время публикации, топ постов недели.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Переписывай чужие посты в свой стиль</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Кидаешь любой пост или ссылку — бот переписывает его так, будто это твой текст.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Следи за 3 источниками тем</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">3 канала или RSS — бот мониторит и предлагает идеи для постов когда выходит важная новость.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon no">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Premium AI и анализ конкурентов</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Только в Pro: claude-sonnet (более живые тексты), мониторинг каналов конкурентов, прогноз охвата, AI-аудит, помощь в монетизации.</div>
+          </div>
+        </div>
+        <button class="plan-btn" onclick="upgradePlan('light')">Перейти на Light · 390₽</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan-card pro" id="plan-pro">
+        <span class="plan-tag tag-pro">🔥 Популярный</span>
+        <div class="plan-header">
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">990₽<span class="plan-period"> /мес</span></div>
+        </div>
+        <div class="plan-tagline">Для роста и заработка на канале</div>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Безлимитные посты</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Публикуй сколько нужно для роста. Технический потолок 100 в день — недостижим для большинства каналов.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">До 10 каналов одновременно</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Идеально для агентств и мультиканальной сетки. У каждого канала свой голос и аналитика.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">3 варианта на каждую тему</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Бот пишет 3 разных подачи одной темы — выбираешь самую сильную.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Premium AI (claude-sonnet)</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Самая мощная модель Anthropic. Тексты живее, контекст глубже, голос точнее. Это главное отличие от Light.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">Полная аналитика всегда</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Все метрики без ограничений: охваты, реакции, динамика, лучшее время и день, топ постов, тренды.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">🎯 Анализ конкурентов</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Добавляешь 3-5 каналов конкурентов — бот показывает что у них работает, какие темы заходят, в какое время постят успешные посты. Бери лучшие идеи и адаптируй.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">🔮 Прогноз охвата перед публикацией</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Перед тем как опубликовать — бот говорит "наберёт примерно 1500-2000 просмотров". Прогноз на основе истории канала.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">📊 Еженедельный AI-аудит</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Раз в неделю отчёт что работает, что нет, на чём фокусироваться. "У тебя падает вовлечённость на постах с цифрами — попробуй больше историй".</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">📅 Контент-план на неделю</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Один клик — 7 тем готово, распределены по дням. Бот сам подбирает разные форматы чтобы канал был разнообразным.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">40 источников мониторинга</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">До 40 каналов, RSS и сайтов. Бот следит и предлагает темы когда выходит важная новость.</div>
+          </div>
+          <div class="feature">
+            <span class="feat-icon yes">●</span>
+            <div class="feat-row" onclick="toggleFeat(this.parentElement)">
+              <span class="feat-name">💰 Помощь в монетизации канала</span>
+              <span class="info-circle">i</span>
+            </div>
+            <div class="feat-desc">Полный набор инструментов для заработка: AI-аудит готовности к рекламе, калькулятор стоимости постов, дорожная карта роста доходов, шаблоны рекламных постов в стиле канала.</div>
+          </div>
+        </div>
+        <button class="plan-btn" onclick="upgradePlan('pro')">Перейти на Pro · 990₽</button>
+      </div>
+
+      <!-- Снижение риска -->
+      <div class="paywall-bottom">
+        <div class="trust-row">✓ Можно отменить в любой момент</div>
+        <div class="trust-row">✓ Уже используют админы Telegram-каналов</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============== МОДАЛЬНЫЕ ОКНА ============== -->
+
+<div class="modal" id="help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Что такое ForgeMetrics?</div>
+      <button class="modal-close" onclick="closeModal('help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>ForgeMetrics</strong> — AI-помощник для Telegram-каналов.</p>
+      <p>Что я умею:</p>
+      <ul>
+        <li>📝 Пишу посты в стиле твоего канала</li>
+        <li>📅 Публикую автоматически по расписанию</li>
+        <li>📊 Веду полную аналитику</li>
+        <li>🎯 Анализирую конкурентов</li>
+        <li>🔍 Слежу за источниками новостей</li>
+        <li>💰 Помогаю монетизировать канал</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="post-types-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Типы постов</div>
+      <button class="modal-close" onclick="closeModal('post-types-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>📰 Новость с реакцией</strong> — реакция на актуальное событие</p>
+      <p><strong>💭 Личное мнение</strong> — твоя позиция по вопросу</p>
+      <p><strong>🔍 Разбор / анализ</strong> — детальный разбор темы</p>
+      <p><strong>✨ Свободная мысль</strong> — наблюдение, рассуждение</p>
+      <p><strong>💡 Полезный факт</strong> — интересная информация</p>
+      <p><strong>📋 Список / советы</strong> — структурированные рекомендации</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="topic-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Как писать тему</div>
+      <button class="modal-close" onclick="closeModal('topic-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Пиши конкретно:</strong> не "про инфляцию", а "почему 8% инфляции это потеря половины денег за 9 лет"</p>
+      <p><strong>Добавляй контекст:</strong> "сделай провокационно", "не упоминай конкурентов", "с цифрами"</p>
+      <p><strong>Можешь дать факты:</strong> "Apple выпустила iPhone 17, цена 1200$"</p>
+      <p>Не бойся длинного описания — лучше больше деталей, чем меньше</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="competitors-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Анализ конкурентов</div>
+      <button class="modal-close" onclick="closeModal('competitors-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Добавляй до 5 каналов конкурентов — бот будет регулярно их анализировать.</p>
+      <p><strong>Что покажет:</strong></p>
+      <ul>
+        <li>Топ-посты конкурентов (что зашло)</li>
+        <li>Темы которые набирают больше всего реакций</li>
+        <li>В какое время постят успешные посты</li>
+        <li>Динамика подписчиков</li>
+        <li>Идеи для адаптации в твой канал</li>
+      </ul>
+      <p>Это <strong>законное использование публичных данных</strong> — мы не копируем посты, только анализируем тренды.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="sources-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Источники для тем</div>
+      <button class="modal-close" onclick="closeModal('sources-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Добавляешь каналы, RSS-ленты или сайты — бот отслеживает их.</p>
+      <p>Когда выходит важная новость — бот присылает: <em>"вышла новость X, написать пост?"</em></p>
+      <p>Один клик — пост готов в стиле твоего канала.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="money-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Помощь в монетизации</div>
+      <button class="modal-close" onclick="closeModal('money-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Этот раздел помогает зарабатывать на канале:</p>
+      <p><strong>💰 Калькулятор</strong> — справедливая цена рекламы в твоём канале</p>
+      <p><strong>🗺 Дорожная карта</strong> — что делать на каждом этапе роста</p>
+      <p><strong>🎯 AI-аудит</strong> — готов ли канал к продаже рекламы</p>
+      <p><strong>📝 Шаблоны</strong> — рекламные посты в стиле канала</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="analytics-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">О метриках</div>
+      <button class="modal-close" onclick="closeModal('analytics-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Просмотры</strong> — сколько людей увидели посты</p>
+      <p><strong>Подписчики</strong> — изменение числа подписчиков</p>
+      <p><strong>Реакции</strong> — лайки, эмодзи, репосты</p>
+      <p><strong>Лучшее время</strong> — когда посты получают больше всего охвата</p>
+      <p>В Pro дополнительно: прогноз охвата, анализ конкурентов, AI-аудит.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="time-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Лучшее время публикации</div>
+      <button class="modal-close" onclick="closeModal('time-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Бот анализирует историю твоих постов и определяет в какое время аудитория наиболее активна.</p>
+      <p>Использует данные минимум по 7 опубликованным постам — иначе прогноз неточный.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="calc-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Калькулятор рекламы</div>
+      <button class="modal-close" onclick="closeModal('calc-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Считает справедливую стоимость рекламного поста в твоём канале.</p>
+      <p>Формула учитывает: средний охват постов, размер аудитории, ER (вовлечённость), нишу канала.</p>
+      <p>Это рыночные цены — можно использовать как ориентир для переговоров с рекламодателями.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="roadmap-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Дорожная карта монетизации</div>
+      <button class="modal-close" onclick="closeModal('roadmap-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>В зависимости от размера канала — разные стратегии заработка:</p>
+      <ul>
+        <li><strong>0–500 подписчиков:</strong> фокус на росте, никакой рекламы</li>
+        <li><strong>500–2000:</strong> партнёрки и упоминания продуктов</li>
+        <li><strong>2000–10000:</strong> продажа рекламы за деньги</li>
+        <li><strong>10000+:</strong> премиум-каналы, Telegram Stars</li>
+        <li><strong>50000+:</strong> спонсорские интеграции</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="audit-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">AI-аудит готовности</div>
+      <button class="modal-close" onclick="closeModal('audit-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Бот честно оценивает канал по шкале 1–10:</p>
+      <ul>
+        <li>Готов ли к продаже рекламы прямо сейчас</li>
+        <li>Что улучшить чтобы поднять цену поста</li>
+        <li>На какие метрики смотрят рекламодатели</li>
+        <li>Защита от типичных ошибок начинающих</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="ad-templates-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Шаблоны рекламных постов</div>
+      <button class="modal-close" onclick="closeModal('ad-templates-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Главная проблема рекламы в Telegram — она часто <strong>ломает стиль канала</strong>. Подписчики чувствуют диссонанс и отписываются.</p>
+      <p>Бот пишет рекламные посты <strong>в твоём стиле</strong> — так чтобы они выглядели как обычный пост, но с упоминанием продукта.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="queue-help-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Как работает очередь</div>
+      <button class="modal-close" onclick="closeModal('queue-help-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Запланированные посты собираются здесь до момента публикации.</p>
+      <p>За <strong>4 часа до публикации</strong> бот пришлёт превью на одобрение в Telegram. Кнопки:</p>
+      <ul>
+        <li>✅ Одобрить — пост опубликуется</li>
+        <li>🔄 Перегенерировать — другой вариант</li>
+        <li>✏️ Редактировать — поправить вручную</li>
+        <li>❌ Отклонить — пост удалится</li>
+      </ul>
+      <p>Если не одобришь за 4 часа — пост не выйдет (по умолчанию).</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="voice-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Голос канала</div>
+      <button class="modal-close" onclick="closeModal('voice-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Голос канала — это уникальный стиль автора. Бот учится писать как ты.</p>
+      <p><strong>Как настроить:</strong></p>
+      <ol>
+        <li>Дай боту 3-5 ссылок на свои посты</li>
+        <li>Бот проанализирует — тему, голос, форматы</li>
+        <li>Подтверди или дополни анализ</li>
+      </ol>
+      <p>Каждый одобренный сгенерированный пост улучшает понимание твоего стиля.</p>
+      <p><strong>💡 Голос можно пересоздать или сбросить в любой момент</strong> — если изменилась тематика или хочешь поэкспериментировать.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="channels-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Подключённые каналы</div>
+      <button class="modal-close" onclick="closeModal('channels-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Чтобы подключить канал:</strong></p>
+      <ol>
+        <li>Добавь @ForgeMetricsBot в администраторы канала</li>
+        <li>Дай право публиковать сообщения</li>
+        <li>Напиши username канала боту</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="business-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Описание канала</div>
+      <button class="modal-close" onclick="closeModal('business-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Контекст для генерации постов:</p>
+      <ul>
+        <li>О чём твой канал</li>
+        <li>Кто аудитория</li>
+        <li>Что предлагаешь (продукт/услуга)</li>
+        <li>Особенности — что отличает от других</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка "Улучшить пост" -->
+<div class="modal" id="improve-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">⚡ Улучшить пост</div>
+      <button class="modal-close" onclick="closeModal('improve-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Вставь свой пост — покажу как он будет выглядеть в твоём же стиле, но с лучшей подачей.</p>
+      <textarea class="topic-input" id="improve-input" placeholder="Вставь сюда любой свой пост..." style="min-height:140px;"></textarea>
+      <button class="btn-primary" onclick="runImprove()" style="margin-top:12px;">
+        ✨ Показать улучшенную версию
+      </button>
+      <div id="improve-result" style="display:none;margin-top:16px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
