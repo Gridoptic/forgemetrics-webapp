@@ -1,157 +1,207 @@
-// ForgeMetrics Mini App — JavaScript
+// ForgeMetrics Mini App
 
-// Telegram WebApp API
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  tg.setHeaderColor('#1f2c38');
-  tg.setBackgroundColor('#17212b');
+  tg.setHeaderColor('#0E1424');
+  tg.setBackgroundColor('#0A0E1A');
 }
 
 const state = {
   user: null,
-  tier: 'free',
+  tier: 'trial',
   trialDaysLeft: 7,
-  selectedPostType: 'news',
-  variantsCount: 3,
-  requestsToday: 0,
-  requestsLimit: 100,
+  currentType: 'news',
+  generatedTypes: {},
   currentTopic: '',
+  requestsToday: 0,
+  requestsLimit: 15,
 };
 
+const typeNames = {
+  news: '📰 Новость',
+  opinion: '💭 Мнение',
+  analysis: '🔍 Разбор',
+  freethought: '✨ Мысль',
+  fact: '💡 Факт',
+  list: '📋 Список',
+};
+
+const typeDescriptions = {
+  news: 'Реакция на актуальное событие',
+  opinion: 'Личная позиция с аргументами',
+  analysis: 'Глубокий разбор темы',
+  freethought: 'Свободное размышление',
+  fact: 'Полезный факт с контекстом',
+  list: '3-5 структурированных пунктов',
+};
+
+// === SET INITIAL TYPE (before generation) ===
+function setInitialType(el, type) {
+  state.currentType = type;
+  document.querySelectorAll('.type-pill[data-type$="-pre"]').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+}
+
+// === TABS ===
 function switchTab(tabName) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('pane-' + tabName).classList.add('active');
   document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-  window.scrollTo(0, 0);
-
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-function pickType(el) {
-  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  state.selectedPostType = el.dataset.type;
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-async function generatePost() {
-  const topic = document.getElementById('topic-input').value.trim();
+// === GENERATE POST (1 type at a time) ===
+async function generatePost(forceType = null) {
+  const topic = document.getElementById('topic-input')?.value.trim() || state.currentTopic;
 
   if (!topic) {
-    showAlert('Напиши тему поста — даже одна строчка лучше чем пусто');
+    showAlert('Опиши тему — даже одна строчка лучше чем пусто');
+    return;
+  }
+  if (topic.length < 10) {
+    showAlert('Тема слишком короткая. Опиши подробнее — чем больше деталей, тем точнее результат');
     return;
   }
 
-  if (topic.length < 10) {
-    showAlert('Тема слишком короткая. Опиши подробнее — чем больше деталей, тем лучше пост');
+  if (state.requestsToday >= state.requestsLimit) {
+    showAlert(`Использовал все ${state.requestsLimit} запросов на сегодня. Лимит обновится в полночь.`);
     return;
   }
 
   state.currentTopic = topic;
+  const typeToGenerate = forceType || state.currentType;
 
   const btn = document.getElementById('generate-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span>⏳</span> Генерирую...';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> <span>Генерирую...</span>';
+  }
 
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
   try {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    const variants = generateMockVariants(topic, state.selectedPostType, state.variantsCount);
-    showVariants(variants);
-
+    await new Promise(r => setTimeout(r, 1500));
+    const text = mockGenerateOneType(topic, typeToGenerate);
+    state.generatedTypes[typeToGenerate] = text;
+    state.currentType = typeToGenerate;
     state.requestsToday++;
+
+    showResults();
     updateRequestsCounter();
 
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
   } catch (error) {
     showAlert('Ошибка генерации: ' + error.message);
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = `<span>✨</span> <span>Сгенерировать (<span id="variants-count">${state.variantsCount}</span> вариантов)</span>`;
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✨</span> <span>Создать пост</span>';
+    }
   }
 }
 
-function generateMockVariants(topic, type, count) {
-  const samples = {
-    news: [
-      `Сегодня вышла важная новость о ${topic.slice(0, 40)}...\n\nНа первый взгляд это ничего не меняет. Но если присмотреться — последствия будут чувствоваться месяцами.\n\nГлавное: рынок отреагирует не сразу. Готовься заранее.`,
-      `${topic.slice(0, 50)}\n\nЭто важно по трём причинам:\n— меняется баланс сил\n— открывается окно возможностей\n— старые правила перестают работать\n\nЧто делать тебе — зависит от позиции.`,
-      `Реакция на новость про ${topic.slice(0, 40)}.\n\nНе паникуй. Не радуйся раньше времени. Просто посмотри на цифры.\n\nТри факта которые меняют всё. Подробнее — в комментариях.`,
-    ],
-    opinion: [
-      `Считаю что ${topic.slice(0, 60)} — переоценено.\n\nПока все спорят о деталях, главное упускают. Реальная проблема не в том что обсуждают, а в том что молчат.\n\nДумай своей головой. Всегда.`,
-      `Моё мнение по ${topic.slice(0, 50)}.\n\nЕсть популярная точка зрения и есть правда. Они не совпадают.\n\nЧто действительно работает — расскажу ниже.`,
-    ],
-    analysis: [
-      `Разбираем: ${topic.slice(0, 60)}.\n\nПервое что заметно — все смотрят не туда. Внимание уходит на громкое, а суть в тихом.\n\nТри слоя проблемы:\n1. Поверхность — то что видят все\n2. Механика — как работает на самом деле\n3. Корень — откуда растут ноги`,
-      `Анализирую ${topic.slice(0, 50)}.\n\nЦифры говорят одно, заголовки — другое. Кому верить?\n\nПо фактам: расклад не такой однозначный. Покажу почему.`,
-    ],
-    freethought: [
-      `Думаю про ${topic.slice(0, 50)}.\n\nИногда самые важные вещи — самые неочевидные. То что мы принимаем как данность, на самом деле очень странно.\n\nПопробуй взглянуть свежим взглядом.`,
-      `${topic.slice(0, 60)}.\n\nВот что меня в этом цепляет: чем больше думаешь — тем меньше понимаешь. И это нормально.\n\nНе все ответы должны быть готовы прямо сейчас.`,
-    ],
-    fact: [
-      `Малоизвестный факт про ${topic.slice(0, 50)}:\n\nТо что считают правилом — на самом деле исключение. А то что считают исключением — было нормой.\n\nДетали удивят.`,
-      `${topic.slice(0, 60)}.\n\nЕсть один нюанс который меняет всё представление. Но о нём почти никто не говорит.\n\nСейчас расскажу.`,
-    ],
-    list: [
-      `${topic.slice(0, 60)} — 5 пунктов:\n\n— Первое: то о чём редко думают\n— Второе: то что недооценивают\n— Третье: то что игнорируют\n— Четвёртое: то что считают неважным\n— Пятое: то что меняет всё`,
-      `5 вещей про ${topic.slice(0, 50)}:\n\n— Не делай очевидное — все так делают\n— Смотри куда не смотрят другие\n— Считай не средние, а крайние значения\n— Доверяй данным, не мнениям\n— Действуй когда страшно`,
-    ],
-  };
+// === SWITCH POST TYPE (with confirmation if not generated yet) ===
+async function switchPostType(type) {
+  if (type === state.currentType) return;
 
-  const pool = samples[type] || samples.news;
-  return pool.slice(0, count);
+  if (state.generatedTypes[type]) {
+    state.currentType = type;
+    renderActivePost();
+    if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    return;
+  }
+
+  const remaining = state.requestsLimit - state.requestsToday;
+  if (remaining <= 0) {
+    showAlert(`Использовал все запросы на сегодня. Лимит обновится в полночь.`);
+    return;
+  }
+
+  const confirmed = await confirmDialog(
+    `Сгенерировать тип "${typeNames[type]}"?`,
+    `Это новый запрос. Останется ${remaining - 1} из ${state.requestsLimit} на сегодня.`
+  );
+
+  if (!confirmed) return;
+
+  await generatePost(type);
 }
 
-function showVariants(variants) {
+function renderActivePost() {
+  const textEl = document.getElementById('active-post-text');
+  const nameEl = document.getElementById('active-type-name');
+  if (!textEl || !nameEl) return;
+
+  textEl.style.opacity = '0';
+  textEl.style.transform = 'translateY(8px)';
+
+  setTimeout(() => {
+    textEl.textContent = state.generatedTypes[state.currentType] || 'Текст не найден';
+    nameEl.textContent = typeNames[state.currentType];
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'translateY(0)';
+  }, 180);
+
+  document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.type-pill').forEach(p => {
+    if (p.dataset.type === state.currentType) p.classList.add('active');
+    if (state.generatedTypes[p.dataset.type]) {
+      p.classList.add('generated');
+    }
+  });
+}
+
+function showResults() {
   const section = document.getElementById('results-section');
-  const list = document.getElementById('variants-list');
-
-  list.innerHTML = variants.map((text, i) => `
-    <div class="variant-card">
-      <div class="variant-header">
-        <span class="variant-num">Вариант ${i + 1}</span>
-      </div>
-      <div class="variant-text">${escapeHtml(text)}</div>
-      <div class="variant-actions">
-        <button class="variant-act primary" onclick="approvePost(${i})">✅ Опубликовать</button>
-        <button class="variant-act" onclick="schedulePost(${i})">📅 Позже</button>
-        <button class="variant-act" onclick="regeneratePost()">🔄 Заново</button>
-      </div>
-    </div>
-  `).join('');
-
+  if (!section) return;
   section.style.display = 'block';
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderActivePost();
+  setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
-function approvePost(index) {
+// === MOCK: simulate AI for one type ===
+function mockGenerateOneType(topic, type) {
+  const t = topic.slice(0, 60);
+  const samples = {
+    news: `Сегодня случилось: ${t}\n\nНа первый взгляд — обычное событие. Но если присмотреться, последствия будут чувствоваться месяцами.\n\nГлавное: рынок отреагирует не сразу. Готовься заранее.`,
+    opinion: `Считаю что ${t} — переоценено.\n\nПока все спорят о деталях, главное упускают. Реальная проблема не в том что обсуждают, а в том о чём молчат.\n\nДумай своей головой. Всегда.`,
+    analysis: `Разбираем: ${t}\n\nПервое что заметно — все смотрят не туда. Внимание уходит на громкое, а суть в тихом.\n\nТри слоя:\n1. Поверхность — то что видят все\n2. Механика — как работает на самом деле\n3. Корень — откуда растут ноги\n\nИменно третий слой определит развитие в долгую.`,
+    freethought: `Думаю про ${t}.\n\nИногда самые важные вещи — самые неочевидные. То что мы принимаем как данность, на самом деле очень странно.\n\nПопробуй взглянуть свежим взглядом. Может оказаться, что ответ был перед глазами.`,
+    fact: `Малоизвестный факт про ${t}:\n\nТо что считают правилом — на самом деле исключение. А то что считают исключением — было нормой.\n\nЭто меняет подход к решениям. И не только в этой теме.`,
+    list: `${t} — 5 пунктов:\n\n— Первое: то о чём редко думают\n— Второе: то что недооценивают\n— Третье: то что игнорируют\n— Четвёртое: то что считают неважным\n— Пятое: то что меняет всё`,
+  };
+  return samples[type] || samples.news;
+}
+
+// === ACTIONS ===
+function approvePost() {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  showAlert('Пост опубликован! (заглушка — скоро подключим к боту)');
+  showAlert(`Пост опубликован! Тип: ${typeNames[state.currentType]}`);
 }
 
-function schedulePost(index) {
+function schedulePost() {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
   showAlert('Откроется выбор времени публикации (скоро)');
 }
 
 function regeneratePost() {
-  generatePost();
+  state.generatedTypes[state.currentType] = null;
+  generatePost(state.currentType);
 }
 
+// === FEATURE TOGGLE ===
 function toggleFeat(featureEl) {
   featureEl.classList.toggle('expanded');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
+// === MODALS ===
 function openModal(modalId) {
   document.getElementById(modalId)?.classList.add('open');
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -167,52 +217,50 @@ document.querySelectorAll('.modal').forEach(modal => {
   });
 });
 
+// === PLANS ===
 function upgradePlan(tier) {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
   if (tg?.sendData) {
     tg.sendData(JSON.stringify({ action: 'upgrade', tier: tier }));
     tg.close();
   } else {
-    showAlert(`Переход на тариф ${tier} — скоро подключим оплату через ЮKassa`);
+    showAlert(`Переход на тариф ${tier}`);
   }
 }
 
+// === ALERT ===
 function showAlert(message) {
-  if (tg?.showAlert) {
-    tg.showAlert(message);
-  } else {
-    alert(message);
-  }
+  if (tg?.showAlert) tg.showAlert(message);
+  else alert(message);
 }
 
+// === COUNTER ===
 function updateRequestsCounter() {
-  document.getElementById('requests-used').textContent = state.requestsToday;
-  document.getElementById('requests-limit').textContent = state.requestsLimit;
+  const usedEl = document.getElementById('requests-used');
+  const limitEl = document.getElementById('requests-limit');
+  if (usedEl) usedEl.textContent = state.requestsToday;
+  if (limitEl) limitEl.textContent = state.requestsLimit;
 }
 
 function updateUserUI() {
   const tierLine = document.getElementById('user-tier-line');
   const trialBanner = document.getElementById('trial-banner');
   const trialDays = document.getElementById('trial-days');
-  const variantsCount = document.getElementById('variants-count');
 
-  if (state.tier === 'free' && state.trialDaysLeft > 0) {
-    tierLine.textContent = `Free · ${state.trialDaysLeft} дней Pro доступа`;
+  if (state.tier === 'trial' && state.trialDaysLeft > 0) {
+    tierLine.textContent = `Pro Trial · ${state.trialDaysLeft} дн осталось`;
     trialDays.textContent = `осталось ${state.trialDaysLeft} ${declension(state.trialDaysLeft, 'день', 'дня', 'дней')}`;
-    trialBanner.style.display = 'flex';
+    if (trialBanner) trialBanner.style.display = 'flex';
   } else if (state.tier === 'free') {
     tierLine.textContent = 'Free тариф';
-    trialBanner.style.display = 'none';
+    if (trialBanner) trialBanner.style.display = 'none';
   } else if (state.tier === 'light') {
     tierLine.textContent = 'Light тариф';
-    trialBanner.style.display = 'none';
+    if (trialBanner) trialBanner.style.display = 'none';
   } else if (state.tier === 'pro') {
     tierLine.textContent = 'Pro тариф';
-    trialBanner.style.display = 'none';
+    if (trialBanner) trialBanner.style.display = 'none';
   }
-
-  variantsCount.textContent = state.variantsCount;
   updateRequestsCounter();
 }
 
@@ -233,24 +281,17 @@ function escapeHtml(text) {
 
 async function loadUserData() {
   const initData = tg?.initDataUnsafe;
-  if (initData?.user) {
-    state.user = initData.user;
-  }
+  if (initData?.user) state.user = initData.user;
 
-  state.tier = 'free';
+  state.tier = 'trial';
   state.trialDaysLeft = 7;
-  state.variantsCount = 3;
-  state.requestsLimit = 100;
+  state.requestsLimit = 15;
   state.requestsToday = 0;
 
   updateUserUI();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  loadUserData();
-  console.log('ForgeMetrics Mini App ready');
-});
-
+// === SUBTABS ===
 function switchSubtab(name, el) {
   document.querySelectorAll('.subtab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
@@ -259,6 +300,7 @@ function switchSubtab(name, el) {
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
+// === IMPROVE ===
 function openImproveModal() {
   openModal('improve-modal');
 }
@@ -266,28 +308,32 @@ function openImproveModal() {
 async function runImprove() {
   const original = document.getElementById('improve-input').value.trim();
   if (original.length < 30) {
-    showAlert('Вставь хотя бы пару предложений из своего поста');
+    showAlert('Вставь хотя бы пару предложений');
+    return;
+  }
+  if (state.requestsToday >= state.requestsLimit) {
+    showAlert(`Использовал все запросы на сегодня. Обновится в полночь.`);
     return;
   }
 
   const resultBox = document.getElementById('improve-result');
   resultBox.style.display = 'block';
-  resultBox.innerHTML = '<div style="text-align:center;padding:16px;color:#a0b8cc;">⏳ Анализирую и улучшаю...</div>';
+  resultBox.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-tertiary);">⏳ Анализирую и улучшаю...</div>';
 
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
   await new Promise(r => setTimeout(r, 1500));
-
-  const improved = mockImprove(original);
+  state.requestsToday++;
+  updateRequestsCounter();
 
   resultBox.innerHTML = `
     <div style="margin-bottom:14px;">
-      <div style="font-size:11px;color:#6b8fa8;text-transform:uppercase;margin-bottom:6px;">Твой пост</div>
-      <div style="background:#1f2c38;border-radius:8px;padding:10px;font-size:12px;color:#a0b8cc;line-height:1.5;">${escapeHtml(original)}</div>
+      <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:8px;letter-spacing:0.06em;font-weight:700;">Оригинал</div>
+      <div style="background:var(--bg-base);border-radius:10px;padding:12px;font-size:13px;color:var(--text-tertiary);line-height:1.55;">${escapeHtml(original)}</div>
     </div>
     <div>
-      <div style="font-size:11px;color:#4caf50;text-transform:uppercase;margin-bottom:6px;">✨ Улучшенная версия</div>
-      <div style="background:#1f2c38;border:1px solid #4caf50;border-radius:8px;padding:10px;font-size:12px;color:#fff;line-height:1.6;">${escapeHtml(improved)}</div>
+      <div style="font-size:11px;background:var(--gradient-button);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;margin-bottom:8px;letter-spacing:0.06em;font-weight:700;">✨ В твоём стиле</div>
+      <div style="background:var(--bg-card);border:1px solid var(--violet-1);border-radius:10px;padding:12px;font-size:13px;color:var(--text-primary);line-height:1.6;box-shadow:0 0 16px rgba(139,92,246,0.15);">${escapeHtml(original)}\n\n[Здесь будет переписанная версия от AI]</div>
     </div>
     <button class="btn-primary" onclick="closeModal('improve-modal');switchTab('create')" style="margin-top:14px;">
       Создать ещё пост →
@@ -297,10 +343,7 @@ async function runImprove() {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 }
 
-function mockImprove(text) {
-  return text + "\n\n[Улучшенная версия будет тут — это заглушка для UI-теста. На бэкенде будет реальный AI-улучшитель.]";
-}
-
+// === RESET VOICE ===
 async function resetVoice() {
   const confirmed = await confirmDialog(
     'Пересоздать голос канала?',
@@ -312,16 +355,24 @@ async function resetVoice() {
     tg.sendData(JSON.stringify({ action: 'reset_voice' }));
     tg.close();
   } else {
-    showAlert('Иди в чат с ботом — отправь /reset_voice чтобы пересоздать голос канала');
+    showAlert('Открой чат с ботом — отправь /reset_voice');
   }
 }
 
+// === MONEY ===
+async function findAdvertisers() {
+  showAlert('🎯 Ищу рекламодателей в твоей нише... Результат придёт в чат.');
+  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'find_advertisers' }));
+}
+
+async function checkAdvertiser() {
+  showAlert('🛡 Открой чат с ботом и пришли ссылку на канал — проверю.');
+  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'check_advertiser' }));
+}
+
 async function runAudit() {
-  showAlert('Запуск AI-аудита канала. Результат придёт в чат.');
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: 'run_audit' }));
-    tg.close();
-  }
+  showAlert('🎯 Запуск AI-аудита канала. Результат придёт в чат.');
+  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'run_audit' }));
 }
 
 function addSource() {
@@ -351,3 +402,12 @@ function confirmDialog(title, text) {
     }
   });
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadUserData();
+  const textEl = document.getElementById('active-post-text');
+  if (textEl) {
+    textEl.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+  }
+  console.log('ForgeMetrics ready');
+});
