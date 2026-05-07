@@ -405,9 +405,37 @@ function confirmDialog(title, text) {
 
 window.addEventListener('DOMContentLoaded', () => {
   loadUserData();
+  initParticles();
   const textEl = document.getElementById('active-post-text');
   if (textEl) {
     textEl.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
   }
   console.log('ForgeMetrics ready');
 });
+
+// === ANIMATED PARTICLES ===
+function initParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+
+  const colors = ['#A78BFA', '#8B5CF6', '#6366F1', '#3B82F6', '#06B6D4', '#EC4899'];
+  const count = 60;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 5;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.background = color;
+    p.style.boxShadow = `0 0 ${size * 4}px ${color}, 0 0 ${size * 8}px ${color}`;
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (12 + Math.random() * 18) + 's';
+    p.style.animationDelay = -(Math.random() * 25) + 's';
+    p.style.opacity = 0.5 + Math.random() * 0.5;
+
+    container.appendChild(p);
+  }
+}
