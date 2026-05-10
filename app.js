@@ -1,413 +1,306 @@
-// ForgeMetrics Mini App
+const API_BASE_URL = 'https://url-shot-replacement-search.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.setHeaderColor('#0E1424');
-  tg.setBackgroundColor('#0A0E1A');
-}
 
 const state = {
-  user: null,
-  tier: 'trial',
-  trialDaysLeft: 7,
-  currentType: 'news',
-  generatedTypes: {},
-  currentTopic: '',
-  requestsToday: 0,
-  requestsLimit: 15,
+    user: null,
+    dashboard: null,
+    initData: null,
 };
 
-const typeNames = {
-  news: '📰 Новость',
-  opinion: '💭 Мнение',
-  analysis: '🔍 Разбор',
-  freethought: '✨ Мысль',
-  fact: '💡 Факт',
-  list: '📋 Список',
+const screens = {
+    loading: document.getElementById('loading-screen'),
+    error: document.getElementById('error-screen'),
+    dashboard: document.getElementById('dashboard-screen'),
+    placeholder: document.getElementById('placeholder-screen'),
 };
 
-const typeDescriptions = {
-  news: 'Реакция на актуальное событие',
-  opinion: 'Личная позиция с аргументами',
-  analysis: 'Глубокий разбор темы',
-  freethought: 'Свободное размышление',
-  fact: 'Полезный факт с контекстом',
-  list: '3-5 структурированных пунктов',
+const els = {
+    errorMessage: document.getElementById('error-message'),
+    avatarLetter: document.getElementById('avatar-letter'),
+    greetingName: document.getElementById('greeting-name'),
+    channelInfo: document.getElementById('channel-info'),
+    metricViews: document.getElementById('metric-views'),
+    metricViewsTrend: document.getElementById('metric-views-trend'),
+    metricSubs: document.getElementById('metric-subs'),
+    metricSubsTrend: document.getElementById('metric-subs-trend'),
+    actionsList: document.getElementById('actions-list'),
+    menuBtn: document.getElementById('menu-btn'),
+    menuDot: document.getElementById('menu-dot'),
+    profileBtn: document.getElementById('profile-btn'),
+    drawer: document.getElementById('drawer'),
+    drawerOverlay: document.getElementById('drawer-overlay'),
+    drawerClose: document.getElementById('drawer-close'),
+    placeholderBack: document.getElementById('placeholder-back'),
+    placeholderTitle: document.getElementById('placeholder-title'),
+    placeholderText: document.getElementById('placeholder-text'),
+    placeholderIcon: document.getElementById('placeholder-icon'),
 };
 
-// === SET INITIAL TYPE (before generation) ===
-function setInitialType(el, type) {
-  state.currentType = type;
-  document.querySelectorAll('.type-pill[data-type$="-pre"]').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
 
-// === TABS ===
-function switchTab(tabName) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('pane-' + tabName).classList.add('active');
-  document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-// === GENERATE POST (1 type at a time) ===
-async function generatePost(forceType = null) {
-  const topic = document.getElementById('topic-input')?.value.trim() || state.currentTopic;
-
-  if (!topic) {
-    showAlert('Опиши тему — даже одна строчка лучше чем пусто');
-    return;
-  }
-  if (topic.length < 10) {
-    showAlert('Тема слишком короткая. Опиши подробнее — чем больше деталей, тем точнее результат');
-    return;
-  }
-
-  if (state.requestsToday >= state.requestsLimit) {
-    showAlert(`Использовал все ${state.requestsLimit} запросов на сегодня. Лимит обновится в полночь.`);
-    return;
-  }
-
-  state.currentTopic = topic;
-  const typeToGenerate = forceType || state.currentType;
-
-  const btn = document.getElementById('generate-btn');
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<span>⏳</span> <span>Генерирую...</span>';
-  }
-
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-  try {
-    await new Promise(r => setTimeout(r, 1500));
-    const text = mockGenerateOneType(topic, typeToGenerate);
-    state.generatedTypes[typeToGenerate] = text;
-    state.currentType = typeToGenerate;
-    state.requestsToday++;
-
-    showResults();
-    updateRequestsCounter();
-
-    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  } catch (error) {
-    showAlert('Ошибка генерации: ' + error.message);
-    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>✨</span> <span>Создать пост</span>';
+function initTelegram() {
+    if (!tg) {
+        console.warn('Telegram WebApp SDK not available — running in browser?');
+        return false;
     }
-  }
-}
 
-// === SWITCH POST TYPE (with confirmation if not generated yet) ===
-async function switchPostType(type) {
-  if (type === state.currentType) return;
+    tg.ready();
+    tg.expand();
 
-  if (state.generatedTypes[type]) {
-    state.currentType = type;
-    renderActivePost();
-    if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-    return;
-  }
+    if (tg.setHeaderColor) tg.setHeaderColor('#0a0d18');
+    if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0d18');
 
-  const remaining = state.requestsLimit - state.requestsToday;
-  if (remaining <= 0) {
-    showAlert(`Использовал все запросы на сегодня. Лимит обновится в полночь.`);
-    return;
-  }
+    state.initData = tg.initData;
 
-  const confirmed = await confirmDialog(
-    `Сгенерировать тип "${typeNames[type]}"?`,
-    `Это новый запрос. Останется ${remaining - 1} из ${state.requestsLimit} на сегодня.`
-  );
-
-  if (!confirmed) return;
-
-  await generatePost(type);
-}
-
-function renderActivePost() {
-  const textEl = document.getElementById('active-post-text');
-  const nameEl = document.getElementById('active-type-name');
-  if (!textEl || !nameEl) return;
-
-  textEl.style.opacity = '0';
-  textEl.style.transform = 'translateY(8px)';
-
-  setTimeout(() => {
-    textEl.textContent = state.generatedTypes[state.currentType] || 'Текст не найден';
-    nameEl.textContent = typeNames[state.currentType];
-    textEl.style.opacity = '1';
-    textEl.style.transform = 'translateY(0)';
-  }, 180);
-
-  document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.type-pill').forEach(p => {
-    if (p.dataset.type === state.currentType) p.classList.add('active');
-    if (state.generatedTypes[p.dataset.type]) {
-      p.classList.add('generated');
+    if (!state.initData) {
+        console.warn('No initData — open via Telegram');
+        return false;
     }
-  });
+
+    return true;
 }
 
-function showResults() {
-  const section = document.getElementById('results-section');
-  if (!section) return;
-  section.style.display = 'block';
-  renderActivePost();
-  setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+
+async function apiRequest(path, options = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
+    };
+
+    if (state.initData) {
+        headers['X-Telegram-Init-Data'] = state.initData;
+    }
+
+    const url = `${API_BASE_URL}${path}`;
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers,
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`API ${response.status}: ${errorText || response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error('API request failed:', url, err);
+        throw err;
+    }
 }
 
-// === MOCK: simulate AI for one type ===
-function mockGenerateOneType(topic, type) {
-  const t = topic.slice(0, 60);
-  const samples = {
-    news: `Сегодня случилось: ${t}\n\nНа первый взгляд — обычное событие. Но если присмотреться, последствия будут чувствоваться месяцами.\n\nГлавное: рынок отреагирует не сразу. Готовься заранее.`,
-    opinion: `Считаю что ${t} — переоценено.\n\nПока все спорят о деталях, главное упускают. Реальная проблема не в том что обсуждают, а в том о чём молчат.\n\nДумай своей головой. Всегда.`,
-    analysis: `Разбираем: ${t}\n\nПервое что заметно — все смотрят не туда. Внимание уходит на громкое, а суть в тихом.\n\nТри слоя:\n1. Поверхность — то что видят все\n2. Механика — как работает на самом деле\n3. Корень — откуда растут ноги\n\nИменно третий слой определит развитие в долгую.`,
-    freethought: `Думаю про ${t}.\n\nИногда самые важные вещи — самые неочевидные. То что мы принимаем как данность, на самом деле очень странно.\n\nПопробуй взглянуть свежим взглядом. Может оказаться, что ответ был перед глазами.`,
-    fact: `Малоизвестный факт про ${t}:\n\nТо что считают правилом — на самом деле исключение. А то что считают исключением — было нормой.\n\nЭто меняет подход к решениям. И не только в этой теме.`,
-    list: `${t} — 5 пунктов:\n\n— Первое: то о чём редко думают\n— Второе: то что недооценивают\n— Третье: то что игнорируют\n— Четвёртое: то что считают неважным\n— Пятое: то что меняет всё`,
-  };
-  return samples[type] || samples.news;
+
+function showScreen(screenName) {
+    Object.values(screens).forEach(s => {
+        if (s) s.style.display = 'none';
+    });
+    if (screens[screenName]) {
+        screens[screenName].style.display = '';
+    }
 }
 
-// === ACTIONS ===
-function approvePost() {
-  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  showAlert(`Пост опубликован! Тип: ${typeNames[state.currentType]}`);
+
+function showError(message) {
+    els.errorMessage.textContent = message;
+    showScreen('error');
 }
 
-function schedulePost() {
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-  showAlert('Откроется выбор времени публикации (скоро)');
+
+async function loadDashboard() {
+    showScreen('loading');
+
+    try {
+        const data = await apiRequest('/api/v1/user/dashboard');
+        state.dashboard = data;
+        renderDashboard(data);
+        showScreen('dashboard');
+    } catch (err) {
+        const detail = err.message || 'Не удалось подключиться к серверу';
+        showError(detail);
+    }
 }
 
-function regeneratePost() {
-  state.generatedTypes[state.currentType] = null;
-  generatePost(state.currentType);
-}
 
-// === FEATURE TOGGLE ===
-function toggleFeat(featureEl) {
-  featureEl.classList.toggle('expanded');
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
+function renderDashboard(data) {
+    const firstName = data.user?.first_name || 'друг';
+    els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
+    els.greetingName.textContent = `Привет, ${firstName}`;
 
-// === MODALS ===
-function openModal(modalId) {
-  document.getElementById(modalId)?.classList.add('open');
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-function closeModal(modalId) {
-  document.getElementById(modalId)?.classList.remove('open');
-}
-
-document.querySelectorAll('.modal').forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('open');
-  });
-});
-
-// === PLANS ===
-function upgradePlan(tier) {
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: 'upgrade', tier: tier }));
-    tg.close();
-  } else {
-    showAlert(`Переход на тариф ${tier}`);
-  }
-}
-
-// === ALERT ===
-function showAlert(message) {
-  if (tg?.showAlert) tg.showAlert(message);
-  else alert(message);
-}
-
-// === COUNTER ===
-function updateRequestsCounter() {
-  const usedEl = document.getElementById('requests-used');
-  const limitEl = document.getElementById('requests-limit');
-  if (usedEl) usedEl.textContent = state.requestsToday;
-  if (limitEl) limitEl.textContent = state.requestsLimit;
-}
-
-function updateUserUI() {
-  const tierLine = document.getElementById('user-tier-line');
-  const trialBanner = document.getElementById('trial-banner');
-  const trialDays = document.getElementById('trial-days');
-
-  if (state.tier === 'trial' && state.trialDaysLeft > 0) {
-    tierLine.textContent = `Pro Trial · ${state.trialDaysLeft} дн осталось`;
-    trialDays.textContent = `осталось ${state.trialDaysLeft} ${declension(state.trialDaysLeft, 'день', 'дня', 'дней')}`;
-    if (trialBanner) trialBanner.style.display = 'flex';
-  } else if (state.tier === 'free') {
-    tierLine.textContent = 'Free тариф';
-    if (trialBanner) trialBanner.style.display = 'none';
-  } else if (state.tier === 'light') {
-    tierLine.textContent = 'Light тариф';
-    if (trialBanner) trialBanner.style.display = 'none';
-  } else if (state.tier === 'pro') {
-    tierLine.textContent = 'Pro тариф';
-    if (trialBanner) trialBanner.style.display = 'none';
-  }
-  updateRequestsCounter();
-}
-
-function declension(num, one, two, five) {
-  let n = Math.abs(num) % 100;
-  if (n >= 5 && n <= 20) return five;
-  n = n % 10;
-  if (n === 1) return one;
-  if (n >= 2 && n <= 4) return two;
-  return five;
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML.replace(/\n/g, '<br>');
-}
-
-async function loadUserData() {
-  const initData = tg?.initDataUnsafe;
-  if (initData?.user) state.user = initData.user;
-
-  state.tier = 'trial';
-  state.trialDaysLeft = 7;
-  state.requestsLimit = 15;
-  state.requestsToday = 0;
-
-  updateUserUI();
-}
-
-// === SUBTABS ===
-function switchSubtab(name, el) {
-  document.querySelectorAll('.subtab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sub-' + name).classList.add('active');
-  el.classList.add('active');
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-// === IMPROVE ===
-function openImproveModal() {
-  openModal('improve-modal');
-}
-
-async function runImprove() {
-  const original = document.getElementById('improve-input').value.trim();
-  if (original.length < 30) {
-    showAlert('Вставь хотя бы пару предложений');
-    return;
-  }
-  if (state.requestsToday >= state.requestsLimit) {
-    showAlert(`Использовал все запросы на сегодня. Обновится в полночь.`);
-    return;
-  }
-
-  const resultBox = document.getElementById('improve-result');
-  resultBox.style.display = 'block';
-  resultBox.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-tertiary);">⏳ Анализирую и улучшаю...</div>';
-
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-  await new Promise(r => setTimeout(r, 1500));
-  state.requestsToday++;
-  updateRequestsCounter();
-
-  resultBox.innerHTML = `
-    <div style="margin-bottom:14px;">
-      <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:8px;letter-spacing:0.06em;font-weight:700;">Оригинал</div>
-      <div style="background:var(--bg-base);border-radius:10px;padding:12px;font-size:13px;color:var(--text-tertiary);line-height:1.55;">${escapeHtml(original)}</div>
-    </div>
-    <div>
-      <div style="font-size:11px;background:var(--gradient-button);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;margin-bottom:8px;letter-spacing:0.06em;font-weight:700;">✨ В твоём стиле</div>
-      <div style="background:var(--bg-card);border:1px solid var(--violet-1);border-radius:10px;padding:12px;font-size:13px;color:var(--text-primary);line-height:1.6;box-shadow:0 0 16px rgba(139,92,246,0.15);">${escapeHtml(original)}\n\n[Здесь будет переписанная версия от AI]</div>
-    </div>
-    <button class="btn-primary" onclick="closeModal('improve-modal');switchTab('create')" style="margin-top:14px;">
-      Создать ещё пост →
-    </button>
-  `;
-
-  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-}
-
-// === RESET VOICE ===
-async function resetVoice() {
-  const confirmed = await confirmDialog(
-    'Пересоздать голос канала?',
-    'Текущие настройки голоса будут удалены. Тебе нужно будет снова дать боту 3-5 постов или новое описание.'
-  );
-  if (!confirmed) return;
-
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: 'reset_voice' }));
-    tg.close();
-  } else {
-    showAlert('Открой чат с ботом — отправь /reset_voice');
-  }
-}
-
-// === MONEY ===
-async function findAdvertisers() {
-  showAlert('🎯 Ищу рекламодателей в твоей нише... Результат придёт в чат.');
-  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'find_advertisers' }));
-}
-
-async function checkAdvertiser() {
-  showAlert('🛡 Открой чат с ботом и пришли ссылку на канал — проверю.');
-  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'check_advertiser' }));
-}
-
-async function runAudit() {
-  showAlert('🎯 Запуск AI-аудита канала. Результат придёт в чат.');
-  if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'run_audit' }));
-}
-
-function addSource() {
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: 'add_source' }));
-    tg.close();
-  } else {
-    showAlert('Открой чат с ботом — там добавишь источник');
-  }
-}
-
-function addCompetitor() {
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: 'add_competitor' }));
-    tg.close();
-  } else {
-    showAlert('Открой чат с ботом — там добавишь конкурента');
-  }
-}
-
-function confirmDialog(title, text) {
-  return new Promise((resolve) => {
-    if (tg?.showConfirm) {
-      tg.showConfirm(`${title}\n\n${text}`, (ok) => resolve(ok));
+    if (data.channel) {
+        const subs = data.channel.subscribers ? formatNumber(data.channel.subscribers) : '—';
+        const title = data.channel.title || data.channel.username || 'Канал';
+        els.channelInfo.textContent = `${title} · ${subs} подписчиков`;
     } else {
-      resolve(confirm(`${title}\n\n${text}`));
+        els.channelInfo.textContent = 'Подключи канал чтобы видеть метрики';
     }
-  });
+
+    if (data.metrics && data.metrics.length >= 2) {
+        const [views, subs] = data.metrics;
+        els.metricViews.textContent = views.value;
+        els.metricSubs.textContent = subs.value;
+
+        renderTrend(els.metricViewsTrend, views.change, views.trend);
+        renderTrend(els.metricSubsTrend, subs.change, subs.trend);
+    }
+
+    renderActions(data.actions || []);
+
+    if (data.has_unread_menu) {
+        els.menuDot.classList.add('active');
+    } else {
+        els.menuDot.classList.remove('active');
+    }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  loadUserData();
-  const textEl = document.getElementById('active-post-text');
-  if (textEl) {
-    textEl.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
-  }
-  console.log('ForgeMetrics ready');
-});
+
+function renderTrend(el, change, trend) {
+    if (!change) {
+        el.innerHTML = '';
+        return;
+    }
+    const iconClass = trend === 'down' ? 'ti-trending-down' : 'ti-trending-up';
+    el.innerHTML = `<i class="ti ${iconClass}"></i>${change}`;
+    el.className = `metric-trend ${trend === 'down' ? 'down' : ''}`;
+}
+
+
+function renderActions(actions) {
+    els.actionsList.innerHTML = '';
+
+    actions.forEach(action => {
+        const card = document.createElement('button');
+        card.className = `action-card ${action.primary ? 'primary' : ''}`;
+        card.dataset.action = action.id;
+
+        const colorClass = action.primary ? '' : `icon-${action.color}`;
+        const subtitleClass = action.color === 'green' && !action.primary ? 'highlight' : '';
+
+        card.innerHTML = `
+            <div class="action-card-content">
+                <div class="action-card-icon ${colorClass}">
+                    <i class="ti ti-${action.icon}"></i>
+                </div>
+                <div class="action-card-text">
+                    <div class="action-card-title">${escapeHtml(action.title)}</div>
+                    <div class="action-card-subtitle ${subtitleClass}">${escapeHtml(action.subtitle)}</div>
+                </div>
+            </div>
+            <i class="ti ti-arrow-right action-card-arrow"></i>
+        `;
+
+        card.addEventListener('click', () => handleAction(action.id));
+        els.actionsList.appendChild(card);
+    });
+}
+
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+
+function formatNumber(num) {
+    if (num === null || num === undefined) return '—';
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'М';
+    if (num >= 10_000) return Math.floor(num / 1000) + 'к';
+    if (num >= 1_000) return (num / 1000).toFixed(1) + 'к';
+    return String(num);
+}
+
+
+function openDrawer() {
+    els.drawer.classList.add('active');
+    els.drawerOverlay.classList.add('active');
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+
+function closeDrawer() {
+    els.drawer.classList.remove('active');
+    els.drawerOverlay.classList.remove('active');
+}
+
+
+const PLACEHOLDER_CONFIG = {
+    create_post: { title: 'Создание поста', text: 'AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.', icon: 'sparkles' },
+    rewrite_post: { title: 'Рерайт поста', text: 'Перепишем чужой пост в твоём стиле. Скоро будет готово.', icon: 'pencil' },
+    content_plan: { title: 'Контент-план', text: 'AI составит план постов на неделю. Скоро запустим.', icon: 'calendar' },
+    channel_analytics: { title: 'Аналитика канала', text: 'Метрики, динамика, лучшие посты. Скоро будет готово.', icon: 'chart-line' },
+    ai_audit: { title: 'AI-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
+    competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них залетает и почему. Скоро будет готово.', icon: 'search' },
+    find_advertisers: { title: 'Поиск рекламодателей', text: 'Найдём тех, кто ищет размещение в твоей нише. Скоро запустим.', icon: 'coin' },
+    post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
+    negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
+    referral: { title: 'Друзья и промокод', text: 'Реферальная программа, твой промокод, бонусы. Скоро будет готово.', icon: 'heart-handshake' },
+    profile: { title: 'Тариф и подписка', text: 'Твой текущий тариф, лимиты, история. Скоро запустим.', icon: 'user-circle' },
+    voice_settings: { title: 'Голос канала', text: 'Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.', icon: 'microphone' },
+    add_channel: { title: 'Подключение канала', text: 'Подключи свой Telegram-канал чтобы я видел метрики и подстраивался под твой стиль. Скоро.', icon: 'plus' },
+    invite_friend: { title: 'Друзья и промокод', text: 'Реферальная программа, твой промокод, бонусы. Скоро будет готово.', icon: 'heart-handshake' },
+};
+
+
+function handleAction(actionId) {
+    closeDrawer();
+
+    const config = PLACEHOLDER_CONFIG[actionId] || {
+        title: 'Скоро будет готово',
+        text: 'Эта функция в разработке.',
+        icon: 'rocket',
+    };
+
+    els.placeholderTitle.textContent = config.title;
+    els.placeholderText.textContent = config.text;
+    els.placeholderIcon.innerHTML = `<i class="ti ti-${config.icon}"></i>`;
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+    showScreen('placeholder');
+}
+
+
+function setupEventListeners() {
+    els.menuBtn.addEventListener('click', openDrawer);
+    els.drawerClose.addEventListener('click', closeDrawer);
+    els.drawerOverlay.addEventListener('click', closeDrawer);
+
+    els.profileBtn.addEventListener('click', () => handleAction('profile'));
+
+    els.placeholderBack.addEventListener('click', () => {
+        showScreen('dashboard');
+    });
+
+    document.querySelectorAll('.drawer-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const action = item.dataset.action;
+            if (action) handleAction(action);
+        });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (els.drawer.classList.contains('active')) closeDrawer();
+        }
+    });
+}
+
+
+async function main() {
+    setupEventListeners();
+
+    const tgReady = initTelegram();
+
+    if (!tgReady) {
+        showError('Открой Mini App через Telegram');
+        return;
+    }
+
+    await loadDashboard();
+}
+
+
+document.addEventListener('DOMContentLoaded', main);
