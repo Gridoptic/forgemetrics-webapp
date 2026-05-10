@@ -117,9 +117,49 @@ async function loadDashboard() {
         renderDashboard(data);
         showScreen('dashboard');
     } catch (err) {
-        const detail = err.message || 'Не удалось подключиться к серверу';
+        const message = err.message || '';
+
+        if (message.includes('404') && message.includes('User not found')) {
+            showStartBotScreen();
+            return;
+        }
+
+        const detail = message || 'Не удалось подключиться к серверу';
         showError(detail);
     }
+}
+
+
+function showStartBotScreen() {
+    els.errorMessage.innerHTML = `
+        <div style="margin-bottom: 16px; line-height: 1.6;">
+            Сначала запусти бота — там я расскажу что умею
+            и активирую тебе бесплатный Trial на 7 дней.
+        </div>
+    `;
+
+    const errorScreen = document.getElementById('error-screen');
+    const errorIcon = errorScreen.querySelector('.error-icon');
+    const errorTitle = errorScreen.querySelector('.error-title');
+    const errorBtn = errorScreen.querySelector('button');
+
+    errorIcon.innerHTML = '<i class="ti ti-rocket"></i>';
+    errorIcon.style.background = 'linear-gradient(135deg, var(--color-purple-bg), rgba(99, 102, 241, 0.05))';
+    errorIcon.style.borderColor = 'var(--color-purple-border)';
+    errorIcon.querySelector('i').style.color = 'var(--color-purple-400)';
+
+    errorTitle.textContent = 'Сначала запусти бота';
+    errorBtn.textContent = 'Открыть @ForgeMetricsBot';
+
+    errorBtn.onclick = () => {
+        if (tg?.openTelegramLink) {
+            tg.openTelegramLink('https://t.me/ForgeMetricsBot');
+        } else {
+            window.open('https://t.me/ForgeMetricsBot', '_blank');
+        }
+    };
+
+    showScreen('error');
 }
 
 
