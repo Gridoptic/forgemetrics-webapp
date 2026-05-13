@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://wages-what-perl-row.trycloudflare.com';
+const API_BASE_URL = 'https://enter-glory-memorial-leather.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
