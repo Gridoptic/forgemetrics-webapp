@@ -71,15 +71,10 @@
 
 html, body {
     width: 100%;
-    min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-}
-
-html {
-    height: 100%;
 }
 
 body {
@@ -93,13 +88,9 @@ body {
         radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
         radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
     background-attachment: fixed;
-    overscroll-behavior-y: contain;
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-    min-height: 100vh;
-    height: auto;
-    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -121,7 +112,6 @@ button:active {
 
 #app {
     width: 100%;
-    min-height: 100vh;
     position: relative;
 }
 
