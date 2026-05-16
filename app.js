@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://enter-glory-memorial-leather.trycloudflare.com';
+const API_BASE_URL = 'https://planes-inter-representing-potter.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -67,6 +67,7 @@ const els = {
     postStyleInput: document.getElementById('post-style-input'),
     postStyleCounter: document.getElementById('post-style-counter-value'),
     postStyleClear: document.getElementById('post-style-clear'),
+    postStyleApply: document.getElementById('post-style-apply'),
     postLimitBanner: document.getElementById('post-limit-banner'),
     postLimitText: document.getElementById('post-limit-text'),
     postGenerateBtn: document.getElementById('post-generate-btn'),
@@ -92,6 +93,7 @@ const els = {
     postSendChannelBtn: document.getElementById('post-send-channel-btn'),
     postScheduleBtn: document.getElementById('post-schedule-btn'),
     postRegenerateBtn: document.getElementById('post-regenerate-btn'),
+    postEmojiBtn: document.getElementById('post-emoji-btn'),
 
     modelPickerModal: document.getElementById('model-picker-modal'),
     modelPickPremium: document.getElementById('model-pick-premium'),
@@ -433,6 +435,10 @@ function resetPostState() {
     if (els.postGenerateBtn) els.postGenerateBtn.disabled = true;
     if (els.postQuestionCustomInput) els.postQuestionCustomInput.value = '';
     if (els.postResultCustomInput) els.postResultCustomInput.value = '';
+    if (els.postStyleApply) {
+        els.postStyleApply.textContent = 'Применить';
+        els.postStyleApply.classList.remove('applied');
+    }
 }
 
 
@@ -466,7 +472,7 @@ function renderLimitBanner(limits) {
     const state_name = limitState.state;
 
     if (state_name === 'exhausted') {
-        els.postLimitText.textContent = 'На сегодня все модели исчерпаны';
+        els.postLimitText.textContent = 'Лимиты на сегодня закончились';
         els.postLimitBanner.classList.add('exhausted');
         els.postGenerateBtn.disabled = true;
         return;
@@ -475,16 +481,26 @@ function renderLimitBanner(limits) {
     let text = '';
     const used = limitState.used ?? 0;
     const limit = limitState.limit;
-    const modelLabel = limitState.model_label || 'Модель';
+    const modelLabel = limitState.model_label || 'Базовая';
+    const generationLabel = `${modelLabel} генерация`;
+    const remaining = (limit != null) ? Math.max(0, limit - used) : null;
 
     if (state_name === 'premium_exhausted_standard_active') {
-        text = `Премиум на сегодня всё. Сейчас ${modelLabel}: ${used}`;
-        if (limit) text += ` / ${limit}`;
+        const exhausted = limitState.exhausted_label || 'Премиум';
+        if (remaining != null) {
+            text = `${exhausted} закончился. ${generationLabel}: ${remaining} / ${limit}`;
+        } else {
+            text = `${exhausted} закончился. ${generationLabel} активна`;
+        }
         els.postLimitBanner.classList.add('warning');
     } else if (state_name === 'premium' || state_name === 'standard' || state_name === 'basic') {
-        text = `${modelLabel}: ${used} / ${limit ?? '∞'}`;
-        if (limit && limit - used <= 2) {
-            els.postLimitBanner.classList.add('warning');
+        if (remaining != null) {
+            text = `${generationLabel}: ${remaining} / ${limit}`;
+            if (remaining <= 2) {
+                els.postLimitBanner.classList.add('warning');
+            }
+        } else {
+            text = `${generationLabel}: без лимита`;
         }
     } else {
         text = 'Готов к работе';
@@ -540,12 +556,59 @@ function toggleStyleInput() {
 
     if (isVisible) {
         wrapper.style.display = 'none';
-        els.postStyleInput.value = '';
-        state.post.styleReferenceText = '';
-        els.postStyleCounter.textContent = '0';
     } else {
         wrapper.style.display = 'flex';
+        if (els.postStyleInput && state.post.styleReferenceText) {
+            els.postStyleInput.value = state.post.styleReferenceText;
+            if (els.postStyleCounter) {
+                els.postStyleCounter.textContent = String(state.post.styleReferenceText.length);
+            }
+        }
         setTimeout(() => els.postStyleInput?.focus(), 100);
+    }
+}
+
+function applyStyleInput() {
+    if (!els.postStyleInput) return;
+    const val = (els.postStyleInput.value || '').trim();
+    state.post.styleReferenceText = val;
+
+    if (els.postStyleApply) {
+        const original = 'Применить';
+        els.postStyleApply.textContent = val ? 'Сохранено ✓' : 'Пусто';
+        els.postStyleApply.classList.toggle('applied', !!val);
+        setTimeout(() => {
+            if (els.postStyleApply) {
+                els.postStyleApply.textContent = original;
+                els.postStyleApply.classList.remove('applied');
+            }
+            if (els.postStyleInputWrapper) {
+                els.postStyleInputWrapper.style.display = 'none';
+            }
+            updateStyleLoadBtnLabel();
+        }, 700);
+    }
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+}
+
+function clearStyleInput() {
+    if (els.postStyleInput) els.postStyleInput.value = '';
+    if (els.postStyleCounter) els.postStyleCounter.textContent = '0';
+    state.post.styleReferenceText = '';
+    updateStyleLoadBtnLabel();
+}
+
+function updateStyleLoadBtnLabel() {
+    if (!els.postStyleLoadBtn) return;
+    const span = els.postStyleLoadBtn.querySelector('span');
+    if (!span) return;
+    if (state.post.styleReferenceText) {
+        span.textContent = 'Пример загружен ✓';
+    } else {
+        const hasChannel = !!state.post.limits?.has_channel;
+        const hasVoice = !!state.post.limits?.has_voice;
+        span.textContent = (hasChannel && !hasVoice) ? 'Настроить стиль' : 'Загрузить пример';
     }
 }
 
@@ -839,6 +902,13 @@ function requestEdit(instruction) {
 }
 
 
+function addEmojiToPost() {
+    if (!state.post.currentPostId) return;
+    const instruction = 'Расставь по тексту уместные эмодзи так, как это делает живой человек в Telegram: не в каждое предложение, а точечно — для усиления эмоции или акцента. Не меняй сам текст, только добавь эмодзи. Не используй эмодзи-списки и не лепи их подряд.';
+    requestEdit(instruction);
+}
+
+
 function showModelPicker() {
     if (!els.modelPickerModal) return;
 
@@ -1064,11 +1134,11 @@ function setupPostEventListeners() {
     }
 
     if (els.postStyleClear) {
-        els.postStyleClear.addEventListener('click', () => {
-            els.postStyleInput.value = '';
-            els.postStyleCounter.textContent = '0';
-            state.post.styleReferenceText = '';
-        });
+        els.postStyleClear.addEventListener('click', clearStyleInput);
+    }
+
+    if (els.postStyleApply) {
+        els.postStyleApply.addEventListener('click', applyStyleInput);
     }
 
     if (els.postGenerateBtn) {
@@ -1126,6 +1196,10 @@ function setupPostEventListeners() {
 
     if (els.postRegenerateBtn) {
         els.postRegenerateBtn.addEventListener('click', regeneratePost);
+    }
+
+    if (els.postEmojiBtn) {
+        els.postEmojiBtn.addEventListener('click', addEmojiToPost);
     }
 
     if (els.modelPickPremium) {

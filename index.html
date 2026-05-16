@@ -262,14 +262,17 @@
                 <label class="post-label" for="post-style-input">Вставь пример поста — подражаю стилю</label>
                 <textarea
                     id="post-style-input"
-                    class="post-topic-textarea"
+                    class="post-style-textarea"
                     placeholder="Вставь сюда чей-то пост или свой — я подстроюсь под этот стиль"
                     maxlength="5000"
                     rows="5"
                 ></textarea>
-                <div class="post-topic-counter">
-                    <span id="post-style-counter-value">0</span> / 5000
-                    <button class="post-style-clear" id="post-style-clear">Очистить</button>
+                <div class="post-style-footer">
+                    <span class="post-style-count"><span id="post-style-counter-value">0</span> / 5000</span>
+                    <div class="post-style-footer-actions">
+                        <button class="post-style-clear" id="post-style-clear">Очистить</button>
+                        <button class="post-style-apply" id="post-style-apply">Применить</button>
+                    </div>
                 </div>
             </div>
 
@@ -362,6 +365,11 @@
                 <div class="result-suggestions-list" id="post-result-suggestions-list"></div>
             </div>
 
+            <button class="result-emoji-btn" id="post-emoji-btn">
+                <i class="ti ti-mood-smile"></i>
+                <span>Добавить эмодзи</span>
+            </button>
+
             <div class="result-custom-edit">
                 <div class="result-section-label">Своя правка</div>
                 <textarea
@@ -409,7 +417,7 @@
                     <i class="ti ti-diamond"></i>
                 </div>
                 <div class="modal-option-body">
-                    <div class="modal-option-title">Премиум модель</div>
+                    <div class="modal-option-title">Премиум генерация</div>
                     <div class="modal-option-subtitle" id="model-pick-premium-meta">Точнее, глубже</div>
                 </div>
             </button>
@@ -419,7 +427,7 @@
                     <i class="ti ti-bolt"></i>
                 </div>
                 <div class="modal-option-body">
-                    <div class="modal-option-title">Стандартная модель</div>
+                    <div class="modal-option-title">Стандарт генерация</div>
                     <div class="modal-option-subtitle" id="model-pick-standard-meta">Быстрее, дешевле</div>
                 </div>
             </button>
