@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://metallica-fda-directions-editors.trycloudflare.com';
+const API_BASE_URL = 'https://wages-what-perl-row.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -27,6 +27,7 @@ const screens = {
     error: document.getElementById('error-screen'),
     dashboard: document.getElementById('dashboard-screen'),
     placeholder: document.getElementById('placeholder-screen'),
+    channels: document.getElementById('channels-screen'),
     postCreate: document.getElementById('post-create-screen'),
     postThinking: document.getElementById('post-thinking-screen'),
     postQuestion: document.getElementById('post-question-screen'),
@@ -53,6 +54,19 @@ const els = {
     placeholderTitle: document.getElementById('placeholder-title'),
     placeholderText: document.getElementById('placeholder-text'),
     placeholderIcon: document.getElementById('placeholder-icon'),
+
+    channelsBack: document.getElementById('channels-back'),
+    channelsLoading: document.getElementById('channels-loading'),
+    channelsBody: document.getElementById('channels-body'),
+    channelsStateEmpty: document.getElementById('channels-state-empty'),
+    channelsStateList: document.getElementById('channels-state-list'),
+    channelsCards: document.getElementById('channels-cards'),
+    channelsBotName: document.getElementById('channels-bot-name'),
+    channelsDemoInput: document.getElementById('channels-demo-input'),
+    channelsDemoBtn: document.getElementById('channels-demo-btn'),
+    channelsDemoError: document.getElementById('channels-demo-error'),
+    channelsDemoResult: document.getElementById('channels-demo-result'),
+    channelsAddMore: document.getElementById('channels-add-more'),
 
     postCreateBack: document.getElementById('post-create-back'),
     postTopicInput: document.getElementById('post-topic-input'),
@@ -369,6 +383,12 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'add_channel') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        openChannels();
+        return;
+    }
+
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
         text: 'Эта функция в разработке.',
@@ -395,6 +415,36 @@ function setupEventListeners() {
     els.placeholderBack.addEventListener('click', () => {
         showScreen('dashboard');
     });
+
+    if (els.channelsBack) {
+        els.channelsBack.addEventListener('click', () => {
+            showScreen('dashboard');
+        });
+    }
+
+    if (els.channelsDemoBtn) {
+        els.channelsDemoBtn.addEventListener('click', runDemoPreview);
+    }
+
+    if (els.channelsDemoInput) {
+        els.channelsDemoInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                runDemoPreview();
+            }
+        });
+    }
+
+    if (els.channelsAddMore) {
+        els.channelsAddMore.addEventListener('click', () => {
+            const ins = document.getElementById('channels-instruction-list');
+            if (ins) {
+                const vis = ins.style.display !== 'none';
+                ins.style.display = vis ? 'none' : '';
+                if (!vis) ins.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
 
     document.querySelectorAll('.drawer-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -617,6 +667,232 @@ function handleConnectChannelHint() {
     closeAllModals();
     handleAction('add_channel');
 }
+
+
+function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+
+function formatSubscribers(n) {
+    if (n == null) return null;
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K';
+    return String(n);
+}
+
+
+async function openChannels() {
+    showScreen('channels');
+
+    if (els.channelsLoading) els.channelsLoading.style.display = '';
+    if (els.channelsBody) els.channelsBody.style.display = 'none';
+    if (els.channelsDemoResult) {
+        els.channelsDemoResult.style.display = 'none';
+        els.channelsDemoResult.innerHTML = '';
+    }
+    if (els.channelsDemoError) els.channelsDemoError.style.display = 'none';
+    if (els.channelsDemoInput) els.channelsDemoInput.value = '';
+
+    try {
+        const data = await apiRequest('/api/v1/channels');
+        state.channels = data;
+        renderChannels(data);
+    } catch (err) {
+        renderChannels({ has_any: false, channels: [], bot_username: 'ForgeMetricsBot' });
+    }
+}
+
+
+function renderChannels(data) {
+    if (els.channelsLoading) els.channelsLoading.style.display = 'none';
+    if (els.channelsBody) els.channelsBody.style.display = '';
+
+    const botName = data.bot_username || 'ForgeMetricsBot';
+    if (els.channelsBotName) els.channelsBotName.textContent = '@' + botName;
+    const botNameList = document.getElementById('channels-bot-name-list');
+    if (botNameList) botNameList.textContent = '@' + botName;
+
+    const hasAny = data.has_any && data.channels && data.channels.length > 0;
+
+    if (!hasAny) {
+        if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = '';
+        if (els.channelsStateList) els.channelsStateList.style.display = 'none';
+        return;
+    }
+
+    if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = 'none';
+    if (els.channelsStateList) els.channelsStateList.style.display = '';
+
+    if (els.channelsCards) {
+        els.channelsCards.innerHTML = data.channels
+            .map(ch => renderChannelCard(ch))
+            .join('');
+    }
+}
+
+
+function renderChannelCard(ch) {
+    const connected = ch.bot_status === 'connected';
+    const title = escapeHtml(ch.title || 'Канал');
+
+    const badge = connected
+        ? `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>Подключён</span></div>`
+        : `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>Только анализ</span></div>`;
+
+    const okIcon = `<i class="ti ti-check"></i> Доступно`;
+    const lockTxt = `<i class="ti ti-lock"></i> Нужен бот-админ`;
+
+    let feats = '';
+    if (connected) {
+        const pub = ch.bot_can_post
+            ? `<span class="channel-card-feat-val ok">${okIcon}</span>`
+            : `<span class="channel-card-feat-val warn">Нет прав на публикацию</span>`;
+        const voice = ch.has_voice
+            ? `<span class="channel-card-feat-val ok">Настроен</span>`
+            : `<span class="channel-card-feat-val warn">Не настроен</span>`;
+        feats = `
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span>${pub}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok">${okIcon}</span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Стиль письма</span>${voice}</div>
+        `;
+    } else {
+        feats = `
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Анализ и стиль</span><span class="channel-card-feat-val ok">${okIcon}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+        `;
+    }
+
+    const warning = connected ? '' : `
+        <div class="channels-demo-warning">
+            <i class="ti ti-flask"></i>
+            <div>
+                <div class="channels-demo-warning-title">Демо-режим</div>
+                <div class="channels-demo-warning-text">Анализ и стиль работают. Для публикации и автопостинга добавь бота админом.</div>
+            </div>
+        </div>`;
+
+    const cta = connected ? '' : `
+        <div class="channels-cta">
+            <div class="channels-cta-text">Хочешь публиковать и автопостить?</div>
+            <button class="channels-cta-btn" onclick="window.__toggleListInstruction&&window.__toggleListInstruction()">Как подключить полностью →</button>
+        </div>`;
+
+    return `
+        ${warning}
+        <div class="channel-card ${connected ? 'connected' : 'demo'}">
+            <div class="channel-card-top">
+                <div class="channel-card-avatar ${connected ? '' : 'demo'}">
+                    <i class="ti ti-brand-telegram"></i>
+                </div>
+                <div class="channel-card-info">
+                    <div class="channel-card-name">${title}</div>
+                    ${badge}
+                </div>
+            </div>
+            <div class="channel-card-feats">${feats}</div>
+        </div>
+        ${cta}
+    `;
+}
+
+
+async function runDemoPreview() {
+    if (!els.channelsDemoInput) return;
+    const raw = (els.channelsDemoInput.value || '').trim();
+
+    if (els.channelsDemoError) els.channelsDemoError.style.display = 'none';
+    if (els.channelsDemoResult) {
+        els.channelsDemoResult.style.display = 'none';
+        els.channelsDemoResult.innerHTML = '';
+    }
+
+    if (!raw) {
+        showDemoError('Введи @username канала');
+        return;
+    }
+
+    if (els.channelsDemoBtn) {
+        els.channelsDemoBtn.disabled = true;
+        els.channelsDemoBtn.textContent = '...';
+    }
+
+    try {
+        const data = await apiRequest('/api/v1/channels/demo-preview', {
+            method: 'POST',
+            body: JSON.stringify({ username: raw }),
+        });
+
+        if (!data.ok) {
+            const map = {
+                invalid_username: 'Не похоже на @username канала. Пример: @durov',
+                not_found: 'Канал не найден или закрыт',
+                private_or_empty: 'Это приватный канал или в нём нет постов. Демо работает только с публичными.',
+                fetch_error: 'Не удалось получить канал. Попробуй позже.',
+            };
+            showDemoError(map[data.error] || 'Не удалось загрузить канал');
+            return;
+        }
+
+        renderDemoPreview(data);
+    } catch (err) {
+        showDemoError('Ошибка соединения. Попробуй ещё раз.');
+    } finally {
+        if (els.channelsDemoBtn) {
+            els.channelsDemoBtn.disabled = false;
+            els.channelsDemoBtn.textContent = 'Анализ';
+        }
+    }
+}
+
+
+function showDemoError(msg) {
+    if (!els.channelsDemoError) return;
+    els.channelsDemoError.textContent = msg;
+    els.channelsDemoError.style.display = '';
+}
+
+
+function renderDemoPreview(data) {
+    if (!els.channelsDemoResult) return;
+
+    const subs = formatSubscribers(data.subscribers);
+    const subLine = subs ? `${subs} подписчиков` : 'Публичный канал';
+
+    const posts = (data.posts || []).slice(0, 3).map(p => {
+        const txt = escapeHtml(p).slice(0, 220);
+        return `<div class="channels-preview-post">${txt}${p.length > 220 ? '…' : ''}</div>`;
+    }).join('');
+
+    els.channelsDemoResult.innerHTML = `
+        <div class="channels-preview-card">
+            <div class="channels-preview-head">
+                <div class="channel-card-avatar demo"><i class="ti ti-brand-telegram"></i></div>
+                <div>
+                    <div class="channels-preview-name">${escapeHtml(data.title || data.username)}</div>
+                    <div class="channels-preview-sub">@${escapeHtml(data.username)} · ${subLine}</div>
+                </div>
+            </div>
+            ${posts || '<div class="channels-preview-sub">Постов для превью не нашлось</div>'}
+        </div>
+    `;
+    els.channelsDemoResult.style.display = '';
+}
+
+
+window.__toggleListInstruction = function () {
+    const ins = document.getElementById('channels-instruction-list');
+    if (ins) {
+        ins.style.display = '';
+        ins.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+};
 
 
 const THINKING_TEXTS_ANALYZE = [
