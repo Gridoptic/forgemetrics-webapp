@@ -207,6 +207,72 @@
         </div>
     </div>
 
+    <div id="channels-screen" class="screen screen-channels" style="display: none;">
+        <div class="channels-header">
+            <button class="channels-back" id="channels-back">
+                <i class="ti ti-arrow-left"></i>
+            </button>
+            <div class="channels-header-title">Мои каналы</div>
+        </div>
+
+        <div class="channels-loading" id="channels-loading">
+            <div class="loading-spinner"></div>
+            <div class="channels-loading-text">Загружаю каналы…</div>
+        </div>
+
+        <div class="channels-body" id="channels-body" style="display: none;">
+
+            <div class="channels-state-empty" id="channels-state-empty" style="display: none;">
+                <div class="channels-empty-icon">
+                    <i class="ti ti-plus"></i>
+                </div>
+                <div class="channels-empty-title">Подключи свой канал</div>
+                <div class="channels-empty-sub">Чтобы публиковать посты и видеть точную статистику</div>
+
+                <div class="channels-instruction">
+                    <div class="channels-instruction-label">Полный доступ</div>
+                    <div class="channels-step">
+                        <div class="channels-step-num">1</div>
+                        <div class="channels-step-text">Открой свой канал → Управление → Администраторы</div>
+                    </div>
+                    <div class="channels-step">
+                        <div class="channels-step-num">2</div>
+                        <div class="channels-step-text">Добавь <span class="channels-bot-name" id="channels-bot-name">@ForgeMetricsBot</span> с правом «Публикация сообщений»</div>
+                    </div>
+                    <div class="channels-step">
+                        <div class="channels-step-num">3</div>
+                        <div class="channels-step-text">Вернись сюда — канал появится автоматически</div>
+                    </div>
+                </div>
+
+                <div class="channels-divider">
+                    <span>или попробовать без подключения</span>
+                </div>
+
+                <div class="channels-demo-box">
+                    <div class="channels-demo-title">Демо-режим</div>
+                    <div class="channels-demo-desc">Вставь @username любого канала — покажу анализ и стиль. Без публикации.</div>
+                    <div class="channels-demo-input-row">
+                        <input type="text" class="channels-demo-input" id="channels-demo-input" placeholder="@channel" autocomplete="off" spellcheck="false">
+                        <button class="channels-demo-btn" id="channels-demo-btn">Анализ</button>
+                    </div>
+                    <div class="channels-demo-error" id="channels-demo-error" style="display: none;"></div>
+                </div>
+
+                <div class="channels-demo-result" id="channels-demo-result" style="display: none;"></div>
+            </div>
+
+            <div class="channels-state-list" id="channels-state-list" style="display: none;">
+                <div class="channels-cards" id="channels-cards"></div>
+                <button class="channels-add-more" id="channels-add-more">
+                    <i class="ti ti-plus"></i>
+                    Подключить ещё канал
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <div id="post-create-screen" class="screen screen-post-create" style="display: none;">
         <header class="post-header">
             <button class="post-back-btn" id="post-create-back">
