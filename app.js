@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://planes-inter-representing-potter.trycloudflare.com';
+const API_BASE_URL = 'https://metallica-fda-directions-editors.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
