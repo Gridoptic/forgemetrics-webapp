@@ -719,10 +719,12 @@ function renderChannels(data) {
     if (botNameList) botNameList.textContent = '@' + botName;
 
     const hasAny = data.has_any && data.channels && data.channels.length > 0;
+    const deleted = data.deleted_channels || [];
 
     if (!hasAny) {
         if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = '';
         if (els.channelsStateList) els.channelsStateList.style.display = 'none';
+        renderDeletedChannels(deleted, true);
         return;
     }
 
@@ -736,6 +738,136 @@ function renderChannels(data) {
     }
 
     renderAddMoreOrLimit(data);
+    renderDeletedChannels(deleted, false);
+    loadChannelAvatars();
+}
+
+
+async function loadChannelAvatars() {
+    const nodes = document.querySelectorAll('[data-avatar-for][data-has-avatar="1"]');
+    for (const node of nodes) {
+        const chId = node.getAttribute('data-avatar-for');
+        if (!chId || node.dataset.avatarLoaded === '1') continue;
+        node.dataset.avatarLoaded = '1';
+        try {
+            const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${chId}/avatar`, {
+                headers: { 'X-Telegram-Init-Data': state.initData || '' },
+            });
+            if (!resp.ok) continue;
+            const blob = await resp.blob();
+            const url = URL.createObjectURL(blob);
+            node.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
+        } catch (e) {
+            // оставляем заглушку-иконку
+        }
+    }
+}
+
+
+function formatCountdown(seconds) {
+    if (seconds <= 0) return 'удаляется...';
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (d > 0) return `${d} дн ${h} ч`;
+    if (h > 0) return `${h} ч ${m} мин`;
+    return `${m} мин`;
+}
+
+
+function renderDeletedChannels(deleted, intoEmpty) {
+    let box = document.getElementById('channels-deleted-box');
+
+    if (!deleted || deleted.length === 0) {
+        if (box) box.style.display = 'none';
+        return;
+    }
+
+    const targetContainer = intoEmpty
+        ? (els.channelsStateEmpty || document.getElementById('channels-state-empty'))
+        : (els.channelsStateList || document.getElementById('channels-state-list'));
+
+    if (!box) {
+        box = document.createElement('div');
+        box.id = 'channels-deleted-box';
+        box.className = 'channels-deleted-box';
+    }
+    if (box.parentNode !== targetContainer && targetContainer) {
+        targetContainer.appendChild(box);
+    }
+
+    const items = deleted.map(ch => {
+        const title = escapeHtml(ch.title || 'Канал');
+        const countdown = formatCountdown(ch.seconds_until_purge);
+        return `
+            <div class="channels-deleted-item">
+                <div class="channels-deleted-info">
+                    <div class="channels-deleted-name">${title}</div>
+                    <div class="channels-deleted-timer">Удалится навсегда через ${countdown}</div>
+                </div>
+                <div class="channels-deleted-actions">
+                    <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">Вернуть</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, '${title.replace(/'/g, "\\'")}')">Удалить навсегда</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    box.innerHTML = `
+        <div class="channels-deleted-label">Недавно удалённые</div>
+        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом удаляются навсегда. Слот тарифа уже свободен.</div>
+        ${items}
+    `;
+    box.style.display = '';
+}
+
+
+window.__channelMenu = function (channelId, title) {
+    const confirmed = confirm(`Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`);
+    if (confirmed) {
+        doSoftDeleteChannel(channelId);
+    }
+};
+
+
+async function doSoftDeleteChannel(channelId) {
+    try {
+        await apiRequest(`/api/v1/channels/${channelId}`, { method: 'DELETE' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await openChannels();
+    } catch (e) {
+        alert('Не удалось удалить канал. Попробуй ещё раз.');
+    }
+}
+
+
+window.__restoreChannel = async function (channelId) {
+    try {
+        await apiRequest(`/api/v1/channels/${channelId}/restore`, { method: 'POST' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await openChannels();
+    } catch (e) {
+        alert('Не удалось восстановить канал.');
+    }
+};
+
+
+window.__purgeChannel = function (channelId, title) {
+    const confirmed = confirm(`Удалить «${title}» НАВСЕГДА?\n\nЭто действие необратимо. Канал нельзя будет вернуть.`);
+    if (confirmed) {
+        doPurgeChannel(channelId);
+    }
+};
+
+
+async function doPurgeChannel(channelId) {
+    try {
+        await apiRequest(`/api/v1/channels/${channelId}/purge`, { method: 'POST' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('warning');
+        await openChannels();
+    } catch (e) {
+        alert('Не удалось удалить канал навсегда.');
+    }
 }
 
 
@@ -846,13 +978,16 @@ function renderChannelCard(ch) {
         ${warning}
         <div class="channel-card ${connected ? 'connected' : 'demo'}">
             <div class="channel-card-top">
-                <div class="channel-card-avatar ${connected ? '' : 'demo'}">
+                <div class="channel-card-avatar ${connected ? '' : 'demo'}" data-avatar-for="${ch.id}" ${ch.has_avatar ? `data-has-avatar="1"` : ''}>
                     <i class="ti ti-brand-telegram"></i>
                 </div>
                 <div class="channel-card-info">
                     <div class="channel-card-name">${title}</div>
                     ${badge}
                 </div>
+                <button class="channel-card-menu" onclick="window.__channelMenu&&window.__channelMenu(${ch.id}, '${title.replace(/'/g, "\\'")}')">
+                    <i class="ti ti-dots-vertical"></i>
+                </button>
             </div>
             <div class="channel-card-feats">${feats}</div>
         </div>
