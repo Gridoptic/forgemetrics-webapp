@@ -2393,3 +2393,52 @@ button:active {
     max-height: 90px;
     overflow: hidden;
 }
+
+.channels-limit-box {
+    background: var(--bg-card);
+    border: 1px solid var(--color-amber-border);
+    border-radius: var(--radius-md);
+    padding: 18px 16px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.channels-limit-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-amber-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+}
+
+.channels-limit-icon i {
+    font-size: 18px;
+    color: var(--color-amber-400);
+}
+
+.channels-limit-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.channels-limit-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.channels-limit-btn {
+    background: var(--color-purple-bg);
+    border: 1px solid var(--color-purple-border);
+    border-radius: var(--radius-sm);
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-purple-400);
+}

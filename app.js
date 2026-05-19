@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://patents-timeline-putting-cedar.trycloudflare.com';
+const API_BASE_URL = 'https://hydrocodone-lou-ltd-integer.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -383,7 +383,7 @@ function handleAction(actionId) {
         return;
     }
 
-    if (actionId === 'add_channel') {
+    if (actionId === 'add_channel' || actionId === 'my_channels') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         openChannels();
         return;
@@ -733,6 +733,64 @@ function renderChannels(data) {
         els.channelsCards.innerHTML = data.channels
             .map(ch => renderChannelCard(ch))
             .join('');
+    }
+
+    renderAddMoreOrLimit(data);
+}
+
+
+const TIER_NAMES = {
+    free: 'Free',
+    trial: 'Trial',
+    light: 'Light',
+    pro: 'Pro',
+    pro_plus: 'Pro+',
+};
+
+
+function renderAddMoreOrLimit(data) {
+    const btn = els.channelsAddMore;
+    if (!btn) return;
+
+    const limit = data.channel_limit || 1;
+    const used = data.channels_used != null ? data.channels_used : (data.channels || []).length;
+    const canAdd = !!data.can_add_more;
+    const tierName = TIER_NAMES[(data.tier || 'free')] || 'Free';
+
+    let limitBox = document.getElementById('channels-limit-box');
+
+    if (canAdd) {
+        btn.style.display = '';
+        if (limitBox) limitBox.style.display = 'none';
+        return;
+    }
+
+    btn.style.display = 'none';
+
+    if (!limitBox) {
+        limitBox = document.createElement('div');
+        limitBox.id = 'channels-limit-box';
+        limitBox.className = 'channels-limit-box';
+        btn.parentNode.insertBefore(limitBox, btn.nextSibling);
+    }
+
+    const nextTierHint = (data.tier === 'free' || data.tier === 'trial' || data.tier === 'light')
+        ? 'Больше каналов — на тарифе Pro'
+        : 'Это максимум для твоего тарифа';
+
+    limitBox.innerHTML = `
+        <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
+        <div class="channels-limit-title">Лимит каналов: ${used} из ${limit}</div>
+        <div class="channels-limit-sub">Тариф ${escapeHtml(tierName)}. ${nextTierHint}</div>
+        <button class="channels-limit-btn" id="channels-limit-btn">Подробнее о Pro</button>
+    `;
+    limitBox.style.display = '';
+
+    const lb = document.getElementById('channels-limit-btn');
+    if (lb) {
+        lb.addEventListener('click', () => {
+            handleAction('profile');
+        });
     }
 }
 
