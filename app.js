@@ -434,6 +434,13 @@ function setupEventListeners() {
         });
     }
 
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('.channels-bot-name');
+        if (target) {
+            copyBotNameToClipboard(target);
+        }
+    });
+
     if (els.channelsDemoBtn) {
         els.channelsDemoBtn.addEventListener('click', runDemoPreview);
     }
@@ -678,6 +685,67 @@ function updateStyleLoadBtnLabel() {
 function handleConnectChannelHint() {
     closeAllModals();
     handleAction('add_channel');
+}
+
+
+function copyBotNameToClipboard(el) {
+    const text = (el.textContent || '').trim();
+    if (!text) return;
+
+    const finish = (ok) => {
+        if (tg?.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred?.(ok ? 'success' : 'error');
+        }
+        showCopyToast(ok ? 'Скопировано: ' + text : 'Не удалось скопировать');
+        if (ok) {
+            el.classList.add('channels-bot-name--copied');
+            setTimeout(() => el.classList.remove('channels-bot-name--copied'), 600);
+        }
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+            .then(() => finish(true))
+            .catch(() => fallbackCopy(text, finish));
+    } else {
+        fallbackCopy(text, finish);
+    }
+}
+
+
+function fallbackCopy(text, finish) {
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.setAttribute('readonly', '');
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        finish(!!ok);
+    } catch (e) {
+        finish(false);
+    }
+}
+
+
+let _copyToastTimer = null;
+function showCopyToast(message) {
+    let toast = document.getElementById('copy-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'copy-toast';
+        toast.className = 'copy-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('copy-toast--visible');
+    if (_copyToastTimer) clearTimeout(_copyToastTimer);
+    _copyToastTimer = setTimeout(() => {
+        toast.classList.remove('copy-toast--visible');
+    }, 1600);
 }
 
 

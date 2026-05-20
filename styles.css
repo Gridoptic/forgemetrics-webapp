@@ -2548,3 +2548,52 @@ button:active {
     border-color: var(--color-amber-border);
     color: var(--color-amber-400);
 }
+
+.channels-bot-name {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 4px;
+    padding: 0 3px;
+    margin: 0 -3px;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.channels-bot-name:active {
+    background: var(--color-purple-bg);
+    transform: scale(0.97);
+}
+
+.channels-bot-name--copied {
+    background: var(--color-green-bg);
+    color: var(--color-green-400) !important;
+}
+
+.copy-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(20, 22, 35, 0.95);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10000;
+    transition: opacity 0.2s ease, transform 0.25s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-width: calc(100% - 32px);
+    text-align: center;
+}
+
+.copy-toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
