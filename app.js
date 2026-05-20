@@ -220,6 +220,17 @@ async function loadDashboard() {
 }
 
 
+async function refreshDashboardSilent() {
+    try {
+        const data = await apiRequest('/api/v1/user/dashboard');
+        state.dashboard = data;
+        renderDashboard(data);
+    } catch (e) {
+        // Тихо: пользователь не на дашборде, не нужно показывать ошибку
+    }
+}
+
+
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
@@ -419,6 +430,7 @@ function setupEventListeners() {
     if (els.channelsBack) {
         els.channelsBack.addEventListener('click', () => {
             showScreen('dashboard');
+            refreshDashboardSilent();
         });
     }
 
@@ -835,6 +847,7 @@ async function doSoftDeleteChannel(channelId) {
         await apiRequest(`/api/v1/channels/${channelId}`, { method: 'DELETE' });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
         await openChannels();
+        refreshDashboardSilent();
     } catch (e) {
         alert('Не удалось удалить канал. Попробуй ещё раз.');
     }
@@ -846,6 +859,7 @@ window.__restoreChannel = async function (channelId) {
         await apiRequest(`/api/v1/channels/${channelId}/restore`, { method: 'POST' });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
         await openChannels();
+        refreshDashboardSilent();
     } catch (e) {
         alert('Не удалось восстановить канал.');
     }
@@ -865,6 +879,7 @@ async function doPurgeChannel(channelId) {
         await apiRequest(`/api/v1/channels/${channelId}/purge`, { method: 'POST' });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('warning');
         await openChannels();
+        refreshDashboardSilent();
     } catch (e) {
         alert('Не удалось удалить канал навсегда.');
     }
