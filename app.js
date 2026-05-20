@@ -803,11 +803,11 @@ function renderDeletedChannels(deleted, intoEmpty) {
             <div class="channels-deleted-item">
                 <div class="channels-deleted-info">
                     <div class="channels-deleted-name">${title}</div>
-                    <div class="channels-deleted-timer">Удалится навсегда через ${countdown}</div>
+                    <div class="channels-deleted-timer">Будет стёрт из системы через ${countdown}</div>
                 </div>
                 <div class="channels-deleted-actions">
                     <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">Вернуть</button>
-                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, '${title.replace(/'/g, "\\'")}')">Удалить навсегда</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, '${title.replace(/'/g, "\\'")}')">Удалить полностью</button>
                 </div>
             </div>
         `;
@@ -815,7 +815,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
 
     box.innerHTML = `
         <div class="channels-deleted-label">Недавно удалённые</div>
-        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом удаляются навсегда. Слот тарифа уже свободен.</div>
+        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом стираются из системы. Слот тарифа уже свободен. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.</div>
         ${items}
     `;
     box.style.display = '';
@@ -853,7 +853,7 @@ window.__restoreChannel = async function (channelId) {
 
 
 window.__purgeChannel = function (channelId, title) {
-    const confirmed = confirm(`Удалить «${title}» НАВСЕГДА?\n\nЭто действие необратимо. Канал нельзя будет вернуть.`);
+    const confirmed = confirm(`Удалить «${title}» из списка полностью?\n\nКанал и его настройки (стиль, метрики, аналитика) будут стёрты. Если снова добавишь бота админом в этот канал — он подключится заново, но настроится с нуля.`);
     if (confirmed) {
         doPurgeChannel(channelId);
     }
