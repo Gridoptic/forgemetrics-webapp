@@ -429,6 +429,7 @@ function setupEventListeners() {
 
     if (els.channelsBack) {
         els.channelsBack.addEventListener('click', () => {
+            stopVoicePolling();
             showScreen('dashboard');
             refreshDashboardSilent();
         });
@@ -688,6 +689,34 @@ function handleConnectChannelHint() {
 }
 
 
+function confirmDialog(message, okText) {
+    return new Promise((resolve) => {
+        if (tg && typeof tg.showConfirm === 'function') {
+            try {
+                tg.showConfirm(message, (ok) => resolve(!!ok));
+                return;
+            } catch (e) {}
+        }
+        const result = window.confirm(message);
+        resolve(!!result);
+    });
+}
+
+
+function alertDialog(message) {
+    return new Promise((resolve) => {
+        if (tg && typeof tg.showAlert === 'function') {
+            try {
+                tg.showAlert(message, () => resolve());
+                return;
+            } catch (e) {}
+        }
+        window.alert(message);
+        resolve();
+    });
+}
+
+
 function copyBotNameToClipboard(el) {
     const text = (el.textContent || '').trim();
     if (!text) return;
@@ -817,9 +846,49 @@ function renderChannels(data) {
             .join('');
     }
 
+    renderConnectionLimitsBanner(data.connection_limits);
     renderAddMoreOrLimit(data);
     renderDeletedChannels(deleted, false);
     loadChannelAvatars();
+
+    const hasCollecting = (data.channels || []).some(c => c.voice_status === 'collecting');
+    if (hasCollecting) {
+        startVoicePollingIfNeeded();
+    } else {
+        stopVoicePolling();
+    }
+}
+
+
+function renderConnectionLimitsBanner(limits) {
+    let banner = document.getElementById('channels-conn-limits');
+
+    if (!limits || limits.is_tester) {
+        if (banner) banner.style.display = 'none';
+        return;
+    }
+
+    const container = els.channelsStateList || document.getElementById('channels-state-list');
+    if (!container) return;
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'channels-conn-limits';
+        banner.className = 'channels-conn-limits';
+        container.insertBefore(banner, container.firstChild);
+    } else if (banner.parentNode !== container) {
+        container.insertBefore(banner, container.firstChild);
+    }
+
+    const daysTxt = (limits.days_until_reset === null || limits.days_until_reset === undefined)
+        ? ''
+        : ` · обновится через ${limits.days_until_reset} дн`;
+
+    banner.innerHTML = `
+        <span class="channels-conn-limits-num">${limits.used} из ${limits.limit}</span>
+        <span class="channels-conn-limits-txt">подключений в этом периоде${daysTxt}</span>
+    `;
+    banner.style.display = '';
 }
 
 
@@ -902,12 +971,46 @@ function renderDeletedChannels(deleted, intoEmpty) {
 }
 
 
-window.__channelMenu = function (channelId, title) {
-    const confirmed = confirm(`Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`);
-    if (confirmed) {
-        doSoftDeleteChannel(channelId);
+window.__channelMenu = async function (channelId, title) {
+    const action = await showChannelMenuPopup(title);
+    if (action === 'refresh_voice') {
+        window.__refreshVoice(channelId, title);
+    } else if (action === 'delete') {
+        const confirmed = await confirmDialog(
+            `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`
+        );
+        if (confirmed) {
+            doSoftDeleteChannel(channelId);
+        }
     }
 };
+
+
+function showChannelMenuPopup(title) {
+    return new Promise((resolve) => {
+        if (tg && typeof tg.showPopup === 'function') {
+            try {
+                tg.showPopup({
+                    title: title,
+                    message: 'Что сделать с каналом?',
+                    buttons: [
+                        { id: 'refresh_voice', type: 'default', text: 'Обновить стиль' },
+                        { id: 'delete', type: 'destructive', text: 'Удалить' },
+                        { id: 'cancel', type: 'cancel' },
+                    ],
+                }, (id) => resolve(id || 'cancel'));
+                return;
+            } catch (e) {}
+        }
+        const answer = window.prompt(
+            `Канал «${title}»\n\nВведи:\n  1 — Обновить стиль\n  2 — Удалить`,
+            ''
+        );
+        if (answer === '1') resolve('refresh_voice');
+        else if (answer === '2') resolve('delete');
+        else resolve('cancel');
+    });
+}
 
 
 async function doSoftDeleteChannel(channelId) {
@@ -917,7 +1020,7 @@ async function doSoftDeleteChannel(channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        alert('Не удалось удалить канал. Попробуй ещё раз.');
+        await alertDialog('Не удалось удалить канал. Попробуй ещё раз.');
     }
 }
 
@@ -929,13 +1032,15 @@ window.__restoreChannel = async function (channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        alert('Не удалось восстановить канал.');
+        await alertDialog('Не удалось восстановить канал.');
     }
 };
 
 
-window.__purgeChannel = function (channelId, title) {
-    const confirmed = confirm(`Удалить «${title}» из списка полностью?\n\nКанал и его настройки (стиль, метрики, аналитика) будут стёрты. Если снова добавишь бота админом в этот канал — он подключится заново, но настроится с нуля.`);
+window.__purgeChannel = async function (channelId, title) {
+    const confirmed = await confirmDialog(
+        `Удалить «${title}» из списка полностью?\n\nКанал и его настройки (стиль, метрики, аналитика) будут стёрты. Если снова добавишь бота админом в этот канал — он подключится заново, но настроится с нуля.`
+    );
     if (confirmed) {
         doPurgeChannel(channelId);
     }
@@ -949,9 +1054,28 @@ async function doPurgeChannel(channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        alert('Не удалось удалить канал навсегда.');
+        await alertDialog('Не удалось удалить канал навсегда.');
     }
 }
+
+
+window.__refreshVoice = async function (channelId, title) {
+    const confirmed = await confirmDialog(
+        `Пересобрать стиль канала «${title}»?\n\nЭто потратит 1 премиум-вызов из дневного лимита.`
+    );
+    if (!confirmed) return;
+    try {
+        await apiRequest(`/api/v1/channels/${channelId}/voice/refresh`, { method: 'POST' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await openChannels();
+        startVoicePollingIfNeeded();
+    } catch (e) {
+        const msg = (e?.message || '').includes('429')
+            ? 'Дневной лимит постов исчерпан. Стиль можно будет обновить завтра.'
+            : 'Не удалось обновить стиль. Попробуй позже.';
+        await alertDialog(msg);
+    }
+};
 
 
 const TIER_NAMES = {
@@ -1010,6 +1134,79 @@ function renderAddMoreOrLimit(data) {
 }
 
 
+function renderVoiceStatus(ch) {
+    const status = ch.voice_status || 'idle';
+    const quality = ch.voice_quality;
+    const n = ch.voice_posts_analyzed || 0;
+
+    if (status === 'collecting') {
+        return `<span class="channel-card-feat-val voice-collecting"><span class="voice-pulse-dot"></span>Настраивается...</span>`;
+    }
+
+    if (status === 'done' && quality === 'full') {
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Настроен</span>`;
+    }
+
+    if (status === 'done' && quality === 'weak') {
+        return `<span class="channel-card-feat-val warn">Слабый — мало материала</span>`;
+    }
+
+    if (status === 'failed' && quality === 'private') {
+        return `<span class="channel-card-feat-val warn">Приватный — загрузи примеры</span>`;
+    }
+
+    if (status === 'failed' && quality === 'no_text') {
+        return `<span class="channel-card-feat-val warn">Нет текста в постах</span>`;
+    }
+
+    if (status === 'failed' && quality === 'no_posts') {
+        return `<span class="channel-card-feat-val warn">Постов пока нет</span>`;
+    }
+
+    if (status === 'pending') {
+        return `<span class="channel-card-feat-val warn">Соберём при обновлении лимита</span>`;
+    }
+
+    if (ch.has_voice) {
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Настроен</span>`;
+    }
+
+    return `<span class="channel-card-feat-val warn">Не настроен</span>`;
+}
+
+
+let _voicePollTimer = null;
+
+function startVoicePollingIfNeeded() {
+    if (_voicePollTimer) return;
+    _voicePollTimer = setInterval(async () => {
+        try {
+            const data = await apiRequest('/api/v1/channels');
+            const hasCollecting = (data.channels || []).some(c => c.voice_status === 'collecting');
+            if (els.channelsCards) {
+                els.channelsCards.innerHTML = (data.channels || []).map(renderChannelCard).join('');
+                loadChannelAvatars();
+            }
+            if (!hasCollecting) {
+                clearInterval(_voicePollTimer);
+                _voicePollTimer = null;
+            }
+        } catch (e) {
+            clearInterval(_voicePollTimer);
+            _voicePollTimer = null;
+        }
+    }, 5000);
+}
+
+
+function stopVoicePolling() {
+    if (_voicePollTimer) {
+        clearInterval(_voicePollTimer);
+        _voicePollTimer = null;
+    }
+}
+
+
 function renderChannelCard(ch) {
     const connected = ch.bot_status === 'connected';
     const title = escapeHtml(ch.title || 'Канал');
@@ -1026,9 +1223,7 @@ function renderChannelCard(ch) {
         const pub = ch.bot_can_post
             ? `<span class="channel-card-feat-val ok">${okIcon}</span>`
             : `<span class="channel-card-feat-val warn">Нет прав на публикацию</span>`;
-        const voice = ch.has_voice
-            ? `<span class="channel-card-feat-val ok">Настроен</span>`
-            : `<span class="channel-card-feat-val warn">Не настроен</span>`;
+        const voice = renderVoiceStatus(ch);
         feats = `
             <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span>${pub}</div>
             <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok">${okIcon}</span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>

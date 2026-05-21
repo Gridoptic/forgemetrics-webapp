@@ -2597,3 +2597,52 @@ button:active {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
+
+.voice-collecting {
+    color: var(--text-tertiary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    animation: voice-pulse-text 1.6s ease-in-out infinite;
+}
+
+.voice-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-purple-400);
+    animation: voice-pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes voice-pulse-text {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes voice-pulse-dot {
+    0%, 100% { opacity: 0.4; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+.channels-conn-limits {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+
+.channels-conn-limits-num {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.channels-conn-limits-txt {
+    color: var(--text-tertiary);
+}
