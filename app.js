@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://randy-pencil-methods-lectures.trycloudflare.com';
+const API_BASE_URL = 'https://apparatus-rural-statistics-denver.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
