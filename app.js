@@ -535,52 +535,64 @@ async function openPostCreate() {
 
 
 function renderLimitBanner(limits) {
-    if (!els.postLimitBanner || !els.postLimitText) return;
+    if (!els.postLimitBanner) return;
 
     els.postLimitBanner.classList.remove('exhausted', 'warning');
-    const limitState = limits.limit_state || {};
-    const state_name = limitState.state;
 
-    if (state_name === 'exhausted') {
-        els.postLimitText.textContent = 'Лимиты на сегодня закончились';
-        els.postLimitBanner.classList.add('exhausted');
-        els.postGenerateBtn.disabled = true;
+    const bars = limits.bars || [];
+    const limitState = limits.limit_state || {};
+
+    if (bars.length === 0) {
+        if (els.postLimitText) els.postLimitText.textContent = '';
+        els.postLimitBanner.innerHTML = '';
         return;
     }
 
-    let text = '';
-    const used = limitState.used ?? 0;
-    const limit = limitState.limit;
-    const modelLabel = limitState.model_label || 'Базовая';
-    const generationLabel = `${modelLabel} генерация`;
-    const remaining = (limit != null) ? Math.max(0, limit - used) : null;
-
-    if (state_name === 'premium_exhausted_standard_active') {
-        const exhausted = limitState.exhausted_label || 'Премиум';
-        if (remaining != null) {
-            text = `${exhausted} закончился. ${generationLabel}: ${remaining} / ${limit}`;
-        } else {
-            text = `${exhausted} закончился. ${generationLabel} активна`;
-        }
-        els.postLimitBanner.classList.add('warning');
-    } else if (state_name === 'premium' || state_name === 'standard' || state_name === 'basic') {
-        if (remaining != null) {
-            text = `${generationLabel}: ${remaining} / ${limit}`;
-            if (remaining <= 2) {
-                els.postLimitBanner.classList.add('warning');
-            }
-        } else {
-            text = `${generationLabel}: без лимита`;
-        }
+    const allExhausted = bars.every(b => b.limit !== null && b.used >= b.limit && !b.is_tester);
+    if (allExhausted) {
+        els.postLimitBanner.classList.add('exhausted');
+        if (els.postGenerateBtn) els.postGenerateBtn.disabled = true;
     } else {
-        text = 'Готов к работе';
+        if (els.postTopicInput && els.postTopicInput.value.trim().length > 0 && els.postGenerateBtn) {
+            els.postGenerateBtn.disabled = false;
+        }
     }
 
-    els.postLimitText.textContent = text;
+    els.postLimitBanner.innerHTML = bars.map(b => {
+        const limit = b.limit;
+        const used = b.used || 0;
+        const safeLimit = (limit == null || limit === 0) ? 1 : limit;
+        const remaining = (limit == null) ? null : Math.max(0, limit - used);
+        const exhausted = (limit != null) && (used >= limit) && !b.is_tester;
+        const percent = exhausted ? 0 : (limit == null ? 100 : Math.max(0, Math.min(100, Math.round((remaining / safeLimit) * 100))));
 
-    if (els.postTopicInput && els.postTopicInput.value.trim().length > 0) {
-        els.postGenerateBtn.disabled = false;
-    }
+        const testerNote = b.is_tester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
+        const timerTxt = (exhausted && b.seconds_until_reset)
+            ? `<span class="limit-row-timer">${formatRemainingTime(b.seconds_until_reset)}</span>`
+            : '';
+
+        const countTxt = (limit == null)
+            ? `<span class="limit-row-count">${used}<span class="limit-row-count-total"></span></span>`
+            : `<span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>`;
+
+        const rowClass = exhausted
+            ? `limit-row limit-row-${b.color} limit-row-exhausted`
+            : `limit-row limit-row-${b.color}`;
+        const iconKey = (b.key === 'premium') ? 'diamond' : (b.key === 'standard' ? 'edit' : 'sparkles');
+
+        return `
+            <div class="${rowClass}">
+                <div class="limit-row-head">
+                    <span class="limit-row-icon"><i class="ti ti-${iconKey}"></i></span>
+                    <span class="limit-row-label">${b.label}</span>
+                    ${testerNote}
+                    ${countTxt}
+                </div>
+                <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
+                ${timerTxt}
+            </div>
+        `;
+    }).join('');
 }
 
 
@@ -846,7 +858,7 @@ function renderChannels(data) {
             .join('');
     }
 
-    renderConnectionLimitsBanner(data.connection_limits);
+    renderConnectionLimitsBanner(data.connection_limits, data.voice_refresh_limits);
     renderAddMoreOrLimit(data);
     renderDeletedChannels(deleted, false);
     loadChannelAvatars();
@@ -860,10 +872,10 @@ function renderChannels(data) {
 }
 
 
-function renderConnectionLimitsBanner(limits) {
-    let banner = document.getElementById('channels-conn-limits');
+function renderConnectionLimitsBanner(connLimits, voiceRefreshLimits) {
+    let banner = document.getElementById('channels-limits-card');
 
-    if (!limits || limits.is_tester) {
+    if (!connLimits) {
         if (banner) banner.style.display = 'none';
         return;
     }
@@ -873,22 +885,77 @@ function renderConnectionLimitsBanner(limits) {
 
     if (!banner) {
         banner = document.createElement('div');
-        banner.id = 'channels-conn-limits';
-        banner.className = 'channels-conn-limits';
+        banner.id = 'channels-limits-card';
+        banner.className = 'channels-limits-card';
         container.insertBefore(banner, container.firstChild);
     } else if (banner.parentNode !== container) {
         container.insertBefore(banner, container.firstChild);
     }
 
-    const daysTxt = (limits.days_until_reset === null || limits.days_until_reset === undefined)
-        ? ''
-        : ` · обновится через ${limits.days_until_reset} дн`;
-
     banner.innerHTML = `
-        <span class="channels-conn-limits-num">${limits.used} из ${limits.limit}</span>
-        <span class="channels-conn-limits-txt">подключений в этом периоде${daysTxt}</span>
+        ${renderLimitRow({
+            icon: 'plug-connected',
+            label: 'Подключений в месяц',
+            used: connLimits.used,
+            limit: connLimits.limit,
+            seconds_until_reset: connLimits.seconds_until_reset,
+            color: 'purple',
+            available: true,
+            isTester: connLimits.is_tester,
+        })}
+        ${renderLimitRow({
+            icon: 'refresh',
+            label: 'Обновлений стиля',
+            used: voiceRefreshLimits ? voiceRefreshLimits.used : 0,
+            limit: voiceRefreshLimits ? voiceRefreshLimits.limit : 0,
+            seconds_until_reset: voiceRefreshLimits ? voiceRefreshLimits.seconds_until_reset : null,
+            color: 'green',
+            available: voiceRefreshLimits ? voiceRefreshLimits.available_on_tier : false,
+            isTester: voiceRefreshLimits ? voiceRefreshLimits.is_tester : false,
+            lockedHint: 'Доступно на платных тарифах',
+        })}
     `;
     banner.style.display = '';
+}
+
+
+function renderLimitRow({ icon, label, used, limit, seconds_until_reset, color, available, isTester, lockedHint }) {
+    if (!available) {
+        return `
+            <div class="limit-row limit-row-locked">
+                <div class="limit-row-head">
+                    <span class="limit-row-icon"><i class="ti ti-lock"></i></span>
+                    <span class="limit-row-label">${label}</span>
+                    <span class="limit-row-hint">${lockedHint || ''}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    const safeLimit = Math.max(1, limit);
+    const remaining = Math.max(0, limit - used);
+    const exhausted = used >= limit && !isTester;
+    const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / safeLimit) * 100)));
+
+    const testerNote = isTester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
+    const timerTxt = (exhausted && seconds_until_reset)
+        ? `<span class="limit-row-timer">${formatRemainingTime(seconds_until_reset)}</span>`
+        : '';
+
+    const rowClass = exhausted ? `limit-row limit-row-${color} limit-row-exhausted` : `limit-row limit-row-${color}`;
+
+    return `
+        <div class="${rowClass}">
+            <div class="limit-row-head">
+                <span class="limit-row-icon"><i class="ti ti-${icon}"></i></span>
+                <span class="limit-row-label">${label}</span>
+                ${testerNote}
+                <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>
+            </div>
+            <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
+            ${timerTxt}
+        </div>
+    `;
 }
 
 
@@ -1798,6 +1865,32 @@ function hideLockedFeatureModal() {
 function closeAllModals() {
     hideModelPicker();
     hideLockedFeatureModal();
+}
+
+
+function formatRemainingTime(seconds) {
+    if (seconds === null || seconds === undefined) return '';
+    if (seconds <= 0) return 'сейчас';
+
+    if (seconds >= 86400) {
+        const days = Math.ceil(seconds / 86400);
+        const word = days === 1 ? 'день' : (days >= 2 && days <= 4 ? 'дня' : 'дней');
+        return `через ${days} ${word}`;
+    }
+
+    if (seconds >= 3600) {
+        const hours = Math.ceil(seconds / 3600);
+        const word = hours === 1 ? 'час' : (hours >= 2 && hours <= 4 ? 'часа' : 'часов');
+        return `через ${hours} ${word}`;
+    }
+
+    if (seconds >= 60) {
+        const minutes = Math.ceil(seconds / 60);
+        const word = minutes === 1 ? 'минуту' : (minutes >= 2 && minutes <= 4 ? 'минуты' : 'минут');
+        return `через ${minutes} ${word}`;
+    }
+
+    return 'через минуту';
 }
 
 
