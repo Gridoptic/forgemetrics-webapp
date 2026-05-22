@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://exam-pair-johns-direction.trycloudflare.com';
+const API_BASE_URL = 'https://presents-src-cards-crest.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
