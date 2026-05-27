@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://presents-src-cards-crest.trycloudflare.com';
+const API_BASE_URL = 'https://contacting-martial-moore-twelve.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -1321,7 +1321,7 @@ function renderChannelCard(ch) {
 
     return `
         ${warning}
-        <div class="channel-card ${connected ? 'connected' : 'demo'}">
+        <div class="channel-card ${connected ? 'connected' : 'demo'}" onclick="window.__openChannelSettings&&window.__openChannelSettings(${ch.id})">
             <div class="channel-card-top">
                 <div class="channel-card-avatar ${connected ? '' : 'demo'}" data-avatar-for="${ch.id}" ${ch.has_avatar ? `data-has-avatar="1"` : ''}>
                     <i class="ti ti-brand-telegram"></i>
@@ -1330,7 +1330,7 @@ function renderChannelCard(ch) {
                     <div class="channel-card-name">${title}</div>
                     ${badge}
                 </div>
-                <button class="channel-card-menu" onclick="window.__channelMenu&&window.__channelMenu(${ch.id}, '${title.replace(/'/g, "\\'")}')">
+                <button class="channel-card-menu" onclick="event.stopPropagation();window.__channelMenu&&window.__channelMenu(${ch.id}, '${title.replace(/'/g, "\\'")}')">
                     <i class="ti ti-dots-vertical"></i>
                 </button>
             </div>
@@ -1338,6 +1338,608 @@ function renderChannelCard(ch) {
         </div>
         ${cta}
     `;
+}
+
+
+window.__openChannelSettings = async function (channelId) {
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+    await openChannelSettingsScreen(channelId);
+};
+
+
+let _settingsState = { channelId: null, data: null, eventsExpanded: false };
+
+
+async function openChannelSettingsScreen(channelId) {
+    _settingsState.channelId = channelId;
+    _settingsState.data = null;
+    _settingsState.eventsExpanded = false;
+
+    let host = document.getElementById('channel-settings-screen');
+    if (!host) {
+        host = document.createElement('div');
+        host.id = 'channel-settings-screen';
+        host.className = 'screen channel-settings-screen';
+        document.body.appendChild(host);
+    }
+
+    host.innerHTML = `
+        <div class="channel-settings-loading">
+            <div class="spinner"></div>
+            <div>Загружаю настройки канала...</div>
+        </div>
+    `;
+    host.style.display = 'flex';
+
+    if (tg?.BackButton) {
+        try {
+            tg.BackButton.show();
+            tg.BackButton.onClick(closeChannelSettings);
+        } catch (e) {}
+    }
+
+    try {
+        const data = await apiRequest(`/api/v1/channels/${channelId}/details`);
+        _settingsState.data = data;
+        renderChannelSettingsScreen(data);
+    } catch (e) {
+        host.innerHTML = `
+            <div class="channel-settings-loading">
+                <i class="ti ti-alert-triangle" style="font-size: 28px; color: #F0997B;"></i>
+                <div>Не удалось загрузить настройки</div>
+                <button class="btn-secondary" onclick="closeChannelSettings()">Назад</button>
+            </div>
+        `;
+    }
+}
+
+
+function closeChannelSettings() {
+    const host = document.getElementById('channel-settings-screen');
+    if (host) host.style.display = 'none';
+    if (tg?.BackButton) {
+        try { tg.BackButton.hide(); } catch (e) {}
+    }
+    _settingsState.channelId = null;
+    _settingsState.data = null;
+}
+
+
+function renderChannelSettingsScreen(data) {
+    const host = document.getElementById('channel-settings-screen');
+    if (!host) return;
+
+    const title = escapeHtml(data.title || 'Канал');
+    const usernameLine = data.is_private
+        ? 'приватный'
+        : (data.username ? `@${escapeHtml(data.username)}` : '');
+    const connectedDate = data.connected_at ? formatConnectedDate(data.connected_at) : '';
+    const subline = [usernameLine, connectedDate].filter(Boolean).join(' · ');
+
+    const avatarHtml = data.has_avatar
+        ? `<div class="cs-avatar" data-avatar-for-cs="${data.id}"><i class="ti ti-brand-telegram"></i></div>`
+        : (data.is_private
+            ? `<div class="cs-avatar cs-avatar-private"><i class="ti ti-lock"></i></div>`
+            : `<div class="cs-avatar cs-avatar-letters">${escapeHtml(getInitials(data.title || 'К'))}</div>`);
+
+    host.innerHTML = `
+        <div class="cs-header">
+            <button class="cs-back" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i></button>
+            ${avatarHtml}
+            <div class="cs-title-block">
+                <div class="cs-title">${title}</div>
+                ${subline ? `<div class="cs-subtitle">${subline}</div>` : ''}
+            </div>
+        </div>
+
+        ${renderSettingsLimitsBar(data.voice_refresh_limits)}
+        ${renderSettingsVoiceSection(data)}
+        ${renderSettingsExamplesSection(data)}
+        ${renderSettingsBehaviorSection(data)}
+        ${renderSettingsHistorySection(data)}
+        ${renderSettingsDangerZone(data)}
+    `;
+
+    if (data.has_avatar) {
+        loadChannelSettingsAvatar(data.id);
+    }
+    attachSettingsHandlers();
+}
+
+
+function renderSettingsLimitsBar(limits) {
+    if (!limits) return '';
+    const used = limits.used || 0;
+    const limit = Math.max(1, limits.limit || 0);
+    const remaining = Math.max(0, limits.limit - used);
+    const exhausted = (limits.limit > 0) && (used >= limits.limit) && !limits.is_tester;
+    const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / limit) * 100)));
+    const testerNote = limits.is_tester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
+    const timerTxt = (exhausted && limits.seconds_until_reset)
+        ? `<span class="limit-row-timer">${formatRemainingTime(limits.seconds_until_reset)}</span>`
+        : '';
+
+    return `
+        <div class="cs-limits-bar limit-row limit-row-green ${exhausted ? 'limit-row-exhausted' : ''}">
+            <div class="limit-row-head">
+                <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
+                <span class="limit-row-label">Обновлений стиля</span>
+                ${testerNote}
+                <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limits.limit} в мес</span></span>
+            </div>
+            <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
+            ${timerTxt}
+        </div>
+    `;
+}
+
+
+function renderSettingsVoiceSection(data) {
+    const status = data.voice_status || 'idle';
+    const quality = data.voice_quality;
+    const hasVoice = !!data.voice_summary;
+    const postsAnalyzed = data.voice_posts_analyzed || 0;
+
+    let statusBadge = '';
+    let bodyHtml = '';
+
+    if (hasVoice && status === 'done') {
+        const qualityLabel = quality === 'full'
+            ? `${postsAnalyzed} постов · качественно`
+            : `${postsAnalyzed} постов · слабый стиль`;
+        statusBadge = `
+            <div class="cs-status-line cs-status-ok">
+                <i class="ti ti-circle-check"></i>
+                <span>Стиль настроен</span>
+                <span class="cs-status-meta">${qualityLabel}</span>
+            </div>
+        `;
+        bodyHtml = `
+            <div class="cs-voice-card">
+                <div class="cs-voice-text" id="cs-voice-text">${escapeHtml(data.voice_summary)}</div>
+                <div class="cs-voice-actions">
+                    <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> Изменить</button>
+                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> Пересобрать</button>
+                </div>
+            </div>
+        `;
+    } else if (status === 'collecting') {
+        statusBadge = `
+            <div class="cs-status-line cs-status-collecting">
+                <span class="voice-pulse-dot"></span>
+                <span>Стиль собирается...</span>
+            </div>
+        `;
+    } else if (status === 'failed' && quality === 'private') {
+        statusBadge = `
+            <div class="cs-status-line cs-status-warn">
+                <i class="ti ti-alert-triangle"></i>
+                <div>
+                    <div class="cs-status-warn-title">Стиль не настроен</div>
+                    <div class="cs-status-warn-text">Канал приватный — я не могу прочитать историю. Загрузи 3-5 примеров постов чтобы AI понял твой стиль.</div>
+                </div>
+            </div>
+        `;
+    } else if (status === 'failed' && quality === 'no_posts') {
+        statusBadge = `
+            <div class="cs-status-line cs-status-warn">
+                <i class="ti ti-alert-triangle"></i>
+                <div>
+                    <div class="cs-status-warn-title">Постов пока нет</div>
+                    <div class="cs-status-warn-text">В канале нет постов для анализа. Опубликуй несколько постов и нажми «Пересобрать», или загрузи примеры вручную.</div>
+                </div>
+            </div>
+        `;
+    } else if (status === 'failed') {
+        statusBadge = `
+            <div class="cs-status-line cs-status-warn">
+                <i class="ti ti-alert-triangle"></i>
+                <div>
+                    <div class="cs-status-warn-title">Не удалось настроить стиль</div>
+                    <div class="cs-status-warn-text">Попробуй загрузить примеры вручную.</div>
+                </div>
+            </div>
+        `;
+    } else {
+        statusBadge = `
+            <div class="cs-status-line cs-status-neutral">
+                <i class="ti ti-clock"></i>
+                <span>Стиль ещё не настроен</span>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="cs-section">
+            <div class="cs-section-title">Стиль письма</div>
+            ${statusBadge}
+            ${bodyHtml}
+        </div>
+    `;
+}
+
+
+function renderSettingsExamplesSection(data) {
+    const hasVoice = !!data.voice_summary && data.voice_status === 'done';
+    const headerLabel = hasVoice ? 'Загрузить примеры вручную' : 'Настроить стиль';
+    const accent = !hasVoice;
+    const headerIcon = accent ? '<i class="ti ti-sparkles"></i> ' : '';
+
+    return `
+        <div class="cs-section">
+            <div class="cs-section-title-row">
+                <span class="cs-section-title ${accent ? 'cs-section-title-accent' : ''}">${headerIcon}${headerLabel}</span>
+                <span class="cs-section-hint">— 1 обновление</span>
+            </div>
+            <div class="cs-examples-card ${accent ? 'cs-examples-card-accent' : ''}">
+                <textarea
+                    id="cs-examples-text"
+                    class="cs-examples-textarea"
+                    placeholder="Вставь сюда 3-5 своих постов как примеры стиля. Разделяй их пустой строкой или ---"
+                    maxlength="5000"
+                ></textarea>
+                <div class="cs-examples-footer">
+                    <span class="cs-examples-count" id="cs-examples-count">0 / 5000 символов</span>
+                    <button class="cs-btn-primary" id="cs-examples-apply" disabled>Применить</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+
+function renderSettingsBehaviorSection(data) {
+    const paused = !!data.is_paused;
+    const profanity = !!data.use_profanity_default;
+
+    return `
+        <div class="cs-section">
+            <div class="cs-section-title">Поведение</div>
+
+            <div class="cs-toggle-row" data-toggle="paused">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-player-play" style="color: ${paused ? 'rgba(255,255,255,0.4)' : '#5DCAA5'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">Канал ${paused ? 'на паузе' : 'активен'}</span>
+                        <button class="cs-info-btn" data-info="paused" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${paused ? 'Генерация постов отключена' : 'Можно генерировать посты'}</div>
+                    <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
+                        Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${!paused ? 'on' : ''}" data-toggle-target="paused">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="profanity">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-flame" style="color: ${profanity ? '#F0997B' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">Нецензурная лексика</span>
+                        <button class="cs-info-btn" data-info="profanity" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${profanity ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию'}</div>
+                    <div class="cs-info-popup" id="cs-info-profanity" style="display:none;">
+                        Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${profanity ? 'on' : ''}" data-toggle-target="profanity">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+
+function renderSettingsHistorySection(data) {
+    const events = data.events || [];
+    if (events.length === 0) {
+        return `
+            <div class="cs-section">
+                <div class="cs-history-empty">
+                    <i class="ti ti-history"></i>
+                    <span>История пуста</span>
+                </div>
+            </div>
+        `;
+    }
+
+    const expanded = _settingsState.eventsExpanded;
+    const itemsHtml = events.map(e => {
+        const dt = e.created_at ? formatEventDate(e.created_at) : '';
+        return `
+            <div class="cs-history-item">
+                <div class="cs-history-dot"></div>
+                <div class="cs-history-text">
+                    <div class="cs-history-label">${escapeHtml(e.event_label || e.event_type)}</div>
+                    <div class="cs-history-date">${dt}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    return `
+        <div class="cs-section">
+            <div class="cs-history-toggle" id="cs-history-toggle">
+                <div class="cs-history-toggle-left">
+                    <i class="ti ti-history"></i>
+                    <span class="cs-history-toggle-title">История действий</span>
+                    <span class="cs-history-toggle-count">${events.length} ${pluralize(events.length, 'событие','события','событий')}</span>
+                </div>
+                <i class="ti ti-chevron-${expanded ? 'up' : 'down'}"></i>
+            </div>
+            <div class="cs-history-body" id="cs-history-body" style="${expanded ? '' : 'display:none;'}">
+                ${itemsHtml}
+            </div>
+        </div>
+    `;
+}
+
+
+function renderSettingsDangerZone(data) {
+    return `
+        <div class="cs-section cs-danger-zone">
+            <button class="cs-btn-danger" id="cs-delete-channel">
+                <i class="ti ti-trash"></i> Удалить канал
+            </button>
+        </div>
+    `;
+}
+
+
+function attachSettingsHandlers() {
+    const textarea = document.getElementById('cs-examples-text');
+    const counter = document.getElementById('cs-examples-count');
+    const applyBtn = document.getElementById('cs-examples-apply');
+
+    if (textarea) {
+        textarea.addEventListener('input', () => {
+            const len = textarea.value.length;
+            if (counter) counter.textContent = `${len} / 5000 символов`;
+            if (applyBtn) applyBtn.disabled = (len < 30);
+        });
+    }
+
+    if (applyBtn) applyBtn.addEventListener('click', handleApplyExamples);
+
+    const editBtn = document.getElementById('cs-voice-edit');
+    if (editBtn) editBtn.addEventListener('click', handleEditVoiceSummary);
+
+    const refreshBtn = document.getElementById('cs-voice-refresh');
+    if (refreshBtn) refreshBtn.addEventListener('click', handleRefreshVoiceFromSettings);
+
+    document.querySelectorAll('.cs-toggle-switch').forEach(sw => {
+        sw.addEventListener('click', async () => {
+            const target = sw.getAttribute('data-toggle-target');
+            const isOn = sw.classList.contains('on');
+            await handleToggleSwitch(target, !isOn);
+        });
+    });
+
+    document.querySelectorAll('.cs-info-btn').forEach(b => {
+        b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const key = b.getAttribute('data-info');
+            const popup = document.getElementById(`cs-info-${key}`);
+            if (popup) popup.style.display = popup.style.display === 'none' ? '' : 'none';
+        });
+    });
+
+    const historyToggle = document.getElementById('cs-history-toggle');
+    if (historyToggle) {
+        historyToggle.addEventListener('click', () => {
+            _settingsState.eventsExpanded = !_settingsState.eventsExpanded;
+            renderChannelSettingsScreen(_settingsState.data);
+        });
+    }
+
+    const delBtn = document.getElementById('cs-delete-channel');
+    if (delBtn) delBtn.addEventListener('click', handleDeleteFromSettings);
+}
+
+
+async function handleApplyExamples() {
+    const textarea = document.getElementById('cs-examples-text');
+    const applyBtn = document.getElementById('cs-examples-apply');
+    if (!textarea || !applyBtn) return;
+
+    const text = textarea.value.trim();
+    if (text.length < 30) {
+        await alertDialog('Слишком короткий текст. Загрузи 3-5 постов от 30 символов каждый.');
+        return;
+    }
+
+    const confirmed = await confirmDialog(
+        `Применить примеры стиля?\n\nЭто заменит текущий стиль канала и потратит 1 обновление из месячного лимита.`
+    );
+    if (!confirmed) return;
+
+    applyBtn.disabled = true;
+    applyBtn.textContent = 'Применяю...';
+
+    try {
+        const result = await apiRequest(`/api/v1/channels/${_settingsState.channelId}/upload-examples`, {
+            method: 'POST',
+            body: JSON.stringify({ examples_text: text }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await alertDialog(`Стиль обновлён! Проанализировано ${result.examples_processed} ${pluralize(result.examples_processed, 'пример', 'примера', 'примеров')}.`);
+        await openChannelSettingsScreen(_settingsState.channelId);
+    } catch (e) {
+        const msg = (e?.message || '').includes('429')
+            ? 'Лимит обновлений стиля на месяц исчерпан.'
+            : (e?.message || '').includes('403')
+                ? 'Загрузка примеров недоступна на этом тарифе.'
+                : (e?.message || '').includes('400')
+                    ? 'Не нашёл осмысленных примеров. Каждый пример должен быть от 30 символов.'
+                    : 'Не удалось применить примеры. Попробуй позже.';
+        await alertDialog(msg);
+        applyBtn.disabled = false;
+        applyBtn.textContent = 'Применить';
+    }
+}
+
+
+async function handleEditVoiceSummary() {
+    const current = _settingsState.data?.voice_summary || '';
+
+    if (tg && typeof tg.showPopup === 'function') {
+        await alertDialog('Введи новый текст стиля. В будущем добавим полноценный редактор.');
+        return;
+    }
+
+    const newText = window.prompt('Отредактируй стиль письма (10-2000 символов):', current);
+    if (newText === null) return;
+    if (newText.trim().length < 10) {
+        await alertDialog('Текст должен быть от 10 символов.');
+        return;
+    }
+
+    try {
+        await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ voice_summary: newText.trim() }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await openChannelSettingsScreen(_settingsState.channelId);
+    } catch (e) {
+        await alertDialog('Не удалось сохранить изменения.');
+    }
+}
+
+
+async function handleRefreshVoiceFromSettings() {
+    const confirmed = await confirmDialog(
+        `Пересобрать стиль из последних постов канала?\n\nЭто заменит текущий стиль и потратит 1 обновление из месячного лимита.`
+    );
+    if (!confirmed) return;
+
+    try {
+        await apiRequest(`/api/v1/channels/${_settingsState.channelId}/voice/refresh`, { method: 'POST' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        await alertDialog('Запустил пересборку. Это займёт 10-30 секунд, потом обнови экран.');
+        setTimeout(() => openChannelSettingsScreen(_settingsState.channelId), 5000);
+    } catch (e) {
+        const msg = (e?.message || '').includes('429')
+            ? 'Лимит обновлений стиля на месяц исчерпан.'
+            : (e?.message || '').includes('403')
+                ? 'Обновление недоступно на этом тарифе.'
+                : 'Не удалось запустить пересборку.';
+        await alertDialog(msg);
+    }
+}
+
+
+async function handleToggleSwitch(target, newValue) {
+    const payload = {};
+    if (target === 'paused') payload.is_paused = newValue;
+    if (target === 'profanity') payload.use_profanity_default = newValue;
+
+    try {
+        await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
+            method: 'PATCH',
+            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+        await openChannelSettingsScreen(_settingsState.channelId);
+    } catch (e) {
+        await alertDialog('Не удалось сохранить изменение.');
+    }
+}
+
+
+async function handleDeleteFromSettings() {
+    const data = _settingsState.data;
+    if (!data) return;
+    const title = data.title || 'Канал';
+    const confirmed = await confirmDialog(
+        `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`
+    );
+    if (!confirmed) return;
+    try {
+        await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, { method: 'DELETE' });
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
+        closeChannelSettings();
+        await openChannels();
+        refreshDashboardSilent();
+    } catch (e) {
+        await alertDialog('Не удалось удалить канал.');
+    }
+}
+
+
+async function loadChannelSettingsAvatar(channelId) {
+    const node = document.querySelector(`[data-avatar-for-cs="${channelId}"]`);
+    if (!node) return;
+    try {
+        const resp = await apiRequest(`/api/v1/channels/${channelId}/avatar`, { responseType: 'blob' });
+        if (resp instanceof Blob) {
+            const url = URL.createObjectURL(resp);
+            node.innerHTML = `<img src="${url}" alt="">`;
+        }
+    } catch (e) {}
+}
+
+
+function getInitials(text) {
+    if (!text) return 'К';
+    const parts = text.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+
+function formatConnectedDate(iso) {
+    try {
+        const d = new Date(iso);
+        const now = new Date();
+        const isToday = d.toDateString() === now.toDateString();
+        if (isToday) return 'подключён сегодня';
+        const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
+        if (d.toDateString() === yesterday.toDateString()) return 'подключён вчера';
+        const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+        return `подключён ${d.getDate()} ${months[d.getMonth()]}`;
+    } catch (e) {
+        return '';
+    }
+}
+
+
+function formatEventDate(iso) {
+    try {
+        const d = new Date(iso);
+        const now = new Date();
+        const diffMin = Math.floor((now - d) / 60000);
+        if (diffMin < 1) return 'только что';
+        if (diffMin < 60) return `${diffMin} мин назад`;
+        const diffHr = Math.floor(diffMin / 60);
+        if (diffHr < 24) return `${diffHr} ч назад`;
+        const diffDay = Math.floor(diffHr / 24);
+        if (diffDay < 7) return `${diffDay} ${pluralize(diffDay, 'день','дня','дней')} назад`;
+        const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+        return `${d.getDate()} ${months[d.getMonth()]} в ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    } catch (e) {
+        return '';
+    }
+}
+
+
+function pluralize(n, one, few, many) {
+    const n10 = n % 10;
+    const n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return one;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
+    return many;
 }
 
 
