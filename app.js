@@ -1823,6 +1823,7 @@ async function handleEditVoiceSummary() {
             const textEl = document.getElementById('cs-voice-text');
             if (textEl) textEl.textContent = trimmed;
         }
+        refreshSettingsHistory();
     } catch (e) {
         await alertDialog('Не удалось сохранить изменения.');
     }
@@ -1958,6 +1959,7 @@ async function handleToggleSwitch(target, newValue) {
             headers: { 'Content-Type': 'application/json' },
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+        refreshSettingsHistory();
     } catch (e) {
         if (_settingsState.data) {
             if (target === 'paused') _settingsState.data.is_paused = newValue;
@@ -1966,6 +1968,34 @@ async function handleToggleSwitch(target, newValue) {
         }
         await alertDialog('Не удалось сохранить изменение.');
     }
+}
+
+
+async function refreshSettingsHistory() {
+    if (!_settingsState.channelId) return;
+    try {
+        const data = await apiRequest(`/api/v1/channels/${_settingsState.channelId}/details`);
+        if (!_settingsState.data) return;
+        _settingsState.data.events = data.events || [];
+
+        const oldSection = document.querySelector('.cs-history-toggle')?.closest('.cs-section');
+        if (!oldSection) return;
+
+        const tmp = document.createElement('div');
+        tmp.innerHTML = renderSettingsHistorySection(_settingsState.data);
+        const newSection = tmp.firstElementChild;
+        if (newSection) {
+            oldSection.replaceWith(newSection);
+
+            const toggle = document.getElementById('cs-history-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    _settingsState.eventsExpanded = !_settingsState.eventsExpanded;
+                    refreshSettingsHistory();
+                });
+            }
+        }
+    } catch (e) {}
 }
 
 
