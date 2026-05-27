@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://contacting-martial-moore-twelve.trycloudflare.com';
+const API_BASE_URL = 'https://test-find-louise-aluminum.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
