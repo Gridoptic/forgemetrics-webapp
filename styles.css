@@ -3344,3 +3344,108 @@ button:active {
 .channel-card:active {
     transform: scale(0.98);
 }
+
+.cs-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.cs-modal {
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    background: #0d1120;
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cs-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+}
+
+.cs-modal-title {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.cs-modal-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+}
+
+.cs-modal-close:active {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.cs-modal-body {
+    padding: 14px 16px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.cs-modal-textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 12px;
+    min-height: 160px;
+    resize: vertical;
+    font-family: inherit;
+    outline: none;
+}
+
+.cs-modal-textarea:focus {
+    border-color: rgba(127, 119, 221, 0.4);
+}
+
+.cs-modal-counter {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 10px;
+    text-align: right;
+    margin-top: 6px;
+}
+
+.cs-modal-actions {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+    justify-content: flex-end;
+}
+
+.cs-modal-actions .cs-btn-primary {
+    padding: 8px 18px;
+}
+
+.cs-modal-actions .cs-btn-ghost {
+    padding: 8px 14px;
+}

@@ -1370,9 +1370,11 @@ async function openChannelSettingsScreen(channelId) {
         </div>
     `;
     host.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 
     if (tg?.BackButton) {
         try {
+            tg.BackButton.offClick(closeChannelSettings);
             tg.BackButton.show();
             tg.BackButton.onClick(closeChannelSettings);
         } catch (e) {}
@@ -1397,8 +1399,13 @@ async function openChannelSettingsScreen(channelId) {
 function closeChannelSettings() {
     const host = document.getElementById('channel-settings-screen');
     if (host) host.style.display = 'none';
+    document.body.style.overflow = '';
+    if (typeof stopSettingsVoicePolling === 'function') stopSettingsVoicePolling();
     if (tg?.BackButton) {
-        try { tg.BackButton.hide(); } catch (e) {}
+        try {
+            tg.BackButton.offClick(closeChannelSettings);
+            tg.BackButton.hide();
+        } catch (e) {}
     }
     _settingsState.channelId = null;
     _settingsState.data = null;
@@ -1790,30 +1797,87 @@ async function handleApplyExamples() {
 
 async function handleEditVoiceSummary() {
     const current = _settingsState.data?.voice_summary || '';
+    const newText = await showVoiceEditorModal(current);
+    if (newText === null) return;
 
-    if (tg && typeof tg.showPopup === 'function') {
-        await alertDialog('Введи новый текст стиля. В будущем добавим полноценный редактор.');
+    const trimmed = newText.trim();
+    if (trimmed.length < 10) {
+        await alertDialog('Текст должен быть от 10 символов.');
         return;
     }
-
-    const newText = window.prompt('Отредактируй стиль письма (10-2000 символов):', current);
-    if (newText === null) return;
-    if (newText.trim().length < 10) {
-        await alertDialog('Текст должен быть от 10 символов.');
+    if (trimmed.length > 2000) {
+        await alertDialog('Текст слишком длинный (макс 2000 символов).');
         return;
     }
 
     try {
         await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
             method: 'PATCH',
-            body: JSON.stringify({ voice_summary: newText.trim() }),
+            body: JSON.stringify({ voice_summary: trimmed }),
             headers: { 'Content-Type': 'application/json' },
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
-        await openChannelSettingsScreen(_settingsState.channelId);
+
+        if (_settingsState.data) {
+            _settingsState.data.voice_summary = trimmed;
+            const textEl = document.getElementById('cs-voice-text');
+            if (textEl) textEl.textContent = trimmed;
+        }
     } catch (e) {
         await alertDialog('Не удалось сохранить изменения.');
     }
+}
+
+
+function showVoiceEditorModal(currentText) {
+    return new Promise((resolve) => {
+        const modal = document.createElement('div');
+        modal.className = 'cs-modal-overlay';
+        modal.innerHTML = `
+            <div class="cs-modal">
+                <div class="cs-modal-header">
+                    <span class="cs-modal-title">Редактировать стиль</span>
+                    <button class="cs-modal-close" data-action="close"><i class="ti ti-x"></i></button>
+                </div>
+                <div class="cs-modal-body">
+                    <textarea class="cs-modal-textarea" id="cs-modal-voice-text" maxlength="2000" placeholder="Описание стиля письма канала...">${escapeHtml(currentText)}</textarea>
+                    <div class="cs-modal-counter" id="cs-modal-counter">${currentText.length} / 2000</div>
+                </div>
+                <div class="cs-modal-actions">
+                    <button class="cs-btn-ghost" data-action="cancel">Отмена</button>
+                    <button class="cs-btn-primary" data-action="save">Сохранить</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const textarea = modal.querySelector('#cs-modal-voice-text');
+        const counter = modal.querySelector('#cs-modal-counter');
+
+        const cleanup = (result) => {
+            modal.remove();
+            resolve(result);
+        };
+
+        textarea.addEventListener('input', () => {
+            counter.textContent = `${textarea.value.length} / 2000`;
+        });
+
+        modal.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const a = btn.getAttribute('data-action');
+                if (a === 'save') cleanup(textarea.value);
+                else cleanup(null);
+            });
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) cleanup(null);
+        });
+
+        setTimeout(() => textarea.focus(), 50);
+    });
 }
 
 
@@ -1826,8 +1890,14 @@ async function handleRefreshVoiceFromSettings() {
     try {
         await apiRequest(`/api/v1/channels/${_settingsState.channelId}/voice/refresh`, { method: 'POST' });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
-        await alertDialog('Запустил пересборку. Это займёт 10-30 секунд, потом обнови экран.');
-        setTimeout(() => openChannelSettingsScreen(_settingsState.channelId), 5000);
+
+        const statusEl = document.querySelector('.cs-status-line');
+        if (statusEl) {
+            statusEl.className = 'cs-status-line cs-status-collecting';
+            statusEl.innerHTML = '<span class="voice-pulse-dot"></span><span>Стиль собирается...</span>';
+        }
+
+        startSettingsVoicePolling();
     } catch (e) {
         const msg = (e?.message || '').includes('429')
             ? 'Лимит обновлений стиля на месяц исчерпан.'
@@ -1839,10 +1909,47 @@ async function handleRefreshVoiceFromSettings() {
 }
 
 
+let _settingsVoicePollTimer = null;
+
+function startSettingsVoicePolling() {
+    if (_settingsVoicePollTimer) return;
+    _settingsVoicePollTimer = setInterval(async () => {
+        if (!_settingsState.channelId) {
+            stopSettingsVoicePolling();
+            return;
+        }
+        try {
+            const data = await apiRequest(`/api/v1/channels/${_settingsState.channelId}/details`);
+            _settingsState.data = data;
+            if (data.voice_status !== 'collecting') {
+                stopSettingsVoicePolling();
+                renderChannelSettingsScreen(data);
+            }
+        } catch (e) {
+            stopSettingsVoicePolling();
+        }
+    }, 4000);
+}
+
+
+function stopSettingsVoicePolling() {
+    if (_settingsVoicePollTimer) {
+        clearInterval(_settingsVoicePollTimer);
+        _settingsVoicePollTimer = null;
+    }
+}
+
+
 async function handleToggleSwitch(target, newValue) {
     const payload = {};
-    if (target === 'paused') payload.is_paused = newValue;
+    if (target === 'paused') payload.is_paused = !newValue;
     if (target === 'profanity') payload.use_profanity_default = newValue;
+
+    if (_settingsState.data) {
+        if (target === 'paused') _settingsState.data.is_paused = !newValue;
+        if (target === 'profanity') _settingsState.data.use_profanity_default = newValue;
+        updateToggleVisual(target, newValue);
+    }
 
     try {
         await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
@@ -1851,9 +1958,39 @@ async function handleToggleSwitch(target, newValue) {
             headers: { 'Content-Type': 'application/json' },
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
-        await openChannelSettingsScreen(_settingsState.channelId);
     } catch (e) {
+        if (_settingsState.data) {
+            if (target === 'paused') _settingsState.data.is_paused = newValue;
+            if (target === 'profanity') _settingsState.data.use_profanity_default = !newValue;
+            updateToggleVisual(target, !newValue);
+        }
         await alertDialog('Не удалось сохранить изменение.');
+    }
+}
+
+
+function updateToggleVisual(target, isOn) {
+    const sw = document.querySelector(`.cs-toggle-switch[data-toggle-target="${target}"]`);
+    if (sw) {
+        if (isOn) sw.classList.add('on');
+        else sw.classList.remove('on');
+    }
+
+    if (target === 'paused') {
+        const iconWrap = document.querySelector('[data-toggle="paused"] .cs-toggle-icon-wrap i');
+        const titleEl = document.querySelector('[data-toggle="paused"] .cs-toggle-title');
+        const subEl = document.querySelector('[data-toggle="paused"] .cs-toggle-sub');
+        const paused = !isOn;
+        if (iconWrap) iconWrap.style.color = paused ? 'rgba(255,255,255,0.4)' : '#5DCAA5';
+        if (titleEl) titleEl.textContent = `Канал ${paused ? 'на паузе' : 'активен'}`;
+        if (subEl) subEl.textContent = paused ? 'Генерация постов отключена' : 'Можно генерировать посты';
+    }
+
+    if (target === 'profanity') {
+        const iconWrap = document.querySelector('[data-toggle="profanity"] .cs-toggle-icon-wrap i');
+        const subEl = document.querySelector('[data-toggle="profanity"] .cs-toggle-sub');
+        if (iconWrap) iconWrap.style.color = isOn ? '#F0997B' : 'rgba(255,255,255,0.4)';
+        if (subEl) subEl.textContent = isOn ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию';
     }
 }
 
