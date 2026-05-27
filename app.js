@@ -1276,11 +1276,17 @@ function stopVoicePolling() {
 
 function renderChannelCard(ch) {
     const connected = ch.bot_status === 'connected';
+    const paused = !!ch.is_paused;
     const title = escapeHtml(ch.title || 'Канал');
 
-    const badge = connected
-        ? `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>Подключён</span></div>`
-        : `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>Только анализ</span></div>`;
+    let badge;
+    if (paused) {
+        badge = `<div class="channel-card-badge paused"><i class="ti ti-player-pause"></i><span>На паузе</span></div>`;
+    } else if (connected) {
+        badge = `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>Подключён</span></div>`;
+    } else {
+        badge = `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>Только анализ</span></div>`;
+    }
 
     const okIcon = `<i class="ti ti-check"></i> Доступно`;
     const lockTxt = `<i class="ti ti-lock"></i> Нужен бот-админ`;
@@ -1360,7 +1366,8 @@ async function openChannelSettingsScreen(channelId) {
         host = document.createElement('div');
         host.id = 'channel-settings-screen';
         host.className = 'screen channel-settings-screen';
-        document.body.appendChild(host);
+        const appRoot = document.getElementById('app') || document.body;
+        appRoot.appendChild(host);
     }
 
     host.innerHTML = `
@@ -1371,6 +1378,8 @@ async function openChannelSettingsScreen(channelId) {
     `;
     host.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    const appRoot = document.getElementById('app');
+    if (appRoot) appRoot.style.overflow = 'hidden';
 
     if (tg?.BackButton) {
         try {
@@ -1400,6 +1409,8 @@ function closeChannelSettings() {
     const host = document.getElementById('channel-settings-screen');
     if (host) host.style.display = 'none';
     document.body.style.overflow = '';
+    const appRoot = document.getElementById('app');
+    if (appRoot) appRoot.style.overflow = '';
     if (typeof stopSettingsVoicePolling === 'function') stopSettingsVoicePolling();
     if (tg?.BackButton) {
         try {
@@ -1409,6 +1420,22 @@ function closeChannelSettings() {
     }
     _settingsState.channelId = null;
     _settingsState.data = null;
+
+    refreshChannelsListSilent();
+}
+
+
+async function refreshChannelsListSilent() {
+    try {
+        const data = await apiRequest('/api/v1/channels');
+        if (els.channelsCards && data.channels) {
+            els.channelsCards.innerHTML = data.channels.map(renderChannelCard).join('');
+            loadChannelAvatars();
+        }
+        if (typeof renderConnectionLimitsBanner === 'function') {
+            renderConnectionLimitsBanner(data.connection_limits, data.voice_refresh_limits);
+        }
+    } catch (e) {}
 }
 
 
@@ -2049,11 +2076,13 @@ async function loadChannelSettingsAvatar(channelId) {
     const node = document.querySelector(`[data-avatar-for-cs="${channelId}"]`);
     if (!node) return;
     try {
-        const resp = await apiRequest(`/api/v1/channels/${channelId}/avatar`, { responseType: 'blob' });
-        if (resp instanceof Blob) {
-            const url = URL.createObjectURL(resp);
-            node.innerHTML = `<img src="${url}" alt="">`;
-        }
+        const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${channelId}/avatar`, {
+            headers: { 'X-Telegram-Init-Data': state.initData || '' },
+        });
+        if (!resp.ok) return;
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        node.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
     } catch (e) {}
 }
 

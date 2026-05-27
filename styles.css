@@ -3449,3 +3449,9 @@ button:active {
 .cs-modal-actions .cs-btn-ghost {
     padding: 8px 14px;
 }
+
+.channel-card-badge.paused {
+    background: rgba(240, 153, 123, 0.12);
+    color: #F0997B;
+    border: 0.5px solid rgba(240, 153, 123, 0.3);
+}
