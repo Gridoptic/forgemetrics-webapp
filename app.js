@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://wife-values-ment-copies.trycloudflare.com';
+const API_BASE_URL = 'https://magazines-dogs-dosage-along.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -269,12 +269,33 @@ function renderDashboard(data) {
     els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
     els.greetingName.textContent = `Привет, ${firstName}`;
 
+    const greetingMeta = document.getElementById('greeting-meta');
+
     if (data.channel) {
         const subs = data.channel.subscribers ? formatNumber(data.channel.subscribers) : '—';
         const title = data.channel.title || data.channel.username || 'Канал';
-        els.channelInfo.textContent = `${title} · ${subs} подписчиков`;
+        const totalChannels = data.total_channels || 1;
+        const switcherIcon = totalChannels > 1
+            ? '<i class="ti ti-chevrons-up-down dashboard-channel-switcher-icon"></i>'
+            : '';
+        els.channelInfo.innerHTML = `${escapeHtml(title)} · ${subs} подписчиков ${switcherIcon}`;
+
+        if (greetingMeta) {
+            greetingMeta.classList.add('clickable');
+            greetingMeta.onclick = () => {
+                openActiveChannelSelector({
+                    onChanged: async () => { await loadDashboard(); }
+                });
+            };
+        }
     } else {
         els.channelInfo.textContent = 'Подключи канал чтобы видеть метрики';
+        if (greetingMeta) {
+            greetingMeta.classList.add('clickable');
+            greetingMeta.onclick = () => {
+                if (typeof openChannels === 'function') openChannels();
+            };
+        }
     }
 
     if (data.metrics && data.metrics.length >= 2) {
@@ -521,15 +542,171 @@ async function openPostCreate() {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
     }
 
+    state.post.useChannelStyle = true;
+    state.post.activeChannel = null;
+
+    renderPostChannelSelector(null);
+
     try {
-        const limits = await apiRequest('/api/v1/post/limits');
+        const [limits, activeData] = await Promise.all([
+            apiRequest('/api/v1/post/limits'),
+            apiRequest('/api/v1/channels/active').catch(() => null),
+        ]);
         state.post.limits = limits;
         renderLimitBanner(limits);
         updateStyleHint(limits);
+
+        if (activeData) {
+            const activeCh = (activeData.channels || []).find(c => c.id === activeData.active_channel_id);
+            state.post.activeChannel = activeCh || null;
+            renderPostChannelSelector(activeCh);
+        }
     } catch (err) {
-        console.error('Failed to load limits:', err);
+        console.error('Failed to load limits/channel:', err);
         if (els.postLimitText) els.postLimitText.textContent = 'Не удалось загрузить лимиты';
         if (els.postLimitBanner) els.postLimitBanner.classList.add('exhausted');
+    }
+}
+
+
+function renderPostChannelSelector(channel) {
+    let container = document.getElementById('post-channel-selector-wrap');
+    const screen = document.getElementById('post-create-screen');
+    if (!screen) return;
+    const form = screen.querySelector('.post-form');
+    if (!form) return;
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'post-channel-selector-wrap';
+        form.insertBefore(container, form.firstChild);
+    }
+
+    if (!channel) {
+        container.innerHTML = `
+            <div class="post-channel-selector empty">
+                <div class="post-channel-selector-avatar"><i class="ti ti-plus"></i></div>
+                <div class="post-channel-selector-info">
+                    <div class="post-channel-selector-eyebrow">Канал не выбран</div>
+                    <div class="post-channel-selector-title">Подключи канал</div>
+                </div>
+                <i class="ti ti-chevron-right post-channel-selector-chev"></i>
+            </div>
+        `;
+        const el = container.querySelector('.post-channel-selector');
+        if (el) el.onclick = () => { if (typeof openChannels === 'function') openChannels(); };
+        renderStyleToggle(false, false);
+        return;
+    }
+
+    const hasVoice = channel.voice_status === 'done' && !!channel.voice_preview;
+    const isPrivate = channel.is_private;
+
+    let avatarHtml;
+    if (channel.has_avatar) {
+        avatarHtml = `<div class="post-channel-selector-avatar" data-avatar-pcs="${channel.id}"><i class="ti ti-brand-telegram"></i></div>`;
+    } else if (isPrivate) {
+        avatarHtml = `<div class="post-channel-selector-avatar private"><i class="ti ti-lock"></i></div>`;
+    } else {
+        avatarHtml = `<div class="post-channel-selector-avatar">${escapeHtml(getInitials(channel.title || 'К'))}</div>`;
+    }
+
+    if (hasVoice) {
+        container.innerHTML = `
+            <div class="post-channel-selector has-style">
+                ${avatarHtml}
+                <div class="post-channel-selector-info">
+                    <div class="post-channel-selector-eyebrow">Пишу в стиле</div>
+                    <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
+                </div>
+                <i class="ti ti-chevrons-up-down post-channel-selector-chev"></i>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="post-channel-selector no-style">
+                ${avatarHtml}
+                <div class="post-channel-selector-info">
+                    <div class="post-channel-selector-eyebrow">Активный канал</div>
+                    <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-alert-triangle post-channel-selector-warn"></i></div>
+                    <div class="post-channel-selector-hint">
+                        Стиль не настроен — пишу нейтрально. <a href="#" data-pcs-upload="${channel.id}">Загрузить примеры →</a>
+                    </div>
+                </div>
+                <i class="ti ti-chevrons-up-down post-channel-selector-chev"></i>
+            </div>
+        `;
+    }
+
+    const el = container.querySelector('.post-channel-selector');
+    if (el) {
+        el.onclick = (ev) => {
+            if (ev.target.tagName === 'A' || ev.target.closest('[data-pcs-upload]')) return;
+            openActiveChannelSelector({
+                onChanged: async () => {
+                    try {
+                        const data = await apiRequest('/api/v1/channels/active');
+                        const activeCh = (data.channels || []).find(c => c.id === data.active_channel_id);
+                        state.post.activeChannel = activeCh || null;
+                        renderPostChannelSelector(activeCh);
+                    } catch (e) {}
+                }
+            });
+        };
+    }
+
+    const uploadLink = container.querySelector('[data-pcs-upload]');
+    if (uploadLink) {
+        uploadLink.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const chId = uploadLink.getAttribute('data-pcs-upload');
+            if (window.__openChannelSettings) window.__openChannelSettings(parseInt(chId, 10));
+        });
+    }
+
+    if (channel.has_avatar) {
+        const avatarNode = container.querySelector(`[data-avatar-pcs="${channel.id}"]`);
+        if (avatarNode) loadBottomSheetAvatar(channel.id, avatarNode);
+    }
+
+    renderStyleToggle(hasVoice, hasVoice);
+}
+
+
+function renderStyleToggle(canEnable, defaultOn) {
+    let toggle = document.getElementById('post-style-toggle-row');
+    const container = document.getElementById('post-channel-selector-wrap');
+    if (!container) return;
+
+    if (!toggle) {
+        toggle = document.createElement('div');
+        toggle.id = 'post-style-toggle-row';
+        container.insertAdjacentElement('afterend', toggle);
+    }
+
+    const enabled = canEnable && (state.post.useChannelStyle !== false) && defaultOn;
+    state.post.useChannelStyle = enabled;
+
+    toggle.innerHTML = `
+        <div class="post-style-toggle ${canEnable ? '' : 'disabled'}">
+            <i class="ti ti-wand post-style-toggle-icon"></i>
+            <span class="post-style-toggle-label">Использовать стиль канала</span>
+            <button class="cs-toggle-switch ${enabled ? 'on' : ''}" id="post-style-toggle-btn" ${canEnable ? '' : 'disabled'}>
+                <span class="cs-toggle-knob"></span>
+            </button>
+        </div>
+    `;
+
+    const btn = toggle.querySelector('#post-style-toggle-btn');
+    if (btn && canEnable) {
+        btn.addEventListener('click', () => {
+            const isOn = btn.classList.contains('on');
+            const newVal = !isOn;
+            state.post.useChannelStyle = newVal;
+            if (newVal) btn.classList.add('on'); else btn.classList.remove('on');
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+        });
     }
 }
 
@@ -1437,6 +1614,236 @@ async function refreshChannelsListSilent() {
 }
 
 
+let _bsActiveContext = null;
+
+
+function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
+    closeBottomSheet();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet';
+
+    let itemsHtml = '';
+    if (!items || items.length === 0) {
+        itemsHtml = `
+            <div class="bs-empty">
+                <div class="bs-empty-icon"><i class="ti ti-broadcast-off"></i></div>
+                <div>Нет каналов для выбора</div>
+            </div>
+        `;
+    } else {
+        itemsHtml = '<div class="bs-list">' + items.map(it => {
+            const isActive = it.id === activeId;
+            const avatarHtml = it.has_avatar
+                ? `<div class="bs-item-avatar" data-avatar-bs="${it.id}"><i class="ti ti-brand-telegram"></i></div>`
+                : (it.is_private
+                    ? `<div class="bs-item-avatar private"><i class="ti ti-lock"></i></div>`
+                    : `<div class="bs-item-avatar">${escapeHtml(getInitials(it.title || 'К'))}</div>`);
+
+            const sub = it.subtitle_warn
+                ? `<div class="bs-item-subtitle warn">${escapeHtml(it.subtitle || '')}</div>`
+                : (it.subtitle ? `<div class="bs-item-subtitle">${escapeHtml(it.subtitle)}</div>` : '');
+
+            const rightIcon = isActive
+                ? `<i class="ti ti-circle-check bs-item-icon-right check"></i>`
+                : `<i class="ti ti-chevron-right bs-item-icon-right"></i>`;
+
+            return `
+                <div class="bs-item ${isActive ? 'active' : ''}" data-bs-item-id="${it.id}">
+                    ${avatarHtml}
+                    <div class="bs-item-info">
+                        <div class="bs-item-title">${escapeHtml(it.title || 'Канал')}</div>
+                        ${sub}
+                    </div>
+                    ${rightIcon}
+                </div>
+            `;
+        }).join('') + '</div>';
+    }
+
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="bs-title">${escapeHtml(title || 'Выбери канал')}</div>
+        ${subtitle ? `<div class="bs-subtitle">${escapeHtml(subtitle)}</div>` : ''}
+        ${itemsHtml}
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+
+    requestAnimationFrame(() => {
+        overlay.classList.add('visible');
+        sheet.classList.add('visible');
+    });
+
+    _bsActiveContext = { overlay, sheet, onSelect };
+
+    overlay.addEventListener('click', closeBottomSheet);
+
+    sheet.querySelectorAll('[data-bs-item-id]').forEach(el => {
+        el.addEventListener('click', () => {
+            const id = parseInt(el.getAttribute('data-bs-item-id'), 10);
+            const ctx = _bsActiveContext;
+            closeBottomSheet();
+            if (ctx && typeof ctx.onSelect === 'function') {
+                ctx.onSelect(id);
+            }
+        });
+    });
+
+    sheet.querySelectorAll('[data-avatar-bs]').forEach(node => {
+        const chId = node.getAttribute('data-avatar-bs');
+        loadBottomSheetAvatar(chId, node);
+    });
+
+    setupBottomSheetSwipeToClose(sheet);
+}
+
+
+function closeBottomSheet() {
+    if (!_bsActiveContext) return;
+    const { overlay, sheet } = _bsActiveContext;
+
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+
+    setTimeout(() => {
+        if (overlay.parentNode) overlay.remove();
+        if (sheet.parentNode) sheet.remove();
+    }, 300);
+
+    _bsActiveContext = null;
+}
+
+
+function setupBottomSheetSwipeToClose(sheet) {
+    let startY = null;
+    let currentY = null;
+    let dragging = false;
+
+    const onTouchStart = (e) => {
+        if (sheet.scrollTop > 0) return;
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        dragging = true;
+        sheet.style.transition = 'none';
+    };
+
+    const onTouchMove = (e) => {
+        if (!dragging) return;
+        currentY = e.touches[0].clientY;
+        const delta = currentY - startY;
+        if (delta > 0) {
+            sheet.style.transform = `translateY(${delta}px)`;
+        }
+    };
+
+    const onTouchEnd = () => {
+        if (!dragging) return;
+        dragging = false;
+        sheet.style.transition = '';
+        const delta = currentY - startY;
+        if (delta > 80) {
+            closeBottomSheet();
+        } else {
+            sheet.style.transform = '';
+        }
+    };
+
+    sheet.addEventListener('touchstart', onTouchStart, { passive: true });
+    sheet.addEventListener('touchmove', onTouchMove, { passive: true });
+    sheet.addEventListener('touchend', onTouchEnd);
+}
+
+
+async function loadBottomSheetAvatar(channelId, node) {
+    try {
+        const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${channelId}/avatar`, {
+            headers: { 'X-Telegram-Init-Data': state.initData || '' },
+        });
+        if (!resp.ok) return;
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        if (node) node.innerHTML = `<img src="${url}" alt="">`;
+    } catch (e) {}
+}
+
+
+async function openActiveChannelSelector(opts) {
+    opts = opts || {};
+    try {
+        const data = await apiRequest('/api/v1/channels/active');
+
+        if (!data.channels || data.channels.length === 0) {
+            if (typeof openChannels === 'function') openChannels();
+            return;
+        }
+
+        const items = data.channels.map(ch => {
+            let subtitle = '';
+            let warn = false;
+            if (ch.voice_status === 'done' && ch.voice_preview) {
+                subtitle = ch.voice_preview;
+            } else if (ch.voice_status === 'done') {
+                subtitle = 'Стиль настроен';
+            } else if (ch.voice_status === 'collecting') {
+                subtitle = 'Стиль собирается...';
+            } else if (ch.is_private) {
+                subtitle = 'Приватный · стиль не настроен';
+                warn = true;
+            } else {
+                subtitle = 'Стиль не настроен';
+                warn = true;
+            }
+
+            return {
+                id: ch.id,
+                title: ch.title || (ch.username ? '@' + ch.username : 'Канал'),
+                subtitle,
+                subtitle_warn: warn,
+                has_avatar: ch.has_avatar,
+                is_private: ch.is_private,
+            };
+        });
+
+        showBottomSheet({
+            title: 'В каком канале работаешь?',
+            subtitle: 'Метрики, стиль и аналитика — этого канала',
+            items,
+            activeId: data.active_channel_id,
+            onSelect: async (channelId) => {
+                try {
+                    await apiRequest('/api/v1/channels/active', {
+                        method: 'PATCH',
+                        body: JSON.stringify({ channel_id: channelId }),
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+                    if (typeof opts.onChanged === 'function') {
+                        opts.onChanged(channelId);
+                    } else {
+                        await loadDashboard();
+                    }
+                } catch (e) {
+                    showToast('Не удалось переключить канал', 'alert-triangle');
+                }
+            },
+        });
+    } catch (e) {
+        showToast('Не удалось загрузить каналы', 'alert-triangle');
+    }
+}
+
+
 function renderChannelSettingsScreen(data) {
     const host = document.getElementById('channel-settings-screen');
     if (!host) return;
@@ -2300,6 +2707,7 @@ async function submitTopicForAnalysis() {
             body: JSON.stringify({
                 topic,
                 use_profanity: state.post.useProfanity,
+                use_channel_style: state.post.useChannelStyle !== false,
                 context_history: [],
             }),
         });
@@ -2365,6 +2773,7 @@ async function submitAnswer(question, answer) {
             body: JSON.stringify({
                 topic: state.post.topic,
                 use_profanity: state.post.useProfanity,
+                use_channel_style: state.post.useChannelStyle !== false,
                 context_history: state.post.contextHistory,
             }),
         });
@@ -2400,6 +2809,7 @@ async function runGenerate() {
             body: JSON.stringify({
                 topic: state.post.topic,
                 use_profanity: state.post.useProfanity,
+                use_channel_style: state.post.useChannelStyle !== false,
                 context_history: state.post.contextHistory,
                 style_reference_text: state.post.styleReferenceText || null,
             }),
