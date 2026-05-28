@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://test-find-louise-aluminum.trycloudflare.com';
+const API_BASE_URL = 'https://wife-values-ment-copies.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -1377,9 +1377,8 @@ async function openChannelSettingsScreen(channelId) {
         </div>
     `;
     host.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    const appRoot = document.getElementById('app');
-    if (appRoot) appRoot.style.overflow = 'hidden';
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
 
     if (tg?.BackButton) {
         try {
@@ -1408,9 +1407,8 @@ async function openChannelSettingsScreen(channelId) {
 function closeChannelSettings() {
     const host = document.getElementById('channel-settings-screen');
     if (host) host.style.display = 'none';
-    document.body.style.overflow = '';
-    const appRoot = document.getElementById('app');
-    if (appRoot) appRoot.style.overflow = '';
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
     if (typeof stopSettingsVoicePolling === 'function') stopSettingsVoicePolling();
     if (tg?.BackButton) {
         try {

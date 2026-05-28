@@ -3455,3 +3455,17 @@ button:active {
     color: #F0997B;
     border: 0.5px solid rgba(240, 153, 123, 0.3);
 }
+
+body.cs-modal-open {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+body.cs-modal-open #app {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+html.cs-modal-open {
+    overflow: hidden !important;
+}
