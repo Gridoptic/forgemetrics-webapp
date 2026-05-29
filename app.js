@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://magazines-dogs-dosage-along.trycloudflare.com';
+const API_BASE_URL = 'https://titles-lets-benjamin-oriented.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
