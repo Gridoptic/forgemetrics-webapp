@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://titles-lets-benjamin-oriented.trycloudflare.com';
+const API_BASE_URL = 'https://previous-til-networking-inflation.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
