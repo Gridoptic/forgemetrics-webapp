@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://previous-til-networking-inflation.trycloudflare.com';
+const API_BASE_URL = 'https://towers-motorcycle-differently-displayed.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -418,6 +418,14 @@ function handleAction(actionId) {
     if (actionId === 'add_channel' || actionId === 'my_channels') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         openChannels();
+        return;
+    }
+
+    if (actionId === 'ai_audit') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openAudit === 'function') {
+            window.__openAudit();
+        }
         return;
     }
 
@@ -1876,6 +1884,7 @@ function renderChannelSettingsScreen(data) {
         ${renderSettingsExamplesSection(data)}
         ${renderSettingsBehaviorSection(data)}
         ${renderSettingsHistorySection(data)}
+        ${renderSettingsAuditSection(data)}
         ${renderSettingsDangerZone(data)}
     `;
 
@@ -2121,6 +2130,20 @@ function renderSettingsHistorySection(data) {
     `;
 }
 
+function renderSettingsAuditSection(data) {
+    return `
+        <div class="cs-section">
+            <button class="cs-btn-audit" data-audit-channel="${data.id}">
+                <span class="cs-btn-audit-icon"><i class="ti ti-target"></i></span>
+                <span class="cs-btn-audit-body">
+                    <span class="cs-btn-audit-title">AI-аудит канала</span>
+                    <span class="cs-btn-audit-sub">Разбор, прогноз и план роста</span>
+                </span>
+                <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
+            </button>
+        </div>
+    `;
+}
 
 function renderSettingsDangerZone(data) {
     return `
@@ -2134,6 +2157,14 @@ function renderSettingsDangerZone(data) {
 
 
 function attachSettingsHandlers() {
+    const auditBtn = document.querySelector('.cs-btn-audit[data-audit-channel]');
+    if (auditBtn) {
+        auditBtn.addEventListener('click', () => {
+            const chId = parseInt(auditBtn.getAttribute('data-audit-channel'), 10);
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('medium');
+            if (typeof window.__openAudit === 'function') window.__openAudit(chId);
+        });
+    }
     const textarea = document.getElementById('cs-examples-text');
     const counter = document.getElementById('cs-examples-count');
     const applyBtn = document.getElementById('cs-examples-apply');
