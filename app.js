@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://towers-motorcycle-differently-displayed.trycloudflare.com';
+const API_BASE_URL = 'https://troy-debian-human-makeup.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
@@ -425,6 +425,14 @@ function handleAction(actionId) {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openAudit === 'function') {
             window.__openAudit();
+        }
+        return;
+    }
+
+    if (actionId === 'competitor_analysis') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openCompetitors === 'function') {
+            window.__openCompetitors();
         }
         return;
     }
@@ -2141,6 +2149,14 @@ function renderSettingsAuditSection(data) {
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
+            <button class="cs-btn-audit cs-btn-competitors" data-competitors-channel="${data.id}">
+                <span class="cs-btn-audit-icon"><i class="ti ti-binoculars"></i></span>
+                <span class="cs-btn-audit-body">
+                    <span class="cs-btn-audit-title">Анализ конкурентов</span>
+                    <span class="cs-btn-audit-sub">Карта ниши, их приёмы, план обгона</span>
+                </span>
+                <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
+            </button>
         </div>
     `;
 }
@@ -2165,6 +2181,16 @@ function attachSettingsHandlers() {
             if (typeof window.__openAudit === 'function') window.__openAudit(chId);
         });
     }
+
+    const competitorsBtn = document.querySelector('.cs-btn-competitors[data-competitors-channel]');
+    if (competitorsBtn) {
+        competitorsBtn.addEventListener('click', () => {
+            const chId = parseInt(competitorsBtn.getAttribute('data-competitors-channel'), 10);
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('medium');
+            if (typeof window.__openCompetitors === 'function') window.__openCompetitors(chId);
+        });
+    }
+
     const textarea = document.getElementById('cs-examples-text');
     const counter = document.getElementById('cs-examples-count');
     const applyBtn = document.getElementById('cs-examples-apply');
