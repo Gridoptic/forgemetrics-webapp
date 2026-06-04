@@ -135,7 +135,10 @@
         _closed = true;
         stopPolling();
         stopThinking();
-        if (_screen) _screen.style.display = 'none';
+        if (_screen && _screen.parentNode) {
+            _screen.parentNode.removeChild(_screen);
+        }
+        _screen = null;
         document.documentElement.classList.remove('comp-modal-open');
         document.body.classList.remove('comp-modal-open');
         try {
@@ -280,6 +283,13 @@
     }
 
     function open(explicitChannelId) {
+        stopPolling();
+        stopThinking();
+        var stale = document.getElementById('competitors-screen');
+        if (stale && stale.parentNode) {
+            stale.parentNode.removeChild(stale);
+        }
+        _screen = null;
         _closed = false;
         _candidates = [];
         _selected = {};
@@ -473,7 +483,9 @@
                 (_hasText(_nicheSummary)
                     ? '<div class="comp-niche-summary"><i class="ti ti-bulb"></i><span>' + _esc(_nicheSummary) + '</span></div>'
                     : '') +
-                '<div class="comp-select-hint">Отмечай до <b>' + _maxSelectable + '</b> каналов. Все проверены — реально существуют.</div>' +
+                (_candidates.length > 0
+                    ? '<div class="comp-select-hint">Отмечай до <b>' + _maxSelectable + '</b> каналов. Все проверены — реально существуют.</div>'
+                    : '') +
                 '<div class="comp-cand-list" id="comp-cand-list">' + cards + '</div>' +
                 manualInputHtml() +
                 '<div class="comp-select-footer">' +

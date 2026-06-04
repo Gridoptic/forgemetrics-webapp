@@ -671,3 +671,10 @@
     .comp-dot-lbl { transition: none !important; }
     .comp-spinner { animation-duration: 2s; }
 }
+
+html.comp-modal-open,
+body.comp-modal-open {
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
