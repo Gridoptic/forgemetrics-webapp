@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://quick-blair-planes-harder.trycloudflare.com';
+const API_BASE_URL = 'https://examples-operator-library-promises.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
