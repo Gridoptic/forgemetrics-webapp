@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://portion-floppy-cell-harrison.trycloudflare.com';
+const API_BASE_URL = 'https://quick-blair-planes-harder.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
