@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://moves-classifieds-largest-plasma.trycloudflare.com';
+const API_BASE_URL = 'https://hash-float-arab-celtic.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
