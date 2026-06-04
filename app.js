@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://hash-float-arab-celtic.trycloudflare.com';
+const API_BASE_URL = 'https://stakeholders-quad-lawyer-similar.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
