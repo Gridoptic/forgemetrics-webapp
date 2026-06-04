@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://outline-rich-vincent-survey.trycloudflare.com';
+const API_BASE_URL = 'https://moves-classifieds-largest-plasma.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
