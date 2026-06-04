@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://examples-operator-library-promises.trycloudflare.com';
+const API_BASE_URL = 'https://ships-classical-vocal-tee.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
