@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://ships-classical-vocal-tee.trycloudflare.com';
+const API_BASE_URL = 'https://excellence-appeals-digest-unsigned.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
