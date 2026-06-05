@@ -783,7 +783,17 @@
             renderIntro();
         });
 
-        requestAnimationFrame(function () { animateNicheMap(); });
+        var reportBody = document.getElementById('comp-report-body');
+        if (reportBody) {
+            var h2hNames = reportBody.querySelectorAll('.comp-h2h-them[data-open-ch]');
+            for (var hi = 0; hi < h2hNames.length; hi++) {
+                (function (el) {
+                    el.addEventListener('click', function () { _openChannel(el.getAttribute('data-open-ch')); });
+                })(h2hNames[hi]);
+            }
+        }
+
+        requestAnimationFrame(function () { initNicheVisuals(report); });
     }
 
     function renderPositioning(report) {
@@ -796,68 +806,280 @@
             '</div>';
     }
 
-    function renderNicheMap(report) {
+    function _mapPoints(report) {
         var map = _g(report, 'niche_map', []);
-        if (!Array.isArray(map)) return '';
+        if (!Array.isArray(map)) return [];
         var pts = [];
         for (var i = 0; i < map.length; i++) {
             var m = map[i];
             if (!m || typeof m !== 'object') continue;
             var reach = m.reach_percent;
             var ppw = m.posts_per_week;
-            if (reach == null && ppw == null) continue;
-            pts.push(m);
+            var subs = m.subscribers;
+            if (reach == null && ppw == null && subs == null) continue;
+            pts.push({
+                username: m.username || '',
+                is_you: !!m.is_you,
+                reach: (reach == null || isNaN(reach)) ? null : Number(reach),
+                ppw: (ppw == null || isNaN(ppw)) ? null : Number(ppw),
+                subs: (subs == null || isNaN(subs)) ? null : Number(subs),
+                role: m.role || m.position_label || null,
+            });
         }
+        return pts;
+    }
+
+    function _roleColor(role, isYou) {
+        if (isYou) return '#818cf8';
+        if (role === 'flagship' || role === 'leader') return '#F0997B';
+        if (role === 'rocket') return '#fbbf24';
+        if (role === 'laggard') return '#6b7088';
+        return '#5DCAA5';
+    }
+
+    function _roleTag(role, isYou) {
+        if (isYou) return { txt: 'ТЫ', cls: 'comp-rt-you' };
+        if (role === 'flagship' || role === 'leader') return { txt: 'ФЛАГМАН', cls: 'comp-rt-flag' };
+        if (role === 'rocket') return { txt: 'РАКЕТА', cls: 'comp-rt-rocket' };
+        return null;
+    }
+
+    function renderNicheMap(report) {
+        var pts = _mapPoints(report);
         if (pts.length < 2) return '';
 
-        var maxReach = 0, maxPpw = 0;
-        for (var j = 0; j < pts.length; j++) {
-            if (pts[j].reach_percent != null && pts[j].reach_percent > maxReach) maxReach = pts[j].reach_percent;
-            if (pts[j].posts_per_week != null && pts[j].posts_per_week > maxPpw) maxPpw = pts[j].posts_per_week;
-        }
-        if (maxReach <= 0) maxReach = 1;
-        if (maxPpw <= 0) maxPpw = 1;
-
-        var W = 320, H = 172, padL = 34, padB = 26, padT = 14, padR = 16;
-        var plotW = W - padL - padR, plotH = H - padT - padB;
-
-        var dots = '';
-        for (var k = 0; k < pts.length; k++) {
-            var p = pts[k];
-            var rx = padL + (Math.max(0, Math.min(1, (p.posts_per_week || 0) / maxPpw))) * plotW;
-            var ry = padT + plotH - (Math.max(0, Math.min(1, (p.reach_percent || 0) / maxReach))) * plotH;
-            var isYou = !!p.is_you;
-            var label = isYou ? 'ТЫ' : ('@' + (p.username || ''));
-            var dotColor = isYou ? '#818cf8' : (positionColor(p.position_label));
-            var r = isYou ? 13 : 9;
-            var cls = isYou ? 'comp-dot comp-dot-you' : 'comp-dot';
-            dots += '<circle class="' + cls + '" cx="' + rx.toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="' + r + '" ' +
-                'fill="' + hexToRgba(dotColor, 0.28) + '" stroke="' + dotColor + '" stroke-width="' + (isYou ? 2.5 : 1.5) + '" ' +
-                'style="opacity:0;' + (isYou ? 'filter:drop-shadow(0 0 7px ' + hexToRgba(dotColor, 0.6) + ');' : '') + '"></circle>';
-            var labelY = ry - r - 5;
-            dots += '<text class="comp-dot-lbl" x="' + rx.toFixed(1) + '" y="' + labelY.toFixed(1) + '" ' +
-                'fill="' + (isYou ? '#AFA9EC' : '#9396ac') + '" font-size="' + (isYou ? 10 : 9) + '" ' +
-                'font-weight="' + (isYou ? '600' : '400') + '" text-anchor="middle" style="opacity:0;">' + _esc(label) + '</text>';
-        }
+        var hasChart = (typeof window !== 'undefined' && typeof window.Chart !== 'undefined');
+        var chartBlock = hasChart
+            ? '<div class="comp-map-wrap">' +
+                  '<canvas id="comp-niche-canvas"></canvas>' +
+              '</div>' +
+              '<div class="comp-map-tip" id="comp-map-tip">Наведи на точку или скрой канал ниже.</div>' +
+              '<div class="comp-map-chips" id="comp-map-chips"></div>'
+            : '';
 
         return '' +
-            '<div class="comp-block-label">Карта ниши · охват \u00d7 частота</div>' +
-            '<div class="comp-map-wrap">' +
-                '<div class="comp-map-axis-y">охват \u2192</div>' +
-                '<div class="comp-map-axis-x">частота \u2192</div>' +
-                '<svg class="comp-map-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
-                    '<line x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + (padT + plotH) + '" stroke="rgba(255,255,255,0.08)" stroke-width="1"></line>' +
-                    '<line x1="' + padL + '" y1="' + (padT + plotH) + '" x2="' + (W - padR) + '" y2="' + (padT + plotH) + '" stroke="rgba(255,255,255,0.08)" stroke-width="1"></line>' +
-                    dots +
-                '</svg>' +
+            '<div class="comp-block-label">Карта ниши' + (hasChart ? ' · охват \u00d7 частота' : '') + '</div>' +
+            chartBlock +
+            '<div class="comp-block-label" style="margin-top:14px;">Рейтинг ниши</div>' +
+            '<div class="comp-rank" id="comp-rank-block">' +
+                '<div class="comp-rank-sort" id="comp-rank-sort">' +
+                    '<button class="comp-srt comp-srt-on" data-sort="subs">Подписчики</button>' +
+                    '<button class="comp-srt" data-sort="reach">Охват</button>' +
+                    '<button class="comp-srt" data-sort="ppw">Частота</button>' +
+                '</div>' +
+                '<div class="comp-rank-rows" id="comp-rank-rows"></div>' +
             '</div>';
     }
 
-    function positionColor(label) {
-        if (label === 'leader') return '#F0997B';
-        if (label === 'challenger') return '#fbbf24';
-        if (label === 'laggard') return '#6b7088';
-        return '#9396ac';
+    function _openChannel(username) {
+        if (!username) return;
+        var u = String(username).replace(/^@/, '');
+        var url = 'https://t.me/' + u;
+        try {
+            if (typeof tg !== 'undefined' && tg && typeof tg.openTelegramLink === 'function') {
+                tg.openTelegramLink(url);
+                return;
+            }
+        } catch (e) {}
+        try { window.open(url, '_blank'); } catch (e) {}
+    }
+
+    function initNicheVisuals(report) {
+        var pts = _mapPoints(report);
+        if (pts.length < 2) return;
+        try { buildNicheChart(pts); } catch (e) {}
+        try { buildRankTable(pts); } catch (e) {}
+    }
+
+    var _nicheChart = null;
+
+    function buildNicheChart(pts) {
+        if (typeof window === 'undefined' || typeof window.Chart === 'undefined') return;
+        var canvas = document.getElementById('comp-niche-canvas');
+        if (!canvas) return;
+
+        var maxSubs = 1;
+        for (var i = 0; i < pts.length; i++) {
+            if (pts[i].subs != null && pts[i].subs > maxSubs) maxSubs = pts[i].subs;
+        }
+        function radiusFor(p) {
+            if (p.subs == null) return 8;
+            var rr = 8 + Math.sqrt(p.subs / maxSubs) * 22;
+            return Math.max(7, Math.min(32, rr));
+        }
+
+        var maxReach = 1, maxPpw = 1;
+        for (var j = 0; j < pts.length; j++) {
+            if (pts[j].reach != null && pts[j].reach > maxReach) maxReach = pts[j].reach;
+            if (pts[j].ppw != null && pts[j].ppw > maxPpw) maxPpw = pts[j].ppw;
+        }
+
+        var datasets = pts.map(function (p) {
+            var c = _roleColor(p.role, p.is_you);
+            return {
+                label: p.is_you ? 'Ты' : ('@' + p.username),
+                data: [{ x: (p.ppw == null ? 0 : p.ppw), y: (p.reach == null ? 0 : p.reach), r: radiusFor(p) }],
+                backgroundColor: hexToRgba(c, p.is_you ? 0.85 : 0.45),
+                borderColor: c,
+                borderWidth: p.is_you ? 0 : 1.5,
+                _pt: p,
+            };
+        });
+
+        var marks = {
+            id: 'compMarks',
+            afterDatasetsDraw: function (chart) {
+                var g = chart.ctx;
+                chart.data.datasets.forEach(function (ds, i) {
+                    if (chart.getDatasetMeta(i).hidden) return;
+                    var el = chart.getDatasetMeta(i).data[0];
+                    if (!el) return;
+                    var p = ds._pt, x = el.x, y = el.y, r = el.options.radius;
+                    if (p.is_you) {
+                        g.save(); g.shadowColor = '#818cf8'; g.shadowBlur = 16;
+                        g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = 'rgba(129,140,248,0.95)'; g.fill(); g.restore();
+                        g.save(); g.beginPath(); g.arc(x, y, Math.max(4, r - 3), 0, 7); g.fillStyle = '#161928'; g.fill();
+                        g.fillStyle = '#AFA9EC'; g.font = '600 11px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+                        g.fillText('Я', x, y + 0.5); g.restore();
+                    }
+                    if (p.role === 'flagship' || p.role === 'leader') {
+                        g.save(); g.fillStyle = '#F0997B'; g.font = '9px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
+                        g.fillText('флагман', x, y - r - 2); g.restore();
+                    }
+                    if (p.role === 'rocket') {
+                        g.save(); g.fillStyle = '#fbbf24'; g.font = '9px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
+                        g.fillText('ракета', x, y - r - 2); g.restore();
+                    }
+                });
+            }
+        };
+
+        if (_nicheChart) { try { _nicheChart.destroy(); } catch (e) {} _nicheChart = null; }
+
+        _nicheChart = new window.Chart(canvas, {
+            type: 'bubble',
+            data: { datasets: datasets },
+            options: {
+                responsive: true, maintainAspectRatio: false, layout: { padding: 18 },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: false,
+                        external: function (c) {
+                            var tip = document.getElementById('comp-map-tip');
+                            if (!tip) return;
+                            var tt = c.tooltip;
+                            if (!tt || !tt.dataPoints || !tt.dataPoints.length) return;
+                            var p = c.chart.data.datasets[tt.dataPoints[0].datasetIndex]._pt;
+                            var nm = p.is_you ? 'Твой канал' : ('@' + p.username);
+                            var col = _roleColor(p.role, p.is_you);
+                            var parts = [];
+                            if (p.subs != null) parts.push(_num(p.subs) + ' подписчиков');
+                            if (p.reach != null) parts.push('охват ' + _pct(p.reach));
+                            if (p.ppw != null) parts.push(_ppw(p.ppw));
+                            tip.innerHTML = '<span style="color:' + col + ';font-weight:500;">' + _esc(nm) + '</span>' +
+                                (parts.length ? ': ' + _esc(parts.join(', ')) : '');
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'частота \u2192', color: '#4a4d61', font: { size: 10 } }, min: 0, suggestedMax: maxPpw * 1.15, grid: { display: false }, ticks: { color: '#4a4d61', font: { size: 9 }, callback: function (v) { return v + '/н'; } } },
+                    y: { title: { display: true, text: 'охват \u2192', color: '#4a4d61', font: { size: 10 } }, min: 0, suggestedMax: maxReach * 1.15, grid: { display: false }, ticks: { color: '#4a4d61', font: { size: 9 }, callback: function (v) { return v + '%'; } } }
+                },
+                animation: { duration: 800, easing: 'easeOutQuart' }
+            },
+            plugins: [marks]
+        });
+
+        var chipsHost = document.getElementById('comp-map-chips');
+        if (chipsHost) {
+            chipsHost.innerHTML = '';
+            pts.forEach(function (p, i) {
+                var c = _roleColor(p.role, p.is_you);
+                var b = document.createElement('button');
+                b.className = 'comp-chip';
+                b.innerHTML = '<span class="comp-chip-dot" style="background:' + c + ';"></span>' + _esc(p.is_you ? 'Ты' : ('@' + p.username));
+                b.addEventListener('click', function () {
+                    var meta = _nicheChart.getDatasetMeta(i);
+                    meta.hidden = !meta.hidden;
+                    b.classList.toggle('comp-chip-off', meta.hidden);
+                    _nicheChart.update();
+                });
+                chipsHost.appendChild(b);
+            });
+        }
+    }
+
+    function buildRankTable(pts) {
+        var host = document.getElementById('comp-rank-rows');
+        if (!host) return;
+        var sortKey = 'subs';
+
+        var maxV = { subs: 1, reach: 1, ppw: 1 };
+        pts.forEach(function (p) {
+            if (p.subs != null && p.subs > maxV.subs) maxV.subs = p.subs;
+            if (p.reach != null && p.reach > maxV.reach) maxV.reach = p.reach;
+            if (p.ppw != null && p.ppw > maxV.ppw) maxV.ppw = p.ppw;
+        });
+
+        function valOf(p, k) { return p[k] == null ? -1 : p[k]; }
+        function dispOf(p, k) {
+            if (p[k] == null) return '—';
+            if (k === 'subs') return _num(p.subs);
+            if (k === 'reach') return _pct(p.reach);
+            return _ppw(p.ppw);
+        }
+        function ini(p) {
+            if (p.is_you) return 'Я';
+            var u = (p.username || '?').replace('@', '');
+            return u.slice(0, 2).toUpperCase();
+        }
+
+        function render() {
+            var sorted = pts.slice().sort(function (a, b) { return valOf(b, sortKey) - valOf(a, sortKey); });
+            host.innerHTML = '';
+            sorted.forEach(function (p, idx) {
+                var c = _roleColor(p.role, p.is_you);
+                var tag = _roleTag(p.role, p.is_you);
+                var pct = Math.max(4, Math.round((valOf(p, sortKey) <= 0 ? 0 : valOf(p, sortKey)) / maxV[sortKey] * 100));
+                var row = document.createElement('div');
+                row.className = 'comp-rank-row' + (p.is_you ? ' comp-rank-you' : '');
+                row.innerHTML =
+                    '<span class="comp-rank-num">' + (idx + 1) + '</span>' +
+                    '<span class="comp-rank-ava" style="color:' + c + ';border-color:' + c + ';background:' + hexToRgba(c, 0.13) + ';">' + _esc(ini(p)) + '</span>' +
+                    '<div class="comp-rank-main">' +
+                        '<div class="comp-rank-name-row">' +
+                            '<span class="comp-rank-name"' + (p.is_you ? '' : ' data-open-ch="' + _esc(p.username) + '"') + '>' + _esc(p.is_you ? 'Твой канал' : ('@' + p.username)) + '</span>' +
+                            (tag ? '<span class="comp-rt ' + tag.cls + '">' + tag.txt + '</span>' : '') +
+                        '</div>' +
+                        '<div class="comp-rank-track"><div class="comp-rank-fill" style="width:0%;background:linear-gradient(90deg,' + hexToRgba(c, 0.5) + ',' + c + ');" data-w="' + pct + '"></div></div>' +
+                    '</div>' +
+                    '<span class="comp-rank-val" style="color:' + c + ';">' + _esc(dispOf(p, sortKey)) + '</span>';
+                host.appendChild(row);
+            });
+            host.querySelectorAll('[data-open-ch]').forEach(function (el) {
+                el.addEventListener('click', function () { _openChannel(el.getAttribute('data-open-ch')); });
+            });
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    var fills = host.querySelectorAll('.comp-rank-fill');
+                    for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute('data-w') + '%';
+                }, 30);
+            });
+        }
+        render();
+
+        var sortBar = document.getElementById('comp-rank-sort');
+        if (sortBar) {
+            sortBar.querySelectorAll('.comp-srt').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    sortKey = btn.getAttribute('data-sort');
+                    sortBar.querySelectorAll('.comp-srt').forEach(function (b) { b.classList.remove('comp-srt-on'); });
+                    btn.classList.add('comp-srt-on');
+                    render();
+                });
+            });
+        }
     }
 
     function hexToRgba(hex, a) {
@@ -868,23 +1090,6 @@
         var b = parseInt(h.slice(4, 6), 16);
         if (isNaN(r) || isNaN(g) || isNaN(b)) return 'rgba(147,150,172,' + a + ')';
         return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-    }
-
-    function animateNicheMap() {
-        var dots = document.querySelectorAll('.comp-map-svg .comp-dot:not(.comp-dot-you)');
-        var lbls = document.querySelectorAll('.comp-map-svg .comp-dot-lbl');
-        for (var i = 0; i < dots.length; i++) {
-            (function (d, idx) {
-                setTimeout(function () { d.style.transition = 'opacity 0.5s ease'; d.style.opacity = '1'; }, idx * 140);
-            })(dots[i], i);
-        }
-        for (var j = 0; j < lbls.length; j++) {
-            (function (l, idx) {
-                setTimeout(function () { l.style.transition = 'opacity 0.5s ease'; l.style.opacity = '1'; }, idx * 140 + 150);
-            })(lbls[j], j);
-        }
-        var you = document.querySelector('.comp-map-svg .comp-dot-you');
-        if (you) setTimeout(function () { you.style.transition = 'opacity 0.6s ease'; you.style.opacity = '1'; }, dots.length * 140 + 200);
     }
 
     function renderHeadToHead(report) {
@@ -936,7 +1141,7 @@
                 '<div class="comp-h2h-head">' +
                     '<span class="comp-h2h-you">ТЫ</span>' +
                     '<span class="comp-h2h-vs">vs</span>' +
-                    '<span class="comp-h2h-them">' + _esc(title) + '</span>' +
+                    '<span class="comp-h2h-them"' + (_hasText(h.username) ? ' data-open-ch="' + _esc(h.username) + '"' : '') + '>' + _esc(title) + '</span>' +
                 '</div>' +
                 verdict +
                 (bars ? '<div class="comp-h2h-bars">' + bars + '</div>' : '') +
