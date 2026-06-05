@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://string-gdp-pan-isa.trycloudflare.com';
+const API_BASE_URL = 'https://automotive-scholarship-tuner-screen.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
