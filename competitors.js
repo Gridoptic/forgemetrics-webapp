@@ -846,21 +846,33 @@
 
     function renderNicheMap(report) {
         var pts = _mapPoints(report);
-        if (pts.length < 2) return '';
-
-        var hasChart = (typeof window !== 'undefined' && typeof window.Chart !== 'undefined');
-        var chartBlock = hasChart
-            ? '<div class="comp-map-wrap">' +
-                  '<canvas id="comp-niche-canvas"></canvas>' +
-              '</div>' +
-              '<div class="comp-map-tip" id="comp-map-tip">Наведи на точку или скрой канал ниже.</div>' +
-              '<div class="comp-map-chips" id="comp-map-chips"></div>'
-            : '';
+        if (pts.length < 2) {
+            return '' +
+                '<div class="comp-block-label">Рейтинг ниши</div>' +
+                '<div class="comp-rank" id="comp-rank-block">' +
+                    '<div class="comp-rank-sort" id="comp-rank-sort">' +
+                        '<button class="comp-srt comp-srt-on" data-sort="subs">Подписчики</button>' +
+                        '<button class="comp-srt" data-sort="reach">Охват</button>' +
+                        '<button class="comp-srt" data-sort="ppw">Частота</button>' +
+                    '</div>' +
+                    '<div class="comp-rank-rows" id="comp-rank-rows"></div>' +
+                '</div>';
+        }
 
         return '' +
-            '<div class="comp-block-label">Карта ниши' + (hasChart ? ' · охват \u00d7 частота' : '') + '</div>' +
-            chartBlock +
-            '<div class="comp-block-label" style="margin-top:14px;">Рейтинг ниши</div>' +
+            '<div class="comp-block-label">Карта ниши \u00b7 охват \u00d7 частота</div>' +
+            '<div class="comp-map-card">' +
+                '<div class="comp-map-legend">' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#F0997B;"></span>флагман</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot comp-lg-you"></span>ты</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#5DCAA5;"></span>конкуренты</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#fbbf24;"></span>ракета</span>' +
+                '</div>' +
+                '<div class="comp-map-stage" id="comp-map-stage"></div>' +
+                '<div class="comp-map-tip" id="comp-map-tip">Нажми на точку — открою канал. Скрывай каналы кнопками ниже.</div>' +
+                '<div class="comp-map-chips" id="comp-map-chips"></div>' +
+            '</div>' +
+            '<div class="comp-block-label" style="margin-top:16px;">Рейтинг ниши</div>' +
             '<div class="comp-rank" id="comp-rank-block">' +
                 '<div class="comp-rank-sort" id="comp-rank-sort">' +
                     '<button class="comp-srt comp-srt-on" data-sort="subs">Подписчики</button>' +
@@ -886,126 +898,201 @@
 
     function initNicheVisuals(report) {
         var pts = _mapPoints(report);
-        if (pts.length < 2) return;
-        try { buildNicheChart(pts); } catch (e) {}
+        if (pts.length >= 2) {
+            try { buildNicheMap(pts); } catch (e) {}
+        }
         try { buildRankTable(pts); } catch (e) {}
     }
 
-    var _nicheChart = null;
+    var _mapHidden = {};
 
-    function buildNicheChart(pts) {
-        if (typeof window === 'undefined' || typeof window.Chart === 'undefined') return;
-        var canvas = document.getElementById('comp-niche-canvas');
-        if (!canvas) return;
+    function _relax(nodes, minGap) {
+        for (var iter = 0; iter < 60; iter++) {
+            var moved = false;
+            for (var i = 0; i < nodes.length; i++) {
+                for (var j = i + 1; j < nodes.length; j++) {
+                    var a = nodes[i], b = nodes[j];
+                    var dx = b.x - a.x, dy = b.y - a.y;
+                    var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+                    var need = a.r + b.r + minGap;
+                    if (dist < need) {
+                        var push = (need - dist) / 2;
+                        var ux = dx / dist, uy = dy / dist;
+                        a.x -= ux * push; a.y -= uy * push;
+                        b.x += ux * push; b.y += uy * push;
+                        moved = true;
+                    }
+                }
+            }
+            if (!moved) break;
+        }
+    }
 
-        var maxSubs = 1;
+    function buildNicheMap(pts) {
+        var stage = document.getElementById('comp-map-stage');
+        if (!stage) return;
+
+        var W = 340, H = 300;
+        var padL = 30, padR = 18, padT = 24, padB = 26;
+        var plotW = W - padL - padR, plotH = H - padT - padB;
+
+        var maxReach = 1, maxPpw = 1, maxSubs = 1;
         for (var i = 0; i < pts.length; i++) {
+            if (pts[i].reach != null && pts[i].reach > maxReach) maxReach = pts[i].reach;
+            if (pts[i].ppw != null && pts[i].ppw > maxPpw) maxPpw = pts[i].ppw;
             if (pts[i].subs != null && pts[i].subs > maxSubs) maxSubs = pts[i].subs;
         }
+        maxReach *= 1.12; maxPpw *= 1.12;
+
         function radiusFor(p) {
-            if (p.subs == null) return 8;
-            var rr = 8 + Math.sqrt(p.subs / maxSubs) * 22;
-            return Math.max(7, Math.min(32, rr));
+            if (p.subs == null) return 11;
+            return Math.max(9, Math.min(26, 9 + Math.sqrt(p.subs / maxSubs) * 17));
         }
 
-        var maxReach = 1, maxPpw = 1;
-        for (var j = 0; j < pts.length; j++) {
-            if (pts[j].reach != null && pts[j].reach > maxReach) maxReach = pts[j].reach;
-            if (pts[j].ppw != null && pts[j].ppw > maxPpw) maxPpw = pts[j].ppw;
+        var nodes = [];
+        for (var k = 0; k < pts.length; k++) {
+            var p = pts[k];
+            var hidden = !!_mapHidden[(p.username || '').toLowerCase() + (p.is_you ? '_you' : '')];
+            var nx = padL + (Math.max(0, Math.min(1, (p.ppw || 0) / maxPpw))) * plotW;
+            var ny = padT + plotH - (Math.max(0, Math.min(1, (p.reach || 0) / maxReach))) * plotH;
+            nodes.push({ p: p, x: nx, y: ny, ox: nx, oy: ny, r: radiusFor(p), hidden: hidden, idx: k });
         }
 
-        var datasets = pts.map(function (p) {
-            var c = _roleColor(p.role, p.is_you);
-            return {
-                label: p.is_you ? 'Ты' : ('@' + p.username),
-                data: [{ x: (p.ppw == null ? 0 : p.ppw), y: (p.reach == null ? 0 : p.reach), r: radiusFor(p) }],
-                backgroundColor: hexToRgba(c, p.is_you ? 0.85 : 0.45),
-                borderColor: c,
-                borderWidth: p.is_you ? 0 : 1.5,
-                _pt: p,
-            };
-        });
+        var visible = nodes.filter(function (n) { return !n.hidden; });
+        _relax(visible, 3);
+        for (var v = 0; v < visible.length; v++) {
+            visible[v].x = Math.max(padL + visible[v].r, Math.min(W - padR - visible[v].r, visible[v].x));
+            visible[v].y = Math.max(padT + visible[v].r, Math.min(padT + plotH - visible[v].r, visible[v].y));
+        }
 
-        var marks = {
-            id: 'compMarks',
-            afterDatasetsDraw: function (chart) {
-                var g = chart.ctx;
-                chart.data.datasets.forEach(function (ds, i) {
-                    if (chart.getDatasetMeta(i).hidden) return;
-                    var el = chart.getDatasetMeta(i).data[0];
-                    if (!el) return;
-                    var p = ds._pt, x = el.x, y = el.y, r = el.options.radius;
-                    if (p.is_you) {
-                        g.save(); g.shadowColor = '#818cf8'; g.shadowBlur = 16;
-                        g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = 'rgba(129,140,248,0.95)'; g.fill(); g.restore();
-                        g.save(); g.beginPath(); g.arc(x, y, Math.max(4, r - 3), 0, 7); g.fillStyle = '#161928'; g.fill();
-                        g.fillStyle = '#AFA9EC'; g.font = '600 11px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-                        g.fillText('Я', x, y + 0.5); g.restore();
-                    }
-                    if (p.role === 'flagship' || p.role === 'leader') {
-                        g.save(); g.fillStyle = '#F0997B'; g.font = '9px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
-                        g.fillText('флагман', x, y - r - 2); g.restore();
-                    }
-                    if (p.role === 'rocket') {
-                        g.save(); g.fillStyle = '#fbbf24'; g.font = '9px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
-                        g.fillText('ракета', x, y - r - 2); g.restore();
-                    }
-                });
+        var midX = padL + plotW * 0.5;
+        var midY = padT + plotH * 0.5;
+
+        var svg = '<svg class="comp-map-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+        svg += '<defs>' +
+            '<radialGradient id="compGlowYou" cx="50%" cy="50%" r="50%">' +
+                '<stop offset="0%" stop-color="#818cf8" stop-opacity="0.55"/>' +
+                '<stop offset="100%" stop-color="#818cf8" stop-opacity="0"/>' +
+            '</radialGradient>' +
+            '<filter id="compSoft" x="-50%" y="-50%" width="200%" height="200%">' +
+                '<feGaussianBlur stdDeviation="2.2"/>' +
+            '</filter>' +
+            '</defs>';
+
+        svg += '<rect x="' + padL + '" y="' + padT + '" width="' + (plotW * 0.5) + '" height="' + (plotH * 0.5) + '" fill="rgba(240,153,123,0.04)"/>';
+        svg += '<rect x="' + midX + '" y="' + padT + '" width="' + (plotW * 0.5) + '" height="' + (plotH * 0.5) + '" fill="rgba(93,202,165,0.05)"/>';
+        svg += '<rect x="' + midX + '" y="' + midY + '" width="' + (plotW * 0.5) + '" height="' + (plotH * 0.5) + '" fill="rgba(99,102,241,0.04)"/>';
+
+        svg += '<line x1="' + midX + '" y1="' + padT + '" x2="' + midX + '" y2="' + (padT + plotH) + '" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="4 4"/>';
+        svg += '<line x1="' + padL + '" y1="' + midY + '" x2="' + (W - padR) + '" y2="' + midY + '" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="4 4"/>';
+
+        svg += '<line x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + (padT + plotH) + '" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>';
+        svg += '<line x1="' + padL + '" y1="' + (padT + plotH) + '" x2="' + (W - padR) + '" y2="' + (padT + plotH) + '" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>';
+
+        svg += '<text x="' + (W - padR - 3) + '" y="' + (padT + 11) + '" fill="rgba(93,202,165,0.5)" font-size="8.5" text-anchor="end">лидеры</text>';
+        svg += '<text x="' + (padL + 4) + '" y="' + (padT + 11) + '" fill="rgba(240,153,123,0.5)" font-size="8.5">нишевые звёзды</text>';
+        svg += '<text x="' + (padL + 4) + '" y="' + (padT + plotH - 5) + '" fill="rgba(255,255,255,0.22)" font-size="8.5">тихони</text>';
+        svg += '<text x="' + (W - padR - 3) + '" y="' + (padT + plotH - 5) + '" fill="rgba(129,140,248,0.5)" font-size="8.5" text-anchor="end">частят</text>';
+
+        svg += '<text x="' + padL + '" y="' + (H - 7) + '" fill="#4a4d61" font-size="9">частота \u2192</text>';
+        svg += '<text x="9" y="' + (padT + 4) + '" fill="#4a4d61" font-size="9" transform="rotate(-90 9 ' + (padT + 4) + ')" text-anchor="end">охват \u2192</text>';
+
+        var delay = 0;
+        for (var n = 0; n < nodes.length; n++) {
+            var nd = nodes[n];
+            if (nd.hidden) continue;
+            var pp = nd.p;
+            var color = _roleColor(pp.role, pp.is_you);
+            var cx = nd.x.toFixed(1), cy = nd.y.toFixed(1), r = nd.r.toFixed(1);
+            var dataAttr = ' data-mapidx="' + nd.idx + '"';
+
+            svg += '<g class="comp-node" style="animation-delay:' + delay + 'ms;" data-node="1">';
+            if (pp.is_you) {
+                svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (nd.r + 9).toFixed(1) + '" fill="url(#compGlowYou)" class="comp-node-glow"/>';
+                svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + color + '" stroke="#AFA9EC" stroke-width="2"' + dataAttr + ' class="comp-node-hit"/>';
+                svg += '<text x="' + cx + '" y="' + cy + '" dy="0.35em" fill="#fff" font-size="10" font-weight="700" text-anchor="middle" pointer-events="none">Я</text>';
+            } else {
+                svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + hexToRgba(color, 0.42) + '" stroke="' + color + '" stroke-width="1.5"' + dataAttr + ' class="comp-node-hit"/>';
+                if (pp.role === 'flagship' || pp.role === 'leader') {
+                    svg += '<text x="' + cx + '" y="' + (nd.y - nd.r - 3).toFixed(1) + '" fill="#F0997B" font-size="8.5" text-anchor="middle" pointer-events="none">флагман</text>';
+                } else if (pp.role === 'rocket') {
+                    svg += '<text x="' + cx + '" y="' + (nd.y - nd.r - 3).toFixed(1) + '" fill="#fbbf24" font-size="8.5" text-anchor="middle" pointer-events="none">ракета</text>';
+                }
             }
-        };
+            svg += '</g>';
+            delay += 70;
+        }
+        svg += '</svg>';
+        stage.innerHTML = svg;
 
-        if (_nicheChart) { try { _nicheChart.destroy(); } catch (e) {} _nicheChart = null; }
-
-        _nicheChart = new window.Chart(canvas, {
-            type: 'bubble',
-            data: { datasets: datasets },
-            options: {
-                responsive: true, maintainAspectRatio: false, layout: { padding: 18 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: false,
-                        external: function (c) {
-                            var tip = document.getElementById('comp-map-tip');
-                            if (!tip) return;
-                            var tt = c.tooltip;
-                            if (!tt || !tt.dataPoints || !tt.dataPoints.length) return;
-                            var p = c.chart.data.datasets[tt.dataPoints[0].datasetIndex]._pt;
-                            var nm = p.is_you ? 'Твой канал' : ('@' + p.username);
-                            var col = _roleColor(p.role, p.is_you);
-                            var parts = [];
-                            if (p.subs != null) parts.push(_num(p.subs) + ' подписчиков');
-                            if (p.reach != null) parts.push('охват ' + _pct(p.reach));
-                            if (p.ppw != null) parts.push(_ppw(p.ppw));
-                            tip.innerHTML = '<span style="color:' + col + ';font-weight:500;">' + _esc(nm) + '</span>' +
-                                (parts.length ? ': ' + _esc(parts.join(', ')) : '');
-                        }
-                    }
-                },
-                scales: {
-                    x: { title: { display: true, text: 'частота \u2192', color: '#4a4d61', font: { size: 10 } }, min: 0, suggestedMax: maxPpw * 1.15, grid: { display: false }, ticks: { color: '#4a4d61', font: { size: 9 }, callback: function (v) { return v + '/н'; } } },
-                    y: { title: { display: true, text: 'охват \u2192', color: '#4a4d61', font: { size: 10 } }, min: 0, suggestedMax: maxReach * 1.15, grid: { display: false }, ticks: { color: '#4a4d61', font: { size: 9 }, callback: function (v) { return v + '%'; } } }
-                },
-                animation: { duration: 800, easing: 'easeOutQuart' }
-            },
-            plugins: [marks]
-        });
+        var hits = stage.querySelectorAll('.comp-node-hit');
+        for (var h = 0; h < hits.length; h++) {
+            (function (el) {
+                el.addEventListener('click', function () {
+                    var idx = parseInt(el.getAttribute('data-mapidx'), 10);
+                    var node = nodes[idx];
+                    if (!node) return;
+                    _haptic('light');
+                    _showMapTip(node.p);
+                });
+            })(hits[h]);
+        }
 
         var chipsHost = document.getElementById('comp-map-chips');
         if (chipsHost) {
             chipsHost.innerHTML = '';
-            pts.forEach(function (p, i) {
-                var c = _roleColor(p.role, p.is_you);
-                var b = document.createElement('button');
-                b.className = 'comp-chip';
-                b.innerHTML = '<span class="comp-chip-dot" style="background:' + c + ';"></span>' + _esc(p.is_you ? 'Ты' : ('@' + p.username));
-                b.addEventListener('click', function () {
-                    var meta = _nicheChart.getDatasetMeta(i);
-                    meta.hidden = !meta.hidden;
-                    b.classList.toggle('comp-chip-off', meta.hidden);
-                    _nicheChart.update();
-                });
-                chipsHost.appendChild(b);
+            for (var ci = 0; ci < nodes.length; ci++) {
+                (function (nd2) {
+                    var pp2 = nd2.p;
+                    var color2 = _roleColor(pp2.role, pp2.is_you);
+                    var key = (pp2.username || '').toLowerCase() + (pp2.is_you ? '_you' : '');
+                    var b = document.createElement('button');
+                    b.className = 'comp-chip' + (nd2.hidden ? ' comp-chip-off' : '');
+                    b.innerHTML = '<span class="comp-chip-dot" style="background:' + color2 + ';"></span>' + _esc(pp2.is_you ? 'Ты' : ('@' + pp2.username));
+                    b.addEventListener('click', function () {
+                        _mapHidden[key] = !_mapHidden[key];
+                        _haptic('light');
+                        buildNicheMap(pts);
+                    });
+                    chipsHost.appendChild(b);
+                })(nodes[ci]);
+            }
+        }
+    }
+
+    function _showMapTip(p) {
+        var tip = document.getElementById('comp-map-tip');
+        if (!tip) return;
+        var nm = p.is_you ? 'Твой канал' : ('@' + p.username);
+        var color = _roleColor(p.role, p.is_you);
+        var role = (p.role === 'flagship' || p.role === 'leader') ? 'Лидер ниши'
+            : (p.role === 'rocket') ? 'Аномальный рост'
+            : (p.is_you) ? 'Ты здесь' : 'Конкурент';
+
+        var metrics = '';
+        if (p.subs != null) metrics += '<span class="comp-tipc-m"><i class="ti ti-users"></i>' + _num(p.subs) + '</span>';
+        if (p.reach != null) metrics += '<span class="comp-tipc-m"><i class="ti ti-eye"></i>' + _pct(p.reach) + '</span>';
+        if (p.ppw != null) metrics += '<span class="comp-tipc-m"><i class="ti ti-calendar"></i>' + _ppw(p.ppw) + '</span>';
+
+        var btn = (!p.is_you && _hasText(p.username))
+            ? '<button class="comp-tipc-btn" data-tip-open="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>'
+            : '';
+
+        tip.classList.add('comp-map-tip-card');
+        tip.innerHTML =
+            '<div class="comp-tipc-head">' +
+                '<span class="comp-tipc-dot" style="background:' + color + ';' + (p.is_you ? 'box-shadow:0 0 6px ' + color + ';' : '') + '"></span>' +
+                '<span class="comp-tipc-name" style="color:' + color + ';">' + _esc(nm) + '</span>' +
+                '<span class="comp-tipc-role">' + _esc(role) + '</span>' +
+            '</div>' +
+            (metrics ? '<div class="comp-tipc-metrics">' + metrics + '</div>' : '') +
+            btn;
+
+        var ob = tip.querySelector('[data-tip-open]');
+        if (ob) {
+            ob.addEventListener('click', function () {
+                _haptic('medium');
+                _openChannel(ob.getAttribute('data-tip-open'));
             });
         }
     }

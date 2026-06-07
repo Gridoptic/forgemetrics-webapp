@@ -844,3 +844,221 @@ body.comp-modal-open {
     min-width: 46px;
     text-align: right;
 }
+
+.comp-map-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 0.5px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 14px 12px 12px;
+}
+
+.comp-map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 0 2px;
+}
+
+.comp-lg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    color: #9396ac;
+}
+
+.comp-lg-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.comp-lg-you {
+    background: #818cf8;
+    box-shadow: 0 0 6px #818cf8;
+}
+
+.comp-map-stage {
+    position: relative;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.comp-map-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.comp-node {
+    opacity: 0;
+    transform: scale(0.4);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: compNodeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.comp-node-hit {
+    cursor: pointer;
+    transition: stroke-width 0.15s ease;
+}
+
+.comp-node-hit:active {
+    stroke-width: 3.5;
+}
+
+.comp-node-glow {
+    animation: compPulse 3s ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+@keyframes compNodeIn {
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes compPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.comp-map-tip {
+    margin: 12px 2px 10px;
+    padding: 11px 13px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 0.5px solid rgba(99, 102, 241, 0.22);
+    border-radius: 12px;
+    font-size: 12px;
+    color: #AFA9EC;
+    line-height: 1.5;
+    min-height: 16px;
+    transition: background 0.2s ease;
+}
+
+.comp-map-tip-open {
+    display: block;
+    font-size: 10.5px;
+    color: #6b7088;
+    margin-top: 3px;
+}
+
+.comp-map-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 2px;
+}
+
+.comp-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    font-size: 10.5px;
+    color: #b8bcd0;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.comp-chip:active { background: rgba(255, 255, 255, 0.08); }
+.comp-chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.comp-chip-off { opacity: 0.35; text-decoration: line-through; }
+
+@media (prefers-reduced-motion: reduce) {
+    .comp-node { animation: none !important; opacity: 1; transform: none; }
+    .comp-node-glow { animation: none !important; }
+}
+
+.comp-map-tip-card {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.comp-tipc-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.comp-tipc-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.comp-tipc-name {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.comp-tipc-role {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #6b7088;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 7px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.comp-tipc-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.comp-tipc-m {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #b8bcd0;
+}
+
+.comp-tipc-m i {
+    font-size: 13px;
+    color: #6b7088;
+}
+
+.comp-tipc-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    transition: transform 0.1s ease;
+}
+
+.comp-tipc-btn:active {
+    transform: scale(0.98);
+}
+
+.comp-tipc-btn i {
+    font-size: 16px;
+}
