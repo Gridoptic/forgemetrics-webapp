@@ -134,6 +134,7 @@
     function closeCompetitors() {
         _closed = true;
         stopPolling();
+        stopSearchPolling();
         stopThinking();
         if (_screen && _screen.parentNode) {
             _screen.parentNode.removeChild(_screen);
@@ -422,21 +423,74 @@
         });
     }
 
+    var _searchPollTimer = null;
+    var _searchPollAttempts = 0;
+    var SEARCH_POLL_MAX = 80;
+
+    function stopSearchPolling() {
+        if (_searchPollTimer) {
+            clearInterval(_searchPollTimer);
+            _searchPollTimer = null;
+        }
+        _searchPollAttempts = 0;
+    }
+
     function startFind() {
         showThinking(THINKING_SEARCH);
         apiPost('/api/v1/channels/' + _channelId + '/competitors/find-candidates')
             .then(function (res) {
                 if (_closed) return;
-                stopThinking();
-                _candidates = (res && res.candidates) || [];
-                _nicheSummary = (res && res.niche_summary) || '';
-                if (res && res.max_selectable) _maxSelectable = res.max_selectable;
-                renderSelect();
+                var sid = res && res.search_id;
+                if (sid == null) {
+                    handleFindError(new Error('no search_id'));
+                    return;
+                }
+                pollSearch(sid);
             })
             .catch(function (err) {
                 if (_closed) return;
                 handleFindError(err);
             });
+    }
+
+    function pollSearch(searchId) {
+        stopSearchPolling();
+        _searchPollAttempts = 0;
+        _searchPollTimer = setInterval(function () {
+            _searchPollAttempts++;
+            if (_searchPollAttempts > SEARCH_POLL_MAX) {
+                stopSearchPolling();
+                showFatalError('Поиск занимает дольше обычного. Попробуй ещё раз.', { icon: 'ti-clock', onRetry: renderIntro });
+                return;
+            }
+            apiGet('/api/v1/competitors/search/' + searchId)
+                .then(function (data) {
+                    if (_closed || !data) return;
+                    if (data.status === 'done') {
+                        stopSearchPolling();
+                        stopThinking();
+                        _candidates = data.candidates || [];
+                        _nicheSummary = data.niche_summary || '';
+                        if (data.max_selectable) _maxSelectable = data.max_selectable;
+                        renderSelect();
+                    } else if (data.status === 'failed') {
+                        stopSearchPolling();
+                        stopThinking();
+                        showFatalError(
+                            data.error || 'Не удалось подобрать конкурентов. Добавь канал вручную.',
+                            { icon: 'ti-mood-empty', onRetry: renderIntro }
+                        );
+                    }
+                })
+                .catch(function (err) {
+                    var msg = (err && err.message) || '';
+                    if (msg.indexOf('404') !== -1) {
+                        stopSearchPolling();
+                        stopThinking();
+                        showFatalError('Поиск не найден. Попробуй ещё раз.', { icon: 'ti-alert-triangle', onRetry: renderIntro });
+                    }
+                });
+        }, POLL_INTERVAL_MS);
     }
 
     function handleFindError(err) {

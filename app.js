@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://fighting-auditor-retention-eleven.trycloudflare.com';
+const API_BASE_URL = 'https://schedules-attractive-independence-western.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
