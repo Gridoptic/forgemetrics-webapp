@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://lawrence-drill-county-notre.trycloudflare.com';
+const API_BASE_URL = 'https://camcorder-hearts-bosnia-arnold.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
