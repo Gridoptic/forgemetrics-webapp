@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://camcorder-hearts-bosnia-arnold.trycloudflare.com';
+const API_BASE_URL = 'https://communicate-stat-contains-revolutionary.trycloudflare.com';
 
 const tg = window.Telegram?.WebApp;
 
