@@ -437,6 +437,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'find_advertisers') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openAdExchange === 'function') {
+            window.__openAdExchange();
+        }
+        return;
+    }
+
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
         text: 'Эта функция в разработке.',
