@@ -374,6 +374,10 @@
                         stopPolling();
                         stopThinking();
                         showFatalError(data.error || 'Подходящих площадок не нашлось. Поиск не списан.', { onRetry: renderIntro, icon: 'ti-mood-empty' });
+                    } else if (data.status === 'service_unavailable') {
+                        stopPolling();
+                        stopThinking();
+                        showFatalError(data.error || 'Сервис временно недоступен. Поиск не списан.', { onRetry: renderIntro, icon: 'ti-cloud-off' });
                     }
                 })
                 .catch(function () {});
@@ -457,7 +461,7 @@
         var match = p.match_percent != null ? p.match_percent : 50;
         var dash = (match / 100 * 119).toFixed(0);
         var contactBtn = p.contact
-            ? '<button class="adx-msg" data-u="' + _esc(p.contact) + '"><i class="ti ti-brand-telegram"></i> Писать</button>'
+            ? '<button class="adx-msg" data-u="' + _esc(p.contact) + '"><i class="ti ti-brand-telegram"></i> Написать</button>'
             : '<button class="adx-msg adx-msg-alt" data-u="' + _esc(p.username) + '"><i class="ti ti-external-link"></i> Канал</button>';
 
         var flagsHtml = (p.health_flags || []).map(function (f) {
@@ -493,7 +497,7 @@
                 '</span>' +
             '</div>' +
             '<div class="adx-metrics">' +
-                '<div class="adx-metric"><div class="adx-metric-lbl">Прогноз охвата</div><div class="adx-metric-val adx-accent">~' + _num(p.forecast_reach) + '</div></div>' +
+                '<div class="adx-metric"><div class="adx-metric-lbl">Охват рекламы</div><div class="adx-metric-val adx-accent">~' + _num(p.forecast_reach) + '</div></div>' +
                 '<div class="adx-metric"><div class="adx-metric-lbl">Цена поста</div><div class="adx-metric-val adx-price">' + _esc(p.price_estimate) + '</div></div>' +
                 '<div class="adx-metric"><div class="adx-metric-lbl">Просмотры</div>' + (sparkSvg(p.views_spark, sparkCol) || '<div class="adx-metric-val">—</div>') + '</div>' +
             '</div>' +
