@@ -370,6 +370,10 @@
                         stopPolling();
                         stopThinking();
                         showFatalError(data.error || 'Поиск не удался. Попробуй ещё раз.', { onRetry: renderIntro });
+                    } else if (data.status === 'empty') {
+                        stopPolling();
+                        stopThinking();
+                        showFatalError(data.error || 'Подходящих площадок не нашлось. Поиск не списан.', { onRetry: renderIntro, icon: 'ti-mood-empty' });
                     }
                 })
                 .catch(function () {});
