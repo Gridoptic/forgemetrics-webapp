@@ -85,7 +85,7 @@ color:var(--mkt-tx);
 #mkt-screen .mkt-b-safe{background:rgba(52,211,153,0.12);color:var(--mkt-gr2);}
 #mkt-screen .mkt-b-big{background:rgba(245,191,79,0.14);color:var(--mkt-gold);}
 #mkt-screen .mkt-b-risk{background:rgba(239,68,68,0.12);color:var(--mkt-rd);}
-#mkt-screen .mkt-desc{font#mkt-screen .mkt-desc{font-size:11.5px;color:var(--mkt-tx2);line-height:1.45;margin-top:9px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;}
+#mkt-screen .mkt-desc{font-size:11.5px;color:var(--mkt-tx2);line-height:1.45;margin-top:9px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;}
 #mkt-screen .mkt-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
 #mkt-screen .mkt-tagchip{font-size:9px;color:var(--mkt-tx2);background:rgba(255,255,255,0.05);padding:2px 7px;border-radius:5px;}
 #mkt-screen .mkt-metrics{display:flex;gap:13px;margin-top:11px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);}
