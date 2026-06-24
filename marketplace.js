@@ -11,6 +11,8 @@
     var _feedState = 'idle';
     var _baseState = 'idle';
     var _my = null;
+    var _channels = [];
+    var _myListings = [];
     var _bookmarks = {};
     var _faqTab = 'terms';
 
@@ -528,7 +530,7 @@
             cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'levit', over: 'none', glow: 'none', orbit: 'none', atomColor: '#5DCAA5',
             glowCard: false, glass: false, tgZone: 'cover', tgTab: 'emoji',
-            att: { avatar: '', cover: '🔥', body: ['🧬'], list: ['🔥', '🧬'] }, listingId: null, channelId: _channelId
+            att: { avatar: '', cover: '', body: [], list: [] }, listingId: null, channelId: _channelId
         };
     }
     function defaultFmts() {
@@ -540,14 +542,65 @@
         ];
     }
 
+    function loadChannels() {
+        return apiGet('/api/v1/channels').then(function (r) {
+            var arr = (r && r.channels) ? r.channels : [];
+            _channels = arr.filter(function (c) { return c.username; });
+            return _channels;
+        }).catch(function () { _channels = []; return []; });
+    }
+    function loadMyListings() {
+        return apiGet('/api/v1/marketplace/my').then(function (r) {
+            _myListings = (r && r.listings) ? r.listings : [];
+            return _myListings;
+        }).catch(function () { _myListings = []; return []; });
+    }
+    function _channelById(id) {
+        for (var i = 0; i < _channels.length; i++) if (_channels[i].id === id) return _channels[i];
+        return null;
+    }
+    function _listingForChannel(chId) {
+        var ch = _channelById(chId);
+        if (!ch || !ch.username) return null;
+        for (var j = 0; j < _myListings.length; j++) {
+            var u = _myListings[j].username;
+            if (u && u.toLowerCase() === ch.username.toLowerCase()) return _myListings[j];
+        }
+        return null;
+    }
+    function channelSelectorHtml() {
+        var opts = _channels.map(function (c) {
+            var mark = _listingForChannel(c.id) ? ' ✓' : '';
+            return '<option value="' + c.id + '"' + (c.id === _ss.channelId ? ' selected' : '') + '>@' + _esc(c.username) + (c.title ? ' — ' + _esc(c.title) : '') + mark + '</option>';
+        }).join('');
+        var listing = _listingForChannel(_ss.channelId);
+        var note = listing ? ('Редактируешь карточку · статус: ' + _esc(listing.status_human || listing.status || '—')) : 'Новое размещение для этого канала';
+        return '<div class="mkt-chsel" style="margin-bottom:14px;"><span class="mkt-lbl">Канал для размещения</span>' +
+            '<select id="mkt-chSel" class="mkt-inp" style="width:100%;">' + opts + '</select>' +
+            '<div style="font-size:11px;color:var(--mkt-tx2);margin-top:6px;">' + note + '</div></div>';
+    }
+    function selectChannel(chId) {
+        _ss = defaultState();
+        _sfmts = defaultFmts();
+        _ss.channelId = chId;
+        var listing = _listingForChannel(chId);
+        if (listing) hydrateStudio(listing);
+        _ss.channelId = chId;
+        renderStudio();
+    }
     function mountStudio() {
         byId('mkt-body').innerHTML = '<div style="text-align:center;padding:48px 16px;color:var(--mkt-tx2);"><i class="ti ti-loader-2" style="font-size:28px;opacity:0.5;"></i><div style="font-size:12px;margin-top:10px;">Загружаю студию…</div></div>';
-        loadMy().then(function (r) {
-            _ss = defaultState();
-            _sfmts = defaultFmts();
-            var listing = (r && r.listings && r.listings.length) ? r.listings[0] : null;
-            if (listing) hydrateStudio(listing);
-            renderStudio();
+        Promise.all([loadChannels(), loadMyListings()]).then(function () {
+            if (!_channels.length) {
+                byId('mkt-body').innerHTML = emptyState('ti-plus', 'Нет подходящих каналов', 'Чтобы выставить канал на Площадку, у него должен быть публичный @username. Добавь или настрой канал в приложении.');
+                return;
+            }
+            var def = null;
+            for (var i = 0; i < _channels.length; i++) {
+                if (_listingForChannel(_channels[i].id)) { def = _channels[i].id; break; }
+            }
+            if (def == null) def = _channels[0].id;
+            selectChannel(def);
         });
     }
     function hydrateStudio(l) {
@@ -577,7 +630,7 @@
     function renderStudio() {
         var ss = _ss;
         byId('mkt-body').innerHTML =
-            '<div class="mkt-studio"><div class="mkt-col-tools">' +
+            '<div class="mkt-studio"><div class="mkt-col-tools">' + channelSelectorHtml() +
             acc('cover', 'ti-photo', 'Обложка', 'Фон шапки карточки', true,
                 '<div class="mkt-minitabs"><button class="mkt-minitab mkt-on" data-cv="grad">Градиент</button><button class="mkt-minitab" data-cv="img">Картинка</button><button class="mkt-minitab" data-cv="gif">GIF</button></div>' +
                 '<div id="mkt-covGrad" class="mkt-covers"></div>') +
@@ -592,12 +645,6 @@
                 '<div id="mkt-atomInline" class="mkt-hidden" style="margin-top:9px;padding:10px;background:rgba(93,202,165,0.07);border:0.5px solid rgba(93,202,165,0.2);border-radius:10px;"><span class="mkt-lbl" style="color:var(--mkt-gr);"><i class="ti ti-atom"></i> Цвет электронов</span><div class="mkt-swatches" id="mkt-atomColors"></div></div>' +
                 fxGroup('Оформление карточки', 'ti-diamond', 'mkt-fxCard', true) +
                 '<div style="font-size:10px;color:var(--mkt-tx3);margin-top:4px;line-height:1.45;"><i class="ti ti-info-circle"></i> Движение и Поверхность — бесплатно всем. <span style="color:var(--mkt-gold);">Свечение, Орбита и Оформление карточки можно посмотреть, но применятся только с продвижением на 30 дней (29 990₽).</span></div>') +
-            acc('tg', 'ti-mood-smile', 'Эмодзи и стикеры Telegram', 'Из твоего аккаунта · с Premium кастомные', false,
-                '<div class="mkt-tgsource"><i class="ti ti-brand-telegram"></i> Берутся <b>прямо из твоего Telegram</b> — все твои эмодзи и стикеры. С <b>Telegram Premium</b> — и кастомные. Свою библиотеку мы не делаем.</div>' +
-                '<span class="mkt-lbl">Куда добавить</span><div class="mkt-minitabs" style="margin-bottom:12px;"><button class="mkt-minitab mkt-on" data-tz="cover">Обложка</button><button class="mkt-minitab" data-tz="avatar">Аватар</button><button class="mkt-minitab" data-tz="body">Тело</button><button class="mkt-minitab" data-tz="list">В список</button></div>' +
-                '<div class="mkt-picker"><div class="mkt-picker-lbl"><i class="ti ti-brand-telegram"></i> Твой Telegram <span style="color:var(--mkt-tx3);text-transform:none;letter-spacing:0;">— в приложении откроется нативный пикер</span></div>' +
-                '<div class="mkt-minitabs"><button class="mkt-minitab mkt-on" data-tt="emoji">Эмодзи</button><button class="mkt-minitab" data-tt="prem">Кастомные<i class="ti ti-crown" style="font-size:11px;margin-left:3px;color:var(--mkt-gold);"></i></button><button class="mkt-minitab" data-tt="stk">Стикеры</button></div>' +
-                '<div id="mkt-tgEmoji" class="mkt-emo-grid"></div><div id="mkt-tgStk" class="mkt-emo-grid mkt-hidden"></div></div>') +
             acc('style', 'ti-droplet', 'Стиль', 'Цвет и шрифт', false,
                 '<span class="mkt-lbl">Акцентный цвет (цена + кнопка)</span><div class="mkt-swatches" id="mkt-colorPick"></div><span class="mkt-lbl" style="margin-top:12px;">Шрифт заголовка</span><div class="mkt-fonts" id="mkt-fontPick"></div>') +
             acc('desc', 'ti-message', 'Описание и теги', 'Текст карточки', false,
@@ -633,11 +680,10 @@
         sc.querySelectorAll('[data-acc]').forEach(function (h) { h.addEventListener('click', function () { accToggle(h.getAttribute('data-acc')); }); });
         sc.querySelectorAll('[data-cv]').forEach(function (b) { b.addEventListener('click', function () { covTab(b.getAttribute('data-cv')); }); });
         sc.querySelectorAll('[data-av]').forEach(function (b) { b.addEventListener('click', function () { avTab(b.getAttribute('data-av')); }); });
-        sc.querySelectorAll('[data-tz]').forEach(function (b) { b.addEventListener('click', function () { tgZone(b.getAttribute('data-tz')); }); });
-        sc.querySelectorAll('[data-tt]').forEach(function (b) { b.addEventListener('click', function () { tgTab(b.getAttribute('data-tt')); }); });
         byId('mkt-sDesc').addEventListener('input', studioPreview);
         byId('mkt-sTags').addEventListener('input', studioPreview);
         byId('mkt-sSlots').addEventListener('input', studioPreview);
+        var chSel = byId('mkt-chSel'); if (chSel) chSel.addEventListener('change', function () { selectChannel(+this.value); });
         byId('mkt-saveBtn').addEventListener('click', saveStudio);
     }
     function accToggle(id) {
@@ -669,7 +715,6 @@
         byId('mkt-fxOrbit').innerHTML = chipRow(FX_ORBIT, ss.orbit, 'orbit', true);
         byId('mkt-fxCard').innerHTML = cardFxRow();
         byId('mkt-atomInline').classList.toggle('mkt-hidden', ss.orbit !== 'atom');
-        renderTg();
         renderFmtEd();
         bindStudioControls();
     }
@@ -798,6 +843,7 @@
         var btn = byId('mkt-saveBtn');
         btn.disabled = true;
         var body = studioPayload();
+        var wasCreate = !_ss.listingId;
         var p;
         if (_ss.listingId) {
             p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
@@ -808,7 +854,10 @@
         }
         p.then(function (r) {
             _haptic('success');
-            if (r && r.listing_id) _ss.listingId = r.listing_id;
+            if (r && r.listing_id) {
+                _ss.listingId = r.listing_id;
+                if (wasCreate) { var _ch = _channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: _ch ? _ch.username : null, status: 'pending', status_human: 'На модерации' }); }
+            }
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
             setTimeout(function () { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить карточку'; btn.disabled = false; }, 1600);
         }).catch(function (e) {

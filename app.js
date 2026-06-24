@@ -445,6 +445,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'marketplace') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openMarketplace === 'function') {
+            window.__openMarketplace();
+        }
+        return;
+    }
+
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
         text: 'Эта функция в разработке.',
