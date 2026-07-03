@@ -60,6 +60,12 @@
 
     /* ===================== helpers ===================== */
     function _esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function _short(n) {
+        if (n == null) return '—';
+        if (n >= 1000000) return (Math.round(n / 100000) / 10 + '').replace('.', ',') + 'М';
+        if (n >= 1000) return (Math.round(n / 100) / 10 + '').replace('.', ',') + 'К';
+        return String(n);
+    }
     function _num(n) { if (n == null || isNaN(n)) return '—'; return Number(n).toLocaleString('ru-RU'); }
     function _haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) { if (k === 'success' || k === 'error' || k === 'warning') tg.HapticFeedback.notificationOccurred(k); else tg.HapticFeedback.impactOccurred(k || 'light'); } } catch (e) {} }
     function apiGet(p) { return apiRequest(p); }
@@ -389,7 +395,10 @@
             '.fmx-met2 b{color:#565b73;font-weight:600;margin-right:2px;}',
             '.fmx-met2 i{width:3px;height:3px;border-radius:50%;background:#3a3f55;flex-shrink:0;}',
             '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
-            '@media(max-width:389px){.fmx-lsp{display:none;}}',
+            '.fmx-lmet{font-size:10px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
+            '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
+            '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}',
             '.fmx-li.prem>.fmx-lrow{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.6),0 0 18px rgba(245,191,79,0.3);}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
@@ -1079,7 +1088,7 @@
         qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
         var hl = el('fmx-hlist');
         if (hl) {
-            var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color, is_top: _ss.glowCard };
+            var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, er: (c.er != null ? c.er : c.er_percent), formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color, is_top: _ss.glowCard };
             hl.innerHTML = '<span class="fmx-lbl" style="margin:0 0 7px;">Так выглядит в списке</span>' + listItem(fakeL, true);
         }
         updateAccSummaries();
@@ -1228,15 +1237,17 @@
     }
     function listItem(l, fx) {
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = _isTop(l);
-        var bits = [_num(l.subscribers) + ' подп'];
-        if (l.avg_views) bits.push('~' + _num(l.avg_views) + ' охват');
-        if (l.er != null) bits.push('ER ' + l.er + '%');
-        var cpm = _cpm(l); if (cpm != null) bits.push('CPM ' + cpm + '₽');
+        var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
+        if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
+        if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
+        var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _num(cpm) + '₽</b>');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '">' +
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + '</div><div class="fmx-lsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(l.username) + ' · ' + bits.join(' · ') + '</div></div>' +
-            (_nicheMatch(l) ? '<i class="ti ti-target-arrow" style="color:#818cf8;font-size:13px;flex-shrink:0;"></i>' : '') + '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + (_nicheMatch(l) ? ' <i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;"></i>' : '') + '</div>' +
+            '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
+            '<div class="fmx-lright"><span class="fmx-lprice">' + _priceFrom(l) + '</span><span class="fmx-lsp">' + spark(hc) + '</span></div>' +
+            '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
     function bindList(scope) {
