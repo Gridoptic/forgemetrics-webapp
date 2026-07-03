@@ -900,6 +900,7 @@
         _ss.listingId = l.id;
         _ss._status = l.status || null;
         _ss.sticker = l.sticker_json || l.sticker || null;
+        if (_ss.sticker) stkEnsureBox(_ss.sticker);
         if (l.accent_color) _ss.color = l.accent_color;
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
@@ -1337,6 +1338,42 @@
     /* ===================== стикеры: панель конструктора ===================== */
     var SEAM = 84;  // высота шапки карточки — стабильный якорь
     var STK_PAD = 3;    // невидимый бордер вокруг контента
+    var STK_DEFBOX = { l: 0.12, t: 0.12, r: 0.88, b: 0.88 };
+    var _stkBoxes = {};  // url -> прямоугольник видимых пикселей (доли)
+    function _scanAlpha(source, url) {
+        try {
+            var cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
+            var ctx = cv.getContext('2d');
+            ctx.drawImage(source, 0, 0, 64, 64);
+            var d = ctx.getImageData(0, 0, 64, 64).data;
+            var minX = 64, minY = 64, maxX = -1, maxY = -1;
+            for (var y = 0; y < 64; y++) for (var x = 0; x < 64; x++) {
+                if (d[(y * 64 + x) * 4 + 3] > 20) {
+                    if (x < minX) minX = x; if (x > maxX) maxX = x;
+                    if (y < minY) minY = y; if (y > maxY) maxY = y;
+                }
+            }
+            if (maxX < 0) return;
+            _stkBoxes[url] = { l: minX / 64, t: minY / 64, r: (maxX + 1) / 64, b: (maxY + 1) / 64 };
+        } catch (e) { /* canvas tainted и т.п. — остаёмся на запасном хитбоксе */ }
+    }
+    function stkEnsureBox(s) {
+        if (!s || !s.url || _stkBoxes[s.url]) return;
+        var abs = mediaAbs(s.url);
+        try {
+            if (s.kind === 'webm') {
+                var v = document.createElement('video');
+                v.crossOrigin = 'anonymous'; v.muted = true; v.preload = 'auto'; v.src = abs;
+                v.addEventListener('loadeddata', function () { _scanAlpha(v, s.url); }, { once: true });
+            } else if (s.kind === 'webp') {
+                var im = new Image();
+                im.crossOrigin = 'anonymous';
+                im.onload = function () { _scanAlpha(im, s.url); };
+                im.src = abs;
+            }
+        } catch (e) {}
+    }
+    function stkBox(s) { return (s && s.url && _stkBoxes[s.url]) || STK_DEFBOX; }
     function stkRects(card) {
         var base = card.getBoundingClientRect(), out = [];
         function push(r) {
@@ -1362,11 +1399,12 @@
         });
         return { rects: out, W: base.width, H: base.height };
     }
-    function stkValid(cx, cy, size, geo) {
+    function stkValid(cx, cy, size, geo, box) {
         var full = size / 2;
         if (cx - full < 2 || cy - full < 2 || cx + full > geo.W - 2 || cy + full > geo.H - 2) return false;
-        var h = full * 0.76;  /* хитбокс: у стикеров прозрачные поля */
-        var l = cx - h, t = cy - h, r = cx + h, b = cy + h;
+        box = box || STK_DEFBOX;
+        var l = cx + size * (box.l - 0.5), r = cx + size * (box.r - 0.5);
+        var t = cy + size * (box.t - 0.5), b = cy + size * (box.b - 0.5);
         for (var i = 0; i < geo.rects.length; i++) {
             var z = geo.rects[i];
             if (l < z.r && r > z.l && t < z.b && b > z.t) return false;
@@ -1375,13 +1413,14 @@
     }
     function stkFindSpot(size, geo) {
         var cands = [[0.84, 40], [0.5, 40], [0.16, 40], [0.84, SEAM + 4], [0.16, SEAM + 4], [0.5, SEAM - 6], [0.84, SEAM + 40], [0.16, SEAM + 40]];
+        var bx = _ss && _ss.sticker ? stkBox(_ss.sticker) : null;
         for (var i = 0; i < cands.length; i++) {
             var cx = cands[i][0] * geo.W, cy = cands[i][1];
-            if (stkValid(cx, cy, size, geo)) return { cx: cx, cy: cy };
+            if (stkValid(cx, cy, size, geo, bx)) return { cx: cx, cy: cy };
         }
         for (var y = 20; y < geo.H - 20; y += 12)
             for (var x = 24; x < geo.W - 24; x += 16)
-                if (stkValid(x, y, size, geo)) return { cx: x, cy: y };
+                if (stkValid(x, y, size, geo, bx)) return { cx: x, cy: y };
         return null;
     }
     function stkSize(s, W) { return Math.max(40, Math.min(64 * (s.scale || 1), Math.min(96, W * 0.28))); }
@@ -1394,7 +1433,7 @@
     }
     function stkMedia(s, animate) {
         if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
-        if (s.kind === 'tgs') return '<span class="fmx-stk-tgs"><i class="ti ti-sticker"></i></span>';
+        if (s.kind === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(s.url) + '" data-anim="' + (animate ? 1 : 0) + '"><i class="ti ti-sticker"></i></span>';
         return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
     }
     function stkOverlay(s, W, animate, draggable) {
@@ -1402,6 +1441,46 @@
         var p = stkPos(s, W);
         var handles = (draggable && (s.mode || 'slot') === 'free') ? '<i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i>' : '';
         return '<div class="fmx-stk' + (draggable ? ' drag' : '') + ((draggable && (s.mode || 'slot') === 'free') ? ' sel' : '') + '" id="' + (draggable ? 'fmx-stkPrev' : '') + '" style="left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);">' + stkMedia(s, animate) + handles + '</div>';
+    }
+    var _lotLibs = null;
+    function _script(u) {
+        return new Promise(function (res, rej) {
+            var s = document.createElement('script');
+            s.src = u; s.onload = res; s.onerror = rej;
+            document.head.appendChild(s);
+        });
+    }
+    function loadLottie() {
+        if (_lotLibs) return _lotLibs;
+        _lotLibs = Promise.all([
+            (typeof pako !== 'undefined') ? Promise.resolve() : _script('https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js'),
+            (typeof lottie !== 'undefined') ? Promise.resolve() : _script('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js')
+        ]);
+        return _lotLibs;
+    }
+    var _tgsData = {};  // url -> animationData
+    function hydrateTgs(root) {
+        var nodes = qsa(root || document, '.fmx-stk-lot[data-tgs]:not([data-done])');
+        if (!nodes.length) return;
+        loadLottie().then(function () {
+            nodes.forEach(function (n) {
+                if (n.getAttribute('data-done')) return;
+                n.setAttribute('data-done', '1');
+                var url = n.getAttribute('data-tgs'), anim = n.getAttribute('data-anim') === '1';
+                var play = function (data) {
+                    n.innerHTML = '';
+                    try {
+                        var a = lottie.loadAnimation({ container: n, renderer: 'svg', loop: true, autoplay: anim, animationData: data });
+                        if (!anim) a.goToAndStop(0, true);
+                    } catch (e) {}
+                };
+                if (_tgsData[url]) { play(_tgsData[url]); return; }
+                fetch(mediaAbs(url)).then(function (r) { return r.arrayBuffer(); }).then(function (buf) {
+                    var json = JSON.parse(pako.inflate(new Uint8Array(buf), { to: 'string' }));
+                    _tgsData[url] = json; play(json);
+                }).catch(function () { n.removeAttribute('data-done'); });
+            });
+        }).catch(function () {});
     }
     function loadStickerPane() {
         var box = el('fmx-stkBody'); if (!box) return;
@@ -1421,7 +1500,7 @@
         } else {
             html = '<div class="fmx-stkgrid">' + _stickers.map(function (st) {
                 var sel = s && s.sticker_id === st.id;
-                return '<div class="fmx-stkcell' + (sel ? ' on' : '') + '" data-sid="' + st.id + '">' + stkMedia(st, st.kind === 'webm') +
+                return '<div class="fmx-stkcell' + (sel ? ' on' : '') + '" data-sid="' + st.id + '">' + stkMedia(st, true) +
                     (st.kind === 'tgs' ? '<span class="fmx-stk-anim">аним.</span>' : '') +
                     '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
             }).join('') + '</div>' +
@@ -1449,6 +1528,7 @@
                 if (!st) return;
                 var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0 };
                 _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot };
+                stkEnsureBox(_ss.sticker);
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
@@ -1481,7 +1561,8 @@
                 var geo = stkRects(card);
                 var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
                 var size = stkSize({ scale: want }, geo.W);
-                while (size > 40 && !stkValid(cx, cy, size, geo)) size -= 2;
+                var bx = stkBox(_ss.sticker);
+                while (size > 40 && !stkValid(cx, cy, size, geo, bx)) size -= 2;
                 want = Math.min(want, size / 64);
                 sc.value = want;
             }
@@ -1489,6 +1570,7 @@
         });
         var ro = el('fmx-stk-rot'); if (ro) ro.addEventListener('input', function () { _ss.sticker.rot = +ro.value; renderHero(); });
         var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
+        hydrateTgs(box);
     }
     function stkEnsureSpot() {
         var hero = el('fmx-hero'), card = hero && hero.querySelector('.fmx-card');
@@ -1497,7 +1579,7 @@
         if (!geo.W) return;
         var size = stkSize(_ss.sticker, geo.W);
         var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
-        if (stkValid(cx, cy, size, geo)) return;
+        if (stkValid(cx, cy, size, geo, stkBox(_ss.sticker))) return;
         var spot = stkFindSpot(size, geo);
         if (!spot) { spot = stkFindSpot(40, geo); if (spot) _ss.sticker.scale = 40 / 64; }
         if (spot) { _ss.sticker.x = spot.cx / geo.W; _ss.sticker.dy = Math.round(spot.cy - SEAM); }
@@ -1540,10 +1622,11 @@
             var r = cardEl.getBoundingClientRect();
             var cx = clientX - r.left, cy = clientY - r.top;
             if (!last) last = { cx: (_ss.sticker.x || 0.82) * W, cy: SEAM + (_ss.sticker.dy || 0) };
+            var bx = stkBox(_ss.sticker);
             var nx = cx, ny = cy;
-            if (!stkValid(nx, ny, size, geo)) {
-                if (stkValid(nx, last.cy, size, geo)) ny = last.cy;
-                else if (stkValid(last.cx, ny, size, geo)) nx = last.cx;
+            if (!stkValid(nx, ny, size, geo, bx)) {
+                if (stkValid(nx, last.cy, size, geo, bx)) ny = last.cy;
+                else if (stkValid(last.cx, ny, size, geo, bx)) nx = last.cx;
                 else { nx = last.cx; ny = last.cy; }
             }
             last = { cx: nx, cy: ny };
@@ -1567,9 +1650,9 @@
         function setScaleClamped(want) {
             if (!geo) geo = stkRects(cardEl);
             want = Math.max(0.6, Math.min(1.6, want));
-            var c = center();
+            var c = center(), bx = stkBox(_ss.sticker);
             var size = stkSize({ scale: want }, geo.W);
-            while (size > 40 && !stkValid(c.cx, c.cy, size, geo)) size -= 2;
+            while (size > 40 && !stkValid(c.cx, c.cy, size, geo, bx)) size -= 2;
             _ss.sticker.scale = Math.min(want, size / 64);
             applyBox();
         }
@@ -1687,6 +1770,7 @@
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
         bindStickerDrag(hero.querySelector('.fmx-card'));
         bindStarDrag(hero.querySelector('.fmx-card'));
+        hydrateTgs(hero);
         qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
         var hl = el('fmx-hlist');
         if (hl) {
@@ -1792,7 +1876,7 @@
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var stk = l.sticker_json || l.sticker;
-        var stkHtml = (stk && stk.url && stk.kind !== 'tgs') ? stkOverlay(stk, 350, top && stk.kind === 'webm', false) : '';
+        var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
@@ -1871,6 +1955,7 @@
     }
 
     function bindCards(scope) {
+        hydrateTgs(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-u')); }); });
