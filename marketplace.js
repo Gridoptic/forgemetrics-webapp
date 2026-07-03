@@ -330,6 +330,8 @@
             '@keyframes fmxSph{0%{transform:translate(27px,0) scale(1.1);opacity:1;}12.5%{transform:translate(19px,7px) scale(1.25);opacity:1;}25%{transform:translate(0,10px) scale(1.3);opacity:1;}37.5%{transform:translate(-19px,7px) scale(1.1);opacity:.95;}50%{transform:translate(-27px,0) scale(0.85);opacity:.7;}62.5%{transform:translate(-19px,-7px) scale(0.55);opacity:.4;}75%{transform:translate(0,-10px) scale(0.5);opacity:.35;}87.5%{transform:translate(19px,-7px) scale(0.75);opacity:.6;}100%{transform:translate(27px,0) scale(1.1);opacity:1;}}',
             '.fmx-chrow.dis{opacity:.55;}',
             '.fmx-lav{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}',
+            '.fmx-lav-fx{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}',
+            '.fmx-lav-fx .fmx-avw{transform:scale(0.74);}',
             '.fmx-lchev{transition:transform 200ms;color:#565b73;flex-shrink:0;font-size:15px;}',
             '.fmx-li.on .fmx-lchev{transform:rotate(180deg);}',
             '.fmx-li.on>.fmx-lrow{border-color:rgba(99,102,241,0.35);}',
@@ -1001,7 +1003,7 @@
         var hl = el('fmx-hlist');
         if (hl) {
             var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color, is_top: _ss.glowCard };
-            hl.innerHTML = '<span class="fmx-lbl" style="margin:0 0 7px;">Так выглядит в списке</span>' + listItem(fakeL);
+            hl.innerHTML = '<span class="fmx-lbl" style="margin:0 0 7px;">Так выглядит в списке</span>' + listItem(fakeL, true);
         }
         updateAccSummaries();
         renderMini(accent, title, priceTxt);
@@ -1088,7 +1090,7 @@
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
-    function listItem(l) {
+    function listItem(l, fx) {
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = _isTop(l);
         var bits = [_num(l.subscribers) + ' подп'];
         if (l.avg_views) bits.push('~' + _num(l.avg_views) + ' охват');
@@ -1096,7 +1098,7 @@
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM ' + cpm + '₽');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '">' +
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
-            '<div class="fmx-lav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>' +
+            (fx ? '<span class="fmx-lav-fx">' + avatarInner(accent) + '</span>' : '<div class="fmx-lav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>') +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + '</div><div class="fmx-lsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(l.username) + ' · ' + bits.join(' · ') + '</div></div>' +
             '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
