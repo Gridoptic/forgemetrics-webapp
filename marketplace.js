@@ -732,6 +732,25 @@
             });
         });
     }
+    function openNichePick(niches) {
+        var old = el('fmx-npBg'); if (old) old.remove();
+        var bg = document.createElement('div');
+        bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm';
+        bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-filter" style="color:#818cf8;"></i> Какая ниша интересует?</div>' +
+            '<div class="fmx-fxw" style="max-height:46vh;overflow-y:auto;">' + niches.map(function (n) { return '<button class="fmx-fx" data-np="' + _esc(n) + '">' + _esc(n) + '</button>'; }).join('') + '</div>' +
+            '<div class="fmx-cfm-r" style="margin-top:12px;"><button class="fmx-btn" data-no>Отмена</button></div></div>';
+        document.body.appendChild(bg);
+        function done() { bg.remove(); }
+        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        bg.querySelector('[data-no]').addEventListener('click', done);
+        qsa(bg, '[data-np]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                _nicheSel = String(b.getAttribute('data-np')).toLowerCase().trim();
+                _sort = 'niche'; done(); _haptic('light');
+                if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+            });
+        });
+    }
     var REP_REASONS = [['scam', 'Скам / обман'], ['fake_metrics', 'Накрутка метрик'], ['illegal', 'Запрещённый контент'], ['other', 'Другое']];
     function openComplaint(target) { /* target: {listing_id} | {request_id} */
         var chips = REP_REASONS.map(function (r, i) { return '<button class="fmx-fx' + (i === 0 ? ' on' : '') + '" data-rr="' + r[0] + '">' + r[1] + '</button>'; }).join('');
@@ -1466,10 +1485,10 @@
                     var seen = {}, niches = [];
                     arr.forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
                     if (!niches.length) { toast('В ленте пока нет каналов с указанной нишей'); return; }
-                    var pick = prompt('Ниша (введи одну из): ' + niches.join(', '), niches[0]);
-                    if (!pick) return;
-                    _nicheSel = String(pick).toLowerCase().trim();
-                } else _nicheSel = null;
+                    openNichePick(niches);
+                    return;
+                }
+                _nicheSel = null;
                 _sort = v;
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
             });
