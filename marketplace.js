@@ -473,6 +473,10 @@
             '.fmx-stk{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
             '.fmx-stk.drag{pointer-events:auto;cursor:grab;touch-action:none;}',
             '.fmx-stk.drag:active{cursor:grabbing;}',
+            '.fmx-stk.sel{outline:1.5px dashed rgba(129,140,248,0.9);outline-offset:3px;}',
+            '.fmx-stkh{position:absolute;width:15px;height:15px;border-radius:50%;background:#818cf8;border:2px solid #0b0e18;box-shadow:0 1px 4px rgba(0,0,0,0.5);pointer-events:auto;z-index:9;}',
+            '.fmx-stkh.rot{top:-23px;left:50%;margin-left:-8px;cursor:grab;}',
+            '.fmx-stkh.rsz{right:-9px;bottom:-9px;cursor:nwse-resize;border-radius:4px;}',
             '.fmx-stkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:7px;max-width:100%;}',
             '.fmx-stkcell{min-width:0;}',
             '.fmx-stkcell{position:relative;aspect-ratio:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:11px;padding:5px;cursor:pointer;transition:border-color 150ms;}',
@@ -1332,7 +1336,7 @@
     }
     /* ===================== стикеры: панель конструктора ===================== */
     var SEAM = 84;  // высота шапки карточки — стабильный якорь
-    var STK_PAD = 4;    // невидимый бордер вокруг контента
+    var STK_PAD = 3;    // невидимый бордер вокруг контента
     function stkRects(card) {
         var base = card.getBoundingClientRect(), out = [];
         function push(r) {
@@ -1359,9 +1363,10 @@
         return { rects: out, W: base.width, H: base.height };
     }
     function stkValid(cx, cy, size, geo) {
-        var h = size / 2;
+        var full = size / 2;
+        if (cx - full < 2 || cy - full < 2 || cx + full > geo.W - 2 || cy + full > geo.H - 2) return false;
+        var h = full * 0.76;  /* хитбокс: у стикеров прозрачные поля */
         var l = cx - h, t = cy - h, r = cx + h, b = cy + h;
-        if (l < 3 || t < 3 || r > geo.W - 3 || b > geo.H - 3) return false;
         for (var i = 0; i < geo.rects.length; i++) {
             var z = geo.rects[i];
             if (l < z.r && r > z.l && t < z.b && b > z.t) return false;
@@ -1395,7 +1400,8 @@
     function stkOverlay(s, W, animate, draggable) {
         if (!s || !s.url) return '';
         var p = stkPos(s, W);
-        return '<div class="fmx-stk' + (draggable ? ' drag' : '') + '" id="' + (draggable ? 'fmx-stkPrev' : '') + '" style="left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);">' + stkMedia(s, animate) + '</div>';
+        var handles = (draggable && (s.mode || 'slot') === 'free') ? '<i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i>' : '';
+        return '<div class="fmx-stk' + (draggable ? ' drag' : '') + ((draggable && (s.mode || 'slot') === 'free') ? ' sel' : '') + '" id="' + (draggable ? 'fmx-stkPrev' : '') + '" style="left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);">' + stkMedia(s, animate) + handles + '</div>';
     }
     function loadStickerPane() {
         var box = el('fmx-stkBody'); if (!box) return;
@@ -1545,9 +1551,60 @@
             var p = stkPos(_ss.sticker, W);
             elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
         }
+        function center() {
+            if (!geo) geo = stkRects(cardEl);
+            return { cx: (_ss.sticker.x || 0.82) * geo.W, cy: SEAM + (_ss.sticker.dy || 0) };
+        }
+        function applyBox() {
+            if (!geo) geo = stkRects(cardEl);
+            var p = stkPos(_ss.sticker, geo.W);
+            elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
+            elS.style.width = p.size + 'px'; elS.style.height = p.size + 'px';
+            elS.style.transform = 'rotate(' + (_ss.sticker.rot || 0) + 'deg)';
+            var sc = el('fmx-stk-sc'); if (sc) sc.value = _ss.sticker.scale || 1;
+            var ro = el('fmx-stk-rot'); if (ro) ro.value = _ss.sticker.rot || 0;
+        }
+        function setScaleClamped(want) {
+            if (!geo) geo = stkRects(cardEl);
+            want = Math.max(0.6, Math.min(1.6, want));
+            var c = center();
+            var size = stkSize({ scale: want }, geo.W);
+            while (size > 40 && !stkValid(c.cx, c.cy, size, geo)) size -= 2;
+            _ss.sticker.scale = Math.min(want, size / 64);
+            applyBox();
+        }
+        function setRotClamped(deg) {
+            _ss.sticker.rot = Math.max(-25, Math.min(25, Math.round(deg)));
+            applyBox();
+        }
         function start(e) {
             if ((_ss.sticker.mode || 'slot') !== 'free') return;
+            if (e.target && e.target.classList && e.target.classList.contains('fmx-stkh')) return;
             e.preventDefault();
+            /* щипок: масштаб + поворот двумя пальцами */
+            if (e.touches && e.touches.length === 2) {
+                var t0 = e.touches;
+                var d0 = Math.hypot(t0[0].clientX - t0[1].clientX, t0[0].clientY - t0[1].clientY);
+                var a0 = Math.atan2(t0[1].clientY - t0[0].clientY, t0[1].clientX - t0[0].clientX) * 180 / Math.PI;
+                var s0 = _ss.sticker.scale || 1, r0 = _ss.sticker.rot || 0;
+                if (d0 < 8) return;
+                var pm = function (ev) {
+                    if (ev.touches.length < 2) return;
+                    ev.preventDefault();
+                    var t = ev.touches;
+                    var d = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+                    var a = Math.atan2(t[1].clientY - t[0].clientY, t[1].clientX - t[0].clientX) * 180 / Math.PI;
+                    setScaleClamped(s0 * d / d0);
+                    setRotClamped(r0 + (a - a0));
+                };
+                var pu = function () {
+                    document.removeEventListener('touchmove', pm); document.removeEventListener('touchend', pu);
+                    _haptic('light');
+                };
+                document.addEventListener('touchmove', pm, { passive: false });
+                document.addEventListener('touchend', pu);
+                return;
+            }
             var mm = function (ev) { var t = ev.touches ? ev.touches[0] : ev; move(t.clientX, t.clientY); };
             var up = function () {
                 document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
@@ -1557,6 +1614,35 @@
             document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
             document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
         }
+        function bindHandle(sel, onMove) {
+            var h = elS.querySelector(sel); if (!h) return;
+            function hs(e) {
+                e.preventDefault(); e.stopPropagation();
+                var mm = function (ev) {
+                    var t = ev.touches ? ev.touches[0] : ev;
+                    var r = cardEl.getBoundingClientRect(), c = center();
+                    onMove(t.clientX - r.left - c.cx, t.clientY - r.top - c.cy);
+                };
+                var mu = function () {
+                    document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu);
+                    document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', mu);
+                    _haptic('light');
+                };
+                document.addEventListener('mousemove', mm); document.addEventListener('mouseup', mu);
+                document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', mu);
+            }
+            h.addEventListener('mousedown', hs);
+            h.addEventListener('touchstart', hs, { passive: false });
+        }
+        bindHandle('.fmx-stkh.rsz', function (dx, dy) {
+            var d = Math.hypot(dx, dy);
+            if (!geo) geo = stkRects(cardEl);
+            var base = stkSize({ scale: 1 }, geo.W) * 0.72;  /* расстояние до угла при scale 1 */
+            if (base > 4) setScaleClamped(d / base);
+        });
+        bindHandle('.fmx-stkh.rot', function (dx, dy) {
+            setRotClamped(Math.atan2(dy, dx) * 180 / Math.PI + 90);
+        });
         elS.addEventListener('mousedown', start);
         elS.addEventListener('touchstart', start, { passive: false });
     }
