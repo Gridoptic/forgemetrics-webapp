@@ -610,13 +610,13 @@
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы».');
             else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return listItem(x); }).join('') + '</div>');
         }
-        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Оформленные карточки каналов нашей Площадки. Совпадение и справедливость цены — оценки бота.</div>' + bar + body;
+        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Здесь каналы продают рекламу. Смотри метрики, сравнивай цены и пиши владельцу — сделка напрямую, без комиссии.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
     }
 
     function renderSell() {
         var sub = el('fmx-sub'); if (!sub) return;
-        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки «куплю рекламу» от пользователей Площадки. Размести свою — и рекламодатели найдут тебя сами.</div>' +
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
             emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Скоро здесь можно будет разместить заявку на покупку рекламы и просматривать чужие. Раздел откроется в ближайших обновлениях.') +
             '<button class="fmx-save" style="margin-top:6px;opacity:0.7;cursor:default;"><i class="ti ti-plus"></i> Оставить заявку (скоро)</button>';
     }
