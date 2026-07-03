@@ -269,7 +269,15 @@
             '.fx-orb-atom{border:1px solid rgba(255,255,255,.13);animation:fmxSpin 4.2s linear infinite;}',
             '.fx-orb-atom::before{content:"";position:absolute;top:-3px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe);}',
             '.fx-orb-atom::after{content:"";position:absolute;bottom:-3px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe);}',
-            '.fx-orb-atom.r2{border-color:transparent;animation-direction:reverse;animation-duration:6s;}'
+            '.fx-orb-atom.r2{border-color:transparent;animation-direction:reverse;animation-duration:6s;}',
+            '.fmx-entq{font-size:13px;color:#8990a8;margin-bottom:12px;}',
+            '.fmx-ent{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;cursor:pointer;margin-bottom:11px;transition:border-color 160ms,transform 160ms;}',
+            '.fmx-ent:active{transform:scale(0.99);}',
+            '.fmx-ent:hover{border-color:rgba(255,255,255,0.14);}',
+            '.fmx-entic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:25px;color:#fff;flex-shrink:0;}',
+            '.fmx-entn{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
+            '.fmx-enttag{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:99px;}',
+            '.fmx-entd{font-size:11.5px;color:#8990a8;line-height:1.4;margin-top:4px;}'
         ].join('');
         document.head.appendChild(s);
     }
@@ -281,23 +289,20 @@
         var d = document.createElement('div');
         d.id = 'fmx-screen';
         d.innerHTML =
-            '<div class="fmx-head"><div class="fmx-hic"><i class="ti ti-building-store"></i></div>' +
-            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
+            '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" style="display:none;margin-right:-2px;"><i class="ti ti-arrow-left"></i></button><div class="fmx-hic"><i class="ti ti-building-store"></i></div>' +
+            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p id="fmx-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button>' +
             '<button class="fmx-ibtn" id="fmx-close" style="margin-left:7px;"><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-pillbar" id="fmx-maintabs"><span class="fmx-pill" id="fmx-mainpill"></span>' +
-            '<button class="fmx-pb on" data-mt="market" style="font-size:12px;">Площадка ForgeMetrics</button>' +
-            '<button class="fmx-pb" data-mt="catalog" style="font-size:12px;">База каналов</button></div>' +
             '<div class="fmx-scroll"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
         _root = d;
         el('fmx-close').addEventListener('click', close);
         el('fmx-faq').addEventListener('click', openFaq);
         el('fmx-bm').addEventListener('click', openBookmarks);
-        qsa(d, '#fmx-maintabs .fmx-pb').forEach(function (b) { b.addEventListener('click', function () { setMainTab(b.getAttribute('data-mt')); }); });
+        el('fmx-back').addEventListener('click', function () { _haptic('light'); setMainTab('enter'); });
         buildModals();
-        window.addEventListener('resize', function () { movePill('fmx-maintabs', 'fmx-mainpill'); if (el('fmx-subtabs')) movePill('fmx-subtabs', 'fmx-subpill'); if (el('fmx-pult')) movePill('fmx-pult', 'fmx-pultpill'); if (el('fmx-panes')) sizePanes(); });
+        window.addEventListener('resize', function () { if (el('fmx-subtabs')) movePill('fmx-subtabs', 'fmx-subpill'); if (el('fmx-pult')) movePill('fmx-pult', 'fmx-pultpill'); if (el('fmx-panes')) sizePanes(); });
     }
 
     function open(channelId) {
@@ -305,7 +310,7 @@
         _opened = true;
         _root.classList.add('fmx-show');
         loadBookmarks();
-        setMainTab('market', true);
+        setMainTab('enter', true);
     }
     function close() { if (_root) _root.classList.remove('fmx-show'); _opened = false; }
 
@@ -320,12 +325,35 @@
     function setMainTab(t, force) {
         if (!force && t === _mainTab) return;
         _mainTab = t;
-        qsa(_root, '#fmx-maintabs .fmx-pb').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-mt') === t); });
-        movePill('fmx-maintabs', 'fmx-mainpill');
+        var back = el('fmx-back'); if (back) back.style.display = t === 'enter' ? 'none' : 'flex';
+        var ti = el('fmx-title'), su = el('fmx-sub');
+        if (ti && su) {
+            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; }
+            else if (t === 'market') { ti.textContent = 'Площадка ForgeMetrics'; su.textContent = 'Живые заявки на рекламу'; }
+            else { ti.textContent = 'Биржа рекламы'; su.textContent = 'База каналов и своя Площадка'; }
+        }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
         if (t === 'catalog') renderCatalog();
-        else renderMarket();
+        else if (t === 'market') renderMarket();
+        else renderEnter();
+    }
+
+    /* ===================== render: enter ===================== */
+    function renderEnter() {
+        var host = el('fmx-main');
+        host.innerHTML =
+            '<div class="fmx-entq">Выбери, где искать:</div>' +
+            '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-database"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
+            '<div class="fmx-entd">Всё, что нашёл бот. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
+            '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
+            '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
+            '<div class="fmx-entd">Каналы выставили рекламу сами: цена названа, карточки оформлены. Или выстави свой канал.</div></div>' +
+            '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка</b> — те, кто готов к сделке, и место оформить карточку своего канала.</span></div>';
+        qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
     }
 
     /* ===================== loaders ===================== */
