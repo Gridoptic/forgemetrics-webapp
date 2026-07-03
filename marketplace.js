@@ -68,13 +68,27 @@
         return String(n);
     }
     function _num(n) { if (n == null || isNaN(n)) return '—'; return Number(n).toLocaleString('ru-RU'); }
+    /* Системные alert/confirm и tg.showAlert/showConfirm ломают клавиатуру вебвью
+       на Telegram Desktop — поэтому все уведомления строго внутри DOM. */
     function uiAlert(msg) {
-        try { if (typeof tg !== 'undefined' && tg && tg.showAlert) { tg.showAlert(String(msg)); return; } } catch (e) {}
-        try { alert(msg); } catch (e) {}
+        var t = el('fmx-toastEl');
+        if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); }
+        t.innerHTML = '<i class="ti ti-alert-circle" style="color:#ef4444;"></i> ' + _esc(String(msg));
+        t.classList.add('on', 'err');
+        clearTimeout(t._tm);
+        t._tm = setTimeout(function () { t.classList.remove('on', 'err'); }, 3600);
     }
     function uiConfirm(msg, cb) {
-        try { if (typeof tg !== 'undefined' && tg && tg.showConfirm) { tg.showConfirm(String(msg), function (ok) { if (ok) cb(); }); return; } } catch (e) {}
-        if (confirm(msg)) cb();
+        var old = el('fmx-cfmBg'); if (old) old.remove();
+        var bg = document.createElement('div');
+        bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm';
+        bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t">' + _esc(String(msg)) + '</div>' +
+            '<div class="fmx-cfm-r"><button class="fmx-btn" data-no>Отмена</button><button class="fmx-btn" data-yes style="background:#818cf8;color:#fff;border-color:transparent;">Да</button></div></div>';
+        document.body.appendChild(bg);
+        function done() { bg.remove(); }
+        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        bg.querySelector('[data-no]').addEventListener('click', done);
+        bg.querySelector('[data-yes]').addEventListener('click', function () { done(); cb(); });
     }
     function _haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) { if (k === 'success' || k === 'error' || k === 'warning') tg.HapticFeedback.notificationOccurred(k); else tg.HapticFeedback.impactOccurred(k || 'light'); } } catch (e) {} }
     function apiGet(p) { return apiRequest(p); }
@@ -422,9 +436,17 @@
             '.fmx-reqn{font-size:10px;font-weight:700;color:#818cf8;background:rgba(129,140,248,0.12);padding:3px 9px;border-radius:7px;}',
             '.fmx-reqf{font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 9px;border-radius:7px;}',
             '.fmx-reqb{margin-left:auto;font-size:12px;font-weight:700;color:#5DCAA5;}',
-            '.fmx-reqt{font-size:12.5px;line-height:1.55;color:#c9cbe0;white-space:pre-wrap;}',
-            '.fmx-reqft{display:flex;align-items:center;justify-content:space-between;margin-top:11px;font-size:10px;color:#565b73;}',
+            '.fmx-reqt{font-size:12.5px;line-height:1.55;color:#c9cbe0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;}',
+            '.fmx-reqft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);font-size:10px;color:#565b73;}',
+            '.fmx-reqft>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-reqft .fmx-btn{flex:0 0 auto;width:auto;}',
+            '.fmx-reqb.na{color:#565b73;font-weight:500;}',
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
+            '.fmx-toast.err{border-color:rgba(239,68,68,0.4);}',
+            '.fmx-cfm{position:fixed;inset:0;z-index:100005;background:rgba(5,7,14,0.6);display:flex;align-items:center;justify-content:center;padding:24px;}',
+            '.fmx-cfm-box{background:#141826;border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:18px;max-width:320px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,0.5);}',
+            '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
+            '.fmx-cfm-r{display:flex;gap:8px;}',
             '.fmx-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.fmx-acc.open{border-color:rgba(99,102,241,0.3);}',
             '.fmx-acch{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;}',
@@ -652,7 +674,7 @@
         if (r.niche) head.push('<span class="fmx-reqn">' + _esc(r.niche) + '</span>');
         head.push('<span class="fmx-reqf">' + (REQ_FMT[r.format] || REQ_FMT.any) + '</span>');
         return '<div class="fmx-req' + (r.mine ? ' mine' : '') + '">' +
-            '<div class="fmx-reqh">' + head.join('') + '<span class="fmx-reqb">' + (r.budget ? 'до ' + _num(r.budget) + ' ₽' : 'бюджет не указан') + '</span></div>' +
+            '<div class="fmx-reqh">' + head.join('') + '<span class="fmx-reqb' + (r.budget ? '' : ' na') + '">' + (r.budget ? 'до ' + _num(r.budget) + ' ₽' : 'бюджет не указан') + '</span></div>' +
             '<div class="fmx-reqt">' + _esc(r.text) + '</div>' +
             '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + '</span>' +
             (r.mine
