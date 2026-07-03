@@ -194,11 +194,11 @@
             '.fmx-cov-bg{position:absolute;inset:0;background-size:cover;background-position:center;}',
             '.fmx-cov-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(120% 130% at 22% 8%,rgba(255,255,255,0.4),transparent 55%);animation:fmxBreathe 7s ease-in-out infinite;}',
             '@keyframes fmxBreathe{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(8%,6%) scale(1.12);}}',
-            '.fmx-tag{position:absolute;top:9px;left:9px;font-size:9px;font-weight:700;padding:4px 8px;border-radius:6px;background:rgba(10,13,24,0.5);color:#5DCAA5;backdrop-filter:blur(5px);z-index:2;display:flex;align-items:center;gap:4px;}',
+            '.fmx-tag{position:absolute;top:9px;left:9px;font-size:9px;font-weight:700;padding:4px 8px;border-radius:6px;background:rgba(10,13,24,0.5);color:#5DCAA5;backdrop-filter:blur(5px);z-index:7;display:flex;align-items:center;gap:4px;}',
             '.fmx-tag.gold{background:linear-gradient(135deg,#fde68a,#f5bf4f);color:#2a1c00;}',
             '.fmx-star{position:absolute;bottom:9px;right:9px;width:30px;height:30px;border-radius:8px;background:rgba(10,13,24,0.45);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);z-index:2;}',
             '.fmx-star.on{color:#f59e0b;}',
-            '.fmx-cb{padding:13px;position:relative;z-index:2;}',
+            '.fmx-cb{padding:13px;position:relative;z-index:3;}',
             '.fmx-crow{display:flex;align-items:center;gap:10px;margin-top:-32px;margin-bottom:11px;position:relative;z-index:2;}',
             '.fmx-av{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;border:2.5px solid #0d1019;flex-shrink:0;}',
             '.fmx-nm{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;padding-top:20px;}',
@@ -470,10 +470,10 @@
             '.fmx-tl i.green.on{background:#5DCAA5;box-shadow:0 0 7px rgba(93,202,165,0.8);}',
             '.fmx-tl b{font-size:9.5px;font-weight:700;margin-left:2px;}',
             '.fmx-tlm{background:transparent;border:none;padding:0 2px 0 0;gap:3px;flex-shrink:0;}',
-            '.fmx-stk{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
-            '.fmx-stk.drag{pointer-events:auto;cursor:grab;touch-action:none;}',
-            '.fmx-stk.drag:active{cursor:grabbing;}',
-            '.fmx-stk.sel{outline:1.5px dashed rgba(129,140,248,0.9);outline-offset:3px;}',
+            '.fmx-stk{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
+            '.fmx-stkGrab{position:absolute;z-index:9;cursor:grab;touch-action:none;}',
+            '.fmx-stkGrab:active{cursor:grabbing;}',
+            '.fmx-stkGrab.sel{outline:1.5px dashed rgba(129,140,248,0.9);outline-offset:3px;}',
             '.fmx-stkh{position:absolute;width:15px;height:15px;border-radius:50%;background:#818cf8;border:2px solid #0b0e18;box-shadow:0 1px 4px rgba(0,0,0,0.5);pointer-events:auto;z-index:9;}',
             '.fmx-stkh.rot{top:-23px;left:50%;margin-left:-8px;cursor:grab;}',
             '.fmx-stkh.rsz{right:-9px;bottom:-9px;cursor:nwse-resize;border-radius:4px;}',
@@ -900,7 +900,6 @@
         _ss.listingId = l.id;
         _ss._status = l.status || null;
         _ss.sticker = l.sticker_json || l.sticker || null;
-        if (_ss.sticker) stkEnsureBox(_ss.sticker);
         if (l.accent_color) _ss.color = l.accent_color;
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
@@ -1337,101 +1336,12 @@
     }
     /* ===================== стикеры: панель конструктора ===================== */
     var SEAM = 84;  // высота шапки карточки — стабильный якорь
-    var STK_PAD = 3;    // невидимый бордер вокруг контента
-    var STK_DEFBOX = { l: 0.15, t: 0.15, r: 0.85, b: 0.85 };
-    var _stkBoxes = {};  // url -> прямоугольник видимых пикселей (доли)
-    function _scanAlpha(source, url) {
-        try {
-            var cv = document.createElement('canvas'); cv.width = 64; cv.height = 64;
-            var ctx = cv.getContext('2d');
-            ctx.drawImage(source, 0, 0, 64, 64);
-            var d = ctx.getImageData(0, 0, 64, 64).data;
-            var minX = 64, minY = 64, maxX = -1, maxY = -1;
-            for (var y = 0; y < 64; y++) for (var x = 0; x < 64; x++) {
-                if (d[(y * 64 + x) * 4 + 3] > 20) {
-                    if (x < minX) minX = x; if (x > maxX) maxX = x;
-                    if (y < minY) minY = y; if (y > maxY) maxY = y;
-                }
-            }
-            if (maxX < 0) return;
-            _stkBoxes[url] = { l: minX / 64, t: minY / 64, r: (maxX + 1) / 64, b: (maxY + 1) / 64 };
-        } catch (e) { /* canvas tainted и т.п. — остаёмся на запасном хитбоксе */ }
-    }
-    function stkEnsureBox(s) {
-        if (!s || !s.url || _stkBoxes[s.url]) return;
-        var abs = mediaAbs(s.url);
-        try {
-            if (s.kind === 'webm') {
-                var v = document.createElement('video');
-                v.crossOrigin = 'anonymous'; v.muted = true; v.preload = 'auto'; v.src = abs;
-                v.addEventListener('loadeddata', function () { _scanAlpha(v, s.url); }, { once: true });
-            } else if (s.kind === 'webp') {
-                var im = new Image();
-                im.crossOrigin = 'anonymous';
-                im.onload = function () { _scanAlpha(im, s.url); };
-                im.src = abs;
-            }
-        } catch (e) {}
-    }
-    function stkBox(s) { return (s && s.url && _stkBoxes[s.url]) || STK_DEFBOX; }
-    function stkRects(card) {
-        var base = card.getBoundingClientRect(), out = [];
-        function push(r) {
-            if (!r || (!r.width && !r.height)) return;
-            out.push({ l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD });
-        }
-        /* звезда добавляется отдельно с пометкой star — при драге стикера она уступает */
-        function pushText(n) { /* обтягивающий прямоугольник текста, не блока */
-            try { var rg = document.createRange(); rg.selectNodeContents(n); var r = rg.getBoundingClientRect(); if (r.width || r.height) { push(r); return; } } catch (e) {}
-            push(n.getBoundingClientRect());
-        }
-        qsa(card, '.fmx-tag').forEach(function (n) { push(n.getBoundingClientRect()); });
-        qsa(card, '.fmx-star').forEach(function (n) { var r = n.getBoundingClientRect(); if (r.width || r.height) { var z = { l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD }; z.star = true; out.push(z); } });
-        var crow = card.querySelector('.fmx-crow');
-        if (crow) {
-            if (crow.firstElementChild) push(crow.firstElementChild.getBoundingClientRect()); /* аватар */
-            qsa(crow, '.fmx-nm,.fmx-meta').forEach(pushText);
-        }
-        qsa(card, '.fmx-badges>*').forEach(function (n) { push(n.getBoundingClientRect()); });
-        qsa(card, '.fmx-met>div').forEach(function (n) { push(n.getBoundingClientRect()); });
-        var acts = card.querySelector('.fmx-acts'); if (acts) push(acts.getBoundingClientRect());
-        qsa(card, '[data-nostk]').forEach(function (n) {
-            if (n.children.length && n.getAttribute('data-nostk') !== 'text') qsa(n, ':scope>*').forEach(function (ch) { push(ch.getBoundingClientRect()); });
-            else pushText(n);
-        });
-        return { rects: out, W: base.width, H: base.height };
-    }
-    function stkValid(cx, cy, size, geo, box, ignoreStar) {
-        var full = size / 2;
-        if (cx - full < 2 || cy - full < 2 || cx + full > geo.W - 2 || cy + full > geo.H - 2) return false;
-        box = box || STK_DEFBOX;
-        var l = cx + size * (box.l - 0.5), r = cx + size * (box.r - 0.5);
-        var t = cy + size * (box.t - 0.5), b = cy + size * (box.b - 0.5);
-        for (var i = 0; i < geo.rects.length; i++) {
-            var z = geo.rects[i];
-            if (ignoreStar && z.star) continue;
-            if (l < z.r && r > z.l && t < z.b && b > z.t) return false;
-        }
-        return true;
-    }
-    function stkFindSpot(size, geo) {
-        var cands = [[0.84, 40], [0.5, 40], [0.16, 40], [0.84, SEAM + 4], [0.16, SEAM + 4], [0.5, SEAM - 6], [0.84, SEAM + 40], [0.16, SEAM + 40]];
-        var bx = _ss && _ss.sticker ? stkBox(_ss.sticker) : null;
-        for (var i = 0; i < cands.length; i++) {
-            var cx = cands[i][0] * geo.W, cy = cands[i][1];
-            if (stkValid(cx, cy, size, geo, bx)) return { cx: cx, cy: cy };
-        }
-        for (var y = 20; y < geo.H - 20; y += 12)
-            for (var x = 24; x < geo.W - 24; x += 16)
-                if (stkValid(x, y, size, geo, bx)) return { cx: x, cy: y };
-        return null;
-    }
-    function stkSize(s, W) { return Math.max(40, Math.min(64 * (s.scale || 1), Math.min(96, W * 0.28))); }
+    function stkSize(s, W) { return Math.max(32, Math.min(64 * (s.scale || 1), Math.min(220, W * 0.62))); }
     function stkPos(s, W) {
         var size = stkSize(s, W);
         if ((s.mode || 'slot') === 'slot') return { size: size, left: W - size - 12, top: SEAM - size * 0.55 };
-        var cx = Math.max(size / 2 + 3, Math.min((s.x != null ? s.x : 0.82) * W, W - size / 2 - 3));
-        var cy = Math.max(size / 2 + 3, SEAM + (s.dy != null ? s.dy : 0));
+        var cx = Math.max(10, Math.min((s.x != null ? s.x : 0.82) * W, W - 10));
+        var cy = Math.max(10, SEAM + (s.dy != null ? s.dy : 0));
         return { size: size, left: cx - size / 2, top: cy - size / 2 };
     }
     function stkMedia(s, animate) {
@@ -1442,8 +1352,10 @@
     function stkOverlay(s, W, animate, draggable) {
         if (!s || !s.url) return '';
         var p = stkPos(s, W);
-        var handles = (draggable && (s.mode || 'slot') === 'free') ? '<i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i>' : '';
-        return '<div class="fmx-stk' + (draggable ? ' drag' : '') + ((draggable && (s.mode || 'slot') === 'free') ? ' sel' : '') + '" id="' + (draggable ? 'fmx-stkPrev' : '') + '" style="left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);">' + stkMedia(s, animate) + handles + '</div>';
+        var boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
+        if (!draggable || (s.mode || 'slot') !== 'free') return core;
+        return core + '<div class="fmx-stkGrab sel" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i></div>';
     }
     var _lotLibs = null;
     function _script(u) {
@@ -1515,9 +1427,9 @@
                     '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
                     '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
                 if (free) {
-                    html += '<div class="fmx-stkrow"><span>Размер</span><input type="range" id="fmx-stk-sc" min="0.6" max="1.6" step="0.05" value="' + (s.scale || 1) + '"></div>' +
+                    html += '<div class="fmx-stkrow"><span>Размер</span><input type="range" id="fmx-stk-sc" min="0.5" max="3.4" step="0.05" value="' + (s.scale || 1) + '"></div>' +
                         '<div class="fmx-stkrow"><span>Наклон</span><input type="range" id="fmx-stk-rot" min="-25" max="25" step="1" value="' + (s.rot || 0) + '"></div>' +
-                        '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Перетащи стикер прямо на карточке-превью. Зона — шапка и верх карточки.</div>';
+                        '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Перетащи стикер по карточке-превью куда угодно: текст и кнопки всегда останутся поверх него.</div>';
                 }
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
@@ -1531,7 +1443,6 @@
                 if (!st) return;
                 var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0 };
                 _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot };
-                stkEnsureBox(_ss.sticker);
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
@@ -1551,69 +1462,20 @@
         qsa(box, '[data-smode]').forEach(function (b) {
             b.addEventListener('click', function () {
                 _ss.sticker.mode = b.getAttribute('data-smode');
-                if (_ss.sticker.mode === 'free') stkEnsureSpot();
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
         var cl = qsa(box, '[data-sclear]')[0];
         if (cl) cl.addEventListener('click', function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
         var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () {
-            var want = +sc.value;
-            var card = el('fmx-hero') && el('fmx-hero').querySelector('.fmx-card');
-            if (card && (_ss.sticker.mode || 'slot') === 'free') {
-                var geo = stkRects(card);
-                var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
-                var size = stkSize({ scale: want }, geo.W);
-                var bx = stkBox(_ss.sticker);
-                while (size > 40 && !stkValid(cx, cy, size, geo, bx, true)) size -= 2;
-                starYield(card);
-                want = Math.min(want, size / 64);
-                sc.value = want;
-            }
-            _ss.sticker.scale = want; renderHero();
+            _ss.sticker.scale = Math.max(0.5, Math.min(3.4, +sc.value)); renderHero();
         });
         var ro = el('fmx-stk-rot'); if (ro) ro.addEventListener('input', function () { _ss.sticker.rot = +ro.value; renderHero(); });
         var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
         hydrateTgs(box);
     }
-    function stkEnsureSpot() {
-        var hero = el('fmx-hero'), card = hero && hero.querySelector('.fmx-card');
-        if (!card || !_ss.sticker) return;
-        var geo = stkRects(card);
-        if (!geo.W) return;
-        var size = stkSize(_ss.sticker, geo.W);
-        var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
-        if (stkValid(cx, cy, size, geo, stkBox(_ss.sticker))) return;
-        var spot = stkFindSpot(size, geo);
-        if (!spot) { spot = stkFindSpot(40, geo); if (spot) _ss.sticker.scale = 40 / 64; }
-        if (spot) { _ss.sticker.x = spot.cx / geo.W; _ss.sticker.dy = Math.round(spot.cy - SEAM); }
-    }
     var STAR_SLOTS = { top: 8, cover: SEAM - 39, body: SEAM + 9 };
     function starTop(pos) { return STAR_SLOTS[pos] != null ? STAR_SLOTS[pos] : STAR_SLOTS.cover; }
-    function starYield(cardEl) {
-        /* стикер отпущен — если он лёг на звезду, звезда переезжает в свободный слот */
-        if (!_ss || !_ss.sticker || (_ss.sticker.mode || 'slot') !== 'free' || !cardEl) return;
-        var base = cardEl.getBoundingClientRect(); if (!base.width) return;
-        var W = base.width, size = stkSize(_ss.sticker, W), box = stkBox(_ss.sticker);
-        var cx = (_ss.sticker.x || 0.82) * W, cy = SEAM + (_ss.sticker.dy || 0);
-        var sl = cx + size * (box.l - 0.5), sr = cx + size * (box.r - 0.5);
-        var st = cy + size * (box.t - 0.5), sb = cy + size * (box.b - 0.5);
-        function starRect(slot) { var y = STAR_SLOTS[slot]; return { l: W - 39 - 2, t: y - 2, r: W - 9 + 2, b: y + 30 + 2 }; }
-        function hits(z) { return sl < z.r && sr > z.l && st < z.b && sb > z.t; }
-        var cur = _ss.starPos || 'cover';
-        if (!hits(starRect(cur))) return;
-        var order = ['top', 'cover', 'body'].filter(function (k) { return k !== cur; });
-        order.sort(function (a, b) { return Math.abs(STAR_SLOTS[a] - STAR_SLOTS[cur]) - Math.abs(STAR_SLOTS[b] - STAR_SLOTS[cur]); });
-        for (var i = 0; i < order.length; i++) {
-            if (!hits(starRect(order[i]))) {
-                _ss.starPos = order[i];
-                var stEl = el('fmx-heroStar');
-                if (stEl) stEl.style.top = starTop(order[i]) + 'px';
-                _haptic('light');
-                return;
-            }
-        }
-    }
     function bindStarDrag(cardEl) {
         var st = el('fmx-heroStar'); if (!st || !cardEl) return;
         function start(e) {
@@ -1642,57 +1504,32 @@
         st.addEventListener('touchstart', start, { passive: false });
     }
     function bindStickerDrag(cardEl) {
-        var elS = el('fmx-stkPrev'); if (!elS || !cardEl) return;
-        var geo = null, last = null;
-        function move(clientX, clientY) {
-            if (!geo) geo = stkRects(cardEl);
-            var W = geo.W, size = stkSize(_ss.sticker, W);
-            var r = cardEl.getBoundingClientRect();
-            var cx = clientX - r.left, cy = clientY - r.top;
-            if (!last) last = { cx: (_ss.sticker.x || 0.82) * W, cy: SEAM + (_ss.sticker.dy || 0) };
-            var bx = stkBox(_ss.sticker);
-            var nx = cx, ny = cy;
-            if (!stkValid(nx, ny, size, geo, bx, true)) {
-                if (stkValid(nx, last.cy, size, geo, bx, true)) ny = last.cy;
-                else if (stkValid(last.cx, ny, size, geo, bx, true)) nx = last.cx;
-                else { nx = last.cx; ny = last.cy; }
-            }
-            last = { cx: nx, cy: ny };
-            _ss.sticker.x = nx / W; _ss.sticker.dy = Math.round(ny - SEAM); _ss.sticker.anchor = 'seam';
-            var p = stkPos(_ss.sticker, W);
-            elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
-        }
-        function center() {
-            if (!geo) geo = stkRects(cardEl);
-            return { cx: (_ss.sticker.x || 0.82) * geo.W, cy: SEAM + (_ss.sticker.dy || 0) };
-        }
+        var grab = el('fmx-stkGrab'), vis = el('fmx-stkPrev');
+        if (!grab || !vis || !cardEl) return;
+        function dims() { var r = cardEl.getBoundingClientRect(); return { W: r.width, H: Math.max(r.height, SEAM + 40), rect: r }; }
         function applyBox() {
-            if (!geo) geo = stkRects(cardEl);
-            var p = stkPos(_ss.sticker, geo.W);
-            elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
-            elS.style.width = p.size + 'px'; elS.style.height = p.size + 'px';
-            elS.style.transform = 'rotate(' + (_ss.sticker.rot || 0) + 'deg)';
+            var d = dims(), p = stkPos(_ss.sticker, d.W);
+            [vis, grab].forEach(function (e) {
+                e.style.left = p.left + 'px'; e.style.top = p.top + 'px';
+                e.style.width = p.size + 'px'; e.style.height = p.size + 'px';
+                e.style.transform = 'rotate(' + (_ss.sticker.rot || 0) + 'deg)';
+            });
             var sc = el('fmx-stk-sc'); if (sc) sc.value = _ss.sticker.scale || 1;
             var ro = el('fmx-stk-rot'); if (ro) ro.value = _ss.sticker.rot || 0;
         }
-        function setScaleClamped(want) {
-            if (!geo) geo = stkRects(cardEl);
-            want = Math.max(0.6, Math.min(1.6, want));
-            var c = center(), bx = stkBox(_ss.sticker);
-            var size = stkSize({ scale: want }, geo.W);
-            while (size > 40 && !stkValid(c.cx, c.cy, size, geo, bx, true)) size -= 2;
-            _ss.sticker.scale = Math.min(want, size / 64);
-            applyBox();
-        }
-        function setRotClamped(deg) {
-            _ss.sticker.rot = Math.max(-25, Math.min(25, Math.round(deg)));
+        function setScale(want) { _ss.sticker.scale = Math.max(0.5, Math.min(3.4, want)); applyBox(); }
+        function setRot(deg) { _ss.sticker.rot = Math.max(-25, Math.min(25, Math.round(deg))); applyBox(); }
+        function center() { var d = dims(); return { cx: (_ss.sticker.x || 0.82) * d.W, cy: SEAM + (_ss.sticker.dy || 0) }; }
+        function move(clientX, clientY) {
+            var d = dims();
+            var cx = Math.max(10, Math.min(clientX - d.rect.left, d.W - 10));
+            var cy = Math.max(10, Math.min(clientY - d.rect.top, d.H - 10));
+            _ss.sticker.x = cx / d.W; _ss.sticker.dy = Math.round(cy - SEAM); _ss.sticker.anchor = 'seam';
             applyBox();
         }
         function start(e) {
-            if ((_ss.sticker.mode || 'slot') !== 'free') return;
             if (e.target && e.target.classList && e.target.classList.contains('fmx-stkh')) return;
             e.preventDefault();
-            /* щипок: масштаб + поворот двумя пальцами */
             if (e.touches && e.touches.length === 2) {
                 var t0 = e.touches;
                 var d0 = Math.hypot(t0[0].clientX - t0[1].clientX, t0[0].clientY - t0[1].clientY);
@@ -1705,12 +1542,10 @@
                     var t = ev.touches;
                     var d = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
                     var a = Math.atan2(t[1].clientY - t[0].clientY, t[1].clientX - t[0].clientX) * 180 / Math.PI;
-                    setScaleClamped(s0 * d / d0);
-                    setRotClamped(r0 + (a - a0));
+                    setScale(s0 * d / d0); setRot(r0 + (a - a0));
                 };
                 var pu = function () {
                     document.removeEventListener('touchmove', pm); document.removeEventListener('touchend', pu);
-                    starYield(cardEl); geo = null;
                     _haptic('light');
                 };
                 document.addEventListener('touchmove', pm, { passive: false });
@@ -1721,25 +1556,23 @@
             var up = function () {
                 document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                 document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
-                starYield(cardEl); geo = null;
                 _haptic('light');
             };
             document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
             document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
         }
         function bindHandle(sel, onMove) {
-            var h = elS.querySelector(sel); if (!h) return;
+            var h = grab.querySelector(sel); if (!h) return;
             function hs(e) {
                 e.preventDefault(); e.stopPropagation();
                 var mm = function (ev) {
                     var t = ev.touches ? ev.touches[0] : ev;
-                    var r = cardEl.getBoundingClientRect(), c = center();
-                    onMove(t.clientX - r.left - c.cx, t.clientY - r.top - c.cy);
+                    var d = dims(), c = center();
+                    onMove(t.clientX - d.rect.left - c.cx, t.clientY - d.rect.top - c.cy, d);
                 };
                 var mu = function () {
                     document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu);
                     document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', mu);
-                    starYield(cardEl); geo = null;
                     _haptic('light');
                 };
                 document.addEventListener('mousemove', mm); document.addEventListener('mouseup', mu);
@@ -1748,17 +1581,16 @@
             h.addEventListener('mousedown', hs);
             h.addEventListener('touchstart', hs, { passive: false });
         }
-        bindHandle('.fmx-stkh.rsz', function (dx, dy) {
-            var d = Math.hypot(dx, dy);
-            if (!geo) geo = stkRects(cardEl);
-            var base = stkSize({ scale: 1 }, geo.W) * 0.72;  /* расстояние до угла при scale 1 */
-            if (base > 4) setScaleClamped(d / base);
+        bindHandle('.fmx-stkh.rsz', function (dx, dy, d) {
+            var dist = Math.hypot(dx, dy);
+            var base = 64 * 0.72;
+            if (base > 4) setScale(dist / base);
         });
         bindHandle('.fmx-stkh.rot', function (dx, dy) {
-            setRotClamped(Math.atan2(dy, dx) * 180 / Math.PI + 90);
+            setRot(Math.atan2(dy, dx) * 180 / Math.PI + 90);
         });
-        elS.addEventListener('mousedown', start);
-        elS.addEventListener('touchstart', start, { passive: false });
+        grab.addEventListener('mousedown', start);
+        grab.addEventListener('touchstart', start, { passive: false });
     }
 
     function renderHero() {
@@ -1784,7 +1616,8 @@
         hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;position:relative;">' + cbg +
             (_ss.sticker ? stkOverlay(_ss.sticker, Math.min(350, hero.clientWidth || 350), _ss.sticker.kind === 'webm', true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
-            (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') + '</div>' +
+            '</div>' +
+            (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star" id="fmx-heroStar" style="bottom:auto;top:' + starTop(_ss.starPos) + 'px;z-index:7;" title="Потяни вверх/вниз"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent, true) +
             '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + ts + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + ts + '">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
@@ -1928,8 +1761,8 @@
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             '<div class="fmx-cov">' + covHtml +
-            (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '</div>' +
+            (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
