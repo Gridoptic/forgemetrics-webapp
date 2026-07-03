@@ -694,7 +694,7 @@
             '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + cts + '</span>' +
             (r.mine
                 ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>Закрыть</button>'
-                : '<button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button>') +
+                : '<span style="display:flex;gap:6px;align-items:center;"><button class="fmx-btn" data-rrep="' + r.id + '" title="Пожаловаться" style="padding:7px 9px;"><i class="ti ti-flag"></i></button><button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button></span>') +
             '</div></div>';
     }
     function renderSell() {
@@ -708,6 +708,7 @@
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
             '<button class="fmx-save" id="fmx-newreq" style="margin:0 0 14px;"><i class="ti ti-plus"></i> Разместить заявку</button>' + body;
         el('fmx-newreq').addEventListener('click', openReqForm);
+        qsa(sub, '[data-rrep]').forEach(function (b) { b.addEventListener('click', function () { openComplaint({ request_id: +b.getAttribute('data-rrep') }); }); });
         qsa(sub, '[data-rwrite]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var rid = b.getAttribute('data-rid');
@@ -730,6 +731,34 @@
                 });
             });
         });
+    }
+    var REP_REASONS = [['scam', 'Скам / обман'], ['fake_metrics', 'Накрутка метрик'], ['illegal', 'Запрещённый контент'], ['other', 'Другое']];
+    function openComplaint(target) { /* target: {listing_id} | {request_id} */
+        var chips = REP_REASONS.map(function (r, i) { return '<button class="fmx-fx' + (i === 0 ? ' on' : '') + '" data-rr="' + r[0] + '">' + r[1] + '</button>'; }).join('');
+        el('fmx-repBody').innerHTML =
+            '<span class="fmx-lbl">Причина</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Комментарий <span style="color:#565b73;text-transform:none;">(для «Другое» — обязателен)</span></span>' +
+            '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="Что не так? Чем конкретнее — тем быстрее разберём."></textarea>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">Жалобы анонимны для владельца. Несколько жалоб от разных людей скрывают цель до ручной проверки.</div>' +
+            '<button class="fmx-save" id="fmx-rep-send" style="margin-top:14px;"><i class="ti ti-flag"></i> Отправить жалобу</button>';
+        var sel = { v: 'scam' };
+        qsa(el('fmx-rep-r'), '[data-rr]').forEach(function (b) { b.addEventListener('click', function () { sel.v = b.getAttribute('data-rr'); qsa(el('fmx-rep-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
+        el('fmx-rep-send').addEventListener('click', function () {
+            var btn = this; btn.disabled = true;
+            var body = { reason: sel.v, comment: el('fmx-rep-c').value };
+            if (target.listing_id) body.listing_id = target.listing_id; else body.request_id = target.request_id;
+            apiPost('/api/v1/marketplace/complaints', body).then(function (r) {
+                btn.disabled = false;
+                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось отправить'); return; }
+                _haptic('success'); hideModal('fmx-repBg');
+                toast(r && r.hidden ? 'Скрыто до проверки — спасибо' : 'Жалоба отправлена — проверим');
+                if (r && r.hidden) {
+                    if (target.listing_id) { _feed = null; _feedState = 'idle'; if (_subTab === 'buy') renderBuy(); }
+                    else { _reqs = null; _reqState = 'idle'; if (_subTab === 'sell') renderSell(); }
+                }
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось отправить — попробуй ещё раз.'); });
+        });
+        showModal('fmx-repBg');
     }
     function openReqForm() {
         var uname = '';
@@ -1501,6 +1530,12 @@
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
 
+        var rp = document.createElement('div'); rp.className = 'fmx-mbg'; rp.id = 'fmx-repBg';
+        rp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-flag" style="color:#ef4444;"></i> Пожаловаться</h2><p>Разберём вручную, автор жалобу не увидит</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-repBody"></div></div>';
+        document.body.appendChild(rp);
+        rp.addEventListener('click', function (e) { if (e.target === rp) hideModal('fmx-repBg'); });
+        qsa(rp, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-repBg'); }); });
+
         var rq = document.createElement('div'); rq.className = 'fmx-mbg'; rq.id = 'fmx-reqBg';
         rq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-speakerphone" style="color:#818cf8;"></i> Заявка на покупку рекламы</h2><p>Владельцы подходящих каналов напишут тебе сами</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-reqBody"></div></div>';
         document.body.appendChild(rq);
@@ -1578,9 +1613,12 @@
             (fmts ? '<div style="font-size:12px;font-weight:700;margin:14px 0 4px;">Форматы и цены</div>' + fmts : '') +
             (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" data-bm="' + _esc(u) + '"><i class="ti ti-star"></i>В закладки</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать владельцу</button></div>';
+            '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать владельцу</button></div>' +
+            (l.id ? '<button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
         el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) { b.addEventListener('click', function () { toggleBm(b.getAttribute('data-bm')); }); });
         el('fmx-listBody').querySelectorAll('[data-w]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-w')); }); });
+        var _lsRep = el('fmx-ls-rep');
+        if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         showModal('fmx-listBg');
     }
     function openBookmarks() {
