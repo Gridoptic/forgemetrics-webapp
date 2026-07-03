@@ -173,9 +173,10 @@
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
-            '.fmx-met{display:flex;align-items:flex-end;gap:0;row-gap:6px;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;}',
-            '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:9px;margin-left:9px;}',
-            '.fmx-met .l{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:3px;margin-bottom:3px;}',
+            '.fmx-met{display:flex;align-items:flex-end;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
+            '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
+            '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:none;padding-left:6px;}',
+            '.fmx-met .l{font-size:8.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.2px;display:flex;align-items:center;gap:3px;margin-bottom:3px;white-space:nowrap;}',
             '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;}',
@@ -1165,7 +1166,7 @@
     /* ===================== cards ===================== */
     function spark(col) {
         var arr = [], i; for (i = 0; i < 9; i++) arr.push(0.7 + Math.sin(i * 1.15) * 0.14 + i * 0.02);
-        var w = 54, h = 22, mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
+        var w = 50, h = 22, mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
         var lx = 0, ly = 0;
         var pts = arr.map(function (v, i) { var x = i / 8 * (w - 5) + 2.5, y = h - ((v - mn) / ((mx - mn) || 1)) * (h - 8) - 4; lx = x; ly = y; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
         return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
