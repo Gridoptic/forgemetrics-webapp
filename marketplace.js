@@ -167,9 +167,10 @@
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
-            '.fmx-met{display:flex;align-items:flex-end;gap:14px;row-gap:6px;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;}',
+            '.fmx-met{display:flex;align-items:flex-end;gap:10px;row-gap:6px;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;}',
             '.fmx-met .l{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:3px;margin-bottom:3px;}',
-            '.fmx-met .v{font-size:14px;font-weight:700;}',
+            '.fmx-met .v{font-size:14px;font-weight:700;white-space:nowrap;}',
+            '.fmx-met .v.sm{font-size:11.5px;color:#c9cbe0;}',
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}',
@@ -1069,8 +1070,9 @@
             (tags.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
+            (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(erH) + '%</div></div>' : ''; })() +
+            (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v sm">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
-            (function () { var ex = []; var erH = (c.er != null ? c.er : c.er_percent); if (erH != null) ex.push('<b>ER</b> ' + erH + '%'); if (minP && c.avg_views) ex.push('<b>CPM</b> ' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽'); return ex.length ? '<div class="fmx-met2">' + ex.join('<i></i>') + '</div>' : ''; })() +
             (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
@@ -1206,8 +1208,9 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
+            (l.er != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(l.er) + '%</div></div>' : '') +
+            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v sm">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
-            (function () { var ex = []; if (l.er != null) ex.push('<b>ER</b> ' + l.er + '%'); var cpmX = _cpm(l); if (cpmX != null) ex.push('<b>CPM</b> ' + _num(cpmX) + ' ₽'); var rrX = _reachRate(l); if (l.er == null && rrX != null) ex.push('<b>охват/подп</b> ' + rrX + '%'); return ex.length ? '<div class="fmx-met2" style="' + fts + '">' + ex.join('<i></i>') + '</div>' : ''; })() +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
     }
@@ -1218,8 +1221,9 @@
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-met" style="margin-top:11px;"><div><div class="l">Цена от</div><div class="v pr">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
+            (l.er != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(l.er) + '%</div></div>' : '') +
+            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v sm">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
-            (function () { var ex = []; if (l.er != null) ex.push('<b>ER</b> ' + l.er + '%'); var cpmX = _cpm(l); if (cpmX != null) ex.push('<b>CPM</b> ' + _num(cpmX) + ' ₽'); var rrX = _reachRate(l); if (l.er == null && rrX != null) ex.push('<b>охват/подп</b> ' + rrX + '%'); return ex.length ? '<div class="fmx-met2">' + ex.join('<i></i>') + '</div>' : ''; })() +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
     function listItem(l, fx) {
