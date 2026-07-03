@@ -834,6 +834,7 @@
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
+        bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
     function fmtRows() {
