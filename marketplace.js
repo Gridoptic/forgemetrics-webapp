@@ -290,7 +290,7 @@
         d.id = 'fmx-screen';
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" style="display:none;margin-right:-2px;"><i class="ti ti-arrow-left"></i></button><div class="fmx-hic" id="fmx-hic"><i class="ti ti-building-store"></i></div>' +
-            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p id="fmx-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
+            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button>' +
             '<button class="fmx-ibtn" id="fmx-close" style="margin-left:7px;"><i class="ti ti-x"></i></button></div>' +
@@ -327,7 +327,7 @@
         _mainTab = t;
         var back = el('fmx-back'); if (back) back.style.display = t === 'enter' ? 'none' : 'flex';
         var hic = el('fmx-hic'); if (hic) hic.style.display = t === 'enter' ? 'flex' : 'none';
-        var ti = el('fmx-title'), su = el('fmx-sub');
+        var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
             if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; }
             else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; }
