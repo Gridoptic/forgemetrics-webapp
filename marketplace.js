@@ -468,7 +468,7 @@
             '.fmx-tl i.amber.on{background:#f59e0b;box-shadow:0 0 7px rgba(245,158,11,0.8);}',
             '.fmx-tl i.green.on{background:#5DCAA5;box-shadow:0 0 7px rgba(93,202,165,0.8);}',
             '.fmx-tl b{font-size:9.5px;font-weight:700;margin-left:2px;}',
-            '.fmx-tlm{padding:4px 6px;gap:3px;flex-shrink:0;}',
+            '.fmx-tlm{flex-direction:column;background:transparent;border:none;padding:0;gap:3px;flex-shrink:0;}',
             '.fmx-tlm i{width:6px;height:6px;}',
             '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
             '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
