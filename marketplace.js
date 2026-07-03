@@ -22,11 +22,11 @@
     var EMOJIS = ['🧬', '🔥', '💪', '🧠', '⚡', '🚀', '💎', '🎯', '📈', '🌿', '❤️', '✨', '🏆', '🎮', '📚', '🌟', '💰', '📊', '👑', '🌈'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
     var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок']];
-    var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS']];
+    var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки']];
     var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['prism', 'Призма'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора']];
-    var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали']];
+    var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера']];
     var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка']];
-    var FX_VIP = { glow: ['aurora'], orbit: ['comet', 'atom', 'orbitals'], glass: ['frost', 'tint', 'dark'] };
+    var FX_VIP = { glow: ['aurora'], orbit: ['comet', 'atom', 'orbitals', 'sphere'], glass: ['frost', 'tint', 'dark'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -257,12 +257,14 @@
             '@keyframes fmxGlitch{0%,86%,100%{transform:translate(0,0) skewX(0);}88%{transform:translate(-2px,1px) skewX(3deg);}90%{transform:translate(2px,-1px) skewX(-2deg);}92%{transform:translate(-1px,-2px);}94%{transform:translate(1.5px,1px) skewX(2deg);}96%{transform:translate(0,0);}}',
             '.fx-g-neon{box-shadow:0 0 12px var(--fxa),0 0 24px var(--fxa);animation:fmxGlowP 2.6s ease-in-out infinite;}',
             '@keyframes fmxGlowP{0%,100%{opacity:.35;}50%{opacity:.85;}}',
-            '.fx-g-prism{background:conic-gradient(from 0deg,#f87171,#fbbf24,#34d399,#60a5fa,#a78bfa,#f87171);filter:blur(7px);opacity:.65;animation:fmxSpin 6s linear infinite;}',
+            '.fx-g-prism{background:conic-gradient(#ff5f6d,#ffc371,#47e891,#4facfe,#b06ab3,#ff5f6d);-webkit-mask:radial-gradient(farthest-side,transparent 60%,#000 64%);mask:radial-gradient(farthest-side,transparent 60%,#000 64%);animation:fmxSpin 3.4s linear infinite;opacity:.95;}',
             '.fx-g-breath{box-shadow:0 0 18px 5px rgba(255,255,255,0.5);animation:fmxBreathH 3.4s ease-in-out infinite;}',
             '@keyframes fmxBreathH{0%,100%{transform:scale(0.94);opacity:.3;}50%{transform:scale(1.14);opacity:.8;}}',
             '.fx-g-gold{box-shadow:0 0 12px rgba(245,191,79,.85),0 0 26px rgba(245,191,79,.5);animation:fmxGoldF 2.8s steps(1) infinite;}',
             '@keyframes fmxGoldF{0%,100%{opacity:.55;}18%{opacity:.85;}34%{opacity:.6;}52%{opacity:.95;}68%{opacity:.7;}84%{opacity:.9;}}',
-            '.fx-g-aurora{background:conic-gradient(from 180deg,#34d399,#60a5fa,#a78bfa,#5DCAA5,#34d399);filter:blur(8px);opacity:.75;animation:fmxSpin 9s linear infinite;}',
+            '.fx-g-aurora{background:conic-gradient(from 180deg,#0fd07f,#17b3a3,#3b82f6,#8b5cf6,#10b981,#0fd07f);filter:blur(9px);animation:fmxSpin 11s linear infinite;}',
+            '.fx-g-aurora::after{content:"";position:absolute;inset:0;border-radius:inherit;animation:fmxAur 5.5s ease-in-out infinite;background:inherit;filter:blur(4px);}',
+            '@keyframes fmxAur{0%,100%{opacity:.15;}50%{opacity:.7;}}',
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}',
             '.fx-o-holo::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-70%;width:45%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-18deg);animation:fmxSweep 2.8s ease-in-out infinite;}',
             '@keyframes fmxSweep{70%,100%{transform:translateX(340%) skewX(-18deg);}}',
@@ -291,6 +293,31 @@
             '.fx-orb-o2::before{content:"";position:absolute;top:-2.5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe);}',
             '.fx-orb-o3{inset:-16px;animation:fmxSpin 6.4s linear infinite;}',
             '.fx-orb-o3::before{content:"";position:absolute;top:-2.5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe);}',
+            '.fx-c-warp{animation:fmxWarp 3.2s ease-in-out infinite;}',
+            '@keyframes fmxWarp{0%,100%{border-radius:13px;transform:skewX(0deg) scale(1,1);}20%{border-radius:15px 11px 16px 12px;transform:skewX(2.5deg) scale(0.985,1.01);}45%{border-radius:11px 16px 12px 17px;transform:skewX(-2.5deg) scale(1.01,0.985);}70%{border-radius:16px 12px 15px 11px;transform:skewX(1.5deg) scale(0.99,1);}}',
+            '.fx-c-slice{animation:fmxSliceC 2.6s steps(1) infinite;}',
+            '@keyframes fmxSliceC{0%,74%,100%{clip-path:none;transform:translateX(0);}76%{clip-path:polygon(0 0,100% 0,100% 34%,94% 34%,94% 46%,100% 46%,100% 100%,0 100%,0 62%,7% 62%,7% 50%,0 50%);transform:translateX(1.5px);}80%{clip-path:polygon(0 0,100% 0,100% 18%,92% 18%,92% 30%,100% 30%,100% 100%,0 100%,0 80%,9% 80%,9% 66%,0 66%);transform:translateX(-2px);}84%{clip-path:none;transform:translateX(1px);}88%{clip-path:polygon(0 0,100% 0,100% 55%,90% 55%,90% 70%,100% 70%,100% 100%,0 100%,0 40%,8% 40%,8% 26%,0 26%);transform:translateX(-1px);}92%{clip-path:none;transform:translateX(0);}}',
+            '.fx-c-slice::before{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;clip-path:inset(30% 0 52% 0);animation:fmxSliceB 2.6s steps(1) infinite;opacity:0;}',
+            '@keyframes fmxSliceB{0%,74%,100%{opacity:0;transform:translateX(0);}77%{opacity:1;transform:translateX(-4px);}83%{opacity:1;transform:translateX(4px);clip-path:inset(56% 0 28% 0);}89%{opacity:0;}}',
+            '.fx-c-shred::before{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,#000 0 2px,transparent 2px 5px);mask:repeating-linear-gradient(0deg,#000 0 2px,transparent 2px 5px);filter:hue-rotate(80deg) saturate(1.8);animation:fmxShredA 1.9s steps(2) infinite;}',
+            '.fx-c-shred::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 5px);mask:repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 5px);filter:hue-rotate(-80deg) saturate(1.8);animation:fmxShredB 1.9s steps(2) infinite;}',
+            '@keyframes fmxShredA{0%,100%{transform:translateX(-1.5px);}50%{transform:translateX(2px);}}',
+            '@keyframes fmxShredB{0%,100%{transform:translateX(1.5px);}50%{transform:translateX(-2px);}}',
+            '.fx-c-blocks{animation:fmxBlkC 3.1s steps(1) infinite;}',
+            '.fx-c-blocks::before{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(15% 60% 55% 12%);animation:fmxBlkA 3.1s steps(1) infinite;opacity:0;}',
+            '.fx-c-blocks::after{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(58% 18% 12% 52%);animation:fmxBlkB 3.1s steps(1) infinite;opacity:0;}',
+            '@keyframes fmxBlkC{0%,70%,100%{transform:translate(0,0);}73%{transform:translate(-1.5px,1px);}79%{transform:translate(1.5px,-1px);}85%{transform:translate(0,0);}}',
+            '@keyframes fmxBlkA{0%,70%,100%{opacity:0;transform:translate(0,0);}72%{opacity:1;transform:translate(5px,-3px);}78%{opacity:1;transform:translate(-4px,2px);clip-path:inset(30% 40% 40% 30%);}84%{opacity:0;}}',
+            '@keyframes fmxBlkB{0%,70%,100%{opacity:0;transform:translate(0,0);}74%{opacity:1;transform:translate(-5px,3px);}80%{opacity:1;transform:translate(4px,-2px);clip-path:inset(10% 55% 60% 8%);}86%{opacity:0;}}',
+            '.fx-orb-sph{inset:0;}',
+            '.fx-orb-sph i{position:absolute;inset:0;display:block;}',
+            '.fx-orb-sph .sp2{transform:rotate(62deg);}',
+            '.fx-orb-sph .sp3{transform:rotate(-62deg);}',
+            '.fx-orb-sph i::before{content:"";position:absolute;top:50%;left:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);animation:fmxSph 3s linear infinite;}',
+            '.fx-orb-sph .sp2::before{animation-duration:3.9s;animation-delay:-1.2s;width:5px;height:5px;margin:-2.5px;}',
+            '.fx-orb-sph .sp3::before{animation-duration:4.7s;animation-delay:-2.3s;width:5px;height:5px;margin:-2.5px;}',
+            '@keyframes fmxSph{0%{transform:translate(27px,0) scale(1.1);opacity:1;}12.5%{transform:translate(19px,7px) scale(1.25);opacity:1;}25%{transform:translate(0,10px) scale(1.3);opacity:1;}37.5%{transform:translate(-19px,7px) scale(1.1);opacity:.95;}50%{transform:translate(-27px,0) scale(0.85);opacity:.7;}62.5%{transform:translate(-19px,-7px) scale(0.55);opacity:.4;}75%{transform:translate(0,-10px) scale(0.5);opacity:.35;}87.5%{transform:translate(19px,-7px) scale(0.75);opacity:.6;}100%{transform:translate(27px,0) scale(1.1);opacity:1;}}',
+            '.fmx-chrow.dis{opacity:.55;}',
             '.fmx-lav{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}',
             '.fmx-lchev{transition:transform 200ms;color:#565b73;flex-shrink:0;font-size:15px;}',
             '.fmx-li.on .fmx-lchev{transform:rotate(180deg);}',
@@ -426,7 +453,7 @@
             if (_mainTab === 'catalog') renderCatalog();
         }).catch(function () { _catState = 'error'; if (_mainTab === 'catalog') renderCatalog(); });
     }
-    function loadChannels() { return apiGet('/api/v1/channels').then(function (r) { _channels = ((r && r.channels) ? r.channels : []).filter(function (c) { return c.username; }); return _channels; }).catch(function () { _channels = []; return []; }); }
+    function loadChannels() { return apiGet('/api/v1/channels').then(function (r) { _channels = (r && r.channels) ? r.channels : []; return _channels; }).catch(function () { _channels = []; return []; }); }
     function loadMyListings() { return apiGet('/api/v1/marketplace/my').then(function (r) { _myListings = (r && r.listings) ? r.listings : []; return _myListings; }).catch(function () { _myListings = []; return []; }); }
     function loadBookmarks() { apiGet('/api/v1/marketplace/bookmarks').then(function (r) { _bookmarks = {}; ((r && r.bookmarks) ? r.bookmarks : []).forEach(function (b) { _bookmarks[b.username || b] = true; }); updateBmCount(); }).catch(function () {}); }
 
@@ -499,10 +526,11 @@
         var sub = el('fmx-sub'); if (!sub) return;
         sub.innerHTML = '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю конструктор…</div></div>';
         Promise.all([loadChannels(), loadMyListings()]).then(function () {
-            if (!_channels.length) { sub.innerHTML = emptyHtml('ti-plus', 'Нет подходящих каналов', 'Чтобы выставить канал на Площадку, у него должен быть публичный @username. Добавь или настрой канал в приложении.'); return; }
+            var pubs = _channels.filter(function (c) { return c.username; });
+            if (!pubs.length) { sub.innerHTML = emptyHtml('ti-plus', 'Нет подходящих каналов', 'Чтобы выставить канал на Площадку, у него должен быть публичный @username. Добавь или настрой канал в приложении.'); return; }
             var def = null;
-            for (var i = 0; i < _channels.length; i++) if (listingForChannel(_channels[i].id)) { def = _channels[i].id; break; }
-            if (def == null) def = _channels[0].id;
+            for (var i = 0; i < pubs.length; i++) if (listingForChannel(pubs[i].id)) { def = pubs[i].id; break; }
+            if (def == null) def = pubs[0].id;
             selectChannel(def);
         });
     }
@@ -559,7 +587,10 @@
         var sub = el('fmx-sub'); if (!sub) return;
         var existing = listingForChannel(_ss.channelId);
         var cur = channelById(_ss.channelId);
-        var rows = _channels.map(function (c) { return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + '" data-cid="' + c.id + '"><div class="fmx-chav">' + _esc((c.title || c.username || '?').charAt(0)) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || ('@' + c.username)) + '</div><div class="fmx-chuu">@' + _esc(c.username) + '</div></div>' + (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') + '</div>'; }).join('');
+        var rows = _channels.map(function (c) {
+            var pub = !!c.username;
+            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (pub ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '"><div class="fmx-chav"' + (pub ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + _esc((c.title || c.username || '?').charAt(0)) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (pub ? '@' + _esc(c.username) : 'приватный — нужен публичный @username') + '</div></div>' + (pub ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
+        }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
@@ -580,7 +611,7 @@
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
-        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
+        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '#fmx-pult .fmx-pb').forEach(function (b) { b.addEventListener('click', function () { setCreateSec(b.getAttribute('data-sc')); }); });
         el('fmx-save').addEventListener('click', saveStudio);
         bindCover(); bindStyle(); bindPrice(); bindText();
@@ -692,13 +723,14 @@
         var c = curChannel();
         var over = '<i class="fmx-avover fx-o-' + _ss.over + '"></i>';
         var core;
-        if (_ss.avatar === 'emoji') core = '<div class="fmx-av" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
-        else core = '<div class="fmx-av" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
+        if (_ss.avatar === 'emoji') core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
+        else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
         var orb = '', oc = _ss.atomColor;
         if (_ss.orbit === 'comet') orb = '<i class="fmx-avorb fx-orb-comet" style="--fxe:' + oc + ';"></i>';
         else if (_ss.orbit === 'atom') orb = '<i class="fmx-avorb fx-orb-atom" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-atom r2" style="--fxe:' + oc + ';"></i>';
         else if (_ss.orbit === 'orbitals') orb = '<i class="fmx-avorb fx-orb-o1" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o2" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o3" style="--fxe:' + oc + ';"></i>';
+        else if (_ss.orbit === 'sphere') orb = '<i class="fmx-avorb fx-orb-sph" style="--fxe:' + oc + ';"><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
         return '<div class="fmx-avw fx-m-' + _ss.move + '">' + halo + core + orb + '</div>';
     }
     function renderHero() {
