@@ -359,6 +359,10 @@
             '#fmx-cropBox:active{cursor:grabbing;}',
             '.fmx-zoomrow{display:flex;align-items:center;gap:10px;margin-top:12px;}',
             '.fmx-zoomrow input{flex:1;accent-color:#818cf8;}',
+            '.fmx-safeT,.fmx-safeB{position:absolute;left:0;right:0;background:rgba(5,7,14,0.6);pointer-events:none;transition:height 60ms linear,top 60ms linear;}',
+            '.fmx-safeT{top:0;}',
+            '.fmx-safeF{position:absolute;left:0;right:0;border-top:1.5px dashed rgba(255,255,255,0.75);border-bottom:1.5px dashed rgba(255,255,255,0.75);pointer-events:none;transition:top 60ms linear;}',
+            '.fmx-safeF span{position:absolute;right:0;top:0;font-size:9px;background:rgba(10,13,24,0.75);padding:2px 7px;border-radius:0 0 0 7px;color:#e8e8ed;}',
             '.fmx-dot-rb{border-radius:50%;border:2px solid rgba(255,255,255,0.85);background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);}',
             '.fmx-cbg{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;}',
             '.fmx-cbg-s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,24,0.35),rgba(10,13,24,0.86) 72%);}',
@@ -929,8 +933,9 @@
         _crop = { target: target, url: url, kind: kind, name: name, x: x, y: y, s: s, drag: null, file: file || null };
         var box = el('fmx-cropBox');
         box.style.aspectRatio = target === 'avatar' ? '1 / 1' : (target === 'cardbg' ? '4 / 5' : '2 / 1');
-        box.innerHTML = kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">';
-        el('fmx-cropHint').textContent = target === 'avatar' ? 'Двигай и масштабируй. Лучше всего от 400×400.' : (target === 'cardbg' ? 'Фон карточки: двигай и масштабируй. Цифры затемняются подложкой автоматически.' : 'Двигай и масштабируй. Лучше всего от 1600×800.');
+        box.innerHTML = (kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">') +
+            (target === 'cover' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона шапки — видна на 100%</span></div>' : '');
+        el('fmx-cropHint').textContent = target === 'avatar' ? 'Двигай и масштабируй. Лучше всего от 400×400.' : (target === 'cardbg' ? 'Фон карточки: двигай и масштабируй. Цифры затемняются подложкой автоматически.' : 'Пунктирная полоса — то, что видно в шапке карточки. Затемнённое сверху и снизу в шапку не попадает.');
         el('fmx-cropZoom').value = s;
         cropApply();
         showModal('fmx-cropBg');
@@ -939,6 +944,13 @@
         var box = el('fmx-cropBox'); if (!box || !_crop) return;
         var m = box.firstChild; if (!m) return;
         m.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:' + _crop.x + '% ' + _crop.y + '%;transform:scale(' + _crop.s + ');transform-origin:' + _crop.x + '% ' + _crop.y + '%;pointer-events:none;display:block;';
+        if (_crop.target === 'cover') {
+            var band = 48.2, top = (100 - band) * (_crop.y / 100);
+            var st = box.querySelector('.fmx-safeT'), sb = box.querySelector('.fmx-safeB'), sf = box.querySelector('.fmx-safeF');
+            if (st) st.style.height = top + '%';
+            if (sf) { sf.style.top = top + '%'; sf.style.height = band + '%'; }
+            if (sb) { sb.style.top = (top + band) + '%'; sb.style.height = (100 - top - band) + '%'; }
+        }
     }
     function finishCrop() {
         if (!_crop) return;
@@ -1078,6 +1090,7 @@
         if (_ss.listingId) p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
         else { if (!_ss.channelId) { btn.disabled = false; alert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
+            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке'); alert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
             if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } }
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
@@ -1118,11 +1131,18 @@
         var cbgHtml = cb ? '<div class="fmx-cbg"><img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '"><i class="fmx-cbg-s"></i></div>' : '';
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
+        var covHtml;
+        if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) {
+            var cpc = (at.cover && typeof at.cover === 'object') ? at.cover : null;
+            var cst = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cpc);
+            var cu = mediaAbs(l.cover_url);
+            covHtml = '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (l.cover_type === 'video' ? '<video src="' + cu + '" style="' + cst + '" muted playsinline preload="metadata"></video>' : '<img src="' + cu + '" style="' + cst + '">') + '</div>';
+        } else covHtml = '<div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>';
         var avHtml = l.avatar_url
             ? '<div class="fmx-av" style="background:' + accent + ';overflow:hidden;position:relative;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(at.avatar) + '"></div>'
             : '<div class="fmx-av" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>';
         return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml +
-            '<div class="fmx-cov"><div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>' +
+            '<div class="fmx-cov">' + covHtml +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
