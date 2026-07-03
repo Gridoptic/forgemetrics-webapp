@@ -13,6 +13,7 @@
     var _chLoaded = false, _chLoading = false, _nicheSel = null;
     var _faqTab = 'terms';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
+    var _stickers = null;  // коллекция стикеров юзера
 
     var COVERS = [
         'linear-gradient(135deg,#6366f1,#8b5cf6)', 'linear-gradient(135deg,#5DCAA5,#10b981)',
@@ -469,6 +470,20 @@
             '.fmx-tl i.green.on{background:#5DCAA5;box-shadow:0 0 7px rgba(93,202,165,0.8);}',
             '.fmx-tl b{font-size:9.5px;font-weight:700;margin-left:2px;}',
             '.fmx-tlm{background:transparent;border:none;padding:0 2px 0 0;gap:3px;flex-shrink:0;}',
+            '.fmx-stk{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
+            '.fmx-stk.drag{pointer-events:auto;cursor:grab;touch-action:none;}',
+            '.fmx-stk.drag:active{cursor:grabbing;}',
+            '.fmx-stkgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;}',
+            '.fmx-stkcell{position:relative;aspect-ratio:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:11px;padding:5px;cursor:pointer;transition:border-color 150ms;}',
+            '.fmx-stkcell.on{border-color:#818cf8;box-shadow:0 0 0 1px #818cf8;}',
+            '.fmx-stkcell img,.fmx-stkcell video{width:100%;height:100%;object-fit:contain;pointer-events:none;}',
+            '.fmx-stkdel{position:absolute;top:-6px;right:-6px;width:17px;height:17px;border-radius:50%;background:#1a1f30;border:1px solid rgba(255,255,255,0.18);color:#8990a8;font-size:11px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;}',
+            '.fmx-stkcell:hover .fmx-stkdel{display:flex;}',
+            '.fmx-stk-tgs{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#818cf8;font-size:22px;}',
+            '.fmx-stk-anim{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:8px;color:#f59e0b;}',
+            '.fmx-stkrow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:11px;color:#8990a8;}',
+            '.fmx-stkrow span{width:52px;flex-shrink:0;}',
+            '.fmx-stkrow input{flex:1;}',
             '.fmx-tlm i{width:6px;height:6px;}',
             '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
             '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
@@ -879,6 +894,7 @@
     function hydrate(l) {
         _ss.listingId = l.id;
         _ss._status = l.status || null;
+        _ss.sticker = l.sticker_json || l.sticker || null;
         if (l.accent_color) _ss.color = l.accent_color;
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
@@ -914,7 +930,7 @@
         _ss._slots = l.slots_note || '';
     }
     function selectChannel(id) {
-        _ss = defaultState(); _sfmts = defaultFmts(); _ss.channelId = id;
+        _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.channelId = id;
         var l = listingForChannel(id); if (l) hydrate(l);
         _ss.channelId = id; _secCreate = 'cover';
         paintCreate();
@@ -938,6 +954,7 @@
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
             accSec('avatar', 'ti-user-circle', 'Аватар', paneAvatar()) +
             accSec('fx', 'ti-sparkles', 'Эффекты аватара', paneFx()) +
+            accSec('sticker', 'ti-sticker', 'Стикер', '<div id="fmx-stkBody">' + loadHtml() + '</div>') +
             accSec('style', 'ti-palette', 'Стиль', paneStyleMin()) +
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
@@ -951,6 +968,7 @@
         qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
+        loadStickerPane();
         var lp = el('fmx-lpause');
         if (lp) lp.addEventListener('click', function () {
             var act = _ss._status === 'paused' ? 'resume' : 'pause';
@@ -1310,6 +1328,130 @@
         }
         return '<div class="fmx-cov-bg" style="background:' + gradient + ';"></div>';
     }
+    /* ===================== стикеры: панель конструктора ===================== */
+    var SEAM = 84;  // высота шапки карточки — стабильный якорь
+    function stkSize(s, W) { return Math.max(40, Math.min(64 * (s.scale || 1), Math.min(96, W * 0.28))); }
+    function stkPos(s, W) {
+        var size = stkSize(s, W);
+        if ((s.mode || 'slot') === 'slot') return { size: size, left: W - size - 12, top: SEAM - size * 0.55 };
+        var cx = Math.max(size / 2 + 4, Math.min((s.x != null ? s.x : 0.82) * W, W - size / 2 - 4));
+        var cy = Math.max(14, Math.min(SEAM + (s.dy != null ? s.dy : 0), SEAM + 48));
+        return { size: size, left: cx - size / 2, top: cy - size / 2 };
+    }
+    function stkMedia(s, animate) {
+        if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
+        if (s.kind === 'tgs') return '<span class="fmx-stk-tgs"><i class="ti ti-sticker"></i></span>';
+        return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
+    }
+    function stkOverlay(s, W, animate, draggable) {
+        if (!s || !s.url) return '';
+        var p = stkPos(s, W);
+        return '<div class="fmx-stk' + (draggable ? ' drag' : '') + '" id="' + (draggable ? 'fmx-stkPrev' : '') + '" style="left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);">' + stkMedia(s, animate) + '</div>';
+    }
+    function loadStickerPane() {
+        var box = el('fmx-stkBody'); if (!box) return;
+        if (_stickers) { renderStickerPane(); return; }
+        apiGet('/api/v1/marketplace/stickers').then(function (r) {
+            _stickers = (r && r.stickers) ? r.stickers : [];
+            renderStickerPane();
+        }).catch(function () { _stickers = []; renderStickerPane(); });
+    }
+    function renderStickerPane() {
+        var box = el('fmx-stkBody'); if (!box) return;
+        var s = _ss.sticker;
+        var html = '';
+        if (!_stickers.length) {
+            html = '<div style="font-size:11.5px;color:#8990a8;line-height:1.6;">Коллекция пуста. Отправь боту в личку любой стикер или премиум-эмодзи — он появится здесь.</div>' +
+                '<button class="fmx-btn" id="fmx-stk-bot" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i>Открыть бота</button>';
+        } else {
+            html = '<div class="fmx-stkgrid">' + _stickers.map(function (st) {
+                var sel = s && s.sticker_id === st.id;
+                return '<div class="fmx-stkcell' + (sel ? ' on' : '') + '" data-sid="' + st.id + '">' + stkMedia(st, st.kind === 'webm') +
+                    (st.kind === 'tgs' ? '<span class="fmx-stk-anim">аним.</span>' : '') +
+                    '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
+            }).join('') + '</div>' +
+                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личку. ' + _stickers.length + '/30.</div>';
+            if (s) {
+                var free = (s.mode || 'slot') === 'free';
+                html += '<div class="fmx-fxw" style="margin-top:12px;">' +
+                    '<button class="fmx-fx' + (!free ? ' on' : '') + '" data-smode="slot">В кармашке</button>' +
+                    '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
+                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
+                if (free) {
+                    html += '<div class="fmx-stkrow"><span>Размер</span><input type="range" id="fmx-stk-sc" min="0.6" max="1.6" step="0.05" value="' + (s.scale || 1) + '"></div>' +
+                        '<div class="fmx-stkrow"><span>Наклон</span><input type="range" id="fmx-stk-rot" min="-25" max="25" step="1" value="' + (s.rot || 0) + '"></div>' +
+                        '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Перетащи стикер прямо на карточке-превью. Зона — шапка и верх карточки.</div>';
+                }
+                if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
+            }
+        }
+        box.innerHTML = html;
+        var bo = el('fmx-stk-bot'); if (bo) bo.addEventListener('click', function () { openTg('ForgeMetricsBot'); });
+        qsa(box, '[data-sid]').forEach(function (cell) {
+            cell.addEventListener('click', function (e) {
+                if (e.target.getAttribute && e.target.getAttribute('data-sdel')) return;
+                var st = _stickers.filter(function (x) { return x.id === +cell.getAttribute('data-sid'); })[0];
+                if (!st) return;
+                var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0 };
+                _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot };
+                _haptic('light'); renderStickerPane(); renderHero();
+            });
+        });
+        qsa(box, '[data-sdel]').forEach(function (b) {
+            b.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var id = +b.getAttribute('data-sdel');
+                uiConfirm('Удалить стикер из коллекции?', function () {
+                    apiRequest('/api/v1/marketplace/stickers/' + id, { method: 'DELETE' }).then(function () {
+                        _stickers = _stickers.filter(function (x) { return x.id !== id; });
+                        if (_ss.sticker && _ss.sticker.sticker_id === id) { _ss.sticker = null; renderHero(); }
+                        renderStickerPane();
+                    }).catch(function () { uiAlert('Не получилось удалить — попробуй ещё раз.'); });
+                });
+            });
+        });
+        qsa(box, '[data-smode]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                _ss.sticker.mode = b.getAttribute('data-smode');
+                _haptic('light'); renderStickerPane(); renderHero();
+            });
+        });
+        var cl = qsa(box, '[data-sclear]')[0];
+        if (cl) cl.addEventListener('click', function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
+        var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () { _ss.sticker.scale = +sc.value; renderHero(); });
+        var ro = el('fmx-stk-rot'); if (ro) ro.addEventListener('input', function () { _ss.sticker.rot = +ro.value; renderHero(); });
+        var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
+    }
+    function bindStickerDrag(cardEl) {
+        var elS = el('fmx-stkPrev'); if (!elS || !cardEl) return;
+        function move(clientX, clientY) {
+            var r = cardEl.getBoundingClientRect();
+            var W = r.width, size = stkSize(_ss.sticker, W);
+            var cx = clientX - r.left, cy = clientY - r.top;
+            cx = Math.max(size / 2 + 4, Math.min(cx, W - size / 2 - 4));
+            cy = Math.max(14, Math.min(cy, SEAM + 48));
+            if (cy < 42 && cx > W - 56) cx = W - 56;      /* зона звезды */
+            if (cy < 34 && cx < 108) cy = 40;             /* зона тега «на продаже» */
+            _ss.sticker.x = cx / W; _ss.sticker.dy = Math.round(cy - SEAM); _ss.sticker.anchor = 'seam';
+            var p = stkPos(_ss.sticker, W);
+            elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
+        }
+        function start(e) {
+            if ((_ss.sticker.mode || 'slot') !== 'free') return;
+            e.preventDefault();
+            var mm = function (ev) { var t = ev.touches ? ev.touches[0] : ev; move(t.clientX, t.clientY); };
+            var up = function () {
+                document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
+                document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                _haptic('light');
+            };
+            document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
+            document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
+        }
+        elS.addEventListener('mousedown', start);
+        elS.addEventListener('touchstart', start, { passive: false });
+    }
+
     function renderHero() {
         var hero = el('fmx-hero'); if (!hero) return;
         var c = curChannel(), accent = _ss.color, hcHero = _healthColor(c);
@@ -1330,7 +1472,8 @@
         }
         var ts = hasBg ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var metSt = hasBg ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
-        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;">' + cbg +
+        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;position:relative;">' + cbg +
+            (_ss.sticker ? stkOverlay(_ss.sticker, Math.min(350, hero.clientWidth || 350), _ss.sticker.kind === 'webm', true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star"><i class="ti ti-star"></i></button></div>' +
@@ -1347,6 +1490,7 @@
             (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
+        bindStickerDrag(hero.querySelector('.fmx-card'));
         qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
         var hl = el('fmx-hlist');
         if (hl) {
@@ -1405,6 +1549,7 @@
             avatar_url: (_ss.avatar === 'img' && typeof _ss.att.avatar === 'object' && _ss.att.avatar && _ss.att.avatar.url) ? _ss.att.avatar.url : null,
             avatar_type: _ss.avatar,
             avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
+            sticker_json: _ss.sticker || null,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
             effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass },
@@ -1450,6 +1595,8 @@
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
+        var stk = l.sticker_json || l.sticker;
+        var stkHtml = (stk && stk.url && stk.kind !== 'tgs') ? stkOverlay(stk, 350, top && stk.kind === 'webm', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
@@ -1468,7 +1615,7 @@
         var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
-        return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml +
+        return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             '<div class="fmx-cov">' + covHtml +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
