@@ -447,6 +447,12 @@
             '.fmx-cfm-box{background:#141826;border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:18px;max-width:320px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,0.5);}',
             '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
             '.fmx-cfm-r{display:flex;gap:8px;}',
+            '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
+            '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
+            '.fmx-lead{display:flex;flex-direction:column;gap:1px;padding:7px 0;border-top:0.5px solid rgba(255,255,255,0.05);text-decoration:none;}',
+            '.fmx-lead:first-of-type{border-top:none;padding-top:0;}',
+            '.fmx-lead b{font-size:12px;color:#e8e8ed;font-weight:600;}',
+            '.fmx-lead span{font-size:10px;color:#8990a8;}',
             '.fmx-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.fmx-acc.open{border-color:rgba(99,102,241,0.3);}',
             '.fmx-acch{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;}',
@@ -669,17 +675,26 @@
         var h = Math.round(m / 60); if (h < 24) return h + ' ч назад';
         var d = Math.round(h / 24); return d + ' дн назад';
     }
+    function _plural(n, a, b, c) { var m = n % 100; if (m >= 11 && m <= 14) return c; m = n % 10; if (m === 1) return a; if (m >= 2 && m <= 4) return b; return c; }
     function reqCard(r) {
         var head = [];
         if (r.niche) head.push('<span class="fmx-reqn">' + _esc(r.niche) + '</span>');
         head.push('<span class="fmx-reqf">' + (REQ_FMT[r.format] || REQ_FMT.any) + '</span>');
+        var cts = r.contacts ? ' · <span style="color:#f59e0b;">🔥 ' + r.contacts + ' ' + _plural(r.contacts, 'отклик', 'отклика', 'откликов') + '</span>' : '';
+        var leads = '';
+        if (r.mine && r.leads && r.leads.length) {
+            leads = '<div class="fmx-leads"><div class="fmx-leads-t"><i class="ti ti-users-group"></i> Заинтересовались:</div>' +
+                r.leads.map(function (ld) {
+                    return '<a class="fmx-lead" href="https://t.me/' + _esc(ld.username) + '" target="_blank"><b>' + _esc(ld.title || '@' + ld.username) + '</b><span>@' + _esc(ld.username) + (ld.subscribers ? ' · ' + _short(ld.subscribers) + ' подп' : '') + '</span></a>';
+                }).join('') + '</div>';
+        }
         return '<div class="fmx-req' + (r.mine ? ' mine' : '') + '">' +
             '<div class="fmx-reqh">' + head.join('') + '<span class="fmx-reqb' + (r.budget ? '' : ' na') + '">' + (r.budget ? 'до ' + _num(r.budget) + ' ₽' : 'бюджет не указан') + '</span></div>' +
-            '<div class="fmx-reqt">' + _esc(r.text) + '</div>' +
-            '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + '</span>' +
+            '<div class="fmx-reqt">' + _esc(r.text) + '</div>' + leads +
+            '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + cts + '</span>' +
             (r.mine
                 ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>Закрыть</button>'
-                : '<button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button>') +
+                : '<button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button>') +
             '</div></div>';
     }
     function renderSell() {
@@ -693,7 +708,18 @@
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
             '<button class="fmx-save" id="fmx-newreq" style="margin:0 0 14px;"><i class="ti ti-plus"></i> Разместить заявку</button>' + body;
         el('fmx-newreq').addEventListener('click', openReqForm);
-        qsa(sub, '[data-rwrite]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-rwrite')); }); });
+        qsa(sub, '[data-rwrite]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var rid = b.getAttribute('data-rid');
+                if (rid) apiPost('/api/v1/marketplace/requests/' + rid + '/contact', {}).then(function (r) {
+                    if (r && r.ok && typeof r.contacts === 'number' && _reqs) {
+                        var it = _reqs.filter(function (x) { return String(x.id) === String(rid); })[0];
+                        if (it && it.contacts !== r.contacts) { it.contacts = r.contacts; renderSell(); }
+                    }
+                }).catch(function () {});
+                openTg(b.getAttribute('data-rwrite'));
+            });
+        });
         qsa(sub, '[data-rclose]').forEach(function (b) {
             b.addEventListener('click', function () {
                 uiConfirm('Закрыть заявку? Она исчезнет из ленты.', function () {
