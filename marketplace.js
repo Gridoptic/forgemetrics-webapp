@@ -18,7 +18,7 @@
         'linear-gradient(135deg,#f59e0b,#ef4444)', 'linear-gradient(135deg,#8b5cf6,#ec4899)'
     ];
     var COVER_NAMES = ['Фиолет', 'Изумруд', 'Закат', 'Океан', 'Огонь', 'Магента'];
-    var COLORS = ['#818cf8', '#5DCAA5', '#F0997B', '#ec4899', '#3b82f6', '#f59e0b', '#a78bfa', '#34d399'];
+    var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
     var EMOJIS = ['🧬', '🔥', '💪', '🧠', '⚡', '🚀', '💎', '🎯', '📈', '🌿', '❤️', '✨', '🏆', '🎮', '📚', '🌟', '💰', '📊', '👑', '🌈'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
     var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок']];
@@ -355,6 +355,11 @@
             '#fmx-cropBox:active{cursor:grabbing;}',
             '.fmx-zoomrow{display:flex;align-items:center;gap:10px;margin-top:12px;}',
             '.fmx-zoomrow input{flex:1;accent-color:#818cf8;}',
+            '.fmx-dot-rb{background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);position:relative;}',
+            '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
+            '.fmx-huerow input{flex:1;-webkit-appearance:none;appearance:none;height:10px;border-radius:99px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none;border:0.5px solid rgba(255,255,255,0.15);}',
+            '.fmx-huerow input::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;background:#fff;border:2.5px solid rgba(10,13,24,0.85);box-shadow:0 2px 7px rgba(0,0,0,0.45);cursor:pointer;}',
+            '.fmx-hueprev{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.85);}',
             '.fmx-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.fmx-acc.open{border-color:rgba(99,102,241,0.3);}',
             '.fmx-acch{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;}',
@@ -366,8 +371,8 @@
             '.fmx-accb{max-height:0;overflow:hidden;transition:max-height 320ms ease;}',
             '.fmx-acc.open .fmx-accb{max-height:1400px;}',
             '.fmx-acci{padding:2px 13px 15px;}',
-            '#fmx-mini{position:absolute;left:0;right:0;top:60px;z-index:45;padding:6px 14px;transform:translateY(-140%);transition:transform 260ms cubic-bezier(.2,.8,.2,1);pointer-events:none;}',
-            '#fmx-mini.on{transform:translateY(0);}',
+            '#fmx-mini{position:absolute;left:0;right:0;top:60px;z-index:45;padding:6px 14px;transform:translateY(-16px);opacity:0;visibility:hidden;transition:transform 240ms cubic-bezier(.2,.8,.2,1),opacity 200ms,visibility 240ms;pointer-events:none;}',
+            '#fmx-mini.on{transform:translateY(0);opacity:1;visibility:visible;}',
             '#fmx-mini .in{max-width:640px;margin:0 auto;background:rgba(13,16,28,0.92);backdrop-filter:blur(10px);border:0.5px solid rgba(255,255,255,0.12);border-radius:13px;padding:6px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 28px rgba(0,0,0,0.5);pointer-events:auto;cursor:pointer;}',
             '#fmx-mini .mini-cov{width:40px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}',
             '#fmx-mini .mini-av{transform:scale(0.7);margin:-8px -7px;flex-shrink:0;}',
@@ -666,15 +671,9 @@
     }
     function renderMini(accent, title, priceTxt) {
         var box = el('fmx-miniIn'); if (!box) return;
-        var covStyle;
-        var mc = _ss._media && _ss._media.cover;
-        if (_ss.covType !== 'grad' && mc && mc.kind !== 'video') covStyle = 'background-image:url(' + mc.url + ');background-size:cover;background-position:center;';
-        else if (_ss.covType !== 'grad' && mc) covStyle = 'background:#11141f;';
-        else covStyle = 'background:' + COVERS[_ss.cover] + ';';
-        box.innerHTML = '<div class="mini-cov" style="' + covStyle + '">' + (mc && mc.kind === 'video' && _ss.covType !== 'grad' ? '<i class="ti ti-video" style="color:#8990a8;font-size:13px;"></i>' : '') + '</div>' +
-            '<div class="mini-av">' + avatarInner(accent) + '</div>' +
+        box.innerHTML = '<div class="mini-av">' + avatarInner(accent) + '</div>' +
             '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(title) + '</div><div style="font-size:10px;color:' + accent + ';font-weight:700;">от ' + priceTxt + '</div></div>' +
-            '<i class="ti ti-arrow-up" style="color:#8990a8;font-size:15px;flex-shrink:0;"></i>';
+            '<span style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:#8990a8;flex-shrink:0;">Наверх <i class="ti ti-arrow-up" style="font-size:13px;"></i></span>';
         checkMini();
     }
     function accSec(id, icon, title, body) {
@@ -758,10 +757,44 @@
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>';
     }
     function paneStyleMin() {
-        return '<span class="fmx-lbl">Акцент — цена и кнопка</span><div class="fmx-dots" id="fmx-colors">' +
-            COLORS.map(function (c) { return '<div class="fmx-dot' + (c === _ss.color ? ' on' : '') + '" data-c="' + c + '" style="background:' + c + '"></div>'; }).join('') + '</div>' +
+        return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>';
+    }
+    function hslHex(h) {
+        var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
+        if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; }
+        else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+        function q(v) { return ('0' + Math.round((v + m) * 255).toString(16)).slice(-2); }
+        return '#' + q(r) + q(g) + q(b);
+    }
+    function hexHue(hex) {
+        var m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return 200;
+        var n = parseInt(m[1], 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+        var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+        if (d) { if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4; h = Math.round(h * 60); if (h < 0) h += 360; }
+        return h;
+    }
+    function colorPick(idBase, cur, sz) {
+        var st = sz ? 'width:' + sz + 'px;height:' + sz + 'px;' : '';
+        var custom = COLORS.indexOf(cur) < 0;
+        return '<div class="fmx-dots" id="' + idBase + '">' +
+            COLORS.map(function (c) { return '<div class="fmx-dot' + (c === cur ? ' on' : '') + '" data-cv="' + c + '" style="background:' + c + ';' + st + '"></div>'; }).join('') +
+            '<div class="fmx-dot fmx-dot-rb' + (custom ? ' on' : '') + '" data-rb="1" style="' + st + (custom ? 'box-shadow:0 0 0 2px ' + cur + ';' : '') + '" title="Свой цвет"></div></div>' +
+            '<div class="fmx-huerow" id="' + idBase + '-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="' + hexHue(cur) + '"><div class="fmx-hueprev" style="background:' + cur + ';"></div></div>';
+    }
+    function bindColorPick(idBase, set) {
+        var box = el(idBase); if (!box) return;
+        var hueRow = el(idBase + '-hue'), slider = hueRow ? hueRow.querySelector('input') : null, prev = hueRow ? hueRow.querySelector('.fmx-hueprev') : null, rb = box.querySelector('[data-rb]');
+        function mark(v) {
+            var preset = COLORS.indexOf(v) >= 0;
+            qsa(box, '.fmx-dot').forEach(function (d) { d.classList.toggle('on', d.getAttribute('data-cv') === v || (d === rb && !preset)); });
+            if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + v;
+            if (prev) prev.style.background = v;
+        }
+        qsa(box, '[data-cv]').forEach(function (d) { d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); if (hueRow) hueRow.style.display = 'none'; set(v); mark(v); renderHero(); }); });
+        if (rb) rb.addEventListener('click', function () { if (!hueRow) return; var open = hueRow.style.display !== 'none'; hueRow.style.display = open ? 'none' : 'flex'; if (!open && slider) { var v = hslHex(+slider.value); set(v); mark(v); renderHero(); } });
+        if (slider) slider.addEventListener('input', function () { var v = hslHex(+this.value); set(v); mark(v); renderHero(); });
     }
     function isVipFx(key, v) { return !!(FX_VIP[key] && FX_VIP[key].indexOf(v) >= 0); }
     function fxChips(key, arr, label) {
@@ -770,17 +803,16 @@
             '</div></div>';
     }
     function atomRow() {
-        return '<div id="fmx-atomrow" class="fmx-fxg" style="' + (_ss.orbit !== 'none' ? '' : 'display:none;') + '"><div class="fmx-fxl vipc"><i class="ti ti-atom"></i> Цвет орбиты</div><div class="fmx-fxw" id="fmx-atomc">' +
-            COLORS.map(function (c) { return '<div class="fmx-dot' + (c === _ss.atomColor ? ' on' : '') + '" data-ac="' + c + '" style="background:' + c + ';width:26px;height:26px;"></div>'; }).join('') +
-            '</div></div>';
+        return '<div id="fmx-atomrow" class="fmx-fxg" style="' + (_ss.orbit !== 'none' ? '' : 'display:none;') + '"><div class="fmx-fxl vipc"><i class="ti ti-atom"></i> Цвет орбиты</div>' +
+            colorPick('fmx-atomc', _ss.atomColor, 26) + '</div>';
     }
     function bindStyle() {
-        qsa(el('fmx-colors'), '.fmx-dot').forEach(function (d) { d.addEventListener('click', function () { _ss.color = d.getAttribute('data-c'); qsa(el('fmx-colors'), '.fmx-dot').forEach(function (x) { x.classList.remove('on'); }); d.classList.add('on'); renderHero(); }); });
+        bindColorPick('fmx-colors', function (v) { _ss.color = v; });
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
-        var _ac = el('fmx-atomc'); if (_ac) qsa(_ac, '.fmx-dot').forEach(function (d) { d.addEventListener('click', function () { _ss.atomColor = d.getAttribute('data-ac'); qsa(_ac, '.fmx-dot').forEach(function (x) { x.classList.remove('on'); }); d.classList.add('on'); renderHero(); }); });
+        bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
     }
