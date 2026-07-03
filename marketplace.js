@@ -68,6 +68,14 @@
         return String(n);
     }
     function _num(n) { if (n == null || isNaN(n)) return '—'; return Number(n).toLocaleString('ru-RU'); }
+    function uiAlert(msg) {
+        try { if (typeof tg !== 'undefined' && tg && tg.showAlert) { tg.showAlert(String(msg)); return; } } catch (e) {}
+        try { alert(msg); } catch (e) {}
+    }
+    function uiConfirm(msg, cb) {
+        try { if (typeof tg !== 'undefined' && tg && tg.showConfirm) { tg.showConfirm(String(msg), function (ok) { if (ok) cb(); }); return; } } catch (e) {}
+        if (confirm(msg)) cb();
+    }
     function _haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) { if (k === 'success' || k === 'error' || k === 'warning') tg.HapticFeedback.notificationOccurred(k); else tg.HapticFeedback.impactOccurred(k || 'light'); } } catch (e) {} }
     function apiGet(p) { return apiRequest(p); }
     function apiPost(p, b) { var o = { method: 'POST' }; if (b !== undefined) { o.body = JSON.stringify(b); o.headers = { 'Content-Type': 'application/json' }; } return apiRequest(p, o); }
@@ -666,11 +674,12 @@
         qsa(sub, '[data-rwrite]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-rwrite')); }); });
         qsa(sub, '[data-rclose]').forEach(function (b) {
             b.addEventListener('click', function () {
-                if (!confirm('Закрыть заявку? Она исчезнет из ленты.')) return;
-                apiPost('/api/v1/marketplace/requests/' + b.getAttribute('data-rclose') + '/close', {}).then(function (r) {
-                    if (r && r.ok === false) { alert(r.error || 'Не удалось закрыть'); return; }
-                    toast('Заявка закрыта'); _reqs = null; _reqState = 'idle'; renderSell();
-                }).catch(function () { alert('Не удалось закрыть — попробуй ещё раз.'); });
+                uiConfirm('Закрыть заявку? Она исчезнет из ленты.', function () {
+                    apiPost('/api/v1/marketplace/requests/' + b.getAttribute('data-rclose') + '/close', {}).then(function (r) {
+                        if (r && r.ok === false) { uiAlert(r.error || 'Не удалось закрыть'); return; }
+                        toast('Заявка закрыта'); _reqs = null; _reqState = 'idle'; renderSell();
+                    }).catch(function () { uiAlert('Не удалось закрыть — попробуй ещё раз.'); });
+                });
             });
         });
     }
@@ -689,6 +698,19 @@
         var fsel = { v: 'any' };
         qsa(el('fmx-rq-fmt'), '[data-rf]').forEach(function (b) { b.addEventListener('click', function () { fsel.v = b.getAttribute('data-rf'); qsa(el('fmx-rq-fmt'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
         el('fmx-rq-send').addEventListener('click', function () {
+            var txtEl = el('fmx-rq-text'), cEl = el('fmx-rq-contact');
+            var bad = null;
+            if (txtEl.value.trim().length < 20) bad = txtEl;
+            else if (!cEl.value.trim()) bad = cEl;
+            qsa(el('fmx-reqBody'), '.fmx-inp').forEach(function (i) { i.style.borderColor = ''; });
+            var hint = el('fmx-rq-hint'); if (hint) hint.remove();
+            if (bad) {
+                _haptic('error');
+                bad.style.borderColor = '#ef4444';
+                bad.insertAdjacentHTML('afterend', '<div id="fmx-rq-hint" style="font-size:10.5px;color:#ef4444;margin-top:5px;">' + (bad === txtEl ? 'Опиши задачу подробнее — минимум 20 символов.' : 'Укажи @username — сюда будут писать владельцы каналов.') + '</div>');
+                bad.focus();
+                return;
+            }
             var btn = this; btn.disabled = true;
             apiPost('/api/v1/marketplace/requests', {
                 contact_username: el('fmx-rq-contact').value,
@@ -698,10 +720,10 @@
                 text: el('fmx-rq-text').value
             }).then(function (r) {
                 btn.disabled = false;
-                if (r && r.ok === false) { _haptic('error'); alert(r.error || 'Не удалось опубликовать'); return; }
+                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось опубликовать'); return; }
                 _haptic('success'); hideModal('fmx-reqBg'); toast('Заявка размещена');
                 _reqs = null; _reqState = 'idle'; renderSell();
-            }).catch(function () { btn.disabled = false; alert('Не удалось опубликовать — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось опубликовать — попробуй ещё раз.'); });
         });
         showModal('fmx-reqBg');
     }
@@ -1024,17 +1046,17 @@
         inp.accept = target === 'avatar' ? 'image/*' : 'image/*,video/mp4';
         inp.addEventListener('change', function () {
             var fl = inp.files && inp.files[0]; if (!fl) return;
-            if (fl.size > 50 * 1024 * 1024) { alert('Файл больше 50 МБ — сожми его или выбери другой.'); return; }
+            if (fl.size > 50 * 1024 * 1024) { uiAlert('Файл больше 50 МБ — сожми его или выбери другой.'); return; }
             var kind = fl.type.indexOf('video') === 0 ? 'video' : (fl.type === 'image/gif' ? 'gif' : 'img');
             var url = URL.createObjectURL(fl);
             if (kind === 'video') {
                 var v = document.createElement('video');
                 v.preload = 'metadata';
                 v.onloadedmetadata = function () {
-                    if (v.duration > 30.5) { alert('Видео длиннее 30 секунд — сократи ролик до 30 сек.'); URL.revokeObjectURL(url); return; }
+                    if (v.duration > 30.5) { uiAlert('Видео длиннее 30 секунд — сократи ролик до 30 сек.'); URL.revokeObjectURL(url); return; }
                     startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
                 };
-                v.onerror = function () { alert('Не удалось прочитать видео.'); URL.revokeObjectURL(url); };
+                v.onerror = function () { uiAlert('Не удалось прочитать видео.'); URL.revokeObjectURL(url); };
                 v.src = url;
             } else startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
         });
@@ -1213,7 +1235,7 @@
         uploadPending().then(function () { _saveListing(btn); }).catch(function (e) {
             _haptic('error'); btn.disabled = false;
             btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке');
-            alert('Не удалось загрузить файл: ' + (e && e.message ? e.message : 'ошибка'));
+            uiAlert('Не удалось загрузить файл: ' + (e && e.message ? e.message : 'ошибка'));
         });
     }
     function _saveListing(btn) {
@@ -1236,16 +1258,16 @@
         };
         var wasCreate = !_ss.listingId, p;
         if (_ss.listingId) p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
-        else { if (!_ss.channelId) { btn.disabled = false; alert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
+        else { if (!_ss.channelId) { btn.disabled = false; uiAlert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
-            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке'); alert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
+            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
             if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } }
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
             toast('Карточка сохранена');
             _feed = null; _feedState = 'idle';
             setTimeout(function () { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить карточку'; btn.disabled = false; }, 1600);
-        }).catch(function (e) { _haptic('error'); btn.disabled = false; alert('Не удалось сохранить: ' + (e && e.message ? e.message : 'ошибка')); });
+        }).catch(function (e) { _haptic('error'); btn.disabled = false; uiAlert('Не удалось сохранить: ' + (e && e.message ? e.message : 'ошибка')); });
     }
 
     /* ===================== cards ===================== */
@@ -1482,7 +1504,7 @@
             '<div class="fmx-po-li gold"><i class="ti ti-sparkles"></i> Эксклюзивное оформление: золотое свечение, премиум-фон, спецэффекты, стеклянные кнопки.</div>' +
             '<div class="fmx-po-li gold"><i class="ti ti-circle-check"></i> Не входит в лимит трёх поднятий.</div>' +
             '<button class="fmx-po-buy gold" data-buy="top">Оформить продвижение на 30 дней</button></div>';
-        qsa(el('fmx-promoBody'), '[data-buy]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); alert('Оплата продвижения (' + b.getAttribute('data-buy') + ') — подключим биллинг.'); }); });
+        qsa(el('fmx-promoBody'), '[data-buy]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); uiAlert('Оплата продвижения (' + b.getAttribute('data-buy') + ') — подключим биллинг.'); }); });
         showModal('fmx-promoBg');
     }
     function openAnalyze(u) {
