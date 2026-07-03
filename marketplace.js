@@ -173,10 +173,10 @@
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
-            '.fmx-met{display:flex;align-items:flex-end;gap:10px;row-gap:6px;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;}',
+            '.fmx-met{display:flex;align-items:flex-end;gap:0;row-gap:6px;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;}',
+            '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:9px;margin-left:9px;}',
             '.fmx-met .l{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:3px;margin-bottom:3px;}',
-            '.fmx-met .v{font-size:14px;font-weight:700;white-space:nowrap;}',
-            '.fmx-met .v.sm{font-size:11.5px;color:#c9cbe0;}',
+            '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}',
@@ -1079,8 +1079,8 @@
             (tags.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
-            (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(erH) + '%</div></div>' : ''; })() +
-            (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v sm">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
+            (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v">' + Math.round(erH) + '%</div></div>' : ''; })() +
+            (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
             (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
@@ -1165,7 +1165,7 @@
     /* ===================== cards ===================== */
     function spark(col) {
         var arr = [], i; for (i = 0; i < 9; i++) arr.push(0.7 + Math.sin(i * 1.15) * 0.14 + i * 0.02);
-        var w = 62, h = 22, mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
+        var w = 54, h = 22, mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
         var lx = 0, ly = 0;
         var pts = arr.map(function (v, i) { var x = i / 8 * (w - 5) + 2.5, y = h - ((v - mn) / ((mx - mn) || 1)) * (h - 8) - 4; lx = x; ly = y; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
         return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
@@ -1217,8 +1217,8 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(l.er) + '%</div></div>' : '') +
-            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v sm">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
+            (l.er != null ? '<div><div class="l">ER</div><div class="v">' + Math.round(l.er) + '%</div></div>' : '') +
+            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
@@ -1230,8 +1230,8 @@
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-met" style="margin-top:11px;"><div><div class="l">Цена от</div><div class="v pr">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">ER</div><div class="v sm">' + Math.round(l.er) + '%</div></div>' : '') +
-            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v sm">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
+            (l.er != null ? '<div><div class="l">ER</div><div class="v">' + Math.round(l.er) + '%</div></div>' : '') +
+            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
