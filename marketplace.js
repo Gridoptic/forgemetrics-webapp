@@ -563,7 +563,7 @@
         if (_catState === 'loading') body = loadHtml();
         else if (_catState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_catalog || !_catalog.length) body = emptyHtml('ti-list-search', 'База скоро наполнится', 'Здесь будет общая база каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return listItem(x); }).join('') + '</div>');
+        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return listItem(x, false, true); }).join('') + '</div>');
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(host);
     }
@@ -1229,25 +1229,25 @@
         return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
-            '<div class="fmx-met" style="margin-top:11px;"><div><div class="l">Цена от</div><div class="v pr">' + _priceFrom(l) + '</div></div>' +
+            '<div class="fmx-met" style="margin-top:11px;"><div><div class="l"><i class="ti ti-users"></i>Подписчики</div><div class="v">' + _num(l.subscribers) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             (l.er != null ? '<div><div class="l">ER</div><div class="v">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
-    function listItem(l, fx) {
-        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = _isTop(l);
+    function listItem(l, fx, plain) {
+        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && _isTop(l);
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _num(cpm) + '₽</b>');
-        return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '">' +
+        return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + (_nicheMatch(l) ? ' <i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;"></i>' : '') + '</div>' +
             '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
-            '<div class="fmx-lright"><span class="fmx-lprice">' + _priceFrom(l) + '</span><span class="fmx-lsp">' + spark(hc) + '</span></div>' +
+            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '<span class="fmx-lsp">' + spark(hc) + '</span></div>' +
             '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
@@ -1259,7 +1259,8 @@
                 if (li.classList.contains('on')) { li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; return; }
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
-                box.innerHTML = fullCard(l); box.style.display = 'block'; li.classList.add('on'); bindCards(box);
+                box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
+                box.style.display = 'block'; li.classList.add('on'); bindCards(box);
             });
         });
     }
