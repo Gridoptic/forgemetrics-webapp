@@ -128,7 +128,7 @@
             '.fmx-card{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
-            '.fmx-cov{height:84px;position:relative;overflow:hidden;}',
+            '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
             '.fmx-cov-bg{position:absolute;inset:0;background-size:cover;background-position:center;}',
             '.fmx-cov-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(120% 130% at 22% 8%,rgba(255,255,255,0.4),transparent 55%);animation:fmxBreathe 7s ease-in-out infinite;}',
             '@keyframes fmxBreathe{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(8%,6%) scale(1.12);}}',
@@ -136,7 +136,7 @@
             '.fmx-tag.gold{background:linear-gradient(135deg,#fde68a,#f5bf4f);color:#2a1c00;}',
             '.fmx-star{position:absolute;bottom:9px;right:9px;width:30px;height:30px;border-radius:8px;background:rgba(10,13,24,0.45);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);z-index:2;}',
             '.fmx-star.on{color:#f59e0b;}',
-            '.fmx-cb{padding:13px;}',
+            '.fmx-cb{padding:13px;position:relative;z-index:2;}',
             '.fmx-crow{display:flex;align-items:center;gap:10px;margin-top:-32px;margin-bottom:11px;position:relative;z-index:2;}',
             '.fmx-av{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;border:2.5px solid #0d1019;flex-shrink:0;}',
             '.fmx-nm{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;padding-top:20px;}',
@@ -181,7 +181,7 @@
             '.fmx-mt{flex:1;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:9px;padding:9px;font-size:11.5px;cursor:pointer;transition:all 160ms;display:flex;align-items:center;justify-content:center;gap:5px;}',
             '.fmx-mt.on{background:rgba(99,102,241,0.13);color:#818cf8;border-color:rgba(99,102,241,0.28);}',
             '.fmx-grads{display:flex;gap:9px;flex-wrap:wrap;}',
-            '.fmx-gd{width:52px;height:40px;border-radius:11px;cursor:pointer;position:relative;border:2px solid transparent;transition:transform 140ms;}',
+            '.fmx-gd{width:36px;height:36px;border-radius:50%;cursor:pointer;position:relative;border:2px solid transparent;transition:transform 140ms;}',
             '.fmx-gd:hover{transform:scale(1.06);}',
             '.fmx-gd.on{border-color:rgba(255,255,255,0.95);}',
             '.fmx-gd.on::after{content:"\\2713";position:absolute;right:-5px;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;color:#0a0d18;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.45);}',
@@ -355,7 +355,16 @@
             '#fmx-cropBox:active{cursor:grabbing;}',
             '.fmx-zoomrow{display:flex;align-items:center;gap:10px;margin-top:12px;}',
             '.fmx-zoomrow input{flex:1;accent-color:#818cf8;}',
-            '.fmx-dot-rb{background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);position:relative;}',
+            '.fmx-dot-rb{border-radius:50%;border:2px solid rgba(255,255,255,0.85);background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);}',
+            '.fmx-cbg{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;}',
+            '.fmx-cbg-s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,24,0.35),rgba(10,13,24,0.86) 72%);}',
+            '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}',
+            '.fmx-fchips span{font-size:9.5px;color:#8990a8;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);padding:3px 8px;border-radius:6px;}',
+            '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
+            '@media(max-width:389px){.fmx-lsp{display:none;}}',
+            '.fmx-li.prem>.fmx-lrow{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.6),0 0 18px rgba(245,191,79,0.3);}',
+            '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
+            '.fmx-chk.on .fmx-box i{opacity:1;}',
             '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
             '.fmx-huerow input{flex:1;-webkit-appearance:none;appearance:none;height:10px;border-radius:99px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none;border:0.5px solid rgba(255,255,255,0.15);}',
             '.fmx-huerow input::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;background:#fff;border:2.5px solid rgba(10,13,24,0.85);box-shadow:0 2px 7px rgba(0,0,0,0.45);cursor:pointer;}',
@@ -585,7 +594,7 @@
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'levit', over: 'none', glow: 'none', orbit: 'none', atomColor: '#5DCAA5', glowCard: false, glass: 'none',
-            att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
+            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
         return [
@@ -598,7 +607,7 @@
     function hydrate(l) {
         _ss.listingId = l.id;
         if (l.accent_color) _ss.color = l.accent_color;
-        if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) _ss.cover = gi; }
+        if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
         var fx = l.effects_json || {};
         ['move', 'over', 'glow', 'orbit'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
@@ -617,7 +626,7 @@
             });
         }
         _ss._desc = l.custom_text || '';
-        if (l.emoji_attachments_json) { var _at = l.emoji_attachments_json; ['cover', 'avatar'].forEach(function (k) { if (_at[k] && typeof _at[k] === 'object') _ss.att[k] = _at[k]; }); }
+        if (l.emoji_attachments_json) { var _at = l.emoji_attachments_json; ['cover', 'avatar', 'cardbg'].forEach(function (k) { if (_at[k] && typeof _at[k] === 'object') _ss.att[k] = _at[k]; }); }
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._slots = l.slots_note || '';
     }
@@ -687,7 +696,7 @@
     }
     function updateAccSummaries() {
         var m = {
-            cover: _ss.covType === 'grad' ? (COVER_NAMES[_ss.cover] || 'Градиент') : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
+            cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
             avatar: _ss.avatar === 'tg' ? 'Из Telegram' : (_ss.avatar === 'emoji' ? 'Эмодзи ' + _ss.avEmoji : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото')),
             fx: (function () { var n = ['move', 'over', 'glow', 'orbit'].filter(function (k) { return _ss[k] !== 'none'; }).length; if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
@@ -725,15 +734,23 @@
         var seg = '<div class="fmx-mtabs" id="fmx-covtype">' +
             '<button class="fmx-mt' + (_ss.covType === 'grad' ? ' on' : '') + '" data-ct="grad"><i class="ti ti-color-swatch"></i> Градиент</button>' +
             '<button class="fmx-mt' + (_ss.covType !== 'grad' ? ' on' : '') + '" data-ct="img"><i class="ti ti-cloud-upload"></i> Загрузить</button></div>';
+        var custom = !!_ss.coverGrad;
         var grads = '<div id="fmx-gradbox" style="' + (_ss.covType === 'grad' ? '' : 'display:none;') + '"><span class="fmx-lbl">Фон обложки</span><div class="fmx-grads" id="fmx-grads">' +
-            COVERS.map(function (g, i) { return '<div class="fmx-gd' + (i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') + '</div></div>';
+            COVERS.map(function (g, i) { return '<div class="fmx-gd' + (!custom && i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') +
+            '<div class="fmx-gd fmx-dot-rb' + (custom ? ' on' : '') + '" data-grb="1" title="Свой градиент"></div></div>' +
+            '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
             mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 50 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
         return seg + grads + upl;
     }
     function bindCover() {
         qsa(el('fmx-covtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.covType = b.getAttribute('data-ct'); qsa(el('fmx-covtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var gb = el('fmx-gradbox'), ub = el('fmx-uplbox'); if (gb) gb.style.display = _ss.covType === 'grad' ? '' : 'none'; if (ub) ub.style.display = _ss.covType === 'grad' ? 'none' : ''; renderHero(); sizePanes(); }); });
-        qsa(el('fmx-grads'), '.fmx-gd').forEach(function (g) { g.addEventListener('click', function () { _ss.cover = +g.getAttribute('data-g'); qsa(el('fmx-grads'), '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); renderHero(); }); });
+        var gr = el('fmx-grads'), ghue = el('fmx-grads-hue'), gsl = ghue ? ghue.querySelector('input') : null, gprev = ghue ? ghue.querySelector('.fmx-hueprev') : null;
+        function gradOf(h) { return 'linear-gradient(135deg,' + hslHex(h) + ',' + hslHex((h + 55) % 360) + ')'; }
+        qsa(gr, '[data-g]').forEach(function (g) { g.addEventListener('click', function () { _ss.cover = +g.getAttribute('data-g'); _ss.coverGrad = null; if (ghue) ghue.style.display = 'none'; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); renderHero(); }); });
+        var grb = gr ? gr.querySelector('[data-grb]') : null;
+        if (grb) grb.addEventListener('click', function () { if (!ghue) return; var open = ghue.style.display !== 'none'; ghue.style.display = open ? 'none' : 'flex'; if (!open && gsl) { _ss.coverGrad = gradOf(+gsl.value); qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); grb.classList.add('on'); if (gprev) gprev.style.background = _ss.coverGrad; renderHero(); } });
+        if (gsl) gsl.addEventListener('input', function () { _ss.coverGrad = gradOf(+this.value); if (gprev) gprev.style.background = _ss.coverGrad; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); if (grb) grb.classList.add('on'); renderHero(); });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="cover"]')[0]);
     }
 
@@ -759,7 +776,9 @@
     function paneStyleMin() {
         return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
-            FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>';
+            FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон карточки <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
+            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка, GIF или видео внутри карточки, где цифры и кнопки — эксклюзив продвижения на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
     }
     function hslHex(h) {
         var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
@@ -817,15 +836,23 @@
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
     }
 
+    function fmtRows() {
+        return _sfmts.map(function (f, i) {
+            return '<div class="fmx-chk' + (f.on ? ' on' : '') + '" data-fi="' + i + '"><div class="fmx-box"><i class="ti ti-check"></i></div><span style="font-size:12.5px;flex:1;">' + _esc(f.n) + '</span>' +
+                (f.on ? '<input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span>' : '<span style="font-size:11px;color:#565b73;">выкл</span>') + '</div>';
+        }).join('');
+    }
     function panePrice() {
-        var fl = '<div id="fmx-fmts">' + _sfmts.map(function (f, i) { return '<div class="fmx-chk' + (f.on ? ' on' : '') + '" data-fi="' + i + '"><div class="fmx-box"><i class="ti ti-check"></i></div><span style="font-size:12.5px;flex:1;">' + _esc(f.n) + '</span><input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span></div>'; }).join('') + '</div>';
-        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Бот подскажет справедливую цену по метрикам канала — итоговую назначаешь сам.</div>';
+        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Бот подскажет справедливую цену по метрикам канала — итоговую назначаешь сам. Включённые форматы видны рекламодателю прямо на карточке.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span>' + fl + note + slots;
+        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots;
+    }
+    function bindFmtRows() {
+        qsa(el('fmx-fmts'), '.fmx-chk').forEach(function (c) { c.addEventListener('click', function (ev) { if (ev.target && ev.target.classList && ev.target.classList.contains('fmx-pinp')) return; var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light'); el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero(); }); });
+        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { _sfmts[+inp.getAttribute('data-pi')].p = +inp.value || 0; renderHero(); }); });
     }
     function bindPrice() {
-        qsa(el('fmx-fmts'), '.fmx-chk').forEach(function (c) { c.addEventListener('click', function (ev) { if (ev.target && ev.target.classList && ev.target.classList.contains('fmx-pinp')) return; var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; c.classList.toggle('on'); renderHero(); }); });
-        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { _sfmts[+inp.getAttribute('data-pi')].p = +inp.value || 0; renderHero(); }); });
+        bindFmtRows();
         el('fmx-slots').addEventListener('input', function () { _ss._slots = this.value; });
     }
 
@@ -886,9 +913,9 @@
     function startCrop(target, url, kind, name, x, y, s) {
         _crop = { target: target, url: url, kind: kind, name: name, x: x, y: y, s: s, drag: null };
         var box = el('fmx-cropBox');
-        box.style.aspectRatio = target === 'avatar' ? '1 / 1' : '2 / 1';
+        box.style.aspectRatio = target === 'avatar' ? '1 / 1' : (target === 'cardbg' ? '4 / 5' : '2 / 1');
         box.innerHTML = kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">';
-        el('fmx-cropHint').textContent = target === 'avatar' ? 'Двигай и масштабируй. Лучше всего от 400×400.' : 'Двигай и масштабируй. Лучше всего от 1600×800.';
+        el('fmx-cropHint').textContent = target === 'avatar' ? 'Двигай и масштабируй. Лучше всего от 400×400.' : (target === 'cardbg' ? 'Фон карточки: двигай и масштабируй. Цифры затемняются подложкой автоматически.' : 'Двигай и масштабируй. Лучше всего от 1600×800.');
         el('fmx-cropZoom').value = s;
         cropApply();
         showModal('fmx-cropBg');
@@ -937,7 +964,7 @@
     function renderHero() {
         var hero = el('fmx-hero'); if (!hero) return;
         var c = curChannel(), accent = _ss.color, hcHero = _healthColor(c);
-        var cover = COVERS[_ss.cover];
+        var cover = _ss.coverGrad || COVERS[_ss.cover];
         var act = _sfmts.filter(function (f) { return f.on; });
         var minP = act.length ? Math.min.apply(null, act.map(function (f) { return f.p; })) : 0;
         var priceTxt = act.length ? _num(minP) + ' ₽' : '—';
@@ -946,16 +973,24 @@
         var desc = _ss._desc || '';
         var tags = (_ss._tags || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean);
         var gs = glassStyles(accent);
-        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;">' +
+        var bb = _ss._media && _ss._media.cardbg, bp = (_ss.att && typeof _ss.att.cardbg === 'object') ? _ss.att.cardbg : null, hasBg = !!(bb && bp);
+        var cbg = '';
+        if (hasBg) {
+            var bst = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + bp.x + '% ' + bp.y + '%;transform:scale(' + bp.s + ');transform-origin:' + bp.x + '% ' + bp.y + '%;';
+            cbg = '<div class="fmx-cbg">' + (bb.kind === 'video' ? '<video src="' + bb.url + '" style="' + bst + '" autoplay muted loop playsinline></video>' : '<img src="' + bb.url + '" style="' + bst + '">') + '<i class="fmx-cbg-s"></i></div>';
+        }
+        var ts = hasBg ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
+        var metSt = hasBg ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
+        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;">' + cbg +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent, true) +
-            '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
+            '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + ts + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + ts + '">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
             '<div class="fmx-badges"><span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span><span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span></div>' +
-            (desc ? '<div class="fmx-desc">' + _esc(desc) + '</div>' : '') +
+            (desc ? '<div class="fmx-desc" style="' + ts + '">' + _esc(desc) + '</div>' : '') +
             (tags.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
-            '<div class="fmx-met"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
+            '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
             (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
@@ -964,7 +999,7 @@
         qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
         var hl = el('fmx-hlist');
         if (hl) {
-            var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color };
+            var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color, is_top: _ss.glowCard };
             hl.innerHTML = '<span class="fmx-lbl" style="margin:0 0 7px;">Так выглядит в списке</span>' + listItem(fakeL);
         }
         updateAccSummaries();
@@ -980,7 +1015,7 @@
             custom_text: (de ? de.value : _ss._desc) || null,
             accent_color: _ss.color,
             cover_type: _ss.covType,
-            cover_gradient: _ss.covType === 'grad' ? COVERS[_ss.cover] : null,
+            cover_gradient: _ss.covType === 'grad' ? (_ss.coverGrad || COVERS[_ss.cover]) : null,
             avatar_type: _ss.avatar,
             avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
             title_style: _ss.font,
@@ -1035,6 +1070,7 @@
             '<div><div class="fmx-nm">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             '<div class="fmx-badges">' + badges(l) + '</div>' +
             (l.custom_text ? '<div class="fmx-desc">' + _esc(l.custom_text) + '</div>' : '') +
+            (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
@@ -1052,16 +1088,16 @@
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
     function listItem(l) {
-        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?';
+        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = _isTop(l);
         var bits = [_num(l.subscribers) + ' подп'];
         if (l.avg_views) bits.push('~' + _num(l.avg_views) + ' охват');
         if (l.er != null) bits.push('ER ' + l.er + '%');
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM ' + cpm + '₽');
-        return '<div class="fmx-li" data-u="' + _esc(l.username) + '">' +
+        return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '">' +
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
             '<div class="fmx-lav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + '</div><div class="fmx-lsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(l.username) + ' · ' + bits.join(' · ') + '</div></div>' +
-            '<span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
+            '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
     function bindList(scope) {
