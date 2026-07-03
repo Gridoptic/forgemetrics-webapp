@@ -1338,7 +1338,7 @@
     /* ===================== стикеры: панель конструктора ===================== */
     var SEAM = 84;  // высота шапки карточки — стабильный якорь
     var STK_PAD = 3;    // невидимый бордер вокруг контента
-    var STK_DEFBOX = { l: 0.12, t: 0.12, r: 0.88, b: 0.88 };
+    var STK_DEFBOX = { l: 0.15, t: 0.15, r: 0.85, b: 0.85 };
     var _stkBoxes = {};  // url -> прямоугольник видимых пикселей (доли)
     function _scanAlpha(source, url) {
         try {
@@ -1380,11 +1380,13 @@
             if (!r || (!r.width && !r.height)) return;
             out.push({ l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD });
         }
+        /* звезда добавляется отдельно с пометкой star — при драге стикера она уступает */
         function pushText(n) { /* обтягивающий прямоугольник текста, не блока */
             try { var rg = document.createRange(); rg.selectNodeContents(n); var r = rg.getBoundingClientRect(); if (r.width || r.height) { push(r); return; } } catch (e) {}
             push(n.getBoundingClientRect());
         }
-        qsa(card, '.fmx-tag,.fmx-star').forEach(function (n) { push(n.getBoundingClientRect()); });
+        qsa(card, '.fmx-tag').forEach(function (n) { push(n.getBoundingClientRect()); });
+        qsa(card, '.fmx-star').forEach(function (n) { var r = n.getBoundingClientRect(); if (r.width || r.height) { var z = { l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD }; z.star = true; out.push(z); } });
         var crow = card.querySelector('.fmx-crow');
         if (crow) {
             if (crow.firstElementChild) push(crow.firstElementChild.getBoundingClientRect()); /* аватар */
@@ -1399,7 +1401,7 @@
         });
         return { rects: out, W: base.width, H: base.height };
     }
-    function stkValid(cx, cy, size, geo, box) {
+    function stkValid(cx, cy, size, geo, box, ignoreStar) {
         var full = size / 2;
         if (cx - full < 2 || cy - full < 2 || cx + full > geo.W - 2 || cy + full > geo.H - 2) return false;
         box = box || STK_DEFBOX;
@@ -1407,6 +1409,7 @@
         var t = cy + size * (box.t - 0.5), b = cy + size * (box.b - 0.5);
         for (var i = 0; i < geo.rects.length; i++) {
             var z = geo.rects[i];
+            if (ignoreStar && z.star) continue;
             if (l < z.r && r > z.l && t < z.b && b > z.t) return false;
         }
         return true;
@@ -1432,9 +1435,9 @@
         return { size: size, left: cx - size / 2, top: cy - size / 2 };
     }
     function stkMedia(s, animate) {
-        if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
+        if (s.kind === 'webm') return '<video crossorigin="anonymous" src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
         if (s.kind === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(s.url) + '" data-anim="' + (animate ? 1 : 0) + '"><i class="ti ti-sticker"></i></span>';
-        return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
+        return '<img crossorigin="anonymous" src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
     }
     function stkOverlay(s, W, animate, draggable) {
         if (!s || !s.url) return '';
@@ -1562,7 +1565,8 @@
                 var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
                 var size = stkSize({ scale: want }, geo.W);
                 var bx = stkBox(_ss.sticker);
-                while (size > 40 && !stkValid(cx, cy, size, geo, bx)) size -= 2;
+                while (size > 40 && !stkValid(cx, cy, size, geo, bx, true)) size -= 2;
+                starYield(card);
                 want = Math.min(want, size / 64);
                 sc.value = want;
             }
@@ -1586,6 +1590,30 @@
     }
     var STAR_SLOTS = { top: 8, cover: SEAM - 39, body: SEAM + 9 };
     function starTop(pos) { return STAR_SLOTS[pos] != null ? STAR_SLOTS[pos] : STAR_SLOTS.cover; }
+    function starYield(cardEl) {
+        /* стикер отпущен — если он лёг на звезду, звезда переезжает в свободный слот */
+        if (!_ss || !_ss.sticker || (_ss.sticker.mode || 'slot') !== 'free' || !cardEl) return;
+        var base = cardEl.getBoundingClientRect(); if (!base.width) return;
+        var W = base.width, size = stkSize(_ss.sticker, W), box = stkBox(_ss.sticker);
+        var cx = (_ss.sticker.x || 0.82) * W, cy = SEAM + (_ss.sticker.dy || 0);
+        var sl = cx + size * (box.l - 0.5), sr = cx + size * (box.r - 0.5);
+        var st = cy + size * (box.t - 0.5), sb = cy + size * (box.b - 0.5);
+        function starRect(slot) { var y = STAR_SLOTS[slot]; return { l: W - 39 - 2, t: y - 2, r: W - 9 + 2, b: y + 30 + 2 }; }
+        function hits(z) { return sl < z.r && sr > z.l && st < z.b && sb > z.t; }
+        var cur = _ss.starPos || 'cover';
+        if (!hits(starRect(cur))) return;
+        var order = ['top', 'cover', 'body'].filter(function (k) { return k !== cur; });
+        order.sort(function (a, b) { return Math.abs(STAR_SLOTS[a] - STAR_SLOTS[cur]) - Math.abs(STAR_SLOTS[b] - STAR_SLOTS[cur]); });
+        for (var i = 0; i < order.length; i++) {
+            if (!hits(starRect(order[i]))) {
+                _ss.starPos = order[i];
+                var stEl = el('fmx-heroStar');
+                if (stEl) stEl.style.top = starTop(order[i]) + 'px';
+                _haptic('light');
+                return;
+            }
+        }
+    }
     function bindStarDrag(cardEl) {
         var st = el('fmx-heroStar'); if (!st || !cardEl) return;
         function start(e) {
@@ -1624,9 +1652,9 @@
             if (!last) last = { cx: (_ss.sticker.x || 0.82) * W, cy: SEAM + (_ss.sticker.dy || 0) };
             var bx = stkBox(_ss.sticker);
             var nx = cx, ny = cy;
-            if (!stkValid(nx, ny, size, geo, bx)) {
-                if (stkValid(nx, last.cy, size, geo, bx)) ny = last.cy;
-                else if (stkValid(last.cx, ny, size, geo, bx)) nx = last.cx;
+            if (!stkValid(nx, ny, size, geo, bx, true)) {
+                if (stkValid(nx, last.cy, size, geo, bx, true)) ny = last.cy;
+                else if (stkValid(last.cx, ny, size, geo, bx, true)) nx = last.cx;
                 else { nx = last.cx; ny = last.cy; }
             }
             last = { cx: nx, cy: ny };
@@ -1652,7 +1680,7 @@
             want = Math.max(0.6, Math.min(1.6, want));
             var c = center(), bx = stkBox(_ss.sticker);
             var size = stkSize({ scale: want }, geo.W);
-            while (size > 40 && !stkValid(c.cx, c.cy, size, geo, bx)) size -= 2;
+            while (size > 40 && !stkValid(c.cx, c.cy, size, geo, bx, true)) size -= 2;
             _ss.sticker.scale = Math.min(want, size / 64);
             applyBox();
         }
@@ -1682,6 +1710,7 @@
                 };
                 var pu = function () {
                     document.removeEventListener('touchmove', pm); document.removeEventListener('touchend', pu);
+                    starYield(cardEl); geo = null;
                     _haptic('light');
                 };
                 document.addEventListener('touchmove', pm, { passive: false });
@@ -1692,6 +1721,7 @@
             var up = function () {
                 document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                 document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                starYield(cardEl); geo = null;
                 _haptic('light');
             };
             document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
@@ -1709,6 +1739,7 @@
                 var mu = function () {
                     document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu);
                     document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', mu);
+                    starYield(cardEl); geo = null;
                     _haptic('light');
                 };
                 document.addEventListener('mousemove', mm); document.addEventListener('mouseup', mu);
