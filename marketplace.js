@@ -38,11 +38,22 @@
         ['Накрутка', 'Искусственные подписчики или просмотры. Признаки: много подписчиков и крошечный охват, скачки просмотров, нет живых комментариев.'],
         ['Маркировка · erid', 'По закону РФ интернет-реклама маркируется и регистрируется в ОРД. На бирже это поле зашито в карточку.']
     ];
+    var RULES = [
+        ['Маркировка рекламы — обязательна', 'По закону «О рекламе» (38-ФЗ) интернет-реклама в РФ маркируется: токен erid, регистрация в ОРД и отчётность. Поле erid заложено в карточку размещения — заполняй его для каждой рекламной интеграции.'],
+        ['Запрещено полностью', 'Наркотики и их пропаганда (ст. 228.1 УК, ст. 6.13 КоАП); оружие и взрывчатка; порнография (ст. 242 УК); экстремизм, терроризм и символика запрещённых организаций (ФЗ-114, ст. 280 и 282 УК); пропаганда ЛГБТ — движение признано экстремистским в РФ; призывы к суициду и селф-харму (ст. 110.1 УК); шок-контент: кровь, увечья, жестокость к людям и животным.'],
+        ['Финансы и «схемы»', 'Пирамиды, скам-проекты и «бинарные опционы» — блокировка (ст. 172.2 УК). Казино и ставки — только операторы с лицензией ФНС и предупреждением о рисках. Кредиты и МФО — с полными условиями, как требует 38-ФЗ.'],
+        ['Здоровье и «чудо-средства»', 'Обещания вылечить болезни, «минус 20 кг за неделю» и псевдомедицина запрещены. Реклама медуслуг, лекарств и БАДов регулируется ст. 24 закона «О рекламе»: обязательные предупреждения и никаких гарантий результата.'],
+        ['Алкоголь, табак, вейпы', 'Реклама алкоголя, табака, вейпов и жидкостей для них в интернете запрещена (ст. 21 и 23 закона «О рекламе») — в любом виде, включая «обзоры» с промокодами.'],
+        ['Картинки, GIF и видео', 'Без чужих брендов, логотипов и персонажей — это авторские права (ст. 1252, 1301 ГК РФ). Без реальных людей без их согласия, включая дипфейки. Без строб-вспышек чаще 3 раз в секунду. Дети в рекламе — только когда это оправдано самим товаром (ст. 6 38-ФЗ).'],
+        ['Эмодзи и стикеры', 'Стикер или эмодзи с запрещённой символикой, наркотиками или 18+ — то же нарушение, что и картинка. Комбинации эмодзи, маскирующие запрещённые товары, тоже считаются нарушением.'],
+        ['18+ и серая зона', 'Эротика 18+ — только в отдельном разделе с подтверждением возраста. Легальный гемблинг и финансовые продукты — со всеми оговорками. Такие карточки проверяются строже и дольше.'],
+        ['Ответственность', 'За контент карточки отвечает тот, кто её разместил — это фиксируется при публикации. Нарушение — снятие карточки, повторное или грубое — бан на Площадке. Пожаловаться на любую карточку можно в один тап.']
+    ];
     var TIPS = [
         'Смотри на охват и ER, а не на число подписчиков.',
         'Сравнивай цену через CPM — дорогой канал может быть выгоднее дешёвого.',
         'Проверяй охват к подписчикам: большой канал с крошечным охватом — деньги на ветер.',
-        'Начни с одного небольшого теста. Зашло — масштабируй, нет — потерял мало.',
+        'Начни с одного небольшого размещения: сработало — масштабируй, нет — потери минимальны.',
         'Подбирай канал под свою нишу: релевантность важнее размера.'
     ];
 
@@ -299,16 +310,16 @@
             '@keyframes fmxSliceC{0%,74%,100%{clip-path:none;transform:translateX(0);}76%{clip-path:polygon(0 0,100% 0,100% 34%,94% 34%,94% 46%,100% 46%,100% 100%,0 100%,0 62%,7% 62%,7% 50%,0 50%);transform:translateX(1.5px);}80%{clip-path:polygon(0 0,100% 0,100% 18%,92% 18%,92% 30%,100% 30%,100% 100%,0 100%,0 80%,9% 80%,9% 66%,0 66%);transform:translateX(-2px);}84%{clip-path:none;transform:translateX(1px);}88%{clip-path:polygon(0 0,100% 0,100% 55%,90% 55%,90% 70%,100% 70%,100% 100%,0 100%,0 40%,8% 40%,8% 26%,0 26%);transform:translateX(-1px);}92%{clip-path:none;transform:translateX(0);}}',
             '.fx-c-slice::before{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;clip-path:inset(30% 0 52% 0);animation:fmxSliceB 2.6s steps(1) infinite;opacity:0;}',
             '@keyframes fmxSliceB{0%,74%,100%{opacity:0;transform:translateX(0);}77%{opacity:1;transform:translateX(-4px);}83%{opacity:1;transform:translateX(4px);clip-path:inset(56% 0 28% 0);}89%{opacity:0;}}',
-            '.fx-c-shred::before{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,#000 0 2px,transparent 2px 5px);mask:repeating-linear-gradient(0deg,#000 0 2px,transparent 2px 5px);filter:hue-rotate(80deg) saturate(1.8);animation:fmxShredA 1.9s steps(2) infinite;}',
-            '.fx-c-shred::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 5px);mask:repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 5px);filter:hue-rotate(-80deg) saturate(1.8);animation:fmxShredB 1.9s steps(2) infinite;}',
-            '@keyframes fmxShredA{0%,100%{transform:translateX(-1.5px);}50%{transform:translateX(2px);}}',
-            '@keyframes fmxShredB{0%,100%{transform:translateX(1.5px);}50%{transform:translateX(-2px);}}',
-            '.fx-c-blocks{animation:fmxBlkC 3.1s steps(1) infinite;}',
-            '.fx-c-blocks::before{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(15% 60% 55% 12%);animation:fmxBlkA 3.1s steps(1) infinite;opacity:0;}',
-            '.fx-c-blocks::after{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(58% 18% 12% 52%);animation:fmxBlkB 3.1s steps(1) infinite;opacity:0;}',
-            '@keyframes fmxBlkC{0%,70%,100%{transform:translate(0,0);}73%{transform:translate(-1.5px,1px);}79%{transform:translate(1.5px,-1px);}85%{transform:translate(0,0);}}',
-            '@keyframes fmxBlkA{0%,70%,100%{opacity:0;transform:translate(0,0);}72%{opacity:1;transform:translate(5px,-3px);}78%{opacity:1;transform:translate(-4px,2px);clip-path:inset(30% 40% 40% 30%);}84%{opacity:0;}}',
-            '@keyframes fmxBlkB{0%,70%,100%{opacity:0;transform:translate(0,0);}74%{opacity:1;transform:translate(-5px,3px);}80%{opacity:1;transform:translate(4px,-2px);clip-path:inset(10% 55% 60% 8%);}86%{opacity:0;}}',
+            '.fx-c-shred::before{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,#000 0 1.5px,transparent 1.5px 8px);mask:repeating-linear-gradient(0deg,#000 0 1.5px,transparent 1.5px 8px);filter:hue-rotate(80deg) saturate(2.2) brightness(1.3);opacity:.9;animation:fmxShredA 1.5s steps(3) infinite;}',
+            '.fx-c-shred::after{content:"";position:absolute;inset:0;background:inherit;border-radius:inherit;-webkit-mask:repeating-linear-gradient(0deg,transparent 0 4.5px,#000 4.5px 6px,transparent 6px 10px);mask:repeating-linear-gradient(0deg,transparent 0 4.5px,#000 4.5px 6px,transparent 6px 10px);filter:hue-rotate(-80deg) saturate(2.2) brightness(1.3);opacity:.9;animation:fmxShredB 1.5s steps(3) infinite;}',
+            '@keyframes fmxShredA{0%,100%{transform:translateX(-2.5px);}33%{transform:translateX(3px);}66%{transform:translateX(-1px);}}',
+            '@keyframes fmxShredB{0%,100%{transform:translateX(2.5px);}33%{transform:translateX(-3px);}66%{transform:translateX(1.5px);}}',
+            '.fx-c-blocks{animation:fmxBlkC 2.4s steps(1) infinite;}',
+            '.fx-c-blocks::before{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(12% 55% 52% 10%);filter:brightness(1.4) contrast(1.15);box-shadow:0 0 0 1px rgba(255,255,255,0.4) inset;animation:fmxBlkA 2.4s steps(1) infinite;opacity:0;}',
+            '.fx-c-blocks::after{content:"";position:absolute;inset:0;background:inherit;clip-path:inset(55% 14% 10% 48%);filter:brightness(0.7) contrast(1.2);box-shadow:0 0 0 1px rgba(0,0,0,0.4) inset;animation:fmxBlkB 2.4s steps(1) infinite;opacity:0;}',
+            '@keyframes fmxBlkC{0%,58%,100%{transform:translate(0,0);}60%{transform:translate(-2px,1px);}68%{transform:translate(2px,-1px);}76%{transform:translate(-1px,0);}84%{transform:translate(0,0);}}',
+            '@keyframes fmxBlkA{0%,58%,100%{opacity:0;transform:translate(0,0);}60%{opacity:1;transform:translate(6px,-4px);}68%{opacity:1;transform:translate(-5px,3px);clip-path:inset(28% 36% 38% 28%);}76%{opacity:1;transform:translate(3px,1px);clip-path:inset(8% 62% 62% 6%);}84%{opacity:0;}}',
+            '@keyframes fmxBlkB{0%,58%,100%{opacity:0;transform:translate(0,0);}62%{opacity:1;transform:translate(-6px,4px);}70%{opacity:1;transform:translate(5px,-3px);clip-path:inset(64% 8% 6% 56%);}78%{opacity:1;transform:translate(-3px,-1px);clip-path:inset(46% 30% 22% 34%);}86%{opacity:0;}}',
             '.fx-orb-sph{inset:0;}',
             '.fx-orb-sph i{position:absolute;inset:0;display:block;}',
             '.fx-orb-sph .sp2{transform:rotate(62deg);}',
@@ -336,6 +347,14 @@
             '.fmx-chav{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}',
             '.fmx-chtt{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-chuu{font-size:10.5px;color:#8990a8;}',
+            '.fmx-upl{border:0.5px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);color:#e8e8ed;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:border-color 150ms;}',
+            '.fmx-upl:hover{border-color:rgba(255,255,255,0.25);}',
+            '.fmx-upl.sec{color:#8990a8;}',
+            '.fmx-uplrow{display:flex;gap:7px;flex-wrap:wrap;}',
+            '#fmx-cropBox{position:relative;width:100%;background:#0a0d18;border-radius:12px;overflow:hidden;touch-action:none;cursor:grab;border:0.5px solid rgba(255,255,255,0.1);}',
+            '#fmx-cropBox:active{cursor:grabbing;}',
+            '.fmx-zoomrow{display:flex;align-items:center;gap:10px;margin-top:12px;}',
+            '.fmx-zoomrow input{flex:1;accent-color:#818cf8;}',
             '.fmx-entq{font-size:13px;color:#8990a8;margin-bottom:12px;}',
             '.fmx-ent{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;cursor:pointer;margin-bottom:11px;transition:border-color 160ms,transform 160ms;}',
             '.fmx-ent:active{transform:scale(0.99);}',
@@ -508,7 +527,7 @@
         var body;
         if (_feedState === 'loading') body = loadHtml();
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
-        else if (!_feed || !_feed.length) body = emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные карточки каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать рекламу».');
+        else if (!_feed || !_feed.length) body = emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные карточки каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
         else body = (_view === 'cards' ? '<div class="fmx-grid">' + _feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _feed.map(listItem).join('') + '</div>');
         sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Оформленные карточки каналов нашей Площадки. Совпадение и справедливость цены — оценки бота.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
@@ -517,7 +536,7 @@
     function renderSell() {
         var sub = el('fmx-sub'); if (!sub) return;
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки «куплю рекламу» от пользователей Площадки. Размести свою — и рекламодатели найдут тебя сами.</div>' +
-            emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Скоро здесь можно будет оставить заявку на покупку рекламы и листать чужие. Площадка растёт вместе с аудиторией.') +
+            emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Скоро здесь можно будет разместить заявку на покупку рекламы и просматривать чужие. Раздел откроется в ближайших обновлениях.') +
             '<button class="fmx-save" style="margin-top:6px;opacity:0.7;cursor:default;"><i class="ti ti-plus"></i> Оставить заявку (скоро)</button>';
     }
 
@@ -540,7 +559,7 @@
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'levit', over: 'none', glow: 'none', orbit: 'none', atomColor: '#5DCAA5', glowCard: false, glass: 'none',
-            att: { avatar: '', cover: '', body: [], list: [] }, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
+            att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
         return [
@@ -554,7 +573,7 @@
         _ss.listingId = l.id;
         if (l.accent_color) _ss.color = l.accent_color;
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) _ss.cover = gi; }
-        if (l.cover_type) _ss.covType = l.cover_type;
+        if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
         var fx = l.effects_json || {};
         ['move', 'over', 'glow', 'orbit'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
         _ss.glowCard = !!fx.glowCard;
@@ -572,6 +591,7 @@
             });
         }
         _ss._desc = l.custom_text || '';
+        if (l.emoji_attachments_json) { var _at = l.emoji_attachments_json; ['cover', 'avatar'].forEach(function (k) { if (_at[k] && typeof _at[k] === 'object') _ss.att[k] = _at[k]; }); }
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._slots = l.slots_note || '';
     }
@@ -628,19 +648,35 @@
     }
     function sizePanes() { var p = el('fmx-panes'); if (!p) return; var a = p.querySelector('.fmx-pane.on'); if (a) p.style.height = a.offsetHeight + 'px'; }
 
+    function mediaBoxHtml(target, hint) {
+        var m = _ss._media && _ss._media[target];
+        var row = m
+            ? '<div class="fmx-note fmx-gr" style="margin-bottom:9px;"><i class="ti ' + (m.kind === 'video' ? 'ti-video' : 'ti-photo-check') + '"></i> ' + _esc(m.name || 'файл выбран') + '</div>' +
+              '<div class="fmx-uplrow"><button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-refresh"></i> Заменить</button>' +
+              '<button class="fmx-upl sec" data-me="' + target + '"><i class="ti ti-crop"></i> Кадрирование</button>' +
+              '<button class="fmx-upl sec" data-md="' + target + '"><i class="ti ti-trash"></i></button></div>'
+            : '<button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-cloud-upload"></i> Выбрать файл</button>';
+        return row + '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + hint + '</div>';
+    }
+    function bindMediaBox(scope) {
+        qsa(scope, '[data-mp]').forEach(function (b) { b.addEventListener('click', function () { pickMedia(b.getAttribute('data-mp')); }); });
+        qsa(scope, '[data-me]').forEach(function (b) { b.addEventListener('click', function () { editMedia(b.getAttribute('data-me')); }); });
+        qsa(scope, '[data-md]').forEach(function (b) { b.addEventListener('click', function () { delMedia(b.getAttribute('data-md')); }); });
+    }
     function paneCover() {
         var seg = '<div class="fmx-mtabs" id="fmx-covtype">' +
             '<button class="fmx-mt' + (_ss.covType === 'grad' ? ' on' : '') + '" data-ct="grad"><i class="ti ti-color-swatch"></i> Градиент</button>' +
-            '<button class="fmx-mt' + (_ss.covType === 'img' ? ' on' : '') + '" data-ct="img"><i class="ti ti-photo"></i> Картинка</button>' +
-            '<button class="fmx-mt' + (_ss.covType === 'gif' ? ' on' : '') + '" data-ct="gif"><i class="ti ti-gif"></i> GIF</button></div>';
-        var grads = '<span class="fmx-lbl">Фон обложки</span><div class="fmx-grads" id="fmx-grads">' +
-            COVERS.map(function (g, i) { return '<div class="fmx-gd' + (i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') + '</div>';
-        var upl = '<div class="fmx-note" id="fmx-uplnote" style="margin-top:14px;' + (_ss.covType === 'grad' ? 'display:none;' : '') + '"><i class="ti ti-cloud-upload"></i> Загрузка своей обложки (картинка/GIF/MP4) с проверкой подключается — скоро будет доступна. Пока выбери градиент.</div>';
+            '<button class="fmx-mt' + (_ss.covType !== 'grad' ? ' on' : '') + '" data-ct="img"><i class="ti ti-cloud-upload"></i> Загрузить</button></div>';
+        var grads = '<div id="fmx-gradbox" style="' + (_ss.covType === 'grad' ? '' : 'display:none;') + '"><span class="fmx-lbl">Фон обложки</span><div class="fmx-grads" id="fmx-grads">' +
+            COVERS.map(function (g, i) { return '<div class="fmx-gd' + (i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') + '</div></div>';
+        var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
+            mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 50 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
         return seg + grads + upl;
     }
     function bindCover() {
-        qsa(el('fmx-covtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.covType = b.getAttribute('data-ct'); qsa(el('fmx-covtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var n = el('fmx-uplnote'); if (n) n.style.display = _ss.covType === 'grad' ? 'none' : 'flex'; renderHero(); sizePanes(); }); });
+        qsa(el('fmx-covtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.covType = b.getAttribute('data-ct'); qsa(el('fmx-covtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var gb = el('fmx-gradbox'), ub = el('fmx-uplbox'); if (gb) gb.style.display = _ss.covType === 'grad' ? '' : 'none'; if (ub) ub.style.display = _ss.covType === 'grad' ? 'none' : ''; renderHero(); sizePanes(); }); });
         qsa(el('fmx-grads'), '.fmx-gd').forEach(function (g) { g.addEventListener('click', function () { _ss.cover = +g.getAttribute('data-g'); qsa(el('fmx-grads'), '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); renderHero(); }); });
+        bindMediaBox(el('fmx-p-cover'));
     }
 
     function paneStyle() {
@@ -652,7 +688,7 @@
             '<button class="fmx-mt' + (_ss.avatar === 'img' ? ' on' : '') + '" data-av="img"><i class="ti ti-photo"></i> Фото</button></div>' +
             '<div id="fmx-avemoji" style="' + (_ss.avatar === 'emoji' ? '' : 'display:none;') + '"><div class="fmx-emg">' + EMOJIS.map(function (e) { return '<div class="fmx-em' + (e === _ss.avEmoji ? ' on' : '') + '" data-e="' + e + '">' + e + '</div>'; }).join('') + '</div></div>' +
             '<div id="fmx-avnote" class="fmx-note" style="margin-top:10px;' + (_ss.avatar === 'tg' ? '' : 'display:none;') + '"><i class="ti ti-info-circle"></i> Используется реальный аватар канала из Telegram.</div>' +
-            '<div id="fmx-avimg" class="fmx-note" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '"><i class="ti ti-cloud-upload"></i> Загрузка своего фото с проверкой — скоро.</div>';
+            '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 50 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
         var font = '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>';
         var fx = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-sparkles"></i> Эффекты аватара</span>' +
@@ -679,17 +715,18 @@
     }
     function bindStyle() {
         qsa(el('fmx-colors'), '.fmx-dot').forEach(function (d) { d.addEventListener('click', function () { _ss.color = d.getAttribute('data-c'); qsa(el('fmx-colors'), '.fmx-dot').forEach(function (x) { x.classList.remove('on'); }); d.classList.add('on'); renderHero(); }); });
-        qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avimg').style.display = _ss.avatar === 'img' ? 'flex' : 'none'; renderHero(); sizePanes(); }); });
+        qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-p-style'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         var _ac = el('fmx-atomc'); if (_ac) qsa(_ac, '.fmx-dot').forEach(function (d) { d.addEventListener('click', function () { _ss.atomColor = d.getAttribute('data-ac'); qsa(_ac, '.fmx-dot').forEach(function (x) { x.classList.remove('on'); }); d.classList.add('on'); renderHero(); }); });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
+        bindMediaBox(el('fmx-p-style'));
     }
 
     function panePrice() {
         var fl = '<div id="fmx-fmts">' + _sfmts.map(function (f, i) { return '<div class="fmx-chk' + (f.on ? ' on' : '') + '" data-fi="' + i + '"><div class="fmx-box"><i class="ti ti-check"></i></div><span style="font-size:12.5px;flex:1;">' + _esc(f.n) + '</span><input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span></div>'; }).join('') + '</div>';
-        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Бот оценит справедливую цену по метрикам канала. Свою цену ставишь любую.</div>';
+        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Бот подскажет справедливую цену по метрикам канала — итоговую назначаешь сам.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
         return '<span class="fmx-lbl">Что продаёшь и почём</span>' + fl + note + slots;
     }
@@ -718,12 +755,75 @@
         if (g === 'dark') return { s: 'background:rgba(8,10,20,0.55);border:0.5px solid rgba(255,255,255,0.14);backdrop-filter:blur(10px);color:#e8e8ed;', p: 'background:linear-gradient(135deg,rgba(8,10,20,0.75),' + accent + '77);border:0.5px solid ' + accent + '66;backdrop-filter:blur(10px);color:#fff;' };
         return { s: '', p: 'background:' + accent + ';color:#fff;' };
     }
+    var _crop = null;
+    function pickMedia(target) {
+        var inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = target === 'avatar' ? 'image/*' : 'image/*,video/mp4';
+        inp.addEventListener('change', function () {
+            var fl = inp.files && inp.files[0]; if (!fl) return;
+            if (fl.size > 50 * 1024 * 1024) { alert('Файл больше 50 МБ — сожми его или выбери другой.'); return; }
+            var kind = fl.type.indexOf('video') === 0 ? 'video' : (fl.type === 'image/gif' ? 'gif' : 'img');
+            var url = URL.createObjectURL(fl);
+            if (kind === 'video') {
+                var v = document.createElement('video');
+                v.preload = 'metadata';
+                v.onloadedmetadata = function () {
+                    if (v.duration > 30.5) { alert('Видео длиннее 30 секунд — сократи ролик до 30 сек.'); URL.revokeObjectURL(url); return; }
+                    startCrop(target, url, kind, fl.name, 50, 50, 1);
+                };
+                v.onerror = function () { alert('Не удалось прочитать видео.'); URL.revokeObjectURL(url); };
+                v.src = url;
+            } else startCrop(target, url, kind, fl.name, 50, 50, 1);
+        });
+        inp.click();
+    }
+    function editMedia(target) {
+        var m = _ss._media && _ss._media[target];
+        if (!m) { pickMedia(target); return; }
+        var a = (_ss.att && typeof _ss.att[target] === 'object') ? _ss.att[target] : {};
+        startCrop(target, m.url, m.kind, m.name, a.x != null ? a.x : 50, a.y != null ? a.y : 50, a.s || 1);
+    }
+    function delMedia(target) {
+        if (_ss._media && _ss._media[target]) { try { URL.revokeObjectURL(_ss._media[target].url); } catch (e) {} delete _ss._media[target]; }
+        _ss.att[target] = '';
+        if (target === 'cover') _ss.covType = 'grad';
+        paintCreate();
+    }
+    function startCrop(target, url, kind, name, x, y, s) {
+        _crop = { target: target, url: url, kind: kind, name: name, x: x, y: y, s: s, drag: null };
+        var box = el('fmx-cropBox');
+        box.style.aspectRatio = target === 'avatar' ? '1 / 1' : '2 / 1';
+        box.innerHTML = kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">';
+        el('fmx-cropHint').textContent = target === 'avatar' ? 'Двигай и масштабируй. Лучше всего от 400×400.' : 'Двигай и масштабируй. Лучше всего от 1600×800.';
+        el('fmx-cropZoom').value = s;
+        cropApply();
+        showModal('fmx-cropBg');
+    }
+    function cropApply() {
+        var box = el('fmx-cropBox'); if (!box || !_crop) return;
+        var m = box.firstChild; if (!m) return;
+        m.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:' + _crop.x + '% ' + _crop.y + '%;transform:scale(' + _crop.s + ');transform-origin:' + _crop.x + '% ' + _crop.y + '%;pointer-events:none;display:block;';
+    }
+    function finishCrop() {
+        if (!_crop) return;
+        if (!_ss._media) _ss._media = {};
+        _ss._media[_crop.target] = { url: _crop.url, kind: _crop.kind, name: _crop.name };
+        _ss.att[_crop.target] = { kind: _crop.kind, name: _crop.name, x: Math.round(_crop.x * 10) / 10, y: Math.round(_crop.y * 10) / 10, s: Math.round(_crop.s * 100) / 100 };
+        if (_crop.target === 'cover') _ss.covType = _crop.kind === 'video' ? 'video' : (_crop.kind === 'gif' ? 'gif' : 'img');
+        if (_crop.target === 'avatar') _ss.avatar = 'img';
+        _crop = null;
+        hideModal('fmx-cropBg');
+        paintCreate();
+    }
     function fontStyle(f) { var m = { normal: 'font-weight:600;', bold: 'font-weight:800;', wide: 'font-weight:700;letter-spacing:0.5px;', mono: 'font-family:monospace;font-weight:600;' }; return m[f] || m.normal; }
     function avatarInner(accent) {
         var c = curChannel();
         var over = '<i class="fmx-avover fx-o-' + _ss.over + '"></i>';
         var core;
-        if (_ss.avatar === 'emoji') core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
+        var av = _ss._media && _ss._media.avatar, ap = (_ss.att && typeof _ss.att.avatar === 'object') ? _ss.att.avatar : null;
+        if (_ss.avatar === 'img' && av && ap) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + av.url + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + ap.x + '% ' + ap.y + '%;transform:scale(' + ap.s + ');transform-origin:' + ap.x + '% ' + ap.y + '%;">' + over + '</div>';
+        else if (_ss.avatar === 'emoji') core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
         var orb = '', oc = _ss.atomColor;
@@ -732,6 +832,14 @@
         else if (_ss.orbit === 'orbitals') orb = '<i class="fmx-avorb fx-orb-o1" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o2" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o3" style="--fxe:' + oc + ';"></i>';
         else if (_ss.orbit === 'sphere') orb = '<i class="fmx-avorb fx-orb-sph" style="--fxe:' + oc + ';"><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
         return '<div class="fmx-avw fx-m-' + _ss.move + '">' + halo + core + orb + '</div>';
+    }
+    function heroCoverHtml(gradient) {
+        var mc = _ss._media && _ss._media.cover, pc = (_ss.att && typeof _ss.att.cover === 'object') ? _ss.att.cover : null;
+        if (_ss.covType !== 'grad' && mc && pc) {
+            var st = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + pc.x + '% ' + pc.y + '%;transform:scale(' + pc.s + ');transform-origin:' + pc.x + '% ' + pc.y + '%;';
+            return '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (mc.kind === 'video' ? '<video src="' + mc.url + '" style="' + st + '" autoplay muted loop playsinline></video>' : '<img src="' + mc.url + '" style="' + st + '">') + '</div>';
+        }
+        return '<div class="fmx-cov-bg" style="background:' + gradient + ';"></div>';
     }
     function renderHero() {
         var hero = el('fmx-hero'); if (!hero) return;
@@ -746,7 +854,7 @@
         var tags = (_ss._tags || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean);
         var gs = glassStyles(accent);
         hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;">' +
-            '<div class="fmx-cov"><div class="fmx-cov-bg" style="background:' + cover + ';"></div>' +
+            '<div class="fmx-cov">' + heroCoverHtml(cover) +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent) +
@@ -920,7 +1028,7 @@
         faq.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-faqBg'); });
 
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
-        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть карточку</h2><p>Поднимает карточку выше в умной сортировке. Выше — больше рекламодателей видят. Топ всегда смешанный, не «всё выкуплено».</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
+        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть карточку</h2><p>Поднимает карточку выше в умной сортировке — её видит больше рекламодателей. Топ смешанный: платные и обычные карточки чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
         document.body.appendChild(promo);
         promo.addEventListener('click', function (e) { if (e.target === promo) hideModal('fmx-promoBg'); });
         promo.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-promoBg'); });
@@ -937,6 +1045,19 @@
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
 
+        var cr = document.createElement('div'); cr.className = 'fmx-mbg'; cr.id = 'fmx-cropBg';
+        cr.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-crop" style="color:#818cf8;"></i> Кадрирование</h2><p id="fmx-cropHint"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-cropBox"></div><div class="fmx-zoomrow"><i class="ti ti-zoom-out" style="color:#8990a8;"></i><input type="range" id="fmx-cropZoom" min="1" max="3" step="0.01" value="1"><i class="ti ti-zoom-in" style="color:#8990a8;"></i></div><div class="fmx-acts" style="margin-top:14px;"><button class="fmx-btn" data-c>Отмена</button><button class="fmx-btn fmx-btn-p" id="fmx-cropOk" style="background:#5DCAA5;color:#04342c;"><i class="ti ti-check"></i>Готово</button></div></div></div>';
+        document.body.appendChild(cr);
+        cr.addEventListener('click', function (e) { if (e.target === cr) { _crop = null; hideModal('fmx-cropBg'); } });
+        qsa(cr, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { _crop = null; hideModal('fmx-cropBg'); }); });
+        cr.querySelector('#fmx-cropOk').addEventListener('click', finishCrop);
+        cr.querySelector('#fmx-cropZoom').addEventListener('input', function () { if (_crop) { _crop.s = parseFloat(this.value) || 1; cropApply(); } });
+        var cbx = cr.querySelector('#fmx-cropBox');
+        cbx.addEventListener('pointerdown', function (e) { if (!_crop) return; e.preventDefault(); _crop.drag = { x: e.clientX, y: e.clientY, ox: _crop.x, oy: _crop.y, w: cbx.offsetWidth || 1, h: cbx.offsetHeight || 1 }; try { cbx.setPointerCapture(e.pointerId); } catch (err) {} });
+        cbx.addEventListener('pointermove', function (e) { if (!_crop || !_crop.drag) return; var d = _crop.drag; _crop.x = Math.max(0, Math.min(100, d.ox - (e.clientX - d.x) / d.w * 100 / _crop.s)); _crop.y = Math.max(0, Math.min(100, d.oy - (e.clientY - d.y) / d.h * 100 / _crop.s)); cropApply(); });
+        cbx.addEventListener('pointerup', function () { if (_crop) _crop.drag = null; });
+        cbx.addEventListener('pointercancel', function () { if (_crop) _crop.drag = null; });
+
         var bm = document.createElement('div'); bm.className = 'fmx-mbg'; bm.id = 'fmx-bmBg';
         bm.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Закладки</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmBody"></div></div>';
         document.body.appendChild(bm);
@@ -949,8 +1070,9 @@
     function openFaq() {
         var body;
         if (_faqTab === 'terms') body = TERMS.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
+        else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> Правила основаны на законах РФ — прежде всего 38-ФЗ «О рекламе». За свой контент отвечает разместивший.</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else body = TIPS.map(function (t) { return '<div class="fmx-tip"><i class="ti ti-circle-check"></i><span>' + _esc(t) + '</span></div>'; }).join('');
-        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ft' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Что значат цифры</button><button class="fmx-ft' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Как рекламироваться</button></div>' + body;
+        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ft' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Цифры</button><button class="fmx-ft' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button><button class="fmx-ft' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button></div>' + body;
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
@@ -960,7 +1082,7 @@
             '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем карточку выше в топе на сутки. Больше показов — больше откликов.</div>' +
             '<button class="fmx-po-buy" data-buy="24">Поднять на 24 часа</button></div>' +
             '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-bolt" style="color:#818cf8;"></i> Поднятие 48 часов</div><div class="fmx-po-pr">1 390 ₽</div></div>' +
-            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> То же, но на двое суток.</div>' +
+            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем карточку выше в топе на двое суток — дольше наверху, больше откликов.</div>' +
             '<button class="fmx-po-buy" data-buy="48">Поднять на 48 часов</button></div>' +
             '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Поднятия на 24 и 48 часов вместе — не больше 3 раз за 30 дней.</div>' +
             '<div class="fmx-po gold"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвижение 30 дней</div><div class="fmx-po-pr gold">29 990 ₽</div></div>' +
