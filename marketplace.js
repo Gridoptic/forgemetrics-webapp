@@ -903,6 +903,7 @@
         _ss.glowCard = !!fx.glowCard;
         _ss.glass = (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none');
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
+        _ss.starPos = fx.starPos || 'cover';
         if (l.title_style) _ss.font = l.title_style;
         if (l.avatar_type) _ss.avatar = l.avatar_type;
         if (l.avatar_emoji) _ss.avEmoji = l.avatar_emoji;
@@ -1330,12 +1331,43 @@
     }
     /* ===================== стикеры: панель конструктора ===================== */
     var SEAM = 84;  // высота шапки карточки — стабильный якорь
+    var STK_PAD = 4;    // невидимый бордер вокруг контента
+    function stkRects(card) {
+        var base = card.getBoundingClientRect(), out = [];
+        qsa(card, '.fmx-tag,.fmx-star,.fmx-crow,.fmx-badges,.fmx-met,.fmx-acts,[data-nostk]').forEach(function (n) {
+            var r = n.getBoundingClientRect();
+            if (!r.width && !r.height) return;
+            out.push({ l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD });
+        });
+        return { rects: out, W: base.width, H: base.height };
+    }
+    function stkValid(cx, cy, size, geo) {
+        var h = size / 2;
+        var l = cx - h, t = cy - h, r = cx + h, b = cy + h;
+        if (l < 3 || t < 3 || r > geo.W - 3 || b > geo.H - 3) return false;
+        for (var i = 0; i < geo.rects.length; i++) {
+            var z = geo.rects[i];
+            if (l < z.r && r > z.l && t < z.b && b > z.t) return false;
+        }
+        return true;
+    }
+    function stkFindSpot(size, geo) {
+        var cands = [[0.84, 40], [0.5, 40], [0.16, 40], [0.84, SEAM + 4], [0.16, SEAM + 4], [0.5, SEAM - 6], [0.84, SEAM + 40], [0.16, SEAM + 40]];
+        for (var i = 0; i < cands.length; i++) {
+            var cx = cands[i][0] * geo.W, cy = cands[i][1];
+            if (stkValid(cx, cy, size, geo)) return { cx: cx, cy: cy };
+        }
+        for (var y = 20; y < geo.H - 20; y += 12)
+            for (var x = 24; x < geo.W - 24; x += 16)
+                if (stkValid(x, y, size, geo)) return { cx: x, cy: y };
+        return null;
+    }
     function stkSize(s, W) { return Math.max(40, Math.min(64 * (s.scale || 1), Math.min(96, W * 0.28))); }
     function stkPos(s, W) {
         var size = stkSize(s, W);
         if ((s.mode || 'slot') === 'slot') return { size: size, left: W - size - 12, top: SEAM - size * 0.55 };
-        var cx = Math.max(size / 2 + 4, Math.min((s.x != null ? s.x : 0.82) * W, W - size / 2 - 4));
-        var cy = Math.max(14, Math.min(SEAM + (s.dy != null ? s.dy : 0), SEAM + 48));
+        var cx = Math.max(size / 2 + 3, Math.min((s.x != null ? s.x : 0.82) * W, W - size / 2 - 3));
+        var cy = Math.max(size / 2 + 3, SEAM + (s.dy != null ? s.dy : 0));
         return { size: size, left: cx - size / 2, top: cy - size / 2 };
     }
     function stkMedia(s, animate) {
@@ -1413,26 +1445,83 @@
         qsa(box, '[data-smode]').forEach(function (b) {
             b.addEventListener('click', function () {
                 _ss.sticker.mode = b.getAttribute('data-smode');
+                if (_ss.sticker.mode === 'free') stkEnsureSpot();
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
         var cl = qsa(box, '[data-sclear]')[0];
         if (cl) cl.addEventListener('click', function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
-        var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () { _ss.sticker.scale = +sc.value; renderHero(); });
+        var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () {
+            var want = +sc.value;
+            var card = el('fmx-hero') && el('fmx-hero').querySelector('.fmx-card');
+            if (card && (_ss.sticker.mode || 'slot') === 'free') {
+                var geo = stkRects(card);
+                var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
+                var size = stkSize({ scale: want }, geo.W);
+                while (size > 40 && !stkValid(cx, cy, size, geo)) size -= 2;
+                want = Math.min(want, size / 64);
+                sc.value = want;
+            }
+            _ss.sticker.scale = want; renderHero();
+        });
         var ro = el('fmx-stk-rot'); if (ro) ro.addEventListener('input', function () { _ss.sticker.rot = +ro.value; renderHero(); });
         var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
     }
+    function stkEnsureSpot() {
+        var hero = el('fmx-hero'), card = hero && hero.querySelector('.fmx-card');
+        if (!card || !_ss.sticker) return;
+        var geo = stkRects(card);
+        if (!geo.W) return;
+        var size = stkSize(_ss.sticker, geo.W);
+        var cx = (_ss.sticker.x || 0.82) * geo.W, cy = SEAM + (_ss.sticker.dy || 0);
+        if (stkValid(cx, cy, size, geo)) return;
+        var spot = stkFindSpot(size, geo);
+        if (!spot) { spot = stkFindSpot(40, geo); if (spot) _ss.sticker.scale = 40 / 64; }
+        if (spot) { _ss.sticker.x = spot.cx / geo.W; _ss.sticker.dy = Math.round(spot.cy - SEAM); }
+    }
+    function bindStarDrag(cardEl) {
+        var st = el('fmx-heroStar'); if (!st || !cardEl) return;
+        function start(e) {
+            e.preventDefault(); e.stopPropagation();
+            var moved = false;
+            var mm = function (ev) {
+                var t = ev.touches ? ev.touches[0] : ev;
+                var r = cardEl.getBoundingClientRect();
+                var y = Math.max(SEAM - 39, Math.min(t.clientY - r.top - 15, SEAM + 9));
+                st.style.top = y + 'px'; moved = true;
+            };
+            var up = function (ev) {
+                document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
+                document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                if (!moved) return;
+                var top = parseFloat(st.style.top);
+                _ss.starPos = (top > SEAM - 15) ? 'body' : 'cover';
+                st.style.top = (_ss.starPos === 'body' ? SEAM + 9 : SEAM - 39) + 'px';
+                _haptic('light');
+            };
+            document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
+            document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
+        }
+        st.addEventListener('mousedown', start);
+        st.addEventListener('touchstart', start, { passive: false });
+    }
     function bindStickerDrag(cardEl) {
         var elS = el('fmx-stkPrev'); if (!elS || !cardEl) return;
+        var geo = null, last = null;
         function move(clientX, clientY) {
+            if (!geo) geo = stkRects(cardEl);
+            var W = geo.W, size = stkSize(_ss.sticker, W);
             var r = cardEl.getBoundingClientRect();
-            var W = r.width, size = stkSize(_ss.sticker, W);
             var cx = clientX - r.left, cy = clientY - r.top;
-            cx = Math.max(size / 2 + 4, Math.min(cx, W - size / 2 - 4));
-            cy = Math.max(14, Math.min(cy, SEAM + 48));
-            if (cy < 42 && cx > W - 56) cx = W - 56;      /* зона звезды */
-            if (cy < 34 && cx < 108) cy = 40;             /* зона тега «на продаже» */
-            _ss.sticker.x = cx / W; _ss.sticker.dy = Math.round(cy - SEAM); _ss.sticker.anchor = 'seam';
+            if (!last) last = { cx: (_ss.sticker.x || 0.82) * W, cy: SEAM + (_ss.sticker.dy || 0) };
+            var nx = cx, ny = cy;
+            if (!stkValid(nx, ny, size, geo)) {
+                if (stkValid(nx, last.cy, size, geo)) ny = last.cy;
+                else if (stkValid(last.cx, ny, size, geo)) nx = last.cx;
+                else { nx = last.cx; ny = last.cy; }
+            }
+            last = { cx: nx, cy: ny };
+            _ss.sticker.x = nx / W; _ss.sticker.dy = Math.round(ny - SEAM); _ss.sticker.anchor = 'seam';
             var p = stkPos(_ss.sticker, W);
             elS.style.left = p.left + 'px'; elS.style.top = p.top + 'px';
         }
@@ -1475,22 +1564,23 @@
         hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;position:relative;">' + cbg +
             (_ss.sticker ? stkOverlay(_ss.sticker, Math.min(350, hero.clientWidth || 350), _ss.sticker.kind === 'webm', true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
-            (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
-            '<button class="fmx-star"><i class="ti ti-star"></i></button></div>' +
+            (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') + '</div>' +
+            '<button class="fmx-star" id="fmx-heroStar" style="bottom:auto;top:' + (_ss.starPos === 'body' ? SEAM + 9 : SEAM - 39) + 'px;z-index:7;" title="Потяни вверх/вниз"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent, true) +
             '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + ts + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + ts + '">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
             '<div class="fmx-badges">' + trafficLight({ health_class: null, subscribers: c.subscribers, avg_views: c.avg_views, er: (c.er != null ? c.er : c.er_percent) }) + '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span><span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span></div>' +
-            (desc ? '<div class="fmx-desc" style="' + ts + '">' + _esc(desc) + '</div>' : '') +
-            (tags.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
+            (desc ? '<div class="fmx-desc" data-nostk style="' + ts + '">' + _esc(desc) + '</div>' : '') +
+            (tags.length ? '<div data-nostk style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hcHero + ';">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
             (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hcHero + ';">' + Math.round(erH) + '%</div></div>' : ''; })() +
             (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
-            (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
+            (_ss._slots ? '<div data-nostk style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
         bindStickerDrag(hero.querySelector('.fmx-card'));
+        bindStarDrag(hero.querySelector('.fmx-card'));
         qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
         var hl = el('fmx-hlist');
         if (hl) {
@@ -1552,7 +1642,7 @@
             sticker_json: _ss.sticker || null,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover' },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -1618,7 +1708,8 @@
         return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             '<div class="fmx-cov">' + covHtml +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
-            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
+            '</div>' +
+            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + (((l.effects_json || {}).starPos === 'body') ? SEAM + 9 : SEAM - 39) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             '<div class="fmx-badges">' + badges(l) + '</div>' +
