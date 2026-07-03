@@ -8,6 +8,7 @@
     var _view = 'cards';
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
+    var _reqs = null, _reqState = 'idle';
     var _channels = [], _myListings = [], _bookmarks = {};
     var _chLoaded = false, _chLoading = false, _nicheSel = null;
     var _faqTab = 'terms';
@@ -407,6 +408,15 @@
             '.fmx-huerow input{flex:1;-webkit-appearance:none;appearance:none;height:10px;border-radius:99px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none;border:0.5px solid rgba(255,255,255,0.15);}',
             '.fmx-huerow input::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;background:#fff;border:2.5px solid rgba(10,13,24,0.85);box-shadow:0 2px 7px rgba(0,0,0,0.45);cursor:pointer;}',
             '.fmx-hueprev{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.85);}',
+            '.fmx-req{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 13px;}',
+            '.fmx-req.mine{border-color:rgba(129,140,248,0.35);}',
+            '.fmx-reqh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px;}',
+            '.fmx-reqn{font-size:10px;font-weight:700;color:#818cf8;background:rgba(129,140,248,0.12);padding:3px 9px;border-radius:7px;}',
+            '.fmx-reqf{font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 9px;border-radius:7px;}',
+            '.fmx-reqb{margin-left:auto;font-size:12px;font-weight:700;color:#5DCAA5;}',
+            '.fmx-reqt{font-size:12.5px;line-height:1.55;color:#c9cbe0;white-space:pre-wrap;}',
+            '.fmx-reqft{display:flex;align-items:center;justify-content:space-between;margin-top:11px;font-size:10px;color:#565b73;}',
+            'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
             '.fmx-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.fmx-acc.open{border-color:rgba(99,102,241,0.3);}',
             '.fmx-acch{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;}',
@@ -614,11 +624,86 @@
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
     }
 
+    var REQ_FMT = { any: 'Любой формат', feed_native: 'В ленте', post_24h: 'На 24 часа', pinned: 'Закреп', stories: 'Сторис', circle: 'Кружок' };
+    function loadRequests() {
+        _reqState = 'loading';
+        apiGet('/api/v1/marketplace/requests').then(function (r) {
+            _reqs = (r && r.requests) ? r.requests : []; _reqState = 'ready';
+            if (_mainTab === 'market' && _subTab === 'sell') renderSell();
+        }).catch(function () { _reqState = 'error'; if (_mainTab === 'market' && _subTab === 'sell') renderSell(); });
+    }
+    function _ago(iso) {
+        if (!iso) return '';
+        var m = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+        if (m < 60) return m + ' мин назад';
+        var h = Math.round(m / 60); if (h < 24) return h + ' ч назад';
+        var d = Math.round(h / 24); return d + ' дн назад';
+    }
+    function reqCard(r) {
+        var head = [];
+        if (r.niche) head.push('<span class="fmx-reqn">' + _esc(r.niche) + '</span>');
+        head.push('<span class="fmx-reqf">' + (REQ_FMT[r.format] || REQ_FMT.any) + '</span>');
+        return '<div class="fmx-req' + (r.mine ? ' mine' : '') + '">' +
+            '<div class="fmx-reqh">' + head.join('') + '<span class="fmx-reqb">' + (r.budget ? 'до ' + _num(r.budget) + ' ₽' : 'бюджет не указан') + '</span></div>' +
+            '<div class="fmx-reqt">' + _esc(r.text) + '</div>' +
+            '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + '</span>' +
+            (r.mine
+                ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>Закрыть</button>'
+                : '<button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button>') +
+            '</div></div>';
+    }
     function renderSell() {
         var sub = el('fmx-sub'); if (!sub) return;
+        if (_reqs == null && _reqState === 'idle') loadRequests();
+        var body;
+        if (_reqState === 'loading') body = loadHtml();
+        else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
+        else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Будь первым: размести заявку — владельцы подходящих каналов напишут сами.');
+        else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(reqCard).join('') + '</div>';
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
-            emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Скоро здесь можно будет разместить заявку на покупку рекламы и просматривать чужие. Раздел откроется в ближайших обновлениях.') +
-            '<button class="fmx-save" style="margin-top:6px;opacity:0.7;cursor:default;"><i class="ti ti-plus"></i> Оставить заявку (скоро)</button>';
+            '<button class="fmx-save" id="fmx-newreq" style="margin:0 0 14px;"><i class="ti ti-plus"></i> Разместить заявку</button>' + body;
+        el('fmx-newreq').addEventListener('click', openReqForm);
+        qsa(sub, '[data-rwrite]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-rwrite')); }); });
+        qsa(sub, '[data-rclose]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                if (!confirm('Закрыть заявку? Она исчезнет из ленты.')) return;
+                apiPost('/api/v1/marketplace/requests/' + b.getAttribute('data-rclose') + '/close', {}).then(function (r) {
+                    if (r && r.ok === false) { alert(r.error || 'Не удалось закрыть'); return; }
+                    toast('Заявка закрыта'); _reqs = null; _reqState = 'idle'; renderSell();
+                }).catch(function () { alert('Не удалось закрыть — попробуй ещё раз.'); });
+            });
+        });
+    }
+    function openReqForm() {
+        var uname = '';
+        try { uname = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) || ''; } catch (e) {}
+        var fchips = Object.keys(REQ_FMT).map(function (k) { return '<button class="fmx-fx' + (k === 'any' ? ' on' : '') + '" data-rf="' + k + '">' + REQ_FMT[k] + '</button>'; }).join('');
+        el('fmx-reqBody').innerHTML =
+            '<span class="fmx-lbl">Ниша каналов</span><input class="fmx-inp" id="fmx-rq-niche" maxlength="64" placeholder="например, Биохакинг">' +
+            '<span class="fmx-lbl fmx-mt2">Бюджет, ₽ (необязательно)</span><input class="fmx-inp" id="fmx-rq-budget" type="number" min="0" step="500" placeholder="например, 15000">' +
+            '<span class="fmx-lbl fmx-mt2">Формат размещения</span><div class="fmx-fxw" id="fmx-rq-fmt">' + fchips + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Что рекламируем и требования</span><textarea class="fmx-inp" id="fmx-rq-text" rows="4" maxlength="500" placeholder="Продукт, гео аудитории, пожелания к каналам. Минимум 20 символов."></textarea>' +
+            '<span class="fmx-lbl fmx-mt2">Контакт для связи</span><div class="fmx-chbtn" style="cursor:text;"><span style="color:#8990a8;">@</span><input class="fmx-inp" id="fmx-rq-contact" style="border:none;background:transparent;padding:0 0 0 4px;flex:1;" maxlength="64" value="' + _esc(uname) + '" placeholder="username"></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">Заявка видна всем владельцам каналов — они напишут на указанный контакт. Максимум 3 активных заявки. Правила площадки действуют и здесь.</div>' +
+            '<button class="fmx-save" id="fmx-rq-send" style="margin-top:14px;"><i class="ti ti-send"></i> Опубликовать заявку</button>';
+        var fsel = { v: 'any' };
+        qsa(el('fmx-rq-fmt'), '[data-rf]').forEach(function (b) { b.addEventListener('click', function () { fsel.v = b.getAttribute('data-rf'); qsa(el('fmx-rq-fmt'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
+        el('fmx-rq-send').addEventListener('click', function () {
+            var btn = this; btn.disabled = true;
+            apiPost('/api/v1/marketplace/requests', {
+                contact_username: el('fmx-rq-contact').value,
+                niche: el('fmx-rq-niche').value,
+                budget: +el('fmx-rq-budget').value || null,
+                format: fsel.v,
+                text: el('fmx-rq-text').value
+            }).then(function (r) {
+                btn.disabled = false;
+                if (r && r.ok === false) { _haptic('error'); alert(r.error || 'Не удалось опубликовать'); return; }
+                _haptic('success'); hideModal('fmx-reqBg'); toast('Заявка размещена');
+                _reqs = null; _reqState = 'idle'; renderSell();
+            }).catch(function () { btn.disabled = false; alert('Не удалось опубликовать — попробуй ещё раз.'); });
+        });
+        showModal('fmx-reqBg');
     }
 
     /* ===================== render: constructor ===================== */
@@ -1345,6 +1430,12 @@
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
+
+        var rq = document.createElement('div'); rq.className = 'fmx-mbg'; rq.id = 'fmx-reqBg';
+        rq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-speakerphone" style="color:#818cf8;"></i> Заявка на покупку рекламы</h2><p>Владельцы подходящих каналов напишут тебе сами</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-reqBody"></div></div>';
+        document.body.appendChild(rq);
+        rq.addEventListener('click', function (e) { if (e.target === rq) hideModal('fmx-reqBg'); });
+        qsa(rq, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-reqBg'); }); });
 
         var cr = document.createElement('div'); cr.className = 'fmx-mbg'; cr.id = 'fmx-cropBg';
         cr.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-crop" style="color:#818cf8;"></i> Кадрирование</h2><p id="fmx-cropHint"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-cropBox"></div><div class="fmx-zoomrow"><i class="ti ti-zoom-out" style="color:#8990a8;"></i><input type="range" id="fmx-cropZoom" min="1" max="3" step="0.01" value="1"><i class="ti ti-zoom-in" style="color:#8990a8;"></i></div><div class="fmx-acts" style="margin-top:14px;"><button class="fmx-btn" data-c>Отмена</button><button class="fmx-btn fmx-btn-p" id="fmx-cropOk" style="background:#5DCAA5;color:#04342c;"><i class="ti ti-check"></i>Готово</button></div></div></div>';
