@@ -9,6 +9,7 @@
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
     var _channels = [], _myListings = [], _bookmarks = {};
+    var _chLoaded = false, _chLoading = false, _nicheSel = null;
     var _faqTab = 'terms';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
 
@@ -71,6 +72,20 @@
     function _firstPrice(l) { if (l.formats && l.formats.length) { for (var i = 0; i < l.formats.length; i++) if (l.formats[i].price) return l.formats[i].price; } return null; }
     function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
     function _cpm(l) { var p = _firstPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
+    function _myNiches() {
+        var s = {};
+        (_channels || []).forEach(function (c) { if (c.niche) s[String(c.niche).toLowerCase().trim()] = 1; });
+        return s;
+    }
+    function _nicheMatch(l) {
+        if (!l || !l.niche) return false;
+        return !!_myNiches()[String(l.niche).toLowerCase().trim()];
+    }
+    function _applySort(arr) {
+        if (_sort === 'match') return arr.slice().sort(function (a, b) { return (_nicheMatch(b) ? 1 : 0) - (_nicheMatch(a) ? 1 : 0); });
+        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && String(l.niche).toLowerCase().trim() === _nicheSel; });
+        return arr;
+    }
     function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; var rr = _reachRate(l); if (rr == null) return '#565b73'; if (rr >= 10) return '#5DCAA5'; if (rr >= 3) return '#f59e0b'; return '#ef4444'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
@@ -369,6 +384,9 @@
             '.fmx-cbg-s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,24,0.35),rgba(10,13,24,0.86) 72%);}',
             '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}',
             '.fmx-fchips span{font-size:9.5px;color:#8990a8;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);padding:3px 8px;border-radius:6px;}',
+            '.fmx-met2{display:flex;align-items:center;gap:8px;font-size:10px;color:#8990a8;margin-top:8px;flex-wrap:wrap;}',
+            '.fmx-met2 b{color:#565b73;font-weight:600;margin-right:2px;}',
+            '.fmx-met2 i{width:3px;height:3px;border-radius:50%;background:#3a3f55;flex-shrink:0;}',
             '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
             '@media(max-width:389px){.fmx-lsp{display:none;}}',
             '.fmx-li.prem>.fmx-lrow{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.6),0 0 18px rgba(245,191,79,0.3);}',
@@ -567,12 +585,20 @@
     function renderBuy() {
         var sub = el('fmx-sub'); if (!sub) return;
         if (_feed == null && _feedState === 'idle') loadFeed();
+        if (!_chLoaded && !_chLoading) {
+            _chLoading = true;
+            loadChannels().then(function () { _chLoaded = true; _chLoading = false; if (_mainTab === 'market' && _subTab === 'buy') renderBuy(); }).catch(function () { _chLoading = false; _chLoaded = true; });
+        }
         var bar = sortBarHtml() + topRowHtml();
         var body;
         if (_feedState === 'loading') body = loadHtml();
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_feed || !_feed.length) body = emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные карточки каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _feed.map(function (x) { return listItem(x); }).join('') + '</div>');
+        else {
+            var feed = _applySort(_feed);
+            if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы».');
+            else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return listItem(x); }).join('') + '</div>');
+        }
         sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Оформленные карточки каналов нашей Площадки. Совпадение и справедливость цены — оценки бота.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
     }
@@ -1044,6 +1070,7 @@
             '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
+            (function () { var ex = []; var erH = (c.er != null ? c.er : c.er_percent); if (erH != null) ex.push('<b>ER</b> ' + erH + '%'); if (minP && c.avg_views) ex.push('<b>CPM</b> ' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽'); return ex.length ? '<div class="fmx-met2">' + ex.join('<i></i>') + '</div>' : ''; })() +
             (_ss._slots ? '<div style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
@@ -1136,11 +1163,13 @@
             '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
     }
     function badges(l) {
+        var mm = _nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '';
         if (l.badges && l.badges.length) {
             var m = { match: ['fmx-b-match', 'ti-target-arrow', 'В точку'], live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
-            return l.badges.map(function (b) { var x = m[b]; return x ? '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>' : ''; }).join('');
+            return mm + l.badges.filter(function (b) { return b !== 'match'; }).map(function (b) { var x = m[b]; return x ? '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>' : ''; }).join('');
         }
-        var out = []; var rr = _reachRate(l);
+        var out = []; if (mm) out.push(mm);
+        var rr = _reachRate(l);
         if (rr != null && rr >= 10) out.push('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>');
         out.push('<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span>');
         if (l.subscribers && l.subscribers >= 100000) out.push('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>');
@@ -1178,6 +1207,7 @@
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
+            (function () { var ex = []; if (l.er != null) ex.push('<b>ER</b> ' + l.er + '%'); var cpmX = _cpm(l); if (cpmX != null) ex.push('<b>CPM</b> ' + _num(cpmX) + ' ₽'); var rrX = _reachRate(l); if (l.er == null && rrX != null) ex.push('<b>охват/подп</b> ' + rrX + '%'); return ex.length ? '<div class="fmx-met2" style="' + fts + '">' + ex.join('<i></i>') + '</div>' : ''; })() +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
     }
@@ -1189,6 +1219,7 @@
             '<div class="fmx-met" style="margin-top:11px;"><div><div class="l">Цена от</div><div class="v pr">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
+            (function () { var ex = []; if (l.er != null) ex.push('<b>ER</b> ' + l.er + '%'); var cpmX = _cpm(l); if (cpmX != null) ex.push('<b>CPM</b> ' + _num(cpmX) + ' ₽'); var rrX = _reachRate(l); if (l.er == null && rrX != null) ex.push('<b>охват/подп</b> ' + rrX + '%'); return ex.length ? '<div class="fmx-met2">' + ex.join('<i></i>') + '</div>' : ''; })() +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
     }
     function listItem(l, fx) {
@@ -1201,7 +1232,7 @@
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + '</div><div class="fmx-lsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(l.username) + ' · ' + bits.join(' · ') + '</div></div>' +
-            '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
+            (_nicheMatch(l) ? '<i class="ti ti-target-arrow" style="color:#818cf8;font-size:13px;flex-shrink:0;"></i>' : '') + '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
     function bindList(scope) {
@@ -1225,7 +1256,24 @@
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
     }
     function bindView() { qsa(el('fmx-main'), '[data-view]').forEach(function (b) { b.addEventListener('click', function () { _view = b.getAttribute('data-view'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); var pb = el('fmx-promobtn'); if (pb) pb.addEventListener('click', openPromo); }
-    function bindSort() { qsa(el('fmx-main'), '[data-sort]').forEach(function (b) { b.addEventListener('click', function () { _sort = b.getAttribute('data-sort'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); }
+    function bindSort() {
+        qsa(el('fmx-main'), '[data-sort]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var v = b.getAttribute('data-sort');
+                if (v === 'niche') {
+                    var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
+                    var seen = {}, niches = [];
+                    arr.forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
+                    if (!niches.length) { toast('В ленте пока нет каналов с указанной нишей'); return; }
+                    var pick = prompt('Ниша (введи одну из): ' + niches.join(', '), niches[0]);
+                    if (!pick) return;
+                    _nicheSel = String(pick).toLowerCase().trim();
+                } else _nicheSel = null;
+                _sort = v;
+                if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+            });
+        });
+    }
 
     function sortBarHtml() {
         return '<div class="fmx-sortbar">' +
@@ -1339,6 +1387,7 @@
         var accent = _isTop(l) ? '#f5bf4f' : _accent(l);
         var fmts = (l.formats && l.formats.length) ? '<div style="display:flex;flex-direction:column;gap:7px;margin-top:8px;">' + l.formats.map(function (f) { return '<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:9px 11px;background:rgba(255,255,255,0.03);border-radius:9px;"><span>' + _esc(f.label || f.format) + '</span><b>' + _num(f.price) + ' ₽</b></div>'; }).join('') + '</div>' : '';
         var mstr = [];
+        if (_nicheMatch(l)) mstr.push('ниша совпадает с твоим каналом');
         if (l.er != null) mstr.push('ER ' + l.er + '%');
         var cpm = _cpm(l); if (cpm != null) mstr.push('CPM ' + cpm + '₽');
         var rr = _reachRate(l); if (rr != null) mstr.push('охват/подп ' + rr + '%');
