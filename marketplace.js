@@ -72,7 +72,9 @@
     function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
     function _cpm(l) { var p = _firstPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
     function _healthColor(l) { var rr = _reachRate(l); if (rr == null) return '#565b73'; if (rr >= 10) return '#5DCAA5'; if (rr >= 3) return '#f59e0b'; return '#ef4444'; }
-    function _coverBg(l) { if ((l.cover_type === 'img' || l.cover_type === 'gif') && l.cover_url) return "url('" + l.cover_url + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
+    function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
+    function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
+    function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
     function _accent(l) { return l.accent_color || '#818cf8'; }
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
@@ -527,7 +529,7 @@
         if (_catState === 'loading') body = loadHtml();
         else if (_catState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_catalog || !_catalog.length) body = emptyHtml('ti-list-search', 'База скоро наполнится', 'Здесь будет общая база каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(listItem).join('') + '</div>');
+        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return listItem(x); }).join('') + '</div>');
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(host);
     }
@@ -565,7 +567,7 @@
         if (_feedState === 'loading') body = loadHtml();
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_feed || !_feed.length) body = emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные карточки каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _feed.map(listItem).join('') + '</div>');
+        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _feed.map(function (x) { return listItem(x); }).join('') + '</div>');
         sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Оформленные карточки каналов нашей Площадки. Совпадение и справедливость цены — оценки бота.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
     }
@@ -629,6 +631,16 @@
         }
         _ss._desc = l.custom_text || '';
         if (l.emoji_attachments_json) { var _at = l.emoji_attachments_json; ['cover', 'avatar', 'cardbg'].forEach(function (k) { if (_at[k] && typeof _at[k] === 'object') _ss.att[k] = _at[k]; }); }
+        ['cover', 'avatar', 'cardbg'].forEach(function (k) {
+            var a = (typeof _ss.att[k] === 'object' && _ss.att[k]) ? _ss.att[k] : null;
+            var srvUrl = (k === 'cover') ? l.cover_url : (k === 'avatar' ? l.avatar_url : (a && a.url));
+            if (a && a.url) srvUrl = a.url;
+            if (!srvUrl) return;
+            if (!a) { a = { x: 50, y: 50, s: 1 }; _ss.att[k] = a; }
+            if (!a.url) a.url = srvUrl;
+            var kk = a.kind || (/\.mp4($|\?)/.test(srvUrl) ? 'video' : (/\.gif($|\?)/.test(srvUrl) ? 'gif' : 'img'));
+            _ss._media[k] = { url: mediaAbs(srvUrl), kind: kk, name: a.name || 'файл на сервере' };
+        });
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._slots = l.slots_note || '';
     }
@@ -893,11 +905,11 @@
                 v.preload = 'metadata';
                 v.onloadedmetadata = function () {
                     if (v.duration > 30.5) { alert('Видео длиннее 30 секунд — сократи ролик до 30 сек.'); URL.revokeObjectURL(url); return; }
-                    startCrop(target, url, kind, fl.name, 50, 50, 1);
+                    startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
                 };
                 v.onerror = function () { alert('Не удалось прочитать видео.'); URL.revokeObjectURL(url); };
                 v.src = url;
-            } else startCrop(target, url, kind, fl.name, 50, 50, 1);
+            } else startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
         });
         inp.click();
     }
@@ -905,7 +917,7 @@
         var m = _ss._media && _ss._media[target];
         if (!m) { pickMedia(target); return; }
         var a = (_ss.att && typeof _ss.att[target] === 'object') ? _ss.att[target] : {};
-        startCrop(target, m.url, m.kind, m.name, a.x != null ? a.x : 50, a.y != null ? a.y : 50, a.s || 1);
+        startCrop(target, m.url, m.kind, m.name, a.x != null ? a.x : 50, a.y != null ? a.y : 50, a.s || 1, m.file || null);
     }
     function delMedia(target) {
         if (_ss._media && _ss._media[target]) { try { URL.revokeObjectURL(_ss._media[target].url); } catch (e) {} delete _ss._media[target]; }
@@ -913,8 +925,8 @@
         if (target === 'cover') _ss.covType = 'grad';
         paintCreate();
     }
-    function startCrop(target, url, kind, name, x, y, s) {
-        _crop = { target: target, url: url, kind: kind, name: name, x: x, y: y, s: s, drag: null };
+    function startCrop(target, url, kind, name, x, y, s, file) {
+        _crop = { target: target, url: url, kind: kind, name: name, x: x, y: y, s: s, drag: null, file: file || null };
         var box = el('fmx-cropBox');
         box.style.aspectRatio = target === 'avatar' ? '1 / 1' : (target === 'cardbg' ? '4 / 5' : '2 / 1');
         box.innerHTML = kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">';
@@ -931,7 +943,7 @@
     function finishCrop() {
         if (!_crop) return;
         if (!_ss._media) _ss._media = {};
-        _ss._media[_crop.target] = { url: _crop.url, kind: _crop.kind, name: _crop.name };
+        _ss._media[_crop.target] = { url: _crop.url, kind: _crop.kind, name: _crop.name, file: _crop.file || (_ss._media[_crop.target] ? _ss._media[_crop.target].file : null) };
         _ss.att[_crop.target] = { kind: _crop.kind, name: _crop.name, x: Math.round(_crop.x * 10) / 10, y: Math.round(_crop.y * 10) / 10, s: Math.round(_crop.s * 100) / 100 };
         if (_crop.target === 'cover') _ss.covType = _crop.kind === 'video' ? 'video' : (_crop.kind === 'gif' ? 'gif' : 'img');
         if (_crop.target === 'avatar') _ss.avatar = 'img';
@@ -1009,8 +1021,42 @@
         renderMini(accent, title, priceTxt);
     }
 
+    function uploadPending() {
+        var chain = Promise.resolve();
+        ['cover', 'avatar', 'cardbg'].forEach(function (t) {
+            chain = chain.then(function () {
+                var m = _ss._media && _ss._media[t];
+                if (!m || !m.file) return;
+                var fd = new FormData();
+                fd.append('file', m.file);
+                fd.append('target', t);
+                var base = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
+                var headers = {};
+                try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e) {}
+                return fetch(base + '/api/v1/marketplace/upload', { method: 'POST', headers: headers, body: fd })
+                    .then(function (r) { if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) { throw new Error(j.detail || ('код ' + r.status)); }); return r.json(); })
+                    .then(function (j) {
+                        if (!j || !j.url) throw new Error('сервер не вернул адрес файла');
+                        if (typeof _ss.att[t] !== 'object' || !_ss.att[t]) _ss.att[t] = { x: 50, y: 50, s: 1 };
+                        _ss.att[t].url = j.url;
+                        _ss.att[t].kind = j.kind || m.kind;
+                        delete m.file;
+                    });
+            });
+        });
+        return chain;
+    }
     function saveStudio() {
         var btn = el('fmx-save'); btn.disabled = true;
+        var hasFiles = ['cover', 'avatar', 'cardbg'].some(function (t) { return _ss._media && _ss._media[t] && _ss._media[t].file; });
+        if (hasFiles) btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю файлы…';
+        uploadPending().then(function () { _saveListing(btn); }).catch(function (e) {
+            _haptic('error'); btn.disabled = false;
+            btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке');
+            alert('Не удалось загрузить файл: ' + (e && e.message ? e.message : 'ошибка'));
+        });
+    }
+    function _saveListing(btn) {
         var ti = el('fmx-title'), de = el('fmx-desc'), ta = el('fmx-tags'), sl = el('fmx-slots');
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
@@ -1019,6 +1065,8 @@
             accent_color: _ss.color,
             cover_type: _ss.covType,
             cover_gradient: _ss.covType === 'grad' ? (_ss.coverGrad || COVERS[_ss.cover]) : null,
+            cover_url: (_ss.covType !== 'grad' && typeof _ss.att.cover === 'object' && _ss.att.cover && _ss.att.cover.url) ? _ss.att.cover.url : null,
+            avatar_url: (_ss.avatar === 'img' && typeof _ss.att.avatar === 'object' && _ss.att.avatar && _ss.att.avatar.url) ? _ss.att.avatar.url : null,
             avatar_type: _ss.avatar,
             avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
             title_style: _ss.font,
@@ -1065,16 +1113,24 @@
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
-        return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' +
+        var at = l.emoji_attachments_json || {};
+        var cb = (at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && at.cardbg.kind === 'img') ? at.cardbg : null;
+        var cbgHtml = cb ? '<div class="fmx-cbg"><img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '"><i class="fmx-cbg-s"></i></div>' : '';
+        var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
+        var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
+        var avHtml = l.avatar_url
+            ? '<div class="fmx-av" style="background:' + accent + ';overflow:hidden;position:relative;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(at.avatar) + '"></div>'
+            : '<div class="fmx-av" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>';
+        return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml +
             '<div class="fmx-cov"><div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>' +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
-            '<div class="fmx-cb"><div class="fmx-crow"><div class="fmx-av" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>' +
-            '<div><div class="fmx-nm">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
+            '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
+            '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             '<div class="fmx-badges">' + badges(l) + '</div>' +
-            (l.custom_text ? '<div class="fmx-desc">' + _esc(l.custom_text) + '</div>' : '') +
+            (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
-            '<div class="fmx-met"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
+            '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
@@ -1098,7 +1154,7 @@
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM ' + cpm + '₽');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '">' +
             '<div class="fmx-lrow"><span class="fmx-ldot" style="background:' + hc + ';box-shadow:0 0 8px ' + hc + ';"></span>' +
-            (fx ? '<span class="fmx-lav-fx">' + avatarInner(accent) + '</span>' : '<div class="fmx-lav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>') +
+            (fx ? '<span class="fmx-lav-fx">' + avatarInner(accent) + '</span>' : (l.avatar_url ? '<div class="fmx-lav" style="background:' + accent + ';overflow:hidden;position:relative;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></div>' : '<div class="fmx-lav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>')) +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + '</div><div class="fmx-lsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(l.username) + ' · ' + bits.join(' · ') + '</div></div>' +
             '<span class="fmx-lsp">' + spark(hc) + '</span><span class="fmx-lprice">' + _priceFrom(l) + '</span><i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
