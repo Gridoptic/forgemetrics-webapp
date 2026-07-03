@@ -473,7 +473,8 @@
             '.fmx-stk{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
             '.fmx-stk.drag{pointer-events:auto;cursor:grab;touch-action:none;}',
             '.fmx-stk.drag:active{cursor:grabbing;}',
-            '.fmx-stkgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;}',
+            '.fmx-stkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:7px;max-width:100%;}',
+            '.fmx-stkcell{min-width:0;}',
             '.fmx-stkcell{position:relative;aspect-ratio:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:11px;padding:5px;cursor:pointer;transition:border-color 150ms;}',
             '.fmx-stkcell.on{border-color:#818cf8;box-shadow:0 0 0 1px #818cf8;}',
             '.fmx-stkcell img,.fmx-stkcell video{width:100%;height:100%;object-fit:contain;pointer-events:none;}',
@@ -1334,10 +1335,26 @@
     var STK_PAD = 4;    // невидимый бордер вокруг контента
     function stkRects(card) {
         var base = card.getBoundingClientRect(), out = [];
-        qsa(card, '.fmx-tag,.fmx-star,.fmx-crow,.fmx-badges,.fmx-met,.fmx-acts,[data-nostk]').forEach(function (n) {
-            var r = n.getBoundingClientRect();
-            if (!r.width && !r.height) return;
+        function push(r) {
+            if (!r || (!r.width && !r.height)) return;
             out.push({ l: r.left - base.left - STK_PAD, t: r.top - base.top - STK_PAD, r: r.right - base.left + STK_PAD, b: r.bottom - base.top + STK_PAD });
+        }
+        function pushText(n) { /* обтягивающий прямоугольник текста, не блока */
+            try { var rg = document.createRange(); rg.selectNodeContents(n); var r = rg.getBoundingClientRect(); if (r.width || r.height) { push(r); return; } } catch (e) {}
+            push(n.getBoundingClientRect());
+        }
+        qsa(card, '.fmx-tag,.fmx-star').forEach(function (n) { push(n.getBoundingClientRect()); });
+        var crow = card.querySelector('.fmx-crow');
+        if (crow) {
+            if (crow.firstElementChild) push(crow.firstElementChild.getBoundingClientRect()); /* аватар */
+            qsa(crow, '.fmx-nm,.fmx-meta').forEach(pushText);
+        }
+        qsa(card, '.fmx-badges>*').forEach(function (n) { push(n.getBoundingClientRect()); });
+        qsa(card, '.fmx-met>div').forEach(function (n) { push(n.getBoundingClientRect()); });
+        var acts = card.querySelector('.fmx-acts'); if (acts) push(acts.getBoundingClientRect());
+        qsa(card, '[data-nostk]').forEach(function (n) {
+            if (n.children.length && n.getAttribute('data-nostk') !== 'text') qsa(n, ':scope>*').forEach(function (ch) { push(ch.getBoundingClientRect()); });
+            else pushText(n);
         });
         return { rects: out, W: base.width, H: base.height };
     }
@@ -1479,6 +1496,8 @@
         if (!spot) { spot = stkFindSpot(40, geo); if (spot) _ss.sticker.scale = 40 / 64; }
         if (spot) { _ss.sticker.x = spot.cx / geo.W; _ss.sticker.dy = Math.round(spot.cy - SEAM); }
     }
+    var STAR_SLOTS = { top: 8, cover: SEAM - 39, body: SEAM + 9 };
+    function starTop(pos) { return STAR_SLOTS[pos] != null ? STAR_SLOTS[pos] : STAR_SLOTS.cover; }
     function bindStarDrag(cardEl) {
         var st = el('fmx-heroStar'); if (!st || !cardEl) return;
         function start(e) {
@@ -1487,16 +1506,17 @@
             var mm = function (ev) {
                 var t = ev.touches ? ev.touches[0] : ev;
                 var r = cardEl.getBoundingClientRect();
-                var y = Math.max(SEAM - 39, Math.min(t.clientY - r.top - 15, SEAM + 9));
+                var y = Math.max(STAR_SLOTS.top, Math.min(t.clientY - r.top - 15, STAR_SLOTS.body));
                 st.style.top = y + 'px'; moved = true;
             };
             var up = function (ev) {
                 document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                 document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
                 if (!moved) return;
-                var top = parseFloat(st.style.top);
-                _ss.starPos = (top > SEAM - 15) ? 'body' : 'cover';
-                st.style.top = (_ss.starPos === 'body' ? SEAM + 9 : SEAM - 39) + 'px';
+                var top = parseFloat(st.style.top), best = 'cover', bd = 1e9;
+                for (var k in STAR_SLOTS) { var d = Math.abs(top - STAR_SLOTS[k]); if (d < bd) { bd = d; best = k; } }
+                _ss.starPos = best;
+                st.style.top = starTop(best) + 'px';
                 _haptic('light');
             };
             document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
@@ -1565,7 +1585,7 @@
             (_ss.sticker ? stkOverlay(_ss.sticker, Math.min(350, hero.clientWidth || 350), _ss.sticker.kind === 'webm', true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') + '</div>' +
-            '<button class="fmx-star" id="fmx-heroStar" style="bottom:auto;top:' + (_ss.starPos === 'body' ? SEAM + 9 : SEAM - 39) + 'px;z-index:7;" title="Потяни вверх/вниз"><i class="ti ti-star"></i></button>' +
+            '<button class="fmx-star" id="fmx-heroStar" style="bottom:auto;top:' + starTop(_ss.starPos) + 'px;z-index:7;" title="Потяни вверх/вниз"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent, true) +
             '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + ts + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + ts + '">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
             '<div class="fmx-badges">' + trafficLight({ health_class: null, subscribers: c.subscribers, avg_views: c.avg_views, er: (c.er != null ? c.er : c.er_percent) }) + '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span><span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span></div>' +
@@ -1576,7 +1596,7 @@
             (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hcHero + ';">' + Math.round(erH) + '%</div></div>' : ''; })() +
             (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
-            (_ss._slots ? '<div data-nostk style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
+            (_ss._slots ? '<div data-nostk="text" style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
         bindStickerDrag(hero.querySelector('.fmx-card'));
@@ -1709,7 +1729,7 @@
             '<div class="fmx-cov">' + covHtml +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '</div>' +
-            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + (((l.effects_json || {}).starPos === 'body') ? SEAM + 9 : SEAM - 39) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
+            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             '<div class="fmx-badges">' + badges(l) + '</div>' +
