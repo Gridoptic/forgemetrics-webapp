@@ -1587,7 +1587,7 @@
         return { size: size, left: cx - size / 2, top: cy - size / 2 };
     }
     function stkMedia(s, animate) {
-        if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
+        if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop autoplay preload="auto"' + (animate ? '' : ' onloadeddata="this.pause()"') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
         if (s.kind === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(s.url) + '" data-anim="' + (animate ? 1 : 0) + '"><i class="ti ti-sticker"></i></span>';
         return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
     }
