@@ -218,7 +218,7 @@
             '.fmx-vt{border:none;background:transparent;color:#8990a8;border-radius:7px;padding:7px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 150ms;}',
             '.fmx-vt.on{background:rgba(99,102,241,0.14);color:#818cf8;}',
             '.fmx-promo{border:0.5px solid rgba(245,191,79,0.4);background:rgba(245,191,79,0.1);color:#f5bf4f;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}',
-            '.fmx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,330px));gap:12px;justify-content:center;}',
+            '.fmx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,350px));gap:12px;justify-content:center;}',
             '.fmx-empty{text-align:center;padding:54px 20px;color:#8990a8;}',
             '.fmx-empty .ti{font-size:40px;opacity:0.3;}',
             '.fmx-empty h3{margin:14px 0 5px;font-size:15px;font-weight:700;color:#e8e8ed;}',
@@ -1910,7 +1910,7 @@
         hero.innerHTML = fullCard(pl);
         var card = hero.querySelector('.fmx-card'); if (!card) return;
         card.style.width = '100%';
-        card.style.maxWidth = '330px';  /* ровно потолок колонки ленты */
+        card.style.maxWidth = '350px';  /* эталон: прежний широкий вид превью; лента подстроена под него */
         /* --- редакторские слои поверх боевой карточки --- */
         if (_ss.sticker) {
             card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, card.clientWidth || 350, true, true));
