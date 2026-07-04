@@ -15,6 +15,11 @@
     var _faqTab = 'terms';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
     var _stickers = null;  // коллекция стикеров юзера
+    function onTap(node, fn) {
+        var t = 0;
+        node.addEventListener('touchend', function (e) { t = Date.now(); e.preventDefault(); fn(e); }, { passive: false });
+        node.addEventListener('click', function (e) { if (Date.now() - t < 600) return; fn(e); });
+    }
 
     var COVERS = [
         'linear-gradient(135deg,#6366f1,#8b5cf6)', 'linear-gradient(135deg,#5DCAA5,#10b981)',
@@ -1592,7 +1597,8 @@
             var xPct = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
             boxSt = 'left:calc(' + xPct + '% - ' + (p.size / 2).toFixed(1) + 'px);top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         }
-        var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
+        var meta = (!draggable && (s.mode || 'slot') === 'free' && s.h0) ? ' data-cy="' + (SEAM + (s.dy || 0)) + '" data-h0="' + (+s.h0) + '" data-half="' + (p.size / 2).toFixed(1) + '"' : '';
+        var core = '<div class="fmx-stk"' + meta + ' ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
         return core + '<div class="fmx-stkGrab sel" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i></div>';
     }
@@ -1699,10 +1705,11 @@
             }
         }
         box.innerHTML = html;
-        var bo = el('fmx-stk-bot'); if (bo) bo.addEventListener('click', function () { openTg('ForgeMetricsBot'); });
+        var bo = el('fmx-stk-bot'); if (bo) onTap(bo, function () { openTg('ForgeMetricsBot'); });
         qsa(box, '[data-sid]').forEach(function (cell) {
-            cell.addEventListener('click', function (e) {
+            onTap(cell, function (e) {
                 if (e.target.getAttribute && e.target.getAttribute('data-sdel')) return;
+                if (e.target.closest && e.target.closest('[data-sdel]')) return;
                 var st = _stickers.filter(function (x) { return x.id === +cell.getAttribute('data-sid'); })[0];
                 if (!st) return;
                 var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0 };
@@ -1711,7 +1718,7 @@
             });
         });
         qsa(box, '[data-sdel]').forEach(function (b) {
-            b.addEventListener('click', function (e) {
+            onTap(b, function (e) {
                 e.stopPropagation();
                 var id = +b.getAttribute('data-sdel');
                 uiConfirm('Удалить стикер из коллекции?', function () {
@@ -1724,13 +1731,13 @@
             });
         });
         qsa(box, '[data-smode]').forEach(function (b) {
-            b.addEventListener('click', function () {
+            onTap(b, function () {
                 _ss.sticker.mode = b.getAttribute('data-smode');
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
         var cl = qsa(box, '[data-sclear]')[0];
-        if (cl) cl.addEventListener('click', function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
+        if (cl) onTap(cl, function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
         var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () {
             _ss.sticker.scale = Math.max(0.5, Math.min(3.4, +sc.value)); renderHero();
         });
@@ -1877,8 +1884,8 @@
         }
         var ts = hasBg ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var metSt = hasBg ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
-        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="max-width:350px;width:100%;position:relative;">' + cbg +
-            (_ss.sticker ? stkOverlay(_ss.sticker, Math.min(350, hero.clientWidth || 350), _ss.sticker.kind === 'webm', true) : '') +
+        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="width:350px;max-width:100%;position:relative;margin:0 auto;">' + cbg +
+            (_ss.sticker ? stkOverlay(_ss.sticker, 350, true, true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
             '</div>' +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
@@ -1957,7 +1964,7 @@
             avatar_url: (_ss.avatar === 'img' && typeof _ss.att.avatar === 'object' && _ss.att.avatar && _ss.att.avatar.url) ? _ss.att.avatar.url : null,
             avatar_type: _ss.avatar,
             avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
-            sticker_json: _ss.sticker || null,
+            sticker_json: (function () { if (!_ss.sticker) return null; var hc = el('fmx-hero') && el('fmx-hero').querySelector('.fmx-card'); if (hc && hc.offsetHeight) _ss.sticker.h0 = hc.offsetHeight; return _ss.sticker; })(),
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
@@ -2086,6 +2093,14 @@
 
     function bindCards(scope) {
         hydrateTgs(scope);
+        qsa(scope || el('fmx-main'), '.fmx-stk[data-h0]').forEach(function (n) {
+            var card = n.parentElement; if (!card || !card.offsetHeight) return;
+            var h0 = +n.getAttribute('data-h0'), cy = +n.getAttribute('data-cy'), half = +n.getAttribute('data-half');
+            if (!h0 || h0 < 60) return;
+            var k = card.offsetHeight / h0;
+            if (Math.abs(k - 1) < 0.02) return;
+            n.style.top = (cy * k - half).toFixed(1) + 'px';
+        });
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-u')); }); });
