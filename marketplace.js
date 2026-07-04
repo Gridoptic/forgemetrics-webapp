@@ -1581,9 +1581,9 @@
         return { size: size, left: cx - size / 2, top: cy - size / 2 };
     }
     function stkMedia(s, animate) {
-        if (s.kind === 'webm') return '<video crossorigin="anonymous" src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
+        if (s.kind === 'webm') return '<video src="' + _esc(mediaAbs(s.url)) + '" muted playsinline loop preload="metadata"' + (animate ? ' autoplay' : '') + ' style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></video>';
         if (s.kind === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(s.url) + '" data-anim="' + (animate ? 1 : 0) + '"><i class="ti ti-sticker"></i></span>';
-        return '<img crossorigin="anonymous" src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
+        return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
     }
     function stkOverlay(s, W, animate, draggable) {
         if (!s || !s.url) return '';
@@ -1593,12 +1593,17 @@
             boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         } else if ((s.mode || 'slot') === 'slot') {
             boxSt = 'right:12px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        } else if (s.h0) {
+            /* полностью пропорционально: карточка любой ширины/высоты растянет стикер как в превью */
+            var xC = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
+            var yC = ((SEAM + (s.dy || 0)) / s.h0 * 100).toFixed(2);
+            var wC = (p.size / (W || 350) * 100).toFixed(2);
+            boxSt = 'left:' + xC + '%;top:' + yC + '%;width:' + wC + '%;aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%) rotate(' + (s.rot || 0) + 'deg);';
         } else {
             var xPct = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
             boxSt = 'left:calc(' + xPct + '% - ' + (p.size / 2).toFixed(1) + 'px);top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         }
-        var meta = (!draggable && (s.mode || 'slot') === 'free' && s.h0) ? ' data-cy="' + (SEAM + (s.dy || 0)) + '" data-h0="' + (+s.h0) + '" data-half="' + (p.size / 2).toFixed(1) + '"' : '';
-        var core = '<div class="fmx-stk"' + meta + ' ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
+        var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
         return core + '<div class="fmx-stkGrab sel" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i></div>';
     }
@@ -1884,8 +1889,8 @@
         }
         var ts = hasBg ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var metSt = hasBg ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
-        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="width:350px;max-width:100%;position:relative;margin:0 auto;">' + cbg +
-            (_ss.sticker ? stkOverlay(_ss.sticker, 350, true, true) : '') +
+        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="width:100%;position:relative;">' + cbg +
+            (_ss.sticker ? stkOverlay(_ss.sticker, (hero.clientWidth || 350), true, true) : '') +
             '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
             '</div>' +
             (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
@@ -2093,14 +2098,6 @@
 
     function bindCards(scope) {
         hydrateTgs(scope);
-        qsa(scope || el('fmx-main'), '.fmx-stk[data-h0]').forEach(function (n) {
-            var card = n.parentElement; if (!card || !card.offsetHeight) return;
-            var h0 = +n.getAttribute('data-h0'), cy = +n.getAttribute('data-cy'), half = +n.getAttribute('data-half');
-            if (!h0 || h0 < 60) return;
-            var k = card.offsetHeight / h0;
-            if (Math.abs(k - 1) < 0.02) return;
-            n.style.top = (cy * k - half).toFixed(1) + 'px';
-        });
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-u')); }); });
