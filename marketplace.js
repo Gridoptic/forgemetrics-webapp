@@ -198,7 +198,8 @@
             '.fmx-pill{position:absolute;top:4px;left:4px;height:calc(100% - 8px);border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);transition:transform 380ms cubic-bezier(.2,.85,.25,1),width 380ms cubic-bezier(.2,.85,.25,1);box-shadow:0 4px 14px rgba(99,102,241,0.4);z-index:0;}',
             '.fmx-pb{flex:1;position:relative;z-index:1;border:none;background:transparent;color:#8990a8;padding:10px 3px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:color 260ms;white-space:nowrap;min-width:0;overflow:hidden;}',
             '.fmx-pb.on{color:#fff;}',
-            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
+            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
+
             '.fmx-scroll::-webkit-scrollbar{display:none;}',
             '.fmx-pad{padding:14px 16px 28px;max-width:640px;margin:0 auto;width:100%;min-width:0;}',
             '@keyframes fmxFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}',
@@ -256,7 +257,7 @@
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
             '.fmx-met{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
             '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
-            '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:none;padding-left:6px;}',
+            '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;}',
             '.fmx-met .l{font-size:8.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.2px;display:flex;align-items:center;gap:3px;margin-bottom:3px;white-space:nowrap;}',
             '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
             '.fmx-met .pr{color:#5DCAA5;}',
@@ -540,6 +541,10 @@
             '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-ptv{font-size:15px;font-weight:800;color:#fff;margin:5px 0 3px;}',
             '.fmx-pts{font-size:9.5px;color:#8990a8;}',
+            '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
+            '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
+            '.fmx-frzTag{position:absolute;top:8px;right:36px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
+            '.fmx-bmdel{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:7px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(255,255,255,0.12);color:#8990a8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:3;}',
             '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
             '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
             '.fmx-revs{margin-top:12px;padding:11px 12px;background:rgba(245,158,11,0.05);border:0.5px solid rgba(245,158,11,0.15);border-radius:11px;}',
@@ -1627,7 +1632,7 @@
     }
     var _tgsData = {};  // url -> animationData
     var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
-    var STK_PHONE_DX = 0, STK_PHONE_DY = 0;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
+    var STK_PHONE_DX = 0, STK_PHONE_DY = -1;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
     var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
@@ -2193,7 +2198,7 @@
     function loadHtml() { return '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю…</div></div>'; }
 
     /* ===================== actions ===================== */
-    function findListing(u) { var arr = (_feed || []).concat(_catalog || []); for (var i = 0; i < arr.length; i++) if (arr[i].username === u) return arr[i]; return null; }
+    function findListing(u) { var arr = (_feed || []).concat(_catalog || []); for (var i = 0; i < arr.length; i++) if (arr[i].username === u) return arr[i]; return _bmMap && _bmMap[u] ? _bmMap[u] : null; }
     function openTg(u) { _haptic('light'); var url = 'https://t.me/' + u; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); } }
     function toggleBm(u) {
         if (!u) return; _haptic('light');
@@ -2323,10 +2328,19 @@
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:12px 0;">' + _esc(l.custom_text) + '</div>' : '') +
             (fmts ? '<div style="font-size:12px;font-weight:700;margin:14px 0 4px;">Форматы и цены</div>' + fmts : '') +
             (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
-            '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" data-bm="' + _esc(u) + '"><i class="ti ti-star"></i>В закладки</button>' +
+            '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i>' + (_bookmarks[u] ? 'В закладках' : 'В закладки') + '</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать владельцу</button></div>' +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
-        el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) { b.addEventListener('click', function () { toggleBm(b.getAttribute('data-bm')); }); });
+        el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                toggleBm(b.getAttribute('data-bm'));
+                var on = !!_bookmarks[b.getAttribute('data-bm')];
+                b.innerHTML = '<i class="ti ti-star"></i>' + (on ? 'В закладках' : 'В закладки');
+                b.style.color = on ? '#f59e0b' : '';
+                b.style.borderColor = on ? 'rgba(245,158,11,0.4)' : '';
+                toast(on ? 'Добавлено в закладки' : 'Убрано из закладок');
+            });
+        });
         el('fmx-listBody').querySelectorAll('[data-w]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-w')); }); });
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
@@ -2334,14 +2348,48 @@
         hydrateTgs(el('fmx-listBody'));
         showModal('fmx-listBg');
     }
+    var _bmMap = {};
     function openBookmarks() {
-        var keys = Object.keys(_bookmarks);
-        el('fmx-bmBody').innerHTML = keys.length ? keys.map(function (u) {
-            var l = findListing(u) || { username: u, title: u };
-            return '<div class="fmx-lrow" style="margin-bottom:8px;cursor:default;"><span class="fmx-ldot" style="background:#5DCAA5;"></span><div style="flex:1;"><div class="fmx-lname">' + _esc(l.title || u) + '</div><div class="fmx-lsub">@' + _esc(u) + '</div></div><button class="fmx-mclose" data-del="' + _esc(u) + '" style="border-color:rgba(239,68,68,0.25);color:#ef4444;"><i class="ti ti-trash"></i></button></div>';
-        }).join('') : '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Жми ★ на карточках, чтобы сохранить канал.</p></div>';
-        el('fmx-bmBody').querySelectorAll('[data-del]').forEach(function (b) { b.addEventListener('click', function () { toggleBm(b.getAttribute('data-del')); openBookmarks(); }); });
+        var box = el('fmx-bmBody');
+        box.innerHTML = loadHtml();
         showModal('fmx-bmBg');
+        apiGet('/api/v1/marketplace/bookmarks/cards').then(function (r) {
+            var items = (r && r.items) || [];
+            _bookmarks = {}; _bmMap = {};
+            items.forEach(function (it) { _bookmarks[it.listing.username] = true; _bmMap[it.listing.username] = it.listing; });
+            updateBmCount();
+            if (!items.length) {
+                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Жми ★ на карточках, чтобы сохранить канал.</p></div>';
+                return;
+            }
+            box.innerHTML = items.map(function (it) {
+                var l = it.listing, u = l.username;
+                return '<div class="fmx-bmrow' + (it.frozen ? ' frz' : '') + '" data-open="' + _esc(u) + '" data-src="' + it.source + '" data-frz="' + (it.frozen ? 1 : 0) + '">' +
+                    zw(listItem(l, false, it.source === 'base')) +
+                    (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> Заморожена</span>' : '') +
+                    '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Убрать из закладок"><i class="ti ti-x"></i></button></div>';
+            }).join('');
+            scaleCards(box);
+            hydrateTgs(box);
+            qsa(box, '[data-del]').forEach(function (b) {
+                b.addEventListener('click', function (e) {
+                    e.stopPropagation(); toggleBm(b.getAttribute('data-del')); openBookmarks();
+                });
+            });
+            qsa(box, '.fmx-bmrow').forEach(function (row) {
+                row.addEventListener('click', function (e) {
+                    if (e.target.closest && e.target.closest('[data-del]')) return;
+                    var u = row.getAttribute('data-open');
+                    if (row.getAttribute('data-frz') === '1') { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); return; }
+                    _haptic('light');
+                    hideModal('fmx-bmBg');
+                    if (row.getAttribute('data-src') === 'base') openTg(u);
+                    else openListing(u);
+                });
+            });
+        }).catch(function () {
+            box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>Не загрузилось</h3><p>Попробуй открыть закладки ещё раз.</p></div>';
+        });
     }
 
     function toast(msg) { var t = el('fmx-toastEl'); if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); } t.innerHTML = '<i class="ti ti-circle-check"></i> ' + _esc(msg); t.classList.add('on'); setTimeout(function () { t.classList.remove('on'); }, 2400); }
