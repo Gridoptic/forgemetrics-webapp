@@ -9,6 +9,7 @@
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
     var _reqs = null, _reqState = 'idle';
+    var _pulse = null, _pulseTs = 0;
     var _channels = [], _myListings = [], _bookmarks = {};
     var _chLoaded = false, _chLoading = false, _nicheSel = null;
     var _faqTab = 'terms';
@@ -489,6 +490,14 @@
             '.fmx-stkrow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:11px;color:#8990a8;}',
             '.fmx-stkrow span{width:52px;flex-shrink:0;}',
             '.fmx-stkrow input{flex:1;}',
+            '.fmx-pday{font-size:11.5px;color:#c9cbe0;background:rgba(245,158,11,0.07);border:0.5px solid rgba(245,158,11,0.2);border-radius:11px;padding:10px 12px;margin-bottom:14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}',
+            '.fmx-pday b{color:#f59e0b;}',
+            '.fmx-psec{font-size:11px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.4px;margin:16px 0 9px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;}',
+            '.fmx-ptile{border:1px solid;border-radius:13px;padding:11px 12px;}',
+            '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-ptv{font-size:15px;font-weight:800;color:#fff;margin:5px 0 3px;}',
+            '.fmx-pts{font-size:9.5px;color:#8990a8;}',
             '.fmx-tlm i{width:6px;height:6px;}',
             '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
             '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
@@ -591,17 +600,81 @@
         if (ti && su) {
             if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; }
             else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; }
+            else if (t === 'pulse') { ti.textContent = 'Пульс рынка'; su.textContent = 'Цены и активность по нишам'; }
             else { ti.textContent = 'Биржа рекламы'; su.textContent = 'База каналов и своя Площадка'; }
         }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
         if (t === 'catalog') renderCatalog();
         else if (t === 'market') renderMarket();
+        else if (t === 'pulse') renderPulse();
         else renderEnter();
         checkMini();
     }
 
     /* ===================== render: enter ===================== */
+    function loadPulse(cb) {
+        if (_pulse && Date.now() - _pulseTs < 300000) { if (cb) cb(); return; }
+        apiGet('/api/v1/marketplace/pulse').then(function (r) {
+            if (r && r.ok) { _pulse = r; _pulseTs = Date.now(); }
+            if (cb) cb();
+        }).catch(function () { if (cb) cb(); });
+    }
+    function _heatColor(v, min, max) {
+        if (v == null || max <= min) return 'rgba(255,255,255,0.05)';
+        var t = (v - min) / (max - min);  /* 0 = дёшево (зелёный), 1 = дорого (красный) */
+        var hue = 145 - t * 145;
+        return 'hsla(' + Math.round(hue) + ',65%,45%,0.16)';
+    }
+    function _heatBorder(v, min, max) {
+        if (v == null || max <= min) return 'rgba(255,255,255,0.08)';
+        var t = (v - min) / (max - min);
+        return 'hsla(' + Math.round(145 - t * 145) + ',65%,55%,0.45)';
+    }
+    function pulseTiles(items, kindLabel) {
+        var cpms = items.map(function (x) { return x.median_cpm; }).filter(function (v) { return v != null; });
+        var mn = cpms.length ? Math.min.apply(null, cpms) : 0, mx = cpms.length ? Math.max.apply(null, cpms) : 1;
+        return '<div class="fmx-pgrid">' + items.map(function (x) {
+            return '<div class="fmx-ptile" style="background:' + _heatColor(x.median_cpm, mn, mx) + ';border-color:' + _heatBorder(x.median_cpm, mn, mx) + ';">' +
+                '<div class="fmx-ptn">' + _esc(x.niche) + '</div>' +
+                '<div class="fmx-ptv">' + (x.median_cpm != null ? 'CPM ' + _num(x.median_cpm) + ' ₽' : (x.median_er != null ? 'ER ' + x.median_er + '%' : '—')) + '</div>' +
+                '<div class="fmx-pts">' + (x.median_price ? 'от ~' + _num(x.median_price) + ' ₽ · ' : '') + x.count + ' ' + kindLabel + '</div>' +
+                (x.median_er != null && x.median_cpm != null ? '<div class="fmx-pts">ER ' + x.median_er + '%</div>' : '') +
+                '</div>';
+        }).join('') + '</div>';
+    }
+    function todayLine() {
+        if (!_pulse) return '';
+        var t = _pulse.today || {};
+        var total = (t.listings || 0) + (t.requests || 0) + (t.contacts || 0);
+        if (!total) return '';
+        var bits = [];
+        if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новая карточка', 'новые карточки', 'новых карточек'));
+        if (t.requests) bits.push('<b>' + t.requests + '</b> ' + _plural(t.requests, 'заявка', 'заявки', 'заявок'));
+        if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
+        return '<div class="fmx-pday"><i class="ti ti-flame" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '</div>';
+    }
+    function renderPulse() {
+        var host = el('fmx-main');
+        host.innerHTML = loadHtml();
+        loadPulse(function () {
+            if (_mainTab !== 'pulse') return;
+            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Пульс недоступен', 'Не получилось загрузить данные — попробуй позже.'); return; }
+            var html = todayLine();
+            if (_pulse.market && _pulse.market.length) {
+                html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · ' + _pulse.market_total + ' ' + _plural(_pulse.market_total, 'карточка', 'карточки', 'карточек') + '</div>' + pulseTiles(_pulse.market, 'карт.');
+            }
+            if (_pulse.base && _pulse.base.length) {
+                html += '<div class="fmx-psec"><i class="ti ti-database" style="color:#818cf8;"></i> База каналов · ' + _num(_pulse.base_total) + ' в наблюдении</div>' + pulseTiles(_pulse.base, 'кан.');
+            }
+            if (!_pulse.market.length && !_pulse.base.length) {
+                html += emptyHtml('ti-activity-heartbeat', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами — здесь оживут цены и CPM.');
+            } else {
+                html += '<div style="font-size:10px;color:#565b73;line-height:1.6;margin-top:14px;">Медианы. Зелёные плитки — CPM ниже медианы рынка (выгоднее покупателю), красные — выше. Площадка — данные наших карточек, База — публичная статистика каналов. Обновление каждые 5 минут.</div>';
+            }
+            host.innerHTML = html;
+        });
+    }
     function renderEnter() {
         var host = el('fmx-main');
         host.innerHTML =
@@ -610,6 +683,10 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
             '<div class="fmx-entd">Всё, что нашёл бот. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
+            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-activity-heartbeat"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Пульс рынка <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
+            '<div class="fmx-entd">Медианные цены, CPM и активность по нишам. Смотри, где рынок дышит.</div></div>' +
+            '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
             '<div class="fmx-entd">Каналы выставили рекламу сами: цена названа, карточки оформлены. Или выстави свой канал.</div></div>' +
@@ -699,8 +776,9 @@
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы».');
             else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return listItem(x); }).join('') + '</div>');
         }
-        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Здесь каналы продают рекламу. Смотри метрики, сравнивай цены и пиши владельцу — сделка напрямую, без комиссии.</div>' + bar + body;
+        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Здесь каналы продают рекламу. Смотри метрики, сравнивай цены и пиши владельцу — сделка напрямую, без комиссии.</div>' + todayLine() + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
+        if (!_pulse) loadPulse(function () { if (_mainTab === 'market' && _subTab === 'buy' && _pulse) renderBuy(); });
     }
 
     var REQ_FMT = { any: 'Любой формат', feed_native: 'В ленте', post_24h: 'На 24 часа', pinned: 'Закреп', stories: 'Сторис', circle: 'Кружок' };
