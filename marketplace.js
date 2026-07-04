@@ -2626,7 +2626,7 @@
     window.__fmxShareRender = function (l, apiBase) {
         try { if (apiBase) API_BASE_URL = apiBase; } catch (e) {}
         injectStyles();
-        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;color:#e8e8ed;font-family:\'Inter\',-apple-system,\'Segoe UI\',Roboto,sans-serif;"><div style="width:350px;">' + fullCard(l) + '</div></div>';
+        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;color:#e8e8ed;font-family:\'Inter\',-apple-system,\'Segoe UI\',Roboto,sans-serif;display:flex;justify-content:center;"><div class="fmx-cwrap" style="width:350px;">' + fullCard(l) + '</div></div>';
         hydrateTgs(document);
     };
 })();
