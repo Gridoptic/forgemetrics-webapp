@@ -252,6 +252,10 @@
             '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
             '.fmx-covbdg .fmx-bdg,.fmx-covbdg .fmx-tl{background:rgba(10,13,24,0.55);border-color:rgba(255,255,255,0.14);}',
             '.fmx-bfree{position:absolute;z-index:6;background:rgba(10,13,24,0.55);border:0.5px solid rgba(255,255,255,0.14);}',
+            '.fmx-bslot{position:absolute;border:1.5px dashed rgba(255,255,255,0.4);border-radius:10px;background:rgba(255,255,255,0.05);z-index:8;pointer-events:none;display:flex;align-items:center;justify-content:center;}',
+            '.fmx-bslot i{font-style:normal;font-size:9px;color:#8990a8;letter-spacing:0.3px;}',
+            '.fmx-bslot.hot{border-color:#5DCAA5;background:rgba(93,202,165,0.14);}',
+            '.fmx-bslot.hot i{color:#5DCAA5;}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -1834,19 +1838,30 @@
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
             bd.style.cursor = vip ? 'grab' : 'pointer';
             function dims() { var r = cardEl.getBoundingClientRect(); return { rect: r, k: r.width ? r.width / 350 : 1 }; }
+            function _zr(e, d) { var r = e.getBoundingClientRect(); return { x1: (r.left - d.rect.left) / d.k, y1: (r.top - d.rect.top) / d.k, x2: (r.right - d.rect.left) / d.k, y2: (r.bottom - d.rect.top) / d.k }; }
             function zones() {
-                /* запретные зоны в логических координатах: аватар, метрики, кнопки */
-                var d = dims(), out = [];
-                ['.fmx-avw', '.fmx-met', '.fmx-acts'].forEach(function (sel) {
-                    var e = cardEl.querySelector(sel); if (!e) return;
-                    var r = e.getBoundingClientRect();
-                    out.push({ x1: (r.left - d.rect.left) / d.k, y1: (r.top - d.rect.top) / d.k, x2: (r.right - d.rect.left) / d.k, y2: (r.bottom - d.rect.top) / d.k });
+                /* запрет: аватар, имя канала, @ссылка, и всё от метрик до низа; домой: классический ряд */
+                var d = dims(), ban = [];
+                ['.fmx-avw', '.fmx-nm', '.fmx-meta'].forEach(function (sel) {
+                    var e = cardEl.querySelector(sel); if (e) ban.push(_zr(e, d));
                 });
-                return out;
+                var met = cardEl.querySelector('.fmx-met');
+                if (met) { var mr = _zr(met, d); ban.push({ x1: 0, y1: mr.y1 - 5, x2: 350, y2: (cardEl.offsetHeight || 500) + 10 }); }
+                var row = cardEl.querySelector('.fmx-cb .fmx-badges');
+                var home;
+                if (row) { home = _zr(row, d); home.y1 -= 4; home.y2 += 4; home.x1 = 8; home.x2 = 342; }
+                else {
+                    var crow = cardEl.querySelector('.fmx-crow');
+                    var cy = crow ? _zr(crow, d).y2 + 2 : 150;
+                    home = { x1: 8, y1: cy, x2: 342, y2: cy + 27 };
+                }
+                return { ban: ban, home: home };
             }
-            var ghost = null, dragging = false, sx = 0, sy = 0, zs = null;
+            var ghost = null, dragging = false, sx = 0, sy = 0, zs = null, homeEl = null;
             function begin(cx, cy) {
                 dragging = true; bd.style.opacity = '0.25'; zs = zones();
+                cardEl.insertAdjacentHTML('beforeend', '<div class="fmx-bslot" style="left:' + zs.home.x1 + 'px;top:' + zs.home.y1 + 'px;width:' + (zs.home.x2 - zs.home.x1) + 'px;height:' + (zs.home.y2 - zs.home.y1) + 'px;"><i>вернуть в ряд</i></div>');
+                homeEl = cardEl.querySelector('.fmx-bslot');
                 ghost = bd.cloneNode(true);
                 ghost.style.cssText = 'position:absolute;z-index:99;pointer-events:none;margin:0;opacity:0.95;';
                 cardEl.appendChild(ghost);
@@ -1859,18 +1874,26 @@
                 var x = Math.max(4, Math.min(lx - w / 2, 346 - w));
                 var y = Math.max(4, Math.min(ly - h / 2, (cardEl.offsetHeight || 400) - h - 4));
                 ghost.style.left = x + 'px'; ghost.style.top = y + 'px';
-                var bad = zs.some(function (z) { return lx >= z.x1 - 4 && lx <= z.x2 + 4 && ly >= z.y1 - 4 && ly <= z.y2 + 4; });
+                var inHome = lx >= zs.home.x1 && lx <= zs.home.x2 && ly >= zs.home.y1 - 6 && ly <= zs.home.y2 + 6;
+                var bad = !inHome && zs.ban.some(function (z) { return lx >= z.x1 - 4 && lx <= z.x2 + 4 && ly >= z.y1 - 4 && ly <= z.y2 + 4; });
                 ghost.style.filter = bad ? 'grayscale(1) brightness(0.7)' : '';
-                return { x: x, y: y, bad: bad };
+                if (homeEl) homeEl.classList.toggle('hot', inHome);
+                return { x: x, y: y, bad: bad, home: inHome };
             }
             function finish(cx, cy) {
                 var p = follow(cx, cy);
                 ghost.remove(); ghost = null;
+                if (homeEl) { homeEl.remove(); homeEl = null; }
                 bd.style.opacity = '';
                 dragging = false;
-                if (p.bad) { toast('Сюда нельзя: аватар, метрики и кнопки — запретная зона'); return; }
+                var key = bd.getAttribute('data-bkey');
+                if (p.home) {
+                    if (_ss.badgeFree) { delete _ss.badgeFree[key]; if (!Object.keys(_ss.badgeFree).length) _ss.badgeFree = null; }
+                    _haptic('light'); renderHero(); return;
+                }
+                if (p.bad) { toast('Сюда нельзя: имя, аватар и низ карточки — запретная зона'); return; }
                 if (!_ss.badgeFree) _ss.badgeFree = {};
-                _ss.badgeFree[bd.getAttribute('data-bkey')] = { x: p.x, y: p.y };
+                _ss.badgeFree[key] = { x: p.x, y: p.y };
                 _haptic('light');
                 renderHero();
             }
