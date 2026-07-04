@@ -1225,7 +1225,7 @@
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
-                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат</button>' : '') +
+                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Поделиться — картинка карточки в чат</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
@@ -1253,12 +1253,12 @@
                     brag.innerHTML = '<i class="ti ti-loader-2"></i> ' + (kind === 'video' ? 'Снимаю живую карточку… ~10 сек' : 'Рисую карточку…');
                     apiPost('/api/v1/marketplace/share', { listing_id: _ss.listingId, kind: kind }).then(function (r) {
                         brag.disabled = false;
-                        brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — карточка в чат';
+                        brag.innerHTML = '<i class="ti ti-share-3"></i> Поделиться — карточка в чат';
                         if (r && r.ok) toast(kind === 'video' ? 'Живая карточка у тебя в чате с ботом!' : 'Картинка у тебя в чате с ботом — пересылай!');
                         else toast((r && r.error) || 'Не получилось');
                     }).catch(function () {
                         brag.disabled = false;
-                        brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — карточка в чат';
+                        brag.innerHTML = '<i class="ti ti-share-3"></i> Поделиться — карточка в чат';
                         toast('Сервер не ответил');
                     });
                 });
@@ -2610,7 +2610,7 @@
 
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
-    /* серверный рендер «Похвастаться»: страница share_render.html вызывает этот хук */
+    /* серверный рендер «Поделиться»: страница share_render.html вызывает этот хук */
     window.__fmxShareRender = function (l, apiBase) {
         try { if (apiBase) API_BASE_URL = apiBase; } catch (e) {}
         injectStyles();
