@@ -1869,58 +1869,72 @@
         grab.addEventListener('touchstart', start, { passive: false });
     }
 
+    function _previewListing() {
+        /* Синтез листинга из состояния конструктора: превью рендерится ТЕМ ЖЕ fullCard, что и биржа. */
+        var c = curChannel() || {};
+        var base = listingForChannel(_ss.channelId);
+        var pl = {};
+        if (base) for (var k in base) pl[k] = base[k];
+        pl.username = c.username || pl.username || 'channel';
+        pl.title = ((_ss._title != null ? _ss._title : (c.title || pl.title)) || 'Твой канал');
+        if (c.subscribers != null) pl.subscribers = c.subscribers;
+        if (c.avg_views != null) pl.avg_views = c.avg_views;
+        if (c.er_percent != null) pl.er = c.er_percent;
+        if (c.health_class) pl.health_class = c.health_class;
+        if (c.niche) pl.niche = c.niche;
+        pl.accent_color = _ss.color;
+        pl.is_top = !!_ss.glowCard; pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
+        var act = (_sfmts || []).filter(function (x) { return x.on; });
+        pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
+        var cm = _ss._media && _ss._media.cover;
+        if (_ss.covType !== 'grad' && cm && cm.url) { pl.cover_type = cm.kind === 'video' ? 'video' : 'img'; pl.cover_url = cm.url; }
+        else { pl.cover_type = 'grad'; pl.cover_url = null; }
+        pl.cover_gradient = _ss.coverGrad || COVERS[_ss.cover];
+        pl.avatar_type = _ss.avatar;
+        var am = _ss._media && _ss._media.avatar;
+        if (_ss.avatar === 'img' && am && am.url) pl.avatar_url = am.url;
+        else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
+        else pl.avatar_url = null;
+        pl.avatar_emoji = _ss.avEmoji;
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover' };
+        pl.emoji_attachments_json = _ss.att || {};
+        pl.custom_text = _ss._desc || '';
+        pl.slots_note = _ss._slots || '';
+        pl.sticker_json = null;  /* стикер — редакторским слоем поверх */
+        if (_ss.showDeals === false) pl.show_deals = false;
+        return pl;
+    }
     function renderHero() {
         var hero = el('fmx-hero'); if (!hero) return;
-        var c = curChannel(), accent = _ss.color, hcHero = _healthColor(c);
-        var cover = _ss.coverGrad || COVERS[_ss.cover];
-        var act = _sfmts.filter(function (f) { return f.on; });
-        var minP = act.length ? Math.min.apply(null, act.map(function (f) { return f.p; })) : 0;
-        var priceTxt = act.length ? _num(minP) + ' ₽' : '—';
-        var title = (_ss._title != null ? _ss._title : (c.title || 'Твой канал')) || 'Твой канал';
-        var subs = c.subscribers != null ? _num(c.subscribers) + ' подп.' : 'подписчики';
-        var desc = _ss._desc || '';
-        var tags = (_ss._tags || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean);
-        var gs = glassStyles(accent);
-        var bb = _ss._media && _ss._media.cardbg, bp = (_ss.att && typeof _ss.att.cardbg === 'object') ? _ss.att.cardbg : null, hasBg = !!(bb && bp);
-        var cbg = '';
-        if (hasBg) {
-            var bst = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + bp.x + '% ' + bp.y + '%;transform:scale(' + bp.s + ');transform-origin:' + bp.x + '% ' + bp.y + '%;';
-            cbg = '<div class="fmx-cbg">' + (bb.kind === 'video' ? '<video src="' + bb.url + '" style="' + bst + '" autoplay muted loop playsinline></video>' : '<img src="' + bb.url + '" style="' + bst + '">') + '<i class="fmx-cbg-s"></i></div>';
+        var pl = _previewListing();
+        hero.innerHTML = fullCard(pl);
+        var card = hero.querySelector('.fmx-card'); if (!card) return;
+        card.style.width = '100%';
+        /* --- редакторские слои поверх боевой карточки --- */
+        if (_ss.sticker) {
+            card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, card.clientWidth || 350, true, true));
+            bindStickerDrag(card);
         }
-        var ts = hasBg ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
-        var metSt = hasBg ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
-        hero.innerHTML = '<div class="fmx-card' + (_ss.glowCard ? ' fmx-prem' : '') + '" style="width:100%;position:relative;">' + cbg +
-            (_ss.sticker ? stkOverlay(_ss.sticker, (hero.clientWidth || 350), true, true) : '') +
-            '<div class="fmx-cov" data-goto="cover" style="cursor:pointer;">' + heroCoverHtml(cover) +
-            '</div>' +
-            (_ss.glowCard ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
-            '<button class="fmx-star" id="fmx-heroStar" style="bottom:auto;top:' + starTop(_ss.starPos) + 'px;z-index:7;" title="Потяни вверх/вниз"><i class="ti ti-star"></i></button>' +
-            '<div class="fmx-cb"><div class="fmx-crow">' + avatarInner(accent, true) +
-            '<div data-goto="text" style="cursor:pointer;"><div class="fmx-nm" style="' + fontStyle(_ss.font) + ts + '">' + _esc(title) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + ts + '">@' + _esc(c.username) + ' · ' + subs + '</div></div></div>' +
-            '<div class="fmx-badges">' + trafficLight({ health_class: null, subscribers: c.subscribers, avg_views: c.avg_views, er: (c.er != null ? c.er : c.er_percent) }) + '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span><span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span></div>' +
-            (desc ? '<div class="fmx-desc" data-nostk style="' + ts + '">' + _esc(desc) + '</div>' : '') +
-            (tags.length ? '<div data-nostk style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;">' + tags.map(function (t) { return '<span style="font-size:10px;color:#8990a8;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;">#' + _esc(t) + '</span>'; }).join('') + '</div>' : '') +
-            '<div class="fmx-met" style="' + metSt + '"><div data-goto="price" style="cursor:pointer;"><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + priceTxt + '</div></div>' +
-            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hcHero + ';">' + (c.avg_views ? '~' + _num(c.avg_views) : '~~~') + '</div></div>' +
-            (function () { var erH = (c.er != null ? c.er : c.er_percent); return erH != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hcHero + ';">' + Math.round(erH) + '%</div></div>' : ''; })() +
-            (minP && c.avg_views ? '<div><div class="l">CPM</div><div class="v">' + _num(Math.round(minP / c.avg_views * 1000)) + ' ₽</div></div>' : '') +
-            '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hcHero) + '</div></div>' +
-            (_ss._slots ? '<div data-nostk="text" style="font-size:10.5px;color:#5DCAA5;margin-top:9px;"><i class="ti ti-calendar-check"></i> ' + _esc(_ss._slots) + '</div>' : '') +
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
-        bindStickerDrag(hero.querySelector('.fmx-card'));
-        bindStarDrag(hero.querySelector('.fmx-card'));
+        var st = card.querySelector('.fmx-star');
+        if (st) {
+            st.removeAttribute('data-bm');
+            st.id = 'fmx-heroStar';
+            st.title = 'Потяни вверх/вниз';
+            bindStarDrag(card);
+        }
+        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
+            qsa(card, z[0]).forEach(function (n) {
+                n.style.cursor = 'pointer';
+                n.addEventListener('click', function (e) {
+                    if (e.target.closest && (e.target.closest('.fmx-stkGrab') || e.target.closest('.fmx-star'))) return;
+                    e.stopPropagation(); _haptic('light'); openAcc(z[1], true);
+                });
+            });
+        });
+        qsa(card, '[data-act]').forEach(function (b) { b.removeAttribute('data-act'); });
         hydrateTgs(hero);
-        qsa(hero, '[data-goto]').forEach(function (g) { g.addEventListener('click', function (e) { e.stopPropagation(); _haptic('light'); openAcc(g.getAttribute('data-goto'), true); }); });
-        var hl = el('fmx-hlist');
-        if (hl) {
-            var fakeL = { username: c.username, title: title, subscribers: c.subscribers, avg_views: c.avg_views, er: (c.er != null ? c.er : c.er_percent), formats: act.length ? [{ price: minP }] : [], accent_color: _ss.color, is_top: _ss.glowCard };
-            hl.innerHTML = '<span class="fmx-lbl" style="margin:0 0 7px;">Так выглядит в списке</span>' + listItem(fakeL, true);
-        }
-        updateAccSummaries();
-        renderMini(accent, title, priceTxt);
+        renderMini(_ss.color, pl.title, _priceFrom(pl));
     }
-
     function uploadPending() {
         var chain = Promise.resolve();
         ['cover', 'avatar', 'cardbg'].forEach(function (t) {
