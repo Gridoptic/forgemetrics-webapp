@@ -8,6 +8,7 @@
     var _view = 'cards';
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
+    var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var m = sp && /^card_(\d+)$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
     var _reqs = null, _reqState = 'idle';
     var _pulse = null, _pulseTs = 0;
     var _channels = [], _myListings = [], _bookmarks = {};
@@ -773,6 +774,7 @@
         _feedState = 'loading';
         apiGet('/api/v1/marketplace/listings').then(function (r) {
             _feed = (r && r.listings) ? r.listings : []; _feedState = 'ready';
+            if (_deepCard) { var dl = _feed.filter(function (x) { return x.id === _deepCard; })[0]; _deepCard = null; if (dl) setTimeout(function () { openListing(dl.username); }, 250); }
             if (_mainTab === 'market' && _subTab === 'buy') renderBuy();
         }).catch(function () { _feedState = 'error'; if (_mainTab === 'market' && _subTab === 'buy') renderBuy(); });
     }
@@ -1222,7 +1224,8 @@
             '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке') + '</button>' +
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
-                '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' : '') +
+                '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
+                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
@@ -1235,6 +1238,21 @@
         var sdT = el('fmx-showdeals');
         if (sdT) sdT.addEventListener('change', function () { _ss.showDeals = sdT.checked; renderHero(); });
         if (_ss.listingId) loadPendingDeals();
+        var brag = el('fmx-brag');
+        if (brag) brag.addEventListener('click', function () {
+            brag.disabled = true;
+            brag.innerHTML = '<i class="ti ti-loader-2"></i> Рисую карточку…';
+            apiPost('/api/v1/marketplace/share', { listing_id: _ss.listingId }).then(function (r) {
+                brag.disabled = false;
+                brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат';
+                if (r && r.ok) toast('Картинка у тебя в чате с ботом — пересылай!');
+                else toast((r && r.error) || 'Не получилось');
+            }).catch(function () {
+                brag.disabled = false;
+                brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат';
+                toast('Сервер не ответил');
+            });
+        });
         var lp = el('fmx-lpause');
         if (lp) lp.addEventListener('click', function () {
             var act = _ss._status === 'paused' ? 'resume' : 'pause';
@@ -2581,4 +2599,11 @@
 
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
+    /* серверный рендер «Похвастаться»: страница share_render.html вызывает этот хук */
+    window.__fmxShareRender = function (l, apiBase) {
+        try { if (apiBase) API_BASE_URL = apiBase; } catch (e) {}
+        injectStyles();
+        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;"><div style="width:350px;">' + fullCard(l) + '</div></div>';
+        hydrateTgs(document);
+    };
 })();
