@@ -251,9 +251,7 @@
             '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
             '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
             '.fmx-covbdg .fmx-bdg,.fmx-covbdg .fmx-tl{background:rgba(10,13,24,0.55);border-color:rgba(255,255,255,0.14);}',
-            '.fmx-bpick{position:absolute;top:8px;left:8px;right:8px;background:#141828;border:0.5px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px;z-index:60;box-shadow:0 12px 32px rgba(0,0,0,0.55);}',
-            '.fmx-bpick .t{font-size:10.5px;color:#8990a8;margin-bottom:7px;}',
-            '.fmx-bpick .row{display:flex;gap:6px;flex-wrap:wrap;}',
+            '.fmx-bfree{position:absolute;z-index:6;background:rgba(10,13,24,0.55);border:0.5px solid rgba(255,255,255,0.14);}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -1161,8 +1159,7 @@
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
         _ss.starPos = fx.starPos || 'cover';
         _ss.topTag = fx.topTag || 'on';
-        _ss.badgeLayout = fx.badgeLayout || 'body';
-        _ss.badgeMap = fx.badgeMap || null;
+        _ss.badgeFree = fx.badgeFree || null;
         if (l.title_style) _ss.font = l.title_style;
         if (l.avatar_type) _ss.avatar = l.avatar_type;
         if (l.avatar_emoji) _ss.avEmoji = l.avatar_emoji;
@@ -1379,16 +1376,11 @@
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>' +
+            '<button class="fmx-btn" id="fmx-bfreset" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-restore"></i> Сбросить позиции плашек</button>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
         return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
-            '<span class="fmx-lbl fmx-mt2">Раскладка бейджей</span>' +
-            '<div style="display:flex;gap:6px;" data-fxg="badgeLayout">' +
-            '<button class="fmx-fx' + (_ss.badgeLayout === 'body' ? ' on' : '') + '" data-v="body">Классика</button>' +
-            '<button class="fmx-fx' + (_ss.badgeLayout === 'cover' ? ' on' : '') + '" data-v="cover">В шапке</button>' +
-            '<button class="fmx-fx' + (_ss.badgeLayout === 'split' ? ' on' : '') + '" data-v="split">Сплит</button>' +
-            '</div>' +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон карточки <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
@@ -1444,9 +1436,11 @@
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
-        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); if (key === 'badgeLayout') _ss.badgeMap = null; qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
+        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
+        var bfr = el('fmx-bfreset');
+        if (bfr) bfr.addEventListener('click', function () { _ss.badgeFree = null; renderHero(); toast('Плашки вернулись на места'); });
         var mb = el('fmx-modboost');
         if (mb) mb.addEventListener('click', function () {
             var base = listingForChannel(_ss.channelId);
@@ -1835,38 +1829,71 @@
         st.addEventListener('mousedown', start);
         st.addEventListener('touchstart', start, { passive: false });
     }
-    var _BROW_NAMES = { ct: 'Верх шапки', cb: 'Низ шапки', b1: 'В теле', b2: 'Над метриками' };
     function bindBadgeDrag(cardEl) {
+        var vip = !!_ss.glowCard || (function () { var b = listingForChannel(_ss.channelId); return b ? _isTop(b) : false; })();
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
-            bd.style.cursor = 'pointer';
-            bd.addEventListener('click', function (e) {
-                e.stopPropagation(); _haptic('light');
-                var old = cardEl.querySelector('.fmx-bpick'); if (old) old.remove();
-                var key = bd.getAttribute('data-bkey');
-                var seed = _previewListing();
-                var cur = _badgePlace(seed, key);
-                var name = (bd.textContent || '').trim();
-                var html = '<div class="fmx-bpick"><div class="t">Куда поставить «' + _esc(name) + '»?</div><div class="row">';
-                _BPLACES.forEach(function (p) {
-                    html += '<button class="fmx-fx' + (p === cur ? ' on' : '') + '" data-bp="' + p + '">' + _BROW_NAMES[p] + '</button>';
+            bd.style.cursor = vip ? 'grab' : 'pointer';
+            function dims() { var r = cardEl.getBoundingClientRect(); return { rect: r, k: r.width ? r.width / 350 : 1 }; }
+            function zones() {
+                /* запретные зоны в логических координатах: аватар, метрики, кнопки */
+                var d = dims(), out = [];
+                ['.fmx-avw', '.fmx-met', '.fmx-acts'].forEach(function (sel) {
+                    var e = cardEl.querySelector(sel); if (!e) return;
+                    var r = e.getBoundingClientRect();
+                    out.push({ x1: (r.left - d.rect.left) / d.k, y1: (r.top - d.rect.top) / d.k, x2: (r.right - d.rect.left) / d.k, y2: (r.bottom - d.rect.top) / d.k });
                 });
-                html += '<button class="fmx-fx" data-bp="x"><i class="ti ti-x"></i></button></div></div>';
-                cardEl.insertAdjacentHTML('beforeend', html);
-                qsa(cardEl, '.fmx-bpick [data-bp]').forEach(function (btn) {
-                    btn.addEventListener('click', function (ev) {
-                        ev.stopPropagation();
-                        var p = btn.getAttribute('data-bp');
-                        if (p === 'x') { cardEl.querySelector('.fmx-bpick').remove(); return; }
-                        if (!_ss.badgeMap) {
-                            _ss.badgeMap = {};
-                            badgeItems(seed).forEach(function (it) { _ss.badgeMap[it.k] = _badgePlace(seed, it.k); });
-                        }
-                        _ss.badgeMap[key] = p;
-                        _haptic('light');
-                        renderHero();
-                    });
-                });
-            });
+                return out;
+            }
+            var ghost = null, dragging = false, sx = 0, sy = 0, zs = null;
+            function begin(cx, cy) {
+                dragging = true; bd.style.opacity = '0.25'; zs = zones();
+                ghost = bd.cloneNode(true);
+                ghost.style.cssText = 'position:absolute;z-index:99;pointer-events:none;margin:0;opacity:0.95;';
+                cardEl.appendChild(ghost);
+                follow(cx, cy);
+            }
+            function follow(cx, cy) {
+                var d = dims();
+                var lx = (cx - d.rect.left) / d.k, ly = (cy - d.rect.top) / d.k;
+                var w = ghost.offsetWidth, h = ghost.offsetHeight;
+                var x = Math.max(4, Math.min(lx - w / 2, 346 - w));
+                var y = Math.max(4, Math.min(ly - h / 2, (cardEl.offsetHeight || 400) - h - 4));
+                ghost.style.left = x + 'px'; ghost.style.top = y + 'px';
+                var bad = zs.some(function (z) { return lx >= z.x1 - 4 && lx <= z.x2 + 4 && ly >= z.y1 - 4 && ly <= z.y2 + 4; });
+                ghost.style.filter = bad ? 'grayscale(1) brightness(0.7)' : '';
+                return { x: x, y: y, bad: bad };
+            }
+            function finish(cx, cy) {
+                var p = follow(cx, cy);
+                ghost.remove(); ghost = null;
+                bd.style.opacity = '';
+                dragging = false;
+                if (p.bad) { toast('Сюда нельзя: аватар, метрики и кнопки — запретная зона'); return; }
+                if (!_ss.badgeFree) _ss.badgeFree = {};
+                _ss.badgeFree[bd.getAttribute('data-bkey')] = { x: p.x, y: p.y };
+                _haptic('light');
+                renderHero();
+            }
+            function onDown(e) {
+                var t = e.touches ? e.touches[0] : e;
+                sx = t.clientX; sy = t.clientY; dragging = false;
+                var mm = function (ev) {
+                    var p = ev.touches ? ev.touches[0] : ev;
+                    if (!vip) return;
+                    if (!dragging && Math.abs(p.clientX - sx) + Math.abs(p.clientY - sy) > 7) begin(p.clientX, p.clientY);
+                    if (dragging) { ev.preventDefault(); follow(p.clientX, p.clientY); }
+                };
+                var up = function (ev) {
+                    document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
+                    document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                    if (dragging) { var p = (ev.changedTouches && ev.changedTouches[0]) || ev; finish(p.clientX, p.clientY); }
+                    else if (!vip) { toast('Свободное перемещение плашек — опция продвижения на 30 дней'); }
+                };
+                document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
+                document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
+            }
+            bd.addEventListener('mousedown', onDown);
+            bd.addEventListener('touchstart', onDown, { passive: true });
         });
     }
     function bindStickerDrag(cardEl) {
@@ -1987,7 +2014,7 @@
         else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body', badgeMap: _ss.badgeMap || null };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
         pl.emoji_attachments_json = _ss.att || {};
         pl.custom_text = _ss._desc || '';
         pl.slots_note = _ss._slots || '';
@@ -2013,7 +2040,7 @@
             st.title = 'Потяни вверх/вниз';
             bindStarDrag(card);
         }
-        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-covbdg', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
+        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
@@ -2084,7 +2111,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body', badgeMap: _ss.badgeMap || null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -2133,15 +2160,10 @@
         }
         return items;
     }
-    var _BPLACES = ['ct', 'cb', 'b1', 'b2'];
-    function _badgePlace(l, k) {
-        var fx = l.effects_json || {};
-        var v = fx.badgeMap && fx.badgeMap[k];
-        if (v) { if (v === 'cover') v = 'cb'; if (v === 'body') v = 'b1'; if (_BPLACES.indexOf(v) >= 0) return v; }
-        var bl = fx.badgeLayout || 'body';
-        if (bl === 'cover') return 'cb';
-        if (bl === 'split') return k === 'deal' ? 'b1' : 'cb';
-        return 'b1';
+    function _freeStyleInject(h, pos) {
+        /* инжект абсолютной позиции и тёмной подложки в корневой тег бейджа */
+        h = h.replace('class="', 'class="fmx-bfree ');
+        return h.replace('<span', '<span style="left:' + pos.x.toFixed(1) + 'px;top:' + pos.y.toFixed(1) + 'px;"');
     }
     function badges(l, part) {
         var items = badgeItems(l);
@@ -2153,12 +2175,14 @@
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
-        var _bp = { ct: [], cb: [], b1: [], b2: [] };
-        bItems.forEach(function (it) { _bp[_badgePlace(l, it.k)].push(it.h); });
-        var covBdg = (_bp.ct.length ? '<div class="fmx-covbdg" data-brow="ct" style="bottom:auto;top:32px;">' + _bp.ct.join('') + '</div>' : '') +
-            (_bp.cb.length ? '<div class="fmx-covbdg" data-brow="cb">' + _bp.cb.join('') + '</div>' : '');
-        var bodyBdg = _bp.b1.length ? '<div class="fmx-badges" data-brow="b1">' + _bp.b1.join('') + '</div>' : '';
-        var bodyBdg2 = _bp.b2.length ? '<div class="fmx-badges" data-brow="b2" style="margin-bottom:2px;">' + _bp.b2.join('') + '</div>' : '';
+        var freeMap = (top || l._preview) && (l.effects_json || {}).badgeFree || null;
+        var flowArr = [], covBdg = '';
+        bItems.forEach(function (it) {
+            if (freeMap && freeMap[it.k]) covBdg += _freeStyleInject(it.h, freeMap[it.k]);
+            else flowArr.push(it.h);
+        });
+        var bodyBdg = flowArr.length ? '<div class="fmx-badges">' + flowArr.join('') + '</div>' : '';
+        var bodyBdg2 = '';
         var stk = l.sticker_json || l.sticker;
         var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
@@ -2179,8 +2203,8 @@
         var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
-        return '<div class="fmx-cwrap"><div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
-            '<div class="fmx-cov">' + covHtml + covBdg +
+        return '<div class="fmx-cwrap"><div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
+            '<div class="fmx-cov">' + covHtml +
             '</div>' +
             (top ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
@@ -2497,6 +2521,9 @@
         el('fmx-bmvTitle').textContent = l.title || u;
         el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
         bindCards(el('fmx-bmvBody'));
+        qsa(el('fmx-bmvBody'), '[data-act="expand"],[data-act="analyze"]').forEach(function (b) {
+            b.addEventListener('click', function () { hideModal('fmx-bmvBg'); });
+        });
         showModal('fmx-bmvBg');
     }
     function openBookmarks() {
