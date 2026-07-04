@@ -2104,7 +2104,7 @@
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
-        var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _num(cpm) + '₽</b>');
+        var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _short(cpm) + '₽</b>');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
@@ -2135,6 +2135,8 @@
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
             card.style.transform = k < 0.999 ? 'scale(' + k.toFixed(4) + ')' : '';
+            var off = Math.max(0, Math.round((ww - 350 * k) / 2));
+            card.style.marginLeft = off ? off + 'px' : '';
             w.style.height = Math.round(card.offsetHeight * k) + 'px';
         });
     }
