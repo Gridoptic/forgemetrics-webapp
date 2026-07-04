@@ -103,18 +103,49 @@
     function _firstPrice(l) { if (l.formats && l.formats.length) { for (var i = 0; i < l.formats.length; i++) if (l.formats[i].price) return l.formats[i].price; } return null; }
     function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
     function _cpm(l) { var p = _firstPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
-    function _myNiches() {
-        var s = {};
-        (_channels || []).forEach(function (c) { if (c.niche) s[String(c.niche).toLowerCase().trim()] = 1; });
-        return s;
+    var _nicheMap = null;  // словарь канонов с бэка; работает и без него (запасные основы)
+    function loadNicheMap() {
+        if (_nicheMap !== null) return;
+        _nicheMap = {};
+        apiGet('/api/v1/marketplace/niche_map').then(function (r) {
+            if (r && r.ok && r.map) _nicheMap = r.map;
+        }).catch(function () {});
+    }
+    function _canonSet(text) {
+        var norm = String(text || '').toLowerCase().replace(/ё/g, 'е').trim();
+        var toks = norm.match(/[a-zа-я0-9+]+/g) || [];
+        var out = {};
+        var map = _nicheMap || {};
+        for (var canon in map) {
+            var roots = map[canon];
+            for (var i = 0; i < roots.length; i++) {
+                var r = roots[i];
+                if (r.indexOf(' ') >= 0) { if (norm.indexOf(r) >= 0) { out[canon] = 1; break; } }
+                else if (r.length <= 3) { if (toks.indexOf(r) >= 0) { out[canon] = 1; break; } }
+                else if (toks.some(function (t) { return t.indexOf(r) === 0; })) { out[canon] = 1; break; }
+            }
+        }
+        toks.forEach(function (t) { if (t.length >= 4) out['~' + t.slice(0, 6)] = 1; });
+        return out;
+    }
+    function nichesMatch(a, b) {
+        if (!a || !b) return false;
+        var sa = _canonSet(a), sb = _canonSet(b);
+        for (var k in sa) if (sb[k]) return true;
+        return false;
+    }
+    function _myNichesStr() {
+        var parts = [];
+        (_channels || []).forEach(function (c) { if (c.niche) parts.push(String(c.niche)); });
+        return parts.join(', ');
     }
     function _nicheMatch(l) {
         if (!l || !l.niche) return false;
-        return !!_myNiches()[String(l.niche).toLowerCase().trim()];
+        return nichesMatch(_myNichesStr(), l.niche);
     }
     function _applySort(arr) {
         if (_sort === 'match') return arr.slice().sort(function (a, b) { return (_nicheMatch(b) ? 1 : 0) - (_nicheMatch(a) ? 1 : 0); });
-        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && String(l.niche).toLowerCase().trim() === _nicheSel; });
+        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && nichesMatch(_nicheSel, l.niche); });
         return arr;
     }
     function _hlInfo(l) {
@@ -2132,5 +2163,6 @@
 
     function toast(msg) { var t = el('fmx-toastEl'); if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); } t.innerHTML = '<i class="ti ti-circle-check"></i> ' + _esc(msg); t.classList.add('on'); setTimeout(function () { t.classList.remove('on'); }, 2400); }
 
-    window.__openMarketplace = open;
+    var _open0 = open;
+    window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
 })();
