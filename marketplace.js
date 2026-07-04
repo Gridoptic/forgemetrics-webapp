@@ -1910,6 +1910,7 @@
         hero.innerHTML = fullCard(pl);
         var card = hero.querySelector('.fmx-card'); if (!card) return;
         card.style.width = '100%';
+        card.style.maxWidth = '330px';  /* ровно потолок колонки ленты */
         /* --- редакторские слои поверх боевой карточки --- */
         if (_ss.sticker) {
             card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, card.clientWidth || 350, true, true));
