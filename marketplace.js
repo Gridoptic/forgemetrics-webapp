@@ -1535,7 +1535,7 @@
         else if (orb === 'orbitals') orbH = '<i class="fmx-avorb fx-orb-o1" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o2" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o3" style="--fxe:' + oc + ';"></i>';
         else if (orb === 'sphere') orbH = '<i class="fmx-avorb fx-orb-sph" style="--fxe:' + oc + ';"><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
         var t = l.title || l.username || '?', core;
-        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(at.avatar) + '">' + over + '</div>';
+        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
         else if (l.avatar_type === 'emoji' && l.avatar_emoji) core = '<div class="fmx-av fx-c-' + ov + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _esc(l.avatar_emoji) + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
         return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + '</div>';
@@ -1583,7 +1583,15 @@
     function stkOverlay(s, W, animate, draggable) {
         if (!s || !s.url) return '';
         var p = stkPos(s, W);
-        var boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        var boxSt;
+        if (draggable) {
+            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        } else if ((s.mode || 'slot') === 'slot') {
+            boxSt = 'right:12px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        } else {
+            var xPct = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
+            boxSt = 'left:calc(' + xPct + '% - ' + (p.size / 2).toFixed(1) + 'px);top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+        }
         var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
         return core + '<div class="fmx-stkGrab sel" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i></div>';
@@ -2260,6 +2268,7 @@
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         if (l.id) { renderDealBox(l); if (l.reviews_count) renderReviews(l); }
+        hydrateTgs(el('fmx-listBody'));
         showModal('fmx-listBg');
     }
     function openBookmarks() {
