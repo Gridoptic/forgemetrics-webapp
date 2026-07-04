@@ -1174,7 +1174,7 @@
         var cur = channelById(_ss.channelId);
         var rows = _channels.map(function (c) {
             var pub = !!c.username;
-            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (pub ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '"><div class="fmx-chav"' + (pub ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + _esc((c.title || c.username || '?').charAt(0)) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (pub ? '@' + _esc(c.username) : 'приватный — нужен публичный @username') + '</div></div>' + (pub ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
+            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (pub ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '"><div class="fmx-chav"' + (pub ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (pub ? '@' + _esc(c.username) : 'приватный — нужен публичный @username') + '</div></div>' + (pub ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
@@ -1547,6 +1547,7 @@
         var av = _ss._media && _ss._media.avatar, ap = (_ss.att && typeof _ss.att.avatar === 'object') ? _ss.att.avatar : null;
         if (_ss.avatar === 'img' && av && ap) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + av.url + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + ap.x + '% ' + ap.y + '%;transform:scale(' + ap.s + ');transform-origin:' + ap.x + '% ' + ap.y + '%;">' + over + '</div>';
         else if (_ss.avatar === 'emoji') core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
+        else if (c.avatar_url) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(c.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">' + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
         var orb = '', oc = _ss.atomColor;
@@ -2036,7 +2037,7 @@
     }
     function simpleCard(l) {
         var accent = _accent(l), hc = _healthColor(l), t = l.title || l.username || '?';
-        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>' +
+        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';' + (l.avatar_url ? 'overflow:hidden;' : '') + '">' + (l.avatar_url ? '<img src="' + mediaAbs(l.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;">' : _esc(t.charAt(0))) + '</div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-met" style="margin-top:11px;"><div><div class="l"><i class="ti ti-users"></i>Подписчики</div><div class="v">' + _num(l.subscribers) + '</div></div>' +
