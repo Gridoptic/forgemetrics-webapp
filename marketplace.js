@@ -174,6 +174,7 @@
     function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
     function _accent(l) { return l.accent_color || '#818cf8'; }
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
+    function _isMod() { try { return !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === 1263501641); } catch (e) { return false; } }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
     function _priceFrom(l) { var p = _firstPrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
 
@@ -248,6 +249,8 @@
             '.fmx-seal{color:#818cf8;font-size:14px;}',
             '.fmx-meta{font-size:10.5px;color:#8990a8;margin-top:2px;}',
             '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
+            '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
+            '.fmx-covbdg .fmx-bdg,.fmx-covbdg .fmx-tl{background:rgba(10,13,24,0.55);border-color:rgba(255,255,255,0.14);}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -706,7 +709,9 @@
                 '</div>';
         }).join('') + '</div>';
     }
+    var _pulseHide = false;
     function todayLine() {
+        if (_pulseHide) return '';
         if (!_pulse) return '';
         var t = _pulse.today || {};
         var total = (t.listings || 0) + (t.requests || 0) + (t.contacts || 0);
@@ -715,7 +720,7 @@
         if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новая карточка', 'новые карточки', 'новых карточек'));
         if (t.requests) bits.push('<b>' + t.requests + '</b> ' + _plural(t.requests, 'заявка', 'заявки', 'заявок'));
         if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
-        return '<div class="fmx-pday"><i class="ti ti-flame" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '</div>';
+        return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-flame" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
     }
     function renderPulse() {
         var host = el('fmx-main');
@@ -1152,6 +1157,8 @@
         _ss.glass = (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none');
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
         _ss.starPos = fx.starPos || 'cover';
+        _ss.topTag = fx.topTag || 'on';
+        _ss.badgeLayout = fx.badgeLayout || 'body';
         if (l.title_style) _ss.font = l.title_style;
         if (l.avatar_type) _ss.avatar = l.avatar_type;
         if (l.avatar_emoji) _ss.avEmoji = l.avatar_emoji;
@@ -1360,10 +1367,24 @@
             atomRow() +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение карточки <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>';
+            '<div style="margin-top:10px;">' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Плашка «Топ месяца» в шапке</div>' +
+            '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
+            '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
+            '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
+            '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
+            '</div></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>' +
+            (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
         return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
+            '<span class="fmx-lbl fmx-mt2">Раскладка бейджей</span>' +
+            '<div style="display:flex;gap:6px;" data-fxg="badgeLayout">' +
+            '<button class="fmx-fx' + (_ss.badgeLayout === 'body' ? ' on' : '') + '" data-v="body">Классика</button>' +
+            '<button class="fmx-fx' + (_ss.badgeLayout === 'cover' ? ' on' : '') + '" data-v="cover">В шапке</button>' +
+            '<button class="fmx-fx' + (_ss.badgeLayout === 'split' ? ' on' : '') + '" data-v="split">Сплит</button>' +
+            '</div>' +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон карточки <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
@@ -1422,6 +1443,19 @@
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
+        var mb = el('fmx-modboost');
+        if (mb) mb.addEventListener('click', function () {
+            var base = listingForChannel(_ss.channelId);
+            if (!base) { toast('Сначала сохрани карточку — топ включается для опубликованной'); return; }
+            mb.disabled = true;
+            apiPost('/api/v1/marketplace/mod/boost', { listing_id: base.id }).then(function (r) {
+                if (r && r.ok) {
+                    toast('Топ месяца включён на 30 дней');
+                    loadMyListings().then(function () { renderHero(); });
+                } else { toast((r && r.error) || 'Не получилось'); }
+                mb.disabled = false;
+            }).catch(function () { toast('Ошибка сети'); mb.disabled = false; });
+        });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
@@ -1915,7 +1949,7 @@
         else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover' };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body' };
         pl.emoji_attachments_json = _ss.att || {};
         pl.custom_text = _ss._desc || '';
         pl.slots_note = _ss._slots || '';
@@ -1941,7 +1975,7 @@
             st.title = 'Потяни вверх/вниз';
             bindStarDrag(card);
         }
-        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
+        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-covbdg', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
@@ -2011,7 +2045,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover' },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body' },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -2040,9 +2074,11 @@
             '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
             '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
     }
-    function badges(l) {
+    function badges(l, part) {
         var dealN = l.deals_count || 0;
-        var deal = (l.show_deals !== false && (dealN || l._preview)) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>' : '';
+        var deal = (l.show_deals !== false) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>' : '';
+        if (part === 'deal') return deal;
+        if (part === 'status') deal = '';
         var mm = trafficLight(l) + deal + (_nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '');
         if (l.badges && l.badges.length) {
             var m = { match: ['fmx-b-match', 'ti-target-arrow', 'В точку'], live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
@@ -2057,6 +2093,15 @@
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
+        var topTag = ((l.effects_json || {}).topTag) || 'on';
+        var bl = ((l.effects_json || {}).badgeLayout) || 'body';
+        var covBdg = '', bodyBdg = '';
+        if (bl === 'cover') covBdg = '<div class="fmx-covbdg">' + badges(l) + '</div>';
+        else if (bl === 'split') {
+            covBdg = '<div class="fmx-covbdg">' + badges(l, 'status') + '</div>';
+            var dOnly = badges(l, 'deal');
+            bodyBdg = dOnly ? '<div class="fmx-badges">' + dOnly + '</div>' : '';
+        } else bodyBdg = '<div class="fmx-badges">' + badges(l) + '</div>';
         var stk = l.sticker_json || l.sticker;
         var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
@@ -2078,13 +2123,13 @@
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-cwrap"><div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
-            '<div class="fmx-cov">' + covHtml +
+            '<div class="fmx-cov">' + covHtml + covBdg +
             '</div>' +
-            (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
+            (top ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
-            '<div class="fmx-badges">' + badges(l) + '</div>' +
+            bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
@@ -2149,6 +2194,12 @@
             w.style.height = Math.round(card.offsetHeight * k) + 'px';
         });
     }
+    document.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-phide]') : null;
+        if (!b) return;
+        _pulseHide = true;
+        var d = b.closest('.fmx-pday'); if (d) d.remove();
+    });
     var _rsT = null;
     window.addEventListener('resize', function () {
         clearTimeout(_rsT);
@@ -2218,6 +2269,10 @@
         document.body.appendChild(faq);
         faq.addEventListener('click', function (e) { if (e.target === faq) hideModal('fmx-faqBg'); });
         faq.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-faqBg'); });
+        var bmv = document.createElement('div'); bmv.className = 'fmx-mbg'; bmv.id = 'fmx-bmvBg';
+        bmv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> <span id="fmx-bmvTitle"></span></h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmvBody"></div></div>';
+        document.body.appendChild(bmv);
+        bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
 
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
         promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть карточку</h2><p>Поднимает карточку выше в умной сортировке — её видит больше рекламодателей. Топ смешанный: платные и обычные карточки чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
@@ -2352,6 +2407,13 @@
         showModal('fmx-listBg');
     }
     var _bmMap = {};
+    function openBmView(u) {
+        var l = (_bmMap && _bmMap[u]) || findListing(u); if (!l) return;
+        el('fmx-bmvTitle').textContent = l.title || u;
+        el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
+        bindCards(el('fmx-bmvBody'));
+        showModal('fmx-bmvBg');
+    }
     function openBookmarks() {
         var box = el('fmx-bmBody');
         box.innerHTML = loadHtml();
@@ -2385,9 +2447,15 @@
                     toggleBm(b.getAttribute('data-del')); openBookmarks();
                 });
             });
-            bindList(box);
             qsa(box, '.fmx-bmrow.frz').forEach(function (row) {
                 row.addEventListener('click', function () { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); });
+            });
+            qsa(box, '.fmx-bmrow:not(.frz)').forEach(function (row) {
+                row.addEventListener('click', function (e) {
+                    if (e.target.closest && e.target.closest('[data-del]')) return;
+                    _haptic('light');
+                    openBmView(row.getAttribute('data-open'));
+                });
             });
         }).catch(function () {
             box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>Не загрузилось</h3><p>Попробуй открыть закладки ещё раз.</p></div>';
