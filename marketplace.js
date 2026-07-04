@@ -1626,7 +1626,7 @@
     }
     var _tgsData = {};  // url -> animationData
     var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
-    var STK_PHONE_DX = 3, STK_PHONE_DY = 7;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
+    var STK_PHONE_DX = 0, STK_PHONE_DY = 0;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
     var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
