@@ -476,7 +476,7 @@
             '.fmx-met2 b{color:#565b73;font-weight:600;margin-right:2px;}',
             '.fmx-met2 i{width:3px;height:3px;border-radius:50%;background:#3a3f55;flex-shrink:0;}',
             '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
-            '.fmx-lmet{font-size:10px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-lmet{font-size:10px;color:#8990a8;margin-top:3px;display:flex;align-items:center;gap:3px 6px;flex-wrap:wrap;line-height:1.45;}',
             '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
             '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
             '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}',
@@ -1598,15 +1598,9 @@
             boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         } else if ((s.mode || 'slot') === 'slot') {
             boxSt = 'right:12px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
-        } else if (s.h0) {
-            /* полностью пропорционально: карточка любой ширины/высоты растянет стикер как в превью */
-            var xC = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
-            var yC = ((SEAM + (s.dy || 0)) / s.h0 * 100).toFixed(2);
-            var wC = (p.size / (W || 350) * 100).toFixed(2);
-            boxSt = 'left:' + xC + '%;top:' + yC + '%;width:' + wC + '%;aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%) rotate(' + (s.rot || 0) + 'deg);';
         } else {
-            var xPct = ((s.x != null ? s.x : 0.82) * 100).toFixed(2);
-            boxSt = 'left:calc(' + xPct + '% - ' + (p.size / 2).toFixed(1) + 'px);top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+            /* пиксели 350-макета: та же математика, что в превью — высота и контент карточки не влияют */
+            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         }
         var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
@@ -1896,7 +1890,7 @@
         if (c.health_class) pl.health_class = c.health_class;
         if (c.niche) pl.niche = c.niche;
         pl.accent_color = _ss.color;
-        pl.is_top = !!_ss.glowCard; pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
+        pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
         var act = (_sfmts || []).filter(function (x) { return x.on; });
         pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
         var cm = _ss._media && _ss._media.cover;
