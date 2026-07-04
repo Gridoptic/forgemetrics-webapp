@@ -260,7 +260,7 @@
             '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-start;}',
-            '.fmx-sp svg{display:block;}',
+            '.fmx-sp svg{display:block;margin-bottom:-2px;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}',
             '.fmx-btn{flex:1;border-radius:10px;padding:10px 6px;font-size:11.5px;font-weight:600;cursor:pointer;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 150ms;white-space:nowrap;}',
             '.fmx-btn-p{border:none;color:#fff;}',
@@ -2018,11 +2018,12 @@
     }
 
     /* ===================== cards ===================== */
-    function spark(col) {
+    function spark(col, w, h) {
         var arr = [], i; for (i = 0; i < 9; i++) arr.push(0.7 + Math.sin(i * 1.15) * 0.14 + i * 0.02);
-        var w = 54, h = 16, mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
+        w = w || 60; h = h || 20;
+        var mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
         var lx = 0, ly = 0;
-        var pts = arr.map(function (v, i) { var x = i / 8 * (w - 5) + 2.5, y = h - ((v - mn) / ((mx - mn) || 1)) * (h - 7) - 3; lx = x; ly = y; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
+        var pts = arr.map(function (v, i) { var x = i / 8 * (w - 5) + 2.5, y = h - ((v - mn) / ((mx - mn) || 1)) * (h - 8) - 4; lx = x; ly = y; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
         return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
             '<polygon points="2.5,' + (h - 1.5) + ' ' + pts + ' ' + lx.toFixed(1) + ',' + (h - 1.5) + '" fill="' + col + '" opacity="0.14"/>' +
             '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -2100,12 +2101,13 @@
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _short(cpm) + '₽</b>');
+        bits.push(trafficLight(l));
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + (_nicheMatch(l) ? ' <i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;"></i>' : '') + '</div>' +
             '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
-            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '<span class="fmx-lsp">' + spark(hc) + '</span>' + trafficLight(l, true) + '</div>' +
+            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '<span class="fmx-lsp">' + spark(hc, 56, 24) + '</span></div>' +
             '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
