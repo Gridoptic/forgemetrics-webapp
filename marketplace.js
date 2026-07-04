@@ -1601,7 +1601,8 @@
             boxSt = 'right:12px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         } else {
             /* пиксели 350-макета: та же математика, что в превью — высота и контент карточки не влияют */
-            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+            var mdx = _touchDev ? STK_PHONE_DX : 0, mdy = _touchDev ? STK_PHONE_DY : 0;
+            boxSt = 'left:' + (p.left + mdx).toFixed(1) + 'px;top:' + (p.top + mdy).toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
         }
         var core = '<div class="fmx-stk" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
@@ -1624,6 +1625,8 @@
         return _lotLibs;
     }
     var _tgsData = {};  // url -> animationData
+    var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
+    var STK_PHONE_DX = 3, STK_PHONE_DY = 7;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
     var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
