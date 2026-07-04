@@ -251,6 +251,8 @@
             '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
             '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
             '.fmx-covbdg .fmx-bdg,.fmx-covbdg .fmx-tl{background:rgba(10,13,24,0.55);border-color:rgba(255,255,255,0.14);}',
+            '.fmx-bslot{position:absolute;border:1.5px dashed rgba(255,255,255,0.4);border-radius:10px;background:rgba(255,255,255,0.06);z-index:8;pointer-events:none;transition:all 120ms;}',
+            '.fmx-bslot.hot{border-color:#818cf8;background:rgba(129,140,248,0.18);}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -1159,6 +1161,7 @@
         _ss.starPos = fx.starPos || 'cover';
         _ss.topTag = fx.topTag || 'on';
         _ss.badgeLayout = fx.badgeLayout || 'body';
+        _ss.badgeMap = fx.badgeMap || null;
         if (l.title_style) _ss.font = l.title_style;
         if (l.avatar_type) _ss.avatar = l.avatar_type;
         if (l.avatar_emoji) _ss.avEmoji = l.avatar_emoji;
@@ -1440,7 +1443,7 @@
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
-        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
+        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); if (key === 'badgeLayout') _ss.badgeMap = null; qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
         var mb = el('fmx-modboost');
@@ -1454,7 +1457,7 @@
                     loadMyListings().then(function () { renderHero(); });
                 } else { toast((r && r.error) || 'Не получилось'); }
                 mb.disabled = false;
-            }).catch(function () { toast('Ошибка сети'); mb.disabled = false; });
+            }).catch(function () { toast('Сервер не ответил: проверь, что бэкенд-файлы залиты и forgemetrics-api перезапущен'); mb.disabled = false; });
         });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
@@ -1831,6 +1834,81 @@
         st.addEventListener('mousedown', start);
         st.addEventListener('touchstart', start, { passive: false });
     }
+    function bindBadgeDrag(cardEl) {
+        qsa(cardEl, '[data-bkey]').forEach(function (bd) {
+            var startX = 0, startY = 0, dragging = false, ghost = null, slots = null;
+            function k() { var r = cardEl.getBoundingClientRect(); return r.width ? r.width / 350 : 1; }
+            function mkSlots() {
+                var cov = cardEl.querySelector('.fmx-cov');
+                var covTop = cov ? (cov.offsetTop + cov.offsetHeight - 40) : 44;
+                var bodyRow = cardEl.querySelector('.fmx-cb .fmx-badges');
+                var crow = cardEl.querySelector('.fmx-crow');
+                var bodyTop = bodyRow ? bodyRow.offsetTop : (crow ? crow.offsetTop + crow.offsetHeight + 2 : 150);
+                cardEl.insertAdjacentHTML('beforeend',
+                    '<div class="fmx-bslot" data-slot="cover" style="left:8px;right:46px;top:' + covTop + 'px;height:32px;"></div>' +
+                    '<div class="fmx-bslot" data-slot="body" style="left:10px;right:10px;top:' + (bodyTop - 3) + 'px;height:29px;"></div>');
+                return qsa(cardEl, '.fmx-bslot');
+            }
+            function hitSlot(cx, cy) {
+                var hit = null;
+                slots.forEach(function (s) {
+                    var r = s.getBoundingClientRect();
+                    var on = cx >= r.left && cx <= r.right && cy >= r.top - 8 && cy <= r.bottom + 8;
+                    s.classList.toggle('hot', on);
+                    if (on) hit = s.getAttribute('data-slot');
+                });
+                return hit;
+            }
+            function begin(cx, cy) {
+                dragging = true; bd.style.opacity = '0.3'; slots = mkSlots();
+                ghost = bd.cloneNode(true);
+                ghost.style.cssText = 'position:absolute;z-index:99;pointer-events:none;margin:0;opacity:0.9;';
+                cardEl.appendChild(ghost);
+                follow(cx, cy);
+            }
+            function follow(cx, cy) {
+                var r = cardEl.getBoundingClientRect(), kk = k();
+                ghost.style.left = ((cx - r.left) / kk - ghost.offsetWidth / 2) + 'px';
+                ghost.style.top = ((cy - r.top) / kk - ghost.offsetHeight / 2) + 'px';
+            }
+            function finish(cx, cy) {
+                var slot = hitSlot(cx, cy);
+                qsa(cardEl, '.fmx-bslot').forEach(function (s) { s.remove(); });
+                if (ghost) ghost.remove();
+                bd.style.opacity = '';
+                dragging = false;
+                if (slot) {
+                    if (!_ss.badgeMap) {
+                        _ss.badgeMap = {};
+                        var seed = _previewListing();
+                        badgeItems(seed).forEach(function (it) { _ss.badgeMap[it.k] = _badgePlace(seed, it.k); });
+                    }
+                    _ss.badgeMap[bd.getAttribute('data-bkey')] = slot;
+                    _haptic('light');
+                    renderHero();
+                }
+            }
+            function onDown(e) {
+                var t = e.touches ? e.touches[0] : e;
+                startX = t.clientX; startY = t.clientY; dragging = false;
+                var mm = function (ev) {
+                    var p = ev.touches ? ev.touches[0] : ev;
+                    if (!dragging && Math.abs(p.clientX - startX) + Math.abs(p.clientY - startY) > 7) begin(p.clientX, p.clientY);
+                    if (dragging) { ev.preventDefault(); follow(p.clientX, p.clientY); hitSlot(p.clientX, p.clientY); }
+                };
+                var up = function (ev) {
+                    document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
+                    document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                    if (dragging) { var p = (ev.changedTouches && ev.changedTouches[0]) || ev; finish(p.clientX, p.clientY); }
+                };
+                document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
+                document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
+            }
+            bd.style.cursor = 'grab';
+            bd.addEventListener('mousedown', onDown);
+            bd.addEventListener('touchstart', onDown, { passive: true });
+        });
+    }
     function bindStickerDrag(cardEl) {
         var grab = el('fmx-stkGrab'), vis = el('fmx-stkPrev');
         if (!grab || !vis || !cardEl) return;
@@ -1949,7 +2027,7 @@
         else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body' };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body', badgeMap: _ss.badgeMap || null };
         pl.emoji_attachments_json = _ss.att || {};
         pl.custom_text = _ss._desc || '';
         pl.slots_note = _ss._slots || '';
@@ -1985,6 +2063,7 @@
             });
         });
         qsa(card, '[data-act]').forEach(function (b) { b.removeAttribute('data-act'); });
+        bindBadgeDrag(card);
         var hl = el('fmx-hlist');
         if (hl) {
             hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">ТАК ВЫГЛЯДИТ В СПИСКЕ</div>' + zw(listItem(pl));
@@ -2045,7 +2124,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body' },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeLayout: _ss.badgeLayout || 'body', badgeMap: _ss.badgeMap || null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -2074,34 +2153,48 @@
             '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
             '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
     }
-    function badges(l, part) {
+    function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
+    function badgeItems(l) {
+        var items = [];
+        items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
         var dealN = l.deals_count || 0;
-        var deal = (l.show_deals !== false) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>' : '';
-        if (part === 'deal') return deal;
-        if (part === 'status') deal = '';
-        var mm = trafficLight(l) + deal + (_nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '');
+        if (l.show_deals !== false) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
+        if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>') });
         if (l.badges && l.badges.length) {
-            var m = { match: ['fmx-b-match', 'ti-target-arrow', 'В точку'], live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
-            return mm + l.badges.filter(function (b) { return b !== 'match'; }).map(function (b) { var x = m[b]; return x ? '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>' : ''; }).join('');
+            var m = { live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
+            l.badges.filter(function (b) { return b !== 'match'; }).forEach(function (b) {
+                var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
+            });
+        } else {
+            var rr = _reachRate(l);
+            if (rr != null && rr >= 10) items.push({ k: 'live', h: _bk('live', '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>') });
+            items.push({ k: 'safe', h: _bk('safe', '<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span>') });
+            if (l.subscribers && l.subscribers >= 100000) items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
         }
-        var out = []; out.push(mm);
-        var rr = _reachRate(l);
-        if (rr != null && rr >= 10) out.push('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>');
-        out.push('<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span>');
-        if (l.subscribers && l.subscribers >= 100000) out.push('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>');
-        return out.join('');
+        return items;
+    }
+    function _badgePlace(l, k) {
+        var fx = l.effects_json || {};
+        if (fx.badgeMap && fx.badgeMap[k]) return fx.badgeMap[k];
+        var bl = fx.badgeLayout || 'body';
+        if (bl === 'cover') return 'cover';
+        if (bl === 'split') return k === 'deal' ? 'body' : 'cover';
+        return 'body';
+    }
+    function badges(l, part) {
+        var items = badgeItems(l);
+        if (part === 'deal') return items.filter(function (i) { return i.k === 'deal'; }).map(function (i) { return i.h; }).join('');
+        if (part === 'status') return items.filter(function (i) { return i.k !== 'deal'; }).map(function (i) { return i.h; }).join('');
+        return items.map(function (i) { return i.h; }).join('');
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
-        var bl = ((l.effects_json || {}).badgeLayout) || 'body';
-        var covBdg = '', bodyBdg = '';
-        if (bl === 'cover') covBdg = '<div class="fmx-covbdg">' + badges(l) + '</div>';
-        else if (bl === 'split') {
-            covBdg = '<div class="fmx-covbdg">' + badges(l, 'status') + '</div>';
-            var dOnly = badges(l, 'deal');
-            bodyBdg = dOnly ? '<div class="fmx-badges">' + dOnly + '</div>' : '';
-        } else bodyBdg = '<div class="fmx-badges">' + badges(l) + '</div>';
+        var bItems = badgeItems(l);
+        var covArr = [], bodyArr = [];
+        bItems.forEach(function (it) { (_badgePlace(l, it.k) === 'cover' ? covArr : bodyArr).push(it.h); });
+        var covBdg = covArr.length ? '<div class="fmx-covbdg">' + covArr.join('') + '</div>' : '';
+        var bodyBdg = bodyArr.length ? '<div class="fmx-badges">' + bodyArr.join('') + '</div>' : '';
         var stk = l.sticker_json || l.sticker;
         var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
@@ -2195,10 +2288,27 @@
         });
     }
     document.addEventListener('click', function (e) {
-        var b = e.target && e.target.closest ? e.target.closest('[data-phide]') : null;
-        if (!b) return;
-        _pulseHide = true;
-        var d = b.closest('.fmx-pday'); if (d) d.remove();
+        var t = e.target; if (!t || !t.closest) return;
+        var b = t.closest('[data-phide]');
+        if (b) { _pulseHide = true; var d = b.closest('.fmx-pday'); if (d) d.remove(); return; }
+        var del = t.closest('#fmx-bmBody [data-del]');
+        if (del) {
+            e.stopPropagation();
+            if (!del.classList.contains('arm')) {
+                del.classList.add('arm'); _haptic('light');
+                setTimeout(function () { del.classList.remove('arm'); }, 2200);
+                return;
+            }
+            toggleBm(del.getAttribute('data-del')); openBookmarks();
+            return;
+        }
+        var row = t.closest('#fmx-bmBody .fmx-bmrow');
+        if (row) {
+            if (row.classList.contains('frz')) { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); return; }
+            _haptic('light');
+            openBmView(row.getAttribute('data-open'));
+            return;
+        }
     });
     var _rsT = null;
     window.addEventListener('resize', function () {
@@ -2256,10 +2366,12 @@
     function openTg(u) { _haptic('light'); var url = 'https://t.me/' + u; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); } }
     function toggleBm(u) {
         if (!u) return; _haptic('light');
-        if (_bookmarks[u]) { delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () {}); }
-        else { _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () {}); }
+        var on;
+        if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () {}); }
+        else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () {}); }
         updateBmCount();
-        if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+        /* точечно: звёзды обновляются на месте, раскрытые строки не сворачиваются */
+        qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', on); });
     }
 
     /* ===================== modals ===================== */
@@ -2409,6 +2521,12 @@
     var _bmMap = {};
     function openBmView(u) {
         var l = (_bmMap && _bmMap[u]) || findListing(u); if (!l) return;
+        if (!el('fmx-bmvBg')) {
+            var bmv = document.createElement('div'); bmv.className = 'fmx-mbg'; bmv.id = 'fmx-bmvBg';
+            bmv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> <span id="fmx-bmvTitle"></span></h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmvBody"></div></div>';
+            document.body.appendChild(bmv);
+            bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
+        }
         el('fmx-bmvTitle').textContent = l.title || u;
         el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
         bindCards(el('fmx-bmvBody'));
@@ -2436,27 +2554,7 @@
             }).join('');
             scaleCards(box);
             hydrateTgs(box);
-            qsa(box, '[data-del]').forEach(function (b) {
-                b.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    if (!b.classList.contains('arm')) {
-                        b.classList.add('arm'); _haptic('light');
-                        setTimeout(function () { b.classList.remove('arm'); }, 2200);
-                        return;
-                    }
-                    toggleBm(b.getAttribute('data-del')); openBookmarks();
-                });
-            });
-            qsa(box, '.fmx-bmrow.frz').forEach(function (row) {
-                row.addEventListener('click', function () { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); });
-            });
-            qsa(box, '.fmx-bmrow:not(.frz)').forEach(function (row) {
-                row.addEventListener('click', function (e) {
-                    if (e.target.closest && e.target.closest('[data-del]')) return;
-                    _haptic('light');
-                    openBmView(row.getAttribute('data-open'));
-                });
-            });
+            /* клики закладок обслуживает постоянный делегат на document */
         }).catch(function () {
             box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>Не загрузилось</h3><p>Попробуй открыть закладки ещё раз.</p></div>';
         });
