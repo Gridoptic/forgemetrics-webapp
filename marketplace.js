@@ -529,6 +529,21 @@
             '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-ptv{font-size:15px;font-weight:800;color:#fff;margin:5px 0 3px;}',
             '.fmx-pts{font-size:9.5px;color:#8990a8;}',
+            '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
+            '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
+            '.fmx-revs{margin-top:12px;padding:11px 12px;background:rgba(245,158,11,0.05);border:0.5px solid rgba(245,158,11,0.15);border-radius:11px;}',
+            '.fmx-revs-t{font-size:11px;font-weight:700;color:#e8e8ed;margin-bottom:7px;display:flex;align-items:center;gap:5px;}',
+            '.fmx-rev{display:flex;flex-direction:column;gap:2px;padding:7px 0;border-top:0.5px solid rgba(255,255,255,0.05);}',
+            '.fmx-rev:first-of-type{border-top:none;padding-top:0;}',
+            '.fmx-rev-s{color:#f59e0b;font-size:11px;letter-spacing:1px;}',
+            '.fmx-rev-x{font-size:11.5px;color:#c9cbe0;line-height:1.5;overflow-wrap:anywhere;}',
+            '.fmx-rev-a{font-size:9.5px;color:#565b73;}',
+            '.fmx-dealtgl{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#c9cbe0;margin-top:12px;cursor:pointer;}',
+            '.fmx-dealtgl input{accent-color:#818cf8;width:15px;height:15px;}',
+            '.fmx-pend{margin-top:12px;padding:11px 12px;background:rgba(245,158,11,0.06);border:0.5px solid rgba(245,158,11,0.2);border-radius:12px;}',
+            '.fmx-pend-t{font-size:11px;font-weight:700;color:#e8e8ed;margin-bottom:8px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-pend-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;font-size:11px;color:#8990a8;border-top:0.5px solid rgba(255,255,255,0.05);}',
+            '.fmx-pend-r:first-of-type{border-top:none;}',
             '.fmx-tlm i{width:6px;height:6px;}',
             '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
             '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
@@ -976,6 +991,61 @@
             renderNsBody();
         }).catch(function () { _nsubs = []; renderNsBody(); });
     }
+    function renderDealBox(l) {
+        var box = el('fmx-dealBox'); if (!box) return;
+        apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
+            if (!r || !r.ok) return;
+            if (r.state === 'pending') {
+                box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>';
+            } else if (r.state === 'confirmed') {
+                box.innerHTML = '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
+            } else if (r.state === 'reviewed') {
+                box.innerHTML = '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен — спасибо!</div>';
+            } else {
+                box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>';
+                el('fmx-dealGo').addEventListener('click', function () {
+                    uiConfirm('Отмечай только реальную сделку: владелец получит запрос на подтверждение, и после него ты сможешь оставить отзыв.', function () {
+                        apiPost('/api/v1/marketplace/deals', { listing_id: l.id }).then(function (rr) {
+                            if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не получилось'); return; }
+                            _haptic('success'); toast('Отправлено владельцу на подтверждение');
+                            renderDealBox(l);
+                        }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+                    });
+                });
+            }
+        }).catch(function () {});
+    }
+    function renderReviews(l) {
+        var box = el('fmx-lsRev'); if (!box) return;
+        apiGet('/api/v1/marketplace/listings/' + l.id + '/reviews').then(function (r) {
+            if (!r || !r.ok || !r.reviews || !r.reviews.length) return;
+            box.innerHTML = '<div class="fmx-revs"><div class="fmx-revs-t"><i class="ti ti-star-filled" style="color:#f59e0b;"></i> ' + (l.rating_avg || '') + ' · ' + l.reviews_count + ' ' + _plural(l.reviews_count, 'отзыв', 'отзыва', 'отзывов') + '</div>' +
+                r.reviews.map(function (rv) {
+                    var stars = '★★★★★'.slice(0, rv.rating) + '☆☆☆☆☆'.slice(0, 5 - rv.rating);
+                    return '<div class="fmx-rev"><span class="fmx-rev-s">' + stars + '</span>' + (rv.text ? '<span class="fmx-rev-x">' + _esc(rv.text) + '</span>' : '') + '<span class="fmx-rev-a">' + _ago(rv.created_at) + '</span></div>';
+                }).join('') + '</div>';
+        }).catch(function () {});
+    }
+    function openReviewForm(dealId) {
+        var sel = { v: 5 };
+        el('fmx-revBody').innerHTML =
+            '<span class="fmx-lbl">Оценка</span><div class="fmx-fxw" id="fmx-rev-r">' +
+            [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx' + (n === 5 ? ' on' : '') + '" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Пара слов (необязательно)</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="Как прошла сделка? Вышел ли пост вовремя, честные ли охваты."></textarea>' +
+            '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;"><i class="ti ti-send"></i> Отправить отзыв</button>';
+        qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
+        el('fmx-rev-send').addEventListener('click', function () {
+            var btn = this; btn.disabled = true;
+            apiPost('/api/v1/marketplace/deals/' + dealId + '/review', { rating: sel.v, text: el('fmx-rev-t').value }).then(function (r) {
+                btn.disabled = false;
+                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось'); return; }
+                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен — спасибо!');
+                _feed = null; _feedState = 'idle';
+            }).catch(function () { btn.disabled = false; uiAlert('Не получилось — попробуй ещё раз.'); });
+        });
+        showModal('fmx-revBg');
+    }
     function openReqForm() {
         var uname = '';
         try { uname = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) || ''; } catch (e) {}
@@ -1054,6 +1124,7 @@
         _ss.listingId = l.id;
         _ss._status = l.status || null;
         _ss.sticker = l.sticker_json || l.sticker || null;
+        _ss.showDeals = l.show_deals !== false;
         if (l.accent_color) _ss.color = l.accent_color;
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
@@ -1090,7 +1161,7 @@
         _ss._slots = l.slots_note || '';
     }
     function selectChannel(id) {
-        _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.channelId = id;
+        _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; _ss.channelId = id;
         var l = listingForChannel(id); if (l) hydrate(l);
         _ss.channelId = id; _secCreate = 'cover';
         paintCreate();
@@ -1122,6 +1193,8 @@
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' : '') +
+            '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
+            (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
@@ -1129,6 +1202,9 @@
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
         loadStickerPane();
+        var sdT = el('fmx-showdeals');
+        if (sdT) sdT.addEventListener('change', function () { _ss.showDeals = sdT.checked; renderHero(); });
+        if (_ss.listingId) loadPendingDeals();
         var lp = el('fmx-lpause');
         if (lp) lp.addEventListener('click', function () {
             var act = _ss._status === 'paused' ? 'resume' : 'pause';
@@ -1551,6 +1627,31 @@
             });
         }).catch(function () {});
     }
+    function loadPendingDeals() {
+        var box = el('fmx-dealsPend'); if (!box) return;
+        apiGet('/api/v1/marketplace/deals/pending').then(function (r) {
+            if (!r || !r.ok || !r.deals || !r.deals.length) { box.innerHTML = ''; return; }
+            box.innerHTML = '<div class="fmx-pend"><div class="fmx-pend-t"><i class="ti ti-heart-handshake" style="color:#f59e0b;"></i> Подтверждение сделок</div>' +
+                r.deals.map(function (d) {
+                    return '<div class="fmx-pend-r" data-did="' + d.deal_id + '"><span>' + (d.buyer_username ? '@' + _esc(d.buyer_username) : 'Рекламодатель') + ' · ' + _ago(d.created_at) + '</span>' +
+                        '<span style="display:flex;gap:6px;"><button class="fmx-btn" data-dacc="' + d.deal_id + '" style="padding:6px 11px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-check"></i>Да</button>' +
+                        '<button class="fmx-btn" data-ddec="' + d.deal_id + '" style="padding:6px 11px;"><i class="ti ti-x"></i>Нет</button></span></div>';
+                }).join('') +
+                '<div style="font-size:10px;color:#565b73;margin-top:6px;">Подтверждай только реальные сделки: счётчик — твоя репутация.</div></div>';
+            function respond(id, acc) {
+                apiPost('/api/v1/marketplace/deals/' + id + '/respond', { accept: acc }).then(function (r2) {
+                    if (r2 && r2.ok === false) { uiAlert(r2.error || 'Не получилось'); return; }
+                    _haptic('success');
+                    toast(acc ? 'Сделка подтверждена — счётчик вырос' : 'Отклонено');
+                    var row = box.querySelector('[data-did="' + id + '"]'); if (row) row.remove();
+                    if (acc) { _feed = null; _feedState = 'idle'; }
+                    if (!box.querySelector('[data-did]')) box.innerHTML = '';
+                }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+            }
+            qsa(box, '[data-dacc]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-dacc'), true); }); });
+            qsa(box, '[data-ddec]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-ddec'), false); }); });
+        }).catch(function () {});
+    }
     function loadStickerPane() {
         var box = el('fmx-stkBody'); if (!box) return;
         if (_stickers) { renderStickerPane(); return; }
@@ -1848,6 +1949,7 @@
             avatar_type: _ss.avatar,
             avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
             sticker_json: _ss.sticker || null,
+            show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
             effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover' },
@@ -1879,7 +1981,8 @@
             '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
     }
     function badges(l) {
-        var mm = trafficLight(l) + (_nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '');
+        var deal = (l.show_deals !== false && l.deals_count) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + l.deals_count + ' ' + _plural(l.deals_count, 'сделка', 'сделки', 'сделок') + '</span>' : '';
+        var mm = trafficLight(l) + deal + (_nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '');
         if (l.badges && l.badges.length) {
             var m = { match: ['fmx-b-match', 'ti-target-arrow', 'В точку'], live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
             return mm + l.badges.filter(function (b) { return b !== 'match'; }).map(function (b) { var x = m[b]; return x ? '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>' : ''; }).join('');
@@ -2054,6 +2157,12 @@
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
 
+        var rv = document.createElement('div'); rv.className = 'fmx-mbg'; rv.id = 'fmx-revBg';
+        rv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Отзыв о сделке</h2><p>Виден всем в развороте карточки</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-revBody"></div></div>';
+        document.body.appendChild(rv);
+        rv.addEventListener('click', function (e) { if (e.target === rv) hideModal('fmx-revBg'); });
+        qsa(rv, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-revBg'); }); });
+
         var ns = document.createElement('div'); ns.className = 'fmx-mbg'; ns.id = 'fmx-nsBg';
         ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> Уведомления о заявках</h2><p>Пришлём в бота, когда рекламодатель ищет каналы твоей ниши</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
         document.body.appendChild(ns);
@@ -2144,11 +2253,12 @@
             (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" data-bm="' + _esc(u) + '"><i class="ti ti-star"></i>В закладки</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать владельцу</button></div>' +
-            (l.id ? '<button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
+            (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
         el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) { b.addEventListener('click', function () { toggleBm(b.getAttribute('data-bm')); }); });
         el('fmx-listBody').querySelectorAll('[data-w]').forEach(function (b) { b.addEventListener('click', function () { openTg(b.getAttribute('data-w')); }); });
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
+        if (l.id) { renderDealBox(l); if (l.reviews_count) renderReviews(l); }
         showModal('fmx-listBg');
     }
     function openBookmarks() {
