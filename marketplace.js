@@ -224,6 +224,10 @@
             '.fmx-empty h3{margin:14px 0 5px;font-size:15px;font-weight:700;color:#e8e8ed;}',
             '.fmx-empty p{margin:0;font-size:12.5px;line-height:1.5;max-width:300px;margin-left:auto;margin-right:auto;}',
             '.fmx-load{text-align:center;padding:54px;color:#8990a8;}',
+            '.fmx-cwrap{width:100%;position:relative;overflow:visible;}',
+            '.fmx-cwrap>.fmx-card{width:350px;transform-origin:top left;}',
+            '.fmx-zw{width:100%;position:relative;}',
+            '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
             '.fmx-card{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
@@ -780,7 +784,7 @@
         if (_catState === 'loading') body = loadHtml();
         else if (_catState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_catalog || !_catalog.length) body = emptyHtml('ti-list-search', 'База скоро наполнится', 'Здесь будет общая база каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return listItem(x, false, true); }).join('') + '</div>');
+        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(host);
     }
@@ -825,7 +829,7 @@
         else {
             var feed = _applySort(_feed);
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы».');
-            else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return listItem(x); }).join('') + '</div>');
+            else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return zw(listItem(x)); }).join('') + '</div>');
         }
         sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Здесь каналы продают рекламу. Смотри метрики, сравнивай цены и пиши владельцу — сделка напрямую, без комиссии.</div>' + todayLine() + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(sub);
@@ -876,10 +880,11 @@
         if (_reqState === 'loading') body = loadHtml();
         else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Будь первым: размести заявку — владельцы подходящих каналов напишут сами.');
-        else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(reqCard).join('') + '</div>';
+        else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
             '<div style="display:flex;gap:8px;margin:0 0 14px;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
             '<button class="fmx-btn" id="fmx-nbell" title="Уведомления о заявках в нишах" style="flex:0 0 auto;padding:0 15px;"><i class="ti ti-bell"></i></button></div>' + body;
+        scaleCards(sub);
         el('fmx-newreq').addEventListener('click', openReqForm);
         el('fmx-nbell').addEventListener('click', openNicheSubs);
         qsa(sub, '[data-rrep]').forEach(function (b) { b.addEventListener('click', function () { openComplaint({ request_id: +b.getAttribute('data-rrep') }); }); });
@@ -1624,7 +1629,13 @@
         return _lotLibs;
     }
     var _tgsData = {};  // url -> animationData
+    var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
+        _lotAnims = _lotAnims.filter(function (a) {
+            if (a.el && a.el.isConnected) return true;
+            try { a.anim.destroy(); } catch (e) {}
+            return false;
+        });
         var nodes = qsa(root || document, '.fmx-stk-lot[data-tgs]:not([data-done])');
         if (!nodes.length) return;
         loadLottie().then(function () {
@@ -1637,6 +1648,7 @@
                     try {
                         var a = lottie.loadAnimation({ container: n, renderer: 'svg', loop: true, autoplay: anim, animationData: data });
                         if (!anim) a.goToAndStop(0, true);
+                        _lotAnims.push({ el: n, anim: a });
                     } catch (e) {}
                 };
                 if (_tgsData[url]) { play(_tgsData[url]); return; }
@@ -1760,7 +1772,8 @@
             var mm = function (ev) {
                 var t = ev.touches ? ev.touches[0] : ev;
                 var r = cardEl.getBoundingClientRect();
-                var y = Math.max(STAR_SLOTS.top, Math.min(t.clientY - r.top - 15, STAR_SLOTS.body));
+                var k = r.width ? r.width / 350 : 1;
+                var y = Math.max(STAR_SLOTS.top, Math.min((t.clientY - r.top) / k - 15, STAR_SLOTS.body));
                 st.style.top = y + 'px'; moved = true;
             };
             var up = function (ev) {
@@ -1782,7 +1795,7 @@
     function bindStickerDrag(cardEl) {
         var grab = el('fmx-stkGrab'), vis = el('fmx-stkPrev');
         if (!grab || !vis || !cardEl) return;
-        function dims() { var r = cardEl.getBoundingClientRect(); return { W: r.width, H: Math.max(r.height, SEAM + 40), rect: r }; }
+        function dims() { var r = cardEl.getBoundingClientRect(); var k = r.width ? r.width / 350 : 1; return { W: 350, H: Math.max(cardEl.offsetHeight || 0, SEAM + 40), rect: r, k: k }; }
         function applyBox() {
             var d = dims(), p = stkPos(_ss.sticker, d.W);
             [vis, grab].forEach(function (e) {
@@ -1798,8 +1811,8 @@
         function center() { var d = dims(); return { cx: (_ss.sticker.x || 0.82) * d.W, cy: SEAM + (_ss.sticker.dy || 0) }; }
         function move(clientX, clientY) {
             var d = dims();
-            var cx = Math.max(10, Math.min(clientX - d.rect.left, d.W - 10));
-            var cy = Math.max(10, Math.min(clientY - d.rect.top, d.H - 10));
+            var cx = Math.max(10, Math.min((clientX - d.rect.left) / d.k, d.W - 10));
+            var cy = Math.max(10, Math.min((clientY - d.rect.top) / d.k, d.H - 10));
             _ss.sticker.x = cx / d.W; _ss.sticker.dy = Math.round(cy - SEAM); _ss.sticker.anchor = 'seam';
             applyBox();
         }
@@ -1844,7 +1857,7 @@
                 var mm = function (ev) {
                     var t = ev.touches ? ev.touches[0] : ev;
                     var d = dims(), c = center();
-                    onMove(t.clientX - d.rect.left - c.cx, t.clientY - d.rect.top - c.cy, d);
+                    onMove((t.clientX - d.rect.left) / d.k - c.cx, (t.clientY - d.rect.top) / d.k - c.cy, d);
                 };
                 var mu = function () {
                     document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu);
@@ -1909,11 +1922,10 @@
         var pl = _previewListing();
         hero.innerHTML = fullCard(pl);
         var card = hero.querySelector('.fmx-card'); if (!card) return;
-        card.style.width = '100%';
-        card.style.maxWidth = '350px';  /* эталон: прежний широкий вид превью; лента подстроена под него */
+        scaleCards(hero);
         /* --- редакторские слои поверх боевой карточки --- */
         if (_ss.sticker) {
-            card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, card.clientWidth || 350, true, true));
+            card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, 350, true, true));
             bindStickerDrag(card);
         }
         var st = card.querySelector('.fmx-star');
@@ -1933,6 +1945,11 @@
             });
         });
         qsa(card, '[data-act]').forEach(function (b) { b.removeAttribute('data-act'); });
+        var hl = el('fmx-hlist');
+        if (hl) {
+            hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">ТАК ВЫГЛЯДИТ В СПИСКЕ</div>' + zw(listItem(pl));
+            scaleCards(hl);
+        }
         hydrateTgs(hero);
         renderMini(_ss.color, pl.title, _priceFrom(pl));
     }
@@ -2052,7 +2069,7 @@
         var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
-        return '<div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
+        return '<div class="fmx-cwrap"><div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             '<div class="fmx-cov">' + covHtml +
             '</div>' +
             (top ? '<span class="fmx-tag gold"><i class="ti ti-rocket"></i> Топ месяца</span>' : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
@@ -2068,7 +2085,7 @@
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div>';
+            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
     }
     function simpleCard(l) {
         var accent = _accent(l), hc = _healthColor(l), t = l.title || l.username || '?';
@@ -2111,8 +2128,24 @@
         });
     }
 
+    function zw(html) { return '<div class="fmx-zw">' + html + '</div>'; }
+    function scaleCards(scope) {
+        qsa(scope || document, '.fmx-cwrap,.fmx-zw').forEach(function (w) {
+            var card = w.firstElementChild; if (!card) return;
+            var ww = w.clientWidth; if (!ww) return;
+            var k = Math.min(1, ww / 350);
+            card.style.transform = k < 0.999 ? 'scale(' + k.toFixed(4) + ')' : '';
+            w.style.height = Math.round(card.offsetHeight * k) + 'px';
+        });
+    }
+    var _rsT = null;
+    window.addEventListener('resize', function () {
+        clearTimeout(_rsT);
+        _rsT = setTimeout(function () { scaleCards(document); }, 120);
+    });
     function bindCards(scope) {
         hydrateTgs(scope);
+        scaleCards(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-u')); }); });
