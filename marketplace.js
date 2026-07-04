@@ -827,8 +827,10 @@
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Будь первым: размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(reqCard).join('') + '</div>';
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
-            '<button class="fmx-save" id="fmx-newreq" style="margin:0 0 14px;"><i class="ti ti-plus"></i> Разместить заявку</button>' + body;
+            '<div style="display:flex;gap:8px;margin:0 0 14px;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
+            '<button class="fmx-btn" id="fmx-nbell" title="Уведомления о заявках в нишах" style="flex:0 0 auto;padding:0 15px;"><i class="ti ti-bell"></i></button></div>' + body;
         el('fmx-newreq').addEventListener('click', openReqForm);
+        el('fmx-nbell').addEventListener('click', openNicheSubs);
         qsa(sub, '[data-rrep]').forEach(function (b) { b.addEventListener('click', function () { openComplaint({ request_id: +b.getAttribute('data-rrep') }); }); });
         qsa(sub, '[data-rwrite]').forEach(function (b) {
             b.addEventListener('click', function () {
@@ -899,6 +901,49 @@
             }).catch(function () { btn.disabled = false; uiAlert('Не удалось отправить — попробуй ещё раз.'); });
         });
         showModal('fmx-repBg');
+    }
+    var _nsubs = null;
+    function renderNsBody() {
+        var box = el('fmx-nsBody'); if (!box) return;
+        var chips = (_nsubs && _nsubs.length)
+            ? '<div class="fmx-fxw" style="margin-bottom:4px;">' + _nsubs.map(function (n) {
+                return '<span class="fmx-fx on" style="display:inline-flex;align-items:center;gap:6px;">' + _esc(n) + '<i class="ti ti-x" data-nsdel="' + _esc(n) + '" style="cursor:pointer;font-size:11px;"></i></span>';
+            }).join('') + '</div>'
+            : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">Подписок пока нет. Ниша твоей карточки подписывается автоматически при публикации.</div>';
+        box.innerHTML = chips +
+            '<span class="fmx-lbl fmx-mt2">Добавить нишу</span>' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="например, Криптовалюты" style="flex:1;">' +
+            '<button class="fmx-btn" id="fmx-ns-add" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-plus"></i></button></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">Ниша сравнивается с той, что указал рекламодатель в заявке. Уведомления приходят от @ForgeMetricsBot.</div>';
+        var addFn = function () {
+            var v = el('fmx-ns-inp').value.trim();
+            if (!v) return;
+            apiPost('/api/v1/marketplace/niche_subs', { niche: v, on: true }).then(function (r) {
+                if (r && r.ok === false) { uiAlert(r.error || 'Не получилось'); return; }
+                var lv = v.toLowerCase();
+                if (_nsubs.indexOf(lv) < 0) _nsubs.push(lv);
+                _nsubs.sort(); _haptic('success'); renderNsBody();
+            }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+        };
+        el('fmx-ns-add').addEventListener('click', addFn);
+        el('fmx-ns-inp').addEventListener('keydown', function (e) { if (e.key === 'Enter') addFn(); });
+        qsa(box, '[data-nsdel]').forEach(function (x) {
+            x.addEventListener('click', function () {
+                var n = x.getAttribute('data-nsdel');
+                apiPost('/api/v1/marketplace/niche_subs', { niche: n, on: false }).then(function () {
+                    _nsubs = _nsubs.filter(function (v) { return v !== n; });
+                    _haptic('light'); renderNsBody();
+                }).catch(function () {});
+            });
+        });
+    }
+    function openNicheSubs() {
+        el('fmx-nsBody').innerHTML = loadHtml();
+        showModal('fmx-nsBg');
+        apiGet('/api/v1/marketplace/niche_subs').then(function (r) {
+            _nsubs = (r && r.niches) ? r.niches : [];
+            renderNsBody();
+        }).catch(function () { _nsubs = []; renderNsBody(); });
     }
     function openReqForm() {
         var uname = '';
@@ -1977,6 +2022,12 @@
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
+
+        var ns = document.createElement('div'); ns.className = 'fmx-mbg'; ns.id = 'fmx-nsBg';
+        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> Уведомления о заявках</h2><p>Пришлём в бота, когда рекламодатель ищет каналы твоей ниши</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
+        document.body.appendChild(ns);
+        ns.addEventListener('click', function (e) { if (e.target === ns) hideModal('fmx-nsBg'); });
+        qsa(ns, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-nsBg'); }); });
 
         var rp = document.createElement('div'); rp.className = 'fmx-mbg'; rp.id = 'fmx-repBg';
         rp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-flag" style="color:#ef4444;"></i> Пожаловаться</h2><p>Разберём вручную, автор жалобу не увидит</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-repBody"></div></div>';
