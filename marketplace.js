@@ -9,6 +9,17 @@
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
     var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var m = sp && /^card_(\d+)$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
+    if (_deepCard) {
+        /* пришли по ссылке на карточку: сами открываем Площадку, карточка развернётся после загрузки ленты */
+        var _deepTry = 0;
+        var _deepT = setInterval(function () {
+            _deepTry++;
+            if (document.body && document.readyState !== 'loading') {
+                clearInterval(_deepT);
+                setTimeout(function () { try { window.__openMarketplace(); setTimeout(function () { setMainTab('market'); }, 200); } catch (e) {} }, 350);
+            } else if (_deepTry > 20) { clearInterval(_deepT); }
+        }, 300);
+    }
     var _reqs = null, _reqState = 'idle';
     var _pulse = null, _pulseTs = 0;
     var _channels = [], _myListings = [], _bookmarks = {};
