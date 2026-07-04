@@ -1838,26 +1838,38 @@
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
             var startX = 0, startY = 0, dragging = false, ghost = null, slots = null;
             function k() { var r = cardEl.getBoundingClientRect(); return r.width ? r.width / 350 : 1; }
+            function _ly(elm, dy) { /* логический top элемента относительно карточки, px 350-макета */
+                var cr = cardEl.getBoundingClientRect(), kk = cr.width ? cr.width / 350 : 1;
+                return (elm.getBoundingClientRect().top - cr.top) / kk + (dy || 0);
+            }
             function mkSlots() {
                 var cov = cardEl.querySelector('.fmx-cov');
-                var covTop = cov ? (cov.offsetTop + cov.offsetHeight - 40) : 44;
-                var bodyRow = cardEl.querySelector('.fmx-cb .fmx-badges');
+                var met = cardEl.querySelector('.fmx-met');
                 var crow = cardEl.querySelector('.fmx-crow');
-                var bodyTop = bodyRow ? bodyRow.offsetTop : (crow ? crow.offsetTop + crow.offsetHeight + 2 : 150);
-                cardEl.insertAdjacentHTML('beforeend',
-                    '<div class="fmx-bslot" data-slot="cover" style="left:8px;right:46px;top:' + covTop + 'px;height:32px;"></div>' +
-                    '<div class="fmx-bslot" data-slot="body" style="left:10px;right:10px;top:' + (bodyTop - 3) + 'px;height:29px;"></div>');
+                var rows = {
+                    ct: cov ? _ly(cov) + 30 : 32,
+                    cb: cov ? _ly(cov) + (cov.offsetHeight - 33) : 51,
+                    b1: (function () { var r = cardEl.querySelector('[data-brow="b1"]'); if (r) return _ly(r, -3); return crow ? _ly(crow) + crow.offsetHeight + 1 : 150; })(),
+                    b2: (function () { var r = cardEl.querySelector('[data-brow="b2"]'); if (r) return _ly(r, -3); return met ? _ly(met) - 30 : 210; })()
+                };
+                var html = '';
+                _BPLACES.forEach(function (p) {
+                    var covRow = (p === 'ct' || p === 'cb');
+                    html += '<div class="fmx-bslot" data-slot="' + p + '" style="left:8px;right:' + (covRow ? 46 : 10) + 'px;top:' + rows[p].toFixed(0) + 'px;height:29px;"></div>';
+                });
+                cardEl.insertAdjacentHTML('beforeend', html);
                 return qsa(cardEl, '.fmx-bslot');
             }
             function hitSlot(cx, cy) {
-                var hit = null;
+                /* магнит: всегда прилипаем к ближайшей по вертикали полосе */
+                var hit = null, best = 1e9;
                 slots.forEach(function (s) {
                     var r = s.getBoundingClientRect();
-                    var on = cx >= r.left && cx <= r.right && cy >= r.top - 8 && cy <= r.bottom + 8;
-                    s.classList.toggle('hot', on);
-                    if (on) hit = s.getAttribute('data-slot');
+                    var d = Math.abs((r.top + r.bottom) / 2 - cy);
+                    if (d < best) { best = d; hit = s; }
                 });
-                return hit;
+                slots.forEach(function (s) { s.classList.toggle('hot', s === hit); });
+                return hit ? hit.getAttribute('data-slot') : null;
             }
             function begin(cx, cy) {
                 dragging = true; bd.style.opacity = '0.3'; slots = mkSlots();
@@ -2173,13 +2185,15 @@
         }
         return items;
     }
+    var _BPLACES = ['ct', 'cb', 'b1', 'b2'];
     function _badgePlace(l, k) {
         var fx = l.effects_json || {};
-        if (fx.badgeMap && fx.badgeMap[k]) return fx.badgeMap[k];
+        var v = fx.badgeMap && fx.badgeMap[k];
+        if (v) { if (v === 'cover') v = 'cb'; if (v === 'body') v = 'b1'; if (_BPLACES.indexOf(v) >= 0) return v; }
         var bl = fx.badgeLayout || 'body';
-        if (bl === 'cover') return 'cover';
-        if (bl === 'split') return k === 'deal' ? 'body' : 'cover';
-        return 'body';
+        if (bl === 'cover') return 'cb';
+        if (bl === 'split') return k === 'deal' ? 'b1' : 'cb';
+        return 'b1';
     }
     function badges(l, part) {
         var items = badgeItems(l);
@@ -2191,10 +2205,12 @@
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
-        var covArr = [], bodyArr = [];
-        bItems.forEach(function (it) { (_badgePlace(l, it.k) === 'cover' ? covArr : bodyArr).push(it.h); });
-        var covBdg = covArr.length ? '<div class="fmx-covbdg">' + covArr.join('') + '</div>' : '';
-        var bodyBdg = bodyArr.length ? '<div class="fmx-badges">' + bodyArr.join('') + '</div>' : '';
+        var _bp = { ct: [], cb: [], b1: [], b2: [] };
+        bItems.forEach(function (it) { _bp[_badgePlace(l, it.k)].push(it.h); });
+        var covBdg = (_bp.ct.length ? '<div class="fmx-covbdg" data-brow="ct" style="bottom:auto;top:32px;">' + _bp.ct.join('') + '</div>' : '') +
+            (_bp.cb.length ? '<div class="fmx-covbdg" data-brow="cb">' + _bp.cb.join('') + '</div>' : '');
+        var bodyBdg = _bp.b1.length ? '<div class="fmx-badges" data-brow="b1">' + _bp.b1.join('') + '</div>' : '';
+        var bodyBdg2 = _bp.b2.length ? '<div class="fmx-badges" data-brow="b2" style="margin-bottom:2px;">' + _bp.b2.join('') + '</div>' : '';
         var stk = l.sticker_json || l.sticker;
         var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
@@ -2224,7 +2240,7 @@
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + ' <i class="ti ti-rosette-discount-check-filled fmx-seal"></i></div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
-            (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
+            (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
             (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
@@ -2527,6 +2543,9 @@
             document.body.appendChild(bmv);
             bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
         }
+        var _bmv = el('fmx-bmvBg');
+        document.body.appendChild(_bmv);   /* в конец стека — поверх списка закладок */
+        _bmv.style.zIndex = '9300';
         el('fmx-bmvTitle').textContent = l.title || u;
         el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
         bindCards(el('fmx-bmvBody'));
