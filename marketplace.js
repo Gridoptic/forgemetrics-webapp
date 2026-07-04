@@ -251,8 +251,9 @@
             '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
             '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
             '.fmx-covbdg .fmx-bdg,.fmx-covbdg .fmx-tl{background:rgba(10,13,24,0.55);border-color:rgba(255,255,255,0.14);}',
-            '.fmx-bslot{position:absolute;border:1.5px dashed rgba(255,255,255,0.4);border-radius:10px;background:rgba(255,255,255,0.06);z-index:8;pointer-events:none;transition:all 120ms;}',
-            '.fmx-bslot.hot{border-color:#818cf8;background:rgba(129,140,248,0.18);}',
+            '.fmx-bpick{position:absolute;top:8px;left:8px;right:8px;background:#141828;border:0.5px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px;z-index:60;box-shadow:0 12px 32px rgba(0,0,0,0.55);}',
+            '.fmx-bpick .t{font-size:10.5px;color:#8990a8;margin-bottom:7px;}',
+            '.fmx-bpick .row{display:flex;gap:6px;flex-wrap:wrap;}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -1834,91 +1835,38 @@
         st.addEventListener('mousedown', start);
         st.addEventListener('touchstart', start, { passive: false });
     }
+    var _BROW_NAMES = { ct: 'Верх шапки', cb: 'Низ шапки', b1: 'В теле', b2: 'Над метриками' };
     function bindBadgeDrag(cardEl) {
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
-            var startX = 0, startY = 0, dragging = false, ghost = null, slots = null;
-            function k() { var r = cardEl.getBoundingClientRect(); return r.width ? r.width / 350 : 1; }
-            function _ly(elm, dy) { /* логический top элемента относительно карточки, px 350-макета */
-                var cr = cardEl.getBoundingClientRect(), kk = cr.width ? cr.width / 350 : 1;
-                return (elm.getBoundingClientRect().top - cr.top) / kk + (dy || 0);
-            }
-            function mkSlots() {
-                var cov = cardEl.querySelector('.fmx-cov');
-                var met = cardEl.querySelector('.fmx-met');
-                var crow = cardEl.querySelector('.fmx-crow');
-                var rows = {
-                    ct: cov ? _ly(cov) + 30 : 32,
-                    cb: cov ? _ly(cov) + (cov.offsetHeight - 33) : 51,
-                    b1: (function () { var r = cardEl.querySelector('[data-brow="b1"]'); if (r) return _ly(r, -3); return crow ? _ly(crow) + crow.offsetHeight + 1 : 150; })(),
-                    b2: (function () { var r = cardEl.querySelector('[data-brow="b2"]'); if (r) return _ly(r, -3); return met ? _ly(met) - 30 : 210; })()
-                };
-                var html = '';
+            bd.style.cursor = 'pointer';
+            bd.addEventListener('click', function (e) {
+                e.stopPropagation(); _haptic('light');
+                var old = cardEl.querySelector('.fmx-bpick'); if (old) old.remove();
+                var key = bd.getAttribute('data-bkey');
+                var seed = _previewListing();
+                var cur = _badgePlace(seed, key);
+                var name = (bd.textContent || '').trim();
+                var html = '<div class="fmx-bpick"><div class="t">Куда поставить «' + _esc(name) + '»?</div><div class="row">';
                 _BPLACES.forEach(function (p) {
-                    var covRow = (p === 'ct' || p === 'cb');
-                    html += '<div class="fmx-bslot" data-slot="' + p + '" style="left:8px;right:' + (covRow ? 46 : 10) + 'px;top:' + rows[p].toFixed(0) + 'px;height:29px;"></div>';
+                    html += '<button class="fmx-fx' + (p === cur ? ' on' : '') + '" data-bp="' + p + '">' + _BROW_NAMES[p] + '</button>';
                 });
+                html += '<button class="fmx-fx" data-bp="x"><i class="ti ti-x"></i></button></div></div>';
                 cardEl.insertAdjacentHTML('beforeend', html);
-                return qsa(cardEl, '.fmx-bslot');
-            }
-            function hitSlot(cx, cy) {
-                /* магнит: всегда прилипаем к ближайшей по вертикали полосе */
-                var hit = null, best = 1e9;
-                slots.forEach(function (s) {
-                    var r = s.getBoundingClientRect();
-                    var d = Math.abs((r.top + r.bottom) / 2 - cy);
-                    if (d < best) { best = d; hit = s; }
+                qsa(cardEl, '.fmx-bpick [data-bp]').forEach(function (btn) {
+                    btn.addEventListener('click', function (ev) {
+                        ev.stopPropagation();
+                        var p = btn.getAttribute('data-bp');
+                        if (p === 'x') { cardEl.querySelector('.fmx-bpick').remove(); return; }
+                        if (!_ss.badgeMap) {
+                            _ss.badgeMap = {};
+                            badgeItems(seed).forEach(function (it) { _ss.badgeMap[it.k] = _badgePlace(seed, it.k); });
+                        }
+                        _ss.badgeMap[key] = p;
+                        _haptic('light');
+                        renderHero();
+                    });
                 });
-                slots.forEach(function (s) { s.classList.toggle('hot', s === hit); });
-                return hit ? hit.getAttribute('data-slot') : null;
-            }
-            function begin(cx, cy) {
-                dragging = true; bd.style.opacity = '0.3'; slots = mkSlots();
-                ghost = bd.cloneNode(true);
-                ghost.style.cssText = 'position:absolute;z-index:99;pointer-events:none;margin:0;opacity:0.9;';
-                cardEl.appendChild(ghost);
-                follow(cx, cy);
-            }
-            function follow(cx, cy) {
-                var r = cardEl.getBoundingClientRect(), kk = k();
-                ghost.style.left = ((cx - r.left) / kk - ghost.offsetWidth / 2) + 'px';
-                ghost.style.top = ((cy - r.top) / kk - ghost.offsetHeight / 2) + 'px';
-            }
-            function finish(cx, cy) {
-                var slot = hitSlot(cx, cy);
-                qsa(cardEl, '.fmx-bslot').forEach(function (s) { s.remove(); });
-                if (ghost) ghost.remove();
-                bd.style.opacity = '';
-                dragging = false;
-                if (slot) {
-                    if (!_ss.badgeMap) {
-                        _ss.badgeMap = {};
-                        var seed = _previewListing();
-                        badgeItems(seed).forEach(function (it) { _ss.badgeMap[it.k] = _badgePlace(seed, it.k); });
-                    }
-                    _ss.badgeMap[bd.getAttribute('data-bkey')] = slot;
-                    _haptic('light');
-                    renderHero();
-                }
-            }
-            function onDown(e) {
-                var t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY; dragging = false;
-                var mm = function (ev) {
-                    var p = ev.touches ? ev.touches[0] : ev;
-                    if (!dragging && Math.abs(p.clientX - startX) + Math.abs(p.clientY - startY) > 7) begin(p.clientX, p.clientY);
-                    if (dragging) { ev.preventDefault(); follow(p.clientX, p.clientY); hitSlot(p.clientX, p.clientY); }
-                };
-                var up = function (ev) {
-                    document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
-                    document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
-                    if (dragging) { var p = (ev.changedTouches && ev.changedTouches[0]) || ev; finish(p.clientX, p.clientY); }
-                };
-                document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
-                document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
-            }
-            bd.style.cursor = 'grab';
-            bd.addEventListener('mousedown', onDown);
-            bd.addEventListener('touchstart', onDown, { passive: true });
+            });
         });
     }
     function bindStickerDrag(cardEl) {
@@ -2463,7 +2411,7 @@
         bm.addEventListener('click', function (e) { if (e.target === bm) hideModal('fmx-bmBg'); });
         bm.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmBg'); });
     }
-    function showModal(id) { var m = el(id); if (m) m.classList.add('fmx-show'); }
+    function showModal(id) { var m = el(id); if (m) { document.body.appendChild(m); m.classList.add('fmx-show'); } }
     function hideModal(id) { var m = el(id); if (m) m.classList.remove('fmx-show'); }
 
     function openFaq() {
