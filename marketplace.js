@@ -544,7 +544,8 @@
             '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
             '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
             '.fmx-frzTag{position:absolute;top:8px;right:36px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
-            '.fmx-bmdel{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:7px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(255,255,255,0.12);color:#8990a8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:3;}',
+            '.fmx-bmdel{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:8px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:3;transition:all 140ms;}',
+            '.fmx-bmdel.arm{background:#ef4444;border-color:#ef4444;color:#fff;transform:scale(1.12);}',
             '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
             '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
             '.fmx-revs{margin-top:12px;padding:11px 12px;background:rgba(245,158,11,0.05);border:0.5px solid rgba(245,158,11,0.15);border-radius:11px;}',
@@ -1632,7 +1633,7 @@
     }
     var _tgsData = {};  // url -> animationData
     var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
-    var STK_PHONE_DX = -0.5, STK_PHONE_DY = -2;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
+    var STK_PHONE_DX = -0.5, STK_PHONE_DY = -2.5;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
     var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
@@ -1900,6 +1901,7 @@
         if (c.health_class) pl.health_class = c.health_class;
         if (c.niche) pl.niche = c.niche;
         pl.accent_color = _ss.color;
+        pl._preview = true;
         pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
         var act = (_sfmts || []).filter(function (x) { return x.on; });
         pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
@@ -2039,7 +2041,8 @@
             '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
     }
     function badges(l) {
-        var deal = (l.show_deals !== false && l.deals_count) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + l.deals_count + ' ' + _plural(l.deals_count, 'сделка', 'сделки', 'сделок') + '</span>' : '';
+        var dealN = l.deals_count || 0;
+        var deal = (l.show_deals !== false && (dealN || l._preview)) ? '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>' : '';
         var mm = trafficLight(l) + deal + (_nicheMatch(l) ? '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>' : '');
         if (l.badges && l.badges.length) {
             var m = { match: ['fmx-b-match', 'ti-target-arrow', 'В точку'], live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
@@ -2367,25 +2370,24 @@
                 return '<div class="fmx-bmrow' + (it.frozen ? ' frz' : '') + '" data-open="' + _esc(u) + '" data-src="' + it.source + '" data-frz="' + (it.frozen ? 1 : 0) + '">' +
                     zw(listItem(l, false, it.source === 'base')) +
                     (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> Заморожена</span>' : '') +
-                    '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Убрать из закладок"><i class="ti ti-x"></i></button></div>';
+                    '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Удалить из закладок (два нажатия)"><i class="ti ti-trash"></i></button></div>';
             }).join('');
             scaleCards(box);
             hydrateTgs(box);
             qsa(box, '[data-del]').forEach(function (b) {
                 b.addEventListener('click', function (e) {
-                    e.stopPropagation(); toggleBm(b.getAttribute('data-del')); openBookmarks();
+                    e.stopPropagation();
+                    if (!b.classList.contains('arm')) {
+                        b.classList.add('arm'); _haptic('light');
+                        setTimeout(function () { b.classList.remove('arm'); }, 2200);
+                        return;
+                    }
+                    toggleBm(b.getAttribute('data-del')); openBookmarks();
                 });
             });
-            qsa(box, '.fmx-bmrow').forEach(function (row) {
-                row.addEventListener('click', function (e) {
-                    if (e.target.closest && e.target.closest('[data-del]')) return;
-                    var u = row.getAttribute('data-open');
-                    if (row.getAttribute('data-frz') === '1') { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); return; }
-                    _haptic('light');
-                    hideModal('fmx-bmBg');
-                    if (row.getAttribute('data-src') === 'base') openTg(u);
-                    else openListing(u);
-                });
+            bindList(box);
+            qsa(box, '.fmx-bmrow.frz').forEach(function (row) {
+                row.addEventListener('click', function () { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); });
             });
         }).catch(function () {
             box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>Не загрузилось</h3><p>Попробуй открыть закладки ещё раз.</p></div>';
