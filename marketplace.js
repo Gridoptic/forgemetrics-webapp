@@ -260,7 +260,7 @@
             '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-start;}',
-            '.fmx-sp svg{display:block;margin-top:1px;}',
+            '.fmx-sp svg{display:block;margin-top:-1px;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}',
             '.fmx-btn{flex:1;border-radius:10px;padding:10px 6px;font-size:11.5px;font-weight:600;cursor:pointer;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 150ms;white-space:nowrap;}',
             '.fmx-btn-p{border:none;color:#fff;}',
@@ -2131,9 +2131,9 @@
             var card = w.firstElementChild; if (!card) return;
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
-            card.style.transform = k < 0.999 ? 'scale(' + k.toFixed(4) + ')' : '';
-            var off = Math.max(0, Math.round((ww - 350 * k) / 2));
-            card.style.marginLeft = off ? off + 'px' : '';
+            card.style.transform = k < 0.9995 ? 'scale(' + k + ')' : '';
+            var off = Math.max(0, (ww - 350 * k) / 2);
+            card.style.marginLeft = off > 0.05 ? off.toFixed(2) + 'px' : '';
             w.style.height = Math.round(card.offsetHeight * k) + 'px';
         });
     }
