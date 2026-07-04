@@ -198,8 +198,7 @@
             '.fmx-pill{position:absolute;top:4px;left:4px;height:calc(100% - 8px);border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);transition:transform 380ms cubic-bezier(.2,.85,.25,1),width 380ms cubic-bezier(.2,.85,.25,1);box-shadow:0 4px 14px rgba(99,102,241,0.4);z-index:0;}',
             '.fmx-pb{flex:1;position:relative;z-index:1;border:none;background:transparent;color:#8990a8;padding:10px 3px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:color 260ms;white-space:nowrap;min-width:0;overflow:hidden;}',
             '.fmx-pb.on{color:#fff;}',
-            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
-
+            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
             '.fmx-scroll::-webkit-scrollbar{display:none;}',
             '.fmx-pad{padding:14px 16px 28px;max-width:640px;margin:0 auto;width:100%;min-width:0;}',
             '@keyframes fmxFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}',
@@ -225,6 +224,8 @@
             '.fmx-empty p{margin:0;font-size:12.5px;line-height:1.5;max-width:300px;margin-left:auto;margin-right:auto;}',
             '.fmx-load{text-align:center;padding:54px;color:#8990a8;}',
             '.fmx-cwrap{width:100%;position:relative;overflow:visible;}',
+            ".fmx-cwrap>.fmx-card,.fmx-zw>*{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;}",
+            '.fmx-met .v,.fmx-lprice{font-variant-numeric:tabular-nums;}',
             '.fmx-cwrap>.fmx-card{width:350px;transform-origin:top left;}',
             '.fmx-zw{width:100%;position:relative;}',
             '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
@@ -1626,7 +1627,7 @@
     }
     var _tgsData = {};  // url -> animationData
     var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
-    var STK_PHONE_DX = 3, STK_PHONE_DY = -3;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
+    var STK_PHONE_DX = 0, STK_PHONE_DY = 0;  // калибровка публичного стикера на тач-устройствах: вправо/вниз, px 350-макета
     var _lotAnims = [];  // живые аниматоры: сироты уничтожаются при каждой гидрации
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
