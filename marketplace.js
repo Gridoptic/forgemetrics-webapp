@@ -1240,17 +1240,28 @@
         if (_ss.listingId) loadPendingDeals();
         var brag = el('fmx-brag');
         if (brag) brag.addEventListener('click', function () {
-            brag.disabled = true;
-            brag.innerHTML = '<i class="ti ti-loader-2"></i> Рисую карточку…';
-            apiPost('/api/v1/marketplace/share', { listing_id: _ss.listingId }).then(function (r) {
-                brag.disabled = false;
-                brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат';
-                if (r && r.ok) toast('Картинка у тебя в чате с ботом — пересылай!');
-                else toast((r && r.error) || 'Не получилось');
-            }).catch(function () {
-                brag.disabled = false;
-                brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — картинка карточки в чат';
-                toast('Сервер не ответил');
+            var old = el('fmx-bragPick'); if (old) { old.remove(); return; }
+            brag.insertAdjacentHTML('afterend',
+                '<div id="fmx-bragPick" style="display:flex;gap:8px;margin-top:8px;">' +
+                '<button class="fmx-btn" data-bragk="png"><i class="ti ti-photo"></i>Картинка</button>' +
+                '<button class="fmx-btn" data-bragk="video"><i class="ti ti-movie"></i>Живая (видео)</button></div>');
+            qsa(el('fmx-bragPick'), '[data-bragk]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var kind = b.getAttribute('data-bragk');
+                    el('fmx-bragPick').remove();
+                    brag.disabled = true;
+                    brag.innerHTML = '<i class="ti ti-loader-2"></i> ' + (kind === 'video' ? 'Снимаю живую карточку… ~10 сек' : 'Рисую карточку…');
+                    apiPost('/api/v1/marketplace/share', { listing_id: _ss.listingId, kind: kind }).then(function (r) {
+                        brag.disabled = false;
+                        brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — карточка в чат';
+                        if (r && r.ok) toast(kind === 'video' ? 'Живая карточка у тебя в чате с ботом!' : 'Картинка у тебя в чате с ботом — пересылай!');
+                        else toast((r && r.error) || 'Не получилось');
+                    }).catch(function () {
+                        brag.disabled = false;
+                        brag.innerHTML = '<i class="ti ti-share-3"></i> Похвастаться — карточка в чат';
+                        toast('Сервер не ответил');
+                    });
+                });
             });
         });
         var lp = el('fmx-lpause');
@@ -2603,7 +2614,7 @@
     window.__fmxShareRender = function (l, apiBase) {
         try { if (apiBase) API_BASE_URL = apiBase; } catch (e) {}
         injectStyles();
-        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;"><div style="width:350px;">' + fullCard(l) + '</div></div>';
+        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;color:#e8e8ed;font-family:\'Inter\',-apple-system,\'Segoe UI\',Roboto,sans-serif;"><div style="width:350px;">' + fullCard(l) + '</div></div>';
         hydrateTgs(document);
     };
 })();
