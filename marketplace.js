@@ -544,7 +544,17 @@
             '.fmx-cp-fld input{width:100%;background:#0f1322;border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;font-size:12.5px;padding:9px 2px;border-radius:10px;text-align:center;outline:none;font-family:inherit;-moz-appearance:textfield;appearance:textfield;}',
             '.fmx-cp-fld input::-webkit-outer-spin-button,.fmx-cp-fld input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}',
             '.fmx-cp-fld input:focus{border-color:rgba(93,202,165,0.5);}',
+            '.fmx-cp-presets{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px;}',
+            '.fmx-cp-pd{width:30px;height:30px;border-radius:9px;cursor:pointer;border:1.5px solid rgba(255,255,255,0.18);padding:0;}',
             '#fmx-buysort .fmx-seg{min-height:40px;}',
+            /* панели сортировок листаются пальцем — полосу прокрутки не показываем */
+            '.fmx-sortbar{scrollbar-width:none;-ms-overflow-style:none;}',
+            '.fmx-sortbar::-webkit-scrollbar{display:none;}',
+            /* пульт промо-постера */
+            '.fmx-ps{width:100%;max-width:580px;max-height:92vh;overflow-y:auto;background:#0b0e18;border:0.5px solid rgba(255,255,255,0.12);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 14px 22px;}',
+            '.fmx-ps-scroll{scrollbar-width:none;-ms-overflow-style:none;}',
+            '.fmx-ps-scroll::-webkit-scrollbar{display:none;}',
+            '.fmx-ps .fmx-fx{min-height:40px;}',
             '.fmx-tl{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.09);padding:4px 9px;border-radius:8px;vertical-align:middle;}',
             '.fmx-tl i{width:7px;height:7px;border-radius:50%;background:#262b40;flex-shrink:0;}',
             '.fmx-tl i.red.on{background:#ef4444;box-shadow:0 0 7px rgba(239,68,68,0.8);}',
@@ -562,6 +572,16 @@
             '.fmx-stkh.del{right:-9px;top:-9px;display:flex;align-items:center;justify-content:center;background:#ef4444;color:#fff;font-size:9px;cursor:pointer;}',
             '.fmx-stk.m-top{z-index:5;}',
             '.fmx-stk.m-blend{z-index:5;opacity:0.55;}',
+            /* управление стикером на карточке 1 в 1 с макетом постера: рамка и ручки видны по тапу, режим — три точки под рамкой */
+            '.fmx-stkGrab .fmx-stkh{display:none;}',
+            '.fmx-stkGrab.sel .fmx-stkh{display:flex;align-items:center;justify-content:center;}',
+            '.fmx-stkmodes{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);display:none;gap:4px;pointer-events:auto;}',
+            '.fmx-stkGrab.sel .fmx-stkmodes{display:flex;}',
+            '.fmx-stkmd{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;padding:0;}',
+            '.fmx-stkmd i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.35);background:#0d1120;}',
+            '.fmx-stkmd.on i{border-color:#5DCAA5;background:rgba(93,202,165,0.35);}',
+            '.fmx-stkModeLabel{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(10,13,24,0.85);border:0.5px solid rgba(93,202,165,0.4);color:#5DCAA5;font-size:11px;font-weight:600;padding:5px 12px;border-radius:999px;z-index:9;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap;}',
+            '.fmx-stkModeLabel.show{opacity:1;}',
             '.fmx-stkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:7px;max-width:100%;}',
             '.fmx-stkcell{min-width:0;}',
             '.fmx-stkcell{position:relative;aspect-ratio:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:11px;padding:5px;cursor:pointer;transition:border-color 150ms;}',
@@ -1392,7 +1412,8 @@
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 12px;"><i class="ti ti-hand-click"></i> Тапни по части карточки, чтобы её изменить</div>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 10px;"><i class="ti ti-hand-click"></i> Тапни по части карточки, чтобы её изменить</div>' +
+            '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> Сброс настроек</button>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
             '<div class="fmx-chdd" id="fmx-chdd"><button class="fmx-chbtn" id="fmx-chbtn" type="button"><i class="ti ti-broadcast lead"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(cur ? ('@' + cur.username + (cur.title ? ' · ' + cur.title : '')) : 'Выбери канал') + '</span><i class="ti ti-chevron-down chev"></i></button><div class="fmx-chlist">' + rows + '</div></div>' +
             (function () {
@@ -1413,7 +1434,7 @@
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
-                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Поделиться — картинка карточки в чат</button>' : '') +
+                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Поделиться — промо-постер и карточка</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
@@ -1422,37 +1443,23 @@
         qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
+        var ra = el('fmx-resetAll');
+        if (ra) ra.addEventListener('click', function () {
+            uiConfirm('Сбросить все настройки оформления к стандартным? На Площадке изменения появятся после сохранения карточки.', function () {
+                var keepCh = _ss.channelId, keepId = _ss.listingId, keepSt = _ss._status;
+                _ss = defaultState(); _sfmts = defaultFmts();
+                _ss.channelId = keepCh; _ss.listingId = keepId; _ss._status = keepSt;
+                _ss.sticker = null; _ss.showDeals = true;
+                _haptic('success'); toast('Настройки сброшены к стандартным');
+                paintCreate();
+            });
+        });
         loadStickerPane();
         var sdT = el('fmx-showdeals');
         if (sdT) sdT.addEventListener('change', function () { _ss.showDeals = sdT.checked; renderHero(); });
         if (_ss.listingId) loadPendingDeals();
         var brag = el('fmx-brag');
-        if (brag) brag.addEventListener('click', function () {
-            var old = el('fmx-bragPick'); if (old) { old.remove(); return; }
-            brag.insertAdjacentHTML('afterend',
-                '<div id="fmx-bragPick" style="display:flex;gap:8px;margin-top:8px;">' +
-                '<button class="fmx-btn" data-bragk="png"><i class="ti ti-photo"></i>Картинка</button>' +
-                '<button class="fmx-btn" data-bragk="video"><i class="ti ti-movie"></i>Видео</button>' +
-                '<button class="fmx-btn" data-bragk="sticker"><i class="ti ti-sticker"></i>Стикер</button></div>');
-            qsa(el('fmx-bragPick'), '[data-bragk]').forEach(function (b) {
-                b.addEventListener('click', function () {
-                    var kind = b.getAttribute('data-bragk');
-                    el('fmx-bragPick').remove();
-                    brag.disabled = true;
-                    brag.innerHTML = '<i class="ti ti-loader-2"></i> ' + (kind === 'png' ? 'Рисую карточку…' : 'Снимаю живую карточку… ~10 сек');
-                    apiPost('/api/v1/marketplace/share', { listing_id: _ss.listingId, kind: kind }).then(function (r) {
-                        brag.disabled = false;
-                        brag.innerHTML = '<i class="ti ti-share-3"></i> Поделиться — карточка в чат';
-                        if (r && r.ok) toast(kind === 'png' ? 'Картинка у тебя в чате с ботом — пересылай!' : 'Готово — смотри чат с ботом и пересылай!');
-                        else toast((r && r.error) || 'Не получилось');
-                    }).catch(function () {
-                        brag.disabled = false;
-                        brag.innerHTML = '<i class="ti ti-share-3"></i> Поделиться — карточка в чат';
-                        toast('Сервер не ответил');
-                    });
-                });
-            });
-        });
+        if (brag) brag.addEventListener('click', function () { _haptic('light'); openPosterStudio(); });
         var lp = el('fmx-lpause');
         if (lp) lp.addEventListener('click', function () {
             var act = _ss._status === 'paused' ? 'resume' : 'pause';
@@ -1591,14 +1598,13 @@
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение карточки <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
-            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Плашка «Топ месяца» в шапке</div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Тег «Топ месяца» в шапке</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>' +
-            '<button class="fmx-btn" id="fmx-bfreset" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-restore"></i> Сбросить позиции плашек</button>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -1685,12 +1691,14 @@
             '<button class="fmx-fx on" data-cpm="sv">Квадрат</button>' +
             '<button class="fmx-fx" data-cpm="spec">Спектр</button></div></div>' +
             '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="280" height="140"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
-            '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1">' +
+            '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">Оттенок</div>' +
+            '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1" style="margin-top:0;">' +
             '<div class="fmx-cp-row">' +
             '<div class="fmx-cp-fld hexf"><span class="fmx-cp-cap">HEX</span><input type="text" id="fmx-cp-hex" maxlength="7" autocomplete="off" autocapitalize="off" spellcheck="false"></div>' +
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">R</span><input type="number" id="fmx-cp-r" min="0" max="255" inputmode="numeric"></div>' +
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">G</span><input type="number" id="fmx-cp-g" min="0" max="255" inputmode="numeric"></div>' +
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">B</span><input type="number" id="fmx-cp-b" min="0" max="255" inputmode="numeric"></div></div>' +
+            '<div class="fmx-cp-presets">' + COLORS.map(function (c) { return '<button class="fmx-cp-pd" data-cpp="' + c + '" style="background:' + c + ';" title="' + c + '"></button>'; }).join('') + '</div>' +
             '<button class="fmx-save" id="fmx-cp-done" style="margin-top:14px;"><i class="ti ti-check"></i> Готово</button></div>';
         document.body.appendChild(bg);
         var cv = el('fmx-cp-cv'), cx = cv.getContext('2d'), dot = el('fmx-cp-dot'), hue = el('fmx-cp-hue'), svb = el('fmx-cp-sv');
@@ -1735,6 +1743,7 @@
             qsa(el('fmx-cp-modes'), '.fmx-fx').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-cpm') === m); });
             hue.max = m === 'spec' ? 100 : 359;
             hue.classList.toggle('sat', m === 'spec');
+            var hc = el('fmx-cp-huecap'); if (hc) hc.textContent = m === 'spec' ? 'Насыщенность' : 'Оттенок';
             draw(); sync();
         }
         qsa(el('fmx-cp-modes'), '[data-cpm]').forEach(function (b) { b.addEventListener('click', function () { setMode(b.getAttribute('data-cpm')); }); });
@@ -1787,6 +1796,14 @@
                 draw(); sync(true);
             });
         });
+        qsa(bg, '[data-cpp]').forEach(function (p) {
+            p.addEventListener('click', function () {
+                var c = hex2rgb(p.getAttribute('data-cpp')); if (!c) return;
+                var hv4 = rgb2hsv(c[0], c[1], c[2]);
+                st.h = hv4[0]; st.s = hv4[1]; st.v = hv4[2];
+                draw(); sync(); _haptic('light');
+            });
+        });
         function done() { bg.remove(); }
         el('fmx-cp-done').addEventListener('click', done);
         bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
@@ -1810,8 +1827,6 @@
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
-        var bfr = el('fmx-bfreset');
-        if (bfr) bfr.addEventListener('click', function () { _ss.badgeFree = null; renderHero(); toast('Плашки вернулись на места'); });
         var mb = el('fmx-modboost');
         if (mb) mb.addEventListener('click', function () {
             var base = listingForChannel(_ss.channelId);
@@ -2018,7 +2033,11 @@
         }
         var core = '<div class="fmx-stk' + mcls + '" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
-        return core + '<div class="fmx-stkGrab sel" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с карточки"></i></div>';
+        var selCls = (_ss && _ss.stickerSel !== false) ? ' sel' : '';
+        var modeDots = '<div class="fmx-stkmodes">' + [['top', 'Поверх'], ['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
+            return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
+        }).join('') + '</div>';
+        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с карточки"></i>' + modeDots + '</div>';
     }
     var _lotLibs = null;
     function _script(u) {
@@ -2119,20 +2138,12 @@
                 '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личку. ' + _stickers.length + '/30.</div>';
             if (s) {
                 var free = (s.mode || 'slot') === 'free';
-                var dm = s.dmode || 'bg';
                 html += '<div class="fmx-fxw" style="margin-top:12px;">' +
                     '<button class="fmx-fx' + (!free ? ' on' : '') + '" data-smode="slot">В кармашке</button>' +
                     '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
-                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>' +
-                    '<div style="font-size:10.5px;color:#8990a8;margin:10px 0 6px;">Отображение на карточке</div>' +
-                    '<div class="fmx-fxw">' +
-                    '<button class="fmx-fx' + (dm === 'top' ? ' on' : '') + '" data-sdmode="top">Поверх</button>' +
-                    '<button class="fmx-fx' + (dm === 'blend' ? ' on' : '') + '" data-sdmode="blend">Слияние</button>' +
-                    '<button class="fmx-fx' + (dm === 'bg' ? ' on' : '') + '" data-sdmode="bg">Задний фон</button></div>';
+                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
                 if (free) {
-                    html += '<div class="fmx-stkrow"><span>Размер</span><input type="range" id="fmx-stk-sc" min="0.5" max="3.4" step="0.05" value="' + (s.scale || 1) + '"></div>' +
-                        '<div class="fmx-stkrow"><span>Поворот</span><input type="range" id="fmx-stk-rot" min="-180" max="180" step="1" value="' + (s.rot || 0) + '"></div>' +
-                        '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Перетащи стикер по карточке-превью куда угодно. Крутить можно за верхнюю точку рамки, размер — за нижний угол.</div>';
+                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на карточке-превью: тап по стикеру — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
                 }
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
@@ -2147,6 +2158,7 @@
                 if (!st) return;
                 var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0, dmode: 'bg' };
                 _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot, dmode: prev.dmode || 'bg' };
+                _ss.stickerSel = true; /* новый стикер сразу с рамкой — редактируй на карточке */
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
@@ -2169,18 +2181,8 @@
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
-        qsa(box, '[data-sdmode]').forEach(function (b) {
-            onTap(b, function () {
-                _ss.sticker.dmode = b.getAttribute('data-sdmode');
-                _haptic('light'); renderStickerPane(); renderHero();
-            });
-        });
         var cl = qsa(box, '[data-sclear]')[0];
         if (cl) onTap(cl, function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
-        var sc = el('fmx-stk-sc'); if (sc) sc.addEventListener('input', function () {
-            _ss.sticker.scale = Math.max(0.5, Math.min(3.4, +sc.value)); renderHero();
-        });
-        var ro = el('fmx-stk-rot'); if (ro) ro.addEventListener('input', function () { _ss.sticker.rot = +ro.value; renderHero(); });
         var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
         hydrateTgs(box);
     }
@@ -2311,8 +2313,6 @@
                 e.style.width = p.size + 'px'; e.style.height = p.size + 'px';
                 e.style.transform = 'rotate(' + (_ss.sticker.rot || 0) + 'deg)';
             });
-            var sc = el('fmx-stk-sc'); if (sc) sc.value = _ss.sticker.scale || 1;
-            var ro = el('fmx-stk-rot'); if (ro) ro.value = _ss.sticker.rot || 0;
         }
         function setScale(want) { _ss.sticker.scale = Math.max(0.5, Math.min(3.4, want)); applyBox(); }
         function setRot(deg) {
@@ -2354,10 +2354,22 @@
                 document.addEventListener('touchend', pu);
                 return;
             }
-            var mm = function (ev) { var t = ev.touches ? ev.touches[0] : ev; move(t.clientX, t.clientY); };
+            var t0p = e.touches ? e.touches[0] : e;
+            var sx = t0p.clientX, sy = t0p.clientY, movedPx = false;
+            var mm = function (ev) {
+                var t = ev.touches ? ev.touches[0] : ev;
+                if (!movedPx && Math.hypot(t.clientX - sx, t.clientY - sy) > 6) movedPx = true;
+                if (movedPx) move(t.clientX, t.clientY);
+            };
             var up = function () {
                 document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                 document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
+                if (!movedPx) {
+                    /* тап без перетаскивания = показать/спрятать рамку с ручками (как в макете постера) */
+                    var selNow = _ss.stickerSel !== false;
+                    _ss.stickerSel = !selNow;
+                    grab.classList.toggle('sel', !selNow);
+                }
                 _haptic('light');
             };
             document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
@@ -2401,6 +2413,29 @@
             del.addEventListener('mousedown', ds);
             del.addEventListener('touchstart', ds, { passive: false });
         }
+        /* три точки под рамкой — режим отображения, с всплывающей подписью (как в макете постера) */
+        var _mlT = null;
+        function showModeLabel(name) {
+            var lbl = cardEl.querySelector('.fmx-stkModeLabel');
+            if (!lbl) { cardEl.insertAdjacentHTML('beforeend', '<div class="fmx-stkModeLabel"></div>'); lbl = cardEl.querySelector('.fmx-stkModeLabel'); }
+            lbl.textContent = name;
+            lbl.classList.add('show');
+            clearTimeout(_mlT);
+            _mlT = setTimeout(function () { lbl.classList.remove('show'); }, 1200);
+        }
+        qsa(grab, '[data-stkmd]').forEach(function (b) {
+            var hs = function (e) {
+                e.preventDefault(); e.stopPropagation();
+                var v = b.getAttribute('data-stkmd');
+                _ss.sticker.dmode = v;
+                qsa(grab, '.fmx-stkmd').forEach(function (x) { x.classList.toggle('on', x === b); });
+                vis.className = 'fmx-stk' + (v === 'top' ? ' m-top' : (v === 'blend' ? ' m-blend' : ''));
+                showModeLabel(b.getAttribute('data-stkmdn'));
+                _haptic('light');
+            };
+            b.addEventListener('mousedown', hs);
+            b.addEventListener('touchstart', hs, { passive: false });
+        });
         grab.addEventListener('mousedown', start);
         grab.addEventListener('touchstart', start, { passive: false });
     }
@@ -2477,6 +2512,237 @@
         }
         hydrateTgs(hero);
         renderMini(_ss.color, pl.title, _priceFrom(pl));
+    }
+    /* ===================== промо-постер: пульт «Поделиться» ===================== */
+    var PS_BGS = [['blur', 'Блюр'], ['g1', 'Изумруд'], ['g2', 'Ультрафиолет'], ['mid', 'Полночь'], ['net', 'Сетка'], ['aur', 'Аврора'], ['coal', 'Уголь'], ['ocean', 'Океан'], ['sunset', 'Закат'], ['lime', 'Лайм'], ['rose', 'Роза'], ['steel', 'Сталь'], ['space', 'Космос'], ['waves', 'Волны'], ['amber', 'Янтарь']];
+    var PS_METRICS = [['subs', 'Подписчики'], ['reach', 'Охват'], ['er', 'ER'], ['cpm', 'CPM'], ['err', 'ERR']];
+    var PS_EMOJIS = ['⚡', '🔥', '🧬', '💊', '🚀', '😤'];
+    function openPosterStudio() {
+        var base = listingForChannel(_ss.channelId);
+        if (!base || !base.id) { toast('Сначала сохрани карточку — постер строится по ней'); return; }
+        var old = el('fmx-psBg'); if (old) { if (old.__fmxCleanup) old.__fmxCleanup(); old.remove(); }
+        var saved = base.poster_json || {};
+        var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
+        var avail = {
+            subs: !!base.subscribers, reach: !!base.avg_views, er: base.er != null,
+            cpm: !!(minPrice && base.avg_views), err: !!(base.avg_views && base.subscribers)
+        };
+        var st = {
+            bg: saved.bg || 'blur',
+            show_niche: saved.show_niche !== false,
+            show_chart: saved.show_chart !== false,
+            metrics: (saved.metrics && saved.metrics.length >= 2) ? saved.metrics.slice() : ['subs', 'reach', 'er', 'cpm'].filter(function (m) { return avail[m]; }),
+            show_price: saved.show_price !== false,
+            price: (saved.price != null && saved.price > 0) ? saved.price : (minPrice || 0),
+            qr: saved.qr || 'both',
+            hook: saved.hook || '',
+            order: (saved.order && saved.order.length === 2) ? saved.order.slice() : ['chart', 'mgrid'],
+            stickers: (saved.stickers || []).slice()
+        };
+        /* оставляем только метрики с реальными данными; если их меньше двух — добираем доступными */
+        st.metrics = st.metrics.filter(function (m) { return avail[m]; });
+        if (st.metrics.length < 2) st.metrics = Object.keys(avail).filter(function (m) { return avail[m]; }).slice(0, 4);
+        var chart = null, chartState = 'loading';
+        var bgEl = document.createElement('div');
+        bgEl.id = 'fmx-psBg'; bgEl.className = 'fmx-cfm';
+        bgEl.style.alignItems = 'flex-end'; bgEl.style.padding = '0';
+        var bgChips = PS_BGS.map(function (b) { return '<button class="fmx-fx' + (st.bg === b[0] ? ' on' : '') + '" data-psbg="' + b[0] + '" style="flex:0 0 auto;">' + b[1] + '</button>'; }).join('');
+        var mChips = PS_METRICS.map(function (m) {
+            var on = st.metrics.indexOf(m[0]) >= 0, dis = !avail[m[0]];
+            return '<button class="fmx-fx' + (on && !dis ? ' on' : '') + '" data-psm="' + m[0] + '"' + (dis ? ' data-psdis="1" style="opacity:0.4;"' : '') + '>' + m[1] + '</button>';
+        }).join('');
+        var emjChips = PS_EMOJIS.map(function (e) { return '<button class="fmx-fx" data-psemj="' + e + '" style="flex:0 0 auto;font-size:18px;">' + e + '</button>'; }).join('');
+        var stkChips = (_stickers || []).map(function (s2) {
+            return '<button class="fmx-fx" data-psstk="' + s2.id + '" style="flex:0 0 auto;width:46px;height:46px;padding:3px;">' + stkMedia(s2, false) + '</button>';
+        }).join('');
+        bgEl.innerHTML = '<div class="fmx-ps">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">' +
+            '<div style="font-size:14px;font-weight:800;"><i class="ti ti-photo-star" style="color:#5DCAA5;"></i> Промо-постер</div>' +
+            '<button class="fmx-btn" id="fmx-ps-x" style="width:auto;padding:9px 13px;"><i class="ti ti-x"></i></button></div>' +
+            '<div id="fmx-psWrap" style="width:100%;overflow:hidden;border-radius:14px;border:0.5px solid rgba(255,255,255,0.1);"><iframe id="fmx-psFrame" src="poster_render.html?edit=1" style="width:540px;height:675px;border:0;transform-origin:0 0;display:block;background:#0a0d18;"></iframe></div>' +
+            '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Стикеры редактируются прямо на постере: рамка, угол — размер, верхняя точка — поворот, крестик — удалить, три точки — режим.</div>' +
+            '<div class="fmx-lbl fmx-mt2">Фон</div>' +
+            '<div class="fmx-fxw fmx-ps-scroll" id="fmx-ps-bgs" style="flex-wrap:nowrap;overflow-x:auto;">' + bgChips + '<button class="fmx-fx' + (typeof st.bg === 'object' ? ' on' : '') + '" data-psownbg="1" style="flex:0 0 auto;"><i class="ti ti-cloud-upload"></i> Свой</button></div>' +
+            '<input type="file" id="fmx-ps-file" accept="image/*,video/mp4" style="display:none;">' +
+            '<div class="fmx-lbl fmx-mt2">Метрики · минимум 2</div>' +
+            '<div class="fmx-fxw" id="fmx-ps-mts">' + mChips + '</div>' +
+            '<div class="fmx-lbl fmx-mt2">Блоки</div>' +
+            '<div class="fmx-fxw">' +
+            '<button class="fmx-fx' + (st.show_chart ? ' on' : '') + '" id="fmx-ps-chart">График</button>' +
+            '<button class="fmx-fx' + (st.show_price ? ' on' : '') + '" id="fmx-ps-price">Цена</button>' +
+            '<button class="fmx-fx' + (st.show_niche ? ' on' : '') + '" id="fmx-ps-niche">Ниша</button>' +
+            '<button class="fmx-fx" id="fmx-ps-order"><i class="ti ti-arrows-exchange"></i> График ↔ Метрики</button></div>' +
+            '<div id="fmx-ps-chartnote" style="display:none;font-size:10px;color:#f5bf4f;margin-top:5px;">Живой истории просмотров пока не набралось — график будет скрыт, пока не появятся данные.</div>' +
+            '<div class="fmx-lbl fmx-mt2">Цена, ₽ <span style="color:#565b73;text-transform:none;">(0 — «Цена по договорённости»)</span></div>' +
+            '<input class="fmx-inp" id="fmx-ps-priceInp" type="number" min="0" max="999999" step="100" inputmode="numeric" value="' + (st.price || '') + '">' +
+            '<div class="fmx-lbl fmx-mt2">QR-коды</div>' +
+            '<div class="fmx-fxw" id="fmx-ps-qr">' + [['none', 'Нет'], ['channel', 'Канал'], ['card', 'Карточка'], ['both', 'Оба']].map(function (q) { return '<button class="fmx-fx' + (st.qr === q[0] ? ' on' : '') + '" data-psqr="' + q[0] + '">' + q[1] + '</button>'; }).join('') + '</div>' +
+            '<div class="fmx-lbl fmx-mt2">Стикеры · тап добавляет на постер</div>' +
+            '<div class="fmx-fxw fmx-ps-scroll" id="fmx-ps-emj" style="flex-wrap:nowrap;overflow-x:auto;align-items:center;">' + emjChips + stkChips + '</div>' +
+            '<div class="fmx-lbl fmx-mt2">Текст</div>' +
+            '<input class="fmx-inp" id="fmx-ps-hook" type="text" maxlength="90" value="' + _esc(st.hook) + '" placeholder="Свой текст · до 90 символов">' +
+            '<button class="fmx-save" id="fmx-ps-send" style="margin-top:16px;"><i class="ti ti-send"></i> Прислать постер в чат (PNG)</button>' +
+            '<div style="font-size:10px;color:#565b73;margin:12px 0 6px;">Карточка целиком — как раньше:</div>' +
+            '<div style="display:flex;gap:8px;">' +
+            '<button class="fmx-btn" data-psk="png"><i class="ti ti-photo"></i>Картинка</button>' +
+            '<button class="fmx-btn" data-psk="video"><i class="ti ti-movie"></i>Видео</button>' +
+            '<button class="fmx-btn" data-psk="sticker"><i class="ti ti-sticker"></i>Стикер</button></div>' +
+            '</div>';
+        document.body.appendChild(bgEl);
+        hydrateTgs(el('fmx-ps-emj'));
+        var wrap = el('fmx-psWrap'), frame = el('fmx-psFrame');
+        /* fit самоочищается, если модалку уже сняли из DOM — залётный слушатель не держит detached-узлы */
+        function fit() { if (!wrap.isConnected) { window.removeEventListener('resize', fit); return; } var w = wrap.clientWidth || 320; var k = Math.min(1, w / 540); frame.style.transform = 'scale(' + k + ')'; wrap.style.height = Math.round(675 * k) + 'px'; }
+        fit();
+        window.addEventListener('resize', fit);
+        bgEl.__fmxCleanup = function () { window.removeEventListener('resize', fit); };
+        var frameReady = false;
+        function pullStickers() {
+            try {
+                if (frameReady && frame.contentWindow && frame.contentWindow.__fmxPosterState) {
+                    var got = frame.contentWindow.__fmxPosterState();
+                    if (got) st.stickers = got;
+                }
+            } catch (e) {}
+        }
+        function psData() {
+            return {
+                id: base.id, username: base.username, title: base.title, niche: base.niche,
+                subscribers: base.subscribers, avg_views: base.avg_views, er: base.er,
+                min_price: minPrice || null, avatar_url: base.avatar_url
+            };
+        }
+        function psApply() {
+            if (!frameReady) return;
+            try {
+                frame.contentWindow.__fmxPosterRender({ listing: psData(), chart: chart }, st, (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '', null);
+            } catch (e) {}
+        }
+        frame.addEventListener('load', function () { frameReady = true; psApply(); });
+        apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
+            chart = (r && r.ok) ? r.chart : null;
+            chartState = 'ready';
+            var note = el('fmx-ps-chartnote'); if (note) note.style.display = (chart || !st.show_chart) ? 'none' : 'block';
+            pullStickers(); psApply();
+        }).catch(function () { chartState = 'ready'; pullStickers(); psApply(); });
+        function close() { window.removeEventListener('resize', fit); bgEl.remove(); }
+        el('fmx-ps-x').addEventListener('click', close);
+        bgEl.addEventListener('click', function (e) { if (e.target === bgEl) close(); });
+        qsa(bgEl, '[data-psbg]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                pullStickers(); st.bg = b.getAttribute('data-psbg');
+                qsa(el('fmx-ps-bgs'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === b); });
+                _haptic('light'); psApply();
+            });
+        });
+        var ownBtn = bgEl.querySelector('[data-psownbg]'), fileInp = el('fmx-ps-file');
+        if (ownBtn) ownBtn.addEventListener('click', function () { fileInp.click(); });
+        if (fileInp) fileInp.addEventListener('change', function () {
+            var f = fileInp.files && fileInp.files[0];
+            fileInp.value = '';
+            if (!f) return;
+            if (f.size > 50 * 1024 * 1024) { toast('Файл больше 50 МБ'); return; }
+            ownBtn.disabled = true; ownBtn.innerHTML = '<i class="ti ti-loader-2"></i>';
+            var fd = new FormData();
+            fd.append('file', f); fd.append('target', 'cover');
+            var apiB = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
+            var headers = {};
+            try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e) {}
+            fetch(apiB + '/api/v1/marketplace/upload', { method: 'POST', headers: headers, body: fd })
+                .then(function (r) { return r.json(); })
+                .then(function (j) {
+                    ownBtn.disabled = false; ownBtn.innerHTML = '<i class="ti ti-cloud-upload"></i> Свой';
+                    if (!j || !j.url) { toast('Не удалось загрузить файл'); return; }
+                    pullStickers();
+                    st.bg = { url: j.url, kind: j.kind === 'video' ? 'video' : (j.kind === 'gif' ? 'gif' : 'img') };
+                    qsa(el('fmx-ps-bgs'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === ownBtn); });
+                    _haptic('success'); psApply();
+                })
+                .catch(function () { ownBtn.disabled = false; ownBtn.innerHTML = '<i class="ti ti-cloud-upload"></i> Свой'; toast('Сервер не ответил'); });
+        });
+        qsa(bgEl, '[data-psm]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                if (b.getAttribute('data-psdis')) { toast('Для этой метрики пока нет данных'); return; }
+                var m = b.getAttribute('data-psm'), i = st.metrics.indexOf(m);
+                if (i >= 0) {
+                    if (st.metrics.length <= 2) { toast('Минимум две метрики'); return; }
+                    st.metrics.splice(i, 1);
+                } else st.metrics.push(m);
+                b.classList.toggle('on', st.metrics.indexOf(m) >= 0);
+                pullStickers(); _haptic('light'); psApply();
+            });
+        });
+        function bindToggle(id, key) {
+            var b = el(id);
+            if (b) b.addEventListener('click', function () {
+                pullStickers(); st[key] = !st[key];
+                b.classList.toggle('on', st[key]);
+                if (key === 'show_chart') { var note = el('fmx-ps-chartnote'); if (note) note.style.display = (chart || !st.show_chart) ? 'none' : 'block'; }
+                _haptic('light'); psApply();
+            });
+        }
+        bindToggle('fmx-ps-chart', 'show_chart');
+        bindToggle('fmx-ps-price', 'show_price');
+        bindToggle('fmx-ps-niche', 'show_niche');
+        el('fmx-ps-order').addEventListener('click', function () {
+            pullStickers(); st.order.reverse(); _haptic('light'); psApply();
+        });
+        var priceT = null;
+        el('fmx-ps-priceInp').addEventListener('input', function () {
+            var v = Math.max(0, Math.min(999999, parseInt(this.value, 10) || 0));
+            clearTimeout(priceT);
+            priceT = setTimeout(function () { pullStickers(); st.price = v; psApply(); }, 300);
+        });
+        qsa(bgEl, '[data-psqr]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                pullStickers(); st.qr = b.getAttribute('data-psqr');
+                qsa(el('fmx-ps-qr'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === b); });
+                _haptic('light'); psApply();
+            });
+        });
+        function addSticker(item) {
+            pullStickers();
+            if (st.stickers.length >= 6) { toast('До шести стикеров на постере'); return; }
+            st.stickers.push(item);
+            _haptic('light'); psApply();
+        }
+        qsa(bgEl, '[data-psemj]').forEach(function (b) {
+            b.addEventListener('click', function () { addSticker({ emoji: b.getAttribute('data-psemj'), x: 0.72, y: 0.18, scale: 1, rot: 0, mode: 'top' }); });
+        });
+        qsa(bgEl, '[data-psstk]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var s2 = (_stickers || []).filter(function (x) { return x.id === +b.getAttribute('data-psstk'); })[0];
+                if (!s2) return;
+                addSticker({ url: s2.url, kind: s2.kind, x: 0.72, y: 0.18, scale: 1, rot: 0, mode: 'top' });
+            });
+        });
+        var hookT = null;
+        el('fmx-ps-hook').addEventListener('input', function () {
+            var v = this.value;
+            clearTimeout(hookT);
+            hookT = setTimeout(function () { pullStickers(); st.hook = v.trim(); psApply(); }, 350);
+        });
+        el('fmx-ps-send').addEventListener('click', function () {
+            var btn = this;
+            pullStickers();
+            btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
+            apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: st }).then(function (r) {
+                btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат (PNG)';
+                if (r && r.ok) { _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!'); if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || st; }
+                else toast((r && r.error) || 'Не получилось');
+            }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат (PNG)'; toast('Сервер не ответил'); });
+        });
+        qsa(bgEl, '[data-psk]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var kind = b.getAttribute('data-psk');
+                b.disabled = true;
+                apiPost('/api/v1/marketplace/share', { listing_id: base.id, kind: kind }).then(function (r) {
+                    b.disabled = false;
+                    if (r && r.ok) toast(kind === 'png' ? 'Картинка у тебя в чате с ботом — пересылай!' : 'Готово — смотри чат с ботом и пересылай!');
+                    else toast((r && r.error) || 'Не получилось');
+                }).catch(function () { b.disabled = false; toast('Сервер не ответил'); });
+            });
+        });
     }
     function uploadPending() {
         var chain = Promise.resolve();
