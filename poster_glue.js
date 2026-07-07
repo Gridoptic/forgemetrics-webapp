@@ -188,7 +188,11 @@
       '<div class="modes">' + MODES.map(function (m) { return '<div class="mdot' + (m[0] === mode ? ' on' : '') + '" data-mode="' + m[0] + '" title="' + m[1] + '"></div>'; }).join('') + '</div></div>';
     var glyph = s.querySelector('.glyph');
     if (it.url) _stickerMedia(glyph, it, opts); else glyph.textContent = it.glyph || '';
-    s.style.left = (it.left || 0) + 'px'; s.style.top = (it.top || 0) + 'px';
+    // позиция: новый формат left/top(px) ИЛИ старый x/y(центр 0..1) — иначе стикеры падали в угол
+    var px = parseInt(s.dataset.size, 10) || 52;
+    var left = (it.left != null) ? it.left : (it.x != null ? it.x * 540 - px / 2 : 200);
+    var top = (it.top != null) ? it.top : (it.y != null ? it.y * 675 - px / 2 : 260);
+    s.style.left = left + 'px'; s.style.top = top + 'px';
     s.style.transform = 'rotate(' + (it.rot || 0) + 'deg)';
     poster.appendChild(s);
     if (typeof window.applySize === 'function') window.applySize(s);
@@ -202,18 +206,24 @@
     if (!el('fmx-ed-style')) {
       var st = document.createElement('style'); st.id = 'fmx-ed-style';
       // панель во всю ширину под постером + крупнее контролы (после масштабирования iframe остаются читаемыми)
-      // постер вплотную к верху окна, редактор почти вплотную к постеру
+      // постер вплотную к верху окна, редактор почти вплотную к постеру;
+      // размеры контролов панели задаёт __fmxPosterPanelScale (нативный размер на экране)
       st.textContent = 'body{padding:6px 8px 26px !important;gap:8px !important;align-items:center !important;justify-content:flex-start !important;}' +
         '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
-        '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}' +
-        '.panel h2{font-size:20px !important;} .panel .sub{font-size:13.5px !important;}' +
-        '.lbl{font-size:14px !important;} .chip{font-size:16px !important;padding:11px 15px !important;} .chip.emoji{font-size:26px !important;padding:8px 12px !important;}' +
-        'select,input[type=text],input[type=number]{font-size:17px !important;padding:14px 13px !important;}' +
-        '.ordrow{font-size:15px !important;padding:10px 12px !important;} .ordbtn{width:34px !important;height:34px !important;}' +
-        '.drop{font-size:13.5px !important;padding:16px !important;} .genbtn{font-size:16px !important;padding:14px !important;} .note,.gentip{font-size:13px !important;}';
+        '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}';
       document.head.appendChild(st);
     }
     var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = 'Редактор макета';
+    // кнопка «Сбросить настройки» прямо под постером
+    if (opts.defaultState && !el('fmx-ed-reset')) {
+      var poster = el('poster');
+      var rb = document.createElement('button');
+      rb.id = 'fmx-ed-reset'; rb.type = 'button';
+      rb.innerHTML = '↺ Сбросить настройки';
+      rb.style.cssText = 'display:block;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:#141828;border:1px solid rgba(255,255,255,0.14);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
+      rb.addEventListener('click', function () { window.__fmxPosterReset(opts.defaultState); });
+      if (poster && poster.parentNode) poster.parentNode.insertBefore(rb, poster.nextSibling);
+    }
     // стикер-пак пользователя (до 30 из бота) — добавляем чипы в блок стикеров макета
     if (opts.stickers && opts.stickers.length && !el('fmx-ed-pack')) {
       var box = el('eChips');
@@ -225,7 +235,9 @@
           var mediaGlyph = document.createElement('span'); mediaGlyph.style.cssText = 'width:100%;height:100%;display:block;';
           _stickerMedia(mediaGlyph, s2, {}); b.appendChild(mediaGlyph);
           b.addEventListener('click', function () {
-            var it = { url: s2.url, kind: s2.kind, mode: 'm-top', size: 96, rot: 0, left: 220, top: 300 };
+            // разные позиции как у эмодзи в макете — чтобы стикеры не стакались в углу
+            var it = { url: s2.url, kind: s2.kind, mode: 'm-top', size: 96, rot: 0,
+              left: 120 + Math.floor(Math.random() * 240), top: 150 + Math.floor(Math.random() * 200) };
             var stk = _spawnSticker(it, {});
             if (typeof window.selectStk === 'function') window.selectStk(stk);
           });
@@ -330,6 +342,48 @@
     poster.querySelectorAll('.stk').forEach(function (s) { s.remove(); });
     (state.stickers || []).forEach(function (it) { if (it && typeof it === 'object') { try { _spawnSticker(it); } catch (e) {} } });
     if (typeof window.relayout === 'function') window.relayout();
+  };
+
+  /* сброс всех настроек постера к дефолту (кнопка под постером) */
+  window.__fmxPosterReset = function (defaultState) {
+    // кастомные цвета палитры — к дефолтам макета
+    if (el('titEl')) el('titEl').style.color = '';
+    if (el('nicheEl')) el('nicheEl').style.color = '';
+    document.querySelectorAll('.mcell .v').forEach(function (v) { v.style.color = ''; });
+    var pb = el('prBox'); if (pb) { pb.style.background = ''; pb.style.boxShadow = ''; }
+    if (el('gl1')) el('gl1').setAttribute('stop-color', '#3fae88');
+    if (el('gl2')) el('gl2').setAttribute('stop-color', '#7be3c0');
+    if (el('ga1')) el('ga1').setAttribute('stop-color', '#5DCAA5');
+    if (el('dot')) el('dot').setAttribute('fill', '#7be3c0');
+    if (el('dotHalo')) el('dotHalo').setAttribute('fill', '#7be3c0');
+    if (el('chartPct')) el('chartPct').style.color = '';
+    document.querySelectorAll('.mcell').forEach(function (c) { delete c.dataset.hex; });
+    window.COLORS = { tit: '#e8e8ed', niche: '#5DCAA5', pr: '#5DCAA5', chart: '#5DCAA5' };
+    window.__fmxPosterApply(defaultState || {});
+  };
+
+  /* контролы панели — в НАТИВНОМ размере на экране: iframe масштабируется на k,
+     поэтому логические размеры = целевой/к (постер остаётся своим, панель читаемой) */
+  window.__fmxPosterPanelScale = function (k) {
+    k = (k && k > 0.05) ? k : 1;
+    var st = el('fmx-ed-scale');
+    if (!st) { st = document.createElement('style'); st.id = 'fmx-ed-scale'; document.head.appendChild(st); }
+    function px(v) { return (v / k).toFixed(1) + 'px'; }
+    st.textContent =
+      '.panel h2{font-size:' + px(16) + ' !important;}' +
+      '.panel .sub{font-size:' + px(11.5) + ' !important;}' +
+      '.lbl{font-size:' + px(10.5) + ' !important;margin:' + px(14) + ' 0 ' + px(8) + ' !important;}' +
+      '.chips{gap:' + px(7) + ' !important;}' +
+      '.chip{font-size:' + px(13) + ' !important;padding:' + px(8) + ' ' + px(11) + ' !important;border-radius:' + px(11) + ' !important;}' +
+      '.chip.emoji{font-size:' + px(19) + ' !important;padding:' + px(6) + ' ' + px(10) + ' !important;}' +
+      'select,input[type=text],input[type=number]{font-size:' + px(14) + ' !important;padding:' + px(11) + ' ' + px(12) + ' !important;border-radius:' + px(11) + ' !important;}' +
+      '.ordrow{font-size:' + px(13) + ' !important;padding:' + px(8) + ' ' + px(11) + ' !important;}' +
+      '.ordbtn{width:' + px(28) + ' !important;height:' + px(28) + ' !important;font-size:' + px(13) + ' !important;}' +
+      '.drop{font-size:' + px(11.5) + ' !important;padding:' + px(13) + ' !important;}' +
+      '.genbtn{font-size:' + px(13) + ' !important;padding:' + px(12) + ' !important;}' +
+      '.note,.gentip{font-size:' + px(11) + ' !important;}' +
+      '#fmx-ed-pack .chip{width:' + px(52) + ' !important;height:' + px(52) + ' !important;padding:' + px(4) + ' !important;}' +
+      '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}';
   };
 
   /* режим рендера: прячем пульт и палитру, ставим постер в угол, сигналим готовность */

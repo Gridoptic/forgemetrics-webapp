@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260707h';
+    var PS_GLUE_V = '20260707i';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2541,6 +2541,14 @@
         var realNiche = base.niche || chan.niche || '';
         var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
         var saved = base.poster_json || {};
+        /* дефолт: при первом заходе показываем ВСЕ блоки — пользователь потом сам решит, что убрать */
+        var defaultState = {
+            bg: 'blur', niche: true, chart: true,
+            metrics: { subs: true, reach: true, er: true, cpm: true, err: true, grow: true, freq: true, mv: true },
+            price: { on: true, val: minPrice || 0 }, qr: 'both', hook: '',
+            order: ['hook', 'chart', 'mgrid'], colors: { cells: {} }, stickers: []
+        };
+        var hasSaved = saved && Object.keys(saved).length > 0;
         var oldm = el('fmx-psBg'); if (oldm) { if (oldm.__fmxCleanup) oldm.__fmxCleanup(); oldm.remove(); }
         _psInjectStyle();
         var apiBase = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
@@ -2560,9 +2568,11 @@
         function fitFrame() {
             try {
                 var idoc = frame.contentDocument; if (!idoc || !idoc.body) return;
+                var k = Math.min(1, (wrap.clientWidth || 360) / LW);
+                // контролы панели — в нативном размере (компенсируем масштаб iframe) ДО замера высоты
+                try { if (frame.contentWindow.__fmxPosterPanelScale) frame.contentWindow.__fmxPosterPanelScale(k); } catch (e) {}
                 var lh = Math.max(idoc.body.scrollHeight, 700);
                 frame.style.width = LW + 'px'; frame.style.height = lh + 'px';
-                var k = Math.min(1, (wrap.clientWidth || 360) / LW);
                 frame.style.transform = 'scale(' + k + ')'; frame.style.transformOrigin = 'top left';
                 wrap.style.height = Math.round(lh * k) + 'px';
             } catch (e) {}
@@ -2587,8 +2597,9 @@
             /* раздельные try: сбой одного шага (например, старого сохранённого состояния)
                не должен отменять остальные — иначе редактор остаётся без адаптива/переименования */
             try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
-            try { if (saved && Object.keys(saved).length && win.__fmxPosterApply) win.__fmxPosterApply(saved); } catch (e) {}
-            try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [] }); } catch (e) {}
+            /* есть сохранённое — восстанавливаем как было (вкл. стикеры); нет — показываем всё */
+            try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
+            try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
             fitFrame();
             requestAnimationFrame(function () { fitFrame(); reveal(); });
             setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
@@ -2615,7 +2626,18 @@
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
         bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); };
-        function close() { if (bg.__fmxCleanup) bg.__fmxCleanup(); bg.remove(); }
+        function close() {
+            /* сохраняем состояние при закрытии — правки, позиции стикеров и удаления запоминаются */
+            try {
+                var win = frame.contentWindow;
+                var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
+                if (state) {
+                    if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = state;
+                    apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, save_only: true }).catch(function () {});
+                }
+            } catch (e) {}
+            if (bg.__fmxCleanup) bg.__fmxCleanup(); bg.remove();
+        }
         el('fmx-ps-x').addEventListener('click', close);
         el('fmx-ps-send').addEventListener('click', function () {
             var btn = this, win = frame.contentWindow;
