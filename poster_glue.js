@@ -328,7 +328,7 @@
     }
     // стикеры — воссоздаём как это делает eChips макета, с bindStk/applySize/setMode (глобальные)
     poster.querySelectorAll('.stk').forEach(function (s) { s.remove(); });
-    (state.stickers || []).forEach(function (it) { _spawnSticker(it); });
+    (state.stickers || []).forEach(function (it) { if (it && typeof it === 'object') { try { _spawnSticker(it); } catch (e) {} } });
     if (typeof window.relayout === 'function') window.relayout();
   };
 
