@@ -82,7 +82,10 @@
     // username — текстовый узел перед nicheSep внутри .meta (макет не трогаем)
     var meta = document.querySelector('.meta');
     if (meta && meta.firstChild) meta.firstChild.nodeValue = data.username ? '@' + String(data.username).replace(/^@/, '') : '';
-    if (el('nicheEl')) el('nicheEl').textContent = data.niche || '';
+    var hasNiche = !!(data.niche && String(data.niche).trim());
+    if (el('nicheEl')) { el('nicheEl').textContent = data.niche || ''; el('nicheEl').classList.toggle('hide', !hasNiche); }
+    if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !hasNiche);
+    var nchip = el('nicheChip'); if (nchip) { nchip.classList.toggle('on', hasNiche); nchip.style.opacity = hasNiche ? '' : '0.45'; nchip.title = hasNiche ? '' : 'У канала не указана ниша'; }
     // аватар — РЕАЛЬНЫЙ канала; нет — плейсхолдер с инициалами
     var avImg = el('avImg');
     if (avImg) {
@@ -201,8 +204,10 @@
     if (!el('fmx-ed-style')) {
       var st = document.createElement('style'); st.id = 'fmx-ed-style';
       // панель во всю ширину под постером + крупнее контролы (после масштабирования iframe остаются читаемыми)
-      st.textContent = 'body{padding:12px !important;gap:14px !important;align-items:center !important;justify-content:flex-start !important;}' +
-        '.panel{width:540px !important;max-width:540px;}' +
+      // постер вплотную к верху окна, редактор почти вплотную к постеру
+      st.textContent = 'body{padding:6px 8px 26px !important;gap:8px !important;align-items:center !important;justify-content:flex-start !important;}' +
+        '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
+        '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}' +
         '.panel h2{font-size:20px !important;} .panel .sub{font-size:13.5px !important;}' +
         '.lbl{font-size:14px !important;} .chip{font-size:16px !important;padding:11px 15px !important;} .chip.emoji{font-size:26px !important;padding:8px 12px !important;}' +
         'select,input[type=text],input[type=number]{font-size:17px !important;padding:14px 13px !important;}' +
@@ -288,11 +293,12 @@
         else { if (img) { img.src = abs(state.bg.url); img.classList.add('act'); } if (vid) vid.classList.remove('act'); }
       }
     }
-    // ниша
-    if (el('nicheEl')) el('nicheEl').classList.toggle('hide', state.niche === false);
-    if (el('nicheSep')) el('nicheSep').classList.toggle('hide', state.niche === false);
-    chipToggle('#poster ~ .panel, .panel', 'id', 'nicheChip', state.niche !== false);
-    var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', state.niche !== false);
+    // ниша — показываем только если у канала есть ниша (иначе висячий разделитель)
+    var hasN = !!(el('nicheEl') && el('nicheEl').textContent.trim());
+    var showN = hasN && state.niche !== false;
+    if (el('nicheEl')) el('nicheEl').classList.toggle('hide', !showN);
+    if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !showN);
+    var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', showN);
     // график
     if (el('chart') && state.chart != null) el('chart').classList.toggle('hide', !state.chart);
     var cch = el('chartChip'); if (cch) cch.classList.toggle('on', state.chart !== false);

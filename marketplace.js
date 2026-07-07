@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260707d';
+    var PS_GLUE_V = '20260707e';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2528,13 +2528,17 @@
             '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
             '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
-            '#fmx-psFrame{border:0;display:block;background:#05070e;}';
+            '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
+            '@keyframes fmxSpin{to{transform:rotate(360deg);}}';
         document.head.appendChild(s);
     }
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
         if (!base || !base.id) { toast('Сначала сохрани карточку — постер строится по ней'); return; }
-        var realAvatar = (channelById(_ss.channelId) || {}).avatar_url || null;
+        var chan = channelById(_ss.channelId) || {};
+        var realAvatar = chan.avatar_url || null;
+        /* ниша — как на карточке Площадки: из листинга, иначе из канала */
+        var realNiche = base.niche || chan.niche || '';
         var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
         var saved = base.poster_json || {};
         var oldm = el('fmx-psBg'); if (oldm) { if (oldm.__fmxCleanup) oldm.__fmxCleanup(); oldm.remove(); }
@@ -2545,8 +2549,9 @@
         bg.innerHTML =
             '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> Промо-постер</div>' +
             '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-psScroll"><div id="fmx-psWrap" style="width:100%;overflow:hidden;">' +
-            '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '"></iframe></div></div>' +
+            '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
+            '<div id="fmx-psWrap" style="width:100%;overflow:hidden;">' +
+            '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;"></iframe></div></div>' +
             '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
         document.body.appendChild(bg);
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
@@ -2564,13 +2569,18 @@
         }
         function posterData() {
             return {
-                id: base.id, username: base.username, title: base.title, niche: base.niche,
+                id: base.id, username: base.username, title: base.title, niche: realNiche,
                 avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
                 er: base.er, min_price: minPrice,
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
-        var stickersDone = false;
+        var stickersDone = false, revealed = false;
+        function reveal() {
+            if (revealed) return; revealed = true;
+            var ld = el('fmx-psLoad'); if (ld) ld.style.display = 'none';
+            frame.style.opacity = '1';
+        }
         function maybeInit() {
             if (!glueReady || !chartDone || !stickersDone) return;
             var win = frame.contentWindow;
@@ -2579,7 +2589,9 @@
                 if (saved && Object.keys(saved).length) win.__fmxPosterApply(saved);
                 if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [] });
             } catch (e) {}
-            fitFrame(); setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
+            fitFrame();
+            requestAnimationFrame(function () { fitFrame(); reveal(); });
+            setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
         }
         frame.addEventListener('load', function () {
             try {
