@@ -98,11 +98,13 @@
       var chip = document.querySelector('#mChips .chip[data-m="' + key + '"]');
       var val = metricValue(key, data);
       if (val == null) {
+        // нет данных — ячейку не показываем (пустую не рисуем), но чип оставляем видимым
+        // и приглушённым (все 8 метрик эталона на месте; включить нельзя — данных нет)
         if (cell) { cell.classList.add('hide'); cell.setAttribute('data-noval', '1'); }
-        if (chip) { chip.style.display = 'none'; chip.classList.remove('on'); }
+        if (chip) { chip.classList.remove('on'); chip.style.display = ''; chip.style.opacity = '0.4'; chip.style.pointerEvents = 'none'; chip.title = 'Нет данных по этой метрике'; }
       } else {
         if (cell) { cell.removeAttribute('data-noval'); var v = cell.querySelector('.v'); if (v) v.textContent = val; }
-        if (chip) chip.style.display = '';
+        if (chip) { chip.style.display = ''; chip.style.opacity = ''; chip.style.pointerEvents = ''; chip.title = ''; }
       }
     });
     // цена
