@@ -2513,221 +2513,103 @@
         hydrateTgs(hero);
         renderMini(_ss.color, pl.title, _priceFrom(pl));
     }
-    /* ===================== промо-постер: пульт «Поделиться» ===================== */
-    var PS_BGS = [['blur', 'Блюр'], ['g1', 'Изумруд'], ['g2', 'Ультрафиолет'], ['mid', 'Полночь'], ['net', 'Сетка'], ['aur', 'Аврора'], ['coal', 'Уголь'], ['ocean', 'Океан'], ['sunset', 'Закат'], ['lime', 'Лайм'], ['rose', 'Роза'], ['steel', 'Сталь'], ['space', 'Космос'], ['waves', 'Волны'], ['amber', 'Янтарь']];
-    var PS_METRICS = [['subs', 'Подписчики'], ['reach', 'Охват'], ['er', 'ER'], ['cpm', 'CPM'], ['err', 'ERR']];
-    var PS_EMOJIS = ['⚡', '🔥', '🧬', '💊', '🚀', '😤'];
+    /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
+    /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
+       Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
+    var PS_GLUE_V = '20260707c';
+    function _psInjectStyle() {
+        if (el('fmx-ps-style')) return;
+        var s = document.createElement('style'); s.id = 'fmx-ps-style';
+        s.textContent = '.fmx-psFull{position:fixed;inset:0;z-index:100005;background:#05070e;display:flex;flex-direction:column;}' +
+            '.fmx-psTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;}' +
+            '.fmx-psTop .t{font-size:15px;font-weight:800;color:#e8e8ed;display:flex;align-items:center;gap:7px;}' +
+            '.fmx-psTop .t i{color:#5DCAA5;}' +
+            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}' +
+            '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
+            '#fmx-psFrame{border:0;display:block;background:#05070e;}';
+        document.head.appendChild(s);
+    }
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
         if (!base || !base.id) { toast('Сначала сохрани карточку — постер строится по ней'); return; }
-        /* постер показывает реальную аватарку канала (не выбор конструктора) */
         var realAvatar = (channelById(_ss.channelId) || {}).avatar_url || null;
-        var old = el('fmx-psBg'); if (old) { if (old.__fmxCleanup) old.__fmxCleanup(); old.remove(); }
-        var saved = base.poster_json || {};
         var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
-        var avail = {
-            subs: !!base.subscribers, reach: !!base.avg_views, er: base.er != null,
-            cpm: !!(minPrice && base.avg_views), err: !!(base.avg_views && base.subscribers)
-        };
-        var st = {
-            bg: saved.bg || 'blur',
-            show_niche: saved.show_niche !== false,
-            show_chart: saved.show_chart !== false,
-            metrics: (saved.metrics && saved.metrics.length >= 2) ? saved.metrics.slice() : ['subs', 'reach', 'er', 'cpm'].filter(function (m) { return avail[m]; }),
-            show_price: saved.show_price !== false,
-            price: (saved.price != null && saved.price > 0) ? saved.price : (minPrice || 0),
-            qr: saved.qr || 'both',
-            hook: saved.hook || '',
-            order: (saved.order && saved.order.length === 2) ? saved.order.slice() : ['chart', 'mgrid'],
-            stickers: (saved.stickers || []).slice()
-        };
-        /* оставляем только метрики с реальными данными; если их меньше двух — добираем доступными */
-        st.metrics = st.metrics.filter(function (m) { return avail[m]; });
-        if (st.metrics.length < 2) st.metrics = Object.keys(avail).filter(function (m) { return avail[m]; }).slice(0, 4);
-        var chart = null, chartState = 'loading';
-        var bgEl = document.createElement('div');
-        bgEl.id = 'fmx-psBg'; bgEl.className = 'fmx-cfm';
-        bgEl.style.alignItems = 'flex-end'; bgEl.style.padding = '0';
-        var bgChips = PS_BGS.map(function (b) { return '<button class="fmx-fx' + (st.bg === b[0] ? ' on' : '') + '" data-psbg="' + b[0] + '" style="flex:0 0 auto;">' + b[1] + '</button>'; }).join('');
-        var mChips = PS_METRICS.map(function (m) {
-            var on = st.metrics.indexOf(m[0]) >= 0, dis = !avail[m[0]];
-            return '<button class="fmx-fx' + (on && !dis ? ' on' : '') + '" data-psm="' + m[0] + '"' + (dis ? ' data-psdis="1" style="opacity:0.4;"' : '') + '>' + m[1] + '</button>';
-        }).join('');
-        var emjChips = PS_EMOJIS.map(function (e) { return '<button class="fmx-fx" data-psemj="' + e + '" style="flex:0 0 auto;font-size:18px;">' + e + '</button>'; }).join('');
-        var stkChips = (_stickers || []).map(function (s2) {
-            return '<button class="fmx-fx" data-psstk="' + s2.id + '" style="flex:0 0 auto;width:46px;height:46px;padding:3px;">' + stkMedia(s2, false) + '</button>';
-        }).join('');
-        bgEl.innerHTML = '<div class="fmx-ps">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">' +
-            '<div style="font-size:14px;font-weight:800;"><i class="ti ti-photo-star" style="color:#5DCAA5;"></i> Промо-постер</div>' +
+        var saved = base.poster_json || {};
+        var oldm = el('fmx-psBg'); if (oldm) { if (oldm.__fmxCleanup) oldm.__fmxCleanup(); oldm.remove(); }
+        _psInjectStyle();
+        var apiBase = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
+        var bg = document.createElement('div');
+        bg.id = 'fmx-psBg'; bg.className = 'fmx-psFull';
+        bg.innerHTML =
+            '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> Промо-постер</div>' +
             '<button class="fmx-btn" id="fmx-ps-x" style="width:auto;padding:9px 13px;"><i class="ti ti-x"></i></button></div>' +
-            '<div id="fmx-psWrap" style="width:100%;overflow:hidden;border-radius:14px;border:0.5px solid rgba(255,255,255,0.1);"><iframe id="fmx-psFrame" src="poster_render.html?edit=1" style="width:540px;height:675px;border:0;transform-origin:0 0;display:block;background:#0a0d18;"></iframe></div>' +
-            '<div style="font-size:10px;color:#565b73;margin-top:6px;"><i class="ti ti-hand-move"></i> Стикеры редактируются прямо на постере: рамка, угол — размер, верхняя точка — поворот, крестик — удалить, три точки — режим.</div>' +
-            '<div class="fmx-lbl fmx-mt2">Фон</div>' +
-            '<div class="fmx-fxw fmx-ps-scroll" id="fmx-ps-bgs" style="flex-wrap:nowrap;overflow-x:auto;">' + bgChips + '<button class="fmx-fx' + (typeof st.bg === 'object' ? ' on' : '') + '" data-psownbg="1" style="flex:0 0 auto;"><i class="ti ti-cloud-upload"></i> Свой</button></div>' +
-            '<input type="file" id="fmx-ps-file" accept="image/*,video/mp4" style="display:none;">' +
-            '<div class="fmx-lbl fmx-mt2">Метрики · минимум 2</div>' +
-            '<div class="fmx-fxw" id="fmx-ps-mts">' + mChips + '</div>' +
-            '<div class="fmx-lbl fmx-mt2">Блоки</div>' +
-            '<div class="fmx-fxw">' +
-            '<button class="fmx-fx' + (st.show_chart ? ' on' : '') + '" id="fmx-ps-chart">График</button>' +
-            '<button class="fmx-fx' + (st.show_price ? ' on' : '') + '" id="fmx-ps-price">Цена</button>' +
-            '<button class="fmx-fx' + (st.show_niche ? ' on' : '') + '" id="fmx-ps-niche">Ниша</button>' +
-            '<button class="fmx-fx" id="fmx-ps-order"><i class="ti ti-arrows-exchange"></i> График ↔ Метрики</button></div>' +
-            '<div id="fmx-ps-chartnote" style="display:none;font-size:10px;color:#f5bf4f;margin-top:5px;">Живой истории просмотров пока не набралось — график будет скрыт, пока не появятся данные.</div>' +
-            '<div class="fmx-lbl fmx-mt2">Цена, ₽ <span style="color:#565b73;text-transform:none;">(0 — «Цена по договорённости»)</span></div>' +
-            '<input class="fmx-inp" id="fmx-ps-priceInp" type="number" min="0" max="999999" step="100" inputmode="numeric" value="' + (st.price || '') + '">' +
-            '<div class="fmx-lbl fmx-mt2">QR-коды</div>' +
-            '<div class="fmx-fxw" id="fmx-ps-qr">' + [['none', 'Нет'], ['channel', 'Канал'], ['card', 'Карточка'], ['both', 'Оба']].map(function (q) { return '<button class="fmx-fx' + (st.qr === q[0] ? ' on' : '') + '" data-psqr="' + q[0] + '">' + q[1] + '</button>'; }).join('') + '</div>' +
-            '<div class="fmx-lbl fmx-mt2">Стикеры · тап добавляет на постер</div>' +
-            '<div class="fmx-fxw fmx-ps-scroll" id="fmx-ps-emj" style="flex-wrap:nowrap;overflow-x:auto;align-items:center;">' + emjChips + stkChips + '</div>' +
-            '<div class="fmx-lbl fmx-mt2">Текст</div>' +
-            '<input class="fmx-inp" id="fmx-ps-hook" type="text" maxlength="90" value="' + _esc(st.hook) + '" placeholder="Свой текст · до 90 символов">' +
-            '<button class="fmx-save" id="fmx-ps-send" style="margin-top:16px;"><i class="ti ti-send"></i> Прислать постер в чат (PNG)</button>' +
-            '</div>';
-        document.body.appendChild(bgEl);
-        hydrateTgs(el('fmx-ps-emj'));
-        var wrap = el('fmx-psWrap'), frame = el('fmx-psFrame');
-        /* fit самоочищается, если модалку уже сняли из DOM — залётный слушатель не держит detached-узлы */
-        function fit() { if (!wrap.isConnected) { window.removeEventListener('resize', fit); return; } var w = wrap.clientWidth || 320; var k = Math.min(1, w / 540); frame.style.transform = 'scale(' + k + ')'; wrap.style.height = Math.round(675 * k) + 'px'; }
-        fit();
-        window.addEventListener('resize', fit);
-        bgEl.__fmxCleanup = function () { window.removeEventListener('resize', fit); };
-        var frameReady = false;
-        function pullStickers() {
+            '<div class="fmx-psScroll"><div id="fmx-psWrap" style="width:100%;overflow:hidden;">' +
+            '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '"></iframe></div></div>' +
+            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
+        document.body.appendChild(bg);
+        var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
+        var LW = 600, glueReady = false, chartDone = false, extra = {};
+
+        function fitFrame() {
             try {
-                if (frameReady && frame.contentWindow && frame.contentWindow.__fmxPosterState) {
-                    var got = frame.contentWindow.__fmxPosterState();
-                    if (got) st.stickers = got;
-                }
+                var idoc = frame.contentDocument; if (!idoc || !idoc.body) return;
+                var lh = Math.max(idoc.body.scrollHeight, 700);
+                frame.style.width = LW + 'px'; frame.style.height = lh + 'px';
+                var k = Math.min(1, (wrap.clientWidth || 360) / LW);
+                frame.style.transform = 'scale(' + k + ')'; frame.style.transformOrigin = 'top left';
+                wrap.style.height = Math.round(lh * k) + 'px';
             } catch (e) {}
         }
-        function psData() {
+        function posterData() {
             return {
                 id: base.id, username: base.username, title: base.title, niche: base.niche,
-                subscribers: base.subscribers, avg_views: base.avg_views, er: base.er,
-                min_price: minPrice || null, avatar_url: realAvatar
+                avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
+                er: base.er, min_price: minPrice,
+                grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
-        function psApply() {
-            if (!frameReady) return;
+        function maybeInit() {
+            if (!glueReady || !chartDone) return;
+            var win = frame.contentWindow;
             try {
-                frame.contentWindow.__fmxPosterRender({ listing: psData(), chart: chart }, st, (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '', null);
+                win.__fmxPosterInit(posterData(), apiBase);
+                if (saved && Object.keys(saved).length) win.__fmxPosterApply(saved);
             } catch (e) {}
+            fitFrame(); setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
         }
-        frame.addEventListener('load', function () { frameReady = true; psApply(); });
+        frame.addEventListener('load', function () {
+            try {
+                var idoc = frame.contentDocument;
+                var g = idoc.createElement('script'); g.src = 'poster_glue.js?v=' + PS_GLUE_V;
+                g.onload = function () { glueReady = true; maybeInit(); };
+                g.onerror = function () { toast('Не удалось загрузить редактор постера'); };
+                idoc.head.appendChild(g);
+                // перерисовать при смене высоты панели (пользователь листает/меняет)
+                idoc.addEventListener('click', function () { setTimeout(fitFrame, 60); });
+            } catch (e) { toast('Редактор недоступен'); }
+        });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            chart = (r && r.ok) ? r.chart : null;
-            chartState = 'ready';
-            var note = el('fmx-ps-chartnote'); if (note) note.style.display = (chart || !st.show_chart) ? 'none' : 'block';
-            pullStickers(); psApply();
-        }).catch(function () { chartState = 'ready'; pullStickers(); psApply(); });
-        function close() { window.removeEventListener('resize', fit); bgEl.remove(); }
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv };
+            chartDone = true; maybeInit();
+        }).catch(function () { chartDone = true; maybeInit(); });
+
+        function onResize() { fitFrame(); }
+        window.addEventListener('resize', onResize);
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); };
+        function close() { if (bg.__fmxCleanup) bg.__fmxCleanup(); bg.remove(); }
         el('fmx-ps-x').addEventListener('click', close);
-        bgEl.addEventListener('click', function (e) { if (e.target === bgEl) close(); });
-        qsa(bgEl, '[data-psbg]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                pullStickers(); st.bg = b.getAttribute('data-psbg');
-                qsa(el('fmx-ps-bgs'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === b); });
-                _haptic('light'); psApply();
-            });
-        });
-        var ownBtn = bgEl.querySelector('[data-psownbg]'), fileInp = el('fmx-ps-file');
-        if (ownBtn) ownBtn.addEventListener('click', function () { fileInp.click(); });
-        if (fileInp) fileInp.addEventListener('change', function () {
-            var f = fileInp.files && fileInp.files[0];
-            fileInp.value = '';
-            if (!f) return;
-            if (f.size > 50 * 1024 * 1024) { toast('Файл больше 50 МБ'); return; }
-            ownBtn.disabled = true; ownBtn.innerHTML = '<i class="ti ti-loader-2"></i>';
-            var fd = new FormData();
-            fd.append('file', f); fd.append('target', 'cover');
-            var apiB = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
-            var headers = {};
-            try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e) {}
-            fetch(apiB + '/api/v1/marketplace/upload', { method: 'POST', headers: headers, body: fd })
-                .then(function (r) { return r.json(); })
-                .then(function (j) {
-                    ownBtn.disabled = false; ownBtn.innerHTML = '<i class="ti ti-cloud-upload"></i> Свой';
-                    if (!j || !j.url) { toast('Не удалось загрузить файл'); return; }
-                    pullStickers();
-                    st.bg = { url: j.url, kind: j.kind === 'video' ? 'video' : (j.kind === 'gif' ? 'gif' : 'img') };
-                    qsa(el('fmx-ps-bgs'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === ownBtn); });
-                    _haptic('success'); psApply();
-                })
-                .catch(function () { ownBtn.disabled = false; ownBtn.innerHTML = '<i class="ti ti-cloud-upload"></i> Свой'; toast('Сервер не ответил'); });
-        });
-        qsa(bgEl, '[data-psm]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                if (b.getAttribute('data-psdis')) { toast('Для этой метрики пока нет данных'); return; }
-                var m = b.getAttribute('data-psm'), i = st.metrics.indexOf(m);
-                if (i >= 0) {
-                    if (st.metrics.length <= 2) { toast('Минимум две метрики'); return; }
-                    st.metrics.splice(i, 1);
-                } else st.metrics.push(m);
-                b.classList.toggle('on', st.metrics.indexOf(m) >= 0);
-                pullStickers(); _haptic('light'); psApply();
-            });
-        });
-        function bindToggle(id, key) {
-            var b = el(id);
-            if (b) b.addEventListener('click', function () {
-                pullStickers(); st[key] = !st[key];
-                b.classList.toggle('on', st[key]);
-                if (key === 'show_chart') { var note = el('fmx-ps-chartnote'); if (note) note.style.display = (chart || !st.show_chart) ? 'none' : 'block'; }
-                _haptic('light'); psApply();
-            });
-        }
-        bindToggle('fmx-ps-chart', 'show_chart');
-        bindToggle('fmx-ps-price', 'show_price');
-        bindToggle('fmx-ps-niche', 'show_niche');
-        el('fmx-ps-order').addEventListener('click', function () {
-            pullStickers(); st.order.reverse(); _haptic('light'); psApply();
-        });
-        var priceT = null;
-        el('fmx-ps-priceInp').addEventListener('input', function () {
-            var v = Math.max(0, Math.min(999999, parseInt(this.value, 10) || 0));
-            clearTimeout(priceT);
-            priceT = setTimeout(function () { pullStickers(); st.price = v; psApply(); }, 300);
-        });
-        qsa(bgEl, '[data-psqr]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                pullStickers(); st.qr = b.getAttribute('data-psqr');
-                qsa(el('fmx-ps-qr'), '.fmx-fx').forEach(function (x) { x.classList.toggle('on', x === b); });
-                _haptic('light'); psApply();
-            });
-        });
-        function addSticker(item) {
-            pullStickers();
-            if (st.stickers.length >= 6) { toast('До шести стикеров на постере'); return; }
-            st.stickers.push(item);
-            _haptic('light'); psApply();
-        }
-        qsa(bgEl, '[data-psemj]').forEach(function (b) {
-            b.addEventListener('click', function () { addSticker({ emoji: b.getAttribute('data-psemj'), x: 0.72, y: 0.18, scale: 1, rot: 0, mode: 'top' }); });
-        });
-        qsa(bgEl, '[data-psstk]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                var s2 = (_stickers || []).filter(function (x) { return x.id === +b.getAttribute('data-psstk'); })[0];
-                if (!s2) return;
-                addSticker({ url: s2.url, kind: s2.kind, x: 0.72, y: 0.18, scale: 1, rot: 0, mode: 'top' });
-            });
-        });
-        var hookT = null;
-        el('fmx-ps-hook').addEventListener('input', function () {
-            var v = this.value;
-            clearTimeout(hookT);
-            hookT = setTimeout(function () { pullStickers(); st.hook = v.trim(); psApply(); }, 350);
-        });
         el('fmx-ps-send').addEventListener('click', function () {
-            var btn = this;
-            pullStickers();
+            var btn = this, win = frame.contentWindow;
+            var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
+            if (!state) { toast('Редактор ещё загружается — секунду'); return; }
             btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
-            apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: st }).then(function (r) {
-                btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат (PNG)';
-                if (r && r.ok) { _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!'); if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || st; }
-                else toast((r && r.error) || 'Не получилось');
-            }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат (PNG)'; toast('Сервер не ответил'); });
+            apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state }).then(function (r) {
+                btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат';
+                if (r && r.ok) {
+                    _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!');
+                    if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
+                } else toast((r && r.error) || 'Не получилось');
+            }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Сервер не ответил'); });
         });
     }
     function uploadPending() {
