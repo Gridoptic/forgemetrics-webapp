@@ -143,6 +143,96 @@
 
   function bgName() { var m = (document.getElementById('poster').className || '').match(/bg-(\S+)/); return m ? m[1] : 'blur'; }
 
+  /* ——— стикеры из коллекции бота (url) + эмодзи ——— */
+  var _lot = null;
+  function _loadScript(u) { return new Promise(function (r, j) { var sc = document.createElement('script'); sc.src = u; sc.onload = r; sc.onerror = j; document.head.appendChild(sc); }); }
+  function _loadLottie() {
+    if (_lot) return _lot;
+    _lot = Promise.all([
+      (typeof pako !== 'undefined') ? Promise.resolve() : _loadScript('https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js'),
+      (typeof lottie !== 'undefined') ? Promise.resolve() : _loadScript('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js')
+    ]);
+    return _lot;
+  }
+  function _stickerMedia(glyph, it, opts) {
+    opts = opts || {};
+    var url = abs(it.url), kind = it.kind || 'webp';
+    if (kind === 'webm') {
+      var v = document.createElement('video'); v.muted = true; v.loop = true; v.autoplay = true; v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;'; v.src = url;
+      v.addEventListener('loadeddata', function () { if (opts.static) { try { v.pause(); v.currentTime = 0.1; } catch (e) {} } });
+      if (v.play) v.play().catch(function () {}); glyph.appendChild(v);
+    } else if (kind === 'tgs') {
+      _loadLottie().then(function () {
+        return fetch(url).then(function (r) { return r.arrayBuffer(); }).then(function (buf) {
+          var json = JSON.parse(pako.inflate(new Uint8Array(buf), { to: 'string' }));
+          var anim = lottie.loadAnimation({ container: glyph, renderer: 'svg', loop: !opts.static, autoplay: !opts.static, animationData: json });
+          if (opts.static) anim.goToAndStop(0, true);
+        });
+      }).catch(function () {});
+    } else {
+      var img = document.createElement('img'); img.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;'; img.src = url; glyph.appendChild(img);
+    }
+  }
+  function _spawnSticker(it, opts) {
+    var poster = el('poster');
+    var mode = it.mode || 'm-top';
+    var MODES = window.MODES || [['m-top', 'Поверх'], ['m-blend', 'Слияние'], ['m-bg', 'Задний фон']];
+    var s = document.createElement('div');
+    s.className = 'stk ' + mode;
+    s.dataset.rot = it.rot || 0; s.dataset.size = it.size || 52; s.dataset.mode = mode;
+    if (it.url) { s.dataset.url = it.url; s.dataset.kind = it.kind || 'webp'; }
+    s.innerHTML = '<span class="glyph"' + (it.url ? ' style="width:100%;height:100%;display:block;"' : '') + '></span>' +
+      '<div class="frame"><div class="hnd h-rot">⟳</div><div class="hnd h-res">⤡</div><div class="hnd h-del">✕</div>' +
+      '<div class="modes">' + MODES.map(function (m) { return '<div class="mdot' + (m[0] === mode ? ' on' : '') + '" data-mode="' + m[0] + '" title="' + m[1] + '"></div>'; }).join('') + '</div></div>';
+    var glyph = s.querySelector('.glyph');
+    if (it.url) _stickerMedia(glyph, it, opts); else glyph.textContent = it.glyph || '';
+    s.style.left = (it.left || 0) + 'px'; s.style.top = (it.top || 0) + 'px';
+    s.style.transform = 'rotate(' + (it.rot || 0) + 'deg)';
+    poster.appendChild(s);
+    if (typeof window.applySize === 'function') window.applySize(s);
+    if (typeof window.bindStk === 'function') window.bindStk(s);
+    return s;
+  }
+
+  /* режим редактора в приложении: адаптив под телефон, переименование, стикер-пак из бота */
+  window.__fmxPosterEditorMode = function (opts) {
+    opts = opts || {};
+    if (!el('fmx-ed-style')) {
+      var st = document.createElement('style'); st.id = 'fmx-ed-style';
+      // панель во всю ширину под постером + крупнее контролы (после масштабирования iframe остаются читаемыми)
+      st.textContent = 'body{padding:12px !important;gap:14px !important;align-items:center !important;justify-content:flex-start !important;}' +
+        '.panel{width:540px !important;max-width:540px;}' +
+        '.panel h2{font-size:20px !important;} .panel .sub{font-size:13.5px !important;}' +
+        '.lbl{font-size:14px !important;} .chip{font-size:16px !important;padding:11px 15px !important;} .chip.emoji{font-size:26px !important;padding:8px 12px !important;}' +
+        'select,input[type=text],input[type=number]{font-size:17px !important;padding:14px 13px !important;}' +
+        '.ordrow{font-size:15px !important;padding:10px 12px !important;} .ordbtn{width:34px !important;height:34px !important;}' +
+        '.drop{font-size:13.5px !important;padding:16px !important;} .genbtn{font-size:16px !important;padding:14px !important;} .note,.gentip{font-size:13px !important;}';
+      document.head.appendChild(st);
+    }
+    var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = 'Редактор макета';
+    // стикер-пак пользователя (до 30 из бота) — добавляем чипы в блок стикеров макета
+    if (opts.stickers && opts.stickers.length && !el('fmx-ed-pack')) {
+      var box = el('eChips');
+      if (box) {
+        var pack = document.createElement('div'); pack.id = 'fmx-ed-pack'; pack.className = 'chips';
+        pack.style.cssText = 'margin-top:8px;';
+        opts.stickers.slice(0, 30).forEach(function (s2) {
+          var b = document.createElement('button'); b.className = 'chip'; b.style.cssText = 'width:52px;height:52px;padding:4px;';
+          var mediaGlyph = document.createElement('span'); mediaGlyph.style.cssText = 'width:100%;height:100%;display:block;';
+          _stickerMedia(mediaGlyph, s2, {}); b.appendChild(mediaGlyph);
+          b.addEventListener('click', function () {
+            var it = { url: s2.url, kind: s2.kind, mode: 'm-top', size: 96, rot: 0, left: 220, top: 300 };
+            var stk = _spawnSticker(it, {});
+            if (typeof window.selectStk === 'function') window.selectStk(stk);
+          });
+          pack.appendChild(b);
+        });
+        box.parentNode.insertBefore(pack, box.nextSibling);
+      }
+    }
+  };
+
   window.__fmxPosterState = function () {
     var poster = el('poster');
     var st = {};
@@ -161,18 +251,19 @@
     var C = window.COLORS || {};
     st.colors = { tit: C.tit, niche: C.niche, pr: C.pr, chart: C.chart, cells: {} };
     METRIC_KEYS.forEach(function (k) { var c = document.querySelector('.mcell[data-m="' + k + '"]'); if (c && c.dataset.hex) st.colors.cells[k] = c.dataset.hex; });
-    // стикеры
+    // стикеры (эмодзи или из коллекции бота — url)
     st.stickers = [];
     poster.querySelectorAll('.stk').forEach(function (s) {
-      var glyph = s.querySelector('.glyph');
-      st.stickers.push({
-        glyph: glyph ? glyph.textContent : '',
+      var it = {
         mode: s.dataset.mode || 'm-top',
         size: parseInt(s.dataset.size, 10) || 52,
         rot: parseInt(s.dataset.rot, 10) || 0,
         left: parseFloat(s.style.left) || 0,
         top: parseFloat(s.style.top) || 0
-      });
+      };
+      if (s.dataset.url) { it.url = s.dataset.url; it.kind = s.dataset.kind || 'webp'; }
+      else { var glyph = s.querySelector('.glyph'); it.glyph = glyph ? glyph.textContent : ''; }
+      st.stickers.push(it);
     });
     return st;
   };
@@ -235,22 +326,7 @@
     }
     // стикеры — воссоздаём как это делает eChips макета, с bindStk/applySize/setMode (глобальные)
     poster.querySelectorAll('.stk').forEach(function (s) { s.remove(); });
-    (state.stickers || []).forEach(function (it) {
-      var s = document.createElement('div');
-      var mode = it.mode || 'm-top';
-      s.className = 'stk ' + mode;
-      s.dataset.rot = it.rot || 0; s.dataset.size = it.size || 52; s.dataset.mode = mode;
-      var MODES = window.MODES || [['m-top', 'Поверх'], ['m-blend', 'Слияние'], ['m-bg', 'Задний фон']];
-      s.innerHTML = '<span class="glyph"></span>' +
-        '<div class="frame"><div class="hnd h-rot">⟳</div><div class="hnd h-res">⤡</div><div class="hnd h-del">✕</div>' +
-        '<div class="modes">' + MODES.map(function (m) { return '<div class="mdot' + (m[0] === mode ? ' on' : '') + '" data-mode="' + m[0] + '" title="' + m[1] + '"></div>'; }).join('') + '</div></div>';
-      s.querySelector('.glyph').textContent = it.glyph || '';
-      s.style.left = (it.left || 0) + 'px'; s.style.top = (it.top || 0) + 'px';
-      s.style.transform = 'rotate(' + (it.rot || 0) + 'deg)';
-      poster.appendChild(s);
-      if (typeof window.applySize === 'function') window.applySize(s);
-      if (typeof window.bindStk === 'function') window.bindStk(s);
-    });
+    (state.stickers || []).forEach(function (it) { _spawnSticker(it); });
     if (typeof window.relayout === 'function') window.relayout();
   };
 

@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260707c';
+    var PS_GLUE_V = '20260707d';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2524,6 +2524,8 @@
             '.fmx-psTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;}' +
             '.fmx-psTop .t{font-size:15px;font-weight:800;color:#e8e8ed;display:flex;align-items:center;gap:7px;}' +
             '.fmx-psTop .t i{color:#5DCAA5;}' +
+            '.fmx-psX{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);color:#c9cede;font-size:17px;cursor:pointer;flex-shrink:0;padding:0;line-height:1;}' +
+            '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
             '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}';
@@ -2542,13 +2544,13 @@
         bg.id = 'fmx-psBg'; bg.className = 'fmx-psFull';
         bg.innerHTML =
             '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> Промо-постер</div>' +
-            '<button class="fmx-btn" id="fmx-ps-x" style="width:auto;padding:9px 13px;"><i class="ti ti-x"></i></button></div>' +
+            '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-psScroll"><div id="fmx-psWrap" style="width:100%;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '"></iframe></div></div>' +
             '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
         document.body.appendChild(bg);
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
-        var LW = 600, glueReady = false, chartDone = false, extra = {};
+        var LW = 560, glueReady = false, chartDone = false, extra = {};
 
         function fitFrame() {
             try {
@@ -2568,12 +2570,14 @@
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
+        var stickersDone = false;
         function maybeInit() {
-            if (!glueReady || !chartDone) return;
+            if (!glueReady || !chartDone || !stickersDone) return;
             var win = frame.contentWindow;
             try {
                 win.__fmxPosterInit(posterData(), apiBase);
                 if (saved && Object.keys(saved).length) win.__fmxPosterApply(saved);
+                if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [] });
             } catch (e) {}
             fitFrame(); setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
         }
@@ -2592,6 +2596,9 @@
             if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
+        // стикер-пак пользователя (до 30 из бота) — грузим для редактора
+        if (_stickers) { stickersDone = true; }
+        else apiGet('/api/v1/marketplace/stickers').then(function (r) { _stickers = (r && r.stickers) ? r.stickers : []; stickersDone = true; maybeInit(); }).catch(function () { _stickers = _stickers || []; stickersDone = true; maybeInit(); });
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
