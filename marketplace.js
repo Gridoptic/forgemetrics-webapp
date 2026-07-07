@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260707f';
+    var PS_GLUE_V = '20260707g';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2584,11 +2584,11 @@
         function maybeInit() {
             if (!glueReady || !chartDone || !stickersDone) return;
             var win = frame.contentWindow;
-            try {
-                win.__fmxPosterInit(posterData(), apiBase);
-                if (saved && Object.keys(saved).length) win.__fmxPosterApply(saved);
-                if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [] });
-            } catch (e) {}
+            /* раздельные try: сбой одного шага (например, старого сохранённого состояния)
+               не должен отменять остальные — иначе редактор остаётся без адаптива/переименования */
+            try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
+            try { if (saved && Object.keys(saved).length && win.__fmxPosterApply) win.__fmxPosterApply(saved); } catch (e) {}
+            try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [] }); } catch (e) {}
             fitFrame();
             requestAnimationFrame(function () { fitFrame(); reveal(); });
             setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);

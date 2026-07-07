@@ -82,10 +82,11 @@
     // username — текстовый узел перед nicheSep внутри .meta (макет не трогаем)
     var meta = document.querySelector('.meta');
     if (meta && meta.firstChild) meta.firstChild.nodeValue = data.username ? '@' + String(data.username).replace(/^@/, '') : '';
+    // ниша: кнопка всегда кликабельна (как в макете); нет ниши — пустой разделитель (без висячей точки)
     var hasNiche = !!(data.niche && String(data.niche).trim());
-    if (el('nicheEl')) { el('nicheEl').textContent = data.niche || ''; el('nicheEl').classList.toggle('hide', !hasNiche); }
-    if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !hasNiche);
-    var nchip = el('nicheChip'); if (nchip) { nchip.classList.toggle('on', hasNiche); nchip.style.opacity = hasNiche ? '' : '0.45'; nchip.title = hasNiche ? '' : 'У канала не указана ниша'; }
+    if (el('nicheEl')) { el('nicheEl').textContent = data.niche || ''; el('nicheEl').classList.remove('hide'); }
+    if (el('nicheSep')) { el('nicheSep').textContent = hasNiche ? ' · ' : ''; el('nicheSep').classList.remove('hide'); }
+    var nchip = el('nicheChip'); if (nchip) { nchip.classList.add('on'); nchip.style.opacity = ''; nchip.style.pointerEvents = ''; nchip.title = ''; }
     // аватар — РЕАЛЬНЫЙ канала; нет — плейсхолдер с инициалами
     var avImg = el('avImg');
     if (avImg) {
@@ -97,15 +98,10 @@
       var cell = document.querySelector('.mcell[data-m="' + key + '"]');
       var chip = document.querySelector('#mChips .chip[data-m="' + key + '"]');
       var val = metricValue(key, data);
-      if (val == null) {
-        // нет данных — ячейку не показываем (пустую не рисуем), но чип оставляем видимым
-        // и приглушённым (все 8 метрик эталона на месте; включить нельзя — данных нет)
-        if (cell) { cell.classList.add('hide'); cell.setAttribute('data-noval', '1'); }
-        if (chip) { chip.classList.remove('on'); chip.style.display = ''; chip.style.opacity = '0.4'; chip.style.pointerEvents = 'none'; chip.title = 'Нет данных по этой метрике'; }
-      } else {
-        if (cell) { cell.removeAttribute('data-noval'); var v = cell.querySelector('.v'); if (v) v.textContent = val; }
-        if (chip) { chip.style.display = ''; chip.style.opacity = ''; chip.style.pointerEvents = ''; chip.title = ''; }
-      }
+      // все 8 метрик эталона: чипы всегда кликабельны; нет данных — значение «—»
+      // (загорится реальным числом само, когда наполнится База каналов)
+      if (cell) { var v = cell.querySelector('.v'); if (v) v.textContent = (val != null ? val : '—'); }
+      if (chip) { chip.style.display = ''; chip.style.opacity = ''; chip.style.pointerEvents = ''; chip.title = ''; }
     });
     // цена
     if (el('prInp')) { el('prInp').value = data.min_price || 0; try { el('prInp').dispatchEvent(new Event('input')); } catch (e) {} }
@@ -295,9 +291,8 @@
         else { if (img) { img.src = abs(state.bg.url); img.classList.add('act'); } if (vid) vid.classList.remove('act'); }
       }
     }
-    // ниша — показываем только если у канала есть ниша (иначе висячий разделитель)
-    var hasN = !!(el('nicheEl') && el('nicheEl').textContent.trim());
-    var showN = hasN && state.niche !== false;
+    // ниша: показываем по состоянию (разделитель пуст, когда ниши нет — висячей точки не будет)
+    var showN = state.niche !== false;
     if (el('nicheEl')) el('nicheEl').classList.toggle('hide', !showN);
     if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !showN);
     var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', showN);
@@ -308,7 +303,6 @@
     if (state.metrics) METRIC_KEYS.forEach(function (k) {
       if (!(k in state.metrics)) return;
       var cell = document.querySelector('.mcell[data-m="' + k + '"]');
-      if (cell && cell.getAttribute('data-noval')) return; // нет данных — не показываем
       if (cell) cell.classList.toggle('hide', !state.metrics[k]);
       var chip = document.querySelector('#mChips .chip[data-m="' + k + '"]'); if (chip) chip.classList.toggle('on', !!state.metrics[k]);
     });
