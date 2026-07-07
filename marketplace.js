@@ -1434,7 +1434,7 @@
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
-                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-share-3"></i> Поделиться — промо-постер и карточка</button>' : '') +
+                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-photo-star"></i> Промо-постер для рекламы канала</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
@@ -2520,6 +2520,8 @@
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
         if (!base || !base.id) { toast('Сначала сохрани карточку — постер строится по ней'); return; }
+        /* постер показывает реальную аватарку канала (не выбор конструктора) */
+        var realAvatar = (channelById(_ss.channelId) || {}).avatar_url || null;
         var old = el('fmx-psBg'); if (old) { if (old.__fmxCleanup) old.__fmxCleanup(); old.remove(); }
         var saved = base.poster_json || {};
         var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
@@ -2582,11 +2584,6 @@
             '<div class="fmx-lbl fmx-mt2">Текст</div>' +
             '<input class="fmx-inp" id="fmx-ps-hook" type="text" maxlength="90" value="' + _esc(st.hook) + '" placeholder="Свой текст · до 90 символов">' +
             '<button class="fmx-save" id="fmx-ps-send" style="margin-top:16px;"><i class="ti ti-send"></i> Прислать постер в чат (PNG)</button>' +
-            '<div style="font-size:10px;color:#565b73;margin:12px 0 6px;">Карточка целиком — как раньше:</div>' +
-            '<div style="display:flex;gap:8px;">' +
-            '<button class="fmx-btn" data-psk="png"><i class="ti ti-photo"></i>Картинка</button>' +
-            '<button class="fmx-btn" data-psk="video"><i class="ti ti-movie"></i>Видео</button>' +
-            '<button class="fmx-btn" data-psk="sticker"><i class="ti ti-sticker"></i>Стикер</button></div>' +
             '</div>';
         document.body.appendChild(bgEl);
         hydrateTgs(el('fmx-ps-emj'));
@@ -2609,7 +2606,7 @@
             return {
                 id: base.id, username: base.username, title: base.title, niche: base.niche,
                 subscribers: base.subscribers, avg_views: base.avg_views, er: base.er,
-                min_price: minPrice || null, avatar_url: base.avatar_url
+                min_price: minPrice || null, avatar_url: realAvatar
             };
         }
         function psApply() {
@@ -2731,17 +2728,6 @@
                 if (r && r.ok) { _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!'); if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || st; }
                 else toast((r && r.error) || 'Не получилось');
             }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат (PNG)'; toast('Сервер не ответил'); });
-        });
-        qsa(bgEl, '[data-psk]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                var kind = b.getAttribute('data-psk');
-                b.disabled = true;
-                apiPost('/api/v1/marketplace/share', { listing_id: base.id, kind: kind }).then(function (r) {
-                    b.disabled = false;
-                    if (r && r.ok) toast(kind === 'png' ? 'Картинка у тебя в чате с ботом — пересылай!' : 'Готово — смотри чат с ботом и пересылай!');
-                    else toast((r && r.error) || 'Не получилось');
-                }).catch(function () { b.disabled = false; toast('Сервер не ответил'); });
-            });
         });
     }
     function uploadPending() {
@@ -3169,8 +3155,8 @@
         var nm = el('fmx-anName'); if (nm) nm.textContent = '@' + u;
         showModal('fmx-anBg');
     }
-    function openListing(u) {
-        var l = findListing(u); if (!l) { openTg(u); return; }
+    function openListing(u, known) {
+        var l = known || findListing(u); if (!l) { openTg(u); return; }
         var accent = _isTop(l) ? '#f5bf4f' : _accent(l);
         var fmts = (l.formats && l.formats.length) ? '<div style="display:flex;flex-direction:column;gap:7px;margin-top:8px;">' + l.formats.map(function (f) { return '<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:9px 11px;background:rgba(255,255,255,0.03);border-radius:9px;"><span>' + _esc(f.label || f.format) + '</span><b>' + _num(f.price) + ' ₽</b></div>'; }).join('') + '</div>' : '';
         var mstr = [];
@@ -3221,10 +3207,19 @@
         el('fmx-bmvTitle').textContent = l.title || u;
         el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
         bindCards(el('fmx-bmvBody'));
-        qsa(el('fmx-bmvBody'), '[data-act="expand"],[data-act="analyze"]').forEach(function (b) {
+        /* «Развернуть» открывает разворот в том же окне (модалкой), с готовым объектом карточки —
+           не проваливается во внешний Telegram, даже если карточки нет в текущей ленте */
+        qsa(el('fmx-bmvBody'), '[data-act="expand"]').forEach(function (b) {
+            var nb = b.cloneNode(true); b.parentNode.replaceChild(nb, b);
+            nb.addEventListener('click', function () { hideModal('fmx-bmvBg'); openListing(u, l); });
+        });
+        qsa(el('fmx-bmvBody'), '[data-act="analyze"]').forEach(function (b) {
             b.addEventListener('click', function () { hideModal('fmx-bmvBg'); });
         });
         showModal('fmx-bmvBg');
+        /* карточку масштабируем ПОСЛЕ показа модалки: до этого clientWidth=0 и scaleCards
+           отрабатывал вхолостую — карточка оставалась 350px и вылезала за край на узких экранах */
+        requestAnimationFrame(function () { scaleCards(el('fmx-bmvBody')); });
     }
     function openBookmarks() {
         var box = el('fmx-bmBody');
@@ -3258,11 +3253,4 @@
 
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
-    /* серверный рендер «Поделиться»: страница share_render.html вызывает этот хук */
-    window.__fmxShareRender = function (l, apiBase) {
-        try { if (apiBase) API_BASE_URL = apiBase; } catch (e) {}
-        injectStyles();
-        document.body.innerHTML = '<div id="fmxShareRoot" style="width:374px;padding:12px;background:#0a0d18;color:#e8e8ed;font-family:\'Inter\',-apple-system,\'Segoe UI\',Roboto,sans-serif;display:flex;justify-content:center;"><div class="fmx-cwrap" style="width:350px;">' + fullCard(l) + '</div></div>';
-        hydrateTgs(document);
-    };
 })();

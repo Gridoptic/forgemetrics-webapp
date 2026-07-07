@@ -105,7 +105,7 @@ body{margin:0;padding:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter',-ap
 .stk .glyph{pointer-events:none;}
 .frame{position:absolute;inset:-8px;border:1.5px dashed rgba(93,202,165,0.9);border-radius:10px;display:none;}
 .stk.sel .frame{display:block;}
-.stk.sel{z-index:6;}
+.stk.sel:not(.m-bg){z-index:6;}
 .hnd{position:absolute;width:22px;height:22px;border-radius:50%;background:#0d1120;border:1.5px solid #5DCAA5;color:#5DCAA5;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;pointer-events:auto;}
 .h-rot{top:-30px;left:50%;transform:translateX(-50%);cursor:grab;}
 .h-res{right:-11px;bottom:-11px;cursor:nwse-resize;}
@@ -2810,7 +2810,13 @@ var qrcode = function() {
       document.getElementById('hookText').textContent = (settings.hook && String(settings.hook).trim()) ? settings.hook : DEFAULT_HOOK;
 
       var avImg = document.getElementById('avImg');
-      var avReady = new Promise(function (resolve) { avImg.onload = function () { resolve(); }; avImg.onerror = function () { resolve(); }; avImg.src = avatarSrc; if (avImg.complete) resolve(); });
+      /* грузим аватар только если источник изменился — иначе на каждый ре-рендер превью картинка мигает («пляшет») */
+      var avReady = new Promise(function (resolve) {
+        if (avImg.getAttribute('data-src') === avatarSrc && avImg.complete) { resolve(); return; }
+        avImg.onload = function () { resolve(); }; avImg.onerror = function () { resolve(); };
+        avImg.setAttribute('data-src', avatarSrc); avImg.src = avatarSrc;
+        if (avImg.complete) resolve();
+      });
 
       var chart = (settings.show_chart !== false) ? data.chart : null;
       if (chart && chart.series) buildChart(chart.series, chart.days); else document.getElementById('chart').classList.add('hide');
