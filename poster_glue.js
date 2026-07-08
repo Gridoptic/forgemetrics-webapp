@@ -615,6 +615,17 @@
     }));
   };
 
+  /* видео-рендер: длительность самого длинного движущегося элемента (сек) — чтобы ролик был длиной с контент.
+     Вызывать ПОСЛЕ __fmxPosterAnimsReady (иначе duration видео ещё неизвестна). 0 — анимаций нет. */
+  window.__fmxPosterMaxDuration = function () {
+    var d = 0;
+    _anims.forEach(function (a) {
+      if (a.kind === 'video' && a.el && isFinite(a.el.duration) && a.el.duration > 0) d = Math.max(d, a.el.duration);
+      else if (a.kind === 'lottie' && a.anim) { try { var ld = a.anim.getDuration(false); if (ld > 0) d = Math.max(d, ld); } catch (e) {} }
+    });
+    return d;
+  };
+
   /* видео-рендер: детерминированно перематываем ВСЕ движущиеся элементы на время t (мс) и ждём кадр.
      Без этого ролик пришлось бы писать в реальном времени с плавающим FPS. */
   window.__fmxPosterSeek = function (t_ms) {

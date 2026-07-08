@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260709a';
+    var PS_GLUE_V = '20260709b';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2681,7 +2681,7 @@
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
-        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); };
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); };
         function close() {
             var win = frame.contentWindow;
             /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
@@ -2726,7 +2726,7 @@
                 var fg = el('fmx-ring-fg'); if (fg) fg.style.strokeDashoffset = (C * (1 - p / 100)).toFixed(1);
                 var pc = el('fmx-pct'); if (pc) pc.textContent = Math.round(p) + '%';
             }
-            function stop() { clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); }
+            function stop() { clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); }
             setPct(2);
             clearInterval(bg.__fmxProgIv);
             bg.__fmxProgIv = setInterval(function () { if (!done) setPct(2 + Math.min(0.93, (Date.now() - t0) / EST) * 88); }, 450);
@@ -2735,12 +2735,13 @@
                 apiGet('/api/v1/marketplace/poster/status?job=' + job).then(function (r) {
                     if (done) return;
                     if (r && r.done) {
-                        done = true; stop(); setPct(100); _haptic('success');
+                        done = true; clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo2);
+                        setPct(100); _haptic('success');   // сначала кольцо дозаполняется до 100%
                         delete window.__fmxPosterJob[base.id];
-                        var b2 = sendBtn();
-                        if (b2) b2.innerHTML = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
+                        var msg = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
+                        bg.__fmxProgDone = setTimeout(function () { var b2 = sendBtn(); if (b2) b2.innerHTML = msg; }, 650);
                         toast(r.sent ? 'Живой постер в чате с ботом — пересылай!' : 'С живым не вышло — прислал картинкой');
-                        bg.__fmxProgTo = setTimeout(restoreSend, 4500);
+                        bg.__fmxProgTo = setTimeout(restoreSend, 5300);
                     } else { bg.__fmxProgPoll = setTimeout(poll, 2000); }
                 }).catch(function () { bg.__fmxProgPoll = setTimeout(poll, 3000); });
             }
