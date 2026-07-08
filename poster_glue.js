@@ -117,6 +117,12 @@
   window.__fmxPosterInit = function (data, api) {
     if (api != null) API = api;
     data = data || {};
+    // QR: подпись не должна быть шире самого QR (иначе белый блок растягивается — было видно на @ForgeMetricsBot)
+    if (!el('fmx-qr-fix')) {
+      var qs = document.createElement('style'); qs.id = 'fmx-qr-fix';
+      qs.textContent = '#qrs .qrt span{max-width:80px !important;}';
+      document.head.appendChild(qs);
+    }
     var titleTxt = data.title || data.username || 'Канал';
     if (el('titEl')) el('titEl').textContent = titleTxt;
     // username — текстовый узел перед nicheSep внутри .meta (макет не трогаем)

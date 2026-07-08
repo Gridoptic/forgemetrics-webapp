@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260708e';
+    var PS_GLUE_V = '20260708f';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2541,26 +2541,37 @@
             '.fmx-fmtrow .tx b{font-size:13.5px;color:#e8e8ed;font-weight:600;}' +
             '.fmx-fmtrow .tx i{font-size:11.5px;color:#8990a8;font-style:normal;line-height:1.35;}' +
             '.fmx-fmtcancel{width:100%;background:transparent;border:0;color:#8990a8;font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:inherit;margin-top:2px;-webkit-tap-highlight-color:transparent;}' +
+            '.fmx-fmtpro{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:800;letter-spacing:0.5px;color:#f5bf4f;background:rgba(245,191,79,0.16);border:1px solid rgba(245,191,79,0.4);border-radius:6px;padding:1px 5px;vertical-align:middle;}' +
+            '.fmx-fmtrow.locked{opacity:0.6;}' +
             '@keyframes fmxUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
         document.head.appendChild(s);
     }
-    /* модалка выбора формата: живой MP4 / GIF-файл / статичный PNG. Показывается только когда есть что анимировать. */
-    function _posterPickFormat() {
+    /* модалка выбора формата: живой MP4 / GIF-файл / статичный PNG. Показывается только когда есть что анимировать.
+       MP4/GIF — на тарифах PRO/PRO+ (liveOk); PNG доступен всем. */
+    function _posterPickFormat(liveOk) {
         return new Promise(function (resolve) {
             var prev = el('fmx-fmtpick'); if (prev) prev.remove();
+            var pro = liveOk ? '' : '<span class="fmx-fmtpro">PRO</span>';
+            var lk = liveOk ? '' : ' locked';
             var m = document.createElement('div'); m.id = 'fmx-fmtpick';
             m.innerHTML = '<div class="fmx-fmtcard">' +
                 '<div class="fmx-fmttitle">Как прислать постер?</div>' +
-                '<button class="fmx-fmtrow" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)</b><i>Анимация играет прямо в чате · пришлю через ~полминуты</i></span></button>' +
-                '<button class="fmx-fmtrow" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>GIF-файл</b><i>Можно скачать и вставить где угодно · тяжелее</i></span></button>' +
-                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно</i></span></button>' +
+                '<button class="fmx-fmtrow' + lk + '" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)' + pro + '</b><i>Анимация играет прямо в чате · пришлю через пару минут</i></span></button>' +
+                '<button class="fmx-fmtrow' + lk + '" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>GIF-файл' + pro + '</b><i>Можно скачать и вставить где угодно · тяжелее</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно · на всех тарифах</i></span></button>' +
                 '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
             document.body.appendChild(m);
             function done(f) { m.remove(); resolve(f || null); }
             m.addEventListener('click', function (e) {
                 if (e.target === m) return done(null);
                 var b = e.target.closest('[data-f]'); if (!b) return;
-                done(b.getAttribute('data-f'));
+                var f = b.getAttribute('data-f');
+                if ((f === 'mp4' || f === 'gif') && !liveOk) {  // не премиум — подсказываем, модалку не закрываем
+                    try { _haptic('warning'); } catch (e2) {}
+                    toast('Живой постер (MP4/GIF) — на тарифах PRO и PRO+. Картинка (PNG) доступна всем');
+                    return;
+                }
+                done(f);
             });
         });
     }
@@ -2657,7 +2668,7 @@
             } catch (e) { toast('Редактор недоступен'); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche };
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, live_ok: r.live_ok };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
         // стикер-пак пользователя (до 30 из бота) — грузим для редактора
@@ -2666,7 +2677,7 @@
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
-        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); };
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearTimeout(bg.__fmxCd); };
         function close() {
             var win = frame.contentWindow;
             /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
@@ -2693,30 +2704,38 @@
         var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат';
         el('fmx-ps-send').addEventListener('click', function () {
             var btn = this, win = frame.contentWindow;
+            function restore() { btn.disabled = false; btn.innerHTML = SEND_LABEL; }
             function send(fmt) {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restore(); toast('Редактор ещё загружается — секунду'); return; }
                 var live = (fmt === 'mp4' || fmt === 'gif');
                 btn.disabled = true;
                 btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> Готовлю живой постер…' : '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
                 apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, format: fmt || 'png' }).then(function (r) {
-                    btn.disabled = false; btn.innerHTML = SEND_LABEL;
                     if (r && r.ok) {
                         _haptic('success');
-                        if (r.queued) toast(fmt === 'gif' ? 'Готовлю GIF — пришлю в чат через ~полминуты' : 'Готовлю живой постер — пришлю в чат через ~полминуты');
-                        else toast('Постер у тебя в чате с ботом — пересылай!');
+                        if (r.queued) {
+                            toast(r.already ? 'Этот постер уже готовится — скоро пришлю в чат'
+                                : (fmt === 'gif' ? 'Готовлю GIF — пришлю в чат через пару минут' : 'Готовлю живой постер — пришлю в чат через пару минут'));
+                            /* защита от повторной отправки: держим кнопку занятой, пока идёт обработка */
+                            btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> Идёт обработка…';
+                            clearTimeout(bg.__fmxCd); bg.__fmxCd = setTimeout(restore, 30000);
+                        } else {
+                            toast('Постер у тебя в чате с ботом — пересылай!'); restore();
+                        }
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
-                    } else toast((r && r.error) || 'Не получилось');
-                }).catch(function () { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Сервер не ответил'); });
+                    } else { restore(); toast((r && r.error) || 'Не получилось'); }
+                }).catch(function () { restore(); toast('Сервер не ответил'); });
             }
             function proceed() {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restore(); toast('Редактор ещё загружается — секунду'); return; }
                 /* MP4/GIF предлагаем только когда есть что анимировать (видео-фон или анимо-стикер) */
                 var hasMotion = !!(state.bg && typeof state.bg === 'object' && state.bg.kind === 'video')
                     || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });
                 if (!hasMotion) { send('png'); return; }
-                _posterPickFormat().then(function (fmt) { if (fmt) send(fmt); });
+                btn.disabled = true;  // пока открыта модалка — кнопка занята (без повторных открытий)
+                _posterPickFormat(extra && extra.live_ok).then(function (fmt) { if (fmt) send(fmt); else restore(); });
             }
             /* если свой фон ещё грузится — дождёмся, чтобы постер ушёл с картинкой, а не с blur */
             var pend = null;
