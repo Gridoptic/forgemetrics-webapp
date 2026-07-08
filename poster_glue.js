@@ -10,6 +10,29 @@
   function el(id) { return document.getElementById(id); }
   function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
 
+  /* === свой фон: серверный url + пан/зум === */
+  var _customBg = null;               // {url, kind} — ЗАГРУЖЕННЫЙ на сервер файл своего фона
+  var _bgpan = { x: 0, y: 0, s: 1 };  // сдвиг (px в системе постера 540x675) и масштаб своей картинки
+  var _bgUploadPending = null;        // промис текущей загрузки файла на сервер (ждём при закрытии/отправке)
+  function _isPhotoBg() { var p = el('poster'); return !!(p && /\bbg-photo\b/.test(p.className)); }
+  function _bgEls() { var a = [], i = el('bgImg'), v = el('bgVid'); if (i) a.push(i); if (v) a.push(v); return a; }
+  function _clampBgpan() {
+    var s = Math.max(1, Math.min(+_bgpan.s || 1, 4)); _bgpan.s = s;
+    var mx = (s - 1) * 270, my = (s - 1) * 337.5;   // не даём краям картинки вылезти за постер (нет слепых зон)
+    _bgpan.x = Math.max(-mx, Math.min(+_bgpan.x || 0, mx));
+    _bgpan.y = Math.max(-my, Math.min(+_bgpan.y || 0, my));
+  }
+  function _applyBgpan() {
+    _clampBgpan();
+    var photo = _isPhotoBg(), poster = el('poster');
+    if (poster) poster.style.touchAction = photo ? 'none' : '';  // жесты на постере не должны скроллить страницу
+    var t = 'translate(' + _bgpan.x + 'px,' + _bgpan.y + 'px) scale(' + _bgpan.s + ')';
+    _bgEls().forEach(function (e) {
+      if (photo) { e.style.transformOrigin = 'center center'; e.style.transform = t; }
+      else { e.style.transform = ''; }  // пресетам возвращаем родной CSS (у блюра свой scale)
+    });
+  }
+
   function initials(title, username) {
     var s = (title || username || '?').trim();
     var p = s.split(/\s+/).filter(Boolean);
@@ -248,12 +271,21 @@
         box.parentNode.insertBefore(pack, box.nextSibling);
       }
     }
+    // свой фон: загрузка на сервер + пан/зум жестами
+    _setupCustomBg();
   };
 
   window.__fmxPosterState = function () {
     var poster = el('poster');
     var st = {};
-    st.bg = bgName();
+    var _bn = bgName();
+    if (_bn === 'photo') {
+      // свой фон: сохраняем ОБЪЕКТ с серверным url (иначе бэкенд не поймёт "photo" и откатит на blur)
+      st.bg = (_customBg && _customBg.url) ? { url: _customBg.url, kind: _customBg.kind || 'img' } : 'blur';
+      if (typeof st.bg === 'object') st.bgpan = { x: Math.round(_bgpan.x), y: Math.round(_bgpan.y), s: +(+_bgpan.s).toFixed(3) };
+    } else {
+      st.bg = _bn;
+    }
     st.niche = !(el('nicheEl') && el('nicheEl').classList.contains('hide'));
     st.chart = !(el('chart') && el('chart').classList.contains('hide'));
     st.price = { on: !(el('prBox') && el('prBox').classList.contains('hide')), val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0 };
@@ -300,11 +332,16 @@
       poster.className = poster.className.replace(/\bbg-\S+/g, '').replace(/\s+/g, ' ').trim() + ' bg-' + name;
       document.querySelectorAll('#bgChips .chip').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-bg') === state.bg); });
       if (typeof state.bg === 'object' && state.bg.url) {
+        _customBg = { url: state.bg.url, kind: state.bg.kind || 'img' };
+        _bgpan = (state.bgpan && typeof state.bgpan === 'object')
+          ? { x: +state.bgpan.x || 0, y: +state.bgpan.y || 0, s: +state.bgpan.s || 1 }
+          : { x: 0, y: 0, s: 1 };
         var img = el('bgImg'), vid = el('bgVid');
         if (state.bg.kind === 'video') { if (vid) { vid.src = abs(state.bg.url); vid.classList.add('act'); if (img) img.classList.remove('act'); if (vid.play) vid.play().catch(function () {}); } }
         else { if (img) { img.src = abs(state.bg.url); img.classList.add('act'); } if (vid) vid.classList.remove('act'); }
       }
     }
+    _applyBgpan();
     // ниша: показываем по состоянию (разделитель пуст, когда ниши нет — висячей точки не будет)
     var showN = state.niche !== false;
     if (el('nicheEl')) el('nicheEl').classList.toggle('hide', !showN);
@@ -361,8 +398,111 @@
     if (el('chartPct')) el('chartPct').style.color = '';
     document.querySelectorAll('.mcell').forEach(function (c) { delete c.dataset.hex; });
     window.COLORS = { tit: '#e8e8ed', niche: '#5DCAA5', pr: '#5DCAA5', chart: '#5DCAA5' };
+    _customBg = null; _bgpan = { x: 0, y: 0, s: 1 };  // свой фон и пан/зум — к дефолту
     window.__fmxPosterApply(defaultState || {});
   };
+
+  /* загрузка своего фона на сервер (иначе картинка живёт лишь в браузере и в чат уходит blur).
+     Загрузчик даёт приложение через window.__fmxPosterUploader(file) -> Promise<{url, kind}>. */
+  function _uploadCustomBg(f) {
+    if (!f || typeof window.__fmxPosterUploader !== 'function') return null;
+    var drop = el('drop'), orig = drop ? drop.innerHTML : '';
+    if (drop) drop.textContent = 'Загружаю фон на сервер…';
+    var p = Promise.resolve(window.__fmxPosterUploader(f)).then(function (res) {
+      if (res && res.url) _customBg = { url: res.url, kind: res.kind || 'img' };
+      if (drop) drop.textContent = (res && res.url) ? 'Фон загружен ✓ — нажмите, чтобы заменить' : 'Не удалось загрузить фон';
+      return res;
+    }).catch(function (e) {
+      _customBg = null;
+      if (drop) { drop.textContent = 'Не удалось загрузить фон — попробуйте ещё раз'; setTimeout(function () { if (drop) drop.innerHTML = orig; }, 2600); }
+      throw e;
+    });
+    _bgUploadPending = p;
+    return p;
+  }
+  window.__fmxPosterBgPending = function () { return _bgUploadPending; };
+
+  /* обёртка выбора своего фона (setOwnBg макета) + пан/зум жестами на постере. Вызывается из editorMode. */
+  function _setupCustomBg() {
+    if (!window.__fmxBgWrapped && typeof window.setOwnBg === 'function') {
+      window.__fmxBgWrapped = true;
+      var origSet = window.setOwnBg;
+      window.setOwnBg = function (f) {
+        try { origSet(f); } catch (e) {}                 // мгновенное локальное превью (blob) — как в макете
+        _bgpan = { x: 0, y: 0, s: 1 }; _applyBgpan();      // свежая картинка — без сдвига
+        _uploadCustomBg(f);                                // и параллельно грузим на сервер
+      };
+    }
+    var chips = el('bgChips');
+    if (chips && !chips.__fmxHook) { chips.__fmxHook = true; chips.addEventListener('click', function () { setTimeout(_applyBgpan, 0); }); }
+    _bindBgGestures();
+  }
+
+  /* пан-зум своей картинки: перетаскивание (палец/мышь) + масштаб (щипок/колесо), только для bg-photo */
+  function _bindBgGestures() {
+    var poster = el('poster');
+    if (!poster || poster.__fmxBgPan) return;
+    poster.__fmxBgPan = true;
+    var ptrs = {}, startPan = null, downXY = null, moved = false, pinch = null;
+    function ids() { return Object.keys(ptrs); }
+    function begin(list) {
+      if (list.length === 1) { startPan = { x: _bgpan.x, y: _bgpan.y }; downXY = { x: ptrs[list[0]].x, y: ptrs[list[0]].y }; moved = false; pinch = null; }
+      else if (list.length === 2) {
+        var a = ptrs[list[0]], b = ptrs[list[1]];
+        pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, s0: _bgpan.s, x0: _bgpan.x, y0: _bgpan.y, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+        moved = true;
+      }
+    }
+    poster.addEventListener('pointerdown', function (e) {
+      if (!_isPhotoBg()) return;
+      if (e.target.closest('.stk') || e.target.closest('.hnd')) return;  // стикеры двигаются своим кодом
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+      begin(ids());
+      try { poster.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    poster.addEventListener('pointermove', function (e) {
+      if (!(e.pointerId in ptrs)) return;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+      var list = ids();
+      if (list.length >= 2 && pinch) {
+        var a = ptrs[list[0]], b = ptrs[list[1]];
+        _bgpan.s = pinch.s0 * (Math.hypot(a.x - b.x, a.y - b.y) / pinch.d0);
+        var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        _bgpan.x = pinch.x0 + (mx - pinch.mx); _bgpan.y = pinch.y0 + (my - pinch.my);
+        _applyBgpan(); e.preventDefault();
+      } else if (list.length === 1 && startPan && downXY) {
+        var dx = e.clientX - downXY.x, dy = e.clientY - downXY.y;
+        if (!moved && (Math.abs(dx) + Math.abs(dy)) < 5) return;  // порог: короткий тап оставляем пикеру/выбору
+        moved = true;
+        _bgpan.x = startPan.x + dx; _bgpan.y = startPan.y + dy;
+        _applyBgpan(); e.preventDefault();
+      }
+    });
+    function end(e) {
+      if (!(e.pointerId in ptrs)) return;
+      delete ptrs[e.pointerId];
+      try { poster.releasePointerCapture(e.pointerId); } catch (_) {}
+      var list = ids();
+      if (list.length < 2) pinch = null;
+      if (list.length === 1) { startPan = { x: _bgpan.x, y: _bgpan.y }; downXY = { x: ptrs[list[0]].x, y: ptrs[list[0]].y }; }
+      else if (list.length === 0) {
+        startPan = null; downXY = null;
+        if (moved) {  // после панорамы глушим клик, чтобы не открылся пикер цвета
+          var sw = function (ev) { ev.stopPropagation(); ev.preventDefault(); };
+          poster.addEventListener('click', sw, { capture: true, once: true });
+          setTimeout(function () { poster.removeEventListener('click', sw, true); }, 400);
+        }
+      }
+    }
+    poster.addEventListener('pointerup', end);
+    poster.addEventListener('pointercancel', end);
+    poster.addEventListener('wheel', function (e) {
+      if (!_isPhotoBg()) return;
+      e.preventDefault();
+      _bgpan.s = _bgpan.s * Math.exp(-e.deltaY * 0.0015);
+      _applyBgpan();
+    }, { passive: false });
+  }
 
   /* контролы панели — в НАТИВНОМ размере на экране: iframe масштабируется на k,
      поэтому логические размеры = целевой/к (постер остаётся своим, панель читаемой) */

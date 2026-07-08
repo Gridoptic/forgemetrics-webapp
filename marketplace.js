@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260707j';
+    var PS_GLUE_V = '20260708a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2585,6 +2585,14 @@
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
+        /* загрузчик своего фона постера на сервер — отдаём его в iframe, glue вызовет при выборе файла */
+        function uploadPosterBg(file) {
+            var fd = new FormData(); fd.append('file', file); fd.append('target', 'posterbg');
+            var headers = {};
+            try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e) {}
+            return fetch(apiBase + '/api/v1/marketplace/upload', { method: 'POST', headers: headers, body: fd })
+                .then(function (r) { if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) { throw new Error(j.detail || ('код ' + r.status)); }); return r.json(); });
+        }
         var stickersDone = false, revealed = false;
         function reveal() {
             if (revealed) return; revealed = true;
@@ -2597,6 +2605,7 @@
             /* раздельные try: сбой одного шага (например, старого сохранённого состояния)
                не должен отменять остальные — иначе редактор остаётся без адаптива/переименования */
             try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
+            try { win.__fmxPosterUploader = uploadPosterBg; } catch (e) {}
             /* есть сохранённое — восстанавливаем как было (вкл. стикеры); нет — показываем всё */
             try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
@@ -2627,30 +2636,47 @@
         window.addEventListener('resize', onResize);
         bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); };
         function close() {
-            /* сохраняем состояние при закрытии — правки, позиции стикеров и удаления запоминаются */
-            try {
-                var win = frame.contentWindow;
-                var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (state) {
-                    if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = state;
-                    apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, save_only: true }).catch(function () {});
-                }
-            } catch (e) {}
-            if (bg.__fmxCleanup) bg.__fmxCleanup(); bg.remove();
+            var win = frame.contentWindow;
+            /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
+            bg.style.pointerEvents = 'none'; bg.style.opacity = '0';
+            var pend = null;
+            try { pend = (win && win.__fmxPosterBgPending) ? win.__fmxPosterBgPending() : null; } catch (e) {}
+            var done = false;
+            function finish() {
+                if (done) return; done = true;
+                /* сохраняем состояние при закрытии — правки, позиции стикеров, свой фон и пан/зум запоминаются */
+                try {
+                    var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
+                    if (state) {
+                        if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = state;
+                        apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, save_only: true }).catch(function () {});
+                    }
+                } catch (e) {}
+                if (bg.__fmxCleanup) bg.__fmxCleanup(); bg.remove();
+            }
+            if (pend && pend.then) { pend.then(finish, finish); setTimeout(finish, 15000); }
+            else finish();
         }
         el('fmx-ps-x').addEventListener('click', close);
         el('fmx-ps-send').addEventListener('click', function () {
             var btn = this, win = frame.contentWindow;
-            var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-            if (!state) { toast('Редактор ещё загружается — секунду'); return; }
-            btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
-            apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state }).then(function (r) {
-                btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат';
-                if (r && r.ok) {
-                    _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!');
-                    if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
-                } else toast((r && r.error) || 'Не получилось');
-            }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Сервер не ответил'); });
+            function send() {
+                var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
+                if (!state) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Редактор ещё загружается — секунду'); return; }
+                btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
+                apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state }).then(function (r) {
+                    btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат';
+                    if (r && r.ok) {
+                        _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!');
+                        if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
+                    } else toast((r && r.error) || 'Не получилось');
+                }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Сервер не ответил'); });
+            }
+            /* если свой фон ещё грузится — дождёмся, чтобы постер ушёл с картинкой, а не с blur */
+            var pend = null;
+            try { pend = (win && win.__fmxPosterBgPending) ? win.__fmxPosterBgPending() : null; } catch (e) {}
+            if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю фон…'; pend.then(send, send); }
+            else send();
         });
     }
     function uploadPending() {
