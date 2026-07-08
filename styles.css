@@ -72,6 +72,7 @@
 html, body {
     width: 100%;
     overflow-x: hidden;
+    overscroll-behavior: none;   /* без сцепления скролла с нативным жестом — меньше «залипаний» тапа */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
