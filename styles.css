@@ -67,6 +67,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* убираем дефолтный прямоугольный блик WebView при тапе (он игнорирует border-radius) */
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {

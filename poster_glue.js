@@ -249,7 +249,8 @@
       // постер вплотную к верху окна, редактор почти вплотную к постеру;
       // min-height:0 + align-content:flex-start убирают распирание flex-строк (иначе огромные
       // пустоты между блоками из-за 100vh); размеры контролов задаёт __fmxPosterPanelScale
-      st.textContent = 'body{padding:6px 8px 26px !important;gap:10px !important;min-height:0 !important;' +
+      st.textContent = '*{-webkit-tap-highlight-color:transparent !important;}button:focus,.chip:focus{outline:none !important;}' +
+        'body{padding:6px 8px 26px !important;gap:10px !important;min-height:0 !important;' +
         'align-items:center !important;align-content:flex-start !important;justify-content:flex-start !important;}' +
         '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
         '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}' +
@@ -461,15 +462,15 @@
         _uploadCustomBg(f);                                // и параллельно грузим на сервер
       };
     }
-    // кнопка режима кадрирования — в панели под зоной «Собственный фон» (нативный размер, тап-зона ≥40px)
+    // кнопка режима кадрирования — прямо под постером, над «Сбросить настройки» (центрирована, тап-зона ≥40px)
     if (!el('fmx-ed-bgcrop')) {
-      var drop = el('drop');
-      if (drop && drop.parentNode) {
+      var anchor = el('fmx-ed-reset') || el('drop');
+      if (anchor && anchor.parentNode) {
         var b = document.createElement('button'); b.id = 'fmx-ed-bgcrop'; b.type = 'button';
         b.innerHTML = '⤢ Кадрировать фон';
-        b.style.cssText = 'display:none;width:100%;margin-top:8px;padding:12px;border-radius:11px;background:#141828;border:1px solid rgba(93,202,165,0.4);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
+        b.style.cssText = 'display:none;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:#141828;border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
         b.addEventListener('click', function () { _setBgCrop(!_bgCrop); });
-        drop.parentNode.insertBefore(b, drop.nextSibling);
+        anchor.parentNode.insertBefore(b, anchor);  // над кнопкой сброса (или перед дропом как запасной вариант)
       }
     }
     _ensureBgOverlay();
@@ -484,7 +485,7 @@
     var poster = el('poster'); if (!poster) return;
     if (!el('fmx-bg-hint')) {
       var h = document.createElement('div'); h.id = 'fmx-bg-hint';
-      h.textContent = 'Перетащите фон, чтобы кадрировать · масштаб';
+      h.textContent = 'Перетащите или масштабируйте фон';
       h.style.display = 'none'; poster.appendChild(h);
     }
     if (el('fmx-bg-catch')) return;
@@ -556,7 +557,7 @@
       '.note,.gentip{font-size:' + px(11) + ' !important;}' +
       '#fmx-ed-pack .chip{width:' + px(52) + ' !important;height:' + px(52) + ' !important;padding:' + px(4) + ' !important;}' +
       '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
-      '#fmx-ed-bgcrop{font-size:' + px(13) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(11) + ' !important;margin-top:' + px(8) + ' !important;}';
+      '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}';
   };
 
   /* режим рендера: прячем пульт и палитру, ставим постер в угол, сигналим готовность */
