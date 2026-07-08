@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260708d';
+    var PS_GLUE_V = '20260708e';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2529,8 +2529,40 @@
             '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
-            '@keyframes fmxSpin{to{transform:rotate(360deg);}}';
+            '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
+            /* модалка выбора формата отправки (живой постер) */
+            '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
+            '.fmx-fmtcard{width:100%;max-width:440px;margin:0 8px calc(8px + env(safe-area-inset-bottom));background:#0d1120;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:14px;box-shadow:0 -12px 44px rgba(0,0,0,0.55);animation:fmxUp .2s ease-out;}' +
+            '.fmx-fmttitle{font-size:15px;font-weight:700;color:#e8e8ed;text-align:center;padding:6px 0 12px;}' +
+            '.fmx-fmtrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#141828;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}' +
+            '.fmx-fmtrow:active{background:#1a2030;}' +
+            '.fmx-fmtrow .ic{width:38px;height:38px;flex-shrink:0;border-radius:11px;background:rgba(93,202,165,0.15);color:#5DCAA5;display:flex;align-items:center;justify-content:center;font-size:19px;}' +
+            '.fmx-fmtrow .tx{display:flex;flex-direction:column;gap:2px;min-width:0;}' +
+            '.fmx-fmtrow .tx b{font-size:13.5px;color:#e8e8ed;font-weight:600;}' +
+            '.fmx-fmtrow .tx i{font-size:11.5px;color:#8990a8;font-style:normal;line-height:1.35;}' +
+            '.fmx-fmtcancel{width:100%;background:transparent;border:0;color:#8990a8;font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:inherit;margin-top:2px;-webkit-tap-highlight-color:transparent;}' +
+            '@keyframes fmxUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
         document.head.appendChild(s);
+    }
+    /* модалка выбора формата: живой MP4 / GIF-файл / статичный PNG. Показывается только когда есть что анимировать. */
+    function _posterPickFormat() {
+        return new Promise(function (resolve) {
+            var prev = el('fmx-fmtpick'); if (prev) prev.remove();
+            var m = document.createElement('div'); m.id = 'fmx-fmtpick';
+            m.innerHTML = '<div class="fmx-fmtcard">' +
+                '<div class="fmx-fmttitle">Как прислать постер?</div>' +
+                '<button class="fmx-fmtrow" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)</b><i>Анимация играет прямо в чате · пришлю через ~полминуты</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>GIF-файл</b><i>Можно скачать и вставить где угодно · тяжелее</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно</i></span></button>' +
+                '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
+            document.body.appendChild(m);
+            function done(f) { m.remove(); resolve(f || null); }
+            m.addEventListener('click', function (e) {
+                if (e.target === m) return done(null);
+                var b = e.target.closest('[data-f]'); if (!b) return;
+                done(b.getAttribute('data-f'));
+            });
+        });
     }
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
@@ -2658,25 +2690,39 @@
             else finish();
         }
         el('fmx-ps-x').addEventListener('click', close);
+        var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат';
         el('fmx-ps-send').addEventListener('click', function () {
             var btn = this, win = frame.contentWindow;
-            function send() {
+            function send(fmt) {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Редактор ещё загружается — секунду'); return; }
-                btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
-                apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state }).then(function (r) {
-                    btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат';
+                if (!state) { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Редактор ещё загружается — секунду'); return; }
+                var live = (fmt === 'mp4' || fmt === 'gif');
+                btn.disabled = true;
+                btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> Готовлю живой постер…' : '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
+                apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, format: fmt || 'png' }).then(function (r) {
+                    btn.disabled = false; btn.innerHTML = SEND_LABEL;
                     if (r && r.ok) {
-                        _haptic('success'); toast('Постер у тебя в чате с ботом — пересылай!');
+                        _haptic('success');
+                        if (r.queued) toast(fmt === 'gif' ? 'Готовлю GIF — пришлю в чат через ~полминуты' : 'Готовлю живой постер — пришлю в чат через ~полминуты');
+                        else toast('Постер у тебя в чате с ботом — пересылай!');
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
                     } else toast((r && r.error) || 'Не получилось');
-                }).catch(function () { btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Прислать постер в чат'; toast('Сервер не ответил'); });
+                }).catch(function () { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Сервер не ответил'); });
+            }
+            function proceed() {
+                var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
+                if (!state) { btn.disabled = false; btn.innerHTML = SEND_LABEL; toast('Редактор ещё загружается — секунду'); return; }
+                /* MP4/GIF предлагаем только когда есть что анимировать (видео-фон или анимо-стикер) */
+                var hasMotion = !!(state.bg && typeof state.bg === 'object' && state.bg.kind === 'video')
+                    || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });
+                if (!hasMotion) { send('png'); return; }
+                _posterPickFormat().then(function (fmt) { if (fmt) send(fmt); });
             }
             /* если свой фон ещё грузится — дождёмся, чтобы постер ушёл с картинкой, а не с blur */
             var pend = null;
             try { pend = (win && win.__fmxPosterBgPending) ? win.__fmxPosterBgPending() : null; } catch (e) {}
-            if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю фон…'; pend.then(send, send); }
-            else send();
+            if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю фон…'; pend.then(proceed, proceed); }
+            else proceed();
         });
     }
     function uploadPending() {

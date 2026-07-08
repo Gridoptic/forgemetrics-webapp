@@ -186,6 +186,7 @@
 
   /* ——— стикеры из коллекции бота (url) + эмодзи ——— */
   var _lot = null;
+  var _anims = [];  // реестр движущихся элементов для покадрового видео-рендера: {kind:'video',el} | {kind:'lottie',anim}
   function _loadScript(u) { return new Promise(function (r, j) { var sc = document.createElement('script'); sc.src = u; sc.onload = r; sc.onerror = j; document.head.appendChild(sc); }); }
   function _loadLottie() {
     if (_lot) return _lot;
@@ -203,12 +204,14 @@
       v.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;'; v.src = url;
       v.addEventListener('loadeddata', function () { if (opts.static) { try { v.pause(); v.currentTime = 0.1; } catch (e) {} } });
       if (v.play) v.play().catch(function () {}); glyph.appendChild(v);
+      _anims.push({ kind: 'video', el: v });  // для покадрового видео-рендера
     } else if (kind === 'tgs') {
       _loadLottie().then(function () {
         return fetch(url).then(function (r) { return r.arrayBuffer(); }).then(function (buf) {
           var json = JSON.parse(pako.inflate(new Uint8Array(buf), { to: 'string' }));
           var anim = lottie.loadAnimation({ container: glyph, renderer: 'svg', loop: !opts.static, autoplay: !opts.static, animationData: json });
           if (opts.static) anim.goToAndStop(0, true);
+          _anims.push({ kind: 'lottie', anim: anim });  // для покадрового видео-рендера
         });
       }).catch(function () {});
     } else {
@@ -350,6 +353,7 @@
   window.__fmxPosterApply = function (state) {
     if (!state) return;
     var poster = el('poster');
+    _anims = [];  // пересобираем реестр движущихся элементов (видео-фон + анимо-стикеры) для видео-рендера
     // фон
     if (state.bg) {
       var name = (typeof state.bg === 'object') ? 'photo' : state.bg;
@@ -361,7 +365,7 @@
           ? { x: +state.bgpan.x || 0, y: +state.bgpan.y || 0, s: +state.bgpan.s || 1 }
           : { x: 0, y: 0, s: 1 };
         var img = el('bgImg'), vid = el('bgVid');
-        if (state.bg.kind === 'video') { if (vid) { vid.src = abs(state.bg.url); vid.classList.add('act'); if (img) img.classList.remove('act'); if (vid.play) vid.play().catch(function () {}); } }
+        if (state.bg.kind === 'video') { if (vid) { vid.src = abs(state.bg.url); vid.classList.add('act'); if (img) img.classList.remove('act'); if (vid.play) vid.play().catch(function () {}); _anims.push({ kind: 'video', el: vid }); } }
         else { if (img) { img.src = abs(state.bg.url); img.classList.add('act'); } if (vid) vid.classList.remove('act'); }
       }
     }
@@ -569,6 +573,50 @@
     // снять выделение стикеров и рамку кадрирования (не должны попасть в PNG)
     document.querySelectorAll('.stk.sel').forEach(function (s) { s.classList.remove('sel'); });
     var p = el('poster'); if (p) p.classList.remove('fmx-bgsel');
+  };
+
+  /* видео-рендер: ждём готовности всех движущихся элементов (видео загрузилось, Lottie построился) */
+  window.__fmxPosterAnimsReady = function () {
+    return Promise.all(_anims.map(function (a) {
+      return new Promise(function (res) {
+        var done = false, fin = function () { if (done) return; done = true; res(); };
+        if (a.kind === 'video') {
+          if (a.el.readyState >= 2) return fin();
+          a.el.addEventListener('loadeddata', fin, { once: true });
+        } else if (a.kind === 'lottie' && a.anim) {
+          if (a.anim.isLoaded) return fin();
+          try { a.anim.addEventListener('DOMLoaded', fin); } catch (e) {}
+        }
+        setTimeout(fin, 5000);  // страховка — не зависаем на битом стикере
+      });
+    }));
+  };
+
+  /* видео-рендер: детерминированно перематываем ВСЕ движущиеся элементы на время t (мс) и ждём кадр.
+     Без этого ролик пришлось бы писать в реальном времени с плавающим FPS. */
+  window.__fmxPosterSeek = function (t_ms) {
+    var waits = [];
+    _anims.forEach(function (a) {
+      if (a.kind === 'video') {
+        var v = a.el, d = (v.duration && isFinite(v.duration) && v.duration > 0) ? v.duration : 3;
+        try { v.pause(); } catch (e) {}
+        var tt = (t_ms / 1000) % d;
+        waits.push(new Promise(function (res) {
+          var done = false, fin = function () { if (done) return; done = true; res(); };
+          v.addEventListener('seeked', fin, { once: true });
+          setTimeout(fin, 400);
+          try { v.currentTime = tt; } catch (e) { fin(); }
+        }));
+      } else if (a.kind === 'lottie' && a.anim) {
+        try {
+          var tf = a.anim.totalFrames || 1, fr = a.anim.frameRate || 30;
+          a.anim.goToAndStop(((t_ms / 1000) * fr) % tf, true);
+        } catch (e) {}
+      }
+    });
+    return Promise.all(waits).then(function () {
+      return new Promise(function (res) { requestAnimationFrame(function () { requestAnimationFrame(res); }); });
+    });
   };
 
   /* серверная точка входа: данные + состояние + режим рендера + сигнал готовности */
