@@ -207,8 +207,10 @@
       var st = document.createElement('style'); st.id = 'fmx-ed-style';
       // панель во всю ширину под постером + крупнее контролы (после масштабирования iframe остаются читаемыми)
       // постер вплотную к верху окна, редактор почти вплотную к постеру;
-      // размеры контролов панели задаёт __fmxPosterPanelScale (нативный размер на экране)
-      st.textContent = 'body{padding:6px 8px 26px !important;gap:8px !important;align-items:center !important;justify-content:flex-start !important;}' +
+      // min-height:0 + align-content:flex-start убирают распирание flex-строк (иначе огромные
+      // пустоты между блоками из-за 100vh); размеры контролов задаёт __fmxPosterPanelScale
+      st.textContent = 'body{padding:6px 8px 26px !important;gap:10px !important;min-height:0 !important;' +
+        'align-items:center !important;align-content:flex-start !important;justify-content:flex-start !important;}' +
         '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
         '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}';
       document.head.appendChild(st);

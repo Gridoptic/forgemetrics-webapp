@@ -2558,7 +2558,7 @@
             '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> Промо-постер</div>' +
             '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
-            '<div id="fmx-psWrap" style="width:100%;overflow:hidden;">' +
+            '<div id="fmx-psWrap" style="width:100%;max-width:560px;margin:0 auto;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;"></iframe></div></div>' +
             '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
         document.body.appendChild(bg);
