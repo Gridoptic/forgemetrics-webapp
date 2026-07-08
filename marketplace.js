@@ -2550,8 +2550,8 @@
             '@keyframes fmxUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
         document.head.appendChild(s);
     }
-    /* модалка выбора формата: живой MP4 / GIF-файл / статичный PNG. Показывается только когда есть что анимировать.
-       MP4/GIF — на тарифах PRO/PRO+ (liveOk); PNG доступен всем. */
+    /* модалка выбора формата: живой MP4 / статичный PNG. Показывается только когда есть что анимировать.
+       MP4 — на тарифах PRO/PRO+ (liveOk); PNG доступен всем. */
     function _posterPickFormat(liveOk) {
         return new Promise(function (resolve) {
             var prev = el('fmx-fmtpick'); if (prev) prev.remove();
@@ -2560,8 +2560,7 @@
             var m = document.createElement('div'); m.id = 'fmx-fmtpick';
             m.innerHTML = '<div class="fmx-fmtcard">' +
                 '<div class="fmx-fmttitle">Как прислать постер?</div>' +
-                '<button class="fmx-fmtrow' + lk + '" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)' + pro + '</b><i>Анимация играет прямо в чате · пришлю через пару минут</i></span></button>' +
-                '<button class="fmx-fmtrow' + lk + '" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>GIF-файл' + pro + '</b><i>Можно скачать и вставить где угодно · тяжелее</i></span></button>' +
+                '<button class="fmx-fmtrow' + lk + '" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)' + pro + '</b><i>Анимация играет прямо в чате · пришлю через минуту</i></span></button>' +
                 '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно · на всех тарифах</i></span></button>' +
                 '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
             document.body.appendChild(m);
@@ -2570,9 +2569,9 @@
                 if (e.target === m) return done(null);
                 var b = e.target.closest('[data-f]'); if (!b) return;
                 var f = b.getAttribute('data-f');
-                if ((f === 'mp4' || f === 'gif') && !liveOk) {  // не премиум — подсказываем, модалку не закрываем
+                if (f === 'mp4' && !liveOk) {  // не премиум — подсказываем, модалку не закрываем
                     try { _haptic('warning'); } catch (e2) {}
-                    toast('Живой постер (MP4/GIF) — на тарифах PRO и PRO+. Картинка (PNG) доступна всем');
+                    toast('Живой постер (MP4) — на тарифах PRO и PRO+. Картинка (PNG) доступна всем');
                     return;
                 }
                 done(f);
@@ -2714,7 +2713,7 @@
            Переживает выход-заход в студию (job хранится в window.__fmxPosterJob[listingId]). */
         function _startPosterProgress(job, fmt) {
             var b = sendBtn(); if (!b || !job) return;
-            var C = 97.4, pct = 0, done = false, t0 = Date.now(), EST = fmt === 'gif' ? 75000 : 58000;
+            var C = 97.4, pct = 0, done = false, t0 = Date.now(), EST = 50000;
             window.__fmxPosterJob[base.id] = job;
             b.disabled = true;
             b.innerHTML = '<span class="fmx-ring"><svg viewBox="0 0 36 36">' +
@@ -2729,7 +2728,12 @@
             function stop() { clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); }
             setPct(2);
             clearInterval(bg.__fmxProgIv);
-            bg.__fmxProgIv = setInterval(function () { if (!done) setPct(2 + Math.min(0.93, (Date.now() - t0) / EST) * 88); }, 450);
+            bg.__fmxProgIv = setInterval(function () {
+                if (done) return;
+                var e = Date.now() - t0;
+                // 2->90% за EST, дальше медленно ползёт 90->98% (никогда не застревает визуально)
+                setPct(e < EST ? 2 + (e / EST) * 88 : 90 + Math.min(8, (e - EST) / 15000 * 8));
+            }, 450);
             function poll() {
                 if (done) return;
                 apiGet('/api/v1/marketplace/poster/status?job=' + job).then(function (r) {
