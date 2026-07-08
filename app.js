@@ -137,11 +137,6 @@ function initTelegram() {
     tg.ready();
     tg.expand();
 
-    // Отключаем нативный вертикальный свайп Telegram (свайп-вниз-«свернуть»): на новых клиентах
-    // он конкурирует со скроллом контента и «съедает» тапы после прокрутки — экран перестаёт
-    // откликаться на 3–4 касания. Доступно с Bot API 7.7; на старых клиентах — тихий no-op.
-    try { if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes(); } catch (e) {}
-
     if (tg.setHeaderColor) tg.setHeaderColor('#0a0d18');
     if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0d18');
 

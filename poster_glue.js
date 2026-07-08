@@ -14,7 +14,24 @@
   var _customBg = null;               // {url, kind} — ЗАГРУЖЕННЫЙ на сервер файл своего фона
   var _bgpan = { x: 0, y: 0, s: 1 };  // сдвиг (px в системе постера 540x675) и масштаб своей картинки
   var _bgUploadPending = null;        // промис текущей загрузки файла на сервер (ждём при закрытии/отправке)
+  var _bgSelected = false;            // фон выделен (тапом) → двигается/масштабируется; иначе — обычный скролл
   function _isPhotoBg() { var p = el('poster'); return !!(p && /\bbg-photo\b/.test(p.className)); }
+  /* выделение фона: подсветка + подсказка; пан/зум работают ТОЛЬКО когда фон выделен —
+     иначе жест = скролл редактора (без этого фото-фон перехватывал прокрутку) */
+  function _setBgSelected(on) {
+    on = !!on && _isPhotoBg();
+    _bgSelected = on;
+    var poster = el('poster');
+    if (poster) { poster.classList.toggle('fmx-bgsel', on); poster.style.touchAction = on ? 'none' : ''; }
+    var hint = el('fmx-bg-hint');
+    if (on && !hint && poster) {
+      hint = document.createElement('div'); hint.id = 'fmx-bg-hint';
+      hint.textContent = 'Перетащите фон, чтобы кадрировать · масштаб — щипок или колесо';
+      poster.appendChild(hint);
+    }
+    if (hint) hint.style.display = on ? 'block' : 'none';
+    if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }  // фон и стикер не выделены вместе
+  }
   function _bgEls() { var a = [], i = el('bgImg'), v = el('bgVid'); if (i) a.push(i); if (v) a.push(v); return a; }
   function _clampBgpan() {
     var s = Math.max(1, Math.min(+_bgpan.s || 1, 4)); _bgpan.s = s;
@@ -25,7 +42,8 @@
   function _applyBgpan() {
     _clampBgpan();
     var photo = _isPhotoBg(), poster = el('poster');
-    if (poster) poster.style.touchAction = photo ? 'none' : '';  // жесты на постере не должны скроллить страницу
+    if (!photo && _bgSelected) _setBgSelected(false);            // ушли с фото-фона — снять выделение
+    if (poster) poster.style.touchAction = (photo && _bgSelected) ? 'none' : '';  // блокируем скролл только на выделенном фоне
     var t = 'translate(' + _bgpan.x + 'px,' + _bgpan.y + 'px) scale(' + _bgpan.s + ')';
     _bgEls().forEach(function (e) {
       if (photo) { e.style.transformOrigin = 'center center'; e.style.transform = t; }
@@ -235,7 +253,13 @@
       st.textContent = 'body{padding:6px 8px 26px !important;gap:10px !important;min-height:0 !important;' +
         'align-items:center !important;align-content:flex-start !important;justify-content:flex-start !important;}' +
         '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
-        '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}';
+        '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}' +
+        /* подсветка выделенного фона: рамка + затемнение подсказки, чтобы было понятно, что фон двигается */
+        '.poster.fmx-bgsel::after{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;z-index:8;' +
+        'box-shadow:inset 0 0 0 2px rgba(93,202,165,0.95), 0 0 0 3px rgba(93,202,165,0.3);}' +
+        '#fmx-bg-hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(10,13,24,0.92);' +
+        'border:1px solid rgba(93,202,165,0.5);color:#5DCAA5;font-size:11px;font-weight:600;padding:6px 13px;border-radius:999px;' +
+        'z-index:9;pointer-events:none;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 20px rgba(0,0,0,0.5);}';
       document.head.appendChild(st);
     }
     var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = 'Редактор макета';
@@ -399,6 +423,7 @@
     document.querySelectorAll('.mcell').forEach(function (c) { delete c.dataset.hex; });
     window.COLORS = { tit: '#e8e8ed', niche: '#5DCAA5', pr: '#5DCAA5', chart: '#5DCAA5' };
     _customBg = null; _bgpan = { x: 0, y: 0, s: 1 };  // свой фон и пан/зум — к дефолту
+    _setBgSelected(false);
     window.__fmxPosterApply(defaultState || {});
   };
 
@@ -429,7 +454,9 @@
       var origSet = window.setOwnBg;
       window.setOwnBg = function (f) {
         try { origSet(f); } catch (e) {}                 // мгновенное локальное превью (blob) — как в макете
-        _bgpan = { x: 0, y: 0, s: 1 }; _applyBgpan();      // свежая картинка — без сдвига
+        _bgpan = { x: 0, y: 0, s: 1 };                    // свежая картинка — без сдвига
+        _setBgSelected(true);                             // сразу выделяем: видно подсветку + подсказку, что можно двигать
+        _applyBgpan();
         _uploadCustomBg(f);                                // и параллельно грузим на сервер
       };
     }
@@ -438,30 +465,39 @@
     _bindBgGestures();
   }
 
-  /* пан-зум своей картинки: перетаскивание (палец/мышь) + масштаб (щипок/колесо), только для bg-photo */
+  /* пан-зум своей картинки. Фон надо СНАЧАЛА выделить тапом (тогда подсветка + подсказка),
+     после этого перетаскивание/щипок/колесо двигают и масштабируют. Пока не выделен — жест = скролл. */
   function _bindBgGestures() {
     var poster = el('poster');
     if (!poster || poster.__fmxBgPan) return;
     poster.__fmxBgPan = true;
-    var ptrs = {}, startPan = null, downXY = null, moved = false, pinch = null;
+    var ptrs = {}, startPan = null, downXY = null, moved = false, pinch = null, tapCand = null;
     function ids() { return Object.keys(ptrs); }
-    function begin(list) {
-      if (list.length === 1) { startPan = { x: _bgpan.x, y: _bgpan.y }; downXY = { x: ptrs[list[0]].x, y: ptrs[list[0]].y }; moved = false; pinch = null; }
-      else if (list.length === 2) {
-        var a = ptrs[list[0]], b = ptrs[list[1]];
-        pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, s0: _bgpan.s, x0: _bgpan.x, y0: _bgpan.y, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
-        moved = true;
-      }
-    }
+    function isBlock(t) { return !!(t.closest('[data-c], .tit, .meta, .pr, .mcell, .chart')); }
     poster.addEventListener('pointerdown', function (e) {
       if (!_isPhotoBg()) return;
-      if (e.target.closest('.stk') || e.target.closest('.hnd')) return;  // стикеры двигаются своим кодом
-      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
-      begin(ids());
-      try { poster.setPointerCapture(e.pointerId); } catch (_) {}
+      if (e.target.closest('.stk') || e.target.closest('.hnd')) { if (_bgSelected) _setBgSelected(false); return; }
+      if (isBlock(e.target)) { if (_bgSelected) _setBgSelected(false); return; }  // тап по блоку — не по фону
+      if (_bgSelected) {
+        ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+        var list = ids();
+        if (list.length === 1) { startPan = { x: _bgpan.x, y: _bgpan.y }; downXY = { x: e.clientX, y: e.clientY }; moved = false; pinch = null; }
+        else if (list.length === 2) {
+          var a = ptrs[list[0]], b = ptrs[list[1]];
+          pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, s0: _bgpan.s, x0: _bgpan.x, y0: _bgpan.y, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+          moved = true;
+        }
+        try { poster.setPointerCapture(e.pointerId); } catch (_) {}
+      } else {
+        tapCand = { id: e.pointerId, x: e.clientX, y: e.clientY };  // кандидат на тап-выделение, скроллу не мешаем
+      }
     });
     poster.addEventListener('pointermove', function (e) {
-      if (!(e.pointerId in ptrs)) return;
+      if (tapCand && e.pointerId === tapCand.id) {
+        if (Math.abs(e.clientX - tapCand.x) + Math.abs(e.clientY - tapCand.y) > 8) tapCand = null;  // это скролл, не тап
+        return;
+      }
+      if (!_bgSelected || !(e.pointerId in ptrs)) return;
       ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
       var list = ids();
       if (list.length >= 2 && pinch) {
@@ -472,13 +508,14 @@
         _applyBgpan(); e.preventDefault();
       } else if (list.length === 1 && startPan && downXY) {
         var dx = e.clientX - downXY.x, dy = e.clientY - downXY.y;
-        if (!moved && (Math.abs(dx) + Math.abs(dy)) < 5) return;  // порог: короткий тап оставляем пикеру/выбору
+        if (!moved && (Math.abs(dx) + Math.abs(dy)) < 4) return;
         moved = true;
         _bgpan.x = startPan.x + dx; _bgpan.y = startPan.y + dy;
         _applyBgpan(); e.preventDefault();
       }
     });
     function end(e) {
+      if (tapCand && e.pointerId === tapCand.id) { tapCand = null; _setBgSelected(true); return; }  // чистый тап → выделить фон
       if (!(e.pointerId in ptrs)) return;
       delete ptrs[e.pointerId];
       try { poster.releasePointerCapture(e.pointerId); } catch (_) {}
@@ -495,13 +532,17 @@
       }
     }
     poster.addEventListener('pointerup', end);
-    poster.addEventListener('pointercancel', end);
+    poster.addEventListener('pointercancel', function (e) { if (tapCand && e.pointerId === tapCand.id) tapCand = null; end(e); });
     poster.addEventListener('wheel', function (e) {
-      if (!_isPhotoBg()) return;
+      if (!_isPhotoBg() || !_bgSelected) return;  // масштаб колесом — только на выделенном фоне
       e.preventDefault();
       _bgpan.s = _bgpan.s * Math.exp(-e.deltaY * 0.0015);
       _applyBgpan();
     }, { passive: false });
+    // тап вне постера (по панели/кнопкам) — снять выделение фона, вернуть обычный скролл
+    document.addEventListener('pointerdown', function (e) {
+      if (_bgSelected && (!e.target || !e.target.closest('#poster'))) _setBgSelected(false);
+    }, true);
   }
 
   /* контролы панели — в НАТИВНОМ размере на экране: iframe масштабируется на k,

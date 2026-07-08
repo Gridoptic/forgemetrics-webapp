@@ -84,14 +84,25 @@ body {
     line-height: 1.5;
     color: var(--text-primary);
     background: var(--bg-base);
-    background-image:
-        radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
-    background-attachment: fixed;
+    /* амбиентный градиент вынесен в фикс-слой body::before: background-attachment:fixed
+       заставлял браузер перерисовывать фон на КАЖДОМ кадре прокрутки — отсюда тормоза скролла */
+    overscroll-behavior-y: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-overflow-scrolling: touch;
+}
+
+/* фон-подсветка, привязанная к вьюпорту, но на отдельном фикс-слое — не перерисовывается при скролле */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
 }
 
 button {
