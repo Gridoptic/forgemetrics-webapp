@@ -585,17 +585,14 @@
     var p = el('poster'); if (p) p.classList.remove('fmx-bgsel');
   };
 
-  /* режим ВИДЕО-рендера: постер прибит в угол и увеличен zoom:2 (чёткий рендер в 1080x1350,
-     не мыло как transform) — под запись экрана record_video в реальном времени. Вьюпорт 1080x1350. */
+  /* стабилизация текста в ВИДЕО: блоки метрик и график делаем НЕПРОЗРАЧНЫМИ — иначе движущийся фон
+     просвечивает сквозь стекло и края букв «кипят»/дрожат кадр-к-кадру. В PNG стекло сохраняется
+     (там движения нет). Живой фон остаётся в шапке, промежутках и стикерах. */
   window.__fmxPosterVideoMode = function () {
     var st = document.createElement('style');
-    st.textContent = '.panel,.picker,#fmx-bg-catch,#fmx-bg-hint,#fmx-ed-bgcrop,#fmx-ed-reset{display:none !important;}' +
-      'html,body{margin:0 !important;padding:0 !important;background:#0a0d18 !important;overflow:hidden !important;}' +
-      '.poster{position:absolute !important;top:0 !important;left:0 !important;box-shadow:none !important;border-radius:0 !important;zoom:2;}' +
-      '.stk .frame{display:none !important;} .poster.fmx-bgsel::after{display:none !important;}';
+    st.textContent = '.mcell,.chart{background-color:rgba(12,15,26,0.99) !important;' +
+      'backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}';
     document.head.appendChild(st);
-    document.querySelectorAll('.stk.sel').forEach(function (s) { s.classList.remove('sel'); });
-    var p = el('poster'); if (p) p.classList.remove('fmx-bgsel');
   };
 
   /* видео-рендер: ждём готовности всех движущихся элементов (видео загрузилось, Lottie построился) */
@@ -659,7 +656,7 @@
     try {
       window.__fmxPosterInit(data, api);
       if (state) window.__fmxPosterApply(state);
-      if (opts.video) window.__fmxPosterVideoMode();
+      if (opts.video) { window.__fmxPosterRenderMode(); window.__fmxPosterVideoMode(); }
       else if (opts.render) window.__fmxPosterRenderMode();
     } catch (e) { if (window.console) console.error('poster render glue error', e); }
     var poster = el('poster');
