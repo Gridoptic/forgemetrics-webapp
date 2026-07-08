@@ -108,9 +108,11 @@
   var _uname = '';
   /* renderQrs макета зашивает подпись «@bh_nlmt» жёстко — переименовываем QR канала после отрисовки */
   function relabelQr(mode) {
-    if (!_uname) return;
     var spans = document.querySelectorAll('#qrs .qrt span');
-    if ((mode === 'channel' || mode === 'both') && spans[0]) spans[0].textContent = '@' + _uname;
+    var chIdx = (mode === 'both' || mode === 'channel') ? 0 : -1;
+    var cardIdx = (mode === 'both') ? 1 : (mode === 'card' ? 0 : -1);
+    if (_uname && chIdx >= 0 && spans[chIdx]) spans[chIdx].textContent = '@' + _uname;
+    if (cardIdx >= 0 && spans[cardIdx]) spans[cardIdx].textContent = '@ForgeMetricsBot';
   }
   function renderQrsSafe(mode) { if (typeof window.renderQrs === 'function') { window.renderQrs(mode); relabelQr(mode); } }
 
@@ -120,7 +122,9 @@
     // QR: подпись не должна быть шире самого QR (иначе белый блок растягивается — было видно на @ForgeMetricsBot)
     if (!el('fmx-qr-fix')) {
       var qs = document.createElement('style'); qs.id = 'fmx-qr-fix';
-      qs.textContent = '#qrs .qrt span{max-width:80px !important;}';
+      // блоки QR одинаковой ширины (по QR ~80px), подпись мельче — чтобы «@ForgeMetricsBot» влезал целиком и блок не растягивался
+      qs.textContent = '#qrs .qrt{width:92px !important;box-sizing:border-box !important;}' +
+        '#qrs .qrt span{max-width:86px !important;font-size:7px !important;letter-spacing:0.1px !important;}';
       document.head.appendChild(qs);
     }
     var titleTxt = data.title || data.username || 'Канал';
@@ -581,6 +585,19 @@
     var p = el('poster'); if (p) p.classList.remove('fmx-bgsel');
   };
 
+  /* режим ВИДЕО-рендера: постер прибит в угол и увеличен zoom:2 (чёткий рендер в 1080x1350,
+     не мыло как transform) — под запись экрана record_video в реальном времени. Вьюпорт 1080x1350. */
+  window.__fmxPosterVideoMode = function () {
+    var st = document.createElement('style');
+    st.textContent = '.panel,.picker,#fmx-bg-catch,#fmx-bg-hint,#fmx-ed-bgcrop,#fmx-ed-reset{display:none !important;}' +
+      'html,body{margin:0 !important;padding:0 !important;background:#0a0d18 !important;overflow:hidden !important;}' +
+      '.poster{position:absolute !important;top:0 !important;left:0 !important;box-shadow:none !important;border-radius:0 !important;zoom:2;}' +
+      '.stk .frame{display:none !important;} .poster.fmx-bgsel::after{display:none !important;}';
+    document.head.appendChild(st);
+    document.querySelectorAll('.stk.sel').forEach(function (s) { s.classList.remove('sel'); });
+    var p = el('poster'); if (p) p.classList.remove('fmx-bgsel');
+  };
+
   /* видео-рендер: ждём готовности всех движущихся элементов (видео загрузилось, Lottie построился) */
   window.__fmxPosterAnimsReady = function () {
     return Promise.all(_anims.map(function (a) {
@@ -631,7 +648,8 @@
     try {
       window.__fmxPosterInit(data, api);
       if (state) window.__fmxPosterApply(state);
-      if (opts.render) window.__fmxPosterRenderMode();
+      if (opts.video) window.__fmxPosterVideoMode();
+      else if (opts.render) window.__fmxPosterRenderMode();
     } catch (e) { if (window.console) console.error('poster render glue error', e); }
     var poster = el('poster');
     var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();

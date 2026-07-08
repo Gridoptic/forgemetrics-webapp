@@ -2516,7 +2516,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260708f';
+    var PS_GLUE_V = '20260709a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2543,6 +2543,10 @@
             '.fmx-fmtcancel{width:100%;background:transparent;border:0;color:#8990a8;font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:inherit;margin-top:2px;-webkit-tap-highlight-color:transparent;}' +
             '.fmx-fmtpro{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:800;letter-spacing:0.5px;color:#f5bf4f;background:rgba(245,191,79,0.16);border:1px solid rgba(245,191,79,0.4);border-radius:6px;padding:1px 5px;vertical-align:middle;}' +
             '.fmx-fmtrow.locked{opacity:0.6;}' +
+            /* кружок прогресса генерации живого постера */
+            '.fmx-ring{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-right:8px;}' +
+            '.fmx-ring svg{width:100%;height:100%;display:block;}' +
+            '.fmx-ring .fg{transition:stroke-dashoffset .45s linear;}' +
             '@keyframes fmxUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
         document.head.appendChild(s);
     }
@@ -2677,7 +2681,7 @@
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
-        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearTimeout(bg.__fmxCd); };
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); };
         function close() {
             var win = frame.contentWindow;
             /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
@@ -2702,40 +2706,79 @@
         }
         el('fmx-ps-x').addEventListener('click', close);
         var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат';
+        function sendBtn() { return el('fmx-ps-send'); }
+        function restoreSend() { var b = sendBtn(); if (b) { b.disabled = false; b.innerHTML = SEND_LABEL; } }
+        window.__fmxPosterJob = window.__fmxPosterJob || {};
+
+        /* кружок прогресса генерации живого постера: плавная анимация по времени + опрос сервера «готово?».
+           Переживает выход-заход в студию (job хранится в window.__fmxPosterJob[listingId]). */
+        function _startPosterProgress(job, fmt) {
+            var b = sendBtn(); if (!b || !job) return;
+            var C = 97.4, pct = 0, done = false, t0 = Date.now(), EST = fmt === 'gif' ? 75000 : 58000;
+            window.__fmxPosterJob[base.id] = job;
+            b.disabled = true;
+            b.innerHTML = '<span class="fmx-ring"><svg viewBox="0 0 36 36">' +
+                '<circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="4"></circle>' +
+                '<circle class="fg" id="fmx-ring-fg" cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + C + '" stroke-dashoffset="' + C + '" transform="rotate(-90 18 18)"></circle>' +
+                '</svg></span> Готовлю живой постер… <b id="fmx-pct">0%</b>';
+            function setPct(p) {
+                p = Math.max(pct, Math.min(100, p)); pct = p;
+                var fg = el('fmx-ring-fg'); if (fg) fg.style.strokeDashoffset = (C * (1 - p / 100)).toFixed(1);
+                var pc = el('fmx-pct'); if (pc) pc.textContent = Math.round(p) + '%';
+            }
+            function stop() { clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); }
+            setPct(2);
+            clearInterval(bg.__fmxProgIv);
+            bg.__fmxProgIv = setInterval(function () { if (!done) setPct(2 + Math.min(0.93, (Date.now() - t0) / EST) * 88); }, 450);
+            function poll() {
+                if (done) return;
+                apiGet('/api/v1/marketplace/poster/status?job=' + job).then(function (r) {
+                    if (done) return;
+                    if (r && r.done) {
+                        done = true; stop(); setPct(100); _haptic('success');
+                        delete window.__fmxPosterJob[base.id];
+                        var b2 = sendBtn();
+                        if (b2) b2.innerHTML = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
+                        toast(r.sent ? 'Живой постер в чате с ботом — пересылай!' : 'С живым не вышло — прислал картинкой');
+                        bg.__fmxProgTo = setTimeout(restoreSend, 4500);
+                    } else { bg.__fmxProgPoll = setTimeout(poll, 2000); }
+                }).catch(function () { bg.__fmxProgPoll = setTimeout(poll, 3000); });
+            }
+            bg.__fmxProgPoll = setTimeout(poll, 1500);
+            bg.__fmxProgTo2 = setTimeout(function () { if (!done) { done = true; stop(); delete window.__fmxPosterJob[base.id]; restoreSend(); } }, 240000);  // страховка
+        }
+
         el('fmx-ps-send').addEventListener('click', function () {
             var btn = this, win = frame.contentWindow;
-            function restore() { btn.disabled = false; btn.innerHTML = SEND_LABEL; }
             function send(fmt) {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { restore(); toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restoreSend(); toast('Редактор ещё загружается — секунду'); return; }
                 var live = (fmt === 'mp4' || fmt === 'gif');
                 btn.disabled = true;
-                btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> Готовлю живой постер…' : '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
+                btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> Отправляю…' : '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
                 apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, format: fmt || 'png' }).then(function (r) {
                     if (r && r.ok) {
                         _haptic('success');
-                        if (r.queued) {
-                            toast(r.already ? 'Этот постер уже готовится — скоро пришлю в чат'
-                                : (fmt === 'gif' ? 'Готовлю GIF — пришлю в чат через пару минут' : 'Готовлю живой постер — пришлю в чат через пару минут'));
-                            /* защита от повторной отправки: держим кнопку занятой, пока идёт обработка */
+                        if (r.queued && r.job) {
+                            _startPosterProgress(r.job, fmt);   // показываем кружок прогресса
+                        } else if (r.queued) {
                             btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> Идёт обработка…';
-                            clearTimeout(bg.__fmxCd); bg.__fmxCd = setTimeout(restore, 30000);
                         } else {
-                            toast('Постер у тебя в чате с ботом — пересылай!'); restore();
+                            toast('Постер у тебя в чате с ботом — пересылай!'); restoreSend();
                         }
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
-                    } else { restore(); toast((r && r.error) || 'Не получилось'); }
-                }).catch(function () { restore(); toast('Сервер не ответил'); });
+                    } else { restoreSend(); toast((r && r.error) || 'Не получилось'); }
+                }).catch(function () { restoreSend(); toast('Сервер не ответил'); });
             }
             function proceed() {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { restore(); toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restoreSend(); toast('Редактор ещё загружается — секунду'); return; }
                 /* MP4/GIF предлагаем только когда есть что анимировать (видео-фон или анимо-стикер) */
                 var hasMotion = !!(state.bg && typeof state.bg === 'object' && state.bg.kind === 'video')
                     || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });
                 if (!hasMotion) { send('png'); return; }
                 btn.disabled = true;  // пока открыта модалка — кнопка занята (без повторных открытий)
-                _posterPickFormat(extra && extra.live_ok).then(function (fmt) { if (fmt) send(fmt); else restore(); });
+                _posterPickFormat(extra && extra.live_ok).then(function (fmt) { if (fmt) send(fmt); else restoreSend(); });
             }
             /* если свой фон ещё грузится — дождёмся, чтобы постер ушёл с картинкой, а не с blur */
             var pend = null;
@@ -2743,6 +2786,8 @@
             if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю фон…'; pend.then(proceed, proceed); }
             else proceed();
         });
+        /* при заходе: если ролик ещё готовится — возобновляем кружок прогресса */
+        if (window.__fmxPosterJob[base.id]) _startPosterProgress(window.__fmxPosterJob[base.id], null);
     }
     function uploadPending() {
         var chain = Promise.resolve();
