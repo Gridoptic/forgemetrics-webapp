@@ -73,11 +73,20 @@
 
 html, body {
     width: 100%;
-    overflow-x: hidden;
     overscroll-behavior: none;   /* без сцепления скролла с нативным жестом — меньше «залипаний» тапа */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+}
+
+/* Горизонтальное переполнение режем через clip, а НЕ hidden.
+   overflow-x:hidden одновременно на html и body делает их контейнерами прокрутки —
+   страница перестаёт листаться колесом и пальцем, работает только ползунок.
+   clip обрезает, но контейнер прокрутки не создаёт. Запасной вариант для старых
+   движков (без clip) — hidden на одном лишь body: вертикаль там не ломается. */
+body { overflow-x: hidden; }
+@supports (overflow: clip) {
+    html, body { overflow-x: clip; }
 }
 
 body {
