@@ -3300,6 +3300,8 @@ function renderQrs(mode) {
   var box = document.getElementById('qrs');
   box.innerHTML = '';
   if (mode === 'channel' || mode === 'both') box.appendChild(qrTile(QR_CHANNEL_URL, '@bh_nlmt'));
+  /* именно @-ник: вне Telegram сразу видно, что это Telegram, ник можно вбить руками,
+     и каждый постер рекламирует площадку. Что делать — говорит «Забронировать ↓» над QR */
   if (mode === 'card' || mode === 'both') box.appendChild(qrTile(QR_CARD_URL, '@ForgeMetricsBot'));
   /* призыв показываем только когда есть QR карточки — именно на него он указывает */
   var cta = document.getElementById('ctaEl');

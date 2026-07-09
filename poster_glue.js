@@ -112,6 +112,8 @@
     var chIdx = (mode === 'both' || mode === 'channel') ? 0 : -1;
     var cardIdx = (mode === 'both') ? 1 : (mode === 'card' ? 0 : -1);
     if (_uname && chIdx >= 0 && spans[chIdx]) spans[chIdx].textContent = '@' + _uname;
+    // @-ник, а не «Карточка»: вне Telegram сразу понятно, что это Telegram, ник вбивается руками,
+    // и постер попутно рекламирует площадку. Смысл действия даёт «Забронировать ↓» над QR
     if (cardIdx >= 0 && spans[cardIdx]) spans[cardIdx].textContent = '@ForgeMetricsBot';
   }
   function renderQrsSafe(mode) { if (typeof window.renderQrs === 'function') { window.renderQrs(mode); relabelQr(mode); } }
