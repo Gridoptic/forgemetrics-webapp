@@ -2713,7 +2713,7 @@
            Переживает выход-заход в студию (job хранится в window.__fmxPosterJob[listingId]). */
         function _startPosterProgress(job, fmt) {
             var b = sendBtn(); if (!b || !job) return;
-            var C = 97.4, pct = 0, done = false, t0 = Date.now(), EST = 50000;
+            var C = 97.4, pct = 0, done = false, t0 = Date.now();
             window.__fmxPosterJob[base.id] = job;
             b.disabled = true;
             b.innerHTML = '<span class="fmx-ring"><svg viewBox="0 0 36 36">' +
@@ -2728,12 +2728,12 @@
             function stop() { clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); }
             setPct(2);
             clearInterval(bg.__fmxProgIv);
+            // прогрев 2->10% за первые 10с (пока поднимается браузер), дальше ведёт РЕАЛЬНЫЙ прогресс с сервера
             bg.__fmxProgIv = setInterval(function () {
                 if (done) return;
-                var e = Date.now() - t0;
-                // 2->90% за EST, дальше медленно ползёт 90->98% (никогда не застревает визуально)
-                setPct(e < EST ? 2 + (e / EST) * 88 : 90 + Math.min(8, (e - EST) / 15000 * 8));
-            }, 450);
+                var warm = 2 + Math.min(1, (Date.now() - t0) / 10000) * 8;
+                if (warm > pct) setPct(warm);
+            }, 700);
             function poll() {
                 if (done) return;
                 apiGet('/api/v1/marketplace/poster/status?job=' + job).then(function (r) {
@@ -2746,7 +2746,10 @@
                         bg.__fmxProgDone = setTimeout(function () { var b2 = sendBtn(); if (b2) b2.innerHTML = msg; }, 650);
                         toast(r.sent ? 'Живой постер в чате с ботом — пересылай!' : 'С живым не вышло — прислал картинкой');
                         bg.__fmxProgTo = setTimeout(restoreSend, 5300);
-                    } else { bg.__fmxProgPoll = setTimeout(poll, 2000); }
+                    } else {
+                        if (r && r.pct) setPct(r.pct);   // РЕАЛЬНЫЙ прогресс: сервер шлёт «снято N из M кадров»
+                        bg.__fmxProgPoll = setTimeout(poll, 1200);
+                    }
                 }).catch(function () { bg.__fmxProgPoll = setTimeout(poll, 3000); });
             }
             bg.__fmxProgPoll = setTimeout(poll, 1500);
