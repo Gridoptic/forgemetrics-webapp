@@ -56,6 +56,13 @@ body{background:#05070e;color:#e8e8ed;font-family:'Inter',-apple-system,'Segoe U
 .mcell .l{font-size:10px;font-weight:600;letter-spacing:1px;color:#8990a8;text-transform:uppercase;margin-top:6px;}
 .mcell .l i{font-style:normal;color:#5c637d;}
 .mcell.hide{display:none;}
+/* иерархия: первые две видимые метрики — «герои», крупнее на любом уровне плотности */
+.mcell.hero{border-color:rgba(255,255,255,0.17);}
+.mcell.hero .v{font-size:38px;letter-spacing:-1px;}
+.poster.d1 .mcell.hero .v{font-size:31px;}
+.poster.d2 .mcell.hero .v{font-size:25px;}
+.poster.d3 .mcell.hero .v{font-size:20px;}
+.poster.d4 .mcell.hero .v{font-size:17px;}
 .c-g .v{color:#5DCAA5;} .c-a .v{color:#f5bf4f;} .c-p .v{color:#b9a5ff;} .c-w .v{color:#f2f3f8;} .c-b .v{color:#7fb8ff;} .c-r .v{color:#ff9db1;}
 
 .price{margin-top:auto;padding-top:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-shrink:0;order:9;}
@@ -63,7 +70,17 @@ body{background:#05070e;color:#e8e8ed;font-family:'Inter',-apple-system,'Segoe U
 .pr.hide{display:none;}
 .prv{font-size:22px;letter-spacing:-0.3px;font-variant-numeric:tabular-nums;white-space:nowrap;display:block;}
 .prsub{font-size:11px;font-weight:600;letter-spacing:0.2px;color:rgba(6,35,26,0.72);margin-top:3px;}
-.qrs{display:flex;gap:10px;margin-left:auto;align-items:flex-end;}
+/* призыв к действию: глагол + стрелка вниз к QR карточки (в картинке кнопка не кликается).
+   Стоит НАД QR, а не в строке цены — иначе отжимал зелёный блок и цена вылезала. */
+.qrwrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin-left:auto;min-width:0;}
+.cta{font-size:12.5px;font-weight:700;color:#e8e8ed;letter-spacing:0.2px;white-space:nowrap;display:flex;align-items:center;gap:6px;text-shadow:0 2px 10px rgba(0,0,0,0.8);}
+.cta .arw{color:#5DCAA5;font-size:15px;line-height:1;}
+.cta.hide{display:none;}
+.poster.d2 .cta{font-size:11px;}
+.poster.d3 .cta{font-size:10px;}
+.poster.d4 .cta{display:none;}
+.prsub{max-width:225px;}
+.qrs{display:flex;gap:10px;align-items:flex-end;}
 .qrt{background:#fff;border-radius:13px;padding:6px 6px 3px;text-align:center;box-shadow:0 10px 26px rgba(0,0,0,0.4);}
 .qrt canvas{display:block;}
 .qrt span{font-size:8.5px;font-weight:700;letter-spacing:0.4px;color:#0a0d18;display:block;padding:2px 0;max-width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 auto;}
@@ -219,8 +236,11 @@ select,input[type=text],input[type=number]{width:100%;background:#141828;border:
     </div>
 
     <div class="price">
-      <div class="pr" id="prBox" data-c="pr"><span class="prv" id="prVal">Реклама от 5 500 ₽</span><div class="prsub">минимальный формат размещения</div></div>
-      <div class="qrs" id="qrs"></div>
+      <div class="pr" id="prBox" data-c="pr"><span class="prv" id="prVal">Реклама от 5 500 ₽</span><div class="prsub" id="prSub">минимальный формат размещения</div></div>
+      <div class="qrwrap">
+        <div class="cta" id="ctaEl">Забронировать <span class="arw">&#8595;</span></div>
+        <div class="qrs" id="qrs"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -290,6 +310,7 @@ select,input[type=text],input[type=number]{width:100%;background:#141828;border:
   <div class="lbl">Блок цены</div>
   <div class="chips" style="margin-bottom:8px;"><button class="chip on" id="prChip">Показывать блок цены</button></div>
   <input type="number" id="prInp" value="5500" min="0" max="999999" step="100" placeholder="Цена, ₽ (до 999 999)">
+  <input type="text" id="prFmtInp" maxlength="64" placeholder="Формат размещения — необязательно: 1/24, пост в ленте на сутки" style="margin-top:8px;">
 
   <div class="lbl">QR-коды · второй ведёт в вашу карточку на Площадке</div>
   <div class="chips" id="qrChips">
@@ -2677,7 +2698,19 @@ if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
   }
 })();
 
+/* иерархия метрик: первые ДВЕ видимые плитки — «герои» (крупный шрифт).
+   Работает при любом наборе метрик (пользователь включает от 2 до 8 штук). */
+function applyHero() {
+  var cells = poster.querySelectorAll('.mcell'), seen = 0;
+  for (var i = 0; i < cells.length; i++) {
+    var vis = !cells[i].classList.contains('hide');
+    cells[i].classList.toggle('hero', vis && seen < 2);
+    if (vis) seen++;
+  }
+}
+
 function relayout() {
+  applyHero();
   poster.classList.remove('d1', 'd2', 'd3', 'd4');
   var steps = ['d1', 'd2', 'd3', 'd4'];
   for (var i = 0; i < steps.length; i++) {
@@ -2762,6 +2795,13 @@ var prBox = document.getElementById('prBox'), prVal = document.getElementById('p
 on('prChip', 'click', function () {
   this.classList.toggle('on');
   prBox.classList.toggle('hide', !this.classList.contains('on'));
+  relayout();
+});
+/* формат размещения — свободное необязательное поле: пусто = прежняя подпись */
+var DEFAULT_PRSUB = 'минимальный формат размещения';
+on('prFmtInp', 'input', function () {
+  var sub = document.getElementById('prSub');
+  if (sub) sub.textContent = this.value.trim() || DEFAULT_PRSUB;
   relayout();
 });
 on('prInp', 'input', function () {
@@ -3260,6 +3300,9 @@ function renderQrs(mode) {
   box.innerHTML = '';
   if (mode === 'channel' || mode === 'both') box.appendChild(qrTile(QR_CHANNEL_URL, '@bh_nlmt'));
   if (mode === 'card' || mode === 'both') box.appendChild(qrTile(QR_CARD_URL, '@ForgeMetricsBot'));
+  /* призыв показываем только когда есть QR карточки — именно на него он указывает */
+  var cta = document.getElementById('ctaEl');
+  if (cta) cta.classList.toggle('hide', !(mode === 'card' || mode === 'both'));
 }
 renderQrs('both');
 on('qrChips', 'click', function (e) {

@@ -325,7 +325,11 @@
     }
     st.niche = !(el('nicheEl') && el('nicheEl').classList.contains('hide'));
     st.chart = !(el('chart') && el('chart').classList.contains('hide'));
-    st.price = { on: !(el('prBox') && el('prBox').classList.contains('hide')), val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0 };
+    st.price = {
+      on: !(el('prBox') && el('prBox').classList.contains('hide')),
+      val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,
+      fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 64) : ''  // формат размещения (необязательно)
+    };
     var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = qrOn ? qrOn.getAttribute('data-qr') : 'both';
     st.hook = el('hookInp') ? el('hookInp').value : '';
     // метрики: видимые (не hide и есть данные)
@@ -400,6 +404,8 @@
       if (el('prBox')) el('prBox').classList.toggle('hide', !state.price.on);
       var pch = el('prChip'); if (pch) pch.classList.toggle('on', !!state.price.on);
       if (el('prInp') && state.price.val != null) { el('prInp').value = state.price.val; try { el('prInp').dispatchEvent(new Event('input')); } catch (e) {} }
+      // формат размещения — после цены: prInp может скрыть подпись, prFmtInp задаёт её текст
+      if (el('prFmtInp')) { el('prFmtInp').value = state.price.fmt || ''; try { el('prFmtInp').dispatchEvent(new Event('input')); } catch (e) {} }
     }
     // QR
     if (state.qr) { document.querySelectorAll('#qrChips .chip').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-qr') === state.qr); }); renderQrsSafe(state.qr); }
