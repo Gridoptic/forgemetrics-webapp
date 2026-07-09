@@ -681,24 +681,23 @@
         var d = document.createElement('div');
         d.id = 'fmx-screen';
         d.innerHTML =
-            '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" style="display:none;margin-right:-2px;"><i class="ti ti-arrow-left"></i></button><div class="fmx-hic" id="fmx-hic"><i class="ti ti-building-store"></i></div>' +
+            '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат значки"><i class="ti ti-rosette-discount-check"></i></button>' +
-            '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button>' +
-            '<button class="fmx-ibtn" id="fmx-close" style="margin-left:7px;"><i class="ti ti-x"></i></button></div>' +
+            '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
             '<div id="fmx-mini"><div class="in" id="fmx-miniIn"></div></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
         _root = d;
-        el('fmx-close').addEventListener('click', close);
         el('fmx-faq').addEventListener('click', openFaq);
         el('fmx-bhelp').addEventListener('click', openBadgeGuide);
         el('fmx-bm').addEventListener('click', openBookmarks);
         // подсказки пульсируют, пока человек не откроет их хотя бы раз (запоминаем в localStorage)
         _pulseHint('fmx-faq', 'fmx_seen_faq');
         _pulseHint('fmx-bhelp', 'fmx_seen_badges');
-        el('fmx-back').addEventListener('click', function () { _haptic('light'); setMainTab('enter'); });
+        // стрелка «назад»: с под-раздела (Площадка/База/Пульс) — на главный экран; с главного — закрыть приложение
+        el('fmx-back').addEventListener('click', function () { _haptic('light'); if (_mainTab !== 'enter') setMainTab('enter'); else close(); });
         document.addEventListener('click', function (e) { var dd = el('fmx-chdd'); if (dd && dd.classList.contains('on') && !dd.contains(e.target)) dd.classList.remove('on'); });
         el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
         el('fmx-mini').addEventListener('click', function () { _haptic('light'); el('fmx-scrollEl').scrollTo({ top: 0, behavior: 'smooth' }); });
@@ -740,8 +739,7 @@
     function setMainTab(t, force) {
         if (!force && t === _mainTab) return;
         _mainTab = t;
-        var back = el('fmx-back'); if (back) back.style.display = t === 'enter' ? 'none' : 'flex';
-        var hic = el('fmx-hic'); if (hic) hic.style.display = t === 'enter' ? 'flex' : 'none';
+        // стрелка «назад» видна всегда (на главном экране закрывает приложение, глубже — ведёт назад)
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
             if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; }
@@ -2576,7 +2574,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710m';
+    var PS_GLUE_V = '20260710n';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
