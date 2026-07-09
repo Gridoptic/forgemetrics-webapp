@@ -250,6 +250,11 @@
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
+            /* долгое нажатие на обложке/аватаре открывало системное меню «сохранить изображение»
+               с полным адресом файла. Скриншот всё равно возможен — это не защита, а вид:
+               карточка не должна вести себя как обычная веб-страница */
+            '.fmx-cov,.fmx-cov *,.fmx-av,.fmx-av *,.fmx-avw,.fmx-avw *{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none;-webkit-user-select:none;}',
+            '.fmx-cov img,.fmx-av img,.fmx-avw img{pointer-events:none;}',
             '.fmx-cov-bg{position:absolute;inset:0;background-size:cover;background-position:center;}',
             '.fmx-cov-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(120% 130% at 22% 8%,rgba(255,255,255,0.4),transparent 55%);animation:fmxBreathe 7s ease-in-out infinite;}',
             '@keyframes fmxBreathe{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(8%,6%) scale(1.12);}}',
@@ -2541,7 +2546,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260709k';
+    var PS_GLUE_V = '20260709l';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
