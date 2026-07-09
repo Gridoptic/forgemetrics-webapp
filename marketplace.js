@@ -28,7 +28,7 @@
     var _pulse = null, _pulseTs = 0;
     var _channels = [], _myListings = [], _bookmarks = {};
     var _chLoaded = false, _chLoading = false, _nicheSel = null;
-    var _faqTab = 'terms';
+    var _faqTab = 'rules';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
     var _stickers = null;  // коллекция стикеров юзера
     function onTap(node, fn) {
@@ -55,13 +55,16 @@
     var GR = '#5DCAA5';
 
     var TERMS = [
-        ['Подписчики', 'Сколько людей в канале. Само по себе мало значит — подписчиков легко накрутить. Главное — охват.'],
-        ['Охват', 'Сколько человек реально видят один пост. Главное число при оценке: рекламу видит охват, а не все подписчики.'],
-        ['ER · вовлечённость', 'Насколько живая аудитория: реакции и комментарии к охвату. Низкий ER при больших цифрах — повод насторожиться.'],
-        ['CPM · за 1000 показов', 'Сколько стоит донести рекламу до 1000 человек. Сравнивай каналы по CPM, а не по голой сумме.'],
-        ['Охват к подписчикам', 'Какая доля подписчиков видит посты. У здорового канала — заметная доля. 100k подписчиков и 1k охват — тревожный знак.'],
-        ['Накрутка', 'Искусственные подписчики или просмотры. Признаки: много подписчиков и крошечный охват, скачки просмотров, нет живых комментариев.'],
-        ['Маркировка · erid', 'В некоторых странах интернет-реклама подлежит маркировке (в России — токен erid). Поле erid в карточке опциональное — для сделок, где маркировка обязательна.']
+        ['Подписчики', 'Сколько всего людей подписано на канал. Само по себе число почти ничего не говорит: подписчиков легко накрутить или закупить. Смотри его только в паре с охватом — важно не сколько подписано, а сколько реально читают.'],
+        ['Средний охват поста', 'Сколько человек в среднем видят один пост. Это главное число при закупке рекламы: твоё объявление увидит именно охват, а не все подписчики. По нему считается реальная цена контакта.'],
+        ['ER · вовлечённость', 'Engagement Rate — доля читателей, которые реагируют: лайки, репосты, комментарии, голоса — по отношению к охвату. Показывает, живая ли аудитория. Высокий охват при низком ER — тревожный сигнал: людей «пригнали», но им не интересно.'],
+        ['ERR · охват к базе', 'Engagement Rate by Reach — какая доля подписчиков реально видит посты (охват ÷ подписчики). У здорового канала это заметная доля. 100 000 подписчиков и 1 000 охвата — почти наверняка накрученная база.'],
+        ['CPM · цена за 1000 показов', 'Сколько стоит донести рекламу до 1000 человек (цена ÷ охват × 1000). Главный инструмент сравнения: дорогой на вид канал с большим охватом может выйти дешевле маленького. Сравнивай каналы по CPM, а не по сумме размещения.'],
+        ['Прирост за 30 дней', 'Насколько выросло или упало число подписчиков за месяц. Плавный органический рост — признак живого канала. Резкий скачок вверх — часто закупка или накрутка подписчиков; после неё охват обычно проседает.'],
+        ['Частота постов', 'Сколько публикаций выходит в неделю. Слишком редко — аудитория отвыкает и хуже реагирует; слишком часто — твоя реклама быстро тонет в потоке. Влияет на то, как долго пост держится вверху ленты у читателя.'],
+        ['Просмотры в месяц', 'Суммарные просмотры всех постов за месяц — общий «трафик» канала. Помогает прикинуть масштаб: сколько всего показов даёт канал за пределами одного поста.'],
+        ['Накрутка', 'Искусственные подписчики или просмотры. Признаки: большая база при крошечном охвате, резкие скачки просмотров без причины, отсутствие живых комментариев, ER близкий к нулю. Индикатор здоровья канала подсвечивает такие каналы красным.'],
+        ['Маркировка · erid', 'В некоторых странах интернет-реклама подлежит обязательной маркировке (в России — токен erid). Поле erid в карточке опциональное — заполняй для сделок, где маркировка обязательна. Ответственность за неё несут стороны сделки.']
     ];
     var RULES = [
         ['Запрещено полностью', 'Наркотики и их пропаганда; оружие и взрывчатка; порнография; терроризм, экстремизм и символика запрещённых организаций; призывы к суициду и селф-харму; шок-контент — кровь, увечья, жестокость к людям и животным; торговля людьми, документами и краденым.'],
@@ -209,6 +212,8 @@
             '.fmx-head h1{margin:0;font-size:16px;font-weight:700;}',
             '.fmx-head p{margin:1px 0 0;font-size:11px;color:#8990a8;}',
             '.fmx-ibtn{width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}',
+            '@keyframes fmxPulse{0%,100%{box-shadow:0 0 0 0 rgba(129,140,248,0.55);}50%{box-shadow:0 0 0 6px rgba(129,140,248,0);}}',
+            '.fmx-ibtn.fmx-pulse{animation:fmxPulse 1.5s ease-out infinite;color:#818cf8;border-color:rgba(129,140,248,0.6);}',
             '.fmx-ibtn.fmx-has{color:#f59e0b;border-color:rgba(245,158,11,0.3);}',
             '.fmx-bmc{position:absolute;top:-5px;right:-5px;background:#6366f1;color:#fff;font-size:9px;font-weight:700;min-width:15px;height:15px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;}',
             '.fmx-pillbar{position:relative;display:flex;margin:0 16px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:4px;flex-shrink:0;}',
@@ -678,7 +683,8 @@
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" style="display:none;margin-right:-2px;"><i class="ti ti-arrow-left"></i></button><div class="fmx-hic" id="fmx-hic"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">База каналов и своя Площадка</p></div>' +
-            '<button class="fmx-ibtn" id="fmx-faq"><i class="ti ti-help"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат значки"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button>' +
             '<button class="fmx-ibtn" id="fmx-close" style="margin-left:7px;"><i class="ti ti-x"></i></button></div>' +
             '<div id="fmx-mini"><div class="in" id="fmx-miniIn"></div></div>' +
@@ -687,7 +693,11 @@
         _root = d;
         el('fmx-close').addEventListener('click', close);
         el('fmx-faq').addEventListener('click', openFaq);
+        el('fmx-bhelp').addEventListener('click', openBadgeGuide);
         el('fmx-bm').addEventListener('click', openBookmarks);
+        // подсказки пульсируют, пока человек не откроет их хотя бы раз (запоминаем в localStorage)
+        _pulseHint('fmx-faq', 'fmx_seen_faq');
+        _pulseHint('fmx-bhelp', 'fmx_seen_badges');
         el('fmx-back').addEventListener('click', function () { _haptic('light'); setMainTab('enter'); });
         document.addEventListener('click', function (e) { var dd = el('fmx-chdd'); if (dd && dd.classList.contains('on') && !dd.contains(e.target)) dd.classList.remove('on'); });
         el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
@@ -1070,7 +1080,7 @@
         if (!_pulse) loadPulse(function () { var tl = el('fmx-todayLine'); if (tl && _pulse) tl.innerHTML = todayLine(); });
     }
 
-    var REQ_FMT = { any: 'Любой формат', feed_native: 'В ленте', post_24h: 'На 24 часа', pinned: 'Закреп', stories: 'Сторис', circle: 'Кружок' };
+    var REQ_FMT = { any: 'Любой формат', feed_native: 'В ленте', post_24h: 'На 24 часа', pinned: 'Закреплённый пост', stories: 'В сторис', circle: 'В кружке' };
     function loadRequests() {
         _reqState = 'loading';
         apiGet('/api/v1/marketplace/requests').then(function (r) {
@@ -1272,15 +1282,15 @@
         }).catch(function () {});
     }
     function openReviewForm(dealId) {
-        var sel = { v: 5 };
+        var sel = { v: 0 };   // без предвыбора — иначе рейтинги завышаются автоматически на 5★
         el('fmx-revBody').innerHTML =
             '<span class="fmx-lbl">Оценка</span><div class="fmx-fxw" id="fmx-rev-r">' +
-            [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx' + (n === 5 ? ' on' : '') + '" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
+            [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Пара слов (необязательно)</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="Как прошла сделка? Вышел ли пост вовремя, честные ли охваты."></textarea>' +
-            '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;"><i class="ti ti-send"></i> Отправить отзыв</button>';
-        qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
+            '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;opacity:0.5;" disabled><i class="ti ti-send"></i> Поставь оценку</button>';
+        qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var sb = el('fmx-rev-send'); if (sb) { sb.disabled = false; sb.style.opacity = '1'; sb.innerHTML = '<i class="ti ti-send"></i> Отправить отзыв'; } }); });
         el('fmx-rev-send').addEventListener('click', function () {
-            var btn = this; btn.disabled = true;
+            var btn = this; if (!sel.v) return; btn.disabled = true;
             apiPost('/api/v1/marketplace/deals/' + dealId + '/review', { rating: sel.v, text: el('fmx-rev-t').value }).then(function (r) {
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось'); return; }
@@ -1358,8 +1368,8 @@
     }
     function defaultFmts() {
         return [
-            { on: true, format: 'feed_native', n: 'Размещение в ленте', p: 5500 },
-            { on: false, format: 'pinned', n: 'Закреплённое 24ч', p: 8000 },
+            { on: true, format: 'feed_native', n: 'В ленте', p: 5500 },
+            { on: false, format: 'pinned', n: 'Закреплённый пост', p: 8000 },
             { on: false, format: 'stories', n: 'В сторис', p: 3000 },
             { on: false, format: 'circle', n: 'В кружке', p: 3000 }
         ];
@@ -1437,7 +1447,7 @@
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
             accSec('avatar', 'ti-user-circle', 'Аватар', paneAvatar()) +
-            accSec('fx', 'ti-sparkles', 'Эффекты аватара', paneFx()) +
+            accSec('fx', 'ti-sparkles', 'Эффекты и анимация', paneFx()) +
             accSec('sticker', 'ti-sticker', 'Стикер', '<div id="fmx-stkBody">' + loadHtml() + '</div>') +
             accSec('style', 'ti-palette', 'Стиль', paneStyleMin()) +
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
@@ -1484,7 +1494,7 @@
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось'); return; }
                 _haptic('success');
                 _ss._status = act === 'pause' ? 'paused' : 'published';
-                for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === _ss.listingId) { _myListings[i].status = _ss._status; _myListings[i].status_human = _ss._status === 'paused' ? 'На паузе' : 'Опубликовано'; }
+                for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === _ss.listingId) { _myListings[i].status = _ss._status; _myListings[i].status_human = _ss._status === 'paused' ? 'Заморожена' : 'Опубликовано'; }
                 toast(act === 'pause' ? 'Карточка заморожена — с Площадки убрана, вернёшь в любой момент' : 'Карточка снова на Площадке');
                 _feed = null; _feedState = 'idle';
                 selectChannel(_ss.channelId);
@@ -1619,7 +1629,7 @@
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применятся с продвижением на 30 дней (29 990 ₽).</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применяются при активном продвижении на 30 дней (29 990 ₽).</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -1892,7 +1902,7 @@
         }).join('');
     }
     function panePrice() {
-        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Бот подскажет справедливую цену по метрикам канала — итоговую назначаешь сам. Включённые форматы видны рекламодателю прямо на карточке.</div>';
+        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Цену задаёшь сам. Ориентируйся на CPM и охват канала — так рекламодателю проще сравнить. Включённые форматы видны на карточке.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
         return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots;
     }
@@ -2542,7 +2552,9 @@
             st.title = 'Потяни вверх/вниз';
             bindStarDrag(card);
         }
-        [['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-badges', 'fx'], ['.fmx-met', 'price']].forEach(function (z) {
+        // .fmx-avw первым — тап по аватару ведёт в «Аватар», а не в «Текст» (он лежит внутри .fmx-crow).
+        // бейджи убраны из зон: тап по ним открывал «Эффекты аватара» — нелогично и путало.
+        [['.fmx-avw', 'avatar'], ['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-met', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
@@ -2564,7 +2576,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710l';
+    var PS_GLUE_V = '20260710m';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2658,7 +2670,7 @@
             '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
             '<div id="fmx-psWrap" style="width:100%;max-width:560px;margin:0 auto;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" scrolling="no" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;overflow:hidden;"></iframe></div></div>' +
-            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
+            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат с ботом</button></div>';
         document.body.appendChild(bg);
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
         var LW = 560, glueReady = false, chartDone = false, extra = {};
@@ -2762,7 +2774,7 @@
             else finish();
         }
         el('fmx-ps-x').addEventListener('click', close);
-        var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат';
+        var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат с ботом';
         function sendBtn() { return el('fmx-ps-send'); }
         function restoreSend() { clearTimeout(bg.__fmxSendCd); var b = sendBtn(); if (b) { b.disabled = false; b.innerHTML = SEND_LABEL; } }
         /* сервер просит подождать — показываем обратный отсчёт прямо на кнопке,
@@ -2961,22 +2973,16 @@
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
             toast(r && r.needs_review ? 'Карточка ушла на ручную проверку — проверим и вернём' : (r && r.resubmitted ? 'Карточка отправлена на повторную проверку' : 'Карточка сохранена'));
             _feed = null; _feedState = 'idle';
-            setTimeout(function () { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить карточку'; btn.disabled = false; }, 1600);
+            setTimeout(function () {
+                // новая карточка: перерисовываем панель, чтобы сразу появились кнопки управления
+                // (Промо-постер, Статистика, Заморозить, Удалить) — раньше они не показывались до перезахода
+                if (wasCreate) { paintCreate(); }
+                else { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить карточку'; btn.disabled = false; }
+            }, 1600);
         }).catch(function (e) { _haptic('error'); btn.disabled = false; uiAlert('Не удалось сохранить: ' + (e && e.message ? e.message : 'ошибка')); });
     }
 
     /* ===================== cards ===================== */
-    function spark(col, w, h) {
-        var arr = [], i; for (i = 0; i < 9; i++) arr.push(0.7 + Math.sin(i * 1.15) * 0.14 + i * 0.02);
-        w = w || 60; h = h || 20;
-        var mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr);
-        var lx = 0, ly = 0;
-        var pts = arr.map(function (v, i) { var x = i / 8 * (w - 5) + 2.5, y = h - ((v - mn) / ((mx - mn) || 1)) * (h - 8) - 4; lx = x; ly = y; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
-        return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
-            '<polygon points="2.5,' + (h - 1.5) + ' ' + pts + ' ' + lx.toFixed(1) + ',' + (h - 1.5) + '" fill="' + col + '" opacity="0.14"/>' +
-            '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-            '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.2" fill="' + col + '"/></svg>';
-    }
     function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
     function badgeItems(l) {
         var items = [];
@@ -2990,9 +2996,10 @@
                 var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
             });
         } else {
+            // бейджи только по РЕАЛЬНЫМ данным: «Живой» — охват ≥10% подписчиков, «Крупный» — ≥100k.
+            // «Безопасный» без критерия убран — это был фальшивый знак доверия (как галочка верификации).
             var rr = _reachRate(l);
             if (rr != null && rr >= 10) items.push({ k: 'live', h: _bk('live', '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>') });
-            items.push({ k: 'safe', h: _bk('safe', '<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span>') });
             if (l.subscribers && l.subscribers >= 100000) items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
         }
         return items;
@@ -3056,11 +3063,11 @@
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
-            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
+            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
             (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
-            '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
+            '</div>' +
+            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + ';opacity:0.55;" data-act="analyze" data-u="' + _esc(l.username) + '" title="AI-разбор подключается"><i class="ti ti-report-analytics"></i>Разбор · скоро</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
     }
     function simpleCard(l) {
@@ -3069,11 +3076,11 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             '<div class="fmx-met" style="margin-top:11px;"><div><div class="l"><i class="ti ti-users"></i>Подписчики</div><div class="v">' + _num(l.subscribers) + '</div></div>' +
-            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '~~~') + '</div></div>' +
+            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
             (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
-            '<div class="fmx-sp"><div class="l"><i class="ti ti-chart-line"></i>Просмотры</div>' + spark(hc) + '</div></div>' +
-            '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать каналу</button></div></div>';
+            '</div>' +
+            '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div>';
     }
     function listItem(l, fx, plain) {
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && _isTop(l);
@@ -3087,7 +3094,7 @@
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + (_nicheMatch(l) ? ' <i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;"></i>' : '') + '</div>' +
             '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
-            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '<span class="fmx-lsp">' + spark(hc, 56, 24) + '</span></div>' +
+            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '</div>' +
             '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
@@ -3331,12 +3338,56 @@
     function showModal(id) { var m = el(id); if (m) { document.body.appendChild(m); m.classList.add('fmx-show'); } }
     function hideModal(id) { var m = el(id); if (m) m.classList.remove('fmx-show'); }
 
+    /* подсказка пульсирует, пока человек не откроет её хотя бы раз (запоминаем навсегда) */
+    function _pulseHint(id, key) {
+        var b = el(id); if (!b) return;
+        try { if (localStorage.getItem(key)) return; } catch (e) {}
+        b.classList.add('fmx-pulse');
+        b.addEventListener('click', function () {
+            b.classList.remove('fmx-pulse');
+            try { localStorage.setItem(key, '1'); } catch (e) {}
+        });
+    }
+
+    /* Справка по значкам: каждый бейдж показан РОВНО как на карточке + профессиональное описание */
+    function openBadgeGuide() {
+        var old = el('fmx-bgdBg'); if (old) old.remove();
+        var row = function (badge, title, desc) {
+            return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
+                '<div style="flex-shrink:0;min-width:96px;display:flex;justify-content:flex-start;padding-top:2px;">' + badge + '</div>' +
+                '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:700;color:#e8e8ed;margin-bottom:3px;">' + title + '</div>' +
+                '<div style="font-size:12px;color:#a9aec0;line-height:1.5;">' + desc + '</div></div></div>';
+        };
+        var body =
+            row(trafficLight({ health_class: 'green' }), 'Здоровье канала',
+                'Индекс здоровья по отношению среднего охвата поста к числу подписчиков. <b style="color:#5DCAA5;">Зелёный</b> — охват в норме (от 10% подписчиков), аудитория живая. <b style="color:#f59e0b;">Жёлтый</b> — охват ниже ожидаемого (3–10%). <b style="color:#ef4444;">Красный</b> — низкий охват при больших цифрах: возможна накрутка подписчиков. Первое, на что смотрит арбитражник перед закупкой.') +
+            row(trafficLight({ health_class: 'amber' }) + ' ' + trafficLight({ health_class: 'red' }), 'Жёлтый и красный',
+                'Те же индикаторы в других состояниях — не приговор, но повод открыть «Развернуть» и проверить охват, ER и динамику вручную.') +
+            row('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
+                'Средний охват поста — не меньше 10% от подписчиков. Аудитория реально читает канал, а не «спит». Хороший знак живой базы.') +
+            row('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
+                'В канале от 100 000 подписчиков. Большой охват за размещение — подходит для масштабных запусков и широких проливов.') +
+            row('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
+                'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
+            row('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4.8 · 3 сделки</span>', 'Сделки и рейтинг',
+                'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
+            row('<span class="fmx-bdg fmx-b-live"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
+                'Появляется, только когда площадка реально проверила канал (без обмана и запрещёнки). Если значка нет — проверку ещё не проходили, это не значит «плохой».');
+        var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
+        bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат значки</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
+            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Значки на карточке помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
+        document.body.appendChild(bg);
+        bg.addEventListener('click', function (e) { if (e.target === bg) hideModal('fmx-bgdBg'); });
+        bg.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bgdBg'); });
+        showModal('fmx-bgdBg');
+    }
+
     function openFaq() {
         var body;
         if (_faqTab === 'terms') body = TERMS.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> Единые правила Площадки. За контент отвечает разместивший; дополнительно действуют законы страны, на аудиторию которой направлена реклама.</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else body = TIPS.map(function (t) { return '<div class="fmx-tip"><i class="ti ti-circle-check"></i><span>' + _esc(t) + '</span></div>'; }).join('');
-        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ft' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Цифры</button><button class="fmx-ft' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button><button class="fmx-ft' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button></div>' + body;
+        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ft' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button><button class="fmx-ft' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Метрики</button><button class="fmx-ft' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button></div>' + body;
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
@@ -3370,7 +3421,7 @@
         if (_nicheMatch(l)) mstr.push('ниша совпадает с твоим каналом');
         if (l.er != null) mstr.push('ER ' + l.er + '%');
         var cpm = _cpm(l); if (cpm != null) mstr.push('CPM ' + cpm + '₽');
-        var rr = _reachRate(l); if (rr != null) mstr.push('охват/подп ' + rr + '%');
+        var rr = _reachRate(l); if (rr != null) mstr.push('охват к подписчикам ' + rr + '%');
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
         el('fmx-listBody').innerHTML =
             '<div style="font-size:12px;color:#8990a8;margin-bottom:12px;">@' + _esc(u) + ' · ' + _num(l.subscribers) + ' подп.</div>' +
@@ -3380,7 +3431,7 @@
             (fmts ? '<div style="font-size:12px;font-weight:700;margin:14px 0 4px;">Форматы и цены</div>' + fmts : '') +
             (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i>' + (_bookmarks[u] ? 'В закладках' : 'В закладки') + '</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать владельцу</button></div>' +
+            '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div>' +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
         el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) {
             b.addEventListener('click', function () {
