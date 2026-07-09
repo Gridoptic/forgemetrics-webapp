@@ -575,6 +575,12 @@
             /* панели сортировок листаются пальцем — полосу прокрутки не показываем */
             '.fmx-sortbar{scrollbar-width:none;-ms-overflow-style:none;}',
             '.fmx-sortbar::-webkit-scrollbar{display:none;}',
+            /* панель «Купить» с кнопкой «Фильтры»: на ПК мышкой горизонтально не прокрутить — показываем аккуратный тонкий скроллбар, чтобы долистать до фильтров */
+            '#fmx-buysort{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;padding-bottom:5px;}',
+            '#fmx-buysort::-webkit-scrollbar{display:block;height:6px;}',
+            '#fmx-buysort::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:6px;}',
+            '#fmx-buysort::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.34);}',
+            '#fmx-buysort::-webkit-scrollbar-track{background:transparent;}',
             /* пульт промо-постера */
             '.fmx-ps{width:100%;max-width:580px;max-height:92vh;overflow-y:auto;background:#0b0e18;border:0.5px solid rgba(255,255,255,0.12);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 14px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}',
             '.fmx-ps::-webkit-scrollbar{width:9px;}',
