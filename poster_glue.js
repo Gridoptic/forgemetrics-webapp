@@ -28,6 +28,13 @@
     var h = el('fmx-bg-hint'); if (h) h.style.display = on ? 'block' : 'none';
     var btn = el('fmx-ed-bgcrop'); if (btn) { btn.innerHTML = on ? '✓ Готово' : '⤢ Кадрировать фон'; btn.classList.toggle('on', on); }
     if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }
+    // прячем ползунок студии на время кадрирования: двигают фон, а не листают. Только КЛАСС на
+    // скроллбар — overflow НЕ трогаем, скролл остаётся рабочим (в т.ч. после «Готово»).
+    try {
+      var host = window.frameElement;
+      var box = host && host.closest ? host.closest('.fmx-psScroll') : null;
+      if (box) box.classList.toggle('fmx-cropbar', on);
+    } catch (e) {}
   }
   function _updateBgCropBtn() {
     var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'block' : 'none';
