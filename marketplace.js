@@ -620,7 +620,7 @@
             '.fmx-tstamp{font-size:10.5px;color:#565b73;margin-left:auto;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-tstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px;}',
             '.fmx-tcell{background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015));border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:10px 11px;min-width:0;}',
-            '.fmx-tcl{font-size:9px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-tcl{font-size:8.5px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.3px;line-height:1.25;min-height:22px;}',
             '.fmx-tcv{font-size:18px;font-weight:800;color:#fff;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-tcv small{font-size:11px;font-weight:700;color:#8990a8;}',
             '.fmx-tvol{font-size:10.5px;color:#8990a8;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px;}',
@@ -763,7 +763,7 @@
         if (ti && su) {
             if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; su.style.display = ''; }
             else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; su.style.display = ''; }
-            else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM, цены и активность'; su.style.display = ''; }
+            else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM по нишам'; su.style.display = ''; }
             else { ti.textContent = 'Рынок рекламы'; su.textContent = ''; su.style.display = 'none'; }
         }
         var host = el('fmx-main');
