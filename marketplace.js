@@ -2547,7 +2547,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710c';
+    var PS_GLUE_V = '20260710d';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2639,6 +2639,10 @@
             '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;"></iframe></div></div>' +
             '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
         document.body.appendChild(bg);
+        // студия — полноэкранный слой поверх приложения. Замораживаем прокрутку контейнера под ней
+        // (fmx-scrollEl), иначе рядом с полосой студии видна вторая полоса — прокрутка фона.
+        var _bgScroll = el('fmx-scrollEl'), _bgScrollPrev = _bgScroll ? _bgScroll.style.overflow : null;
+        if (_bgScroll) _bgScroll.style.overflow = 'hidden';
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
         var LW = 560, glueReady = false, chartDone = false, extra = {};
 
@@ -2726,6 +2730,8 @@
             var done = false;
             function finish() {
                 if (done) return; done = true;
+                // возвращаем прокрутку фонового контейнера ровно как было
+                if (_bgScroll) _bgScroll.style.overflow = (_bgScrollPrev || '');
                 /* сохраняем состояние при закрытии — правки, позиции стикеров, свой фон и пан/зум запоминаются */
                 try {
                     var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;

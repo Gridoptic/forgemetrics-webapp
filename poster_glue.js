@@ -492,6 +492,17 @@
       window.__fmxBgWrapped = true;
       var origSet = window.setOwnBg;
       window.setOwnBg = function (f) {
+        // большой файл отклоняем СРАЗУ при выборе — не показываем превью, которое всё равно
+        // не уйдёт в постер (на сервер не влезет). 64 МБ — синхронно с бэкендом.
+        if (f && f.size > 64 * 1024 * 1024) {
+          var d = el('drop');
+          if (d) {
+            var o = d.innerHTML;
+            d.textContent = 'Файл ' + Math.round(f.size / 1048576) + ' МБ — это больше 64 МБ. Возьми полегче';
+            setTimeout(function () { if (d) d.innerHTML = o; }, 3200);
+          }
+          return;                                          // ни превью, ни загрузки
+        }
         try { origSet(f); } catch (e) {}                 // мгновенное локальное превью (blob) — как в макете
         _bgpan = { x: 0, y: 0, s: 1 };                    // свежая картинка — без сдвига
         _updateBgCropBtn();                               // показать кнопку «Кадрировать фон»
