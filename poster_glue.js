@@ -579,7 +579,22 @@
       '.note,.gentip{font-size:' + px(11) + ' !important;}' +
       '#fmx-ed-pack .chip{width:' + px(52) + ' !important;height:' + px(52) + ' !important;padding:' + px(4) + ' !important;}' +
       '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
-      '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}';
+      '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
+      /* палитра цвета: она живёт внутри масштабированного iframe и ужималась вместе с постером.
+         Компенсируем — на экране получается нативный размер, квадрат и ползунок нормально ловятся пальцем */
+      '.picker{width:' + px(252) + ' !important;padding:' + px(14) + ' !important;border-radius:' + px(14) + ' !important;}' +
+      '.pkhead{margin-bottom:' + px(10) + ' !important;}' +
+      '.picker .pt{font-size:' + px(12) + ' !important;}' +
+      '.pkx{font-size:' + px(13) + ' !important;padding:' + px(2) + ' ' + px(7) + ' !important;border-radius:' + px(7) + ' !important;}' +
+      '.picker .sv{height:' + px(130) + ' !important;border-radius:' + px(10) + ' !important;}' +
+      '.picker .svdot{width:' + px(14) + ' !important;height:' + px(14) + ' !important;}' +
+      '.picker .cap{font-size:' + px(9) + ' !important;}' +
+      '.picker .hue{height:' + px(14) + ' !important;margin-top:' + px(10) + ' !important;border-radius:' + px(8) + ' !important;}' +
+      '.picker .hue::-webkit-slider-thumb{width:' + px(18) + ' !important;height:' + px(18) + ' !important;}' +
+      '.picker .crow{gap:' + px(6) + ' !important;margin-top:' + px(10) + ' !important;}' +
+      '.picker .crow input{font-size:' + px(12.5) + ' !important;padding:' + px(8) + ' ' + px(2) + ' !important;border-radius:' + px(9) + ' !important;}' +
+      '.picker .preset{margin-top:' + px(10) + ' !important;gap:' + px(6) + ' !important;}' +
+      '.picker .pd{width:' + px(22) + ' !important;height:' + px(22) + ' !important;border-radius:' + px(7) + ' !important;}';
   };
 
   /* режим рендера: прячем пульт и палитру, ставим постер в угол, сигналим готовность */

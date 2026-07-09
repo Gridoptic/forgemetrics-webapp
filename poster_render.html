@@ -158,7 +158,9 @@ select,input[type=text],input[type=number]{width:100%;background:#141828;border:
 
 .picker{display:none;position:fixed;width:252px;z-index:60;background:#10152a;border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,0.55);}
 .picker.show{display:block;}
-.pkhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+/* шапка пикера — ручка перетаскивания: палитра не должна закрывать то, что красишь */
+.pkhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}
+.pkx{touch-action:auto;}
 .picker .pt{font-size:12px;font-weight:600;color:#e8e8ed;}
 .picker .pt b{color:#5DCAA5;}
 .pkx{cursor:pointer;color:#8990a8;font-size:13px;padding:2px 7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:#141828;font-family:inherit;}
@@ -3018,10 +3020,39 @@ function openPicker(kind, el, name, currentHex, evt) {
     var t = evt.touches ? evt.touches[0] : evt;
     x = t.clientX; y = t.clientY;
   }
-  var W = 252, H = p.offsetHeight || 330;
+  var W = p.offsetWidth || 252, H = p.offsetHeight || 330;   // фактическая ширина: она зависит от масштаба
   p.style.left = Math.max(8, Math.min(x + 14, window.innerWidth - W - 8)) + 'px';
   p.style.top = Math.max(8, Math.min(y + 14, window.innerHeight - H - 8)) + 'px';
 }
+
+/* перетаскивание палитры за шапку — чтобы видеть элемент, который красишь */
+(function () {
+  var p = document.getElementById('picker');
+  var head = p && p.querySelector('.pkhead');
+  if (!p || !head) return;
+  var drag = null;
+  head.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('.pkx')) return;            // кнопки ⇄ и ✕ не тащат
+    var r = p.getBoundingClientRect();
+    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    try { head.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  head.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var W = p.offsetWidth, H = p.offsetHeight;
+    p.style.left = Math.max(6, Math.min(e.clientX - drag.dx, window.innerWidth - W - 6)) + 'px';
+    p.style.top = Math.max(6, Math.min(e.clientY - drag.dy, window.innerHeight - H - 6)) + 'px';
+    e.preventDefault();
+  });
+  function endDrag(e) {
+    if (!drag) return;
+    drag = null;
+    try { head.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
+  head.addEventListener('pointerup', endDrag);
+  head.addEventListener('pointercancel', endDrag);
+})();
 on('pickClose', 'click', function () {
   document.getElementById('picker').classList.remove('show');
 });
