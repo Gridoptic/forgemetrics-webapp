@@ -2547,7 +2547,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710d';
+    var PS_GLUE_V = '20260710e';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2636,13 +2636,9 @@
             '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
             '<div id="fmx-psWrap" style="width:100%;max-width:560px;margin:0 auto;overflow:hidden;">' +
-            '<iframe id="fmx-psFrame" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;"></iframe></div></div>' +
+            '<iframe id="fmx-psFrame" scrolling="no" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;overflow:hidden;"></iframe></div></div>' +
             '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат</button></div>';
         document.body.appendChild(bg);
-        // студия — полноэкранный слой поверх приложения. Замораживаем прокрутку контейнера под ней
-        // (fmx-scrollEl), иначе рядом с полосой студии видна вторая полоса — прокрутка фона.
-        var _bgScroll = el('fmx-scrollEl'), _bgScrollPrev = _bgScroll ? _bgScroll.style.overflow : null;
-        if (_bgScroll) _bgScroll.style.overflow = 'hidden';
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
         var LW = 560, glueReady = false, chartDone = false, extra = {};
 
@@ -2692,6 +2688,7 @@
                не должен отменять остальные — иначе редактор остаётся без адаптива/переименования */
             try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
             try { win.__fmxPosterUploader = uploadPosterBg; } catch (e) {}
+            try { win.__fmxPosterNotify = function (m) { toast(m, true); }; } catch (e) {}   // заметный тост из редактора
             /* есть сохранённое — восстанавливаем как было (вкл. стикеры); нет — показываем всё */
             try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
@@ -2730,8 +2727,6 @@
             var done = false;
             function finish() {
                 if (done) return; done = true;
-                // возвращаем прокрутку фонового контейнера ровно как было
-                if (_bgScroll) _bgScroll.style.overflow = (_bgScrollPrev || '');
                 /* сохраняем состояние при закрытии — правки, позиции стикеров, свой фон и пан/зум запоминаются */
                 try {
                     var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;

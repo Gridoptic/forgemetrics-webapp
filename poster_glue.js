@@ -495,12 +495,11 @@
         // большой файл отклоняем СРАЗУ при выборе — не показываем превью, которое всё равно
         // не уйдёт в постер (на сервер не влезет). 64 МБ — синхронно с бэкендом.
         if (f && f.size > 64 * 1024 * 1024) {
+          var msg = 'Файл ' + Math.round(f.size / 1048576) + ' МБ — это больше 64 МБ. Возьми полегче';
           var d = el('drop');
-          if (d) {
-            var o = d.innerHTML;
-            d.textContent = 'Файл ' + Math.round(f.size / 1048576) + ' МБ — это больше 64 МБ. Возьми полегче';
-            setTimeout(function () { if (d) d.innerHTML = o; }, 3200);
-          }
+          if (d) { var o = d.innerHTML; d.textContent = msg; setTimeout(function () { if (d) d.innerHTML = o; }, 3200); }
+          // и заметный всплывающий тост поверх студии — текст в области легко пропустить
+          try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(msg); } catch (e) {}
           return;                                          // ни превью, ни загрузки
         }
         try { origSet(f); } catch (e) {}                 // мгновенное локальное превью (blob) — как в макете
