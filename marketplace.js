@@ -1928,11 +1928,18 @@
     function pickMedia(target) {
         var inp = document.createElement('input');
         inp.type = 'file';
-        inp.accept = target === 'avatar' ? 'image/*' : 'image/*,video/mp4';
+        inp.accept = target === 'avatar' ? 'image/*' : 'image/*,video/mp4,video/quicktime';
         inp.addEventListener('change', function () {
             var fl = inp.files && inp.files[0]; if (!fl) return;
-            if (fl.size > 50 * 1024 * 1024) { uiAlert('Файл больше 50 МБ — сожми его или выбери другой.'); return; }
-            var kind = fl.type.indexOf('video') === 0 ? 'video' : (fl.type === 'image/gif' ? 'gif' : 'img');
+            // строгая проверка типа при ВЫБОРЕ: accept — лишь подсказка, через «все файлы» можно
+            // подсунуть .conf/.bat/что угодно. Пускаем только настоящие фото и видео.
+            var t = (fl.type || '').toLowerCase();
+            var isImg = t.indexOf('image/') === 0;
+            var isVid = t === 'video/mp4' || t === 'video/quicktime';
+            if (target === 'avatar' && !isImg) { uiAlert('Для аватара подойдёт только фото или GIF.'); return; }
+            if (!isImg && !isVid) { uiAlert('Можно загрузить только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит.'); return; }
+            if (fl.size > MEDIA_MAX_BYTES) { uiAlert('Файл больше 64 МБ — сожми его или выбери другой.'); return; }
+            var kind = isVid ? 'video' : (t === 'image/gif' ? 'gif' : 'img');
             var url = URL.createObjectURL(fl);
             if (kind === 'video') {
                 var v = document.createElement('video');
@@ -2557,7 +2564,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710i';
+    var PS_GLUE_V = '20260710j';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';

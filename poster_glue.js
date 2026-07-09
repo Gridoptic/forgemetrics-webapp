@@ -492,6 +492,17 @@
       window.__fmxBgWrapped = true;
       var origSet = window.setOwnBg;
       window.setOwnBg = function (f) {
+        // строгая проверка типа: принимаем только настоящие фото/видео. Через «все файлы» или
+        // перетаскиванием можно подсунуть .conf/.bat/что угодно — не пускаем даже в локальное превью.
+        var _t = (f && f.type || '').toLowerCase();
+        var _ok = _t.indexOf('image/') === 0 || _t === 'video/mp4' || _t === 'video/quicktime';
+        if (f && !_ok) {
+          var em = 'Можно только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит';
+          var de = el('drop');
+          if (de) { var oo = de.innerHTML; de.textContent = em; setTimeout(function () { if (de) de.innerHTML = oo; }, 3200); }
+          try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(em); } catch (e) {}
+          return;
+        }
         // большой файл отклоняем СРАЗУ при выборе — не показываем превью, которое всё равно
         // не уйдёт в постер (на сервер не влезет). 64 МБ — синхронно с бэкендом.
         if (f && f.size > 64 * 1024 * 1024) {
