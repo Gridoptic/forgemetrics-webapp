@@ -2564,7 +2564,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710k';
+    var PS_GLUE_V = '20260710l';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3219,11 +3219,17 @@
             if (!r || !r.ok) { body.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Попробуй ещё раз позже.'); return; }
             var t = r.totals || { expands: 0, writes: 0, views: 0 };
             var maxW = Math.max(1, Math.max.apply(null, (r.series || []).map(function (d) { return Math.max(d.expands, d.writes); })));
-            var bars = (r.series || []).map(function (d) {
+            var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            var _series = r.series || [];
+            var bars = _series.map(function (d, i) {
                 var he = Math.round(d.expands / maxW * 46), hw = Math.round(d.writes / maxW * 46);
-                return '<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:48px;min-width:0;">' +
+                var dd = new Date(d.day + 'T00:00:00');
+                var today = i === _series.length - 1;
+                return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;">' +
+                    '<div style="display:flex;align-items:flex-end;gap:2px;height:48px;">' +
                     '<div title="Развороты: ' + d.expands + '" style="width:7px;height:' + Math.max(2, he) + 'px;background:#5DCAA5;border-radius:2px;opacity:' + (d.expands ? 1 : 0.25) + ';"></div>' +
-                    '<div title="Написать: ' + d.writes + '" style="width:7px;height:' + Math.max(2, hw) + 'px;background:#818cf8;border-radius:2px;opacity:' + (d.writes ? 1 : 0.25) + ';"></div></div>';
+                    '<div title="Написать: ' + d.writes + '" style="width:7px;height:' + Math.max(2, hw) + 'px;background:#818cf8;border-radius:2px;opacity:' + (d.writes ? 1 : 0.25) + ';"></div></div>' +
+                    '<div style="font-size:10px;font-weight:' + (today ? '700' : '400') + ';color:' + (today ? '#5DCAA5' : '#8990a8') + ';white-space:nowrap;">' + WD[dd.getDay()] + '</div></div>';
             }).join('');
             body.innerHTML =
                 '<div style="display:flex;gap:10px;margin-bottom:16px;">' +
