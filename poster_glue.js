@@ -28,26 +28,6 @@
     var h = el('fmx-bg-hint'); if (h) h.style.display = on ? 'block' : 'none';
     var btn = el('fmx-ed-bgcrop'); if (btn) { btn.innerHTML = on ? '✓ Готово' : '⤢ Кадрировать фон'; btn.classList.toggle('on', on); }
     if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }
-    _lockStudioScroll(on);
-  }
-  /* На время кадрирования замораживаем прокрутку контейнера студии в родительском окне:
-     iframe постера лежит внутри прокручиваемой .fmx-psScroll, и палец, вместо того чтобы
-     двигать фон, пролистывал студию. Замок снимаем по «Готово». */
-  function _lockStudioScroll(on) {
-    try {
-      var host = window.frameElement;                 // iframe в родителе (тот же домен)
-      if (!host) return;
-      var box = host.closest ? host.closest('.fmx-psScroll') : null;
-      if (!box && host.parentElement) {               // запасной путь вверх по дереву
-        box = host.parentElement;
-        while (box && box.className && box.className.indexOf('fmx-psScroll') < 0) box = box.parentElement;
-      }
-      if (box) {
-        box.style.overflowY = on ? 'hidden' : 'auto';
-        box.style.touchAction = on ? 'none' : '';
-      }
-      host.style.touchAction = on ? 'none' : '';       // и сам iframe не отдаёт жест наружу
-    } catch (e) { /* другой домен / не в iframe — молча пропускаем */ }
   }
   function _updateBgCropBtn() {
     var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'block' : 'none';
@@ -516,8 +496,9 @@
         _bgpan = { x: 0, y: 0, s: 1 };                    // свежая картинка — без сдвига
         _updateBgCropBtn();                               // показать кнопку «Кадрировать фон»
         _applyBgpan();
-        _setBgCrop(true);                                 // сразу включаем кадрирование: видно рамку и подсказку
-        _uploadCustomBg(f);                                // и параллельно грузим на сервер
+        // кадрирование НЕ включаем автоматически: его слой перекрывает постер и мешает листать
+        // студию. Пользователь сам жмёт «Кадрировать фон», когда хочет подвинуть фон.
+        _uploadCustomBg(f);                                // грузим на сервер
       };
     }
     // кнопка режима кадрирования — прямо под постером, над «Сбросить настройки» (центрирована, тап-зона ≥40px)
