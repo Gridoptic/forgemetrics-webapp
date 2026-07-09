@@ -2936,6 +2936,18 @@ function drawSV() {
   g2.addColorStop(0, 'rgba(0,0,0,0)'); g2.addColorStop(1, '#000');
   svx.fillStyle = g2; svx.fillRect(0, 0, svc.width, svc.height);
 }
+/* полоска под квадратом. В режиме «Спектр» она задаёт насыщенность, поэтому красим её
+   в текущий тон: серый -> выбранный цвет. Раньше был жёстко зашит красный. */
+function hueBar() {
+  var hue = document.getElementById('hue');
+  if (!hue) return;
+  if (pick.mode === 'spec') {
+    var h = Math.round(pick.px * 360);
+    hue.style.background = 'linear-gradient(90deg,hsl(' + h + ',0%,62%),hsl(' + h + ',100%,50%))';
+  } else {
+    hue.style.background = '';
+  }
+}
 function syncInputs() {
   var c = hsv2rgb(pick.h, pick.s, pick.v);
   var hex = rgb2hex(c[0], c[1], c[2]);
@@ -2956,6 +2968,7 @@ function syncInputs() {
     dot.style.background = hex;
   }
   if (hue) hue.value = pick.mode === 'spec' ? Math.round(pick.ss * 100) : Math.round(pick.h);
+  hueBar();
   if (pick.target) {
     if (pick.target.kind === 'cell') pick.target.el.dataset.hex = hex;
     else COLORS[pick.target.kind] = hex;
@@ -3106,13 +3119,11 @@ on('pickMode', 'click', function () {
     var c0 = hsv2rgb(pick.h, pick.s, pick.v);
     specFromRgb(c0[0], c0[1], c0[2]);
     hue.max = 100; hue.value = Math.round(pick.ss * 100);
-    document.getElementById('hueCap').textContent = 'Тон';
-    document.getElementById('hue').style.background = 'linear-gradient(90deg,#888,#f00)';
+    document.getElementById('hueCap').textContent = 'Насыщенность';
   } else {
     pick.mode = 'sv';
     hue.max = 359; hue.value = Math.round(pick.h);
     document.getElementById('hueCap').textContent = 'Оттенок';
-    document.getElementById('hue').style.background = '';
   }
   drawSV(); syncInputs();
 });

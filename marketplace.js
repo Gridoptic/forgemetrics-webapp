@@ -536,7 +536,6 @@
             '.fmx-cp-dot{position:absolute;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.6);transform:translate(-50%,-50%);pointer-events:none;}',
             '.fmx-cp-hue{width:100%;margin-top:10px;-webkit-appearance:none;appearance:none;height:13px;border-radius:8px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none;border:0.5px solid rgba(255,255,255,0.15);}',
             '.fmx-cp-hue::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2.5px solid rgba(10,13,24,0.85);box-shadow:0 2px 7px rgba(0,0,0,0.45);cursor:pointer;}',
-            '.fmx-cp-hue.sat{background:linear-gradient(90deg,#9aa0ad,#f00);}',
             '.fmx-cp-row{display:flex;gap:6px;margin-top:10px;align-items:flex-end;}',
             '.fmx-cp-fld{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}',
             '.fmx-cp-fld.hexf{flex:1.6;}',
@@ -1679,7 +1678,8 @@
     /* «Свой цвет»: HSV-квадрат/спектр + hue + HEX + RGB — общий компонент для акцента и орбиты */
     function openColorStudio(cur, onPick) {
         var old = el('fmx-cpBg'); if (old) old.remove();
-        var st = { h: 160, s: 0.6, v: 0.8, mode: 'sv', px: 0.5, py: 0.5 };
+        /* ss — насыщенность спектра (полоска), отдельно от s: иначе полоска дёргается при перетаскивании точки */
+        var st = { h: 160, s: 0.6, v: 0.8, mode: 'sv', px: 0.5, py: 0.5, ss: 1 };
         var c0 = hex2rgb(cur);
         if (c0) { var hv = rgb2hsv(c0[0], c0[1], c0[2]); st.h = hv[0]; st.s = hv[1]; st.v = hv[2]; }
         var bg = document.createElement('div');
@@ -1702,9 +1702,30 @@
             '<button class="fmx-save" id="fmx-cp-done" style="margin-top:14px;"><i class="ti ti-check"></i> Готово</button></div>';
         document.body.appendChild(bg);
         var cv = el('fmx-cp-cv'), cx = cv.getContext('2d'), dot = el('fmx-cp-dot'), hue = el('fmx-cp-hue'), svb = el('fmx-cp-sv');
+        /* спектр: цвет = позиция точки (тон по X, светлота по Y) + насыщенность с полоски */
+        function specApply() {
+            var c = hsl2rgb(st.px * 360, Math.round(st.ss * 100), 92 - st.py * 84);
+            var h = rgb2hsv(c[0], c[1], c[2]);
+            st.h = h[0]; st.s = h[1]; st.v = h[2];
+        }
+        /* обратный пересчёт: цвет -> позиция точки и насыщенность полоски */
+        function specFromRgb(r, g, b) {
+            var rr = r / 255, gg = g / 255, bb = b / 255;
+            var mx = Math.max(rr, gg, bb), mn = Math.min(rr, gg, bb), d = mx - mn, h = 0;
+            if (d) {
+                if (mx === rr) h = 60 * (((gg - bb) / d) % 6);
+                else if (mx === gg) h = 60 * ((bb - rr) / d + 2);
+                else h = 60 * ((rr - gg) / d + 4);
+            }
+            if (h < 0) h += 360;
+            var l = (mx + mn) / 2, den = 1 - Math.abs(2 * l - 1);
+            st.px = h / 360;
+            st.py = Math.max(0, Math.min(1, (92 - l * 100) / 84));
+            st.ss = den ? Math.max(0, Math.min(1, d / den)) : 0;
+        }
         function draw() {
             if (st.mode === 'spec') {
-                var sat = Math.round(st.s * 100);
+                var sat = Math.round(st.ss * 100);
                 for (var x = 0; x < cv.width; x++) {
                     var hh = x / cv.width * 360;
                     var g = cx.createLinearGradient(0, 0, 0, cv.height);
@@ -1730,19 +1751,24 @@
             el('fmx-cp-r').value = c[0]; el('fmx-cp-g').value = c[1]; el('fmx-cp-b').value = c[2];
             if (st.mode === 'spec') {
                 dot.style.left = (st.px * 100) + '%'; dot.style.top = (st.py * 100) + '%';
-                hue.value = Math.round(st.s * 100);
+                hue.value = Math.round(st.ss * 100);
+                /* полоска насыщенности красится в текущий тон: серый -> выбранный цвет */
+                var hh2 = Math.round(st.px * 360);
+                hue.style.background = 'linear-gradient(90deg,hsl(' + hh2 + ',0%,62%),hsl(' + hh2 + ',100%,50%))';
             } else {
                 dot.style.left = (st.s * 100) + '%'; dot.style.top = ((1 - st.v) * 100) + '%';
                 hue.value = Math.round(st.h);
+                hue.style.background = '';
             }
             dot.style.background = hex;
             if (live) onPick(hex);
         }
         function setMode(m) {
             st.mode = m;
+            /* точка спектра — из текущего цвета, иначе она прыгала в центр и цвет уезжал */
+            if (m === 'spec') { var cc = hsv2rgb(st.h, st.s, st.v); specFromRgb(cc[0], cc[1], cc[2]); }
             qsa(el('fmx-cp-modes'), '.fmx-fx').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-cpm') === m); });
             hue.max = m === 'spec' ? 100 : 359;
-            hue.classList.toggle('sat', m === 'spec');
             var hc = el('fmx-cp-huecap'); if (hc) hc.textContent = m === 'spec' ? 'Насыщенность' : 'Оттенок';
             draw(); sync();
         }
@@ -1754,11 +1780,7 @@
             var fy = Math.max(0, Math.min(1, (t.clientY - r.top) / r.height));
             if (st.mode === 'spec') {
                 st.px = fx; st.py = fy;
-                var l = 92 - fy * 84;
-                var c = hsl2rgb(fx * 360, Math.round(st.s * 100), l);
-                var h = rgb2hsv(c[0], c[1], c[2]);
-                st.h = h[0]; st.v = h[2];
-                var keepS = st.s; st.s = h[1]; sync(); st.s = keepS;
+                specApply(); sync();
             } else { st.s = fx; st.v = 1 - fy; sync(); }
         }
         function svStart(e) {
@@ -1775,7 +1797,7 @@
         svb.addEventListener('mousedown', svStart);
         svb.addEventListener('touchstart', svStart, { passive: false });
         hue.addEventListener('input', function () {
-            if (st.mode === 'spec') { st.s = Math.max(0, Math.min(1, (+this.value) / 100)); draw(); }
+            if (st.mode === 'spec') { st.ss = Math.max(0, Math.min(1, (+this.value) / 100)); specApply(); draw(); }
             else { st.h = +this.value; draw(); }
             sync();
         });
@@ -1783,6 +1805,7 @@
             var c = hex2rgb(this.value); if (!c) return;
             var hv2 = rgb2hsv(c[0], c[1], c[2]);
             st.h = hv2[0]; st.s = hv2[1]; st.v = hv2[2];
+            if (st.mode === 'spec') specFromRgb(c[0], c[1], c[2]);
             draw(); sync(true);
         });
         ['r', 'g', 'b'].forEach(function (k) {
@@ -1792,6 +1815,7 @@
                 var b = Math.max(0, Math.min(255, parseInt(el('fmx-cp-b').value, 10) || 0));
                 var hv3 = rgb2hsv(r, g, b);
                 st.h = hv3[0]; st.s = hv3[1]; st.v = hv3[2];
+                if (st.mode === 'spec') specFromRgb(r, g, b);
                 el('fmx-cp-hex').value = rgb2hex(r, g, b);
                 draw(); sync(true);
             });
@@ -1801,6 +1825,7 @@
                 var c = hex2rgb(p.getAttribute('data-cpp')); if (!c) return;
                 var hv4 = rgb2hsv(c[0], c[1], c[2]);
                 st.h = hv4[0]; st.s = hv4[1]; st.v = hv4[2];
+                if (st.mode === 'spec') specFromRgb(c[0], c[1], c[2]);
                 draw(); sync(); _haptic('light');
             });
         });
@@ -2516,7 +2541,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260709i';
+    var PS_GLUE_V = '20260709j';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
