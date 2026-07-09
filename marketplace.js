@@ -2554,7 +2554,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710g';
+    var PS_GLUE_V = '20260710h';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2569,9 +2569,6 @@
             '.fmx-psScroll::-webkit-scrollbar-track{background:transparent;}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}' +
-            /* режим кадрирования: ползунок прячем (двигают фон, а не листают), но скролл НЕ трогаем — overflow остаётся auto */
-            '.fmx-psScroll.fmx-cropbar{scrollbar-width:none;}' +
-            '.fmx-psScroll.fmx-cropbar::-webkit-scrollbar{width:0;display:none;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
