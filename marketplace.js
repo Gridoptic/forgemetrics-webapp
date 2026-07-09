@@ -2,6 +2,7 @@
     'use strict';
 
     /* ===================== state ===================== */
+    var MEDIA_MAX_BYTES = 64 * 1024 * 1024;   // единый лимит загрузки (совпадает с бэкендом)
     var _root = null, _opened = false;
     var _mainTab = 'market';
     var _subTab = 'buy';
@@ -2546,7 +2547,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710b';
+    var PS_GLUE_V = '20260710c';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2663,6 +2664,11 @@
         }
         /* загрузчик своего фона постера на сервер — отдаём его в iframe, glue вызовет при выборе файла */
         function uploadPosterBg(file) {
+            // проверяем размер СРАЗУ, до отправки: иначе большой файл уходит на сервер, соединение
+            // рвётся на лимите и fetch падает невнятным «Failed to fetch». Так — мгновенно и понятно.
+            if (file && file.size > MEDIA_MAX_BYTES) {
+                return Promise.reject(new Error('Файл ' + Math.round(file.size / 1048576) + ' МБ — это больше 64 МБ'));
+            }
             var fd = new FormData(); fd.append('file', file); fd.append('target', 'posterbg');
             var headers = {};
             try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e) {}
@@ -2835,7 +2841,7 @@
                 try { bgErr = win.__fmxPosterBgError ? win.__fmxPosterBgError() : null; } catch (e) {}
                 if (bgErr) {
                     restoreSend();
-                    var big = /больше|\b413\b|превыш/i.test(bgErr);
+                    var big = /больше|\b413\b|превыш|64 МБ|fetch/i.test(bgErr);
                     toast(big ? 'Фон слишком большой: до 64 МБ. Для видео нужен короткий ролик — в постер идёт первый отрезок 20 сек' : ('Фон не загрузился: ' + bgErr), true);
                     return;
                 }
@@ -2861,6 +2867,9 @@
             chain = chain.then(function () {
                 var m = _ss._media && _ss._media[t];
                 if (!m || !m.file) return;
+                if (m.file.size > MEDIA_MAX_BYTES) {
+                    throw new Error('Файл «' + t + '» ' + Math.round(m.file.size / 1048576) + ' МБ — больше 64 МБ. Возьми полегче');
+                }
                 var fd = new FormData();
                 fd.append('file', m.file);
                 fd.append('target', t);
