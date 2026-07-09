@@ -613,11 +613,30 @@
             '.fmx-stkrow input{flex:1;}',
             '.fmx-pday{font-size:11.5px;color:#c9cbe0;background:rgba(245,158,11,0.07);border:0.5px solid rgba(245,158,11,0.2);border-radius:11px;padding:10px 12px;margin-bottom:14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}',
             '.fmx-pday b{color:#f59e0b;}',
-            '.fmx-psec{font-size:11px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.4px;margin:16px 0 9px;display:flex;align-items:center;gap:6px;}',
-            '.fmx-pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;}',
-            '.fmx-ptile{border:1px solid;border-radius:13px;padding:11px 12px;}',
-            '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-ptv{font-size:15px;font-weight:800;color:#fff;margin:5px 0 3px;}',
+            '.fmx-thead{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}',
+            '.fmx-tlive{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:#22c55e;background:rgba(34,197,94,0.1);border:0.5px solid rgba(34,197,94,0.28);border-radius:20px;padding:4px 9px 4px 8px;}',
+            '.fmx-tdot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,0.6);animation:fmxTpulse 1.8s infinite;}',
+            '@keyframes fmxTpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.5);}70%{box-shadow:0 0 0 6px rgba(34,197,94,0);}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}}',
+            '.fmx-tstamp{font-size:10.5px;color:#565b73;margin-left:auto;display:inline-flex;align-items:center;gap:4px;}',
+            '.fmx-tstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px;}',
+            '.fmx-tcell{background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015));border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:10px 11px;min-width:0;}',
+            '.fmx-tcl{font-size:9px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-tcv{font-size:18px;font-weight:800;color:#fff;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-tcv small{font-size:11px;font-weight:700;color:#8990a8;}',
+            '.fmx-tvol{font-size:10.5px;color:#8990a8;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px;}',
+            '.fmx-tvol b{color:#c9cbe0;font-weight:700;font-variant-numeric:tabular-nums;}',
+            '.fmx-tvol i{font-size:12px;}',
+            '.fmx-psec{font-size:11px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.4px;margin:18px 0 9px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}',
+            '.fmx-ptile{border:0.5px solid;border-radius:13px;padding:11px 12px;background:rgba(255,255,255,0.018);min-width:0;}',
+            '.fmx-pthead{display:flex;align-items:center;gap:6px;min-width:0;}',
+            '.fmx-ptdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}',
+            '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}',
+            '.fmx-ptv{font-size:16px;font-weight:800;color:#fff;margin:6px 0 4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-ptu{font-size:10px;font-weight:700;color:#8990a8;}',
+            '.fmx-pbar{height:3px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin:0 0 7px;}',
+            '.fmx-pbarf{height:100%;border-radius:3px;}',
+            '.fmx-ptmeta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:9.5px;color:#8990a8;font-variant-numeric:tabular-nums;}',
             '.fmx-pts{font-size:9.5px;color:#8990a8;}',
             '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
             '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
@@ -682,7 +701,7 @@
         d.id = 'fmx-screen';
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
-            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Биржа Telegram-каналов и аналитика трафика</p></div>' +
+            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат значки"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
@@ -742,10 +761,10 @@
         // стрелка «назад» видна всегда (на главном экране закрывает приложение, глубже — ведёт назад)
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
-            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; }
-            else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; }
-            else if (t === 'pulse') { ti.textContent = 'Пульс рынка'; su.textContent = 'Цены и активность по нишам'; }
-            else { ti.textContent = 'Рынок рекламы'; su.textContent = 'Биржа Telegram-каналов и аналитика трафика'; }
+            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; su.style.display = ''; }
+            else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; su.style.display = ''; }
+            else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM, цены и активность'; su.style.display = ''; }
+            else { ti.textContent = 'Рынок рекламы'; su.textContent = ''; su.style.display = 'none'; }
         }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
@@ -775,17 +794,58 @@
         var t = (v - min) / (max - min);
         return 'hsla(' + Math.round(145 - t * 145) + ',65%,55%,0.45)';
     }
+    function _pmedian(arr) {
+        var a = arr.filter(function (v) { return v != null; }).sort(function (x, y) { return x - y; });
+        if (!a.length) return null;
+        var m = Math.floor(a.length / 2);
+        return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+    }
     function pulseTiles(items, kindLabel) {
         var cpms = items.map(function (x) { return x.median_cpm; }).filter(function (v) { return v != null; });
         var mn = cpms.length ? Math.min.apply(null, cpms) : 0, mx = cpms.length ? Math.max.apply(null, cpms) : 1;
         return '<div class="fmx-pgrid">' + items.map(function (x) {
-            return '<div class="fmx-ptile" style="background:' + _heatColor(x.median_cpm, mn, mx) + ';border-color:' + _heatBorder(x.median_cpm, mn, mx) + ';">' +
-                '<div class="fmx-ptn">' + _esc(x.niche) + '</div>' +
-                '<div class="fmx-ptv">' + (x.median_cpm != null ? 'CPM ' + _num(x.median_cpm) + ' ₽' : (x.median_er != null ? 'ER ' + x.median_er + '%' : '—')) + '</div>' +
-                '<div class="fmx-pts">' + (x.median_price ? 'от ~' + _num(x.median_price) + ' ₽ · ' : '') + x.count + ' ' + kindLabel + '</div>' +
-                (x.median_er != null && x.median_cpm != null ? '<div class="fmx-pts">ER ' + x.median_er + '%</div>' : '') +
+            var has = x.median_cpm != null;
+            var col = _heatBorder(x.median_cpm, mn, mx);
+            /* полоса «выгодности»: полнее и зеленее = дешевле медианы (лучше покупателю) */
+            var gauge = has ? (mx > mn ? Math.round((mx - x.median_cpm) / (mx - mn) * 100) : 100) : 0;
+            var meta = [];
+            if (x.median_price) meta.push('<span>от ' + _num(x.median_price) + ' ₽</span>');
+            if (x.median_er != null && has) meta.push('<span>ER ' + x.median_er + '%</span>');
+            meta.push('<span>' + x.count + ' ' + kindLabel + '</span>');
+            return '<div class="fmx-ptile" style="border-color:' + col + ';">' +
+                '<div class="fmx-pthead"><span class="fmx-ptdot" style="background:' + (has ? col : 'rgba(255,255,255,0.15)') + ';"></span><span class="fmx-ptn">' + _esc(x.niche) + '</span></div>' +
+                '<div class="fmx-ptv">' + (has ? _num(x.median_cpm) + ' <span class="fmx-ptu">₽ · CPM</span>' : (x.median_er != null ? x.median_er + ' <span class="fmx-ptu">% · ER</span>' : '<span class="fmx-ptu">нет данных</span>')) + '</div>' +
+                (has ? '<div class="fmx-pbar"><div class="fmx-pbarf" style="width:' + gauge + '%;background:' + col + ';"></div></div>' : '') +
+                '<div class="fmx-ptmeta">' + meta.join('') + '</div>' +
                 '</div>';
         }).join('') + '</div>';
+    }
+    function _termHead() {
+        var ago = '';
+        if (_pulse.generated_at) {
+            var gm = Math.round((Date.now() - Date.parse(_pulse.generated_at)) / 60000);
+            if (isNaN(gm) || gm < 0) gm = 0;
+            ago = gm <= 0 ? 'обновлено только что' : 'обновлено ' + gm + ' мин назад';
+        }
+        var allC = [], niches = {};
+        (_pulse.market || []).concat(_pulse.base || []).forEach(function (x) {
+            if (x.median_cpm != null) allC.push(x.median_cpm);
+            if (x.niche) niches[String(x.niche).toLowerCase()] = 1;
+        });
+        var medCpm = _pmedian(allC), nCount = Object.keys(niches).length;
+        var t = _pulse.today || {}, todayTotal = (t.listings || 0) + (t.requests || 0) + (t.contacts || 0);
+        var h = '<div class="fmx-thead"><span class="fmx-tlive"><span class="fmx-tdot"></span>live</span>' +
+            (ago ? '<span class="fmx-tstamp"><i class="ti ti-refresh"></i>' + ago + '</span>' : '') + '</div>';
+        h += '<div class="fmx-tstrip">' +
+            '<div class="fmx-tcell"><div class="fmx-tcl">Медиана CPM</div><div class="fmx-tcv">' + (medCpm != null ? _num(medCpm) + ' <small>₽</small>' : '—') + '</div></div>' +
+            '<div class="fmx-tcell"><div class="fmx-tcl">Ниш в анализе</div><div class="fmx-tcv">' + (nCount || '—') + '</div></div>' +
+            '<div class="fmx-tcell"><div class="fmx-tcl">Событий сегодня</div><div class="fmx-tcv">' + (todayTotal || '—') + '</div></div>' +
+            '</div>';
+        var vol = [];
+        if (_pulse.market_total) vol.push('<i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'карточка', 'карточки', 'карточек'));
+        if (_pulse.base_total) vol.push('<i class="ti ti-database" style="color:#818cf8;"></i> База · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
+        if (vol.length) h += '<div class="fmx-tvol">' + vol.join('<span style="color:#3a3f52;">|</span>') + '</div>';
+        return h;
     }
     var _pulseHide = false;
     function todayLine() {
@@ -805,19 +865,17 @@
         host.innerHTML = loadHtml();
         loadPulse(function () {
             if (_mainTab !== 'pulse') return;
-            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Пульс недоступен', 'Не получилось загрузить данные — попробуй позже.'); return; }
-            var html = todayLine();
+            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не получилось загрузить данные — попробуй позже.'); return; }
+            var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
+            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами — здесь оживут цены, CPM и ликвидность по нишам.'); return; }
+            var html = _termHead();
             if (_pulse.market && _pulse.market.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · ' + _pulse.market_total + ' ' + _plural(_pulse.market_total, 'карточка', 'карточки', 'карточек') + '</div>' + pulseTiles(_pulse.market, 'карт.');
+                html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
             }
             if (_pulse.base && _pulse.base.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-database" style="color:#818cf8;"></i> База каналов · ' + _num(_pulse.base_total) + ' в наблюдении</div>' + pulseTiles(_pulse.base, 'кан.');
+                html += '<div class="fmx-psec"><i class="ti ti-database" style="color:#818cf8;"></i> База каналов · публичная статистика</div>' + pulseTiles(_pulse.base, 'кан.');
             }
-            if (!_pulse.market.length && !_pulse.base.length) {
-                html += emptyHtml('ti-activity-heartbeat', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами — здесь оживут цены и CPM.');
-            } else {
-                html += '<div style="font-size:10px;color:#565b73;line-height:1.6;margin-top:14px;">Медианы. Зелёные плитки — CPM ниже медианы рынка (выгоднее покупателю), красные — выше. Площадка — данные наших карточек, База — публичная статистика каналов. Обновление каждые 5 минут.</div>';
-            }
+            html += '<div style="font-size:10px;color:#565b73;line-height:1.65;margin-top:16px;">Показаны медианы по нишам. <b style="color:#8990a8;">Зелёные</b> — CPM ниже медианы (выгоднее покупателю), <b style="color:#8990a8;">красные</b> — выше. Площадка — точные данные наших карточек, База — публичная статистика каналов. Обновление раз в 5 минут. Тренды и история цен появятся с накоплением данных.</div>';
             host.innerHTML = html;
         });
     }
@@ -829,15 +887,15 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
             '<div class="fmx-entd">Всё, что нашёл бот. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-activity-heartbeat"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Пульс рынка <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
-            '<div class="fmx-entd">Медианные цены, CPM и активность по нишам. Смотри, где рынок дышит.</div></div>' +
-            '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
             '<div class="fmx-entd">Каналы выставили рекламу сами: цена названа, карточки оформлены. Или выстави свой канал.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка</b> — те, кто готов к сделке, и место оформить карточку своего канала.</span></div>';
+            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-chart-candle"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
+            '<div class="fmx-entd">Медианный CPM, цены и активность по нишам — весь рынок на одном экране.</div></div>' +
+            '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>' +
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка ForgeMetrics</b> — те, кто готов к сделке, и место оформить карточку своего канала.</span></div>';
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
     }
 
