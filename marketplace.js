@@ -373,7 +373,7 @@
             '.fmx-po-buy.gold{background:linear-gradient(135deg,#f5bf4f,#d4a017);color:#231600;}',
             '.fmx-limit{font-size:11px;color:#f5bf4f;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.25);border-radius:9px;padding:9px 11px;margin-bottom:11px;display:flex;gap:7px;align-items:flex-start;line-height:1.5;}',
             '.fmx-limit i{flex-shrink:0;margin-top:1px;}',
-            '.fmx-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:rgba(20,24,40,0.96);border:0.5px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:all 300ms;backdrop-filter:blur(10px);z-index:9300;display:flex;align-items:center;gap:8px;pointer-events:none;}',
+            '.fmx-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:rgba(20,24,40,0.96);border:0.5px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:all 300ms;backdrop-filter:blur(10px);z-index:100030;display:flex;align-items:center;gap:8px;pointer-events:none;}',
             '.fmx-toast.on{opacity:1;transform:translateX(-50%) translateY(0);}',
             '.fmx-fxg{margin-top:10px;}',
             '.fmx-fxl{font-size:10px;color:#8990a8;margin-bottom:6px;display:flex;align-items:center;gap:5px;}',
@@ -525,7 +525,7 @@
             '.fmx-reqft .fmx-btn{flex:0 0 auto;width:auto;}',
             '.fmx-reqb.na{color:#565b73;font-weight:500;}',
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
-            '.fmx-toast.err{border-color:rgba(239,68,68,0.4);}',
+            '.fmx-toast.err{border-color:rgba(239,68,68,0.4);color:#f87171;}',
             '.fmx-cfm{position:fixed;inset:0;z-index:100005;background:rgba(5,7,14,0.6);display:flex;align-items:center;justify-content:center;padding:24px;}',
             '.fmx-cfm-box{background:#141826;border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:18px;max-width:320px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,0.5);}',
             '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
@@ -2541,7 +2541,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260709j';
+    var PS_GLUE_V = '20260709k';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2705,7 +2705,7 @@
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
-        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); };
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); clearTimeout(bg.__fmxSendCd); };
         function close() {
             var win = frame.contentWindow;
             /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
@@ -2731,7 +2731,20 @@
         el('fmx-ps-x').addEventListener('click', close);
         var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат';
         function sendBtn() { return el('fmx-ps-send'); }
-        function restoreSend() { var b = sendBtn(); if (b) { b.disabled = false; b.innerHTML = SEND_LABEL; } }
+        function restoreSend() { clearTimeout(bg.__fmxSendCd); var b = sendBtn(); if (b) { b.disabled = false; b.innerHTML = SEND_LABEL; } }
+        /* сервер просит подождать — показываем обратный отсчёт прямо на кнопке,
+           иначе нажатие выглядит как «ничего не произошло» */
+        function waitSend(sec) {
+            var b = sendBtn();
+            if (!b) return;
+            b.disabled = true;
+            (function tick() {
+                if (sec <= 0) { restoreSend(); return; }
+                b.innerHTML = '<i class="ti ti-clock"></i> Можно через ' + sec + ' с';
+                sec--;
+                bg.__fmxSendCd = setTimeout(tick, 1000);
+            })();
+        }
         window.__fmxPosterJob = window.__fmxPosterJob || {};
 
         /* кружок прогресса генерации живого постера: плавная анимация по времени + опрос сервера «готово?».
@@ -2800,8 +2813,13 @@
                             toast('Постер у тебя в чате с ботом — пересылай!'); restoreSend();
                         }
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
-                    } else { restoreSend(); toast((r && r.error) || 'Не получилось'); }
-                }).catch(function () { restoreSend(); toast('Сервер не ответил'); });
+                    } else {
+                        var msg = (r && r.error) || 'Не получилось';
+                        var wait = /через\s+(\d+)\s*с/.exec(msg);   // «Повтори через 12 с.»
+                        if (wait) waitSend(parseInt(wait[1], 10)); else restoreSend();
+                        toast(msg, true);
+                    }
+                }).catch(function () { restoreSend(); toast('Сервер не ответил', true); });
             }
             function proceed() {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
@@ -3341,7 +3359,18 @@
         });
     }
 
-    function toast(msg) { var t = el('fmx-toastEl'); if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); } t.innerHTML = '<i class="ti ti-circle-check"></i> ' + _esc(msg); t.classList.add('on'); setTimeout(function () { t.classList.remove('on'); }, 2400); }
+    /* err=true — отказ: красная рамка и другой значок. Раньше любая ошибка показывалась
+       с зелёной галочкой, будто всё удалось. */
+    var _toastTo = null;
+    function toast(msg, err) {
+        var t = el('fmx-toastEl');
+        if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); }
+        t.classList.toggle('err', !!err);
+        t.innerHTML = '<i class="ti ' + (err ? 'ti-alert-circle' : 'ti-circle-check') + '"></i> ' + _esc(msg);
+        t.classList.add('on');
+        clearTimeout(_toastTo);   // подряд идущие тосты не гасят друг друга досрочно
+        _toastTo = setTimeout(function () { t.classList.remove('on'); }, 2400);
+    }
 
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
