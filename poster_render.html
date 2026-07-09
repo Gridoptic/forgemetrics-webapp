@@ -79,7 +79,8 @@ body{background:#05070e;color:#e8e8ed;font-family:'Inter',-apple-system,'Segoe U
 .poster.d2 .cta{font-size:11px;}
 .poster.d3 .cta{font-size:10px;}
 .poster.d4 .cta{display:none;}
-.prsub{max-width:225px;}
+/* формат размещения: длинная строка без пробелов не должна вылезать за блок цены */
+.prsub{max-width:225px;overflow-wrap:anywhere;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .qrs{display:flex;gap:10px;align-items:flex-end;}
 .qrt{background:#fff;border-radius:13px;padding:6px 6px 3px;text-align:center;box-shadow:0 10px 26px rgba(0,0,0,0.4);}
 .qrt canvas{display:block;}
@@ -310,7 +311,7 @@ select,input[type=text],input[type=number]{width:100%;background:#141828;border:
   <div class="lbl">Блок цены</div>
   <div class="chips" style="margin-bottom:8px;"><button class="chip on" id="prChip">Показывать блок цены</button></div>
   <input type="number" id="prInp" value="5500" min="0" max="999999" step="100" placeholder="Цена, ₽ (до 999 999)">
-  <input type="text" id="prFmtInp" maxlength="64" placeholder="Формат размещения — необязательно: 1/24, пост в ленте на сутки" style="margin-top:8px;">
+  <input type="text" id="prFmtInp" maxlength="40" placeholder="Формат размещения, до 40 символов (необязательно)" style="margin-top:8px;">
 
   <div class="lbl">QR-коды · второй ведёт в вашу карточку на Площадке</div>
   <div class="chips" id="qrChips">

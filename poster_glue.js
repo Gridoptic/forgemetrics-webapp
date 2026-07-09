@@ -328,7 +328,7 @@
     st.price = {
       on: !(el('prBox') && el('prBox').classList.contains('hide')),
       val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,
-      fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 64) : ''  // формат размещения (необязательно)
+      fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 40) : ''  // формат размещения (необязательно)
     };
     var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = qrOn ? qrOn.getAttribute('data-qr') : 'both';
     st.hook = el('hookInp') ? el('hookInp').value : '';
