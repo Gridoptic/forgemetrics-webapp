@@ -1570,7 +1570,7 @@
             '<div class="fmx-gd fmx-dot-rb' + (custom ? ' on' : '') + '" data-grb="1" title="Свой градиент"></div></div>' +
             '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
-            mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 50 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
+            mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 64 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
         return seg + grads + upl;
     }
     function bindCover() {
@@ -1591,7 +1591,7 @@
             '<button class="fmx-mt' + (_ss.avatar === 'img' ? ' on' : '') + '" data-av="img"><i class="ti ti-photo"></i> Фото</button></div>' +
             '<div id="fmx-avemoji" style="' + (_ss.avatar === 'emoji' ? '' : 'display:none;') + '"><div class="fmx-emg">' + EMOJIS.map(function (e) { return '<div class="fmx-em' + (e === _ss.avEmoji ? ' on' : '') + '" data-e="' + e + '">' + e + '</div>'; }).join('') + '</div></div>' +
             '<div id="fmx-avnote" class="fmx-note" style="margin-top:10px;' + (_ss.avatar === 'tg' ? '' : 'display:none;') + '"><i class="ti ti-info-circle"></i> Используется реальный аватар канала из Telegram.</div>' +
-            '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 50 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
+            '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 64 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
     }
     function paneFx() {
         return fxChips('move', FX_MOVE, 'Движение') +
@@ -2546,7 +2546,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260709m';
+    var PS_GLUE_V = '20260710a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2829,6 +2829,16 @@
             function proceed() {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
                 if (!state) { restoreSend(); toast('Редактор ещё загружается — секунду'); return; }
+                /* свой фон выбран, но на сервер не загрузился (обычно слишком большой): не отправляем
+                   молча постер с дефолтным фоном — честно объясняем, почему в конструкторе он есть, а в постер не попал */
+                var bgErr = null;
+                try { bgErr = win.__fmxPosterBgError ? win.__fmxPosterBgError() : null; } catch (e) {}
+                if (bgErr) {
+                    restoreSend();
+                    var big = /больше|\b413\b|превыш/i.test(bgErr);
+                    toast(big ? 'Фон слишком большой: до 64 МБ. Для видео нужен короткий ролик — в постер идёт первый отрезок 20 сек' : ('Фон не загрузился: ' + bgErr), true);
+                    return;
+                }
                 /* MP4/GIF предлагаем только когда есть что анимировать (видео-фон или анимо-стикер) */
                 var hasMotion = !!(state.bg && typeof state.bg === 'object' && state.bg.kind === 'video')
                     || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });

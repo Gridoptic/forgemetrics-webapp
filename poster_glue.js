@@ -14,6 +14,7 @@
   var _customBg = null;               // {url, kind} — ЗАГРУЖЕННЫЙ на сервер файл своего фона
   var _bgpan = { x: 0, y: 0, s: 1 };  // сдвиг (px в системе постера 540x675) и масштаб своей картинки
   var _bgUploadPending = null;        // промис текущей загрузки файла на сервер (ждём при закрытии/отправке)
+  var _bgUploadError = null;          // текст ошибки загрузки своего фона (слишком большой и т.п.)
   var _bgCrop = false;                // включён режим кадрирования фона
   function _isPhotoBg() { var p = el('poster'); return !!(p && /\bbg-photo\b/.test(p.className)); }
   /* Режим кадрирования: поверх постера — прозрачный слой-захват (#fmx-bg-catch). Он ловит
@@ -27,6 +28,26 @@
     var h = el('fmx-bg-hint'); if (h) h.style.display = on ? 'block' : 'none';
     var btn = el('fmx-ed-bgcrop'); if (btn) { btn.innerHTML = on ? '✓ Готово' : '⤢ Кадрировать фон'; btn.classList.toggle('on', on); }
     if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }
+    _lockStudioScroll(on);
+  }
+  /* На время кадрирования замораживаем прокрутку контейнера студии в родительском окне:
+     iframe постера лежит внутри прокручиваемой .fmx-psScroll, и палец, вместо того чтобы
+     двигать фон, пролистывал студию. Замок снимаем по «Готово». */
+  function _lockStudioScroll(on) {
+    try {
+      var host = window.frameElement;                 // iframe в родителе (тот же домен)
+      if (!host) return;
+      var box = host.closest ? host.closest('.fmx-psScroll') : null;
+      if (!box && host.parentElement) {               // запасной путь вверх по дереву
+        box = host.parentElement;
+        while (box && box.className && box.className.indexOf('fmx-psScroll') < 0) box = box.parentElement;
+      }
+      if (box) {
+        box.style.overflowY = on ? 'hidden' : 'auto';
+        box.style.touchAction = on ? 'none' : '';
+      }
+      host.style.touchAction = on ? 'none' : '';       // и сам iframe не отдаёт жест наружу
+    } catch (e) { /* другой домен / не в iframe — молча пропускаем */ }
   }
   function _updateBgCropBtn() {
     var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'block' : 'none';
@@ -455,12 +476,16 @@
     if (!f || typeof window.__fmxPosterUploader !== 'function') return null;
     var drop = el('drop'), orig = drop ? drop.innerHTML : '';
     if (drop) drop.textContent = 'Загружаю фон на сервер…';
+    _bgUploadError = null;                              // новый выбор — прошлую ошибку сбрасываем
     var p = Promise.resolve(window.__fmxPosterUploader(f)).then(function (res) {
-      if (res && res.url) _customBg = { url: res.url, kind: res.kind || 'img' };
+      if (res && res.url) { _customBg = { url: res.url, kind: res.kind || 'img' }; _bgUploadError = null; }
+      else { _customBg = null; _bgUploadError = 'Не удалось загрузить фон'; }
       if (drop) drop.textContent = (res && res.url) ? 'Фон загружен ✓ — нажмите, чтобы заменить' : 'Не удалось загрузить фон';
       return res;
     }).catch(function (e) {
       _customBg = null;
+      // текст с сервера («Файл больше 120 МБ») — чтобы объяснить пользователю, что пошло не так
+      _bgUploadError = (e && e.message) ? String(e.message) : 'Не удалось загрузить фон';
       if (drop) { drop.textContent = 'Не удалось загрузить фон — попробуйте ещё раз'; setTimeout(function () { if (drop) drop.innerHTML = orig; }, 2600); }
       throw e;
     });
@@ -468,10 +493,21 @@
     return p;
   }
   window.__fmxPosterBgPending = function () { return _bgUploadPending; };
+  /* Пользователь выбрал свой фон, но на сервер он не загрузился (обычно слишком большой).
+     Возвращаем текст ошибки — чтобы не отправлять молча постер с дефолтным фоном. */
+  window.__fmxPosterBgError = function () {
+    return (bgName() === 'photo' && !(_customBg && _customBg.url)) ? (_bgUploadError || 'Фон не загрузился') : null;
+  };
 
   /* обёртка выбора своего фона (setOwnBg макета) + создание кнопки кадрирования и слоя-захвата.
      Вызывается из editorMode. */
   function _setupCustomBg() {
+    // подсказка про лимит размера прямо в области выбора: иначе непонятно, почему тяжёлый файл
+    // в конструкторе играет (локальное превью), а в постер не попадает (на сервер не влез)
+    var drop0 = el('drop');
+    if (drop0 && drop0.innerHTML.indexOf('до 64 МБ') < 0) {
+      drop0.innerHTML += '<br><span style="opacity:.65;font-size:11px;">Файл до 64 МБ · для видео берётся первый отрезок 20 сек</span>';
+    }
     if (!window.__fmxBgWrapped && typeof window.setOwnBg === 'function') {
       window.__fmxBgWrapped = true;
       var origSet = window.setOwnBg;
