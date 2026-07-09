@@ -215,9 +215,13 @@
             '.fmx-pill{position:absolute;top:4px;left:4px;height:calc(100% - 8px);border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);transition:transform 380ms cubic-bezier(.2,.85,.25,1),width 380ms cubic-bezier(.2,.85,.25,1);box-shadow:0 4px 14px rgba(99,102,241,0.4);z-index:0;}',
             '.fmx-pb{flex:1;position:relative;z-index:1;border:none;background:transparent;color:#8990a8;padding:10px 3px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:color 260ms;white-space:nowrap;min-width:0;overflow:hidden;}',
             '.fmx-pb.on{color:#fff;}',
-            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
-
-            '.fmx-scroll::-webkit-scrollbar{display:none;}',
+            /* видимый ползунок справа: если у пользователя не работает колёсико, он зажмёт и опустит.
+               scrollbar-gutter:stable резервирует под него место — контент не прыгает и ползунок не мигает */
+            '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}',
+            '.fmx-scroll::-webkit-scrollbar{width:9px;}',
+            '.fmx-scroll::-webkit-scrollbar-track{background:transparent;}',
+            '.fmx-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}',
+            '.fmx-scroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}',
             '.fmx-pad{padding:14px 16px 28px;max-width:640px;margin:0 auto;width:100%;min-width:0;}',
             '@keyframes fmxFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}',
             '.fmx-fade{animation:fmxFade 320ms cubic-bezier(.2,.8,.2,1);}',
@@ -556,7 +560,10 @@
             '.fmx-sortbar{scrollbar-width:none;-ms-overflow-style:none;}',
             '.fmx-sortbar::-webkit-scrollbar{display:none;}',
             /* пульт промо-постера */
-            '.fmx-ps{width:100%;max-width:580px;max-height:92vh;overflow-y:auto;background:#0b0e18;border:0.5px solid rgba(255,255,255,0.12);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 14px 22px;}',
+            '.fmx-ps{width:100%;max-width:580px;max-height:92vh;overflow-y:auto;background:#0b0e18;border:0.5px solid rgba(255,255,255,0.12);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 14px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}',
+            '.fmx-ps::-webkit-scrollbar{width:9px;}',
+            '.fmx-ps::-webkit-scrollbar-track{background:transparent;}',
+            '.fmx-ps::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}',
             '.fmx-ps-scroll{scrollbar-width:none;-ms-overflow-style:none;}',
             '.fmx-ps-scroll::-webkit-scrollbar{display:none;}',
             '.fmx-ps .fmx-fx{min-height:40px;}',
@@ -2547,7 +2554,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710e';
+    var PS_GLUE_V = '20260710f';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2557,7 +2564,11 @@
             '.fmx-psTop .t i{color:#5DCAA5;}' +
             '.fmx-psX{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);color:#c9cede;font-size:17px;cursor:pointer;flex-shrink:0;padding:0;line-height:1;}' +
             '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
-            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}' +
+            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}' +
+            '.fmx-psScroll::-webkit-scrollbar{width:9px;}' +
+            '.fmx-psScroll::-webkit-scrollbar-track{background:transparent;}' +
+            '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}' +
+            '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
