@@ -667,7 +667,9 @@
             '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
             '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
-            '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:14px;padding:3px 8px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.14);background:#0f1322;font-family:inherit;line-height:1;touch-action:auto;}',
+            '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:13px;padding:2px 7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:#141828;font-family:inherit;line-height:1;touch-action:auto;}',
+            '.fmx-cp-pt{font-size:12px;font-weight:600;color:#e8e8ed;}',
+            '.fmx-cp-pt b{color:#5DCAA5;}',
             '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
             '.fmx-cfm-r{display:flex;gap:8px;}',
             /* палитра «Свой цвет»: HSV-квадрат/спектр + HEX + RGB (перенос из макета постера) */
@@ -683,8 +685,8 @@
             '.fmx-cp-fld input{width:100%;background:#0f1322;border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;font-size:12.5px;padding:9px 2px;border-radius:10px;text-align:center;outline:none;font-family:inherit;-moz-appearance:textfield;appearance:textfield;}',
             '.fmx-cp-fld input::-webkit-outer-spin-button,.fmx-cp-fld input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}',
             '.fmx-cp-fld input:focus{border-color:rgba(93,202,165,0.5);}',
-            '.fmx-cp-presets{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px;}',
-            '.fmx-cp-pd{width:30px;height:30px;border-radius:9px;cursor:pointer;border:1.5px solid rgba(255,255,255,0.18);padding:0;}',
+            '.fmx-cp-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}',
+            '.fmx-cp-pd{width:22px;height:22px;border-radius:7px;cursor:pointer;border:1.5px solid rgba(255,255,255,0.18);padding:0;}',
             '#fmx-buysort .fmx-seg{min-height:40px;}',
             /* панели сортировок листаются пальцем — полосу прокрутки не показываем */
             '.fmx-sortbar{scrollbar-width:none;-ms-overflow-style:none;}',
@@ -1921,7 +1923,7 @@
             COLORS.map(function (c) { return '<div class="fmx-dot' + (c === cur ? ' on' : '') + '" data-cv="' + c + '" style="background:' + c + ';' + st + '"></div>'; }).join('') +
             '<div class="fmx-dot fmx-dot-rb' + (custom ? ' on' : '') + '" data-rb="1" style="' + st + (custom ? 'box-shadow:0 0 0 2px ' + cur + ';' : '') + '" title="Свой цвет"></div></div>';
     }
-    function bindColorPick(idBase, set) {
+    function bindColorPick(idBase, set, title) {
         var box = el(idBase); if (!box) return;
         var rb = box.querySelector('[data-rb]');
         function mark(v) {
@@ -1932,7 +1934,7 @@
         }
         qsa(box, '[data-cv]').forEach(function (d) { d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); renderHero(); }); });
         if (rb) rb.addEventListener('click', function () {
-            openColorStudio(box.getAttribute('data-cur') || '#5DCAA5', function (hex) { set(hex); mark(hex); renderHero(); });
+            openColorStudio(box.getAttribute('data-cur') || '#5DCAA5', function (hex) { set(hex); mark(hex); renderHero(); }, title || 'Свой');
         });
     }
     /* «Свой цвет»: HSV-квадрат/спектр + hue + HEX + RGB — общий компонент для акцента и орбиты */
@@ -1967,11 +1969,8 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-cpBg'; bg.className = 'fmx-cfm';
         bg.innerHTML = '<div class="fmx-cfm-box" id="fmx-cp-box">' +
-            '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-ttl">' + (title || 'Свой цвет') + '</div>' +
-            '<button class="fmx-cp-x" id="fmx-cp-close" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
-            '<div style="display:flex;gap:6px;margin-bottom:10px;" id="fmx-cp-modes">' +
-            '<button class="fmx-fx on" data-cpm="sv">Квадрат</button>' +
-            '<button class="fmx-fx" data-cpm="spec">Спектр</button></div>' +
+            '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-pt">Цвет: <b>' + (title || 'Свой') + '</b></div>' +
+            '<div style="display:flex;gap:6px;"><button class="fmx-cp-x" id="fmx-cp-mode" title="Стиль палитры">⇄</button><button class="fmx-cp-x" id="fmx-cp-close" aria-label="Закрыть">✕</button></div></div>' +
             '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="252" height="130"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
             '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">Оттенок</div>' +
             '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1" style="margin-top:0;">' +
@@ -1980,8 +1979,8 @@
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">R</span><input type="number" id="fmx-cp-r" min="0" max="255" inputmode="numeric"></div>' +
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">G</span><input type="number" id="fmx-cp-g" min="0" max="255" inputmode="numeric"></div>' +
             '<div class="fmx-cp-fld"><span class="fmx-cp-cap">B</span><input type="number" id="fmx-cp-b" min="0" max="255" inputmode="numeric"></div></div>' +
-            '<div class="fmx-cp-presets">' + COLORS.map(function (c) { return '<button class="fmx-cp-pd" data-cpp="' + c + '" style="background:' + c + ';" title="' + c + '"></button>'; }).join('') + '</div>' +
-            '<button class="fmx-save" id="fmx-cp-done" style="margin-top:14px;"><i class="ti ti-check"></i> Готово</button></div>';
+            '<div class="fmx-cp-presets">' + ['#5DCAA5', '#f5bf4f', '#b9a5ff', '#7fb8ff', '#ff9db1', '#f2f3f8', '#fb923c', '#a3e635'].map(function (c) { return '<button class="fmx-cp-pd" data-cpp="' + c + '" style="background:' + c + ';" title="' + c + '"></button>'; }).join('') + '</div>' +
+            '</div>';
         document.body.appendChild(bg);
         /* пикер плавающий и подвижный: тянем за шапку, чтобы не закрывать то, что красим */
         (function () {
@@ -2002,7 +2001,7 @@
                 document.addEventListener('touchmove', mv, { passive: false }); document.addEventListener('touchend', up);
             }
             head.addEventListener('mousedown', dstart); head.addEventListener('touchstart', dstart, { passive: false });
-            el('fmx-cp-close').addEventListener('click', function () { bg.remove(); });
+            el('fmx-cp-close').addEventListener('click', function () { done(); });
         })();
         var cv = el('fmx-cp-cv'), cx = cv.getContext('2d'), dot = el('fmx-cp-dot'), hue = el('fmx-cp-hue'), svb = el('fmx-cp-sv');
         /* спектр: цвет = позиция точки (тон по X, светлота по Y) + насыщенность с полоски */
@@ -2070,12 +2069,11 @@
             st.mode = m;
             /* точка спектра — из текущего цвета, иначе она прыгала в центр и цвет уезжал */
             if (m === 'spec') { var cc = hsv2rgb(st.h, st.s, st.v); specFromRgb(cc[0], cc[1], cc[2]); }
-            qsa(el('fmx-cp-modes'), '.fmx-fx').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-cpm') === m); });
             hue.max = m === 'spec' ? 100 : 359;
             var hc = el('fmx-cp-huecap'); if (hc) hc.textContent = m === 'spec' ? 'Насыщенность' : 'Оттенок';
             draw(); sync();
         }
-        qsa(el('fmx-cp-modes'), '[data-cpm]').forEach(function (b) { b.addEventListener('click', function () { setMode(b.getAttribute('data-cpm')); }); });
+        el('fmx-cp-mode').addEventListener('click', function () { setMode(st.mode === 'sv' ? 'spec' : 'sv'); });
         function svPoint(e) {
             var t = e.touches ? e.touches[0] : e;
             var r = svb.getBoundingClientRect();
@@ -2132,9 +2130,9 @@
                 draw(); sync(); _haptic('light');
             });
         });
-        function done() { bg.remove(); }
-        el('fmx-cp-done').addEventListener('click', done);
-        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        function done() { document.removeEventListener('mousedown', _outside); document.removeEventListener('touchstart', _outside); bg.remove(); }
+        function _outside(e) { if (!e.target.closest('#fmx-cp-box')) done(); }
+        setTimeout(function () { document.addEventListener('mousedown', _outside); document.addEventListener('touchstart', _outside); }, 0);
         draw(); sync(); live = true;
     }
     function isVipFx(key, v) { return !!(FX_VIP[key] && FX_VIP[key].indexOf(v) >= 0); }
@@ -2151,12 +2149,12 @@
             colorPick('fmx-atomc', _ss.atomColor, 26) + '</div>';
     }
     function bindStyle() {
-        bindColorPick('fmx-colors', function (v) { _ss.color = v; });
+        bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цена и кнопки');
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
-        bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; });
+        bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; }, 'Орбита');
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
         var mb = el('fmx-modboost');
         if (mb) mb.addEventListener('click', function () {
@@ -2890,8 +2888,8 @@
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
                     e.stopPropagation(); _haptic('light');
-                    if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); renderHero(); }, 'Цвет шапки');
-                    else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цвет цены и кнопок');
+                    if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); renderHero(); }, 'Шапка');
+                    else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цена и кнопки');
                 });
             });
         }
