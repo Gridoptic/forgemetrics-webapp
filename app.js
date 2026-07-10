@@ -27,6 +27,7 @@ const screens = {
     error: document.getElementById('error-screen'),
     dashboard: document.getElementById('dashboard-screen'),
     placeholder: document.getElementById('placeholder-screen'),
+    cabinet: document.getElementById('cabinet-screen'),
     channels: document.getElementById('channels-screen'),
     postCreate: document.getElementById('post-create-screen'),
     postThinking: document.getElementById('post-thinking-screen'),
@@ -459,6 +460,9 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'profile') { openCabinet(); return; }
+    if (actionId === 'referral' || actionId === 'invite_friend') { openCabinet('referral'); return; }
+
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
         text: 'Эта функция в разработке.',
@@ -475,8 +479,165 @@ function handleAction(actionId) {
 }
 
 
+// ==================== Личный кабинет ====================
+let cabinetData = null;
+
+function cabNum(n) { return Number(n || 0).toLocaleString('ru-RU'); }
+function hapticLight() { if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); }
+function hapticMed() { if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
+function copyText(t) {
+    try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t); } catch (e) {}
+    return new Promise((res) => {
+        try { const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } catch (e) {}
+        res();
+    });
+}
+function cabToast(msg) {
+    let t = document.getElementById('cab-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'cab-toast'; t.className = 'cab-toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    void t.offsetWidth;
+    t.classList.add('show');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function cabSafe(s, def) { return (typeof s === 'string' && /^[a-z0-9-]+$/.test(s)) ? s : def; }
+function cabTile(color, icon, size) {
+    return `<div class="cab-tile ${size ? size + ' ' : ''}cab-t-${cabSafe(color, 'pu')}"><i class="ti ti-${cabSafe(icon, 'circle')}"></i></div>`;
+}
+
+const CAB_BENEFITS = {
+    pro: [
+        '30 постов в день вместо 1 и 100 AI-запросов',
+        'Живой промо-постер MP4, до 10 каналов, аудиты и анализ конкурентов',
+        'Приоритет на Площадке и эксклюзивное оформление офферов',
+    ],
+    pro_plus: [
+        '100 постов в день, до 30 каналов и максимум AI-запросов',
+        'Больше аудитов, анализов конкурентов и поисков рекламодателей',
+        'Максимальный приоритет и все премиум-эффекты',
+    ],
+};
+
+async function openCabinet(scrollTo) {
+    hapticLight();
+    showScreen('cabinet');
+    const body = document.getElementById('cabinet-body');
+    if (body && !cabinetData) {
+        body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Загрузка…</div>';
+    }
+    try {
+        const data = await apiRequest('/api/v1/user/cabinet');
+        cabinetData = data;
+        renderCabinet(data);
+        if (scrollTo) {
+            const sec = document.getElementById('cab-sec-' + scrollTo);
+            if (sec) setTimeout(() => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+        }
+    } catch (e) {
+        if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить кабинет.<br>Попробуй позже.</div>';
+    }
+}
+
+function cabUsageRow(u) {
+    const limit = u.limit, used = u.used;
+    let vtext, fillCls, pct;
+    if (limit >= 999999) { vtext = `<b>${cabNum(used)}</b> / ∞`; fillCls = 'gr'; pct = 8; }
+    else if (limit <= 0) { vtext = 'недоступно на этом тарифе'; fillCls = 'pu'; pct = 0; }
+    else {
+        vtext = `<b>${cabNum(used)}</b> / ${cabNum(limit)}`;
+        pct = Math.min(100, Math.round(used / limit * 100));
+        fillCls = used >= limit ? 'full' : (pct >= 70 ? 'am' : 'gr');
+    }
+    return `<div class="cab-use">${cabTile(u.color, u.icon, 'md')}<div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
+}
+
+function renderCabinet(d) {
+    const body = document.getElementById('cabinet-body');
+    if (!body) return;
+    const u = d.user || {};
+    const photo = tg?.initDataUnsafe?.user?.photo_url;
+    const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
+    const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
+    const m = (state.dashboard && state.dashboard.metrics) || [];
+    const metricHtml = m.slice(0, 2).map((x) => `<div class="cab-hstat"><div class="n">${escapeHtml(x.value || '—')}</div><div class="l">${escapeHtml(x.label)}${x.change ? ` <span class="cab-up">↗ ${escapeHtml(String(x.change).replace('+', ''))}</span>` : ''}</div></div>`).join('');
+
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span></div></div>${metricHtml ? `<div class="cab-hstats">${metricHtml}</div>` : ''}</div>`;
+
+    if (d.upgrade) {
+        const up = d.upgrade;
+        const bens = (CAB_BENEFITS[up.target] || []).map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${escapeHtml(b)}</div>`).join('');
+        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('pu', 'rocket')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · базовый доступ</div></div></div><div class="cab-bens">${bens}</div><button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button><div class="cab-cta-note">Оплата подключится к запуску · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
+    } else {
+        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
+    }
+
+    html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Лимиты сегодня</h3><span class="cab-link">обновятся в 00:00</span></div>${(d.usage || []).map(cabUsageRow).join('')}</div>`;
+
+    if (d.channel) {
+        const ch = d.channel;
+        const chi = escapeHtml((ch.title || 'K').trim().charAt(0).toUpperCase() || 'K');
+        html += `<div class="cab-card"><div class="cab-stt"><h3>${cabTile('gr', 'broadcast', 'sm')} Мои каналы</h3><span class="cab-link" id="cab-channels">управление <i class="ti ti-chevron-right"></i></span></div><div class="cab-chan" id="cab-chan-open"><div class="cab-chav">${chi}</div><div class="cab-ci"><div class="cab-cnm"><span class="cab-live"></span> ${escapeHtml(ch.title || '')}</div><div class="cab-csub">${ch.username ? '@' + escapeHtml(ch.username) + ' · ' : ''}<b>${cabNum(ch.subscribers)}</b> подписчиков${ch.niche ? ' · ' + escapeHtml(ch.niche) : ''}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    } else {
+        html += `<div class="cab-card"><div class="cab-stt"><h3>${cabTile('gr', 'broadcast', 'sm')} Мои каналы</h3></div><div class="cab-chan" id="cab-chan-open"><div class="cab-chav"><i class="ti ti-plus"></i></div><div class="cab-ci"><div class="cab-cnm">Подключить канал</div><div class="cab-csub">Публикация, метрики и оффер на Площадке</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    }
+
+    const r = d.referral || {};
+    html += `<div class="cab-card" id="cab-sec-referral"><div class="cab-stt"><h3>${cabTile('pk', 'heart-handshake', 'sm')} Приглашай и зарабатывай</h3></div><div class="cab-bal"><span class="big">${cabNum(r.credits_balance)} ₽</span><span class="cap">кредитов на балансе · заработано ${cabNum(r.credits_earned)} ₽</span></div><div class="cab-lvl"><span class="cab-lvlpill">${escapeHtml(r.level_emoji || '👤')} ${escapeHtml(r.level_display || 'Member')}</span>${r.next_level_display ? `<span class="cab-lvlnext">до ${escapeHtml(r.next_level_emoji || '')} ${escapeHtml(r.next_level_display)} — ${cabNum(r.needed_for_next)} платящих</span>` : '<span class="cab-lvlnext">высший уровень</span>'}</div><div class="cab-lvlbar"><div class="cab-lvlfill" style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></div></div><div class="cab-bgrid"><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_light)} ₽</div><div class="t">за Light</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro)} ₽</div><div class="t">за Pro</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro_plus)} ₽</div><div class="t">за Pro+</div></div></div>${r.promo_code ? `<div class="cab-promo"><span class="cab-code">${escapeHtml(r.promo_code)}</span><div class="cab-cp" id="cab-copy" title="Копировать"><i class="ti ti-copy"></i></div></div>` : ''}<button class="cab-cta pk" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button><div class="cab-cta-note">Друг получает −15% на первый месяц · бонус после его оплаты</div></div>`;
+
+    const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">Язык интерфейса</div><div class="cab-sd">Русский</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+
+    html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
+
+    body.innerHTML = html;
+    wireCabinet(d);
+}
+
+function wireCabinet(d) {
+    const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+    on('cab-upgrade', () => {
+        hapticMed();
+        if (tg?.showPopup) tg.showPopup({ title: 'Оформление тарифа', message: 'Оплата подписок подключится к запуску. Сейчас все функции доступны на лимитах твоего тарифа.', buttons: [{ type: 'ok' }] });
+        else cabToast('Оплата подключится к запуску');
+    });
+    on('cab-compare', () => cabToast('Витрина тарифов — скоро'));
+    on('cab-channels', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
+    on('cab-chan-open', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
+    on('cab-copy', () => {
+        const code = (d.referral && d.referral.promo_code) || '';
+        const btn = document.getElementById('cab-copy');
+        copyText(code).then(() => {
+            if (btn) { btn.classList.add('ok'); btn.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { btn.classList.remove('ok'); btn.innerHTML = '<i class="ti ti-copy"></i>'; }, 1600); }
+            cabToast('Промокод скопирован');
+        });
+    });
+    on('cab-share', () => {
+        hapticLight();
+        const link = (d.referral && d.referral.referral_link) || '';
+        const text = 'Присоединяйся к ForgeMetrics — AI-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:';
+        const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
+        if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
+    });
+    on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
+    on('cab-theme', () => cabToast('Темы оформления — скоро'));
+    on('cab-lang', () => cabToast('Другие языки интерфейса — скоро'));
+    on('cab-notif', () => {
+        const tog = document.getElementById('cab-notif-tog');
+        if (!tog) return;
+        const now = tog.classList.toggle('on');
+        try { localStorage.setItem('fm_notif', now ? '1' : '0'); } catch (e) {}
+        cabToast(now ? 'Уведомления включены' : 'Уведомления выключены');
+    });
+}
+
+
 function setupEventListeners() {
     els.menuBtn.addEventListener('click', openDrawer);
+    const cabBack = document.getElementById('cabinet-back');
+    if (cabBack) cabBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
+    const cabSet = document.getElementById('cabinet-settings');
+    if (cabSet) cabSet.addEventListener('click', () => { const s = document.getElementById('cab-sec-settings'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     els.drawerClose.addEventListener('click', closeDrawer);
     els.drawerOverlay.addEventListener('click', closeDrawer);
 
