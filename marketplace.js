@@ -793,7 +793,7 @@
         // стрелка «назад» видна всегда (на главном экране закрывает приложение, глубже — ведёт назад)
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
-            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Все каналы, собранные ботом'; su.style.display = ''; }
+            if (t === 'catalog') { ti.textContent = 'Радар каналов'; su.textContent = 'Все каналы, собранные ботом'; su.style.display = ''; }
             else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; su.style.display = ''; }
             else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM по нишам'; su.style.display = ''; }
             else { ti.textContent = 'Рынок рекламы'; su.textContent = ''; su.style.display = 'none'; }
@@ -875,7 +875,7 @@
             '</div>';
         var vol = [];
         if (_pulse.market_total) vol.push('<i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'оффер', 'оффера', 'офферов'));
-        if (_pulse.base_total) vol.push('<i class="ti ti-database" style="color:#818cf8;"></i> База · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
+        if (_pulse.base_total) vol.push('<i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
         if (vol.length) h += '<div class="fmx-tvol">' + vol.join('<span style="color:#3a3f52;">|</span>') + '</div>';
         return h;
     }
@@ -899,15 +899,15 @@
             if (_mainTab !== 'pulse') return;
             if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не удалось загрузить данные — попробуй позже.'); return; }
             var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
-            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
+            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Радаре появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
             var html = _termHead();
             if (_pulse.market && _pulse.market.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
             }
             if (_pulse.base && _pulse.base.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-database" style="color:#818cf8;"></i> База каналов · публичная статистика</div>' + pulseTiles(_pulse.base, 'кан.');
+                html += '<div class="fmx-psec"><i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар каналов · публичная статистика</div>' + pulseTiles(_pulse.base, 'кан.');
             }
-            html += '<div style="font-size:10px;color:#565b73;line-height:1.65;margin-top:16px;">Показаны медианы по нишам. <b style="color:#8990a8;">Зелёные</b> — CPM ниже медианы (выгоднее покупателю), <b style="color:#8990a8;">красные</b> — выше. Площадка — точные данные наших карточек, База — публичная статистика каналов. Обновление раз в 5 минут. Тренды и история цен появятся с накоплением данных.</div>';
+            html += '<div style="font-size:10px;color:#565b73;line-height:1.65;margin-top:16px;">Показаны медианы по нишам. <b style="color:#8990a8;">Зелёные</b> — CPM ниже медианы (выгоднее покупателю), <b style="color:#8990a8;">красные</b> — выше. Площадка — точные данные наших офферов, Радар — публичная статистика каналов. Обновление раз в 5 минут. Тренды и история цен появятся с накоплением данных.</div>';
             host.innerHTML = html;
         });
     }
@@ -915,8 +915,8 @@
         var host = el('fmx-main');
         host.innerHTML =
             '<div class="fmx-entq">Выбери, где искать:</div>' +
-            '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-database"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
+            '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-radar-2"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Радар каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
             '<div class="fmx-entd">Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
@@ -1018,7 +1018,7 @@
         var body;
         if (_catState === 'loading') body = loadHtml();
         else if (_catState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
-        else if (!_catalog || !_catalog.length) body = emptyHtml('ti-list-search', 'База скоро наполнится', 'Здесь будет общая база каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
+        else if (!_catalog || !_catalog.length) body = emptyHtml('ti-radar-2', 'Радар скоро наполнится', 'Здесь будет каталог каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
         else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + body;
         bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(host);
