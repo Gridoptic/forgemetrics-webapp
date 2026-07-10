@@ -336,11 +336,12 @@ function renderActions(actions) {
 
     actions.forEach(action => {
         const card = document.createElement('button');
-        card.className = `action-card ${action.primary ? 'primary' : ''}`;
+        // все карточки единообразные — стеклянные (без сплошной заливки .primary): «Написать пост» в общем ряду
+        card.className = 'action-card';
         card.dataset.action = action.id;
 
-        const colorClass = action.primary ? '' : `icon-${action.color}`;
-        const subtitleClass = action.color === 'green' && !action.primary ? 'highlight' : '';
+        const colorClass = `icon-${action.color || 'purple'}`;
+        const subtitleClass = action.color === 'green' ? 'highlight' : '';
 
         card.innerHTML = `
             <div class="action-card-content">
