@@ -2449,7 +2449,8 @@
         if (!s || !s.url) return '';
         var p = stkPos(s, W);
         var dm = s.dmode || 'bg';
-        var mcls = dm === 'top' ? ' m-top' : (dm === 'blend' ? ' m-blend' : '');
+        if (dm === 'top') dm = 'blend';   /* режим «Поверх» убран — старые стикеры показываем как «Слияние» */
+        var mcls = dm === 'blend' ? ' m-blend' : '';
         var boxSt;
         if (draggable) {
             boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
@@ -2462,7 +2463,7 @@
         var core = '<div class="fmx-stk' + mcls + '" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
         var selCls = (_ss && _ss.stickerSel !== false) ? ' sel' : '';
-        var modeDots = '<div class="fmx-stkmodes">' + [['top', 'Поверх'], ['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
+        var modeDots = '<div class="fmx-stkmodes">' + [['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
             return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
         }).join('') + '</div>';
         return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Перемещение, размер, поворот"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с оффера"></i>' + modeDots + '</div>';
@@ -2604,7 +2605,7 @@
                     '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
                     '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
                 if (free) {
-                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
+                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (слияние · задний фон).</div>';
                 }
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
@@ -3378,7 +3379,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? (_ss.sticker.dmode || 'bg') : null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? ((_ss.sticker.dmode === 'top' ? 'blend' : _ss.sticker.dmode) || 'bg') : null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
