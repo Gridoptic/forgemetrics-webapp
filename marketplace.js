@@ -229,6 +229,15 @@
             '.fmx-pill{position:absolute;top:4px;left:4px;height:calc(100% - 8px);border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);transition:transform 380ms cubic-bezier(.2,.85,.25,1),width 380ms cubic-bezier(.2,.85,.25,1);box-shadow:0 4px 14px rgba(99,102,241,0.4);z-index:0;}',
             '.fmx-pb{flex:1;position:relative;z-index:1;border:none;background:transparent;color:#8990a8;padding:10px 3px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:color 260ms;white-space:nowrap;min-width:0;overflow:hidden;}',
             '.fmx-pb.on{color:#fff;}',
+            '.fmx-sellcta{display:flex;align-items:center;gap:12px;padding:13px;border-radius:15px;margin:0 0 9px;cursor:pointer;background:linear-gradient(135deg,rgba(93,202,165,0.14),rgba(16,185,129,0.05));border:1px solid rgba(93,202,165,0.34);transition:transform 0.15s,box-shadow 0.15s;}',
+            '.fmx-sellcta:active{transform:scale(0.99);}',
+            '.fmx-sellcta-ic{width:44px;height:44px;border-radius:13px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,#5DCAA5,#10b981);color:#06251b;font-size:22px;box-shadow:0 8px 18px -8px rgba(16,185,129,0.55);}',
+            '.fmx-sellcta-t{flex:1;min-width:0;}',
+            '.fmx-sellcta-t .n{font-size:13.5px;font-weight:800;color:#5DCAA5;}',
+            '.fmx-sellcta-t .s{font-size:11px;color:#8990a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-sellcta-go{color:#5DCAA5;font-size:20px;flex:0 0 auto;}',
+            '.fmx-reqlink{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:transparent;border:none;color:#8990a8;font-size:11.5px;font-weight:600;padding:2px 0 13px;cursor:pointer;}',
+            '.fmx-reqlink i{font-size:14px;}',
             /* видимый ползунок справа: если у пользователя не работает колёсико, он зажмёт и опустит.
                scrollbar-gutter:stable резервирует под него место — контент не прыгает и ползунок не мигает */
             '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}',
@@ -748,7 +757,7 @@
         _pulseHint('fmx-faq', 'fmx_seen_faq');
         _pulseHint('fmx-bhelp', 'fmx_seen_badges');
         // стрелка «назад»: с под-раздела (Площадка/База/Пульс) — на главный экран; с главного — закрыть приложение
-        el('fmx-back').addEventListener('click', function () { _haptic('light'); if (_mainTab !== 'enter') setMainTab('enter'); else close(); });
+        el('fmx-back').addEventListener('click', function () { _haptic('light'); if (_mainTab === 'market' && (_subTab === 'create' || _subTab === 'sell')) { setSubTab('buy'); return; } if (_mainTab !== 'enter') setMainTab('enter'); else close(); });
         document.addEventListener('click', function (e) { var dd = el('fmx-chdd'); if (dd && dd.classList.contains('on') && !dd.contains(e.target)) dd.classList.remove('on'); });
         el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
         el('fmx-mini').addEventListener('click', function () { _haptic('light'); el('fmx-scrollEl').scrollTo({ top: 0, behavior: 'smooth' }); });
@@ -801,7 +810,7 @@
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
         if (t === 'catalog') renderCatalog();
-        else if (t === 'market') renderMarket();
+        else if (t === 'market') { _subTab = 'buy'; renderMarket(); }
         else if (t === 'pulse') renderPulse();
         else renderEnter();
         checkMini();
@@ -1027,26 +1036,42 @@
     /* ===================== render: market ===================== */
     function renderMarket() {
         var host = el('fmx-main');
+        /* конструктор и заявки — на весь экран, с кнопкой «назад в витрину» */
+        if (_subTab === 'create' || _subTab === 'sell') {
+            host.innerHTML = '<button class="fmx-btn" id="fmx-mkback" style="margin:0 0 12px;padding:8px 13px;font-size:12.5px;"><i class="ti ti-arrow-left"></i> Площадка</button><div id="fmx-sub"></div>';
+            el('fmx-mkback').addEventListener('click', function () { _haptic('light'); setSubTab('buy'); });
+            if (_subTab === 'create') renderCreate(); else renderSell();
+            checkMini();
+            return;
+        }
+        /* по умолчанию — витрина офферов + заметная кнопка «выставить свой канал» */
+        _subTab = 'buy';
         host.innerHTML =
-            '<div class="fmx-pillbar" id="fmx-subtabs" style="margin:0 0 16px;"><span class="fmx-pill" id="fmx-subpill"></span>' +
-            '<button class="fmx-pb" data-st="buy"><i class="ti ti-shopping-bag"></i> Купить</button>' +
-            '<button class="fmx-pb" data-st="sell"><i class="ti ti-speakerphone"></i> Продать</button>' +
-            '<button class="fmx-pb" data-st="create"><i class="ti ti-sparkles"></i> Создать</button></div>' +
+            '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-building-store"></i></div>' +
+            '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
+            '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
+            '<button class="fmx-reqlink" id="fmx-reqlink"><i class="ti ti-speakerphone"></i> Заявки рекламодателей <i class="ti ti-arrow-right" style="font-size:13px;"></i></button>' +
             '<div id="fmx-sub"></div>';
-        qsa(host, '#fmx-subtabs .fmx-pb').forEach(function (b) { b.addEventListener('click', function () { setSubTab(b.getAttribute('data-st')); }); });
-        setSubTab(_subTab, true);
+        el('fmx-sellcta').addEventListener('click', function () { _haptic('light'); setSubTab('create'); });
+        el('fmx-reqlink').addEventListener('click', function () { _haptic('light'); setSubTab('sell'); });
+        updateSellCta();
+        renderBuy();
+        checkMini();
+    }
+    function updateSellCta() {
+        if (typeof loadMyListings !== 'function') return;
+        loadMyListings().then(function () {
+            if (_mainTab !== 'market' || _subTab !== 'buy') return;
+            var n = el('fmx-sellcta-n'), s = el('fmx-sellcta-s'); if (!n || !s) return;
+            if (_myListings && _myListings.length) { n.textContent = 'Мой оффер'; s.textContent = 'Опубликован · нажми, чтобы управлять'; }
+        }).catch(function () {});
     }
     function setSubTab(t, force) {
+        if (!force && t === _subTab && el('fmx-sub')) return;
         _subTab = t;
-        var bar = el('fmx-subtabs');
-        qsa(bar, '.fmx-pb').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-st') === t); });
-        movePill('fmx-subtabs', 'fmx-subpill');
-        var sub = el('fmx-sub');
-        sub.classList.remove('fmx-fade'); void sub.offsetWidth; sub.classList.add('fmx-fade');
-        if (t === 'buy') renderBuy();
-        else if (t === 'sell') renderSell();
-        else renderCreate();
-        checkMini();
+        var host = el('fmx-main');
+        if (host) { host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade'); }
+        renderMarket();
     }
 
     function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0); }
@@ -1145,7 +1170,7 @@
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_feed || !_feed.length) body = hasFilters
             ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Смягчи запрос или сбрось фильтры — и офферы вернутся.')
-            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер во вкладке «Создать».');
+            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер кнопкой «Выставить свой канал».');
         else {
             var feed = _applyBuyFilter(_feed);
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы» — или догрузи ленту дальше.') + moreBtn;
