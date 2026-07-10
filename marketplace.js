@@ -917,7 +917,7 @@
             '<div class="fmx-entq">Выбери, где искать:</div>' +
             '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-database"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
-            '<div class="fmx-entd">Все каналы, собранные ботом. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
+            '<div class="fmx-entd">Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
