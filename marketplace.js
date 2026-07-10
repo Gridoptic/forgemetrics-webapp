@@ -1167,7 +1167,7 @@
             /* каналы влияют только на бейджи карточек — перерисовываем тело, не трогая поиск */
             loadChannels().then(function () { _chLoaded = true; _chLoading = false; if (_mainTab === 'market' && _subTab === 'buy') paintBuyBody(); }).catch(function () { _chLoading = false; _chLoaded = true; });
         }
-        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Готовые офферы каналов, где можно купить рекламу. Сравнивай по охвату, ER и CPM, проверяй рейтинг и подтверждённые сделки — и пиши владельцу напрямую, без посредников и комиссии.</div>' +
+        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Нужна реклама — покупаешь размещение в чужих каналах.</div>' +
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
             searchHtml('Поиск по названию или @каналу…') +
             sortBarHtml() + buySortRowHtml() + topRowHtml() +
@@ -1223,7 +1223,7 @@
         else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
-        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: они ищут каналы под свою задачу и бюджет. Продаёшь рекламу — откликайся на подходящие и предлагай размещение напрямую. Покупаешь сам — размести заявку, и каналы под твою нишу напишут первыми.</div>' +
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Есть свой канал — продаёшь в нём рекламу тем, кто её ищет.</div>' +
             '<div style="display:flex;gap:8px;margin:0 0 14px;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
             '<button class="fmx-btn" id="fmx-nbell" title="Уведомления о заявках в нишах" style="flex:0 0 auto;padding:0 15px;"><i class="ti ti-bell"></i></button></div>' + body;
         scaleCards(sub);
