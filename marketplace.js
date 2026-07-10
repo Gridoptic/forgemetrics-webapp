@@ -285,6 +285,9 @@
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
+            '.fmx-fullbg .fmx-crow{margin-top:0;}',
+            '.fmx-fullbg .fmx-cb{padding-top:34px;}',
+            '.fmx-fullbg .fmx-cbg-s{background:linear-gradient(180deg,rgba(10,13,24,0.5),rgba(10,13,24,0.55) 35%,rgba(10,13,24,0.9));}',
             /* долгое нажатие на обложке/аватаре открывало системное меню «сохранить изображение»
                с полным адресом файла. Скриншот всё равно возможен — это не защита, а вид:
                карточка не должна вести себя как обычная веб-страница */
@@ -1599,7 +1602,7 @@
 
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
-            move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, glass: 'none',
+            move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
             coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
@@ -1621,6 +1624,7 @@
         var fx = l.effects_json || {};
         ['move', 'over', 'glow', 'orbit', 'part'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
         _ss.glowCard = !!fx.glowCard;
+        _ss.fullBg = !!fx.fullBg;
         _ss.glass = (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none');
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
         _ss.starPos = fx.starPos || 'cover';
@@ -1874,8 +1878,10 @@
         return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон оффера <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
-            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка, GIF или видео внутри оффера, где цифры и кнопки — эксклюзив продвижения на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
+            '<span class="fmx-lbl fmx-mt2">Фон оффера</span>' +
+            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — на PRO/PRO+ или при продвижении на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>' +
+            '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Фон во всю карточку — без шапки</span></div>' +
+            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — на PRO/PRO+ или при продвижении на 30 дней.</div>';
     }
     function hslHex(h) {
         var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
@@ -2158,6 +2164,7 @@
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; }, 'Орбита');
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
+        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () { _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero(); });
         var mb = el('fmx-modboost');
         if (mb) mb.addEventListener('click', function () {
             var base = listingForChannel(_ss.channelId);
@@ -2847,7 +2854,7 @@
         else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
         /* превью фона оффера: до сохранения ссылка живёт в _media (blob) — прокидываем её в att.cardbg, иначе fullCard не видит фон */
         var _att = {}; for (var _ak in (_ss.att || {})) _att[_ak] = _ss.att[_ak];
         var _cbg = _ss._media && _ss._media.cardbg;
@@ -3293,7 +3300,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? (_ss.sticker.dmode || 'bg') : null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? (_ss.sticker.dmode || 'bg') : null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -3383,10 +3390,12 @@
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
-        var cb = ((top || l._preview) && at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
+        var _cbRaw = (at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
+        var cb = (_cbRaw && (_cbRaw.kind === 'img' || top || l._preview)) ? _cbRaw : null; /* картинка-фон — всем бесплатно; GIF/MP4-анимация — только 30д/PRO (или примерить в превью) */
         var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
             ? '<video src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
             : '<img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
+        var fullBg = !!(cb && (l.effects_json || {}).fullBg); /* фон во всю карточку без шапки — только при активном фоне оффера */
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
         var covHtml;
@@ -3400,9 +3409,8 @@
         var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
-        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
-            '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml +
-            '</div>' +
+        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
+            (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
