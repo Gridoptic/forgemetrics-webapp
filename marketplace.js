@@ -55,12 +55,12 @@
     var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
     var EMOJIS = ['🧬', '🔥', '💪', '🧠', '⚡', '🚀', '💎', '🎯', '📈', '🌿', '❤️', '✨', '🏆', '🎮', '📚', '🌟', '💰', '📊', '👑', '🌈'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
-    var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок']];
-    var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки']];
-    var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора']];
+    var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок'], ['tilt3d', '3D-наклон'], ['pendulum', 'Маятник'], ['drift', 'Дрейф'], ['jelly', 'Желе'], ['flip', 'Переворот']];
+    var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки'], ['scan', 'Сканер']];
+    var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора'], ['rainbow', 'Радуга'], ['fire', 'Пламя'], ['ice', 'Иней'], ['pulsar', 'Пульсары'], ['electric', 'Электро'], ['corona', 'Корона']];
     var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера']];
     var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка']];
-    var FX_VIP = { glow: ['aurora'], orbit: ['comet', 'atom', 'orbitals', 'sphere'], glass: ['frost', 'tint', 'dark'] };
+    var FX_VIP = { glow: ['neon', 'breath', 'gold', 'aurora', 'rainbow', 'fire', 'ice', 'pulsar', 'electric', 'corona'], orbit: ['comet', 'atom', 'orbitals', 'sphere'], glass: ['frost', 'tint', 'dark'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -454,6 +454,16 @@
             '@keyframes fmxGlitch{0%,86%,100%{transform:translate(0,0) skewX(0);}88%{transform:translate(-2px,1px) skewX(3deg);}90%{transform:translate(2px,-1px) skewX(-2deg);}92%{transform:translate(-1px,-2px);}94%{transform:translate(1.5px,1px) skewX(2deg);}96%{transform:translate(0,0);}}',
             '.fx-m-bounce{transform-origin:50% 90%;animation:fmxBounce 1.8s ease-in-out infinite;}',
             '@keyframes fmxBounce{0%,80%,100%{transform:translateY(0) scale(1,1);}10%{transform:translateY(0) scale(1.08,0.9);}26%{transform:translateY(-11px) scale(0.96,1.06);}42%{transform:translateY(0) scale(1.07,0.9);}54%{transform:translateY(-4px) scale(0.98,1.02);}66%{transform:translateY(0) scale(1.03,0.97);}}',
+            '.fx-m-tilt3d{animation:fmxTilt 4s ease-in-out infinite;}',
+            '@keyframes fmxTilt{0%,100%{transform:perspective(220px) rotateX(6deg) rotateY(-9deg);}50%{transform:perspective(220px) rotateX(-6deg) rotateY(9deg);}}',
+            '.fx-m-pendulum{transform-origin:50% -55%;animation:fmxPend 2.6s cubic-bezier(.5,0,.5,1) infinite;}',
+            '@keyframes fmxPend{0%,100%{transform:rotate(-11deg);}50%{transform:rotate(11deg);}}',
+            '.fx-m-drift{animation:fmxDrift 6s ease-in-out infinite;}',
+            '@keyframes fmxDrift{0%,100%{transform:translate(0,0);}25%{transform:translate(4px,-3px);}50%{transform:translate(0,-5px);}75%{transform:translate(-4px,-3px);}}',
+            '.fx-m-jelly{animation:fmxJelly 2.8s ease-in-out infinite;}',
+            '@keyframes fmxJelly{0%,100%{transform:scale(1,1);}20%{transform:scale(1.08,0.92);}40%{transform:scale(0.94,1.06);}60%{transform:scale(1.04,0.96);}80%{transform:scale(0.98,1.02);}}',
+            '.fx-m-flip{animation:fmxFlip 5s ease-in-out infinite;}',
+            '@keyframes fmxFlip{0%,60%,100%{transform:perspective(320px) rotateY(0);}80%{transform:perspective(320px) rotateY(360deg);}}',
             '.fx-g-neon{box-shadow:0 0 12px var(--fxa),0 0 24px var(--fxa);animation:fmxGlowP 2.6s ease-in-out infinite;}',
             '@keyframes fmxGlowP{0%,100%{opacity:.35;}50%{opacity:.85;}}',
             '.fx-g-breath{box-shadow:0 0 18px 5px rgba(255,255,255,0.5);animation:fmxBreathH 3.4s ease-in-out infinite;}',
@@ -463,6 +473,16 @@
             '.fx-g-aurora{background:conic-gradient(from 180deg,#0fd07f,#17b3a3,#3b82f6,#8b5cf6,#10b981,#0fd07f);filter:blur(9px);animation:fmxSpin 11s linear infinite;}',
             '.fx-g-aurora::after{content:"";position:absolute;inset:0;border-radius:inherit;animation:fmxAur 5.5s ease-in-out infinite;background:inherit;filter:blur(4px);}',
             '@keyframes fmxAur{0%,100%{opacity:.15;}50%{opacity:.7;}}',
+            '.fx-g-rainbow{background:conic-gradient(from 0deg,#ff004c,#ff8a00,#ffee00,#00e676,#00b0ff,#7c4dff,#ff004c);filter:blur(7px);animation:fmxSpin 4.5s linear infinite;opacity:.85;}',
+            '.fx-g-fire{box-shadow:0 0 12px 2px rgba(255,110,20,.75),0 0 26px 4px rgba(255,60,0,.45),0 5px 20px rgba(255,150,0,.4);animation:fmxFire 1.5s steps(1) infinite;}',
+            '@keyframes fmxFire{0%,100%{opacity:.7;transform:scaleY(1);}20%{opacity:.95;transform:scaleY(1.05);}40%{opacity:.72;}55%{opacity:1;transform:scaleY(1.04);}70%{opacity:.8;}85%{opacity:.95;}}',
+            '.fx-g-ice{box-shadow:0 0 10px 1px rgba(150,232,255,.7),0 0 22px 3px rgba(80,180,255,.4);animation:fmxIce 3.2s ease-in-out infinite;}',
+            '@keyframes fmxIce{0%,100%{opacity:.5;filter:hue-rotate(0deg);}50%{opacity:.9;filter:hue-rotate(-14deg);}}',
+            '.fx-g-pulsar{color:var(--fxa,#5DCAA5);border-radius:inherit;animation:fmxPulsar 2.2s ease-out infinite;}',
+            '@keyframes fmxPulsar{0%{box-shadow:0 0 0 1px currentColor,0 0 0 1px currentColor;opacity:.9;}100%{box-shadow:0 0 0 9px currentColor,0 0 0 18px currentColor;opacity:0;}}',
+            '.fx-g-electric{box-shadow:0 0 10px rgba(124,77,255,.7),0 0 20px rgba(0,180,255,.5);animation:fmxElec 0.9s steps(1) infinite;}',
+            '@keyframes fmxElec{0%,100%{opacity:.5;filter:hue-rotate(0deg);}15%{opacity:1;filter:hue-rotate(22deg);}30%{opacity:.4;}45%{opacity:.95;filter:hue-rotate(-22deg);}60%{opacity:.6;}75%{opacity:1;}}',
+            '.fx-g-corona{background:repeating-conic-gradient(from 0deg,rgba(245,191,79,.55) 0deg 6deg,transparent 6deg 16deg);-webkit-mask:radial-gradient(farthest-side,transparent 52%,#000 62%,transparent 100%);mask:radial-gradient(farthest-side,transparent 52%,#000 62%,transparent 100%);animation:fmxSpin 9s linear infinite;opacity:.8;}',
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}',
             '.fx-o-holo::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-70%;width:45%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-18deg);animation:fmxSweep 2.8s ease-in-out infinite;}',
             '@keyframes fmxSweep{70%,100%{transform:translateX(340%) skewX(-18deg);}}',
@@ -482,6 +502,10 @@
             '@keyframes fmxVhsRoll{0%{transform:translateY(0) skewX(0);}90%{transform:translateY(320%) skewX(0);}93%{transform:translateY(345%) skewX(7deg);}96%{transform:translateY(365%) skewX(-4deg);}100%{transform:translateY(385%) skewX(0);}}',
             '.fx-o-vhs::after{content:"";position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,0.55);box-shadow:0 0 7px rgba(0,238,255,0.6);opacity:0;animation:fmxVhsScan 2.8s linear infinite;}',
             '@keyframes fmxVhsScan{0%{top:-6%;opacity:0;}8%{opacity:.55;}88%{opacity:.55;}100%{top:104%;opacity:0;}}',
+            '.fx-o-scan{background:linear-gradient(0deg,rgba(0,229,255,0.05) 0 1px,transparent 1px 4px);}',
+            '.fx-o-scan::before{content:"";position:absolute;left:0;right:0;height:38%;top:-38%;background:linear-gradient(180deg,transparent,rgba(0,229,255,0.28),rgba(0,229,255,0.5),transparent);box-shadow:0 0 10px rgba(0,229,255,0.5);animation:fmxScan 2.4s cubic-bezier(.5,0,.5,1) infinite;}',
+            '@keyframes fmxScan{0%{transform:translateY(0);}100%{transform:translateY(360%);}}',
+            '.fx-o-scan::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(0,229,255,0.25);}',
             '.fx-orb-comet{animation:fmxSpin 3.2s linear infinite;}',
             '.fx-orb-comet::before{content:"";position:absolute;top:-2px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--fxe,#fff);box-shadow:0 0 6px var(--fxe,#fff),0 0 16px var(--fxe,#f5bf4f);}',
             '.fx-orb-atom{border:1px solid rgba(255,255,255,.13);animation:fmxSpin 4.2s linear infinite;}',
@@ -1783,7 +1807,7 @@
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Свечение — бесплатно. <span style="color:#f5bf4f;">Опции с замком можно примерить в предпросмотре — применяются при активном продвижении на 30 дней (29 990 ₽).</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение и Поверхность — бесплатно. <span style="color:#f5bf4f;">Свечение — при поднятии от 48 часов; Орбита, Стекло и золотое свечение оффера — при продвижении на 30 дней. Опции с замком можно примерить в предпросмотре.</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -2171,9 +2195,11 @@
         var fx = l.effects_json || {}, at = l.emoji_attachments_json || {}, top = _isTop(l);
         var mv = fx.move || 'none', ov = fx.over || 'none', gl = fx.glow || 'none', orb = fx.orbit || 'none';
         var oc = fx.atomColor || accent;
-        if (!top) {
-            if (FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';
-            if (FX_VIP.orbit.indexOf(orb) >= 0) orb = 'none';
+        /* гейтинг только в живой ленте; в превью конструктора (_preview) показываем всё — «примерить» */
+        if (!l._preview) {
+            var _boost = _isBoost(l);
+            if (!(top || _boost) && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';   /* свечение: поднятие 48ч ИЛИ продвижение 30д */
+            if (!top && FX_VIP.orbit.indexOf(orb) >= 0) orb = 'none';            /* орбита: только продвижение 30д */
         }
         var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
         var over = '<i class="fmx-avover fx-o-' + ov + '"></i>';
