@@ -815,7 +815,7 @@
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
         if (t === 'catalog') renderCatalog();
-        else if (t === 'market') { _subTab = 'buy'; renderMarket(); }
+        else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
         else if (t === 'pulse') renderPulse();
         else renderEnter();
         checkMini();
@@ -3167,6 +3167,8 @@
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
+        /* золотое свечение: в превью конструктора — строго по тумблеру glowCard; в живой ленте — премиум-гейт (top) + флаг (старые офферы без флага светятся как раньше) */
+        var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (top && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
         var freeMap = null; /* перемещение бейджей отключено — всегда в общем ряду */
@@ -3202,7 +3204,7 @@
         var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
-        return '<div class="fmx-cwrap"><div class="fmx-card' + (top ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
+        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             '<div class="fmx-cov">' + covHtml +
             '</div>' +
             (top ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
