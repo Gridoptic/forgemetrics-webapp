@@ -335,6 +335,7 @@
             '.fmx-tldesc{flex:1;min-width:0;font-size:12px;color:#a9aec0;line-height:1.4;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
+            '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
@@ -3364,6 +3365,8 @@
     function badgeItems(l) {
         var items = [];
         items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
+        // реальная проверка (бот — админ канала), не фейк-галочка: продавец действительно управляет размещением
+        if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>') });
@@ -3757,6 +3760,8 @@
             '</div>';
         var body =
             healthCard +
+            card('<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>', 'Владелец подтверждён',
+                'Наш бот — администратор этого канала: продавец действительно управляет размещением и может опубликовать твою рекламу. Это техническая проверка доступа, а не самоназвание — без бейджа доступ не подтверждён.') +
             card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
                 'Средний охват поста — не менее 10% от числа подписчиков. Аудитория активно читает канал: признак живой, невыгоревшей базы.') +
             card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
