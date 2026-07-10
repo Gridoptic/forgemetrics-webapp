@@ -307,9 +307,13 @@
             '.fmx-bgd-desc .fmx-hp{margin:5px 0 0;text-indent:12px;}',
             '.fmx-bgd-badge .fmx-bdg{font-size:11px;padding:5px 10px;font-weight:700;}',
             '.fmx-bgd-badge .fmx-bdg i{font-size:14px;}',
-            '.fmx-bgd-badge .fmx-tl{padding:5px 9px;}',
-            '.fmx-bgd-badge .fmx-tl i{width:8px;height:8px;}',
-            '.fmx-bgd-badge .fmx-tl b{font-size:10px;}',
+            '.fmx-bgd-health{flex-direction:column;align-items:stretch;gap:0;}',
+            '.fmx-tlrow{display:flex;gap:10px;align-items:center;margin-top:8px;}',
+            '.fmx-tlcell{flex-shrink:0;}',
+            '.fmx-bgd-health .fmx-tl{width:112px;box-sizing:border-box;justify-content:flex-start;padding:5px 10px;white-space:nowrap;}',
+            '.fmx-bgd-health .fmx-tl i{width:8px;height:8px;}',
+            '.fmx-bgd-health .fmx-tl b{font-size:10px;}',
+            '.fmx-tldesc{flex:1;min-width:0;font-size:12px;color:#a9aec0;line-height:1.4;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
@@ -3457,14 +3461,19 @@
                 '<div class="fmx-bgd-txt"><div class="fmx-bgd-title">' + title + '</div>' +
                 '<div class="fmx-bgd-desc">' + desc + '</div></div></div>';
         };
-        var healthDesc =
-            '<div>Отношение среднего охвата поста к числу подписчиков — живая ли аудитория.</div>' +
-            '<p class="fmx-hp"><b style="color:#5DCAA5;">Зелёный</b> — охват в норме (от 10% подписчиков), аудитория живая.</p>' +
-            '<p class="fmx-hp"><b style="color:#f59e0b;">Жёлтый</b> — охват ниже ожидаемого (3–10%): повод проверить вручную.</p>' +
-            '<p class="fmx-hp"><b style="color:#ef4444;">Красный</b> — низкий охват при больших цифрах: возможна накрутка подписчиков.</p>' +
-            '<div style="margin-top:7px;">Первое, на что смотрит арбитражник перед закупкой.</div>';
+        var tlRow = function (state, name, hex, text) {
+            return '<div class="fmx-tlrow"><div class="fmx-tlcell">' + trafficLight({ health_class: state }) + '</div>' +
+                '<div class="fmx-tldesc"><b style="color:' + hex + ';">' + name + '</b> — ' + text + '</div></div>';
+        };
+        var healthCard = '<div class="fmx-bgd-card fmx-bgd-health">' +
+            '<div class="fmx-bgd-title">Здоровье канала · светофор</div>' +
+            '<div class="fmx-bgd-desc">Отношение среднего охвата поста к числу подписчиков — живая ли аудитория.</div>' +
+            tlRow('green', 'Зелёный', '#5DCAA5', 'охват в норме (от 10% подписчиков), аудитория живая.') +
+            tlRow('amber', 'Жёлтый', '#f59e0b', 'охват ниже ожидаемого (3–10%): повод проверить вручную.') +
+            tlRow('red', 'Красный', '#ef4444', 'низкий охват при больших цифрах: возможна накрутка подписчиков.') +
+            '<div class="fmx-bgd-desc" style="margin-top:9px;">Первое, на что смотрит арбитражник перед закупкой.</div></div>';
         var body =
-            card(trafficLight({ health_class: 'green' }) + trafficLight({ health_class: 'amber' }) + trafficLight({ health_class: 'red' }), 'Здоровье канала · светофор', healthDesc) +
+            healthCard +
             card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
                 'Средний охват поста — не меньше 10% от подписчиков. Аудитория реально читает канал, а не «спит». Хороший знак живой базы.') +
             card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
