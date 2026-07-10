@@ -28,6 +28,7 @@ const screens = {
     dashboard: document.getElementById('dashboard-screen'),
     placeholder: document.getElementById('placeholder-screen'),
     cabinet: document.getElementById('cabinet-screen'),
+    tariffs: document.getElementById('tariffs-screen'),
     channels: document.getElementById('channels-screen'),
     postCreate: document.getElementById('post-create-screen'),
     postThinking: document.getElementById('post-thinking-screen'),
@@ -723,12 +724,8 @@ function renderCabinet(d) {
 
 function wireCabinet(d) {
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    on('cab-upgrade', () => {
-        hapticMed();
-        if (tg?.showPopup) tg.showPopup({ title: 'Оформление тарифа', message: 'Оплата подписок подключится к запуску. Сейчас все функции доступны на лимитах твоего тарифа.', buttons: [{ type: 'ok' }] });
-        else cabToast('Оплата подключится к запуску');
-    });
-    on('cab-compare', () => cabToast('Витрина тарифов — скоро'));
+    on('cab-upgrade', () => { openTariffs(); });
+    on('cab-compare', () => { openTariffs(); });
     on('cab-channels', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
     on('cab-chan-open', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
     on('cab-copy', () => {
@@ -759,12 +756,86 @@ function wireCabinet(d) {
 }
 
 
+// ==================== Витрина тарифов ====================
+let tariffsData = null;
+
+function tfIcon(key) { return key === 'light' ? 'package' : (key === 'pro' ? 'rocket' : 'crown'); }
+
+async function openTariffs() {
+    hapticLight();
+    showScreen('tariffs');
+    const body = document.getElementById('tariffs-body');
+    if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Загрузка…</div>';
+    try {
+        const data = await apiRequest('/api/v1/user/tariffs');
+        tariffsData = data;
+        renderTariffs(data);
+    } catch (e) {
+        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Не удалось загрузить тарифы.</div>';
+    }
+}
+
+function tfCurBanner(d) {
+    if (d.current_tier === 'trial') {
+        const n = d.trial_days_left;
+        const dw = (n != null) ? `осталось ${n} ${plural3(n, 'день', 'дня', 'дней')}` : 'активен';
+        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Тебе открыт полный доступ — Pro+</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы не потерять аудит, конкурентов и каналы после триала.</div></div></div>`;
+    }
+    if (['light', 'pro', 'pro_plus'].includes(d.current_tier)) return '';
+    return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">3 поста в день, 1 канал. Выбери план для полного доступа.</div></div></div>`;
+}
+
+function tfCta(plan, d) {
+    if (d.current_tier === plan.key) return '<button class="tf-cta cur" disabled><i class="ti ti-circle-check"></i> Твой тариф</button>';
+    if (d.booked_plan === plan.key) return `<button class="tf-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
+    const cls = plan.popular ? 'prime' : (plan.tile === 'gold' ? 'gold' : 'ghost');
+    const shine = plan.popular ? '<span class="shine"></span>' : '';
+    return `<button class="tf-cta ${cls}" data-book="${plan.key}">${shine}Забронировать ${escapeHtml(plan.name)} — ${cabNum(plan.price)} ₽</button>`;
+}
+
+function tfPlanCard(plan, d) {
+    const lead = plan.lead ? `<div class="tf-lead ${plan.tile === 'gold' ? 'gold' : ''}"><i class="ti ti-${plan.tile === 'gold' ? 'crown' : 'bolt'}"></i> ${escapeHtml(plan.lead)}</div>` : '';
+    const feats = (plan.features || []).map((f) => `<div class="tf-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
+    const head = `<div class="tf-phead"><div class="tf-ptile ${escapeHtml(plan.tile)}"><i class="ti ti-${tfIcon(plan.key)}"></i></div><div class="tf-pn"><div class="name">${escapeHtml(plan.name)}</div><div class="price"><b>${cabNum(plan.price)} ₽</b> / мес</div></div></div>`;
+    const inner = `${plan.popular ? '<div class="tf-ribbon">★ Популярный</div>' : ''}${head}${lead}<div class="tf-feats">${feats}</div>${tfCta(plan, d)}`;
+    if (plan.popular) return `<div class="tf-plan pop"><div class="tf-glow"></div><div class="tf-inner">${inner}</div></div>`;
+    return `<div class="tf-plan">${inner}</div>`;
+}
+
+function renderTariffs(d) {
+    const body = document.getElementById('tariffs-body');
+    if (!body) return;
+    let html = tfCurBanner(d);
+    html += '<div class="tf-sub">Забронируй план сейчас — оплату подключим к запуску и уведомим тебя. После триала остаётся бесплатный Free.</div>';
+    html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
+    const extras = (d.extras || []).map((e) => `<div class="tf-erow"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span></div>`).join('');
+    if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
+    html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
+    body.innerHTML = html;
+    body.querySelectorAll('[data-book]').forEach((btn) => {
+        if (btn.classList.contains('cur')) return;
+        btn.addEventListener('click', async () => {
+            const plan = btn.getAttribute('data-book');
+            hapticMed();
+            btn.disabled = true;
+            try {
+                const r = await apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan }) });
+                if (r && r.ok) { tariffsData.booked_plan = plan; renderTariffs(tariffsData); cabToast('Тариф забронирован — уведомим при запуске'); }
+                else { btn.disabled = false; cabToast('Не удалось забронировать'); }
+            } catch (e) { btn.disabled = false; cabToast('Не удалось забронировать'); }
+        });
+    });
+}
+
+
 function setupEventListeners() {
     els.menuBtn.addEventListener('click', openDrawer);
     const cabBack = document.getElementById('cabinet-back');
     if (cabBack) cabBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
     const cabSet = document.getElementById('cabinet-settings');
     if (cabSet) cabSet.addEventListener('click', () => { const s = document.getElementById('cab-sec-settings'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    const tfBack = document.getElementById('tariffs-back');
+    if (tfBack) tfBack.addEventListener('click', () => { hapticLight(); showScreen('cabinet'); });
     els.drawerClose.addEventListener('click', closeDrawer);
     els.drawerOverlay.addEventListener('click', closeDrawer);
 
