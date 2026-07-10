@@ -720,7 +720,7 @@
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
-            '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат значки"><i class="ti ti-rosette-discount-check"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
             '<div id="fmx-mini"><div class="in" id="fmx-miniIn"></div></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
@@ -3441,10 +3441,10 @@
     function openBadgeGuide() {
         var old = el('fmx-bgdBg'); if (old) old.remove();
         var row = function (badge, title, desc) {
-            return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
-                '<div style="flex-shrink:0;min-width:96px;display:flex;justify-content:flex-start;padding-top:2px;">' + badge + '</div>' +
-                '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:700;color:#e8e8ed;margin-bottom:3px;">' + title + '</div>' +
-                '<div style="font-size:12px;color:#a9aec0;line-height:1.5;">' + desc + '</div></div></div>';
+            return '<div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
+                '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:9px;">' + badge + '</div>' +
+                '<div style="font-size:13.5px;font-weight:700;color:#e8e8ed;margin-bottom:4px;">' + title + '</div>' +
+                '<div style="font-size:12px;color:#a9aec0;line-height:1.55;">' + desc + '</div></div>';
         };
         var body =
             row(trafficLight({ health_class: 'green' }), 'Здоровье канала',
@@ -3460,10 +3460,10 @@
             row('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4.8 · 3 сделки</span>', 'Сделки и рейтинг',
                 'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
             row('<span class="fmx-bdg fmx-b-live"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
-                'Появляется, только когда площадка реально проверила канал (без обмана и запрещёнки). Если значка нет — проверку ещё не проходили, это не значит «плохой».');
+                'Появляется, только когда площадка реально проверила канал (без обмана и запрещёнки). Если бейджа нет — проверку ещё не проходили, это не значит «плохой».');
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
-        bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат значки</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Значки в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
+        bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат бейджи</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
+            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Бейджи в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
         document.body.appendChild(bg);
         bg.addEventListener('click', function (e) { if (e.target === bg) hideModal('fmx-bgdBg'); });
         bg.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bgdBg'); });
