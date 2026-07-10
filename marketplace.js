@@ -260,7 +260,9 @@
             '.fmx-search input{flex:1;background:transparent;border:none;outline:none;color:#e8e8ed;font-size:13px;font-family:inherit;}',
             '.fmx-search i{color:#565b73;}',
             '.fmx-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;}',
-            '.fmx-divlbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#565b73;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-divrow{display:flex;align-items:center;gap:9px;margin-bottom:12px;}',
+            '.fmx-divlbl{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:#565b73;font-weight:700;white-space:nowrap;flex:0 0 auto;}',
+            '.fmx-divline{flex:1;height:1px;background:rgba(255,255,255,0.09);min-width:8px;}',
             '.fmx-vtog{display:flex;gap:3px;background:rgba(255,255,255,0.04);padding:3px;border-radius:9px;}',
             '.fmx-vt{border:none;background:transparent;color:#8990a8;border-radius:7px;padding:7px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 150ms;}',
             '.fmx-vt.on{background:rgba(99,102,241,0.14);color:#818cf8;}',
@@ -1050,11 +1052,13 @@
         /* по умолчанию — витрина офферов + заметная кнопка «выставить свой канал» */
         _subTab = 'buy';
         host.innerHTML =
+            searchHtml('Поиск по каналу или нише…') +
             '<div class="fmx-mkhelper"><b>Покупаешь рекламу</b> — выбирай канал в ленте ниже. <b>Продаёшь</b> — выстави свой оффер:</div>' +
-            '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-building-store"></i></div>' +
+            '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-plus"></i></div>' +
             '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
             '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
             '<div id="fmx-sub"></div>';
+        (function () { var si = host.querySelector('.fmx-search input'); if (si) { si.value = _q; si.addEventListener('input', function () { var v = si.value; clearTimeout(_qTimer); _qTimer = setTimeout(function () { _q = v.trim(); loadFeed(false); }, 350); }); } })();
         el('fmx-sellcta').addEventListener('click', function () { _haptic('light'); setSubTab('create'); });
         updateSellCta();
         renderBuy();
@@ -1065,7 +1069,13 @@
         loadMyListings().then(function () {
             if (_mainTab !== 'market' || _subTab !== 'buy') return;
             var n = el('fmx-sellcta-n'), s = el('fmx-sellcta-s'); if (!n || !s) return;
-            if (_myListings && _myListings.length) { n.textContent = 'Мой оффер'; s.textContent = 'Опубликован · нажми, чтобы управлять'; }
+            if (_myListings && _myListings.length) {
+                n.textContent = 'Мой оффер';
+                var st = _myListings.length > 1
+                    ? _myListings.length + ' ' + _plural(_myListings.length, 'оффер', 'оффера', 'офферов')
+                    : (_myListings[0].status_human || 'Оффер');
+                s.textContent = st + ' · нажми, чтобы управлять';
+            }
         }).catch(function () {});
     }
     function setSubTab(t, force) {
@@ -1093,15 +1103,6 @@
     var _qTimer = null;
     function bindBuyControls() {
         var sub = el('fmx-sub'); if (!sub) return;
-        var si = sub.querySelector('.fmx-search input');
-        if (si) {
-            si.value = _q;
-            si.addEventListener('input', function () {
-                var v = si.value;
-                clearTimeout(_qTimer);
-                _qTimer = setTimeout(function () { _q = v.trim(); loadFeed(false); }, 350);
-            });
-        }
         qsa(sub, '[data-bsort]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var v = b.getAttribute('data-bsort');
@@ -1217,8 +1218,7 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
-            searchHtml('Поиск по названию или @каналу…') +
-            buySortRowHtml() + topRowHtml() +
+            topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
         bindSort(); bindView(); bindBuyControls();
         if (_feed == null && _feedState === 'idle') loadFeed(); else paintBuyBody();
@@ -3343,7 +3343,7 @@
             '<button class="fmx-vt' + (_view === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
     }
     function topRowHtml() {
-        return '<div class="fmx-toprow"><span class="fmx-divlbl">Каналы, где можно купить рекламу</span>' + vtogHtml() + '</div>';
+        return '<div class="fmx-divrow"><span class="fmx-divlbl">Каналы, где можно купить рекламу</span><span class="fmx-divline"></span>' + vtogHtml() + '</div>';
     }
     function emptyHtml(icon, title, sub) { return '<div class="fmx-empty"><i class="ti ' + icon + '"></i><h3>' + _esc(title) + '</h3><p>' + _esc(sub) + '</p></div>'; }
     function loadHtml() { return '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю…</div></div>'; }
