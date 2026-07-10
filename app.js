@@ -287,6 +287,21 @@ function localizeTree(root) {
     } catch (e) {}
 }
 
+// Авто-локализация: переводит любой новый DOM-контент (биржа, модалки) без ручной обвязки.
+function initAutoLocalize() {
+    if (typeof getLang !== 'function' || getLang() === 'ru') return;
+    try {
+        localizeTree(document.body);
+        const obs = new MutationObserver((muts) => {
+            muts.forEach((m) => {
+                if (!m.addedNodes) return;
+                m.addedNodes.forEach((n) => { if (n.nodeType === 1) localizeTree(n); });
+            });
+        });
+        obs.observe(document.body, { childList: true, subtree: true });
+    } catch (e) {}
+}
+
 function renderDashboard(data) {
     const firstName = data.user?.first_name || 'друг';
     els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
@@ -3767,6 +3782,7 @@ function setupPostEventListeners() {
 
 async function main() {
     setupEventListeners();
+    initAutoLocalize();
 
     const tgReady = initTelegram();
 
