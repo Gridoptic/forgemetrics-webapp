@@ -58,9 +58,10 @@
     var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок'], ['tilt3d', '3D-наклон'], ['pendulum', 'Маятник'], ['drift', 'Дрейф'], ['jelly', 'Желе'], ['flip', 'Переворот']];
     var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки'], ['scan', 'Сканер']];
     var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора'], ['rainbow', 'Радуга'], ['fire', 'Пламя'], ['ice', 'Иней'], ['pulsar', 'Пульсары'], ['electric', 'Электро'], ['corona', 'Корона']];
-    var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера']];
-    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка']];
-    var FX_VIP = { glow: ['neon', 'breath', 'gold', 'aurora', 'rainbow', 'fire', 'ice', 'pulsar', 'electric', 'corona'], orbit: ['comet', 'atom', 'orbitals', 'sphere'], glass: ['frost', 'tint', 'dark'] };
+    var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера'], ['satellite', 'Спутник'], ['dualcomet', 'Двойная комета'], ['constellation', 'Созвездие'], ['saturn', 'Кольцо'], ['swarm', 'Рой'], ['meteor', 'Метеор']];
+    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка'], ['crystal', 'Кристалл'], ['goldglass', 'Золотое'], ['hologlass', 'Голо'], ['neonglass', 'Неон'], ['smoke', 'Дым'], ['mirror', 'Зеркало'], ['acid', 'Кислота']];
+    var FX_PART = [['none', 'Без'], ['sparks', 'Искры'], ['snow', 'Снег'], ['fireflies', 'Светлячки'], ['bubbles', 'Пузырьки'], ['stardust', 'Звёздная пыль'], ['embers', 'Угольки'], ['confetti', 'Конфетти'], ['rain', 'Дождь'], ['petals', 'Лепестки'], ['matrix', 'Код']];
+    var FX_VIP = { glow: ['neon', 'breath', 'gold', 'aurora', 'rainbow', 'fire', 'ice', 'pulsar', 'electric', 'corona'], orbit: ['comet', 'atom', 'orbitals', 'sphere', 'satellite', 'dualcomet', 'constellation', 'saturn', 'swarm', 'meteor'], glass: ['frost', 'tint', 'dark', 'crystal', 'goldglass', 'hologlass', 'neonglass', 'smoke', 'mirror', 'acid'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -543,6 +544,56 @@
             '.fx-orb-sph i::before{content:"";position:absolute;top:50%;left:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);animation:fmxSph 3s linear infinite;}',
             '.fx-orb-sph .sp2::before{animation-duration:3.9s;animation-delay:-1.2s;width:5px;height:5px;margin:-2.5px;}',
             '.fx-orb-sph .sp3::before{animation-duration:4.7s;animation-delay:-2.3s;width:5px;height:5px;margin:-2.5px;}',
+            '.fx-orb-sat{inset:-7px;animation:fmxSpin 3.6s linear infinite;}',
+            '.fx-orb-sat::before{content:"";position:absolute;top:-3px;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 8px var(--fxe),0 0 16px var(--fxe);}',
+            '.fx-orb-sat::after{content:"";position:absolute;top:0;left:38%;width:3px;height:3px;border-radius:50%;background:var(--fxe);opacity:.5;box-shadow:0 0 5px var(--fxe);}',
+            '.fx-orb-dual{inset:-6px;animation:fmxSpin 3s linear infinite;}',
+            '.fx-orb-dual::before{content:"";position:absolute;top:-2.5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);}',
+            '.fx-orb-dual::after{content:"";position:absolute;bottom:-2.5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);}',
+            '.fx-orb-const{inset:-8px;animation:fmxSpin 7s linear infinite;}',
+            '.fx-orb-const i{position:absolute;top:50%;left:50%;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 6px var(--fxe);}',
+            '.fx-orb-const i:nth-child(1){transform:rotate(0deg) translate(0,-28px);}',
+            '.fx-orb-const i:nth-child(2){transform:rotate(90deg) translate(0,-28px);}',
+            '.fx-orb-const i:nth-child(3){transform:rotate(180deg) translate(0,-28px);}',
+            '.fx-orb-const i:nth-child(4){transform:rotate(270deg) translate(0,-28px);}',
+            '.fx-orb-saturn{inset:-6px -13px;border:1.5px solid var(--fxe);border-radius:50%;transform:rotateX(70deg);box-shadow:0 0 10px -2px var(--fxe),inset 0 0 8px -3px var(--fxe);animation:fmxSatPulse 2.6s ease-in-out infinite;}',
+            '@keyframes fmxSatPulse{0%,100%{opacity:.5;}50%{opacity:.95;}}',
+            '.fx-orb-swarm{inset:-6px;}',
+            '.fx-orb-swarm i{position:absolute;top:50%;left:50%;width:3px;height:3px;margin:-1.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 6px var(--fxe);}',
+            '.fx-orb-swarm i:nth-child(1){animation:fmxSw1 2.4s linear infinite;}',
+            '.fx-orb-swarm i:nth-child(2){animation:fmxSw2 3.3s linear infinite;}',
+            '.fx-orb-swarm i:nth-child(3){animation:fmxSw3 4.1s linear infinite;}',
+            '@keyframes fmxSw1{from{transform:rotate(0deg) translate(0,-22px);}to{transform:rotate(360deg) translate(0,-22px);}}',
+            '@keyframes fmxSw2{from{transform:rotate(120deg) translate(0,-30px);}to{transform:rotate(480deg) translate(0,-30px);}}',
+            '@keyframes fmxSw3{from{transform:rotate(240deg) translate(0,-16px);}to{transform:rotate(600deg) translate(0,-16px);}}',
+            '.fx-orb-meteor{inset:-7px;animation:fmxSpin 2.2s linear infinite;}',
+            '.fx-orb-meteor::before{content:"";position:absolute;top:-1px;left:calc(50% - 8px);width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--fxe));}',
+            '.fx-orb-meteor::after{content:"";position:absolute;top:-3px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 10px var(--fxe),0 0 18px var(--fxe);}',
+            '.fmx-avpart{position:absolute;inset:-10px;pointer-events:none;z-index:5;}',
+            '.fx-p-sparks i{position:absolute;bottom:6%;width:3px;height:3px;border-radius:50%;background:#ffd36b;box-shadow:0 0 6px #ffab2e;opacity:0;animation:fmxPRise 1.9s ease-out infinite;}',
+            '@keyframes fmxPRise{0%{transform:translateY(0) scale(1);opacity:0;}12%{opacity:1;}100%{transform:translateY(-42px) scale(.35);opacity:0;}}',
+            '.fx-p-embers i{position:absolute;bottom:4%;width:3px;height:3px;border-radius:50%;background:#ff7a1a;box-shadow:0 0 7px #ff3d00;opacity:0;animation:fmxPEmber 2.7s ease-out infinite;}',
+            '@keyframes fmxPEmber{0%{transform:translate(0,0);opacity:0;}18%{opacity:1;}50%{transform:translate(4px,-22px);}100%{transform:translate(-3px,-46px);opacity:0;}}',
+            '.fx-p-bubbles i{position:absolute;bottom:2%;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7),rgba(255,255,255,.05));border:0.5px solid rgba(255,255,255,.35);opacity:0;animation:fmxPBub 3.6s ease-in infinite;}',
+            '@keyframes fmxPBub{0%{transform:translateY(0) scale(.6);opacity:0;}15%{opacity:.85;}100%{transform:translateY(-50px) scale(1.1);opacity:0;}}',
+            '.fx-p-snow i{position:absolute;top:-8%;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 4px #fff;opacity:0;animation:fmxPFall 3.4s linear infinite;}',
+            '@keyframes fmxPFall{0%{transform:translate(0,0);opacity:0;}12%{opacity:.9;}88%{opacity:.9;}100%{transform:translate(7px,58px);opacity:0;}}',
+            '.fx-p-confetti i{position:absolute;top:-8%;width:4px;height:6px;border-radius:1px;opacity:0;animation:fmxPConf 2.9s linear infinite;}',
+            '.fx-p-confetti i:nth-child(3n+1){background:#ff4d6d;}',
+            '.fx-p-confetti i:nth-child(3n+2){background:#4dd4ff;}',
+            '.fx-p-confetti i:nth-child(3n){background:#ffd24d;}',
+            '@keyframes fmxPConf{0%{transform:translateY(0) rotate(0);opacity:0;}10%{opacity:1;}100%{transform:translateY(58px) rotate(420deg);opacity:0;}}',
+            '.fx-p-rain i{position:absolute;top:-12%;width:1.5px;height:9px;border-radius:1px;background:linear-gradient(180deg,transparent,rgba(150,200,255,.85));opacity:0;animation:fmxPRain 1s linear infinite;}',
+            '@keyframes fmxPRain{0%{transform:translateY(0);opacity:0;}10%{opacity:.85;}100%{transform:translateY(58px);opacity:0;}}',
+            '.fx-p-petals i{position:absolute;top:-8%;width:7px;height:5px;border-radius:60% 40% 55% 45%;background:linear-gradient(135deg,#ffd1e8,#ff8fc7);opacity:0;animation:fmxPPetal 4.2s ease-in-out infinite;}',
+            '@keyframes fmxPPetal{0%{transform:translate(0,0) rotate(0);opacity:0;}14%{opacity:.9;}100%{transform:translate(11px,56px) rotate(200deg);opacity:0;}}',
+            '.fx-p-matrix i{position:absolute;top:-16%;width:2px;height:12px;border-radius:1px;background:linear-gradient(180deg,transparent,#00ff70);box-shadow:0 0 6px #00ff70;opacity:0;animation:fmxPMatrix 1.5s linear infinite;}',
+            '@keyframes fmxPMatrix{0%{transform:translateY(0);opacity:0;}10%{opacity:1;}100%{transform:translateY(58px);opacity:0;}}',
+            '.fx-p-stardust i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 5px #cbd5ff,0 0 9px #a5b4ff;animation:fmxPTwinkle 2.1s ease-in-out infinite;}',
+            '@keyframes fmxPTwinkle{0%,100%{opacity:.12;transform:scale(.5);}50%{opacity:1;transform:scale(1.35);}}',
+            '.fx-p-fireflies i{position:absolute;width:3px;height:3px;border-radius:50%;background:#d6ff70;box-shadow:0 0 8px #9dff3d,0 0 14px #9dff3d;animation:fmxPFly 4.5s ease-in-out infinite,fmxPBlink 1.5s ease-in-out infinite;}',
+            '@keyframes fmxPFly{0%,100%{transform:translate(0,0);}25%{transform:translate(6px,-5px);}50%{transform:translate(-4px,4px);}75%{transform:translate(4px,6px);}}',
+            '@keyframes fmxPBlink{0%,100%{opacity:.25;}50%{opacity:1;}}',
             '@keyframes fmxSph{0%{transform:translate(27px,0) scale(1.1);opacity:1;}12.5%{transform:translate(19px,7px) scale(1.25);opacity:1;}25%{transform:translate(0,10px) scale(1.3);opacity:1;}37.5%{transform:translate(-19px,7px) scale(1.1);opacity:.95;}50%{transform:translate(-27px,0) scale(0.85);opacity:.7;}62.5%{transform:translate(-19px,-7px) scale(0.55);opacity:.4;}75%{transform:translate(0,-10px) scale(0.5);opacity:.35;}87.5%{transform:translate(19px,-7px) scale(0.75);opacity:.6;}100%{transform:translate(27px,0) scale(1.1);opacity:1;}}',
             '.fmx-chrow.dis{opacity:.55;}',
             '.fmx-lav{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}',
@@ -1541,7 +1592,7 @@
 
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
-            move: 'levit', over: 'none', glow: 'none', orbit: 'none', atomColor: '#5DCAA5', glowCard: false, glass: 'none',
+            move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, glass: 'none',
             coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
@@ -1561,7 +1612,7 @@
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
         var fx = l.effects_json || {};
-        ['move', 'over', 'glow', 'orbit'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
+        ['move', 'over', 'glow', 'orbit', 'part'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
         _ss.glowCard = !!fx.glowCard;
         _ss.glass = (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none');
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
@@ -1727,7 +1778,7 @@
         var m = {
             cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
             avatar: _ss.avatar === 'tg' ? 'Из Telegram' : (_ss.avatar === 'emoji' ? 'Эмодзи ' + _ss.avEmoji : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото')),
-            fx: (function () { var n = ['move', 'over', 'glow', 'orbit'].filter(function (k) { return _ss[k] !== 'none'; }).length; if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
+            fx: (function () { var n = ['move', 'over', 'glow', 'orbit', 'part'].filter(function (k) { return _ss[k] !== 'none'; }).length; if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
             price: (function () { var on = _sfmts.filter(function (f) { return f.on; }); if (!on.length) return 'Не выбраны'; return on.length + ' форм. · от ' + _num(Math.min.apply(null, on.map(function (f) { return f.p; }))) + ' ₽'; })(),
             text: (_ss._desc ? 'Описание готово' : 'Заголовок и описание')
@@ -1798,6 +1849,7 @@
             fxChips('glow', FX_GLOW, 'Свечение') +
             fxChips('orbit', FX_ORBIT, 'Орбита') +
             atomRow() +
+            fxChips('part', FX_PART, 'Частицы') +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
@@ -2110,6 +2162,13 @@
         if (g === 'frost') return { s: 'background:rgba(255,255,255,0.10);border:0.5px solid rgba(255,255,255,0.25);backdrop-filter:blur(10px);color:#fff;', p: 'background:linear-gradient(135deg,' + accent + 'e6,' + accent + '99);border:0.5px solid ' + accent + 'aa;backdrop-filter:blur(10px);color:#fff;' };
         if (g === 'tint') return { s: 'background:' + accent + '22;border:0.5px solid ' + accent + '55;backdrop-filter:blur(10px);color:' + accent + ';', p: 'background:linear-gradient(135deg,' + accent + ',' + accent + 'aa);border:0.5px solid ' + accent + ';backdrop-filter:blur(10px);color:#fff;' };
         if (g === 'dark') return { s: 'background:rgba(8,10,20,0.55);border:0.5px solid rgba(255,255,255,0.14);backdrop-filter:blur(10px);color:#e8e8ed;', p: 'background:linear-gradient(135deg,rgba(8,10,20,0.75),' + accent + '77);border:0.5px solid ' + accent + '66;backdrop-filter:blur(10px);color:#fff;' };
+        if (g === 'crystal') return { s: 'background:rgba(255,255,255,0.16);border:0.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(12px);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);', p: 'background:linear-gradient(135deg,rgba(255,255,255,0.35),' + accent + 'cc);border:0.5px solid rgba(255,255,255,0.5);backdrop-filter:blur(12px);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);' };
+        if (g === 'goldglass') return { s: 'background:rgba(245,191,79,0.14);border:0.5px solid rgba(245,191,79,0.45);backdrop-filter:blur(10px);color:#f5d78a;', p: 'background:linear-gradient(135deg,#f5bf4f,#d4a017);border:0.5px solid #f5bf4f;backdrop-filter:blur(10px);color:#2a1c00;' };
+        if (g === 'hologlass') return { s: 'background:linear-gradient(135deg,rgba(124,77,255,0.18),rgba(0,229,255,0.18),rgba(255,0,140,0.18));border:0.5px solid rgba(255,255,255,0.3);backdrop-filter:blur(11px);color:#fff;', p: 'background:linear-gradient(135deg,#7c4dff,#00b0ff,#ff008c);border:0.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(11px);color:#fff;' };
+        if (g === 'neonglass') return { s: 'background:rgba(8,10,20,0.5);border:1px solid ' + accent + ';backdrop-filter:blur(10px);color:' + accent + ';box-shadow:0 0 8px ' + accent + '88,inset 0 0 6px ' + accent + '44;', p: 'background:linear-gradient(135deg,' + accent + ',' + accent + 'cc);border:1px solid ' + accent + ';backdrop-filter:blur(10px);color:#fff;box-shadow:0 0 10px ' + accent + 'aa;' };
+        if (g === 'smoke') return { s: 'background:rgba(20,22,30,0.7);border:0.5px solid rgba(255,255,255,0.08);backdrop-filter:blur(14px);color:#c8ccd8;', p: 'background:linear-gradient(135deg,rgba(30,32,42,0.9),' + accent + '55);border:0.5px solid rgba(255,255,255,0.12);backdrop-filter:blur(14px);color:#fff;' };
+        if (g === 'mirror') return { s: 'background:linear-gradient(160deg,rgba(255,255,255,0.28),rgba(255,255,255,0.06) 45%,rgba(255,255,255,0.18));border:0.5px solid rgba(255,255,255,0.35);backdrop-filter:blur(8px);color:#fff;', p: 'background:linear-gradient(160deg,rgba(255,255,255,0.5),' + accent + 'aa 45%,' + accent + ');border:0.5px solid rgba(255,255,255,0.45);backdrop-filter:blur(8px);color:#fff;' };
+        if (g === 'acid') return { s: 'background:rgba(52,255,140,0.12);border:0.5px solid rgba(52,255,140,0.45);backdrop-filter:blur(10px);color:#7dffb0;', p: 'background:linear-gradient(135deg,#34ff8c,#00b894);border:0.5px solid #34ff8c;backdrop-filter:blur(10px);color:#052012;' };
         return { s: '', p: 'background:' + accent + ';color:#fff;' };
     }
     var _crop = null;
@@ -2191,6 +2250,31 @@
         paintCreate();
     }
     function fontStyle(f) { var m = { normal: 'font-weight:600;', bold: 'font-weight:800;', wide: 'font-weight:700;letter-spacing:0.5px;', mono: 'font-family:monospace;font-weight:600;' }; return m[f] || m.normal; }
+    function orbitHtml(orb, oc) {
+        var s = ' style="--fxe:' + oc + ';"';
+        if (orb === 'comet') return '<i class="fmx-avorb fx-orb-comet"' + s + '></i>';
+        if (orb === 'atom') return '<i class="fmx-avorb fx-orb-atom"' + s + '></i><i class="fmx-avorb fx-orb-atom r2"' + s + '></i>';
+        if (orb === 'orbitals') return '<i class="fmx-avorb fx-orb-o1"' + s + '></i><i class="fmx-avorb fx-orb-o2"' + s + '></i><i class="fmx-avorb fx-orb-o3"' + s + '></i>';
+        if (orb === 'sphere') return '<i class="fmx-avorb fx-orb-sph"' + s + '><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
+        if (orb === 'satellite') return '<i class="fmx-avorb fx-orb-sat"' + s + '></i>';
+        if (orb === 'dualcomet') return '<i class="fmx-avorb fx-orb-dual"' + s + '></i>';
+        if (orb === 'constellation') return '<i class="fmx-avorb fx-orb-const"' + s + '><i></i><i></i><i></i><i></i></i>';
+        if (orb === 'saturn') return '<i class="fmx-avorb fx-orb-saturn"' + s + '></i>';
+        if (orb === 'swarm') return '<i class="fmx-avorb fx-orb-swarm"' + s + '><i></i><i></i><i></i></i>';
+        if (orb === 'meteor') return '<i class="fmx-avorb fx-orb-meteor"' + s + '></i>';
+        return '';
+    }
+    function partHtml(part) {
+        if (!part || part === 'none') return '';
+        var flo = (part === 'stardust' || part === 'fireflies');
+        var h = '';
+        for (var i = 0; i < 6; i++) {
+            var st = 'left:' + (8 + i * 14) + '%;animation-delay:' + (i * 0.33).toFixed(2) + 's;';
+            if (flo) st += 'top:' + (14 + ((i * 27) % 60)) + '%;';
+            h += '<i style="' + st + '"></i>';
+        }
+        return '<i class="fmx-avpart fx-p-' + part + '">' + h + '</i>';
+    }
     function listingAvatar(l, accent) {
         var fx = l.effects_json || {}, at = l.emoji_attachments_json || {}, top = _isTop(l);
         var mv = fx.move || 'none', ov = fx.over || 'none', gl = fx.glow || 'none', orb = fx.orbit || 'none';
@@ -2203,16 +2287,13 @@
         }
         var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
         var over = '<i class="fmx-avover fx-o-' + ov + '"></i>';
-        var orbH = '';
-        if (orb === 'comet') orbH = '<i class="fmx-avorb fx-orb-comet" style="--fxe:' + oc + ';"></i>';
-        else if (orb === 'atom') orbH = '<i class="fmx-avorb fx-orb-atom" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-atom r2" style="--fxe:' + oc + ';"></i>';
-        else if (orb === 'orbitals') orbH = '<i class="fmx-avorb fx-orb-o1" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o2" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o3" style="--fxe:' + oc + ';"></i>';
-        else if (orb === 'sphere') orbH = '<i class="fmx-avorb fx-orb-sph" style="--fxe:' + oc + ';"><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
+        var orbH = orbitHtml(orb, oc);
+        var pt = fx.part || 'none';
         var t = l.title || l.username || '?', core;
         if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
         else if (l.avatar_type === 'emoji' && l.avatar_emoji) core = '<div class="fmx-av fx-c-' + ov + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _esc(l.avatar_emoji) + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
-        return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + '</div>';
+        return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + partHtml(pt) + '</div>';
     }
     function avatarInner(accent, goto) {
         var c = curChannel();
@@ -2224,12 +2305,8 @@
         else if (c.avatar_url) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(c.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">' + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
-        var orb = '', oc = _ss.atomColor;
-        if (_ss.orbit === 'comet') orb = '<i class="fmx-avorb fx-orb-comet" style="--fxe:' + oc + ';"></i>';
-        else if (_ss.orbit === 'atom') orb = '<i class="fmx-avorb fx-orb-atom" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-atom r2" style="--fxe:' + oc + ';"></i>';
-        else if (_ss.orbit === 'orbitals') orb = '<i class="fmx-avorb fx-orb-o1" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o2" style="--fxe:' + oc + ';"></i><i class="fmx-avorb fx-orb-o3" style="--fxe:' + oc + ';"></i>';
-        else if (_ss.orbit === 'sphere') orb = '<i class="fmx-avorb fx-orb-sph" style="--fxe:' + oc + ';"><i class="sp1"></i><i class="sp2"></i><i class="sp3"></i></i>';
-        return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="avatar" style="cursor:pointer;"' : '') + '>' + halo + core + orb + '</div>';
+        var oc = _ss.atomColor, orb = orbitHtml(_ss.orbit, oc);
+        return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="avatar" style="cursor:pointer;"' : '') + '>' + halo + core + orb + partHtml(_ss.part) + '</div>';
     }
     function heroCoverHtml(gradient) {
         var mc = _ss._media && _ss._media.cover, pc = (_ss.att && typeof _ss.att.cover === 'object') ? _ss.att.cover : null;
@@ -2708,7 +2785,7 @@
         else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
         pl.emoji_attachments_json = _ss.att || {};
         pl.custom_text = _ss._desc || '';
         pl.slots_note = _ss._slots || '';
@@ -3132,7 +3209,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? (_ss.sticker.dmode || 'bg') : null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? (_ss.sticker.dmode || 'bg') : null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
