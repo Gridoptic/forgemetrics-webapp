@@ -667,7 +667,7 @@
             '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
             '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
-            '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:13px;padding:2px 7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:#141828;font-family:inherit;line-height:1;touch-action:auto;}',
+            '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:13px;padding:2px 7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:#141828;font-family:inherit;touch-action:auto;}',
             '.fmx-cp-pt{font-size:12px;font-weight:600;color:#e8e8ed;}',
             '.fmx-cp-pt b{color:#5DCAA5;}',
             '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
