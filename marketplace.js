@@ -925,7 +925,7 @@
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-chart-candle"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
-            '<div class="fmx-entd">Медианный CPM, цены и активность по нишам — весь рынок на одном экране.</div></div>' +
+            '<div class="fmx-entd">Медианный CPM, цены, объёмы и активность по каждой нише в реальном времени — теплокарта всего рынка Telegram-рекламы. Видно, где трафик дешевеет, а где перегрет: оцениваешь ситуацию до закупа.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>' +
             '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка ForgeMetrics</b> — те, кто готов к сделке, и место оформить оффер своего канала.</span></div>';
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
