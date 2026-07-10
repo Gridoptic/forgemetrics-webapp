@@ -60,7 +60,7 @@
     var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора'], ['rainbow', 'Радуга'], ['fire', 'Пламя'], ['ice', 'Иней'], ['pulsar', 'Пульсары'], ['electric', 'Электро'], ['corona', 'Корона']];
     var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера'], ['satellite', 'Спутник'], ['dualcomet', 'Двойная комета'], ['constellation', 'Созвездие'], ['saturn', 'Кольцо'], ['swarm', 'Рой'], ['meteor', 'Метеор']];
     var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка'], ['crystal', 'Кристалл'], ['goldglass', 'Золотое'], ['hologlass', 'Голо'], ['neonglass', 'Неон'], ['smoke', 'Дым'], ['mirror', 'Зеркало'], ['acid', 'Кислота']];
-    var FX_PART = [['none', 'Без'], ['sparks', 'Искры'], ['snow', 'Снег'], ['fireflies', 'Светлячки'], ['bubbles', 'Пузырьки'], ['stardust', 'Звёздная пыль'], ['embers', 'Угольки'], ['confetti', 'Конфетти'], ['rain', 'Дождь'], ['petals', 'Лепестки'], ['matrix', 'Код']];
+    var FX_PART = [['none', 'Без'], ['sparks', 'Искры'], ['snow', 'Снег'], ['fireflies', 'Светлячки'], ['bubbles', 'Пузырьки'], ['stardust', 'Звёздная пыль'], ['embers', 'Угольки'], ['confetti', 'Конфетти'], ['rain', 'Дождь'], ['petals', 'Лепестки'], ['matrix', 'Матрица']];
     var FX_VIP = { glow: ['neon', 'breath', 'gold', 'aurora', 'rainbow', 'fire', 'ice', 'pulsar', 'electric', 'corona'], orbit: ['comet', 'atom', 'orbitals', 'sphere', 'satellite', 'dualcomet', 'constellation', 'saturn', 'swarm', 'meteor'], glass: ['frost', 'tint', 'dark', 'crystal', 'goldglass', 'hologlass', 'neonglass', 'smoke', 'mirror', 'acid'] };
     var GR = '#5DCAA5';
 
@@ -432,7 +432,9 @@
             '.fmx-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:rgba(20,24,40,0.96);border:0.5px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:all 300ms;backdrop-filter:blur(10px);z-index:100030;display:flex;align-items:center;gap:8px;pointer-events:none;}',
             '.fmx-toast.on{opacity:1;transform:translateX(-50%) translateY(0);}',
             '.fmx-fxg{margin-top:10px;}',
-            '.fmx-fxl{font-size:10px;color:#8990a8;margin-bottom:6px;display:flex;align-items:center;gap:5px;}',
+            '.fmx-fxl{font-size:12.5px;font-weight:700;color:#d6dae8;letter-spacing:0.3px;margin-bottom:7px;display:flex;align-items:center;gap:6px;}',
+            '.fmx-fxl .ti-lock{font-size:11px;}',
+            '.fmx-fxlock{font-size:9.5px;color:#b9964d;margin:-3px 0 8px;line-height:1.45;}',
             '.fmx-fxl.vipc{color:#f5bf4f;}',
             '.fmx-fxw{display:flex;gap:6px;flex-wrap:wrap;}',
             '.fmx-fx{border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;padding:7px 11px;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all 150ms;font-family:inherit;}',
@@ -569,7 +571,7 @@
             '.fx-orb-meteor{inset:-7px;animation:fmxSpin 2.2s linear infinite;}',
             '.fx-orb-meteor::before{content:"";position:absolute;top:-1px;left:calc(50% - 8px);width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--fxe));}',
             '.fx-orb-meteor::after{content:"";position:absolute;top:-3px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 10px var(--fxe),0 0 18px var(--fxe);}',
-            '.fmx-avpart{position:absolute;inset:-10px;pointer-events:none;z-index:5;}',
+            '.fmx-avpart{position:absolute;inset:-10px;pointer-events:none;z-index:8;}',
             '.fx-p-sparks i{position:absolute;bottom:6%;width:3px;height:3px;border-radius:50%;background:#ffd36b;box-shadow:0 0 6px #ffab2e;opacity:0;animation:fmxPRise 1.9s ease-out infinite;}',
             '@keyframes fmxPRise{0%{transform:translateY(0) scale(1);opacity:0;}12%{opacity:1;}100%{transform:translateY(-42px) scale(.35);opacity:0;}}',
             '.fx-p-embers i{position:absolute;bottom:4%;width:3px;height:3px;border-radius:50%;background:#ff7a1a;box-shadow:0 0 7px #ff3d00;opacity:0;animation:fmxPEmber 2.7s ease-out infinite;}',
@@ -585,8 +587,8 @@
             '@keyframes fmxPConf{0%{transform:translateY(0) rotate(0);opacity:0;}10%{opacity:1;}100%{transform:translateY(58px) rotate(420deg);opacity:0;}}',
             '.fx-p-rain i{position:absolute;top:-12%;width:1.5px;height:9px;border-radius:1px;background:linear-gradient(180deg,transparent,rgba(150,200,255,.85));opacity:0;animation:fmxPRain 1s linear infinite;}',
             '@keyframes fmxPRain{0%{transform:translateY(0);opacity:0;}10%{opacity:.85;}100%{transform:translateY(58px);opacity:0;}}',
-            '.fx-p-petals i{position:absolute;top:-8%;width:7px;height:5px;border-radius:60% 40% 55% 45%;background:linear-gradient(135deg,#ffd1e8,#ff8fc7);opacity:0;animation:fmxPPetal 4.2s ease-in-out infinite;}',
-            '@keyframes fmxPPetal{0%{transform:translate(0,0) rotate(0);opacity:0;}14%{opacity:.9;}100%{transform:translate(11px,56px) rotate(200deg);opacity:0;}}',
+            '.fx-p-petals i{position:absolute;top:-8%;width:7px;height:6px;border-radius:60% 40% 55% 45%;background:linear-gradient(135deg,#ffd1e8,#ff8fc7);opacity:0;transform-origin:center;animation:fmxPPetal 4.4s ease-in-out infinite;}',
+            '@keyframes fmxPPetal{0%{transform:translate(0,-4px) rotate(0);opacity:0;}12%{opacity:.9;}50%{transform:translate(var(--sx,6px),26px) rotate(var(--r1,110deg));opacity:.9;}100%{transform:translate(var(--dx,10px),58px) rotate(var(--rot,220deg));opacity:0;}}',
             '.fx-p-matrix i{position:absolute;top:-16%;width:2px;height:12px;border-radius:1px;background:linear-gradient(180deg,transparent,#00ff70);box-shadow:0 0 6px #00ff70;opacity:0;animation:fmxPMatrix 1.5s linear infinite;}',
             '@keyframes fmxPMatrix{0%{transform:translateY(0);opacity:0;}10%{opacity:1;}100%{transform:translateY(58px);opacity:0;}}',
             '.fx-p-stardust i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 5px #cbd5ff,0 0 9px #a5b4ff;animation:fmxPTwinkle 2.1s ease-in-out infinite;}',
@@ -1846,11 +1848,11 @@
     function paneFx() {
         return fxChips('move', FX_MOVE, 'Движение') +
             fxChips('over', FX_OVER, 'Поверхность') +
-            fxChips('glow', FX_GLOW, 'Свечение') +
-            fxChips('orbit', FX_ORBIT, 'Орбита') +
+            fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при поднятии 48 часов или продвижении 30 дней') +
+            fxChips('orbit', FX_ORBIT, 'Орбита', 'Доступно при продвижении 30 дней') +
             atomRow() +
             fxChips('part', FX_PART, 'Частицы') +
-            fxChips('glass', FX_GLASS, 'Стеклянные кнопки') +
+            fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении 30 дней') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
             '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Тег «Топ месяца» в шапке</div>' +
@@ -1859,7 +1861,7 @@
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение и Поверхность — бесплатно. <span style="color:#f5bf4f;">Свечение — при поднятии от 48 часов; Орбита, Стекло и золотое свечение оффера — при продвижении на 30 дней. Опции с замком можно примерить в предпросмотре.</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение оффера — при продвижении на 30 дней. Всё с замком можно примерить в предпросмотре.</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -2091,8 +2093,11 @@
         draw(); sync(); live = true;
     }
     function isVipFx(key, v) { return !!(FX_VIP[key] && FX_VIP[key].indexOf(v) >= 0); }
-    function fxChips(key, arr, label) {
-        return '<div class="fmx-fxg"><div class="fmx-fxl">' + label + '</div><div class="fmx-fxw" data-fxg="' + key + '">' +
+    function fxChips(key, arr, label, lockNote) {
+        var paid = !!lockNote;
+        return '<div class="fmx-fxg"><div class="fmx-fxl' + (paid ? ' vipc' : '') + '">' + label + (paid ? ' <i class="ti ti-lock"></i>' : '') + '</div>' +
+            (paid ? '<div class="fmx-fxlock">' + lockNote + '</div>' : '') +
+            '<div class="fmx-fxw" data-fxg="' + key + '">' +
             arr.map(function (o) { var vip = isVipFx(key, o[0]); return '<button class="fmx-fx' + (o[0] === _ss[key] ? ' on' : '') + (vip ? ' vip' : '') + '" data-v="' + o[0] + '">' + (vip ? '<i class="ti ti-lock"></i>' : '') + o[1] + '</button>'; }).join('') +
             '</div></div>';
     }
@@ -2266,6 +2271,17 @@
     }
     function partHtml(part) {
         if (!part || part === 'none') return '';
+        if (part === 'petals') {
+            var ph = '';
+            for (var j = 0; j < 7; j++) {
+                var sway = ((j % 2) ? -1 : 1) * (5 + (j * 3) % 10);
+                var dx = ((j % 3 === 0) ? -1 : 1) * (6 + (j * 5) % 16);
+                var r1 = ((j % 2) ? -1 : 1) * (60 + (j * 25) % 90);
+                var rot = ((j % 2) ? -1 : 1) * (150 + (j * 40) % 160);
+                ph += '<i style="left:' + (5 + (j * 13) % 84) + '%;animation-delay:' + (j * 0.53).toFixed(2) + 's;animation-duration:' + (3.4 + (j % 4) * 0.65).toFixed(2) + 's;--sx:' + sway + 'px;--dx:' + dx + 'px;--r1:' + r1 + 'deg;--rot:' + rot + 'deg;"></i>';
+            }
+            return '<i class="fmx-avpart fx-p-petals">' + ph + '</i>';
+        }
         var flo = (part === 'stardust' || part === 'fireflies');
         var h = '';
         for (var i = 0; i < 6; i++) {
