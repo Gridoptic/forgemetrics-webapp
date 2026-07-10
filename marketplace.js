@@ -921,7 +921,7 @@
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
-            '<div class="fmx-entd">Каналы сами выставили рекламу: цена названа, форматы и метрики — в готовом оффере, связь напрямую. Подтверждённые сделки и рейтинг показывают, кому можно доверять. Или оформи оффер своего канала.</div></div>' +
+            '<div class="fmx-entd">Каналы сами выставили рекламу: цена, форматы, реальные метрики и прямая связь с владельцем — всё собрано в готовом оффере. Рейтинг и подтверждённые сделки сразу показывают, кому можно доверять, а свой канал ты оформляешь оффером здесь же.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-chart-candle"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
