@@ -3360,7 +3360,8 @@
             '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div>';
     }
     function listItem(l, fx, plain) {
-        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && _isTop(l);
+        /* золотая рамка миниатюры — по той же логике, что и большая карточка: в превью по тумблеру glowCard, в ленте — Топ + флаг */
+        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
