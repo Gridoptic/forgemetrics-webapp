@@ -136,6 +136,9 @@ function initTelegram() {
 
     tg.ready();
     tg.expand();
+    // Свайп вниз больше не сворачивает приложение — свернуть можно только галочкой-шевроном
+    // в шапке Telegram. Метод доступен с Bot API 7.7; на старых клиентах просто игнорируется.
+    if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
 
     if (tg.setHeaderColor) tg.setHeaderColor('#0a0d18');
     if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0d18');
