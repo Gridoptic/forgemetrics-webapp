@@ -236,7 +236,7 @@
             '#fmx-screen *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}',
             '#fmx-screen .ti{line-height:1;}',
             '.fmx-head{display:flex;align-items:center;gap:9px;padding:14px 14px 12px;flex-shrink:0;min-width:0;max-width:640px;margin:0 auto;width:100%;}',
-            '.fmx-hic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;box-shadow:0 5px 16px rgba(99,102,241,0.5);flex-shrink:0;}',
+            '.fmx-hic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.32);display:flex;align-items:center;justify-content:center;color:#818cf8;font-size:20px;flex-shrink:0;}',
             '.fmx-head h1{margin:0;font-size:16px;font-weight:700;}',
             '.fmx-head p{margin:1px 0 0;font-size:11px;color:#8990a8;}',
             '.fmx-ibtn{width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}',
@@ -250,7 +250,7 @@
             '.fmx-pb.on{color:#fff;}',
             '.fmx-sellcta{display:flex;align-items:center;gap:12px;padding:13px;border-radius:15px;margin:0 0 9px;cursor:pointer;background:linear-gradient(135deg,rgba(93,202,165,0.14),rgba(16,185,129,0.05));border:1px solid rgba(93,202,165,0.34);transition:transform 0.15s,box-shadow 0.15s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
             '.fmx-sellcta:active{transform:scale(0.99);}',
-            '.fmx-sellcta-ic{width:44px;height:44px;border-radius:13px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,#5DCAA5,#10b981);color:#06251b;font-size:22px;box-shadow:0 8px 18px -8px rgba(16,185,129,0.55);}',
+            '.fmx-sellcta-ic{width:44px;height:44px;border-radius:13px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;font-size:22px;}',
             '.fmx-sellcta-t{flex:1;min-width:0;}',
             '.fmx-sellcta-t .n{font-size:13.5px;font-weight:800;color:#5DCAA5;}',
             '.fmx-sellcta-t .s{font-size:11px;color:#8990a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
@@ -429,8 +429,9 @@
             '@keyframes fmxUp{from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;}}',
             '.fmx-mhead{display:flex;align-items:flex-start;gap:10px;padding:18px 18px 12px;flex-shrink:0;border-bottom:0.5px solid rgba(255,255,255,0.06);}',
             '.fmx-mhead h2{margin:0;font-size:16px;font-weight:700;flex:1;display:flex;align-items:center;gap:8px;}',
-            /* иконки-плитки на заголовках модалок и карточек продвижения — как в главном меню; плитка сама берёт цвет глифа через color-mix, на старых клиентах правило игнорируется и остаётся обычная иконка */
-            '.fmx-mhead h2>i:first-child,.fmx-po-nm>i:first-child{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:10px;font-size:16px;background:color-mix(in srgb,currentColor 16%,transparent);border:1px solid color-mix(in srgb,currentColor 32%,transparent);}',
+            /* иконки-плитки на заголовках модалок, карточек продвижения и инфо-блоках — как в главном меню.
+               Сначала явный фон (работает везде, включая Telegram Desktop), затем color-mix под цвет глифа там, где поддерживается */
+            '.fmx-mhead h2>i:first-child,.fmx-po-nm>i:first-child,.fmx-note>i:first-child{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;font-size:15px;background:rgba(255,255,255,0.09);background:color-mix(in srgb,currentColor 20%,transparent);border:1px solid rgba(255,255,255,0.14);border:1px solid color-mix(in srgb,currentColor 38%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,0.10);}',
             '.fmx-mhead p{margin:3px 0 0;font-size:11.5px;color:#8990a8;line-height:1.5;}',
             '.fmx-mclose{width:30px;height:30px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}',
             '.fmx-mbody{padding:16px 18px 22px;overflow-y:auto;-webkit-overflow-scrolling:touch;}',
@@ -846,7 +847,7 @@
             '#fmx-mini .mini-cov{width:40px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}',
             '#fmx-mini .mini-av{transform:scale(0.7);margin:-8px -7px;flex-shrink:0;}',
             '.fmx-entq{font-size:13px;color:#8990a8;margin-bottom:12px;}',
-            '.fmx-ent{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.10);border-radius:16px;cursor:pointer;margin-bottom:11px;transition:border-color 160ms,transform 160ms;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
+            '.fmx-ent{display:flex;align-items:center;gap:14px;padding:16px;background:linear-gradient(160deg,rgba(255,255,255,0.09),rgba(255,255,255,0.035));border:1px solid rgba(255,255,255,0.16);border-radius:16px;cursor:pointer;margin-bottom:11px;transition:border-color 160ms,transform 160ms,box-shadow 160ms;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),0 8px 22px -14px rgba(0,0,0,0.6);}',
             '.fmx-ent:active{transform:scale(0.99);}',
             '.fmx-ent:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-entic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:25px;color:#fff;flex-shrink:0;}',
@@ -1047,15 +1048,15 @@
         var host = el('fmx-main');
         host.innerHTML =
             '<div class="fmx-entq">Выбери, где искать:</div>' +
-            '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-radar-2"></i></div>' +
+            '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.32);color:#818cf8;"><i class="ti ti-radar-2"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Радар каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
             '<div class="fmx-entd">Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
+            '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
             '<div class="fmx-entd">Каналы сами выставили рекламу: цена, форматы, реальные метрики и прямая связь с владельцем — всё собрано в готовом оффере. Рейтинг и подтверждённые сделки сразу показывают, кому можно доверять, а свой канал ты оформляешь оффером здесь же.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-chart-candle"></i></div>' +
+            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.32);color:#fbbf24;"><i class="ti ti-chart-candle"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
             '<div class="fmx-entd">Медианный CPM, цены, объёмы и активность по каждой нише в реальном времени — теплокарта всего рынка Telegram-рекламы. Видно, где трафик дешевеет, а где перегрет: оцениваешь ситуацию до закупа.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>';
