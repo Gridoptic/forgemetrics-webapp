@@ -258,6 +258,7 @@
             '.fmx-search input{flex:1;background:transparent;border:none;outline:none;color:#e8e8ed;font-size:13px;font-family:inherit;}',
             '.fmx-search i{color:#565b73;}',
             '.fmx-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;}',
+            '.fmx-divlbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#565b73;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.fmx-vtog{display:flex;gap:3px;background:rgba(255,255,255,0.04);padding:3px;border-radius:9px;}',
             '.fmx-vt{border:none;background:transparent;color:#8990a8;border-radius:7px;padding:7px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 150ms;}',
             '.fmx-vt.on{background:rgba(99,102,241,0.14);color:#818cf8;}',
@@ -1192,7 +1193,7 @@
             /* каналы влияют только на бейджи карточек — перерисовываем тело, не трогая поиск */
             loadChannels().then(function () { _chLoaded = true; _chLoading = false; if (_mainTab === 'market' && _subTab === 'buy') paintBuyBody(); }).catch(function () { _chLoading = false; _chLoaded = true; });
         }
-        sub.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-building-store"></i> Купить рекламу в чужом канале.</div>' +
+        sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
             searchHtml('Поиск по названию или @каналу…') +
             sortBarHtml() + buySortRowHtml() + topRowHtml() +
@@ -3320,7 +3321,7 @@
             '<button class="fmx-vt' + (_view === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
     }
     function topRowHtml() {
-        return '<div class="fmx-toprow"><button class="fmx-promo" id="fmx-promobtn"><i class="ti ti-rocket"></i> Продвинуть</button>' + vtogHtml() + '</div>';
+        return '<div class="fmx-toprow"><span class="fmx-divlbl">Каналы, где можно купить рекламу</span>' + vtogHtml() + '</div>';
     }
     function emptyHtml(icon, title, sub) { return '<div class="fmx-empty"><i class="ti ' + icon + '"></i><h3>' + _esc(title) + '</h3><p>' + _esc(sub) + '</p></div>'; }
     function loadHtml() { return '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю…</div></div>'; }
