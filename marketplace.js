@@ -546,9 +546,8 @@
             '.fx-orb-sph i::before{content:"";position:absolute;top:50%;left:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);animation:fmxSph 3s linear infinite;}',
             '.fx-orb-sph .sp2::before{animation-duration:3.9s;animation-delay:-1.2s;width:5px;height:5px;margin:-2.5px;}',
             '.fx-orb-sph .sp3::before{animation-duration:4.7s;animation-delay:-2.3s;width:5px;height:5px;margin:-2.5px;}',
-            '.fx-orb-sat{inset:-7px;animation:fmxSpin 3.6s linear infinite;}',
-            '.fx-orb-sat::before{content:"";position:absolute;top:-3px;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 8px var(--fxe),0 0 16px var(--fxe);}',
-            '.fx-orb-sat::after{content:"";position:absolute;top:0;left:38%;width:3px;height:3px;border-radius:50%;background:var(--fxe);opacity:.5;box-shadow:0 0 5px var(--fxe);}',
+            '.fx-orb-sat{inset:-7px;border:1px solid rgba(255,255,255,0.10);border-radius:50%;animation:fmxSpin 3.8s linear infinite;}',
+            '.fx-orb-sat::before{content:"";position:absolute;top:-3.5px;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 8px var(--fxe),0 0 16px var(--fxe);}',
             '.fx-orb-dual{inset:-6px;animation:fmxSpin 3s linear infinite;}',
             '.fx-orb-dual::before{content:"";position:absolute;top:-2.5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);}',
             '.fx-orb-dual::after{content:"";position:absolute;bottom:-2.5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--fxe);box-shadow:0 0 7px var(--fxe),0 0 15px var(--fxe);}',
@@ -568,9 +567,9 @@
             '@keyframes fmxSw1{from{transform:rotate(0deg) translate(0,-22px);}to{transform:rotate(360deg) translate(0,-22px);}}',
             '@keyframes fmxSw2{from{transform:rotate(120deg) translate(0,-30px);}to{transform:rotate(480deg) translate(0,-30px);}}',
             '@keyframes fmxSw3{from{transform:rotate(240deg) translate(0,-16px);}to{transform:rotate(600deg) translate(0,-16px);}}',
-            '.fx-orb-meteor{inset:-7px;animation:fmxSpin 2.2s linear infinite;}',
-            '.fx-orb-meteor::before{content:"";position:absolute;top:-1px;left:calc(50% - 8px);width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--fxe));}',
-            '.fx-orb-meteor::after{content:"";position:absolute;top:-3px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--fxe);box-shadow:0 0 10px var(--fxe),0 0 18px var(--fxe);}',
+            '.fx-orb-meteor{inset:-8px;animation:fmxSpin 1.9s linear infinite;}',
+            '.fx-orb-meteor::before{content:"";position:absolute;top:-1.5px;left:calc(50% - 28px);width:30px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--fxe) 90%);box-shadow:0 0 6px var(--fxe);}',
+            '.fx-orb-meteor::after{content:"";position:absolute;top:-3.5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--fxe),0 0 16px var(--fxe),0 0 26px var(--fxe);}',
             '.fmx-avpart{position:absolute;inset:-10px;pointer-events:none;z-index:8;}',
             '.fx-p-sparks i{position:absolute;bottom:6%;width:3px;height:3px;border-radius:50%;background:#ffd36b;box-shadow:0 0 6px #ffab2e;opacity:0;animation:fmxPRise 1.9s ease-out infinite;}',
             '@keyframes fmxPRise{0%{transform:translateY(0) scale(1);opacity:0;}12%{opacity:1;}100%{transform:translateY(-42px) scale(.35);opacity:0;}}',
@@ -1848,10 +1847,10 @@
     function paneFx() {
         return fxChips('move', FX_MOVE, 'Движение') +
             fxChips('over', FX_OVER, 'Поверхность') +
+            fxChips('part', FX_PART, 'Частицы') +
             fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при поднятии 48 часов или продвижении 30 дней') +
             fxChips('orbit', FX_ORBIT, 'Орбита', 'Доступно при продвижении 30 дней') +
             atomRow() +
-            fxChips('part', FX_PART, 'Частицы') +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении 30 дней') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
