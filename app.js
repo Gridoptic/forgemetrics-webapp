@@ -505,6 +505,27 @@ function cabSafe(s, def) { return (typeof s === 'string' && /^[a-z0-9-]+$/.test(
 function cabTile(color, icon, size) {
     return `<div class="cab-tile ${size ? size + ' ' : ''}cab-t-${cabSafe(color, 'pu')}"><i class="ti ti-${cabSafe(icon, 'circle')}"></i></div>`;
 }
+function plural3(n, one, few, many) {
+    const a = Math.abs(n) % 100, b = a % 10;
+    if (a > 10 && a < 20) return many;
+    if (b > 1 && b < 5) return few;
+    if (b === 1) return one;
+    return many;
+}
+function cabStatusHtml(sub) {
+    sub = sub || {};
+    if (sub.kind === 'trial') {
+        const total = sub.total_days || 7;
+        const left = sub.days_left != null ? sub.days_left : total;
+        const pct = Math.max(5, Math.min(100, Math.round((sub.used_days || 0) / total * 100)));
+        return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-clock-hour-4" style="color:#fbbf24"></i> Пробный период</span><span class="cab-stval">осталось ${left} ${plural3(left, 'день', 'дня', 'дней')}</span></div><div class="cab-stbar"><div class="cab-stfill am" style="width:${pct}%"></div></div><div class="cab-stsub">Полный доступ к Pro-возможностям на время триала</div></div>`;
+    }
+    if (sub.kind === 'paid') {
+        const tail = sub.days_left != null ? `осталось ${sub.days_left} ${plural3(sub.days_left, 'день', 'дня', 'дней')}` : (sub.ends_at ? 'до ' + escapeHtml(sub.ends_at) : 'активна');
+        return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-rosette-discount-check" style="color:#5DCAA5"></i> Подписка активна</span><span class="cab-stval">${tail}</span></div><div class="cab-stsub">Все возможности тарифа открыты</div></div>`;
+    }
+    return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-sparkles" style="color:#818cf8"></i> Тариф Free</span><span class="cab-stval">базовые лимиты</span></div><div class="cab-stsub">Оформи Pro — больше постов в день, аудиты и приоритет на Площадке</div></div>`;
+}
 
 const CAB_BENEFITS = {
     pro: [
@@ -559,10 +580,8 @@ function renderCabinet(d) {
     const photo = tg?.initDataUnsafe?.user?.photo_url;
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
-    const m = (state.dashboard && state.dashboard.metrics) || [];
-    const metricHtml = m.slice(0, 2).map((x) => `<div class="cab-hstat"><div class="n">${escapeHtml(x.value || '—')}</div><div class="l">${escapeHtml(x.label)}${x.change ? ` <span class="cab-up">↗ ${escapeHtml(String(x.change).replace('+', ''))}</span>` : ''}</div></div>`).join('');
 
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span></div></div>${metricHtml ? `<div class="cab-hstats">${metricHtml}</div>` : ''}</div>`;
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span></div></div>${cabStatusHtml(d.subscription)}</div>`;
 
     if (d.upgrade) {
         const up = d.upgrade;
