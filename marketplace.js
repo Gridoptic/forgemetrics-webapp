@@ -284,6 +284,7 @@
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
+            '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
             /* долгое нажатие на обложке/аватаре открывало системное меню «сохранить изображение»
                с полным адресом файла. Скриншот всё равно возможен — это не защита, а вид:
                карточка не должна вести себя как обычная веб-страница */
@@ -3400,7 +3401,7 @@
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
-            '<div class="fmx-cov">' + covHtml +
+            '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml +
             '</div>' +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
