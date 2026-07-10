@@ -783,6 +783,11 @@
             '.fmx-bmdel.arm{background:#ef4444;border-color:#ef4444;color:#fff;transform:scale(1.12);}',
             '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
             '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
+            '.fmx-proof{margin-top:10px;background:rgba(90,176,230,0.08);border:0.5px solid rgba(90,176,230,0.25);border-radius:10px;padding:10px 12px;font-size:12px;color:#c9cbe0;line-height:1.5;}',
+            '.fmx-proof-t{font-size:11px;font-weight:700;color:#5ab0e6;display:flex;align-items:center;gap:5px;}',
+            '.fmx-proof a{color:#5ab0e6;}',
+            '.fmx-plc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:9px;padding:9px 10px;margin-top:6px;}',
+            '.fmx-plc-in{margin:0;flex:1;font-size:12px;padding:8px;}',
             '.fmx-revs{margin-top:12px;padding:11px 12px;background:rgba(245,158,11,0.05);border:0.5px solid rgba(245,158,11,0.15);border-radius:11px;}',
             '.fmx-revs-t{font-size:11px;font-weight:700;color:#e8e8ed;margin-bottom:7px;display:flex;align-items:center;gap:5px;}',
             '.fmx-rev{display:flex;flex-direction:column;gap:2px;padding:7px 0;border-top:0.5px solid rgba(255,255,255,0.05);}',
@@ -1500,6 +1505,17 @@
             renderNsBody();
         }).catch(function () { _nsubs = []; renderNsBody(); });
     }
+    function _proofHtml(r) {
+        if (!r || !r.post_url) return '';
+        var lines = '';
+        if (r.reach_24h != null) lines += '<div>Охват за 24 ч: <b style="color:#5ab0e6;">' + _num(r.reach_24h) + '</b></div>';
+        if (r.reach_48h != null) lines += '<div>Охват за 48 ч: <b style="color:#5ab0e6;">' + _num(r.reach_48h) + '</b></div>';
+        var note;
+        if (r.proof_status === 'measured') note = (r.reach_24h == null && r.reach_48h == null) ? '<div style="color:#8990a8;">Охват замерить не удалось — пост не в публичной ленте.</div>' : '';
+        else note = '<div style="color:#8990a8;">Замеряем охват — отчёт придёт через 24 и 48 часов.</div>';
+        return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> Доказательство размещения</div>' +
+            '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
+    }
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
@@ -1507,10 +1523,10 @@
             if (r.state === 'pending') {
                 box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>';
             } else if (r.state === 'confirmed') {
-                box.innerHTML = '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                box.innerHTML = _proofHtml(r) + '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
-                box.innerHTML = '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен. Спасибо.</div>';
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен. Спасибо.</div>';
             } else {
                 box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
@@ -2501,27 +2517,60 @@
     }
     function loadPendingDeals() {
         var box = el('fmx-dealsPend'); if (!box) return;
-        apiGet('/api/v1/marketplace/deals/pending').then(function (r) {
+        apiGet('/api/v1/marketplace/deals/mine').then(function (r) {
             if (!r || !r.ok || !r.deals || !r.deals.length) { box.innerHTML = ''; return; }
-            box.innerHTML = '<div class="fmx-pend"><div class="fmx-pend-t"><i class="ti ti-heart-handshake" style="color:#f59e0b;"></i> Подтверждение сделок</div>' +
-                r.deals.map(function (d) {
-                    return '<div class="fmx-pend-r" data-did="' + d.deal_id + '"><span>' + (d.buyer_username ? '@' + _esc(d.buyer_username) : 'Рекламодатель') + ' · ' + _ago(d.created_at) + '</span>' +
-                        '<span style="display:flex;gap:6px;"><button class="fmx-btn" data-dacc="' + d.deal_id + '" style="padding:6px 11px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-check"></i>Да</button>' +
-                        '<button class="fmx-btn" data-ddec="' + d.deal_id + '" style="padding:6px 11px;"><i class="ti ti-x"></i>Нет</button></span></div>';
-                }).join('') +
-                '<div style="font-size:10px;color:#565b73;margin-top:6px;">Подтверждай только реальные сделки: счётчик — твоя репутация.</div></div>';
+            var pend = r.deals.filter(function (d) { return d.status === 'pending'; });
+            var conf = r.deals.filter(function (d) { return d.status === 'confirmed'; });
+            var who = function (d) { return d.buyer_username ? '@' + _esc(d.buyer_username) : 'Рекламодатель'; };
+            var html = '<div class="fmx-pend">';
+            if (pend.length) {
+                html += '<div class="fmx-pend-t"><i class="ti ti-heart-handshake" style="color:#f59e0b;"></i> Подтверждение сделок</div>' +
+                    pend.map(function (d) {
+                        return '<div class="fmx-pend-r" data-did="' + d.deal_id + '"><span>' + who(d) + ' · ' + _ago(d.created_at) + '</span>' +
+                            '<span style="display:flex;gap:6px;"><button class="fmx-btn" data-dacc="' + d.deal_id + '" style="padding:6px 11px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-check"></i>Да</button>' +
+                            '<button class="fmx-btn" data-ddec="' + d.deal_id + '" style="padding:6px 11px;"><i class="ti ti-x"></i>Нет</button></span></div>';
+                    }).join('') +
+                    '<div style="font-size:10px;color:#565b73;margin:6px 0;">Подтверждай только реальные сделки: счётчик — твоя репутация.</div>';
+            }
+            if (conf.length) {
+                html += '<div class="fmx-pend-t" style="margin-top:' + (pend.length ? '12px' : '0') + ';"><i class="ti ti-chart-line" style="color:#5ab0e6;"></i> Размещение и охват</div>' +
+                    conf.map(function (d) {
+                        if (!d.proof_status) {
+                            return '<div class="fmx-plc"><div style="font-size:11.5px;color:#c9cbe0;">' + who(d) + ' — отметь вышедший рекламный пост</div>' +
+                                '<div style="display:flex;gap:6px;margin-top:6px;"><input class="fmx-inp fmx-plc-in" placeholder="https://t.me/канал/123"><button class="fmx-btn fmx-plc-go" data-pdid="' + d.deal_id + '" style="padding:6px 11px;color:#5ab0e6;border-color:rgba(90,176,230,0.4);flex:0 0 auto;"><i class="ti ti-send"></i></button></div></div>';
+                        }
+                        var rr = '';
+                        if (d.reach_24h != null) rr += ' · 24ч: ' + _num(d.reach_24h);
+                        if (d.reach_48h != null) rr += ' · 48ч: ' + _num(d.reach_48h);
+                        return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-circle-check" style="color:#5DCAA5;"></i> ' + who(d) + ' — замеряем охват' + rr + '</div></div>';
+                    }).join('') +
+                    '<div style="font-size:10px;color:#565b73;margin-top:6px;">Пришли ссылку на пост — платформа сама замерит охват через 24 и 48 часов и отчитается покупателю.</div>';
+            }
+            html += '</div>';
+            box.innerHTML = html;
             function respond(id, acc) {
                 apiPost('/api/v1/marketplace/deals/' + id + '/respond', { accept: acc }).then(function (r2) {
                     if (r2 && r2.ok === false) { uiAlert(r2.error || 'Не удалось'); return; }
                     _haptic('success');
                     toast(acc ? 'Сделка подтверждена — счётчик вырос' : 'Отклонено');
-                    var row = box.querySelector('[data-did="' + id + '"]'); if (row) row.remove();
                     if (acc) { _feed = null; _feedState = 'idle'; }
-                    if (!box.querySelector('[data-did]')) box.innerHTML = '';
+                    loadPendingDeals();
                 }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
             }
             qsa(box, '[data-dacc]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-dacc'), true); }); });
             qsa(box, '[data-ddec]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-ddec'), false); }); });
+            qsa(box, '.fmx-plc-go').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var wrap = b.parentNode, inp = wrap ? wrap.querySelector('.fmx-plc-in') : null, url = inp ? inp.value.trim() : '';
+                    if (!url) { uiAlert('Вставь ссылку на вышедший пост.'); return; }
+                    b.disabled = true;
+                    apiPost('/api/v1/marketplace/deals/' + b.getAttribute('data-pdid') + '/placement', { post_url: url }).then(function (r2) {
+                        if (r2 && r2.ok === false) { b.disabled = false; _haptic('error'); uiAlert(r2.error || 'Не удалось'); return; }
+                        _haptic('success'); toast('Размещение отмечено — замерим охват и отчитаемся покупателю');
+                        loadPendingDeals();
+                    }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+                });
+            });
         }).catch(function () {});
     }
     function loadStickerPane() {
