@@ -3240,11 +3240,10 @@
         if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _short(cpm) + '₽</b>');
         if (l.audience && _audText(l.audience)) bits.push('<span style="color:' + _audColor(l.audience) + ';font-weight:700;">' + _audText(l.audience) + '</span>');
-        bits.push(trafficLight(l));
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(t) + (_nicheMatch(l) ? ' <i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;"></i>' : '') + '</div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="display:flex;align-items:center;gap:6px;"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;">' + _esc(t) + '</span>' + (_nicheMatch(l) ? '<i class="ti ti-target-arrow" style="color:#818cf8;font-size:11px;flex:0 0 auto;"></i>' : '') + '<span style="flex:0 0 auto;">' + trafficLight(l, true) + '</span></div>' +
             '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
             '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '</div>' +
             '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
