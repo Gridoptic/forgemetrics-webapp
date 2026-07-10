@@ -299,6 +299,17 @@
             '.fmx-bslot.hot i{color:#5DCAA5;}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
+            '.fmx-bgd-card{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:12px 13px;margin-bottom:9px;}',
+            '.fmx-bgd-badge{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:150px;}',
+            '.fmx-bgd-txt{flex:1;min-width:0;}',
+            '.fmx-bgd-title{font-size:13px;font-weight:700;color:#e8e8ed;margin-bottom:4px;}',
+            '.fmx-bgd-desc{font-size:12px;color:#a9aec0;line-height:1.5;}',
+            '.fmx-bgd-desc .fmx-hp{margin:5px 0 0;text-indent:12px;}',
+            '.fmx-bgd-badge .fmx-bdg{font-size:11px;padding:5px 10px;font-weight:700;}',
+            '.fmx-bgd-badge .fmx-bdg i{font-size:14px;}',
+            '.fmx-bgd-badge .fmx-tl{padding:5px 9px;}',
+            '.fmx-bgd-badge .fmx-tl i{width:8px;height:8px;}',
+            '.fmx-bgd-badge .fmx-tl b{font-size:10px;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
@@ -3440,26 +3451,29 @@
     /* Справка по значкам: каждый бейдж показан РОВНО как на карточке + профессиональное описание */
     function openBadgeGuide() {
         var old = el('fmx-bgdBg'); if (old) old.remove();
-        var row = function (badge, title, desc) {
-            return '<div style="padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
-                '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:9px;">' + badge + '</div>' +
-                '<div style="font-size:13.5px;font-weight:700;color:#e8e8ed;margin-bottom:4px;">' + title + '</div>' +
-                '<div style="font-size:12px;color:#a9aec0;line-height:1.55;">' + desc + '</div></div>';
+        var card = function (badge, title, desc) {
+            return '<div class="fmx-bgd-card">' +
+                '<div class="fmx-bgd-badge">' + badge + '</div>' +
+                '<div class="fmx-bgd-txt"><div class="fmx-bgd-title">' + title + '</div>' +
+                '<div class="fmx-bgd-desc">' + desc + '</div></div></div>';
         };
+        var healthDesc =
+            '<div>Отношение среднего охвата поста к числу подписчиков — живая ли аудитория.</div>' +
+            '<p class="fmx-hp"><b style="color:#5DCAA5;">Зелёный</b> — охват в норме (от 10% подписчиков), аудитория живая.</p>' +
+            '<p class="fmx-hp"><b style="color:#f59e0b;">Жёлтый</b> — охват ниже ожидаемого (3–10%): повод проверить вручную.</p>' +
+            '<p class="fmx-hp"><b style="color:#ef4444;">Красный</b> — низкий охват при больших цифрах: возможна накрутка подписчиков.</p>' +
+            '<div style="margin-top:7px;">Первое, на что смотрит арбитражник перед закупкой.</div>';
         var body =
-            row(trafficLight({ health_class: 'green' }), 'Здоровье канала',
-                'Индекс здоровья по отношению среднего охвата поста к числу подписчиков. <b style="color:#5DCAA5;">Зелёный</b> — охват в норме (от 10% подписчиков), аудитория живая. <b style="color:#f59e0b;">Жёлтый</b> — охват ниже ожидаемого (3–10%). <b style="color:#ef4444;">Красный</b> — низкий охват при больших цифрах: возможна накрутка подписчиков. Первое, на что смотрит арбитражник перед закупкой.') +
-            row(trafficLight({ health_class: 'amber' }) + ' ' + trafficLight({ health_class: 'red' }), 'Жёлтый и красный',
-                'Те же индикаторы в других состояниях — не приговор, но повод открыть «Развернуть» и проверить охват, ER и динамику вручную.') +
-            row('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
+            card(trafficLight({ health_class: 'green' }) + trafficLight({ health_class: 'amber' }) + trafficLight({ health_class: 'red' }), 'Здоровье канала · светофор', healthDesc) +
+            card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
                 'Средний охват поста — не меньше 10% от подписчиков. Аудитория реально читает канал, а не «спит». Хороший знак живой базы.') +
-            row('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
+            card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
                 'В канале от 100 000 подписчиков. Большой охват за размещение — подходит для масштабных запусков и широких проливов.') +
-            row('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
+            card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
                 'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
-            row('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4.8 · 3 сделки</span>', 'Сделки и рейтинг',
+            card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4.8 · 3 сделки</span>', 'Сделки и рейтинг',
                 'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
-            row('<span class="fmx-bdg fmx-b-live"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
+            card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
                 'Появляется, только когда площадка реально проверила канал (без обмана и запрещёнки). Если бейджа нет — проверку ещё не проходили, это не значит «плохой».');
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
         bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат бейджи</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
