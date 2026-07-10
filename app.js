@@ -269,6 +269,24 @@ function showStartBotScreen() {
 }
 
 
+// Локализация поддерева: переводит статические текстовые узлы через t() (ru — как есть).
+function localizeTree(root) {
+    if (!root || typeof getLang !== 'function' || getLang() === 'ru' || typeof t !== 'function') return;
+    try {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        const nodes = [];
+        let node;
+        while ((node = walker.nextNode())) nodes.push(node);
+        nodes.forEach((n) => {
+            const raw = n.nodeValue;
+            const trimmed = raw.trim();
+            if (!trimmed) return;
+            const tr = t(trimmed);
+            if (tr && tr !== trimmed) n.nodeValue = raw.replace(trimmed, tr);
+        });
+    } catch (e) {}
+}
+
 function renderDashboard(data) {
     const firstName = data.user?.first_name || 'друг';
     els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
@@ -283,6 +301,7 @@ function renderDashboard(data) {
     } else {
         els.menuDot.classList.remove('active');
     }
+    localizeTree(screens.dashboard);
 }
 
 // ---------- Пульс канала: селектор + виджет + график ----------
@@ -584,6 +603,7 @@ function handleAction(actionId) {
 
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
+    localizeTree(screens.placeholder);
     showScreen('placeholder');
 }
 
@@ -714,12 +734,13 @@ function renderCabinet(d) {
     html += `<div class="cab-card" id="cab-sec-referral"><div class="cab-stt"><h3>${cabTile('pk', 'heart-handshake', 'sm')} Приглашай и зарабатывай</h3></div><div class="cab-bal"><span class="big">${cabNum(r.credits_balance)} ₽</span><span class="cap">кредитов на балансе · заработано ${cabNum(r.credits_earned)} ₽</span></div><div class="cab-lvl"><span class="cab-lvlpill">${escapeHtml(r.level_emoji || '👤')} ${escapeHtml(r.level_display || 'Member')}</span>${r.next_level_display ? `<span class="cab-lvlnext">до ${escapeHtml(r.next_level_emoji || '')} ${escapeHtml(r.next_level_display)} — ${cabNum(r.needed_for_next)} платящих</span>` : '<span class="cab-lvlnext">высший уровень</span>'}</div><div class="cab-lvlbar"><div class="cab-lvlfill" style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></div></div><div class="cab-bgrid"><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_light)} ₽</div><div class="t">за Light</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro)} ₽</div><div class="t">за Pro</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro_plus)} ₽</div><div class="t">за Pro+</div></div></div>${r.promo_code ? `<div class="cab-promo"><span class="cab-code">${escapeHtml(r.promo_code)}</span><div class="cab-cp" id="cab-copy" title="Копировать"><i class="ti ti-copy"></i></div></div>` : ''}<button class="cab-cta pk" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button><div class="cab-cta-note">Друг получает −15% на первый месяц · бонус после его оплаты</div></div>`;
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">Язык интерфейса</div><div class="cab-sd">Русский</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${escapeHtml((window.I18N && I18N.flags[getLang()] + ' ' + I18N.names[getLang()]) || 'Русский')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
 
     body.innerHTML = html;
     wireCabinet(d);
+    localizeTree(screens.cabinet);
 }
 
 function wireCabinet(d) {
@@ -745,7 +766,7 @@ function wireCabinet(d) {
     });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
     on('cab-theme', () => cabToast('Темы оформления — скоро'));
-    on('cab-lang', () => cabToast('Другие языки интерфейса — скоро'));
+    on('cab-lang', () => openLangPicker());
     on('cab-notif', () => {
         const tog = document.getElementById('cab-notif-tog');
         if (!tog) return;
@@ -755,6 +776,31 @@ function wireCabinet(d) {
     });
 }
 
+
+// ==================== Переключатель языка ====================
+function closeLang(ov) { ov.classList.remove('show'); setTimeout(() => { if (ov && ov.parentNode) ov.remove(); }, 260); }
+function openLangPicker() {
+    hapticLight();
+    if (!window.I18N) return;
+    const cur = getLang();
+    const rows = I18N.supported.map((l) => `<button class="lang-row${l === cur ? ' on' : ''}" data-l="${l}"><span class="fl">${I18N.flags[l]}</span><span class="nm">${escapeHtml(I18N.names[l])}</span>${l === cur ? '<i class="ti ti-check ck"></i>' : ''}</button>`).join('');
+    const old = document.getElementById('lang-ov'); if (old) old.remove();
+    const ov = document.createElement('div');
+    ov.id = 'lang-ov';
+    ov.className = 'lang-ov';
+    ov.innerHTML = `<div class="lang-sheet"><div class="lang-h">${t('Язык интерфейса')}</div><div class="lang-list">${rows}</div></div>`;
+    document.body.appendChild(ov);
+    localizeTree(ov);
+    requestAnimationFrame(() => ov.classList.add('show'));
+    ov.addEventListener('click', (e) => { if (e.target === ov) closeLang(ov); });
+    ov.querySelectorAll('[data-l]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const l = btn.getAttribute('data-l');
+            if (window.setLang(l)) { hapticMed(); location.reload(); }
+            else closeLang(ov);
+        });
+    });
+}
 
 // ==================== Витрина тарифов ====================
 let tariffsData = null;
@@ -812,6 +858,7 @@ function renderTariffs(d) {
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
     html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
     body.innerHTML = html;
+    localizeTree(screens.tariffs);
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
         btn.addEventListener('click', async () => {

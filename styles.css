@@ -4089,3 +4089,17 @@ html.cs-modal-open {
 .tf-erow:last-child{border-bottom:none;padding-bottom:0;}.tf-erow .l{color:#c6cad8;}.tf-erow .p{font-weight:800;color:var(--text-primary);white-space:nowrap;}
 .tf-note{text-align:center;font-size:11px;color:var(--text-tertiary);line-height:1.5;margin-top:14px;padding:0 8px;}.tf-note b{color:var(--text-secondary);}
 @media (prefers-reduced-motion:reduce){.tf-glow,.tf-cta .shine,.tf-plan,.tf-cur,.tf-extras{animation:none;}}
+
+/* ===================== Переключатель языка ===================== */
+.lang-ov{position:fixed;inset:0;z-index:100040;background:rgba(5,7,14,0.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .25s;}
+.lang-ov.show{opacity:1;}
+.lang-sheet{width:100%;max-width:520px;background:rgba(17,20,31,0.98);border:1px solid rgba(255,255,255,0.1);border-bottom:none;border-radius:20px 20px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+.lang-ov.show .lang-sheet{transform:none;}
+.lang-h{font-size:15px;font-weight:700;text-align:center;margin-bottom:12px;color:var(--text-primary);}
+.lang-list{display:flex;flex-direction:column;gap:2px;max-height:62vh;overflow-y:auto;}
+.lang-row{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:none;background:transparent;border-radius:12px;cursor:pointer;font-family:inherit;color:var(--text-primary);transition:background .14s;}
+.lang-row:hover{background:rgba(255,255,255,0.04);}
+.lang-row.on{background:rgba(93,202,165,0.1);}
+.lang-row .fl{font-size:20px;flex-shrink:0;line-height:1;}
+.lang-row .nm{flex:1;text-align:left;font-size:14px;font-weight:600;}
+.lang-row .ck{color:#5DCAA5;font-size:18px;flex-shrink:0;}
