@@ -663,12 +663,15 @@
             '.fmx-reqb.na{color:#565b73;font-weight:500;}',
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
             '.fmx-toast.err{border-color:rgba(239,68,68,0.4);color:#f87171;}',
-            '.fmx-cfm{position:fixed;inset:0;z-index:100005;background:rgba(5,7,14,0.6);display:flex;align-items:center;justify-content:center;padding:24px;}',
-            '.fmx-cfm-box{background:#141826;border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:18px;max-width:320px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,0.5);}',
+            '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',
+            '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
+            '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
+            '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
+            '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:14px;padding:3px 8px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.14);background:#0f1322;font-family:inherit;line-height:1;touch-action:auto;}',
             '.fmx-cfm-t{font-size:13px;line-height:1.55;color:#e8e8ed;margin-bottom:14px;}',
             '.fmx-cfm-r{display:flex;gap:8px;}',
             /* палитра «Свой цвет»: HSV-квадрат/спектр + HEX + RGB (перенос из макета постера) */
-            '.fmx-cp-sv{position:relative;width:100%;height:140px;border-radius:10px;overflow:hidden;cursor:crosshair;touch-action:none;}',
+            '.fmx-cp-sv{position:relative;width:100%;height:130px;border-radius:10px;overflow:hidden;cursor:crosshair;touch-action:none;}',
             '.fmx-cp-sv canvas{width:100%;height:100%;display:block;}',
             '.fmx-cp-dot{position:absolute;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.6);transform:translate(-50%,-50%);pointer-events:none;}',
             '.fmx-cp-hue{width:100%;margin-top:10px;-webkit-appearance:none;appearance:none;height:13px;border-radius:8px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none;border:0.5px solid rgba(255,255,255,0.15);}',
@@ -1933,7 +1936,29 @@
         });
     }
     /* «Свой цвет»: HSV-квадрат/спектр + hue + HEX + RGB — общий компонент для акцента и орбиты */
-    function openColorStudio(cur, onPick) {
+    function gradFromHex(hex) {
+        var c = hex2rgb(hex); if (!c) return 'linear-gradient(135deg,' + hex + ',' + hex + ')';
+        var hv = rgb2hsv(c[0], c[1], c[2]);
+        var c2 = hsv2rgb((hv[0] + 28) % 360, Math.min(1, hv[1] * 1.05 + 0.05), Math.max(0.18, hv[2] * 0.6));
+        return 'linear-gradient(135deg,' + hex + ',' + rgb2hex(c2[0], c2[1], c2[2]) + ')';
+    }
+    function coverSeedColor() {
+        var g = _ss.coverGrad || COVERS[_ss.cover] || '';
+        var m = /#([0-9a-fA-F]{6})/.exec(g);
+        return m ? '#' + m[1] : '#5DCAA5';
+    }
+    function setAccentColor(hex) {
+        _ss.color = hex;
+        var box = el('fmx-colors');
+        if (box) {
+            var preset = COLORS.indexOf(hex) >= 0, rb = box.querySelector('[data-rb]');
+            qsa(box, '.fmx-dot').forEach(function (d) { d.classList.toggle('on', d.getAttribute('data-cv') === hex || (d === rb && !preset)); });
+            if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + hex;
+            box.setAttribute('data-cur', hex);
+        }
+        renderHero();
+    }
+    function openColorStudio(cur, onPick, title) {
         var old = el('fmx-cpBg'); if (old) old.remove();
         /* ss — насыщенность спектра (полоска), отдельно от s: иначе полоска дёргается при перетаскивании точки */
         var st = { h: 160, s: 0.6, v: 0.8, mode: 'sv', px: 0.5, py: 0.5, ss: 1 };
@@ -1941,13 +1966,13 @@
         if (c0) { var hv = rgb2hsv(c0[0], c0[1], c0[2]); st.h = hv[0]; st.s = hv[1]; st.v = hv[2]; }
         var bg = document.createElement('div');
         bg.id = 'fmx-cpBg'; bg.className = 'fmx-cfm';
-        bg.innerHTML = '<div class="fmx-cfm-box">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">' +
-            '<div style="font-size:13px;font-weight:700;">Свой цвет</div>' +
-            '<div style="display:flex;gap:6px;" id="fmx-cp-modes">' +
+        bg.innerHTML = '<div class="fmx-cfm-box" id="fmx-cp-box">' +
+            '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-ttl">' + (title || 'Свой цвет') + '</div>' +
+            '<button class="fmx-cp-x" id="fmx-cp-close" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
+            '<div style="display:flex;gap:6px;margin-bottom:10px;" id="fmx-cp-modes">' +
             '<button class="fmx-fx on" data-cpm="sv">Квадрат</button>' +
-            '<button class="fmx-fx" data-cpm="spec">Спектр</button></div></div>' +
-            '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="280" height="140"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
+            '<button class="fmx-fx" data-cpm="spec">Спектр</button></div>' +
+            '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="252" height="130"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
             '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">Оттенок</div>' +
             '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1" style="margin-top:0;">' +
             '<div class="fmx-cp-row">' +
@@ -1958,6 +1983,27 @@
             '<div class="fmx-cp-presets">' + COLORS.map(function (c) { return '<button class="fmx-cp-pd" data-cpp="' + c + '" style="background:' + c + ';" title="' + c + '"></button>'; }).join('') + '</div>' +
             '<button class="fmx-save" id="fmx-cp-done" style="margin-top:14px;"><i class="ti ti-check"></i> Готово</button></div>';
         document.body.appendChild(bg);
+        /* пикер плавающий и подвижный: тянем за шапку, чтобы не закрывать то, что красим */
+        (function () {
+            var box = el('fmx-cp-box'), head = el('fmx-cp-head');
+            function dstart(e) {
+                if (e.target.closest && e.target.closest('#fmx-cp-close')) return;
+                var t = e.touches ? e.touches[0] : e, r = box.getBoundingClientRect();
+                var ox = t.clientX - r.left, oy = t.clientY - r.top;
+                box.style.left = r.left + 'px'; box.style.top = r.top + 'px'; box.style.bottom = 'auto'; box.style.marginLeft = '0';
+                function mv(ev) {
+                    var p = ev.touches ? ev.touches[0] : ev; if (ev.cancelable) ev.preventDefault();
+                    var x = Math.max(4, Math.min(window.innerWidth - r.width - 4, p.clientX - ox));
+                    var y = Math.max(4, Math.min(window.innerHeight - 44, p.clientY - oy));
+                    box.style.left = x + 'px'; box.style.top = y + 'px';
+                }
+                function up() { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up); document.removeEventListener('touchmove', mv); document.removeEventListener('touchend', up); }
+                document.addEventListener('mousemove', mv); document.addEventListener('mouseup', up);
+                document.addEventListener('touchmove', mv, { passive: false }); document.addEventListener('touchend', up);
+            }
+            head.addEventListener('mousedown', dstart); head.addEventListener('touchstart', dstart, { passive: false });
+            el('fmx-cp-close').addEventListener('click', function () { bg.remove(); });
+        })();
         var cv = el('fmx-cp-cv'), cx = cv.getContext('2d'), dot = el('fmx-cp-dot'), hue = el('fmx-cp-hue'), svb = el('fmx-cp-sv');
         /* спектр: цвет = позиция точки (тон по X, светлота по Y) + насыщенность с полоски */
         function specApply() {
@@ -2132,7 +2178,7 @@
     function fmtRows() {
         return _sfmts.map(function (f, i) {
             return '<div class="fmx-chk' + (f.on ? ' on' : '') + '" data-fi="' + i + '"><div class="fmx-box"><i class="ti ti-check"></i></div><span style="font-size:12.5px;flex:1;">' + _esc(f.n) + '</span>' +
-                (f.on ? '<input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span>' : '<span style="font-size:11px;color:#565b73;">выкл</span>') + '</div>';
+                (f.on ? '<input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100" min="0" max="999999"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span>' : '<span style="font-size:11px;color:#565b73;">выкл</span>') + '</div>';
         }).join('');
     }
     function panePrice() {
@@ -2142,7 +2188,7 @@
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-chk').forEach(function (c) { c.addEventListener('click', function (ev) { if (ev.target && ev.target.classList && ev.target.classList.contains('fmx-pinp')) return; var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light'); el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero(); }); });
-        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { _sfmts[+inp.getAttribute('data-pi')].p = Math.max(0, Math.min(100000000, +inp.value || 0)); renderHero(); }); });
+        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { var v = Math.max(0, Math.min(999999, +inp.value || 0)); _sfmts[+inp.getAttribute('data-pi')].p = v; if ((+inp.value || 0) > 999999) inp.value = v; renderHero(); }); });
     }
     function bindPrice() {
         bindFmtRows();
@@ -2828,15 +2874,30 @@
         }
         // .fmx-avw первым — тап по аватару ведёт в «Аватар», а не в «Текст» (он лежит внутри .fmx-crow).
         // бейджи убраны из зон: тап по ним открывал «Эффекты аватара» — нелогично и путало.
-        [['.fmx-avw', 'avatar'], ['.fmx-cov', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-met', 'price']].forEach(function (z) {
+        [['.fmx-avw', 'avatar'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-met', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
-                    if (e.target.closest && (e.target.closest('.fmx-stkGrab') || e.target.closest('.fmx-star'))) return;
+                    if (e.target.closest && (e.target.closest('.fmx-stkGrab') || e.target.closest('.fmx-star') || e.target.closest('[data-cedit]'))) return;
                     e.stopPropagation(); _haptic('light'); openAcc(z[1], true);
                 });
             });
         });
+        /* прямое окрашивание тапом по постеру: шапка -> цвет обложки; цена/кнопки -> акцент (общий цвет цены и кнопок) */
+        function bindCEdit(sel, kind) {
+            qsa(card, sel).forEach(function (n) {
+                n.setAttribute('data-cedit', kind);
+                n.style.cursor = 'pointer';
+                n.addEventListener('click', function (e) {
+                    e.stopPropagation(); _haptic('light');
+                    if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); renderHero(); }, 'Цвет шапки');
+                    else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цвет цены и кнопок');
+                });
+            });
+        }
+        bindCEdit('.fmx-cov', 'cover');
+        bindCEdit('.v.pr', 'accent');
+        bindCEdit('.fmx-btn', 'accent');
         qsa(card, '[data-act]').forEach(function (b) { b.removeAttribute('data-act'); });
         bindBadgeDrag(card);
         var hl = el('fmx-hlist');
