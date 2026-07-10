@@ -335,13 +335,16 @@ function renderPulse(pulse) {
     if (!pulse) { host.innerHTML = ''; return; }
     const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
     const h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
+    const heroNum = (pulse.avg_views != null)
+        ? `<span class="v pw-num" data-to="${pulse.avg_views}" data-sep="1">0</span>`
+        : '<span class="v">—</span>';
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
         <span class="pw-health ${h.c}"><span class="pw-dot"></span> ${h.t}${h.s ? ` <span class="pw-hs">${h.s}</span>` : ''}</span>
         <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
       </div>
       <div class="pw-hlab">Средний охват · 30 дней</div>
-      <div class="pw-hbig"><span class="v pw-num" data-to="${pulse.avg_views || 0}" data-sep="1">0</span><span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
+      <div class="pw-hbig">${heroNum}<span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-mrow">
         ${pwCell('Подписчики', pulse.subscribers, { sep: true })}
@@ -362,7 +365,7 @@ async function loadReachSeries() {
     if (!host) return;
     try {
         const r = await apiRequest('/api/v1/user/reach-series');
-        if (r && Array.isArray(r.series) && r.series.length >= 2) {
+        if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             drawReachChart(host, r.series, r.dates || [], r.days || 30);
             const tr = document.getElementById('pw-trend');
             if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
@@ -375,6 +378,7 @@ async function loadReachSeries() {
 }
 
 function drawReachChart(host, DATA, dates, days) {
+    if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const W = Math.max(260, host.clientWidth || 320), Hh = 100, padT = 16, padB = 20, padL = 6, padR = 6;
     const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
@@ -408,7 +412,7 @@ function drawReachChart(host, DATA, dates, days) {
 
     const tip = document.getElementById('pw-tip'), cx = document.getElementById('pw-cx'), cd = document.getElementById('pw-cd'), ep = document.getElementById('pw-ep');
     function at(clientX) {
-        const r = host.getBoundingClientRect(); const sx = (clientX - r.left) * (W / r.width);
+        const r = host.getBoundingClientRect(); if (!r.width) return; const sx = (clientX - r.left) * (W / r.width);
         let i = Math.round((sx - padL) / ((W - padL - padR) / last)); i = Math.max(0, Math.min(last, i));
         const x = X(i), y = Y(DATA[i]); cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.opacity = 1;
         cd.setAttribute('cx', x); cd.setAttribute('cy', y); cd.style.opacity = 1; ep.style.opacity = 0;
@@ -421,6 +425,7 @@ function drawReachChart(host, DATA, dates, days) {
     host.addEventListener('pointerdown', (e) => at(e.clientX));
     host.addEventListener('pointerleave', off);
     host.addEventListener('pointerup', off);
+    host.addEventListener('pointercancel', off);
 }
 
 
