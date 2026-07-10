@@ -2423,6 +2423,7 @@
         st.addEventListener('touchstart', start, { passive: false });
     }
     function bindBadgeDrag(cardEl) {
+        return; /* перемещение бейджей отключено — бейджи фиксированы в общем ряду */
         var vip = !!_ss.glowCard || (function () { var b = listingForChannel(_ss.channelId); return b ? _isTop(b) : false; })();
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
             bd.style.cursor = vip ? 'grab' : 'pointer';
@@ -3168,13 +3169,13 @@
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
-        var freeMap = (top || l._preview) && (l.effects_json || {}).badgeFree || null;
+        var freeMap = null; /* перемещение бейджей отключено — всегда в общем ряду */
         var flowArr = [], covBdg = '';
         bItems.forEach(function (it) {
             if (freeMap && freeMap[it.k]) covBdg += _freeStyleInject(it.h, freeMap[it.k]);
             else flowArr.push(it.h);
         });
-        var bodyBdg = flowArr.length ? '<div class="fmx-badges">' + flowArr.join('') + '</div>' : '';
+        var _ab = _audChip(l); var bodyBdg = (flowArr.length || _ab) ? '<div class="fmx-badges">' + flowArr.join('') + _ab + '</div>' : '';
         var bodyBdg2 = '';
         var stk = l.sticker_json || l.sticker;
         /* угол и режим отображения также лежат в effects_json (stickerRot/stickerMode) — фолбэк для рендера */
@@ -3208,7 +3209,6 @@
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
-            (_audChip(l) ? '<div style="margin:9px 0 -1px;">' + _audChip(l) + '</div>' : '') +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
