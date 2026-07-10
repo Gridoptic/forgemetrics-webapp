@@ -1069,12 +1069,14 @@
         loadMyListings().then(function () {
             if (_mainTab !== 'market' || _subTab !== 'buy') return;
             var n = el('fmx-sellcta-n'), s = el('fmx-sellcta-s'); if (!n || !s) return;
+            var cta = el('fmx-sellcta'), ic = cta ? cta.querySelector('.fmx-sellcta-ic i') : null;
             if (_myListings && _myListings.length) {
                 n.textContent = 'Мой оффер';
                 var st = _myListings.length > 1
                     ? _myListings.length + ' ' + _plural(_myListings.length, 'оффер', 'оффера', 'офферов')
                     : (_myListings[0].status_human || 'Оффер');
                 s.textContent = st + ' · нажми, чтобы управлять';
+                if (ic) ic.className = 'ti ti-adjustments-horizontal';
             }
         }).catch(function () {});
     }
