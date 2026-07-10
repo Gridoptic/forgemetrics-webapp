@@ -1156,8 +1156,7 @@
         var host = el('fmx-main');
         /* конструктор и заявки — на весь экран, с кнопкой «назад в витрину» */
         if (_subTab === 'create' || _subTab === 'sell') {
-            host.innerHTML = '<button class="fmx-btn" id="fmx-mkback" style="margin:0 0 12px;padding:8px 13px;font-size:12.5px;"><i class="ti ti-arrow-left"></i> Площадка</button><div id="fmx-sub"></div>';
-            el('fmx-mkback').addEventListener('click', function () { _haptic('light'); setSubTab('buy'); });
+            host.innerHTML = '<div id="fmx-sub"></div>';  /* «назад» — только основная стрелка в шапке (fmx-back), дубль убран */
             if (_subTab === 'create') renderCreate(); else renderSell();
             checkMini();
             return;
