@@ -1859,7 +1859,8 @@
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении 30 дней') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
-            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Тег «Топ месяца» в шапке</div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Топ месяца» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
+            '<div class="fmx-fxlock" style="margin:0 0 6px;">Доступно только при продвижении на 30 дней</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
@@ -2832,6 +2833,7 @@
         pl.accent_color = _ss.color;
         pl._preview = true;
         pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
+        pl._realTop = base ? _isTop(base) : false; /* реальное 30-дневное продвижение — для таблички «Топ месяца» (её нельзя подделать тумблером) */
         var act = (_sfmts || []).filter(function (x) { return x.on; });
         pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
         var cm = _ss._media && _ss._media.cover;
@@ -2845,7 +2847,14 @@
         else pl.avatar_url = null;
         pl.avatar_emoji = _ss.avEmoji;
         pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
-        pl.emoji_attachments_json = _ss.att || {};
+        /* превью фона оффера: до сохранения ссылка живёт в _media (blob) — прокидываем её в att.cardbg, иначе fullCard не видит фон */
+        var _att = {}; for (var _ak in (_ss.att || {})) _att[_ak] = _ss.att[_ak];
+        var _cbg = _ss._media && _ss._media.cardbg;
+        if (_cbg && _cbg.url) {
+            var _cba = (typeof _att.cardbg === 'object' && _att.cardbg) ? _att.cardbg : { x: 50, y: 50, s: 1 };
+            _att.cardbg = { x: _cba.x, y: _cba.y, s: _cba.s, url: _cbg.url, kind: _cbg.kind || 'img' };
+        }
+        pl.emoji_attachments_json = _att;
         pl.custom_text = _ss._desc || '';
         pl.slots_note = _ss._slots || '';
         pl.sticker_json = null;  /* стикер — редакторским слоем поверх */
@@ -3350,6 +3359,7 @@
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
+        var realTop = l._preview ? !!l._realTop : top; /* табличка «Топ месяца» — только реальное продвижение 30 дней, не от тумблера свечения */
         /* золотое свечение: в превью конструктора — строго по тумблеру glowCard; в живой ленте — премиум-гейт (top) + флаг (старые офферы без флага светятся как раньше) */
         var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (top && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
@@ -3372,7 +3382,7 @@
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
-        var cb = (top && at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && at.cardbg.kind === 'img') ? at.cardbg : null;
+        var cb = ((top || l._preview) && at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && at.cardbg.kind === 'img') ? at.cardbg : null;
         var cbgHtml = cb ? '<div class="fmx-cbg"><img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '"><i class="fmx-cbg-s"></i></div>' : '';
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
@@ -3390,7 +3400,7 @@
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             '<div class="fmx-cov">' + covHtml +
             '</div>' +
-            (top ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
+            (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
