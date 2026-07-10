@@ -793,7 +793,7 @@
         // стрелка «назад» видна всегда (на главном экране закрывает приложение, глубже — ведёт назад)
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
-            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Всё, что нашёл бот'; su.style.display = ''; }
+            if (t === 'catalog') { ti.textContent = 'База каналов'; su.textContent = 'Все каналы, собранные ботом'; su.style.display = ''; }
             else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; su.style.display = ''; }
             else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM по нишам'; su.style.display = ''; }
             else { ti.textContent = 'Рынок рекламы'; su.textContent = ''; su.style.display = 'none'; }
@@ -897,9 +897,9 @@
         host.innerHTML = loadHtml();
         loadPulse(function () {
             if (_mainTab !== 'pulse') return;
-            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не получилось загрузить данные — попробуй позже.'); return; }
+            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не удалось загрузить данные — попробуй позже.'); return; }
             var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
-            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами — здесь оживут цены, CPM и ликвидность по нишам.'); return; }
+            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Базе появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
             var html = _termHead();
             if (_pulse.market && _pulse.market.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
@@ -917,7 +917,7 @@
             '<div class="fmx-entq">Выбери, где искать:</div>' +
             '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="ti ti-database"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">База каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
-            '<div class="fmx-entd">Всё, что нашёл бот. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
+            '<div class="fmx-entd">Все каналы, собранные ботом. Находишь подходящий канал — пишешь владельцу сам.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
@@ -1146,7 +1146,7 @@
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_feed || !_feed.length) body = hasFilters
             ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Смягчи запрос или сбрось фильтры — и офферы вернутся.')
-            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
+            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер во вкладке «Создать».');
         else {
             var feed = _applyBuyFilter(_feed);
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы» — или догрузи ленту дальше.') + moreBtn;
@@ -1222,7 +1222,7 @@
         var body;
         if (_reqState === 'loading') body = loadHtml();
         else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
-        else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Будь первым: размести заявку — владельцы подходящих каналов напишут сами.');
+        else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: «ищу каналы под задачу, бюджет такой-то». Твой канал подходит — откликайся первым. Сам покупаешь рекламу — размести свою заявку.</div>' +
             '<div style="display:flex;gap:8px;margin:0 0 14px;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
@@ -1279,7 +1279,7 @@
         el('fmx-repBody').innerHTML =
             '<span class="fmx-lbl">Причина</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Комментарий <span style="color:#565b73;text-transform:none;">(для «Другое» — обязателен)</span></span>' +
-            '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="Что не так? Чем конкретнее — тем быстрее разберём."></textarea>' +
+            '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="Опиши проблему. Чем конкретнее — тем быстрее разберём."></textarea>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">Жалобы анонимны для владельца. Несколько жалоб от разных людей скрывают цель до ручной проверки.</div>' +
             '<button class="fmx-save" id="fmx-rep-send" style="margin-top:14px;"><i class="ti ti-flag"></i> Отправить жалобу</button>';
         var sel = { v: 'scam' };
@@ -1292,7 +1292,7 @@
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось отправить'); return; }
                 _haptic('success'); hideModal('fmx-repBg');
-                toast(r && r.hidden ? 'Скрыто до проверки — спасибо' : 'Жалоба отправлена — проверим');
+                toast(r && r.hidden ? 'Скрыто до проверки. Спасибо.' : 'Жалоба отправлена — проверим');
                 if (r && r.hidden) {
                     if (target.listing_id) { _feed = null; _feedState = 'idle'; if (_subTab === 'buy') renderBuy(); }
                     else { _reqs = null; _reqState = 'idle'; if (_subTab === 'sell') renderSell(); }
@@ -1318,11 +1318,11 @@
             var v = el('fmx-ns-inp').value.trim();
             if (!v) return;
             apiPost('/api/v1/marketplace/niche_subs', { niche: v, on: true }).then(function (r) {
-                if (r && r.ok === false) { uiAlert(r.error || 'Не получилось'); return; }
+                if (r && r.ok === false) { uiAlert(r.error || 'Не удалось'); return; }
                 var lv = v.toLowerCase();
                 if (_nsubs.indexOf(lv) < 0) _nsubs.push(lv);
                 _nsubs.sort(); _haptic('success'); renderNsBody();
-            }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+            }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
         };
         el('fmx-ns-add').addEventListener('click', addFn);
         el('fmx-ns-inp').addEventListener('keydown', function (e) { if (e.key === 'Enter') addFn(); });
@@ -1354,16 +1354,16 @@
                 box.innerHTML = '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
-                box.innerHTML = '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен — спасибо!</div>';
+                box.innerHTML = '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен. Спасибо.</div>';
             } else {
                 box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
                     uiConfirm('Отмечай только реальную сделку: владелец получит запрос на подтверждение, и после него ты сможешь оставить отзыв.', function () {
                         apiPost('/api/v1/marketplace/deals', { listing_id: l.id }).then(function (rr) {
-                            if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не получилось'); return; }
+                            if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
                             _haptic('success'); toast('Отправлено владельцу на подтверждение');
                             renderDealBox(l);
-                        }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+                        }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
                     });
                 });
             }
@@ -1392,10 +1392,10 @@
             var btn = this; if (!sel.v) return; btn.disabled = true;
             apiPost('/api/v1/marketplace/deals/' + dealId + '/review', { rating: sel.v, text: el('fmx-rev-t').value }).then(function (r) {
                 btn.disabled = false;
-                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось'); return; }
-                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен — спасибо!');
+                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
+                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен. Спасибо.');
                 _feed = null; _feedState = 'idle';
-            }).catch(function () { btn.disabled = false; uiAlert('Не получилось — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
         });
         showModal('fmx-revBg');
     }
@@ -1533,7 +1533,7 @@
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 10px;"><i class="ti ti-hand-click"></i> Тапни по части оффера, чтобы его изменить</div>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 10px;"><i class="ti ti-hand-click"></i> Нажми на часть оффера, чтобы изменить его</div>' +
             '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> Сброс настроек</button>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
             '<div class="fmx-chdd" id="fmx-chdd"><button class="fmx-chbtn" id="fmx-chbtn" type="button"><i class="ti ti-broadcast lead"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(cur ? ('@' + cur.username + (cur.title ? ' · ' + cur.title : '')) : 'Выбери канал') + '</span><i class="ti ti-chevron-down chev"></i></button><div class="fmx-chlist">' + rows + '</div></div>' +
@@ -1590,14 +1590,14 @@
             lp.disabled = true;
             apiPost('/api/v1/marketplace/listings/' + _ss.listingId + '/' + act, {}).then(function (r) {
                 lp.disabled = false;
-                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось'); return; }
+                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
                 _haptic('success');
                 _ss._status = act === 'pause' ? 'paused' : 'published';
                 for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === _ss.listingId) { _myListings[i].status = _ss._status; _myListings[i].status_human = _ss._status === 'paused' ? 'Заморожена' : 'Опубликовано'; }
                 toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
                 _feed = null; _feedState = 'idle';
                 selectChannel(_ss.channelId);
-            }).catch(function () { lp.disabled = false; uiAlert('Не получилось — попробуй ещё раз.'); });
+            }).catch(function () { lp.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
         });
         var ld = el('fmx-ldel');
         if (ld) ld.addEventListener('click', function () {
@@ -1605,14 +1605,14 @@
                 ld.disabled = true;
                 apiRequest('/api/v1/marketplace/listings/' + _ss.listingId, { method: 'DELETE' }).then(function (r) {
                     ld.disabled = false;
-                    if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось удалить'); return; }
+                    if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось удалить'); return; }
                     _haptic('success'); toast('Оффер удалён');
                     var delId = _ss.listingId;
                     _myListings = _myListings.filter(function (x) { return x.id !== delId; });
                     _ss.listingId = null; _ss._status = null;
                     _feed = null; _feedState = 'idle';
                     selectChannel(_ss.channelId);
-                }).catch(function () { ld.disabled = false; uiAlert('Не получилось — попробуй ещё раз.'); });
+                }).catch(function () { ld.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
             });
         });
         bindCover(); bindStyle(); bindPrice(); bindText();
@@ -1986,7 +1986,7 @@
                 if (r && r.ok) {
                     toast('Топ месяца включён на 30 дней');
                     loadMyListings().then(function () { renderHero(); });
-                } else { toast((r && r.error) || 'Не получилось'); }
+                } else { toast((r && r.error) || 'Не удалось'); }
                 mb.disabled = false;
             }).catch(function () { toast('Сервер не ответил: проверь, что бэкенд-файлы залиты и forgemetrics-api перезапущен'); mb.disabled = false; });
         });
@@ -2194,7 +2194,7 @@
         var modeDots = '<div class="fmx-stkmodes">' + [['top', 'Поверх'], ['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
             return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
         }).join('') + '</div>';
-        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с оффера"></i>' + modeDots + '</div>';
+        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Перемещение, размер, поворот"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с оффера"></i>' + modeDots + '</div>';
     }
     var _lotLibs = null;
     function _script(u) {
@@ -2258,13 +2258,13 @@
                 '<div style="font-size:10px;color:#565b73;margin-top:6px;">Подтверждай только реальные сделки: счётчик — твоя репутация.</div></div>';
             function respond(id, acc) {
                 apiPost('/api/v1/marketplace/deals/' + id + '/respond', { accept: acc }).then(function (r2) {
-                    if (r2 && r2.ok === false) { uiAlert(r2.error || 'Не получилось'); return; }
+                    if (r2 && r2.ok === false) { uiAlert(r2.error || 'Не удалось'); return; }
                     _haptic('success');
                     toast(acc ? 'Сделка подтверждена — счётчик вырос' : 'Отклонено');
                     var row = box.querySelector('[data-did="' + id + '"]'); if (row) row.remove();
                     if (acc) { _feed = null; _feedState = 'idle'; }
                     if (!box.querySelector('[data-did]')) box.innerHTML = '';
-                }).catch(function () { uiAlert('Не получилось — попробуй ещё раз.'); });
+                }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
             }
             qsa(box, '[data-dacc]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-dacc'), true); }); });
             qsa(box, '[data-ddec]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-ddec'), false); }); });
@@ -2283,7 +2283,7 @@
         var s = _ss.sticker;
         var html = '';
         if (!_stickers.length) {
-            html = '<div style="font-size:11.5px;color:#8990a8;line-height:1.6;">Коллекция пуста. Отправь боту в личку любой стикер или премиум-эмодзи — он появится здесь.</div>' +
+            html = '<div style="font-size:11.5px;color:#8990a8;line-height:1.6;">Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.</div>' +
                 '<button class="fmx-btn" id="fmx-stk-bot" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i>Открыть бота</button>';
         } else {
             html = '<div class="fmx-stkgrid">' + _stickers.map(function (st) {
@@ -2292,15 +2292,15 @@
                     (st.kind === 'tgs' ? '<span class="fmx-stk-anim">аним.</span>' : '') +
                     '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
             }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личку. ' + _stickers.length + '/30.</div>';
+                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личных сообщениях.' + _stickers.length + '/30.</div>';
             if (s) {
                 var free = (s.mode || 'slot') === 'free';
                 html += '<div class="fmx-fxw" style="margin-top:12px;">' +
-                    '<button class="fmx-fx' + (!free ? ' on' : '') + '" data-smode="slot">В кармашке</button>' +
+                    '<button class="fmx-fx' + (!free ? ' on' : '') + '" data-smode="slot">В слоте</button>' +
                     '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
                     '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
                 if (free) {
-                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: тап по стикеру — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
+                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
                 }
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
@@ -2328,7 +2328,7 @@
                         _stickers = _stickers.filter(function (x) { return x.id !== id; });
                         if (_ss.sticker && _ss.sticker.sticker_id === id) { _ss.sticker = null; renderHero(); }
                         renderStickerPane();
-                    }).catch(function () { uiAlert('Не получилось удалить — попробуй ещё раз.'); });
+                    }).catch(function () { uiAlert('Не удалось удалить — попробуй ещё раз.'); });
                 });
             });
         });
@@ -2340,7 +2340,7 @@
         });
         var cl = qsa(box, '[data-sclear]')[0];
         if (cl) onTap(cl, function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
-        var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В кармашке' : 'Свободно') : 'Нет';
+        var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В слоте' : 'Свободно') : 'Нет';
         hydrateTgs(box);
     }
     var STAR_SLOTS = { top: 8, cover: SEAM - 39, body: SEAM + 9 };
@@ -2450,7 +2450,7 @@
                     document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                     document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
                     if (dragging) { var p = (ev.changedTouches && ev.changedTouches[0]) || ev; finish(p.clientX, p.clientY); }
-                    else if (!vip) { toast('Свободное перемещение плашек — опция продвижения на 30 дней'); }
+                    else if (!vip) { toast('Свободное перемещение блоков — опция продвижения на 30 дней'); }
                 };
                 document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
                 document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
@@ -2667,7 +2667,7 @@
         bindBadgeDrag(card);
         var hl = el('fmx-hlist');
         if (hl) {
-            hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">ТАК ВЫГЛЯДИТ В СПИСКЕ</div>' + zw(listItem(pl));
+            hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">ВИД В СПИСКЕ</div>' + zw(listItem(pl));
             scaleCards(hl);
         }
         hydrateTgs(hero);
@@ -2927,7 +2927,7 @@
                         delete window.__fmxPosterJob[base.id];
                         var msg = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
                         bg.__fmxProgDone = setTimeout(function () { var b2 = sendBtn(); if (b2) b2.innerHTML = msg; }, 650);
-                        toast(r.sent ? 'Живой постер в чате с ботом — пересылай!' : 'С живым не вышло — прислал картинкой');
+                        toast(r.sent ? 'Живой постер в чате с ботом, можно переслать' : 'Живой постер не удалось создать — отправлен изображением');
                         bg.__fmxProgTo = setTimeout(restoreSend, 5300);
                     } else {
                         if (r && r.pct) setPct(r.pct);   // РЕАЛЬНЫЙ прогресс: сервер шлёт «снято N из M кадров»
@@ -2955,11 +2955,11 @@
                         } else if (r.queued) {
                             btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> Идёт обработка…';
                         } else {
-                            toast('Постер у тебя в чате с ботом — пересылай!'); restoreSend();
+                            toast('Постер в чате с ботом, можно переслать'); restoreSend();
                         }
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
                     } else {
-                        var msg = (r && r.error) || 'Не получилось';
+                        var msg = (r && r.error) || 'Не удалось';
                         var wait = /через\s+(\d+)\s*с/.exec(msg);   // «Повтори через 12 с.»
                         if (wait) waitSend(parseInt(wait[1], 10)); else restoreSend();
                         toast(msg, true);
@@ -3002,7 +3002,7 @@
                 var m = _ss._media && _ss._media[t];
                 if (!m || !m.file) return;
                 if (m.file.size > MEDIA_MAX_BYTES) {
-                    throw new Error('Файл «' + t + '» ' + Math.round(m.file.size / 1048576) + ' МБ — больше 64 МБ. Возьми полегче');
+                    throw new Error('Файл «' + t + '» ' + Math.round(m.file.size / 1048576) + ' МБ — больше 64 МБ. Выбери файл меньше');
                 }
                 var fd = new FormData();
                 fd.append('file', m.file);
@@ -3601,7 +3601,7 @@
             items.forEach(function (it) { _bookmarks[it.listing.username] = true; _bmMap[it.listing.username] = it.listing; });
             updateBmCount();
             if (!items.length) {
-                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Жми ★ на офферах, чтобы сохранить канал.</p></div>';
+                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Отмечай ★ на офферах, чтобы сохранить канал.</p></div>';
                 return;
             }
             box.innerHTML = items.map(function (it) {
