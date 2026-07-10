@@ -273,44 +273,8 @@ function renderDashboard(data) {
     els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
     els.greetingName.textContent = `Привет, ${firstName}`;
 
-    const greetingMeta = document.getElementById('greeting-meta');
-
-    if (data.channel) {
-        const subs = data.channel.subscribers ? formatNumber(data.channel.subscribers) : '—';
-        const title = data.channel.title || data.channel.username || 'Канал';
-        const totalChannels = data.total_channels || 1;
-        const switcherIcon = totalChannels > 1
-            ? '<i class="ti ti-chevrons-up-down dashboard-channel-switcher-icon"></i>'
-            : '';
-        els.channelInfo.innerHTML = `${escapeHtml(title)} · ${subs} подписчиков ${switcherIcon}`;
-
-        if (greetingMeta) {
-            greetingMeta.classList.add('clickable');
-            greetingMeta.onclick = () => {
-                openActiveChannelSelector({
-                    onChanged: async () => { await loadDashboard(); }
-                });
-            };
-        }
-    } else {
-        els.channelInfo.textContent = 'Подключи канал чтобы видеть метрики';
-        if (greetingMeta) {
-            greetingMeta.classList.add('clickable');
-            greetingMeta.onclick = () => {
-                if (typeof openChannels === 'function') openChannels();
-            };
-        }
-    }
-
-    if (data.metrics && data.metrics.length >= 2) {
-        const [views, subs] = data.metrics;
-        els.metricViews.textContent = views.value;
-        els.metricSubs.textContent = subs.value;
-
-        renderTrend(els.metricViewsTrend, views.change, views.trend);
-        renderTrend(els.metricSubsTrend, subs.change, subs.trend);
-    }
-
+    renderChannelSelector(data);
+    renderPulse(data.pulse);
     renderActions(data.actions || []);
 
     if (data.has_unread_menu) {
@@ -318,6 +282,145 @@ function renderDashboard(data) {
     } else {
         els.menuDot.classList.remove('active');
     }
+}
+
+// ---------- Пульс канала: селектор + виджет + график ----------
+function renderChannelSelector(data) {
+    const host = document.getElementById('channel-selector');
+    if (!host) return;
+    const ch = data.channel;
+    if (ch) {
+        const title = ch.title || ch.username || 'Канал';
+        const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
+        const niche = (data.pulse && data.pulse.niche) ? data.pulse.niche : '';
+        const multi = (data.total_channels || 1) > 1;
+        const sub = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? ' · ' + escapeHtml(niche) : ''} · ${multi ? 'нажми, чтобы сменить канал' : 'нажми для управления'}`;
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav">${initial}</div><div class="pw-chinfo"><div class="pw-chn">${escapeHtml(title)} <span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
+        const btn = document.getElementById('pw-chansel-btn');
+        if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
+    } else {
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav"><i class="ti ti-plus"></i></div><div class="pw-chinfo"><div class="pw-chn">Подключить канал</div><div class="pw-chnb">Метрики, публикация и оффер на Площадке</div></div><div class="pw-chchev"><i class="ti ti-chevron-right"></i></div></button>`;
+        const btn = document.getElementById('pw-chansel-btn');
+        if (btn) btn.addEventListener('click', () => { hapticLight(); if (typeof openChannels === 'function') openChannels(); });
+    }
+}
+
+function pwFmt(v, el) {
+    const suf = el.dataset.suf || '', dec = +(el.dataset.dec || 0), sep = el.dataset.sep === '1';
+    if (sep) return Math.round(v).toLocaleString('ru-RU') + suf;
+    if (dec) return v.toFixed(dec) + suf;
+    return String(Math.round(v)) + suf;
+}
+function pwCountUp(root) {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (root || document).querySelectorAll('.pw-num[data-to]').forEach((el) => {
+        const to = parseFloat(el.dataset.to) || 0;
+        if (reduce) { el.textContent = pwFmt(to, el); return; }
+        let t0 = null;
+        function step(t) { if (!t0) t0 = t; const p = Math.min(1, (t - t0) / 900); el.textContent = pwFmt(to * (1 - Math.pow(1 - p, 3)), el); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+    });
+}
+function pwCell(label, val, opts) {
+    opts = opts || {};
+    if (val == null) return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv">—</div></div>`;
+    const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
+    const tr = opts.trend != null ? `<span class="${opts.trend >= 0 ? 'up' : 'dn'}">${opts.trend >= 0 ? '↗' : '↘'}${Math.abs(opts.trend)}%</span>` : '';
+    return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div></div>`;
+}
+
+function renderPulse(pulse) {
+    const host = document.getElementById('pulse-widget');
+    if (!host) return;
+    if (!pulse) { host.innerHTML = ''; return; }
+    const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
+    const h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
+    host.innerHTML = `<div class="pw-pulse">
+      <div class="pw-prow">
+        <span class="pw-health ${h.c}"><span class="pw-dot"></span> ${h.t}${h.s ? ` <span class="pw-hs">${h.s}</span>` : ''}</span>
+        <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
+      </div>
+      <div class="pw-hlab">Средний охват · 30 дней</div>
+      <div class="pw-hbig"><span class="v pw-num" data-to="${pulse.avg_views || 0}" data-sep="1">0</span><span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
+      <div class="pw-chart" id="pw-chart"></div>
+      <div class="pw-mrow">
+        ${pwCell('Подписчики', pulse.subscribers, { sep: true })}
+        <div class="pw-mdiv"></div>
+        ${pwCell('Вовлечённость', pulse.er_percent, { suf: '%', dec: 1 })}
+        <div class="pw-mdiv"></div>
+        ${pwCell('Охват к базе', pulse.reach_rate, { suf: '%' })}
+      </div>
+    </div>`;
+    pwCountUp(host);
+    const an = document.getElementById('pw-analyze');
+    if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
+    loadReachSeries();
+}
+
+async function loadReachSeries() {
+    const host = document.getElementById('pw-chart');
+    if (!host) return;
+    try {
+        const r = await apiRequest('/api/v1/user/reach-series');
+        if (r && Array.isArray(r.series) && r.series.length >= 2) {
+            drawReachChart(host, r.series, r.dates || [], r.days || 30);
+            const tr = document.getElementById('pw-trend');
+            if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
+        } else {
+            host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — заглядывай позже</div>';
+        }
+    } catch (e) {
+        host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
+    }
+}
+
+function drawReachChart(host, DATA, dates, days) {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const W = Math.max(260, host.clientWidth || 320), Hh = 100, padT = 16, padB = 20, padL = 6, padR = 6;
+    const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
+    const lo = min - (max - min) * 0.5, hi = max + (max - min) * 0.22, rng = (hi - lo) || 1, last = DATA.length - 1;
+    const X = (i) => padL + i * (W - padL - padR) / last;
+    const Y = (v) => padT + (1 - (v - lo) / rng) * (Hh - padT - padB);
+    const pts = DATA.map((v, i) => [X(i), Y(v)]);
+    function smooth(p) { if (p.length < 2) return ''; let d = 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1); for (let i = 0; i < p.length - 1; i++) { const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c; const c1x = b[0] + (c[0] - a[0]) / 6, c1y = b[1] + (c[1] - a[1]) / 6, c2x = c[0] - (e[0] - b[0]) / 6, c2y = c[1] - (e[1] - b[1]) / 6; d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1); } return d; }
+    const line = smooth(pts), area = line + ' L' + X(last).toFixed(1) + ',' + (Hh - padB) + ' L' + X(0).toFixed(1) + ',' + (Hh - padB) + ' Z';
+    const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
+    const grids = [max, min];
+    let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
+    svg += '<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(93,202,165,0.40)"/><stop offset="0.55" stop-color="rgba(93,202,165,0.10)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient>';
+    svg += '<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37b487"/><stop offset="1" stop-color="#74edb4"/></linearGradient>';
+    svg += '<filter id="pwglf" x="-20%" y="-60%" width="140%" height="240%"><feGaussianBlur stdDeviation="3.2"/></filter></defs>';
+    grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
+    svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
+    svg += `<path d="${line}" fill="none" stroke="#5DCAA5" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
+    svg += `<path id="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="rgba(93,202,165,0.22)"/>`;
+    svg += `<circle id="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
+    const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
+    svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
+    svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">сегодня</text>`;
+    svg += `<line id="pw-cx" class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
+    svg += `<circle id="pw-cd" class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
+    host.innerHTML = svg + '<div class="pw-tip" id="pw-tip"></div>';
+
+    const cl = document.getElementById('pw-cl'), ar = host.querySelector('.pw-area');
+    if (!reduce && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
+
+    const tip = document.getElementById('pw-tip'), cx = document.getElementById('pw-cx'), cd = document.getElementById('pw-cd'), ep = document.getElementById('pw-ep');
+    function at(clientX) {
+        const r = host.getBoundingClientRect(); const sx = (clientX - r.left) * (W / r.width);
+        let i = Math.round((sx - padL) / ((W - padL - padR) / last)); i = Math.max(0, Math.min(last, i));
+        const x = X(i), y = Y(DATA[i]); cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.opacity = 1;
+        cd.setAttribute('cx', x); cd.setAttribute('cy', y); cd.style.opacity = 1; ep.style.opacity = 0;
+        const dlab = (dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад');
+        tip.innerHTML = `<div class="d">${dlab}</div>${DATA[i].toLocaleString('ru-RU')} охват`;
+        tip.style.left = (x / W * r.width) + 'px'; tip.style.top = (y / Hh * r.height) + 'px'; tip.style.opacity = 1;
+    }
+    function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
+    host.addEventListener('pointermove', (e) => at(e.clientX));
+    host.addEventListener('pointerdown', (e) => at(e.clientX));
+    host.addEventListener('pointerleave', off);
+    host.addEventListener('pointerup', off);
 }
 
 

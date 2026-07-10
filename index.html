@@ -7,7 +7,7 @@
     <title>ForgeMetrics</title>
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css?v=20260710c">
+    <link rel="stylesheet" href="styles.css?v=20260710d">
     <link rel="stylesheet" href="audit.css?v=20260704f">
     <link rel="stylesheet" href="competitors.css?v=20260704f">
     <link rel="stylesheet" href="ad_exchange.css?v=20260704f">
@@ -47,34 +47,10 @@
 
         <div class="greeting">
             <div class="greeting-name" id="greeting-name">Привет</div>
-            <div class="greeting-meta" id="greeting-meta">
-                <i class="ti ti-brand-telegram"></i>
-                <span id="channel-info">Подключи канал чтобы видеть метрики</span>
-            </div>
         </div>
 
-        <div class="metrics" id="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">
-                    <i class="ti ti-eye"></i>
-                    Просмотры
-                </div>
-                <div class="metric-value">
-                    <span class="metric-number" id="metric-views">—</span>
-                    <span class="metric-trend" id="metric-views-trend"></span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">
-                    <i class="ti ti-users"></i>
-                    Подписчики
-                </div>
-                <div class="metric-value">
-                    <span class="metric-number" id="metric-subs">—</span>
-                    <span class="metric-trend" id="metric-subs-trend"></span>
-                </div>
-            </div>
-        </div>
+        <div id="channel-selector"></div>
+        <div id="pulse-widget"></div>
 
         <div class="section-label">Что делаем сейчас?</div>
 
@@ -561,7 +537,7 @@
 
 </div>
 
-<script src="app.js?v=20260710g"></script>
+<script src="app.js?v=20260710h"></script>
 <script src="audit.js?v=20260704f"></script>
 <script src="competitors.js?v=20260704f"></script>
 <script src="ad_exchange.js?v=20260704f"></script>
