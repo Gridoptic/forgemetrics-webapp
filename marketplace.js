@@ -3382,8 +3382,10 @@
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
-        var cb = ((top || l._preview) && at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && at.cardbg.kind === 'img') ? at.cardbg : null;
-        var cbgHtml = cb ? '<div class="fmx-cbg"><img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '"><i class="fmx-cbg-s"></i></div>' : '';
+        var cb = ((top || l._preview) && at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
+        var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
+            ? '<video src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
+            : '<img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
         var covHtml;
