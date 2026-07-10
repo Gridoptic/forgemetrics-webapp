@@ -111,8 +111,8 @@
         if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); }
         t.innerHTML = '<i class="ti ti-alert-circle" style="color:#ef4444;"></i> ' + _esc(String(msg));
         t.classList.add('on', 'err');
-        clearTimeout(t._tm);
-        t._tm = setTimeout(function () { t.classList.remove('on', 'err'); }, 3600);
+        clearTimeout(_toastTo);   // общий таймер с toast(): не гасят друг друга досрочно, не залипает 'err'
+        _toastTo = setTimeout(function () { t.classList.remove('on', 'err'); }, 3600);
     }
     function uiConfirm(msg, cb) {
         var old = el('fmx-cfmBg'); if (old) old.remove();
@@ -1116,17 +1116,32 @@
     }
 
     /* ===================== render: catalog ===================== */
+    var _catQ = '', _catQTimer = null;
+    function _catList() {
+        var list = _applySort(_catalog || []);
+        var q = (_catQ || '').toLowerCase();
+        if (q) list = list.filter(function (l) { return (((l.title || '') + ' @' + (l.username || '') + ' ' + (l.niche || '')).toLowerCase()).indexOf(q) >= 0; });
+        return list;
+    }
+    function paintCatalogBody() {
+        var box = el('fmx-catBody'); if (!box) return;
+        if (_catState === 'loading') { box.innerHTML = loadHtml(); return; }
+        if (_catState === 'error') { box.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.'); return; }
+        if (!_catalog || !_catalog.length) { box.innerHTML = emptyHtml('ti-radar-2', 'Радар скоро наполнится', 'Здесь будет каталог каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.'); return; }
+        var list = _catList();
+        if (!list.length) { box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.'); return; }
+        box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
+        bindCards(box); if (_view === 'list') bindList(box);
+    }
     function renderCatalog() {
         var host = el('fmx-main');
         if (_catalog == null && _catState === 'idle') loadCatalog();
         var bar = sortBarHtml() + searchHtml('Поиск канала по теме…') + '<div class="fmx-toprow" style="justify-content:flex-end;">' + vtogHtml() + '</div>';
-        var body;
-        if (_catState === 'loading') body = loadHtml();
-        else if (_catState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
-        else if (!_catalog || !_catalog.length) body = emptyHtml('ti-radar-2', 'Радар скоро наполнится', 'Здесь будет каталог каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.');
-        else body = (_view === 'cards' ? '<div class="fmx-grid">' + _catalog.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + _catalog.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
-        host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + body;
-        bindSort(); bindView(); bindCards(); if (_view === 'list') bindList(host);
+        host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + '<div id="fmx-catBody"></div>';
+        bindSort(); bindView();
+        var si = host.querySelector('.fmx-search input');
+        if (si) { si.value = _catQ; si.addEventListener('input', function () { var v = si.value; clearTimeout(_catQTimer); _catQTimer = setTimeout(function () { _catQ = v.trim(); paintCatalogBody(); }, 300); }); }
+        paintCatalogBody();
     }
 
     /* ===================== render: market ===================== */
@@ -2203,13 +2218,10 @@
     }
 
     function paneText() {
-        var c = curChannel();
-        return '<span class="fmx-lbl">Заголовок</span><input class="fmx-inp" id="fmx-title" value="' + _esc(_ss._title != null ? _ss._title : (c.title || '')) + '" maxlength="60">' +
-            '<span class="fmx-lbl fmx-mt2">О канале (видно при «Развернуть»)</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="Чем хорош канал и какая аудитория…">' + _esc(_ss._desc || '') + '</textarea>' +
+        return '<span class="fmx-lbl">О канале (видно при «Развернуть»)</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="Чем хорош канал и какая аудитория…">' + _esc(_ss._desc || '') + '</textarea>' +
             '<span class="fmx-lbl fmx-mt2">Теги (через запятую)</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="ниша, тема, аудитория">';
     }
     function bindText() {
-        el('fmx-title').addEventListener('input', function () { _ss._title = this.value; renderHero(); });
         el('fmx-desc').addEventListener('input', function () { _ss._desc = this.value; renderHero(); });
         el('fmx-tags').addEventListener('input', function () { _ss._tags = this.value; renderHero(); });
     }
@@ -2268,6 +2280,8 @@
         if (_ss._media && _ss._media[target]) { try { URL.revokeObjectURL(_ss._media[target].url); } catch (e) {} delete _ss._media[target]; }
         _ss.att[target] = '';
         if (target === 'cover') _ss.covType = 'grad';
+        if (target === 'avatar') _ss.avatar = 'tg';   // без фото возвращаемся к аватару канала, а не к букве
+        if (target === 'cardbg') _ss.fullBg = false;   // нет фона — тумблер «во всю карточку» тоже выключаем
         paintCreate();
     }
     function startCrop(target, url, kind, name, x, y, s, file) {
@@ -2298,6 +2312,10 @@
     function finishCrop() {
         if (!_crop) return;
         if (!_ss._media) _ss._media = {};
+        var _old = _ss._media[_crop.target];
+        if (_old && _old.url && _old.url !== _crop.url && String(_old.url).indexOf('blob:') === 0) {
+            try { URL.revokeObjectURL(_old.url); } catch (e) {}   // прежний blob заменяется — освобождаем, иначе утечка памяти
+        }
         _ss._media[_crop.target] = { url: _crop.url, kind: _crop.kind, name: _crop.name, file: _crop.file || (_ss._media[_crop.target] ? _ss._media[_crop.target].file : null) };
         _ss.att[_crop.target] = { kind: _crop.kind, name: _crop.name, x: Math.round(_crop.x * 10) / 10, y: Math.round(_crop.y * 10) / 10, s: Math.round(_crop.s * 100) / 100 };
         if (_crop.target === 'cover') _ss.covType = _crop.kind === 'video' ? 'video' : (_crop.kind === 'gif' ? 'gif' : 'img');
@@ -2305,6 +2323,15 @@
         _crop = null;
         hideModal('fmx-cropBg');
         paintCreate();
+    }
+    function _cancelCrop() {
+        // отмена кропа: если это свежий blob (не сохранённый файл) — освобождаем, иначе утечка
+        if (_crop && _crop.url && String(_crop.url).indexOf('blob:') === 0) {
+            var m = _ss._media && _ss._media[_crop.target];
+            if (!m || m.url !== _crop.url) { try { URL.revokeObjectURL(_crop.url); } catch (e) {} }
+        }
+        _crop = null;
+        hideModal('fmx-cropBg');
     }
     function fontStyle(f) { var m = { normal: 'font-weight:600;', bold: 'font-weight:800;', wide: 'font-weight:700;letter-spacing:0.5px;', mono: 'font-family:monospace;font-weight:600;' }; return m[f] || m.normal; }
     function orbitHtml(orb, oc) {
@@ -2358,7 +2385,7 @@
         var orbH = orbitHtml(orb, oc);
         var pt = fx.part || 'none';
         var t = l.title || l.username || '?', core;
-        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(l.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
+        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
         else if (l.avatar_type === 'emoji' && l.avatar_emoji) core = '<div class="fmx-av fx-c-' + ov + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _esc(l.avatar_emoji) + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
         return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + partHtml(pt) + '</div>';
@@ -3284,7 +3311,7 @@
         });
     }
     function _saveListing(btn) {
-        var ti = el('fmx-title'), de = el('fmx-desc'), ta = el('fmx-tags'), sl = el('fmx-slots');
+        var de = el('fmx-desc'), ta = el('fmx-tags'), sl = el('fmx-slots');
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
             slots_note: (sl ? sl.value : _ss._slots) || null,
@@ -3393,8 +3420,8 @@
         var _cbRaw = (at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
         var cb = (_cbRaw && (_cbRaw.kind === 'img' || top || l._preview)) ? _cbRaw : null; /* картинка-фон — всем бесплатно; GIF/MP4-анимация — только 30д/PRO (или примерить в превью) */
         var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
-            ? '<video src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
-            : '<img src="' + mediaAbs(cb.url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
+            ? '<video src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
+            : '<img src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
         var fullBg = !!(cb && (l.effects_json || {}).fullBg); /* фон во всю карточку без шапки — только при активном фоне оффера */
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
@@ -3402,11 +3429,11 @@
         if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) {
             var cpc = (at.cover && typeof at.cover === 'object') ? at.cover : null;
             var cst = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cpc);
-            var cu = mediaAbs(l.cover_url);
+            var cu = _esc(mediaAbs(l.cover_url));
             covHtml = '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (l.cover_type === 'video' ? '<video src="' + cu + '" style="' + cst + '" muted playsinline preload="metadata"></video>' : '<img src="' + cu + '" style="' + cst + '">') + '</div>';
         } else covHtml = '<div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>';
         var avHtml = listingAvatar(l, accent);
-        var gk = top ? ((l.effects_json || {}).glass || 'none') : 'none';
+        var gk = (top || l._preview) ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
@@ -3428,7 +3455,7 @@
     }
     function simpleCard(l) {
         var accent = _accent(l), hc = _healthColor(l), t = l.title || l.username || '?';
-        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';' + (l.avatar_url ? 'overflow:hidden;' : '') + '">' + (l.avatar_url ? '<img src="' + mediaAbs(l.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;">' : _esc(t.charAt(0))) + '</div>' +
+        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';' + (l.avatar_url ? 'overflow:hidden;' : '') + '">' + (l.avatar_url ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" style="width:100%;height:100%;object-fit:cover;">' : _esc(t.charAt(0))) + '</div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             '<button class="fmx-star" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);' + (_bookmarks[l.username] ? 'color:#f59e0b;' : '') + '" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
             (_audChip(l) ? '<div style="margin:11px 0 -2px;">' + _audChip(l) + '</div>' : '') +
@@ -3677,8 +3704,8 @@
         var cr = document.createElement('div'); cr.className = 'fmx-mbg'; cr.id = 'fmx-cropBg';
         cr.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-crop" style="color:#818cf8;"></i> Кадрирование</h2><p id="fmx-cropHint"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-cropBox"></div><div class="fmx-zoomrow"><i class="ti ti-zoom-out" style="color:#8990a8;"></i><input type="range" id="fmx-cropZoom" min="1" max="3" step="0.01" value="1"><i class="ti ti-zoom-in" style="color:#8990a8;"></i></div><div class="fmx-acts" style="margin-top:14px;"><button class="fmx-btn" data-c>Отмена</button><button class="fmx-btn fmx-btn-p" id="fmx-cropOk" style="background:#5DCAA5;color:#04342c;"><i class="ti ti-check"></i>Готово</button></div></div></div>';
         document.body.appendChild(cr);
-        cr.addEventListener('click', function (e) { if (e.target === cr) { _crop = null; hideModal('fmx-cropBg'); } });
-        qsa(cr, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { _crop = null; hideModal('fmx-cropBg'); }); });
+        cr.addEventListener('click', function (e) { if (e.target === cr) { _cancelCrop(); } });
+        qsa(cr, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { _cancelCrop(); }); });
         cr.querySelector('#fmx-cropOk').addEventListener('click', finishCrop);
         cr.querySelector('#fmx-cropZoom').addEventListener('input', function () { if (_crop) { _crop.s = parseFloat(this.value) || 1; cropApply(); } });
         var cbx = cr.querySelector('#fmx-cropBox');
@@ -3883,8 +3910,8 @@
         t.classList.toggle('err', !!err);
         t.innerHTML = '<i class="ti ' + (err ? 'ti-alert-circle' : 'ti-circle-check') + '"></i> ' + _esc(msg);
         t.classList.add('on');
-        clearTimeout(_toastTo);   // подряд идущие тосты не гасят друг друга досрочно
-        _toastTo = setTimeout(function () { t.classList.remove('on'); }, 2400);
+        clearTimeout(_toastTo);   // общий таймер с uiAlert(): подряд идущие сообщения не гасят друг друга досрочно
+        _toastTo = setTimeout(function () { t.classList.remove('on', 'err'); }, 2400);
     }
 
     var _open0 = open;
