@@ -73,7 +73,7 @@
         ['Частота постов', 'Сколько публикаций выходит в неделю. Слишком редко — аудитория отвыкает и хуже реагирует; слишком часто — твоя реклама быстро тонет в потоке. Влияет на то, как долго пост держится вверху ленты у читателя.'],
         ['Просмотры в месяц', 'Суммарные просмотры всех постов за месяц — общий «трафик» канала. Помогает прикинуть масштаб: сколько всего показов даёт канал за пределами одного поста.'],
         ['Накрутка', 'Искусственные подписчики или просмотры. Признаки: большая база при крошечном охвате, резкие скачки просмотров без причины, отсутствие живых комментариев, ER близкий к нулю. Индикатор здоровья канала подсвечивает такие каналы красным.'],
-        ['Маркировка · erid', 'В некоторых странах интернет-реклама подлежит обязательной маркировке (в России — токен erid). Поле erid в карточке опциональное — заполняй для сделок, где маркировка обязательна. Ответственность за неё несут стороны сделки.']
+        ['Маркировка · erid', 'В некоторых странах интернет-реклама подлежит обязательной маркировке (в России — токен erid). Поле erid в оффере опциональное — заполняй для сделок, где маркировка обязательна. Ответственность за неё несут стороны сделки.']
     ];
     var RULES = [
         ['Запрещено полностью', 'Наркотики и их пропаганда; оружие и взрывчатка; порнография; терроризм, экстремизм и символика запрещённых организаций; призывы к суициду и селф-харму; шок-контент — кровь, увечья, жестокость к людям и животным; торговля людьми, документами и краденым.'],
@@ -83,8 +83,8 @@
         ['Картинки, GIF и видео', 'Без чужих брендов, логотипов и персонажей — это чужая интеллектуальная собственность. Без реальных людей без их согласия, включая дипфейки. Без строб-вспышек чаще 3 раз в секунду. Дети в рекламе — только когда это оправдано самим товаром.'],
         ['Эмодзи и стикеры', 'Стикер или эмодзи с запрещённой символикой, наркотиками или 18+ — то же нарушение, что и картинка. Комбинации эмодзи, маскирующие запрещённые товары, тоже считаются нарушением.'],
         ['18+ и серая зона', 'Эротика 18+ — только в отдельном разделе с подтверждением возраста. Лицензируемые ниши — азартные игры, финансы, крипта — проверяются строже и дольше.'],
-        ['Маркировка рекламы', 'В некоторых странах интернет-реклама подлежит обязательной маркировке (например, в России — токен erid). Это ответственность сторон сделки. Поле erid в карточке — опциональное: заполняй, если работаешь с аудиторией, где маркировка обязательна.'],
-        ['Ответственность', 'За контент карточки отвечает тот, кто её разместил — это фиксируется при публикации. Также запрещено всё, что запрещено законами страны, на аудиторию которой направлена реклама. Нарушение — снятие карточки, повторное или грубое — бан. Пожаловаться на любую карточку можно в один тап.']
+        ['Маркировка рекламы', 'В некоторых странах интернет-реклама подлежит обязательной маркировке (например, в России — токен erid). Это ответственность сторон сделки. Поле erid в оффере — опциональное: заполняй, если работаешь с аудиторией, где маркировка обязательна.'],
+        ['Ответственность', 'За контент оффера отвечает тот, кто его разместил — это фиксируется при публикации. Также запрещено всё, что запрещено законами страны, на аудиторию которой направлена реклама. Нарушение — снятие оффера, повторное или грубое — бан. Пожаловаться на любой оффер можно в один тап.']
     ];
     var TIPS = [
         'Смотри на охват и ER, а не на число подписчиков.',
@@ -859,7 +859,7 @@
             '<div class="fmx-tcell"><div class="fmx-tcl">Событий сегодня</div><div class="fmx-tcv">' + (todayTotal || '—') + '</div></div>' +
             '</div>';
         var vol = [];
-        if (_pulse.market_total) vol.push('<i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'карточка', 'карточки', 'карточек'));
+        if (_pulse.market_total) vol.push('<i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'оффер', 'оффера', 'офферов'));
         if (_pulse.base_total) vol.push('<i class="ti ti-database" style="color:#818cf8;"></i> База · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
         if (vol.length) h += '<div class="fmx-tvol">' + vol.join('<span style="color:#3a3f52;">|</span>') + '</div>';
         return h;
@@ -872,7 +872,7 @@
         var total = (t.listings || 0) + (t.requests || 0) + (t.contacts || 0);
         if (!total) return '';
         var bits = [];
-        if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новая карточка', 'новые карточки', 'новых карточек'));
+        if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новый оффер', 'новых оффера', 'новых офферов'));
         if (t.requests) bits.push('<b>' + t.requests + '</b> ' + _plural(t.requests, 'заявка', 'заявки', 'заявок'));
         if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
         return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-flame" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
@@ -906,13 +906,13 @@
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,#5DCAA5,#10b981);"><i class="ti ti-building-store"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые заявки</span></div>' +
-            '<div class="fmx-entd">Каналы выставили рекламу сами: цена названа, карточки оформлены. Или выстави свой канал.</div></div>' +
+            '<div class="fmx-entd">Каналы выставили рекламу сами: цена названа, офферы оформлены. Или выстави свой канал.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="ti ti-chart-candle"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
             '<div class="fmx-entd">Медианный CPM, цены и активность по нишам — весь рынок на одном экране.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>' +
-            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка ForgeMetrics</b> — те, кто готов к сделке, и место оформить карточку своего канала.</span></div>';
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> <span><b style="color:#e8e8ed;">База</b> — справочник всех каналов, пишешь им сам. <b style="color:#e8e8ed;">Площадка ForgeMetrics</b> — те, кто готов к сделке, и место оформить оффер своего канала.</span></div>';
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
     }
 
@@ -1130,8 +1130,8 @@
         if (_feedState === 'loading' && !loadingMore) body = loadHtml();
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_feed || !_feed.length) body = hasFilters
-            ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Смягчи запрос или сбрось фильтры — и карточки вернутся.')
-            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные карточки каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
+            ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Смягчи запрос или сбрось фильтры — и офферы вернутся.')
+            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Будь первым — оформи свой канал во вкладке «Создать».');
         else {
             var feed = _applyBuyFilter(_feed);
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы» — или догрузи ленту дальше.') + moreBtn;
@@ -1293,7 +1293,7 @@
             ? '<div class="fmx-fxw" style="margin-bottom:4px;">' + _nsubs.map(function (n) {
                 return '<span class="fmx-fx on" style="display:inline-flex;align-items:center;gap:6px;">' + _esc(n) + '<i class="ti ti-x" data-nsdel="' + _esc(n) + '" style="cursor:pointer;font-size:11px;"></i></span>';
             }).join('') + '</div>'
-            : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">Подписок пока нет. Ниша твоей карточки подписывается автоматически при публикации.</div>';
+            : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">Подписок пока нет. Ниша твоего оффера подписывается автоматически при публикации.</div>';
         box.innerHTML = chips +
             '<span class="fmx-lbl fmx-mt2">Добавить нишу</span>' +
             '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="например, Криптовалюты" style="flex:1;">' +
@@ -1518,16 +1518,16 @@
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 10px;"><i class="ti ti-hand-click"></i> Тапни по части карточки, чтобы её изменить</div>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin:-12px 0 10px;"><i class="ti ti-hand-click"></i> Тапни по части оффера, чтобы его изменить</div>' +
             '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> Сброс настроек</button>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
             '<div class="fmx-chdd" id="fmx-chdd"><button class="fmx-chbtn" id="fmx-chbtn" type="button"><i class="ti ti-broadcast lead"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(cur ? ('@' + cur.username + (cur.title ? ' · ' + cur.title : '')) : 'Выбери канал') + '</span><i class="ti ti-chevron-down chev"></i></button><div class="fmx-chlist">' + rows + '</div></div>' +
             (function () {
                 if (!existing) return '<div class="fmx-chnote">Новое размещение для этого канала</div>';
                 var ms = existing.moderation_status || '';
-                if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">Карточка отклонена' + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>Исправь и нажми «Сохранить карточку» — она уйдёт на повторную проверку.</div>';
-                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;">Карточка на ручной проверке — это не блокировка' + (existing.reject_reason ? '. ' + _esc(existing.reject_reason) : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
-                return '<div class="fmx-chnote">Редактируешь карточку · статус: ' + _esc(existing.status_human || existing.status || '—') + '</div>';
+                if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">Оффер отклонён' + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>Исправь и нажми «Сохранить оффер» — он уйдёт на повторную проверку.</div>';
+                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;">Оффер на ручной проверке — это не блокировка' + (existing.reject_reason ? '. ' + _esc(existing.reject_reason) : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
+                return '<div class="fmx-chnote">Редактируешь оффер · статус:' + _esc(existing.status_human || existing.status || '—') + '</div>';
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
             accSec('avatar', 'ti-user-circle', 'Аватар', paneAvatar()) +
@@ -1536,15 +1536,15 @@
             accSec('style', 'ti-palette', 'Стиль', paneStyleMin()) +
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
-            '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке') + '</button>' +
+            '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке') + '</button>' +
             (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
                 '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-photo-star"></i> Промо-постер для рекламы канала</button>' +
-                '<button class="fmx-btn" id="fmx-lstats" style="width:100%;margin-top:8px;"><i class="ti ti-chart-bar"></i> Статистика карточки за неделю</button>' : '') +
-            '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на карточке</label>' +
+                '<button class="fmx-btn" id="fmx-lstats" style="width:100%;margin-top:8px;"><i class="ti ti-chart-bar"></i> Статистика оффера за неделю</button>' : '') +
+            '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
-            '<div class="fmx-savenote">После публикации карточка пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
+            '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
         qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
@@ -1552,7 +1552,7 @@
         el('fmx-save').addEventListener('click', saveStudio);
         var ra = el('fmx-resetAll');
         if (ra) ra.addEventListener('click', function () {
-            uiConfirm('Сбросить все настройки оформления к стандартным? На Площадке изменения появятся после сохранения карточки.', function () {
+            uiConfirm('Сбросить все настройки оформления к стандартным? На Площадке изменения появятся после сохранения оффера.', function () {
                 var keepCh = _ss.channelId, keepId = _ss.listingId, keepSt = _ss._status;
                 _ss = defaultState(); _sfmts = defaultFmts();
                 _ss.channelId = keepCh; _ss.listingId = keepId; _ss._status = keepSt;
@@ -1579,19 +1579,19 @@
                 _haptic('success');
                 _ss._status = act === 'pause' ? 'paused' : 'published';
                 for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === _ss.listingId) { _myListings[i].status = _ss._status; _myListings[i].status_human = _ss._status === 'paused' ? 'Заморожена' : 'Опубликовано'; }
-                toast(act === 'pause' ? 'Карточка заморожена — с Площадки убрана, вернёшь в любой момент' : 'Карточка снова на Площадке');
+                toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
                 _feed = null; _feedState = 'idle';
                 selectChannel(_ss.channelId);
             }).catch(function () { lp.disabled = false; uiAlert('Не получилось — попробуй ещё раз.'); });
         });
         var ld = el('fmx-ldel');
         if (ld) ld.addEventListener('click', function () {
-            uiConfirm('Удалить карточку с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
+            uiConfirm('Удалить оффер с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
                 ld.disabled = true;
                 apiRequest('/api/v1/marketplace/listings/' + _ss.listingId, { method: 'DELETE' }).then(function (r) {
                     ld.disabled = false;
                     if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не получилось удалить'); return; }
-                    _haptic('success'); toast('Карточка удалена');
+                    _haptic('success'); toast('Оффер удалён');
                     var delId = _ss.listingId;
                     _myListings = _myListings.filter(function (x) { return x.id !== delId; });
                     _ss.listingId = null; _ss._status = null;
@@ -1705,7 +1705,7 @@
             fxChips('orbit', FX_ORBIT, 'Орбита') +
             atomRow() +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки') +
-            '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение карточки <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
+            '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
             '<div style="font-size:10.5px;color:#8990a8;margin-bottom:6px;">Тег «Топ месяца» в шапке</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
@@ -1720,8 +1720,8 @@
         return '<span class="fmx-lbl">Акцент — цена и кнопка</span>' + colorPick('fmx-colors', _ss.color) +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон карточки <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
-            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка, GIF или видео внутри карточки, где цифры и кнопки — эксклюзив продвижения на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
+            '<span class="fmx-lbl fmx-mt2" style="color:#f5bf4f;">Фон оффера <i class="ti ti-lock" style="font-size:10px;"></i></span>' +
+            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка, GIF или видео внутри оффера, где цифры и кнопки — эксклюзив продвижения на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
     }
     function hslHex(h) {
         var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
@@ -1965,7 +1965,7 @@
         var mb = el('fmx-modboost');
         if (mb) mb.addEventListener('click', function () {
             var base = listingForChannel(_ss.channelId);
-            if (!base) { toast('Сначала сохрани карточку — топ включается для опубликованной'); return; }
+            if (!base) { toast('Сначала сохрани оффер — топ включается для опубликованного'); return; }
             mb.disabled = true;
             apiPost('/api/v1/marketplace/mod/boost', { listing_id: base.id }).then(function (r) {
                 if (r && r.ok) {
@@ -1986,7 +1986,7 @@
         }).join('');
     }
     function panePrice() {
-        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Цену задаёшь сам. Ориентируйся на CPM и охват канала — так рекламодателю проще сравнить. Включённые форматы видны на карточке.</div>';
+        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Цену задаёшь сам. Ориентируйся на CPM и охват канала — так рекламодателю проще сравнить. Включённые форматы видны в оффере.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
         return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots;
     }
@@ -2066,9 +2066,9 @@
         box.style.aspectRatio = target === 'avatar' ? '1 / 1' : (target === 'cardbg' ? '4 / 5' : '2 / 1');
         box.innerHTML = (kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">') +
             (target === 'cover' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона шапки — видна на 100%</span></div>' : '') +
-            (target === 'cardbg' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона карточки — видна на 100%</span></div>' : '') +
+            (target === 'cardbg' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона оффера — видна на 100%</span></div>' : '') +
             (target === 'avatar' ? '<div class="fmx-safeR"></div>' : '');
-        el('fmx-cropHint').textContent = target === 'avatar' ? 'Пунктирный контур — видимая зона аватара, углы срежутся скруглением.' : (target === 'cardbg' ? 'Пунктирная полоса — видимая часть тела карточки. Цифры затемняются подложкой автоматически.' : 'Пунктирная полоса — то, что видно в шапке карточки. Затемнённое сверху и снизу в шапку не попадает.');
+        el('fmx-cropHint').textContent = target === 'avatar' ? 'Пунктирный контур — видимая зона аватара, углы срежутся скруглением.' : (target === 'cardbg' ? 'Пунктирная полоса — видимая часть тела оффера. Цифры затемняются подложкой автоматически.' : 'Пунктирная полоса — то, что видно в шапке оффера. Затемнённое сверху и снизу в шапку не попадает.');
         el('fmx-cropZoom').value = s;
         cropApply();
         showModal('fmx-cropBg');
@@ -2179,7 +2179,7 @@
         var modeDots = '<div class="fmx-stkmodes">' + [['top', 'Поверх'], ['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
             return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
         }).join('') + '</div>';
-        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с карточки"></i>' + modeDots + '</div>';
+        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Тащи, щипай, крути"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с оффера"></i>' + modeDots + '</div>';
     }
     var _lotLibs = null;
     function _script(u) {
@@ -2285,7 +2285,7 @@
                     '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
                     '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
                 if (free) {
-                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на карточке-превью: тап по стикеру — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
+                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: тап по стикеру — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (поверх · слияние · задний фон).</div>';
                 }
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
@@ -2416,7 +2416,7 @@
                     if (_ss.badgeFree) { delete _ss.badgeFree[key]; if (!Object.keys(_ss.badgeFree).length) _ss.badgeFree = null; }
                     _haptic('light'); renderHero(); return;
                 }
-                if (p.bad) { toast('Сюда нельзя: имя, аватар и низ карточки — запретная зона'); return; }
+                if (p.bad) { toast('Сюда нельзя: имя, аватар и низ оффера — запретная зона'); return; }
                 if (!_ss.badgeFree) _ss.badgeFree = {};
                 _ss.badgeFree[key] = { x: p.x, y: p.y };
                 _haptic('light');
@@ -2661,7 +2661,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260710o';
+    var PS_GLUE_V = '20260710r';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -2729,7 +2729,7 @@
     }
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
-        if (!base || !base.id) { toast('Сначала сохрани карточку — постер строится по ней'); return; }
+        if (!base || !base.id) { toast('Сначала сохрани оффер — постер строится по нему'); return; }
         var chan = channelById(_ss.channelId) || {};
         var realAvatar = chan.avatar_url || null;
         /* ниша — как на карточке Площадки: из листинга, иначе из канала */
@@ -3014,7 +3014,7 @@
         if (hasFiles) btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю файлы…';
         uploadPending().then(function () { _saveListing(btn); }).catch(function (e) {
             _haptic('error'); btn.disabled = false;
-            btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке');
+            btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке');
             uiAlert('Не удалось загрузить файл: ' + (e && e.message ? e.message : 'ошибка'));
         });
     }
@@ -3042,7 +3042,7 @@
         if (_ss.listingId) p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
         else { if (!_ss.channelId) { btn.disabled = false; uiAlert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
-            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить карточку' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
+            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
             if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } }
             if (r && (r.resubmitted || r.needs_review)) {
@@ -3056,13 +3056,13 @@
                 }
             }
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
-            toast(r && r.needs_review ? 'Карточка ушла на ручную проверку — проверим и вернём' : (r && r.resubmitted ? 'Карточка отправлена на повторную проверку' : 'Карточка сохранена'));
+            toast(r && r.needs_review ? 'Оффер ушёл на ручную проверку — проверим и вернём' : (r && r.resubmitted ? 'Оффер отправлен на повторную проверку' : 'Оффер сохранён'));
             _feed = null; _feedState = 'idle';
             setTimeout(function () {
                 // новая карточка: перерисовываем панель, чтобы сразу появились кнопки управления
                 // (Промо-постер, Статистика, Заморозить, Удалить) — раньше они не показывались до перезахода
                 if (wasCreate) { paintCreate(); }
-                else { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить карточку'; btn.disabled = false; }
+                else { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить оффер'; btn.disabled = false; }
             }, 1600);
         }).catch(function (e) { _haptic('error'); btn.disabled = false; uiAlert('Не удалось сохранить: ' + (e && e.message ? e.message : 'ошибка')); });
     }
@@ -3229,7 +3229,7 @@
         }
         var row = t.closest('#fmx-bmBody .fmx-bmrow');
         if (row) {
-            if (row.classList.contains('frz')) { _haptic('light'); toast('Карточка в заморозке — владелец приостановил продажу'); return; }
+            if (row.classList.contains('frz')) { _haptic('light'); toast('Оффер в заморозке — владелец приостановил продажу'); return; }
             _haptic('light');
             openBmView(row.getAttribute('data-open'));
             return;
@@ -3298,7 +3298,7 @@
     }
     /* статистика карточки владельцу: развороты и клики «Написать» за 7 дней + мини-график по дням */
     function openListingStats(lid) {
-        lid = parseInt(lid, 10); if (!lid) { toast('Сначала сохрани карточку'); return; }
+        lid = parseInt(lid, 10); if (!lid) { toast('Сначала сохрани оффер'); return; }
         var old = el('fmx-statsBg'); if (old) old.remove();
         var bg = document.createElement('div'); bg.id = 'fmx-statsBg'; bg.className = 'fmx-cfm';
         bg.innerHTML = '<div class="fmx-cfm-box" style="max-width:440px;">' +
@@ -3329,14 +3329,14 @@
             body.innerHTML =
                 '<div style="display:flex;gap:10px;margin-bottom:16px;">' +
                 '<div style="flex:1;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);border-radius:12px;padding:12px;text-align:center;">' +
-                '<div style="font-size:26px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:11px;color:#a9aec0;margin-top:2px;">Развернули карточку</div></div>' +
+                '<div style="font-size:26px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:11px;color:#a9aec0;margin-top:2px;">Развернули оффер</div></div>' +
                 '<div style="flex:1;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);border-radius:12px;padding:12px;text-align:center;">' +
                 '<div style="font-size:26px;font-weight:800;color:#818cf8;">' + t.writes + '</div><div style="font-size:11px;color:#a9aec0;margin-top:2px;">Нажали «Написать»</div></div></div>' +
                 '<div style="display:flex;align-items:flex-end;gap:3px;padding:6px 2px;">' + bars + '</div>' +
                 '<div style="display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:11px;color:#8990a8;">' +
                 '<span><span style="display:inline-block;width:8px;height:8px;background:#5DCAA5;border-radius:2px;margin-right:4px;"></span>Развороты</span>' +
                 '<span><span style="display:inline-block;width:8px;height:8px;background:#818cf8;border-radius:2px;margin-right:4px;"></span>Написать</span></div>' +
-                (t.expands + t.writes === 0 ? '<div style="font-size:12px;color:#8990a8;text-align:center;margin-top:14px;">Пока данных нет. Как только карточку начнут смотреть на Площадке — здесь появятся цифры.</div>' : '');
+                (t.expands + t.writes === 0 ? '<div style="font-size:12px;color:#8990a8;text-align:center;margin-top:14px;">Пока данных нет. Как только оффер начнут смотреть на Площадке — здесь появятся цифры.</div>' : '');
         }).catch(function () { var b = el('fmx-statsBody'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Ошибка', 'Проверь связь.'); });
     }
     function openTg(u) { _haptic('light'); var url = 'https://t.me/' + u; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); } }
@@ -3363,7 +3363,7 @@
         bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
 
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
-        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть карточку</h2><p>Поднимает карточку выше в умной сортировке — её видит больше рекламодателей. Топ смешанный: платные и обычные карточки чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
+        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть оффер</h2><p>Поднимает оффер выше в умной сортировке — его видит больше рекламодателей. Топ смешанный: платные и обычные офферы чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
         document.body.appendChild(promo);
         promo.addEventListener('click', function (e) { if (e.target === promo) hideModal('fmx-promoBg'); });
         promo.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-promoBg'); });
@@ -3375,13 +3375,13 @@
         lst.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-listBg'); });
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
-        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-report-analytics" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div><div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-hourglass-high"></i><h3>Скоро</h3><p>Глубокий разбор подключается. Пока смотри метрики в «Развернуть» и бейджи здоровья на карточке.</p></div></div></div>';
+        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-report-analytics" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div><div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-hourglass-high"></i><h3>Скоро</h3><p>Глубокий разбор подключается. Пока смотри метрики в «Развернуть» и бейджи здоровья в оффере.</p></div></div></div>';
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
 
         var rv = document.createElement('div'); rv.className = 'fmx-mbg'; rv.id = 'fmx-revBg';
-        rv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Отзыв о сделке</h2><p>Виден всем в развороте карточки</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-revBody"></div></div>';
+        rv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Отзыв о сделке</h2><p>Виден всем в развороте оффера</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-revBody"></div></div>';
         document.body.appendChild(rv);
         rv.addEventListener('click', function (e) { if (e.target === rv) hideModal('fmx-revBg'); });
         qsa(rv, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-revBg'); }); });
@@ -3463,7 +3463,7 @@
                 'Появляется, только когда площадка реально проверила канал (без обмана и запрещёнки). Если значка нет — проверку ещё не проходили, это не значит «плохой».');
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
         bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат значки</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Значки на карточке помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
+            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Значки в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
         document.body.appendChild(bg);
         bg.addEventListener('click', function (e) { if (e.target === bg) hideModal('fmx-bgdBg'); });
         bg.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bgdBg'); });
@@ -3482,10 +3482,10 @@
     function openPromo() {
         el('fmx-promoBody').innerHTML =
             '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-bolt" style="color:#818cf8;"></i> Поднятие 24 часа</div><div class="fmx-po-pr">490 ₽</div></div>' +
-            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем карточку выше в топе на сутки. Больше показов — больше откликов.</div>' +
+            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем оффер выше в топе на сутки. Больше показов — больше откликов.</div>' +
             '<button class="fmx-po-buy" data-buy="24">Поднять на 24 часа</button></div>' +
             '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-bolt" style="color:#818cf8;"></i> Поднятие 48 часов</div><div class="fmx-po-pr">1 390 ₽</div></div>' +
-            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем карточку выше в топе на двое суток — дольше наверху, больше откликов.</div>' +
+            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем оффер выше в топе на двое суток — дольше наверху, больше откликов.</div>' +
             '<button class="fmx-po-buy" data-buy="48">Поднять на 48 часов</button></div>' +
             '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Поднятия на 24 и 48 часов вместе — не больше 3 раз за 30 дней.</div>' +
             '<div class="fmx-po gold"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвижение 30 дней</div><div class="fmx-po-pr gold">29 990 ₽</div></div>' +
@@ -3520,7 +3520,7 @@
             (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i>' + (_bookmarks[u] ? 'В закладках' : 'В закладки') + '</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div>' +
-            (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на карточку</button>' : '');
+            (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на оффер</button>' : '');
         el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) {
             b.addEventListener('click', function () {
                 toggleBm(b.getAttribute('data-bm'));
@@ -3577,7 +3577,7 @@
             items.forEach(function (it) { _bookmarks[it.listing.username] = true; _bmMap[it.listing.username] = it.listing; });
             updateBmCount();
             if (!items.length) {
-                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Жми ★ на карточках, чтобы сохранить канал.</p></div>';
+                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Жми ★ на офферах, чтобы сохранить канал.</p></div>';
                 return;
             }
             box.innerHTML = items.map(function (it) {
