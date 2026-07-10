@@ -340,7 +340,9 @@ function renderActions(actions) {
         card.className = 'action-card';
         card.dataset.action = action.id;
 
-        const colorClass = `icon-${action.color || 'purple'}`;
+        // бэкенд помечает главное действие color:"primary" — класса .icon-primary нет, поэтому маплем на purple (плитка как у остальных)
+        const iconColor = (action.color && action.color !== 'primary') ? action.color : 'purple';
+        const colorClass = `icon-${iconColor}`;
         const subtitleClass = action.color === 'green' ? 'highlight' : '';
 
         card.innerHTML = `
