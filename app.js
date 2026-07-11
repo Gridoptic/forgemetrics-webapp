@@ -294,20 +294,26 @@ function localizeAttrs(el) {
         if (tr) el.setAttribute(a, v.replace(trimmed, tr));
     }
 }
+// Перевод одного текстового узла (общая точка для обхода дерева и наблюдателя).
+function localizeTextNode(n) {
+    try {
+        const raw = n.nodeValue;
+        if (!raw) return;
+        const trimmed = raw.trim();
+        if (!trimmed) return;
+        const tr = localizeStr(trimmed);
+        if (tr) n.nodeValue = raw.replace(trimmed, tr);
+    } catch (e) {}
+}
 function localizeTree(root) {
     if (!root || typeof getLang !== 'function' || getLang() === 'ru' || typeof t !== 'function') return;
     try {
+        if (root.nodeType === 3) { localizeTextNode(root); return; }
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         const nodes = [];
         let node;
         while ((node = walker.nextNode())) nodes.push(node);
-        nodes.forEach((n) => {
-            const raw = n.nodeValue;
-            const trimmed = raw.trim();
-            if (!trimmed) return;
-            const tr = localizeStr(trimmed);
-            if (tr) n.nodeValue = raw.replace(trimmed, tr);
-        });
+        nodes.forEach(localizeTextNode);
         // атрибуты (подсказки/плейсхолдеры) на самом узле и всех вложенных
         localizeAttrs(root);
         if (root.querySelectorAll) {
@@ -324,11 +330,16 @@ function initAutoLocalize() {
         localizeTree(document.body);
         const obs = new MutationObserver((muts) => {
             muts.forEach((m) => {
+                // текст, заданный через element.textContent / изменение nodeValue
+                if (m.type === 'characterData') { localizeTextNode(m.target); return; }
                 if (!m.addedNodes) return;
-                m.addedNodes.forEach((n) => { if (n.nodeType === 1) localizeTree(n); });
+                m.addedNodes.forEach((n) => {
+                    if (n.nodeType === 1) localizeTree(n);         // элемент — обходим целиком
+                    else if (n.nodeType === 3) localizeTextNode(n); // текстовый узел
+                });
             });
         });
-        obs.observe(document.body, { childList: true, subtree: true });
+        obs.observe(document.body, { childList: true, subtree: true, characterData: true });
     } catch (e) {}
 }
 
