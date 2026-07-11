@@ -281,8 +281,13 @@ function localizeTree(root) {
             const raw = n.nodeValue;
             const trimmed = raw.trim();
             if (!trimmed) return;
-            const tr = t(trimmed);
-            if (tr && tr !== trimmed) n.nodeValue = raw.replace(trimmed, tr);
+            let tr = t(trimmed);
+            if (tr && tr !== trimmed) { n.nodeValue = raw.replace(trimmed, tr); return; }
+            // строки с подстановкой (числа/имена/цены) — по шаблону
+            if (typeof translateTemplate === 'function') {
+                const tt = translateTemplate(trimmed);
+                if (tt && tt !== trimmed) n.nodeValue = raw.replace(trimmed, tt);
+            }
         });
     } catch (e) {}
 }
