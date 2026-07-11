@@ -1727,7 +1727,7 @@
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin:2px 0 10px;line-height:1.35;"><i class="ti ti-hand-click"></i> Нажми на часть оффера, чтобы изменить его</div>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin:0 0 10px;padding-top:8px;line-height:1.35;position:relative;z-index:2;background:var(--bg-base);"><i class="ti ti-hand-click"></i> Нажми на часть оффера, чтобы изменить его</div>' +
             '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> Сброс настроек</button>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
             '<div class="fmx-chdd" id="fmx-chdd"><button class="fmx-chbtn" id="fmx-chbtn" type="button"><i class="ti ti-broadcast lead"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(cur ? ('@' + cur.username + (cur.title ? ' · ' + cur.title : '')) : 'Выбери канал') + '</span><i class="ti ti-chevron-down chev"></i></button><div class="fmx-chlist">' + rows + '</div></div>' +
