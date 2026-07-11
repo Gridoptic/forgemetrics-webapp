@@ -3360,7 +3360,7 @@ on('qrChips', 'click', function (e) {
 </script>
 <!-- Локализация пульта редактора (в iframe). Словарь берём из родителя — без повторной загрузки.
      #poster (замороженный макет) не трогаем. Серверный рендер: LANG='ru' → autoLocalize молча выходит. -->
-<script src="i18n.js?v=11"></script>
+<script src="i18n.js?v=12"></script>
 <script>
   try { if (window.parent && window.parent !== window && window.parent.__I18N_DICT) window.__I18N_DICT = window.parent.__I18N_DICT; } catch (e) {}
   try { window.autoLocalize && window.autoLocalize({ skip: '#poster' }); } catch (e) {}
