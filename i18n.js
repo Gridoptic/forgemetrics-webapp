@@ -13,6 +13,19 @@
     };
     // флаги-эмодзи для переключателя (нейтрально: язык, не политика — берём распространённые)
     var FLAGS = { ru: '🇷🇺', en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', kk: '🇰🇿', uz: '🇺🇿', be: '🇧🇾', az: '🇦🇿' };
+    // SVG-флаги: эмодзи-флаги НЕ рендерятся в Telegram Desktop на Windows (показываются как буквы стран),
+    // поэтому рисуем сами. Простые узнаваемые версии (без сложных гербов). viewBox 24x18, скругление — по CSS.
+    var _fl = function (inner) { return '<svg class="flsvg" viewBox="0 0 24 18" preserveAspectRatio="none">' + inner + '</svg>'; };
+    var FLAG_SVG = {
+        ru: _fl('<rect width="24" height="6" fill="#fff"/><rect y="6" width="24" height="6" fill="#0039A6"/><rect y="12" width="24" height="6" fill="#D52B1E"/>'),
+        en: _fl('<rect width="24" height="18" fill="#012169"/><path d="M0,0 L24,18 M24,0 L0,18" stroke="#fff" stroke-width="3.6"/><path d="M0,0 L24,18 M24,0 L0,18" stroke="#C8102E" stroke-width="1.6"/><rect x="9.5" width="5" height="18" fill="#fff"/><rect y="6.5" width="24" height="5" fill="#fff"/><rect x="10.5" width="3" height="18" fill="#C8102E"/><rect y="7.5" width="24" height="3" fill="#C8102E"/>'),
+        es: _fl('<rect width="24" height="18" fill="#AA151B"/><rect y="4.5" width="24" height="9" fill="#F1BF00"/>'),
+        de: _fl('<rect width="24" height="6" fill="#000"/><rect y="6" width="24" height="6" fill="#DD0000"/><rect y="12" width="24" height="6" fill="#FFCE00"/>'),
+        kk: _fl('<rect width="24" height="18" fill="#00AFCA"/><circle cx="12" cy="8" r="3.4" fill="#FEC50C"/><rect x="7" y="14" width="10" height="1.4" fill="#FEC50C"/>'),
+        uz: _fl('<rect width="24" height="6" fill="#0099B5"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#1EB53A"/><rect y="5.3" width="24" height="0.7" fill="#CE1126"/><rect y="12" width="24" height="0.7" fill="#CE1126"/>'),
+        be: _fl('<rect width="24" height="12" fill="#D22730"/><rect y="12" width="24" height="6" fill="#009739"/><rect width="4" height="18" fill="#fff"/>'),
+        az: _fl('<rect width="24" height="6" fill="#0092BC"/><rect y="6" width="24" height="6" fill="#EF3340"/><rect y="12" width="24" height="6" fill="#509E2F"/><circle cx="11.5" cy="9" r="2.6" fill="#fff"/><circle cx="12.4" cy="9" r="2.2" fill="#EF3340"/>'),
+    };
 
     function detect() {
         try {
@@ -31,7 +44,7 @@
     // словари переводов подмешиваются в window.__I18N_DICT позже (i18n_dict.js)
     var DICT = window.__I18N_DICT || {};
 
-    window.I18N = { supported: SUPPORTED, names: NAMES, flags: FLAGS };
+    window.I18N = { supported: SUPPORTED, names: NAMES, flags: FLAGS, flagSvg: FLAG_SVG };
     window.getLang = function () { return LANG; };
     window.setLang = function (l) {
         if (SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
@@ -56,6 +69,7 @@
         { re: /^подключён (\d+) (янв|фев|мар|апр|мая|июн|июл|авг|сен|окт|ноя|дек)$/, k: 'подключён %1 %2' },
         { re: /^(\d+) (янв|фев|мар|апр|мая|июн|июл|авг|сен|окт|ноя|дек) в (\d\d:\d\d)$/, k: '%1 %2 в %3' },
         { re: /^([\d\s  .,]+) символов$/, k: '%1 символов' },
+        { re: /^([\d\s  .,]+) постов$/, k: '%1 постов' },
         { re: /^Тариф (.+?) · \+(\d+) дн\.$/, k: 'Тариф %1 · +%2 дн.' },
         { re: /^Тариф (.+?)\. Больше каналов — на тарифе Pro$/, k: 'Тариф %1. Больше каналов — на тарифе Pro' },
         { re: /^Тариф (.+?)\. Это максимум для твоего тарифа$/, k: 'Тариф %1. Это максимум для твоего тарифа' },
