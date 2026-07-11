@@ -165,6 +165,8 @@ async function apiRequest(path, options = {}) {
     if (state.initData) {
         headers['X-Telegram-Init-Data'] = state.initData;
     }
+    // выбранный язык интерфейса — чтобы AI-ответы (аудит, конкуренты, биржа, посты) приходили на нём
+    try { if (typeof getLang === 'function') headers['X-Lang'] = getLang(); } catch (e) {}
 
     const url = `${API_BASE_URL}${path}`;
 
