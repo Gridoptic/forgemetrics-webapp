@@ -1735,7 +1735,7 @@
                 if (!existing) return '<div class="fmx-chnote">Новое размещение для этого канала</div>';
                 var ms = existing.moderation_status || '';
                 if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">Оффер отклонён' + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>Исправь и нажми «Сохранить оффер» — он уйдёт на повторную проверку.</div>';
-                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;"><span>Оффер на ручной проверке — это не блокировка</span>' + (existing.reject_reason ? '. ' + _esc(existing.reject_reason) : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
+                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;"><span>Оффер на ручной проверке — это не блокировка</span>' + (existing.reject_reason ? '. <span>' + _esc(existing.reject_reason) + '</span>' : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
                 return '<div class="fmx-chnote">Редактируешь оффер · статус:' + _esc(existing.status_human || existing.status || '—') + '</div>';
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
