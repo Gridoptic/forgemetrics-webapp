@@ -1663,7 +1663,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". The generated text is inserted into the poster automatically, within the character limit.",
   "в ForgeMetrics с %1 %2": "With ForgeMetrics since %1 %2",
   "подключён %1 %2": "connected %1 %2",
-  "%1 символов": "%1 characters"
+  "%1 символов": "%1 characters",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "es": {
   "Мужская": "Masculina",
@@ -3326,7 +3327,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". El texto generado se inserta en el póster automáticamente, dentro del límite de caracteres.",
   "в ForgeMetrics с %1 %2": "en ForgeMetrics desde %1 %2",
   "подключён %1 %2": "conectado %1 %2",
-  "%1 символов": "%1 caracteres"
+  "%1 символов": "%1 caracteres",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "de": {
   "Мужская": "Männlich",
@@ -4989,7 +4991,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". Der fertige Text wird automatisch in das Poster eingefügt, innerhalb des Zeichenlimits.",
   "в ForgeMetrics с %1 %2": "bei ForgeMetrics seit %1 %2",
   "подключён %1 %2": "verbunden %1 %2",
-  "%1 символов": "%1 Zeichen"
+  "%1 символов": "%1 Zeichen",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "kk": {
   "Мужская": "Ерлер",
@@ -6651,7 +6654,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". Дайын мәтін таңба лимиті шегінде постерге автоматты түрде қойылады.",
   "в ForgeMetrics с %1 %2": "%1 %2 бастап ForgeMetrics-те",
   "подключён %1 %2": "қосылды %1 %2",
-  "%1 символов": "%1 таңба"
+  "%1 символов": "%1 таңба",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "uz": {
   "Мужская": "Erkak",
@@ -8314,7 +8318,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". Tayyor matn posterga avtomatik tarzda, belgilar limiti doirasida joylashtiriladi.",
   "в ForgeMetrics с %1 %2": "ForgeMetricsda %1 %2 dan beri",
   "подключён %1 %2": "ulandi %1 %2",
-  "%1 символов": "%1 belgi"
+  "%1 символов": "%1 belgi",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "be": {
   "Мужская": "Мужчынская",
@@ -9978,7 +9983,8 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". Гатовы тэкст устаўляецца ў постар аўтаматычна, у межах ліміту сімвалаў.",
   "в ForgeMetrics с %1 %2": "у ForgeMetrics з %1 %2",
   "подключён %1 %2": "падключаны %1 %2",
-  "%1 символов": "%1 сімвалаў"
+  "%1 символов": "%1 сімвалаў",
+  "%1 %2 в %3": "%1 %2, %3"
  },
  "az": {
   "Мужская": "Kişi",
@@ -11641,6 +11647,7 @@ window.__I18N_DICT = {
   ". Готовый текст вставляется в постер автоматически, в пределах лимита символов.": ". Hazır mətn simvol limiti daxilində postere avtomatik əlavə olunur.",
   "в ForgeMetrics с %1 %2": "ForgeMetrics-də %1 %2-dən bəri",
   "подключён %1 %2": "qoşulub %1 %2",
-  "%1 символов": "%1 simvol"
+  "%1 символов": "%1 simvol",
+  "%1 %2 в %3": "%1 %2, %3"
  }
 };
