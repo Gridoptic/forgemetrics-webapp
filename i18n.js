@@ -52,7 +52,9 @@
     // Порядок важен: более конкретные шаблоны идут раньше общих.
     var TEMPLATES = [
         { re: /^Привет, (.+)$/, k: 'Привет, %1' },
-        { re: /^в ForgeMetrics с (.+)$/, k: 'в ForgeMetrics с %1' },
+        { re: /^в ForgeMetrics с ([А-Яа-яЁё]+) (\d{4})$/, k: 'в ForgeMetrics с %1 %2' },
+        { re: /^подключён (\d+) (янв|фев|мар|апр|мая|июн|июл|авг|сен|окт|ноя|дек)$/, k: 'подключён %1 %2' },
+        { re: /^([\d\s  .,]+) символов$/, k: '%1 символов' },
         { re: /^Тариф (.+?) · \+(\d+) дн\.$/, k: 'Тариф %1 · +%2 дн.' },
         { re: /^Тариф (.+?)\. Больше каналов — на тарифе Pro$/, k: 'Тариф %1. Больше каналов — на тарифе Pro' },
         { re: /^Тариф (.+?)\. Это максимум для твоего тарифа$/, k: 'Тариф %1. Это максимум для твоего тарифа' },
@@ -123,42 +125,46 @@
             if (out == null || out === '') out = TEMPLATES[i].k;
             for (var g = m.length - 1; g >= 1; g--) {
                 var val = m[g];
-                var tv = window.t(val);            // переводим захваченную часть, если она есть в словаре
-                if ((tv == null || tv === val) && window.edgeTranslate) { var ev = window.edgeTranslate(val); if (ev) tv = ev; }
+                var tv = window.t(val);            // переводим захваченную часть, если она точно есть в словаре
                 out = out.split('%' + g).join(tv != null ? tv : val);
             }
             return out;
         }
         return text;
     };
-    // Перевод отрезка: точный ключ → шаблон → крайняя словарная фраза. null если ничего.
+    // Перевод отрезка: точный ключ → шаблон. edge НЕ используем (рискует задеть данные —
+    // названия/описания каналов); для конкретных склеек есть точные шаблоны.
     function _segTr(seg) {
         if (!seg) return null;
         var r = window.t(seg);
         if (r && r !== seg) return r;
         if (window.translateTemplate) { var x = window.translateTemplate(seg); if (x && x !== seg) return x; }
-        if (window.edgeTranslate) { var y = window.edgeTranslate(seg); if (y) return y; }
         return null;
     }
-    // Крайняя словарная фраза внутри составного узла: переводим самую длинную ведущую или
-    // хвостовую фразу, что есть в словаре, остальное (динамику: @имена, числа, даты) не трогаем.
-    // Ловит «@user · 1 911 подп» (хвост «подп»), «0 / 5000 символов» (хвост «символов»), «Жирный ·» (голова).
+    // Перевод КРАЙНИХ словарных фраз (голова + хвост) составного узла; середину НЕ трогаем —
+    // чтобы не перевести слово-данные внутри описания/имени канала. Переводит самую длинную
+    // ведущую фразу и самую длинную хвостовую фразу, что есть в словаре.
+    // Ловит «подключён 15 июн» (голова «подключён» + хвост «июн»), «Жирный ·» (голова), «0 / 5000 символов» (хвост).
     window.edgeTranslate = function (trimmed) {
         if (LANG === 'ru' || trimmed == null) return null;
         var words = trimmed.split(' ');
         if (words.length < 2) return null;
-        var take, part, tv;
-        for (take = Math.min(6, words.length - 1); take >= 1; take--) {   // хвост: длиннее — приоритетнее
-            part = words.slice(words.length - take).join(' ');
-            tv = window.t(part);
-            if (tv && tv !== part) return words.slice(0, words.length - take).join(' ') + ' ' + tv;
+        var lo = 0, hi = words.length, head = null, tail = null, take, p, tv;
+        for (take = Math.min(8, words.length - 1); take >= 1; take--) {   // голова
+            p = words.slice(0, take).join(' ');
+            if (take === 1 && p.length < 3) continue;
+            tv = window.t(p);
+            if (tv && tv !== p) { head = tv; lo = take; break; }
         }
-        for (take = Math.min(6, words.length - 1); take >= 1; take--) {   // голова
-            part = words.slice(0, take).join(' ');
-            tv = window.t(part);
-            if (tv && tv !== part) return tv + ' ' + words.slice(take).join(' ');
+        for (take = Math.min(8, words.length - lo - 1); take >= 1; take--) {  // хвост (не залезая на голову)
+            p = words.slice(words.length - take).join(' ');
+            if (take === 1 && p.length < 3) continue;
+            tv = window.t(p);
+            if (tv && tv !== p) { tail = tv; hi = words.length - take; break; }
         }
-        return null;
+        if (head === null && tail === null) return null;
+        var mid = words.slice(lo, hi).join(' ');
+        return [head, mid, tail].filter(function (x) { return x !== null && x !== ''; }).join(' ');
     };
     // Составной узел с разделителями (· — / |): делим, переводим каждый отрезок, разделители сохраняем.
     // Ловит «приватный · подключён 15 июн», «На проверке · нажми, чтобы управлять» и т.п.
@@ -176,11 +182,14 @@
         }
         return changed ? out : null;
     };
-    // Ведущий разделитель («— X», «· X»): переводим X, разделитель сохраняем.
+    // Разделитель по краям («— X», «· X», «X ·»): переводим ядро (exact/шаблон), разделитель
+    // сохраняем. Ядро переводится только если оно точно в словаре — данные не заденет.
     window.stripSepTranslate = function (trimmed) {
         if (LANG === 'ru' || trimmed == null) return null;
-        var m = trimmed.match(/^([—–\-·|/]+\s+)(.+)$/);
+        var m = trimmed.match(/^([—–\-·|/]+\s+)(.+)$/);   // ведущий
         if (m) { var ct = _segTr(m[2]); if (ct) return m[1] + ct; }
+        var e = trimmed.match(/^(.+?)(\s+[—–·|/]+)$/);    // хвостовой («Жирный ·»)
+        if (e) { var ct2 = _segTr(e[1]); if (ct2) return ct2 + e[2]; }
         return null;
     };
 
@@ -197,7 +206,6 @@
             if (window.translateTemplate) { var t2 = window.translateTemplate(s); if (t2 && t2 !== s) return t2; }
             if (window.stripSepTranslate) { var t3 = window.stripSepTranslate(s); if (t3) return t3; }
             if (window.segmentTranslate) { var t4 = window.segmentTranslate(s); if (t4) return t4; }
-            if (window.edgeTranslate) { var t5 = window.edgeTranslate(s); if (t5) return t5; }
             return null;
         }
         function inSkip(node) {
