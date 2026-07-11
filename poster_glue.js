@@ -10,6 +10,107 @@
   function el(id) { return document.getElementById(id); }
   function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
 
+  /* ===== локализация постера (метки/цена) — МАКЕТ НЕ ТРОГАЕМ =====
+     Переводим только известные статичные подписи #poster по карте; данные (имя канала,
+     ниша, числа, хук, свой формат размещения) не затрагиваем. Работает и в редакторе
+     (переключатель в пульте), и на сервере (язык берётся из state.lang → кеш PNG делится по языкам). */
+  var POSTER_L = {
+    ru: {"subs":"Подписчики","reach":"Средний охват","post_i":"· пост","er":"Вовлечённость","cpm":"Цена 1000 показов","err":"Охват к базе","grow":"Прирост · 30 дней","freq":"Частота постов","mv":"Просмотры · месяц","chart":"Просмотры · 30 дней","prsub":"минимальный формат размещения","cta":"Забронировать","prpref":"Реклама от","prneg":"Цена по договорённости","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    en: {"subs":"Subscribers","reach":"Average reach","post_i":"· post","er":"Engagement","cpm":"Price per 1000 impressions","err":"Reach to base","grow":"Growth · 30 days","freq":"Posting frequency","mv":"Views · month","chart":"Views · 30 days","prsub":"minimum placement format","cta":"Reserve","prpref":"Ads from","prneg":"Price on request","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    es: {"subs":"Suscriptores","reach":"Alcance medio","post_i":"· post","er":"Interacción","cpm":"Precio de 1000 impresiones","err":"Alcance sobre base","grow":"Crecimiento · 30 días","freq":"Frecuencia de publicaciones","mv":"Vistas · mes","chart":"Vistas · 30 días","prsub":"formato mínimo de publicación","cta":"Reservar","prpref":"Publicidad desde","prneg":"Precio a convenir","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    de: {"subs":"Abonnenten","reach":"Durchschnittliche Reichweite","post_i":"· Beitrag","er":"Engagement","cpm":"Preis pro 1000 Impressionen","err":"Reichweite zur Basis","grow":"Zuwachs · 30 Tage","freq":"Beitragsfrequenz","mv":"Aufrufe · Monat","chart":"Aufrufe · 30 Tage","prsub":"Mindestformat der Platzierung","cta":"Reservieren","prpref":"Werbung ab","prneg":"Preis auf Anfrage","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    kk: {"subs":"Жазылушылар","reach":"Орташа қамту","post_i":"· жазба","er":"Тартылым","cpm":"1000 көрсетілім бағасы","err":"Базаға қамту","grow":"Өсім · 30 күн","freq":"Постар жиілігі","mv":"Қаралымдар · ай","chart":"Қаралымдар · 30 күн","prsub":"орналастырудың ең аз форматы","cta":"Брондау","prpref":"Жарнама, бастап","prneg":"Баға келісім бойынша","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    uz: {"subs":"Obunachilar","reach":"Oʻrtacha qamrov","post_i":"· post","er":"Jalb etilganlik","cpm":"1000 ta koʻrsatish narxi","err":"Bazaga qamrov","grow":"Oʻsish · 30 kun","freq":"Postlar chastotasi","mv":"Koʻrishlar · oy","chart":"Ko'rishlar · 30 kun","prsub":"joylashtirishning minimal formati","cta":"Band qilish","prpref":"Reklama —","prneg":"Narx kelishuv asosida","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    be: {"subs":"Падпісчыкі","reach":"Сярэдні ахоп","post_i":"· допіс","er":"Уцягнутасць","cpm":"Цана 1000 паказаў","err":"Ахоп да базы","grow":"Прырост · 30 дзён","freq":"Частата пастоў","mv":"Прагляды · месяц","chart":"Прагляды · 30 дзён","prsub":"мінімальны фармат размяшчэння","cta":"Забраніраваць","prpref":"Рэклама ад","prneg":"Цана па дамоўленасці","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"},
+    az: {"subs":"Abunəçilər","reach":"Orta əhatə","post_i":"· post","er":"Cəlbolunma","cpm":"1000 göstərişin qiyməti","err":"Bazaya əhatə","grow":"Artım · 30 gün","freq":"Post tezliyi","mv":"Baxışlar · ay","chart":"Baxışlar · 30 gün","prsub":"minimum yerləşdirmə formatı","cta":"Rezerv et","prpref":"Reklam","prneg":"Qiymət razılaşma ilə","er_i":"· ER","cpm_i":"· CPM","err_i":"· ERR"}
+  };
+  var _psLang = 'ru';
+  function _psPack() { return POSTER_L[_psLang] || POSTER_L.ru; }
+  function _psEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function _psLbl(m, main, suff) {
+    var e = document.querySelector('.mcell[data-m="' + m + '"] .l');
+    if (e) e.innerHTML = _psEsc(main) + (suff ? ' <i>' + _psEsc(suff) + '</i>' : '');
+  }
+  function _psApplyLabels() {
+    var P = _psPack();
+    _psLbl('subs', P.subs);
+    _psLbl('reach', P.reach, P.post_i);
+    _psLbl('er', P.er, P.er_i);
+    _psLbl('cpm', P.cpm, P.cpm_i);
+    _psLbl('err', P.err, P.err_i);
+    _psLbl('grow', P.grow);
+    _psLbl('freq', P.freq);
+    _psLbl('mv', P.mv);
+    var ct = document.querySelector('.chart .ct span'); if (ct) ct.textContent = P.chart;   // заголовок графика
+    var cta = el('ctaEl'); if (cta) cta.innerHTML = _psEsc(P.cta) + ' <span class="arw">↓</span>';
+    _psLocalizePrice();
+  }
+  function _psLocalizePrice() {
+    var P = _psPack();
+    var pv = el('prVal');
+    if (pv) {
+      var t = pv.textContent || '';
+      if (t === 'Цена по договорённости') pv.textContent = P.prneg;                 // n = 0
+      else if (t.indexOf('Реклама от') === 0) pv.textContent = P.prpref + t.slice(('Реклама от').length);  // «Реклама от NNN ₽» → префикс на языке, число как есть
+      var nt = pv.textContent || '';
+      pv.style.fontSize = nt.length > 16 ? '19px' : '';   // авто-ужатие как в макете
+    }
+    var ps = el('prSub');
+    if (ps) {
+      var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
+      if (!fmtv) ps.textContent = P.prsub;   // свой формат размещения (данные) не трогаем — только дефолт
+    }
+  }
+  /* каждая метка — максимум 2 строки: длинные языки не толкают сетку за нижний край постера */
+  function _psFit() {
+    var poster = el('poster'); if (!poster) return;
+    poster.querySelectorAll('.mcell .l').forEach(function (l) {
+      l.style.fontSize = ''; l.style.letterSpacing = '';
+      var fs = parseFloat(getComputedStyle(l).fontSize) || 10;
+      var max2 = fs * 1.35 * 2 + 2, guard = 0;
+      while (l.scrollHeight > max2 && guard < 6) {
+        guard++; fs = fs * 0.9; if (fs < 6.5) break;
+        l.style.fontSize = fs.toFixed(2) + 'px'; l.style.letterSpacing = '0.2px';
+      }
+    });
+  }
+  function _psEnsurePriceHooks() {
+    if (window.__fmxPsPriceHooked) return;
+    var pi = el('prInp'), pf = el('prFmtInp');
+    if (!pi && !pf) return;
+    window.__fmxPsPriceHooked = 1;   // наши слушатели идут ПОСЛЕ макетных → отрабатывают следом и локализуют
+    if (pi) pi.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
+    if (pf) pf.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
+  }
+  function _psEnsureLangUI() {
+    if (document.getElementById('fmxPsLang')) return;
+    var panel = document.querySelector('.panel'); if (!panel) return;
+    var anchor = panel.querySelector('.sub') || panel.querySelector('h2'); if (!anchor) return;
+    var codes = [['ru', 'RU'], ['en', 'EN'], ['es', 'ES'], ['de', 'DE'], ['kk', 'KK'], ['uz', 'UZ'], ['be', 'BE'], ['az', 'AZ']];
+    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Язык постера';   // локализатор пульта переведёт сам
+    var chips = document.createElement('div'); chips.className = 'chips'; chips.id = 'fmxPsLang';
+    codes.forEach(function (c) {
+      var b = document.createElement('button'); b.className = 'chip' + (c[0] === _psLang ? ' on' : '');
+      b.setAttribute('data-pl', c[0]); b.textContent = c[1]; chips.appendChild(b);
+    });
+    anchor.parentNode.insertBefore(chips, anchor.nextSibling);
+    anchor.parentNode.insertBefore(lbl, chips);
+    chips.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('.chip') : null;
+      if (b) { var pl = b.getAttribute('data-pl'); if (pl) window.__fmxPosterSetLang(pl); }
+    });
+  }
+  function _psMarkLangChips() {
+    var c = document.getElementById('fmxPsLang'); if (!c) return;
+    c.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-pl') === _psLang); });
+  }
+  /* публичный переключатель языка постера (пульт + внешние вызовы) */
+  window.__fmxPosterSetLang = function (lang) {
+    if (lang && POSTER_L[lang]) _psLang = lang;
+    _psApplyLabels(); _psFit(); _psMarkLangChips();
+  };
+  window.__fmxPosterLang = function () { return _psLang; };
+
   /* === свой фон: серверный url + режим кадрирования (пан/зум) === */
   var _customBg = null;               // {url, kind} — ЗАГРУЖЕННЫЙ на сервер файл своего фона
   var _bgpan = { x: 0, y: 0, s: 1 };  // сдвиг (px в системе постера 540x675) и масштаб своей картинки
@@ -171,6 +272,8 @@
     if (data.chart && data.chart.series) drawChart(data.chart.series, data.chart.days);
     else if (el('chart')) el('chart').classList.add('hide');
     if (typeof window.relayout === 'function') window.relayout();
+    // локализация постера: переключатель в пульте, перевод меток/цены, авто-подгонка
+    _psEnsurePriceHooks(); _psEnsureLangUI(); _psApplyLabels(); _psFit();
   };
 
   /* ——— применить цвет к элементу (1:1 с applyColor макета) ——— */
@@ -358,6 +461,7 @@
       else { var glyph = s.querySelector('.glyph'); it.glyph = glyph ? glyph.textContent : ''; }
       st.stickers.push(it);
     });
+    st.lang = _psLang;   // язык постера — попадает в кеш серверного PNG (payload = data+state)
     return st;
   };
 
@@ -369,6 +473,7 @@
 
   window.__fmxPosterApply = function (state) {
     if (!state) return;
+    if (state.lang && POSTER_L[state.lang]) _psLang = state.lang;   // восстанавливаем язык постера
     var poster = el('poster');
     _anims = [];  // пересобираем реестр движущихся элементов (видео-фон + анимо-стикеры) для видео-рендера
     // фон
@@ -428,6 +533,7 @@
     poster.querySelectorAll('.stk').forEach(function (s) { s.remove(); });
     (state.stickers || []).forEach(function (it) { if (it && typeof it === 'object') { try { _spawnSticker(it); } catch (e) {} } });
     if (typeof window.relayout === 'function') window.relayout();
+    _psEnsureLangUI(); _psApplyLabels(); _psFit(); _psMarkLangChips();   // язык постера после применения состояния
   };
 
   /* сброс всех настроек постера к дефолту (кнопка под постером) */
@@ -727,7 +833,7 @@
     if (el('bgImg') && el('bgImg').classList.contains('act')) imgs.push(el('bgImg'));
     var waits = imgs.map(function (im) { return new Promise(function (res) { if (im.complete) return res(); im.onload = res; im.onerror = res; setTimeout(res, 5000); }); });
     Promise.all([Promise.resolve(fontsReady).catch(function () {})].concat(waits)).then(function () {
-      requestAnimationFrame(function () { requestAnimationFrame(function () { if (typeof window.relayout === 'function') { try { window.relayout(); } catch (e) {} } poster.classList.add('ready'); }); });
+      requestAnimationFrame(function () { requestAnimationFrame(function () { if (typeof window.relayout === 'function') { try { window.relayout(); } catch (e) {} } try { _psApplyLabels(); _psFit(); } catch (e) {} poster.classList.add('ready'); }); });
     });
     setTimeout(function () { poster.classList.add('ready'); }, 9000);
   };

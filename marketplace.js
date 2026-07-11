@@ -3034,7 +3034,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260711h';
+    var PS_GLUE_V = '20260712a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3182,6 +3182,8 @@
             try { win.__fmxPosterNotify = function (m) { toast(m, true); }; } catch (e) {}   // заметный тост из редактора
             /* есть сохранённое — восстанавливаем как было (вкл. стикеры); нет — показываем всё */
             try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
+            /* язык постера: сохранённый — из состояния; новый — язык интерфейса (по умолчанию) */
+            try { if (win.__fmxPosterSetLang) win.__fmxPosterSetLang((hasSaved && saved && saved.lang) ? saved.lang : ((typeof getLang === 'function') ? getLang() : 'ru')); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
             fitFrame();
             requestAnimationFrame(function () { fitFrame(); reveal(); });
