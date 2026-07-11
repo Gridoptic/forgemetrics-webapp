@@ -270,6 +270,30 @@ function showStartBotScreen() {
 
 
 // Локализация поддерева: переводит статические текстовые узлы через t() (ru — как есть).
+// Перевод одной строки: точный ключ, затем шаблон с подстановкой. null — если перевода нет.
+function localizeStr(trimmed) {
+    let tr = t(trimmed);
+    if (tr && tr !== trimmed) return tr;
+    if (typeof translateTemplate === 'function') {
+        const tt = translateTemplate(trimmed);
+        if (tt && tt !== trimmed) return tt;
+    }
+    return null;
+}
+// Перевод видимых атрибутов элемента (подсказки, плейсхолдеры).
+const LOC_ATTRS = ['title', 'placeholder', 'aria-label', 'alt'];
+function localizeAttrs(el) {
+    if (!el || el.nodeType !== 1 || !el.getAttribute) return;
+    for (let i = 0; i < LOC_ATTRS.length; i++) {
+        const a = LOC_ATTRS[i];
+        const v = el.getAttribute(a);
+        if (!v) continue;
+        const trimmed = v.trim();
+        if (!trimmed) continue;
+        const tr = localizeStr(trimmed);
+        if (tr) el.setAttribute(a, v.replace(trimmed, tr));
+    }
+}
 function localizeTree(root) {
     if (!root || typeof getLang !== 'function' || getLang() === 'ru' || typeof t !== 'function') return;
     try {
@@ -281,14 +305,15 @@ function localizeTree(root) {
             const raw = n.nodeValue;
             const trimmed = raw.trim();
             if (!trimmed) return;
-            let tr = t(trimmed);
-            if (tr && tr !== trimmed) { n.nodeValue = raw.replace(trimmed, tr); return; }
-            // строки с подстановкой (числа/имена/цены) — по шаблону
-            if (typeof translateTemplate === 'function') {
-                const tt = translateTemplate(trimmed);
-                if (tt && tt !== trimmed) n.nodeValue = raw.replace(trimmed, tt);
-            }
+            const tr = localizeStr(trimmed);
+            if (tr) n.nodeValue = raw.replace(trimmed, tr);
         });
+        // атрибуты (подсказки/плейсхолдеры) на самом узле и всех вложенных
+        localizeAttrs(root);
+        if (root.querySelectorAll) {
+            const els = root.querySelectorAll('[title],[placeholder],[aria-label],[alt]');
+            for (let i = 0; i < els.length; i++) localizeAttrs(els[i]);
+        }
     } catch (e) {}
 }
 
