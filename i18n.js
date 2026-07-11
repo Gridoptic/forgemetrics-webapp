@@ -94,4 +94,71 @@
         }
         return text;
     };
+
+    // Самодостаточный авто-локализатор для отдельных документов (напр. iframe редактора постера).
+    // opts.skip — CSS-селектор поддерева, которое НЕ трогать (напр. '#poster' — замороженный макет).
+    // Для серверного рендера LANG='ru' → тихо выходит, ничего не переводит.
+    window.autoLocalize = function (opts) {
+        opts = opts || {};
+        var skipSel = opts.skip || null;
+        if (LANG === 'ru' || typeof document === 'undefined') return;
+        function tr1(s) {
+            var r = window.t(s);
+            if (r && r !== s) return r;
+            if (window.translateTemplate) { var t2 = window.translateTemplate(s); if (t2 && t2 !== s) return t2; }
+            return null;
+        }
+        function inSkip(node) {
+            if (!skipSel) return false;
+            var e = node.nodeType === 3 ? node.parentElement : node;
+            return !!(e && e.closest && e.closest(skipSel));
+        }
+        function locText(n) {
+            try {
+                if (inSkip(n)) return;
+                var raw = n.nodeValue; if (!raw) return;
+                var tm = raw.trim(); if (!tm) return;
+                var r = tr1(tm); if (r) n.nodeValue = raw.replace(tm, r);
+            } catch (e) {}
+        }
+        var ATTRS = ['title', 'placeholder', 'aria-label', 'alt'];
+        function locAttrs(el) {
+            try {
+                if (!el || el.nodeType !== 1 || !el.getAttribute || inSkip(el)) return;
+                for (var i = 0; i < ATTRS.length; i++) {
+                    var v = el.getAttribute(ATTRS[i]); if (!v) continue;
+                    var tm = v.trim(); if (!tm) continue;
+                    var r = tr1(tm); if (r) el.setAttribute(ATTRS[i], v.replace(tm, r));
+                }
+            } catch (e) {}
+        }
+        function locTree(root) {
+            try {
+                if (!root) return;
+                if (root.nodeType === 3) { locText(root); return; }
+                if (root.nodeType !== 1) return;
+                var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+                while ((n = w.nextNode())) nodes.push(n);
+                for (var i = 0; i < nodes.length; i++) locText(nodes[i]);
+                locAttrs(root);
+                if (root.querySelectorAll) { var els = root.querySelectorAll('[title],[placeholder],[aria-label],[alt]'); for (var j = 0; j < els.length; j++) locAttrs(els[j]); }
+            } catch (e) {}
+        }
+        function run() {
+            locTree(document.body);
+            try {
+                var obs = new MutationObserver(function (muts) {
+                    muts.forEach(function (m) {
+                        if (m.type === 'characterData') { locText(m.target); return; }
+                        if (!m.addedNodes) return;
+                        m.addedNodes.forEach(function (nd) {
+                            if (nd.nodeType === 1) locTree(nd); else if (nd.nodeType === 3) locText(nd);
+                        });
+                    });
+                });
+                obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+            } catch (e) {}
+        }
+        if (document.body) run(); else document.addEventListener('DOMContentLoaded', run);
+    };
 })();
