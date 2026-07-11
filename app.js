@@ -285,6 +285,16 @@ function localizeStr(trimmed) {
         const ts = stripSepTranslate(trimmed);
         if (ts) return ts;
     }
+    // составной узел с разделителями — перевести каждый отрезок
+    if (typeof segmentTranslate === 'function') {
+        const sg = segmentTranslate(trimmed);
+        if (sg) return sg;
+    }
+    // крайняя словарная фраза (хвост/голова) внутри узла с динамикой
+    if (typeof edgeTranslate === 'function') {
+        const eg = edgeTranslate(trimmed);
+        if (eg) return eg;
+    }
     return null;
 }
 // Перевод видимых атрибутов элемента (подсказки, плейсхолдеры).

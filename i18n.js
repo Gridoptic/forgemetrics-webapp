@@ -113,16 +113,57 @@
         }
         return text;
     };
-    // Ведущий разделитель («— X», «· X», «/ X»): переводим X, разделитель сохраняем.
-    // Ловит случаи, когда подпись в коде склеена с меткой через тег (<b>Метка</b> — X).
+    // Перевод отрезка: точный ключ → шаблон → крайняя словарная фраза. null если ничего.
+    function _segTr(seg) {
+        if (!seg) return null;
+        var r = window.t(seg);
+        if (r && r !== seg) return r;
+        if (window.translateTemplate) { var x = window.translateTemplate(seg); if (x && x !== seg) return x; }
+        if (window.edgeTranslate) { var y = window.edgeTranslate(seg); if (y) return y; }
+        return null;
+    }
+    // Крайняя словарная фраза внутри составного узла: переводим самую длинную ведущую или
+    // хвостовую фразу, что есть в словаре, остальное (динамику: @имена, числа, даты) не трогаем.
+    // Ловит «@user · 1 911 подп» (хвост «подп»), «0 / 5000 символов» (хвост «символов»), «Жирный ·» (голова).
+    window.edgeTranslate = function (trimmed) {
+        if (LANG === 'ru' || trimmed == null) return null;
+        var words = trimmed.split(' ');
+        if (words.length < 2) return null;
+        var take, part, tv;
+        for (take = Math.min(6, words.length - 1); take >= 1; take--) {   // хвост: длиннее — приоритетнее
+            part = words.slice(words.length - take).join(' ');
+            tv = window.t(part);
+            if (tv && tv !== part) return words.slice(0, words.length - take).join(' ') + ' ' + tv;
+        }
+        for (take = Math.min(6, words.length - 1); take >= 1; take--) {   // голова
+            part = words.slice(0, take).join(' ');
+            tv = window.t(part);
+            if (tv && tv !== part) return tv + ' ' + words.slice(take).join(' ');
+        }
+        return null;
+    };
+    // Составной узел с разделителями (· — / |): делим, переводим каждый отрезок, разделители сохраняем.
+    // Ловит «приватный · подключён 15 июн», «На проверке · нажми, чтобы управлять» и т.п.
+    window.segmentTranslate = function (trimmed) {
+        if (LANG === 'ru' || trimmed == null) return null;
+        var parts = trimmed.split(/(\s[·—–|/]\s)/);
+        if (parts.length < 3) return null;
+        var changed = false, out = '';
+        for (var i = 0; i < parts.length; i++) {
+            if (/^\s[·—–|/]\s$/.test(parts[i])) { out += parts[i]; continue; }
+            var seg = parts[i].trim();
+            var tr = seg ? _segTr(seg) : null;
+            if (tr && tr !== seg) { out += parts[i].replace(seg, tr); changed = true; }
+            else out += parts[i];
+        }
+        return changed ? out : null;
+    };
+    // Ведущий разделитель («— X», «· X»): переводим X, разделитель сохраняем.
     window.stripSepTranslate = function (trimmed) {
         if (LANG === 'ru' || trimmed == null) return null;
         var m = trimmed.match(/^([—–\-·|/]+\s+)(.+)$/);
-        if (!m) return null;
-        var core = m[2];
-        var ct = window.t(core);
-        if (ct === core && window.translateTemplate) { var x = window.translateTemplate(core); if (x !== core) ct = x; }
-        return (ct && ct !== core) ? (m[1] + ct) : null;
+        if (m) { var ct = _segTr(m[2]); if (ct) return m[1] + ct; }
+        return null;
     };
 
     // Самодостаточный авто-локализатор для отдельных документов (напр. iframe редактора постера).
@@ -137,6 +178,8 @@
             if (r && r !== s) return r;
             if (window.translateTemplate) { var t2 = window.translateTemplate(s); if (t2 && t2 !== s) return t2; }
             if (window.stripSepTranslate) { var t3 = window.stripSepTranslate(s); if (t3) return t3; }
+            if (window.segmentTranslate) { var t4 = window.segmentTranslate(s); if (t4) return t4; }
+            if (window.edgeTranslate) { var t5 = window.edgeTranslate(s); if (t5) return t5; }
             return null;
         }
         function inSkip(node) {

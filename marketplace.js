@@ -252,7 +252,7 @@
             '.fmx-sellcta:active{transform:scale(0.99);}',
             '.fmx-sellcta-ic{width:44px;height:44px;border-radius:13px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;font-size:22px;}',
             '.fmx-sellcta-t{flex:1;min-width:0;}',
-            '.fmx-sellcta-t .n{font-size:13.5px;font-weight:800;color:#5DCAA5;}',
+            '.fmx-sellcta-t .n{font-size:13.5px;font-weight:800;color:#5DCAA5;overflow-wrap:anywhere;}',
             '.fmx-sellcta-t .s{font-size:11px;color:#8990a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-sellcta-go{color:#5DCAA5;font-size:20px;flex:0 0 auto;}',
             '.fmx-mkhelper{font-size:11.5px;color:#8990a8;line-height:1.45;margin:0 2px 11px;}',
@@ -3025,7 +3025,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260711b';
+    var PS_GLUE_V = '20260711c';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
