@@ -280,7 +280,7 @@
             '.fmx-search i{color:#565b73;}',
             '.fmx-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;}',
             '.fmx-divrow{display:flex;align-items:center;gap:9px;margin-bottom:12px;}',
-            '.fmx-divlbl{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:#565b73;font-weight:700;white-space:nowrap;flex:0 0 auto;}',
+            '.fmx-divlbl{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:#565b73;font-weight:700;flex:0 1 auto;min-width:0;overflow-wrap:anywhere;}',
             '.fmx-divline{flex:1;height:1px;background:rgba(255,255,255,0.09);min-width:8px;}',
             '.fmx-vtog{display:flex;gap:3px;background:rgba(255,255,255,0.04);padding:3px;border-radius:9px;}',
             '.fmx-vt{border:none;background:transparent;color:#8990a8;border-radius:7px;padding:7px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 150ms;}',
@@ -3025,7 +3025,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260711a';
+    var PS_GLUE_V = '20260711b';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';

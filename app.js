@@ -280,6 +280,11 @@ function localizeStr(trimmed) {
         const tt = translateTemplate(trimmed);
         if (tt && tt !== trimmed) return tt;
     }
+    // ведущий разделитель («— X», «· X»): перевести X, разделитель сохранить
+    if (typeof stripSepTranslate === 'function') {
+        const ts = stripSepTranslate(trimmed);
+        if (ts) return ts;
+    }
     return null;
 }
 // Перевод видимых атрибутов элемента (подсказки, плейсхолдеры).
