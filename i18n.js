@@ -3,13 +3,16 @@
    а если перевода нет — исходную русскую строку (graceful fallback, ничего не ломается).
    Язык: ручной выбор (localStorage) > язык Telegram (initData) > русский. */
 (function () {
-    var SUPPORTED = ['ru', 'en', 'es', 'de', 'uk', 'kk', 'uz', 'be', 'az'];
+    // 'uk' временно отключён (удалён из списка) — не показывается в переключателе и не
+    // автоопределяется. Переводы украинского сохранены в git-истории; вернуть = добавить
+    // 'uk' сюда, в NAMES/FLAGS и восстановить блок "uk" в i18n_dict.js.
+    var SUPPORTED = ['ru', 'en', 'es', 'de', 'kk', 'uz', 'be', 'az'];
     var NAMES = {
         ru: 'Русский', en: 'English', es: 'Español', de: 'Deutsch',
-        uk: 'Українська', kk: 'Қазақша', uz: 'Oʻzbekcha', be: 'Беларуская', az: 'Azərbaycan'
+        kk: 'Қазақша', uz: 'Oʻzbekcha', be: 'Беларуская', az: 'Azərbaycan'
     };
     // флаги-эмодзи для переключателя (нейтрально: язык, не политика — берём распространённые)
-    var FLAGS = { ru: '🇷🇺', en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', uk: '🇺🇦', kk: '🇰🇿', uz: '🇺🇿', be: '🇧🇾', az: '🇦🇿' };
+    var FLAGS = { ru: '🇷🇺', en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', kk: '🇰🇿', uz: '🇺🇿', be: '🇧🇾', az: '🇦🇿' };
 
     function detect() {
         try {
