@@ -1186,7 +1186,7 @@
         _subTab = 'buy';
         host.innerHTML =
             searchHtml('Поиск по каналу или нише…') +
-            '<div class="fmx-mkhelper"><b>Покупаешь рекламу</b> — выбирай канал в ленте ниже. <b>Продаёшь</b> — выстави свой оффер:</div>' +
+            '<div class="fmx-mkhelper"><b>Покупаешь рекламу</b> — выбирай канал в ленте ниже.<br><b>Продаёшь</b> — выстави свой оффер:</div>' +
             '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-plus"></i></div>' +
             '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
             '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
