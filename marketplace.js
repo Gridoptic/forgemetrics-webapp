@@ -854,6 +854,12 @@
             '.fmx-entn{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
             '.fmx-enttag{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:99px;}',
             '.fmx-entd{font-size:11.5px;color:#8990a8;line-height:1.4;margin-top:4px;}',
+            /* ----- бегущая строка для текста, который не вмещается ----- */
+            '.fmx-mq{overflow:hidden;}',
+            '.fmx-mqi{display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top;}',
+            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;animation:fmxMq var(--mqd,8s) ease-in-out infinite alternate;}',
+            '@keyframes fmxMq{0%,18%{transform:translateX(0);}82%,100%{transform:translateX(var(--mqx,0));}}',
+            '@media (prefers-reduced-motion:reduce){.fmx-mq-on .fmx-mqi{animation:none;}}',
             /* ----- панель модерации (только для владельца) ----- */
             '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
             '.fmx-mtab{flex:1;padding:9px 4px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05);color:#8990a8;font-size:12px;font-weight:600;cursor:pointer;}',
@@ -912,7 +918,7 @@
         el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
         el('fmx-mini').addEventListener('click', function () { _haptic('light'); el('fmx-scrollEl').scrollTo({ top: 0, behavior: 'smooth' }); });
         buildModals();
-        window.addEventListener('resize', function () { if (el('fmx-subtabs')) movePill('fmx-subtabs', 'fmx-subpill'); if (el('fmx-pult')) movePill('fmx-pult', 'fmx-pultpill'); if (el('fmx-panes')) sizePanes(); });
+        window.addEventListener('resize', function () { if (el('fmx-subtabs')) movePill('fmx-subtabs', 'fmx-subpill'); if (el('fmx-pult')) movePill('fmx-pult', 'fmx-pultpill'); if (el('fmx-panes')) sizePanes(); _mqMeasure(el('fmx-htitle')); _mqMeasure(el('fmx-hsub')); _mqMeasure(el('fmx-sellcta-s')); });
     }
 
     var _prevOverflow = null;
@@ -946,17 +952,43 @@
         pill.style.transform = 'translateX(' + (b.offsetLeft - 4) + 'px)';
     }
 
+    /* Бегущая строка: если текст не помещается в одну строку — плавно прокручиваем
+       туда-обратно с паузами; помещается — обычный ellipsis. Уважает reduce-motion. */
+    function _mqText(elm, text) {
+        if (!elm) return;
+        elm.classList.add('fmx-mq');
+        var span = elm.querySelector('.fmx-mqi');
+        if (!span) { elm.textContent = ''; span = document.createElement('span'); span.className = 'fmx-mqi'; elm.appendChild(span); }
+        if (span.textContent !== text) span.textContent = text;
+        elm.classList.remove('fmx-mq-on');
+        elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqd');
+        requestAnimationFrame(function () { _mqMeasure(elm); });
+    }
+    function _mqMeasure(elm) {
+        try {
+            var span = elm && elm.querySelector && elm.querySelector('.fmx-mqi'); if (!span) return;
+            elm.classList.remove('fmx-mq-on');
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var over = span.scrollWidth - elm.clientWidth;
+            if (over > 3) {
+                elm.style.setProperty('--mqx', '-' + (over + 12) + 'px');
+                elm.style.setProperty('--mqd', Math.max(4, (over + 12) / 28).toFixed(1) + 's');
+                elm.classList.add('fmx-mq-on');
+            }
+        } catch (e) {}
+    }
+
     function setMainTab(t, force) {
         if (!force && t === _mainTab) return;
         _mainTab = t;
         // стрелка «назад» видна всегда (на главном экране закрывает приложение, глубже — ведёт назад)
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
-            if (t === 'catalog') { ti.textContent = 'Радар каналов'; su.textContent = 'Все каналы, собранные ботом'; su.style.display = ''; }
-            else if (t === 'market') { ti.textContent = 'Площадка'; su.textContent = 'ForgeMetrics · живые заявки'; su.style.display = ''; }
-            else if (t === 'pulse') { ti.textContent = 'Рыночный терминал'; su.textContent = 'Медианы CPM по нишам'; su.style.display = ''; }
-            else if (t === 'mod') { ti.textContent = 'Модерация'; su.textContent = 'Только для владельца'; su.style.display = ''; }
-            else { ti.textContent = 'Рынок рекламы'; su.textContent = ''; su.style.display = 'none'; }
+            if (t === 'catalog') { _mqText(ti, 'Радар каналов'); _mqText(su, 'Все каналы, собранные ботом'); su.style.display = ''; }
+            else if (t === 'market') { _mqText(ti, 'Площадка'); _mqText(su, 'ForgeMetrics · живые заявки'); su.style.display = ''; }
+            else if (t === 'pulse') { _mqText(ti, 'Рыночный терминал'); _mqText(su, 'Медианы CPM по нишам'); su.style.display = ''; }
+            else if (t === 'mod') { _mqText(ti, 'Модерация'); _mqText(su, 'Только для владельца'); su.style.display = ''; }
+            else { _mqText(ti, 'Рынок рекламы'); _mqText(su, ''); su.style.display = 'none'; }
         }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
@@ -1423,7 +1455,7 @@
                 var st = _myListings.length > 1
                     ? _myListings.length + ' ' + _plural(_myListings.length, 'оффер', 'оффера', 'офферов')
                     : (_myListings[0].status_human || 'Оффер');
-                s.textContent = st + ' · нажми, чтобы управлять';
+                _mqText(s, st + ' · нажми, чтобы управлять');
                 if (ic) ic.className = 'ti ti-adjustments-horizontal';
             }
         }).catch(function () {});
