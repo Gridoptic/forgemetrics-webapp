@@ -810,7 +810,7 @@ function refCardHtml(r) {
     const rate = RF_RATE[lvlKey] || 15;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
-        ? `до <b>${escapeHtml(r.next_level_display)}</b><br>ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
+        ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
         : 'высший уровень';
     return `<div class="rf">
   <div class="rf-card">
@@ -828,8 +828,8 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>от платежей приглашённых —<br>кредитами на баланс</span></div>
-        <p>Другу — <b>−15%</b> на первый месяц (сгорает с концом триала). Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
+        <div class="rf-rate"><b>${rate}%</b><span>от платежей приглашённых — кредитами на баланс</span></div>
+        <p>Другу −15% на первый месяц (сгорает с концом триала). Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
         <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
       </div>
     </div>
@@ -874,9 +874,9 @@ function refCardHtml(r) {
 
   <div class="rf-how">
     <span class="rf-eyebrow">Как это работает</span>
-    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься <b>ссылкой или промокодом</b> с админами каналов.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней и получает <b>−15%</b> на первый месяц.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>После его первой оплаты тебе начисляются <b>кредиты</b> — тем больше, чем выше уровень.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой или промокодом с админами каналов.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней и получает −15% на первый месяц.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
