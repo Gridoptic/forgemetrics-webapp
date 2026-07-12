@@ -858,9 +858,9 @@
             '.fmx-mq{overflow:hidden;}',
             '.fmx-mqi{display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top;}',
             '.fmx-mqc{display:inline-block;}',
-            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;animation:fmxMq var(--mqd,10s) linear infinite;}',
+            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;will-change:transform;backface-visibility:hidden;animation:fmxMq var(--mqd,10s) linear infinite;}',
             '.fmx-mq-on .fmx-mqc + .fmx-mqc{margin-left:var(--mqg,80px);}',
-            '@keyframes fmxMq{from{transform:translateX(0);}to{transform:translateX(var(--mqx,0));}}',
+            '@keyframes fmxMq{from{transform:translate3d(0,0,0);}to{transform:translate3d(var(--mqx,0),0,0);}}',
             '@media (prefers-reduced-motion:reduce){.fmx-mq-on .fmx-mqi{animation:none;}}',
             /* ----- панель модерации (только для владельца) ----- */
             '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
@@ -960,6 +960,7 @@
         if (!elm) return;
         elm.classList.add('fmx-mq');
         elm.setAttribute('data-mqt', text);
+        elm._mqSig = null;   // новый текст — форсируем перемер
         elm.classList.remove('fmx-mq-on');
         elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
         elm.textContent = '';
@@ -973,6 +974,12 @@
             if (!elm || !elm.querySelector) return;
             var text = elm.getAttribute('data-mqt'); if (text == null) return;
             var inner = elm.querySelector('.fmx-mqi'); if (!inner) return;
+            var contW = elm.clientWidth;
+            // Ничего не изменилось (та же ширина и текст) — НЕ пересобираем: иначе анимация
+            // рестартует на каждом лишнем resize (при скролле/смене вьюпорта) и текст дёргается.
+            var sig = contW + '|' + text;
+            if (elm._mqSig === sig) return;
+            elm._mqSig = sig;
             // сброс к одной копии и снятие анимации — для честного замера ширины
             elm.classList.remove('fmx-mq-on');
             elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
@@ -980,7 +987,7 @@
             for (var i = 1; i < copies.length; i++) copies[i].remove();
             var first = copies[0]; if (!first) return;
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            var copyW = inner.scrollWidth, contW = elm.clientWidth;
+            var copyW = inner.scrollWidth;
             if (copyW > contW + 3 && contW > 0) {
                 // разрыв ≥ ширины контейнера: текст полностью уходит и лишь потом появляется с конца
                 var gap = contW + 20;
