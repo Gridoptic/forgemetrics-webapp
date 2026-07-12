@@ -1149,7 +1149,7 @@ function tfPlanCard(plan, d) {
     const price = isYear ? plan.price_year : plan.price;
     const per = isYear ? '/год' : '/мес';
     const color = TP_COLOR[plan.key] || 'pu';
-    const ribbon = plan.popular ? '<span class="tp-rib">★ Популярный</span>' : '';
+    const ribbon = plan.popular ? '<span class="tp-rib">★ Оптимальный</span>' : '';
     const feats = (plan.features || []).map((f) => `<div class="tp-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
     const lead = plan.lead ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
     const save = isYear ? '<div class="tp-save">2 месяца в подарок</div>' : '';
