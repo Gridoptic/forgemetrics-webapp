@@ -516,9 +516,8 @@ function drawReachChart(host, DATA, dates, days) {
         const pxX = x / W * r.width, pxY = y / Hh * r.height;
         const half = tip.offsetWidth / 2 + 4;
         tip.style.left = Math.max(half, Math.min(r.width - half, pxX)) + 'px';
-        const above = pxY - tip.offsetHeight * 1.28 >= 2;   // если не влезает сверху — показываем под точкой
         tip.style.top = pxY + 'px';
-        tip.style.transform = above ? 'translate(-50%,-128%)' : 'translate(-50%,28%)';
+        tip.style.transform = 'translate(-50%,-128%)';   // всегда над точкой
     }
     function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
     host.addEventListener('pointermove', (e) => at(e.clientX));
