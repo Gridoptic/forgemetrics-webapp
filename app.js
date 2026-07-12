@@ -385,7 +385,7 @@ function renderChannelSelector(data) {
         // подпись: @username · ниша (подсказку не пишем — на баре есть шеврон-стрелка, и длинная подсказка обрезалась)
         const idn = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? (ch.username ? ' · ' : '') + escapeHtml(niche) : ''}`;
         const sub = idn || (multi ? 'нажми, чтобы сменить канал' : 'нажми для управления');
-        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn">${escapeHtml(title)} <span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">${escapeHtml(title)}</span><span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
         // реальный аватар канала в баре (как в списке каналов); при отсутствии/ошибке остаётся буква
