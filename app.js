@@ -1097,12 +1097,19 @@ function openLangPicker() {
 // ==================== Витрина тарифов ====================
 let tariffsData = null;
 let tfPeriod = 'month'; // 'month' | 'year'
+let tfReturn = 'dashboard'; // куда возвращать по «назад» — экран, с которого открыли тарифы
 // цвет стекла по тарифу (в стиле рефералки, но у каждого свой оттенок)
 const TP_COLOR = { light: 'bl', pro: 'pu', pro_plus: 'gd', agency: 'gr', network: 'pk' };
 
 function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
 async function openTariffs() {
+    // запоминаем текущий видимый экран — «назад» вернёт туда же (главный или кабинет)
+    try {
+        for (const [name, el] of Object.entries(screens)) {
+            if (el && name !== 'tariffs' && el.style.display !== 'none') { tfReturn = name; break; }
+        }
+    } catch (e) { tfReturn = 'dashboard'; }
     hapticLight();
     showScreen('tariffs');
     const body = document.getElementById('tariffs-body');
@@ -1267,7 +1274,7 @@ function setupEventListeners() {
     const cabSet = document.getElementById('cabinet-settings');
     if (cabSet) cabSet.addEventListener('click', () => { const s = document.getElementById('cab-sec-settings'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     const tfBack = document.getElementById('tariffs-back');
-    if (tfBack) tfBack.addEventListener('click', () => { hapticLight(); showScreen('cabinet'); });
+    if (tfBack) tfBack.addEventListener('click', () => { hapticLight(); showScreen(tfReturn || 'dashboard'); });
     els.drawerClose.addEventListener('click', closeDrawer);
     els.drawerOverlay.addEventListener('click', closeDrawer);
 
