@@ -382,10 +382,15 @@ function renderChannelSelector(data) {
         const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
         const niche = (data.pulse && data.pulse.niche) ? data.pulse.niche : '';
         const multi = (data.total_channels || 1) > 1;
-        const sub = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? ' · ' + escapeHtml(niche) : ''} · ${multi ? 'нажми, чтобы сменить канал' : 'нажми для управления'}`;
-        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav">${initial}</div><div class="pw-chinfo"><div class="pw-chn">${escapeHtml(title)} <span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
+        // подпись: @username · ниша (подсказку не пишем — на баре есть шеврон-стрелка, и длинная подсказка обрезалась)
+        const idn = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? (ch.username ? ' · ' : '') + escapeHtml(niche) : ''}`;
+        const sub = idn || (multi ? 'нажми, чтобы сменить канал' : 'нажми для управления');
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn">${escapeHtml(title)} <span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
+        // реальный аватар канала в баре (как в списке каналов); при отсутствии/ошибке остаётся буква
+        const avEl = document.getElementById('pw-chav-el');
+        if (avEl && ch.id) loadBottomSheetAvatar(ch.id, avEl);
     } else {
         host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav"><i class="ti ti-plus"></i></div><div class="pw-chinfo"><div class="pw-chn">Подключить канал</div><div class="pw-chnb">Метрики, публикация и оффер на Площадке</div></div><div class="pw-chchev"><i class="ti ti-chevron-right"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');

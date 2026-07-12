@@ -4027,10 +4027,10 @@ html.cs-modal-open {
 
 .pw-mrow{display:flex;align-items:stretch;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);position:relative;}
 .pw-mcell{flex:1;min-width:0;}
-.pw-ml{font-size:9.5px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.3px;font-weight:600;line-height:1.15;overflow-wrap:anywhere;min-height:2.2em;display:flex;align-items:flex-end;}
+.pw-ml{font-size:9px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.1px;font-weight:600;line-height:1.15;overflow-wrap:anywhere;min-height:2.2em;display:flex;align-items:flex-end;}
 .pw-mv{font-size:16px;font-weight:800;margin-top:3px;letter-spacing:-.4px;display:flex;align-items:baseline;gap:5px;color:var(--text-primary);}
 .pw-mv .up{font-size:10px;font-weight:800;color:#5DCAA5;}.pw-mv .dn{font-size:10px;font-weight:800;color:#f7a58c;}
-.pw-mdiv{width:1px;background:rgba(255,255,255,0.07);margin:1px 11px;flex-shrink:0;}
+.pw-mdiv{width:1px;background:rgba(255,255,255,0.07);margin:1px 7px;flex-shrink:0;}
 @media (prefers-reduced-motion:reduce){.pw-chansel,.pw-pulse{animation:none;}}
 
 /* ===================== Витрина тарифов ===================== */
