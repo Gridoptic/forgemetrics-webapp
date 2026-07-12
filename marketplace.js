@@ -691,7 +691,7 @@
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
             '.fmx-toast.err{border-color:rgba(239,68,68,0.4);color:#f87171;}',
             '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',
-            '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
+            '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;max-width:calc(100vw - 20px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
             '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
             '.fmx-cp-x{cursor:pointer;color:#8990a8;font-size:13px;padding:2px 7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:#141828;font-family:inherit;touch-action:auto;}',
@@ -2238,6 +2238,9 @@
     }
     function openColorStudio(cur, onPick, title) {
         var old = el('fmx-cpBg'); if (old) old.remove();
+        // окно приложения держим развёрнутым и глушим вертикальный свайп Telegram: иначе
+        // перетаскивание по палитре (ось яркости) воспринимается как свайп и окно дёргается
+        try { if (typeof tg !== 'undefined' && tg) { if (tg.disableVerticalSwipes) tg.disableVerticalSwipes(); if (tg.expand) tg.expand(); } } catch (e) {}
         /* ss — насыщенность спектра (полоска), отдельно от s: иначе полоска дёргается при перетаскивании точки */
         var st = { h: 160, s: 0.6, v: 0.8, mode: 'sv', px: 0.5, py: 0.5, ss: 1 };
         var c0 = hex2rgb(cur);
@@ -2267,7 +2270,7 @@
                 var ox = t.clientX - r.left, oy = t.clientY - r.top;
                 box.style.left = r.left + 'px'; box.style.top = r.top + 'px'; box.style.bottom = 'auto'; box.style.marginLeft = '0';
                 function mv(ev) {
-                    var p = ev.touches ? ev.touches[0] : ev; if (ev.cancelable) ev.preventDefault();
+                    var p = ev.touches ? ev.touches[0] : ev; if (ev.cancelable) ev.preventDefault(); ev.stopPropagation();
                     var x = Math.max(4, Math.min(window.innerWidth - r.width - 4, p.clientX - ox));
                     var y = Math.max(4, Math.min(window.innerHeight - 44, p.clientY - oy));
                     box.style.left = x + 'px'; box.style.top = y + 'px';
@@ -2363,7 +2366,7 @@
         function svStart(e) {
             e.preventDefault();
             svPoint(e);
-            var mv = function (ev) { ev.preventDefault(); svPoint(ev); };
+            var mv = function (ev) { ev.preventDefault(); ev.stopPropagation(); svPoint(ev); };
             var up = function () {
                 document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up);
                 document.removeEventListener('touchmove', mv); document.removeEventListener('touchend', up);
