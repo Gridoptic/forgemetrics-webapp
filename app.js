@@ -1163,10 +1163,9 @@ function tfPlanCard(plan, d) {
       <button class="tp-head" data-tphead="${escapeHtml(plan.key)}" aria-expanded="${plan.popular ? 'true' : 'false'}">
         <div class="tp-tile"><i class="ti ti-${tfIcon(plan.key)}"></i></div>
         <div class="tp-main">
-          <div class="tp-top"><span class="tp-name">${escapeHtml(plan.name)}</span>${ribbon}</div>
+          <div class="tp-r1"><span class="tp-name">${escapeHtml(plan.name)}</span>${ribbon}<span class="tp-price"><b>${cabNum(price)} ₽</b><span class="tp-per">${per}</span></span></div>
           <div class="tp-brief">${escapeHtml(plan.brief || '')}</div>
         </div>
-        <div class="tp-price"><b>${cabNum(price)} ₽</b><span>${per}</span></div>
         <i class="ti ti-chevron-down tp-chev"></i>
       </button>
       <div class="tp-body"><div class="tp-in">${lead}<div class="tp-feats">${feats}</div>${save}${cta}</div></div>
