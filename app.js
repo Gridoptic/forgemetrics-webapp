@@ -1166,6 +1166,54 @@ function tfPlanCard(plan, d) {
     </div>`;
 }
 
+// Бегущая строка описаний тарифов: покадрово (rAF), только если текст не влезает; две копии
+// для бесшовности; полностью останавливается, когда экран тарифов скрыт (изоляция экрана).
+const _tpMq = { items: [], raf: null, last: 0 };
+function _tpMqStop() { if (_tpMq.raf) cancelAnimationFrame(_tpMq.raf); _tpMq.raf = null; _tpMq.last = 0; _tpMq.items = []; }
+function _tpMqTick(ts) {
+    _tpMq.raf = null;
+    const scr = screens.tariffs;
+    if (!scr || scr.style.display === 'none') { _tpMqStop(); return; }
+    if (!_tpMq.last) _tpMq.last = ts;
+    let dt = ts - _tpMq.last; _tpMq.last = ts;
+    if (dt > 100) dt = 16;
+    for (let i = 0; i < _tpMq.items.length; i++) {
+        const m = _tpMq.items[i];
+        if (!m.el.isConnected) { _tpMq.items.splice(i, 1); i--; continue; }
+        m.offset += m.speed * dt / 1000;
+        if (m.offset >= m.period) m.offset -= m.period;
+        m.inner.style.transform = 'translate3d(' + (-m.offset).toFixed(2) + 'px,0,0)';
+    }
+    if (_tpMq.items.length) _tpMq.raf = requestAnimationFrame(_tpMqTick);
+}
+function setupTariffMarquees() {
+    _tpMqStop();
+    const scr = screens.tariffs; if (!scr) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scr.querySelectorAll('.tp-brief').forEach((el) => {
+        const text = (el.getAttribute('data-mqt') || el.textContent || '').trim();
+        if (!text) return;
+        el.setAttribute('data-mqt', text);
+        el.classList.remove('tp-mq-on');
+        el.style.removeProperty('--tp-mqg');
+        el.textContent = '';
+        const inner = document.createElement('span'); inner.className = 'tp-mqi';
+        const c = document.createElement('span'); c.className = 'tp-mqc'; c.textContent = text;
+        inner.appendChild(c); el.appendChild(inner);
+        if (reduce) return;
+        const contW = el.clientWidth, copyW = inner.scrollWidth;
+        if (copyW > contW + 3 && contW > 0) {
+            const gap = Math.max(28, Math.round(contW * 0.5));
+            const second = c.cloneNode(true); second.setAttribute('aria-hidden', 'true');
+            inner.appendChild(second);
+            el.style.setProperty('--tp-mqg', gap + 'px');
+            el.classList.add('tp-mq-on');
+            _tpMq.items.push({ el, inner, offset: 0, period: copyW + gap, speed: 38 });
+        }
+    });
+    if (_tpMq.items.length) _tpMq.raf = requestAnimationFrame(_tpMqTick);
+}
+
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
@@ -1206,6 +1254,7 @@ function renderTariffs(d) {
             } catch (e) { btn.disabled = false; cabToast('Не удалось забронировать'); }
         });
     });
+    requestAnimationFrame(setupTariffMarquees);
 }
 
 
