@@ -1,5 +1,5 @@
 /* Словари переводов ForgeMetrics (авто-сгенерировано + вычитка носителями). Ключ — русская строка.
-   Нет ключа/пусто → показывается русская строка (fallback). Фаза 1-7 + рефералка v2 + тарифы Agency/Network + годовая/допы.
+   Нет ключа/пусто → показывается русская строка (fallback). Фаза 1-7 + рефералка v2 + тарифы Agency/Network + годовая/допы + редизайн тарифов.
    uk (украинский) временно отключён — восстановить из git-истории. */
 window.__I18N_DICT = {
  "en": {
@@ -1755,7 +1755,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "Package of 15 placements",
   "Топ ленты (буст 48 ч)": "Feed top (48h boost)",
   "Абонемент «Всегда в ленте» (мес)": "\"Always in feed\" subscription (mo)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Expanded limits: channel audits, competitor analysis, ad exchange"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Expanded limits: channel audits, competitor analysis, ad exchange",
+  "Старт: AI-генерация и Площадка": "Start: AI generation and Marketplace",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Optimum: premium AI, audits, competitor analysis",
+  "Максимум для одиночек: все лимиты": "Maximum for solo users: all limits",
+  "Для сеток: 25 каналов и режим сеток": "For networks: 25 channels and grid mode",
+  "Крупные сети: 50 каналов и менеджер": "Large networks: 50 channels and account manager",
+  "Планы, годовая оплата и разовые пакеты": "Plans, annual billing and one-time packages"
  },
  "es": {
   "Партнёрская программа": "Programa de afiliados",
@@ -3510,7 +3516,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "Paquete de 15 publicaciones",
   "Топ ленты (буст 48 ч)": "Top del feed (impulso 48 h)",
   "Абонемент «Всегда в ленте» (мес)": "Suscripción «Siempre en el feed» (mes)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Límites ampliados: auditorías, competidores, bolsa de anuncios"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Límites ampliados: auditorías, competidores, bolsa de anuncios",
+  "Старт: AI-генерация и Площадка": "Inicio: generación con AI y Marketplace",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Óptimo: AI premium, auditorías y competencia",
+  "Максимум для одиночек: все лимиты": "Máximo para usuarios individuales: todos los límites",
+  "Для сеток: 25 каналов и режим сеток": "Para redes: 25 canales y modo de red",
+  "Крупные сети: 50 каналов и менеджер": "Grandes redes: 50 canales y gestor de cuenta",
+  "Планы, годовая оплата и разовые пакеты": "Planes, facturación anual y paquetes puntuales"
  },
  "de": {
   "Партнёрская программа": "Partnerprogramm",
@@ -5265,7 +5277,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "Paket mit 15 Platzierungen",
   "Топ ленты (буст 48 ч)": "Top-Feed (48-Std.-Boost)",
   "Абонемент «Всегда в ленте» (мес)": "Abo „Immer im Feed“ (Mon.)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Erweiterte Limits: Audits, Wettbewerber, Werbebörse"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Erweiterte Limits: Audits, Wettbewerber, Werbebörse",
+  "Старт: AI-генерация и Площадка": "Start: AI-Generierung und Marketplace",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Optimum: Premium-AI, Audits, Konkurrenzanalyse",
+  "Максимум для одиночек: все лимиты": "Maximum für Einzelnutzer: alle Limits",
+  "Для сеток: 25 каналов и режим сеток": "Für Netzwerke: 25 Kanäle und Netzwerkmodus",
+  "Крупные сети: 50 каналов и менеджер": "Große Netzwerke: 50 Kanäle und Account-Manager",
+  "Планы, годовая оплата и разовые пакеты": "Tarife, Jahresabrechnung und Einmalpakete"
  },
  "kk": {
   "Партнёрская программа": "Серіктестік бағдарламасы",
@@ -7019,7 +7037,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "15 орналастыру пакеті",
   "Топ ленты (буст 48 ч)": "Лента топы (48 сағ буст)",
   "Абонемент «Всегда в ленте» (мес)": "«Әрдайым лентада» абонементі (ай)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Кеңейтілген лимиттер: аудиттер, бәсекелестер, биржа"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Кеңейтілген лимиттер: аудиттер, бәсекелестер, биржа",
+  "Старт: AI-генерация и Площадка": "Бастау: AI-генерация және Маркетплейс",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Оптимум: премиум-AI, аудиттер, бәсекелестер",
+  "Максимум для одиночек: все лимиты": "Жеке қолданушыларға максимум: барлық лимиттер",
+  "Для сеток: 25 каналов и режим сеток": "Желілерге: 25 канал және желі режимі",
+  "Крупные сети: 50 каналов и менеджер": "Ірі желілер: 50 канал және менеджер",
+  "Планы, годовая оплата и разовые пакеты": "Жоспарлар, жылдық төлем және бір реттік пакеттер"
  },
  "uz": {
   "Партнёрская программа": "Hamkorlik dasturi",
@@ -8774,7 +8798,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "15 ta joylashtirish paketi",
   "Топ ленты (буст 48 ч)": "Lenta topi (48 soat bust)",
   "Абонемент «Всегда в ленте» (мес)": "«Doim lentada» abonementi (oy)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Kengaytirilgan limitlar: auditlar, raqobatchilar, birja"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Kengaytirilgan limitlar: auditlar, raqobatchilar, birja",
+  "Старт: AI-генерация и Площадка": "Start: AI-generatsiya va Marketplace",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Optimum: premium AI, auditlar, raqobatchilar tahlili",
+  "Максимум для одиночек: все лимиты": "Yakka foydalanuvchilar uchun maksimum: barcha limitlar",
+  "Для сеток: 25 каналов и режим сеток": "Tarmoqlar uchun: 25 kanal va tarmoq rejimi",
+  "Крупные сети: 50 каналов и менеджер": "Yirik tarmoqlar: 50 kanal va menejer",
+  "Планы, годовая оплата и разовые пакеты": "Rejalar, yillik to'lov va bir martalik paketlar"
  },
  "be": {
   "Партнёрская программа": "Партнёрская праграма",
@@ -10530,7 +10560,13 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "Пакет 15 размяшчэнняў",
   "Топ ленты (буст 48 ч)": "Топ стужкі (буст 48 г)",
   "Абонемент «Всегда в ленте» (мес)": "Абанемент «Заўсёды ў стужцы» (мес)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Пашыраныя ліміты: аўдыты, канкурэнты, біржа"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Пашыраныя ліміты: аўдыты, канкурэнты, біржа",
+  "Старт: AI-генерация и Площадка": "Старт: AI-генерацыя і Пляцоўка",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Аптымум: прэміум-AI, аўдыты, канкурэнты",
+  "Максимум для одиночек: все лимиты": "Максімум для адзіночак: усе ліміты",
+  "Для сеток: 25 каналов и режим сеток": "Для сетак: 25 каналаў і рэжым сетак",
+  "Крупные сети: 50 каналов и менеджер": "Буйныя сеткі: 50 каналаў і менеджэр",
+  "Планы, годовая оплата и разовые пакеты": "Планы, гадавая аплата і разавыя пакеты"
  },
  "az": {
   "Партнёрская программа": "Tərəfdaşlıq proqramı",
@@ -12285,6 +12321,12 @@ window.__I18N_DICT = {
   "Пакет 15 размещений": "15 yerləşdirmə paketi",
   "Топ ленты (буст 48 ч)": "Lentin zirvəsi (48 saat boost)",
   "Абонемент «Всегда в ленте» (мес)": "«Həmişə lentdə» abunəliyi (ay)",
-  "Расширенные лимиты: аудиты, конкуренты, биржа": "Genişləndirilmiş limitlər: auditlər, rəqiblər, birja"
+  "Расширенные лимиты: аудиты, конкуренты, биржа": "Genişləndirilmiş limitlər: auditlər, rəqiblər, birja",
+  "Старт: AI-генерация и Площадка": "Start: AI generasiya və Marketplace",
+  "Оптимум: премиум-AI, аудиты, конкуренты": "Optimum: premium AI, auditlər və rəqib analizi",
+  "Максимум для одиночек: все лимиты": "Tək istifadəçilər üçün maksimum: bütün limitlər",
+  "Для сеток: 25 каналов и режим сеток": "Şəbəkələr üçün: 25 kanal və şəbəkə rejimi",
+  "Крупные сети: 50 каналов и менеджер": "İri şəbəkələr: 50 kanal və menecer",
+  "Планы, годовая оплата и разовые пакеты": "Planlar, illik ödəniş və birdəfəlik paketlər"
  }
 };

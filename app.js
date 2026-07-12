@@ -670,6 +670,7 @@ function handleAction(actionId) {
 
     if (actionId === 'profile') { openCabinet(); return; }
     if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }
+    if (actionId === 'tariffs') { openTariffs(); return; }
 
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
@@ -1096,6 +1097,8 @@ function openLangPicker() {
 // ==================== Витрина тарифов ====================
 let tariffsData = null;
 let tfPeriod = 'month'; // 'month' | 'year'
+// цвет стекла по тарифу (в стиле рефералки, но у каждого свой оттенок)
+const TP_COLOR = { light: 'bl', pro: 'pu', pro_plus: 'gd', agency: 'gr', network: 'pk' };
 
 function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
@@ -1135,16 +1138,32 @@ function tfCta(plan, d) {
 }
 
 function tfPlanCard(plan, d) {
-    const lead = plan.lead ? `<div class="tf-lead ${plan.tile === 'gold' ? 'gold' : ''}"><i class="ti ti-${plan.tile === 'gold' ? 'crown' : 'bolt'}"></i> ${escapeHtml(plan.lead)}</div>` : '';
-    const feats = (plan.features || []).map((f) => `<div class="tf-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
     const isYear = tfPeriod === 'year';
-    const priceHtml = isYear
-        ? `<div class="price"><b>${cabNum(plan.price_year)} ₽</b> / год<span class="tf-save">2 месяца в подарок</span></div>`
-        : `<div class="price"><b>${cabNum(plan.price)} ₽</b> / мес</div>`;
-    const head = `<div class="tf-phead"><div class="tf-ptile ${escapeHtml(plan.tile)}"><i class="ti ti-${tfIcon(plan.key)}"></i></div><div class="tf-pn"><div class="name">${escapeHtml(plan.name)}</div>${priceHtml}</div></div>`;
-    const inner = `${plan.popular ? '<div class="tf-ribbon">★ Популярный</div>' : ''}${head}${lead}<div class="tf-feats">${feats}</div>${tfCta(plan, d)}`;
-    if (plan.popular) return `<div class="tf-plan pop"><div class="tf-glow"></div><div class="tf-inner">${inner}</div></div>`;
-    return `<div class="tf-plan">${inner}</div>`;
+    const price = isYear ? plan.price_year : plan.price;
+    const per = isYear ? '/год' : '/мес';
+    const color = TP_COLOR[plan.key] || 'pu';
+    const ribbon = plan.popular ? '<span class="tp-rib">★ Популярный</span>' : '';
+    const feats = (plan.features || []).map((f) => `<div class="tp-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
+    const lead = plan.lead ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
+    const save = isYear ? '<div class="tp-save">2 месяца в подарок</div>' : '';
+    let cta;
+    if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
+    else if (d.booked_plan === plan.key) cta = `<button class="tp-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
+    else cta = `<button class="tp-cta" data-book="${plan.key}">Забронировать ${escapeHtml(plan.name)} — ${cabNum(price)} ₽</button>`;
+    const openCls = plan.popular ? ' open' : '';
+    const popCls = plan.popular ? ' pop' : '';
+    return `<div class="tp-card tp-${color}${popCls}${openCls}" data-plan="${escapeHtml(plan.key)}">
+      <button class="tp-head" data-tphead="${escapeHtml(plan.key)}" aria-expanded="${plan.popular ? 'true' : 'false'}">
+        <div class="tp-tile"><i class="ti ti-${tfIcon(plan.key)}"></i></div>
+        <div class="tp-main">
+          <div class="tp-top"><span class="tp-name">${escapeHtml(plan.name)}</span>${ribbon}</div>
+          <div class="tp-brief">${escapeHtml(plan.brief || '')}</div>
+        </div>
+        <div class="tp-price"><b>${cabNum(price)} ₽</b><span>${per}</span></div>
+        <i class="ti ti-chevron-down tp-chev"></i>
+      </button>
+      <div class="tp-body"><div class="tp-in">${lead}<div class="tp-feats">${feats}</div>${save}${cta}</div></div>
+    </div>`;
 }
 
 function renderTariffs(d) {
@@ -1166,6 +1185,13 @@ function renderTariffs(d) {
         const per = btn.getAttribute('data-per');
         if (per === tfPeriod) return;
         tfPeriod = per; hapticLight(); renderTariffs(d);
+    }));
+    body.querySelectorAll('[data-tphead]').forEach((h) => h.addEventListener('click', () => {
+        const card = h.closest('.tp-card');
+        if (!card) return;
+        hapticLight();
+        const open = card.classList.toggle('open');
+        h.setAttribute('aria-expanded', open ? 'true' : 'false');
     }));
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
