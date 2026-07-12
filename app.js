@@ -3838,6 +3838,62 @@ function setupPostEventListeners() {
 }
 
 
+/* ===================== live-обновление (без перезаходов) =====================
+   Пока приложение открыто, периодически (и при возврате фокуса) сверяем версии
+   ассетов из index.html на сервере с реально загруженными. Если вышла новая
+   версия — мягко перезагружаемся, не прерывая набор текста. Работает вместе с
+   no-store на index.html (vercel.json): перезагрузка получает свежую страницу. */
+var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n_dict.js'];
+function _fmVerFromDom() {
+    return _FM_ASSETS.map(function (f) {
+        var el = document.querySelector('script[src*="' + f + '?v="], link[href*="' + f + '?v="]');
+        var u = el ? (el.getAttribute('src') || el.getAttribute('href') || '') : '';
+        var m = u.match(/\?v=([0-9a-zA-Z.]+)/);
+        return f + ':' + (m ? m[1] : '');
+    }).join('|');
+}
+function _fmVerFromHtml(html) {
+    return _FM_ASSETS.map(function (f) {
+        var m = (html || '').match(new RegExp(f.replace(/\./g, '\\.') + '\\?v=([0-9a-zA-Z.]+)'));
+        return f + ':' + (m ? m[1] : '');
+    }).join('|');
+}
+var _fmBaseVer = null, _fmPending = false;
+function _fmTyping() {
+    var a = document.activeElement; if (!a) return false;
+    var t = (a.tagName || '').toLowerCase();
+    return t === 'input' || t === 'textarea' || a.isContentEditable === true;
+}
+function _fmApply() {
+    if (_fmTyping()) { _fmPending = true; return; }   // не прерываем набор — применим, когда освободится
+    try {
+        var now = Date.now();
+        var t0 = +sessionStorage.getItem('fm_upd_t') || 0;
+        var n = (now - t0 > 120000) ? 1 : (+sessionStorage.getItem('fm_upd_n') || 0) + 1;
+        sessionStorage.setItem('fm_upd_t', now); sessionStorage.setItem('fm_upd_n', n);
+        if (n > 3) return;   // защита от петли: не больше 3 перезагрузок за 2 минуты
+    } catch (e) {}
+    try { showToast('Обновляю до новой версии…', 'refresh'); } catch (e) {}
+    setTimeout(function () { try { location.reload(); } catch (e) {} }, 700);
+}
+async function _fmCheck() {
+    if (_fmPending) { if (!_fmTyping()) _fmApply(); return; }
+    try {
+        var r = await fetch('/index.html?fmv=' + Date.now(), { cache: 'no-store' });
+        if (!r.ok) return;
+        var cur = _fmVerFromHtml(await r.text());
+        if (!/:[0-9]/.test(cur)) return;                 // на сервере версий не нашли — молчим
+        if (_fmBaseVer && cur !== _fmBaseVer) _fmApply();
+    } catch (e) {}
+}
+function startLiveUpdate() {
+    _fmBaseVer = _fmVerFromDom();
+    if (!/:[0-9]/.test(_fmBaseVer)) return;               // нет версий в теге — не включаем (без ложных перезагрузок)
+    setInterval(_fmCheck, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) _fmCheck(); });
+    window.addEventListener('focus', _fmCheck);
+}
+
 async function main() {
     setupEventListeners();
     initAutoLocalize();
@@ -3849,6 +3905,7 @@ async function main() {
         return;
     }
 
+    startLiveUpdate();
     await loadDashboard();
 }
 
