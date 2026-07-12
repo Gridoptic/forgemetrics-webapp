@@ -1086,7 +1086,7 @@ function openLangPicker() {
 // ==================== Витрина тарифов ====================
 let tariffsData = null;
 
-function tfIcon(key) { return key === 'light' ? 'package' : (key === 'pro' ? 'rocket' : 'crown'); }
+function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
 async function openTariffs() {
     hapticLight();

@@ -1,5 +1,5 @@
 /* Словари переводов ForgeMetrics (авто-сгенерировано + вычитка носителями). Ключ — русская строка.
-   Нет ключа/пусто → показывается русская строка (fallback). Фаза 1-7 + рефералка v2.
+   Нет ключа/пусто → показывается русская строка (fallback). Фаза 1-7 + рефералка v2 + тарифы Agency/Network.
    uk (украинский) временно отключён — восстановить из git-истории. */
 window.__I18N_DICT = {
  "en": {
@@ -1729,7 +1729,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "You share your link or promo code with channel admins.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "A friend registers through it and gets −15% for the first month.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "After their first payment you earn credits — the higher your tier, the more.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Join ForgeMetrics — an AI tool and ad exchange for Telegram channel admins. Use my link for −15% on the first month:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Join ForgeMetrics — an AI tool and ad exchange for Telegram channel admins. Use my link for −15% on the first month:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Maximum limits: channel audits, competitor analysis, ad exchange",
+  "Антифрод-скоринг площадок и максимум приоритета": "Anti-fraud scoring of placements and maximum priority",
+  "Для сеток каналов:": "For channel networks:",
+  "Режим сеток: 25 каналов на одном экране": "Grid mode: 25 channels on a single screen",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Bulk card creation, package pricing, network statistics",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Priority MP4 render, placement report export",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Increased limits for channel audits, competitor analysis, and ad exchange",
+  "Для крупных сетей и медиабаинга:": "For large networks and media buying:",
+  "До 50 каналов · выделенный воркер рендера": "Up to 50 channels · dedicated render worker",
+  "Всё из Agency, плюс максимальные лимиты": "Everything in Agency, plus maximum limits",
+  "API и выгрузка данных": "API and data export",
+  "Персональный менеджер, ранний доступ к метрикам": "Dedicated account manager, early access to metrics",
+  "Анализ конкурента": "Competitor analysis",
+  "Анализ рекламных площадок": "Ad placement analysis"
  },
  "es": {
   "Партнёрская программа": "Programa de afiliados",
@@ -3458,7 +3472,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Compartes tu enlace o código promocional con administradores de canales.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Tu amigo se registra con él y obtiene −15% el primer mes.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Tras su primer pago se te abonan créditos — cuanto más alto sea tu nivel, más recibes.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Únete a ForgeMetrics — herramienta AI y bolsa de publicidad para administradores de canales de Telegram. Con mi enlace, −15% el primer mes:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Únete a ForgeMetrics — herramienta AI y bolsa de publicidad para administradores de canales de Telegram. Con mi enlace, −15% el primer mes:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Límites máximos: auditorías, competidores, bolsa de anuncios",
+  "Антифрод-скоринг площадок и максимум приоритета": "Scoring antifraude de plataformas y máxima prioridad",
+  "Для сеток каналов:": "Para redes de canales:",
+  "Режим сеток: 25 каналов на одном экране": "Modo de red: 25 canales en una sola pantalla",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Creación masiva de tarjetas, precios por paquete, estadísticas de la red",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Renderizado prioritario MP4, exportación de informes de emplazamiento",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Límites ampliados de auditorías, competidores y bolsa de anuncios",
+  "Для крупных сетей и медиабаинга:": "Para grandes redes y compra de medios:",
+  "До 50 каналов · выделенный воркер рендера": "Hasta 50 canales · worker de renderizado dedicado",
+  "Всё из Agency, плюс максимальные лимиты": "Todo lo de Agency, más los límites máximos",
+  "API и выгрузка данных": "API y exportación de datos",
+  "Персональный менеджер, ранний доступ к метрикам": "Gestor personal, acceso anticipado a las métricas",
+  "Анализ конкурента": "Análisis de competidor",
+  "Анализ рекламных площадок": "Análisis de plataformas publicitarias"
  },
  "de": {
   "Партнёрская программа": "Partnerprogramm",
@@ -5187,7 +5215,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Du teilst den Link oder Promo-Code mit Kanal-Admins.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Ein Freund registriert sich darüber und erhält −15% im ersten Monat.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Nach seiner ersten Zahlung werden dir Credits gutgeschrieben — umso mehr, je höher dein Level.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Komm zu ForgeMetrics — AI-Tool und Werbebörse für Admins von Telegram-Kanälen. Über meinen Link −15% im ersten Monat:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Komm zu ForgeMetrics — AI-Tool und Werbebörse für Admins von Telegram-Kanälen. Über meinen Link −15% im ersten Monat:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Maximale Limits: Audits, Wettbewerber, Werbebörse",
+  "Антифрод-скоринг площадок и максимум приоритета": "Anti-Fraud-Scoring der Werbeplätze und maximale Priorität",
+  "Для сеток каналов:": "Für Kanalnetzwerke:",
+  "Режим сеток: 25 каналов на одном экране": "Netzwerkmodus: 25 Kanäle auf einem Bildschirm",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Massenerstellung von Karten, Paketpreise, Netzwerkstatistik",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Priorisiertes MP4-Rendering, Export von Platzierungsberichten",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Erhöhte Limits für Audits, Wettbewerber und Werbebörse",
+  "Для крупных сетей и медиабаинга:": "Für große Netzwerke und Media-Buying:",
+  "До 50 каналов · выделенный воркер рендера": "Bis zu 50 Kanäle · dedizierter Render-Worker",
+  "Всё из Agency, плюс максимальные лимиты": "Alles aus Agency, plus maximale Limits",
+  "API и выгрузка данных": "API und Datenexport",
+  "Персональный менеджер, ранний доступ к метрикам": "Persönlicher Ansprechpartner, früher Zugang zu Metriken",
+  "Анализ конкурента": "Wettbewerberanalyse",
+  "Анализ рекламных площадок": "Analyse der Werbeplätze"
  },
  "kk": {
   "Партнёрская программа": "Серіктестік бағдарламасы",
@@ -6915,7 +6957,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Сілтемені немесе промокодты арна әкімшілерімен бөлісесің.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Досың сол сілтеме бойынша тіркеледі және бірінші айға −15% алады.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Оның бірінші төлемінен кейін саған кредиттер есептеледі — деңгейің неғұрлым жоғары болса, соғұрлым көп.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ке қосыл — Telegram-арналарының әкімшілеріне арналған AI-құрал және жарнама биржасы. Менің сілтемем бойынша бірінші айға −15%:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ке қосыл — Telegram-арналарының әкімшілеріне арналған AI-құрал және жарнама биржасы. Менің сілтемем бойынша бірінші айға −15%:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Максималды лимиттер: аудиттер, бәсекелестер, биржа",
+  "Антифрод-скоринг площадок и максимум приоритета": "Алаңдардың антифрод-скорингі және максималды басымдық",
+  "Для сеток каналов:": "Арналар торлары үшін:",
+  "Режим сеток: 25 каналов на одном экране": "Тор режимі: бір экранда 25 арна",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Карточкаларды жаппай жасау, топтамалық бағалар, желі статистикасы",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "MP4 басым рендері, орналастыру есептерін экспорттау",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Аудиттердің, бәсекелестердің және биржаның жоғарылатылған лимиттері",
+  "Для крупных сетей и медиабаинга:": "Ірі желілер мен медиабаинг үшін:",
+  "До 50 каналов · выделенный воркер рендера": "50 арнаға дейін · бөлінген рендер воркері",
+  "Всё из Agency, плюс максимальные лимиты": "Agency-дегінің бәрі, оған қоса максималды лимиттер",
+  "API и выгрузка данных": "API және деректерді экспорттау",
+  "Персональный менеджер, ранний доступ к метрикам": "Жеке менеджер, метрикаларға ерте қол жеткізу",
+  "Анализ конкурента": "Бәсекелесті талдау",
+  "Анализ рекламных площадок": "Жарнама алаңдарын талдау"
  },
  "uz": {
   "Партнёрская программа": "Hamkorlik dasturi",
@@ -8644,7 +8700,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Kanal adminlari bilan havola yoki promokodni ulashasan.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Doʻsting u orqali roʻyxatdan oʻtadi va birinchi oy uchun −15% oladi.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Uning birinchi toʻlovidan soʻng senga kreditlar hisoblanadi — darajang qanchalik yuqori boʻlsa, shunchalik koʻp.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetricsga qoʻshil — Telegram kanallari adminlari uchun AI-vosita va reklama birjasi. Havolam orqali birinchi oy uchun −15%:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetricsga qoʻshil — Telegram kanallari adminlari uchun AI-vosita va reklama birjasi. Havolam orqali birinchi oy uchun −15%:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Maksimal limitlar: auditlar, raqobatchilar, birja",
+  "Антифрод-скоринг площадок и максимум приоритета": "Maydonchalar antifrod-skoringi va maksimal ustuvorlik",
+  "Для сеток каналов:": "Kanallar setkasi uchun:",
+  "Режим сеток: 25 каналов на одном экране": "Setka rejimi: bitta ekranda 25 ta kanal",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Kartochkalarni ommaviy yaratish, paketli narxlar, tarmoq statistikasi",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Ustuvor MP4 render, joylashtirish hisobotlarini eksport qilish",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Auditlar, raqobatchilar va birja uchun oshirilgan limitlar",
+  "Для крупных сетей и медиабаинга:": "Yirik tarmoqlar va mediabaying uchun:",
+  "До 50 каналов · выделенный воркер рендера": "50 tagacha kanal · ajratilgan render vorkeri",
+  "Всё из Agency, плюс максимальные лимиты": "Agency dagi barcha imkoniyatlar, plyus maksimal limitlar",
+  "API и выгрузка данных": "API va ma'lumotlarni eksport qilish",
+  "Персональный менеджер, ранний доступ к метрикам": "Shaxsiy menejer, metrikalarga erta kirish",
+  "Анализ конкурента": "Raqobatchi tahlili",
+  "Анализ рекламных площадок": "Reklama maydonchalari tahlili"
  },
  "be": {
   "Партнёрская программа": "Партнёрская праграма",
@@ -10374,7 +10444,21 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Дзелішся спасылкай або промакодам з адмінамі каналаў.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Сябар рэгіструецца па ёй і атрымлівае −15% на першы месяц.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Пасля яго першай аплаты табе налічваюцца крэдыты — тым больш, чым вышэй узровень.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Далучайся да ForgeMetrics — AI-інструмент і біржа рэкламы для адмінаў Telegram-каналаў. Па маёй спасылцы −15% на першы месяц:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Далучайся да ForgeMetrics — AI-інструмент і біржа рэкламы для адмінаў Telegram-каналаў. Па маёй спасылцы −15% на першы месяц:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Максімум лімітаў: аўдыты, канкурэнты, біржа",
+  "Антифрод-скоринг площадок и максимум приоритета": "Антыфрод-скорынг пляцовак і максімум прыярытэту",
+  "Для сеток каналов:": "Для сетак каналаў:",
+  "Режим сеток: 25 каналов на одном экране": "Рэжым сетак: 25 каналаў на адным экране",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Масавае стварэнне картак, пакетныя цэны, статыстыка сеткі",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Прыярытэтны рэндэр MP4, экспарт справаздач аб размяшчэнні",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Павышаныя ліміты аўдытаў, канкурэнтаў і біржы",
+  "Для крупных сетей и медиабаинга:": "Для буйных сетак і медыябаінгу:",
+  "До 50 каналов · выделенный воркер рендера": "Да 50 каналаў · выдзелены воркер рэндэру",
+  "Всё из Agency, плюс максимальные лимиты": "Усё з Agency, плюс максімальныя ліміты",
+  "API и выгрузка данных": "API і выгрузка дадзеных",
+  "Персональный менеджер, ранний доступ к метрикам": "Персанальны менеджэр, ранні доступ да метрык",
+  "Анализ конкурента": "Аналіз канкурэнта",
+  "Анализ рекламных площадок": "Аналіз рэкламных пляцовак"
  },
  "az": {
   "Партнёрская программа": "Tərəfdaşlıq proqramı",
@@ -12103,6 +12187,20 @@ window.__I18N_DICT = {
   "Делишься ссылкой или промокодом с админами каналов.": "Kanal adminləri ilə linki və ya promo kodu paylaşırsan.",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Dost onunla qeydiyyatdan keçir və ilk aya −15% əldə edir.",
   "После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.": "Onun ilk ödənişindən sonra sənə kreditlər hesablanır — səviyyə nə qədər yüksəkdirsə, bir o qədər çox.",
-  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ə qoşul — Telegram kanalları adminləri üçün AI aləti və reklam birjası. Mənim linkimlə ilk aya −15%:"
+  "Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ə qoşul — Telegram kanalları adminləri üçün AI aləti və reklam birjası. Mənim linkimlə ilk aya −15%:",
+  "Максимум лимитов: аудиты, конкуренты, биржа": "Maksimum limitlər: auditlər, rəqiblər, birja",
+  "Антифрод-скоринг площадок и максимум приоритета": "Platformaların antifrod-skorinqi və maksimum prioritet",
+  "Для сеток каналов:": "Kanal şəbəkələri üçün:",
+  "Режим сеток: 25 каналов на одном экране": "Şəbəkə rejimi: bir ekranda 25 kanal",
+  "Массовое создание карточек, пакетные цены, статистика сети": "Kütləvi kart yaradılması, paket qiymətləri, şəbəkə statistikası",
+  "Приоритетный рендер MP4, экспорт отчётов о размещении": "Prioritet MP4 render, yerləşdirmə hesabatlarının eksportu",
+  "Повышенные лимиты аудитов, конкурентов и биржи": "Auditlər, rəqiblər və birja üçün artırılmış limitlər",
+  "Для крупных сетей и медиабаинга:": "İri şəbəkələr və mediabayinq üçün:",
+  "До 50 каналов · выделенный воркер рендера": "50 kanala qədər · ayrılmış render vorkeri",
+  "Всё из Agency, плюс максимальные лимиты": "Agency-dəki hər şey, üstəlik maksimum limitlər",
+  "API и выгрузка данных": "API və məlumat eksportu",
+  "Персональный менеджер, ранний доступ к метрикам": "Şəxsi menecer, metrikalara erkən çıxış",
+  "Анализ конкурента": "Rəqib təhlili",
+  "Анализ рекламных площадок": "Reklam platformalarının təhlili"
  }
 };
