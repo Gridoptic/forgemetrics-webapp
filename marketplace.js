@@ -4179,22 +4179,34 @@
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
+    var _PROMO_DESC = {
+        burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки.',
+        burst48: 'Подъём в платной полосе на двое суток.',
+        week: 'Присутствие оффера в платной полосе на 7 дней.',
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное.',
+        pack5: '5 недельных размещений со скидкой за объём.',
+        pack15: '15 недельных размещений со скидкой за объём.'
+    };
     function openPromo() {
-        el('fmx-promoBody').innerHTML =
-            '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-bolt" style="color:#818cf8;"></i> Поднятие 24 часа</div><div class="fmx-po-pr">490 ₽</div></div>' +
-            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем оффер выше в топе на сутки. Больше показов — больше откликов.</div>' +
-            '<button class="fmx-po-buy" data-buy="24">Поднять на 24 часа</button></div>' +
-            '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-bolt" style="color:#818cf8;"></i> Поднятие 48 часов</div><div class="fmx-po-pr">1 390 ₽</div></div>' +
-            '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> Поднимаем оффер выше в топе на двое суток — дольше наверху, больше откликов.</div>' +
-            '<button class="fmx-po-buy" data-buy="48">Поднять на 48 часов</button></div>' +
-            '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Поднятия на 24 и 48 часов вместе — не больше 3 раз за 30 дней.</div>' +
-            '<div class="fmx-po gold"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвижение 30 дней</div><div class="fmx-po-pr gold">29 990 ₽</div></div>' +
-            '<div class="fmx-po-li gold"><i class="ti ti-arrow-up"></i> Приоритет в топе на месяц, максимум показов.</div>' +
-            '<div class="fmx-po-li gold"><i class="ti ti-sparkles"></i> Эксклюзивное оформление: золотое свечение, премиум-фон, спецэффекты, стеклянные кнопки.</div>' +
-            '<div class="fmx-po-li gold"><i class="ti ti-circle-check"></i> Не входит в лимит трёх поднятий.</div>' +
-            '<button class="fmx-po-buy gold" data-buy="top">Оформить продвижение на 30 дней</button></div>';
-        qsa(el('fmx-promoBody'), '[data-buy]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); uiAlert('Оплата продвижения (' + b.getAttribute('data-buy') + ') — подключим биллинг.'); }); });
+        var body = el('fmx-promoBody');
+        body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Загрузка…</div>';
         showModal('fmx-promoBg');
+        apiGet('/api/v1/marketplace/promo-options').then(function (r) {
+            if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; return; }
+            var opts = r.options || [], disc = r.discount_pct || 0, html = '';
+            if (disc > 0) html += '<div class="fmx-limit" style="border-color:rgba(52,211,153,.4);color:#34d399;"><i class="ti ti-discount-2"></i> Скидка твоего тарифа на всё продвижение: −' + disc + '%</div>';
+            opts.forEach(function (o) {
+                var ic = o.kind === 'credits' ? 'ti-package' : (o.in_burst_cap ? 'ti-bolt' : 'ti-rocket');
+                var pr = '<b>' + _num(o.price) + ' ₽</b>';
+                if (o.base_price && o.base_price > o.price) pr = '<span style="text-decoration:line-through;opacity:.45;font-weight:600;margin-right:6px;">' + _num(o.base_price) + '</span>' + pr;
+                html += '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ' + ic + '" style="color:#818cf8;"></i> ' + _esc(o.label) + '</div><div class="fmx-po-pr">' + pr + '</div></div>' +
+                    '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> ' + _esc(_PROMO_DESC[o.product] || '') + '</div>' +
+                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">Выбрать</button></div>';
+            });
+            html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Всплески 24 и 48 ч вместе — не больше ' + (r.burst_cap || 3) + ' раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.</div>';
+            body.innerHTML = html;
+            qsa(body, '[data-buy]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); uiAlert('Оплата продвижения — подключим при запуске (ЮKassa).'); }); });
+        }).catch(function () { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; });
     }
     function openAnalyze(u) {
         _haptic('light');
