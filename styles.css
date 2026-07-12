@@ -3957,6 +3957,24 @@ html.cs-modal-open {
 .cab-cp{width:32px;height:32px;border-radius:9px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.28);color:#818cf8;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:16px;transition:all .15s;}
 .cab-cp:hover{background:rgba(99,102,241,0.2);}
 .cab-cp.ok{color:#5DCAA5;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.14);}
+.cab-cp.edit{background:rgba(129,140,248,0.10);}
+.cab-reflbl{font-size:11px;font-weight:700;color:var(--text-secondary);margin:0 2px 7px;}
+.cab-reflbl.mt{margin-top:14px;}
+.cab-refhint{font-weight:500;color:var(--text-tertiary);}
+.cab-code.lnk{font-size:12px;letter-spacing:0;font-family:inherit;}
+.cab-promoed{display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border-medium);border-radius:12px;padding:12px;margin-bottom:12px;}
+.cab-promoed.on{display:block;animation:fmFade .18s ease-out;}
+@keyframes fmFade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.cab-pinp{width:100%;background:#12162a;border:1px solid var(--border-medium);border-radius:10px;padding:11px 12px;color:var(--text-primary);font-family:ui-monospace,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;outline:none;text-align:center;box-sizing:border-box;}
+.cab-pinp:focus{border-color:rgba(129,140,248,0.6);}
+.cab-pmsg{font-size:11px;color:var(--text-tertiary);margin:8px 2px 0;min-height:14px;text-align:center;line-height:1.35;}
+.cab-pmsg.ok{color:#5DCAA5;}
+.cab-pmsg.bad{color:#f7a58c;}
+.cab-prow{display:flex;gap:8px;margin-top:11px;}
+.cab-pbtn{flex:1;padding:10px;border-radius:10px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;min-height:40px;}
+.cab-pbtn.ghost{background:rgba(255,255,255,0.06);color:var(--text-secondary);}
+.cab-pbtn.save{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}
+.cab-pbtn.save:disabled{opacity:0.45;cursor:default;}
 
 .cab-set{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.045);cursor:pointer;}
 .cab-set:last-child{border-bottom:none;padding-bottom:2px;}
