@@ -869,6 +869,10 @@
             '.fmx-mbtn.ok{background:rgba(93,202,165,0.16);color:#5DCAA5;border:1px solid rgba(93,202,165,0.34);}',
             '.fmx-mbtn.no{background:rgba(239,68,68,0.13);color:#f87171;border:1px solid rgba(239,68,68,0.32);}',
             '.fmx-mbtn:active{transform:scale(0.98);}',
+            '.fmx-mopen{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:9px;border-radius:10px;border:0.5px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.10);color:#a5b4fc;font-size:12px;font-weight:600;cursor:pointer;min-height:40px;}',
+            '.fmx-mopen:active{transform:scale(0.98);}',
+            '.fmx-macat{font-size:11px;color:#8990a8;margin-top:5px;}',
+            '.fmx-macat b{color:#c5c8d6;font-weight:600;}',
             '.fmx-mstatrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#8990a8;padding:6px 0;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:6px;}',
             '.fmx-mstatrow b{color:#e8e8ed;font-weight:700;text-align:right;overflow-wrap:anywhere;}',
             '.fmx-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px;}',
@@ -1142,9 +1146,17 @@
         });
     }
     function modReject(id) {
-        modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина — автор увидит её и сможет исправить', btn: 'Отклонить' }, function (reason) {
+        // причина необязательна: пусто → бэкенд подставит «Отклонено модератором после ручной проверки»
+        modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина (необязательно) — автор увидит и сможет исправить', btn: 'Отклонить', optional: true }, function (reason) {
             apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
         });
+    }
+    var _CATRU = { white: 'белый', grey: 'серый', black: 'чёрный' };
+    function _openChannel(url) {
+        _haptic('light');
+        try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) { tg.openTelegramLink(url); return; } } catch (e) {}
+        try { if (typeof tg !== 'undefined' && tg && tg.openLink) { tg.openLink(url); return; } } catch (e) {}
+        try { window.open(url, '_blank'); } catch (e) {}
     }
     function modRestore(id) {
         uiConfirm('Вернуть заявку R' + id + ' и снять жалобы?', function () {
@@ -1165,11 +1177,20 @@
             if (r.empty) { box.innerHTML = emptyHtml('ti-checks', 'Очередь пуста', 'Офферов на проверке и открытых жалоб нет.'); return; }
             var h = '';
             (r.listings || []).forEach(function (l) {
+                var acat = '';
+                if (l.ai_category || l.ai_confidence != null) {
+                    var bits = [];
+                    if (l.ai_category) bits.push('<b>' + _esc(_CATRU[l.ai_category] || l.ai_category) + '</b>');
+                    if (l.ai_confidence != null) bits.push('уверенность ' + l.ai_confidence + '%');
+                    acat = '<div class="fmx-macat">Автопроверка: ' + bits.join(' · ') + '</div>';
+                }
                 h += '<div class="fmx-mcard">' +
                     '<div class="fmx-mtitle">#' + l.id + ' @' + _esc(l.username) + (l.is_adult ? '<span class="fmx-mbadge">18+</span>' : '') + '</div>' +
                     (l.title ? '<div class="fmx-msub">' + _esc(l.title) + '</div>' : '') +
                     '<div class="fmx-mmeta">' + _esc(l.note) + (l.complaints ? ' · жалоб: ' + l.complaints : '') + '</div>' +
+                    acat +
                     (l.ai_reason ? '<div class="fmx-mai">ИИ: ' + _esc(l.ai_reason) + '</div>' : '') +
+                    (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> Открыть канал</button>' : '') +
                     '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-appr="' + l.id + '">Одобрить</button>' +
                     '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button></div>' +
                     '</div>';
@@ -1188,6 +1209,7 @@
             box.innerHTML = h;
             qsa(box, '[data-appr]').forEach(function (b) { b.addEventListener('click', function () { modApprove(+b.getAttribute('data-appr')); }); });
             qsa(box, '[data-rej]').forEach(function (b) { b.addEventListener('click', function () { modReject(+b.getAttribute('data-rej')); }); });
+            qsa(box, '[data-open]').forEach(function (b) { b.addEventListener('click', function () { _openChannel(b.getAttribute('data-open')); }); });
             qsa(box, '[data-rest]').forEach(function (b) { b.addEventListener('click', function () { modRestore(+b.getAttribute('data-rest')); }); });
             qsa(box, '[data-rem]').forEach(function (b) { b.addEventListener('click', function () { modRemove(+b.getAttribute('data-rem')); }); });
         }).catch(function () { _modFail(box); });
