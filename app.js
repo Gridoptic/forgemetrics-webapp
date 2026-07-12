@@ -1085,6 +1085,7 @@ function openLangPicker() {
 
 // ==================== Витрина тарифов ====================
 let tariffsData = null;
+let tfPeriod = 'month'; // 'month' | 'year'
 
 function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
@@ -1117,13 +1118,20 @@ function tfCta(plan, d) {
     if (d.booked_plan === plan.key) return `<button class="tf-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
     const cls = plan.popular ? 'prime' : (plan.tile === 'gold' ? 'gold' : 'ghost');
     const shine = plan.popular ? '<span class="shine"></span>' : '';
-    return `<button class="tf-cta ${cls}" data-book="${plan.key}">${shine}Забронировать ${escapeHtml(plan.name)} — ${cabNum(plan.price)} ₽</button>`;
+    const isYear = tfPeriod === 'year';
+    const price = isYear ? plan.price_year : plan.price;
+    const per = isYear ? '/год' : '';
+    return `<button class="tf-cta ${cls}" data-book="${plan.key}">${shine}Забронировать ${escapeHtml(plan.name)} — ${cabNum(price)} ₽${per}</button>`;
 }
 
 function tfPlanCard(plan, d) {
     const lead = plan.lead ? `<div class="tf-lead ${plan.tile === 'gold' ? 'gold' : ''}"><i class="ti ti-${plan.tile === 'gold' ? 'crown' : 'bolt'}"></i> ${escapeHtml(plan.lead)}</div>` : '';
     const feats = (plan.features || []).map((f) => `<div class="tf-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
-    const head = `<div class="tf-phead"><div class="tf-ptile ${escapeHtml(plan.tile)}"><i class="ti ti-${tfIcon(plan.key)}"></i></div><div class="tf-pn"><div class="name">${escapeHtml(plan.name)}</div><div class="price"><b>${cabNum(plan.price)} ₽</b> / мес</div></div></div>`;
+    const isYear = tfPeriod === 'year';
+    const priceHtml = isYear
+        ? `<div class="price"><b>${cabNum(plan.price_year)} ₽</b> / год<span class="tf-save">2 месяца в подарок</span></div>`
+        : `<div class="price"><b>${cabNum(plan.price)} ₽</b> / мес</div>`;
+    const head = `<div class="tf-phead"><div class="tf-ptile ${escapeHtml(plan.tile)}"><i class="ti ti-${tfIcon(plan.key)}"></i></div><div class="tf-pn"><div class="name">${escapeHtml(plan.name)}</div>${priceHtml}</div></div>`;
     const inner = `${plan.popular ? '<div class="tf-ribbon">★ Популярный</div>' : ''}${head}${lead}<div class="tf-feats">${feats}</div>${tfCta(plan, d)}`;
     if (plan.popular) return `<div class="tf-plan pop"><div class="tf-glow"></div><div class="tf-inner">${inner}</div></div>`;
     return `<div class="tf-plan">${inner}</div>`;
@@ -1132,14 +1140,23 @@ function tfPlanCard(plan, d) {
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
+    const disc = d.annual_discount_pct || 17;
     let html = tfCurBanner(d);
+    html += `<div class="tf-billtog"><button class="tf-bt${tfPeriod === 'month' ? ' on' : ''}" data-per="month">Месяц</button><button class="tf-bt${tfPeriod === 'year' ? ' on' : ''}" data-per="year">Год <span class="sv">−${disc}%</span></button></div>`;
     html += '<div class="tf-sub">Забронируй план сейчас — оплату подключим к запуску и уведомим тебя. После триала остаётся бесплатный Free.</div>';
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
     const extras = (d.extras || []).map((e) => `<div class="tf-erow"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span></div>`).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
+    const promos = (d.promotions || []).map((e) => `<div class="tf-erow"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span></div>`).join('');
+    if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
     html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
     body.innerHTML = html;
     localizeTree(screens.tariffs);
+    body.querySelectorAll('[data-per]').forEach((btn) => btn.addEventListener('click', () => {
+        const per = btn.getAttribute('data-per');
+        if (per === tfPeriod) return;
+        tfPeriod = per; hapticLight(); renderTariffs(d);
+    }));
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
         btn.addEventListener('click', async () => {
