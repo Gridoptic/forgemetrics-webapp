@@ -782,27 +782,105 @@ function cabUsageRow(u) {
     return `<div class="cab-use">${cabTile(u.color, u.icon, 'md')}<div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
 }
 
-function cabRefLadder(cur) {
+// Ставка (FACE %) и перки по уровню — модель revenue-share кредитами (economics-model).
+// Без «продукта навсегда»: доля с платежей кредитами + продвижения в ленте + охват.
+const RF_RATE = { member: 15, connector: 15, influencer: 25, ambassador: 40, founders_circle: 62 };
+
+function cabRefLadder(curKey) {
     const L = [
-        { n: 'Member', e: '👤', need: 'старт', perk: 'участвуешь в программе' },
-        { n: 'Connector', e: '🟢', need: '1 платящий', perk: '+50% к дневному лимиту' },
-        { n: 'Influencer', e: '🔵', need: '10 платящих', perk: '+100% лимит · ×1.1 к бонусам' },
-        { n: 'Ambassador', e: '🟣', need: '50 платящих', perk: '×1.25 к бонусам' },
-        { n: 'Founders Circle', e: '💎', need: '200 платящих', perk: '×1.4 к бонусам' },
+        { key: 'member', n: 'Member', need: 'старт', perk: 'участие в программе' },
+        { key: 'connector', n: 'Connector', need: '1 оплативший', perk: '15% от платежей — кредитами' },
+        { key: 'influencer', n: 'Influencer', need: '10 оплативших', perk: '25% · +1 продвижение в Топ ленты/мес' },
+        { key: 'ambassador', n: 'Ambassador', need: '50 оплативших', perk: '40% · лидерборд · ×1.25 к охвату продвижений' },
+        { key: 'founders_circle', n: 'Founders Circle', need: '200 оплативших', perk: '62% · полка Founders · ×1.5 к охвату' },
     ];
-    let ci = L.findIndex((x) => x.n === (cur || 'Member'));
+    let ci = L.findIndex((x) => x.key === (curKey || 'member'));
     if (ci < 0) ci = 0;
     const rows = L.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
-        const mark = i < ci ? '<i class="ti ti-check"></i>' : (i === ci ? '<span class="cab-lad-here">ты здесь</span>' : '');
-        return `<div class="cab-lad-row ${st}"><span class="cab-lad-em">${x.e}</span><div class="cab-lad-ti"><div class="cab-lad-n">${escapeHtml(x.n)} <span class="cab-lad-need">${escapeHtml(x.need)}</span></div><div class="cab-lad-p">${escapeHtml(x.perk)}</div></div>${mark}</div>`;
+        const here = i === ci ? '<span class="rf-here">ты здесь</span>' : '';
+        return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(x.n)} <span class="need">· ${escapeHtml(x.need)}</span></div><div class="perk">${escapeHtml(x.perk)}</div></div>${here}</div>`;
     }).join('');
-    return `<div class="cab-lad"><div class="cab-lad-h">Уровни программы · бонусы включатся с оплатой</div>${rows}</div>`;
+    return `<div class="rf-ladder">${rows}</div>`;
 }
 
 function refCardHtml(r) {
     r = r || {};
-    return `<div class="cab-card" id="cab-sec-referral"><div class="cab-stt"><h3>${cabTile('pk', 'heart-handshake', 'sm')} Приглашай и зарабатывай</h3></div><div class="cab-bal"><span class="big">${cabNum(r.credits_balance)} ₽</span><span class="cap">кредитов на балансе · заработано ${cabNum(r.credits_earned)} ₽</span></div><div class="cab-lvl"><span class="cab-lvlpill">${escapeHtml(r.level_emoji || '👤')} ${escapeHtml(r.level_display || 'Member')}</span>${r.next_level_display ? `<span class="cab-lvlnext">до ${escapeHtml(r.next_level_emoji || '')} ${escapeHtml(r.next_level_display)} — ${cabNum(r.needed_for_next)} платящих</span>` : '<span class="cab-lvlnext">высший уровень</span>'}</div><div class="cab-lvlbar"><div class="cab-lvlfill" style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></div></div><div class="cab-bgrid"><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_light)} ₽</div><div class="t">за Light</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro)} ₽</div><div class="t">за Pro</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro_plus)} ₽</div><div class="t">за Pro+</div></div></div>${cabRefLadder(r.level_display)}<div class="cab-reflbl">Твой промокод <span class="cab-refhint">— придумай красивый, если свободен</span></div><div class="cab-promo" id="cab-promo-view"><span class="cab-code" id="cab-code">${escapeHtml(r.promo_code || '—')}</span><div class="cab-cp" id="cab-copy" title="Копировать"><i class="ti ti-copy"></i></div><div class="cab-cp edit" id="cab-edit" title="Изменить"><i class="ti ti-pencil"></i></div></div><div class="cab-promoed" id="cab-promo-edit"><input class="cab-pinp" id="cab-pinp" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ПРИДУМАЙ КОД"><div class="cab-pmsg" id="cab-pmsg">4–12 символов: латиница, цифры, _</div><div class="cab-prow"><button class="cab-pbtn ghost" id="cab-pcancel">Отмена</button><button class="cab-pbtn save" id="cab-psave" disabled>Сохранить</button></div></div><div class="cab-reflbl mt">Реферальная ссылка</div><div class="cab-promo"><span class="cab-code lnk" id="cab-link">${escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''))}</span><div class="cab-cp" id="cab-linkcopy" title="Копировать ссылку"><i class="ti ti-link"></i></div></div><button class="cab-cta pk" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button><div class="cab-cta-note">Друг получает −15% на первый месяц · бонус после его оплаты</div></div>`;
+    const lvlKey = r.level || 'member';
+    const rate = RF_RATE[lvlKey] || 15;
+    const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
+    const nextLine = r.next_level_display
+        ? `до <b>${escapeHtml(r.next_level_display)}</b><br>ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
+        : 'высший уровень';
+    return `<div class="rf">
+  <div class="rf-card">
+    <span class="rf-eyebrow">Приглашено по твоей ссылке</span>
+    <div class="rf-stats">
+      <div class="rf-stat"><div class="n">${cabNum(r.total_invited)}</div><div class="l">перешло</div></div>
+      <div class="rf-divx"></div>
+      <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">оплатили</div></div>
+      <div class="rf-divx"></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.pending_bonuses)}</div><div class="l">в ожидании</div></div>
+    </div>
+  </div>
+
+  <div class="rf-card rf-value rf-glow">
+    <div class="rf-body">
+      <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
+      <div>
+        <div class="rf-rate"><b>${rate}%</b><span>от платежей приглашённых —<br>кредитами на баланс</span></div>
+        <p>Другу — <b>−15%</b> на первый месяц (сгорает с концом триала). Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
+        <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
+      </div>
+    </div>
+    <div class="rf-bal">
+      <span class="k">Баланс кредитов</span>
+      <span class="v">${cabNum(r.credits_balance)}&nbsp;₽</span>
+      <span class="e">на тариф и продвижение</span>
+    </div>
+  </div>
+
+  <div class="rf-card">
+    <div class="rf-lvltop">
+      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Member')}</div><div class="sub">твой уровень</div></div></div>
+      <div class="rf-lvlnext">${nextLine}</div>
+    </div>
+    <div class="rf-bar"><i style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></i></div>
+    ${cabRefLadder(lvlKey)}
+  </div>
+
+  <div class="rf-card rf-glow">
+    <div class="rf-lbl" style="margin-top:0">Твой промокод</div>
+    <div class="rf-field" id="cab-promo-view">
+      <span class="code" id="cab-code">${escapeHtml(r.promo_code || '—')}</span>
+      <button class="rf-fbtn" id="cab-copy" aria-label="Копировать промокод"><i class="ti ti-copy"></i></button>
+      <button class="rf-fbtn" id="cab-edit" aria-label="Изменить промокод"><i class="ti ti-pencil"></i></button>
+    </div>
+    <div class="rf-promoed" id="cab-promo-edit">
+      <input class="rf-pinp" id="cab-pinp" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ПРИДУМАЙ КОД">
+      <div class="rf-pmsg" id="cab-pmsg">4–12 символов: латиница, цифры, _</div>
+      <div class="rf-prow"><button class="rf-pbtn" id="cab-pcancel">Отмена</button><button class="rf-pbtn save" id="cab-psave" disabled>Сохранить</button></div>
+    </div>
+
+    <div class="rf-lbl">Твоя ссылка</div>
+    <div class="rf-field">
+      <span class="link" id="cab-link">${link}</span>
+      <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
+    </div>
+
+    <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button>
+    <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> Скопировать текст приглашения</button>
+  </div>
+
+  <div class="rf-how">
+    <span class="rf-eyebrow">Как это работает</span>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься <b>ссылкой или промокодом</b> с админами каналов.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней и получает <b>−15%</b> на первый месяц.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>После его первой оплаты тебе начисляются <b>кредиты</b> — тем больше, чем выше уровень.</p></div>
+  </div>
+
+  <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
+</div>`;
 }
 
 function renderReferral(d) {
@@ -911,6 +989,13 @@ function wireReferral(d) {
         const b = document.getElementById('cab-linkcopy');
         copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast('Ссылка скопирована'); });
     });
+    on('cab-invite-copy', () => {
+        hapticLight();
+        const link = (d.referral && d.referral.referral_link) || '';
+        const text = t('Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:') + '\n' + link;
+        const b = document.getElementById('cab-invite-copy');
+        copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
+    });
     (function () {
         const curCode = (d.referral && d.referral.promo_code) || '';
         const inp = document.getElementById('cab-pinp');
@@ -933,6 +1018,8 @@ function wireReferral(d) {
         }
         on('cab-edit', () => {
             hapticLight();
+            const dl = (d.referral && d.referral.promo_change_days_left) || 0;
+            if (dl > 0) { cabToast('Сменить промокод можно через ' + dl + ' дн.'); return; }
             const view = document.getElementById('cab-promo-view'), ed = document.getElementById('cab-promo-edit'), el = document.getElementById('cab-pinp');
             if (!ed || !el) return;
             if (view) view.style.display = 'none';
