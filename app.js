@@ -511,7 +511,14 @@ function drawReachChart(host, DATA, dates, days) {
         cd.setAttribute('cx', x); cd.setAttribute('cy', y); cd.style.opacity = 1; ep.style.opacity = 0;
         const dlab = (dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад');
         tip.innerHTML = `<div class="d">${dlab}</div>${DATA[i].toLocaleString('ru-RU')} охват`;
-        tip.style.left = (x / W * r.width) + 'px'; tip.style.top = (y / Hh * r.height) + 'px'; tip.style.opacity = 1;
+        tip.style.opacity = 1;
+        // держим рамку в пределах графика: у крайних точек не вылезает за края в невидимую зону
+        const pxX = x / W * r.width, pxY = y / Hh * r.height;
+        const half = tip.offsetWidth / 2 + 4;
+        tip.style.left = Math.max(half, Math.min(r.width - half, pxX)) + 'px';
+        const above = pxY - tip.offsetHeight * 1.28 >= 2;   // если не влезает сверху — показываем под точкой
+        tip.style.top = pxY + 'px';
+        tip.style.transform = above ? 'translate(-50%,-128%)' : 'translate(-50%,28%)';
     }
     function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
     host.addEventListener('pointermove', (e) => at(e.clientX));
