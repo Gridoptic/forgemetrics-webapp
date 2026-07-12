@@ -739,24 +739,24 @@ function cabStatusHtml(sub) {
 
 const CAB_BENEFITS = {
     pro: [
-        '30 постов в день вместо 1 и 100 AI-запросов',
-        'Живой промо-постер MP4, до 10 каналов, аудиты и анализ конкурентов',
-        'Приоритет на Площадке и эксклюзивное оформление офферов',
+        'До 8 постов в день на премиум-модели + 100 на стандартной',
+        'Живой MP4-постер, оформление карточки, 10 каналов · 30 источников',
+        '6 аудитов, 2 анализа конкурентов и 5 подборов площадок в месяц',
     ],
     pro_plus: [
-        '100 постов в день, до 30 каналов и максимум AI-запросов',
-        'Больше аудитов, анализов конкурентов и поисков рекламодателей',
-        'Максимальный приоритет и все премиум-эффекты',
+        'До 20 постов в день на премиум-модели + 100 на стандартной',
+        '100 источников стиля и 30 обновлений голоса канала в месяц',
+        '15 аудитов, 4 анализа конкурентов и 12 подборов площадок в месяц',
     ],
     agency: [
-        'Режим сеток: 25 каналов на одном экране, пакетные цены и статистика сети',
-        'Массовое создание карточек, приоритетный рендер и экспорт отчётов',
-        'Повышенные лимиты аудитов, конкурентов и биржи',
+        'До 30 постов в день на премиум-модели, 25 каналов · 200 источников',
+        '20 аудитов, 5 анализов конкурентов и 15 подборов площадок в месяц',
+        '60 обновлений голоса канала в месяц',
     ],
     network: [
-        'До 50 каналов и выделенный воркер рендера',
-        'Максимальные лимиты, API и выгрузка данных',
-        'Персональный менеджер и ранний доступ к метрикам',
+        'До 50 постов в день на премиум-модели, 50 каналов · 300 источников',
+        '40 аудитов, 10 анализов конкурентов и 30 подборов площадок в месяц',
+        '120 обновлений голоса и приоритет в очереди рендера',
     ],
 };
 
@@ -1172,6 +1172,38 @@ function tfPlanCard(plan, d) {
     </div>`;
 }
 
+const tfReduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+// Плавный разворот: анимируем реальную высоту (0↔контент) через Web Animations API.
+// height, а не max-height — нет «раннего финиша»; в покое height:auto, значит контент не обрезается.
+// toggle(open) переключает класс покоя владельца ДО замера цели — старт меряем до переключения.
+function animOpen(bodyEl, toggle, open) {
+    if (!bodyEl) { toggle(open); return; }
+    if (bodyEl._a) { bodyEl._a.cancel(); bodyEl._a = null; }
+    const start = bodyEl.getBoundingClientRect().height;
+    toggle(open);
+    if (tfReduceMotion || typeof bodyEl.animate !== 'function') { bodyEl.style.height = ''; return; }
+    const end = open ? bodyEl.scrollHeight : 0;
+    bodyEl.style.height = start + 'px';
+    void bodyEl.getBoundingClientRect();
+    const a = bodyEl.animate([{ height: start + 'px' }, { height: end + 'px' }],
+        { duration: 260, easing: 'cubic-bezier(.33,0,.2,1)' });
+    bodyEl._a = a;
+    const done = () => { if (bodyEl._a === a) { bodyEl.style.height = ''; bodyEl._a = null; } };
+    a.onfinish = done; a.oncancel = done;
+}
+
+function tfAnimateCard(card, open) {
+    animOpen(card.querySelector('.tp-body'), (o) => card.classList.toggle('open', o), open);
+}
+
+function tfErow(e) {
+    const hasEx = !!e.explain;
+    const chev = hasEx ? '<i class="ti ti-chevron-down tf-exchev"></i>' : '';
+    const ex = hasEx ? `<div class="tf-ex"><div class="tf-exin">${escapeHtml(e.explain)}</div></div>` : '';
+    return `<div class="tf-erow${hasEx ? ' tap' : ''}"><div class="tf-erow-h"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
+}
+
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
@@ -1180,9 +1212,9 @@ function renderTariffs(d) {
     html += `<div class="tf-billtog"><button class="tf-bt${tfPeriod === 'month' ? ' on' : ''}" data-per="month">Месяц</button><button class="tf-bt${tfPeriod === 'year' ? ' on' : ''}" data-per="year">Год <span class="sv">−${disc}%</span></button></div>`;
     html += '<div class="tf-sub">Забронируй план сейчас — оплату подключим к запуску и уведомим тебя. После триала остаётся бесплатный Free.</div>';
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
-    const extras = (d.extras || []).map((e) => `<div class="tf-erow"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span></div>`).join('');
+    const extras = (d.extras || []).map(tfErow).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
-    const promos = (d.promotions || []).map((e) => `<div class="tf-erow"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span></div>`).join('');
+    const promos = (d.promotions || []).map(tfErow).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
     html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
     body.innerHTML = html;
@@ -1196,16 +1228,17 @@ function renderTariffs(d) {
         const card = h.closest('.tp-card');
         if (!card) return;
         hapticLight();
-        const tpb = card.querySelector('.tp-body');
-        const open = card.classList.toggle('open');
+        const open = !card.classList.contains('open');
         h.setAttribute('aria-expanded', open ? 'true' : 'false');
-        // max-height по реальной высоте контента: работает на всех WebView, плавно и без «раннего» финиша
-        if (tpb) tpb.style.maxHeight = open ? (tpb.scrollHeight + 'px') : '0';
+        tfAnimateCard(card, open);
     }));
-    // раскрытые по умолчанию (популярный) — задать реальную высоту после верстки
-    requestAnimationFrame(() => {
-        body.querySelectorAll('.tp-card.open .tp-body').forEach((tpb) => { tpb.style.maxHeight = tpb.scrollHeight + 'px'; });
-    });
+    body.querySelectorAll('.tf-erow.tap .tf-erow-h').forEach((h) => h.addEventListener('click', () => {
+        const row = h.closest('.tf-erow');
+        if (!row) return;
+        hapticLight();
+        const open = !row.classList.contains('open');
+        animOpen(row.querySelector('.tf-ex'), (o) => row.classList.toggle('open', o), open);
+    }));
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
         btn.addEventListener('click', async () => {
