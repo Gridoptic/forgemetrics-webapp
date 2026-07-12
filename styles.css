@@ -4139,9 +4139,8 @@ html.cs-modal-open {
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .tp-chev{font-size:17px;color:var(--text-tertiary,#63687e);flex:0 0 auto;margin-left:2px;transition:transform .3s cubic-bezier(.4,0,.2,1);}
 .tp-card.open .tp-chev{transform:rotate(180deg);color:var(--tp-a);}
-.tp-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.4,0,.2,1);}
-.tp-card.open .tp-body{grid-template-rows:1fr;}
-.tp-in{overflow:hidden;min-height:0;padding:0 15px 15px;}
+.tp-body{max-height:0;overflow:hidden;transition:max-height .28s cubic-bezier(.4,0,.2,1);}
+.tp-in{padding:0 15px 15px;}
 .tp-lead{font-size:11.5px;font-weight:650;color:var(--tp-a);margin:0 0 10px;padding-top:2px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;}
 .tp-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
 .tp-feat{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--text-primary,#e8e8ed);line-height:1.4;}

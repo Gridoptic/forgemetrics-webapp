@@ -1196,9 +1196,16 @@ function renderTariffs(d) {
         const card = h.closest('.tp-card');
         if (!card) return;
         hapticLight();
+        const tpb = card.querySelector('.tp-body');
         const open = card.classList.toggle('open');
         h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        // max-height по реальной высоте контента: работает на всех WebView, плавно и без «раннего» финиша
+        if (tpb) tpb.style.maxHeight = open ? (tpb.scrollHeight + 'px') : '0';
     }));
+    // раскрытые по умолчанию (популярный) — задать реальную высоту после верстки
+    requestAnimationFrame(() => {
+        body.querySelectorAll('.tp-card.open .tp-body').forEach((tpb) => { tpb.style.maxHeight = tpb.scrollHeight + 'px'; });
+    });
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
         btn.addEventListener('click', async () => {
