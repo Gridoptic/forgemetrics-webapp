@@ -3914,6 +3914,7 @@ html.cs-modal-open {
 .cab-cta.pk{background:linear-gradient(135deg,#ec4899,#f472b6);box-shadow:0 10px 26px -10px rgba(236,72,153,0.75);}
 .cab-cta.pk:hover{box-shadow:0 14px 30px -10px rgba(236,72,153,0.85);}
 .cab-cta-note{text-align:center;font-size:10.5px;color:var(--text-tertiary);margin-top:9px;line-height:1.4;}
+.cab-note{font-size:12px;line-height:1.5;color:var(--text-secondary);background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.22);border-radius:12px;padding:12px 14px;margin-bottom:12px;}
 .cab-cta-note b{color:var(--text-secondary);cursor:pointer;}
 
 .cab-use{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.045);}

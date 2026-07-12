@@ -28,6 +28,7 @@ const screens = {
     dashboard: document.getElementById('dashboard-screen'),
     placeholder: document.getElementById('placeholder-screen'),
     cabinet: document.getElementById('cabinet-screen'),
+    referral: document.getElementById('referral-screen'),
     tariffs: document.getElementById('tariffs-screen'),
     channels: document.getElementById('channels-screen'),
     postCreate: document.getElementById('post-create-screen'),
@@ -668,7 +669,7 @@ function handleAction(actionId) {
     }
 
     if (actionId === 'profile') { openCabinet(); return; }
-    if (actionId === 'referral' || actionId === 'invite_friend') { openCabinet('referral'); return; }
+    if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }
 
     const config = PLACEHOLDER_CONFIG[actionId] || {
         title: 'Скоро будет готово',
@@ -799,6 +800,35 @@ function cabRefLadder(cur) {
     return `<div class="cab-lad"><div class="cab-lad-h">Уровни программы · бонусы включатся с оплатой</div>${rows}</div>`;
 }
 
+function refCardHtml(r) {
+    r = r || {};
+    return `<div class="cab-card" id="cab-sec-referral"><div class="cab-stt"><h3>${cabTile('pk', 'heart-handshake', 'sm')} Приглашай и зарабатывай</h3></div><div class="cab-bal"><span class="big">${cabNum(r.credits_balance)} ₽</span><span class="cap">кредитов на балансе · заработано ${cabNum(r.credits_earned)} ₽</span></div><div class="cab-lvl"><span class="cab-lvlpill">${escapeHtml(r.level_emoji || '👤')} ${escapeHtml(r.level_display || 'Member')}</span>${r.next_level_display ? `<span class="cab-lvlnext">до ${escapeHtml(r.next_level_emoji || '')} ${escapeHtml(r.next_level_display)} — ${cabNum(r.needed_for_next)} платящих</span>` : '<span class="cab-lvlnext">высший уровень</span>'}</div><div class="cab-lvlbar"><div class="cab-lvlfill" style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></div></div><div class="cab-bgrid"><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_light)} ₽</div><div class="t">за Light</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro)} ₽</div><div class="t">за Pro</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro_plus)} ₽</div><div class="t">за Pro+</div></div></div>${cabRefLadder(r.level_display)}<div class="cab-reflbl">Твой промокод <span class="cab-refhint">— придумай красивый, если свободен</span></div><div class="cab-promo" id="cab-promo-view"><span class="cab-code" id="cab-code">${escapeHtml(r.promo_code || '—')}</span><div class="cab-cp" id="cab-copy" title="Копировать"><i class="ti ti-copy"></i></div><div class="cab-cp edit" id="cab-edit" title="Изменить"><i class="ti ti-pencil"></i></div></div><div class="cab-promoed" id="cab-promo-edit"><input class="cab-pinp" id="cab-pinp" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ПРИДУМАЙ КОД"><div class="cab-pmsg" id="cab-pmsg">4–12 символов: латиница, цифры, _</div><div class="cab-prow"><button class="cab-pbtn ghost" id="cab-pcancel">Отмена</button><button class="cab-pbtn save" id="cab-psave" disabled>Сохранить</button></div></div><div class="cab-reflbl mt">Реферальная ссылка</div><div class="cab-promo"><span class="cab-code lnk" id="cab-link">${escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''))}</span><div class="cab-cp" id="cab-linkcopy" title="Копировать ссылку"><i class="ti ti-link"></i></div></div><button class="cab-cta pk" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button><div class="cab-cta-note">Друг получает −15% на первый месяц · бонус после его оплаты</div></div>`;
+}
+
+function renderReferral(d) {
+    const body = document.getElementById('referral-body');
+    if (!body) return;
+    const r = (d && d.referral) || {};
+    body.innerHTML = refCardHtml(r);
+    wireReferral(d || {});
+    if (screens.referral) localizeTree(screens.referral);
+}
+
+async function openReferral() {
+    hapticLight();
+    showScreen('referral');
+    const body = document.getElementById('referral-body');
+    if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Загрузка…</div>';
+    else if (body && cabinetData) renderReferral(cabinetData);
+    try {
+        const data = await apiRequest('/api/v1/user/cabinet');
+        cabinetData = data;
+        renderReferral(data);
+    } catch (e) {
+        if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить.<br>Попробуй позже.</div>';
+    }
+}
+
 function renderCabinet(d) {
     const body = document.getElementById('cabinet-body');
     if (!body) return;
@@ -827,8 +857,8 @@ function renderCabinet(d) {
         html += `<div class="cab-card"><div class="cab-stt"><h3>${cabTile('gr', 'broadcast', 'sm')} Мои каналы</h3></div><div class="cab-chan" id="cab-chan-open"><div class="cab-chav"><i class="ti ti-plus"></i></div><div class="cab-ci"><div class="cab-cnm">Подключить канал</div><div class="cab-csub">Публикация, метрики и оффер на Площадке</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
     }
 
-    const r = d.referral || {};
-    html += `<div class="cab-card" id="cab-sec-referral"><div class="cab-stt"><h3>${cabTile('pk', 'heart-handshake', 'sm')} Приглашай и зарабатывай</h3></div><div class="cab-bal"><span class="big">${cabNum(r.credits_balance)} ₽</span><span class="cap">кредитов на балансе · заработано ${cabNum(r.credits_earned)} ₽</span></div><div class="cab-lvl"><span class="cab-lvlpill">${escapeHtml(r.level_emoji || '👤')} ${escapeHtml(r.level_display || 'Member')}</span>${r.next_level_display ? `<span class="cab-lvlnext">до ${escapeHtml(r.next_level_emoji || '')} ${escapeHtml(r.next_level_display)} — ${cabNum(r.needed_for_next)} платящих</span>` : '<span class="cab-lvlnext">высший уровень</span>'}</div><div class="cab-lvlbar"><div class="cab-lvlfill" style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></div></div><div class="cab-bgrid"><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_light)} ₽</div><div class="t">за Light</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro)} ₽</div><div class="t">за Pro</div></div><div class="cab-bcell"><div class="p">+${cabNum(r.bonus_pro_plus)} ₽</div><div class="t">за Pro+</div></div></div>${cabRefLadder(r.level_display)}<div class="cab-reflbl">Твой промокод <span class="cab-refhint">— придумай красивый, если свободен</span></div><div class="cab-promo" id="cab-promo-view"><span class="cab-code" id="cab-code">${escapeHtml(r.promo_code || '—')}</span><div class="cab-cp" id="cab-copy" title="Копировать"><i class="ti ti-copy"></i></div><div class="cab-cp edit" id="cab-edit" title="Изменить"><i class="ti ti-pencil"></i></div></div><div class="cab-promoed" id="cab-promo-edit"><input class="cab-pinp" id="cab-pinp" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ПРИДУМАЙ КОД"><div class="cab-pmsg" id="cab-pmsg">4–12 символов: латиница, цифры, _</div><div class="cab-prow"><button class="cab-pbtn ghost" id="cab-pcancel">Отмена</button><button class="cab-pbtn save" id="cab-psave" disabled>Сохранить</button></div></div><div class="cab-reflbl mt">Реферальная ссылка</div><div class="cab-promo"><span class="cab-code lnk" id="cab-link">${escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''))}</span><div class="cab-cp" id="cab-linkcopy" title="Копировать ссылку"><i class="ti ti-link"></i></div></div><button class="cab-cta pk" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button><div class="cab-cta-note">Друг получает −15% на первый месяц · бонус после его оплаты</div></div>`;
+    // Реферальная секция вынесена в отдельный экран (openReferral/renderReferral) —
+    // в кабинете её больше нет; вход — кнопка «Друзья и промокод» на главном экране.
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
     html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
@@ -846,6 +876,21 @@ function wireCabinet(d) {
     on('cab-compare', () => { openTariffs(); });
     on('cab-channels', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
     on('cab-chan-open', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
+    on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
+    on('cab-theme', () => cabToast('Темы оформления — скоро'));
+    on('cab-lang', () => openLangPicker());
+    on('cab-notif', () => {
+        const tog = document.getElementById('cab-notif-tog');
+        if (!tog) return;
+        const now = tog.classList.toggle('on');
+        try { localStorage.setItem('fm_notif', now ? '1' : '0'); } catch (e) {}
+        cabToast(now ? 'Уведомления включены' : 'Уведомления выключены');
+    });
+}
+
+function wireReferral(d) {
+    d = d || {};
+    const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
     on('cab-copy', () => {
         const code = (d.referral && d.referral.promo_code) || '';
         const btn = document.getElementById('cab-copy');
@@ -866,7 +911,6 @@ function wireCabinet(d) {
         const b = document.getElementById('cab-linkcopy');
         copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast('Ссылка скопирована'); });
     });
-    // --- редактор своего промокода ---
     (function () {
         const curCode = (d.referral && d.referral.promo_code) || '';
         const inp = document.getElementById('cab-pinp');
@@ -917,24 +961,13 @@ function wireCabinet(d) {
                         d.referral.promo_code = res.promo_code;
                         d.referral.referral_link = 'https://t.me/ForgeMetricsBot?start=' + res.promo_code;
                         cabToast('Промокод изменён');
-                        renderCabinet(d);
-                        setTimeout(() => { const s = document.getElementById('cab-sec-referral'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60);
+                        renderReferral(d);
                     } else {
                         setMsg(t((res && res.message) || 'Не удалось изменить'), 'bad'); setSave(false);
                     }
                 }).catch(() => { setMsg('Не удалось изменить', 'bad'); setSave(false); });
         });
     })();
-    on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
-    on('cab-theme', () => cabToast('Темы оформления — скоро'));
-    on('cab-lang', () => openLangPicker());
-    on('cab-notif', () => {
-        const tog = document.getElementById('cab-notif-tog');
-        if (!tog) return;
-        const now = tog.classList.toggle('on');
-        try { localStorage.setItem('fm_notif', now ? '1' : '0'); } catch (e) {}
-        cabToast(now ? 'Уведомления включены' : 'Уведомления выключены');
-    });
 }
 
 
@@ -1040,6 +1073,8 @@ function setupEventListeners() {
     els.menuBtn.addEventListener('click', openDrawer);
     const cabBack = document.getElementById('cabinet-back');
     if (cabBack) cabBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
+    const refBack = document.getElementById('referral-back');
+    if (refBack) refBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
     const cabSet = document.getElementById('cabinet-settings');
     if (cabSet) cabSet.addEventListener('click', () => { const s = document.getElementById('cab-sec-settings'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     const tfBack = document.getElementById('tariffs-back');
