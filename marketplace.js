@@ -2109,7 +2109,7 @@
         qsa(gr, '[data-g]').forEach(function (g) { g.addEventListener('click', function () { _ss.cover = +g.getAttribute('data-g'); _ss.coverGrad = null; if (ghue) ghue.style.display = 'none'; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); renderHero(); }); });
         var grb = gr ? gr.querySelector('[data-grb]') : null;
         if (grb) grb.addEventListener('click', function () { if (!ghue) return; var open = ghue.style.display !== 'none'; ghue.style.display = open ? 'none' : 'flex'; if (!open && gsl) { _ss.coverGrad = gradOf(+gsl.value); qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); grb.classList.add('on'); if (gprev) gprev.style.background = _ss.coverGrad; renderHero(); } });
-        if (gsl) gsl.addEventListener('input', function () { _ss.coverGrad = gradOf(+this.value); if (gprev) gprev.style.background = _ss.coverGrad; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); if (grb) grb.classList.add('on'); renderHero(); });
+        if (gsl) gsl.addEventListener('input', function () { _ss.coverGrad = gradOf(+this.value); if (gprev) gprev.style.background = _ss.coverGrad; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); if (grb) grb.classList.add('on'); _liveCover(_ss.coverGrad); _heroDebounced(); });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="cover"]')[0]);
     }
 
@@ -2210,7 +2210,7 @@
         }
         qsa(box, '[data-cv]').forEach(function (d) { d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); renderHero(); }); });
         if (rb) rb.addEventListener('click', function () {
-            openColorStudio(box.getAttribute('data-cur') || '#5DCAA5', function (hex) { set(hex); mark(hex); renderHero(); }, title || 'Свой');
+            openColorStudio(box.getAttribute('data-cur') || '#5DCAA5', function (hex) { set(hex); mark(hex); _liveAccent(hex); _heroDebounced(); }, title || 'Свой');
         });
     }
     /* «Свой цвет»: HSV-квадрат/спектр + hue + HEX + RGB — общий компонент для акцента и орбиты */
@@ -2225,6 +2225,15 @@
         var m = /#([0-9a-fA-F]{6})/.exec(g);
         return m ? '#' + m[1] : '#5DCAA5';
     }
+    /* Живое окрашивание превью при перетаскивании по палитре БЕЗ пересборки карточки:
+       renderHero() полностью пересобирает постер и пересчитывает масштаб (scaleCards) на
+       каждый кадр — из-за чего карточка «дёргается» по размеру. Цвет размер не меняет,
+       поэтому во время движения красим на месте, а точную перерисовку делаем один раз
+       после паузы/отпускания (дебаунс). */
+    var _heroColorT = null;
+    function _heroDebounced() { clearTimeout(_heroColorT); _heroColorT = setTimeout(function () { _heroColorT = null; renderHero(); }, 150); }
+    function _liveAccent(hex) { var h = el('fmx-hero'); if (h) qsa(h, '.fmx-met .v.pr').forEach(function (n) { n.style.color = hex; }); }
+    function _liveCover(grad) { var h = el('fmx-hero'); if (h) qsa(h, '.fmx-cov-bg').forEach(function (n) { n.style.background = grad; }); }
     function setAccentColor(hex) {
         _ss.color = hex;
         var box = el('fmx-colors');
@@ -2234,7 +2243,7 @@
             if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + hex;
             box.setAttribute('data-cur', hex);
         }
-        renderHero();
+        _liveAccent(hex); _heroDebounced();
     }
     function openColorStudio(cur, onPick, title) {
         var old = el('fmx-cpBg'); if (old) old.remove();
@@ -3231,7 +3240,7 @@
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
                     e.stopPropagation(); _haptic('light');
-                    if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); renderHero(); }, 'Шапка');
+                    if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); _liveCover(_ss.coverGrad); _heroDebounced(); }, 'Шапка');
                     else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цена и кнопки');
                 });
             });
