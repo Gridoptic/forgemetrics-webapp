@@ -747,6 +747,16 @@ const CAB_BENEFITS = {
         'Больше аудитов, анализов конкурентов и поисков рекламодателей',
         'Максимальный приоритет и все премиум-эффекты',
     ],
+    agency: [
+        'Режим сеток: 25 каналов на одном экране, пакетные цены и статистика сети',
+        'Массовое создание карточек, приоритетный рендер и экспорт отчётов',
+        'Повышенные лимиты аудитов, конкурентов и биржи',
+    ],
+    network: [
+        'До 50 каналов и выделенный воркер рендера',
+        'Максимальные лимиты, API и выгрузка данных',
+        'Персональный менеджер и ранний доступ к метрикам',
+    ],
 };
 
 async function openCabinet(scrollTo) {
@@ -1109,7 +1119,7 @@ function tfCurBanner(d) {
         const dw = (n != null) ? `осталось ${n} ${plural3(n, 'день', 'дня', 'дней')}` : 'активен';
         return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Тебе открыт полный доступ — Pro+</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы не потерять аудит, конкурентов и каналы после триала.</div></div></div>`;
     }
-    if (['light', 'pro', 'pro_plus'].includes(d.current_tier)) return '';
+    if (['light', 'pro', 'pro_plus', 'agency', 'network'].includes(d.current_tier)) return '';
     return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">3 поста в день, 1 канал. Выбери план для полного доступа.</div></div></div>`;
 }
 
@@ -2072,6 +2082,8 @@ const TIER_NAMES = {
     light: 'Light',
     pro: 'Pro',
     pro_plus: 'Pro+',
+    agency: 'Agency',
+    network: 'Network',
 };
 
 
