@@ -858,10 +858,8 @@
             '.fmx-mq{overflow:hidden;}',
             '.fmx-mqi{display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top;}',
             '.fmx-mqc{display:inline-block;}',
-            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;will-change:transform;backface-visibility:hidden;animation:fmxMq var(--mqd,10s) linear infinite;}',
+            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;will-change:transform;backface-visibility:hidden;}',
             '.fmx-mq-on .fmx-mqc + .fmx-mqc{margin-left:var(--mqg,80px);}',
-            '@keyframes fmxMq{from{transform:translate3d(0,0,0);}to{transform:translate3d(var(--mqx,0),0,0);}}',
-            '@media (prefers-reduced-motion:reduce){.fmx-mq-on .fmx-mqi{animation:none;}}',
             /* ----- панель модерации (только для владельца) ----- */
             '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
             '.fmx-mtab{flex:1;padding:9px 4px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05);color:#8990a8;font-size:12px;font-weight:600;cursor:pointer;}',
@@ -943,6 +941,7 @@
         lockPage();
         loadBookmarks();
         setMainTab('enter', true);
+        _mqStart();
     }
     function close() { if (_root) _root.classList.remove('fmx-show'); _opened = false; unlockPage(); }
 
@@ -954,15 +953,37 @@
         pill.style.transform = 'translateX(' + (b.offsetLeft - 4) + 'px)';
     }
 
-    /* Бегущая строка: если текст не помещается в одну строку — плавно прокручиваем
-       туда-обратно с паузами; помещается — обычный ellipsis. Уважает reduce-motion. */
+    /* Бегущая строка (рекламная лента): едет в одну сторону, полностью уходит и появляется
+       с конца. Двигаем ПОКАДРОВО через requestAnimationFrame с модульным сдвигом — так нет
+       границы CSS-итерации, из-за которой в момент «перескока» ленты был микролаг. Две копии
+       текста делают переход бесшовным. Помещается — обычный ellipsis. Уважает reduce-motion. */
+    var _mqActive = [], _mqRaf = null, _mqLast = 0;
+    function _mqUnreg(elm) { for (var i = 0; i < _mqActive.length; i++) { if (_mqActive[i].el === elm) { _mqActive.splice(i, 1); i--; } } }
+    function _mqTick(ts) {
+        _mqRaf = null;
+        if (!_opened) { _mqLast = 0; return; }               // маркетплейс закрыт — стоп (перезапустится при open)
+        if (!_mqLast) _mqLast = ts;
+        var dt = ts - _mqLast; _mqLast = ts;
+        if (dt > 100) dt = 16;                               // после паузы кадров не прыгаем
+        for (var i = 0; i < _mqActive.length; i++) {
+            var m = _mqActive[i];
+            if (!m.el.isConnected) { _mqActive.splice(i, 1); i--; continue; }
+            if (m.el.offsetParent === null) continue;        // скрыт — не двигаем
+            m.offset += m.speed * dt / 1000;
+            if (m.offset >= m.period) m.offset -= m.period;  // непрерывный цикл без «перескока»
+            m.inner.style.transform = 'translate3d(' + (-m.offset).toFixed(2) + 'px,0,0)';
+        }
+        if (_mqActive.length) _mqRaf = requestAnimationFrame(_mqTick); else _mqLast = 0;
+    }
+    function _mqStart() { if (_mqRaf == null && _mqActive.length && _opened) { _mqLast = 0; _mqRaf = requestAnimationFrame(_mqTick); } }
     function _mqText(elm, text) {
         if (!elm) return;
+        _mqUnreg(elm);
         elm.classList.add('fmx-mq');
         elm.setAttribute('data-mqt', text);
         elm._mqSig = null;   // новый текст — форсируем перемер
         elm.classList.remove('fmx-mq-on');
-        elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
+        elm.style.removeProperty('--mqg');
         elm.textContent = '';
         var inner = document.createElement('span'); inner.className = 'fmx-mqi';
         var c = document.createElement('span'); c.className = 'fmx-mqc'; c.textContent = text;
@@ -975,14 +996,14 @@
             var text = elm.getAttribute('data-mqt'); if (text == null) return;
             var inner = elm.querySelector('.fmx-mqi'); if (!inner) return;
             var contW = elm.clientWidth;
-            // Ничего не изменилось (та же ширина и текст) — НЕ пересобираем: иначе анимация
-            // рестартует на каждом лишнем resize (при скролле/смене вьюпорта) и текст дёргается.
+            // Ничего не изменилось (та же ширина и текст) — НЕ пересобираем (иначе лента
+            // сбрасывалась бы на лишнем resize при скролле/смене вьюпорта).
             var sig = contW + '|' + text;
             if (elm._mqSig === sig) return;
             elm._mqSig = sig;
-            // сброс к одной копии и снятие анимации — для честного замера ширины
+            _mqUnreg(elm);
             elm.classList.remove('fmx-mq-on');
-            elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
+            elm.style.removeProperty('--mqg'); inner.style.transform = '';
             var copies = inner.querySelectorAll('.fmx-mqc');
             for (var i = 1; i < copies.length; i++) copies[i].remove();
             var first = copies[0]; if (!first) return;
@@ -994,9 +1015,9 @@
                 var second = first.cloneNode(true); second.setAttribute('aria-hidden', 'true');
                 inner.appendChild(second);
                 elm.style.setProperty('--mqg', gap + 'px');
-                elm.style.setProperty('--mqx', '-' + (copyW + gap) + 'px');
-                elm.style.setProperty('--mqd', Math.max(6, (copyW + gap) / 55).toFixed(1) + 's');
                 elm.classList.add('fmx-mq-on');
+                _mqActive.push({ el: elm, inner: inner, offset: 0, period: copyW + gap, speed: 46 });
+                _mqStart();
             }
         } catch (e) {}
     }
