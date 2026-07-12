@@ -854,11 +854,13 @@
             '.fmx-entn{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
             '.fmx-enttag{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:99px;}',
             '.fmx-entd{font-size:11.5px;color:#8990a8;line-height:1.4;margin-top:4px;}',
-            /* ----- бегущая строка для текста, который не вмещается ----- */
+            /* ----- бегущая строка (рекламная лента): едет в одну сторону, уходит и появляется с конца ----- */
             '.fmx-mq{overflow:hidden;}',
             '.fmx-mqi{display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top;}',
-            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;animation:fmxMq var(--mqd,8s) ease-in-out infinite alternate;}',
-            '@keyframes fmxMq{0%,18%{transform:translateX(0);}82%,100%{transform:translateX(var(--mqx,0));}}',
+            '.fmx-mqc{display:inline-block;}',
+            '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;animation:fmxMq var(--mqd,10s) linear infinite;}',
+            '.fmx-mq-on .fmx-mqc + .fmx-mqc{margin-left:var(--mqg,80px);}',
+            '@keyframes fmxMq{from{transform:translateX(0);}to{transform:translateX(var(--mqx,0));}}',
             '@media (prefers-reduced-motion:reduce){.fmx-mq-on .fmx-mqi{animation:none;}}',
             /* ----- панель модерации (только для владельца) ----- */
             '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
@@ -957,22 +959,36 @@
     function _mqText(elm, text) {
         if (!elm) return;
         elm.classList.add('fmx-mq');
-        var span = elm.querySelector('.fmx-mqi');
-        if (!span) { elm.textContent = ''; span = document.createElement('span'); span.className = 'fmx-mqi'; elm.appendChild(span); }
-        if (span.textContent !== text) span.textContent = text;
+        elm.setAttribute('data-mqt', text);
         elm.classList.remove('fmx-mq-on');
-        elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqd');
+        elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
+        elm.textContent = '';
+        var inner = document.createElement('span'); inner.className = 'fmx-mqi';
+        var c = document.createElement('span'); c.className = 'fmx-mqc'; c.textContent = text;
+        inner.appendChild(c); elm.appendChild(inner);
         requestAnimationFrame(function () { _mqMeasure(elm); });
     }
     function _mqMeasure(elm) {
         try {
-            var span = elm && elm.querySelector && elm.querySelector('.fmx-mqi'); if (!span) return;
+            if (!elm || !elm.querySelector) return;
+            var text = elm.getAttribute('data-mqt'); if (text == null) return;
+            var inner = elm.querySelector('.fmx-mqi'); if (!inner) return;
+            // сброс к одной копии и снятие анимации — для честного замера ширины
             elm.classList.remove('fmx-mq-on');
+            elm.style.removeProperty('--mqx'); elm.style.removeProperty('--mqg'); elm.style.removeProperty('--mqd');
+            var copies = inner.querySelectorAll('.fmx-mqc');
+            for (var i = 1; i < copies.length; i++) copies[i].remove();
+            var first = copies[0]; if (!first) return;
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            var over = span.scrollWidth - elm.clientWidth;
-            if (over > 3) {
-                elm.style.setProperty('--mqx', '-' + (over + 12) + 'px');
-                elm.style.setProperty('--mqd', Math.max(4, (over + 12) / 28).toFixed(1) + 's');
+            var copyW = inner.scrollWidth, contW = elm.clientWidth;
+            if (copyW > contW + 3 && contW > 0) {
+                // разрыв ≥ ширины контейнера: текст полностью уходит и лишь потом появляется с конца
+                var gap = contW + 20;
+                var second = first.cloneNode(true); second.setAttribute('aria-hidden', 'true');
+                inner.appendChild(second);
+                elm.style.setProperty('--mqg', gap + 'px');
+                elm.style.setProperty('--mqx', '-' + (copyW + gap) + 'px');
+                elm.style.setProperty('--mqd', Math.max(6, (copyW + gap) / 55).toFixed(1) + 's');
                 elm.classList.add('fmx-mq-on');
             }
         } catch (e) {}
