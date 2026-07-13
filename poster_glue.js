@@ -619,6 +619,13 @@
         var vis = Array.prototype.some.call(sc.children, function (ch) { return ch.style.display !== 'none' && getComputedStyle(ch).display !== 'none'; });
         if (!vis) sc.style.display = 'none';
       });
+      // иконки секций (макет 14.07): по идентификатору содержимого — не зависят от текста метки
+      [['fmxPsLang', '🌐'], ['ordBox', '≡'], ['nicheChip', '◉'], ['bgChips', '◐'], ['chartChip', '▲'],
+       ['mChips', '▦'], ['prInp', '₽'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
+        var t = document.getElementById(mp[0]); if (!t) return;
+        var sc = t.closest ? t.closest('.fmx-sec') : null; if (!sc) return;
+        var lb = sc.querySelector('.lbl'); if (lb && !lb.getAttribute('data-ico')) lb.setAttribute('data-ico', mp[1]);
+      });
     }
   };
 
@@ -943,31 +950,42 @@
       '.picker .crow input{font-size:' + px(12.5) + ' !important;padding:' + px(8) + ' ' + px(2) + ' !important;border-radius:' + px(9) + ' !important;}' +
       '.picker .preset{margin-top:' + px(10) + ' !important;gap:' + px(6) + ' !important;}' +
       '.picker .pd{width:' + px(22) + ' !important;height:' + px(22) + ' !important;border-radius:' + px(7) + ' !important;}' +
-      /* ——— скин пульта (редизайн 14.07): карточки, единые чипы, фокус-кольца ——— */
-      '.fmx-sec{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);' +
-        'border-radius:' + px(14) + ';padding:' + px(12) + ' ' + px(13) + ';margin:' + px(10) + ' 0;}' +
+      /* ——— скин пульта по утверждённому макету (14.07): индиго, свечение, иконки секций ——— */
+      '.fmx-sec{position:relative;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);' +
+        'border-radius:' + px(16) + ';padding:' + px(13) + ' ' + px(14) + ';margin:' + px(11) + ' 0;overflow:hidden;' +
+        'box-shadow:0 1px 0 rgba(255,255,255,0.05) inset,0 20px 46px -28px rgba(0,0,0,0.85);}' +
+      '.fmx-sec::before{content:"";position:absolute;top:-1px;left:12%;right:12%;height:' + px(80) + ';' +
+        'pointer-events:none;background:radial-gradient(80% 100% at 50% 0%,rgba(129,140,248,0.13) 0%,transparent 70%);}' +
       '.fmx-sec .lbl{margin-top:0 !important;}' +
-      '.lbl{color:#8f99b8 !important;letter-spacing:1.2px !important;}' +
+      '.lbl{position:relative;display:flex !important;align-items:center;gap:' + px(8) + ';' +
+        'color:#9aa0f5 !important;letter-spacing:1.2px !important;}' +
+      '.fmx-sec .lbl::before{content:attr(data-ico);width:' + px(26) + ';height:' + px(26) + ';' +
+        'border-radius:' + px(8) + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
+        'font-size:' + px(13) + ';letter-spacing:0;color:#8b8ff8;border:1px solid rgba(129,140,248,0.42);' +
+        'background:linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04));' +
+        'box-shadow:0 10px 24px -14px rgba(129,140,248,0.4);}' +
+      '.fmx-sec .lbl:not([data-ico])::before{display:none;}' +
       '.chip{background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.10) !important;' +
         'color:#c6cdde !important;transition:border-color 0.15s,background 0.15s,color 0.15s;}' +
-      '.chip.on{background:linear-gradient(135deg,rgba(93,202,165,0.22),rgba(93,202,165,0.07)) !important;' +
-        'border-color:rgba(93,202,165,0.6) !important;color:#7ee7c2 !important;' +
-        'box-shadow:0 0 10px rgba(93,202,165,0.12);}' +
-      '#fmxPsLang .chip{display:inline-flex !important;align-items:center !important;gap:' + px(6) + ';' +
-        'padding:' + px(6) + ' ' + px(9) + ' !important;font-weight:700 !important;}' +
-      '#fmxPsLang .chip .flsvg{width:' + px(18) + ';height:' + px(13) + ';border-radius:' + px(2.5) + ';' +
+      '.chip.on{background:linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06)) !important;' +
+        'border-color:rgba(129,140,248,0.42) !important;color:#8b8ff8 !important;' +
+        'box-shadow:0 0 12px rgba(129,140,248,0.14);}' +
+      '#fmxPsLang{display:grid !important;grid-template-columns:repeat(5,1fr) !important;gap:' + px(7) + ' !important;}' +
+      '#fmxPsLang .chip{display:flex !important;align-items:center !important;justify-content:center !important;' +
+        'gap:' + px(6) + ';padding:' + px(8) + ' ' + px(4) + ' !important;font-weight:700 !important;}' +
+      '#fmxPsLang .chip .flsvg{width:' + px(19) + ';height:' + px(14) + ';border-radius:' + px(3) + ';' +
         'box-shadow:0 0 0 1px rgba(255,255,255,0.18);display:block;flex-shrink:0;}' +
       'input[type=text],input[type=number]{background:rgba(0,0,0,0.30) !important;' +
         'border:1px solid rgba(255,255,255,0.09) !important;color:#e8eaf1 !important;}' +
-      'input[type=text]:focus,input[type=number]:focus{border-color:rgba(93,202,165,0.55) !important;' +
-        'box-shadow:0 0 0 2px rgba(93,202,165,0.12) !important;outline:none !important;}' +
+      'input[type=text]:focus,input[type=number]:focus{border-color:rgba(129,140,248,0.42) !important;' +
+        'box-shadow:0 0 0 2px rgba(129,140,248,0.13) !important;outline:none !important;}' +
       '.ordrow{background:rgba(255,255,255,0.04) !important;border:1px solid rgba(255,255,255,0.08) !important;' +
-        'border-radius:' + px(11) + ' !important;}' +
+        'border-radius:' + px(12) + ' !important;}' +
       '.ordbtn{border-radius:50% !important;background:rgba(255,255,255,0.07) !important;' +
         'border:1px solid rgba(255,255,255,0.12) !important;}' +
       '.genbtn{background:linear-gradient(135deg,rgba(129,140,248,0.22),rgba(129,140,248,0.08)) !important;' +
         'border:1px solid rgba(129,140,248,0.5) !important;color:#aab2f7 !important;font-weight:700 !important;}' +
-      '.drop{border:1px dashed rgba(93,202,165,0.35) !important;background:rgba(93,202,165,0.04) !important;}';
+      '.drop{border:1px dashed rgba(129,140,248,0.42) !important;background:rgba(129,140,248,0.05) !important;}';
   };
 
   /* режим рендера: прячем пульт и палитру, ставим постер в угол, сигналим готовность */

@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714i';
+    var PS_GLUE_V = '20260714j';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3363,6 +3363,13 @@
             '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
+            '#fmx-psDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);padding:8px 12px;}' +
+            '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
+            '#fmx-dkPrev{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;}' +
+            '#fmx-dkFrame{width:540px;height:675px;border:0;transform:scale(0.159);transform-origin:top left;pointer-events:none;}' +
+            '.fmx-dkNav{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-content:center;min-width:0;}' +
+            '.fmx-dkChip{font-size:11.5px;font-weight:600;color:#a7aec6;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;}' +
+            '.fmx-dkChip.on{color:#8b8ff8;background:rgba(129,140,248,0.13);border-color:rgba(129,140,248,0.42);}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             /* модалка выбора формата отправки (живой постер) */
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
@@ -3413,6 +3420,88 @@
             });
         });
     }
+    /*FMX_DOCK_BEGIN*/
+    /* Липкий док редактора постера (утверждённый макет 14.07): живое мини-превью (второй
+       iframe с тем же glue, синхронизация через __fmxPosterState -> __fmxPosterApply) +
+       якорная навигация по секциям. Появляется, когда полный постер ушёл за верх экрана. */
+    function _fmxBuildPosterDock(env) {
+        var dock = document.createElement('div');
+        dock.id = 'fmx-psDock';
+        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="К постеру"></div><div class="fmx-dkNav" id="fmx-dkNav"></div></div>';
+        dock.style.display = 'none';
+        env.dockParent.insertBefore(dock, env.wrap);
+        var mini = null, miniWin = null, lastState = '', destroyed = false;
+        function ensureMini() {
+            if (mini || destroyed) return;
+            mini = document.createElement('iframe');
+            mini.id = 'fmx-dkFrame'; mini.setAttribute('scrolling', 'no');
+            mini.src = env.pageUrl;
+            document.getElementById('fmx-dkPrev').appendChild(mini);
+            mini.addEventListener('load', function () {
+                try {
+                    var idoc = mini.contentDocument;
+                    var g = idoc.createElement('script'); g.src = env.glueSrc;
+                    g.onload = function () {
+                        try {
+                            miniWin = mini.contentWindow;
+                            miniWin.__fmxPosterRender(env.getData(), env.getState(), env.api, { render: true });
+                            lastState = JSON.stringify(env.getState() || {});
+                        } catch (e) {}
+                    };
+                    idoc.head.appendChild(g);
+                } catch (e) {}
+            });
+        }
+        var NAV = [['fmxPsLang', 'Язык'], ['ordBox', 'Блоки'], ['bgChips', 'Фон'], ['mChips', 'Метрики'], ['prInp', 'Цена'], ['eChips', 'Стикеры'], ['hookInp', 'Текст']];
+        var nav = dock.querySelector('#fmx-dkNav');
+        NAV.forEach(function (nv) {
+            var a = document.createElement('button'); a.type = 'button'; a.className = 'fmx-dkChip';
+            a.textContent = env.tr(nv[1]);
+            a.addEventListener('click', function () {
+                try {
+                    var idoc = env.frame.contentDocument;
+                    var t = idoc.getElementById(nv[0]); if (!t) return;
+                    var sec = (t.closest && t.closest('.fmx-sec')) || t;
+                    var y = (sec.getBoundingClientRect().top - idoc.body.getBoundingClientRect().top) * env.getK();
+                    env.scroll.scrollTo({ top: env.wrap.offsetTop + y - dock.offsetHeight - 8, behavior: 'smooth' });
+                    nav.querySelectorAll('.fmx-dkChip').forEach(function (x) { x.classList.toggle('on', x === a); });
+                } catch (e) {}
+            });
+            nav.appendChild(a);
+        });
+        dock.querySelector('#fmx-dkPrev').addEventListener('click', function () {
+            env.scroll.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        function onScroll() {
+            try {
+                var thr = env.wrap.offsetTop + 675 * env.getK() * 0.8;
+                var vis = env.scroll.scrollTop > thr;
+                if (vis && dock.style.display === 'none') { dock.style.display = ''; ensureMini(); }
+                else if (!vis && dock.style.display !== 'none') dock.style.display = 'none';
+            } catch (e) {}
+        }
+        env.scroll.addEventListener('scroll', onScroll);
+        var iv = setInterval(function () {
+            try {
+                if (destroyed || !miniWin || dock.style.display === 'none') return;
+                var st = env.getState(); if (!st) return;
+                var js = JSON.stringify(st);
+                if (js !== lastState) {
+                    lastState = js;
+                    miniWin.__fmxPosterApply(st);
+                    if (st.lang && miniWin.__fmxPosterSetLang) miniWin.__fmxPosterSetLang(st.lang);
+                }
+            } catch (e) {}
+        }, 700);
+        return {
+            destroy: function () {
+                destroyed = true; clearInterval(iv);
+                env.scroll.removeEventListener('scroll', onScroll);
+                try { dock.remove(); } catch (e) {}
+            }
+        };
+    }
+    /*FMX_DOCK_END*/
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
         if (!base || !base.id) { toast('Сначала сохрани оффер — постер строится по нему'); return; }
@@ -3499,6 +3588,20 @@
             /* язык постера: сохранённый — из состояния; новый — язык интерфейса (по умолчанию) */
             try { if (win.__fmxPosterSetLang) win.__fmxPosterSetLang((hasSaved && saved && saved.lang) ? saved.lang : ((typeof getLang === 'function') ? getLang() : 'ru')); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
+            // липкий док (макет 14.07): превью + навигация; создаём один раз после готовности glue
+            try {
+                if (!bg.__fmxDock) {
+                    bg.__fmxDock = _fmxBuildPosterDock({
+                        scroll: bg.querySelector('.fmx-psScroll'), dockParent: bg.querySelector('.fmx-psScroll'),
+                        wrap: wrap, frame: frame,
+                        pageUrl: 'poster_render.html?v=' + PS_GLUE_V, glueSrc: 'poster_glue.js?v=' + PS_GLUE_V, api: apiBase,
+                        getData: posterData,
+                        getState: function () { try { return frame.contentWindow.__fmxPosterState(); } catch (e) { return null; } },
+                        tr: function (s2) { try { return (typeof _t === 'function') ? _t(s2) : s2; } catch (e) { return s2; } },
+                        getK: function () { return Math.min(1, (wrap.clientWidth || 360) / LW); }
+                    });
+                }
+            } catch (e) {}
             fitFrame();
             requestAnimationFrame(function () { fitFrame(); reveal(); });
             setTimeout(fitFrame, 300); setTimeout(fitFrame, 900);
@@ -3524,7 +3627,7 @@
 
         function onResize() { fitFrame(); }
         window.addEventListener('resize', onResize);
-        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); clearTimeout(bg.__fmxSendCd); };
+        bg.__fmxCleanup = function () { window.removeEventListener('resize', onResize); clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo); clearTimeout(bg.__fmxProgTo2); clearTimeout(bg.__fmxProgDone); clearTimeout(bg.__fmxSendCd); if (bg.__fmxDock) { try { bg.__fmxDock.destroy(); } catch (e) {} bg.__fmxDock = null; } };
         function close() {
             var win = frame.contentWindow;
             /* мгновенно убираем визуально; DOM держим живым, пока не дождёмся загрузки своего фона */
