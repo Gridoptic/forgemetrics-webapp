@@ -1874,7 +1874,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "15 weekly placements with a volume discount. Each active week unlocks Week-tier styles.",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Image background — available to everyone. GIF and MP4 animation — only with the \"Month in Feed\" promotion. The area under the numbers is darkened automatically, readability is preserved.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "The cover is hidden and the background fills the entire card — available to everyone. Animated background (GIF/MP4) — only with the \"Month in Feed\" promotion.",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Gold glow and \"Top of the Month\" — only with the \"Month in Feed\" promotion. Everything with a lock can be previewed."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Gold glow and \"Top of the Month\" — only with the \"Month in Feed\" promotion. Everything with a lock can be previewed.",
+  "Лидерборд недели": "Weekly leaderboard",
+  "Твоя позиция: %1": "Your position: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Prize for the top performer — %1. Counts invitees who activated a trial within 7 days.",
+  "Неделя продвижения в ленте": "A week of feed promotion",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 admins have already reserved their plans — the reserved price is locked in forever.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Your reservation: %1 at %2 ₽/mo — price locked in.",
+  "Стрик %1 дн.": "Streak: %1 d.",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Channel card on ForgeMetrics: real metrics and placement price.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Invitation bonus — a discount on the first month and an extended trial:"
  },
  "es": {
   "Партнёрская программа": "Programa de afiliados",
@@ -3748,7 +3757,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "15 colocaciones semanales con descuento por volumen. Cada semana activa desbloquea los estilos del nivel «Semana».",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Imagen de fondo: disponible para todos. Animación GIF y MP4: solo con la promoción «Mes en el feed». La capa bajo las cifras se oscurece automáticamente; la legibilidad no se ve afectada.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "La portada se oculta y el fondo ocupa toda la tarjeta: disponible para todos. Fondo animado (GIF/MP4): solo con la promoción «Mes en el feed».",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Resplandor dorado y «Top del mes»: solo con la promoción «Mes en el feed». Todo lo que tiene candado puede probarse en la vista previa."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Resplandor dorado y «Top del mes»: solo con la promoción «Mes en el feed». Todo lo que tiene candado puede probarse en la vista previa.",
+  "Лидерборд недели": "Tabla de líderes de la semana",
+  "Твоя позиция: %1": "Tu posición: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Premio al mejor — %1. Cuentan los invitados que activaron la prueba en 7 días.",
+  "Неделя продвижения в ленте": "Semana de promoción en el feed",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 admins ya han reservado sus planes — el precio de la reserva se fija para siempre.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Tu reserva: %1 por %2 ₽/mes — precio fijado.",
+  "Стрик %1 дн.": "Racha de %1 días",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Ficha del canal en ForgeMetrics: métricas reales y precio de publicación.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Bono por invitación — descuento en el primer mes y prueba ampliada:"
  },
  "de": {
   "Партнёрская программа": "Partnerprogramm",
@@ -5622,7 +5640,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "15 Wochenplatzierungen mit Mengenrabatt. Jede aktive Woche schaltet die Stile der Stufe „Woche“ frei.",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Bild als Hintergrund — für alle verfügbar. GIF- und MP4-Animation — nur bei der Promotion „Monat im Feed“. Die Fläche hinter den Zahlen wird automatisch abgedunkelt, die Lesbarkeit bleibt erhalten.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "Das Cover wird ausgeblendet, der Hintergrund füllt die gesamte Karte — für alle verfügbar. Animierter Hintergrund (GIF/MP4) — nur bei der Promotion „Monat im Feed“.",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Goldenes Leuchten und „Top des Monats“ — nur bei der Promotion „Monat im Feed“. Alles mit Schloss lässt sich in der Vorschau ausprobieren."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Goldenes Leuchten und „Top des Monats“ — nur bei der Promotion „Monat im Feed“. Alles mit Schloss lässt sich in der Vorschau ausprobieren.",
+  "Лидерборд недели": "Leaderboard der Woche",
+  "Твоя позиция: %1": "Deine Position: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Preis für den Besten — %1. Gezählt werden Eingeladene, die den Trial innerhalb von 7 Tagen aktiviert haben.",
+  "Неделя продвижения в ленте": "Eine Woche Promotion im Feed",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 Admins haben bereits Tarife reserviert — der Reservierungspreis wird dauerhaft fixiert.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Deine Reservierung: %1 für %2 ₽/Monat — der Preis ist fixiert.",
+  "Стрик %1 дн.": "Streak %1 Tage",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Kanalkarte auf ForgeMetrics: echte Metriken und Platzierungspreis.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Einladungsbonus — Rabatt auf den ersten Monat und erweiterter Trial:"
  },
  "kk": {
   "Партнёрская программа": "Серіктестік бағдарламасы",
@@ -7495,7 +7522,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "Көлем үшін жеңілдікпен 15 апталық орналастыру. Әр белсенді апта «Апта» деңгейінің стильдерін ашады.",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Фон-сурет — барлығына қолжетімді. GIF және MP4-анимация — тек «Лентадағы ай» жылжытуында. Сандар астындағы төсеме автоматты түрде күңгірттеледі, оқылымдылық сақталады.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "Мұқаба жасырылады, фон бүкіл карточканы алады — барлығына қолжетімді. Анимациялы фон (GIF/MP4) — тек «Лентадағы ай» жылжытуында.",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Алтын жарқырау және «Ай үздігі» — тек «Лентадағы ай» жылжытуында. Құлпы бар элементтердің бәрін алдын ала қарауда байқап көруге болады."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Алтын жарқырау және «Ай үздігі» — тек «Лентадағы ай» жылжытуында. Құлпы бар элементтердің бәрін алдын ала қарауда байқап көруге болады.",
+  "Лидерборд недели": "Апта лидерборды",
+  "Твоя позиция: %1": "Сенің позицияң: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Үздікке сыйлық — %1. 7 күн ішінде триалды белсендірген шақырылғандар есептеледі.",
+  "Неделя продвижения в ленте": "Лентада жылжыту аптасы",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 админ тарифтерді брондап қойды — брон бағасы мәңгіге бекітіледі.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Сенің бронің: %1, айына %2 ₽ — баға бекітілген.",
+  "Стрик %1 дн.": "Стрик %1 күн",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics-тегі арна карточкасы: нақты метрикалар және орналастыру бағасы.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Шақыру бонусы — алғашқы айға жеңілдік және кеңейтілген триал:"
  },
  "uz": {
   "Партнёрская программа": "Hamkorlik dasturi",
@@ -9369,7 +9405,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "Hajm uchun chegirma bilan 15 ta haftalik joylashtirish. Har bir faol hafta «Hafta» darajasidagi uslublarni ochadi.",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Fon rasmi — hammaga ochiq. GIF va MP4 animatsiya — faqat «Lentada bir oy» targʻibotida. Raqamlar ostidagi qatlam avtomatik qoraytiriladi, oʻqilish buzilmaydi.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "Muqova yashiriladi, fon butun kartochkani egallaydi — hammaga ochiq. Animatsiyali fon (GIF/MP4) — faqat «Lentada bir oy» targʻibotida.",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Oltin shuʼla va «Oyning topi» — faqat «Lentada bir oy» targʻibotida. Qulflangan hamma narsani oldindan koʻrishda sinab koʻrish mumkin."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Oltin shuʼla va «Oyning topi» — faqat «Lentada bir oy» targʻibotida. Qulflangan hamma narsani oldindan koʻrishda sinab koʻrish mumkin.",
+  "Лидерборд недели": "Hafta liderlar jadvali",
+  "Твоя позиция: %1": "Sening o'rning: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Eng yaxshisiga mukofot — %1. 7 kun ichida trialni faollashtirgan taklif qilinganlar hisobga olinadi.",
+  "Неделя продвижения в ленте": "Lentada bir hafta targ'ibot",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 admin allaqachon tariflarni bron qildi — bron narxi abadiy qat'iy belgilanadi.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Sening broning: %1, oyiga %2 ₽ — narx qat'iy belgilangan.",
+  "Стрик %1 дн.": "Strik %1 kun",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics'dagi kanal kartochkasi: haqiqiy metrikalar va joylashtirish narxi.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Taklif bo'yicha bonus — birinchi oyga chegirma va kengaytirilgan trial:"
  },
  "be": {
   "Партнёрская программа": "Партнёрская праграма",
@@ -11244,7 +11289,16 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "15 тыднёвых размяшчэнняў са зніжкай за аб'ём. Кожны актыўны тыдзень адкрывае стылі ўзроўню «Тыдзень».",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Малюнак-фон — даступны ўсім. GIF і MP4-анімацыя — толькі пры прасоўванні «Месяц у стужцы». Падкладка пад лічбамі зацямняецца аўтаматычна, чытэльнасць не пакутуе.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "Вокладка хаваецца, фон займае ўсю картку — даступна ўсім. Анімаваны фон (GIF/MP4) — толькі пры прасоўванні «Месяц у стужцы».",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Залатое свячэнне і «Топ месяца» — толькі пры прасоўванні «Месяц у стужцы». Усё з замком можна прымерыць у папярэднім праглядзе."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Залатое свячэнне і «Топ месяца» — толькі пры прасоўванні «Месяц у стужцы». Усё з замком можна прымерыць у папярэднім праглядзе.",
+  "Лидерборд недели": "Лідэрборд тыдня",
+  "Твоя позиция: %1": "Твая пазіцыя: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Прыз лепшаму — %1. Улічваюцца запрошаныя, якія актывавалі трыял за 7 дзён.",
+  "Неделя продвижения в ленте": "Тыдзень прасоўвання ў стужцы",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 адмінаў ужо забраніравалі тарыфы — цана броні фіксуецца назаўсёды.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Твая бронь: %1 па %2 ₽/мес — цана зафіксавана.",
+  "Стрик %1 дн.": "Стрык %1 дн.",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Картка канала на ForgeMetrics: рэальныя метрыкі і цана размяшчэння.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Бонус па запрашэнні — зніжка на першы месяц і пашыраны трыял:"
  },
  "az": {
   "Партнёрская программа": "Tərəfdaşlıq proqramı",
@@ -13118,6 +13172,15 @@ window.__I18N_DICT = {
   "15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».": "Həcmə görə endirimlə 15 həftəlik yerləşdirmə. Hər aktiv həftə «Həftə» səviyyəsinin üslublarını açır.",
   "Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.": "Fon şəkli hamıya əlçatandır. GIF və MP4-animasiya — yalnız «Lentdə bir ay» irəlilətməsi ilə. Rəqəmlərin altındakı qat avtomatik tündləşir, oxunaqlılıq itmir.",
   "Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».": "Üz qabığı gizlədilir, fon bütün kartı tutur — hamıya əlçatandır. Animasiyalı fon (GIF/MP4) — yalnız «Lentdə bir ay» irəlilətməsi ilə.",
-  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Qızıl parıltı və «Ayın topu» — yalnız «Lentdə bir ay» irəlilətməsi ilə. Kilidli olan hər şeyi önbaxışda sınamaq olar."
+  "Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.": "Qızıl parıltı və «Ayın topu» — yalnız «Lentdə bir ay» irəlilətməsi ilə. Kilidli olan hər şeyi önbaxışda sınamaq olar.",
+  "Лидерборд недели": "Həftənin liderbordu",
+  "Твоя позиция: %1": "Sənin mövqeyin: %1",
+  "Приз лучшему — %1. Считаются приглашённые, активировавшие триал за 7 дней.": "Ən yaxşıya mükafat — %1. 7 gün ərzində trialı aktivləşdirən dəvətlilər sayılır.",
+  "Неделя продвижения в ленте": "Lentdə irəliləyiş həftəsi",
+  "%1 админов уже забронировали тарифы — цена брони фиксируется навсегда.": "%1 admin artıq tarifləri bron edib — bron qiyməti həmişəlik sabitlənir.",
+  "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Sənin bronun: %1, %2 ₽/ay — qiymət sabitlənib.",
+  "Стрик %1 дн.": "Strik %1 gün",
+  "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics-də kanal kartı: real metrikalar və yerləşdirmə qiyməti.",
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Dəvət bonusu — ilk aya endirim və genişləndirilmiş trial:"
  }
 };

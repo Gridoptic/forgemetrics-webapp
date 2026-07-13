@@ -817,6 +817,21 @@
     });
   };
 
+  /* Виральный след Free-постера (батч C): деликатная реф-строка внизу. Рисуется ТОЛЬКО когда
+     бэкенд прислал data.ref_line (Free-тариф); платные постеры — без знака. Эталон постера
+     не трогаем — элемент добавляет glue-слой поверх. */
+  function _psRefLine(text) {
+    var poster = el('poster');
+    if (!poster || poster.querySelector('.ps-refline')) return;
+    var d = document.createElement('div');
+    d.className = 'ps-refline';
+    d.textContent = text;
+    d.style.cssText = 'position:absolute;left:0;right:0;bottom:6px;text-align:center;' +
+      'font:600 10.5px Inter,Arial,sans-serif;letter-spacing:.04em;color:rgba(255,255,255,0.5);' +
+      'text-shadow:0 1px 2px rgba(0,0,0,0.55);pointer-events:none;z-index:60;';
+    poster.appendChild(d);
+  }
+
   /* серверная точка входа: данные + состояние + режим рендера + сигнал готовности */
   window.__fmxPosterRender = function (data, state, api, opts) {
     opts = opts || {};
@@ -825,6 +840,7 @@
       if (state) window.__fmxPosterApply(state);
       if (opts.video) { window.__fmxPosterRenderMode(); window.__fmxPosterVideoMode(); }
       else if (opts.render) window.__fmxPosterRenderMode();
+      if (data && data.ref_line) _psRefLine(data.ref_line);
     } catch (e) { if (window.console) console.error('poster render glue error', e); }
     var poster = el('poster');
     var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();

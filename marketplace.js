@@ -3841,6 +3841,7 @@
             (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
+            (l.id ? '<button class="fmx-star" data-share="' + l.id + '" data-shu="' + _esc(l.username) + '" style="bottom:auto;top:' + (starTop((l.effects_json || {}).starPos) + 36) + 'px;z-index:7;"><i class="ti ti-share-2"></i></button>' : '') +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             bodyBdg +
@@ -3943,6 +3944,7 @@
         scaleCards(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
+        qsa(host, '[data-share]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); shareCard(b.getAttribute('data-share'), b.getAttribute('data-shu')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
@@ -4038,6 +4040,25 @@
         }).catch(function () { var b = el('fmx-statsBody'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Ошибка', 'Проверь связь.'); });
     }
     function openTg(u) { _haptic('light'); var url = 'https://t.me/' + u; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); } }
+    /* Шаринг карточки (батч C): деп-линк карточки + личная реф-строка отправителя.
+       Каждый шер — вход и в оффер, и в рефералку (K-фактор). Промокод кэшируется. */
+    var _myPromo = null;
+    function shareCard(listingId, username) {
+        _haptic('light');
+        var doShare = function () {
+            var _t = (typeof window !== 'undefined' && window.t) ? window.t : function (s) { return s; };
+            var cardLink = 'https://t.me/ForgeMetricsBot?startapp=card_' + listingId;
+            var text = _t('Карточка канала на ForgeMetrics: реальные метрики и цена размещения.') + (username ? ' @' + username : '');
+            if (_myPromo) text += '\n' + _t('Бонус по приглашению — скидка на первый месяц и расширенный триал:') + ' https://t.me/ForgeMetricsBot?start=' + _myPromo;
+            var url = 'https://t.me/share/url?url=' + encodeURIComponent(cardLink) + '&text=' + encodeURIComponent(text);
+            try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); }
+        };
+        if (_myPromo) return doShare();
+        apiGet('/api/v1/referral/stats').then(function (r) {
+            if (r && r.promo_code) _myPromo = r.promo_code;
+            doShare();
+        }).catch(doShare);
+    }
     function toggleBm(u) {
         if (!u) return; _haptic('light');
         var on;

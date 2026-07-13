@@ -929,9 +929,28 @@ async function openReferral() {
         const data = await apiRequest('/api/v1/user/cabinet');
         cabinetData = data;
         renderReferral(data);
+        loadRefLeaderboard();
     } catch (e) {
         if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить.<br>Попробуй позже.</div>';
     }
+}
+
+// Лидерборд недели (батч C): показываем ТОЛЬКО при ≥3 реальных участниках — без выдуманных цифр
+async function loadRefLeaderboard() {
+    try {
+        const r = await apiRequest('/api/v1/referral/leaderboard');
+        if (!r || !r.ok || !r.visible || !(r.items || []).length) return;
+        const host = document.getElementById('referral-body');
+        if (!host || host.querySelector('.rf-lb')) return;
+        const rows = r.items.map((x, i) => `<div class="rf-hrow"><span class="rf-hnum">${i + 1}</span><p style="display:flex;justify-content:space-between;gap:10px;"><span>${escapeHtml(x.name)}</span><b>${cabNum(x.activated)}</b></p></div>`).join('');
+        const me = r.me ? `<p class="rf-lbme">Твоя позиция: ${r.me}</p>` : '';
+        const block = document.createElement('div');
+        block.className = 'rf-how rf-lb';
+        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Приз лучшему — ${escapeHtml(r.prize)}. Считаются приглашённые, активировавшие триал за 7 дней.</p>`;
+        const foot = host.querySelector('.rf-foot');
+        if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
+        localizeTree(block);
+    } catch (e) { /* лидерборд необязателен */ }
 }
 
 function renderCabinet(d) {
@@ -942,7 +961,8 @@ function renderCabinet(d) {
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span></div></div>${cabStatusHtml(d.subscription)}</div>`;
+    const streakChip = (u.streak_days || 0) >= 2 ? ` <span class="cab-chip"><i class="ti ti-flame"></i> Стрик ${cabNum(u.streak_days)} дн.</span>` : '';
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span>${streakChip}</div></div>${cabStatusHtml(d.subscription)}</div>`;
 
     if (d.upgrade) {
         const up = d.upgrade;
@@ -1227,6 +1247,8 @@ function renderTariffs(d) {
     let html = tfCurBanner(d);
     html += `<div class="tf-billtog"><button class="tf-bt${tfPeriod === 'month' ? ' on' : ''}" data-per="month">Месяц</button><button class="tf-bt${tfPeriod === 'year' ? ' on' : ''}" data-per="year">Год <span class="sv">−${disc}%</span></button></div>`;
     html += '<div class="tf-sub">Забронируй план сейчас — оплату подключим к запуску и уведомим тебя. После триала остаётся бесплатный Free.</div>';
+    if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
+    if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
     const extras = (d.extras || []).map(tfErow).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
