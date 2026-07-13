@@ -621,7 +621,7 @@
       });
       // иконки секций (макет 14.07): по идентификатору содержимого — не зависят от текста метки
       [['fmxPsLang', '🌐'], ['ordBox', '≡'], ['nicheChip', '◉'], ['bgChips', '◐'], ['chartChip', '▲'],
-       ['mChips', '▦'], ['prInp', '₽'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
+       ['mChips', '▦'], ['prInp', '💳'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
         var t = document.getElementById(mp[0]); if (!t) return;
         var sc = t.closest ? t.closest('.fmx-sec') : null; if (!sc) return;
         var lb = sc.querySelector('.lbl'); if (lb && !lb.getAttribute('data-ico')) lb.setAttribute('data-ico', mp[1]);
