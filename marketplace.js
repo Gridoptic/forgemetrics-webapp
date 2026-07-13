@@ -2927,7 +2927,7 @@
                     (st.kind === 'tgs' ? '<span class="fmx-stk-anim">аним.</span>' : '') +
                     '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
             }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личных сообщениях. ' + _stickers.length + '/30</div>';
+                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личных сообщениях.<span> ' + _stickers.length + '/30</span></div>';
             if (s) {
                 var free = (s.mode || 'slot') === 'free';
                 html += '<div class="fmx-fxw" style="margin-top:12px;">' +

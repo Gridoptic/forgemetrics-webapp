@@ -1931,7 +1931,23 @@ function handleConnectChannelHint() {
 }
 
 
+// системные диалоги идут мимо DOM-локализатора — переводим сообщение здесь
+function _trDialog(message) {
+    try {
+        if (typeof window.t === 'function') {
+            const r = window.t(message);
+            if (r && r !== message) return r;
+        }
+        if (typeof window.translateTemplate === 'function') {
+            const r2 = window.translateTemplate(message);
+            if (r2 && r2 !== message) return r2;
+        }
+    } catch (e) {}
+    return message;
+}
+
 function confirmDialog(message, okText) {
+    message = _trDialog(message);
     return new Promise((resolve) => {
         if (tg && typeof tg.showConfirm === 'function') {
             try {
@@ -1946,6 +1962,7 @@ function confirmDialog(message, okText) {
 
 
 function alertDialog(message) {
+    message = _trDialog(message);
     return new Promise((resolve) => {
         if (tg && typeof tg.showAlert === 'function') {
             try {
