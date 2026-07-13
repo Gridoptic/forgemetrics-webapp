@@ -4433,7 +4433,9 @@ function setupPostEventListeners() {
    ассетов из index.html на сервере с реально загруженными. Если вышла новая
    версия — мягко перезагружаемся, не прерывая набор текста. Работает вместе с
    no-store на index.html (vercel.json): перезагрузка получает свежую страницу. */
-var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n_dict.js'];
+// i18n_dict.js больше не грузится (словари пофайловые, лениво); отслеживаем i18n.js —
+// при обновлении переводов бампать ?v у i18n.js И у загрузчика словаря в index.html
+var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js'];
 function _fmVerFromDom() {
     return _FM_ASSETS.map(function (f) {
         var el = document.querySelector('script[src*="' + f + '?v="], link[href*="' + f + '?v="]');
@@ -4501,3 +4503,13 @@ async function main() {
 
 
 document.addEventListener('DOMContentLoaded', main);
+
+// RTL-языки (арабский, персидский): направление текста в полях ввода — по содержимому,
+// чтобы набор шёл справа налево; на вёрстку не влияет (dir=auto только для текста поля)
+document.addEventListener('DOMContentLoaded', function () {
+    try {
+        document.querySelectorAll('textarea, input[type="text"], input:not([type])').forEach(function (el) {
+            if (!el.hasAttribute('dir')) el.setAttribute('dir', 'auto');
+        });
+    } catch (e) {}
+});

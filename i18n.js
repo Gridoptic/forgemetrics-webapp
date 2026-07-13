@@ -6,13 +6,23 @@
     // 'uk' временно отключён (удалён из списка) — не показывается в переключателе и не
     // автоопределяется. Переводы украинского сохранены в git-истории; вернуть = добавить
     // 'uk' сюда, в NAMES/FLAGS и восстановить блок "uk" в i18n_dict.js.
-    var SUPPORTED = ['ru', 'en', 'es', 'de', 'kk', 'uz', 'be', 'az'];
+    // Глобальная экспансия 13.07.2026: +12 языков (итого 20). Словари грузятся лениво —
+    // только активный язык (webapp/i18n/<lang>.js), см. загрузчик в index.html.
+    var SUPPORTED = ['ru', 'en', 'ar', 'hi', 'id', 'pt', 'es', 'fr', 'de', 'it',
+                     'tr', 'fa', 'vi', 'bn', 'kk', 'uz', 'be', 'az', 'am', 'sw'];
     var NAMES = {
-        ru: 'Русский', en: 'English', es: 'Español', de: 'Deutsch',
-        kk: 'Қазақша', uz: 'Oʻzbekcha', be: 'Беларуская', az: 'Azərbaycan'
+        ru: 'Русский', en: 'English', ar: 'العربية', hi: 'हिन्दी',
+        id: 'Bahasa Indonesia', pt: 'Português (BR)', es: 'Español', fr: 'Français',
+        de: 'Deutsch', it: 'Italiano', tr: 'Türkçe', fa: 'فارسی',
+        vi: 'Tiếng Việt', bn: 'বাংলা', kk: 'Қазақша', uz: 'Oʻzbekcha',
+        be: 'Беларуская', az: 'Azərbaycan', am: 'አማርኛ', sw: 'Kiswahili'
     };
     // флаги-эмодзи для переключателя (нейтрально: язык, не политика — берём распространённые)
-    var FLAGS = { ru: '🇷🇺', en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', kk: '🇰🇿', uz: '🇺🇿', be: '🇧🇾', az: '🇦🇿' };
+    var FLAGS = {
+        ru: '🇷🇺', en: '🇬🇧', ar: '🇸🇦', hi: '🇮🇳', id: '🇮🇩', pt: '🇧🇷', es: '🇪🇸', fr: '🇫🇷',
+        de: '🇩🇪', it: '🇮🇹', tr: '🇹🇷', fa: '🇮🇷', vi: '🇻🇳', bn: '🇧🇩', kk: '🇰🇿', uz: '🇺🇿',
+        be: '🇧🇾', az: '🇦🇿', am: '🇪🇹', sw: '🇹🇿'
+    };
     // SVG-флаги: эмодзи-флаги НЕ рендерятся в Telegram Desktop на Windows (показываются как буквы стран),
     // поэтому рисуем сами. Простые узнаваемые версии (без сложных гербов). viewBox 24x18, скругление — по CSS.
     var _fl = function (inner) { return '<svg class="flsvg" viewBox="0 0 24 18" preserveAspectRatio="none">' + inner + '</svg>'; };
@@ -25,6 +35,18 @@
         uz: _fl('<rect width="24" height="6" fill="#0099B5"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#1EB53A"/><rect y="5.3" width="24" height="0.7" fill="#CE1126"/><rect y="12" width="24" height="0.7" fill="#CE1126"/>'),
         be: _fl('<rect width="24" height="12" fill="#D22730"/><rect y="12" width="24" height="6" fill="#009739"/><rect width="4" height="18" fill="#fff"/>'),
         az: _fl('<rect width="24" height="6" fill="#0092BC"/><rect y="6" width="24" height="6" fill="#EF3340"/><rect y="12" width="24" height="6" fill="#509E2F"/><circle cx="11.5" cy="9" r="2.6" fill="#fff"/><circle cx="12.4" cy="9" r="2.2" fill="#EF3340"/>'),
+        ar: _fl('<rect width="24" height="18" fill="#165d31"/><rect x="4" y="7" width="16" height="1.6" fill="#fff"/><rect x="4" y="10.4" width="12" height="1.2" fill="#fff"/>'),
+        hi: _fl('<rect width="24" height="6" fill="#FF9933"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#138808"/><circle cx="12" cy="9" r="2.2" fill="none" stroke="#000080" stroke-width="0.8"/>'),
+        id: _fl('<rect width="24" height="9" fill="#CE1126"/><rect y="9" width="24" height="9" fill="#fff"/>'),
+        pt: _fl('<rect width="24" height="18" fill="#009B3A"/><polygon points="12,2.5 21.5,9 12,15.5 2.5,9" fill="#FEDF00"/><circle cx="12" cy="9" r="3.4" fill="#002776"/>'),
+        fr: _fl('<rect width="8" height="18" fill="#0055A4"/><rect x="8" width="8" height="18" fill="#fff"/><rect x="16" width="8" height="18" fill="#EF4135"/>'),
+        it: _fl('<rect width="8" height="18" fill="#009246"/><rect x="8" width="8" height="18" fill="#fff"/><rect x="16" width="8" height="18" fill="#CE2B37"/>'),
+        tr: _fl('<rect width="24" height="18" fill="#E30A17"/><circle cx="10" cy="9" r="4" fill="#fff"/><circle cx="11.2" cy="9" r="3.2" fill="#E30A17"/><polygon points="15.6,9 18.4,9.9 16.7,7.5 16.7,10.5 18.4,8.1" fill="#fff"/>'),
+        fa: _fl('<rect width="24" height="6" fill="#239F40"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#DA0000"/><circle cx="12" cy="9" r="1.8" fill="none" stroke="#DA0000" stroke-width="0.9"/>'),
+        vi: _fl('<rect width="24" height="18" fill="#DA251D"/><polygon points="12,4.6 13.4,8.4 17.4,8.4 14.2,10.8 15.4,14.6 12,12.3 8.6,14.6 9.8,10.8 6.6,8.4 10.6,8.4" fill="#FFFF00"/>'),
+        bn: _fl('<rect width="24" height="18" fill="#006A4E"/><circle cx="10.5" cy="9" r="4.4" fill="#F42A41"/>'),
+        am: _fl('<rect width="24" height="6" fill="#078930"/><rect y="6" width="24" height="6" fill="#FCDD09"/><rect y="12" width="24" height="6" fill="#DA121A"/><circle cx="12" cy="9" r="3.4" fill="#0F47AF"/><polygon points="12,6.6 12.7,8.4 14.6,8.4 13.1,9.6 13.7,11.4 12,10.3 10.3,11.4 10.9,9.6 9.4,8.4 11.3,8.4" fill="#FCDD09"/>'),
+        sw: _fl('<rect width="24" height="18" fill="#1EB53A"/><polygon points="0,18 24,0 24,18" fill="#00A3DD"/><polygon points="0,18 0,13 17,0 24,0 24,5 7,18" fill="#000"/><polygon points="0,13 0,11.6 15.4,0 17,0" fill="#FCD116"/><polygon points="7,18 8.6,18 24,6.4 24,5" fill="#FCD116"/>'),
     };
 
     function detect() {
