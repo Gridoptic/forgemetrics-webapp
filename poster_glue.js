@@ -70,21 +70,50 @@
   function _psLocalizePrice() {
     var P = _psPack();
     var pv = el('prVal');
+    var box = el('prBox');
+    var ruVal = null;
     if (pv) {
       // русский оригинал держим в data-атрибуте: после первого перевода textContent уже
       // не русский, и повторная смена языка без этого «залипала» на прошлом переводе
       var cur = pv.textContent || '';
       if (cur === 'Цена по договорённости' || cur.indexOf('Реклама от') === 0) pv.setAttribute('data-fmx-src', cur);
       var t = pv.getAttribute('data-fmx-src') || cur;
+      ruVal = t;
       if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;   // n = 0
       else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));  // «Реклама от NNN ₽» → префикс на языке, число как есть
       var nt = pv.textContent || '';
       pv.style.fontSize = nt.length > 16 ? '19px' : '';   // авто-ужатие как в макете
     }
     var ps = el('prSub');
+    var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
     if (ps) {
-      var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
-      if (!fmtv) ps.textContent = P.prsub;   // свой формат размещения (данные) не трогаем — только дефолт
+      if (!fmtv) ps.textContent = (_psLang === 'ru') ? 'минимальный формат размещения' : P.prsub;   // свой формат размещения (данные) не трогаем — только дефолт
+    }
+    // ШИРИНА КНОПКИ: длина текста в каждом языке своя, и кнопка «плясала».
+    // Фиксируем ширину по русскому эталону (для ru — естественная, вид не меняется),
+    // а перевод вписываем ужатием шрифта. Замер русской ширины — синхронно, до отрисовки кадра.
+    if (box && pv) {
+      if (_psLang === 'ru') {
+        box.style.width = '';
+        pv.style.fontSize = (pv.textContent || '').length > 16 ? '19px' : '';
+      } else {
+        var trVal = pv.textContent, trValFs = pv.style.fontSize;
+        var trSub = ps ? ps.textContent : null;
+        pv.textContent = ruVal || trVal;
+        pv.style.fontSize = (ruVal && ruVal.length > 16) ? '19px' : '';
+        if (ps && !fmtv) ps.textContent = 'минимальный формат размещения';
+        box.style.width = '';
+        var ruW = box.offsetWidth;                       // эталонная ширина с русским текстом
+        pv.textContent = trVal; pv.style.fontSize = trValFs;
+        if (ps && !fmtv) ps.textContent = trSub;
+        if (ruW > 0) box.style.width = ruW + 'px';
+        // ужимаем перевод цены, пока не влезет (пол 13px)
+        var fs = parseFloat(getComputedStyle(pv).fontSize) || 22, guard = 0;
+        while (pv.scrollWidth > pv.clientWidth && fs > 13 && guard < 8) {
+          guard++; fs = fs * 0.93;
+          pv.style.fontSize = fs.toFixed(1) + 'px';
+        }
+      }
     }
   }
   /* каждая метка — максимум 2 строки: длинные языки не толкают сетку за нижний край постера */
