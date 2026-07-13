@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714j';
+    var PS_GLUE_V = '20260714k';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3365,7 +3365,7 @@
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
             '#fmx-psDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);padding:8px 12px;}' +
             '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
-            '#fmx-dkPrev{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;}' +
+            '#fmx-dkPrev{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
             '#fmx-dkFrame{width:540px;height:675px;border:0;transform:scale(0.159);transform-origin:top left;pointer-events:none;}' +
             '.fmx-dkNav{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-content:center;min-width:0;}' +
             '.fmx-dkChip{font-size:11.5px;font-weight:600;color:#a7aec6;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;}' +
@@ -3469,9 +3469,51 @@
             });
             nav.appendChild(a);
         });
-        dock.querySelector('#fmx-dkPrev').addEventListener('click', function () {
-            env.scroll.scrollTo({ top: 0, behavior: 'smooth' });
+        /* peek-жест (идея владельца 14.07): зажатие (>=260мс) — превью раскрывается почти на весь
+           экран, отпускание — сворачивается; быстрый тап — прокрутка к началу. iframe НЕ переносим
+           по DOM (это перезагрузило бы его) — растягиваем контейнер и масштабируем содержимое. */
+        var prev = dock.querySelector('#fmx-dkPrev');
+        var peek = { on: false, timer: null, held: false, bd: null, saved: '' };
+        function peekStart() {
+            peek.timer = null;
+            if (peek.on || !mini) return;
+            peek.on = true; peek.held = true;
+            peek.bd = document.createElement('div');
+            peek.bd.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:89;';
+            document.body.appendChild(peek.bd);
+            peek.saved = prev.getAttribute('style') || '';
+            var vw = window.innerWidth || 360, vh = window.innerHeight || 640;
+            var w = Math.min(vw * 0.92, (vh * 0.86) * (540 / 675), 460);
+            var sc = w / 540;
+            prev.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);' +
+                'width:' + w.toFixed(0) + 'px;height:' + (675 * sc).toFixed(0) + 'px;border-radius:16px;' +
+                'overflow:hidden;border:1px solid rgba(255,255,255,0.16);z-index:90;' +
+                'box-shadow:0 30px 80px rgba(0,0,0,0.7);background:#0a0d18;cursor:pointer;';
+            mini.style.transform = 'scale(' + sc.toFixed(4) + ')';
+        }
+        function peekEnd() {
+            if (peek.timer) { clearTimeout(peek.timer); peek.timer = null; }
+            if (!peek.on) return;
+            peek.on = false;
+            if (peek.bd) { try { peek.bd.remove(); } catch (e) {} peek.bd = null; }
+            prev.setAttribute('style', peek.saved || '');
+            if (mini) mini.style.transform = '';
+        }
+        prev.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+        prev.addEventListener('pointerdown', function (e) {
+            e.preventDefault();
+            peek.held = false;
+            try { prev.setPointerCapture(e.pointerId); } catch (e2) {}
+            if (peek.timer) clearTimeout(peek.timer);
+            peek.timer = setTimeout(peekStart, 260);
         });
+        function peekUp(e) {
+            var wasHold = peek.held;
+            peekEnd();
+            if (!wasHold && e.type === 'pointerup') env.scroll.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        prev.addEventListener('pointerup', peekUp);
+        prev.addEventListener('pointercancel', peekUp);
         function onScroll() {
             try {
                 var thr = env.wrap.offsetTop + 675 * env.getK() * 0.8;
