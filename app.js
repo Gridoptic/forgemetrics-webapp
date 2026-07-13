@@ -1234,8 +1234,43 @@ function animOpen(bodyEl, toggle, open) {
     a.onfinish = done; a.oncancel = done;
 }
 
+// FLIP-разворот карточки тарифа (fix подлагивания): анимация высоты заставляла браузер
+// пересчитывать геометрию ВСЕЙ страницы и перерисовывать тени/градиенты карточек 60 раз/сек —
+// на телефонных WebView это дёргалось. Теперь высота меняется мгновенно (один пересчёт),
+// а видимое движение — только transform у элементов ниже (GPU-композитор, без пересчёта
+// и без перерисовки); контент проявляется прозрачностью через CSS (.tp-in).
 function tfAnimateCard(card, open) {
-    animOpen(card.querySelector('.tp-body'), (o) => card.classList.toggle('open', o), open);
+    const toggle = (o) => card.classList.toggle('open', o);
+    if (tfReduceMotion || typeof card.animate !== 'function') { toggle(open); return; }
+    const run = () => {
+        const sibs = [];
+        let seen = false;
+        Array.from(card.parentElement.children).forEach((el) => {
+            if (el === card) { seen = true; return; }
+            if (seen) sibs.push(el);
+        });
+        const tops = sibs.map((el) => el.getBoundingClientRect().top);
+        toggle(open);
+        sibs.forEach((el, i) => {
+            const d = tops[i] - el.getBoundingClientRect().top;
+            if (Math.abs(d) < 1) return;
+            if (el._fa) el._fa.cancel();
+            const a = el.animate(
+                [{ transform: `translateY(${d}px)` }, { transform: 'none' }],
+                { duration: 240, easing: 'cubic-bezier(.33,0,.2,1)' },
+            );
+            el._fa = a;
+            const done = () => { if (el._fa === a) el._fa = null; };
+            a.onfinish = done; a.oncancel = done;
+        });
+    };
+    if (open) { run(); return; }
+    // закрытие: сначала гасим контент (120 мс), потом схлопываем и съезжаем — без скачка исчезновения
+    const tin = card.querySelector('.tp-in');
+    if (!tin) { run(); return; }
+    tin.style.transition = 'opacity .12s ease';
+    tin.style.opacity = '0';
+    setTimeout(() => { run(); tin.style.transition = ''; tin.style.opacity = ''; }, 120);
 }
 
 function tfErow(e, bookedExtras) {
