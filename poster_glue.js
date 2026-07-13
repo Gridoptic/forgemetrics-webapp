@@ -378,7 +378,7 @@
     if (_uname) window.QR_CHANNEL_URL = 'https://t.me/' + _uname;
     if (data.id) window.QR_CARD_URL = 'https://t.me/ForgeMetricsBot?startapp=card_' + data.id;
     var qrOn = document.querySelector('#qrChips .chip.on');
-    renderQrsSafe(qrOn ? qrOn.getAttribute('data-qr') : 'both');
+    renderQrsSafe(qrOn ? qrOn.getAttribute('data-qr') : 'card');
     // держим подпись QR канала верной и когда пользователь сам переключает режим в панели
     var qc = el('qrChips');
     if (qc && !qc.__fmxRelabel) { qc.__fmxRelabel = 1; qc.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('.chip') : null; if (b) setTimeout(function () { relabelQr(b.getAttribute('data-qr')); }, 0); }); }
@@ -564,7 +564,7 @@
       val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,
       fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 40) : ''  // формат размещения (необязательно)
     };
-    var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = qrOn ? qrOn.getAttribute('data-qr') : 'both';
+    var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = qrOn ? qrOn.getAttribute('data-qr') : 'card';
     st.hook = el('hookInp') ? el('hookInp').value : '';
     // метрики: видимые (не hide и есть данные)
     st.metrics = {};

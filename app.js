@@ -4482,7 +4482,10 @@ function _fmApply() {
         var now = Date.now();
         var t0 = +sessionStorage.getItem('fm_upd_t') || 0;
         var n = (now - t0 > 120000) ? 1 : (+sessionStorage.getItem('fm_upd_n') || 0) + 1;
-        sessionStorage.setItem('fm_upd_t', now); sessionStorage.setItem('fm_upd_n', n);
+        /* якорь окна — только на первой перезагрузке серии: иначе каждая подавленная
+           попытка сдвигала окно вперёд и обновления отключались до конца сессии */
+        if (n === 1) sessionStorage.setItem('fm_upd_t', now);
+        sessionStorage.setItem('fm_upd_n', n);
         if (n > 3) return;   // защита от петли: не больше 3 перезагрузок за 2 минуты
     } catch (e) {}
     try { showToast('Обновляю до новой версии…', 'refresh'); } catch (e) {}
