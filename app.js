@@ -740,23 +740,23 @@ function cabStatusHtml(sub) {
 const CAB_BENEFITS = {
     pro: [
         'До 8 постов в день на премиум-модели + 100 на стандартной',
-        'Живой MP4-постер, оформление карточки, 10 каналов · 30 источников',
+        'Оформление карточки, 10 каналов · 30 источников стиля',
         '6 аудитов, 2 анализа конкурентов и 5 подборов площадок в месяц',
     ],
     pro_plus: [
-        'До 20 постов в день на премиум-модели + 100 на стандартной',
-        '100 источников стиля и 30 обновлений голоса канала в месяц',
-        '15 аудитов, 4 анализа конкурентов и 12 подборов площадок в месяц',
+        'До 15 постов в день на премиум-модели + 100 на стандартной',
+        'Живой MP4-постер, приоритетный рендер и стиль «Свечение»',
+        '15 аудитов, 4 анализа конкурентов и 8 подборов площадок в месяц',
     ],
     agency: [
-        'До 30 постов в день на премиум-модели, 25 каналов · 200 источников',
-        '20 аудитов, 5 анализов конкурентов и 15 подборов площадок в месяц',
-        '60 обновлений голоса канала в месяц',
+        'До 24 постов в день на премиум-модели, 25 каналов · 200 источников',
+        'MP4-постер, приоритетный рендер, стили «Свечение» и «Стекло»',
+        '20 аудитов, 5 анализов конкурентов и 10 подборов площадок в месяц',
     ],
     network: [
-        'До 50 постов в день на премиум-модели, 50 каналов · 300 источников',
-        '40 аудитов, 10 анализов конкурентов и 30 подборов площадок в месяц',
-        '120 обновлений голоса и приоритет в очереди рендера',
+        'До 40 постов в день на премиум-модели, 50 каналов · 300 источников',
+        'MP4-постер, стили и анимированные стикеры карточки',
+        '30 аудитов, 10 анализов конкурентов и 20 подборов площадок в месяц',
     ],
 };
 
@@ -793,32 +793,48 @@ function cabUsageRow(u) {
     return `<div class="cab-use">${cabTile(u.color, u.icon, 'md')}<div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
 }
 
-// Ставка (FACE %) и перки по уровню — модель revenue-share кредитами (economics-model).
-// Без «продукта навсегда»: доля с платежей кредитами + продвижения в ленте + охват.
-const RF_RATE = { member: 15, connector: 15, influencer: 25, ambassador: 40, founders_circle: 62 };
+// Модель C («гибрид»): ставки, пороги и перки приходят С БЭКЕНДА (r.ladder) — фронт
+// ничего не хардкодит, витрина не может разойтись с реальными начислениями.
+const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle' };
+const RF_PERK_TEXT = {
+    burst24_monthly: '+1 всплеск 24 ч/мес',
+    promo_week_monthly: '+1 неделя промо/мес',
+    fx_glow: 'стиль «Свечение»',
+    extra_audit_1: '+1 аудит/мес',
+    leaderboard: 'лидерборд',
+    fx_glass: 'стеклянные кнопки',
+    extra_audit_2: '+2 аудита/мес',
+    promo_discount_10: '−10% на продвижение',
+    founders_shelf: 'полка Founders',
+    fx_all: 'все стили карточек',
+    sub_discount_10: '−10% на подписку навсегда',
+    promo_discount_20: '−20% на продвижение',
+};
 
-function cabRefLadder(curKey) {
-    const L = [
-        { key: 'member', n: 'Member', need: 'старт', perk: 'участие в программе' },
-        { key: 'connector', n: 'Connector', need: '1 оплативший', perk: '15% от платежей — кредитами' },
-        { key: 'influencer', n: 'Influencer', need: '10 оплативших', perk: '25% · +1 продвижение в Топ ленты/мес' },
-        { key: 'ambassador', n: 'Ambassador', need: '50 оплативших', perk: '40% · лидерборд · ×1.25 к охвату продвижений' },
-        { key: 'founders_circle', n: 'Founders Circle', need: '200 оплативших', perk: '62% · полка Founders · ×1.5 к охвату' },
-    ];
-    let ci = L.findIndex((x) => x.key === (curKey || 'member'));
+function cabRefLadder(r) {
+    const curKey = (r.level === 'member' ? 'starter' : r.level) || 'starter';
+    const ladder = (r.ladder && r.ladder.length) ? r.ladder : [];
+    let ci = ladder.findIndex((x) => x.key === curKey);
     if (ci < 0) ci = 0;
-    const rows = L.map((x, i) => {
+    const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
         const here = i === ci ? '<span class="rf-here">ты здесь</span>' : '';
-        return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(x.n)} <span class="need">· ${escapeHtml(x.need)}</span></div><div class="perk">${escapeHtml(x.perk)}</div></div>${here}</div>`;
+        const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
+        const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
+        const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
+        const perkLine = `${x.rate_pct}%${perks ? ' · ' + perks : ''}`;
+        return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}${seats}</span></div><div class="perk">${escapeHtml(perkLine)}</div></div>${here}</div>`;
     }).join('');
     return `<div class="rf-ladder">${rows}</div>`;
 }
 
 function refCardHtml(r) {
     r = r || {};
-    const lvlKey = r.level || 'member';
-    const rate = RF_RATE[lvlKey] || 15;
+    const rate = r.rate_pct || 20;
+    const firstN = r.reward_first_payments || 3;
+    const fDisc = r.friend_discount_pct || 15;
+    const fDays = r.friend_trial_days || 10;
+    const bDays = r.base_trial_days || 7;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
         ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
@@ -839,8 +855,8 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>от платежей приглашённых — кредитами на баланс</span></div>
-        <p>Другу −15% на первый месяц (сгорает с концом триала). Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
+        <div class="rf-rate"><b>${rate}%</b><span>от первых ${firstN} платежей каждого приглашённого — кредитами на баланс</span></div>
+        <p>Другу −${fDisc}% на первый месяц и расширенный триал: ${fDays} дней вместо ${bDays}. Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
         <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
       </div>
     </div>
@@ -853,11 +869,11 @@ function refCardHtml(r) {
 
   <div class="rf-card">
     <div class="rf-lvltop">
-      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Member')}</div><div class="sub">твой уровень</div></div></div>
+      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">твой уровень</div></div></div>
       <div class="rf-lvlnext">${nextLine}</div>
     </div>
     <div class="rf-bar"><i style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></i></div>
-    ${cabRefLadder(lvlKey)}
+    ${cabRefLadder(r)}
   </div>
 
   <div class="rf-card rf-glow">
@@ -886,8 +902,8 @@ function refCardHtml(r) {
   <div class="rf-how">
     <span class="rf-eyebrow">Как это работает</span>
     <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой или промокодом с админами каналов.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней и получает −15% на первый месяц.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>После его первой оплаты тебе начисляются кредиты — тем больше, чем выше уровень.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первый месяц и ${fDays} дней триала вместо ${bDays}.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого из его первых ${firstN} платежей тебе идут кредиты — тем больше, чем выше уровень.</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
@@ -1127,7 +1143,7 @@ function tfCurBanner(d) {
     if (d.current_tier === 'trial') {
         const n = d.trial_days_left;
         const dw = (n != null) ? `осталось ${n} ${plural3(n, 'день', 'дня', 'дней')}` : 'активен';
-        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Тебе открыт полный доступ — Pro+</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы не потерять аудит, конкурентов и каналы после триала.</div></div></div>`;
+        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Trial активен — премиум-генерация, аудит и биржа</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы сохранить премиум-модель, аудиты и каналы после триала.</div></div></div>`;
     }
     if (['light', 'pro', 'pro_plus', 'agency', 'network'].includes(d.current_tier)) return '';
     return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">3 поста в день, 1 канал. Выбери план для полного доступа.</div></div></div>`;

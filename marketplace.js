@@ -2202,20 +2202,20 @@
         return fxChips('move', FX_MOVE, 'Движение') +
             fxChips('over', FX_OVER, 'Поверхность') +
             fxChips('part', FX_PART, 'Частицы') +
-            fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при поднятии 48 часов или продвижении 30 дней') +
-            fxChips('orbit', FX_ORBIT, 'Орбита', 'Доступно при продвижении 30 дней') +
+            fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при любом продвижении или на тарифе Pro+') +
+            fxChips('orbit', FX_ORBIT, 'Орбита', 'Только при продвижении «Месяц в ленте» — не входит ни в один тариф') +
             atomRow() +
-            fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении 30 дней') +
+            fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
             '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Топ месяца» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
-            '<div class="fmx-fxlock" style="margin:0 0 6px;">Доступно только при продвижении на 30 дней</div>' +
+            '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение оффера — при продвижении на 30 дней. Всё с замком можно примерить в предпросмотре.</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -2223,9 +2223,9 @@
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Фон оффера</span>' +
-            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — на PRO/PRO+ или при продвижении на 30 дней. Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>' +
+            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>' +
             '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Фон во всю карточку — без шапки</span></div>' +
-            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — на PRO/PRO+ или при продвижении на 30 дней.</div>';
+            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».</div>';
     }
     function hslHex(h) {
         var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
@@ -2715,11 +2715,15 @@
         var fx = l.effects_json || {}, at = l.emoji_attachments_json || {}, top = _isTop(l);
         var mv = fx.move || 'none', ov = fx.over || 'none', gl = fx.glow || 'none', orb = fx.orbit || 'none';
         var oc = fx.atomColor || accent;
-        /* гейтинг только в живой ленте; в превью конструктора (_preview) показываем всё — «примерить» */
+        /* гейтинг только в живой ленте; в превью конструктора (_preview) показываем всё — «примерить».
+           Права приходят с бэкенда (l.fx: промо-уровень ИЛИ тариф/уровень рефералки владельца);
+           легаси-фолбэк top/boost — для кэшированных ответов без fx. */
         if (!l._preview) {
-            var _boost = _isBoost(l);
-            if (!(top || _boost) && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';   /* свечение: поднятие 48ч ИЛИ продвижение 30д */
-            if (!top && FX_VIP.orbit.indexOf(orb) >= 0) orb = 'none';            /* орбита: только продвижение 30д */
+            var _fx = l.fx || null, _boost = _isBoost(l);
+            var _canGlow = _fx ? !!_fx.glow : (top || _boost);
+            var _canOrbit = _fx ? !!_fx.orbit : top;
+            if (!_canGlow && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';   /* свечение: всплеск+ или Pro+ */
+            if (!_canOrbit && FX_VIP.orbit.indexOf(orb) >= 0) orb = 'none'; /* орбита: ТОЛЬКО месяц в ленте */
         }
         var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
         var over = '<i class="fmx-avover fx-o-' + ov + '"></i>';
@@ -3386,6 +3390,7 @@
             m.innerHTML = '<div class="fmx-fmtcard">' +
                 '<div class="fmx-fmttitle">Как прислать постер?</div>' +
                 '<button class="fmx-fmtrow' + lk + '" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)' + pro + '</b><i>Анимация играет прямо в чате · пришлю через минуту</i></span></button>' +
+                '<button class="fmx-fmtrow' + lk + '" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>Живой постер (GIF)' + pro + '</b><i>Анимация без звука · для площадок, где MP4 неудобен</i></span></button>' +
                 '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно · на всех тарифах</i></span></button>' +
                 '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
             document.body.appendChild(m);
@@ -3394,9 +3399,9 @@
                 if (e.target === m) return done(null);
                 var b = e.target.closest('[data-f]'); if (!b) return;
                 var f = b.getAttribute('data-f');
-                if (f === 'mp4' && !liveOk) {  // не премиум — подсказываем, модалку не закрываем
+                if ((f === 'mp4' || f === 'gif') && !liveOk) {  // не премиум — подсказываем, модалку не закрываем
                     try { _haptic('warning'); } catch (e2) {}
-                    toast('Живой постер (MP4) — на тарифах PRO и PRO+. Картинка (PNG) доступна всем');
+                    toast('Живой постер (MP4/GIF) — на тарифах Pro+, Agency и Network. Картинка (PNG) доступна всем');
                     return;
                 }
                 done(f);
@@ -3784,9 +3789,11 @@
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
-        var realTop = l._preview ? !!l._realTop : top; /* табличка «Топ месяца» — только реальное продвижение 30 дней, не от тумблера свечения */
-        /* золотое свечение: в превью конструктора — строго по тумблеру glowCard; в живой ленте — премиум-гейт (top) + флаг (старые офферы без флага светятся как раньше) */
-        var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (top && (l.effects_json || {}).glowCard !== false);
+        var _fxG = l.fx || null;
+        var _gold = _fxG ? !!_fxG.gold : top;   /* золото «Топ месяца»: ЭКСКЛЮЗИВ месячного продвижения */
+        var realTop = l._preview ? !!l._realTop : _gold; /* табличка «Топ месяца» — только реальное месячное продвижение */
+        /* золотое свечение карточки: в превью — по тумблеру; в живой ленте — только месяц */
+        var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_gold && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
         var freeMap = null; /* перемещение бейджей отключено — всегда в общем ряду */
@@ -3803,12 +3810,15 @@
             if (stk.dmode == null && l.effects_json.stickerMode) stk.dmode = l.effects_json.stickerMode;
             if (stk.rot == null && l.effects_json.stickerRot != null) stk.rot = l.effects_json.stickerRot;
         }
-        var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, top && stk.kind !== 'webp', false) : '';
+        var _fxL = l.fx || null;
+        var _canStkAnim = _fxL ? !!_fxL.anim_sticker : top;   /* аним. стикеры: неделя+ или Network */
+        var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, (_canStkAnim || !!l._preview) && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
         var _cbRaw = (at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
-        var cb = (_cbRaw && (_cbRaw.kind === 'img' || top || l._preview)) ? _cbRaw : null; /* картинка-фон — всем бесплатно; GIF/MP4-анимация — только 30д/PRO (или примерить в превью) */
+        var _canAnimBg = _fxL ? !!_fxL.anim_bg : top;   /* анимированный фон: ЭКСКЛЮЗИВ месяца в ленте */
+        var cb = (_cbRaw && (_cbRaw.kind === 'img' || _canAnimBg || l._preview)) ? _cbRaw : null; /* картинка-фон — всем бесплатно; GIF/MP4-анимация — только месячное продвижение */
         var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
             ? '<video src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
             : '<img src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
@@ -3823,7 +3833,8 @@
             covHtml = '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (l.cover_type === 'video' ? '<video src="' + cu + '" style="' + cst + '" muted playsinline preload="metadata"></video>' : '<img src="' + cu + '" style="' + cst + '">') + '</div>';
         } else covHtml = '<div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>';
         var avHtml = listingAvatar(l, accent);
-        var gk = (top || l._preview) ? ((l.effects_json || {}).glass || 'none') : 'none';
+        var _canGlass = _fxL ? !!_fxL.glass : top;   /* стекло: неделя+ или Agency/Network */
+        var gk = (_canGlass || l._preview) ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
@@ -4180,12 +4191,12 @@
         showModal('fmx-faqBg');
     }
     var _PROMO_DESC = {
-        burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки.',
-        burst48: 'Подъём в платной полосе на двое суток.',
-        week: 'Присутствие оффера в платной полосе на 7 дней.',
-        month: 'Присутствие 30 дней — выгоднее за день, чем недельное.',
-        pack5: '5 недельных размещений со скидкой за объём.',
-        pack15: '15 недельных размещений со скидкой за объём.'
+        burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
+        burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
+        week: 'Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.',
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: орбита, анимированный фон, золото и тег «Топ месяца» — их не даёт ни один тариф.',
+        pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
+        pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
     };
     function openPromo() {
         var body = el('fmx-promoBody');
