@@ -3344,7 +3344,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260713b';
+    var PS_GLUE_V = '20260713c';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3513,7 +3513,7 @@
             } catch (e) { toast('Редактор недоступен'); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, live_ok: r.live_ok };
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
         // стикер-пак пользователя (до 30 из бота) — грузим для редактора
@@ -3731,7 +3731,9 @@
         p.then(function (r) {
             if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
-            if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } }
+            if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } loadMyListings(); }
+            // loadMyListings: заглушка выше — только для мгновенного UI; без обновления с сервера
+            // постер строился по ней (без метрик/цены/названия — «постер всё удалил»)
             if (r && (r.resubmitted || r.needs_review)) {
                 _ss._status = 'pending';
                 var nm = r.needs_review;
