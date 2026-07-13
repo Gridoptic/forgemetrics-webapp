@@ -57,10 +57,9 @@
     var c = el('fmxCallout');
     if (!c) {
       c = document.createElement('div'); c.id = 'fmxCallout';
-      /* пропорции ОРИГИНАЛА (вердикт владельца 14.07): высокая капсула с воздухом.
-         line-height:1 оставлен (иначе высокие глифы ar/hi раздували плашку) —
-         прежняя высота набирается вертикальными отступами, одинаково для всех языков */
-      c.style.cssText = 'position:absolute;top:18px;right:24px;z-index:6;padding:8px 14px;border-radius:999px;' +
+      /* размеры В ТОЧНОСТИ как в исходной версии (git b5fbe92, вердикт владельца 14.07):
+         top:14, паддинг 7px 14px; line-height:1 — высокие глифы ar/hi не раздувают капсулу */
+      c.style.cssText = 'position:absolute;top:14px;right:24px;z-index:6;padding:7px 14px;border-radius:999px;' +
         'font-size:12px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;line-height:1;' +
         'background:rgba(93,202,165,0.14);border:1px solid rgba(93,202,165,0.5);color:#7ee7c2;' +
         'white-space:nowrap;pointer-events:none;';
@@ -70,7 +69,7 @@
     c.style.display = '';
     /* сброс возможного ужатия — ЯВНЫМИ базовыми значениями: пустая строка стирала бы
        и штатные отступы из cssText (плашка становилась плоской) */
-    c.style.fontSize = '12px'; c.style.padding = '8px 14px'; c.style.letterSpacing = '1.1px';
+    c.style.fontSize = '12px'; c.style.padding = '7px 14px'; c.style.letterSpacing = '1.1px';
     /* Коллизия с названием: только РЕАЛЬНОЕ пересечение прямоугольников (искусственные
        запасы давали ложное срабатывание после догрузки шрифта — плашка «исчезала»).
        При пересечении сначала ужимаемся, прячемся только если не помогло. */
