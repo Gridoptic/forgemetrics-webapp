@@ -550,7 +550,9 @@
     if (h2 && !el('fmx-ed-why')) {
       var why = document.createElement('div'); why.id = 'fmx-ed-why';
       why.textContent = 'Баннер — готовый рекламный креатив твоего канала. Рассылай и размещай его там, где есть рекламодатели: админ-чаты и биржи размещений, форумы, каталоги каналов, сторис соцсетей, личные предложения. QR ведёт на живую карточку канала — рекламодатель сканирует, проверяет метрики и бронирует размещение без лишней переписки. В QR вшита твоя реферальная ссылка: все, кто пришёл с баннера, закрепляются за тобой.';
-      why.style.cssText = 'margin:6px 0 10px;font-size:11.5px;line-height:1.45;color:#8d93a8;';
+      why.style.cssText = 'margin:8px 0 14px;padding:11px 13px;border-radius:12px;' +
+        'background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));' +
+        'border:1px solid rgba(93,202,165,0.35);font-size:11.5px;line-height:1.5;color:#c6cdde;';
       h2.parentNode.insertBefore(why, h2.nextSibling);
     }
     // кнопка «Сбросить настройки» прямо под постером
