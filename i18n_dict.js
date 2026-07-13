@@ -1901,7 +1901,8 @@ window.__I18N_DICT = {
   "Много": "Many",
   "В стиле канала": "Channel style",
   "Не удалось получить идеи — попробуй ещё раз": "Couldn't fetch ideas — try again",
-  "Авто — как в канале (~%1 знаков)": "Auto — like your channel (~%1 chars)"
+  "Авто — как в канале (~%1 знаков)": "Auto — like your channel (~%1 chars)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "This is a post generator, not a chat assistant. Describe a topic for your channel post"
  },
  "es": {
   "Партнёрская программа": "Programa de afiliados",
@@ -3802,7 +3803,8 @@ window.__I18N_DICT = {
   "Много": "Muchos",
   "В стиле канала": "Estilo del canal",
   "Не удалось получить идеи — попробуй ещё раз": "No se pudieron obtener ideas — inténtalo de nuevo",
-  "Авто — как в канале (~%1 знаков)": "Auto — como en el canal (~%1 caracteres)"
+  "Авто — как в канале (~%1 знаков)": "Auto — como en el canal (~%1 caracteres)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Esto es un generador de posts, no un asistente de chat. Describe el tema del post para tu canal"
  },
  "de": {
   "Партнёрская программа": "Partnerprogramm",
@@ -5703,7 +5705,8 @@ window.__I18N_DICT = {
   "Много": "Viele",
   "В стиле канала": "Im Kanalstil",
   "Не удалось получить идеи — попробуй ещё раз": "Ideen konnten nicht geladen werden — versuch es erneut",
-  "Авто — как в канале (~%1 знаков)": "Auto — wie im Kanal (~%1 Zeichen)"
+  "Авто — как в канале (~%1 знаков)": "Auto — wie im Kanal (~%1 Zeichen)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Das ist ein Post-Generator, kein Chat-Assistent. Beschreibe ein Thema für deinen Kanal-Post"
  },
  "kk": {
   "Партнёрская программа": "Серіктестік бағдарламасы",
@@ -7603,7 +7606,8 @@ window.__I18N_DICT = {
   "Много": "Көп",
   "В стиле канала": "Арна стилінде",
   "Не удалось получить идеи — попробуй ещё раз": "Идеяларды алу мүмкін болмады — қайталап көр",
-  "Авто — как в канале (~%1 знаков)": "Авто — арнадағыдай (~%1 таңба)"
+  "Авто — как в канале (~%1 знаков)": "Авто — арнадағыдай (~%1 таңба)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Бұл пост генераторы, чат-көмекші емес. Арнаңа арналған пост тақырыбын сипатта"
  },
  "uz": {
   "Партнёрская программа": "Hamkorlik dasturi",
@@ -9504,7 +9508,8 @@ window.__I18N_DICT = {
   "Много": "Ko'p",
   "В стиле канала": "Kanal uslubida",
   "Не удалось получить идеи — попробуй ещё раз": "G'oyalarni olib bo'lmadi — yana urinib ko'r",
-  "Авто — как в канале (~%1 знаков)": "Avto — kanaldagidek (~%1 belgi)"
+  "Авто — как в канале (~%1 знаков)": "Avto — kanaldagidek (~%1 belgi)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Bu post generatori, chat-yordamchi emas. Kanaling uchun post mavzusini yozib ber"
  },
  "be": {
   "Партнёрская программа": "Партнёрская праграма",
@@ -11406,7 +11411,8 @@ window.__I18N_DICT = {
   "Много": "Шмат",
   "В стиле канала": "У стылі канала",
   "Не удалось получить идеи — попробуй ещё раз": "Не атрымалася атрымаць ідэі — паспрабуй яшчэ раз",
-  "Авто — как в канале (~%1 знаков)": "Аўта — як у канале (~%1 знакаў)"
+  "Авто — как в канале (~%1 знаков)": "Аўта — як у канале (~%1 знакаў)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Гэта генератар пастоў, а не чат-асістэнт. Апішы тэму паста для канала"
  },
  "az": {
   "Партнёрская программа": "Tərəfdaşlıq proqramı",
@@ -13307,6 +13313,7 @@ window.__I18N_DICT = {
   "Много": "Çox",
   "В стиле канала": "Kanal üslubunda",
   "Не удалось получить идеи — попробуй ещё раз": "İdeyaları almaq mümkün olmadı — yenidən yoxla",
-  "Авто — как в канале (~%1 знаков)": "Avto — kanaldakı kimi (~%1 simvol)"
+  "Авто — как в канале (~%1 знаков)": "Avto — kanaldakı kimi (~%1 simvol)",
+  "Это генератор постов, а не чат-ассистент. Опиши тему поста для канала": "Bu post generatorudur, çat-assistent deyil. Kanalın üçün post mövzusunu təsvir et"
  }
 };

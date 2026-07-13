@@ -3817,6 +3817,14 @@ async function submitTopicForAnalysis() {
 
 
 async function handleAnalyzeResult(result) {
+    // защита от нецелевого использования: вопрос ассистенту вместо темы поста
+    if (result.off_topic) {
+        stopThinkingAnimation();
+        showScreen('postCreate');
+        showToast('Это генератор постов, а не чат-ассистент. Опиши тему поста для канала', 'info-circle');
+        return;
+    }
+
     if (result.ready_to_generate || !result.needs_question) {
         await runGenerate();
         return;
