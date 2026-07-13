@@ -145,7 +145,7 @@
       if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;   // n = 0
       else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));  // «Реклама от NNN ₽» → префикс на языке, число как есть
       var nt = pv.textContent || '';
-      pv.style.fontSize = nt.length > 16 ? '19px' : '';   // авто-ужатие как в макете
+      pv.style.fontSize = nt.length > 16 ? '21px' : '';   // длинные цены: 21px (акцент 14.07; базовые 24px)
     }
     var ps = el('prSub');
     var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
@@ -158,12 +158,12 @@
     if (box && pv) {
       if (_psLang === 'ru') {
         box.style.width = '';
-        pv.style.fontSize = (pv.textContent || '').length > 16 ? '19px' : '';
+        pv.style.fontSize = (pv.textContent || '').length > 16 ? '21px' : '';
       } else {
         var trVal = pv.textContent, trValFs = pv.style.fontSize;
         var trSub = ps ? ps.textContent : null;
         pv.textContent = ruVal || trVal;
-        pv.style.fontSize = (ruVal && ruVal.length > 16) ? '19px' : '';
+        pv.style.fontSize = (ruVal && ruVal.length > 16) ? '21px' : '';
         if (ps && !fmtv) ps.textContent = 'минимальный формат размещения';
         box.style.width = '';
         var ruW = box.offsetWidth;                       // эталонная ширина с русским текстом
@@ -349,7 +349,11 @@
       ms.textContent = '#poster .price{transform:translateY(-8px);}' +
         '#poster.d2 .price,#poster.d3 .price,#poster.d4 .price{transform:translateY(-5px);}' +
         '#qrChips .chip[data-qr="channel"],#qrChips .chip[data-qr="both"]{display:none;}' +
-        '.stk .modes .mdot[data-mode="m-top"]{display:none;}';
+        '.stk .modes .mdot[data-mode="m-top"]{display:none;}' +
+        /* акцент на цену (вердикт 14.07): кнопка шире/выше, цифры крупнее; без !important,
+           чтобы инлайн-ужатие длинных цен и переводов продолжало побеждать */
+        '#poster .pr{padding:15px 24px;}' +
+        '#poster .prv{font-size:24px;}';
       document.head.appendChild(ms);
     }
     // QR: подпись не должна быть шире самого QR (иначе белый блок растягивается — было видно на @ForgeMetricsBot)
