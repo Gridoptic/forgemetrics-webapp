@@ -816,13 +816,18 @@ function cabRefLadder(r) {
     const ladder = (r.ladder && r.ladder.length) ? r.ladder : [];
     let ci = ladder.findIndex((x) => x.key === curKey);
     if (ci < 0) ci = 0;
+    const firstN = r.reward_first_payments || 3;
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
         const here = i === ci ? '<span class="rf-here">ты здесь</span>' : '';
         const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
-        const perkLine = `${x.rate_pct}%${perks ? ' · ' + perks : ''}`;
+        // первая ступень объясняет, ЧТО значит процент; дальше — короткая форма
+        const rate = i === 0
+            ? `${x.rate_pct}% от первых ${firstN} платежей — кредитами`
+            : `${x.rate_pct}% от платежей`;
+        const perkLine = `${rate}${perks ? ' · ' + perks : ''}`;
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}${seats}</span></div><div class="perk">${escapeHtml(perkLine)}</div></div>${here}</div>`;
     }).join('');
     return `<div class="rf-ladder">${rows}</div>`;

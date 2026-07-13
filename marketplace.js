@@ -2041,6 +2041,7 @@
                 '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
                 '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
                 '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-photo-star"></i> Промо-постер для рекламы канала</button>' +
+                '<button class="fmx-btn" id="fmx-lpromo" style="width:100%;margin-top:8px;border-color:rgba(129,140,248,0.45);color:#818cf8;"><i class="ti ti-rocket"></i> Продвижение оффера в ленте — цены</button>' +
                 '<button class="fmx-btn" id="fmx-lstats" style="width:100%;margin-top:8px;"><i class="ti ti-chart-bar"></i> Статистика оффера за неделю</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
             (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
@@ -2067,6 +2068,8 @@
         if (_ss.listingId) loadPendingDeals();
         var brag = el('fmx-brag');
         if (brag) brag.addEventListener('click', function () { _haptic('light'); openPosterStudio(); });
+        var lpromo = el('fmx-lpromo');
+        if (lpromo) lpromo.addEventListener('click', function () { _haptic('light'); openPromo(); });
         var lstats = el('fmx-lstats');
         if (lstats) lstats.addEventListener('click', function () { _haptic('light'); openListingStats(_ss.listingId); });
         var lp = el('fmx-lpause');

@@ -1883,7 +1883,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Your reservation: %1 at %2 ₽/mo — price locked in.",
   "Стрик %1 дн.": "Streak: %1 d.",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Channel card on ForgeMetrics: real metrics and placement price.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Invitation bonus — a discount on the first month and an extended trial:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Invitation bonus — a discount on the first month and an extended trial:",
+  "%1% от первых %2 платежей — кредитами": "%1% of the first %2 payments — as credits",
+  "%1% от платежей": "%1% of payments",
+  "Продвижение оффера в ленте — цены": "Offer promotion in the feed — prices"
  },
  "es": {
   "Партнёрская программа": "Programa de afiliados",
@@ -3766,7 +3769,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Tu reserva: %1 por %2 ₽/mes — precio fijado.",
   "Стрик %1 дн.": "Racha de %1 días",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Ficha del canal en ForgeMetrics: métricas reales y precio de publicación.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Bono por invitación — descuento en el primer mes y prueba ampliada:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Bono por invitación — descuento en el primer mes y prueba ampliada:",
+  "%1% от первых %2 платежей — кредитами": "%1% de los primeros %2 pagos — en créditos",
+  "%1% от платежей": "%1% de los pagos",
+  "Продвижение оффера в ленте — цены": "Promoción del offer en el feed — precios"
  },
  "de": {
   "Партнёрская программа": "Partnerprogramm",
@@ -5649,7 +5655,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Deine Reservierung: %1 für %2 ₽/Monat — der Preis ist fixiert.",
   "Стрик %1 дн.": "Streak %1 Tage",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Kanalkarte auf ForgeMetrics: echte Metriken und Platzierungspreis.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Einladungsbonus — Rabatt auf den ersten Monat und erweiterter Trial:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Einladungsbonus — Rabatt auf den ersten Monat und erweiterter Trial:",
+  "%1% от первых %2 платежей — кредитами": "%1% der ersten %2 Zahlungen — als Guthaben",
+  "%1% от платежей": "%1% der Zahlungen",
+  "Продвижение оффера в ленте — цены": "Offer-Promotion im Feed — Preise"
  },
  "kk": {
   "Партнёрская программа": "Серіктестік бағдарламасы",
@@ -7531,7 +7540,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Сенің бронің: %1, айына %2 ₽ — баға бекітілген.",
   "Стрик %1 дн.": "Стрик %1 күн",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics-тегі арна карточкасы: нақты метрикалар және орналастыру бағасы.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Шақыру бонусы — алғашқы айға жеңілдік және кеңейтілген триал:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Шақыру бонусы — алғашқы айға жеңілдік және кеңейтілген триал:",
+  "%1% от первых %2 платежей — кредитами": "алғашқы %2 төлемнен %1% — кредит түрінде",
+  "%1% от платежей": "төлемдерден %1%",
+  "Продвижение оффера в ленте — цены": "Лентада офферді жылжыту — бағалар"
  },
  "uz": {
   "Партнёрская программа": "Hamkorlik dasturi",
@@ -9414,7 +9426,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Sening broning: %1, oyiga %2 ₽ — narx qat'iy belgilangan.",
   "Стрик %1 дн.": "Strik %1 kun",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics'dagi kanal kartochkasi: haqiqiy metrikalar va joylashtirish narxi.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Taklif bo'yicha bonus — birinchi oyga chegirma va kengaytirilgan trial:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Taklif bo'yicha bonus — birinchi oyga chegirma va kengaytirilgan trial:",
+  "%1% от первых %2 платежей — кредитами": "birinchi %2 to'lovdan %1% — kredit sifatida",
+  "%1% от платежей": "to'lovlardan %1%",
+  "Продвижение оффера в ленте — цены": "Lentada offerni targ'ib qilish — narxlar"
  },
  "be": {
   "Партнёрская программа": "Партнёрская праграма",
@@ -11298,7 +11313,10 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Твая бронь: %1 па %2 ₽/мес — цана зафіксавана.",
   "Стрик %1 дн.": "Стрык %1 дн.",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Картка канала на ForgeMetrics: рэальныя метрыкі і цана размяшчэння.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Бонус па запрашэнні — зніжка на першы месяц і пашыраны трыял:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Бонус па запрашэнні — зніжка на першы месяц і пашыраны трыял:",
+  "%1% от первых %2 платежей — кредитами": "%1% ад першых %2 плацяжоў — крэдытамі",
+  "%1% от платежей": "%1% ад плацяжоў",
+  "Продвижение оффера в ленте — цены": "Прасоўванне офера ў стужцы — цэны"
  },
  "az": {
   "Партнёрская программа": "Tərəfdaşlıq proqramı",
@@ -13181,6 +13199,9 @@ window.__I18N_DICT = {
   "Твоя бронь: %1 по %2 ₽/мес — цена зафиксирована.": "Sənin bronun: %1, %2 ₽/ay — qiymət sabitlənib.",
   "Стрик %1 дн.": "Strik %1 gün",
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics-də kanal kartı: real metrikalar və yerləşdirmə qiyməti.",
-  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Dəvət bonusu — ilk aya endirim və genişləndirilmiş trial:"
+  "Бонус по приглашению — скидка на первый месяц и расширенный триал:": "Dəvət bonusu — ilk aya endirim və genişləndirilmiş trial:",
+  "%1% от первых %2 платежей — кредитами": "ilk %2 ödənişdən %1% — kredit şəklində",
+  "%1% от платежей": "ödənişlərdən %1%",
+  "Продвижение оффера в ленте — цены": "Lentdə offerin irəliləyişi — qiymətlər"
  }
 };
