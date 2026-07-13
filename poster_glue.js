@@ -45,9 +45,9 @@
   }
   var _psNiche = null;   // {raw, tr} — ниша листинга и её переводы (с бэка), для смены языка на лету
   var _psAsof = null;    // дата среза метрик (с бэка) — для строки-пруфа
-  // QR канала с постера убран (решение владельца 13.07): режимы только «наш» (card) или «нет»;
-  // легаси both/channel из старых сохранений приводим к card
-  function _psQr(m) { return m === 'none' ? 'none' : 'card'; }
+  // QR всегда включён и всегда наш (решение владельца 14.07: отключение убрано из пульта);
+  // легаси none/both/channel из старых сохранений приводим к card
+  function _psQr(m) { return 'card'; }
   /* плашка «Реклама в канале» в правом верхнем углу (скрин владельца 13.07): постер —
      оффер, а не визитка. line-height:1 — глифы высоких письменностей (ar/hi) не раздувают
      плашку; при пересечении с длинным названием канала прячется, на текст не наезжает. */
@@ -380,6 +380,13 @@
         });
       });
       window.__fmxStkNorm.observe(el('poster'), { childList: true });
+    }
+    // строка QR-режимов убрана из пульта (вердикт 14.07): выбора больше нет, QR всегда наш
+    var qrRow = el('qrChips');
+    if (qrRow) {
+      qrRow.style.display = 'none';
+      var qrLbl = qrRow.previousElementSibling;
+      if (qrLbl && qrLbl.classList && qrLbl.classList.contains('lbl')) qrLbl.style.display = 'none';
     }
     var titleTxt = data.title || data.username || 'Канал';
     if (el('titEl')) el('titEl').textContent = titleTxt;
