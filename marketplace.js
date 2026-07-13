@@ -3344,7 +3344,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260713d';
+    var PS_GLUE_V = '20260713e';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3465,6 +3465,12 @@
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
+        // мост для кнопки «ИИ-хук» в пульте: 3 продающих слогана по нише/метрикам на языке постера
+        window.__fmxHookIdeas = function (lang, cb) {
+            apiPost('/api/v1/marketplace/poster/hooks', { listing_id: base.id, lang: lang || 'ru' })
+                .then(function (r) { cb((r && r.ok && r.hooks && r.hooks.length) ? r.hooks : null); })
+                .catch(function () { cb(null); });
+        };
         /* загрузчик своего фона постера на сервер — отдаём его в iframe, glue вызовет при выборе файла */
         function uploadPosterBg(file) {
             // проверяем размер СРАЗУ, до отправки: иначе большой файл уходит на сервер, соединение

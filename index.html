@@ -579,7 +579,7 @@
 
 </div>
 
-<script src="i18n.js?v=15"></script>
+<script src="i18n.js?v=16"></script>
 <script>
 /* Ленивая загрузка словаря: только активный язык (~250 КБ вместо всех 20 языков).
    document.write при парсинге — синхронно, словарь готов до запуска app.js. */
@@ -587,7 +587,7 @@
     try {
         var l = window.getLang ? window.getLang() : 'ru';
         if (l && l !== 'ru') {
-            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=36"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=37"></scr' + 'ipt>');
         }
     } catch (e) {}
 })();
@@ -596,7 +596,7 @@
 <script src="audit.js?v=20260704f"></script>
 <script src="competitors.js?v=20260704f"></script>
 <script src="ad_exchange.js?v=20260704f"></script>
-<script src="marketplace.js?v=20260713j"></script>
+<script src="marketplace.js?v=20260713k"></script>
 
 </body>
 </html>
