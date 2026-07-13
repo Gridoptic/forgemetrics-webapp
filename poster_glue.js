@@ -209,7 +209,14 @@
     var chips = document.createElement('div'); chips.className = 'chips'; chips.id = 'fmxPsLang';
     codes.forEach(function (c) {
       var b = document.createElement('button'); b.className = 'chip' + (c[0] === _psLang ? ' on' : '');
-      b.setAttribute('data-pl', c[0]); b.textContent = c[1]; chips.appendChild(b);
+      b.setAttribute('data-pl', c[0]);
+      // флаг + код (вердикт 14.07): SVG-флаги из i18n.js (window.I18N) — эмодзи-флаги
+      // не рисуются на Windows; при недоступности словаря — только код
+      var fl = null;
+      try { fl = window.I18N && window.I18N.flagSvg && window.I18N.flagSvg[c[0]]; } catch (e) {}
+      if (fl) b.innerHTML = fl + '<span>' + c[1] + '</span>';
+      else b.textContent = c[1];
+      chips.appendChild(b);
     });
     anchor.parentNode.insertBefore(chips, anchor.nextSibling);
     anchor.parentNode.insertBefore(lbl, chips);
@@ -592,6 +599,27 @@
     }
     // свой фон: загрузка на сервер + пан/зум жестами
     _setupCustomBg();
+    /* редизайн пульта (14.07): секции-карточки. Узлы ПЕРЕНОСИМ (append) — слушатели и id
+       сохраняются; палитра (.picker) живёт вне панели и не задевается */
+    var panelEl = document.querySelector('.panel');
+    if (panelEl && !panelEl.querySelector('.fmx-sec')) {
+      var kids = Array.prototype.slice.call(panelEl.children);
+      var sec = null;
+      kids.forEach(function (node) {
+        if (node.classList && node.classList.contains('lbl')) {
+          sec = document.createElement('div'); sec.className = 'fmx-sec';
+          panelEl.insertBefore(sec, node);
+          sec.appendChild(node);
+        } else if (sec) {
+          sec.appendChild(node);
+        }
+      });
+      // карточка целиком из скрытых узлов (например, убранные QR-режимы) — пустую плашку не рисуем
+      panelEl.querySelectorAll('.fmx-sec').forEach(function (sc) {
+        var vis = Array.prototype.some.call(sc.children, function (ch) { return ch.style.display !== 'none' && getComputedStyle(ch).display !== 'none'; });
+        if (!vis) sc.style.display = 'none';
+      });
+    }
   };
 
   window.__fmxPosterState = function () {
@@ -914,7 +942,32 @@
       '.picker .crow{gap:' + px(6) + ' !important;margin-top:' + px(10) + ' !important;}' +
       '.picker .crow input{font-size:' + px(12.5) + ' !important;padding:' + px(8) + ' ' + px(2) + ' !important;border-radius:' + px(9) + ' !important;}' +
       '.picker .preset{margin-top:' + px(10) + ' !important;gap:' + px(6) + ' !important;}' +
-      '.picker .pd{width:' + px(22) + ' !important;height:' + px(22) + ' !important;border-radius:' + px(7) + ' !important;}';
+      '.picker .pd{width:' + px(22) + ' !important;height:' + px(22) + ' !important;border-radius:' + px(7) + ' !important;}' +
+      /* ——— скин пульта (редизайн 14.07): карточки, единые чипы, фокус-кольца ——— */
+      '.fmx-sec{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);' +
+        'border-radius:' + px(14) + ';padding:' + px(12) + ' ' + px(13) + ';margin:' + px(10) + ' 0;}' +
+      '.fmx-sec .lbl{margin-top:0 !important;}' +
+      '.lbl{color:#8f99b8 !important;letter-spacing:1.2px !important;}' +
+      '.chip{background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.10) !important;' +
+        'color:#c6cdde !important;transition:border-color 0.15s,background 0.15s,color 0.15s;}' +
+      '.chip.on{background:linear-gradient(135deg,rgba(93,202,165,0.22),rgba(93,202,165,0.07)) !important;' +
+        'border-color:rgba(93,202,165,0.6) !important;color:#7ee7c2 !important;' +
+        'box-shadow:0 0 10px rgba(93,202,165,0.12);}' +
+      '#fmxPsLang .chip{display:inline-flex !important;align-items:center !important;gap:' + px(6) + ';' +
+        'padding:' + px(6) + ' ' + px(9) + ' !important;font-weight:700 !important;}' +
+      '#fmxPsLang .chip .flsvg{width:' + px(18) + ';height:' + px(13) + ';border-radius:' + px(2.5) + ';' +
+        'box-shadow:0 0 0 1px rgba(255,255,255,0.18);display:block;flex-shrink:0;}' +
+      'input[type=text],input[type=number]{background:rgba(0,0,0,0.30) !important;' +
+        'border:1px solid rgba(255,255,255,0.09) !important;color:#e8eaf1 !important;}' +
+      'input[type=text]:focus,input[type=number]:focus{border-color:rgba(93,202,165,0.55) !important;' +
+        'box-shadow:0 0 0 2px rgba(93,202,165,0.12) !important;outline:none !important;}' +
+      '.ordrow{background:rgba(255,255,255,0.04) !important;border:1px solid rgba(255,255,255,0.08) !important;' +
+        'border-radius:' + px(11) + ' !important;}' +
+      '.ordbtn{border-radius:50% !important;background:rgba(255,255,255,0.07) !important;' +
+        'border:1px solid rgba(255,255,255,0.12) !important;}' +
+      '.genbtn{background:linear-gradient(135deg,rgba(129,140,248,0.22),rgba(129,140,248,0.08)) !important;' +
+        'border:1px solid rgba(129,140,248,0.5) !important;color:#aab2f7 !important;font-weight:700 !important;}' +
+      '.drop{border:1px dashed rgba(93,202,165,0.35) !important;background:rgba(93,202,165,0.04) !important;}';
   };
 
   /* режим рендера: прячем пульт и палитру, ставим постер в угол, сигналим готовность */
