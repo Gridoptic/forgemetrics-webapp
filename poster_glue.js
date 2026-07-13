@@ -15,26 +15,26 @@
      ниша, числа, хук, свой формат размещения) не затрагиваем. Работает и в редакторе
      (переключатель в пульте), и на сервере (язык берётся из state.lang → кеш PNG делится по языкам). */
   var POSTER_L = {
-    ru: {"subs": "Подписчики", "reach": "Средний охват", "post_i": "· пост", "er": "Вовлечённость", "cpm": "Цена 1000 показов", "err": "Охват к базе", "grow": "Прирост · 30 дней", "freq": "Частота постов", "mv": "Просмотры · месяц", "chart": "Просмотры · 30 дней", "prsub": "минимальный формат размещения", "cta": "Забронировать", "prpref": "Реклама от", "prneg": "Цена по договорённости", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Аудитория, которая читает до конца — и покупает."},
-    en: {"subs": "Subscribers", "reach": "Average reach", "post_i": "· post", "er": "Engagement", "cpm": "Price per 1000 impressions", "err": "Reach to base", "grow": "Growth · 30 days", "freq": "Posting frequency", "mv": "Views · month", "chart": "Views · 30 days", "prsub": "minimum placement format", "cta": "Reserve", "prpref": "Ads from", "prneg": "Price on request", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "An audience that reads to the end — and buys."},
-    es: {"subs": "Suscriptores", "reach": "Alcance medio", "post_i": "· post", "er": "Interacción", "cpm": "Precio de 1000 impresiones", "err": "Alcance sobre base", "grow": "Crecimiento · 30 días", "freq": "Frecuencia de publicaciones", "mv": "Vistas · mes", "chart": "Vistas · 30 días", "prsub": "formato mínimo de publicación", "cta": "Reservar", "prpref": "Publicidad desde", "prneg": "Precio a convenir", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Una audiencia que lee hasta el final… y compra."},
-    de: {"subs": "Abonnenten", "reach": "Durchschnittliche Reichweite", "post_i": "· Beitrag", "er": "Engagement", "cpm": "Preis pro 1000 Impressionen", "err": "Reichweite zur Basis", "grow": "Zuwachs · 30 Tage", "freq": "Beitragsfrequenz", "mv": "Aufrufe · Monat", "chart": "Aufrufe · 30 Tage", "prsub": "Mindestformat der Platzierung", "cta": "Reservieren", "prpref": "Werbung ab", "prneg": "Preis auf Anfrage", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Ein Publikum, das bis zum Schluss liest – und kauft."},
-    kk: {"subs": "Жазылушылар", "reach": "Орташа қамту", "post_i": "· жазба", "er": "Тартылым", "cpm": "1000 көрсетілім бағасы", "err": "Базаға қамту", "grow": "Өсім · 30 күн", "freq": "Постар жиілігі", "mv": "Қаралымдар · ай", "chart": "Қаралымдар · 30 күн", "prsub": "орналастырудың ең аз форматы", "cta": "Брондау", "prpref": "Жарнама, бастап", "prneg": "Баға келісім бойынша", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Соңына дейін оқитын — әрі сатып алатын аудитория."},
-    uz: {"subs": "Obunachilar", "reach": "Oʻrtacha qamrov", "post_i": "· post", "er": "Jalb etilganlik", "cpm": "1000 ta koʻrsatish narxi", "err": "Bazaga qamrov", "grow": "Oʻsish · 30 kun", "freq": "Postlar chastotasi", "mv": "Koʻrishlar · oy", "chart": "Ko'rishlar · 30 kun", "prsub": "joylashtirishning minimal formati", "cta": "Band qilish", "prpref": "Reklama —", "prneg": "Narx kelishuv asosida", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Oxirigacha o‘qiydigan — va sotib oladigan auditoriya."},
-    be: {"subs": "Падпісчыкі", "reach": "Сярэдні ахоп", "post_i": "· допіс", "er": "Уцягнутасць", "cpm": "Цана 1000 паказаў", "err": "Ахоп да базы", "grow": "Прырост · 30 дзён", "freq": "Частата пастоў", "mv": "Прагляды · месяц", "chart": "Прагляды · 30 дзён", "prsub": "мінімальны фармат размяшчэння", "cta": "Забраніраваць", "prpref": "Рэклама ад", "prneg": "Цана па дамоўленасці", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Аўдыторыя, якая чытае да канца — і купляе."},
-    az: {"subs": "Abunəçilər", "reach": "Orta əhatə", "post_i": "· post", "er": "Cəlbolunma", "cpm": "1000 göstərişin qiyməti", "err": "Bazaya əhatə", "grow": "Artım · 30 gün", "freq": "Post tezliyi", "mv": "Baxışlar · ay", "chart": "Baxışlar · 30 gün", "prsub": "minimum yerləşdirmə formatı", "cta": "Rezerv et", "prpref": "Reklam", "prneg": "Qiymət razılaşma ilə", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Sona qədər oxuyan — və satın alan auditoriya."},
-    ar: {"subs": "المشتركون", "reach": "متوسط الوصول", "post_i": "· منشور", "er": "التفاعل", "cpm": "سعر 1000 ظهور", "err": "الوصول إلى القاعدة", "grow": "النمو · 30 يومًا", "freq": "تكرار النشر", "mv": "المشاهدات · شهر", "chart": "المشاهدات · 30 يومًا", "prsub": "الحد الأدنى لصيغة الإعلان", "cta": "احجز الآن", "prpref": "الإعلان من", "prneg": "السعر حسب الاتفاق", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "جمهور يقرأ حتى النهاية — ويشتري."},
-    fa: {"subs": "دنبال‌کنندگان", "reach": "میانگین بازدید", "post_i": "· پست", "er": "نرخ تعامل", "cpm": "قیمت ۱۰۰۰ نمایش", "err": "بازدید به دنبال‌کننده", "grow": "رشد · ۳۰ روز", "freq": "تناوب پست‌ها", "mv": "بازدید · ماه", "chart": "بازدید · ۳۰ روز", "prsub": "حداقل فرمت درج آگهی", "cta": "رزرو", "prpref": "تبلیغ از", "prneg": "قیمت توافقی", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "مخاطبانی که تا آخر می‌خوانند — و می‌خرند."},
-    tr: {"subs": "Aboneler", "reach": "Ortalama erişim", "post_i": "· gönderi", "er": "Etkileşim", "cpm": "1000 gösterim fiyatı", "err": "Erişim / abone", "grow": "Artış · 30 gün", "freq": "Gönderi sıklığı", "mv": "Görüntülenme · ay", "chart": "Görüntülenme · 30 gün", "prsub": "minimum yerleşim formatı", "cta": "Rezerve et", "prpref": "Reklam min.", "prneg": "Fiyat görüşülür", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Sonuna kadar okuyan — ve satın alan bir kitle."},
-    hi: {"subs": "सब्सक्राइबर", "reach": "औसत रीच", "post_i": "· पोस्ट", "er": "एंगेजमेंट", "cpm": "1000 इंप्रेशन की कीमत", "err": "बेस पर रीच", "grow": "ग्रोथ · 30 दिन", "freq": "पोस्ट फ्रीक्वेंसी", "mv": "व्यूज़ · माह", "chart": "व्यूज़ · 30 दिन", "prsub": "न्यूनतम प्लेसमेंट फॉर्मेट", "cta": "बुक करें", "prpref": "विज्ञापन से", "prneg": "कीमत अनुरोध पर", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "ऐसी ऑडियंस जो आख़िर तक पढ़ती है — और ख़रीदती भी है।"},
-    bn: {"subs": "সাবস্ক্রাইবার", "reach": "গড় রিচ", "post_i": "· পোস্ট", "er": "এনগেজমেন্ট", "cpm": "১০০০ ভিউয়ের দাম", "err": "বেস অনুপাতে রিচ", "grow": "বৃদ্ধি · ৩০ দিন", "freq": "পোস্টের হার", "mv": "ভিউ · মাস", "chart": "ভিউ · ৩০ দিন", "prsub": "ন্যূনতম প্লেসমেন্ট ফরম্যাট", "cta": "বুক করুন", "prpref": "বিজ্ঞাপন শুরু", "prneg": "দাম আলোচনাসাপেক্ষ", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "এমন অডিয়েন্স, যারা শেষ পর্যন্ত পড়ে — আর কেনেও।"},
-    id: {"subs": "Subscriber", "reach": "Jangkauan rata-rata", "post_i": "· post", "er": "Engagement", "cpm": "Harga per 1000 tayangan", "err": "Jangkauan vs basis", "grow": "Pertumbuhan · 30 hari", "freq": "Frekuensi posting", "mv": "Tayangan · bulan", "chart": "Tayangan · 30 hari", "prsub": "format penempatan minimum", "cta": "Booking", "prpref": "Iklan mulai", "prneg": "Harga nego", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Audiens yang membaca sampai habis — dan membeli."},
-    vi: {"subs": "Người theo dõi", "reach": "Reach trung bình", "post_i": "· bài", "er": "Tương tác", "cpm": "Giá 1000 lượt xem", "err": "Reach / người theo dõi", "grow": "Tăng trưởng · 30 ngày", "freq": "Tần suất đăng", "mv": "Lượt xem · tháng", "chart": "Lượt xem · 30 ngày", "prsub": "định dạng đặt tối thiểu", "cta": "Đặt chỗ", "prpref": "Quảng cáo từ", "prneg": "Giá thỏa thuận", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Độc giả đọc đến cuối bài — và mua hàng."},
-    pt: {"subs": "Inscritos", "reach": "Alcance médio", "post_i": "· post", "er": "Engajamento", "cpm": "Preço por 1000 views", "err": "Alcance vs. base", "grow": "Crescimento · 30 dias", "freq": "Frequência de posts", "mv": "Views · mês", "chart": "Views · 30 dias", "prsub": "formato mínimo de anúncio", "cta": "Reservar", "prpref": "Anúncios a partir de", "prneg": "Preço sob consulta", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Uma audiência que lê até o fim — e compra."},
-    fr: {"subs": "Abonnés", "reach": "Portée moyenne", "post_i": "· post", "er": "Engagement", "cpm": "Prix pour 1000 vues", "err": "Portée / base", "grow": "Croissance · 30 j", "freq": "Fréquence de posts", "mv": "Vues · mois", "chart": "Vues · 30 jours", "prsub": "format de placement minimal", "cta": "Réserver", "prpref": "Pub dès", "prneg": "Prix sur demande", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Une audience qui lit jusqu’au bout — et qui achète."},
-    it: {"subs": "Iscritti", "reach": "Copertura media", "post_i": "· post", "er": "Engagement", "cpm": "Prezzo per 1000 impression", "err": "Copertura su base", "grow": "Crescita · 30 giorni", "freq": "Frequenza post", "mv": "Visualizzazioni · mese", "chart": "Visualizzazioni · 30 giorni", "prsub": "formato minimo di inserzione", "cta": "Prenota", "prpref": "Ads da", "prneg": "Prezzo su richiesta", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Un pubblico che legge fino in fondo — e compra."},
-    am: {"subs": "ተከታዮች", "reach": "አማካይ ተደራሽነት", "post_i": "· ፖስት", "er": "ተሳትፎ", "cpm": "ዋጋ ለ1000 እይታ", "err": "ተደራሽነት ከመሠረት", "grow": "እድገት · 30 ቀን", "freq": "የፖስት ድግግሞሽ", "mv": "እይታዎች · ወር", "chart": "እይታዎች · 30 ቀን", "prsub": "አነስተኛ የማስታወቂያ ቅርጸት", "cta": "አስይዝ", "prpref": "ማስታወቂያ ከ", "prneg": "ዋጋ በስምምነት", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "እስከ መጨረሻው የሚያነብ — እና የሚገዛ ታዳሚ።"},
-    sw: {"subs": "Wasajili", "reach": "Ufikiaji wastani", "post_i": "· chapisho", "er": "Ushirikiano", "cpm": "Bei ya maonyesho 1000", "err": "Ufikiaji kwa msingi", "grow": "Ukuaji · siku 30", "freq": "Kasi ya machapisho", "mv": "Mionekano · mwezi", "chart": "Mionekano · siku 30", "prsub": "kifurushi cha chini cha tangazo", "cta": "Weka nafasi", "prpref": "Matangazo kuanzia", "prneg": "Bei kwa makubaliano", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Hadhira inayosoma hadi mwisho — na kununua."}
+    ru: {"subs": "Подписчики", "reach": "Средний охват", "post_i": "· пост", "er": "Вовлечённость", "cpm": "Цена 1000 показов", "err": "Охват к базе", "grow": "Прирост · 30 дней", "freq": "Частота постов", "mv": "Просмотры · месяц", "chart": "Просмотры · 30 дней", "prsub": "минимальный формат размещения", "cta": "Забронировать", "prpref": "Реклама от", "prneg": "Цена по договорённости", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Аудитория, которая читает до конца — и покупает.", "trust": "Метрики подтверждены ForgeMetrics · живая карточка по QR"},
+    en: {"subs": "Subscribers", "reach": "Average reach", "post_i": "· post", "er": "Engagement", "cpm": "Price per 1000 impressions", "err": "Reach to base", "grow": "Growth · 30 days", "freq": "Posting frequency", "mv": "Views · month", "chart": "Views · 30 days", "prsub": "minimum placement format", "cta": "Reserve", "prpref": "Ads from", "prneg": "Price on request", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "An audience that reads to the end — and buys.", "trust": "Metrics verified by ForgeMetrics · live card via QR"},
+    es: {"subs": "Suscriptores", "reach": "Alcance medio", "post_i": "· post", "er": "Interacción", "cpm": "Precio de 1000 impresiones", "err": "Alcance sobre base", "grow": "Crecimiento · 30 días", "freq": "Frecuencia de publicaciones", "mv": "Vistas · mes", "chart": "Vistas · 30 días", "prsub": "formato mínimo de publicación", "cta": "Reservar", "prpref": "Publicidad desde", "prneg": "Precio a convenir", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Una audiencia que lee hasta el final… y compra.", "trust": "Métricas verificadas por ForgeMetrics · tarjeta en vivo por QR"},
+    de: {"subs": "Abonnenten", "reach": "Durchschnittliche Reichweite", "post_i": "· Beitrag", "er": "Engagement", "cpm": "Preis pro 1000 Impressionen", "err": "Reichweite zur Basis", "grow": "Zuwachs · 30 Tage", "freq": "Beitragsfrequenz", "mv": "Aufrufe · Monat", "chart": "Aufrufe · 30 Tage", "prsub": "Mindestformat der Platzierung", "cta": "Reservieren", "prpref": "Werbung ab", "prneg": "Preis auf Anfrage", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Ein Publikum, das bis zum Schluss liest – und kauft.", "trust": "Metriken von ForgeMetrics bestätigt · Live-Karte per QR"},
+    kk: {"subs": "Жазылушылар", "reach": "Орташа қамту", "post_i": "· жазба", "er": "Тартылым", "cpm": "1000 көрсетілім бағасы", "err": "Базаға қамту", "grow": "Өсім · 30 күн", "freq": "Постар жиілігі", "mv": "Қаралымдар · ай", "chart": "Қаралымдар · 30 күн", "prsub": "орналастырудың ең аз форматы", "cta": "Брондау", "prpref": "Жарнама, бастап", "prneg": "Баға келісім бойынша", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Соңына дейін оқитын — әрі сатып алатын аудитория.", "trust": "Метрикаларды ForgeMetrics растаған · QR арқылы жанды карточка"},
+    uz: {"subs": "Obunachilar", "reach": "Oʻrtacha qamrov", "post_i": "· post", "er": "Jalb etilganlik", "cpm": "1000 ta koʻrsatish narxi", "err": "Bazaga qamrov", "grow": "Oʻsish · 30 kun", "freq": "Postlar chastotasi", "mv": "Koʻrishlar · oy", "chart": "Ko'rishlar · 30 kun", "prsub": "joylashtirishning minimal formati", "cta": "Band qilish", "prpref": "Reklama —", "prneg": "Narx kelishuv asosida", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Oxirigacha o‘qiydigan — va sotib oladigan auditoriya.", "trust": "Metrikalar ForgeMetrics tomonidan tasdiqlangan · QR orqali jonli kartochka"},
+    be: {"subs": "Падпісчыкі", "reach": "Сярэдні ахоп", "post_i": "· допіс", "er": "Уцягнутасць", "cpm": "Цана 1000 паказаў", "err": "Ахоп да базы", "grow": "Прырост · 30 дзён", "freq": "Частата пастоў", "mv": "Прагляды · месяц", "chart": "Прагляды · 30 дзён", "prsub": "мінімальны фармат размяшчэння", "cta": "Забраніраваць", "prpref": "Рэклама ад", "prneg": "Цана па дамоўленасці", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Аўдыторыя, якая чытае да канца — і купляе.", "trust": "Метрыкі пацверджаны ForgeMetrics · жывая картка па QR"},
+    az: {"subs": "Abunəçilər", "reach": "Orta əhatə", "post_i": "· post", "er": "Cəlbolunma", "cpm": "1000 göstərişin qiyməti", "err": "Bazaya əhatə", "grow": "Artım · 30 gün", "freq": "Post tezliyi", "mv": "Baxışlar · ay", "chart": "Baxışlar · 30 gün", "prsub": "minimum yerləşdirmə formatı", "cta": "Rezerv et", "prpref": "Reklam", "prneg": "Qiymət razılaşma ilə", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Sona qədər oxuyan — və satın alan auditoriya.", "trust": "Metrikalar ForgeMetrics tərəfindən təsdiqlənib · QR ilə canlı kart"},
+    ar: {"subs": "المشتركون", "reach": "متوسط الوصول", "post_i": "· منشور", "er": "التفاعل", "cpm": "سعر 1000 ظهور", "err": "الوصول إلى القاعدة", "grow": "النمو · 30 يومًا", "freq": "تكرار النشر", "mv": "المشاهدات · شهر", "chart": "المشاهدات · 30 يومًا", "prsub": "الحد الأدنى لصيغة الإعلان", "cta": "احجز الآن", "prpref": "الإعلان من", "prneg": "السعر حسب الاتفاق", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "جمهور يقرأ حتى النهاية — ويشتري.", "trust": "المقاييس موثّقة من ForgeMetrics · بطاقة حية عبر QR"},
+    fa: {"subs": "دنبال‌کنندگان", "reach": "میانگین بازدید", "post_i": "· پست", "er": "نرخ تعامل", "cpm": "قیمت ۱۰۰۰ نمایش", "err": "بازدید به دنبال‌کننده", "grow": "رشد · ۳۰ روز", "freq": "تناوب پست‌ها", "mv": "بازدید · ماه", "chart": "بازدید · ۳۰ روز", "prsub": "حداقل فرمت درج آگهی", "cta": "رزرو", "prpref": "تبلیغ از", "prneg": "قیمت توافقی", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "مخاطبانی که تا آخر می‌خوانند — و می‌خرند.", "trust": "متریک‌ها با تأیید ForgeMetrics · کارت زنده از طریق QR"},
+    tr: {"subs": "Aboneler", "reach": "Ortalama erişim", "post_i": "· gönderi", "er": "Etkileşim", "cpm": "1000 gösterim fiyatı", "err": "Erişim / abone", "grow": "Artış · 30 gün", "freq": "Gönderi sıklığı", "mv": "Görüntülenme · ay", "chart": "Görüntülenme · 30 gün", "prsub": "minimum yerleşim formatı", "cta": "Rezerve et", "prpref": "Reklam min.", "prneg": "Fiyat görüşülür", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Sonuna kadar okuyan — ve satın alan bir kitle.", "trust": "Metrikler ForgeMetrics tarafından doğrulandı · QR ile canlı kart"},
+    hi: {"subs": "सब्सक्राइबर", "reach": "औसत रीच", "post_i": "· पोस्ट", "er": "एंगेजमेंट", "cpm": "1000 इंप्रेशन की कीमत", "err": "बेस पर रीच", "grow": "ग्रोथ · 30 दिन", "freq": "पोस्ट फ्रीक्वेंसी", "mv": "व्यूज़ · माह", "chart": "व्यूज़ · 30 दिन", "prsub": "न्यूनतम प्लेसमेंट फॉर्मेट", "cta": "बुक करें", "prpref": "विज्ञापन से", "prneg": "कीमत अनुरोध पर", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "ऐसी ऑडियंस जो आख़िर तक पढ़ती है — और ख़रीदती भी है।", "trust": "मेट्रिक्स ForgeMetrics द्वारा सत्यापित · QR से लाइव कार्ड"},
+    bn: {"subs": "সাবস্ক্রাইবার", "reach": "গড় রিচ", "post_i": "· পোস্ট", "er": "এনগেজমেন্ট", "cpm": "১০০০ ভিউয়ের দাম", "err": "বেস অনুপাতে রিচ", "grow": "বৃদ্ধি · ৩০ দিন", "freq": "পোস্টের হার", "mv": "ভিউ · মাস", "chart": "ভিউ · ৩০ দিন", "prsub": "ন্যূনতম প্লেসমেন্ট ফরম্যাট", "cta": "বুক করুন", "prpref": "বিজ্ঞাপন শুরু", "prneg": "দাম আলোচনাসাপেক্ষ", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "এমন অডিয়েন্স, যারা শেষ পর্যন্ত পড়ে — আর কেনেও।", "trust": "মেট্রিক্স ForgeMetrics দ্বারা যাচাইকৃত · QR-এ লাইভ কার্ড"},
+    id: {"subs": "Subscriber", "reach": "Jangkauan rata-rata", "post_i": "· post", "er": "Engagement", "cpm": "Harga per 1000 tayangan", "err": "Jangkauan vs basis", "grow": "Pertumbuhan · 30 hari", "freq": "Frekuensi posting", "mv": "Tayangan · bulan", "chart": "Tayangan · 30 hari", "prsub": "format penempatan minimum", "cta": "Booking", "prpref": "Iklan mulai", "prneg": "Harga nego", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Audiens yang membaca sampai habis — dan membeli.", "trust": "Metrik terverifikasi ForgeMetrics · kartu live via QR"},
+    vi: {"subs": "Người theo dõi", "reach": "Reach trung bình", "post_i": "· bài", "er": "Tương tác", "cpm": "Giá 1000 lượt xem", "err": "Reach / người theo dõi", "grow": "Tăng trưởng · 30 ngày", "freq": "Tần suất đăng", "mv": "Lượt xem · tháng", "chart": "Lượt xem · 30 ngày", "prsub": "định dạng đặt tối thiểu", "cta": "Đặt chỗ", "prpref": "Quảng cáo từ", "prneg": "Giá thỏa thuận", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Độc giả đọc đến cuối bài — và mua hàng.", "trust": "Số liệu do ForgeMetrics xác thực · thẻ live qua QR"},
+    pt: {"subs": "Inscritos", "reach": "Alcance médio", "post_i": "· post", "er": "Engajamento", "cpm": "Preço por 1000 views", "err": "Alcance vs. base", "grow": "Crescimento · 30 dias", "freq": "Frequência de posts", "mv": "Views · mês", "chart": "Views · 30 dias", "prsub": "formato mínimo de anúncio", "cta": "Reservar", "prpref": "Anúncios a partir de", "prneg": "Preço sob consulta", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Uma audiência que lê até o fim — e compra.", "trust": "Métricas verificadas pela ForgeMetrics · cartão ao vivo via QR"},
+    fr: {"subs": "Abonnés", "reach": "Portée moyenne", "post_i": "· post", "er": "Engagement", "cpm": "Prix pour 1000 vues", "err": "Portée / base", "grow": "Croissance · 30 j", "freq": "Fréquence de posts", "mv": "Vues · mois", "chart": "Vues · 30 jours", "prsub": "format de placement minimal", "cta": "Réserver", "prpref": "Pub dès", "prneg": "Prix sur demande", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Une audience qui lit jusqu’au bout — et qui achète.", "trust": "Métriques vérifiées par ForgeMetrics · fiche live via QR"},
+    it: {"subs": "Iscritti", "reach": "Copertura media", "post_i": "· post", "er": "Engagement", "cpm": "Prezzo per 1000 impression", "err": "Copertura su base", "grow": "Crescita · 30 giorni", "freq": "Frequenza post", "mv": "Visualizzazioni · mese", "chart": "Visualizzazioni · 30 giorni", "prsub": "formato minimo di inserzione", "cta": "Prenota", "prpref": "Ads da", "prneg": "Prezzo su richiesta", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Un pubblico che legge fino in fondo — e compra.", "trust": "Metriche verificate da ForgeMetrics · scheda live via QR"},
+    am: {"subs": "ተከታዮች", "reach": "አማካይ ተደራሽነት", "post_i": "· ፖስት", "er": "ተሳትፎ", "cpm": "ዋጋ ለ1000 እይታ", "err": "ተደራሽነት ከመሠረት", "grow": "እድገት · 30 ቀን", "freq": "የፖስት ድግግሞሽ", "mv": "እይታዎች · ወር", "chart": "እይታዎች · 30 ቀን", "prsub": "አነስተኛ የማስታወቂያ ቅርጸት", "cta": "አስይዝ", "prpref": "ማስታወቂያ ከ", "prneg": "ዋጋ በስምምነት", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "እስከ መጨረሻው የሚያነብ — እና የሚገዛ ታዳሚ።", "trust": "መለኪያዎች በForgeMetrics ተረጋግጠዋል · በQR ቀጥታ ካርድ"},
+    sw: {"subs": "Wasajili", "reach": "Ufikiaji wastani", "post_i": "· chapisho", "er": "Ushirikiano", "cpm": "Bei ya maonyesho 1000", "err": "Ufikiaji kwa msingi", "grow": "Ukuaji · siku 30", "freq": "Kasi ya machapisho", "mv": "Mionekano · mwezi", "chart": "Mionekano · siku 30", "prsub": "kifurushi cha chini cha tangazo", "cta": "Weka nafasi", "prpref": "Matangazo kuanzia", "prneg": "Bei kwa makubaliano", "er_i": "· ER", "cpm_i": "· CPM", "err_i": "· ERR", "hook": "Hadhira inayosoma hadi mwisho — na kununua.", "trust": "Vipimo vimethibitishwa na ForgeMetrics · kadi hai kwa QR"}
   };
   var _psLang = 'ru';
   function _psPack() { return POSTER_L[_psLang] || POSTER_L.ru; }
@@ -44,6 +44,28 @@
     if (e) e.innerHTML = _psEsc(main) + (suff ? ' <i>' + _psEsc(suff) + '</i>' : '');
   }
   var _psNiche = null;   // {raw, tr} — ниша листинга и её переводы (с бэка), для смены языка на лету
+  var _psAsof = null;    // дата среза метрик (с бэка) — для строки-пруфа
+  // QR канала с постера убран (решение владельца 13.07): режимы только «наш» (card) или «нет»;
+  // легаси both/channel из старых сохранений приводим к card
+  function _psQr(m) { return m === 'none' ? 'none' : 'card'; }
+  /* строка-пруф под нижним блоком: подтверждение метрик площадкой + дата среза.
+     Заменяет текстовую реф-ссылку Free — её никто не вводил руками, рефка теперь вшита в QR. */
+  function _psProofLine() {
+    var poster = el('poster'); if (!poster) return;
+    var Pk = _psPack();
+    var d = el('fmxProof');
+    if (!d) {
+      d = document.createElement('div'); d.id = 'fmxProof';
+      d.style.cssText = 'position:absolute;left:36px;right:36px;bottom:8px;height:12px;line-height:12px;' +
+        'text-align:center;font:600 9.5px Inter,Arial,sans-serif;letter-spacing:.03em;' +
+        'color:rgba(255,255,255,0.45);text-shadow:0 1px 2px rgba(0,0,0,0.55);' +
+        'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;z-index:60;';
+      poster.appendChild(d);
+    }
+    var dt = _psAsof;
+    if (!dt) { var nn = new Date(); dt = ('0' + nn.getDate()).slice(-2) + '.' + ('0' + (nn.getMonth() + 1)).slice(-2) + '.' + nn.getFullYear(); }
+    d.textContent = (Pk.trust || 'Метрики подтверждены ForgeMetrics · живая карточка по QR') + ' · ' + dt;
+  }
   function _psApplyNiche() {
     if (!_psNiche || !el('nicheEl')) return;
     var v = (_psLang !== 'ru' && _psNiche.tr && _psNiche.tr[_psLang]) ? _psNiche.tr[_psLang] : _psNiche.raw;
@@ -65,6 +87,7 @@
     var hk = el('hookText'), hin = el('hookInp');
     if (hk && P.hook && (!hin || !String(hin.value || '').trim())) hk.textContent = P.hook;
     _psApplyNiche();
+    _psProofLine();
     _psLocalizePrice();
   }
   function _psLocalizePrice() {
@@ -278,6 +301,16 @@
   window.__fmxPosterInit = function (data, api) {
     if (api != null) API = api;
     data = data || {};
+    _psAsof = data.asof || null;
+    /* нижний блок (цена+CTA+QR) приподнят, под ним — строка-пруф; transform не трогает
+       relayout-плотности макета, в плотных состояниях подъём меньше, чтобы не наехать на метрики */
+    if (!el('fmx-mkt2')) {
+      var ms = document.createElement('style'); ms.id = 'fmx-mkt2';
+      ms.textContent = '#poster .price{transform:translateY(-8px);}' +
+        '#poster.d2 .price,#poster.d3 .price,#poster.d4 .price{transform:translateY(-5px);}' +
+        '#qrChips .chip[data-qr="channel"],#qrChips .chip[data-qr="both"]{display:none;}';
+      document.head.appendChild(ms);
+    }
     // QR: подпись не должна быть шире самого QR (иначе белый блок растягивается — было видно на @ForgeMetricsBot)
     if (!el('fmx-qr-fix')) {
       var qs = document.createElement('style'); qs.id = 'fmx-qr-fix';
@@ -319,9 +352,11 @@
     // QR-ссылки (глобальные var макета) + перерисовка текущего режима
     _uname = (data.username || '').replace(/^@/, '');
     if (_uname) window.QR_CHANNEL_URL = 'https://t.me/' + _uname;
-    if (data.id) window.QR_CARD_URL = 'https://t.me/ForgeMetricsBot?startapp=card_' + data.id;
+    if (data.id) window.QR_CARD_URL = 'https://t.me/ForgeMetricsBot?startapp=card_' + data.id + (data.ref_code ? '_r_' + data.ref_code : '');
     var qrOn = document.querySelector('#qrChips .chip.on');
-    renderQrsSafe(qrOn ? qrOn.getAttribute('data-qr') : 'both');
+    var qmode = _psQr(qrOn ? qrOn.getAttribute('data-qr') : 'card');
+    document.querySelectorAll('#qrChips .chip').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-qr') === qmode); });
+    renderQrsSafe(qmode);
     // держим подпись QR канала верной и когда пользователь сам переключает режим в панели
     var qc = el('qrChips');
     if (qc && !qc.__fmxRelabel) { qc.__fmxRelabel = 1; qc.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('.chip') : null; if (b) setTimeout(function () { relabelQr(b.getAttribute('data-qr')); }, 0); }); }
@@ -493,7 +528,7 @@
       val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,
       fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 40) : ''  // формат размещения (необязательно)
     };
-    var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = qrOn ? qrOn.getAttribute('data-qr') : 'both';
+    var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = _psQr(qrOn ? qrOn.getAttribute('data-qr') : 'card');
     st.hook = el('hookInp') ? el('hookInp').value : '';
     // метрики: видимые (не hide и есть данные)
     st.metrics = {};
@@ -573,7 +608,7 @@
       if (el('prFmtInp')) { el('prFmtInp').value = state.price.fmt || ''; try { el('prFmtInp').dispatchEvent(new Event('input')); } catch (e) {} }
     }
     // QR
-    if (state.qr) { document.querySelectorAll('#qrChips .chip').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-qr') === state.qr); }); renderQrsSafe(state.qr); }
+    if (state.qr) { var q2 = _psQr(state.qr); document.querySelectorAll('#qrChips .chip').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-qr') === q2); }); renderQrsSafe(q2); }
     // текст
     if (state.hook != null) { if (el('hookInp')) el('hookInp').value = state.hook; if (el('hookText')) el('hookText').textContent = state.hook.trim() ? state.hook : (window.DEFAULT_HOOK || el('hookText').textContent); }
     // порядок блоков
@@ -874,21 +909,6 @@
     });
   };
 
-  /* Виральный след Free-постера (батч C): деликатная реф-строка внизу. Рисуется ТОЛЬКО когда
-     бэкенд прислал data.ref_line (Free-тариф); платные постеры — без знака. Эталон постера
-     не трогаем — элемент добавляет glue-слой поверх. */
-  function _psRefLine(text) {
-    var poster = el('poster');
-    if (!poster || poster.querySelector('.ps-refline')) return;
-    var d = document.createElement('div');
-    d.className = 'ps-refline';
-    d.textContent = text;
-    d.style.cssText = 'position:absolute;left:0;right:0;bottom:6px;text-align:center;' +
-      'font:600 10.5px Inter,Arial,sans-serif;letter-spacing:.04em;color:rgba(255,255,255,0.5);' +
-      'text-shadow:0 1px 2px rgba(0,0,0,0.55);pointer-events:none;z-index:60;';
-    poster.appendChild(d);
-  }
-
   /* серверная точка входа: данные + состояние + режим рендера + сигнал готовности */
   window.__fmxPosterRender = function (data, state, api, opts) {
     opts = opts || {};
@@ -897,7 +917,6 @@
       if (state) window.__fmxPosterApply(state);
       if (opts.video) { window.__fmxPosterRenderMode(); window.__fmxPosterVideoMode(); }
       else if (opts.render) window.__fmxPosterRenderMode();
-      if (data && data.ref_line) _psRefLine(data.ref_line);
     } catch (e) { if (window.console) console.error('poster render glue error', e); }
     var poster = el('poster');
     var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();

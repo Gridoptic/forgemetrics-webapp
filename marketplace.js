@@ -21,7 +21,9 @@
         return '<span class="fmx-aud" style="color:' + c + ';border-color:' + c + '55;background:' + c + '1a;"><i class="ti ' + _audIcon(a) + '"></i>' + t + '</span>';
     }
     var _feedTotal = 0, _feedOffset = 0, _FEED_PAGE = 30;
-    var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var m = sp && /^card_(\d+)$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
+    /* деп-линк карточки; необязательный суффикс _r_<код> — рефка владельца постера, вшитая в QR
+       (атрибуцию делает бэкенд из подписанного initData, фронту нужен только id карточки) */
+    var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var m = sp && /^card_(\d+)(?:_r_[A-Za-z0-9_-]+)?$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
     if (_deepCard) {
         /* пришли по ссылке на карточку: сами открываем Площадку, карточка развернётся после загрузки ленты */
         var _deepTry = 0;
@@ -3344,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260713g';
+    var PS_GLUE_V = '20260713h';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3459,7 +3461,7 @@
         function posterData() {
             return {
                 id: base.id, username: base.username, title: base.title, niche: realNiche || extra.niche || '',
-                niche_tr: extra.niche_tr || null,
+                niche_tr: extra.niche_tr || null, ref_code: extra.ref_code || null,
                 avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
                 er: base.er, min_price: minPrice,
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
@@ -3513,7 +3515,7 @@
             } catch (e) { toast('Редактор недоступен'); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok };
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, ref_code: r.ref_code || null };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
         // стикер-пак пользователя (до 30 из бота) — грузим для редактора
