@@ -546,6 +546,13 @@
       document.head.appendChild(st);
     }
     var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = 'Редактор макета';
+    // зачем баннер и QR: пояснение в шапке пульта (вердикт 14.07); переводится словарём приложения
+    if (h2 && !el('fmx-ed-why')) {
+      var why = document.createElement('div'); why.id = 'fmx-ed-why';
+      why.textContent = 'Баннер — готовый рекламный креатив твоего канала. Рассылай и размещай его там, где есть рекламодатели: админ-чаты и биржи размещений, форумы, каталоги каналов, сторис соцсетей, личные предложения. QR ведёт на живую карточку канала — рекламодатель сканирует, проверяет метрики и бронирует размещение без лишней переписки. В QR вшита твоя реферальная ссылка: все, кто пришёл с баннера, закрепляются за тобой.';
+      why.style.cssText = 'margin:6px 0 10px;font-size:11.5px;line-height:1.45;color:#8d93a8;';
+      h2.parentNode.insertBefore(why, h2.nextSibling);
+    }
     // кнопка «Сбросить настройки» прямо под постером
     if (opts.defaultState && !el('fmx-ed-reset')) {
       var poster = el('poster');
