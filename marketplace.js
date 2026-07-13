@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714k';
+    var PS_GLUE_V = '20260714l';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3482,6 +3482,11 @@
             peek.bd.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:89;';
             document.body.appendChild(peek.bd);
             peek.saved = prev.getAttribute('style') || '';
+            /* backdrop-filter шапки делает её containing block для position:fixed —
+               раскрытое превью центрировалось по шапке и уезжало верхом за экран.
+               На время peek отключаем размытие (под подложкой его не видно). */
+            peek.dockBF = [dock.style.backdropFilter, dock.style.webkitBackdropFilter];
+            dock.style.backdropFilter = 'none'; dock.style.webkitBackdropFilter = 'none';
             var vw = window.innerWidth || 360, vh = window.innerHeight || 640;
             var w = Math.min(vw * 0.92, (vh * 0.86) * (540 / 675), 460);
             var sc = w / 540;
@@ -3496,6 +3501,7 @@
             if (!peek.on) return;
             peek.on = false;
             if (peek.bd) { try { peek.bd.remove(); } catch (e) {} peek.bd = null; }
+            if (peek.dockBF) { dock.style.backdropFilter = peek.dockBF[0] || ''; dock.style.webkitBackdropFilter = peek.dockBF[1] || ''; peek.dockBF = null; }
             prev.setAttribute('style', peek.saved || '');
             if (mini) mini.style.transform = '';
         }
