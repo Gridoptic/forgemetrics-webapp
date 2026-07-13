@@ -105,7 +105,7 @@
       if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;   // n = 0
       else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));  // «Реклама от NNN ₽» → префикс на языке, число как есть
       var nt = pv.textContent || '';
-      pv.style.fontSize = nt.length > 16 ? '19px' : '';   // авто-ужатие как в макете
+      pv.style.fontSize = nt.length > 16 ? '22px' : '';   // авто-ужатие длинных цен (укрупнено 13.07: базовый 26px)
     }
     var ps = el('prSub');
     var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
@@ -118,12 +118,12 @@
     if (box && pv) {
       if (_psLang === 'ru') {
         box.style.width = '';
-        pv.style.fontSize = (pv.textContent || '').length > 16 ? '19px' : '';
+        pv.style.fontSize = (pv.textContent || '').length > 16 ? '22px' : '';
       } else {
         var trVal = pv.textContent, trValFs = pv.style.fontSize;
         var trSub = ps ? ps.textContent : null;
         pv.textContent = ruVal || trVal;
-        pv.style.fontSize = (ruVal && ruVal.length > 16) ? '19px' : '';
+        pv.style.fontSize = (ruVal && ruVal.length > 16) ? '22px' : '';
         if (ps && !fmtv) ps.textContent = 'минимальный формат размещения';
         box.style.width = '';
         var ruW = box.offsetWidth;                       // эталонная ширина с русским текстом
@@ -296,7 +296,32 @@
     // и постер попутно рекламирует площадку. Смысл действия даёт «Забронировать ↓» над QR
     if (cardIdx >= 0 && spans[cardIdx]) spans[cardIdx].textContent = '@ForgeMetricsBot';
   }
-  function renderQrsSafe(mode) { if (typeof window.renderQrs === 'function') { window.renderQrs(mode); relabelQr(mode); } }
+  /* Укрупнённый QR (заказ владельца 13.07): эталонный qrTile рисует 80px (сетка 160);
+     перекрываем глобал копией с дисплеем 104px и сеткой 256 — renderQrs эталона подхватит
+     нашу версию при вызове (глобальный лукап по имени). Логика 1:1 с эталоном. */
+  function _fmxQrTileBig(url, label) {
+    var q = qrcode(0, 'M'); q.addData(url); q.make();
+    var n = q.getModuleCount(), TARGET = 256;
+    var cell = Math.max(2, Math.floor(TARGET / (n + 4)));
+    var size = cell * n;
+    var off = Math.floor((TARGET - size) / 4) * 2;
+    var c = document.createElement('canvas'); c.width = TARGET; c.height = TARGET;
+    c.style.width = '104px'; c.style.height = '104px';
+    var x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, TARGET, TARGET);
+    x.fillStyle = '#0a0d18';
+    for (var r = 0; r < n; r++) for (var col = 0; col < n; col++) {
+      if (q.isDark(r, col)) x.fillRect(off + col * cell, off + r * cell, cell, cell);
+    }
+    var d = document.createElement('div'); d.className = 'qrt';
+    d.appendChild(c);
+    var sp = document.createElement('span'); sp.textContent = label; d.appendChild(sp);
+    return d;
+  }
+  function renderQrsSafe(mode) {
+    if (typeof window.qrTile === 'function' && window.qrTile !== _fmxQrTileBig) window.qrTile = _fmxQrTileBig;
+    if (typeof window.renderQrs === 'function') { window.renderQrs(mode); relabelQr(mode); }
+  }
 
   window.__fmxPosterInit = function (data, api) {
     if (api != null) API = api;
@@ -308,15 +333,22 @@
       var ms = document.createElement('style'); ms.id = 'fmx-mkt2';
       ms.textContent = '#poster .price{transform:translateY(-8px);}' +
         '#poster.d2 .price,#poster.d3 .price,#poster.d4 .price{transform:translateY(-5px);}' +
-        '#qrChips .chip[data-qr="channel"],#qrChips .chip[data-qr="both"]{display:none;}';
+        '#qrChips .chip[data-qr="channel"],#qrChips .chip[data-qr="both"]{display:none;}' +
+        /* укрупнение нижнего ряда: кнопка цены и CTA (без !important на font-size значения —
+           авто-ужатие длинных цен инлайн-стилем должно продолжать побеждать) */
+        '#poster .pr{padding:16px 24px;border-radius:18px;}' +
+        '#poster .prv{font-size:26px;}' +
+        '#poster .prsub{font-size:12px;max-width:240px;}' +
+        '#poster .cta{font-size:13.5px;}' +
+        '#poster.d2 .cta{font-size:12px;}#poster.d3 .cta{font-size:10.5px;}';
       document.head.appendChild(ms);
     }
     // QR: подпись не должна быть шире самого QR (иначе белый блок растягивается — было видно на @ForgeMetricsBot)
     if (!el('fmx-qr-fix')) {
       var qs = document.createElement('style'); qs.id = 'fmx-qr-fix';
       // блоки QR одинаковой ширины (по QR ~80px), подпись мельче — чтобы «@ForgeMetricsBot» влезал целиком и блок не растягивался
-      qs.textContent = '#qrs .qrt{width:92px !important;box-sizing:border-box !important;}' +
-        '#qrs .qrt span{max-width:86px !important;font-size:7px !important;letter-spacing:0.1px !important;}';
+      qs.textContent = '#qrs .qrt{width:118px !important;box-sizing:border-box !important;}' +
+        '#qrs .qrt span{max-width:112px !important;font-size:8.5px !important;letter-spacing:0.1px !important;}';
       document.head.appendChild(qs);
     }
     var titleTxt = data.title || data.username || 'Канал';
