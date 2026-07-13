@@ -1215,43 +1215,29 @@ function tfPlanCard(plan, d) {
 
 const tfReduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-// Плавный разворот: анимируем реальную высоту (0↔контент) через Web Animations API.
-// height, а не max-height — нет «раннего финиша»; в покое height:auto, значит контент не обрезается.
-// toggle(open) переключает класс покоя владельца ДО замера цели — старт меряем до переключения.
-function animOpen(bodyEl, toggle, open) {
-    if (!bodyEl) { toggle(open); return; }
-    if (bodyEl._a) { bodyEl._a.cancel(); bodyEl._a = null; }
-    const start = bodyEl.getBoundingClientRect().height;
-    toggle(open);
-    if (tfReduceMotion || typeof bodyEl.animate !== 'function') { bodyEl.style.height = ''; return; }
-    const end = open ? bodyEl.scrollHeight : 0;
-    bodyEl.style.height = start + 'px';
-    void bodyEl.getBoundingClientRect();
-    const a = bodyEl.animate([{ height: start + 'px' }, { height: end + 'px' }],
-        { duration: 260, easing: 'cubic-bezier(.33,0,.2,1)' });
-    bodyEl._a = a;
-    const done = () => { if (bodyEl._a === a) { bodyEl.style.height = ''; bodyEl._a = null; } };
-    a.onfinish = done; a.oncancel = done;
-}
-
-// FLIP-разворот карточки тарифа (fix подлагивания): анимация высоты заставляла браузер
-// пересчитывать геометрию ВСЕЙ страницы и перерисовывать тени/градиенты карточек 60 раз/сек —
-// на телефонных WebView это дёргалось. Теперь высота меняется мгновенно (один пересчёт),
-// а видимое движение — только transform у элементов ниже (GPU-композитор, без пересчёта
-// и без перерисовки); контент проявляется прозрачностью через CSS (.tp-in).
-function tfAnimateCard(card, open) {
-    const toggle = (o) => card.classList.toggle('open', o);
-    if (tfReduceMotion || typeof card.animate !== 'function') { toggle(open); return; }
-    const run = () => {
-        const sibs = [];
+// FLIP-раскрытие (fix подлагивания): анимация высоты заставляла браузер пересчитывать
+// геометрию ВСЕЙ страницы и перерисовывать тени/градиенты 60 раз/сек — на телефонных
+// WebView это дёргалось. Теперь высота меняется мгновенно (один пересчёт), а видимое
+// движение — только transform у элементов ниже (GPU-композитор, без пересчёта и без
+// перерисовки); контент проявляется прозрачностью через CSS. Соседи собираются на всех
+// уровнях вложенности до контейнера экрана: строки внутри блока И следующие блоки целиком.
+function flipToggle(owner, toggle, open, fadeSel) {
+    if (tfReduceMotion || typeof owner.animate !== 'function') { toggle(open); return; }
+    const movers = [];
+    let node = owner;
+    while (node && node.parentElement && node.id !== 'tariffs-body') {
         let seen = false;
-        Array.from(card.parentElement.children).forEach((el) => {
-            if (el === card) { seen = true; return; }
-            if (seen) sibs.push(el);
+        Array.from(node.parentElement.children).forEach((el) => {
+            if (el === node) { seen = true; return; }
+            if (seen) movers.push(el);
         });
-        const tops = sibs.map((el) => el.getBoundingClientRect().top);
+        node = node.parentElement;
+        if (node && node.id === 'tariffs-body') break;
+    }
+    const run = () => {
+        const tops = movers.map((el) => el.getBoundingClientRect().top);
         toggle(open);
-        sibs.forEach((el, i) => {
+        movers.forEach((el, i) => {
             const d = tops[i] - el.getBoundingClientRect().top;
             if (Math.abs(d) < 1) return;
             if (el._fa) el._fa.cancel();
@@ -1266,11 +1252,15 @@ function tfAnimateCard(card, open) {
     };
     if (open) { run(); return; }
     // закрытие: сначала гасим контент (120 мс), потом схлопываем и съезжаем — без скачка исчезновения
-    const tin = card.querySelector('.tp-in');
-    if (!tin) { run(); return; }
-    tin.style.transition = 'opacity .12s ease';
-    tin.style.opacity = '0';
-    setTimeout(() => { run(); tin.style.transition = ''; tin.style.opacity = ''; }, 120);
+    const fade = fadeSel ? owner.querySelector(fadeSel) : null;
+    if (!fade) { run(); return; }
+    fade.style.transition = 'opacity .12s ease';
+    fade.style.opacity = '0';
+    setTimeout(() => { run(); fade.style.transition = ''; fade.style.opacity = ''; }, 120);
+}
+
+function tfAnimateCard(card, open) {
+    flipToggle(card, (o) => card.classList.toggle('open', o), open, '.tp-in');
 }
 
 function tfErow(e, bookedExtras) {
@@ -1324,7 +1314,7 @@ function renderTariffs(d) {
         if (!row) return;
         hapticLight();
         const open = !row.classList.contains('open');
-        animOpen(row.querySelector('.tf-ex'), (o) => row.classList.toggle('open', o), open);
+        flipToggle(row, (o) => row.classList.toggle('open', o), open, '.tf-exin');
     }));
     // бронь допа/промо: тап — забронировать, повторный — снять; строка не сворачивается
     body.querySelectorAll('[data-bex]').forEach((btn) => btn.addEventListener('click', async (ev) => {
