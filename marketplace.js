@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714l';
+    var PS_GLUE_V = '20260714m';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3370,6 +3370,7 @@
             '.fmx-dkNav{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-content:center;min-width:0;}' +
             '.fmx-dkChip{font-size:11.5px;font-weight:600;color:#a7aec6;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;}' +
             '.fmx-dkChip.on{color:#8b8ff8;background:rgba(129,140,248,0.13);border-color:rgba(129,140,248,0.42);}' +
+            '.fmx-dkHint{max-width:560px;margin:6px auto 0;font-size:10.5px;color:#7c86a3;text-align:center;letter-spacing:0.2px;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             /* модалка выбора формата отправки (живой постер) */
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
@@ -3469,6 +3470,11 @@
             });
             nav.appendChild(a);
         });
+        // подсказка о жесте — прямо в доке (вердикт 14.07): люди не догадаются сами
+        var dkHint = document.createElement('div');
+        dkHint.className = 'fmx-dkHint';
+        dkHint.textContent = env.tr('Зажми превью — развернётся на весь экран · быстрый тап — к постеру');
+        dock.appendChild(dkHint);
         /* peek-жест (идея владельца 14.07): зажатие (>=260мс) — превью раскрывается почти на весь
            экран, отпускание — сворачивается; быстрый тап — прокрутка к началу. iframe НЕ переносим
            по DOM (это перезагрузило бы его) — растягиваем контейнер и масштабируем содержимое. */
