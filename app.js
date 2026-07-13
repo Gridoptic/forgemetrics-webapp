@@ -1238,11 +1238,19 @@ function tfAnimateCard(card, open) {
     animOpen(card.querySelector('.tp-body'), (o) => card.classList.toggle('open', o), open);
 }
 
-function tfErow(e) {
+function tfErow(e, bookedExtras) {
     const hasEx = !!e.explain;
     const chev = hasEx ? '<i class="ti ti-chevron-down tf-exchev"></i>' : '';
-    const ex = hasEx ? `<div class="tf-ex"><div class="tf-exin">${escapeHtml(e.explain)}</div></div>` : '';
-    return `<div class="tf-erow${hasEx ? ' tap' : ''}"><div class="tf-erow-h"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
+    const isBooked = !!(e.key && (bookedExtras || []).includes(e.key));
+    // бронь допа (лист ожидания до оплаты): кнопка внутри раскрытой строки, тап повторно — снять
+    const cta = e.key
+        ? (isBooked
+            ? `<button class="tf-excta done" data-bex="${escapeHtml(e.key)}"><i class="ti ti-circle-check"></i> Забронировано · уведомим при запуске</button>`
+            : `<button class="tf-excta" data-bex="${escapeHtml(e.key)}"><i class="ti ti-bookmark"></i> Забронировать — уведомим при запуске</button>`)
+        : '';
+    const bookedDot = isBooked ? '<i class="ti ti-circle-check" style="color:#34d399;margin-right:5px;"></i>' : '';
+    const ex = hasEx ? `<div class="tf-ex"><div class="tf-exin">${escapeHtml(e.explain)}${cta}</div></div>` : '';
+    return `<div class="tf-erow${hasEx ? ' tap' : ''}${isBooked ? ' booked' : ''}"><div class="tf-erow-h"><span class="l">${bookedDot}${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
 }
 
 function renderTariffs(d) {
@@ -1255,9 +1263,10 @@ function renderTariffs(d) {
     if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
     if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
-    const extras = (d.extras || []).map(tfErow).join('');
+    const bx = d.booked_extras || [];
+    const extras = (d.extras || []).map((e) => tfErow(e, bx)).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
-    const promos = (d.promotions || []).map(tfErow).join('');
+    const promos = (d.promotions || []).map((e) => tfErow(e, bx)).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
     html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
     body.innerHTML = html;
@@ -1281,6 +1290,33 @@ function renderTariffs(d) {
         hapticLight();
         const open = !row.classList.contains('open');
         animOpen(row.querySelector('.tf-ex'), (o) => row.classList.toggle('open', o), open);
+    }));
+    // бронь допа/промо: тап — забронировать, повторный — снять; строка не сворачивается
+    body.querySelectorAll('[data-bex]').forEach((btn) => btn.addEventListener('click', async (ev) => {
+        ev.stopPropagation();
+        const key = btn.getAttribute('data-bex');
+        hapticMed();
+        btn.disabled = true;
+        try {
+            const r = await apiRequest('/api/v1/user/book-extra', { method: 'POST', body: JSON.stringify({ key }) });
+            if (r && r.ok) {
+                tariffsData.booked_extras = (tariffsData.booked_extras || []).filter((k) => k !== key);
+                if (r.booked) tariffsData.booked_extras.push(key);
+                const row = btn.closest('.tf-erow');
+                row.classList.toggle('booked', !!r.booked);
+                const dotHost = row.querySelector('.tf-erow-h .l');
+                const oldDot = dotHost.querySelector('.ti-circle-check');
+                if (r.booked && !oldDot) dotHost.insertAdjacentHTML('afterbegin', '<i class="ti ti-circle-check" style="color:#34d399;margin-right:5px;"></i>');
+                if (!r.booked && oldDot) oldDot.remove();
+                btn.classList.toggle('done', !!r.booked);
+                btn.innerHTML = r.booked
+                    ? '<i class="ti ti-circle-check"></i> Забронировано · уведомим при запуске'
+                    : '<i class="ti ti-bookmark"></i> Забронировать — уведомим при запуске';
+                localizeTree(btn);
+                cabToast(r.booked ? 'Пакет забронирован — уведомим при запуске' : 'Бронь снята');
+            } else cabToast('Не удалось забронировать');
+        } catch (e) { cabToast('Не удалось забронировать'); }
+        btn.disabled = false;
     }));
     body.querySelectorAll('[data-book]').forEach((btn) => {
         if (btn.classList.contains('cur')) return;
