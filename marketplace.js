@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714m';
+    var PS_GLUE_V = '20260714n';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3463,8 +3463,14 @@
                     var idoc = env.frame.contentDocument;
                     var t = idoc.getElementById(nv[0]); if (!t) return;
                     var sec = (t.closest && t.closest('.fmx-sec')) || t;
-                    var y = (sec.getBoundingClientRect().top - idoc.body.getBoundingClientRect().top) * env.getK();
-                    env.scroll.scrollTo({ top: env.wrap.offsetTop + y - dock.offsetHeight - 8, behavior: 'smooth' });
+                    var body = idoc.body.getBoundingClientRect();
+                    /* якорим НИЖНЮЮ границу предыдущего блока к низу шапки (вердикт 14.07):
+                       целевой блок виден целиком — с зазором, рамкой и названием */
+                    var prevEl = sec.previousElementSibling;
+                    var yTop = prevEl
+                        ? (prevEl.getBoundingClientRect().bottom - body.top)
+                        : (sec.getBoundingClientRect().top - body.top - 12);
+                    env.scroll.scrollTo({ top: env.wrap.offsetTop + yTop * env.getK() - dock.offsetHeight, behavior: 'smooth' });
                     nav.querySelectorAll('.fmx-dkChip').forEach(function (x) { x.classList.toggle('on', x === a); });
                 } catch (e) {}
             });
