@@ -1446,12 +1446,19 @@ function resetPostState() {
     state.post.suggestions = [];
     state.post.isGood = false;
     state.post.pendingInstruction = null;
+    state.post.length = 'auto';
+    state.post.emoji = 'auto';
+    state.post.styleUserChoice = null; // null = юзер ещё не трогал тумблер стиля
+    state.post.lastStyleApplied = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
     if (els.postStyleInput) els.postStyleInput.value = '';
     if (els.postTopicCounter) els.postTopicCounter.textContent = '0';
     if (els.postStyleCounter) els.postStyleCounter.textContent = '0';
-    if (els.postProfanityToggle) els.postProfanityToggle.dataset.active = 'false';
+    setProfanity(false);
+    setChipGroup('post-length-chips', 'auto');
+    setChipGroup('post-emoji-chips', 'auto');
+    hideTopicIdeas();
     if (els.postStyleInputWrapper) els.postStyleInputWrapper.style.display = 'none';
     if (els.postGenerateBtn) els.postGenerateBtn.disabled = true;
     if (els.postQuestionCustomInput) els.postQuestionCustomInput.value = '';
@@ -1467,9 +1474,11 @@ async function openPostCreate() {
     resetPostState();
     showScreen('postCreate');
 
-    if (els.postLimitText) els.postLimitText.textContent = 'Загружаю лимиты...';
+    // баннер лимитов перерисовывается через innerHTML — исходный #post-limit-text после
+    // первого рендера отсоединён, поэтому статусы пишем прямо в баннер
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
+        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Загружаю лимиты...</span>';
     }
 
     state.post.useChannelStyle = true;
@@ -1485,6 +1494,8 @@ async function openPostCreate() {
         state.post.limits = limits;
         renderLimitBanner(limits);
         updateStyleHint(limits);
+        setProfanity(!!limits.profanity_default);
+        updateLengthAutoNote(limits.style_profile);
 
         if (activeData) {
             const activeCh = (activeData.channels || []).find(c => c.id === activeData.active_channel_id);
@@ -1493,9 +1504,112 @@ async function openPostCreate() {
         }
     } catch (err) {
         console.error('Failed to load limits/channel:', err);
-        if (els.postLimitText) els.postLimitText.textContent = 'Не удалось загрузить лимиты';
-        if (els.postLimitBanner) els.postLimitBanner.classList.add('exhausted');
+        if (els.postLimitBanner) {
+            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Не удалось загрузить лимиты</span>';
+            els.postLimitBanner.classList.add('exhausted');
+        }
     }
+}
+
+
+// Подпись у «Авто»-длины: показываем, что длина возьмётся из канала
+function updateLengthAutoNote(styleProfile) {
+    const note = document.getElementById('post-length-note');
+    if (!note) return;
+    if (styleProfile && styleProfile.median_chars) {
+        note.textContent = `Авто — как в канале (~${styleProfile.median_chars} знаков)`;
+        note.style.display = state.post.length === 'auto' ? '' : 'none';
+    } else {
+        note.textContent = '';
+        note.style.display = 'none';
+    }
+}
+
+
+function setChipGroup(groupId, value) {
+    const group = document.getElementById(groupId);
+    if (!group) return;
+    group.querySelectorAll('.post-chip').forEach(ch => {
+        ch.classList.toggle('on', ch.dataset.val === value);
+    });
+}
+
+
+function setProfanity(on) {
+    state.post.useProfanity = !!on;
+    if (els.postProfanityToggle) {
+        els.postProfanityToggle.classList.toggle('on', !!on);
+        els.postProfanityToggle.dataset.active = String(!!on);
+    }
+}
+
+
+// ===== Идеи тем следующего поста =====
+
+function hideTopicIdeas() {
+    const list = document.getElementById('post-ideas-list');
+    if (list) { list.style.display = 'none'; list.innerHTML = ''; }
+    const btn = document.getElementById('post-ideas-btn');
+    if (btn) btn.classList.remove('loading');
+}
+
+async function loadTopicIdeas() {
+    const btn = document.getElementById('post-ideas-btn');
+    const list = document.getElementById('post-ideas-list');
+    if (!btn || !list) return;
+    if (btn.classList.contains('loading')) return;
+
+    if (list.style.display !== 'none' && list.children.length > 0) {
+        hideTopicIdeas();
+        return;
+    }
+
+    btn.classList.add('loading');
+    const iconEl = btn.querySelector('i');
+    if (iconEl) iconEl.className = 'ti ti-loader-2 spin';
+    try {
+        const result = await apiRequest('/api/v1/post/ideas', {
+            method: 'POST',
+            body: JSON.stringify({}),
+        });
+        renderTopicIdeas(result.ideas || []);
+    } catch (err) {
+        console.warn('Ideas failed:', err);
+        showToast('Не удалось получить идеи — попробуй ещё раз', 'alert-triangle');
+    } finally {
+        btn.classList.remove('loading');
+        if (iconEl) iconEl.className = 'ti ti-bulb';
+    }
+}
+
+function renderTopicIdeas(ideas) {
+    const list = document.getElementById('post-ideas-list');
+    if (!list) return;
+    if (!ideas.length) {
+        showToast('Не удалось получить идеи — попробуй ещё раз', 'alert-triangle');
+        return;
+    }
+    list.innerHTML = '';
+    ideas.forEach(idea => {
+        const card = document.createElement('button');
+        card.className = 'post-idea-card';
+        card.innerHTML = `
+            <span class="post-idea-title">${escapeHtml(idea.title || '')}</span>
+            ${idea.hint ? `<span class="post-idea-hint">${escapeHtml(idea.hint)}</span>` : ''}
+            <i class="ti ti-arrow-up-left post-idea-use"></i>
+        `;
+        card.addEventListener('click', () => {
+            const topicText = idea.hint ? `${idea.title}. ${idea.hint}` : (idea.title || '');
+            if (els.postTopicInput) {
+                els.postTopicInput.value = topicText.slice(0, 500);
+                els.postTopicInput.dispatchEvent(new Event('input'));
+            }
+            hideTopicIdeas();
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged?.();
+        });
+        list.appendChild(card);
+    });
+    list.style.display = '';
 }
 
 
@@ -1615,8 +1729,17 @@ function renderStyleToggle(canEnable, defaultOn) {
         container.insertAdjacentElement('afterend', toggle);
     }
 
-    const enabled = canEnable && (state.post.useChannelStyle !== false) && defaultOn;
-    state.post.useChannelStyle = enabled;
+    // ФИКС 13.07: плейсхолдер-рендер (canEnable=false, пока канал грузится) раньше
+    // ЗАПИСЫВАЛ useChannelStyle=false — тумблер навсегда открывался выключенным и стиль
+    // канала в генерацию не уходил. Теперь состояние пишем только когда стиль доступен,
+    // а выбор пользователя храним отдельно (styleUserChoice) и уважаем его.
+    let enabled = false;
+    if (canEnable) {
+        enabled = (state.post.styleUserChoice === null || state.post.styleUserChoice === undefined)
+            ? !!defaultOn
+            : !!state.post.styleUserChoice;
+        state.post.useChannelStyle = enabled;
+    }
 
     toggle.innerHTML = `
         <div class="post-style-toggle ${canEnable ? '' : 'disabled'}">
@@ -1628,13 +1751,15 @@ function renderStyleToggle(canEnable, defaultOn) {
         </div>
     `;
 
+    const row = toggle.querySelector('.post-style-toggle');
     const btn = toggle.querySelector('#post-style-toggle-btn');
-    if (btn && canEnable) {
-        btn.addEventListener('click', () => {
-            const isOn = btn.classList.contains('on');
-            const newVal = !isOn;
+    if (row && btn && canEnable) {
+        // тап-зона — вся строка, не только пипка 30px
+        row.addEventListener('click', () => {
+            const newVal = !btn.classList.contains('on');
+            state.post.styleUserChoice = newVal;
             state.post.useChannelStyle = newVal;
-            if (newVal) btn.classList.add('on'); else btn.classList.remove('on');
+            btn.classList.toggle('on', newVal);
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
         });
     }
@@ -1731,9 +1856,7 @@ function updateStyleHint(limits) {
 
 
 function toggleProfanity() {
-    const cur = els.postProfanityToggle.dataset.active === 'true';
-    els.postProfanityToggle.dataset.active = String(!cur);
-    state.post.useProfanity = !cur;
+    setProfanity(!state.post.useProfanity);
     if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged?.();
 }
 
@@ -3785,11 +3908,14 @@ async function runGenerate() {
                 use_channel_style: state.post.useChannelStyle !== false,
                 context_history: state.post.contextHistory,
                 style_reference_text: state.post.styleReferenceText || null,
+                length: state.post.length || 'auto',
+                emoji: state.post.emoji || 'auto',
             }),
         });
 
         state.post.currentPostId = result.post_id;
         state.post.currentPostText = result.text;
+        state.post.lastStyleApplied = !!(result.style_applied ?? result.has_voice);
 
         stopThinkingAnimation();
         renderResult(result);
@@ -3805,6 +3931,16 @@ async function runGenerate() {
 function renderResult(result) {
     els.postResultText.textContent = result.text;
     els.postResultModel.textContent = result.model_used || 'Модель';
+
+    // честный индикатор: применялся ли стиль канала к этому тексту
+    const styleBadge = document.getElementById('post-result-style');
+    if (styleBadge) {
+        const applied = (result.style_applied !== undefined)
+            ? !!result.style_applied
+            : !!state.post.lastStyleApplied;
+        styleBadge.style.display = applied ? '' : 'none';
+    }
+
     els.postResultSuggestions.style.display = 'none';
     els.postResultSuggestionsList.innerHTML = '';
     els.postResultCustomInput.value = '';
@@ -3976,7 +4112,8 @@ function regeneratePost() {
         return;
     }
 
-    state.post.contextHistory = [];
+    // contextHistory сохраняем: ответы на уточняющие вопросы — часть задания,
+    // перегенерация не должна их выбрасывать
     showScreen('postThinking');
     startThinkingAnimation(THINKING_TEXTS_GENERATE);
     runGenerate();
@@ -4133,8 +4270,38 @@ function setupPostEventListeners() {
         });
     }
 
-    if (els.postProfanityToggle) {
-        els.postProfanityToggle.addEventListener('click', toggleProfanity);
+    // тап-зона мата — вся строка настройки, не только переключатель
+    const profanityRow = document.getElementById('post-profanity-row');
+    if (profanityRow) {
+        profanityRow.addEventListener('click', toggleProfanity);
+    }
+
+    const lengthChips = document.getElementById('post-length-chips');
+    if (lengthChips) {
+        lengthChips.addEventListener('click', (ev) => {
+            const chip = ev.target.closest('.post-chip');
+            if (!chip) return;
+            state.post.length = chip.dataset.val || 'auto';
+            setChipGroup('post-length-chips', state.post.length);
+            updateLengthAutoNote(state.post.limits?.style_profile);
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged?.();
+        });
+    }
+
+    const emojiChips = document.getElementById('post-emoji-chips');
+    if (emojiChips) {
+        emojiChips.addEventListener('click', (ev) => {
+            const chip = ev.target.closest('.post-chip');
+            if (!chip) return;
+            state.post.emoji = chip.dataset.val || 'auto';
+            setChipGroup('post-emoji-chips', state.post.emoji);
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged?.();
+        });
+    }
+
+    const ideasBtn = document.getElementById('post-ideas-btn');
+    if (ideasBtn) {
+        ideasBtn.addEventListener('click', loadTopicIdeas);
     }
 
     if (els.postStyleLoadBtn) {

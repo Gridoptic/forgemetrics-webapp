@@ -7,7 +7,7 @@
     <title>ForgeMetrics</title>
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css?v=20260713c">
+    <link rel="stylesheet" href="styles.css?v=20260713d">
     <link rel="stylesheet" href="audit.css?v=20260704f">
     <link rel="stylesheet" href="competitors.css?v=20260704f">
     <link rel="stylesheet" href="ad_exchange.css?v=20260704f">
@@ -312,7 +312,14 @@
         </header>
 
         <div class="post-form">
-            <label class="post-label" for="post-topic-input">О чём пост?</label>
+            <div class="post-label-row">
+                <label class="post-label" for="post-topic-input">О чём пост?</label>
+                <button class="post-ideas-btn" id="post-ideas-btn">
+                    <i class="ti ti-bulb"></i>
+                    <span>Идея темы</span>
+                </button>
+            </div>
+            <div class="post-ideas-list" id="post-ideas-list" style="display: none;"></div>
             <textarea
                 id="post-topic-input"
                 class="post-topic-textarea"
@@ -324,11 +331,32 @@
                 <span id="post-topic-counter-value">0</span> / 500
             </div>
 
-            <div class="post-controls">
-                <button class="post-toggle" id="post-profanity-toggle" data-active="false">
-                    <span class="post-toggle-indicator"></span>
-                    <span class="post-toggle-label">Нецензурная лексика</span>
-                </button>
+            <div class="post-settings">
+                <div class="post-setting-row">
+                    <div class="post-setting-label"><i class="ti ti-ruler-2"></i><span>Длина</span></div>
+                    <div class="post-chip-group" id="post-length-chips">
+                        <button class="post-chip on" data-val="auto">Авто</button>
+                        <button class="post-chip" data-val="short">Короткий</button>
+                        <button class="post-chip" data-val="medium">Средний</button>
+                        <button class="post-chip" data-val="long">Длинный</button>
+                    </div>
+                    <div class="post-setting-note" id="post-length-note" style="display: none;"></div>
+                </div>
+                <div class="post-setting-row">
+                    <div class="post-setting-label"><i class="ti ti-mood-smile"></i><span>Эмодзи</span></div>
+                    <div class="post-chip-group" id="post-emoji-chips">
+                        <button class="post-chip on" data-val="auto">Авто</button>
+                        <button class="post-chip" data-val="none">Без них</button>
+                        <button class="post-chip" data-val="few">Немного</button>
+                        <button class="post-chip" data-val="many">Много</button>
+                    </div>
+                </div>
+                <div class="post-setting-row toggle-row" id="post-profanity-row">
+                    <div class="post-setting-label"><i class="ti ti-message-off"></i><span>Нецензурная лексика</span></div>
+                    <button class="cs-toggle-switch" id="post-profanity-toggle" data-active="false">
+                        <span class="cs-toggle-knob"></span>
+                    </button>
+                </div>
             </div>
 
             <div class="post-style-hint" id="post-style-hint" style="display: none;">
@@ -440,11 +468,7 @@
                 <i class="ti ti-arrow-left"></i>
             </button>
             <div class="post-header-title">Готовый пост</div>
-            <div class="post-header-spacer">
-                <button class="post-result-menu-btn" id="post-result-menu-btn">
-                    <i class="ti ti-dots-vertical"></i>
-                </button>
-            </div>
+            <div class="post-header-spacer"></div>
         </header>
 
         <div class="result-body">
@@ -452,6 +476,7 @@
                 <div class="result-card-text" id="post-result-text"></div>
                 <div class="result-card-meta">
                     <span class="result-meta-item" id="post-result-model">Модель</span>
+                    <span class="result-meta-item style-badge" id="post-result-style" style="display: none;"><i class="ti ti-wand"></i><span>В стиле канала</span></span>
                 </div>
             </div>
 
@@ -554,9 +579,9 @@
 
 </div>
 
-<script src="i18n_dict.js?v=31"></script>
+<script src="i18n_dict.js?v=32"></script>
 <script src="i18n.js?v=12"></script>
-<script src="app.js?v=20260713h"></script>
+<script src="app.js?v=20260713i"></script>
 <script src="audit.js?v=20260704f"></script>
 <script src="competitors.js?v=20260704f"></script>
 <script src="ad_exchange.js?v=20260704f"></script>
