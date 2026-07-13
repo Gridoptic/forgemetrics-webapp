@@ -3217,6 +3217,8 @@ function attachSettingsHandlers() {
         auditBtn.addEventListener('click', () => {
             const chId = parseInt(auditBtn.getAttribute('data-audit-channel'), 10);
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('medium');
+            // окно настроек — оверлей поверх всего: без закрытия аудит открывался ПОД ним
+            closeChannelSettings();
             if (typeof window.__openAudit === 'function') window.__openAudit(chId);
         });
     }
@@ -3226,6 +3228,7 @@ function attachSettingsHandlers() {
         competitorsBtn.addEventListener('click', () => {
             const chId = parseInt(competitorsBtn.getAttribute('data-competitors-channel'), 10);
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('medium');
+            closeChannelSettings();
             if (typeof window.__openCompetitors === 'function') window.__openCompetitors(chId);
         });
     }
