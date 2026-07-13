@@ -43,6 +43,12 @@
     var e = document.querySelector('.mcell[data-m="' + m + '"] .l');
     if (e) e.innerHTML = _psEsc(main) + (suff ? ' <i>' + _psEsc(suff) + '</i>' : '');
   }
+  var _psNiche = null;   // {raw, tr} — ниша листинга и её переводы (с бэка), для смены языка на лету
+  function _psApplyNiche() {
+    if (!_psNiche || !el('nicheEl')) return;
+    var v = (_psLang !== 'ru' && _psNiche.tr && _psNiche.tr[_psLang]) ? _psNiche.tr[_psLang] : _psNiche.raw;
+    if (v) el('nicheEl').textContent = v;
+  }
   function _psApplyLabels() {
     var P = _psPack();
     _psLbl('subs', P.subs);
@@ -55,15 +61,20 @@
     _psLbl('mv', P.mv);
     var ct = document.querySelector('.chart .ct span'); if (ct) ct.textContent = P.chart;   // заголовок графика
     var cta = el('ctaEl'); if (cta) cta.innerHTML = _psEsc(P.cta) + ' <span class="arw">↓</span>';
+    _psApplyNiche();
     _psLocalizePrice();
   }
   function _psLocalizePrice() {
     var P = _psPack();
     var pv = el('prVal');
     if (pv) {
-      var t = pv.textContent || '';
-      if (t === 'Цена по договорённости') pv.textContent = P.prneg;                 // n = 0
-      else if (t.indexOf('Реклама от') === 0) pv.textContent = P.prpref + t.slice(('Реклама от').length);  // «Реклама от NNN ₽» → префикс на языке, число как есть
+      // русский оригинал держим в data-атрибуте: после первого перевода textContent уже
+      // не русский, и повторная смена языка без этого «залипала» на прошлом переводе
+      var cur = pv.textContent || '';
+      if (cur === 'Цена по договорённости' || cur.indexOf('Реклама от') === 0) pv.setAttribute('data-fmx-src', cur);
+      var t = pv.getAttribute('data-fmx-src') || cur;
+      if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;   // n = 0
+      else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));  // «Реклама от NNN ₽» → префикс на языке, число как есть
       var nt = pv.textContent || '';
       pv.style.fontSize = nt.length > 16 ? '19px' : '';   // авто-ужатие как в макете
     }
@@ -250,7 +261,9 @@
     if (meta && meta.firstChild) meta.firstChild.nodeValue = data.username ? '@' + String(data.username).replace(/^@/, '') : '';
     // ниша: кнопка всегда кликабельна (как в макете); нет ниши — пустой разделитель (без висячей точки)
     var hasNiche = !!(data.niche && String(data.niche).trim());
+    _psNiche = hasNiche ? { raw: data.niche, tr: data.niche_tr || null } : null;   // для перевода при смене языка
     if (el('nicheEl')) { el('nicheEl').textContent = data.niche || ''; el('nicheEl').classList.remove('hide'); }
+    _psApplyNiche();
     if (el('nicheSep')) { el('nicheSep').textContent = hasNiche ? ' · ' : ''; el('nicheSep').classList.remove('hide'); }
     var nchip = el('nicheChip'); if (nchip) { nchip.classList.add('on'); nchip.style.opacity = ''; nchip.style.pointerEvents = ''; nchip.title = ''; }
     // аватар — РЕАЛЬНЫЙ канала; нет — плейсхолдер с инициалами

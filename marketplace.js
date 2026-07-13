@@ -3344,7 +3344,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260713a';
+    var PS_GLUE_V = '20260713b';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3459,6 +3459,7 @@
         function posterData() {
             return {
                 id: base.id, username: base.username, title: base.title, niche: realNiche || extra.niche || '',
+                niche_tr: extra.niche_tr || null,
                 avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
                 er: base.er, min_price: minPrice,
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
