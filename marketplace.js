@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714n';
+    var PS_GLUE_V = '20260714o';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3363,14 +3363,15 @@
             '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
             '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
-            '#fmx-psDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);padding:8px 12px;}' +
+            '#fmx-psDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.08);border-radius:0 0 18px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.75);padding:7px 11px;}' +
             '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
             '#fmx-dkPrev{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
             '#fmx-dkFrame{width:540px;height:675px;border:0;transform:scale(0.159);transform-origin:top left;pointer-events:none;}' +
-            '.fmx-dkNav{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-content:center;min-width:0;}' +
-            '.fmx-dkChip{font-size:11.5px;font-weight:600;color:#a7aec6;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;}' +
+            '.fmx-dkCol{flex:1;min-width:0;max-height:107px;display:flex;flex-direction:column;justify-content:center;gap:5px;}' +
+            '.fmx-dkNav{display:flex;flex-wrap:wrap;gap:5px;min-width:0;}' +
+            '.fmx-dkChip{font-size:10.5px;font-weight:600;color:#a7aec6;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;line-height:1.3;}' +
             '.fmx-dkChip.on{color:#8b8ff8;background:rgba(129,140,248,0.13);border-color:rgba(129,140,248,0.42);}' +
-            '.fmx-dkHint{max-width:560px;margin:6px auto 0;font-size:10.5px;color:#7c86a3;text-align:center;letter-spacing:0.2px;}' +
+            '.fmx-dkHint{font-size:9.5px;color:#7c86a3;letter-spacing:0.2px;line-height:1.35;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             /* модалка выбора формата отправки (живой постер) */
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
@@ -3428,7 +3429,7 @@
     function _fmxBuildPosterDock(env) {
         var dock = document.createElement('div');
         dock.id = 'fmx-psDock';
-        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="К постеру"></div><div class="fmx-dkNav" id="fmx-dkNav"></div></div>';
+        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="К постеру"></div><div class="fmx-dkCol"><div class="fmx-dkNav" id="fmx-dkNav"></div></div></div>';
         dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
         var mini = null, miniWin = null, lastState = '', destroyed = false;
@@ -3465,8 +3466,11 @@
                     var sec = (t.closest && t.closest('.fmx-sec')) || t;
                     var body = idoc.body.getBoundingClientRect();
                     /* якорим НИЖНЮЮ границу предыдущего блока к низу шапки (вердикт 14.07):
-                       целевой блок виден целиком — с зазором, рамкой и названием */
+                       целевой блок виден целиком — с зазором, рамкой и названием.
+                       Скрытые блоки (например, убранные QR-режимы) пропускаем — у них
+                       нулевая геометрия, и «Стикеры» улетали наверх */
                     var prevEl = sec.previousElementSibling;
+                    while (prevEl && prevEl.getBoundingClientRect().height === 0) prevEl = prevEl.previousElementSibling;
                     var yTop = prevEl
                         ? (prevEl.getBoundingClientRect().bottom - body.top)
                         : (sec.getBoundingClientRect().top - body.top - 12);
@@ -3480,7 +3484,7 @@
         var dkHint = document.createElement('div');
         dkHint.className = 'fmx-dkHint';
         dkHint.textContent = env.tr('Зажми превью — развернётся на весь экран · быстрый тап — к постеру');
-        dock.appendChild(dkHint);
+        dock.querySelector('.fmx-dkCol').appendChild(dkHint);
         /* peek-жест (идея владельца 14.07): зажатие (>=260мс) — превью раскрывается почти на весь
            экран, отпускание — сворачивается; быстрый тап — прокрутка к началу. iframe НЕ переносим
            по DOM (это перезагрузило бы его) — растягиваем контейнер и масштабируем содержимое. */
