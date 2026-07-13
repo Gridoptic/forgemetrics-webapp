@@ -621,7 +621,7 @@
       });
       // иконки секций (макет 14.07): по идентификатору содержимого — не зависят от текста метки
       [['fmxPsLang', '🌐'], ['ordBox', '≡'], ['nicheChip', '◉'], ['bgChips', '◐'], ['chartChip', '▲'],
-       ['mChips', '▦'], ['prInp', '💳'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
+       ['mChips', '▦'], ['prInp', 'card'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
         var t = document.getElementById(mp[0]); if (!t) return;
         var sc = t.closest ? t.closest('.fmx-sec') : null; if (!sc) return;
         var lb = sc.querySelector('.lbl'); if (lb && !lb.getAttribute('data-ico')) lb.setAttribute('data-ico', mp[1]);
@@ -965,6 +965,9 @@
         'background:linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04));' +
         'box-shadow:0 10px 24px -14px rgba(129,140,248,0.4);}' +
       '.fmx-sec .lbl:not([data-ico])::before{display:none;}' +
+      '.fmx-sec .lbl[data-ico="card"]::before{content:"";' +
+        'background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238b8ff8%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Crect x=%272.5%27 y=%275%27 width=%2719%27 height=%2714%27 rx=%273%27/%3E%3Cpath d=%27M2.5 10h19%27/%3E%3C/svg%3E") center/' + px(15) + ' auto no-repeat,' +
+        'linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04));}' +
       '.chip{background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.10) !important;' +
         'color:#c6cdde !important;transition:border-color 0.15s,background 0.15s,color 0.15s;}' +
       '.chip.on{background:linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06)) !important;' +
