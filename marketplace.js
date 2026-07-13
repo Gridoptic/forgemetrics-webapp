@@ -3346,7 +3346,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714o';
+    var PS_GLUE_V = '20260714p';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3474,7 +3474,11 @@
                     var yTop = prevEl
                         ? (prevEl.getBoundingClientRect().bottom - body.top)
                         : (sec.getBoundingClientRect().top - body.top - 12);
-                    env.scroll.scrollTo({ top: env.wrap.offsetTop + yTop * env.getK() - dock.offsetHeight, behavior: 'smooth' });
+                    /* всё через видимые прямоугольники: offsetTop зависит от вёрстки контейнеров
+                       (в студии над скроллом заголовок — навигация промахивалась на его высоту) */
+                    var fR = env.frame.getBoundingClientRect(), scR = env.scroll.getBoundingClientRect();
+                    var anchorAbs = env.scroll.scrollTop + (fR.top - scR.top) + yTop * env.getK();
+                    env.scroll.scrollTo({ top: anchorAbs - dock.offsetHeight, behavior: 'smooth' });
                     nav.querySelectorAll('.fmx-dkChip').forEach(function (x) { x.classList.toggle('on', x === a); });
                 } catch (e) {}
             });
@@ -3538,8 +3542,8 @@
         prev.addEventListener('pointercancel', peekUp);
         function onScroll() {
             try {
-                var thr = env.wrap.offsetTop + 675 * env.getK() * 0.8;
-                var vis = env.scroll.scrollTop > thr;
+                var fR = env.frame.getBoundingClientRect(), scR = env.scroll.getBoundingClientRect();
+                var vis = (fR.top - scR.top) < -675 * env.getK() * 0.8;
                 if (vis && dock.style.display === 'none') { dock.style.display = ''; ensureMini(); }
                 else if (!vis && dock.style.display !== 'none') dock.style.display = 'none';
             } catch (e) {}
