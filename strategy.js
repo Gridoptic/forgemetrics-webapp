@@ -44,6 +44,18 @@
         '<path d="M34 8.5c2.5 0 4.5 1.9 4.5 4.3 0 3.2-4.5 7.4-4.5 7.4s-4.5-4.2-4.5-7.4c0-2.4 2-4.3 4.5-4.3z" fill="#5DCAA5"/>' +
         '<circle cx="34" cy="12.9" r="1.7" fill="#06231a"/></svg>';
 
+    var DAYS_EN = {
+        monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда', thursday: 'Четверг',
+        friday: 'Пятница', saturday: 'Суббота', sunday: 'Воскресенье',
+        mon: 'Понедельник', tue: 'Вторник', wed: 'Среда', thu: 'Четверг',
+        fri: 'Пятница', sat: 'Суббота', sun: 'Воскресенье' };
+
+    function fixDays(text) {
+        return String(text == null ? '' : text).replace(
+            /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/g,
+            function (m) { var r = DAYS_EN[m.toLowerCase()]; return r ? T(r) : m; });
+    }
+
     var SEC_ICON = {
         niche: '<i class="ti ti-target"></i>', audience: '<i class="ti ti-users"></i>',
         content: '<i class="ti ti-list-details"></i>', traffic_free: '<i class="ti ti-rocket"></i>',
@@ -468,7 +480,7 @@
             ? '<button class="stg-how" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Как сделать')) + '</button>' : '';
         return '<div class="stg-step" data-step="' + esc(s.key) + '">' +
             '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>' +
-            '<div class="t"><b>' + esc(s.title) + '</b>' + (s.body ? bodyHtml(s.body) : '') + '</div>' + how +
+            '<div class="t"><b>' + esc(fixDays(s.title)) + '</b>' + (s.body ? bodyHtml(fixDays(s.body)) : '') + '</div>' + how +
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
     }
 
@@ -534,7 +546,7 @@
                 inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
             }
             if (sec.intro && sec.intro.trim()) {
-                inner += '<div class="stg-note" style="margin-top:9px;">' + termWrap(sec.intro) + '</div>';
+                inner += '<div class="stg-note" style="margin-top:9px;">' + termWrap(fixDays(sec.intro)) + '</div>';
             }
             inner += chartHtml(sec.chart);
             if (sec.steps && sec.steps.length) {
@@ -740,21 +752,24 @@
         var def = terms[key];
         if (!def) return;
         haptic('light');
-        var host = elm.closest('.stg-step, .stg-note, .stg-sec');
-        if (!host) return;
-        var old = host.querySelector('.stg-tip[data-tip-for]');
-        if (old) {
-            var same = old.getAttribute('data-tip-for') === key;
-            old.remove();
-            if (same) return;
+        // повторный тап по тому же слову — закрыть
+        var nxt = elm.nextElementSibling;
+        if (nxt && nxt.classList && nxt.classList.contains('stg-tip')) { nxt.remove(); return; }
+        // подсказка раскрывается ПРЯМО ПОД словом, в месте тапа
+        var sec = elm.closest('.stg-sec');
+        if (sec) sec.querySelectorAll('.stg-tip[data-tip-for]').forEach(function (t) { t.remove(); });
+        var body = elm.closest('.stg-body');
+        if (body && body.classList.contains('clamp')) {
+            body.classList.remove('clamp');
+            var m = body.parentElement.querySelector('.stg-more');
+            if (m) m.remove();
         }
-        var tip = document.createElement('div');
+        var tip = document.createElement('span');
         tip.className = 'stg-tip';
+        tip.style.display = 'block';
         tip.setAttribute('data-tip-for', key);
         tip.innerHTML = '<b>' + esc(key) + '</b> — ' + esc(def);
-        var block = elm.closest('.stg-step');
-        if (block) block.insertAdjacentElement('afterend', tip);
-        else host.appendChild(tip);
+        elm.insertAdjacentElement('afterend', tip);
     }
 
     function copyPost(i) {
