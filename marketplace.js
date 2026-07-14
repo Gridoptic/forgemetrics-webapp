@@ -2120,6 +2120,11 @@
                 box.innerHTML = fullCard(pl);
                 try { hydrateTgs(box); } catch (e2) {}
             },
+            renderListPreview: function (box) {
+                var pl = _previewListing();
+                box.innerHTML = listItem(pl);
+                try { hydrateTgs(box); } catch (e2) {}
+            },
             stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts); } catch (e2) { return String(Date.now()); } },
             miniEl: el('fmx-mini')
         });
@@ -3361,7 +3366,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714s';
+    var PS_GLUE_V = '20260714t';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3435,9 +3440,10 @@
         st.textContent =
             '#fmx-psDock,#fmx-cdDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.08);border-radius:0 0 18px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.75);padding:7px 11px;}' +
             '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
-            '#fmx-dkPrev,#fmx-cdPrev{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
+            '#fmx-dkPrev,.fmx-cdTile{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
+            '.fmx-cdTile{position:relative;}' +
             '#fmx-dkFrame{width:540px;height:675px;border:0;transform:scale(0.159);transform-origin:top left;pointer-events:none;}' +
-            '.fmx-cdScale{width:350px;transform-origin:top left;pointer-events:none;}' +
+            '.fmx-cdScale{position:absolute;left:0;top:50%;width:350px;transform-origin:left top;pointer-events:none;}' +
             '.fmx-dkCol{flex:1;min-width:0;max-height:107px;display:flex;flex-direction:column;justify-content:center;gap:5px;}' +
             '.fmx-dkNav{display:flex;flex-wrap:wrap;gap:5px;min-width:0;}' +
             '.fmx-dkChip{font-size:10.5px;font-weight:600;color:#a7aec6;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;line-height:1.3;}' +
@@ -3454,18 +3460,33 @@
         _fmxEnsureDockCss();
         var dock = document.createElement('div');
         dock.id = 'fmx-cdDock';
-        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-cdPrev" title="К карточке"><div class="fmx-cdScale"></div></div><div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
+        dock.innerHTML = '<div class="fmx-dkIn">' +
+            '<div id="fmx-cdPrev" class="fmx-cdTile" title="К карточке"><div class="fmx-cdScale"></div></div>' +
+            '<div id="fmx-cdPrev2" class="fmx-cdTile" title="Вид в списке"><div class="fmx-cdScale"></div></div>' +
+            '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
         dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
         var prev = dock.querySelector('#fmx-cdPrev');
-        var box = dock.querySelector('.fmx-cdScale');
+        var box = prev.querySelector('.fmx-cdScale');
+        var prev2 = dock.querySelector('#fmx-cdPrev2');
+        var box2 = prev2.querySelector('.fmx-cdScale');
         var nav = dock.querySelector('.fmx-dkNav');
         var destroyed = false, lastKey = '';
+        if (!env.renderListPreview) { prev2.style.display = 'none'; prev2 = null; box2 = null; }
+        /* контент-бокс: натуральная ширина 350, вертикальное центрирование в плитке точным
+           сдвигом в px (проценты translateY считаются от НЕмасштабированной высоты) */
+        function layoutTile(tile, bx) {
+            var s2 = tile.clientWidth / 350;
+            bx.style.top = '50%';
+            bx.style.transform = 'none';
+            var nh = bx.offsetHeight || 1;
+            bx.style.transform = 'translateY(' + (-(nh * s2) / 2).toFixed(1) + 'px) scale(' + s2.toFixed(4) + ')';
+        }
         function renderMini() {
             try {
                 env.renderPreview(box);
-                var k2 = prev.clientWidth / 350;
-                box.style.transform = 'scale(' + k2.toFixed(4) + ')';
+                layoutTile(prev, box);
+                if (prev2) { env.renderListPreview(box2); layoutTile(prev2, box2); }
             } catch (e) {}
         }
         env.sections.forEach(function (sc, i) {
@@ -3502,52 +3523,59 @@
         dkHint.className = 'fmx-dkHint';
         dkHint.textContent = env.tr('Зажми превью — развернётся на весь экран · быстрый тап — к карточке');
         dock.querySelector('.fmx-dkCol').appendChild(dkHint);
-        /* peek-жест — как у постера; backdrop-filter шторки на время peek отключаем
+        /* peek-жест на КАЖДОЙ плитке свой (вердикт 14.07): зажал карточку — раскрылась карточка,
+           зажал вид в списке — раскрылась строка. backdrop-filter шторки на время peek отключаем
            (containing block для fixed), узлы по DOM не переносим */
-        var peek = { on: false, timer: null, held: false, bd: null, saved: '', dockBF: null };
-        function peekStart() {
-            peek.timer = null;
-            if (peek.on) return;
-            peek.on = true; peek.held = true;
-            peek.bd = document.createElement('div');
-            peek.bd.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:89;';
-            document.body.appendChild(peek.bd);
-            peek.saved = prev.getAttribute('style') || '';
-            peek.dockBF = [dock.style.backdropFilter, dock.style.webkitBackdropFilter];
-            dock.style.backdropFilter = 'none'; dock.style.webkitBackdropFilter = 'none';
-            var vw = window.innerWidth || 360, vh = window.innerHeight || 640;
-            var ch = Math.max(box.scrollHeight, 200);
-            var sc2 = Math.min((vw * 0.92) / 350, (vh * 0.86) / ch, 460 / 350);
-            prev.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);' +
-                'width:' + (350 * sc2).toFixed(0) + 'px;height:' + (ch * sc2).toFixed(0) + 'px;border-radius:16px;' +
-                'overflow:hidden;border:1px solid rgba(255,255,255,0.16);z-index:90;' +
-                'box-shadow:0 30px 80px rgba(0,0,0,0.7);background:#0a0d18;cursor:pointer;';
-            box.style.transform = 'scale(' + sc2.toFixed(4) + ')';
+        function bindPeek(tile, bx) {
+            var peek = { on: false, timer: null, held: false, bd: null, saved: '', dockBF: null };
+            function peekStart() {
+                peek.timer = null;
+                if (peek.on) return;
+                peek.on = true; peek.held = true;
+                peek.bd = document.createElement('div');
+                peek.bd.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:89;';
+                document.body.appendChild(peek.bd);
+                peek.saved = tile.getAttribute('style') || '';
+                peek.dockBF = [dock.style.backdropFilter, dock.style.webkitBackdropFilter];
+                dock.style.backdropFilter = 'none'; dock.style.webkitBackdropFilter = 'none';
+                var vw = window.innerWidth || 360, vh = window.innerHeight || 640;
+                bx.style.transform = 'none';
+                var ch = Math.max(bx.offsetHeight, 40);
+                var sc2 = Math.min((vw * 0.92) / 350, (vh * 0.86) / ch, 460 / 350);
+                tile.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);' +
+                    'width:' + (350 * sc2).toFixed(0) + 'px;height:' + (ch * sc2).toFixed(0) + 'px;border-radius:16px;' +
+                    'overflow:hidden;border:1px solid rgba(255,255,255,0.16);z-index:90;' +
+                    'box-shadow:0 30px 80px rgba(0,0,0,0.7);background:#0a0d18;cursor:pointer;';
+                bx.style.top = '0';
+                bx.style.transform = 'scale(' + sc2.toFixed(4) + ')';
+            }
+            function peekEnd() {
+                if (peek.timer) { clearTimeout(peek.timer); peek.timer = null; }
+                if (!peek.on) return;
+                peek.on = false;
+                if (peek.bd) { try { peek.bd.remove(); } catch (e) {} peek.bd = null; }
+                if (peek.dockBF) { dock.style.backdropFilter = peek.dockBF[0] || ''; dock.style.webkitBackdropFilter = peek.dockBF[1] || ''; peek.dockBF = null; }
+                tile.setAttribute('style', peek.saved || '');
+                layoutTile(tile, bx);
+            }
+            tile.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+            tile.addEventListener('pointerdown', function (e) {
+                e.preventDefault();
+                peek.held = false;
+                try { tile.setPointerCapture(e.pointerId); } catch (e2) {}
+                if (peek.timer) clearTimeout(peek.timer);
+                peek.timer = setTimeout(peekStart, 260);
+            });
+            function peekUp(e) {
+                var wasHold = peek.held;
+                peekEnd();
+                if (!wasHold && e.type === 'pointerup') env.scroll.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            tile.addEventListener('pointerup', peekUp);
+            tile.addEventListener('pointercancel', peekUp);
         }
-        function peekEnd() {
-            if (peek.timer) { clearTimeout(peek.timer); peek.timer = null; }
-            if (!peek.on) return;
-            peek.on = false;
-            if (peek.bd) { try { peek.bd.remove(); } catch (e) {} peek.bd = null; }
-            if (peek.dockBF) { dock.style.backdropFilter = peek.dockBF[0] || ''; dock.style.webkitBackdropFilter = peek.dockBF[1] || ''; peek.dockBF = null; }
-            prev.setAttribute('style', peek.saved || '');
-            box.style.transform = 'scale(' + (prev.clientWidth / 350).toFixed(4) + ')';
-        }
-        prev.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-        prev.addEventListener('pointerdown', function (e) {
-            e.preventDefault();
-            peek.held = false;
-            try { prev.setPointerCapture(e.pointerId); } catch (e2) {}
-            if (peek.timer) clearTimeout(peek.timer);
-            peek.timer = setTimeout(peekStart, 260);
-        });
-        function peekUp(e) {
-            var wasHold = peek.held;
-            peekEnd();
-            if (!wasHold && e.type === 'pointerup') env.scroll.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        prev.addEventListener('pointerup', peekUp);
-        prev.addEventListener('pointercancel', peekUp);
+        bindPeek(prev, box);
+        if (prev2) bindPeek(prev2, box2);
         function onScroll() {
             try {
                 if (!document.contains(dock)) { destroy(); return; }
