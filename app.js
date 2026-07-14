@@ -644,6 +644,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'ai_strategy') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openStrategy === 'function') {
+            window.__openStrategy();
+        }
+        return;
+    }
+
     if (actionId === 'competitor_analysis') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openCompetitors === 'function') {

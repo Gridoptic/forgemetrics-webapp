@@ -1,0 +1,194 @@
+/* AI-стратегия канала — стили строго по утверждённому макету (14.07). Префикс stg-. */
+
+.stg-screen {
+    position: fixed;
+    inset: 0;
+    background: #0a0d18;
+    background-image:
+        radial-gradient(circle at 15% 8%, rgba(99, 102, 241, 0.10), transparent 42%),
+        radial-gradient(circle at 85% 92%, rgba(93, 202, 165, 0.05), transparent 42%);
+    z-index: 9999;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 14px 44px;
+    display: none;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+    color: #e8eaf1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.stg-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.stg-back {
+    width: 36px; height: 36px; border-radius: 10px; flex: 0 0 auto;
+    background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.08);
+    color: #818cf8; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+}
+.stg-back:active { background: rgba(255,255,255,0.08); }
+.stg-head .t { font-size: 16px; font-weight: 800; }
+
+.stg-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 30px 10px; }
+.stg-center .big { font-size: 40px; }
+.stg-center .m { color: #8d93a8; font-size: 13px; max-width: 300px; line-height: 1.55; }
+@keyframes stgSpin { to { transform: rotate(360deg); } }
+.stg-spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(129,140,248,0.2); border-top-color: #818cf8; animation: stgSpin 0.9s linear infinite; }
+
+/* ===== Витрина ===== */
+@keyframes stgRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.stg-flag { position: relative; border-radius: 20px; overflow: hidden; animation: stgRise .5s cubic-bezier(.2,.8,.2,1) both;
+    box-shadow: 0 22px 48px -22px rgba(99,102,241,0.6); }
+.stg-flag .glow { position: absolute; inset: -45%; background: conic-gradient(from 0deg,#6366f1,#8b5cf6,#5DCAA5,#a78bfa,#6366f1);
+    animation: stgSpin 6s linear infinite; }
+.stg-flag .inner { position: relative; margin: 1.6px; border-radius: 18.5px; padding: 17px;
+    border: 1px solid rgba(99,102,241,0.25); background: linear-gradient(160deg,rgba(20,22,34,0.97),rgba(12,14,23,0.99)); }
+.stg-flag .inner::before { content: ""; position: absolute; top: -40px; right: -30px; width: 160px; height: 160px;
+    background: radial-gradient(circle,rgba(99,102,241,0.18),transparent 66%); pointer-events: none; }
+.stg-ribbon { position: absolute; top: 13px; right: 13px; font-size: 9.5px; font-weight: 800; letter-spacing: .4px;
+    text-transform: uppercase; z-index: 2; padding: 4px 10px; border-radius: 99px; color: #fff;
+    background: linear-gradient(135deg,#6366f1,#8b5cf6); box-shadow: 0 6px 16px -6px rgba(99,102,241,0.9); }
+.stg-fhead { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; padding-right: 86px; }
+.stg-fic { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center;
+    flex: 0 0 auto; border: 1px solid rgba(129,140,248,0.45);
+    background: linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04)); }
+.stg-fname { font-size: 17px; font-weight: 800; }
+.stg-fsub { font-size: 11.5px; color: #8d93a8; margin-top: 2px; }
+.stg-fwhat { margin: 12px 0 4px; display: flex; flex-direction: column; gap: 7px; }
+.stg-fw { display: flex; gap: 9px; font-size: 12.5px; color: #a7aec6; line-height: 1.45; }
+.stg-fw b { color: #e8eaf1; font-weight: 600; }
+.stg-fw .tick { color: #5DCAA5; flex: 0 0 auto; }
+.stg-fprice { display: flex; align-items: baseline; gap: 9px; margin: 13px 0 3px; flex-wrap: wrap; }
+.stg-fprice b { font-size: 30px; font-weight: 800; letter-spacing: -0.4px; }
+.stg-fprice span { font-size: 12px; color: #8d93a8; }
+.stg-fcta { width: 100%; margin-top: 11px; padding: 13px; border: 0; border-radius: 13px; font-weight: 700; font-size: 14px;
+    font-family: inherit; color: #fff; cursor: pointer; background: linear-gradient(135deg,#6366f1,#8b5cf6);
+    box-shadow: 0 14px 30px -12px rgba(99,102,241,0.8); }
+.stg-fcta:disabled { opacity: 0.6; }
+.stg-fcta.booked { background: rgba(93,202,165,0.14); color: #5DCAA5; border: 1px solid rgba(93,202,165,0.45); box-shadow: none; }
+.stg-fnote { text-align: center; font-size: 10.5px; color: #565b73; margin-top: 8px; }
+
+/* ===== Карточки-секции ===== */
+.stg-sec { position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 15px; margin-top: 12px; overflow: hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
+.stg-sec::before { content: ""; position: absolute; top: -1px; left: 12%; right: 12%; height: 90px; pointer-events: none;
+    background: radial-gradient(80% 100% at 50% 0%,rgba(129,140,248,0.13) 0%,transparent 70%); }
+.stg-eyebrow { position: relative; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
+    letter-spacing: .09em; text-transform: uppercase; color: #9aa0f5; }
+.stg-eyebrow .tile { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    flex: 0 0 auto; color: #818cf8; border: 1px solid rgba(129,140,248,0.42); font-size: 13px;
+    background: linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04)); }
+
+/* ===== Интервью ===== */
+.stg-prog { position: relative; height: 5px; border-radius: 99px; background: rgba(255,255,255,0.06); margin: 12px 0; overflow: hidden; }
+.stg-prog i { position: absolute; inset: 0; border-radius: 99px; background: linear-gradient(90deg,#6366f1,#8b5cf6); transition: width .35s ease; }
+.stg-q { position: relative; font-size: 15px; font-weight: 700; margin: 4px 0 10px; }
+.stg-chips { position: relative; display: flex; flex-wrap: wrap; gap: 7px; }
+.stg-ch { font-size: 12.5px; font-weight: 600; color: #c6cdde; padding: 8px 13px; border-radius: 11px;
+    background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; user-select: none; }
+.stg-ch.on { color: #818cf8; background: linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06));
+    border-color: rgba(129,140,248,0.55); box-shadow: 0 0 12px rgba(129,140,248,0.14); }
+.stg-sub { position: relative; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8d93a8; margin: 12px 0 7px; }
+.stg-inp { position: relative; width: 100%; margin-top: 9px; padding: 11px 12px; border-radius: 11px; font-size: 13px;
+    font-family: inherit; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.09); color: #e8eaf1; outline: none; }
+.stg-inp:focus { border-color: rgba(129,140,248,0.5); }
+.stg-next { position: relative; width: 100%; margin-top: 11px; padding: 12px; border: 1px solid rgba(129,140,248,0.5);
+    border-radius: 12px; font-weight: 700; font-size: 13px; font-family: inherit; color: #818cf8; cursor: pointer;
+    background: linear-gradient(135deg,rgba(129,140,248,0.22),rgba(129,140,248,0.08)); }
+.stg-next:disabled { opacity: 0.45; }
+.stg-prev { position: relative; display: block; margin: 9px auto 0; background: none; border: 0; color: #565b73;
+    font-size: 11.5px; font-family: inherit; cursor: pointer; }
+.stg-note { position: relative; font-size: 10.5px; color: #8d93a8; line-height: 1.5; }
+.stg-note b { color: #f5bf4f; }
+
+/* ===== Документ ===== */
+.stg-dochead { position: relative; display: flex; align-items: center; gap: 13px; }
+.stg-ring { width: 54px; height: 54px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; font-weight: 800; color: #5DCAA5; position: relative; }
+.stg-ring::before { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: #12141f; }
+.stg-ring span { position: relative; }
+.stg-dochead .t { min-width: 0; }
+.stg-dochead .t b { display: block; font-size: 15px; overflow-wrap: break-word; }
+.stg-dochead .t span { display: block; font-size: 11.5px; color: #8d93a8; margin-top: 3px; line-height: 1.45; }
+
+.stg-step { position: relative; display: flex; gap: 10px; align-items: flex-start; padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.05); }
+.stg-step:first-of-type { border-top: 0; }
+.stg-cb { width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.2); flex: 0 0 auto;
+    margin-top: 1px; cursor: pointer; }
+.stg-cb.done { border-color: #5DCAA5; background: rgba(93,202,165,0.15); position: relative; }
+.stg-cb.done::after { content: "✓"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #5DCAA5; }
+.stg-step .t { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.45; color: #a7aec6; overflow-wrap: break-word; }
+.stg-step .t b { color: #e8eaf1; font-weight: 600; display: block; }
+.stg-body { position: relative; }
+.stg-body.clamp { max-height: 58px; overflow: hidden; }
+.stg-body.clamp::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+    background: linear-gradient(180deg, transparent, #10121d); }
+.stg-more { display: inline-block; margin-top: 3px; font-size: 11px; font-weight: 700; color: #818cf8; cursor: pointer; }
+.stg-how { flex: 0 0 auto; font-size: 10.5px; font-weight: 700; color: #818cf8; padding: 5px 9px; border-radius: 99px;
+    background: rgba(129,140,248,0.12); border: 1px solid rgba(129,140,248,0.4); cursor: pointer; white-space: nowrap;
+    font-family: inherit; }
+.stg-term { border-bottom: 1px dashed rgba(129,140,248,0.6); cursor: pointer; color: #e8eaf1; }
+.stg-tip { position: relative; margin-top: 8px; padding: 9px 11px; border-radius: 10px; font-size: 11px; line-height: 1.5;
+    color: #c9cede; background: rgba(129,140,248,0.1); border: 1px solid rgba(129,140,248,0.35); overflow-wrap: break-word; }
+.stg-tip b { color: #818cf8; }
+
+/* график площадок */
+.stg-bar-row { position: relative; margin-top: 11px; }
+.stg-bar-l { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 12px; }
+.stg-bar-l b { font-weight: 600; min-width: 0; overflow-wrap: break-word; }
+.stg-dif { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: #8d93a8; white-space: nowrap; flex: 0 0 auto; }
+.stg-dif i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.stg-bar-tr { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.stg-bar-f { height: 10px; border-radius: 3px 4px 4px 3px; background: linear-gradient(90deg,#6d78f2,#8b8ff8);
+    box-shadow: 0 0 10px rgba(129,140,248,0.25); min-width: 6px; }
+.stg-bar-v { font-size: 11px; font-weight: 700; color: #e8eaf1; font-variant-numeric: tabular-nums; }
+
+/* гайд */
+.stg-guide { position: relative; margin-top: 10px; border-radius: 13px; border: 1px solid rgba(129,140,248,0.3);
+    background: rgba(129,140,248,0.06); padding: 12px; }
+.stg-guide h4 { font-size: 13px; margin: 0 0 8px; }
+.stg-gstep { display: flex; gap: 9px; padding: 7px 0; font-size: 12px; line-height: 1.5; color: #a7aec6; }
+.stg-gstep .n { width: 20px; height: 20px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center;
+    justify-content: center; font-size: 10.5px; font-weight: 800; color: #818cf8;
+    background: rgba(129,140,248,0.14); border: 1px solid rgba(129,140,248,0.4); }
+.stg-gstep b { color: #e8eaf1; }
+.stg-gwarn { display: flex; gap: 8px; font-size: 11.5px; line-height: 1.5; color: #d8b46a; padding: 4px 0; }
+.stg-ask { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 11.5px; font-weight: 700;
+    color: #818cf8; padding: 8px 13px; border-radius: 99px; background: rgba(129,140,248,0.12);
+    border: 1px solid rgba(129,140,248,0.45); cursor: pointer; font-family: inherit; }
+
+/* посты */
+.stg-post { position: relative; border-top: 1px solid rgba(255,255,255,0.05); padding: 9px 0; }
+.stg-post .h { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; }
+.stg-post .h b { font-size: 12.5px; font-weight: 600; min-width: 0; overflow-wrap: break-word; }
+.stg-copy { flex: 0 0 auto; font-size: 10.5px; font-weight: 700; color: #5DCAA5; padding: 5px 9px; border-radius: 99px;
+    background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.4); cursor: pointer; white-space: nowrap;
+    font-family: inherit; }
+.stg-post .b { display: none; margin-top: 7px; font-size: 12px; line-height: 1.55; color: #a7aec6; white-space: pre-wrap; overflow-wrap: break-word; }
+.stg-post.open .b { display: block; }
+
+/* ===== Разбор недели ===== */
+.stg-verd { display: flex; gap: 9px; font-size: 12.5px; line-height: 1.5; color: #a7aec6; padding: 6px 0; }
+.stg-verd .ic { flex: 0 0 auto; }
+.stg-verd b { color: #e8eaf1; font-weight: 600; }
+.stg-task { position: relative; margin-top: 9px; padding: 10px 12px; border-radius: 11px; font-size: 12px; line-height: 1.5;
+    background: linear-gradient(135deg,rgba(93,202,165,0.14),rgba(93,202,165,0.04)); border: 1px solid rgba(93,202,165,0.4); }
+.stg-task b { color: #5DCAA5; }
+
+/* ===== Чат ===== */
+.stg-msg { position: relative; max-width: 86%; padding: 10px 13px; border-radius: 14px; font-size: 12.5px; line-height: 1.5;
+    margin-top: 9px; overflow-wrap: break-word; white-space: pre-wrap; }
+.stg-msg.u { margin-left: auto; background: rgba(129,140,248,0.16); border: 1px solid rgba(129,140,248,0.4); border-bottom-right-radius: 5px; }
+.stg-msg.a { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 5px; color: #a7aec6; }
+.stg-quota { position: relative; text-align: center; font-size: 10.5px; color: #565b73; margin-top: 10px; }
+.stg-chatrow { position: relative; display: flex; gap: 8px; margin-top: 11px; }
+.stg-chatrow .stg-inp { margin-top: 0; flex: 1; min-width: 0; }
+.stg-send { flex: 0 0 auto; width: 44px; border: 1px solid rgba(129,140,248,0.5); border-radius: 11px; color: #818cf8;
+    background: linear-gradient(135deg,rgba(129,140,248,0.22),rgba(129,140,248,0.08)); cursor: pointer; font-size: 16px; }
+.stg-send:disabled { opacity: 0.45; }
+
+@media (min-width: 600px) {
+    .stg-screen { padding-left: max(14px, calc(50vw - 260px)); padding-right: max(14px, calc(50vw - 260px)); }
+}
