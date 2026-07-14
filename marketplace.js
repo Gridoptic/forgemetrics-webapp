@@ -2010,11 +2010,27 @@
     }
     function curChannel() { return channelById(_ss.channelId) || { title: 'Твой канал', username: 'your_channel', subscribers: null }; }
 
+    /*FMX_CHSORT_BEGIN*/
+    /* Умная сортировка выбора канала (вердикт 14.07): сначала каналы с готовым оффером
+       (с ними работают чаще), затем публичные по алфавиту, приватные (замок) — в конце. */
+    function _chSortForPicker(list, hasListing) {
+        return list.slice().sort(function (a, b) {
+            function rank(c) {
+                if (!c.username) return 2;
+                return hasListing(c.id) ? 0 : 1;
+            }
+            var ra = rank(a), rb = rank(b);
+            if (ra !== rb) return ra - rb;
+            var ta = String(a.title || a.username || ''), tb = String(b.title || b.username || '');
+            return ta.localeCompare(tb, undefined, { sensitivity: 'base' });
+        });
+    }
+    /*FMX_CHSORT_END*/
     function paintCreate() {
         var sub = el('fmx-sub'); if (!sub) return;
         var existing = listingForChannel(_ss.channelId);
         var cur = channelById(_ss.channelId);
-        var rows = _channels.map(function (c) {
+        var rows = _chSortForPicker(_channels, function (cid) { return !!listingForChannel(cid); }).map(function (c) {
             var pub = !!c.username;
             return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (pub ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '"><div class="fmx-chav"' + (pub ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (pub ? '@' + _esc(c.username) : 'приватный — нужен публичный @username') + '</div></div>' + (pub ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
         }).join('');
@@ -3363,7 +3379,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714y';
+    var PS_GLUE_V = '20260714z';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
