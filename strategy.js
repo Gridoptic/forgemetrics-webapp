@@ -457,7 +457,7 @@
     }
 
     function bodyHtml(text) {
-        var long = String(text || '').length > 240;
+        var long = String(text || '').length > 480;
         return '<span class="stg-body' + (long ? ' clamp' : '') + '">' + termWrap(text) + '</span>' +
             (long ? '<span class="stg-more" data-act="more">' + esc(T('развернуть')) + '</span>' : '');
     }
@@ -536,9 +536,23 @@
         html += chatHtml();
         html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' +
             esc(T('Начать новую стратегию')) + '</button>';
-        setView(html);
+        var host = setView(html);
+        unclampSmall(host);
         var chatBox = document.getElementById('stg-chat-msgs');
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // свёртка честная: если за окном прячется меньше полутора строк — показываем всё
+    function unclampSmall(host) {
+        try {
+            host.querySelectorAll('.stg-body.clamp').forEach(function (b) {
+                if (b.scrollHeight - b.clientHeight < 28) {
+                    b.classList.remove('clamp');
+                    var m = b.parentElement.querySelector('.stg-more');
+                    if (m) m.remove();
+                }
+            });
+        } catch (e) {}
     }
 
     // ==================== 5. Разбор недели ====================
