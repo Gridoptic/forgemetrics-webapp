@@ -2117,12 +2117,9 @@
             openSection: function (id) { openAcc(id, false); },
             renderPreview: function (box) {
                 var pl = _previewListing();
-                box.innerHTML = fullCard(pl);
-                try { hydrateTgs(box); } catch (e2) {}
-            },
-            renderListPreview: function (box) {
-                var pl = _previewListing();
-                box.innerHTML = listItem(pl);
+                /* оба вида одним рендером (вердикт 14.07): карточка и под ней вид в списке;
+                   peek раскрывает их вместе на весь экран друг под другом */
+                box.innerHTML = fullCard(pl) + '<div style="margin-top:12px;">' + listItem(pl) + '</div>';
                 try { hydrateTgs(box); } catch (e2) {}
             },
             stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts); } catch (e2) { return String(Date.now()); } },
@@ -3366,7 +3363,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714t';
+    var PS_GLUE_V = '20260714v';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3462,31 +3459,28 @@
         dock.id = 'fmx-cdDock';
         dock.innerHTML = '<div class="fmx-dkIn">' +
             '<div id="fmx-cdPrev" class="fmx-cdTile" title="К карточке"><div class="fmx-cdScale"></div></div>' +
-            '<div id="fmx-cdPrev2" class="fmx-cdTile" title="Вид в списке"><div class="fmx-cdScale"></div></div>' +
             '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
         dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
         var prev = dock.querySelector('#fmx-cdPrev');
         var box = prev.querySelector('.fmx-cdScale');
-        var prev2 = dock.querySelector('#fmx-cdPrev2');
-        var box2 = prev2.querySelector('.fmx-cdScale');
         var nav = dock.querySelector('.fmx-dkNav');
         var destroyed = false, lastKey = '';
-        if (!env.renderListPreview) { prev2.style.display = 'none'; prev2 = null; box2 = null; }
         /* контент-бокс: натуральная ширина 350, вертикальное центрирование в плитке точным
            сдвигом в px (проценты translateY считаются от НЕмасштабированной высоты) */
         function layoutTile(tile, bx) {
-            var s2 = tile.clientWidth / 350;
             bx.style.top = '50%';
             bx.style.transform = 'none';
             var nh = bx.offsetHeight || 1;
-            bx.style.transform = 'translateY(' + (-(nh * s2) / 2).toFixed(1) + 'px) scale(' + s2.toFixed(4) + ')';
+            /* масштаб по обеим осям (карточка выше своей плитки — вписываем целиком), центр по X и Y */
+            var s2 = Math.min(tile.clientWidth / 350, tile.clientHeight / nh);
+            var offX = (tile.clientWidth - 350 * s2) / 2;
+            bx.style.transform = 'translate(' + offX.toFixed(1) + 'px,' + (-(nh * s2) / 2).toFixed(1) + 'px) scale(' + s2.toFixed(4) + ')';
         }
         function renderMini() {
             try {
                 env.renderPreview(box);
                 layoutTile(prev, box);
-                if (prev2) { env.renderListPreview(box2); layoutTile(prev2, box2); }
             } catch (e) {}
         }
         env.sections.forEach(function (sc, i) {
@@ -3575,7 +3569,6 @@
             tile.addEventListener('pointercancel', peekUp);
         }
         bindPeek(prev, box);
-        if (prev2) bindPeek(prev2, box2);
         function onScroll() {
             try {
                 if (!document.contains(dock)) { destroy(); return; }
