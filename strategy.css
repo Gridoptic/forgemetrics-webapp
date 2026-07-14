@@ -19,6 +19,11 @@
     line-height: 1.5;
 }
 
+/* Экран — flex-колонка, а у карточек overflow:hidden: без запрета сжатия браузер
+   ужимает их по высоте под окно и режет текст (ловилось на десктопном Telegram). */
+.stg-screen > * { flex: 0 0 auto; }
+.stg-screen > .stg-center { flex: 1 1 auto; }
+
 .stg-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .stg-back {
     width: 36px; height: 36px; border-radius: 10px; flex: 0 0 auto;

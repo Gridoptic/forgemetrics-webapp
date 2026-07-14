@@ -44,8 +44,12 @@
         '<path d="M34 8.5c2.5 0 4.5 1.9 4.5 4.3 0 3.2-4.5 7.4-4.5 7.4s-4.5-4.2-4.5-7.4c0-2.4 2-4.3 4.5-4.3z" fill="#5DCAA5"/>' +
         '<circle cx="34" cy="12.9" r="1.7" fill="#06231a"/></svg>';
 
-    var SEC_ICON = { niche: '🎯', audience: '👥', content: '📋', traffic_free: '🚀',
-        traffic_paid: '📣', monetize: '💰', offer: '🏪', metrics: '📊', week1: '✅' };
+    var SEC_ICON = {
+        niche: '<i class="ti ti-target"></i>', audience: '<i class="ti ti-users"></i>',
+        content: '<i class="ti ti-list-details"></i>', traffic_free: '<i class="ti ti-rocket"></i>',
+        traffic_paid: '<i class="ti ti-speakerphone"></i>', monetize: '<i class="ti ti-coin"></i>',
+        offer: '<i class="ti ti-building-store"></i>', metrics: '<i class="ti ti-chart-bar"></i>',
+        week1: '<i class="ti ti-checklist"></i>' };
     var DIFF = { easy: { c: '#5DCAA5', l: 'Просто' }, medium: { c: '#f5bf4f', l: 'Средне' }, hard: { c: '#ef8080', l: 'Сложно' } };
 
     // ==================== каркас экрана ====================
@@ -190,28 +194,28 @@
     // ==================== 2. Интервью ====================
 
     var STEPS = [
-        { key: 'start', icon: '🎯', head: 'Знакомство со стратегом', q: 'С чего начинаем?',
+        { key: 'start', icon: '<i class="ti ti-target"></i>', head: 'Знакомство со стратегом', q: 'С чего начинаем?',
           note: 'Пять коротких вопросов — и стратег соберёт план лично под тебя: нишу, контент, трафик и заработок.',
           type: 'single', field: 'start_mode',
           options: ['Уже есть канал — строим на его базе', 'Начинаю с нуля — подбери мне нишу'] },
-        { key: 'interests', icon: '🔥', head: 'Знакомство со стратегом', q: 'Чем тебе интересно заниматься?',
+        { key: 'interests', icon: '<i class="ti ti-flame"></i>', head: 'Знакомство со стратегом', q: 'Чем тебе интересно заниматься?',
           note: 'Это самый важный вопрос из всех. Канал, который ведёшь через силу, умирает за месяц — поэтому ниша ищется на пересечении твоих интересов и того, за что рекламодатели реально платят. Выбери всё, что откликается:',
           type: 'multi', field: 'interests',
           options: ['Спорт и ЗОЖ', 'Финансы и инвестиции', 'Технологии и ИИ', 'Игры', 'Кино и сериалы', 'Психология', 'Авто', 'Кулинария', 'Путешествия', 'Мода и стиль', 'Бизнес и карьера', 'Юмор и развлечения'],
           custom: 'Свой вариант — напиши, чем горишь', customField: 'custom_interest' },
-        { key: 'geo', icon: '🌍', head: 'Страна и аудитория', q: 'Где живёт твоя аудитория?',
+        { key: 'geo', icon: '<i class="ti ti-world"></i>', head: 'Страна и аудитория', q: 'Где живёт твоя аудитория?',
           note: 'От региона зависит всё: какие площадки работают, сколько стоит подписчик и какие рекламодатели платят.',
           type: 'single', field: 'audience_geo',
           options: ['Россия и СНГ', 'Европа', 'США и Канада', 'Латинская Америка', 'Ближний Восток', 'Юго-Восточная Азия', 'Индия', 'Весь мир'],
           custom: 'Твоя страна — для точных советов по площадкам и ценам', customField: 'country' },
-        { key: 'resources', icon: '⏱️', head: 'Время и бюджет', q: 'Сколько готов вкладывать?',
+        { key: 'resources', icon: '<i class="ti ti-clock"></i>', head: 'Время и бюджет', q: 'Сколько готов вкладывать?',
           note: 'Честный ответ важнее красивого: план под 3 часа в неделю и план под 15 — это два разных плана.',
           type: 'double',
           groups: [
               { sub: 'Время в неделю', field: 'time_per_week', options: ['До 3 часов', '3–7 часов', '7–15 часов', '15+ часов'] },
               { sub: 'Бюджет на продвижение', field: 'budget', options: ['Без бюджета', 'До 3 000 ₽/мес', '3–10 тыс ₽/мес', 'Больше 10 тыс ₽/мес'] },
           ] },
-        { key: 'goal', icon: '💰', head: 'Цель', q: 'Что для тебя главное?',
+        { key: 'goal', icon: '<i class="ti ti-coin"></i>', head: 'Цель', q: 'Что для тебя главное?',
           note: 'Цель определяет монетизацию: под каждую соберётся своя лестница заработка.',
           type: 'single', field: 'goal',
           options: ['Зарабатывать на рекламе в канале', 'Продавать перелив трафика', 'Продавать свой продукт или услуги', 'Личный бренд и экспертность', 'Пока не знаю — подскажи'],
@@ -264,7 +268,7 @@
             }
         }
         var last = _ivStep === STEPS.length - 1;
-        var nextLabel = last ? T('Готово — строим стратегию') + ' 🚀'
+        var nextLabel = last ? T('Готово — строим стратегию')
             : T('Дальше') + ' → ' + T(STEPS[_ivStep + 1].head);
         setView(
             '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile">' + st.icon + '</span> ' + esc(T(st.head)) + '</div>' +
@@ -513,7 +517,7 @@
             var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
                 (sec.chart && sec.chart.bars && sec.chart.bars.length) || (sec.posts && sec.posts.length);
             if (!hasContent) return;
-            var inner = '<div class="stg-eyebrow"><span class="tile">' + (SEC_ICON[sec.key] || '📌') + '</span> ' + esc(T(sec.title || sec.key)) + '</div>';
+            var inner = '<div class="stg-eyebrow"><span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span> ' + esc(T(sec.title || sec.key)) + '</div>';
             if (sec.key === 'niche' && sec.chosen) {
                 inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
             }
@@ -540,17 +544,17 @@
     function reviewHtml() {
         var revs = _state.reviews || [];
         if (!revs.length) {
-            return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile">📈</span> ' + esc(T('Разбор недели')) + '</div>' +
+            return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Разбор недели')) + '</div>' +
                 '<div class="stg-note" style="margin-top:9px;">' + esc(T('Первый разбор стратег сделает через неделю: сверит план с фактическими цифрами канала — что сработало, где отстаёшь и что делать дальше.')) + '</div></div>';
         }
         var r = revs[0];
-        var inner = '<div class="stg-eyebrow"><span class="tile">📈</span> ' + esc(T('Неделя')) + ' ' + (r.week || 1) + ' · ' + esc(T('разбор от стратега')) + '</div>';
+        var inner = '<div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Неделя')) + ' ' + (r.week || 1) + ' · ' + esc(T('разбор от стратега')) + '</div>';
         if (r.summary) inner += '<div class="stg-note" style="margin-top:9px;">' + esc(r.summary) + '</div>';
         (r.wins || []).forEach(function (w) {
-            inner += '<div class="stg-verd"><span class="ic">✅</span><span><b>' + esc(T('Сработало:')) + '</b> ' + esc(w.title ? w.title + '. ' : '') + esc(w.body || '') + '</span></div>';
+            inner += '<div class="stg-verd"><span class="ic" style="color:#5DCAA5"><i class="ti ti-circle-check"></i></span><span><b>' + esc(T('Сработало:')) + '</b> ' + esc(w.title ? w.title + '. ' : '') + esc(w.body || '') + '</span></div>';
         });
         (r.lags || []).forEach(function (w) {
-            inner += '<div class="stg-verd"><span class="ic">⚠️</span><span><b>' + esc(T('Отстаём:')) + '</b> ' + esc(w.title ? w.title + '. ' : '') + esc(w.body || '') + '</span></div>';
+            inner += '<div class="stg-verd"><span class="ic" style="color:#f5bf4f"><i class="ti ti-alert-triangle"></i></span><span><b>' + esc(T('Отстаём:')) + '</b> ' + esc(w.title ? w.title + '. ' : '') + esc(w.body || '') + '</span></div>';
         });
         if (r.task) {
             inner += '<div class="stg-task"><b>' + esc(T('Задача недели:')) + '</b> ' + esc(r.task.title ? r.task.title + '. ' : '') + esc(r.task.body || '') + '</div>';
@@ -567,7 +571,7 @@
         }).join('');
         var used = (_state.chat && _state.chat.used) || 0;
         var quota = (_state.chat && _state.chat.quota) || 30;
-        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile">💬</span> ' + esc(T('Вопрос стратегу')) + '</div>' +
+        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Вопрос стратегу')) + '</div>' +
             '<div id="stg-chat-msgs" style="max-height:300px;overflow-y:auto;">' + rows + '</div>' +
             '<div class="stg-chatrow"><input class="stg-inp" id="stg-chat-inp" maxlength="1000" placeholder="' + esc(T('Спроси о своём канале, нише или шаге плана')) + '">' +
             '<button class="stg-send" data-act="send"><i class="ti ti-send"></i></button></div>' +
@@ -619,14 +623,14 @@
             return '<div class="stg-gstep"><span class="n">' + (s.n || i + 1) + '</span><span>' + esc(s.text || '') + '</span></div>';
         }).join('');
         var warns = (g.warnings || []).map(function (w) {
-            return '<div class="stg-gwarn"><span>⚠️</span><span>' + esc(w) + '</span></div>';
+            return '<div class="stg-gwarn"><span><i class="ti ti-alert-triangle"></i></span><span>' + esc(w) + '</span></div>';
         }).join('');
         var tools = (g.tools || []).map(function (tl) {
-            return '<div class="stg-gstep"><span class="n">🛠</span><span><b>' + esc(tl.name || '') + '</b>' +
+            return '<div class="stg-gstep"><span class="n"><i class="ti ti-tool"></i></span><span><b>' + esc(tl.name || '') + '</b>' +
                 (tl.where ? ' — ' + esc(tl.where) : '') + (tl.for ? ' (' + esc(tl.for) + ')' : '') + '</span></div>';
         }).join('');
         return '<div class="stg-guide"><h4>' + esc(g.title || T('Пошагово')) + '</h4>' + steps + tools + warns +
-            '<button class="stg-ask" data-act="ask" data-t="' + esc(g.title || '') + '">💬 ' + esc(T('Спроси стратега об этом шаге')) + '</button></div>';
+            '<button class="stg-ask" data-act="ask" data-t="' + esc(g.title || '') + '"><i class="ti ti-message-circle"></i> ' + esc(T('Спроси стратега об этом шаге')) + '</button></div>';
     }
 
     function openGuide(btn) {
