@@ -3363,7 +3363,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714x';
+    var PS_GLUE_V = '20260714y';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3436,6 +3436,8 @@
         var st = document.createElement('style'); st.id = 'fmx-dkCss';
         st.textContent =
             '#fmx-psDock,#fmx-cdDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.08);border-radius:0 0 18px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.75);padding:7px 11px;}' +
+            /* студия постера: шторка по ширине блока с полями по краям, а не во весь экран (вердикт 14.07) */
+            '#fmx-psDock{box-sizing:border-box;width:calc(100% - 20px);max-width:560px;margin:0 auto;border-left:1px solid rgba(255,255,255,0.08);border-right:1px solid rgba(255,255,255,0.08);}' +
             '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
             '#fmx-dkPrev,.fmx-cdTile{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
             '.fmx-cdTile{position:relative;}' +
