@@ -3379,7 +3379,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714z';
+    var PS_GLUE_V = '20260715a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3451,9 +3451,9 @@
         if (document.getElementById('fmx-dkCss')) return;
         var st = document.createElement('style'); st.id = 'fmx-dkCss';
         st.textContent =
-            '#fmx-psDock,#fmx-cdDock{position:sticky;top:0;z-index:30;background:rgba(11,14,24,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.08);border-radius:0 0 18px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.75);padding:7px 11px;}' +
-            /* студия постера: шторка по ширине блока с полями по краям, а не во весь экран (вердикт 14.07) */
-            '#fmx-psDock{box-sizing:border-box;width:calc(100% - 20px);max-width:560px;margin:0 auto;border-left:1px solid rgba(255,255,255,0.08);border-right:1px solid rgba(255,255,255,0.08);}' +
+            '#fmx-psDock,#fmx-cdDock{position:fixed;z-index:30;box-sizing:border-box;background:rgba(11,14,24,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.75);padding:7px 11px;' +
+                'opacity:0;transform:translateY(-10px);transition:opacity 190ms ease,transform 190ms ease;pointer-events:none;}' +
+            '#fmx-psDock.dk-on,#fmx-cdDock.dk-on{opacity:1;transform:none;pointer-events:auto;}' +
             '.fmx-dkIn{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center;}' +
             '#fmx-dkPrev,.fmx-cdTile{width:86px;height:107px;flex:0 0 auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);cursor:pointer;background:#0a0d18;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}' +
             '.fmx-cdTile{position:relative;}' +
@@ -3478,7 +3478,6 @@
         dock.innerHTML = '<div class="fmx-dkIn">' +
             '<div id="fmx-cdPrev" class="fmx-cdTile" title="К карточке"><div class="fmx-cdScale"></div></div>' +
             '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
-        dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
         var prevOA = env.scroll.style.overflowAnchor;
         env.scroll.style.overflowAnchor = 'none';   // scroll anchoring дёргал позицию при анимации аккордеона
@@ -3613,17 +3612,23 @@
             try {
                 if (!document.contains(dock)) { destroy(); return; }
                 var wR = env.wrap.getBoundingClientRect(), scR = env.scroll.getBoundingClientRect();
-                var vis = wR.height > 0 && (wR.bottom - scR.top) < 8;
-                var was = dock.style.display !== 'none';
-                dock.style.display = vis ? 'block' : 'none';
+                var on = dock.classList.contains('dk-on');
+                var d = wR.bottom - scR.top;
+                /* гистерезис: показ и скрытие на разных отметках — на границе не мигает */
+                var vis = wR.height > 0 && (on ? d < 25 : d < -15);
+                var W = Math.min(scR.width - 20, 560);
+                dock.style.top = scR.top.toFixed(1) + 'px';
+                dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
+                dock.style.width = W.toFixed(1) + 'px';
+                dock.classList.toggle('dk-on', vis);
                 if (env.miniEl) env.miniEl.classList.remove('on');   // старая мини-шторка не дублирует новую
-                if (vis && !was) { lastKey = env.stateKey(); renderMini(); }
+                if (vis && !on) { lastKey = env.stateKey(); renderMini(); }
             } catch (e) {}
         }
         env.scroll.addEventListener('scroll', onScroll);
         var iv = setInterval(function () {
             if (!document.contains(dock)) { destroy(); return; }
-            if (dock.style.display === 'none') return;
+            if (!dock.classList.contains('dk-on')) return;
             try {
                 var k3 = env.stateKey();
                 if (k3 !== lastKey) { lastKey = k3; renderMini(); }
@@ -3651,7 +3656,6 @@
         var dock = document.createElement('div');
         dock.id = 'fmx-psDock';
         dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="К постеру"></div><div class="fmx-dkCol"><div class="fmx-dkNav" id="fmx-dkNav"></div></div></div>';
-        dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
         var mini = null, miniWin = null, lastState = '', destroyed = false;
         function ensureMini() {
@@ -3764,15 +3768,22 @@
         function onScroll() {
             try {
                 var fR = env.frame.getBoundingClientRect(), scR = env.scroll.getBoundingClientRect();
-                var vis = (fR.top - scR.top) < -675 * env.getK() * 0.8;
-                if (vis && dock.style.display === 'none') { dock.style.display = ''; ensureMini(); }
-                else if (!vis && dock.style.display !== 'none') dock.style.display = 'none';
+                var on = dock.classList.contains('dk-on');
+                var base = -675 * env.getK() * 0.8;
+                var d = fR.top - scR.top;
+                var vis = on ? d < base + 40 : d < base;   // гистерезис против мигания на границе
+                var W = Math.min(scR.width - 20, 560);
+                dock.style.top = scR.top.toFixed(1) + 'px';
+                dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
+                dock.style.width = W.toFixed(1) + 'px';
+                dock.classList.toggle('dk-on', vis);
+                if (vis && !on) ensureMini();
             } catch (e) {}
         }
         env.scroll.addEventListener('scroll', onScroll);
         var iv = setInterval(function () {
             try {
-                if (destroyed || !miniWin || dock.style.display === 'none') return;
+                if (destroyed || !miniWin || !dock.classList.contains('dk-on')) return;
                 var st = env.getState(); if (!st) return;
                 var js = JSON.stringify(st);
                 if (js !== lastState) {
