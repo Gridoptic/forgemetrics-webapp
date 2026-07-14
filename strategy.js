@@ -534,6 +534,8 @@
 
         html += reviewHtml();
         html += chatHtml();
+        html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' +
+            esc(T('Начать новую стратегию')) + '</button>';
         setView(html);
         var chatBox = document.getElementById('stg-chat-msgs');
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
@@ -614,6 +616,34 @@
                 if (btn) btn.disabled = false;
                 if (typing) { typing.id = ''; typing.textContent = T('Стратег не ответил — попробуй ещё раз.'); }
             });
+    }
+
+    function restartFlow(btn) {
+        haptic('light');
+        if (!btn.getAttribute('data-armed')) {
+            btn.setAttribute('data-armed', '1');
+            btn.style.color = '#f5bf4f';
+            btn.textContent = T('Точно начать заново? Текущий план уйдёт в архив — нажми ещё раз');
+            setTimeout(function () {
+                if (btn && btn.getAttribute('data-armed')) {
+                    btn.removeAttribute('data-armed');
+                    btn.style.color = '';
+                    btn.textContent = T('Начать новую стратегию');
+                }
+            }, 5000);
+            return;
+        }
+        haptic('medium');
+        apiRequest('/api/v1/strategy/restart', { method: 'POST' })
+            .then(function (r) {
+                if (r && r.ok) {
+                    _guides = {}; _iv = {}; _started = false; _state = null;
+                    window.__openStrategy();
+                } else {
+                    toast(T('Не удалось начать. Попробуй ещё раз'));
+                }
+            })
+            .catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); });
     }
 
     // ==================== гайды и клики ====================
@@ -724,6 +754,7 @@
         if (act === 'next') { stepNext(); return; }
         if (act === 'prev') { haptic('light'); _ivStep = Math.max(0, _ivStep - 1); renderStep(); return; }
         if (act === 'regen') { regen(); return; }
+        if (act === 'restart') { restartFlow(actEl); return; }
         if (act === 'cb') { toggleStep(actEl); return; }
         if (act === 'how') { openGuide(actEl); return; }
         if (act === 'more') {
