@@ -472,15 +472,27 @@
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
     }
 
+    // стоимость в метке — коротко: до первой запятой/скобки, максимум ~26 символов
+    function shortCost(c) {
+        var t = String(c == null ? '' : c).trim();
+        if (!t || t === '—' || t === '-') return '';
+        t = t.split(/[(,;]/)[0].trim().replace(/[·—-]\s*$/, '').trim();
+        if (t.length > 26) t = t.slice(0, 25).replace(/\s+\S*$/, '') + '…';
+        return t;
+    }
+
     function chartHtml(chart) {
         if (!chart || !chart.bars || !chart.bars.length) return '';
+        var bars = chart.bars.filter(function (b) { return (b.pct || 0) > 0; });
+        if (!bars.length) bars = chart.bars.slice(0, 4);
         var max = 1;
-        chart.bars.forEach(function (b) { if (b.pct > max) max = b.pct; });
-        var rows = chart.bars.slice().sort(function (a, b) { return (b.pct || 0) - (a.pct || 0); }).map(function (b) {
+        bars.forEach(function (b) { if (b.pct > max) max = b.pct; });
+        var rows = bars.slice().sort(function (a, b) { return (b.pct || 0) - (a.pct || 0); }).map(function (b) {
             var d = DIFF[b.difficulty] || DIFF.medium;
             var w = Math.max(8, Math.round((b.pct || 0) / max * 88));
+            var cost = shortCost(b.cost);
             return '<div class="stg-bar-row"><div class="stg-bar-l"><b>' + esc(b.name) + '</b>' +
-                '<span class="stg-dif"><i style="background:' + d.c + '"></i>' + esc(T(d.l)) + (b.cost ? ' · ' + esc(b.cost) : '') + '</span></div>' +
+                '<span class="stg-dif"><i style="background:' + d.c + '"></i>' + esc(T(d.l)) + (cost ? ' · ' + esc(cost) : '') + '</span></div>' +
                 '<div class="stg-bar-tr"><div class="stg-bar-f" style="width:' + w + '%"></div><span class="stg-bar-v">' + (b.pct || 0) + '%</span></div></div>';
         }).join('');
         var advice = chart.advice
