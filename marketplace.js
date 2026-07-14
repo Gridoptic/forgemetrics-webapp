@@ -3363,7 +3363,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260714v';
+    var PS_GLUE_V = '20260714w';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -3462,6 +3462,8 @@
             '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
         dock.style.display = 'none';
         env.dockParent.insertBefore(dock, env.wrap);
+        var prevOA = env.scroll.style.overflowAnchor;
+        env.scroll.style.overflowAnchor = 'none';   // scroll anchoring дёргал позицию при анимации аккордеона
         var prev = dock.querySelector('#fmx-cdPrev');
         var box = prev.querySelector('.fmx-cdScale');
         var nav = dock.querySelector('.fmx-dkNav');
@@ -3491,24 +3493,45 @@
                 try {
                     env.openSection(sc[0]);
                     nav.querySelectorAll('.fmx-dkChip').forEach(function (x) { x.classList.toggle('on', x === a); });
-                    setTimeout(function () {
-                        var sec = env.root.querySelector('.fmx-acc[data-ac="' + sc[0] + '"]'); if (!sec) return;
-                        /* якорь: нижняя граница предыдущего ВИДИМОГО блока к низу шторки; всё
-                           по видимым прямоугольникам (offsetTop зависит от вёрстки контейнеров) */
+                    /* аккордеон анимируется (max-height 320ms ease), и высоты «едут»: целимся только
+                       после СТАБИЛИЗАЦИИ геометрии (два одинаковых замера подряд), затем плавная
+                       прокрутка и финальная доводка до пикселя — иначе прилипание выходило кривым */
+                    function anchorAbs() {
+                        var sec = env.root.querySelector('.fmx-acc[data-ac="' + sc[0] + '"]'); if (!sec) return null;
                         var prevEl = sec.previousElementSibling;
                         while (prevEl && prevEl.getBoundingClientRect().height === 0) prevEl = prevEl.previousElementSibling;
                         var scR = env.scroll.getBoundingClientRect();
                         var y = prevEl ? prevEl.getBoundingClientRect().bottom : (sec.getBoundingClientRect().top - 12);
-                        /* высота шторки: если в момент клика она скрыта — меряем мгновенным
-                           невидимым показом (offsetHeight у display:none равен нулю) */
-                        var dockH = dock.offsetHeight;
-                        if (!dockH) {
+                        return env.scroll.scrollTop + (y - scR.top);
+                    }
+                    function dockHeight() {
+                        var h = dock.offsetHeight;
+                        if (!h) {
                             dock.style.visibility = 'hidden'; dock.style.display = 'block';
-                            dockH = dock.offsetHeight;
+                            h = dock.offsetHeight;
                             dock.style.display = 'none'; dock.style.visibility = '';
                         }
-                        env.scroll.scrollTo({ top: env.scroll.scrollTop + (y - scR.top) - dockH, behavior: 'smooth' });
-                    }, 300);   // аккордеон раскрывается анимацией — целимся после неё
+                        return h;
+                    }
+                    var lastY = null, tries = 0;
+                    (function waitStable() {
+                        var yNow = anchorAbs(); if (yNow == null) return;
+                        tries++;
+                        if (lastY != null && Math.abs(yNow - lastY) < 1) {
+                            var target = yNow - dockHeight();
+                            env.scroll.scrollTo({ top: target, behavior: 'smooth' });
+                            setTimeout(function () {   // доводка: гасим остаточный дрейф одним точным шагом
+                                var yFin = anchorAbs(); if (yFin == null) return;
+                                var tFin = yFin - dockHeight();
+                                var maxS = env.scroll.scrollHeight - env.scroll.clientHeight;
+                                tFin = Math.max(0, Math.min(tFin, maxS));
+                                if (Math.abs(env.scroll.scrollTop - tFin) > 4) env.scroll.scrollTo({ top: tFin });
+                            }, 460);
+                            return;
+                        }
+                        lastY = yNow;
+                        if (tries < 12) setTimeout(waitStable, 90);
+                    })();
                 } catch (e) {}
             });
             nav.appendChild(a);
@@ -3594,6 +3617,7 @@
             destroyed = true;
             peekEnd();
             clearInterval(iv);
+            env.scroll.style.overflowAnchor = prevOA || '';
             env.scroll.removeEventListener('scroll', onScroll);
             try { if (dock.parentNode) dock.parentNode.removeChild(dock); } catch (e) {}
         }
