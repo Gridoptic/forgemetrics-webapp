@@ -202,9 +202,13 @@
     // ==================== 3. Лента недели (1-в-1 макет) ====================
     function fmtInfo(f) { return FMT[f] || ['Пост', 'ti-file-text']; }
     function statusOf(p) {
-        if (p.status === 'approved') return ['Утверждён', 'ok'];
-        if (p.text) return ['Черновик готов', 'draft'];
-        return ['Идея', 'idea'];
+        var ps = p.publish_status;
+        if (ps === 'published') return [T('Опубликован'), 'pub'];
+        if (ps === 'queued') return [T('Запланирован') + (p.slot_hm ? ' ' + p.slot_hm : ''), 'q'];
+        if (ps === 'failed' || ps === 'needs_check') return [T('Не отправлен'), 'fail'];
+        if (p.status === 'approved') return [T('Утверждён'), 'ok'];
+        if (p.text) return [T('Черновик готов'), 'draft'];
+        return [T('Идея'), 'idea'];
     }
     function dateLabel(iso) {
         if (!iso) return '';
@@ -234,10 +238,22 @@
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
             : '';
 
+        // «Штурман»: запланировать выход в канал (когда есть утверждённые с текстом) / снять с очереди
+        var apprText = ps.filter(function (p) { return p.status === 'approved' && p.text; }).length;
+        var scheduled = _state.status === 'scheduled' || ps.some(function (p) { return p.publish_status === 'queued'; });
+        var schedBtn = '';
+        if (scheduled) {
+            schedBtn = '<button class="cp-allbtn sched" data-act="unschedule"><i class="ti ti-calendar-off"></i> ' + esc(T('Снять неделю с очереди')) + '</button>';
+        } else if (apprText > 0) {
+            schedBtn = '<button class="cp-allbtn sched" data-act="schedule"><i class="ti ti-calendar-up"></i> ' + esc(T('Запланировать выход в канал')) + '</button>';
+        }
+
         var ribbon = '<div class="cp-ribbon">' + ps.map(function (p) { return ribbonCard(p); }).join('') + '</div>';
 
-        setView(header + allBtn + ribbon + detailPanel() +
-            '<div class="cp-foot">' + esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Автовыкладка — на следующем этапе.')) + '</div>');
+        var foot = scheduled
+            ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
+            : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
+        setView(header + allBtn + schedBtn + ribbon + detailPanel() + '<div class="cp-foot">' + foot + '</div>');
     }
 
     function hoursWord(n) {
@@ -274,16 +290,29 @@
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
 
         var body;
+        var pubc = '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>';
         if (_dayBusy[p.id]) {
             body = '<div class="cp-dload"><div class="cp-spin sm"></div>' + esc(T('Пишу текст...')) + '</div>';
+        } else if (p.publish_status === 'published') {
+            body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
+                (p.published_url ? '<button class="cp-act ok" data-act="openpost" data-url="' + esc(p.published_url) + '"><i class="ti ti-external-link"></i> ' + esc(T('Открыть в канале')) + '</button>' : '') +
+                '<button class="cp-act" data-act="rollback" data-id="' + p.id + '"><i class="ti ti-trash"></i> ' + esc(T('Удалить из канала')) + '</button>' + pubc + '</div>' +
+                '<div class="cp-note">' + esc(T('Опубликовано. Удалить из канала ботом можно 48 часов.')) + '</div>';
+        } else if (p.publish_status === 'queued') {
+            body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
+                '<button class="cp-act" data-act="canceld" data-id="' + p.id + '"><i class="ti ti-calendar-off"></i> ' + esc(T('Снять с очереди')) + '</button>' + pubc + '</div>' +
+                '<div class="cp-note">' + esc(T('Выйдет в канал автоматически в указанное время.')) + '</div>';
+        } else if (p.publish_status === 'failed' || p.publish_status === 'needs_check') {
+            body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
+                '<button class="cp-act ok" data-act="approve" data-id="' + p.id + '"><i class="ti ti-circle-check"></i> ' + esc(T('Утвердить')) + '</button>' + pubc + '</div>' +
+                '<div class="cp-note fail">' + esc(T('Пост не отправлен. Проверь права бота и запланируй заново.')) + '</div>';
         } else if (p.text) {
             body = '<div class="cp-dtext2">' + esc(p.text) + '</div>' +
                 '<div class="cp-dacts">' +
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
-                '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' +
-                '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button></div>';
+                '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
                 '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>';
@@ -416,5 +445,55 @@
         if (act === 'genall') { genAll(); return; }
         if (act === 'approve') { approve(+id); return; }
         if (act === 'copy') { copyDay(+id); return; }
+        if (act === 'schedule') { doSchedule(); return; }
+        if (act === 'unschedule') { doUnschedule(); return; }
+        if (act === 'canceld') { cancelDay(+id); return; }
+        if (act === 'rollback') { rollbackDay(+id); return; }
+        if (act === 'openpost') {
+            var url = actEl.getAttribute('data-url');
+            haptic('light');
+            try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) return tg.openTelegramLink(url); } catch (e) {}
+            try { window.open(url, '_blank'); } catch (e) {}
+            return;
+        }
+    }
+
+    // ==================== «Штурман»: планирование выхода ====================
+    function doSchedule() {
+        if (!_state.can_post) {
+            toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
+            return;
+        }
+        haptic('medium');
+        apiRequest('/api/v1/content-plan/schedule', { method: 'POST', body: '{}' })
+            .then(function (r) {
+                if (r && r.ok) { toast(T('Неделя запланирована — посты выйдут в канал сами')); refreshState(); }
+                else if (r && r.error === 'no_bot_rights') toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
+                else if (r && r.error === 'nothing_approved') toast(T('Сначала утверди хотя бы один пост.'));
+                else toast(T('Не удалось запланировать'));
+            })
+            .catch(function () { toast(T('Не удалось запланировать')); });
+    }
+    function doUnschedule() {
+        haptic('medium');
+        apiRequest('/api/v1/content-plan/unschedule', { method: 'POST', body: '{}' })
+            .then(function (r) { if (r && r.ok) { toast(T('Неделя снята с очереди')); refreshState(); } else toast(T('Не удалось снять с очереди')); })
+            .catch(function () { toast(T('Не удалось снять с очереди')); });
+    }
+    function cancelDay(id) {
+        haptic('light');
+        apiRequest('/api/v1/content-plan/cancel-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) { if (r && r.ok) { toast(T('Пост снят с очереди')); refreshState(); } else toast(T('Не удалось снять с очереди')); })
+            .catch(function () { toast(T('Не удалось снять с очереди')); });
+    }
+    function rollbackDay(id) {
+        haptic('medium');
+        apiRequest('/api/v1/content-plan/rollback-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                if (r && r.ok) { toast(T('Пост удалён из канала')); refreshState(); }
+                else if (r && r.error === 'too_late') toast(T('Прошло больше 48 часов — бот уже не может удалить пост.'));
+                else toast(T('Не удалось удалить из канала'));
+            })
+            .catch(function () { toast(T('Не удалось удалить из канала')); });
     }
 })();

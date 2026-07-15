@@ -74,6 +74,9 @@
 .cp-allbtn { width: 100%; padding: 12px; border: 1px solid rgba(129,140,248,0.45); border-radius: 12px; margin-bottom: 12px;
     background: rgba(129,140,248,0.12); color: #a9b0ff; font-weight: 700; font-size: 13px; font-family: inherit; cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 7px; }
+.cp-allbtn.sched { border: 0; color: #fff; background: linear-gradient(135deg,#5DCAA5,#3fa985); box-shadow: 0 12px 26px -14px rgba(93,202,165,0.8); }
+.cp-note { font-size: 11.5px; color: #8d93a8; margin-top: 10px; line-height: 1.45; }
+.cp-note.fail { color: #ef8080; }
 
 /* ===== горизонтальная лента дней (1-в-1 макет) ===== */
 .cp-ribbon { display: grid; grid-auto-flow: column; grid-auto-columns: 168px; gap: 10px;
@@ -106,6 +109,9 @@
 .cp-day.s-ok .cp-dstat { color: #5DCAA5; } .cp-day.s-ok .sd { background: #5DCAA5; }
 .cp-day.s-draft .cp-dstat { color: #E8B04B; } .cp-day.s-draft .sd { background: #E8B04B; }
 .cp-day.s-idea .cp-dstat { color: #656b83; } .cp-day.s-idea .sd { background: #656b83; }
+.cp-day.s-pub .cp-dstat { color: #5DCAA5; } .cp-day.s-pub .sd { background: #5DCAA5; box-shadow: 0 0 8px rgba(93,202,165,0.7); }
+.cp-day.s-q .cp-dstat { color: #818cf8; } .cp-day.s-q .sd { background: #818cf8; }
+.cp-day.s-fail .cp-dstat { color: #ef8080; } .cp-day.s-fail .sd { background: #ef8080; }
 
 /* ===== деталь выбранного дня ===== */
 .cp-detail { background: rgba(255,255,255,0.03); border: 1px solid rgba(129,140,248,0.28); border-radius: 16px; padding: 16px; margin-top: 4px; }
