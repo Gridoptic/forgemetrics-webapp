@@ -5,6 +5,7 @@
 
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _lastOriginal = '', _lastResult = '', _busy = false, _tab = 'res';
+    var _avCache = {};   // id канала -> objectURL картинки ('x' = аватарки нет/не загрузилась)
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -57,20 +58,49 @@
         return null;
     }
     function chAv(c) {
-        if (c && c.avatar_url) return '<img src="' + esc(c.avatar_url) + '">';
+        // буква-заглушка; реальная аватарка подгружается rwLoadAvatars() поверх — как в основном приложении
         var t = (c && (c.title || c.username)) || '?';
         return esc(String(t).charAt(0).toUpperCase());
     }
+    function avAttr(c) {
+        // помечаем контейнер .av для отложенной подгрузки картинки (эндпоинт /channels/{id}/avatar)
+        return (c && c.has_avatar && c.id != null) ? ' data-rwav="' + c.id + '"' : '';
+    }
+    function rwLoadAvatars(scope) {
+        var root = scope || document.getElementById('rewrite-screen');
+        if (!root || !root.querySelectorAll) return;
+        var base = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
+        var initData = '';
+        try { if (typeof state !== 'undefined' && state && state.initData) initData = state.initData; } catch (e) {}
+        function fill(id, url) {
+            var host = document.getElementById('rewrite-screen');
+            if (!host) return;
+            host.querySelectorAll('[data-rwav="' + id + '"]').forEach(function (n) {
+                n.innerHTML = '<img src="' + url + '" alt="">';
+            });
+        }
+        root.querySelectorAll('[data-rwav]').forEach(function (node) {
+            var id = node.getAttribute('data-rwav');
+            if (!id) return;
+            var v = _avCache[id];
+            if (v) { if (v !== 'x' && v !== 'pending') fill(id, v); return; }
+            _avCache[id] = 'pending';
+            fetch(base + '/api/v1/channels/' + id + '/avatar', { headers: { 'X-Telegram-Init-Data': initData } })
+                .then(function (r) { if (!r.ok) throw 0; return r.blob(); })
+                .then(function (b) { var url = URL.createObjectURL(b); _avCache[id] = url; fill(id, url); })
+                .catch(function () { _avCache[id] = 'x'; });
+        });
+    }
 
     function chHead(c) {
-        return '<div class="av">' + (c ? chAv(c) : '<i class="ti ti-broadcast"></i>') + '</div>' +
+        return '<div class="av"' + avAttr(c) + '>' + (c ? chAv(c) : '<i class="ti ti-broadcast"></i>') + '</div>' +
             '<div class="nm"><b>' + esc(c ? (c.title || ('@' + c.username)) : T('Без канала — нейтральный стиль')) + '</b>' +
             '<span>' + esc(c ? ('@' + c.username) : T('подключи канал, чтобы писать в его голосе')) + '</span></div>';
     }
     function chOpt(ch) {
         var sel = ch.id === _chId;
         return '<button type="button" class="rw-chopt' + (sel ? ' sel' : '') + '" data-chid="' + ch.id + '">' +
-            '<div class="av">' + chAv(ch) + '</div><div class="nm"><b>' + esc(ch.title || ('@' + ch.username)) + '</b>' +
+            '<div class="av"' + avAttr(ch) + '>' + chAv(ch) + '</div><div class="nm"><b>' + esc(ch.title || ('@' + ch.username)) + '</b>' +
             '<span>@' + esc(ch.username) + '</span></div>' +
             '<i class="ti ti-check ck"></i></button>';
     }
@@ -113,6 +143,7 @@
 
             '<button class="rw-go" data-act="go">' + esc(T('Переписать в моём стиле')) + '</button>' +
             '<div id="rw-result"></div>');
+        rwLoadAvatars();
     }
 
     function onInput(ev) {
@@ -194,7 +225,7 @@
             haptic('light');
             // обновляем НА МЕСТЕ (не перерисовываем форму — иначе стирается введённый текст)
             var head = document.getElementById('rw-chhead');
-            if (head) head.innerHTML = chHead(curChannel()) + '<i class="ti ti-chevron-down chev"></i>';
+            if (head) { head.innerHTML = chHead(curChannel()) + '<i class="ti ti-chevron-down chev"></i>'; rwLoadAvatars(head); }
             var list = document.getElementById('rw-chlist');
             if (list) {
                 list.querySelectorAll('.rw-chopt').forEach(function (o) {
