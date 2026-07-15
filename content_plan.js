@@ -12,6 +12,7 @@
     var _freq = 7;
     var _selDay = 0;            // выбранный день (day_index) для панели детали
     var _dayBusy = {};          // post_id -> идёт генерация текста
+    var _batchTimer = null;     // поллинг батча «вся неделя разом» (не гасится stopTimers)
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -57,6 +58,7 @@
     }
     function close() {
         stopTimers();
+        if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
         var host = document.getElementById('content-plan-screen');
         if (host) host.style.display = 'none';
         document.documentElement.classList.remove('cs-modal-open');
@@ -147,6 +149,7 @@
     function doGenerate(btn) {
         if (btn) btn.disabled = true;
         haptic('medium');
+        if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
         var tz = 0;
         try { tz = -(new Date().getTimezoneOffset()); } catch (e) {}
         var body = { channel_id: _chId, goal: _goal, frequency: _freq, tz_offset_minutes: tz };
@@ -314,23 +317,46 @@
     }
 
     function genAll() {
-        var pending = (_state.posts || []).filter(function (p) { return !p.text && !_dayBusy[p.id]; });
+        var pending = (_state.posts || []).filter(function (p) { return !p.text; });
         if (!pending.length) return;
-        var i = 0;
-        function step() {
-            if (i >= pending.length) { refreshState(); return; }
-            var p = pending[i]; i++;
-            _dayBusy[p.id] = true; renderWeek();
-            apiRequest('/api/v1/content-plan/generate-day', { method: 'POST', body: JSON.stringify({ post_id: p.id }) })
-                .then(function (r) {
-                    _dayBusy[p.id] = false;
-                    if (r && r.ok) { p.text = r.text; p.status = r.status || 'draft'; p.model_used = r.model_used; renderWeek(); step(); }
-                    else { toast(cap(r)); renderWeek(); }   // потолок/ошибка — останавливаемся
-                })
-                .catch(function () { _dayBusy[p.id] = false; toast(T('Не удалось написать текст')); renderWeek(); });
-        }
         haptic('medium');
-        step();
+        pending.forEach(function (p) { _dayBusy[p.id] = true; });
+        renderWeek();
+        // серверный батч всей недели: накопительный avoid-список + анти-плагиат (качество ×N)
+        apiRequest('/api/v1/content-plan/generate-all', { method: 'POST', body: '{}' })
+            .then(function (r) {
+                if (r && r.ok) { toast(T('Пишу всю неделю — карточки будут заполняться')); startBatchPoll(); }
+                else {
+                    pending.forEach(function (p) { _dayBusy[p.id] = false; });
+                    if (r && r.gate === 'pro') toast(T('Вся неделя разом — на платном тарифе. Пока пиши тексты по одному.'));
+                    else toast(cap(r));
+                    renderWeek();
+                }
+            })
+            .catch(function () { pending.forEach(function (p) { _dayBusy[p.id] = false; }); toast(T('Не удалось запустить генерацию')); renderWeek(); });
+    }
+
+    function startBatchPoll() {
+        if (_batchTimer) clearInterval(_batchTimer);
+        var prevN = (_state.posts || []).filter(function (p) { return p.text; }).length;
+        var ticks = 0;
+        // _batchTimer НЕ очищается stopTimers() — переживает renderWeek(); гасится по завершению/close()
+        _batchTimer = setInterval(function () {
+            ticks++;
+            apiRequest('/api/v1/content-plan').then(function (d) {
+                if (!d || !d.ok) return;
+                _state = d;
+                var withText = (d.posts || []).filter(function (p) { return p.text; });
+                withText.forEach(function (p) { _dayBusy[p.id] = false; });
+                var pending = (d.posts || []).filter(function (p) { return !p.text; }).length;
+                if (withText.length !== prevN || !pending) { prevN = withText.length; renderWeek(); }
+                if (!pending || ticks > 80) {
+                    clearInterval(_batchTimer); _batchTimer = null;
+                    for (var k in _dayBusy) _dayBusy[k] = false;
+                    renderWeek();
+                }
+            }).catch(function () {});
+        }, 3000);
     }
 
     function approve(id) {
