@@ -1,6 +1,5 @@
 /* Метрики канала — объективный дашборд (подписчики, охват, ER, тренд, регулярность,
-   лучшие посты, спарклайн просмотров). Данные из fetch_channel_analytics + ad_health.
-   Честно: точная динамика подписчиков и время суток — с TGStat. */
+   лучшие посты, спарклайн просмотров). Данные из fetch_channel_analytics + ad_health. */
 (function () {
     'use strict';
 
@@ -146,10 +145,7 @@
             (trendTxt ? '<div class="mx-trend ' + trendCls + '"><i class="ti ti-' + (trendCls === 'up' ? 'trending-up' : (trendCls === 'down' ? 'trending-down' : 'minus')) + '"></i> ' + esc(trendTxt) + '</div>' : '') +
             (d.spark && d.spark.length > 1 ? '<div class="mx-sparkwrap"><div class="mx-lbl">' + esc(T('Просмотры последних постов')) + '</div>' + spark(d.spark) + '</div>' : '') +
 
-            (best ? '<div class="mx-sec"><div class="mx-lbl">' + esc(T('Лучшие посты')) + '</div>' + best + '</div>' : '') +
-
-            '<div class="mx-note">' + esc(T('Данные — из публичной ленты канала. Точная динамика подписчиков, охваты по часам и лучшее время выхода появятся с подключением TGStat.')) +
-            (d.posts_analyzed ? ' ' + esc(T('Проанализировано постов:')) + ' ' + d.posts_analyzed + '.' : '') + '</div>');
+            (best ? '<div class="mx-sec"><div class="mx-lbl">' + esc(T('Лучшие посты')) + '</div>' + best + '</div>' : ''));
     }
 
     function onClick(ev) {
