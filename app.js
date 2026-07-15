@@ -682,6 +682,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'content_plan') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openContentPlan === 'function') {
+            window.__openContentPlan();
+        }
+        return;
+    }
+
     if (actionId === 'profile') { openCabinet(); return; }
     if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }
     if (actionId === 'tariffs') { openTariffs(); return; }
