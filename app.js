@@ -690,6 +690,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'channel_analytics') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openChannelMetrics === 'function') {
+            window.__openChannelMetrics();
+        }
+        return;
+    }
+
     if (actionId === 'profile') { openCabinet(); return; }
     if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }
     if (actionId === 'tariffs') { openTariffs(); return; }
