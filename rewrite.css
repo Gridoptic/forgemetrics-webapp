@@ -34,23 +34,41 @@
     padding: 8px 11px; border-radius: 10px; background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.35); }
 .rw-link-note.on { display: block; }
 
-/* выбор канала */
-.rw-ch { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 12px; cursor: pointer;
-    background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); }
-.rw-ch .av { width: 34px; height: 34px; border-radius: 10px; flex: 0 0 auto; overflow: hidden; display: flex;
-    align-items: center; justify-content: center; font-weight: 800; color: #818cf8;
-    background: linear-gradient(160deg,rgba(129,140,248,0.2),rgba(129,140,248,0.05)); }
+/* выбор канала — выдвижка */
+.rw-chdd { position: relative; }
+.rw-ch { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; border-radius: 12px; cursor: pointer;
+    background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); font-family: inherit; text-align: left;
+    transition: border-color .18s, background .18s; }
+.rw-ch:active { background: rgba(255,255,255,0.07); }
+.rw-chdd.open .rw-ch { border-color: rgba(129,140,248,0.5); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.rw-ch .av { width: 36px; height: 36px; border-radius: 10px; flex: 0 0 auto; overflow: hidden; display: flex;
+    align-items: center; justify-content: center; font-weight: 800; font-size: 15px; color: #818cf8;
+    background: linear-gradient(160deg,rgba(129,140,248,0.22),rgba(129,140,248,0.05)); border: 1px solid rgba(129,140,248,0.3); }
 .rw-ch .av img { width: 100%; height: 100%; object-fit: cover; }
 .rw-ch .nm { flex: 1; min-width: 0; }
-.rw-ch .nm b { display: block; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rw-ch .nm span { display: block; font-size: 11px; color: #8d93a8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rw-ch .chev { color: #565b73; flex: 0 0 auto; }
-.rw-chlist { margin-top: 8px; display: none; flex-direction: column; gap: 6px; }
-.rw-chlist.on { display: flex; }
-.rw-chopt { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 10px; cursor: pointer;
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); font-size: 12.5px; }
-.rw-chopt.sel { border-color: rgba(129,140,248,0.55); background: linear-gradient(135deg,rgba(129,140,248,0.16),rgba(129,140,248,0.05)); }
-.rw-chopt .av { width: 26px; height: 26px; border-radius: 8px; font-size: 12px; }
+.rw-ch .nm b { display: block; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rw-ch .nm span { display: block; font-size: 11px; color: #8d93a8; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rw-ch .chev { color: #8d93a8; flex: 0 0 auto; transition: transform .22s ease; }
+.rw-chdd.open .rw-ch .chev { transform: rotate(180deg); }
+
+.rw-chlist { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .24s ease, opacity .18s ease;
+    border-radius: 0 0 12px 12px; border: 1px solid transparent; border-top: 0; }
+.rw-chdd.open .rw-chlist { max-height: 340px; opacity: 1; overflow-y: auto;
+    border-color: rgba(129,140,248,0.5); background: rgba(14,17,28,0.6); }
+.rw-chopt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; cursor: pointer;
+    background: none; border: 0; border-top: 1px solid rgba(255,255,255,0.05); font-family: inherit; text-align: left; }
+.rw-chopt:first-child { border-top: 0; }
+.rw-chopt:active { background: rgba(129,140,248,0.08); }
+.rw-chopt.sel { background: rgba(129,140,248,0.1); }
+.rw-chopt .av { width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto; overflow: hidden; display: flex;
+    align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: #818cf8;
+    background: linear-gradient(160deg,rgba(129,140,248,0.2),rgba(129,140,248,0.05)); }
+.rw-chopt .av img { width: 100%; height: 100%; object-fit: cover; }
+.rw-chopt .nm { flex: 1; min-width: 0; }
+.rw-chopt .nm b { display: block; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rw-chopt .nm span { display: block; font-size: 10.5px; color: #8d93a8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rw-chopt .ck { color: #5DCAA5; flex: 0 0 auto; opacity: 0; }
+.rw-chopt.sel .ck { opacity: 1; }
 
 /* сегменты */
 .rw-lbl { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8d93a8; margin: 12px 0 7px; }

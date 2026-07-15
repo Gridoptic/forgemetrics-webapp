@@ -62,6 +62,26 @@
         return esc(String(t).charAt(0).toUpperCase());
     }
 
+    function chHead(c) {
+        return '<div class="av">' + (c ? chAv(c) : '<i class="ti ti-broadcast"></i>') + '</div>' +
+            '<div class="nm"><b>' + esc(c ? (c.title || ('@' + c.username)) : T('Без канала — нейтральный стиль')) + '</b>' +
+            '<span>' + esc(c ? ('@' + c.username) : T('подключи канал, чтобы писать в его голосе')) + '</span></div>';
+    }
+    function chOpt(ch) {
+        var sel = ch.id === _chId;
+        return '<button type="button" class="rw-chopt' + (sel ? ' sel' : '') + '" data-chid="' + ch.id + '">' +
+            '<div class="av">' + chAv(ch) + '</div><div class="nm"><b>' + esc(ch.title || ('@' + ch.username)) + '</b>' +
+            '<span>@' + esc(ch.username) + '</span></div>' +
+            '<i class="ti ti-check ck"></i></button>';
+    }
+    function chOptNone() {
+        var sel = _chId == null;
+        return '<button type="button" class="rw-chopt' + (sel ? ' sel' : '') + '" data-chid="0">' +
+            '<div class="av"><i class="ti ti-ban"></i></div><div class="nm"><b>' + esc(T('Без канала — нейтральный стиль')) + '</b>' +
+            '<span>' + esc(T('чистый нейтральный текст')) + '</span></div>' +
+            '<i class="ti ti-check ck"></i></button>';
+    }
+
     function seg(name, val, opts) {
         return '<div class="rw-seg" data-seg="' + name + '">' + opts.map(function (o) {
             return '<button data-v="' + o[0] + '" class="' + (val === o[0] ? 'on' : '') + '">' + esc(T(o[1])) + '</button>';
@@ -71,13 +91,11 @@
     function renderForm() {
         var c = curChannel();
         var chBlock = _channels && _channels.length
-            ? '<div class="rw-ch" data-act="chtoggle"><div class="av">' + (c ? chAv(c) : '<i class="ti ti-broadcast"></i>') + '</div>' +
-              '<div class="nm"><b>' + esc(c ? (c.title || ('@' + c.username)) : T('Без канала — нейтральный стиль')) + '</b>' +
-              '<span>' + esc(c ? ('@' + c.username) : T('подключи канал, чтобы писать в его голосе')) + '</span></div>' +
-              '<i class="ti ti-chevron-down chev"></i></div>' +
-              '<div class="rw-chlist" id="rw-chlist">' + _channels.map(function (ch) {
-                  return '<div class="rw-chopt' + (ch.id === _chId ? ' sel' : '') + '" data-chid="' + ch.id + '"><div class="av">' + chAv(ch) + '</div><div class="nm"><b>' + esc(ch.title || ('@' + ch.username)) + '</b></div>' + (ch.id === _chId ? '<i class="ti ti-check" style="color:#5DCAA5;"></i>' : '') + '</div>';
-              }).join('') + '</div>'
+            ? '<div class="rw-chdd"><button type="button" class="rw-ch" data-act="chtoggle" id="rw-chhead">' + chHead(c) +
+              '<i class="ti ti-chevron-down chev"></i></button>' +
+              '<div class="rw-chlist" id="rw-chlist">' +
+              _channels.map(function (ch) { return chOpt(ch); }).join('') +
+              chOptNone() + '</div></div>'
             : '<div class="rw-hint">' + esc(T('Канал не подключён — перепишу в чистом нейтральном стиле. Подключи канал в приложении, чтобы писать точно в его голосе.')) + '</div>';
 
         setView(
@@ -170,14 +188,30 @@
             haptic('light'); return;
         }
         var opt = t.closest ? t.closest('.rw-chopt') : null;
-        if (opt) { _chId = +opt.getAttribute('data-chid'); haptic('light'); renderForm(); return; }
+        if (opt) {
+            var cid = +opt.getAttribute('data-chid');
+            _chId = cid > 0 ? cid : null;              // 0 = «Без канала»
+            haptic('light');
+            // обновляем НА МЕСТЕ (не перерисовываем форму — иначе стирается введённый текст)
+            var head = document.getElementById('rw-chhead');
+            if (head) head.innerHTML = chHead(curChannel()) + '<i class="ti ti-chevron-down chev"></i>';
+            var list = document.getElementById('rw-chlist');
+            if (list) {
+                list.querySelectorAll('.rw-chopt').forEach(function (o) {
+                    o.classList.toggle('sel', +o.getAttribute('data-chid') === (cid || 0) || (cid === 0 && o.getAttribute('data-chid') === '0'));
+                });
+                var dd = list.closest('.rw-chdd');
+                if (dd) dd.classList.remove('open');
+            }
+            return;
+        }
         var tab = t.closest ? t.closest('[data-tab]') : null;
         if (tab) { _tab = tab.getAttribute('data-tab'); haptic('light'); renderResult({ channel: curChannel() ? { username: curChannel().username } : null, model_used: null }); return; }
         var actEl = t.closest ? t.closest('[data-act]') : null;
         if (!actEl) return;
         var act = actEl.getAttribute('data-act');
         if (act === 'close') { haptic('light'); close(); return; }
-        if (act === 'chtoggle') { var l = document.getElementById('rw-chlist'); if (l) l.classList.toggle('on'); haptic('light'); return; }
+        if (act === 'chtoggle') { var dd = actEl.closest('.rw-chdd'); if (dd) dd.classList.toggle('open'); haptic('light'); return; }
         if (act === 'improve') { _improve = !_improve; actEl.classList.toggle('on', _improve); haptic('light'); return; }
         if (act === 'go') { go(false); return; }
         if (act === 'more') { go(true); return; }
