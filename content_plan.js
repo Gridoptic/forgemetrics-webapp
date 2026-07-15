@@ -225,7 +225,7 @@
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
             '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
-            '<div class="cp-saved"><i class="ti ti-clock-hour-4"></i> ' + esc(T('сэкономлено')) + ' ~' + savedHours(n) + ' ' + esc(hoursWord(savedHours(n))) + '</div></div>';
+            '<div class="cp-saved"><i class="ti ti-clock-hour-4"></i> ' + esc(T('сэкономлено')) + ' ~' + savedHours(n) + ' ' + esc(T(hoursWord(savedHours(n)))) + '</div></div>';
 
         var allBtn = haveText < n
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
@@ -254,7 +254,7 @@
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
             : '';
         return '<div class="cp-day s-' + st[1] + (p.day_index === _selDay ? ' sel' : '') + '" data-act="selday" data-day="' + p.day_index + '">' +
-            '<div class="cp-dhead"><span class="d">' + esc(wd) + '</span><span class="dt">' + esc(dateLabel(p.date_iso)) + '</span></div>' +
+            '<div class="cp-dhead"><span class="d">' + esc(T(wd)) + '</span><span class="dt">' + esc(dateLabel(p.date_iso)) + '</span></div>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' +
             '<div class="cp-dtitle">' + esc(p.title || '') + '</div>' + slot +
             '<div class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + '</div></div>';
@@ -286,7 +286,7 @@
                 '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>';
         }
         return '<div class="cp-detail">' +
-            '<div class="cp-dtop2"><span class="d2">' + esc(wd) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
+            '<div class="cp-dtop2"><span class="d2">' + esc(T(wd)) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
             slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + body + '</div>';
     }
