@@ -1428,6 +1428,27 @@
     }
     function loadChannels() { return apiGet('/api/v1/channels').then(function (r) { _channels = (r && r.channels) ? r.channels : []; return _channels; }).catch(function () { _channels = []; return []; }); }
     function loadMyListings() { return apiGet('/api/v1/marketplace/my').then(function (r) { _myListings = (r && r.listings) ? r.listings : []; return _myListings; }).catch(function () { _myListings = []; return []; }); }
+    // после публикации карточка ещё на модерации; когда модерация переведёт её в published —
+    // освежаем ленту, чтобы она появилась в умной сортировке без перезахода в приложение
+    var _pubPollT = null;
+    function _pollPublish(lid) {
+        if (_pubPollT) { clearInterval(_pubPollT); _pubPollT = null; }
+        var tries = 0;
+        _pubPollT = setInterval(function () {
+            tries++;
+            if (tries > 12) { clearInterval(_pubPollT); _pubPollT = null; return; }
+            loadMyListings().then(function (list) {
+                var mine = (list || []).filter(function (x) { return x.id === lid; })[0];
+                if (mine && mine.status === 'published') {
+                    clearInterval(_pubPollT); _pubPollT = null;
+                    _feed = null; _feedState = 'idle';
+                    toast('Оффер прошёл проверку и опубликован — уже в ленте');
+                    if (_subTab === 'buy') { try { renderBuy(); } catch (e) {} }
+                }
+            }).catch(function () {});
+        }, 6000);
+    }
+
     function loadBookmarks() { apiGet('/api/v1/marketplace/bookmarks').then(function (r) { _bookmarks = {}; ((r && r.bookmarks) ? r.bookmarks : []).forEach(function (b) { _bookmarks[b.username || b] = true; }); updateBmCount(); }).catch(function () {}); }
 
     function updateBmCount() {
@@ -1941,6 +1962,8 @@
             for (var i = 0; i < pubs.length; i++) if (listingForChannel(pubs[i].id)) { def = pubs[i].id; break; }
             if (def == null) def = pubs[0].id;
             selectChannel(def);
+        }).catch(function () {
+            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить конструктор', 'Проверь связь и попробуй ещё раз.');
         });
     }
     function channelById(id) { for (var i = 0; i < _channels.length; i++) if (_channels[i].id === id) return _channels[i]; return null; }
@@ -2322,7 +2345,7 @@
             if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + v;
             box.setAttribute('data-cur', v);
         }
-        qsa(box, '[data-cv]').forEach(function (d) { d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); renderHero(); }); });
+        qsa(box, '[data-cv]').forEach(function (d) { d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); _liveAccent(v); _heroDebounced(); }); });
         if (rb) rb.addEventListener('click', function () {
             openColorStudio(box.getAttribute('data-cur') || '#5DCAA5', function (hex) { set(hex); mark(hex); _liveAccent(hex); _heroDebounced(); }, title || 'Свой');
         });
@@ -2589,7 +2612,7 @@
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-chk').forEach(function (c) { c.addEventListener('click', function (ev) { if (ev.target && ev.target.classList && ev.target.classList.contains('fmx-pinp')) return; var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light'); el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero(); }); });
-        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { var v = Math.max(0, Math.min(999999, +inp.value || 0)); _sfmts[+inp.getAttribute('data-pi')].p = v; if ((+inp.value || 0) > 999999) inp.value = v; renderHero(); }); });
+        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { var v = Math.max(0, Math.min(999999, +inp.value || 0)); _sfmts[+inp.getAttribute('data-pi')].p = v; if ((+inp.value || 0) > 999999) inp.value = v; _heroDebounced(); }); });
     }
     function bindPrice() {
         bindFmtRows();
@@ -2601,8 +2624,8 @@
             '<span class="fmx-lbl fmx-mt2">Теги (через запятую)</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="ниша, тема, аудитория">';
     }
     function bindText() {
-        el('fmx-desc').addEventListener('input', function () { _ss._desc = this.value; renderHero(); });
-        el('fmx-tags').addEventListener('input', function () { _ss._tags = this.value; renderHero(); });
+        el('fmx-desc').addEventListener('input', function () { _ss._desc = this.value; _heroDebounced(); });
+        el('fmx-tags').addEventListener('input', function () { _ss._tags = this.value; _heroDebounced(); });
     }
 
     function glassStyles(accent) { return glassKindStyles(_ss.glass, accent); }
@@ -2768,7 +2791,7 @@
         var orbH = orbitHtml(orb, oc);
         var pt = fx.part || 'none';
         var t = l.title || l.username || '?', core;
-        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
+        if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
         else if (l.avatar_type === 'emoji' && l.avatar_emoji) core = '<div class="fmx-av fx-c-' + ov + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _esc(l.avatar_emoji) + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
         return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + partHtml(pt) + '</div>';
@@ -2790,7 +2813,7 @@
         var mc = _ss._media && _ss._media.cover, pc = (_ss.att && typeof _ss.att.cover === 'object') ? _ss.att.cover : null;
         if (_ss.covType !== 'grad' && mc && pc) {
             var st = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + pc.x + '% ' + pc.y + '%;transform:scale(' + pc.s + ');transform-origin:' + pc.x + '% ' + pc.y + '%;';
-            return '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (mc.kind === 'video' ? '<video src="' + mc.url + '" style="' + st + '" autoplay muted loop playsinline></video>' : '<img src="' + mc.url + '" style="' + st + '">') + '</div>';
+            return '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (mc.kind === 'video' ? '<video src="' + mc.url + '" style="' + st + '" autoplay muted loop playsinline preload="none"></video>' : '<img loading="lazy" decoding="async" src="' + mc.url + '" style="' + st + '">') + '</div>';
         }
         return '<div class="fmx-cov-bg" style="background:' + gradient + ';"></div>';
     }
@@ -2818,12 +2841,12 @@
         var mcls = dm === 'blend' ? ' m-blend' : '';
         var boxSt;
         if (draggable) {
-            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
         } else if ((s.mode || 'slot') === 'slot') {
-            boxSt = 'right:' + (12 - (_touchDev ? STK_PHONE_DX : 0)) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+            boxSt = 'right:' + (12 - (_touchDev ? STK_PHONE_DX : 0)) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
         } else {
             /* пиксели 350-макета: сдвиг уже учтён в stkPos */
-            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (s.rot || 0) + 'deg);';
+            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
         }
         var core = '<div class="fmx-stk' + mcls + '" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
         if (!draggable || (s.mode || 'slot') !== 'free') return core;
@@ -3379,7 +3402,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260715a';
+    var PS_GLUE_V = '20260715i';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -4132,7 +4155,7 @@
         };
         var wasCreate = !_ss.listingId, p;
         if (_ss.listingId) p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
-        else { if (!_ss.channelId) { btn.disabled = false; uiAlert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
+        else { if (!_ss.channelId) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> Опубликовать на Площадке'; uiAlert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
             if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
@@ -4152,6 +4175,7 @@
             btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
             toast(r && r.needs_review ? 'Оффер ушёл на ручную проверку — проверим и вернём' : (r && r.resubmitted ? 'Оффер отправлен на повторную проверку' : 'Оффер сохранён'));
             _feed = null; _feedState = 'idle';
+            if (wasCreate && r && r.listing_id) _pollPublish(r.listing_id);
             setTimeout(function () {
                 // новая карточка: перерисовываем панель, чтобы сразу появились кнопки управления
                 // (Промо-постер, Статистика, Заморозить, Удалить) — раньше они не показывались до перезахода
@@ -4232,7 +4256,7 @@
         var cb = (_cbRaw && (_cbRaw.kind === 'img' || _canAnimBg || l._preview)) ? _cbRaw : null; /* картинка-фон — всем бесплатно; GIF/MP4-анимация — только месячное продвижение */
         var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
             ? '<video src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
-            : '<img src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
+            : '<img loading="lazy" decoding="async" src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
         var fullBg = !!(cb && (l.effects_json || {}).fullBg); /* фон во всю карточку без шапки — только при активном фоне оффера */
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
@@ -4312,15 +4336,21 @@
 
     function zw(html) { return '<div class="fmx-zw">' + html + '</div>'; }
     function scaleCards(scope) {
+        // фаза 1 — только ЧТЕНИЕ ширины (без записи между чтениями), затем фаза 2 — запись transform,
+        // фаза 3 — чтение высоты пачкой, фаза 4 — запись высоты. Так браузер не форсит reflow на каждой карточке.
+        var list = [];
         qsa(scope || document, '.fmx-cwrap,.fmx-zw').forEach(function (w) {
             var card = w.firstElementChild; if (!card) return;
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
-            card.style.transform = k < 0.9995 ? 'scale(' + k + ')' : '';
-            var off = Math.max(0, (ww - 350 * k) / 2);
-            card.style.marginLeft = off > 0.05 ? off.toFixed(2) + 'px' : '';
-            w.style.height = Math.round(card.offsetHeight * k) + 'px';
+            list.push({ w: w, card: card, k: k, off: Math.max(0, (ww - 350 * k) / 2) });
         });
+        list.forEach(function (it) {
+            it.card.style.transform = it.k < 0.9995 ? 'scale(' + it.k + ')' : '';
+            it.card.style.marginLeft = it.off > 0.05 ? it.off.toFixed(2) + 'px' : '';
+        });
+        list.forEach(function (it) { it.h = it.card.offsetHeight; });
+        list.forEach(function (it) { it.w.style.height = Math.round(it.h * it.k) + 'px'; });
     }
     document.addEventListener('click', function (e) {
         var t = e.target; if (!t || !t.closest) return;
@@ -4473,8 +4503,14 @@
     function toggleBm(u) {
         if (!u) return; _haptic('light');
         var on;
-        if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () {}); }
-        else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () {}); }
+        function _revert(prev) {   // откат оптимистичного состояния при сбое сети — звезда не должна врать
+            if (prev) _bookmarks[u] = true; else delete _bookmarks[u];
+            updateBmCount();
+            qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', prev); });
+            toast('Не удалось обновить закладку — попробуй ещё раз');
+        }
+        if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () { _revert(true); }); }
+        else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () { _revert(false); }); }
         updateBmCount();
         /* точечно: звёзды обновляются на месте, раскрытые строки не сворачиваются */
         qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', on); });

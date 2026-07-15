@@ -10,13 +10,14 @@
 
     var _channelId = null;
     var _direction = 'sell';
+    var _reqSeq = 0;   // токен актуальности: ответ устаревшего bootstrap игнорируется при быстром переключении вкладок
     var _segment = 'all';
     var _sort = 'match';
     var _report = null;
     var _limits = null;
     var _searchId = null;
 
-    var MAX_POLL = 60;
+    var MAX_POLL = 120;   // 120*3с=360с — покрывает максимум бэкенда, иначе фронт сдаётся, а поиск ещё идёт и тратит деньги
 
     var SEGMENT_NOTES = {
         all: 'Все найденные площадки по твоей нише. Полная картина рынка — отсортируй как удобно и ничего не упустишь.',
@@ -242,11 +243,12 @@
     }
 
     function bootstrap() {
+        var seq = ++_reqSeq;
         Promise.all([
             apiGet('/api/v1/ad-exchange/limits').catch(function () { return null; }),
             apiGet('/api/v1/channels/' + _channelId + '/ad-exchange/latest?direction=' + _direction).catch(function () { return null; })
         ]).then(function (res) {
-            if (_closed) return;
+            if (_closed || seq !== _reqSeq) return;   // пришёл ответ на устаревший запрос (сменили вкладку) — игнор
             _limits = res[0];
             var latest = res[1];
             if (latest && latest.status === 'done' && latest.report) {
@@ -321,6 +323,7 @@
         Array.prototype.forEach.call(tabs, function (t) {
             t.addEventListener('click', function () {
                 _direction = t.getAttribute('data-dir');
+                _reqSeq++;   // инвалидируем летящие запросы предыдущего направления
                 _haptic('light');
                 Array.prototype.forEach.call(tabs, function (x) { x.classList.remove('on'); });
                 t.classList.add('on');
@@ -365,7 +368,8 @@
                         stopPolling();
                         stopThinking();
                         _report = data.report;
-                        bootstrap();
+                        renderReport();   // отчёт уже на руках — рисуем сразу, не гоняем latest (мог отбросить по direction/lang)
+                        apiGet('/api/v1/ad-exchange/limits').then(function (lm) { if (!_closed && lm) _limits = lm; }).catch(function () {});
                     } else if (data.status === 'failed') {
                         stopPolling();
                         stopThinking();
