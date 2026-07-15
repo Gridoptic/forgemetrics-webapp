@@ -79,16 +79,23 @@
                 n.innerHTML = '<img src="' + url + '" alt="">';
             });
         }
+        function attempt(id, tries) {
+            _avCache[id] = 'pending';
+            fetch(base + '/api/v1/channels/' + id + '/avatar', { headers: { 'X-Telegram-Init-Data': initData } })
+                .then(function (r) { if (!r.ok) throw 0; return r.blob(); })
+                .then(function (b) { var url = URL.createObjectURL(b); _avCache[id] = url; fill(id, url); })
+                .catch(function () {
+                    // серия повторов — на случай задержки Telegram сразу после подключения; остаёмся 'pending', чтобы не дёргать параллельно
+                    if (tries < 3) setTimeout(function () { attempt(id, tries + 1); }, 1500 * (tries + 1));
+                    else _avCache[id] = 'x';
+                });
+        }
         root.querySelectorAll('[data-rwav]').forEach(function (node) {
             var id = node.getAttribute('data-rwav');
             if (!id) return;
             var v = _avCache[id];
             if (v) { if (v !== 'x' && v !== 'pending') fill(id, v); return; }
-            _avCache[id] = 'pending';
-            fetch(base + '/api/v1/channels/' + id + '/avatar', { headers: { 'X-Telegram-Init-Data': initData } })
-                .then(function (r) { if (!r.ok) throw 0; return r.blob(); })
-                .then(function (b) { var url = URL.createObjectURL(b); _avCache[id] = url; fill(id, url); })
-                .catch(function () { _avCache[id] = 'x'; });
+            attempt(id, 0);
         });
     }
 

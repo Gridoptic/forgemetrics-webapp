@@ -2107,9 +2107,11 @@ function renderChannels(data) {
         if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = '';
         if (els.channelsStateList) els.channelsStateList.style.display = 'none';
         renderDeletedChannels(deleted, true);
+        startEmptyChannelsWatch();   // ждём первого подключения — подхватим его сами
         return;
     }
 
+    stopEmptyChannelsWatch();
     if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = 'none';
     if (els.channelsStateList) els.channelsStateList.style.display = '';
 
@@ -2220,23 +2222,36 @@ function renderLimitRow({ icon, label, used, limit, seconds_until_reset, color, 
 }
 
 
-async function loadChannelAvatars() {
+function loadChannelAvatars() {
     const nodes = document.querySelectorAll('[data-avatar-for][data-has-avatar="1"]');
     for (const node of nodes) {
         const chId = node.getAttribute('data-avatar-for');
-        if (!chId || node.dataset.avatarLoaded === '1') continue;
-        node.dataset.avatarLoaded = '1';
-        try {
-            const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${chId}/avatar`, {
-                headers: { 'X-Telegram-Init-Data': state.initData || '' },
-            });
-            if (!resp.ok) continue;
-            const blob = await resp.blob();
-            const url = URL.createObjectURL(blob);
-            node.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
-        } catch (e) {
-            // оставляем заглушку-иконку
-        }
+        if (!chId || node.dataset.avatarLoaded === '1' || node.dataset.avatarPending === '1') continue;
+        _loadOneChannelAvatar(chId, 0);
+    }
+}
+
+async function _loadOneChannelAvatar(chId, attempt) {
+    // актуальный узел ищем каждый раз заново — при ре-рендере он мог быть заменён
+    const node = document.querySelector(`[data-avatar-for="${chId}"][data-has-avatar="1"]`);
+    if (!node || node.dataset.avatarLoaded === '1') return;
+    node.dataset.avatarPending = '1';
+    try {
+        const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${chId}/avatar`, {
+            headers: { 'X-Telegram-Init-Data': state.initData || '' },
+        });
+        if (!resp.ok) throw new Error('avatar ' + resp.status);
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const live = document.querySelector(`[data-avatar-for="${chId}"][data-has-avatar="1"]`) || node;
+        live.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
+        live.dataset.avatarLoaded = '1';
+        delete live.dataset.avatarPending;
+    } catch (e) {
+        delete node.dataset.avatarPending;
+        // короткая серия повторов — на случай задержки Telegram сразу после подключения канала
+        if (attempt < 3) setTimeout(() => _loadOneChannelAvatar(chId, attempt + 1), 1500 * (attempt + 1));
+        // флаг avatarLoaded НЕ ставим — при следующем рендере/рефреше тоже попробуем
     }
 }
 
@@ -2534,6 +2549,56 @@ function stopVoicePolling() {
         clearInterval(_voicePollTimer);
         _voicePollTimer = null;
     }
+}
+
+
+/* Автоподхват нового канала без перезахода.
+   Канал подключается ВНЕ приложения (бота добавляют админом в Telegram), поэтому
+   после возврата в мини-апп и пока пользователь ждёт на пустом экране — сами
+   перечитываем список: канал и его аватарка появляются моментально. */
+function _channelsScreenActive() {
+    return !!(screens.channels && screens.channels.style.display !== 'none');
+}
+
+async function refreshChannelsOnReturn() {
+    if (!_channelsScreenActive() || document.hidden) return;
+    try {
+        const data = await apiRequest('/api/v1/channels');
+        state.channels = data;
+        renderChannels(data);   // сам обрабатывает переход пусто→список и грузит аватарки
+    } catch (e) {}
+}
+
+let _emptyChWatch = null;
+let _emptyChWatchN = 0;
+
+function startEmptyChannelsWatch() {
+    if (_emptyChWatch) return;
+    _emptyChWatchN = 0;
+    _emptyChWatch = setInterval(async () => {
+        if (!_channelsScreenActive()) { stopEmptyChannelsWatch(); return; }   // ушли с экрана — не крутим впустую
+        if (document.hidden) return;
+        if (++_emptyChWatchN > 40) { stopEmptyChannelsWatch(); return; }        // защитный потолок ~3.5 мин
+        try {
+            const data = await apiRequest('/api/v1/channels');
+            if (data && data.has_any && data.channels && data.channels.length) {
+                stopEmptyChannelsWatch();
+                state.channels = data;
+                renderChannels(data);   // покажет карточку канала + аватарку
+            }
+        } catch (e) {}
+    }, 5000);
+}
+
+function stopEmptyChannelsWatch() {
+    if (_emptyChWatch) { clearInterval(_emptyChWatch); _emptyChWatch = null; }
+}
+
+function initChannelsAutoRefresh() {
+    // возврат приложения в фокус (например, после добавления бота в Telegram) — обновить список каналов
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshChannelsOnReturn(); });
+    window.addEventListener('focus', refreshChannelsOnReturn);
+    window.addEventListener('pageshow', refreshChannelsOnReturn);
 }
 
 
@@ -4535,6 +4600,7 @@ async function main() {
     }
 
     startLiveUpdate();
+    initChannelsAutoRefresh();
     await loadDashboard();
 }
 
