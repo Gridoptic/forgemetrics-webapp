@@ -607,7 +607,6 @@ const PLACEHOLDER_CONFIG = {
     create_post: { title: 'Создание поста', text: 'AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.', icon: 'sparkles' },
     rewrite_post: { title: 'Рерайт поста', text: 'Перепишем чужой пост в твоём стиле. Скоро будет готово.', icon: 'pencil' },
     content_plan: { title: 'Контент-план', text: 'AI составит план постов на неделю. Скоро запустим.', icon: 'calendar' },
-    channel_analytics: { title: 'Аналитика канала', text: 'Метрики, динамика, лучшие посты. Скоро будет готово.', icon: 'chart-line' },
     ai_audit: { title: 'AI-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
     competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них залетает и почему. Скоро будет готово.', icon: 'search' },
     find_advertisers: { title: 'Поиск рекламодателей', text: 'Найдём тех, кто ищет размещение в твоей нише. Скоро запустим.', icon: 'coin' },
@@ -690,13 +689,6 @@ function handleAction(actionId) {
         return;
     }
 
-    if (actionId === 'channel_analytics') {
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        if (typeof window.__openChannelMetrics === 'function') {
-            window.__openChannelMetrics();
-        }
-        return;
-    }
 
     if (actionId === 'profile') { openCabinet(); return; }
     if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }
