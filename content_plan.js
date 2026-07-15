@@ -10,7 +10,7 @@
     var _chId = null;           // выбранный канал брифа
     var _goal = 'engagement';
     var _freq = 7;
-    var _open = {};             // day_index -> раскрыта ли карточка
+    var _selDay = 0;            // выбранный день (day_index) для панели детали
     var _dayBusy = {};          // post_id -> идёт генерация текста
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -196,69 +196,99 @@
             '<button class="cp-go" style="max-width:280px;" data-act="regen">' + esc(T('Собрать заново')) + '</button></div>');
     }
 
-    // ==================== 3. Лента недели ====================
+    // ==================== 3. Лента недели (1-в-1 макет) ====================
     function fmtInfo(f) { return FMT[f] || ['Пост', 'ti-file-text']; }
-    function statusLabel(p) {
+    function statusOf(p) {
         if (p.status === 'approved') return ['Утверждён', 'ok'];
         if (p.text) return ['Черновик готов', 'draft'];
         return ['Идея', 'idea'];
     }
+    function dateLabel(iso) {
+        if (!iso) return '';
+        try {
+            var lang = (window.getLang ? window.getLang() : 'ru') || 'ru';
+            return new Date(iso + 'T00:00:00').toLocaleDateString(lang, { day: 'numeric', month: 'long' });
+        } catch (e) { return ''; }
+    }
+    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }   // ~30 мин/пост
+
+    function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
+
     function renderWeek() {
-        var posts = (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); });
-        var n = posts.length;
-        var appr = posts.filter(function (p) { return p.status === 'approved'; }).length;
+        var ps = posts();
+        var n = ps.length;
+        if (_selDay == null || !ps.some(function (p) { return p.day_index === _selDay; })) _selDay = ps.length ? ps[0].day_index : 0;
+        var appr = ps.filter(function (p) { return p.status === 'approved'; }).length;
         var pct = n ? Math.round(appr / n * 100) : 0;
-        var haveText = posts.filter(function (p) { return p.text; }).length;
+        var haveText = ps.filter(function (p) { return p.text; }).length;
 
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
-            '<div class="cp-wkmeta"><div class="cp-wkgoal">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div>' +
-            (_state.arc ? '<div class="cp-wkarc">' + esc(_state.arc) + '</div>' : '') + '</div></div>';
+            '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
+            '<div class="cp-saved"><i class="ti ti-clock-hour-4"></i> ' + esc(T('сэкономлено')) + ' ~' + savedHours(n) + ' ' + esc(hoursWord(savedHours(n))) + '</div></div>';
 
         var allBtn = haveText < n
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
             : '';
 
-        var cards = posts.map(function (p) { return dayCard(p); }).join('');
+        var ribbon = '<div class="cp-ribbon">' + ps.map(function (p) { return ribbonCard(p); }).join('') + '</div>';
 
-        setView(header + allBtn + '<div class="cp-days">' + cards + '</div>' +
-            '<div class="cp-foot">' + esc(T('Автовыкладка в умное время — на следующем этапе. Пока: утверди и опубликуй вручную (кнопка «Скопировать»).')) + '</div>');
+        setView(header + allBtn + ribbon + detailPanel() +
+            '<div class="cp-foot">' + esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Автовыкладка — на следующем этапе.')) + '</div>');
     }
 
-    function dayCard(p) {
+    function hoursWord(n) {
+        var m10 = n % 10, m100 = n % 100;
+        if (m10 === 1 && m100 !== 11) return 'час';
+        if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return 'часа';
+        return 'часов';
+    }
+
+    function ribbonCard(p) {
         var fi = fmtInfo(p.format);
-        var st = statusLabel(p);
-        var open = !!_open[p.day_index];
+        var st = statusOf(p);
         var wd = WD[(p.day_index || 0) % 7];
-        var busy = !!_dayBusy[p.id];
+        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['гипотеза · уточним', 'lo'];
+        var slot = p.slot_hm
+            ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm) + '</span>' +
+              '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
+            : '';
+        return '<div class="cp-day s-' + st[1] + (p.day_index === _selDay ? ' sel' : '') + '" data-act="selday" data-day="' + p.day_index + '">' +
+            '<div class="cp-dhead"><span class="d">' + esc(wd) + '</span><span class="dt">' + esc(dateLabel(p.date_iso)) + '</span></div>' +
+            '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' +
+            '<div class="cp-dtitle">' + esc(p.title || '') + '</div>' + slot +
+            '<div class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + '</div></div>';
+    }
 
-        var inner = '';
-        if (open) {
-            if (busy) {
-                inner = '<div class="cp-dbody"><div class="cp-dload"><div class="cp-spin sm"></div>' + esc(T('Пишу текст...')) + '</div></div>';
-            } else if (p.text) {
-                inner = '<div class="cp-dbody"><div class="cp-dtext">' + esc(p.text) + '</div>' +
-                    '<div class="cp-dacts">' +
-                    '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
-                    '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
-                    esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
-                    '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' +
-                    '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>' +
-                    '</div></div>';
-            } else {
-                inner = '<div class="cp-dbody">' +
-                    (p.angle ? '<div class="cp-dangle">' + esc(p.angle) + '</div>' : '') +
-                    '<button class="cp-act wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button></div>';
-            }
+    function detailPanel() {
+        var ps = posts();
+        var p = ps.filter(function (x) { return x.day_index === _selDay; })[0];
+        if (!p) return '';
+        var fi = fmtInfo(p.format);
+        var wd = WD[(p.day_index || 0) % 7];
+        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['гипотеза · уточним', 'lo'];
+        var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm) +
+            ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
+
+        var body;
+        if (_dayBusy[p.id]) {
+            body = '<div class="cp-dload"><div class="cp-spin sm"></div>' + esc(T('Пишу текст...')) + '</div>';
+        } else if (p.text) {
+            body = '<div class="cp-dtext2">' + esc(p.text) + '</div>' +
+                '<div class="cp-dacts">' +
+                '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
+                '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
+                esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
+                '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' +
+                '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button></div>';
+        } else {
+            body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
+                '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>';
         }
-
-        return '<div class="cp-day' + (open ? ' open' : '') + ' s-' + st[1] + '" data-day="' + p.day_index + '">' +
-            '<button class="cp-dtop" data-act="toggle" data-day="' + p.day_index + '">' +
-            '<span class="cp-dw">' + esc(wd) + '</span>' +
-            '<span class="cp-dmid"><span class="cp-dfmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' +
-            '<span class="cp-dtitle">' + esc(p.title || '') + '</span></span>' +
-            '<span class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + '</span>' +
-            '<i class="ti ti-chevron-down cp-chev"></i></button>' + inner + '</div>';
+        return '<div class="cp-detail">' +
+            '<div class="cp-dtop2"><span class="d2">' + esc(wd) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
+            '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
+            slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + body + '</div>';
     }
 
     // ==================== действия ====================
@@ -268,7 +298,7 @@
         var p = post(id);
         if (!p || _dayBusy[id]) return;
         _dayBusy[id] = true;
-        _open[p.day_index] = true;
+        _selDay = p.day_index;
         renderWeek();
         haptic('light');
         apiRequest('/api/v1/content-plan/generate-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
@@ -352,9 +382,8 @@
         if (act === 'close') { haptic('light'); close(); return; }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') { renderBrief(); return; }
-        if (act === 'toggle') {
-            var di = +actEl.getAttribute('data-day');
-            _open[di] = !_open[di]; renderWeek(); haptic('light'); return;
+        if (act === 'selday') {
+            _selDay = +actEl.getAttribute('data-day'); renderWeek(); haptic('light'); return;
         }
         if (act === 'genday') { genDay(+id, false); return; }
         if (act === 'variant') { genDay(+id, true); return; }
