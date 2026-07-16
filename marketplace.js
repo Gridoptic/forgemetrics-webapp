@@ -2997,7 +2997,9 @@
        размер + поворот. Координаты — в процентах холста, поэтому витрина одинакова на любом
        экране. Сохранение — POST tablo (сервер валидирует всё). */
     var _ted = { l: null, els: [], sel: -1, bg: null };
-    var _TED_STK = ['🚀', '🔥', '💎', '⚡', '🎯', '📈', '💰', '🏆', '⭐', '✅'];
+    var _TED_STK = ['🚀', '🔥', '💎', '⚡', '🎯', '📈', '💰', '🏆', '⭐', '✅',
+        '💼', '📊', '📣', '🧲', '🎁', '🛒', '👑', '💡', '🔔', '🤝',
+        '📌', '✨', '💯', '🎉', '🪙', '📅', '🔗', '🎬', '🧠', '🌐'];
     var _TED_BG = [
         { id: 'g1', n: 'Изумруд' }, { id: 'g2', n: 'Ультрафиолет' }, { id: 'mid', n: 'Полночь' },
         { id: 'net', n: 'Сетка' }, { id: 'aur', n: 'Аврора' }, { id: 'coal', n: 'Уголь' },
@@ -3225,10 +3227,22 @@
         el('fmx-tedBgOk').addEventListener('click', closeSheet);
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
-    /* стикеры: коллекция пользователя из бота (та же база, что у конструктора) + набор эмодзи */
+    /* стикеры: коллекция пользователя из бота (та же база, что у конструктора) + набор эмодзи.
+       e = null — режим добавления: элемент создаётся только после выбора */
     function _tedPickStk(e) {
         _ensureSheets();
         var sh = el('fmx-writeSheet');
+        function put(s, sk) {
+            if (!e) {
+                e = { t: 'stk', x: 70, y: 4, w: sk ? 26 : 20, h: sk ? 17 : 12, rot: 0, fs: 16, s: s };
+                _ted.els.push(e); _ted.sel = _ted.els.length - 1;
+            } else {
+                e.s = s; delete e.sk;
+                if (sk && e.w < 14) e.w = 18;
+            }
+            if (sk) e.sk = sk;
+            closeSheet(); _haptic('light'); _tedDrawCanvas();
+        }
         function paint() {
             var lst = _stickers || [];
             sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
@@ -3240,18 +3254,12 @@
                 '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
                 _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div>';
             qsa(sh, '[data-stx]').forEach(function (b) {
-                b.addEventListener('click', function () {
-                    e.s = b.getAttribute('data-stx'); delete e.sk;
-                    closeSheet(); _haptic('light'); _tedDrawCanvas();
-                });
+                b.addEventListener('click', function () { put(b.getAttribute('data-stx'), null); });
             });
             qsa(sh, '[data-stm]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     var st = lst[+b.getAttribute('data-stm')]; if (!st) return;
-                    e.s = st.url;
-                    e.sk = (st.kind === 'webm' || st.kind === 'tgs') ? st.kind : 'img';
-                    if (e.w < 14) e.w = 18;
-                    closeSheet(); _haptic('light'); _tedDrawCanvas();
+                    put(st.url, (st.kind === 'webm' || st.kind === 'tgs') ? st.kind : 'img');
                 });
             });
             try { hydrateTgs(sh); } catch (e9) {}
@@ -3270,14 +3278,14 @@
     function _tedAdd(t) {
         if (_ted.els.length >= 12) { uiAlert('На витрине помещается до 12 элементов — удали лишний.'); return; }
         if (t === 'img' || t === 'video') { _tedUpload(t); return; }
+        /* стикер: сначала выбор — элемент появляется только после него (ничего не ставим заранее) */
+        if (t === 'stk') { _tedPickStk(null); return; }
         var e;
         if (t === 'title') e = { t: 'title', x: 6, y: 4, w: 70, h: 10, rot: 0, fs: 16, s: 'Заголовок витрины' };
-        else if (t === 'text') e = { t: 'text', x: 6, y: 20, w: 55, h: 12, rot: 0, fs: 11, s: 'Расскажи, что получает рекламодатель' };
-        else e = { t: 'stk', x: 70, y: 4, w: 20, h: 12, rot: 0, fs: 16, s: '🚀' };
+        else e = { t: 'text', x: 6, y: 20, w: 55, h: 12, rot: 0, fs: 11, s: 'Расскажи, что получает рекламодатель' };
         _ted.els.push(e); _ted.sel = _ted.els.length - 1;
         _haptic('light'); _tedDrawCanvas();
-        if (t === 'title' || t === 'text') _tedEditText(e);
-        else if (t === 'stk') _tedPickStk(e);
+        _tedEditText(e);
     }
     function _tedUpload(kind) {
         var inp = el('fmx-tedFile'); if (!inp) return;
