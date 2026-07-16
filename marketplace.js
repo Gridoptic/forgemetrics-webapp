@@ -154,9 +154,24 @@
     function el(id) { return document.getElementById(id); }
     function qsa(scope, sel) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); }
     function _hash(s) { var h = 0, i; for (i = 0; i < s.length; i++) { h = ((h << 5) - h + s.charCodeAt(i)) | 0; } return h; }
-    function _firstPrice(l) { if (l.formats && l.formats.length) { for (var i = 0; i < l.formats.length; i++) if (l.formats[i].price) return l.formats[i].price; } return null; }
+    /* Цена «от» = МИНИМУМ по форматам, как min_price на бэкенде (по нему же идёт сортировка по CPM).
+       Раньше брали цену ПЕРВОГО формата: если владелец перечислил форматы не по возрастанию,
+       карточка писала «Цена от 9 000 ₽» при настоящем минимуме 5 500 ₽, а показанный CPM
+       расходился с порядком сортировки — лента по CPM выглядела сломанной.
+       Берём min_price с бэка (единый источник), иначе считаем сами — для черновика в конструкторе. */
+    function _minPrice(l) {
+        if (typeof l.min_price === 'number' && l.min_price > 0) return l.min_price;
+        var m = null;
+        if (l.formats && l.formats.length) {
+            for (var i = 0; i < l.formats.length; i++) {
+                var p = l.formats[i].price;
+                if (p && (m === null || p < m)) m = p;
+            }
+        }
+        return m;
+    }
     function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
-    function _cpm(l) { var p = _firstPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
+    function _cpm(l) { var p = _minPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
     var _nicheMap = null;  // словарь канонов с бэка; работает и без него (запасные основы)
     function loadNicheMap() {
         if (_nicheMap !== null) return;
@@ -225,7 +240,7 @@
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
     function _isMod() { try { return !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === 1263501641); } catch (e) { return false; } }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
-    function _priceFrom(l) { var p = _firstPrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
+    function _priceFrom(l) { var p = _minPrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
 
     /* ===================== styles ===================== */
     function injectStyles() {
@@ -911,7 +926,38 @@
             '.fmx-sleg{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:#8990a8;}',
             '.fmx-sleg span{display:inline-flex;align-items:center;gap:5px;}',
             '.fmx-sleg i{width:8px;height:8px;border-radius:3px;display:inline-block;}',
-            '.fmx-slnote{margin-top:9px;font-size:11px;color:#5DCAA5;display:flex;align-items:flex-start;gap:6px;line-height:1.4;}'
+            '.fmx-slnote{margin-top:9px;font-size:11px;color:#5DCAA5;display:flex;align-items:flex-start;gap:6px;line-height:1.4;}',
+            /* Сравнение каналов */
+            '.fmx-cmpb.on{background:rgba(93,202,165,0.9);color:#06281e;}',
+            '.fmx-cmpBar{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;display:none;align-items:center;gap:8px;padding:9px 10px;border-radius:14px;background:rgba(16,19,32,0.92);border:0.5px solid rgba(255,255,255,0.12);backdrop-filter:blur(12px);box-shadow:0 8px 28px rgba(0,0,0,0.5);}',
+            '.fmx-cmpBar.on{display:flex;}',
+            '.fmx-cmpn{font-size:11px;color:#8990a8;white-space:nowrap;}',
+            '.fmx-cmpclr{margin-left:auto;background:transparent;border:0;color:#8990a8;font-size:11px;font-family:inherit;cursor:pointer;padding:6px;min-height:40px;}',
+            '.fmx-cmpgo{background:rgba(93,202,165,0.14);border:0.5px solid rgba(93,202,165,0.35);color:#5DCAA5;font-size:11.5px;font-weight:700;font-family:inherit;border-radius:10px;padding:0 12px;min-height:40px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}',
+            '.fmx-cmpgo[disabled]{opacity:0.45;}',
+            '.fmx-cmpwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px;}',
+            '.fmx-cmpt{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums;}',
+            '.fmx-cmpt th,.fmx-cmpt td{padding:8px 4px;text-align:center;border-bottom:0.5px solid rgba(255,255,255,0.07);}',
+            '.fmx-cmpt th{vertical-align:bottom;}',
+            /* столбец метрик узкий и с переносом — иначе на 320px третий канал не влезал и обрезался.
+               sticky: при скролле длинных названий подписи строк остаются на месте */
+            '.fmx-cmph{text-align:left!important;color:#8990a8;font-size:10px;font-weight:600;line-height:1.25;width:70px;min-width:70px;white-space:normal;position:sticky;left:0;background:#0f1220;z-index:1;}',
+            '.fmx-cmpav{width:34px;height:34px;margin:0 auto 5px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;}',
+            '.fmx-cmpav img{width:100%;height:100%;object-fit:cover;display:block;}',
+            '.fmx-cmpnm{font-size:10.5px;font-weight:700;color:#e8e8ed;max-width:72px;margin:0 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-cmpu{font-size:9px;color:#565b73;max-width:72px;margin:0 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-cmpt td{color:#c9cbe0;font-weight:600;}',
+            '.fmx-cmpw{color:#5DCAA5!important;background:rgba(93,202,165,0.09);}',
+            '.fmx-cmpw i{font-size:10px;margin-left:3px;vertical-align:1px;}',
+            '.fmx-cmpna{color:#565b73!important;font-weight:400!important;}',
+            '.fmx-cmpleg{margin-top:10px;font-size:10px;color:#8990a8;line-height:1.45;display:flex;gap:6px;align-items:flex-start;}',
+            '.fmx-cmpleg i{color:#5DCAA5;flex:0 0 auto;margin-top:1px;}',
+            /* узкий телефон: ужимаем, чтобы 3 канала влезли целиком и ничего не обрезалось */
+            '@media (max-width:379px){.fmx-cmpt{font-size:10.5px;}' +
+            '.fmx-cmpt th,.fmx-cmpt td{padding:7px 2px;}' +
+            '.fmx-cmph{width:52px;min-width:52px;font-size:9.5px;}' +
+            '.fmx-cmpnm{font-size:10px;max-width:58px;}.fmx-cmpu{font-size:8.5px;max-width:58px;}' +
+            '.fmx-cmpav{width:30px;height:30px;font-size:12px;}}'
         ].join('');
         document.head.appendChild(s);
     }
@@ -1067,6 +1113,7 @@
         else if (t === 'pulse') renderPulse();
         else if (t === 'mod') { _modTab = 'queue'; renderMod(); }
         else renderEnter();
+        drawCmpBar();   // панель сравнения живёт только на ленте — при смене вкладки прячем
         checkMini();
     }
 
@@ -1943,6 +1990,99 @@
                 }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
             });
         });
+    }
+
+    /* ---------- Сравнение каналов ----------
+       Выбор до 3 карточек → таблица метрик бок о бок, лучшее в строке подсвечено.
+       Подсвечиваем ТОЛЬКО то, где «лучше» объективно: охват, ER, охват к подписчикам,
+       здоровье (больше — лучше), CPM и цена (меньше — лучше). Подписчиков НЕ подсвечиваем:
+       большой канал не значит хороший, зелёная метка там вводила бы в заблуждение. */
+    var CMP_MAX = 3;
+    var _cmp = {};                       // username → карточка (снимок на момент выбора)
+    function _cmpCount() { return Object.keys(_cmp).length; }
+
+    function toggleCmp(u) {
+        var l = findListing(u);
+        if (_cmp[u]) { delete _cmp[u]; }
+        else {
+            if (_cmpCount() >= CMP_MAX) { _haptic('error'); toast('Можно сравнить не больше ' + CMP_MAX + ' каналов — сними лишний.'); return; }
+            if (!l) { _haptic('error'); toast('Не удалось добавить канал к сравнению.'); return; }
+            _cmp[u] = l;
+        }
+        _haptic('light');
+        qsa(document, '.fmx-cmpb[data-cmp="' + (window.CSS && CSS.escape ? CSS.escape(u) : u) + '"]').forEach(function (b) { b.classList.toggle('on', !!_cmp[u]); });
+        drawCmpBar();
+    }
+
+    function drawCmpBar() {
+        var bar = el('fmx-cmpBar');
+        if (!bar) return;
+        var n = _cmpCount();
+        // панель — только на ленте Площадки: на «Радаре» и «Терминале» сравнивать нечего
+        bar.classList.toggle('on', n > 0 && _mainTab === 'market');
+        if (!n) return;
+        bar.innerHTML = '<span class="fmx-cmpn">Выбрано ' + n + ' из ' + CMP_MAX + '</span>' +
+            '<button class="fmx-cmpclr" id="fmx-cmpClr">Сбросить</button>' +
+            '<button class="fmx-cmpgo" id="fmx-cmpGo"' + (n < 2 ? ' disabled' : '') + '><i class="ti ti-columns-3"></i> ' +
+            (n < 2 ? 'Выбери ещё один' : 'Сравнить') + '</button>';
+        el('fmx-cmpClr').addEventListener('click', function () {
+            _cmp = {}; _haptic('light');
+            qsa(document, '.fmx-cmpb.on').forEach(function (b) { b.classList.remove('on'); });
+            drawCmpBar();
+        });
+        el('fmx-cmpGo').addEventListener('click', function () { if (_cmpCount() >= 2) openCompare(); });
+    }
+
+    /* строки таблицы: dir = 'up' (больше лучше) | 'down' (меньше лучше) | null (не подсвечиваем) */
+    var CMP_ROWS = [
+        { k: 'subs', label: 'Подписчики', dir: null, get: function (l) { return l.subscribers || null; }, fmt: function (v) { return _num(v); } },
+        { k: 'views', label: 'Охват', dir: 'up', get: function (l) { return l.avg_views || null; }, fmt: function (v) { return '~' + _num(v); } },
+        { k: 'er', label: 'ER', dir: 'up', get: function (l) { return l.er != null ? l.er : null; }, fmt: function (v) { return (Math.round(v * 10) / 10) + '%'; } },
+        { k: 'reach', label: 'Охват к подп.', dir: 'up', get: _reachRate, fmt: function (v) { return v + '%'; } },
+        { k: 'cpm', label: 'CPM', dir: 'down', get: _cpm, fmt: function (v) { return _num(v) + ' ₽'; } },
+        { k: 'price', label: 'Цена от', dir: 'down', get: _minPrice, fmt: function (v) { return _num(v) + ' ₽'; } },
+        { k: 'health', label: 'Здоровье', dir: 'up', get: function (l) { return l.health_score != null ? l.health_score : null; }, fmt: function (v) { return Math.round(v); } }
+    ];
+
+    function openCompare() {
+        var items = Object.keys(_cmp).map(function (u) { return _cmp[u]; });
+        if (items.length < 2) return;
+        var body = el('fmx-cmpBody'); if (!body) return;
+        var h = '<div class="fmx-cmpwrap"><table class="fmx-cmpt"><thead><tr><th class="fmx-cmph"></th>' +
+            items.map(function (l) {
+                var t = l.title || l.username || '?';
+                /* аватар простой, без эффектов карточки: свечение и орбиты в таблице только мешают */
+                var av = l.avatar_url
+                    ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt="">'
+                    : _esc(t.charAt(0));
+                return '<th><div class="fmx-cmpav" style="background:' + _esc(_accent(l)) + ';">' + av + '</div>' +
+                    '<div class="fmx-cmpnm">' + _esc(t) + '</div>' +
+                    '<div class="fmx-cmpu">@' + _esc(l.username || '') + '</div></th>';
+            }).join('') + '</tr></thead><tbody>';
+        CMP_ROWS.forEach(function (row) {
+            var vals = items.map(row.get);
+            var known = vals.filter(function (v) { return v != null; });
+            // подсвечиваем только если есть что сравнивать и значения РАЗНЫЕ
+            var best = null;
+            if (row.dir && known.length >= 2 && Math.min.apply(null, known) !== Math.max.apply(null, known)) {
+                best = row.dir === 'up' ? Math.max.apply(null, known) : Math.min.apply(null, known);
+            }
+            h += '<tr><td class="fmx-cmph">' + row.label + '</td>' + vals.map(function (v) {
+                if (v == null) return '<td class="fmx-cmpna">—</td>';
+                var win = (best !== null && v === best);
+                return '<td' + (win ? ' class="fmx-cmpw"' : '') + '>' + row.fmt(v) + (win ? '<i class="ti ti-check"></i>' : '') + '</td>';
+            }).join('') + '</tr>';
+        });
+        h += '</tbody></table></div>' +
+            '<div class="fmx-cmpleg"><i class="ti ti-check"></i> Лучшее в строке. Подписчиков не отмечаем: размер канала сам по себе не говорит о качестве.</div>' +
+            '<div class="fmx-acts" style="margin-top:12px;">' + items.map(function (l) {
+                return '<button class="fmx-btn" data-cmpw="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>' + _esc((l.title || l.username || '').slice(0, 14)) + '</button>';
+            }).join('') + '</div>';
+        body.innerHTML = h;
+        qsa(body, '[data-cmpw]').forEach(function (b) {
+            b.addEventListener('click', function () { hideModal('fmx-cmpBg'); openListing(b.getAttribute('data-cmpw')); });
+        });
+        showModal('fmx-cmpBg');
     }
 
     function renderDealBox(l) {
@@ -4371,6 +4511,7 @@
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             (l.id ? '<button class="fmx-star" data-share="' + l.id + '" data-shu="' + _esc(l.username) + '" style="bottom:auto;top:' + (starTop((l.effects_json || {}).starPos) + 36) + 'px;z-index:7;"><i class="ti ti-share-2"></i></button>' : '') +
+            '<button class="fmx-star fmx-cmpb' + (_cmp[l.username] ? ' on' : '') + '" data-cmp="' + _esc(l.username) + '" title="Сравнить" style="bottom:auto;top:' + (starTop((l.effects_json || {}).starPos) + 72) + 'px;z-index:7;"><i class="ti ti-columns-3"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             bodyBdg +
@@ -4480,6 +4621,7 @@
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-share]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); shareCard(b.getAttribute('data-share'), b.getAttribute('data-shu')); }); });
+        qsa(host, '[data-cmp]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleCmp(b.getAttribute('data-cmp')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
@@ -4633,6 +4775,15 @@
         document.body.appendChild(lst);
         lst.addEventListener('click', function (e) { if (e.target === lst) hideModal('fmx-listBg'); });
         lst.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-listBg'); });
+
+        var cmp = document.createElement('div'); cmp.className = 'fmx-mbg'; cmp.id = 'fmx-cmpBg';
+        cmp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-columns-3" style="color:#5DCAA5;"></i> Сравнение каналов</h2><p>Метрики бок о бок — лучшее в строке подсвечено</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-cmpBody"></div></div>';
+        document.body.appendChild(cmp);
+        cmp.addEventListener('click', function (e) { if (e.target === cmp) hideModal('fmx-cmpBg'); });
+        qsa(cmp, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-cmpBg'); }); });
+
+        var cbar = document.createElement('div'); cbar.className = 'fmx-cmpBar'; cbar.id = 'fmx-cmpBar';
+        _root.appendChild(cbar);   // внутри экрана Биржи: закрыли Биржу — панель ушла вместе с ней
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
         an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-report-analytics" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div><div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-hourglass-high"></i><h3>Скоро</h3><p>Глубокий разбор подключается. Пока смотри метрики в «Развернуть» и бейджи здоровья в оффере.</p></div></div></div>';
