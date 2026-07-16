@@ -1170,6 +1170,9 @@
             '.fmx-tbgc em{font-style:normal;font-size:8.5px;color:#8990a8;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.fmx-tbgc.on .fmx-tbgt{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
             '.fmx-tbgc.on em{color:#c7cdff;}',
+            /* эмодзи-набор: превью в два ряда, ниже — невидимая растворяющаяся граница + «Развернуть» */
+            '.fmx-emwrap{overflow:hidden;max-height:122px;transition:max-height 300ms cubic-bezier(0.3,0.9,0.3,1);-webkit-mask-image:linear-gradient(180deg,#000 58%,rgba(0,0,0,0.35) 84%,transparent 99%);mask-image:linear-gradient(180deg,#000 58%,rgba(0,0,0,0.35) 84%,transparent 99%);}',
+            '.fmx-emwrap.open{max-height:640px;-webkit-mask-image:none;mask-image:none;}',
             /* панель кнопок: тонкий фирменный скроллбар снизу — тот же, что у панели «Купить» */
             '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;}',
             '.fmx-tedbar::-webkit-scrollbar{display:block;height:6px;}',
@@ -2997,9 +3000,13 @@
        размер + поворот. Координаты — в процентах холста, поэтому витрина одинакова на любом
        экране. Сохранение — POST tablo (сервер валидирует всё). */
     var _ted = { l: null, els: [], sel: -1, bg: null };
+    /* без свежих юникод-эмодзи (монета и т.п.): старые устройства рисуют их белым квадратом */
     var _TED_STK = ['🚀', '🔥', '💎', '⚡', '🎯', '📈', '💰', '🏆', '⭐', '✅',
         '💼', '📊', '📣', '🧲', '🎁', '🛒', '👑', '💡', '🔔', '🤝',
-        '📌', '✨', '💯', '🎉', '🪙', '📅', '🔗', '🎬', '🧠', '🌐'];
+        '📌', '✨', '💯', '🎉', '📅', '🔗', '🎬', '🧠', '🧬', '🌐',
+        '💳', '🏦', '📱', '💻', '🤖', '🎮', '⚽', '💪', '🎓', '📚',
+        '🎵', '🎤', '🎥', '📷', '🍕', '☕', '👗', '💄', '✈️', '🏝️',
+        '🚗', '🏠', '🧸', '🐶', '📰', '🎲', '📦', '🌿'];
     var _TED_BG = [
         { id: 'g1', n: 'Изумруд' }, { id: 'g2', n: 'Ультрафиолет' }, { id: 'mid', n: 'Полночь' },
         { id: 'net', n: 'Сетка' }, { id: 'aur', n: 'Аврора' }, { id: 'coal', n: 'Уголь' },
@@ -3251,8 +3258,10 @@
                     lst.map(function (st, j) { return '<button class="fmx-stkcell" data-stm="' + j + '">' + stkMedia(st, false) + '</button>'; }).join('') + '</div>'
                     : '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;margin-top:4px;">Коллекция пуста: отправь боту стикер в личные сообщения — он появится здесь.</div>') +
                 '<span class="fmx-lbl fmx-mt2">Эмодзи</span>' +
-                '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
-                _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div>';
+                '<div class="fmx-emwrap" id="fmx-emw"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
+                _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div></div>' +
+                '<div style="display:flex;justify-content:center;margin-top:-26px;position:relative;z-index:2;">' +
+                '<button class="fmx-tabmore" id="fmx-emMore" style="min-height:32px;padding:6px 16px;font-size:10.5px;">Развернуть</button></div>';
             qsa(sh, '[data-stx]').forEach(function (b) {
                 b.addEventListener('click', function () { put(b.getAttribute('data-stx'), null); });
             });
@@ -3261,6 +3270,13 @@
                     var st = lst[+b.getAttribute('data-stm')]; if (!st) return;
                     put(st.url, (st.kind === 'webm' || st.kind === 'tgs') ? st.kind : 'img');
                 });
+            });
+            var emw = sh.querySelector('#fmx-emw'), emb = sh.querySelector('#fmx-emMore');
+            if (emb) emb.addEventListener('click', function () {
+                var open = emw.classList.toggle('open');
+                emb.textContent = open ? 'Свернуть' : 'Развернуть';
+                emb.parentNode.style.marginTop = open ? '8px' : '-26px';
+                _haptic('light');
             });
             try { hydrateTgs(sh); } catch (e9) {}
             _forcePlay(sh);
