@@ -1122,12 +1122,13 @@
             /* will-change: элемент живёт на своём слое — при перетаскивании телефон не перерисовывает
                тяжёлый градиентный фон холста на каждом кадре (иначе жест дёргается) */
             '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2;will-change:left,top,width,height,transform;}',
-            '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);}',
+            /* выбранный — поверх остальных: его ручки не накрывают соседние элементы */
+            '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);z-index:6;}',
             /* перемещение: фон затемняется, включается мелкая сетка — выравнивание на глаз */
             '.fmx-tabed.moving::before{content:"";position:absolute;inset:0;background:rgba(5,7,14,0.42);z-index:1;pointer-events:none;transform:translateZ(0);}',
             '.fmx-tabed.moving::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(rgba(255,255,255,0.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.09) 1px,transparent 1px);background-size:5% 3.3333%;transform:translateZ(0);}',
             /* два режима отображения (точки под рамкой, как у стикера конструктора) */
-            '.fmx-tmodes{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:9;}',
+            '.fmx-tmodes{position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:9;}',
             '.fmx-tmd{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;padding:0;}',
             '.fmx-tmd i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.35);background:#0d1120;pointer-events:none;}',
             '.fmx-tmd.on i{border-color:#5DCAA5;background:rgba(93,202,165,0.35);}',
@@ -1153,7 +1154,9 @@
             '.fmx-tabed .el.med{overflow:visible;}',
             '.fmx-tabed .el.med img,.fmx-tabed .el.med video{border-radius:12px;}',
             '.fmx-tabed .el img,.fmx-tabed .el video{pointer-events:none;-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;}',
-            '.fmx-hnd{position:absolute;width:15px;height:15px;border-radius:4px;background:#818cf8;border:2px solid #0b0e18;box-shadow:0 1px 4px rgba(0,0,0,0.5);right:-9px;bottom:-9px;z-index:9;touch-action:none;cursor:nwse-resize;}',
+            /* ручки ВЫШЕ точек режима (z 11 против 9): у маленького стикера точка наезжала на угловую
+               ручку и перехватывала тап — растягивание «не работало» */
+            '.fmx-hnd{position:absolute;width:15px;height:15px;border-radius:4px;background:#818cf8;border:2px solid #0b0e18;box-shadow:0 1px 4px rgba(0,0,0,0.5);right:-9px;bottom:-9px;z-index:11;touch-action:none;cursor:nwse-resize;}',
             '.fmx-hnd::before{content:"";position:absolute;inset:-11px;}',
             '.fmx-hnd.rot{right:auto;left:50%;margin-left:-8px;top:-23px;bottom:auto;border-radius:50%;cursor:grab;}',
             '.fmx-hnd.del{right:-9px;top:-9px;bottom:auto;left:auto;border-radius:50%;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;}',
@@ -3301,7 +3304,6 @@
     var _tedDrag = null;
     var _tedPts = {};      /* активные пальцы: pointerId → {x,y} — для щипка двумя пальцами */
     var _tedLpT = null;    /* таймер зажатия текста → окно цвета */
-    var _tedRaf = 0;       /* запись в DOM — один раз за кадр: несколько pointermove не дёргают отрисовку */
     function _tedBindCanvas(cv) {
         function pct(ev) {
             var r = cv.getBoundingClientRect();
@@ -3318,7 +3320,8 @@
             if (e.x + e.w > 100) e.x = Math.max(0, 100 - e.w);
             var k = e.w / d.w0;
             if (e.t === 'title' || e.t === 'text') e.fs = Math.max(8, Math.min(28, d.fs0 * k));
-            else if (e.t === 'stk' && !e.sk) e.fs = Math.max(8, Math.min(96, d.fs0 * k));
+            /* эмодзи: кегль от самого жеста, не от ширины бокса — иначе у края и на 100% ширины рост замирал */
+            else if (e.t === 'stk' && !e.sk) e.fs = Math.max(8, Math.min(96, d.fs0 * scale));
             else {
                 e.h = Math.max(4, Math.min(100, (d.h0 || 18) * k));
                 if (e.y + e.h > 100) e.y = Math.max(0, 100 - e.h);
@@ -3434,22 +3437,22 @@
                 applyScale(e, _tedDrag, d / _tedDrag.d0);
                 setRot(e, _tedDrag.r0 + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI - _tedDrag.a0));
             }
-            if (!_tedRaf) _tedRaf = requestAnimationFrame(function () {
-                _tedRaf = 0;
-                if (_tedDrag) _tedApply(_tedDrag.e);
-            });
+            /* пишем сразу, как конструктор: rAF-отсрочка на части WebView задерживала применение */
+            _tedApply(e);
         };
         cv.onpointerup = cv.onpointercancel = function (ev) {
             delete _tedPts[ev.pointerId];
             clearTimeout(_tedLpT);
             cv.classList.remove('moving');
-            /* повторный тап по уже выбранному тексту (без движения и без зажатия) = правка надписи */
-            if (_tedDrag && _tedDrag.kind === 'move' && !_tedDrag.moved && _tedDrag.wasSel &&
-                (_tedDrag.e.t === 'title' || _tedDrag.e.t === 'text')) {
+            /* повторный тап без движения: текст → правка надписи; остальное → спрятать рамку
+               (тумблер выбора, как у стикера конструктора) */
+            if (_tedDrag && _tedDrag.kind === 'move' && !_tedDrag.moved && _tedDrag.wasSel) {
                 var eT = _tedDrag.e;
                 _tedDrag = null;
                 _haptic('light');
-                _tedEditText(eT);
+                if (eT.t === 'title' || eT.t === 'text') { _tedEditText(eT); return; }
+                _ted.sel = -1;
+                _tedDrawCanvas();
                 return;
             }
             if (_tedDrag && _tedDrag.kind === 'pinch') {
