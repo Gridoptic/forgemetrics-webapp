@@ -1116,10 +1116,34 @@
             '.fmx-tgl.on .sw::after{left:19px;}',
             /* редактор витрины: разрешаем ввод в полях (body глушит user-select — WebView без этого не даёт каретку) */
             'input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}',
-            /* редактор витрины — механика и вид ручек 1 в 1 со стикер-редактором конструктора */
-            '.fmx-tabed{touch-action:none;}',
-            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
+            /* редактор витрины — механика и вид ручек 1 в 1 со стикер-редактором конструктора.
+               touch-action глушим только на элементах и ручках: пустой холст пропускает скролл модалки */
+            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2;}',
             '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);}',
+            /* перемещение: фон затемняется, включается мелкая сетка — выравнивание на глаз */
+            '.fmx-tabed.moving::before{content:"";position:absolute;inset:0;background:rgba(5,7,14,0.42);z-index:1;pointer-events:none;}',
+            '.fmx-tabed.moving::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(rgba(255,255,255,0.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.09) 1px,transparent 1px);background-size:5% 3.3333%;}',
+            /* два режима отображения (точки под рамкой, как у стикера конструктора) */
+            '.fmx-tmodes{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:9;}',
+            '.fmx-tmd{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;padding:0;}',
+            '.fmx-tmd i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.35);background:#0d1120;pointer-events:none;}',
+            '.fmx-tmd.on i{border-color:#5DCAA5;background:rgba(93,202,165,0.35);}',
+            '.fmx-tab .el.mb{opacity:0.55;}',
+            /* медиа-стикер из коллекции бота: прозрачный, без рамок и подложки */
+            '.fmx-tab .el.stkm{overflow:visible;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.45));}',
+            '.fmx-tab .el.stkm img,.fmx-tab .el.stkm video,.fmx-tab .el.stkm .fmx-stk-lot{width:100%;height:100%;object-fit:contain;display:block;}',
+            '.fmx-tab .el.stkm .fmx-stk-lot{display:flex;align-items:center;justify-content:center;color:#565b73;}',
+            /* панель инструментов — заметные стеклянные кнопки в стиле приложения */
+            '.fmx-tedbar .fmx-seg{background:linear-gradient(135deg,rgba(129,140,248,0.16),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.38);color:#c7cdff;font-weight:700;min-height:40px;padding:8px 13px;flex:0 0 auto;}',
+            '.fmx-tedbar .fmx-seg i{color:#818cf8;}',
+            '.fmx-tedbar #fmx-tedBgBtn{background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border-color:rgba(245,191,79,0.4);color:#f5d99a;}',
+            '.fmx-tedbar #fmx-tedBgBtn i{color:#f5bf4f;}',
+            /* инструкция — синее прозрачное стекло, как наши подсказки */
+            '.fmx-tedhelp{margin-top:12px;padding:13px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(129,140,248,0.14),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
+            '.fmx-tedhelp .th{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#c7cdff;margin-bottom:8px;}',
+            '.fmx-tedhelp ol{margin:0;padding-left:18px;font-size:10.5px;line-height:1.65;color:#c9cbe0;}',
+            '.fmx-tedhelp li{margin-bottom:3px;}',
+            '.fmx-tedhelp b{color:#e8e8ed;}',
             /* у фото/видео overflow:hidden обрезал ручки за краем — в редакторе раскрываем, скругление переносим на само медиа */
             '.fmx-tabed .el.med{overflow:visible;}',
             '.fmx-tabed .el.med img,.fmx-tabed .el.med video{border-radius:12px;}',
@@ -1130,7 +1154,8 @@
             '.fmx-hnd.del{right:-9px;top:-9px;bottom:auto;left:auto;border-radius:50%;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;}',
             /* плитки фона витрины */
             '.fmx-tbgw{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}',
-            '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;background:#0a0d18;padding:0;position:relative;}',
+            /* без собственного фона: живую миниатюру даёт класс пресета tbg-* */
+            '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;padding:0;position:relative;}',
             '.fmx-tbgt.on{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
             '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
@@ -2766,6 +2791,15 @@
     function _elColor(e) {
         return (e.c && /^#[0-9a-fA-F]{6}$/.test(String(e.c))) ? 'color:' + e.c + ';' : '';
     }
+    /* режим отображения элемента: 'b' = «Слияние» (полупрозрачный, как у стикера конструктора) */
+    function _elMode(e) { return e.m === 'b' ? ' mb' : ''; }
+    /* стикер из коллекции бота (s = /media/-путь): webp/png/webm/tgs — как stkMedia конструктора */
+    function _tabStkInner(e) {
+        if (!e.s || String(e.s).indexOf('/media/') !== 0) return null;
+        if (e.sk === 'webm') return '<video src="' + _esc(mediaAbs(e.s)) + '" muted playsinline loop autoplay preload="auto"></video>';
+        if (e.sk === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(e.s) + '" data-anim="1"><i class="ti ti-sticker"></i></span>';
+        return '<img src="' + _esc(mediaAbs(e.s)) + '" alt="" draggable="false">';
+    }
     function renderTablo(json, mount, opts) {
         opts = opts || {};
         var els = (json && json.els) || [];
@@ -2775,16 +2809,22 @@
         els.forEach(function (e) {
             var st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;' +
                 (e.rot ? 'transform:rotate(' + e.rot + 'deg);' : '');
-            if (e.t === 'title') h += '<div class="el ttl" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + '</div>';
-            else if (e.t === 'text') h += '<div class="el txt" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + '</div>';
-            else if (e.t === 'stk') h += '<div class="el stk" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + '</div>';
-            else if (e.t === 'img') h += '<div class="el med" style="' + st + 'height:' + e.h + '%;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(e.u)) + '" alt=""></div>';
-            else if (e.t === 'video') h += '<div class="el med" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted autoplay loop playsinline preload="metadata"></video></div>';
+            var md = _elMode(e);
+            if (e.t === 'title') h += '<div class="el ttl' + md + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + '</div>';
+            else if (e.t === 'text') h += '<div class="el txt' + md + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + '</div>';
+            else if (e.t === 'stk') {
+                var sm = _tabStkInner(e);
+                if (sm) h += '<div class="el stkm' + md + '" style="' + st + 'height:' + e.h + '%;">' + sm + '</div>';
+                else h += '<div class="el stk' + md + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + '</div>';
+            }
+            else if (e.t === 'img') h += '<div class="el med' + md + '" style="' + st + 'height:' + e.h + '%;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(e.u)) + '" alt=""></div>';
+            else if (e.t === 'video') h += '<div class="el med' + md + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted autoplay loop playsinline preload="metadata"></video></div>';
         });
         h += '<div class="fmx-tabfade"></div></div></div>';
         if (opts.cut !== false) h += '<div class="fmx-tabmw"><button class="fmx-tabmore">Развернуть</button></div>' +
             '<button class="fmx-btn fmx-tabless" style="display:none;margin:8px auto 0;"><i class="ti ti-chevron-up"></i> Свернуть витрину</button>';
         mount.innerHTML = h;
+        try { hydrateTgs(mount); } catch (e9) {}
         var vp = mount.querySelector('.fmx-tabvp');
         var more = mount.querySelector('.fmx-tabmore'), less = mount.querySelector('.fmx-tabless');
         if (more) more.addEventListener('click', function () {
@@ -2972,17 +3012,29 @@
         var body = el('fmx-tedBody'); if (!body) return;
         body.innerHTML =
             '<div class="fmx-tedbar">' +
+            '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
             '<button class="fmx-seg" data-tadd="title"><i class="ti ti-heading"></i> Заголовок</button>' +
             '<button class="fmx-seg" data-tadd="text"><i class="ti ti-text-caption"></i> Текст</button>' +
             '<button class="fmx-seg" data-tadd="img"><i class="ti ti-photo"></i> Фото/гиф</button>' +
             '<button class="fmx-seg" data-tadd="video"><i class="ti ti-video"></i> Видео</button>' +
             '<button class="fmx-seg" data-tadd="stk"><i class="ti ti-sticker"></i> Стикер</button>' +
-            '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
             '</div>' +
             '<div class="fmx-tabvp noext" style="margin-top:10px;"><div class="fmx-tab fmx-tabed" id="fmx-tedCv"></div></div>' +
             '<div id="fmx-tedRow" style="display:flex;gap:7px;margin-top:10px;align-items:center;flex-wrap:wrap;"></div>' +
             '<button class="fmx-save" id="fmx-tedSave" style="margin-top:12px;"><i class="ti ti-device-floppy"></i> Сохранить витрину</button>' +
             '<div style="font-size:10px;color:#565b73;margin-top:7px;line-height:1.5;">До 12 элементов. Закупщик видит верхнюю половину, остальное — по «Развернуть»</div>' +
+            '<div class="fmx-tedhelp"><div class="th"><i class="ti ti-info-circle" style="color:#818cf8;"></i> Как оформить витрину</div><ol>' +
+            '<li><b>Фон</b> — первая кнопка: 14 готовых градиентов или свой цвет через палитру.</li>' +
+            '<li><b>Добавь элемент</b>: заголовок, текст, фото/гиф, видео или стикер.</li>' +
+            '<li><b>Стикеры</b> — твоя коллекция из бота: отправь боту стикер в личные сообщения, и он появится в списке. Плюс набор эмодзи.</li>' +
+            '<li><b>Тап по элементу</b> — выбрать. Перетаскивай прямо пальцем: фон затемнится и появится сетка для ровной расстановки.</li>' +
+            '<li><b>Угловая ручка</b> — размер, <b>верхняя точка</b> — поворот, <b>красный крестик</b> — удалить. Щипок двумя пальцами: размер и поворот одновременно.</li>' +
+            '<li><b>Две точки под рамкой</b> — режим отображения: обычный или «Слияние» (полупрозрачный, вписывается в фон).</li>' +
+            '<li><b>Зажми текст на секунду</b> — откроется передвижное окно цвета: спектр, оттенок, HEX и RGB.</li>' +
+            '<li><b>«Изменить текст»</b> под холстом — правка надписи; там же цветовые точки.</li>' +
+            '<li>Закупщик видит верхнюю половину витрины сразу, остальное — по кнопке «Развернуть». Самое важное размещай сверху.</li>' +
+            '<li>Жми <b>«Сохранить витрину»</b> — изменения сразу видны в развороте оффера.</li>' +
+            '</ol></div>' +
             '<input type="file" id="fmx-tedFile" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime" style="display:none;">';
         _tedDrawCanvas();
         qsa(body, '[data-tadd]').forEach(function (b) {
@@ -3007,40 +3059,52 @@
         _ted.els.forEach(function (e, i) {
             var st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;' +
                 (e.rot ? 'transform:rotate(' + e.rot + 'deg);' : '');
-            var sel = i === _ted.sel ? ' sel' : '';
+            var sel = (i === _ted.sel ? ' sel' : '') + _elMode(e);
             if (e.t === 'title') h += '<div class="el ttl' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
             else if (e.t === 'text') h += '<div class="el txt' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
-            else if (e.t === 'stk') h += '<div class="el stk' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
+            else if (e.t === 'stk') {
+                var sm = _tabStkInner(e);
+                if (sm) h += '<div class="el stkm' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;">' + sm + _tedHnd(i) + '</div>';
+                else h += '<div class="el stk' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
+            }
             else if (e.t === 'img') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><img src="' + _esc(mediaAbs(e.u)) + '" alt="" draggable="false">' + _tedHnd(i) + '</div>';
             else if (e.t === 'video') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted loop autoplay playsinline></video>' + _tedHnd(i) + '</div>';
         });
         cv.innerHTML = h;
+        try { hydrateTgs(cv); } catch (e9) {}
         _tedRow();
         _tedBindCanvas(cv);
     }
-    /* трио ручек 1 в 1 с конструктором: поворот сверху, размер в углу, крестик удаления */
+    /* трио ручек 1 в 1 с конструктором (поворот сверху, размер в углу, крестик) +
+       две точки режима отображения под рамкой, как у стикера на карточке */
     function _tedHnd(i) {
         if (i !== _ted.sel) return '';
+        var e = _ted.els[i];
         return '<span class="fmx-hnd" data-hz="' + i + '"></span>' +
             '<span class="fmx-hnd rot" data-hr="' + i + '"></span>' +
-            '<span class="fmx-hnd del" data-hd="' + i + '"><i class="ti ti-x"></i></span>';
+            '<span class="fmx-hnd del" data-hd="' + i + '"><i class="ti ti-x"></i></span>' +
+            '<span class="fmx-tmodes">' +
+            '<button class="fmx-tmd' + (e.m !== 'b' ? ' on' : '') + '" data-tm="" title="Обычный"><i></i></button>' +
+            '<button class="fmx-tmd' + (e.m === 'b' ? ' on' : '') + '" data-tm="b" title="Слияние"><i></i></button>' +
+            '</span>';
     }
     /* пульт цвета 1 в 1 с конструктором (точки + «Свой цвет» → подвижная студия), без побочных
        вызовов конструктора (_liveAccent/renderHero) — красим сразу выбранный элемент витрины */
+    function _tedMarkPick(box, v) {
+        var rb = box.querySelector('[data-rb]');
+        var preset = COLORS.indexOf(v) >= 0;
+        qsa(box, '.fmx-dot').forEach(function (d) { d.classList.toggle('on', d.getAttribute('data-cv') === v || (d === rb && !preset)); });
+        if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + v;
+        box.setAttribute('data-cur', v);
+    }
     function _tedBindPick(idBase, cur, set, title) {
         var box = el(idBase); if (!box) return;
         var rb = box.querySelector('[data-rb]');
-        function mark(v) {
-            var preset = COLORS.indexOf(v) >= 0;
-            qsa(box, '.fmx-dot').forEach(function (d) { d.classList.toggle('on', d.getAttribute('data-cv') === v || (d === rb && !preset)); });
-            if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + v;
-            box.setAttribute('data-cur', v);
-        }
         qsa(box, '[data-cv]').forEach(function (d) {
-            d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); _haptic('light'); });
+            d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); _tedMarkPick(box, v); _haptic('light'); });
         });
         if (rb) rb.addEventListener('click', function () {
-            openColorStudio(box.getAttribute('data-cur') || cur, function (hex) { set(hex); mark(hex); }, title || 'Свой');
+            openColorStudio(box.getAttribute('data-cur') || cur, function (hex) { set(hex); _tedMarkPick(box, hex); }, title || 'Свой');
         });
     }
     function _tedRow() {
@@ -3109,15 +3173,42 @@
         el('fmx-tedBgOk').addEventListener('click', closeSheet);
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
+    /* стикеры: коллекция пользователя из бота (та же база, что у конструктора) + набор эмодзи */
     function _tedPickStk(e) {
         _ensureSheets();
         var sh = el('fmx-writeSheet');
-        sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
-            '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">' +
-            _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div>';
-        qsa(sh, '[data-stx]').forEach(function (b) {
-            b.addEventListener('click', function () { e.s = b.getAttribute('data-stx'); closeSheet(); _tedDrawCanvas(); });
-        });
+        function paint() {
+            var lst = _stickers || [];
+            sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
+                '<span class="fmx-lbl fmx-mt2">Твоя коллекция из бота</span>' +
+                (lst.length ? '<div class="fmx-stkgrid" style="margin-top:8px;">' +
+                    lst.map(function (st, j) { return '<button class="fmx-stkcell" data-stm="' + j + '">' + stkMedia(st, false) + '</button>'; }).join('') + '</div>'
+                    : '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;margin-top:4px;">Коллекция пуста: отправь боту стикер в личные сообщения — он появится здесь.</div>') +
+                '<span class="fmx-lbl fmx-mt2">Эмодзи</span>' +
+                '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
+                _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div>';
+            qsa(sh, '[data-stx]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    e.s = b.getAttribute('data-stx'); delete e.sk;
+                    closeSheet(); _haptic('light'); _tedDrawCanvas();
+                });
+            });
+            qsa(sh, '[data-stm]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var st = lst[+b.getAttribute('data-stm')]; if (!st) return;
+                    e.s = st.url;
+                    e.sk = (st.kind === 'webm' || st.kind === 'tgs') ? st.kind : 'img';
+                    if (e.w < 14) e.w = 18;
+                    closeSheet(); _haptic('light'); _tedDrawCanvas();
+                });
+            });
+            try { hydrateTgs(sh); } catch (e9) {}
+        }
+        if (_stickers) paint();
+        else apiGet('/api/v1/marketplace/stickers').then(function (r) {
+            _stickers = (r && r.stickers) ? r.stickers : [];
+            paint();
+        }).catch(function () { _stickers = _stickers || []; paint(); });
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
     function _tedAdd(t) {
@@ -3130,6 +3221,7 @@
         _ted.els.push(e); _ted.sel = _ted.els.length - 1;
         _haptic('light'); _tedDrawCanvas();
         if (t === 'title' || t === 'text') _tedEditText(e);
+        else if (t === 'stk') _tedPickStk(e);
     }
     function _tedUpload(kind) {
         var inp = el('fmx-tedFile'); if (!inp) return;
@@ -3160,6 +3252,7 @@
        обработчики), а перетаскивание в том же жесте должно продолжаться, как в конструкторе */
     var _tedDrag = null;
     var _tedPts = {};      /* активные пальцы: pointerId → {x,y} — для щипка двумя пальцами */
+    var _tedLpT = null;    /* таймер зажатия текста → окно цвета */
     function _tedBindCanvas(cv) {
         function pct(ev) {
             var r = cv.getBoundingClientRect();
@@ -3185,6 +3278,14 @@
         cv.onpointerdown = function (ev) {
             var t = ev.target;
             _tedPts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+            /* две точки под рамкой — режим отображения */
+            var tm = t.closest ? t.closest('[data-tm]') : null;
+            if (tm) {
+                delete _tedPts[ev.pointerId];
+                var eM = _ted.els[_ted.sel];
+                if (eM) { eM.m = tm.getAttribute('data-tm') || undefined; if (!eM.m) delete eM.m; _haptic('light'); _tedDrawCanvas(); }
+                return;
+            }
             var hd = t.closest ? t.closest('[data-hd]') : null;
             var hz = t.closest ? t.closest('[data-hz]') : null;
             var hr = t.closest ? t.closest('[data-hr]') : null;
@@ -3224,6 +3325,22 @@
                 if (_ted.sel !== i) { _ted.sel = i; _tedDrawCanvas(); }
                 var e3 = _ted.els[i];
                 _tedDrag = { kind: 'move', e: e3, start: pct(ev), x0: e3.x, y0: e3.y };
+                /* зажатие текста = передвижное окно цвета 1 в 1 с конструктором */
+                if (e3.t === 'title' || e3.t === 'text') {
+                    clearTimeout(_tedLpT);
+                    _tedLpT = setTimeout(function () {
+                        if (!_tedDrag || _tedDrag.kind !== 'move' || _tedDrag.e !== e3 || _tedDrag.moved) return;
+                        _tedDrag = null;
+                        cv.classList.remove('moving');
+                        _haptic('light');
+                        openColorStudio(e3.c || (e3.t === 'title' ? '#e8e8ed' : '#b9c1d9'), function (hex) {
+                            e3.c = hex;
+                            var node = cv.querySelector('.el[data-i="' + _ted.els.indexOf(e3) + '"]');
+                            if (node) node.style.color = hex;
+                            var dots = el('fmx-tedc'); if (dots) _tedMarkPick(dots, hex);
+                        }, e3.t === 'title' ? 'Заголовок' : 'Текст');
+                    }, 480);
+                }
             } else {
                 if (_ted.sel !== -1) { _ted.sel = -1; _tedDrawCanvas(); }
                 return;
@@ -3237,15 +3354,26 @@
             var e = _tedDrag.e;
             if (_tedDrag.kind === 'move') {
                 var p = pct(ev);
-                e.x = Math.max(0, Math.min(96, _tedDrag.x0 + p.x - _tedDrag.start.x));
-                e.y = Math.max(0, Math.min(96, _tedDrag.y0 + p.y - _tedDrag.start.y));
+                var dx = p.x - _tedDrag.start.x, dy = p.y - _tedDrag.start.y;
+                if (!_tedDrag.moved && Math.abs(dx) + Math.abs(dy) > 1.2) {
+                    _tedDrag.moved = true;
+                    clearTimeout(_tedLpT);
+                }
+                if (_tedDrag.moved) {
+                    cv.classList.add('moving');   /* затемнение + сетка для ровной расстановки */
+                    e.x = Math.max(0, Math.min(96, _tedDrag.x0 + dx));
+                    e.y = Math.max(0, Math.min(96, _tedDrag.y0 + dy));
+                }
             } else if (_tedDrag.kind === 'resize') {
+                cv.classList.add('moving');
                 applyScale(e, _tedDrag, Math.hypot(ev.clientX - _tedDrag.cx, ev.clientY - _tedDrag.cy) / _tedDrag.dist0);
             } else if (_tedDrag.kind === 'rotate') {
+                cv.classList.add('moving');
                 setRot(e, Math.atan2(ev.clientY - _tedDrag.cy, ev.clientX - _tedDrag.cx) * 180 / Math.PI + 90);
             } else if (_tedDrag.kind === 'pinch') {
                 var a = _tedPts[_tedDrag.p1], b = _tedPts[_tedDrag.p2];
                 if (!a || !b) return;
+                cv.classList.add('moving');
                 var d = Math.hypot(a.x - b.x, a.y - b.y);
                 applyScale(e, _tedDrag, d / _tedDrag.d0);
                 setRot(e, _tedDrag.r0 + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI - _tedDrag.a0));
@@ -3254,6 +3382,8 @@
         };
         cv.onpointerup = cv.onpointercancel = function (ev) {
             delete _tedPts[ev.pointerId];
+            clearTimeout(_tedLpT);
+            cv.classList.remove('moving');
             if (_tedDrag && _tedDrag.kind === 'pinch') {
                 /* один палец остался — щипок закончен, второй палец продолжает перенос */
                 var left = Object.keys(_tedPts);
