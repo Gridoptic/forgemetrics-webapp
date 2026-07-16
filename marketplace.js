@@ -1610,9 +1610,8 @@
             '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-plus"></i></div>' +
             '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
             '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
-            '<div style="display:flex;gap:8px;margin:0 0 12px;">' +
-            '<button class="fmx-mt on" style="pointer-events:none;">Каналы</button>' +
-            '<button class="fmx-mt" id="fmx-goReqs"><i class="ti ti-speakerphone"></i> Заявки рекламодателей</button></div>' +
+            /* сегмент «Заявки рекламодателей» убран 16.07.2026 по решению владельца:
+               от концепции заявок ушли, вход не открываем (экран renderSell спит) */
             '<div id="fmx-sub"></div>';
         (function () { var si = host.querySelector('.fmx-search input'); if (si) { si.value = _q; si.addEventListener('input', function () { var v = si.value; clearTimeout(_qTimer); _qTimer = setTimeout(function () { _q = v.trim(); loadFeed(false); }, 350); }); } })();
         el('fmx-sellcta').addEventListener('click', function () {
@@ -1620,7 +1619,6 @@
             // с офферами блок ведёт в кабинет управления; новичку — сразу в конструктор
             setSubTab(_myListings && _myListings.length ? 'mine' : 'create');
         });
-        el('fmx-goReqs').addEventListener('click', function () { _haptic('light'); setSubTab('sell'); });
         updateSellCta();
         renderBuy();
         checkMini();
