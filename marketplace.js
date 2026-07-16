@@ -1828,7 +1828,8 @@
                 '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="от" value="' + (v1 != null ? v1 : '') + '">' +
                 '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="до" value="' + (v2 != null ? v2 : '') + '"></div></div>';
         };
-        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты</div>' +
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты' +
+            '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;margin:-4px -4px -4px auto;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-bfgrid">' +
             _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
@@ -1855,6 +1856,8 @@
         document.body.appendChild(bg);
         function done() { bg.remove(); }
         bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        var bfx = bg.querySelector('#fmx-bf-x');
+        if (bfx) bfx.addEventListener('click', done);
         qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (b) {
             b.addEventListener('click', function () { qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); });
         });
