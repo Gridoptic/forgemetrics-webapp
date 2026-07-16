@@ -1119,11 +1119,13 @@
             'input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}',
             /* редактор витрины — механика и вид ручек 1 в 1 со стикер-редактором конструктора.
                touch-action глушим только на элементах и ручках: пустой холст пропускает скролл модалки */
-            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2;}',
+            /* will-change: элемент живёт на своём слое — при перетаскивании телефон не перерисовывает
+               тяжёлый градиентный фон холста на каждом кадре (иначе жест дёргается) */
+            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2;will-change:left,top,width,height,transform;}',
             '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);}',
             /* перемещение: фон затемняется, включается мелкая сетка — выравнивание на глаз */
-            '.fmx-tabed.moving::before{content:"";position:absolute;inset:0;background:rgba(5,7,14,0.42);z-index:1;pointer-events:none;}',
-            '.fmx-tabed.moving::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(rgba(255,255,255,0.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.09) 1px,transparent 1px);background-size:5% 3.3333%;}',
+            '.fmx-tabed.moving::before{content:"";position:absolute;inset:0;background:rgba(5,7,14,0.42);z-index:1;pointer-events:none;transform:translateZ(0);}',
+            '.fmx-tabed.moving::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(rgba(255,255,255,0.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.09) 1px,transparent 1px);background-size:5% 3.3333%;transform:translateZ(0);}',
             /* два режима отображения (точки под рамкой, как у стикера конструктора) */
             '.fmx-tmodes{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:9;}',
             '.fmx-tmd{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;padding:0;}',
@@ -3299,6 +3301,7 @@
     var _tedDrag = null;
     var _tedPts = {};      /* активные пальцы: pointerId → {x,y} — для щипка двумя пальцами */
     var _tedLpT = null;    /* таймер зажатия текста → окно цвета */
+    var _tedRaf = 0;       /* запись в DOM — один раз за кадр: несколько pointermove не дёргают отрисовку */
     function _tedBindCanvas(cv) {
         function pct(ev) {
             var r = cv.getBoundingClientRect();
@@ -3431,7 +3434,10 @@
                 applyScale(e, _tedDrag, d / _tedDrag.d0);
                 setRot(e, _tedDrag.r0 + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI - _tedDrag.a0));
             }
-            _tedApply(e);
+            if (!_tedRaf) _tedRaf = requestAnimationFrame(function () {
+                _tedRaf = 0;
+                if (_tedDrag) _tedApply(_tedDrag.e);
+            });
         };
         cv.onpointerup = cv.onpointercancel = function (ev) {
             delete _tedPts[ev.pointerId];
@@ -3460,7 +3466,7 @@
         if (!node) return;
         node.style.left = e.x + '%'; node.style.top = e.y + '%'; node.style.width = e.w + '%';
         node.style.transform = e.rot ? 'rotate(' + e.rot + 'deg)' : '';
-        if (e.t === 'stk') node.style.fontSize = Math.round((e.fs || 12) * 2.6) + 'px';
+        if (e.t === 'stk' && !e.sk) node.style.fontSize = ((e.fs || 12) * 2.6).toFixed(1) + 'px';
         else if (e.t === 'title' || e.t === 'text') node.style.fontSize = (e.fs || 12) + 'px';
         else node.style.height = e.h + '%';
     }
