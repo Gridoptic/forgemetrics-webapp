@@ -754,12 +754,10 @@
             /* панели сортировок листаются пальцем — полосу прокрутки не показываем */
             '.fmx-sortbar{scrollbar-width:none;-ms-overflow-style:none;}',
             '.fmx-sortbar::-webkit-scrollbar{display:none;}',
-            /* панель «Купить» с кнопкой «Фильтры»: на ПК мышкой горизонтально не прокрутить — показываем аккуратный тонкий скроллбар, чтобы долистать до фильтров */
-            '#fmx-buysort{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;padding-bottom:5px;}',
-            '#fmx-buysort::-webkit-scrollbar{display:block;height:6px;}',
-            '#fmx-buysort::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:6px;}',
-            '#fmx-buysort::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.34);}',
-            '#fmx-buysort::-webkit-scrollbar-track{background:transparent;}',
+            /* панель «Купить» с кнопкой «Фильтры»: нативный скроллбар скрыт — видимость даёт
+               индикатор .fmx-hsb (одинаков на телефоне и ПК), листание — палец/мышь/колесо */
+            '#fmx-buysort{scrollbar-width:none;padding-bottom:2px;margin-bottom:4px;touch-action:pan-x;}',
+            '#fmx-buysort::-webkit-scrollbar{display:none;}',
             /* пульт промо-постера */
             '.fmx-ps{width:100%;max-width:580px;max-height:92vh;overflow-y:auto;background:#0b0e18;border:0.5px solid rgba(255,255,255,0.12);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 14px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}',
             '.fmx-ps::-webkit-scrollbar{width:9px;}',
@@ -1175,12 +1173,16 @@
             /* эмодзи-набор: превью в два ряда, ниже — невидимая растворяющаяся граница + «Развернуть» */
             '.fmx-emwrap{overflow:hidden;max-height:122px;transition:max-height 300ms cubic-bezier(0.3,0.9,0.3,1);-webkit-mask-image:linear-gradient(180deg,#000 58%,rgba(0,0,0,0.35) 84%,transparent 99%);mask-image:linear-gradient(180deg,#000 58%,rgba(0,0,0,0.35) 84%,transparent 99%);}',
             '.fmx-emwrap.open{max-height:640px;-webkit-mask-image:none;mask-image:none;}',
-            /* панель кнопок: тонкий фирменный скроллбар снизу — тот же, что у панели «Купить» */
-            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;}',
-            '.fmx-tedbar::-webkit-scrollbar{display:block;height:6px;}',
-            '.fmx-tedbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:6px;}',
-            '.fmx-tedbar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.34);}',
-            '.fmx-tedbar::-webkit-scrollbar-track{background:transparent;}',
+            /* панель кнопок: нативный скроллбар скрыт (телефоны его всё равно не рисуют) —
+               видимость даёт собственный индикатор .fmx-hsb, одинаковый на всех устройствах */
+            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
+            '.fmx-tedbar::-webkit-scrollbar{display:none;}',
+            /* фирменный индикатор прокрутки лент кнопок */
+            '.fmx-hsb{height:4px;border-radius:4px;background:rgba(255,255,255,0.08);position:relative;overflow:hidden;margin:2px 2px 10px;}',
+            '.fmx-hsb i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:rgba(255,255,255,0.28);}',
+            '.fmx-hsb.tight{margin-bottom:0;}',
+            /* растворение правого края, пока справа есть скрытые кнопки */
+            '.fmx-hfade.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             '.fmx-lssect{font-size:10.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}',
             '.fmx-lssect::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06);}',
@@ -1895,6 +1897,7 @@
     var _qTimer = null;
     function bindBuyControls() {
         var sub = el('fmx-sub'); if (!sub) return;
+        _hscrollify(el('fmx-buysort'));
         qsa(sub, '[data-bsort]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var v = b.getAttribute('data-bsort');
@@ -3083,12 +3086,31 @@
         });
         el('fmx-tedBgBtn').addEventListener('click', _tedBgSheet);
         el('fmx-tedSave').addEventListener('click', _tedSave);
-        _tedBarScroll(body.querySelector('.fmx-tedbar'));
+        _hscrollify(body.querySelector('.fmx-tedbar'), true);
     }
-    /* прокрутка панели кнопок: палец (pan-x), перетаскивание мышью, колесо;
-       видимая полоса прокрутки — фирменный тонкий скроллбар (см. CSS .fmx-tedbar) */
-    function _tedBarScroll(bar) {
-        if (!bar) return;
+    /* лента кнопок с прокруткой: палец (pan-x), перетаскивание мышью, колесо; видимость на
+       ЛЮБОМ устройстве — собственный индикатор-полоска под лентой (телефоны нативный скроллбар
+       не рисуют) + растворение правого края как подсказка «дальше есть ещё» */
+    function _hscrollify(bar, tight) {
+        if (!bar || bar.__hsb) return;
+        bar.__hsb = true;
+        bar.classList.add('fmx-hfade');
+        var sb = document.createElement('div');
+        sb.className = 'fmx-hsb' + (tight ? ' tight' : '');
+        sb.innerHTML = '<i></i>';
+        bar.parentNode.insertBefore(sb, bar.nextSibling);
+        var th = sb.firstChild;
+        function upd() {
+            var need = bar.scrollWidth > bar.clientWidth + 4;
+            sb.style.display = need ? 'block' : 'none';
+            bar.classList.toggle('more', need && bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 4);
+            if (!need) return;
+            th.style.width = Math.max(10, bar.clientWidth / bar.scrollWidth * 100) + '%';
+            th.style.left = (bar.scrollLeft / bar.scrollWidth * 100) + '%';
+        }
+        bar.addEventListener('scroll', upd);
+        setTimeout(upd, 0); setTimeout(upd, 400);
+        try { window.addEventListener('resize', upd); } catch (e) {}
         bar.addEventListener('wheel', function (ev) {
             if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { bar.scrollLeft += ev.deltaY; ev.preventDefault(); }
         }, { passive: false });
