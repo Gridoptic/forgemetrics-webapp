@@ -1143,8 +1143,6 @@
             /* панель инструментов — заметные стеклянные кнопки в стиле приложения */
             '.fmx-tedbar .fmx-seg{background:linear-gradient(135deg,rgba(129,140,248,0.16),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.38);color:#c7cdff;font-weight:700;min-height:40px;padding:8px 13px;flex:0 0 auto;}',
             '.fmx-tedbar .fmx-seg i{color:#818cf8;}',
-            '.fmx-tedbar #fmx-tedBgBtn{background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border-color:rgba(245,191,79,0.4);color:#f5d99a;}',
-            '.fmx-tedbar #fmx-tedBgBtn i{color:#f5bf4f;}',
             /* инструкция — синее прозрачное стекло, как наши подсказки */
             '.fmx-tedhelp{margin-top:12px;padding:13px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(129,140,248,0.14),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
             '.fmx-tedhelp .th{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#c7cdff;margin-bottom:8px;}',
@@ -1168,6 +1166,9 @@
             '.fmx-tbgt{width:44px;height:66px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.12);overflow:hidden;position:relative;display:block;flex:0 0 auto;}',
             /* mini — полноразмерный фон 176x264 (2:3), ужатый в 4 раза: пиксельные узоры («Космос», «Сетка») не искажаются */
             '.fmx-tbgt .mini{position:absolute;top:0;left:0;width:176px;height:264px;transform:scale(0.25);transform-origin:0 0;display:block;}',
+            /* тонкие узоры («Сетка», «Волны») при ужатии в 4 раза исчезают — в миниатюре линии ярче и толще */
+            '.fmx-tbgt .mini.tbg-net{background:linear-gradient(rgba(93,202,165,0.4) 3px, transparent 3px),linear-gradient(90deg, rgba(93,202,165,0.4) 3px, transparent 3px),radial-gradient(120% 100% at 50% -20%, #10182b, #0a0d18 65%);background-size:34px 34px,34px 34px,100% 100%;}',
+            '.fmx-tbgt .mini.tbg-waves{background:repeating-linear-gradient(115deg, rgba(93,202,165,0.32) 0 6px, transparent 6px 26px),linear-gradient(180deg,#0c1322,#0a0d18);}',
             '.fmx-tbgc em{font-style:normal;font-size:8.5px;color:#8990a8;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.fmx-tbgc.on .fmx-tbgt{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
             '.fmx-tbgc.on em{color:#c7cdff;}',
@@ -3053,7 +3054,7 @@
             '</ul></div>' +
             '<div class="fmx-tedbar">' +
             '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
-            '<button class="fmx-seg" data-tadd="title"><i class="ti ti-heading"></i> Заголовок</button>' +
+            '<button class="fmx-seg" data-tadd="title"><i class="ti ti-h-1"></i> Заголовок</button>' +
             '<button class="fmx-seg" data-tadd="text"><i class="ti ti-text-caption"></i> Текст</button>' +
             '<button class="fmx-seg" data-tadd="img"><i class="ti ti-photo"></i> Фото/гиф</button>' +
             '<button class="fmx-seg" data-tadd="video"><i class="ti ti-video"></i> Видео</button>' +
@@ -3183,7 +3184,7 @@
     function _tedRow() {
         var row = el('fmx-tedRow'); if (!row) return;
         var e = _ted.els[_ted.sel];
-        if (!e) { row.innerHTML = '<span style="font-size:10.5px;color:#565b73;padding:6px 0;">Тап по элементу — выбрать. Ручки: угол — размер, сверху — поворот, крестик — удалить</span>'; return; }
+        if (!e) { row.innerHTML = ''; return; }   /* подсказка уже есть в шапке — не дублируем */
         var isTxt = (e.t === 'title' || e.t === 'text');
         row.innerHTML =
             (isTxt ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;min-width:150px;"><i class="ti ti-pencil"></i> Изменить текст</button>' : '') +
@@ -3267,7 +3268,7 @@
             sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
                 '<span class="fmx-lbl fmx-mt2">Твоя коллекция из бота</span>' +
                 (lst.length ? '<div class="fmx-stkgrid" style="margin-top:8px;">' +
-                    lst.map(function (st, j) { return '<button class="fmx-stkcell" data-stm="' + j + '">' + stkMedia(st, false) + '</button>'; }).join('') + '</div>'
+                    lst.map(function (st, j) { return '<button class="fmx-stkcell" data-stm="' + j + '">' + stkMedia(st, true) + '</button>'; }).join('') + '</div>'
                     : '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;margin-top:4px;">Коллекция пуста: отправь боту стикер в личные сообщения — он появится здесь.</div>') +
                 '<span class="fmx-lbl fmx-mt2">Эмодзи</span>' +
                 '<div class="fmx-emwrap" id="fmx-emw"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
