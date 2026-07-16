@@ -992,6 +992,14 @@
             '.fmx-sd.sel{border:1.5px solid #818cf8;background:rgba(129,140,248,0.15);color:#c7cdff;}',
             '.fmx-sd.watch{box-shadow:inset 0 0 0 1.5px rgba(245,191,79,0.65);}',
             '.fmx-sd.busy2{cursor:pointer;}',
+            /* календарь: свободное — тихий фон, глаз цепляется за занятое/горящее/выбранное */
+            '.fmx-sd.free{background:rgba(93,202,165,0.05);border-color:rgba(93,202,165,0.14);color:#7fbfa8;}',
+            '.fmx-sd.free.hot{background:rgba(245,191,79,0.1);border-color:rgba(245,191,79,0.6);color:#f5bf4f;}',
+            /* полоса 14 дней в развороте (вид закупщика) */
+            '.fmx-dd.sel .c{border:1.5px solid #818cf8;background:rgba(129,140,248,0.15);color:#c7cdff;}',
+            '.fmx-dd.hot .c{background:rgba(245,191,79,0.12);color:#f5bf4f;border-color:rgba(245,191,79,0.5);}',
+            '.fmx-dd.watch .c{box-shadow:inset 0 0 0 1.5px rgba(245,191,79,0.65);}',
+            '.fmx-slmore{width:100%;margin-top:10px;}',
             /* нижняя шторка (утверждённый паттерн макета) */
             '.fmx-shbg{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9400;display:none;}',
             '.fmx-shbg.on{display:block;}',
@@ -2549,6 +2557,8 @@
                 _lsSel.day = iso;
                 _haptic('light');
                 calDraw(box, l, 'view');
+                var host = box.closest ? box.closest('#fmx-slotsBox') : null;
+                if (host) drawBuyerSlots(host, l), (function () { var f = host.querySelector('#fmx-calFull'); if (f) { f.style.display = 'block'; var mb = host.querySelector('#fmx-calMonth'); if (mb) mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц'; calDraw(f, l, 'view'); } })();
                 _syncWriteBtn(l);
                 var dq = demand[iso];
                 toast(dq ? 'Дата выбрана. На неё уже ' + dq + ' ' + _plural(dq, 'запрос', 'запроса', 'запросов') + ' за неделю — решай быстрее'
@@ -2586,6 +2596,107 @@
             calDraw(box, l, 'view');
         }).catch(function () {});
     }
+    /* Календарь разворота (вид закупщика), три состояния:
+       1) владелец не вёл календарь — одна честная строка, без зелёной стены;
+       2) ведёт — компактная полоса ближайших 14 дней + «Свободно с …»;
+       3) «Весь месяц» — полный календарь для планирующих дальше. */
+    function loadBuyerSlots(box, l, done) {
+        if (!box || !l.id) return;
+        apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
+            if (!r || !r.ok) { box.innerHTML = ''; return; }
+            _calData[l.id] = r;
+            drawBuyerSlots(box, l);
+            if (done) done(r);
+        }).catch(function () { box.innerHTML = ''; });
+    }
+    function drawBuyerSlots(box, l) {
+        var r = _calData[l.id];
+        if (!r) return;
+        var kept = !!(r.slots_updated_at || (r.busy && r.busy.length));
+        if (!kept) {
+            box.innerHTML = '<div style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:#8990a8;line-height:1.5;">' +
+                '<i class="ti ti-calendar-question" style="color:#565b73;flex:0 0 auto;margin-top:1px;"></i>' +
+                '<span>Владелец не заполнил календарь — уточни даты в сообщении.</span></div>';
+            return;
+        }
+        var busy = {}; (r.busy || []).forEach(function (x) { busy[x] = 1; });
+        var demand = r.demand || {};
+        var watch = {}; (r.watch || []).forEach(function (x) { watch[x] = 1; });
+        var hot = {}; ((r.hot && r.hot.days) || []).forEach(function (x) { hot[x] = 1; });
+        /* ближайшее свободное окно */
+        var d0 = new Date(); d0.setHours(12, 0, 0, 0);
+        var freeFrom = null, dd = new Date(d0);
+        for (var k = 0; k < 90; k++) { var isoK = _isoOf(dd); if (!busy[isoK]) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
+        var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        var h = '<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:9px;">' +
+            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Ближайшие 90 дней заняты</span>') +
+            (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">Обновлён ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
+        h += '<div class="fmx-d14 num">';
+        var d = new Date(d0);
+        for (var i = 0; i < 14; i++) {
+            var iso = _isoOf(d);
+            var isBusy = !!busy[iso];
+            var cls = 'fmx-dd ' + (isBusy ? 'bs' : 'fr');
+            if (!isBusy && hot[iso]) cls += ' hot';
+            if (!isBusy && _lsSel && _lsSel.day === iso) cls += ' sel';
+            if (isBusy && watch[iso]) cls += ' watch';
+            h += '<div class="' + cls + '" data-bd="' + iso + '"><div class="c">' + d.getDate() + (demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
+                '<div class="w">' + WD[d.getDay()] + '</div></div>';
+            d.setDate(d.getDate() + 1);
+        }
+        h += '</div>' +
+            '<div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:#8990a8;flex-wrap:wrap;">' +
+            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(93,202,165,0.5);"></i> свободно</span>' +
+            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(239,128,128,0.5);"></i> занято</span>' +
+            (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> горящие −' + r.hot.pct + '%</span>' : '') +
+            '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
+            (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
+            '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
+            '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
+        box.innerHTML = h;
+        qsa(box, '[data-bd]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var iso = b.getAttribute('data-bd');
+                if (busy[iso]) { _calWatchBuyer(box, l, iso); return; }
+                _lsSel.day = iso;
+                _haptic('light');
+                drawBuyerSlots(box, l);
+                _redrawFullIfOpen(box, l);
+                _syncWriteBtn(l);
+                var dq = demand[iso];
+                toast(dq ? 'Дата выбрана. На неё уже ' + dq + ' ' + _plural(dq, 'запрос', 'запроса', 'запросов') + ' за неделю — решай быстрее'
+                         : 'Дата выбрана — кнопка «Написать» обновилась');
+            });
+        });
+        var mBtn = box.querySelector('#fmx-calMonth');
+        if (mBtn) mBtn.addEventListener('click', function () {
+            var full = box.querySelector('#fmx-calFull');
+            var open = full.style.display !== 'none';
+            if (open) { full.style.display = 'none'; mBtn.innerHTML = '<i class="ti ti-calendar-month"></i> Весь месяц'; }
+            else {
+                full.style.display = 'block';
+                mBtn.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц';
+                calDraw(full, l, 'view');
+            }
+            _haptic('light');
+        });
+    }
+    function _redrawFullIfOpen(box, l) {
+        var full = box.querySelector('#fmx-calFull');
+        if (full && full.style.display !== 'none') calDraw(full, l, 'view');
+    }
+    function _calWatchBuyer(box, l, iso) {
+        apiPost('/api/v1/marketplace/listings/' + l.id + '/date_watch', { day: iso }).then(function (rr) {
+            if (!rr || !rr.ok) { if (rr && rr.error === 'self') toast('Это твой оффер — даты меняются в кабинете', true); return; }
+            var r = _calData[l.id];
+            if (rr.on) { (r.watch = r.watch || []).push(iso); toast('Сообщим в бота, когда владелец освободит эту дату'); }
+            else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast('Слежение за датой снято'); }
+            _haptic('light');
+            drawBuyerSlots(box, l);
+            _redrawFullIfOpen(box, l);
+        }).catch(function () {});
+    }
+
     function loadCal(box, l, mode, done) {
         if (!box || !l.id) return;
         apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
@@ -6175,7 +6286,7 @@
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         if (l.id) {
-            loadCal(el('fmx-slotsBox'), l, 'view', function (r) {
+            loadBuyerSlots(el('fmx-slotsBox'), l, function (r) {
                 /* живые значения доверия */
                 var av = el('fmx-tr-accv');
                 if (av) av.textContent = (r.accuracy_pct != null)
@@ -6192,7 +6303,7 @@
                         if (!busy[iso]) { _lsSel.day = iso; break; }
                         d.setDate(d.getDate() + 1);
                     }
-                    calDraw(el('fmx-slotsBox'), l, 'view');
+                    drawBuyerSlots(el('fmx-slotsBox'), l);   // перерисовать полосу с выбранным днём
                 }
                 _syncWriteBtn(l);
             });
