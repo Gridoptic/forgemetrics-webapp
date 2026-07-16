@@ -1148,7 +1148,8 @@
             /* инструкция — синее прозрачное стекло, как наши подсказки */
             '.fmx-tedhelp{margin-top:12px;padding:13px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(129,140,248,0.14),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
             '.fmx-tedhelp .th{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#c7cdff;margin-bottom:8px;}',
-            '.fmx-tedhelp ol{margin:0;padding-left:18px;font-size:10.5px;line-height:1.65;color:#c9cbe0;}',
+            '.fmx-tedhelp ol,.fmx-tedhelp ul{margin:0;padding-left:18px;font-size:10.5px;line-height:1.65;color:#c9cbe0;}',
+            '.fmx-tedhelp ul{margin-top:7px;list-style:disc;}',
             '.fmx-tedhelp li{margin-bottom:3px;}',
             '.fmx-tedhelp b{color:#e8e8ed;}',
             /* у фото/видео overflow:hidden обрезал ручки за краем — в редакторе раскрываем, скругление переносим на само медиа */
@@ -3039,6 +3040,15 @@
     function _tedPaint() {
         var body = el('fmx-tedBody'); if (!body) return;
         body.innerHTML =
+            '<div class="fmx-tedhelp fmx-tedwhy" style="margin:0 0 12px;"><div class="th"><i class="ti ti-sparkles" style="color:#818cf8;"></i> Витрина — презентация твоего оффера</div>' +
+            '<div style="font-size:10.5px;line-height:1.6;color:#c9cbe0;">Закупщик видит её в развороте сразу после метрик. Это твоё рекламное пространство: покажи, почему размещение у тебя окупится.</div>' +
+            '<ul>' +
+            '<li>скриншоты статистики: охваты, прирост, вовлечённость;</li>' +
+            '<li>примеры интеграций и их результаты в цифрах;</li>' +
+            '<li>сильные стороны аудитории: гео, платёжеспособность, ниша;</li>' +
+            '<li>форматы, условия, бонус при заказе серии размещений;</li>' +
+            '<li>короткое видео-знакомство с каналом.</li>' +
+            '</ul></div>' +
             '<div class="fmx-tedbar">' +
             '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
             '<button class="fmx-seg" data-tadd="title"><i class="ti ti-heading"></i> Заголовок</button>' +
