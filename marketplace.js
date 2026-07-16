@@ -1124,6 +1124,7 @@
         else if (t === 'pulse') renderPulse();
         else if (t === 'mod') { _modTab = 'queue'; renderMod(); }
         else renderEnter();
+        if (t !== 'market') _cmp = {};   // выбор сравнения не переживает уход с Площадки — иначе всплывал бы через день как глюк
         drawCmpBar();   // панель сравнения живёт только на ленте — при смене вкладки прячем
         checkMini();
     }
@@ -1643,6 +1644,12 @@
                 var v = b.getAttribute('data-bsort');
                 if (v === _sortBuy) return;
                 _sortBuy = v; _haptic('light');
+                /* зеркальная честность: ушёл с умной сортировки — подбор под нишу снимается
+                   с уведомлением, а не продолжает молча числиться включённым в фильтрах */
+                if (v !== 'smart' && _sort === 'match') {
+                    _sort = 'all';
+                    toast('Подбор «Под мою нишу» работает только в умной сортировке — снят');
+                }
                 qsa(el('fmx-buysort'), '[data-bsort]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-bsort') === v); });
                 loadFeed(false);
             });
@@ -1698,7 +1705,20 @@
             var au = bg.querySelector('#fmx-bf-aud [data-aud].on');
             _fAud = (au && au.getAttribute('data-aud')) ? au.getAttribute('data-aud') : null;
             var nf = bg.querySelector('#fmx-bf-niche [data-nf].on');
-            if (nf) { var nv = nf.getAttribute('data-nf'); if (nv === 'match') { _sort = 'match'; _nicheSel = null; } else if (nv === 'all') { _sort = 'all'; _nicheSel = null; } }
+            if (nf) {
+                var nv = nf.getAttribute('data-nf');
+                if (nv === 'match') {
+                    _sort = 'match'; _nicheSel = null;
+                    /* подбор под нишу пересортировывает только умную выдачу — раньше при явной
+                       серверной сортировке выбор молча игнорировался (чип горел, эффекта не было) */
+                    if (_sortBuy !== 'smart') {
+                        _sortBuy = 'smart';
+                        // подсветку чипов обновляем руками: loadFeed перерисовывает только ленту, не панель сортировок
+                        qsa(el('fmx-buysort'), '[data-bsort]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-bsort') === 'smart'); });
+                        toast('Включена умная сортировка — подбор под твою нишу работает в ней');
+                    }
+                } else if (nv === 'all') { _sort = 'all'; _nicheSel = null; }
+            }
             done(); _haptic('light'); _refreshFilterChip(); loadFeed(false);
         });
         bg.querySelector('[data-reset]').addEventListener('click', function () {
@@ -1737,6 +1757,7 @@
         }
         host.innerHTML = body;
         bindCards(host); if (_view === 'list') bindList(host);
+        observeViews(host);   // показы считаем только в ленте Площадки (не Радар, не закладки, не превью)
         var more = el('fmx-more');
         if (more) more.addEventListener('click', function () {
             more.disabled = true; more.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю…';
@@ -4553,8 +4574,9 @@
             (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
-            (l.id ? '<button class="fmx-star" data-share="' + l.id + '" data-shu="' + _esc(l.username) + '" style="bottom:auto;top:' + (starTop((l.effects_json || {}).starPos) + 36) + 'px;z-index:7;"><i class="ti ti-share-2"></i></button>' : '') +
-            '<button class="fmx-star fmx-cmpb' + (_cmp[l.username] ? ' on' : '') + '" data-cmp="' + _esc(l.username) + '" title="Сравнить" style="bottom:auto;top:' + (starTop((l.effects_json || {}).starPos) + 72) + 'px;z-index:7;"><i class="ti ti-columns-3"></i></button>' +
+            /* стопка иконок сокращена до одной звезды (16.07.2026, решение владельца): безымянные
+               кружки share и сравнения не считывались. Share вернётся подписанной кнопкой в кабинете
+               и развороте, сравнение — кнопкой в закладках, когда офферов станет 3+ */
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             bodyBdg +
@@ -4663,13 +4685,11 @@
         scaleCards(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
-        qsa(host, '[data-share]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); shareCard(b.getAttribute('data-share'), b.getAttribute('data-shu')); }); });
-        qsa(host, '[data-cmp]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleCmp(b.getAttribute('data-cmp')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
     }
-    function bindView() { qsa(el('fmx-main'), '[data-view]').forEach(function (b) { b.addEventListener('click', function () { _view = b.getAttribute('data-view'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); var pb = el('fmx-promobtn'); if (pb) pb.addEventListener('click', openPromo); }
+    function bindView() { qsa(el('fmx-main'), '[data-view]').forEach(function (b) { b.addEventListener('click', function () { _view = b.getAttribute('data-view'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); }
     function bindSort() {
         qsa(el('fmx-main'), '[data-sort]').forEach(function (b) {
             b.addEventListener('click', function () {
@@ -4716,6 +4736,30 @@
         if (kind === 'write') { if (_trackedWrite[lid]) return; _trackedWrite[lid] = 1; }  // клик считаем раз за сессию
         try { apiPost('/api/v1/marketplace/listings/' + lid + '/track', { kind: kind }).catch(function () {}); } catch (e) {}
     }
+    /* Показы карточек в ленте. Бэкенд принимал kind='view' с первого дня (дедуп сутки, владелец
+       не считается), но фронт событие не отправлял — продавец видел вечный ноль показов и делал
+       вывод «площадка мёртвая». Показ = карточка видна наполовину. Раз за сессию на карточку.
+       Наблюдаем ТОЛЬКО ленту Площадки: в Радаре id — это id платформы, слать его в track нельзя. */
+    var _seenView = {}, _viewObs = null;
+    function observeViews(scope) {
+        if (typeof IntersectionObserver === 'undefined' || !scope) return;
+        if (!_viewObs) {
+            _viewObs = new IntersectionObserver(function (ents) {
+                ents.forEach(function (en) {
+                    if (!en.isIntersecting) return;
+                    _viewObs.unobserve(en.target);
+                    var lid = en.target.getAttribute('data-lid');
+                    if (!lid || _seenView[lid]) return;
+                    _seenView[lid] = 1;
+                    trackListing(lid, 'view');
+                });
+            }, { threshold: 0.5 });
+        }
+        qsa(scope, '[data-act="expand"][data-lid]').forEach(function (b) {
+            var lid = b.getAttribute('data-lid');
+            if (lid && !_seenView[lid]) _viewObs.observe(b);
+        });
+    }
     /* статистика карточки владельцу: развороты и клики «Написать» за 7 дней + мини-график по дням */
     function openListingStats(lid) {
         lid = parseInt(lid, 10); if (!lid) { toast('Сначала сохрани оффер'); return; }
@@ -4747,11 +4791,13 @@
                     '<div style="font-size:10px;font-weight:' + (today ? '700' : '400') + ';color:' + (today ? '#5DCAA5' : '#8990a8') + ';white-space:nowrap;">' + WD[dd.getDay()] + '</div></div>';
             }).join('');
             body.innerHTML =
-                '<div style="display:flex;gap:10px;margin-bottom:16px;">' +
-                '<div style="flex:1;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);border-radius:12px;padding:12px;text-align:center;">' +
-                '<div style="font-size:26px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:11px;color:#a9aec0;margin-top:2px;">Развернули оффер</div></div>' +
-                '<div style="flex:1;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);border-radius:12px;padding:12px;text-align:center;">' +
-                '<div style="font-size:26px;font-weight:800;color:#818cf8;">' + t.writes + '</div><div style="font-size:11px;color:#a9aec0;margin-top:2px;">Нажали «Написать»</div></div></div>' +
+                '<div style="display:flex;gap:8px;margin-bottom:16px;">' +
+                '<div style="flex:1;background:rgba(245,191,79,0.08);border:1px solid rgba(245,191,79,0.22);border-radius:12px;padding:12px 8px;text-align:center;">' +
+                '<div style="font-size:24px;font-weight:800;color:#f5bf4f;">' + (t.views || 0) + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Показы в ленте</div></div>' +
+                '<div style="flex:1;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);border-radius:12px;padding:12px 8px;text-align:center;">' +
+                '<div style="font-size:24px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Развернули</div></div>' +
+                '<div style="flex:1;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);border-radius:12px;padding:12px 8px;text-align:center;">' +
+                '<div style="font-size:24px;font-weight:800;color:#818cf8;">' + t.writes + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Написали</div></div></div>' +
                 '<div style="display:flex;align-items:flex-end;gap:3px;padding:6px 2px;">' + bars + '</div>' +
                 '<div style="display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:11px;color:#8990a8;">' +
                 '<span><span style="display:inline-block;width:8px;height:8px;background:#5DCAA5;border-radius:2px;margin-right:4px;"></span>Развороты</span>' +
@@ -4925,9 +4971,9 @@
             card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
                 'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
             card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4,8 · 3 сделки</span>', 'Сделки и рейтинг',
-                'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
-            card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
-                'Канал прошёл модерацию Площадки — запрещённый контент и признаки мошенничества не выявлены. Отсутствие бейджа означает лишь, что проверка ещё не проводилась, и не свидетельствует о нарушениях.');
+                'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.');
+            /* карточка «Безопасный» удалена из гида 16.07.2026: сам бейдж убран из ленты раньше
+               (фальшивый знак доверия) — справка описывала несуществующее */
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
         bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат бейджи</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Бейджи в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
