@@ -1129,6 +1129,8 @@
             '.fmx-tmd i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.35);background:#0d1120;pointer-events:none;}',
             '.fmx-tmd.on i{border-color:#5DCAA5;background:rgba(93,202,165,0.35);}',
             '.fmx-tab .el.mb{opacity:0.55;}',
+            /* режим «Поверх»: выше всех элементов (в редакторе обычные — z 2, в рендере — auto) */
+            '.fmx-tab .el.mt{z-index:4;}',
             /* медиа-стикер из коллекции бота: прозрачный, без рамок и подложки */
             '.fmx-tab .el.stkm{overflow:visible;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.45));}',
             '.fmx-tab .el.stkm img,.fmx-tab .el.stkm video,.fmx-tab .el.stkm .fmx-stk-lot{width:100%;height:100%;object-fit:contain;display:block;}',
@@ -2791,8 +2793,8 @@
     function _elColor(e) {
         return (e.c && /^#[0-9a-fA-F]{6}$/.test(String(e.c))) ? 'color:' + e.c + ';' : '';
     }
-    /* режим отображения элемента: 'b' = «Слияние» (полупрозрачный, как у стикера конструктора) */
-    function _elMode(e) { return e.m === 'b' ? ' mb' : ''; }
+    /* режим отображения элемента: 'b' = «Слияние» (полупрозрачный), 't' = «Поверх» (выше всех) */
+    function _elMode(e) { return e.m === 'b' ? ' mb' : (e.m === 't' ? ' mt' : ''); }
     /* стикер из коллекции бота (s = /media/-путь): webp/png/webm/tgs — как stkMedia конструктора */
     function _tabStkInner(e) {
         if (!e.s || String(e.s).indexOf('/media/') !== 0) return null;
@@ -3029,9 +3031,9 @@
             '<li><b>Стикеры</b> — твоя коллекция из бота: отправь боту стикер в личные сообщения, и он появится в списке. Плюс набор эмодзи.</li>' +
             '<li><b>Тап по элементу</b> — выбрать. Перетаскивай прямо пальцем: фон затемнится и появится сетка для ровной расстановки.</li>' +
             '<li><b>Угловая ручка</b> — размер, <b>верхняя точка</b> — поворот, <b>красный крестик</b> — удалить. Щипок двумя пальцами: размер и поворот одновременно.</li>' +
-            '<li><b>Две точки под рамкой</b> — режим отображения: обычный или «Слияние» (полупрозрачный, вписывается в фон).</li>' +
-            '<li><b>Зажми текст на секунду</b> — откроется передвижное окно цвета: спектр, оттенок, HEX и RGB.</li>' +
-            '<li><b>«Изменить текст»</b> под холстом — правка надписи; там же цветовые точки.</li>' +
+            '<li><b>Три точки под рамкой</b> — режим отображения: обычный, «Слияние» (полупрозрачный, вписывается в фон) и «Поверх» (выше всех элементов).</li>' +
+            '<li><b>Повторный тап по выбранному тексту</b> — правка надписи; то же делает кнопка «Изменить текст» под холстом.</li>' +
+            '<li><b>Зажми текст на секунду</b> — откроется передвижное окно цвета: спектр, оттенок, HEX и RGB; цветовые точки есть и под холстом.</li>' +
             '<li>Закупщик видит верхнюю половину витрины сразу, остальное — по кнопке «Развернуть». Самое важное размещай сверху.</li>' +
             '<li>Жми <b>«Сохранить витрину»</b> — изменения сразу видны в развороте оффера.</li>' +
             '</ol></div>' +
@@ -3084,8 +3086,9 @@
             '<span class="fmx-hnd rot" data-hr="' + i + '"></span>' +
             '<span class="fmx-hnd del" data-hd="' + i + '"><i class="ti ti-x"></i></span>' +
             '<span class="fmx-tmodes">' +
-            '<button class="fmx-tmd' + (e.m !== 'b' ? ' on' : '') + '" data-tm="" title="Обычный"><i></i></button>' +
+            '<button class="fmx-tmd' + (!e.m ? ' on' : '') + '" data-tm="" title="Обычный"><i></i></button>' +
             '<button class="fmx-tmd' + (e.m === 'b' ? ' on' : '') + '" data-tm="b" title="Слияние"><i></i></button>' +
+            '<button class="fmx-tmd' + (e.m === 't' ? ' on' : '') + '" data-tm="t" title="Поверх"><i></i></button>' +
             '</span>';
     }
     /* пульт цвета 1 в 1 с конструктором (точки + «Свой цвет» → подвижная студия), без побочных
@@ -3322,9 +3325,10 @@
                 _tedDrag = { kind: 'rotate', e: e2, cx: c2.x, cy: c2.y };
             } else if (elN) {
                 var i = +elN.getAttribute('data-i');
-                if (_ted.sel !== i) { _ted.sel = i; _tedDrawCanvas(); }
+                var wasSel = _ted.sel === i;
+                if (!wasSel) { _ted.sel = i; _tedDrawCanvas(); }
                 var e3 = _ted.els[i];
-                _tedDrag = { kind: 'move', e: e3, start: pct(ev), x0: e3.x, y0: e3.y };
+                _tedDrag = { kind: 'move', e: e3, start: pct(ev), x0: e3.x, y0: e3.y, wasSel: wasSel };
                 /* зажатие текста = передвижное окно цвета 1 в 1 с конструктором */
                 if (e3.t === 'title' || e3.t === 'text') {
                     clearTimeout(_tedLpT);
@@ -3384,6 +3388,15 @@
             delete _tedPts[ev.pointerId];
             clearTimeout(_tedLpT);
             cv.classList.remove('moving');
+            /* повторный тап по уже выбранному тексту (без движения и без зажатия) = правка надписи */
+            if (_tedDrag && _tedDrag.kind === 'move' && !_tedDrag.moved && _tedDrag.wasSel &&
+                (_tedDrag.e.t === 'title' || _tedDrag.e.t === 'text')) {
+                var eT = _tedDrag.e;
+                _tedDrag = null;
+                _haptic('light');
+                _tedEditText(eT);
+                return;
+            }
             if (_tedDrag && _tedDrag.kind === 'pinch') {
                 /* один палец остался — щипок закончен, второй палец продолжает перенос */
                 var left = Object.keys(_tedPts);
