@@ -887,7 +887,31 @@
             '.fmx-stile{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;padding:13px;}',
             '.fmx-stv{font-size:19px;font-weight:800;color:#e8e8ed;overflow-wrap:anywhere;}',
             '.fmx-stl{font-size:11px;color:#8990a8;margin-top:3px;}',
-            '.fmx-sts{font-size:10px;color:#565b73;margin-top:1px;}'
+            '.fmx-sts{font-size:10px;color:#565b73;margin-top:1px;}',
+
+            /* ===== календарь занятости слотов ===== */
+            '.fmx-slots{margin-top:16px;background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:13px;}',
+            '.fmx-slh{display:flex;align-items:center;gap:8px;margin-bottom:4px;}',
+            '.fmx-slh .t{font-size:12px;font-weight:700;color:#e8e8ed;display:flex;align-items:center;gap:6px;}',
+            '.fmx-slh .t i{color:#5DCAA5;font-size:14px;}',
+            '.fmx-slfree{margin-left:auto;font-size:10.5px;font-weight:700;color:#5DCAA5;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.3);border-radius:999px;padding:3px 9px;white-space:nowrap;}',
+            '.fmx-slhint{font-size:10.5px;color:#8990a8;line-height:1.45;margin-bottom:10px;}',
+            '.fmx-slgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}',
+            '.fmx-slw{font-size:9.5px;color:#565b73;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;padding-bottom:2px;}',
+            '.fmx-sd{min-height:40px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#c9cbe0;font-size:12px;font-weight:600;font-family:inherit;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;line-height:1.1;}',
+            '.fmx-sdm{font-size:8px;font-weight:800;letter-spacing:0.4px;text-transform:uppercase;color:#818cf8;margin-bottom:1px;}',
+            '.fmx-sd.free{color:#5DCAA5;background:rgba(93,202,165,0.09);border-color:rgba(93,202,165,0.22);}',
+            '.fmx-sd.busy{color:#8990a8;background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.06);}',
+            '.fmx-sd.busy .fmx-sdn{text-decoration:line-through;text-decoration-color:rgba(239,128,128,0.75);}',
+            '.fmx-sd.past{color:#3a3f52;background:transparent;border-color:transparent;}',
+            '.fmx-sd.past .fmx-sdm{color:#3a3f52;}',
+            '.fmx-sd.today{box-shadow:0 0 0 1.5px rgba(129,140,248,0.75);}',
+            '.fmx-sd.own{cursor:pointer;}',
+            '.fmx-sd.own:active{transform:scale(0.94);}',
+            '.fmx-sleg{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:#8990a8;}',
+            '.fmx-sleg span{display:inline-flex;align-items:center;gap:5px;}',
+            '.fmx-sleg i{width:8px;height:8px;border-radius:3px;display:inline-block;}',
+            '.fmx-slnote{margin-top:9px;font-size:11px;color:#5DCAA5;display:flex;align-items:flex-start;gap:6px;line-height:1.4;}'
         ].join('');
         document.head.appendChild(s);
     }
@@ -1851,6 +1875,76 @@
         return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> Доказательство размещения</div>' +
             '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
     }
+    /* ===== календарь занятости слотов =====
+       Владелец отмечает занятые дни; покупатель видит свободные и пишет уже с датой.
+       Брони покупателем нет — гонки за слот исключены. Перерисовываем ТОЛЬКО этот блок. */
+    var SL_WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    var SL_MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    var SL_WEEKS = 6;
+
+    function _isoDay(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function renderSlotsBox(l) {
+        var box = el('fmx-slotsBox');
+        if (!box || !l.id) return;
+        apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
+            if (!r || !r.ok) { box.innerHTML = ''; return; }
+            _slotsDraw(box, l, r);
+        }).catch(function () { box.innerHTML = ''; });
+    }
+
+    function _slotsDraw(box, l, r) {
+        var busy = {};
+        (r.busy || []).forEach(function (s) { busy[s] = 1; });
+        var today = new Date(); today.setHours(12, 0, 0, 0);   // полдень: перевод часов не сдвинет дату
+        var todayIso = _isoDay(today);
+        var start = new Date(today);
+        start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   // понедельник текущей недели
+        var cells = '', freeCount = 0;
+        for (var i = 0; i < SL_WEEKS * 7; i++) {
+            var dt = new Date(start); dt.setDate(start.getDate() + i);
+            var iso = _isoDay(dt);
+            /* сравниваем ISO-строки, а не мс: у ISO-дат лексикографический порядок = хронологический,
+               и это не ломается на переходе часов (летнее время) в любом часовом поясе */
+            var past = iso < todayIso, isBusy = !!busy[iso], own = !past && !!r.is_owner;
+            if (!past && !isBusy) freeCount++;
+            var cls = 'fmx-sd ' + (past ? 'past' : (isBusy ? 'busy' : 'free')) +
+                (iso === todayIso ? ' today' : '') + (own ? ' own' : '');
+            /* лента идёт через границу месяцев (…31, 1, 2…) — подписываем месяц на его первом дне
+               и на первой клетке ленты, иначе не понять, август это или июль */
+            var mon = (i === 0 || dt.getDate() === 1) ? '<span class="fmx-sdm">' + SL_MON[dt.getMonth()] + '</span>' : '';
+            cells += '<button class="' + cls + '"' + (own ? ' data-slot="' + iso + '"' : ' disabled') + '>' +
+                mon + '<span class="fmx-sdn">' + dt.getDate() + '</span></button>';
+        }
+        box.innerHTML = '<div class="fmx-slots">' +
+            '<div class="fmx-slh"><span class="t"><i class="ti ti-calendar-check"></i> Свободные даты</span>' +
+            '<span class="fmx-slfree">' + freeCount + ' своб.</span></div>' +
+            '<div class="fmx-slhint">' + (r.is_owner
+                ? 'Отмечай занятые дни — покупатели сразу увидят свободные и не будут спрашивать в личке.'
+                : 'Зелёные — свободно. Напиши владельцу сразу с нужной датой.') + '</div>' +
+            '<div class="fmx-slgrid">' + SL_WD.map(function (w) { return '<span class="fmx-slw">' + w + '</span>'; }).join('') + cells + '</div>' +
+            '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
+            '<span><i style="background:rgba(255,255,255,0.12);"></i>занято</span></div>' +
+            (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
+            '</div>';
+        if (!r.is_owner) return;
+        box.querySelectorAll('[data-slot]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var day = b.getAttribute('data-slot');
+                b.disabled = true;
+                apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/toggle', { day: day }).then(function (rr) {
+                    b.disabled = false;
+                    if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить день'); return; }
+                    _haptic('light');
+                    if (rr.busy) busy[day] = 1; else delete busy[day];
+                    _slotsDraw(box, l, { ok: true, is_owner: true, busy: Object.keys(busy), slots_note: r.slots_note });
+                }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+            });
+        });
+    }
+
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
@@ -4708,7 +4802,7 @@
             (mstr.length ? '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;">' + mstr.map(function (m) { return '<span style="font-size:11px;color:#a9aec0;background:rgba(255,255,255,0.04);padding:5px 10px;border-radius:8px;">' + _esc(m) + '</span>'; }).join('') + '</div>' : '') +
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:12px 0;">' + _esc(l.custom_text) + '</div>' : '') +
             (fmts ? '<div style="font-size:12px;font-weight:700;margin:14px 0 4px;">Форматы и цены</div>' + fmts : '') +
-            (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '') +
+            (l.id ? '<div id="fmx-slotsBox"></div>' : (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '')) +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i>' + (_bookmarks[u] ? 'В закладках' : 'В закладки') + '</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div>' +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на оффер</button>' : '');
@@ -4725,7 +4819,7 @@
         el('fmx-listBody').querySelectorAll('[data-w]').forEach(function (b) { b.addEventListener('click', function () { trackListing(l.id, 'write'); openTg(b.getAttribute('data-w')); }); });
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
-        if (l.id) { renderDealBox(l); if (l.reviews_count) renderReviews(l); }
+        if (l.id) { renderSlotsBox(l); renderDealBox(l); if (l.reviews_count) renderReviews(l); }
         hydrateTgs(el('fmx-listBody'));
         showModal('fmx-listBg');
     }
