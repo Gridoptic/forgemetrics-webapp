@@ -952,6 +952,17 @@
             '.fmx-cmpna{color:#565b73!important;font-weight:400!important;}',
             '.fmx-cmpleg{margin-top:10px;font-size:10px;color:#8990a8;line-height:1.45;display:flex;gap:6px;align-items:flex-start;}',
             '.fmx-cmpleg i{color:#5DCAA5;flex:0 0 auto;margin-top:1px;}',
+            /* Подписки на ниши: строка = ниша + сегодняшний CPM + сдвиг за неделю */
+            '.fmx-nslist{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}',
+            '.fmx-nsrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);min-height:40px;}',
+            '.fmx-nsn{flex:1;min-width:0;font-size:11.5px;font-weight:600;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-nscpm{font-size:11.5px;font-weight:700;color:#c9cbe0;font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto;}',
+            '.fmx-nsd{font-size:10px;font-weight:700;border-radius:999px;padding:2px 6px;display:inline-flex;align-items:center;gap:2px;white-space:nowrap;flex:0 0 auto;}',
+            '.fmx-nsd.good{color:#5DCAA5;background:rgba(93,202,165,0.12);}',
+            '.fmx-nsd.bad{color:#ef8080;background:rgba(239,128,128,0.12);}',
+            '.fmx-nsna{font-size:10px;color:#565b73;white-space:nowrap;flex:0 0 auto;}',
+            '.fmx-nsx{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:0;background:transparent;color:#565b73;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}',
+            '.fmx-nsx:active{background:rgba(255,255,255,0.06);}',
             /* узкий телефон: ужимаем, чтобы 3 канала влезли целиком и ничего не обрезалось */
             '@media (max-width:379px){.fmx-cmpt{font-size:10.5px;}' +
             '.fmx-cmpt th,.fmx-cmpt td{padding:7px 2px;}' +
@@ -1211,6 +1222,9 @@
             var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
             if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Радаре появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
             var html = _termHead();
+            /* вход в отслеживание ниш именно отсюда: алерт о сдвиге CPM нужен закупщику,
+               а он смотрит цены здесь. На вкладке «Продать» колокольчик остаётся для заявок. */
+            html += '<button class="fmx-btn" id="fmx-pbell" style="width:100%;margin:2px 0 14px;"><i class="ti ti-bell"></i> Следить за нишей — сообщим о сдвиге CPM</button>';
             if (_pulse.market && _pulse.market.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
             }
@@ -1219,6 +1233,7 @@
             }
             html += '<div style="font-size:10px;color:#565b73;line-height:1.65;margin-top:16px;">Показаны медианы по нишам. <b style="color:#8990a8;">Зелёные</b> — CPM ниже медианы (выгоднее покупателю), <b style="color:#8990a8;">красные</b> — выше. Площадка — точные данные наших офферов, Радар — публичная статистика каналов. Обновление раз в 5 минут. Тренды и история цен появятся с накоплением данных.</div>';
             host.innerHTML = html;
+            var pb = el('fmx-pbell'); if (pb) pb.addEventListener('click', openNicheSubs);
         });
     }
     function renderEnter() {
@@ -1868,19 +1883,39 @@
         });
         showModal('fmx-repBg');
     }
-    var _nsubs = null;
+    var _nsubs = null, _nsMetrics = {}, _nsThr = 12;
+    /* Строка ниши: слева название, справа — сегодняшний CPM и сдвиг за неделю.
+       Для закупщика падение CPM — хорошая новость (зелёный), рост — плохая (красный).
+       Цифру рисуем ТОЛЬКО если бэкенд её дал (выборка достаточная). Пусто — так и пишем,
+       выдумывать числа нельзя. */
+    function _nsRow(n) {
+        var m = _nsMetrics ? _nsMetrics[n] : null;
+        var right;
+        if (!m) {
+            right = '<span class="fmx-nsna">данных мало</span>';
+        } else {
+            var d = '';
+            if (m.pct != null && Math.abs(m.pct) >= 0.1) {
+                var down = m.pct < 0;
+                d = '<span class="fmx-nsd ' + (down ? 'good' : 'bad') + '"><i class="ti ti-arrow-' +
+                    (down ? 'down' : 'up') + '-right"></i>' + Math.abs(Math.round(m.pct)) + '%</span>';
+            }
+            right = '<span class="fmx-nscpm">' + _num(m.cpm) + ' ₽</span>' + d;
+        }
+        return '<div class="fmx-nsrow"><span class="fmx-nsn">' + _esc(n) + '</span>' + right +
+            '<button class="fmx-nsx" data-nsdel="' + _esc(n) + '" title="Отписаться"><i class="ti ti-x"></i></button></div>';
+    }
+
     function renderNsBody() {
         var box = el('fmx-nsBody'); if (!box) return;
         var chips = (_nsubs && _nsubs.length)
-            ? '<div class="fmx-fxw" style="margin-bottom:4px;">' + _nsubs.map(function (n) {
-                return '<span class="fmx-fx on" style="display:inline-flex;align-items:center;gap:6px;">' + _esc(n) + '<i class="ti ti-x" data-nsdel="' + _esc(n) + '" style="cursor:pointer;font-size:11px;"></i></span>';
-            }).join('') + '</div>'
+            ? '<div class="fmx-nslist">' + _nsubs.map(_nsRow).join('') + '</div>'
             : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">Подписок пока нет. Ниша твоего оффера подписывается автоматически при публикации.</div>';
         box.innerHTML = chips +
             '<span class="fmx-lbl fmx-mt2">Добавить нишу</span>' +
             '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="например, Криптовалюты" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-ns-add" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-plus"></i></button></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">Ниша сравнивается с той, что указал рекламодатель в заявке. Уведомления приходят от @ForgeMetricsBot.</div>';
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">CPM — медиана по нише за сегодня. Сообщим в @ForgeMetricsBot, когда он сдвинется больше чем на ' + Math.round(_nsThr) + '% за неделю, и когда рекламодатель будет искать каналы этой ниши.</div>';
         var addFn = function () {
             var v = el('fmx-ns-inp').value.trim();
             if (!v) return;
@@ -1889,6 +1924,12 @@
                 var lv = v.toLowerCase();
                 if (_nsubs.indexOf(lv) < 0) _nsubs.push(lv);
                 _nsubs.sort(); _haptic('success'); renderNsBody();
+                // добираем метрику по новой нише: без этого строка навсегда осталась бы «данных мало»
+                apiGet('/api/v1/marketplace/niche_subs').then(function (rr) {
+                    if (!rr || !rr.niches) return;
+                    _nsubs = rr.niches; _nsMetrics = rr.metrics || {};
+                    renderNsBody();
+                }).catch(function () {});
             }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
         };
         el('fmx-ns-add').addEventListener('click', addFn);
@@ -1908,8 +1949,10 @@
         showModal('fmx-nsBg');
         apiGet('/api/v1/marketplace/niche_subs').then(function (r) {
             _nsubs = (r && r.niches) ? r.niches : [];
+            _nsMetrics = (r && r.metrics) ? r.metrics : {};
+            if (r && r.threshold) _nsThr = r.threshold;
             renderNsBody();
-        }).catch(function () { _nsubs = []; renderNsBody(); });
+        }).catch(function () { _nsubs = []; _nsMetrics = {}; renderNsBody(); });
     }
     function _proofHtml(r) {
         if (!r || !r.post_url) return '';
@@ -4798,7 +4841,7 @@
         qsa(rv, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-revBg'); }); });
 
         var ns = document.createElement('div'); ns.className = 'fmx-mbg'; ns.id = 'fmx-nsBg';
-        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> Уведомления о заявках</h2><p>Пришлём в бота, когда рекламодатель ищет каналы твоей ниши</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
+        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> Отслеживание ниш</h2><p>CPM ниши и заявки рекламодателей — в бота</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
         document.body.appendChild(ns);
         ns.addEventListener('click', function (e) { if (e.target === ns) hideModal('fmx-nsBg'); });
         qsa(ns, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-nsBg'); }); });
