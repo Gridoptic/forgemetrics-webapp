@@ -1178,8 +1178,10 @@
             '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             /* фирменный индикатор прокрутки лент кнопок */
-            '.fmx-hsb{height:4px;border-radius:4px;background:rgba(255,255,255,0.08);position:relative;overflow:hidden;margin:2px 2px 10px;}',
-            '.fmx-hsb i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:rgba(255,255,255,0.28);}',
+            '.fmx-hsb{height:4px;border-radius:4px;background:rgba(255,255,255,0.08);position:relative;margin:2px 2px 10px;cursor:pointer;touch-action:none;}',
+            /* тап-зона шире видимой полоски — палец попадает без прицеливания */
+            '.fmx-hsb::before{content:"";position:absolute;left:0;right:0;top:-12px;bottom:-12px;}',
+            '.fmx-hsb i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:rgba(255,255,255,0.28);pointer-events:none;}',
             '.fmx-hsb.tight{margin-bottom:0;}',
             /* растворение правого края, пока справа есть скрытые кнопки */
             '.fmx-hfade.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);}',
@@ -3111,6 +3113,26 @@
         bar.addEventListener('scroll', upd);
         setTimeout(upd, 0); setTimeout(upd, 400);
         try { window.addEventListener('resize', upd); } catch (e) {}
+        /* индикатор интерактивный: тап по дорожке перематывает, бегунок можно вести пальцем/мышью */
+        var sbDrag = false;
+        function sbTo(clientX) {
+            var r = sb.getBoundingClientRect();
+            var max = bar.scrollWidth - bar.clientWidth;
+            if (max <= 0 || r.width <= 0) return;
+            var thW = r.width * Math.max(0.1, bar.clientWidth / bar.scrollWidth);
+            var f = (clientX - r.left - thW / 2) / Math.max(1, r.width - thW);
+            bar.scrollLeft = Math.max(0, Math.min(max, f * max));
+        }
+        sb.addEventListener('pointerdown', function (ev) {
+            ev.preventDefault();
+            sbDrag = true;
+            try { sb.setPointerCapture(ev.pointerId); } catch (e) {}
+            sbTo(ev.clientX);
+        });
+        sb.addEventListener('pointermove', function (ev) { if (sbDrag) sbTo(ev.clientX); });
+        ['pointerup', 'pointercancel'].forEach(function (evn) {
+            sb.addEventListener(evn, function () { sbDrag = false; });
+        });
         bar.addEventListener('wheel', function (ev) {
             if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { bar.scrollLeft += ev.deltaY; ev.preventDefault(); }
         }, { passive: false });
