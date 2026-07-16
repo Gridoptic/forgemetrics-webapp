@@ -1061,7 +1061,8 @@
             '.fmx-tabvp.open{padding-top:150%;}',
             '.fmx-tabvp:not(.open){border-bottom-left-radius:0;border-bottom-right-radius:0;-webkit-mask-image:linear-gradient(180deg,#000 52%,rgba(0,0,0,0.4) 80%,transparent 99%);mask-image:linear-gradient(180deg,#000 52%,rgba(0,0,0,0.4) 80%,transparent 99%);}',
             '.fmx-tabvp.noext{padding-top:150%;-webkit-mask-image:none;mask-image:none;border-radius:16px;}',
-            '.fmx-tab{position:absolute;top:0;left:0;width:100%;aspect-ratio:2/3;background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);}',
+            /* min-height добирает разницу от рамок контейнера — иначе снизу полоска-зазор без фона */
+            '.fmx-tab{position:absolute;top:0;left:0;width:100%;aspect-ratio:2/3;min-height:100%;background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);}',
             /* фоны витрины — палитра постера 1 в 1 (значения из эталона poster_render + усиленные "Космос"/"Ультрафиолет") */
             '.tbg-g1{background:radial-gradient(120% 90% at 80% -10%, rgba(93,202,165,0.55), transparent 55%),radial-gradient(120% 100% at 0% 110%, rgba(20,90,70,0.5), transparent 55%),#0a0d18;}',
             '.tbg-g2{background:radial-gradient(90% 70% at 85% -5%, rgba(168,85,247,0.60), rgba(109,40,217,0.22) 45%, transparent 66%),radial-gradient(100% 80% at -5% 110%, rgba(217,70,239,0.38), transparent 60%),radial-gradient(60% 40% at 50% 115%, rgba(139,92,246,0.28), transparent 62%),radial-gradient(45% 30% at 20% 8%, rgba(88,28,235,0.30), transparent 65%),linear-gradient(170deg, #170433 0%, #0d0224 48%, #060112 100%);}',
@@ -1160,11 +1161,15 @@
             '.fmx-hnd::before{content:"";position:absolute;inset:-11px;}',
             '.fmx-hnd.rot{right:auto;left:50%;margin-left:-8px;top:-23px;bottom:auto;border-radius:50%;cursor:grab;}',
             '.fmx-hnd.del{right:-9px;top:-9px;bottom:auto;left:auto;border-radius:50%;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;}',
-            /* плитки фона витрины */
-            '.fmx-tbgw{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}',
-            /* без собственного фона: живую миниатюру даёт класс пресета tbg-* */
-            '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;padding:0;position:relative;}',
-            '.fmx-tbgt.on{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
+            /* плитки фона витрины: честная миниатюра = уменьшенная копия холста 2:3 + подпись */
+            '.fmx-tbgw{display:flex;gap:9px 7px;flex-wrap:wrap;margin-top:10px;}',
+            '.fmx-tbgc{background:none;border:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;width:56px;font-family:inherit;}',
+            '.fmx-tbgt{width:44px;height:66px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.12);overflow:hidden;position:relative;display:block;flex:0 0 auto;}',
+            /* mini — полноразмерный фон 176x264 (2:3), ужатый в 4 раза: пиксельные узоры («Космос», «Сетка») не искажаются */
+            '.fmx-tbgt .mini{position:absolute;top:0;left:0;width:176px;height:264px;transform:scale(0.25);transform-origin:0 0;display:block;}',
+            '.fmx-tbgc em{font-style:normal;font-size:8.5px;color:#8990a8;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-tbgc.on .fmx-tbgt{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
+            '.fmx-tbgc.on em{color:#c7cdff;}',
             /* панель кнопок: тонкий фирменный скроллбар снизу — тот же, что у панели «Купить» */
             '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;}',
             '.fmx-tedbar::-webkit-scrollbar{display:block;height:6px;}',
@@ -3198,8 +3203,8 @@
         var curC = (_ted.bg && _ted.bg.k === 'c') ? _ted.bg.c : null;
         sh.innerHTML = '<div class="grip"></div><h3>Фон витрины</h3>' +
             '<div class="fmx-tbgw">' +
-            '<button class="fmx-tbgt' + (!_ted.bg ? ' on' : '') + '" data-tbg="" title="Стандарт" style="background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);"></button>' +
-            _TED_BG.map(function (p) { return '<button class="fmx-tbgt tbg-' + p.id + (curP === p.id ? ' on' : '') + '" data-tbg="' + p.id + '" title="' + p.n + '"></button>'; }).join('') +
+            '<button class="fmx-tbgc' + (!_ted.bg ? ' on' : '') + '" data-tbg=""><span class="fmx-tbgt"><span class="mini" style="background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);"></span></span><em>Стандарт</em></button>' +
+            _TED_BG.map(function (p) { return '<button class="fmx-tbgc' + (curP === p.id ? ' on' : '') + '" data-tbg="' + p.id + '"><span class="fmx-tbgt"><span class="mini tbg-' + p.id + '"></span></span><em>' + p.n + '</em></button>'; }).join('') +
             '</div>' +
             '<span class="fmx-lbl fmx-mt2">Свой цвет фона</span>' + colorPick('fmx-tedbgc', curC || '#0a0d18', 22) +
             '<button class="fmx-save" id="fmx-tedBgOk" style="margin-top:12px;">Готово</button>';
@@ -3207,14 +3212,14 @@
             b.addEventListener('click', function () {
                 var id = b.getAttribute('data-tbg');
                 _ted.bg = id ? { k: 'p', id: id } : null;
-                qsa(sh, '.fmx-tbgt').forEach(function (x) { x.classList.toggle('on', x === b); });
+                qsa(sh, '.fmx-tbgc').forEach(function (x) { x.classList.toggle('on', x === b); });
                 qsa(sh, '#fmx-tedbgc .fmx-dot').forEach(function (x) { x.classList.remove('on'); });
                 _tedApplyBg(); _haptic('light');
             });
         });
         _tedBindPick('fmx-tedbgc', curC || '#0a0d18', function (hex) {
             _ted.bg = { k: 'c', c: hex };
-            qsa(sh, '.fmx-tbgt').forEach(function (x) { x.classList.remove('on'); });
+            qsa(sh, '.fmx-tbgc').forEach(function (x) { x.classList.remove('on'); });
             _tedApplyBg();
         }, 'Фон витрины');
         el('fmx-tedBgOk').addEventListener('click', closeSheet);
