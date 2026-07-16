@@ -1159,7 +1159,9 @@
             /* без собственного фона: живую миниатюру даёт класс пресета tbg-* */
             '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;padding:0;position:relative;}',
             '.fmx-tbgt.on{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
-            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;}',
+            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}',
+            /* пока справа есть скрытые кнопки — край растворяется как подсказка «листай» */
+            '.fmx-tedbar.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             '.fmx-lssect{font-size:10.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}',
             '.fmx-lssect::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06);}',
@@ -3044,6 +3046,33 @@
         });
         el('fmx-tedBgBtn').addEventListener('click', _tedBgSheet);
         el('fmx-tedSave').addEventListener('click', _tedSave);
+        _tedBarScroll(body.querySelector('.fmx-tedbar'));
+    }
+    /* прокрутка панели кнопок: палец (pan-x), перетаскивание мышью, колесо; скроллбар скрыт,
+       поэтому пока справа есть скрытые кнопки — правый край растворён (класс more) */
+    function _tedBarScroll(bar) {
+        if (!bar) return;
+        function upd() { bar.classList.toggle('more', bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 4); }
+        bar.addEventListener('scroll', upd);
+        setTimeout(upd, 0);
+        bar.addEventListener('wheel', function (ev) {
+            if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { bar.scrollLeft += ev.deltaY; ev.preventDefault(); }
+        }, { passive: false });
+        var st = null, sw = false;
+        bar.addEventListener('pointerdown', function (ev) { st = { x: ev.clientX, l: bar.scrollLeft }; sw = false; });
+        bar.addEventListener('pointermove', function (ev) {
+            if (!st) return;
+            var dx = ev.clientX - st.x;
+            if (Math.abs(dx) > 6) sw = true;
+            if (sw) bar.scrollLeft = st.l - dx;
+        });
+        ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (evn) {
+            bar.addEventListener(evn, function () { st = null; });
+        });
+        /* после перетаскивания отпускание не должно нажимать кнопку под пальцем */
+        bar.addEventListener('click', function (ev) {
+            if (sw) { ev.stopPropagation(); ev.preventDefault(); sw = false; }
+        }, true);
     }
     /* фон холста редактора — тем же правилом, что и боевой рендер */
     function _tedApplyBg() {
