@@ -1159,9 +1159,12 @@
             /* без собственного фона: живую миниатюру даёт класс пресета tbg-* */
             '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;padding:0;position:relative;}',
             '.fmx-tbgt.on{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
-            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}',
-            /* пока справа есть скрытые кнопки — край растворяется как подсказка «листай» */
-            '.fmx-tedbar.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);}',
+            /* панель кнопок: тонкий фирменный скроллбар снизу — тот же, что у панели «Купить» */
+            '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.24) transparent;}',
+            '.fmx-tedbar::-webkit-scrollbar{display:block;height:6px;}',
+            '.fmx-tedbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:6px;}',
+            '.fmx-tedbar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.34);}',
+            '.fmx-tedbar::-webkit-scrollbar-track{background:transparent;}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             '.fmx-lssect{font-size:10.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}',
             '.fmx-lssect::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06);}',
@@ -3048,13 +3051,10 @@
         el('fmx-tedSave').addEventListener('click', _tedSave);
         _tedBarScroll(body.querySelector('.fmx-tedbar'));
     }
-    /* прокрутка панели кнопок: палец (pan-x), перетаскивание мышью, колесо; скроллбар скрыт,
-       поэтому пока справа есть скрытые кнопки — правый край растворён (класс more) */
+    /* прокрутка панели кнопок: палец (pan-x), перетаскивание мышью, колесо;
+       видимая полоса прокрутки — фирменный тонкий скроллбар (см. CSS .fmx-tedbar) */
     function _tedBarScroll(bar) {
         if (!bar) return;
-        function upd() { bar.classList.toggle('more', bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 4); }
-        bar.addEventListener('scroll', upd);
-        setTimeout(upd, 0);
         bar.addEventListener('wheel', function (ev) {
             if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { bar.scrollLeft += ev.deltaY; ev.preventDefault(); }
         }, { passive: false });
