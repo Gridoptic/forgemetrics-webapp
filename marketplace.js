@@ -1062,6 +1062,21 @@
             '.fmx-tabvp:not(.open){border-bottom-left-radius:0;border-bottom-right-radius:0;-webkit-mask-image:linear-gradient(180deg,#000 52%,rgba(0,0,0,0.4) 80%,transparent 99%);mask-image:linear-gradient(180deg,#000 52%,rgba(0,0,0,0.4) 80%,transparent 99%);}',
             '.fmx-tabvp.noext{padding-top:150%;-webkit-mask-image:none;mask-image:none;border-radius:16px;}',
             '.fmx-tab{position:absolute;top:0;left:0;width:100%;aspect-ratio:2/3;background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);}',
+            /* фоны витрины — палитра постера 1 в 1 (значения из эталона poster_render + усиленные "Космос"/"Ультрафиолет") */
+            '.tbg-g1{background:radial-gradient(120% 90% at 80% -10%, rgba(93,202,165,0.55), transparent 55%),radial-gradient(120% 100% at 0% 110%, rgba(20,90,70,0.5), transparent 55%),#0a0d18;}',
+            '.tbg-g2{background:radial-gradient(90% 70% at 85% -5%, rgba(168,85,247,0.60), rgba(109,40,217,0.22) 45%, transparent 66%),radial-gradient(100% 80% at -5% 110%, rgba(217,70,239,0.38), transparent 60%),radial-gradient(60% 40% at 50% 115%, rgba(139,92,246,0.28), transparent 62%),radial-gradient(45% 30% at 20% 8%, rgba(88,28,235,0.30), transparent 65%),linear-gradient(170deg, #170433 0%, #0d0224 48%, #060112 100%);}',
+            '.tbg-mid{background:radial-gradient(140% 90% at 50% -30%, #131a2e, #0a0d18 60%);}',
+            '.tbg-net{background:linear-gradient(rgba(93,202,165,0.055) 1px, transparent 1px),linear-gradient(90deg, rgba(93,202,165,0.055) 1px, transparent 1px),radial-gradient(120% 100% at 50% -20%, #10182b, #0a0d18 65%);background-size:34px 34px,34px 34px,100% 100%;}',
+            '.tbg-aur{background:radial-gradient(60% 45% at 22% 8%, rgba(93,202,165,0.5), transparent 60%),radial-gradient(55% 45% at 85% 30%, rgba(129,140,248,0.45), transparent 65%),radial-gradient(60% 50% at 55% 105%, rgba(245,191,79,0.22), transparent 60%),#0a0d18;}',
+            '.tbg-coal{background:linear-gradient(160deg,#101318,#07090f 70%);}',
+            '.tbg-ocean{background:radial-gradient(110% 90% at 20% -10%, rgba(56,150,220,0.5), transparent 55%),radial-gradient(120% 100% at 90% 110%, rgba(45,212,191,0.35), transparent 55%),#081120;}',
+            '.tbg-sunset{background:radial-gradient(110% 80% at 80% -10%, rgba(251,146,60,0.5), transparent 55%),radial-gradient(110% 90% at 10% 110%, rgba(236,72,153,0.4), transparent 55%),#140a14;}',
+            '.tbg-lime{background:radial-gradient(110% 90% at 75% -10%, rgba(163,230,53,0.42), transparent 55%),radial-gradient(120% 100% at 5% 110%, rgba(34,197,94,0.32), transparent 55%),#0a1208;}',
+            '.tbg-rose{background:radial-gradient(110% 90% at 80% -10%, rgba(244,63,94,0.45), transparent 55%),radial-gradient(120% 100% at 10% 115%, rgba(251,113,133,0.3), transparent 55%),#160a10;}',
+            '.tbg-steel{background:linear-gradient(150deg,#1c2430 0%,#0d1420 55%,#0a0f1a 100%);}',
+            '.tbg-space{background:radial-gradient(3.2px 3.2px at 432px 88px, rgba(255,255,255,1) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(2.6px 2.6px at 96px 236px, rgba(255,255,255,0.93) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(2.2px 2.2px at 268px 484px, rgba(255,255,255,0.96) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(1.4px 1.4px at 10px 20px, rgba(255,255,255,0.96), transparent),radial-gradient(1.1px 1.1px at 60px 150px, rgba(255,255,255,0.68), transparent),radial-gradient(1.7px 1.7px at 120px 40px, rgba(255,255,255,0.96), transparent),radial-gradient(1.1px 1.1px at 170px 110px, rgba(255,255,255,0.72), transparent),radial-gradient(1.3px 1.3px at 200px 180px, rgba(255,255,255,0.93), transparent),radial-gradient(1.0px 1.0px at 90px 90px, rgba(255,255,255,0.78), transparent),radial-gradient(1.2px 1.2px at 150px 15px, rgba(255,255,255,0.78), transparent),radial-gradient(1.2px 1.2px at 30px 220px, rgba(255,255,255,0.78), transparent),radial-gradient(1.5px 1.5px at 100px 60px, rgba(255,255,255,0.93), transparent),radial-gradient(1.1px 1.1px at 180px 190px, rgba(255,255,255,0.68), transparent),radial-gradient(1.8px 1.8px at 250px 90px, rgba(255,255,255,0.96), transparent),radial-gradient(1.2px 1.2px at 290px 240px, rgba(255,255,255,0.72), transparent),radial-gradient(1.0px 1.0px at 210px 30px, rgba(255,255,255,0.68), transparent),radial-gradient(1.6px 1.6px at 50px 300px, rgba(255,255,255,0.88), transparent),radial-gradient(1.1px 1.1px at 140px 120px, rgba(255,255,255,0.68), transparent),radial-gradient(1.3px 1.3px at 260px 330px, rgba(255,255,255,0.96), transparent),radial-gradient(2.0px 2.0px at 350px 60px, rgba(255,255,255,1), transparent),radial-gradient(1.2px 1.2px at 410px 180px, rgba(255,255,255,0.68), transparent),radial-gradient(1.4px 1.4px at 320px 260px, rgba(255,255,255,0.78), transparent),radial-gradient(1.1px 1.1px at 80px 30px, rgba(255,255,255,0.78), transparent),radial-gradient(70% 45% at 78% 18%, rgba(124,58,237,0.42), transparent 65%),radial-gradient(55% 40% at 15% 45%, rgba(56,189,248,0.20), transparent 65%),radial-gradient(65% 45% at 60% 85%, rgba(217,70,239,0.22), transparent 65%),linear-gradient(115deg, transparent 28%, rgba(148,163,255,0.12) 42%, rgba(226,232,255,0.16) 50%, rgba(148,163,255,0.12) 58%, transparent 72%),radial-gradient(130% 100% at 50% 120%, #16204a 0%, #070b1a 55%, #030512 100%);background-size:100% 100%,100% 100%,100% 100%,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,317px 263px,317px 263px,317px 263px,317px 263px,317px 263px,317px 263px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%;background-repeat:no-repeat,no-repeat,no-repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;}',
+            '.tbg-waves{background:repeating-linear-gradient(115deg, rgba(93,202,165,0.07) 0 2px, transparent 2px 26px),linear-gradient(180deg,#0c1322,#0a0d18);}',
+            '.tbg-amber{background:radial-gradient(110% 90% at 78% -10%, rgba(245,191,79,0.45), transparent 55%),radial-gradient(120% 100% at 8% 112%, rgba(217,119,6,0.3), transparent 55%),#140f06;}',
             '.fmx-tab .el{position:absolute;overflow:hidden;}',
             '.fmx-tab .el.ttl{font-weight:800;line-height:1.28;letter-spacing:-0.2px;color:#e8e8ed;overflow:visible;}',
             '.fmx-tab .el.txt{color:#b9c1d9;line-height:1.5;overflow:visible;}',
@@ -1099,12 +1114,24 @@
             '.fmx-tgl .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left 160ms;}',
             '.fmx-tgl.on .sw{background:#5DCAA5;}',
             '.fmx-tgl.on .sw::after{left:19px;}',
-            /* табло-редактор */
+            /* редактор витрины: разрешаем ввод в полях (body глушит user-select — WebView без этого не даёт каретку) */
+            'input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}',
+            /* редактор витрины — механика и вид ручек 1 в 1 со стикер-редактором конструктора */
             '.fmx-tabed{touch-action:none;}',
-            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;}',
+            '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);}',
-            '.fmx-hnd{position:absolute;width:18px;height:18px;border-radius:50%;background:#818cf8;border:2px solid #fff;right:-9px;bottom:-9px;z-index:3;touch-action:none;cursor:nwse-resize;}',
-            '.fmx-hnd.rot{right:auto;left:50%;transform:translateX(-50%);top:-26px;bottom:auto;background:#f5bf4f;cursor:grab;}',
+            /* у фото/видео overflow:hidden обрезал ручки за краем — в редакторе раскрываем, скругление переносим на само медиа */
+            '.fmx-tabed .el.med{overflow:visible;}',
+            '.fmx-tabed .el.med img,.fmx-tabed .el.med video{border-radius:12px;}',
+            '.fmx-tabed .el img,.fmx-tabed .el video{pointer-events:none;-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;}',
+            '.fmx-hnd{position:absolute;width:15px;height:15px;border-radius:4px;background:#818cf8;border:2px solid #0b0e18;box-shadow:0 1px 4px rgba(0,0,0,0.5);right:-9px;bottom:-9px;z-index:9;touch-action:none;cursor:nwse-resize;}',
+            '.fmx-hnd::before{content:"";position:absolute;inset:-11px;}',
+            '.fmx-hnd.rot{right:auto;left:50%;margin-left:-8px;top:-23px;bottom:auto;border-radius:50%;cursor:grab;}',
+            '.fmx-hnd.del{right:-9px;top:-9px;bottom:auto;left:auto;border-radius:50%;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;}',
+            /* плитки фона витрины */
+            '.fmx-tbgw{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}',
+            '.fmx-tbgt{width:46px;height:46px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;flex:0 0 auto;background:#0a0d18;padding:0;position:relative;}',
+            '.fmx-tbgt.on{border-color:#818cf8;box-shadow:0 0 0 1.5px #818cf8;}',
             '.fmx-tedbar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;}',
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             '.fmx-lssect{font-size:10.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}',
@@ -2123,7 +2150,7 @@
             '<div class="fmx-mineacts">' +
             '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' +
             '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar"></i>Статистика</button>' +
-            '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Табло разворота</button>' +
+            '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Витрина</button>' +
             '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
             '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>' +
             '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
@@ -2729,23 +2756,34 @@
     function renderSlotsBox(l, boxEl) { loadCal(boxEl || el('fmx-slotsBox'), l, 'edit'); }
 
     /* ==================== табло разворота ==================== */
+    /* фон витрины: класс пресета либо инлайн свой цвет; значения валидирует сервер, тут только страховка */
+    function _tabBg(json) {
+        var bg = json && json.bg;
+        if (bg && bg.k === 'p' && /^[a-z0-9]{2,8}$/.test(String(bg.id || ''))) return { cls: ' tbg-' + bg.id, st: '' };
+        if (bg && bg.k === 'c' && /^#[0-9a-fA-F]{6}$/.test(String(bg.c || ''))) return { cls: '', st: 'background:' + bg.c + ';' };
+        return { cls: '', st: '' };
+    }
+    function _elColor(e) {
+        return (e.c && /^#[0-9a-fA-F]{6}$/.test(String(e.c))) ? 'color:' + e.c + ';' : '';
+    }
     function renderTablo(json, mount, opts) {
         opts = opts || {};
         var els = (json && json.els) || [];
         if (!els.length) { mount.innerHTML = ''; return false; }
-        var h = '<div class="fmx-tabvp' + (opts.cut === false ? ' noext' : '') + '"><div class="fmx-tab">';
+        var bg = _tabBg(json);
+        var h = '<div class="fmx-tabvp' + (opts.cut === false ? ' noext' : '') + '"><div class="fmx-tab' + bg.cls + '" style="' + bg.st + '">';
         els.forEach(function (e) {
             var st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;' +
                 (e.rot ? 'transform:rotate(' + e.rot + 'deg);' : '');
-            if (e.t === 'title') h += '<div class="el ttl" style="' + st + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + '</div>';
-            else if (e.t === 'text') h += '<div class="el txt" style="' + st + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + '</div>';
+            if (e.t === 'title') h += '<div class="el ttl" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + '</div>';
+            else if (e.t === 'text') h += '<div class="el txt" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + '</div>';
             else if (e.t === 'stk') h += '<div class="el stk" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + '</div>';
             else if (e.t === 'img') h += '<div class="el med" style="' + st + 'height:' + e.h + '%;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(e.u)) + '" alt=""></div>';
             else if (e.t === 'video') h += '<div class="el med" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted autoplay loop playsinline preload="metadata"></video></div>';
         });
         h += '<div class="fmx-tabfade"></div></div></div>';
         if (opts.cut !== false) h += '<div class="fmx-tabmw"><button class="fmx-tabmore">Развернуть</button></div>' +
-            '<button class="fmx-btn fmx-tabless" style="display:none;margin:8px auto 0;"><i class="ti ti-chevron-up"></i> Свернуть табло</button>';
+            '<button class="fmx-btn fmx-tabless" style="display:none;margin:8px auto 0;"><i class="ti ti-chevron-up"></i> Свернуть витрину</button>';
         mount.innerHTML = h;
         var vp = mount.querySelector('.fmx-tabvp');
         var more = mount.querySelector('.fmx-tabmore'), less = mount.querySelector('.fmx-tabless');
@@ -2777,7 +2815,7 @@
                     var l = findListing(c.getAttribute('data-u'));
                     if (!l) return;
                     var ok = renderTablo(l.expand_content_json, el('fmx-peekIn'), { cut: false });
-                    if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">Владелец пока не оформил табло оффера</div></div>';
+                    if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">Владелец пока не оформил витрину оффера</div></div>';
                     el('fmx-peek').style.display = 'flex';
                     _haptic('light');
                 }, 450);
@@ -2894,24 +2932,33 @@
             ((f.day || f.fmt) ? ': ' + [(f.day ? _fmtDayRu(f.day) : null), f.fmt].filter(Boolean).join(' · ') : '');
     }
 
-    /* ==================== редактор табло (владелец, из кабинета) ====================
-       Холст 2:3 с механикой стикер-редактора: перетаскивание, растягивание за угол,
-       поворот за верхнюю ручку. Координаты — в процентах холста, поэтому табло
-       одинаково на любом экране. Сохранение — POST tablo (сервер валидирует всё). */
-    var _ted = { l: null, els: [], sel: -1 };
+    /* ==================== редактор витрины (владелец, из кабинета) ====================
+       Холст 2:3 с механикой стикер-редактора конструктора 1 в 1: перетаскивание, растягивание
+       за угловую ручку, поворот за верхнюю, удаление крестиком, щипок двумя пальцами =
+       размер + поворот. Координаты — в процентах холста, поэтому витрина одинакова на любом
+       экране. Сохранение — POST tablo (сервер валидирует всё). */
+    var _ted = { l: null, els: [], sel: -1, bg: null };
     var _TED_STK = ['🚀', '🔥', '💎', '⚡', '🎯', '📈', '💰', '🏆', '⭐', '✅'];
+    var _TED_BG = [
+        { id: 'g1', n: 'Изумруд' }, { id: 'g2', n: 'Ультрафиолет' }, { id: 'mid', n: 'Полночь' },
+        { id: 'net', n: 'Сетка' }, { id: 'aur', n: 'Аврора' }, { id: 'coal', n: 'Уголь' },
+        { id: 'ocean', n: 'Океан' }, { id: 'sunset', n: 'Закат' }, { id: 'lime', n: 'Лайм' },
+        { id: 'rose', n: 'Роза' }, { id: 'steel', n: 'Сталь' }, { id: 'space', n: 'Космос' },
+        { id: 'waves', n: 'Волны' }, { id: 'amber', n: 'Янтарь' }
+    ];
 
     function openTabloEditor(l) {
         _ted.l = l;
         _ted.els = ((l.expand_content_json && l.expand_content_json.els) || []).map(function (e) {
             return JSON.parse(JSON.stringify(e));
         });
+        _ted.bg = (l.expand_content_json && l.expand_content_json.bg) ? JSON.parse(JSON.stringify(l.expand_content_json.bg)) : null;
         _ted.sel = -1;
         if (!el('fmx-tedBg')) {
             var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-tedBg';
             bg.innerHTML = '<div class="fmx-modal" style="max-width:440px;">' +
-                '<div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-layout-collage" style="color:#f5bf4f;"></i> Табло разворота</h2>' +
-                '<p>Свободный холст: перетаскивай, растягивай за угол, поворачивай за верхнюю точку</p></div>' +
+                '<div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-layout-collage" style="color:#f5bf4f;"></i> Витрина оффера</h2>' +
+                '<p>Свободный холст: перетаскивай, растягивай за угол, поворачивай за верхнюю точку, крестик — удалить</p></div>' +
                 '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
                 '<div class="fmx-mbody" id="fmx-tedBody"></div></div>';
             document.body.appendChild(bg);
@@ -2930,61 +2977,96 @@
             '<button class="fmx-seg" data-tadd="img"><i class="ti ti-photo"></i> Фото/гиф</button>' +
             '<button class="fmx-seg" data-tadd="video"><i class="ti ti-video"></i> Видео</button>' +
             '<button class="fmx-seg" data-tadd="stk"><i class="ti ti-sticker"></i> Стикер</button>' +
+            '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
             '</div>' +
             '<div class="fmx-tabvp noext" style="margin-top:10px;"><div class="fmx-tab fmx-tabed" id="fmx-tedCv"></div></div>' +
-            '<div id="fmx-tedRow" style="display:flex;gap:7px;margin-top:10px;"></div>' +
-            '<button class="fmx-save" id="fmx-tedSave" style="margin-top:12px;"><i class="ti ti-device-floppy"></i> Сохранить табло</button>' +
+            '<div id="fmx-tedRow" style="display:flex;gap:7px;margin-top:10px;align-items:center;flex-wrap:wrap;"></div>' +
+            '<button class="fmx-save" id="fmx-tedSave" style="margin-top:12px;"><i class="ti ti-device-floppy"></i> Сохранить витрину</button>' +
             '<div style="font-size:10px;color:#565b73;margin-top:7px;line-height:1.5;">До 12 элементов. Закупщик видит верхнюю половину, остальное — по «Развернуть»</div>' +
             '<input type="file" id="fmx-tedFile" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime" style="display:none;">';
         _tedDrawCanvas();
         qsa(body, '[data-tadd]').forEach(function (b) {
             b.addEventListener('click', function () { _tedAdd(b.getAttribute('data-tadd')); });
         });
+        el('fmx-tedBgBtn').addEventListener('click', _tedBgSheet);
         el('fmx-tedSave').addEventListener('click', _tedSave);
+    }
+    /* фон холста редактора — тем же правилом, что и боевой рендер */
+    function _tedApplyBg() {
+        var cv = el('fmx-tedCv'); if (!cv) return;
+        var bg = _tabBg({ bg: _ted.bg });
+        cv.className = 'fmx-tab fmx-tabed' + bg.cls;
+        cv.style.background = '';
+        if (bg.st) cv.style.background = _ted.bg.c;
     }
 
     function _tedDrawCanvas() {
         var cv = el('fmx-tedCv'); if (!cv) return;
+        _tedApplyBg();
         var h = '';
         _ted.els.forEach(function (e, i) {
             var st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;' +
                 (e.rot ? 'transform:rotate(' + e.rot + 'deg);' : '');
             var sel = i === _ted.sel ? ' sel' : '';
-            if (e.t === 'title') h += '<div class="el ttl' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
-            else if (e.t === 'text') h += '<div class="el txt' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
-            else if (e.t === 'stk') h += '<div class="el stk' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + _tedHnd(i, true) + '</div>';
-            else if (e.t === 'img') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><img src="' + _esc(mediaAbs(e.u)) + '" alt="">' + _tedHnd(i, true) + '</div>';
-            else if (e.t === 'video') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted loop autoplay playsinline></video>' + _tedHnd(i, true) + '</div>';
+            if (e.t === 'title') h += '<div class="el ttl' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
+            else if (e.t === 'text') h += '<div class="el txt' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
+            else if (e.t === 'stk') h += '<div class="el stk' + sel + '" data-i="' + i + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
+            else if (e.t === 'img') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><img src="' + _esc(mediaAbs(e.u)) + '" alt="" draggable="false">' + _tedHnd(i) + '</div>';
+            else if (e.t === 'video') h += '<div class="el med' + sel + '" data-i="' + i + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted loop autoplay playsinline></video>' + _tedHnd(i) + '</div>';
         });
         cv.innerHTML = h;
         _tedRow();
         _tedBindCanvas(cv);
     }
-    function _tedHnd(i, rotatable) {
+    /* трио ручек 1 в 1 с конструктором: поворот сверху, размер в углу, крестик удаления */
+    function _tedHnd(i) {
         if (i !== _ted.sel) return '';
         return '<span class="fmx-hnd" data-hz="' + i + '"></span>' +
-            (rotatable ? '<span class="fmx-hnd rot" data-hr="' + i + '"></span>' : '');
+            '<span class="fmx-hnd rot" data-hr="' + i + '"></span>' +
+            '<span class="fmx-hnd del" data-hd="' + i + '"><i class="ti ti-x"></i></span>';
+    }
+    /* пульт цвета 1 в 1 с конструктором (точки + «Свой цвет» → подвижная студия), без побочных
+       вызовов конструктора (_liveAccent/renderHero) — красим сразу выбранный элемент витрины */
+    function _tedBindPick(idBase, cur, set, title) {
+        var box = el(idBase); if (!box) return;
+        var rb = box.querySelector('[data-rb]');
+        function mark(v) {
+            var preset = COLORS.indexOf(v) >= 0;
+            qsa(box, '.fmx-dot').forEach(function (d) { d.classList.toggle('on', d.getAttribute('data-cv') === v || (d === rb && !preset)); });
+            if (rb) rb.style.boxShadow = preset ? '' : '0 0 0 2px ' + v;
+            box.setAttribute('data-cur', v);
+        }
+        qsa(box, '[data-cv]').forEach(function (d) {
+            d.addEventListener('click', function () { var v = d.getAttribute('data-cv'); set(v); mark(v); _haptic('light'); });
+        });
+        if (rb) rb.addEventListener('click', function () {
+            openColorStudio(box.getAttribute('data-cur') || cur, function (hex) { set(hex); mark(hex); }, title || 'Свой');
+        });
     }
     function _tedRow() {
         var row = el('fmx-tedRow'); if (!row) return;
         var e = _ted.els[_ted.sel];
-        if (!e) { row.innerHTML = '<span style="font-size:10.5px;color:#565b73;padding:6px 0;">Тап по элементу — выбрать; перетаскивание — переместить</span>'; return; }
+        if (!e) { row.innerHTML = '<span style="font-size:10.5px;color:#565b73;padding:6px 0;">Тап по элементу — выбрать. Ручки: угол — размер, сверху — поворот, крестик — удалить</span>'; return; }
+        var isTxt = (e.t === 'title' || e.t === 'text');
         row.innerHTML =
-            ((e.t === 'title' || e.t === 'text') ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;"><i class="ti ti-pencil"></i> Изменить текст</button>' : '') +
+            (isTxt ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;min-width:150px;"><i class="ti ti-pencil"></i> Изменить текст</button>' : '') +
             (e.t === 'stk' ? '<button class="fmx-btn" id="fmx-tedStk" style="flex:1;"><i class="ti ti-sticker"></i> Сменить стикер</button>' : '') +
-            '<button class="fmx-btn" id="fmx-tedDel" style="flex:1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i> Удалить</button>';
+            (isTxt ? '<div style="flex-basis:100%;">' + colorPick('fmx-tedc', e.c || (e.t === 'title' ? '#e8e8ed' : '#b9c1d9'), 22) + '</div>' : '');
         var tb = el('fmx-tedTxt');
         if (tb) tb.addEventListener('click', function () { _tedEditText(e); });
         var sb = el('fmx-tedStk');
         if (sb) sb.addEventListener('click', function () { _tedPickStk(e); });
-        el('fmx-tedDel').addEventListener('click', function () {
-            _ted.els.splice(_ted.sel, 1); _ted.sel = -1; _haptic('light'); _tedDrawCanvas();
-        });
+        if (isTxt) _tedBindPick('fmx-tedc', e.c || '#e8e8ed', function (hex) {
+            e.c = hex;
+            var cv = el('fmx-tedCv');
+            var node = cv && cv.querySelector('.el[data-i="' + _ted.sel + '"]');
+            if (node) node.style.color = hex;
+        }, e.t === 'title' ? 'Заголовок' : 'Текст');
     }
     function _tedEditText(e) {
         _ensureSheets();
         var sh = el('fmx-writeSheet');
-        sh.innerHTML = '<div class="grip"></div><h3>' + (e.t === 'title' ? 'Заголовок' : 'Текст') + ' табло</h3>' +
+        sh.innerHTML = '<div class="grip"></div><h3>' + (e.t === 'title' ? 'Заголовок' : 'Текст') + ' витрины</h3>' +
             '<textarea class="fmx-inp" id="fmx-tedTa" rows="3" maxlength="' + (e.t === 'title' ? 200 : 600) + '" style="margin-top:10px;width:100%;line-height:1.5;resize:none;"></textarea>' +
             '<button class="fmx-save" id="fmx-tedTaOk" style="margin-top:10px;">Готово</button>';
         el('fmx-tedTa').value = e.s || '';
@@ -2993,6 +3075,38 @@
             if (v) e.s = v;
             closeSheet(); _tedDrawCanvas();
         });
+        el('fmx-shbg').classList.add('on'); sh.classList.add('on');
+        /* каретка сразу в поле — после анимации шторки */
+        setTimeout(function () { var ta = el('fmx-tedTa'); if (ta) try { ta.focus(); } catch (e2) {} }, 280);
+    }
+    /* фон витрины: пресеты постера 1 в 1 + свой цвет через студию */
+    function _tedBgSheet() {
+        _ensureSheets();
+        var sh = el('fmx-writeSheet');
+        var curP = (_ted.bg && _ted.bg.k === 'p') ? _ted.bg.id : null;
+        var curC = (_ted.bg && _ted.bg.k === 'c') ? _ted.bg.c : null;
+        sh.innerHTML = '<div class="grip"></div><h3>Фон витрины</h3>' +
+            '<div class="fmx-tbgw">' +
+            '<button class="fmx-tbgt' + (!_ted.bg ? ' on' : '') + '" data-tbg="" title="Стандарт" style="background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);"></button>' +
+            _TED_BG.map(function (p) { return '<button class="fmx-tbgt tbg-' + p.id + (curP === p.id ? ' on' : '') + '" data-tbg="' + p.id + '" title="' + p.n + '"></button>'; }).join('') +
+            '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Свой цвет фона</span>' + colorPick('fmx-tedbgc', curC || '#0a0d18', 22) +
+            '<button class="fmx-save" id="fmx-tedBgOk" style="margin-top:12px;">Готово</button>';
+        qsa(sh, '[data-tbg]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var id = b.getAttribute('data-tbg');
+                _ted.bg = id ? { k: 'p', id: id } : null;
+                qsa(sh, '.fmx-tbgt').forEach(function (x) { x.classList.toggle('on', x === b); });
+                qsa(sh, '#fmx-tedbgc .fmx-dot').forEach(function (x) { x.classList.remove('on'); });
+                _tedApplyBg(); _haptic('light');
+            });
+        });
+        _tedBindPick('fmx-tedbgc', curC || '#0a0d18', function (hex) {
+            _ted.bg = { k: 'c', c: hex };
+            qsa(sh, '.fmx-tbgt').forEach(function (x) { x.classList.remove('on'); });
+            _tedApplyBg();
+        }, 'Фон витрины');
+        el('fmx-tedBgOk').addEventListener('click', closeSheet);
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
     function _tedPickStk(e) {
@@ -3007,10 +3121,10 @@
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
     function _tedAdd(t) {
-        if (_ted.els.length >= 12) { uiAlert('На табло помещается до 12 элементов — удали лишний.'); return; }
+        if (_ted.els.length >= 12) { uiAlert('На витрине помещается до 12 элементов — удали лишний.'); return; }
         if (t === 'img' || t === 'video') { _tedUpload(t); return; }
         var e;
-        if (t === 'title') e = { t: 'title', x: 6, y: 4, w: 70, h: 10, rot: 0, fs: 16, s: 'Заголовок табло' };
+        if (t === 'title') e = { t: 'title', x: 6, y: 4, w: 70, h: 10, rot: 0, fs: 16, s: 'Заголовок витрины' };
         else if (t === 'text') e = { t: 'text', x: 6, y: 20, w: 55, h: 12, rot: 0, fs: 11, s: 'Расскажи, что получает рекламодатель' };
         else e = { t: 'stk', x: 74, y: 4, w: 16, h: 10, rot: -12, fs: 14, s: '🚀' };
         _ted.els.push(e); _ted.sel = _ted.els.length - 1;
@@ -3042,29 +3156,74 @@
         };
         inp.click();
     }
+    /* состояние жеста — на уровне модуля: выбор элемента перерисовывает холст (и перевешивает
+       обработчики), а перетаскивание в том же жесте должно продолжаться, как в конструкторе */
+    var _tedDrag = null;
+    var _tedPts = {};      /* активные пальцы: pointerId → {x,y} — для щипка двумя пальцами */
     function _tedBindCanvas(cv) {
-        var drag = null;
         function pct(ev) {
             var r = cv.getBoundingClientRect();
             return { x: (ev.clientX - r.left) / r.width * 100, y: (ev.clientY - r.top) / r.height * 100 };
         }
+        function centerPx(e) {
+            var r = cv.getBoundingClientRect();
+            return { x: r.left + (e.x + e.w / 2) / 100 * r.width, y: r.top + (e.y + (e.h || 10) / 2) / 100 * r.height };
+        }
+        function applyScale(e, d, scale) {
+            scale = Math.max(0.2, Math.min(5, scale));
+            e.w = Math.max(6, Math.min(100 - e.x, d.w0 * scale));
+            var k = e.w / d.w0;
+            if (e.t === 'title' || e.t === 'text' || e.t === 'stk') e.fs = Math.max(8, Math.min(28, d.fs0 * k));
+            else e.h = Math.max(4, Math.min(100 - e.y, (d.h0 || 18) * k));
+        }
+        function setRot(e, deg) {
+            /* свободный поворот, нормализация в -180..180 — как у стикера конструктора */
+            var r = Math.round(deg) % 360;
+            if (r > 180) r -= 360; if (r < -180) r += 360;
+            e.rot = r;
+        }
         cv.onpointerdown = function (ev) {
             var t = ev.target;
-            var hz = t.getAttribute && t.getAttribute('data-hz');
-            var hr = t.getAttribute && t.getAttribute('data-hr');
+            _tedPts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+            var hd = t.closest ? t.closest('[data-hd]') : null;
+            var hz = t.closest ? t.closest('[data-hz]') : null;
+            var hr = t.closest ? t.closest('[data-hr]') : null;
             var elN = t.closest ? t.closest('.el') : null;
-            if (hz != null && hz !== '') {
-                var e1 = _ted.els[+hz];
-                drag = { kind: 'resize', e: e1, start: pct(ev), w0: e1.w, fs0: e1.fs || 12, h0: e1.h };
-            } else if (hr != null && hr !== '') {
-                var e2 = _ted.els[+hr];
-                var r2 = cv.getBoundingClientRect();
-                drag = { kind: 'rotate', e: e2, cx: r2.left + (e2.x + e2.w / 2) / 100 * r2.width, cy: r2.top + (e2.y + (e2.h || 10) / 2) / 100 * r2.height };
+            /* второй палец на выбранном элементе = щипок: размер + поворот (1 в 1 с конструктором) */
+            var ids = Object.keys(_tedPts);
+            if (_tedDrag && (_tedDrag.kind === 'move' || _tedDrag.kind === 'pinch') && ids.length === 2 && elN) {
+                var ee = _tedDrag.e;
+                var a = _tedPts[ids[0]], b = _tedPts[ids[1]];
+                var d0 = Math.hypot(a.x - b.x, a.y - b.y);
+                if (d0 > 8) _tedDrag = {
+                    kind: 'pinch', e: ee, p1: ids[0], p2: ids[1], d0: d0,
+                    a0: Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI,
+                    w0: ee.w, h0: ee.h, fs0: ee.fs || 12, r0: ee.rot || 0, x0: ee.x, y0: ee.y
+                };
+                ev.preventDefault();
+                try { cv.setPointerCapture(ev.pointerId); } catch (e9) {}
+                return;
+            }
+            if (hd) {
+                var iD = +hd.getAttribute('data-hd');
+                delete _tedPts[ev.pointerId];
+                _ted.els.splice(iD, 1); _ted.sel = -1;
+                _haptic('light'); _tedDrawCanvas();
+                return;
+            }
+            if (hz) {
+                var e1 = _ted.els[+hz.getAttribute('data-hz')];
+                var c1 = centerPx(e1);
+                _tedDrag = { kind: 'resize', e: e1, cx: c1.x, cy: c1.y, dist0: Math.max(8, Math.hypot(ev.clientX - c1.x, ev.clientY - c1.y)), w0: e1.w, fs0: e1.fs || 12, h0: e1.h };
+            } else if (hr) {
+                var e2 = _ted.els[+hr.getAttribute('data-hr')];
+                var c2 = centerPx(e2);
+                _tedDrag = { kind: 'rotate', e: e2, cx: c2.x, cy: c2.y };
             } else if (elN) {
                 var i = +elN.getAttribute('data-i');
                 if (_ted.sel !== i) { _ted.sel = i; _tedDrawCanvas(); }
                 var e3 = _ted.els[i];
-                drag = { kind: 'move', e: e3, start: pct(ev), x0: e3.x, y0: e3.y };
+                _tedDrag = { kind: 'move', e: e3, start: pct(ev), x0: e3.x, y0: e3.y };
             } else {
                 if (_ted.sel !== -1) { _ted.sel = -1; _tedDrawCanvas(); }
                 return;
@@ -3073,27 +3232,34 @@
             try { cv.setPointerCapture(ev.pointerId); } catch (e4) {}
         };
         cv.onpointermove = function (ev) {
-            if (!drag) return;
-            var e = drag.e;
-            if (drag.kind === 'move') {
+            if (_tedPts[ev.pointerId]) _tedPts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+            if (!_tedDrag) return;
+            var e = _tedDrag.e;
+            if (_tedDrag.kind === 'move') {
                 var p = pct(ev);
-                e.x = Math.max(0, Math.min(96, drag.x0 + p.x - drag.start.x));
-                e.y = Math.max(0, Math.min(96, drag.y0 + p.y - drag.start.y));
-            } else if (drag.kind === 'resize') {
-                var p2 = pct(ev);
-                var dw = p2.x - drag.start.x;
-                e.w = Math.max(6, Math.min(100 - e.x, drag.w0 + dw));
-                if (e.t === 'title' || e.t === 'text' || e.t === 'stk') e.fs = Math.max(8, Math.min(28, drag.fs0 * (e.w / drag.w0)));
-                else e.h = Math.max(4, Math.min(100 - e.y, (drag.h0 || 18) * (e.w / drag.w0)));
-            } else if (drag.kind === 'rotate') {
-                var ang = Math.atan2(ev.clientY - drag.cy, ev.clientX - drag.cx) * 180 / Math.PI + 90;
-                if (ang > 180) ang -= 360;
-                e.rot = Math.round(ang);
+                e.x = Math.max(0, Math.min(96, _tedDrag.x0 + p.x - _tedDrag.start.x));
+                e.y = Math.max(0, Math.min(96, _tedDrag.y0 + p.y - _tedDrag.start.y));
+            } else if (_tedDrag.kind === 'resize') {
+                applyScale(e, _tedDrag, Math.hypot(ev.clientX - _tedDrag.cx, ev.clientY - _tedDrag.cy) / _tedDrag.dist0);
+            } else if (_tedDrag.kind === 'rotate') {
+                setRot(e, Math.atan2(ev.clientY - _tedDrag.cy, ev.clientX - _tedDrag.cx) * 180 / Math.PI + 90);
+            } else if (_tedDrag.kind === 'pinch') {
+                var a = _tedPts[_tedDrag.p1], b = _tedPts[_tedDrag.p2];
+                if (!a || !b) return;
+                var d = Math.hypot(a.x - b.x, a.y - b.y);
+                applyScale(e, _tedDrag, d / _tedDrag.d0);
+                setRot(e, _tedDrag.r0 + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI - _tedDrag.a0));
             }
             _tedApply(e);
         };
-        cv.onpointerup = cv.onpointercancel = function () {
-            if (drag) { drag = null; _tedDrawCanvas(); }
+        cv.onpointerup = cv.onpointercancel = function (ev) {
+            delete _tedPts[ev.pointerId];
+            if (_tedDrag && _tedDrag.kind === 'pinch') {
+                /* один палец остался — щипок закончен, второй палец продолжает перенос */
+                var left = Object.keys(_tedPts);
+                if (left.length === 1) { _tedDrag = { kind: 'move', e: _tedDrag.e, start: { x: 0, y: 0 }, x0: _tedDrag.e.x, y0: _tedDrag.e.y }; var pp = _tedPts[left[0]]; var r = cv.getBoundingClientRect(); _tedDrag.start = { x: (pp.x - r.left) / r.width * 100, y: (pp.y - r.top) / r.height * 100 }; return; }
+            }
+            if (_tedDrag) { _tedDrag = null; _tedDrawCanvas(); }
         };
     }
     function _tedApply(e) {
@@ -3108,12 +3274,12 @@
     }
     function _tedSave() {
         var btn = el('fmx-tedSave'); btn.disabled = true;
-        apiPost('/api/v1/marketplace/listings/' + _ted.l.id + '/tablo', { els: _ted.els }).then(function (r) {
+        apiPost('/api/v1/marketplace/listings/' + _ted.l.id + '/tablo', { els: _ted.els, bg: _ted.bg }).then(function (r) {
             btn.disabled = false;
-            if (!r || !r.ok) { _haptic('error'); uiAlert((r && r.error) || 'Не удалось сохранить табло'); return; }
-            _ted.l.expand_content_json = { v: 1, els: _ted.els };
+            if (!r || !r.ok) { _haptic('error'); uiAlert((r && r.error) || 'Не удалось сохранить витрину'); return; }
+            _ted.l.expand_content_json = { v: 2, els: _ted.els, bg: _ted.bg };
             _haptic('success');
-            toast('Табло сохранено — закупщики видят его в развороте оффера');
+            toast('Витрина сохранена — закупщики видят её в развороте оффера');
             hideModal('fmx-tedBg');
         }).catch(function () { btn.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
     }
@@ -6270,7 +6436,7 @@
         /* табло продавца */
         if (l.id && l.expand_content_json && l.expand_content_json.els && l.expand_content_json.els.length) {
             var tb = el('fmx-tabloBox');
-            tb.innerHTML = '<div class="fmx-lssect">Табло продавца</div><div id="fmx-tabloIn"></div>';
+            tb.innerHTML = '<div class="fmx-lssect">Витрина</div><div id="fmx-tabloIn"></div>';
             renderTablo(l.expand_content_json, el('fmx-tabloIn'), { cut: true });
         }
         /* доверие: расшифровки + живые значения */
