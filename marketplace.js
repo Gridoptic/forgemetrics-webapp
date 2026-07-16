@@ -335,13 +335,13 @@
             '.fmx-tag.gold{background:linear-gradient(135deg,#fde68a,#f5bf4f);color:#2a1c00;}',
             '.fmx-star{position:absolute;bottom:9px;right:9px;width:30px;height:30px;border-radius:8px;background:rgba(10,13,24,0.45);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);z-index:2;}',
             '.fmx-star.on{color:#f59e0b;}',
-            '.fmx-cb{padding:13px;position:relative;z-index:3;}',
-            '.fmx-crow{display:flex;align-items:center;gap:10px;margin-top:-32px;margin-bottom:11px;position:relative;z-index:2;}',
+            '.fmx-cb{padding:11px 13px 12px;position:relative;z-index:3;}',
+            '.fmx-crow{display:flex;align-items:center;gap:10px;margin-top:-32px;margin-bottom:9px;position:relative;z-index:2;}',
             '.fmx-av{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;border:2.5px solid #0d1019;flex-shrink:0;}',
             '.fmx-nm{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;padding-top:20px;}',
             '.fmx-seal{color:#818cf8;font-size:14px;}',
             '.fmx-meta{font-size:10.5px;color:#8990a8;margin-top:2px;}',
-            '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
+            '.fmx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}',
             '.fmx-aud{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;border:0.5px solid;white-space:nowrap;line-height:1.5;}',
             '.fmx-aud i{font-size:12px;}',
             '.fmx-covbdg{position:absolute;left:9px;bottom:8px;right:46px;display:flex;gap:5px;flex-wrap:wrap;z-index:7;}',
@@ -374,7 +374,7 @@
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
-            '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:11px;}',
+            '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;}',
             '.fmx-met{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
             '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
             '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;}',
@@ -383,7 +383,7 @@
             '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-start;}',
             '.fmx-sp svg{display:block;margin-top:-1px;}',
-            '.fmx-acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}',
+            '.fmx-acts{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;}',
             '.fmx-btn{flex:1;border-radius:10px;padding:10px 6px;font-size:11.5px;font-weight:600;cursor:pointer;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 150ms;white-space:nowrap;}',
             '.fmx-btn-p{border:none;color:#fff;}',
             '.fmx-scard{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:13px;transition:border-color 200ms;}',
@@ -677,7 +677,7 @@
             '.fmx-dot-rb{border-radius:50%;border:2px solid rgba(255,255,255,0.85);background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);}',
             '.fmx-cbg{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;}',
             '.fmx-cbg-s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,24,0.35),rgba(10,13,24,0.86) 72%);}',
-            '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}',
+            '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}',
             '.fmx-fchips span{font-size:9.5px;color:#8990a8;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);padding:3px 8px;border-radius:6px;}',
             '.fmx-met2{display:flex;align-items:center;gap:8px;font-size:10px;color:#8990a8;margin-top:8px;flex-wrap:wrap;}',
             '.fmx-met2 b{color:#565b73;font-weight:600;margin-right:2px;}',
@@ -5445,24 +5445,7 @@
         return '<span class="fmx-dpill ' + (neg ? 'gr' : 'am') + '">' + (neg ? '−' : '+') + Math.abs(Math.round(d)) + '% к нише</span>';
     }
 
-    /* доступность дат прямо на оффере: календарь начинает продавать из ленты */
-    function _availRow(l) {
-        if (!l.id) return '';
-        var left;
-        if (l.free_from) {
-            left = '<span class="fr">●</span><span class="fr">Свободно с ' + _fmtDayRu(l.free_from) + '</span>';
-        } else if (l.busy_until) {
-            left = '<span class="bs">●</span><span class="bs">Занято до ' + _fmtDayRu(l.busy_until) + '</span>';
-        } else if (l.slots_updated_at) {
-            left = '<span class="fr">●</span><span class="fr">Свободно</span>';
-        } else {
-            left = '<span class="nd">●</span><span class="nd">Даты не указаны</span>';
-        }
-        var right = (!l.deals_count) ? '<span class="new num">Новый на Площадке</span>' : '';
-        return '<div class="fmx-avail">' + left + right + '</div>';
-    }
-
-    var MON_RD = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        var MON_RD = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
     var MON_IM = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
     function _fmtDayRu(iso) {
         try { var p = String(iso).split('-'); return parseInt(p[2], 10) + ' ' + MON_RD[parseInt(p[1], 10) - 1]; }
@@ -5573,7 +5556,8 @@
             (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
-            _availRow(l) +
+            /* строка дат убрана с карточки (17.07.2026, решение владельца): даты живут внутри
+               разворота в календаре; «Новый на Площадке» не нёс смысла — сделки видны бейджем */
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + ';opacity:0.55;" data-act="analyze" data-u="' + _esc(l.username) + '" title="AI-разбор подключается"><i class="ti ti-report-analytics"></i>Разбор · скоро</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
     }
