@@ -2315,6 +2315,8 @@
                 var l = _mineById(+b.getAttribute('data-mposter')); if (!l) return;
                 var ch = _mineChannelOf(l);
                 if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении.'); return; }
+                /* прямой заход из кабинета: состояние конструктора могло ещё не создаваться */
+                if (!_ss) { _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; }
                 _haptic('light'); _ss.channelId = ch.id;   // постер-студия строится по каналу оффера
                 openPosterStudio();
             });
