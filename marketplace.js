@@ -963,6 +963,19 @@
             '.fmx-nsna{font-size:10px;color:#565b73;white-space:nowrap;flex:0 0 auto;}',
             '.fmx-nsx{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:0;background:transparent;color:#565b73;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}',
             '.fmx-nsx:active{background:rgba(255,255,255,0.06);}',
+            /* кабинет продавца «Мои офферы» */
+            '.fmx-minecard{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:13px;margin-bottom:10px;}',
+            '.fmx-minehead{display:flex;align-items:center;gap:10px;}',
+            '.fmx-mineav{width:38px;height:38px;border-radius:11px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex:0 0 auto;}',
+            '.fmx-mineav img{width:100%;height:100%;object-fit:cover;display:block;}',
+            '.fmx-minenm{font-size:13px;font-weight:700;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-mineu{font-size:10.5px;color:#565b73;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-mine-st{flex:0 0 auto;font-size:10px;font-weight:700;border-radius:999px;padding:3px 9px;border:0.5px solid;white-space:nowrap;}',
+            '.fmx-minerej{margin-top:9px;font-size:11px;color:#ef8080;line-height:1.45;background:rgba(239,68,68,0.07);border:0.5px solid rgba(239,68,68,0.2);border-radius:10px;padding:8px 10px;}',
+            '.fmx-minemet{margin-top:9px;font-size:11px;color:#8990a8;font-variant-numeric:tabular-nums;}',
+            '.fmx-minemet b{color:#c9cbe0;}',
+            '.fmx-mineacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px;}',
+            '.fmx-mineacts .fmx-btn{min-height:40px;font-size:11px;}',
             /* узкий телефон: ужимаем, чтобы 3 канала влезли целиком и ничего не обрезалось */
             '@media (max-width:379px){.fmx-cmpt{font-size:10.5px;}' +
             '.fmx-cmpt th,.fmx-cmpt td{padding:7px 2px;}' +
@@ -996,7 +1009,13 @@
         _pulseHint('fmx-faq', 'fmx_seen_faq');
         _pulseHint('fmx-bhelp', 'fmx_seen_badges');
         // стрелка «назад»: с под-раздела (Площадка/База/Пульс) — на главный экран; с главного — закрыть приложение
-        el('fmx-back').addEventListener('click', function () { _haptic('light'); if (_mainTab === 'market' && (_subTab === 'create' || _subTab === 'sell')) { setSubTab('buy'); return; } if (_mainTab !== 'enter') setMainTab('enter'); else close(); });
+        el('fmx-back').addEventListener('click', function () {
+            _haptic('light');
+            // из конструктора, открытого ИЗ кабинета, «назад» возвращает в кабинет, а не в витрину
+            if (_mainTab === 'market' && _subTab === 'create' && _backTo === 'mine') { _backTo = null; setSubTab('mine'); return; }
+            if (_mainTab === 'market' && (_subTab === 'create' || _subTab === 'sell' || _subTab === 'mine')) { setSubTab('buy'); return; }
+            if (_mainTab !== 'enter') setMainTab('enter'); else close();
+        });
         document.addEventListener('click', function (e) { var dd = el('fmx-chdd'); if (dd && dd.classList.contains('on') && !dd.contains(e.target)) dd.classList.remove('on'); });
         el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
         el('fmx-mini').addEventListener('click', function () { _haptic('light'); el('fmx-scrollEl').scrollTo({ top: 0, behavior: 'smooth' }); });
@@ -1576,10 +1595,10 @@
     /* ===================== render: market ===================== */
     function renderMarket() {
         var host = el('fmx-main');
-        /* конструктор и заявки — на весь экран, с кнопкой «назад в витрину» */
-        if (_subTab === 'create' || _subTab === 'sell') {
+        /* конструктор, заявки и кабинет — на весь экран, с кнопкой «назад в витрину» */
+        if (_subTab === 'create' || _subTab === 'sell' || _subTab === 'mine') {
             host.innerHTML = '<div id="fmx-sub"></div>';  /* «назад» — только основная стрелка в шапке (fmx-back), дубль убран */
-            if (_subTab === 'create') renderCreate(); else renderSell();
+            if (_subTab === 'create') renderCreate(); else if (_subTab === 'sell') renderSell(); else renderMine();
             checkMini();
             return;
         }
@@ -1591,9 +1610,17 @@
             '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-plus"></i></div>' +
             '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
             '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
+            '<div style="display:flex;gap:8px;margin:0 0 12px;">' +
+            '<button class="fmx-mt on" style="pointer-events:none;">Каналы</button>' +
+            '<button class="fmx-mt" id="fmx-goReqs"><i class="ti ti-speakerphone"></i> Заявки рекламодателей</button></div>' +
             '<div id="fmx-sub"></div>';
         (function () { var si = host.querySelector('.fmx-search input'); if (si) { si.value = _q; si.addEventListener('input', function () { var v = si.value; clearTimeout(_qTimer); _qTimer = setTimeout(function () { _q = v.trim(); loadFeed(false); }, 350); }); } })();
-        el('fmx-sellcta').addEventListener('click', function () { _haptic('light'); setSubTab('create'); });
+        el('fmx-sellcta').addEventListener('click', function () {
+            _haptic('light'); _backTo = null;
+            // с офферами блок ведёт в кабинет управления; новичку — сразу в конструктор
+            setSubTab(_myListings && _myListings.length ? 'mine' : 'create');
+        });
+        el('fmx-goReqs').addEventListener('click', function () { _haptic('light'); setSubTab('sell'); });
         updateSellCta();
         renderBuy();
         checkMini();
@@ -1827,9 +1854,9 @@
         else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
-        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Продать рекламу в своём канале.</div>' +
-            '<div style="display:flex;gap:8px;margin:0 0 14px;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
-            '<button class="fmx-btn" id="fmx-nbell" title="Уведомления о заявках в нишах" style="flex:0 0 auto;padding:0 15px;"><i class="ti ti-bell"></i></button></div>' + body;
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: здесь ищут каналы для размещения. Твоя ниша подошла — пиши первым.</div>' +
+            '<div style="display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;min-width:170px;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
+            '<button class="fmx-btn" id="fmx-nbell" style="flex:0 0 auto;padding:0 13px;min-height:40px;"><i class="ti ti-bell"></i> Следить за нишей</button></div>' + body;
         scaleCards(sub);
         el('fmx-newreq').addEventListener('click', openReqForm);
         el('fmx-nbell').addEventListener('click', openNicheSubs);
@@ -1857,6 +1884,164 @@
             });
         });
     }
+    /* ===================== кабинет продавца «Мои офферы» =====================
+       Собран из готовых блоков (статистика, календарь, постер, сделки, pause/delete) —
+       раньше всё это лежало на дне конструктора под семью секциями оформления.
+       Один экран-список; продвижение вернётся сюда при подключении оплаты. */
+    var _backTo = null;   // откуда открыт конструктор: 'mine' — «назад» вернёт в кабинет
+    var _mineEditCh = null;   // канал, чей оффер редактируем из кабинета
+
+    function _mineChannelOf(l) {
+        for (var i = 0; i < _channels.length; i++) {
+            var c = _channels[i];
+            if (c.username && l.username && c.username.toLowerCase() === l.username.toLowerCase()) return c;
+        }
+        return null;
+    }
+
+    function _mineStatus(l) {
+        var m = {
+            published: ['#5DCAA5', 'Опубликовано'],
+            paused: ['#8990a8', 'Заморожен'],
+            rejected: ['#ef8080', 'Отклонён'],
+            pending: ['#f5bf4f', 'На проверке']
+        };
+        var s = m[l.status] || ['#8990a8', l.status_human || l.status || '—'];
+        return '<span class="fmx-mine-st" style="color:' + s[0] + ';border-color:' + s[0] + '33;background:' + s[0] + '14;">' + _esc(l.status_human || s[1]) + '</span>';
+    }
+
+    function mineCard(l) {
+        var t = l.title || l.username || '?';
+        var av = l.avatar_url
+            ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt="">'
+            : _esc(t.charAt(0));
+        var frozen = l.status === 'paused';
+        return '<div class="fmx-minecard" data-mine="' + l.id + '">' +
+            '<div class="fmx-minehead"><div class="fmx-mineav" style="background:' + _esc(_accent(l)) + ';">' + av + '</div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-minenm">' + _esc(t) + '</div>' +
+            '<div class="fmx-mineu">@' + _esc(l.username || '') + '</div></div>' + _mineStatus(l) + '</div>' +
+            (l.status === 'rejected' && l.reject_reason
+                ? '<div class="fmx-minerej">Причина: ' + _esc(l.reject_reason) + ' — исправь и сохрани, оффер уйдёт на повторную проверку.</div>' : '') +
+            '<div class="fmx-minemet" id="fmx-mst-' + l.id + '">За 7 дней: считаем…</div>' +
+            '<div class="fmx-mineacts">' +
+            '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' +
+            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar"></i>Статистика</button>' +
+            '<button class="fmx-btn" data-mcal="' + l.id + '"><i class="ti ti-calendar-check"></i>Календарь</button>' +
+            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
+            '<button class="fmx-btn" data-mposter="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-photo-star"></i>Постер</button>' +
+            '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
+            '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить оффер</button>' +
+            '</div></div>';
+    }
+
+    function _mineById(id) { for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === id) return _myListings[i]; return null; }
+
+    function paintMine() {
+        var sub = el('fmx-sub'); if (!sub) return;
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-briefcase"></i> Кабинет продавца: статус, статистика и управление офферами. Занятые даты отмечай в календаре — покупатели видят свободные.</div>' +
+            '<div id="fmx-dealsPend"></div>' +
+            _myListings.map(mineCard).join('') +
+            '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"><i class="ti ti-plus"></i> Создать ещё оффер</button>';
+        loadPendingDeals();   // подтверждение сделок — репутация, поэтому первым блоком
+        el('fmx-mineNew').addEventListener('click', function () { _haptic('light'); _backTo = 'mine'; _mineEditCh = null; setSubTab('create'); });
+        qsa(sub, '[data-medit]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-medit')); if (!l) return;
+                var ch = _mineChannelOf(l);
+                if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении — проверь список каналов.'); return; }
+                _haptic('light'); _mineEditCh = ch.id; _backTo = 'mine'; setSubTab('create');
+            });
+        });
+        qsa(sub, '[data-mstat]').forEach(function (b) {
+            b.addEventListener('click', function () { _haptic('light'); openListingStats(+b.getAttribute('data-mstat')); });
+        });
+        qsa(sub, '[data-mcal]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-mcal')); if (!l) return;
+                _haptic('light'); openOwnerCalendar(l);
+            });
+        });
+        qsa(sub, '[data-mshare]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-mshare')); if (!l) return;
+                shareCard(l.id, l.username);
+            });
+        });
+        qsa(sub, '[data-mposter]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-mposter')); if (!l) return;
+                var ch = _mineChannelOf(l);
+                if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении.'); return; }
+                _haptic('light'); _ss.channelId = ch.id;   // постер-студия строится по каналу оффера
+                openPosterStudio();
+            });
+        });
+        qsa(sub, '[data-mpause]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-mpause')); if (!l) return;
+                var act = l.status === 'paused' ? 'resume' : 'pause';
+                b.disabled = true;
+                apiPost('/api/v1/marketplace/listings/' + l.id + '/' + act, {}).then(function (r) {
+                    b.disabled = false;
+                    if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
+                    _haptic('success');
+                    l.status = act === 'pause' ? 'paused' : 'published';
+                    l.status_human = act === 'pause' ? 'Заморожен' : 'Опубликовано';
+                    toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
+                    _feed = null; _feedState = 'idle';
+                    if (_subTab === 'mine') paintMine();
+                }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+            });
+        });
+        qsa(sub, '[data-mdel]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var l = _mineById(+b.getAttribute('data-mdel')); if (!l) return;
+                uiConfirm('Удалить оффер «' + (l.title || l.username || '') + '» с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
+                    b.disabled = true;
+                    apiRequest('/api/v1/marketplace/listings/' + l.id, { method: 'DELETE' }).then(function (r) {
+                        b.disabled = false;
+                        if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось удалить'); return; }
+                        _haptic('success'); toast('Оффер удалён');
+                        _myListings = _myListings.filter(function (x) { return x.id !== l.id; });
+                        if (_ss.listingId === l.id) { _ss.listingId = null; _ss._status = null; }
+                        _feed = null; _feedState = 'idle';
+                        if (!_myListings.length) { setSubTab('buy', true); return; }
+                        if (_subTab === 'mine') paintMine();
+                    }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+                });
+            });
+        });
+        // мини-цифры за 7 дней; при 1–3 карточках поштучные запросы — норма
+        _myListings.forEach(function (l) {
+            apiGet('/api/v1/marketplace/my/' + l.id + '/stats').then(function (r) {
+                var n = el('fmx-mst-' + l.id); if (!n) return;
+                if (!r || !r.ok) { n.textContent = 'За 7 дней: статистика недоступна'; return; }
+                var t = r.totals || {};
+                n.innerHTML = 'За 7 дней: <b>' + (t.views || 0) + '</b> показов · <b>' + (t.expands || 0) + '</b> разворотов · <b>' + (t.writes || 0) + '</b> нажали «Написать»';
+            }).catch(function () { var n = el('fmx-mst-' + l.id); if (n) n.textContent = 'За 7 дней: статистика недоступна'; });
+        });
+    }
+
+    function renderMine() {
+        var sub = el('fmx-sub'); if (!sub) return;
+        sub.innerHTML = loadHtml();
+        Promise.all([loadChannels(), loadMyListings()]).then(function () {
+            if (_subTab !== 'mine') return;
+            if (!_myListings.length) { setSubTab('create', true); return; }   // кабинет без офферов не нужен
+            paintMine();
+        }).catch(function () {
+            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
+        });
+    }
+
+    function openOwnerCalendar(l) {
+        var box = el('fmx-calBox'); if (!box) return;
+        var s = el('fmx-calSub'); if (s) s.textContent = '@' + (l.username || '') + ' — отмечай занятые дни, покупатели увидят свободные';
+        box.innerHTML = loadHtml();
+        showModal('fmx-calBg');
+        renderSlotsBox(l, box);
+    }
+
     function openNichePick(niches) {
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
@@ -1997,8 +2182,8 @@
         return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     }
 
-    function renderSlotsBox(l) {
-        var box = el('fmx-slotsBox');
+    function renderSlotsBox(l, boxEl) {
+        var box = boxEl || el('fmx-slotsBox');   // boxEl — календарь владельца в кабинете, без него — разворот карточки
         if (!box || !l.id) return;
         apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
             if (!r || !r.ok) { box.innerHTML = ''; return; }
@@ -2257,7 +2442,12 @@
             var pubs = _channels.filter(function (c) { return c.username; });
             if (!pubs.length) { sub.innerHTML = emptyHtml('ti-plus', 'Нет подходящих каналов', 'Чтобы выставить канал на Площадку, у него должен быть публичный @username. Добавь или настрой канал в приложении.'); return; }
             var def = null;
-            for (var i = 0; i < pubs.length; i++) if (listingForChannel(pubs[i].id)) { def = pubs[i].id; break; }
+            // из кабинета «Редактировать» открывает конструктор с КОНКРЕТНЫМ каналом оффера
+            if (_mineEditCh != null) {
+                for (var k = 0; k < pubs.length; k++) if (pubs[k].id === _mineEditCh) { def = _mineEditCh; break; }
+                _mineEditCh = null;
+            }
+            if (def == null) for (var i = 0; i < pubs.length; i++) if (listingForChannel(pubs[i].id)) { def = pubs[i].id; break; }
             if (def == null) def = pubs[0].id;
             selectChannel(def);
         }).catch(function () {
@@ -2376,14 +2566,10 @@
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
             '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке') + '</button>' +
-            (_ss.listingId ? '<div style="display:flex;gap:8px;margin-top:10px;">' +
-                '<button class="fmx-btn" id="fmx-lpause">' + (_ss._status === 'paused' ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
-                '<button class="fmx-btn" id="fmx-ldel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить</button></div>' +
-                '<button class="fmx-btn" id="fmx-brag" style="width:100%;margin-top:8px;border-color:rgba(245,191,79,0.45);color:#f5bf4f;"><i class="ti ti-photo-star"></i> Промо-постер для рекламы канала</button>' +
-                '<button class="fmx-btn" id="fmx-lpromo" style="width:100%;margin-top:8px;border-color:rgba(129,140,248,0.45);color:#818cf8;"><i class="ti ti-rocket"></i> Продвижение оффера в ленте — цены</button>' +
-                '<button class="fmx-btn" id="fmx-lstats" style="width:100%;margin-top:8px;"><i class="ti ti-chart-bar"></i> Статистика оффера за неделю</button>' : '') +
+            /* управленческий слой (статус, статистика, постер, сделки) перенесён в кабинет
+               «Мои офферы» 16.07.2026 — конструктор остаётся чистым редактором оформления */
+            (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> Кабинет «Мои офферы»: статус, статистика, календарь</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
-            (_ss.listingId ? '<div id="fmx-dealsPend"></div>' : '') +
             '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
@@ -2404,44 +2590,8 @@
         loadStickerPane();
         var sdT = el('fmx-showdeals');
         if (sdT) sdT.addEventListener('change', function () { _ss.showDeals = sdT.checked; renderHero(); });
-        if (_ss.listingId) loadPendingDeals();
-        var brag = el('fmx-brag');
-        if (brag) brag.addEventListener('click', function () { _haptic('light'); openPosterStudio(); });
-        var lpromo = el('fmx-lpromo');
-        if (lpromo) lpromo.addEventListener('click', function () { _haptic('light'); openPromo(); });
-        var lstats = el('fmx-lstats');
-        if (lstats) lstats.addEventListener('click', function () { _haptic('light'); openListingStats(_ss.listingId); });
-        var lp = el('fmx-lpause');
-        if (lp) lp.addEventListener('click', function () {
-            var act = _ss._status === 'paused' ? 'resume' : 'pause';
-            lp.disabled = true;
-            apiPost('/api/v1/marketplace/listings/' + _ss.listingId + '/' + act, {}).then(function (r) {
-                lp.disabled = false;
-                if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
-                _haptic('success');
-                _ss._status = act === 'pause' ? 'paused' : 'published';
-                for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === _ss.listingId) { _myListings[i].status = _ss._status; _myListings[i].status_human = _ss._status === 'paused' ? 'Заморожена' : 'Опубликовано'; }
-                toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
-                _feed = null; _feedState = 'idle';
-                selectChannel(_ss.channelId);
-            }).catch(function () { lp.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
-        });
-        var ld = el('fmx-ldel');
-        if (ld) ld.addEventListener('click', function () {
-            uiConfirm('Удалить оффер с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
-                ld.disabled = true;
-                apiRequest('/api/v1/marketplace/listings/' + _ss.listingId, { method: 'DELETE' }).then(function (r) {
-                    ld.disabled = false;
-                    if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось удалить'); return; }
-                    _haptic('success'); toast('Оффер удалён');
-                    var delId = _ss.listingId;
-                    _myListings = _myListings.filter(function (x) { return x.id !== delId; });
-                    _ss.listingId = null; _ss._status = null;
-                    _feed = null; _feedState = 'idle';
-                    selectChannel(_ss.channelId);
-                }).catch(function () { ld.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
-            });
-        });
+        var tm = el('fmx-toMine');
+        if (tm) tm.addEventListener('click', function () { _haptic('light'); _backTo = null; setSubTab('mine'); });
         bindCover(); bindStyle(); bindPrice(); bindText();
         renderHero();
         openAcc(_secCreate || 'cover', false);
@@ -3927,8 +4077,9 @@
             }
             tile.addEventListener('pointerup', peekUp);
             tile.addEventListener('pointercancel', peekUp);
+            return peekEnd;   // наружу — для destroy(): без этого закрытие пульта падало с ReferenceError
         }
-        bindPeek(prev, box);
+        var _peekEnd = bindPeek(prev, box) || function () {};
         function onScroll() {
             try {
                 if (!document.contains(dock)) { destroy(); return; }
@@ -3958,7 +4109,7 @@
         function destroy() {
             if (destroyed) return;
             destroyed = true;
-            peekEnd();
+            _peekEnd();   // peekEnd живёт внутри bindPeek — прямой вызов здесь падал и оставлял интервал жить
             clearInterval(iv);
             env.scroll.style.overflowAnchor = prevOA || '';
             env.scroll.removeEventListener('scroll', onScroll);
@@ -4865,6 +5016,12 @@
         lst.addEventListener('click', function (e) { if (e.target === lst) hideModal('fmx-listBg'); });
         lst.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-listBg'); });
 
+        var cal = document.createElement('div'); cal.className = 'fmx-mbg'; cal.id = 'fmx-calBg';
+        cal.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-calendar-check" style="color:#5DCAA5;"></i> Календарь занятости</h2><p id="fmx-calSub"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-calBox"></div></div></div>';
+        document.body.appendChild(cal);
+        cal.addEventListener('click', function (e) { if (e.target === cal) hideModal('fmx-calBg'); });
+        qsa(cal, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-calBg'); }); });
+
         var cmp = document.createElement('div'); cmp.className = 'fmx-mbg'; cmp.id = 'fmx-cmpBg';
         cmp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-columns-3" style="color:#5DCAA5;"></i> Сравнение каналов</h2><p>Метрики бок о бок — лучшее в строке подсвечено</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-cmpBody"></div></div>';
         document.body.appendChild(cmp);
@@ -5045,7 +5202,11 @@
             (l.id ? '<div id="fmx-slotsBox"></div>' : (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '')) +
             '<div class="fmx-acts" style="margin-top:16px;"><button class="fmx-btn" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i>' + (_bookmarks[u] ? 'В закладках' : 'В закладки') + '</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:' + accent + ';color:#fff;" data-w="' + _esc(u) + '"><i class="ti ti-brand-telegram"></i>Написать</button></div>' +
+            /* «Поделиться» отдельной строкой: третья кнопка в ряду не влезает на 320px */
+            (l.id ? '<button class="fmx-btn" id="fmx-lsShare" style="width:100%;margin-top:10px;"><i class="ti ti-share-2"></i> Поделиться карточкой</button>' : '') +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div><button class="fmx-btn" id="fmx-ls-rep" style="width:100%;margin-top:10px;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться на оффер</button>' : '');
+        var lsSh = el('fmx-lsShare');
+        if (lsSh) lsSh.addEventListener('click', function () { shareCard(l.id, l.username); });
         el('fmx-listBody').querySelectorAll('[data-bm]').forEach(function (b) {
             b.addEventListener('click', function () {
                 toggleBm(b.getAttribute('data-bm'));
