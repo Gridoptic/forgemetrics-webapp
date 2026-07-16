@@ -1082,6 +1082,19 @@
             '.fmx-tedbar::-webkit-scrollbar{display:none;}',
             '.fmx-lssect{font-size:10.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}',
             '.fmx-lssect::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06);}',
+            /* фильтры: компакт под высоту телефона, без нижнего скролла страницы */
+            '.fmx-bf-compact{max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain;}',
+            '.fmx-bf-compact .fmx-lbl{margin:0 0 4px;font-size:9.5px;}',
+            '.fmx-bf-compact .fmx-lbl.fmx-mt2{margin-top:9px;}',
+            '.fmx-bf-compact .fmx-inp{padding:8px 9px;font-size:12px;min-height:36px;min-width:0;width:100%;}',
+            '.fmx-bf-compact .fmx-fx{padding:9px 11px;min-height:40px;font-size:11px;}',
+            '.fmx-bf-compact .fmx-tgl{font-size:10.5px;line-height:1.3;}',
+            '.fmx-bf-compact .fmx-cfm-r{margin-top:11px;}',
+            '.fmx-bfgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px 10px;}',
+            '.fmx-bfcell{min-width:0;}',
+            '.fmx-bfrow{display:flex;gap:6px;min-width:0;}',
+            /* date-инпуты на узких экранах не раздувают колонку */
+            '.fmx-bf-compact input[type=date]{font-size:10.5px;padding:8px 6px;}',
             /* узкий телефон: ужимаем, чтобы 3 канала влезли целиком и ничего не обрезалось */
             '@media (max-width:379px){.fmx-cmpt{font-size:10.5px;}' +
             '.fmx-cmpt th,.fmx-cmpt td{padding:7px 2px;}' +
@@ -1578,7 +1591,10 @@
         if (_fSubsMin != null) p.push('subs_min=' + _fSubsMin);
         if (_fAud) p.push('audience=' + _fAud);
         if (_fCpmMax != null) p.push('cpm_max=' + _fCpmMax);
+        if (_fCpmMin != null) p.push('cpm_min=' + _fCpmMin);
         if (_fErMin != null) p.push('er_min=' + _fErMin);
+        if (_fErMax != null) p.push('er_max=' + _fErMax);
+        if (_fSubsMax != null) p.push('subs_max=' + _fSubsMax);
         if (_fFreeFrom) p.push('free_from=' + _fFreeFrom + (_fFreeTo ? '&free_to=' + _fFreeTo : ''));
         if (_fDeals) p.push('deals_only=1');
         return '/api/v1/marketplace/listings?' + p.join('&');
@@ -1759,7 +1775,8 @@
     }
 
     var _fCpmMax = null, _fErMin = null, _fFreeFrom = null, _fFreeTo = null, _fDeals = false;
-    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null ? 1 : 0) + (_fErMin != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0); }
+    var _fSubsMax = null, _fCpmMin = null, _fErMax = null;
+    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fSubsMax != null ? 1 : 0); }
     function buySortRowHtml() {
         var opts = [['smart', 'Умная'], ['price_asc', 'Цена ↑'], ['price_desc', 'Цена ↓'], ['reach', 'Охват'], ['cpm', 'CPM'], ['fresh', 'Свежие']];
         var nf = _buyFiltersCount();
@@ -1805,19 +1822,24 @@
         var old = el('fmx-bfBg'); if (old) old.remove();
         var bg = document.createElement('div');
         bg.id = 'fmx-bfBg'; bg.className = 'fmx-cfm';
-        bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты</div>' +
-            '<span class="fmx-lbl">Цена размещения, ₽</span>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-bf-pmin" type="number" min="0" inputmode="numeric" placeholder="от" value="' + (_fPriceMin != null ? _fPriceMin : '') + '">' +
-            '<input class="fmx-inp" id="fmx-bf-pmax" type="number" min="0" inputmode="numeric" placeholder="до" value="' + (_fPriceMax != null ? _fPriceMax : '') + '"></div>' +
-            '<span class="fmx-lbl fmx-mt2">Подписчики, от</span>' +
-            '<input class="fmx-inp" id="fmx-bf-smin" type="number" min="0" inputmode="numeric" placeholder="например, 10000" value="' + (_fSubsMin != null ? _fSubsMin : '') + '">' +
-            '<span class="fmx-lbl fmx-mt2">CPM до, ₽ · ER от, %</span>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-bf-cpm" type="number" min="0" inputmode="numeric" placeholder="CPM до" value="' + (_fCpmMax != null ? _fCpmMax : '') + '">' +
-            '<input class="fmx-inp" id="fmx-bf-er" type="number" min="0" step="0.1" inputmode="decimal" placeholder="ER от" value="' + (_fErMin != null ? _fErMin : '') + '"></div>' +
-            '<span class="fmx-lbl fmx-mt2">Свободно в даты</span>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
-            '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div>' +
-            '<div class="fmx-tgl' + (_fDeals ? ' on' : '') + '" id="fmx-bf-deals"><span class="sw"></span>Только с подтверждёнными сделками</div>' +
+        var _bfPair = function (lbl, id1, v1, id2, v2, step) {
+            var st = step ? ' step="0.1" inputmode="decimal"' : ' inputmode="numeric"';
+            return '<div class="fmx-bfcell"><span class="fmx-lbl">' + lbl + '</span>' +
+                '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="от" value="' + (v1 != null ? v1 : '') + '">' +
+                '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="до" value="' + (v2 != null ? v2 : '') + '"></div></div>';
+        };
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты</div>' +
+            '<div class="fmx-bfgrid">' +
+            _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
+            _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
+            _bfPair('CPM, ₽', 'fmx-bf-cpmn', _fCpmMin, 'fmx-bf-cpm', _fCpmMax) +
+            _bfPair('ER, %', 'fmx-bf-er', _fErMin, 'fmx-bf-erx', _fErMax, true) +
+            '<div class="fmx-bfcell"><span class="fmx-lbl">Свободно · с / по</span>' +
+            '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
+            '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
+            '<div class="fmx-bfcell" style="display:flex;align-items:flex-end;">' +
+            '<div class="fmx-tgl' + (_fDeals ? ' on' : '') + '" id="fmx-bf-deals" style="padding:0 0 8px;"><span class="sw"></span>Только со сделками</div></div>' +
+            '</div>' +
             '<span class="fmx-lbl fmx-mt2">Аудитория</span>' +
             '<div class="fmx-fxw" id="fmx-bf-aud">' +
             [['', 'Все'], ['female', 'Женская'], ['male', 'Мужская'], ['mixed', 'Смешанная']].map(function (o) {
@@ -1848,6 +1870,10 @@
         bg.querySelector('[data-apply]').addEventListener('click', function () {
             _fPriceMin = val('fmx-bf-pmin'); _fPriceMax = val('fmx-bf-pmax'); _fSubsMin = val('fmx-bf-smin');
             _fCpmMax = val('fmx-bf-cpm'); _fErMin = val('fmx-bf-er');
+            _fSubsMax = val('fmx-bf-smax'); _fCpmMin = val('fmx-bf-cpmn'); _fErMax = val('fmx-bf-erx');
+            if (_fSubsMin != null && _fSubsMax != null && _fSubsMin > _fSubsMax) { var t2 = _fSubsMin; _fSubsMin = _fSubsMax; _fSubsMax = t2; }
+            if (_fCpmMin != null && _fCpmMax != null && _fCpmMin > _fCpmMax) { var t3 = _fCpmMin; _fCpmMin = _fCpmMax; _fCpmMax = t3; }
+            if (_fErMin != null && _fErMax != null && _fErMin > _fErMax) { var t4 = _fErMin; _fErMin = _fErMax; _fErMax = t4; }
             var _df = el('fmx-bf-df'), _dt2 = el('fmx-bf-dt');
             _fFreeFrom = (_df && _df.value) ? _df.value : null;
             _fFreeTo = (_fFreeFrom && _dt2 && _dt2.value && _dt2.value >= _fFreeFrom) ? _dt2.value : null;
@@ -1875,6 +1901,7 @@
         bg.querySelector('[data-reset]').addEventListener('click', function () {
             _fPriceMin = _fPriceMax = _fSubsMin = null; _fAud = null; _sort = 'match'; _nicheSel = null;
             _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false;
+            _fSubsMax = _fCpmMin = _fErMax = null;
             done(); _refreshFilterChip(); loadFeed(false);
         });
     }
@@ -5948,7 +5975,13 @@
             card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
                 'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
             card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4,8 · 3 сделки</span>', 'Сделки и рейтинг',
-                'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.');
+                'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
+            card('<span class="fmx-aud" style="color:#5b9dff;border:0.5px solid #5b9dff55;background:#5b9dff1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-male"></i> Мужская</span>', 'Аудитория: мужская',
+                'Больше половины читателей канала — мужчины. Подходит под офферы с мужской целевой аудиторией: трейдинг, авто, спорт, техника, беттинг.') +
+            card('<span class="fmx-aud" style="color:#ff6fae;border:0.5px solid #ff6fae55;background:#ff6fae1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-female"></i> Женская</span>', 'Аудитория: женская',
+                'Больше половины читателей — женщины. Подходит под офферы с женской целевой аудиторией: красота, мода, дети, дом, маркетплейсы.') +
+            card('<span class="fmx-aud" style="color:#9aa0b5;border:0.5px solid #9aa0b555;background:#9aa0b51a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-users-group"></i> Смешанная</span>', 'Аудитория: смешанная',
+                'Заметной перекоса по полу нет — канал читают и мужчины, и женщины. Универсальный вариант под широкие офферы: финансы, новости, развлечения.');
             /* карточка «Безопасный» удалена из гида 16.07.2026: сам бейдж убран из ленты раньше
                (фальшивый знак доверия) — справка описывала несуществующее */
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
