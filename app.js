@@ -447,11 +447,27 @@ function renderPulse(pulse) {
         <div class="pw-mdiv"></div>
         ${pwCell('Охват к базе', pulse.reach_rate, { suf: '%' })}
       </div>
+      <div id="pw-aihook"></div>
     </div>`;
     pwCountUp(host);
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
     loadReachSeries();
+}
+
+// Крючок ИИ у пульса: когда охват просел — сразу предлагаем вернуть его постами.
+// Показываем только на реальном спаде (trend < 0), иначе прячем — без выдумок.
+function renderPulseHook(trendPct) {
+    const hook = document.getElementById('pw-aihook');
+    if (!hook) return;
+    if (trendPct == null || trendPct >= 0) { hook.innerHTML = ''; return; }
+    const drop = Math.abs(trendPct);
+    hook.innerHTML = `<div class="pw-aihook">`
+        + `<span class="pw-aih-ic"><i class="ti ti-sparkles"></i></span>`
+        + `<div class="pw-aih-tx">Охват просел на <b>${drop}%</b> — ИИ подготовит вовлекающие посты, чтобы вернуть его.</div>`
+        + `<button class="pw-aih-go" type="button">Собрать <i class="ti ti-arrow-right"></i></button></div>`;
+    const go = hook.querySelector('.pw-aih-go');
+    if (go) go.addEventListener('click', () => { hapticLight(); handleAction('create_post'); });
 }
 
 async function loadReachSeries() {
@@ -463,6 +479,8 @@ async function loadReachSeries() {
             drawReachChart(host, r.series, r.dates || [], r.days || 30);
             const tr = document.getElementById('pw-trend');
             if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
+            // проактивный крючок: охват просел → ИИ сразу предлагает вернуть его постами
+            renderPulseHook(r.trend_pct);
         } else {
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — заглядывай позже</div>';
         }
