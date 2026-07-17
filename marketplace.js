@@ -1169,8 +1169,9 @@
             '.fmx-fmtnm{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1;}',
             '.fmx-fmtnm>span{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.fmx-fmtsub{font-size:9px;color:#565b73;font-style:normal;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
-            '.fmx-guar{display:flex;align-items:flex-start;gap:7px;margin-top:9px;padding:9px 11px;border-radius:11px;background:rgba(245,191,79,0.06);border:0.5px dashed rgba(245,191,79,0.3);font-size:10px;color:#c9cbe0;line-height:1.5;}',
-            '.fmx-guar i.ti{color:#f5bf4f;font-size:13px;flex:0 0 auto;margin-top:1px;}',
+            '.fmx-terms{margin-top:2px;}',
+            '.fmx-tline{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#c9cbe0;padding:5px 0;}',
+            '.fmx-tline i{color:#8990a8;font-size:13px;flex:0 0 auto;}',
             /* sticky-низ разворота */
             '.fmx-lsfoot{position:sticky;bottom:-15px;margin:14px -16px -15px;padding:12px 16px 15px;background:linear-gradient(180deg,transparent,rgba(18,21,35,0.97) 35%);display:flex;gap:8px;z-index:5;}',
             '.fmx-lsfoot .bm{flex:0 0 48px;}',
@@ -2873,6 +2874,16 @@
     function _peakLabel(l) { var p = _peakWin(l); return p ? (String(p.from).padStart(2, '0') + ':00–' + String(p.to).padStart(2, '0') + ':00') : ''; }
     function _inPeak(l, tmin) { var p = _peakWin(l); if (!p) return false; var h = Math.floor(tmin / 60); return p.from <= p.to ? (h >= p.from && h < p.to) : (h >= p.from || h < p.to); }
     function _peakBlock(l) { var lab = _peakLabel(l); if (!lab) return ''; return '<div class="fmx-peak"><i class="ti ti-chart-line"></i><span>Час пик просмотров · <b>' + lab + '</b></span></div>'; }
+    /* условия размещения (коротко, по делу) */
+    function _termsBlock(l) {
+        var em = { advertiser: 'ставит рекламодатель', channel: 'ставит канал', discuss: 'обсуждается' };
+        var lines = [];
+        if (l.erid_who && em[l.erid_who]) lines.push('Маркировка (erid) — ' + em[l.erid_who]);
+        lines.push('Оплата напрямую с владельцем');
+        lines.push('Гарант, бронь по времени и авто-маркировка — в разработке');
+        return '<div class="fmx-lssect">Условия размещения</div><div class="fmx-terms">' +
+            lines.map(function (t) { return '<div class="fmx-tline"><i class="ti ti-point-filled"></i>' + _esc(t) + '</div>'; }).join('') + '</div>';
+    }
 
     /* панель слотов дня для ПОКУПАТЕЛЯ: выбор свободного времени выхода */
     function _buyerSlotsHtml(l, r) {
@@ -4835,7 +4846,6 @@
     }
     function panePrice() {
         var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i> Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</div>';
-        var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
         var eridOpts = [['advertiser', 'Ставит рекламодатель'], ['channel', 'Ставит канал'], ['discuss', 'Обсуждается']];
         var erid = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-tag"></i> Маркировка рекламы (erid)</span>' +
             '<div class="fmx-eridseg" id="fmx-erid">' + eridOpts.map(function (o) {
@@ -4844,7 +4854,7 @@
             '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> Кто ставит токен ОРД — условие размещения, видно закупщику. Авто-маркировка подключится с оплатой через площадку.</div>';
         var ins = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-chart-line"></i> Аналитика в витрине</span>' +
             '<div class="fmx-htog" id="fmx-hideIns"><div class="fmx-htl">Показывать час пик и рекл. охват<i>' + (_ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала') + '</i></div><div class="fmx-hsw' + (_ss._hideInsights ? '' : ' on') + '"></div></div>';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots + erid + ins;
+        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + erid + ins;
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
@@ -4872,7 +4882,6 @@
     }
     function bindPrice() {
         bindFmtRows();
-        el('fmx-slots').addEventListener('input', function () { _ss._slots = this.value; });
         qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (b) {
             b.addEventListener('click', function () {
                 var v = b.getAttribute('data-erid');
@@ -7181,7 +7190,7 @@
                         '<span class="cp">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : '') + '</span></div>';
                 }).join('') + '</div>' +
                 '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. ' + (l.ad_reach_24h ? 'CPM по <b style="color:#5DCAA5;">рекламному охвату (ERR24)</b> из замеров сделок.' : 'Тап по строке подставит формат в сообщение') + '</div>' +
-                '<div class="fmx-guar"><i class="ti ti-shield-half"></i> <span>Сейчас — прямой контакт с владельцем. Сделка с гарантом, бронью по времени и маркировкой — в разработке.</span></div>';
+                _termsBlock(l);
         }
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
         el('fmx-listBody').innerHTML =
