@@ -5211,6 +5211,7 @@
         }
         pl.emoji_attachments_json = _att;
         pl.custom_text = _ss._desc || '';
+        pl.title_style = _ss.font;   /* выбранный шрифт заголовка — иначе превью его не показывало */
         pl.slots_note = _ss._slots || '';
         pl.sticker_json = null;  /* стикер — редакторским слоем поверх */
         if (_ss.showDeals === false) pl.show_deals = false;
@@ -6033,18 +6034,23 @@
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
-        if (_ss.listingId) p = apiPatch('/api/v1/marketplace/listings/' + _ss.listingId, body);
-        else { if (!_ss.channelId) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> Опубликовать на Площадке'; uiAlert('Сначала выбери канал.'); return; } body.channel_id = _ss.channelId; p = apiPost('/api/v1/marketplace/listings', body); }
+        /* контекст на момент отправки: если за время запроса пользователь сменит канал (_ss
+           пересоздаётся), ответ не должен писать listing_id/статус в оффер ДРУГОГО канала */
+        var savingCh = _ss.channelId, savingId = _ss.listingId;
+        if (savingId) p = apiPatch('/api/v1/marketplace/listings/' + savingId, body);
+        else { if (!savingCh) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> Опубликовать на Площадке'; uiAlert('Сначала выбери канал.'); return; } body.channel_id = savingCh; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
-            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
+            var sameCtx = !!(_ss && _ss.channelId === savingCh);   // канал не сменили за время запроса
+            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (savingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
-            if (r && r.listing_id) { _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(_ss.channelId); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } loadMyListings(); }
+            var savedId = (r && r.listing_id) || savingId;
+            if (r && r.listing_id) { if (sameCtx) _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(savingCh); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } loadMyListings(); }
             // loadMyListings: заглушка выше — только для мгновенного UI; без обновления с сервера
             // постер строился по ней (без метрик/цены/названия — «постер всё удалил»)
             if (r && (r.resubmitted || r.needs_review)) {
-                _ss._status = 'pending';
+                if (sameCtx) _ss._status = 'pending';
                 var nm = r.needs_review;
-                for (var ri = 0; ri < _myListings.length; ri++) if (_myListings[ri].id === _ss.listingId) {
+                for (var ri = 0; ri < _myListings.length; ri++) if (_myListings[ri].id === savedId) {
                     _myListings[ri].status = 'pending';
                     _myListings[ri].status_human = nm ? 'На проверке' : 'На модерации';
                     _myListings[ri].moderation_status = nm ? 'needs_review' : 'pending';
@@ -6056,6 +6062,7 @@
             _feed = null; _feedState = 'idle';
             if (wasCreate && r && r.listing_id) _pollPublish(r.listing_id);
             setTimeout(function () {
+                if (!(_ss && _ss.channelId === savingCh)) return;   // канал сменили — не трогаем чужой конструктор
                 // новая карточка: перерисовываем панель, чтобы сразу появились кнопки управления
                 // (Промо-постер, Статистика, Заморозить, Удалить) — раньше они не показывались до перезахода
                 if (wasCreate) { paintCreate(); }
@@ -6176,7 +6183,7 @@
                кружки share и сравнения не считывались. Share вернётся подписанной кнопкой в кабинете
                и развороте, сравнение — кнопкой в закладках, когда офферов станет 3+ */
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
-            '<div><div class="fmx-nm" style="' + fts + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
+            '<div><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
