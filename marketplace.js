@@ -6251,7 +6251,19 @@
                     var tw = document.createElement('div');
                     tw.innerHTML = '<div class="fmx-lssect" style="margin-top:12px;">Витрина</div><div class="fmx-litabin"></div>';
                     box.appendChild(tw);
-                    try { renderTablo(ec, tw.querySelector('.fmx-litabin'), { cut: true }); } catch (e9) {}
+                    try {
+                        renderTablo(ec, tw.querySelector('.fmx-litabin'), { cut: true });
+                        /* тап по самой мини-витрине раскрывает её (кнопка «Развернуть» мелкая, палец
+                           естественно бьёт по превью) — а не сворачивает строку */
+                        var _vp = tw.querySelector('.fmx-tabvp'), _more = tw.querySelector('.fmx-tabmore');
+                        if (_vp && _more) {
+                            _vp.style.cursor = 'pointer';
+                            _vp.addEventListener('click', function (ev) {
+                                if (ev.target.closest('.fmx-tabmore') || ev.target.closest('.fmx-tabless')) return;
+                                if (!_vp.classList.contains('open')) { ev.stopPropagation(); _more.click(); }
+                            });
+                        }
+                    } catch (e9) {}
                 }
                 box.style.display = 'block'; li.classList.add('on'); bindCards(box);
             });
