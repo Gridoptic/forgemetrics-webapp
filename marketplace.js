@@ -1835,9 +1835,10 @@
         host.innerHTML =
             searchHtml('Поиск по каналу или нише…') +
             '<div class="fmx-mkhelper"><b>Покупаешь рекламу</b> — выбирай канал в ленте ниже.<br><b>Продаёшь</b> — выстави свой оффер:</div>' +
-            '<div class="fmx-sellcta" id="fmx-sellcta"><div class="fmx-sellcta-ic"><i class="ti ti-plus"></i></div>' +
-            '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">Выставить свой канал</div><div class="s" id="fmx-sellcta-s">Оформи оффер — его увидят покупатели</div></div>' +
-            '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>' +
+            /* стартовое состояние блока — сразу из уже загруженных офферов (после кабинета они
+               в памяти), иначе updateSellCta досоздаст его при первом заходе. Без этого при
+               возврате из кабинета мелькало «Выставить канал» до асинхронной дозагрузки */
+            _sellCtaHtml() +
             /* сегмент «Заявки рекламодателей» убран 16.07.2026 по решению владельца:
                от концепции заявок ушли, вход не открываем (экран renderSell спит) */
             '<div id="fmx-sub"></div>';
@@ -1850,21 +1851,38 @@
         updateSellCta();
         renderBuy();
     }
+    /* блок «Мой оффер» по текущему известному состоянию _myListings (синхронно, без асинк-мелькания) */
+    function _sellCtaSub() {
+        if (_myListings && _myListings.length) {
+            var st = _myListings.length > 1
+                ? _myListings.length + ' ' + _plural(_myListings.length, 'оффер', 'оффера', 'офферов')
+                : (_myListings[0].status_human || 'Оффер');
+            return st + ' · нажми, чтобы управлять';
+        }
+        return 'Оформи оффер — его увидят покупатели';
+    }
+    function _sellCtaHtml() {
+        var has = _myListings && _myListings.length;
+        return '<div class="fmx-sellcta" id="fmx-sellcta">' +
+            '<div class="fmx-sellcta-ic"><i class="ti ' + (has ? 'ti-adjustments-horizontal' : 'ti-plus') + '"></i></div>' +
+            '<div class="fmx-sellcta-t"><div class="n" id="fmx-sellcta-n">' + (has ? 'Мой оффер' : 'Выставить свой канал') + '</div>' +
+            '<div class="s" id="fmx-sellcta-s">' + _esc(_sellCtaSub()) + '</div></div>' +
+            '<i class="ti ti-chevron-right fmx-sellcta-go"></i></div>';
+    }
+    function _paintSellCta() {
+        if (_mainTab !== 'market' || _subTab !== 'buy') return;
+        var n = el('fmx-sellcta-n'), s = el('fmx-sellcta-s'), cta = el('fmx-sellcta');
+        if (!n || !s || !cta) return;
+        var has = _myListings && _myListings.length;
+        n.textContent = has ? 'Мой оффер' : 'Выставить свой канал';
+        var ic = cta.querySelector('.fmx-sellcta-ic i');
+        if (ic) ic.className = 'ti ' + (has ? 'ti-adjustments-horizontal' : 'ti-plus');
+        _mqText(s, _sellCtaSub());   // бегущая строка для узких экранов
+    }
     function updateSellCta() {
         if (typeof loadMyListings !== 'function') return;
-        loadMyListings().then(function () {
-            if (_mainTab !== 'market' || _subTab !== 'buy') return;
-            var n = el('fmx-sellcta-n'), s = el('fmx-sellcta-s'); if (!n || !s) return;
-            var cta = el('fmx-sellcta'), ic = cta ? cta.querySelector('.fmx-sellcta-ic i') : null;
-            if (_myListings && _myListings.length) {
-                n.textContent = 'Мой оффер';
-                var st = _myListings.length > 1
-                    ? _myListings.length + ' ' + _plural(_myListings.length, 'оффер', 'оффера', 'офферов')
-                    : (_myListings[0].status_human || 'Оффер');
-                _mqText(s, st + ' · нажми, чтобы управлять');
-                if (ic) ic.className = 'ti ti-adjustments-horizontal';
-            }
-        }).catch(function () {});
+        _paintSellCta();   // уже знаем офферы — сразу верное состояние, без мелькания
+        loadMyListings().then(_paintSellCta).catch(function () {});
     }
     function setSubTab(t, force) {
         if (!force && t === _subTab && el('fmx-sub')) return;
