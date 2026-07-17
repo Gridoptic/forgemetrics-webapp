@@ -42,6 +42,28 @@
     var _faqTab = 'rules';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
     var _stickers = null;  // коллекция стикеров юзера
+
+    /* ===== БИРЖА 3.0: рыночный каталог форматов (нотация X/Y = часов в топе / часов в ленте) =====
+       Костяк = тайм-форматы + натив + репост; доп-опции = закреп/кружок/сторис. Подпись (n) едет
+       в базу и совпадает с VALID_FORMATS на бэке; почасовая расшифровка (sub) — только на фронте.
+       preset — стартовая цена (владелец правит); base — опорный формат для нормализации CPM. */
+    var FMT_CATALOG = [
+        { k: 'h1_24',  n: '1/24',         sub: '1 ч в топе · 24 ч в ленте',           core: true,  base: true, preset: 5500 },
+        { k: 'h2_48',  n: '2/48',         sub: '2 ч в топе · 48 ч в ленте · охват выше', core: true,             preset: 5900 },
+        { k: 'h3_72',  n: '3/72',         sub: '3 ч в топе · 72 ч в ленте',           core: true,             preset: 6200 },
+        { k: 'd7',     n: '7 дней',       sub: '3 ч в топе · 7 дней в ленте',         core: true,             preset: 9000 },
+        { k: 'perm',   n: 'Без удаления', sub: '3 ч в топе · остаётся 30 дней или навсегда · премиум', core: true, preset: 11000 },
+        { k: 'native', n: 'Нативный',     sub: 'Автор пишет сам по ТЗ · доверие и конверсия выше', core: true, preset: 11000 },
+        { k: 'repost', n: 'Репост',       sub: 'Пересылка вашего поста · по правилам 1/24', core: true,        preset: 5000 },
+        { k: 'pinned', n: 'Закреп',       sub: 'Закрепление в шапке · надбавка к формату', core: false,       preset: 2500 },
+        { k: 'circle', n: 'Кружок',       sub: 'Видеосообщение внутри поста',         core: false,            preset: 5000 },
+        { k: 'stories', n: 'Сторис',      sub: 'Отдельный тип площадки, не пост в ленте', core: false,        preset: 3000 }
+    ];
+    var FMT_LEGACY = { post_24h: 'h1_24', feed_native: 'native' };   // старые ключи → новые
+    var _FMT_BY_K = {}; FMT_CATALOG.forEach(function (f) { _FMT_BY_K[f.k] = f; });
+    function _fmtKey(k) { return FMT_LEGACY[k] || k; }
+    function _fmtMeta(k) { return _FMT_BY_K[_fmtKey(k)] || null; }
+    function _isCode(n) { return /^\d+\/\d+$/.test(n || ''); }   // «1/24» — моно-бейдж, «Нативный» — обычный
     function onTap(node, fn) {
         var t = 0;
         node.addEventListener('touchend', function (e) { t = Date.now(); e.preventDefault(); fn(e); }, { passive: false });
@@ -190,7 +212,17 @@
         return m;
     }
     function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
-    function _cpm(l) { var p = _minPrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
+    /* Цена опорного формата 1/24 — по ней считается headline-CPM (нормализация к рынку). Нет 1/24 → min_price. */
+    function _basePrice(l) {
+        if (typeof l.base_price === 'number' && l.base_price > 0) return l.base_price;
+        if (l.formats && l.formats.length) {
+            for (var i = 0; i < l.formats.length; i++) {
+                if (_fmtKey(l.formats[i].format) === 'h1_24' && l.formats[i].price) return l.formats[i].price;
+            }
+        }
+        return _minPrice(l);
+    }
+    function _cpm(l) { var p = _basePrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
     var _nicheMap = null;  // словарь канонов с бэка; работает и без него (запасные основы)
     function loadNicheMap() {
         if (_nicheMap !== null) return;
@@ -450,6 +482,29 @@
             '.fmx-box{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0;transition:all 150ms;}',
             '.fmx-chk.on .fmx-box{background:#6366f1;border-color:#6366f1;}',
             '.fmx-pinp{width:96px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;font-size:12px;color:#e8e8ed;text-align:right;outline:none;}',
+            /* ===== БИРЖА 3.0: плитки форматов в редакторе ===== */
+            '.fmx-fgrp{margin-bottom:13px;}',
+            '.fmx-fghd{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:800;color:#565b73;margin:2px 2px 8px;}',
+            '.fmx-ft{display:flex;align-items:center;gap:11px;padding:11px 12px;border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;background:rgba(255,255,255,0.02);}',
+            '.fmx-ft.on{background:linear-gradient(135deg,rgba(129,140,248,0.1),rgba(129,140,248,0.02));border-color:rgba(129,140,248,0.4);}',
+            '.fmx-fsw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.1);position:relative;flex:0 0 auto;transition:background .16s;}',
+            '.fmx-fsw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .16s;}',
+            '.fmx-ft.on .fmx-fsw{background:#818cf8;}',
+            '.fmx-ft.on .fmx-fsw::after{left:19px;}',
+            '.fmx-ftm{flex:1;min-width:0;}',
+            '.fmx-ftt{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;}',
+            '.fmx-ftcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;font-weight:800;color:#818cf8;letter-spacing:-0.3px;}',
+            '.fmx-ftnm{font-size:13.5px;font-weight:700;color:#e8e8ed;letter-spacing:-0.2px;}',
+            '.fmx-ftbase{font-size:8.5px;font-weight:800;letter-spacing:0.3px;color:#5DCAA5;background:rgba(93,202,165,0.13);border-radius:5px;padding:1px 5px;}',
+            '.fmx-fts{font-size:10px;color:#8990a8;margin-top:2px;line-height:1.35;}',
+            '.fmx-ftr{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px;}',
+            '.fmx-ftpr{display:flex;align-items:center;gap:3px;}',
+            '.fmx-ftp{width:80px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 8px;font-size:12.5px;font-weight:700;color:#e8e8ed;text-align:right;outline:none;font-family:inherit;}',
+            '.fmx-ft.on .fmx-ftp{border-color:rgba(129,140,248,0.35);}',
+            '.fmx-ft:not(.on) .fmx-ftp{opacity:0.55;}',
+            '.fmx-ftpr .cur{font-size:11px;color:#8990a8;}',
+            '.fmx-ftc{font-size:9.5px;color:#5DCAA5;font-family:ui-monospace,Menlo,Consolas,monospace;min-height:12px;white-space:nowrap;}',
+            '.fmx-ft:not(.on) .fmx-ftc{color:#565b73;}',
             '.fmx-tog{display:flex;align-items:center;gap:10px;padding:11px;border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:9px;cursor:pointer;}',
             '.fmx-sw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.12);position:relative;transition:background 180ms;flex-shrink:0;}',
             '.fmx-sw i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left 180ms;}',
@@ -1050,6 +1105,11 @@
             '.fmx-fmt .pr{margin-left:auto;font-weight:700;white-space:nowrap;}',
             '.fmx-fmt .cp{color:#8990a8;font-size:10.5px;width:78px;text-align:right;white-space:nowrap;}',
             '.fmx-fmt .bd{width:7px;height:7px;border-radius:50%;background:#5DCAA5;flex:0 0 auto;}',
+            '.fmx-fmtnm{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1;}',
+            '.fmx-fmtnm>span{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-fmtsub{font-size:9px;color:#565b73;font-style:normal;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-guar{display:flex;align-items:flex-start;gap:7px;margin-top:9px;padding:9px 11px;border-radius:11px;background:rgba(245,191,79,0.06);border:0.5px dashed rgba(245,191,79,0.3);font-size:10px;color:#c9cbe0;line-height:1.5;}',
+            '.fmx-guar i.ti{color:#f5bf4f;font-size:13px;flex:0 0 auto;margin-top:1px;}',
             /* sticky-низ разворота */
             '.fmx-lsfoot{position:sticky;bottom:-15px;margin:14px -16px -15px;padding:12px 16px 15px;background:linear-gradient(180deg,transparent,rgba(18,21,35,0.97) 35%);display:flex;gap:8px;z-index:5;}',
             '.fmx-lsfoot .bm{flex:0 0 48px;}',
@@ -2090,7 +2150,8 @@
         if (!_pulse) loadPulse(function () { var tl = el('fmx-todayLine'); if (tl && _pulse) tl.innerHTML = todayLine(); });
     }
 
-    var REQ_FMT = { any: 'Любой формат', feed_native: 'В ленте', post_24h: 'На 24 часа', pinned: 'Закреплённый пост', stories: 'В сторис', circle: 'В кружке' };
+    var REQ_FMT = { any: 'Любой формат' };
+    FMT_CATALOG.forEach(function (f) { REQ_FMT[f.k] = f.n; });   // требования рекламодателя — те же рыночные форматы
     function loadRequests() {
         _reqState = 'loading';
         apiGet('/api/v1/marketplace/requests').then(function (r) {
@@ -2109,7 +2170,7 @@
     function reqCard(r) {
         var head = [];
         if (r.niche) head.push('<span class="fmx-reqn">' + _esc(r.niche) + '</span>');
-        head.push('<span class="fmx-reqf">' + (REQ_FMT[r.format] || REQ_FMT.any) + '</span>');
+        head.push('<span class="fmx-reqf">' + (REQ_FMT[_fmtKey(r.format)] || REQ_FMT.any) + '</span>');
         var cts = r.contacts ? ' · <span style="color:#f59e0b;">🔥 ' + r.contacts + ' ' + _plural(r.contacts, 'отклик', 'отклика', 'откликов') + '</span>' : '';
         var leads = '';
         if (r.mine && r.leads && r.leads.length) {
@@ -3908,12 +3969,10 @@
             coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
-        return [
-            { on: true, format: 'feed_native', n: 'В ленте', p: 5500 },
-            { on: false, format: 'pinned', n: 'Закреплённый пост', p: 8000 },
-            { on: false, format: 'stories', n: 'В сторис', p: 3000 },
-            { on: false, format: 'circle', n: 'В кружке', p: 3000 }
-        ];
+        /* все форматы каталога как строки редактора; по умолчанию включён только опорный 1/24 */
+        return FMT_CATALOG.map(function (f) {
+            return { on: !!f.base, format: f.k, n: f.n, p: f.preset, core: f.core, sub: f.sub, base: !!f.base };
+        });
     }
     function hydrate(l) {
         _ss.listingId = l.id;
@@ -3938,9 +3997,12 @@
         if (l.formats && l.formats.length) {
             _sfmts.forEach(function (f) { f.on = false; });
             l.formats.forEach(function (rf) {
-                var found = false;
-                _sfmts.forEach(function (f) { if (f.format === rf.format) { f.on = true; f.p = rf.price; found = true; } });
-                if (!found) _sfmts.push({ on: true, format: rf.format, n: rf.label || rf.format, p: rf.price });
+                var key = _fmtKey(rf.format), found = false;   // старый ключ → новый
+                _sfmts.forEach(function (f) { if (f.format === key) { f.on = true; f.p = rf.price; found = true; } });
+                if (!found) {
+                    var m = _fmtMeta(key);
+                    _sfmts.push({ on: true, format: key, n: m ? m.n : (rf.label || key), p: rf.price, core: m ? m.core : false, sub: m ? m.sub : '', base: m ? !!m.base : false });
+                }
             });
         }
         _ss._desc = l.custom_text || '';
@@ -4479,20 +4541,50 @@
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
+    function _fmtTile(f, i, av) {
+        var c = (f.on && av && f.p) ? Math.round(f.p / av * 1000) : null;
+        var title = _isCode(f.n)
+            ? '<span class="fmx-ftcode">' + _esc(f.n) + '</span>'
+            : '<span class="fmx-ftnm">' + _esc(f.n) + '</span>';
+        if (f.base) title += '<span class="fmx-ftbase">база</span>';
+        return '<div class="fmx-ft' + (f.on ? ' on' : '') + '" data-fi="' + i + '">' +
+            '<div class="fmx-fsw"></div>' +
+            '<div class="fmx-ftm"><div class="fmx-ftt">' + title + '</div>' +
+            (f.sub ? '<div class="fmx-fts">' + _esc(f.sub) + '</div>' : '') + '</div>' +
+            '<div class="fmx-ftr"><div class="fmx-ftpr"><input class="fmx-ftp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100" min="0" max="999999" inputmode="numeric"><span class="cur">₽</span></div>' +
+            '<div class="fmx-ftc">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : (f.on ? '' : 'выкл')) + '</div></div></div>';
+    }
     function fmtRows() {
-        return _sfmts.map(function (f, i) {
-            return '<div class="fmx-chk' + (f.on ? ' on' : '') + '" data-fi="' + i + '"><div class="fmx-box"><i class="ti ti-check"></i></div><span style="font-size:12.5px;flex:1;">' + _esc(f.n) + '</span>' +
-                (f.on ? '<input class="fmx-pinp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100" min="0" max="999999"><span style="font-size:11px;color:#8990a8;margin-left:5px;">₽</span>' : '<span style="font-size:11px;color:#565b73;">выкл</span>') + '</div>';
-        }).join('');
+        var av = (curChannel() || {}).avg_views || 0, core = [], sec = [];
+        _sfmts.forEach(function (f, i) { (f.core ? core : sec).push(_fmtTile(f, i, av)); });
+        var h = '<div class="fmx-fgrp"><div class="fmx-fghd">Основные форматы</div>' + core.join('') + '</div>';
+        if (sec.length) h += '<div class="fmx-fgrp"><div class="fmx-fghd">Доп-опции</div>' + sec.join('') + '</div>';
+        return h;
     }
     function panePrice() {
-        var note = '<div class="fmx-note" style="margin-top:4px;"><i class="ti ti-bulb"></i> Цену задаёшь сам. Ориентируйся на CPM и охват канала — так рекламодателю проще сравнить. Включённые форматы видны в оффере.</div>';
+        var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i> Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
         return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots;
     }
     function bindFmtRows() {
-        qsa(el('fmx-fmts'), '.fmx-chk').forEach(function (c) { c.addEventListener('click', function (ev) { if (ev.target && ev.target.classList && ev.target.classList.contains('fmx-pinp')) return; var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light'); el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero(); }); });
-        qsa(el('fmx-fmts'), '[data-pi]').forEach(function (inp) { inp.addEventListener('click', function (e) { e.stopPropagation(); }); inp.addEventListener('input', function () { var v = Math.max(0, Math.min(999999, +inp.value || 0)); _sfmts[+inp.getAttribute('data-pi')].p = v; if ((+inp.value || 0) > 999999) inp.value = v; _heroDebounced(); }); });
+        qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
+            c.addEventListener('click', function (ev) {
+                if (ev.target && ev.target.classList && (ev.target.classList.contains('fmx-ftp') || ev.target.classList.contains('cur'))) return;
+                var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light');
+                el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero();
+            });
+        });
+        qsa(el('fmx-fmts'), '.fmx-ftp').forEach(function (inp) {
+            inp.addEventListener('click', function (e) { e.stopPropagation(); });
+            inp.addEventListener('input', function () {
+                var v = Math.max(0, Math.min(999999, +inp.value || 0)), idx = +inp.getAttribute('data-pi');
+                _sfmts[idx].p = v; if ((+inp.value || 0) > 999999) inp.value = v;
+                var cell = inp.closest('.fmx-ft'), cc = cell ? cell.querySelector('.fmx-ftc') : null;
+                var av = (curChannel() || {}).avg_views || 0;
+                if (cc && _sfmts[idx].on) cc.textContent = (av && v) ? 'CPM ' + _num(Math.round(v / av * 1000)) + ' ₽' : '';
+                _heroDebounced();
+            });
+        });
     }
     function bindPrice() {
         bindFmtRows();
@@ -6778,14 +6870,17 @@
                 '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;" id="fmx-fmtl" class="num">' +
                 l.formats.map(function (f) {
                     var lb = _esc(f.label || f.format);
+                    var m = _fmtMeta(f.format), sub = m && m.sub ? _esc(m.sub) : '';
                     var c = (f.price && l.avg_views) ? Math.round(f.price / l.avg_views * 1000) : null;
                     var isBest = c != null && bestCpm != null && Math.abs(c - Math.round(bestCpm)) < 1 && l.formats.length > 1;
                     return '<div class="fmx-fmt' + ((f.label || f.format) === _lsSel.fmt ? ' on' : '') + '" data-fmt="' + lb + '" data-p="' + (f.price || '') + '">' +
-                        (isBest ? '<span class="bd"></span>' : '') + '<span>' + lb + '</span>' +
+                        (isBest ? '<span class="bd"></span>' : '') +
+                        '<div class="fmx-fmtnm"><span>' + lb + '</span>' + (sub ? '<i class="fmx-fmtsub">' + sub + '</i>' : '') + '</div>' +
                         '<span class="pr">' + (f.price ? _num(f.price) + ' ₽' : 'по договорённости') + '</span>' +
                         '<span class="cp">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : '') + '</span></div>';
                 }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. Тап по строке подставит формат в сообщение</div>';
+                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. Тап по строке подставит формат в сообщение</div>' +
+                '<div class="fmx-guar"><i class="ti ti-shield-half"></i> <span>Сейчас — прямой контакт с владельцем. Сделка с гарантом, бронью по времени и маркировкой — в разработке.</span></div>';
         }
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
         el('fmx-listBody').innerHTML =
