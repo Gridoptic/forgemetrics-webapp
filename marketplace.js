@@ -875,11 +875,6 @@
             '.fmx-accb{max-height:0;overflow:hidden;transition:max-height 320ms ease;}',
             '.fmx-acc.open .fmx-accb{max-height:1400px;}',
             '.fmx-acci{padding:2px 13px 15px;}',
-            '#fmx-mini{position:absolute;left:0;right:0;top:60px;z-index:45;padding:6px 14px;transform:translateY(-16px);opacity:0;visibility:hidden;transition:transform 240ms cubic-bezier(.2,.8,.2,1),opacity 200ms,visibility 240ms;pointer-events:none;}',
-            '#fmx-mini.on{transform:translateY(0);opacity:1;visibility:visible;}',
-            '#fmx-mini .in{max-width:640px;margin:0 auto;background:rgba(13,16,28,0.92);backdrop-filter:blur(10px);border:0.5px solid rgba(255,255,255,0.12);border-radius:13px;padding:6px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 10px 28px rgba(0,0,0,0.5);pointer-events:auto;cursor:pointer;}',
-            '#fmx-mini .mini-cov{width:40px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}',
-            '#fmx-mini .mini-av{transform:scale(0.7);margin:-8px -7px;flex-shrink:0;}',
             '.fmx-entq{font-size:13px;color:#8990a8;margin-bottom:12px;}',
             '.fmx-ent{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;cursor:pointer;margin-bottom:11px;transition:border-color 160ms,transform 160ms,background 160ms;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
             '.fmx-ent:active{transform:scale(0.99);}',
@@ -1181,7 +1176,7 @@
             '.fmx-hsb{height:4px;border-radius:4px;background:rgba(255,255,255,0.08);position:relative;margin:2px 2px 10px;cursor:pointer;touch-action:none;}',
             /* тап-зона шире видимой полоски — палец попадает без прицеливания */
             '.fmx-hsb::before{content:"";position:absolute;left:0;right:0;top:-12px;bottom:-12px;}',
-            '.fmx-hsb i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:rgba(255,255,255,0.28);pointer-events:none;}',
+            '.fmx-hsb i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:linear-gradient(90deg,#5DCAA5,#34d399);box-shadow:0 0 8px rgba(93,202,165,0.35);opacity:0.85;pointer-events:none;}',
             '.fmx-hsb.tight{margin-bottom:0;}',
             /* растворение правого края, пока справа есть скрытые кнопки */
             '.fmx-hfade.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);}',
@@ -1223,7 +1218,6 @@
             '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
-            '<div id="fmx-mini"><div class="in" id="fmx-miniIn"></div></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
         _root = d;
@@ -1242,8 +1236,6 @@
             if (_mainTab !== 'enter') setMainTab('enter'); else close();
         });
         document.addEventListener('click', function (e) { var dd = el('fmx-chdd'); if (dd && dd.classList.contains('on') && !dd.contains(e.target)) dd.classList.remove('on'); });
-        el('fmx-scrollEl').addEventListener('scroll', checkMini, { passive: true });
-        el('fmx-mini').addEventListener('click', function () { _haptic('light'); el('fmx-scrollEl').scrollTo({ top: 0, behavior: 'smooth' }); });
         buildModals();
         window.addEventListener('resize', function () { if (el('fmx-subtabs')) movePill('fmx-subtabs', 'fmx-subpill'); if (el('fmx-pult')) movePill('fmx-pult', 'fmx-pultpill'); if (el('fmx-panes')) sizePanes(); _mqMeasure(el('fmx-htitle')); _mqMeasure(el('fmx-hsub')); _mqMeasure(el('fmx-sellcta-s')); });
     }
@@ -1370,7 +1362,6 @@
         else renderEnter();
         if (t !== 'market') _cmp = {};   // выбор сравнения не переживает уход с Площадки — иначе всплывал бы через день как глюк
         drawCmpBar();   // панель сравнения живёт только на ленте — при смене вкладки прячем
-        checkMini();
     }
 
     /* ===================== render: enter ===================== */
@@ -1832,7 +1823,6 @@
         if (_subTab === 'create' || _subTab === 'sell' || _subTab === 'mine') {
             host.innerHTML = '<div id="fmx-sub"></div>';  /* «назад» — только основная стрелка в шапке (fmx-back), дубль убран */
             if (_subTab === 'create') renderCreate(); else if (_subTab === 'sell') renderSell(); else renderMine();
-            checkMini();
             return;
         }
         /* по умолчанию — витрина офферов + заметная кнопка «выставить свой канал» */
@@ -1854,7 +1844,6 @@
         });
         updateSellCta();
         renderBuy();
-        checkMini();
     }
     function updateSellCta() {
         if (typeof loadMyListings !== 'function') return;
@@ -4019,30 +4008,17 @@
             renderPreview: function (box) {
                 var pl = _previewListing();
                 /* оба вида одним рендером (вердикт 14.07): карточка и под ней вид в списке;
-                   peek раскрывает их вместе на весь экран друг под другом */
+                   peek раскрывает их вместе на весь экран друг под другом.
+                   Стикер тут рисуем публичным слоем: _previewListing его нарочно обнуляет
+                   (в большом превью он живёт редакторским слоем, которого здесь нет). */
+                if (_ss && _ss.sticker && _ss.sticker.url) pl.sticker_json = _ss.sticker;
                 box.innerHTML = fullCard(pl) + '<div style="margin-top:12px;">' + listItem(pl) + '</div>';
                 try { hydrateTgs(box); } catch (e2) {}
             },
-            stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts); } catch (e2) { return String(Date.now()); } },
-            miniEl: el('fmx-mini')
+            stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts); } catch (e2) { return String(Date.now()); } }
         });
     }
-    function checkMini() {
-        var m = el('fmx-mini'); if (!m) return;
-        var show = false;
-        if (_mainTab === 'market' && _subTab === 'create') {
-            var h = el('fmx-hero'), sc = el('fmx-scrollEl');
-            if (h && sc && h.offsetHeight > 0) show = sc.scrollTop > (h.offsetTop + h.offsetHeight - 6);
-        }
-        m.classList.toggle('on', show);
-    }
-    function renderMini(accent, title, priceTxt) {
-        var box = el('fmx-miniIn'); if (!box) return;
-        box.innerHTML = '<div class="mini-av">' + avatarInner(accent) + '</div>' +
-            '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(title) + '</div><div style="font-size:10px;color:' + accent + ';font-weight:700;">от ' + priceTxt + '</div></div>' +
-            '<span style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:#8990a8;flex-shrink:0;">Наверх <i class="ti ti-arrow-up" style="font-size:13px;"></i></span>';
-        checkMini();
-    }
+    /* старая мини-плашка «Наверх» удалена (17.07): дублировала пульт с превью и наезжала на него */
     function accSec(id, icon, title, body) {
         return '<div class="fmx-acc" data-ac="' + id + '"><div class="fmx-acch"><div class="fmx-accic"><i class="ti ' + icon + '"></i></div><div style="flex:1;min-width:0;"><div class="fmx-acct">' + title + '</div><div class="fmx-accv" id="fmx-accv-' + id + '"></div></div><i class="ti ti-chevron-down fmx-accc"></i></div><div class="fmx-accb"><div class="fmx-acci">' + body + '</div></div></div>';
     }
@@ -5259,7 +5235,6 @@
             scaleCards(hl);
         }
         hydrateTgs(hero);
-        renderMini(_ss.color, pl.title, _priceFrom(pl));
     }
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
@@ -5507,7 +5482,6 @@
                 dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
                 dock.style.width = W.toFixed(1) + 'px';
                 dock.classList.toggle('dk-on', vis);
-                if (env.miniEl) env.miniEl.classList.remove('on');   // старая мини-шторка не дублирует новую
                 if (vis && !on) { lastKey = env.stateKey(); renderMini(); }
             } catch (e) {}
         }
