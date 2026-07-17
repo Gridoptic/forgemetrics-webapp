@@ -2515,6 +2515,7 @@
 
     function openOwnerCalendar(l) {
         var box = el('fmx-calBox'); if (!box) return;
+        _ownerSelDay = null;   // не тащим выбранный день из прошлого оффера
         var s = el('fmx-calSub'); if (s) s.textContent = '@' + (l.username || '') + ' — отмечай занятые дни, покупатели увидят свободные';
         box.innerHTML = loadHtml();
         showModal('fmx-calBg');
@@ -2761,7 +2762,7 @@
             if (isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
             var clickable = !past && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
             h += '<button class="' + cls + '"' + (clickable ? ' data-cd="' + iso + '"' : ' disabled') + '>' +
-                '<span class="fmx-sdn">' + d + '</span>' + (demand[iso] ? '<i class="dm"></i>' : '') + _dayDots(r, iso) + '</button>';
+                '<span class="fmx-sdn">' + d + '</span>' + (demand[iso] ? '<i class="dm"></i>' : '') + ((past || isBusy) ? '' : _dayDots(r, iso)) + '</button>';
         }
         h += '</div>' +
             '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
@@ -2771,7 +2772,7 @@
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-flame"></i><span>Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
-            (mode === 'edit' ? _ownerSlotsHtml(l, r) : '');   // владелец: настройка слотов по времени
+            (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _ownerSlotsHtml(l, r) + '</div>' : '');   // владелец: настройка слотов
         box.innerHTML = h;
         if (mode === 'edit') _bindOwnerSlots(box, l);
         qsa(box, '[data-nav]').forEach(function (b) {
@@ -2785,11 +2786,13 @@
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-cd');
                 if (mode === 'edit') {
-                    if (_slotCfg(r)) { _ownerSelDay = (_ownerSelDay === iso) ? null : iso; _haptic('light'); calDraw(box, l, 'edit'); }
-                    else { _calToggleDay(box, l, iso); }   // без слотов по времени — старое поведение (занять весь день)
+                    // день занят целиком (напр. до включения слотов) — тап освобождает его; иначе выбираем для настройки слотов
+                    if (_slotCfg(r) && !busy[iso]) { _ownerSelDay = (_ownerSelDay === iso) ? null : iso; _haptic('light'); calDraw(box, l, 'edit'); }
+                    else { _calToggleDay(box, l, iso); }
                     return;
                 }
                 if (busy[iso]) { _calWatchDay(box, l, iso); return; }
+                if (_lsSel.day !== iso) _lsSel.time = null;   // сменил день — сбрасываем время (как в полосе)
                 _lsSel.day = iso;
                 _haptic('light');
                 calDraw(box, l, 'view');
@@ -2836,7 +2839,7 @@
     var _ownerSelDay = null;   // день, выбранный владельцем для настройки занятости слотов (edit)
     var _SLOT_PRESETS = ['09:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '21:00'];
     function _tmin(t) { var p = String(t || '').split(':'); return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0); }
-    function _fmtT(m) { return Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0'); }
+    function _fmtT(m) { return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
     function _isPrime(m) { return (m >= 720 && m <= 900) || (m >= 1140 && m <= 1320); }   // полдень 12–15, вечер 19–22
     function _slotCfg(r) { return (r && r.slot_config && r.slot_config.times && r.slot_config.times.length) ? r.slot_config : null; }
     function _busyTimes(r) { var s = {}; (r.busy_times || []).forEach(function (x) { s[x] = 1; }); return s; }
@@ -2848,8 +2851,10 @@
     }
     function _dayDots(r, iso) {
         var s = _daySlot(r, iso); if (!s || !s.n) return '';
-        var show = Math.min(s.n, 4), fShow = Math.round(s.free / s.n * show), d = '';
-        for (var i = 0; i < show; i++) d += '<i class="' + (i < fShow ? 'f' : 'b') + '"></i>';
+        var show = Math.min(s.n, 4), fShow = Math.round(s.free / s.n * show);
+        if (s.free < s.n && fShow >= show) fShow = show - 1;   // есть занятый слот → хотя бы 1 серая точка
+        if (s.free > 0 && fShow <= 0) fShow = 1;               // есть свободный слот → хотя бы 1 зелёная
+        var d = ''; for (var i = 0; i < show; i++) d += '<i class="' + (i < fShow ? 'f' : 'b') + '"></i>';
         return '<span class="fmx-sdots">' + d + '</span>';
     }
 
@@ -2871,9 +2876,20 @@
             b.addEventListener('click', function () {
                 var tm = +b.getAttribute('data-ts');
                 _lsSel.time = (_lsSel.time === tm) ? null : tm;
-                _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+                _haptic('light'); _refreshBuyerExtra(box, l);   // точечно, без пересбора всей полосы (лаг)
             });
         });
+    }
+    /* точечная перерисовка ТОЛЬКО панели слотов + корзины (полосу дней не трогаем — она от времени не зависит) */
+    function _refreshBuyerExtra(box, l) {
+        var ex = box.querySelector('#fmx-buyerExtra');
+        if (!ex) { drawBuyerSlots(box, l); _syncWriteBtn(l); return; }
+        var r = _calData[l.id];
+        ex.innerHTML = _buyerSlotsHtml(l, r) + _basketHtml(l);
+        _bindBuyerSlots(box, l); _bindBasket(box, l);
+        qsa(box, '.fmx-dd.sel').forEach(function (c) { c.classList.remove('sel'); });
+        if (_lsSel.day) { var cell = box.querySelector('.fmx-dd[data-bd="' + _lsSel.day + '"]'); if (cell) cell.classList.add('sel'); }
+        _syncWriteBtn(l);
     }
 
     /* панель слотов для ВЛАДЕЛЬЦА: стандартные времена + режим «1 выход/сутки» + занятость по дню */
@@ -2935,10 +2951,22 @@
                     var key = _ownerSelDay + '|' + tm;
                     if (rr.busy) { if (r.busy_times.indexOf(key) < 0) r.busy_times.push(key); }
                     else { r.busy_times = r.busy_times.filter(function (x) { return x !== key; }); }
-                    _haptic('light'); calDraw(box, l, 'edit');
+                    _haptic('light'); _refreshOwnerExtra(box, l);   // точечно: панель + точки дня, без пересбора месяца (лаг)
                 }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
             });
         });
+    }
+    /* точечная перерисовка панели владельца + точек выбранного дня (без пересбора сетки месяца) */
+    function _refreshOwnerExtra(box, l) {
+        var ex = box.querySelector('#fmx-ownerExtra');
+        if (!ex) { calDraw(box, l, 'edit'); return; }
+        var r = _calData[l.id];
+        ex.innerHTML = _ownerSlotsHtml(l, r);
+        _bindOwnerSlots(box, l);
+        if (_ownerSelDay) {
+            var cell = box.querySelector('.fmx-sd[data-cd="' + _ownerSelDay + '"]');
+            if (cell) { var old = cell.querySelector('.fmx-sdots'); if (old) old.remove(); var h = _dayDots(r, _ownerSelDay); if (h) cell.insertAdjacentHTML('beforeend', h); }
+        }
     }
 
     /* Календарь разворота (вид закупщика), три состояния:
@@ -2989,7 +3017,7 @@
             if (isBusy && watch[iso]) cls += ' watch';
             var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
             h += '<div class="' + cls + '" data-bd="' + iso + '"><div class="c">' + d.getDate() + (demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
-                _dayDots(r, iso) + wlab + '</div>';
+                (isBusy ? '' : _dayDots(r, iso)) + wlab + '</div>';
             d.setDate(d.getDate() + 1);
         }
         h += '</div>' +
@@ -2999,8 +3027,7 @@
             (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> горящие −' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
-            _buyerSlotsHtml(l, r) +
-            _basketHtml(l) +
+            '<div id="fmx-buyerExtra">' + _buyerSlotsHtml(l, r) + _basketHtml(l) + '</div>' +
             '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
         /* полоса пересоздаётся при выборе даты — позицию прокрутки сохраняем, чтобы не отбрасывало к началу */
@@ -3019,11 +3046,14 @@
                 var iso = b.getAttribute('data-bd');
                 if (busy[iso]) { _calWatchBuyer(box, l, iso); return; }
                 if (_lsSel.day !== iso) _lsSel.time = null;   // сменил день — сбрасываем выбранное время
+                // день уже в заявке-корзине — не дублируем (иначе «25 июля, 25 июля» и счётчик+1)
+                if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
+                    _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light'); _refreshBuyerExtra(box, l); _redrawFullIfOpen(box, l); return;
+                }
                 _lsSel.day = iso;
                 _haptic('light');
-                drawBuyerSlots(box, l);
+                _refreshBuyerExtra(box, l);   // точечно: панель слотов+корзина+класс sel, полосу не пересобираем (лаг)
                 _redrawFullIfOpen(box, l);
-                _syncWriteBtn(l);
                 var dq = demand[iso];
                 toast(dq ? 'Дата выбрана. На неё уже ' + dq + ' ' + _plural(dq, 'запрос', 'запроса', 'запросов') + ' за неделю — решай быстрее'
                          : 'Дата выбрана — кнопка «Написать» обновилась');
@@ -3211,13 +3241,13 @@
             if (!_lsSel.basket.some(function (x) { return (x.day + '|' + (x.time == null ? '' : x.time)) === key; }))
                 _lsSel.basket.push({ day: _lsSel.day, time: _lsSel.time });
             _lsSel.day = null; _lsSel.time = null;
-            _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+            _haptic('light'); _refreshBuyerExtra(box, l);
             toast('Дата добавлена в заявку — выбери ещё или нажми «Написать»');
         });
         qsa(box, '.fmx-bchip').forEach(function (c) {
             c.addEventListener('click', function () {
                 _lsSel.basket.splice(+c.getAttribute('data-bi'), 1);
-                _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+                _haptic('light'); _refreshBuyerExtra(box, l);
             });
         });
     }
@@ -3396,6 +3426,7 @@
     /* лента кнопок с прокруткой: палец (pan-x), перетаскивание мышью, колесо; видимость на
        ЛЮБОМ устройстве — собственный индикатор-полоска под лентой (телефоны нативный скроллбар
        не рисуют) + растворение правого края как подсказка «дальше есть ещё» */
+    var _hsBars = [], _hsResizeBound = false;   // реестр полос + ОДИН глобальный resize (без утечки на пересоздании)
     function _hscrollify(bar, tight) {
         if (!bar || bar.__hsb) return;
         bar.__hsb = true;
@@ -3415,7 +3446,19 @@
         }
         bar.addEventListener('scroll', upd);
         setTimeout(upd, 0); setTimeout(upd, 400);
-        try { window.addEventListener('resize', upd); } catch (e) {}
+        /* resize через ОДИН глобальный слушатель + реестр: пересозданные полосы не плодят слушателей,
+           отсоединённый DOM отпускается (раньше каждый re-render навешивал вечный window-listener). */
+        bar.__hsUpd = upd;
+        _hsBars.push(bar);
+        if (!_hsResizeBound) {
+            _hsResizeBound = true;
+            try {
+                window.addEventListener('resize', function () {
+                    _hsBars = _hsBars.filter(function (b) { return b.isConnected; });
+                    _hsBars.forEach(function (b) { if (b.__hsUpd) b.__hsUpd(); });
+                });
+            } catch (e) {}
+        }
         /* индикатор интерактивный: тап по дорожке перематывает, бегунок можно вести пальцем/мышью */
         var sbDrag = false;
         function sbTo(clientX) {
@@ -4789,7 +4832,11 @@
             c.addEventListener('click', function (ev) {
                 if (ev.target && ev.target.classList && (ev.target.classList.contains('fmx-ftp') || ev.target.classList.contains('cur'))) return;
                 var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light');
-                el('fmx-fmts').innerHTML = fmtRows(); bindFmtRows(); renderHero();
+                // точечно: класс плитки + её CPM-ячейка, hero через дебаунс (не пересобираем все плитки)
+                c.classList.toggle('on', _sfmts[i].on);
+                var cc = c.querySelector('.fmx-ftc'), av = (curChannel() || {}).avg_views || 0, p = _sfmts[i].p;
+                if (cc) cc.textContent = (_sfmts[i].on && av && p) ? 'CPM ' + _num(Math.round(p / av * 1000)) + ' ₽' : (_sfmts[i].on ? '' : 'выкл');
+                _heroDebounced();
             });
         });
         qsa(el('fmx-fmts'), '.fmx-ftp').forEach(function (inp) {
