@@ -267,7 +267,7 @@
     }
     function _applySort(arr) {
         if (_sort === 'match') return arr.slice().sort(function (a, b) { return (_nicheMatch(b) ? 1 : 0) - (_nicheMatch(a) ? 1 : 0); });
-        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && nichesMatch(_nicheSel, l.niche); });
+        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && _nicheHit(_nicheSel, l.niche); });
         return arr;
     }
     function _hlInfo(l) {
@@ -563,6 +563,11 @@
             '.fmx-fx{border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;padding:7px 11px;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all 150ms;font-family:inherit;}',
             '.fmx-fx.on{background:rgba(99,102,241,0.14);color:#818cf8;border-color:rgba(99,102,241,0.3);}',
             '.fmx-fx.vip{border-color:rgba(245,191,79,0.3);color:#b9964d;}',
+            '.fmx-npg{font-size:10px;letter-spacing:0.11em;text-transform:uppercase;color:#565b73;margin:14px 2px 8px;display:flex;align-items:center;gap:8px;}',
+            '.fmx-npg:first-child{margin-top:2px;}',
+            '.fmx-npg::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.06);}',
+            '.fmx-npg+.fmx-fxw .fmx-fx .fmx-npn{margin-left:5px;font-size:9.5px;font-weight:700;color:#818cf8;}',
+            '.fmx-fx.on .fmx-npn{color:#a5b4fc;}',
             '.fmx-fx.vip.on{background:rgba(245,191,79,0.12);color:#f5bf4f;border-color:rgba(245,191,79,0.5);}',
             '.fmx-fx .ti-lock{font-size:10px;}',
             '.fmx-avw{position:relative;width:46px;height:46px;flex-shrink:0;}',
@@ -2149,7 +2154,7 @@
         });
     }
     function _applyBuyFilter(arr) {
-        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && nichesMatch(_nicheSel, l.niche); });
+        if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && _nicheHit(_nicheSel, l.niche); });
         /* «Под мою нишу» пересортировывает только умную выдачу — явную серверную сортировку не перебиваем */
         if (_sort === 'match' && _sortBuy === 'smart') return arr.slice().sort(function (a, b) { return (_nicheMatch(b) ? 1 : 0) - (_nicheMatch(a) ? 1 : 0); });
         return arr;
@@ -2533,24 +2538,90 @@
         renderSlotsBox(l, box);
     }
 
-    function openNichePick(niches) {
+    /* Полная таксономия ниш (рыночная). Чип: строка (совпадение = сам ярлык) или [ярлык, совпадение]
+       для «зонтичных» вертикалей (напр. «Нутра — вся» ловит все «Нутра · …» по токену «нутра»).
+       Совпадение канала считается через nichesMatch (токены), так что фильтр работает и по вертикали,
+       и по подниши без спец-логики. */
+    var NICHE_TAX = [
+        ['Арбитраж · Нутра', [['Нутра — вся', 'нутра'], 'Похудение', 'Потенция', 'Суставы', 'Диабет', 'Зрение', 'Слух', 'Паразиты / детокс', 'Гипертония', 'Простатит', 'Грибок', 'Варикоз', 'Геморрой', 'Омоложение', 'Иммунитет', 'БАДы / витамины', 'Спортпит', 'Кожа / волосы', 'Щитовидка / ЛОР']],
+        ['Арбитраж · Гемблинг и беттинг', [['Гемблинг — весь', 'гемблинг'], ['Беттинг — весь', 'беттинг'], 'Онлайн-казино', 'Слоты', 'Краш-игры', 'Live-казино', 'Крипто-казино', 'Покер', 'Ставки на спорт', 'Прогнозы / каперы']],
+        ['Арбитраж · Крипта и Web3', [['Крипта — вся', 'крипта'], 'Трейдинг', 'Сигналы / боты', 'Биржи / обменники', 'P2P', 'DeFi / стейкинг', 'NFT', 'Майнинг', 'Airdrop / launchpad', 'Кошельки', 'Обучение трейдингу']],
+        ['Арбитраж · Финансы и займы', [['Финансы — все', 'финансы'], 'Займы / МФО', 'Кредиты', 'Кредитные карты', 'Дебетовые карты', 'Ипотека', 'Автокредиты', 'Банкротство', 'Страхование', 'Кэшбэк', 'РКО']],
+        ['Арбитраж · Трейдинг и инвест', ['Форекс', 'Брокеры / акции', 'Инвест-платформы', 'Копитрейдинг', 'ПАММ / ДУ']],
+        ['Арбитраж · Товарка и e-commerce', [['Товарка — вся', 'товарка'], 'COD / наложенный платёж', 'Wow-товары', 'Одежда / обувь', 'Товары для дома', 'Реплики', 'Дропшиппинг', 'Маркетплейсы WB / Ozon', 'Обучение селлеров', 'Инструменты для продавцов']],
+        ['Арбитраж · Дейтинг, adult, прочее', ['Дейтинг', 'Знакомства СНГ', 'Adult · вебкам', 'Adult · подписки / OnlyFans', 'Adult · секс-товары', 'Свипстейки / розыгрыши', 'Установки приложений / PWA', 'Мобильные игры', 'VPN / утилиты', 'Эссе / дипломы', 'Инфобизнес / заработок', 'MLM / сетевой']],
+        ['Сервисы для арбитража', ['Антидетект-браузеры', 'Прокси-сервисы', 'Трекеры / аналитика', 'Платёжки / антифрод', 'CPA-сети / партнёрки', 'Обмен / P2P-крипта']],
+        ['Маркетинг и трафик', ['Арбитраж трафика', 'SMM / таргет', 'Контекстная реклама', 'Маркетинг / бренд', 'PR / реклама', 'Инфлюенс / блогеры', 'Копирайтинг', 'Медиабаинг', 'Лидген']],
+        ['Бизнес и деньги', ['Бизнес', 'Стартапы', 'Продажи', 'Менеджмент', 'Личные финансы', 'Инвестиции', 'Заработок', 'Малый бизнес', 'Франшизы', 'Оптовая торговля']],
+        ['IT и технологии', ['IT', 'Программирование', 'Нейросети / AI', 'Дизайн UX / UI', 'Кибербезопасность', 'Гаджеты / девайсы', 'Софт / приложения', 'Игры / гейминг', 'Киберспорт', 'Web3-разработка', 'No-code', 'DevOps', 'Data / ML']],
+        ['Новости и общество', ['Новости', 'Политика', 'Экономика', 'Расследования', 'Региональные новости', 'Военное / СВО', 'Право / юриспруденция', 'Общество', 'Международные отношения', 'История']],
+        ['Образование и развитие', ['Образование', 'Наука / научпоп', 'Языки / английский', 'Психология', 'Саморазвитие', 'Мотивация', 'Книги / литература', 'Цитаты', 'Философия', 'Продуктивность', 'Финграмотность']],
+        ['Здоровье, спорт, ЗОЖ', ['Здоровье / медицина', 'Ментальное здоровье', 'Фитнес', 'Питание / диетология', 'Спорт', 'Футбол', 'Хоккей', 'Баскетбол', 'Единоборства / ММА', 'Бег', 'Йога / медитация', 'Бодибилдинг']],
+        ['Стиль жизни и красота', ['Мода / стиль', 'Красота / бьюти', 'Косметология', 'Лайфстайл / блог', 'Знаменитости', 'Лайфхаки', 'Люкс', 'Для женщин', 'Для мужчин']],
+        ['Развлечения и медиа', ['Юмор / мемы', 'Кино / сериалы', 'Музыка', 'Аниме / манга', 'Видео / клипы', 'Подкасты', 'Афиша / события', 'Искусство', 'Фотография', 'Стикеры / гифки', 'Шок-контент']],
+        ['Дом, хобби, увлечения', ['Путешествия / туризм', 'Кулинария / рецепты', 'Дом / интерьер', 'Ремонт / строительство', 'Сад / огород / дача', 'Растения', 'Рукоделие', 'Охота / рыбалка', 'Авто / мото', 'Транспорт', 'Коллекционирование', 'Настольные игры']],
+        ['Люди и отношения', ['Отношения', 'Знакомства', 'Семья', 'Дети / родительство', 'Беременность / материнство', 'Питомцы / животные', 'Психология отношений']],
+        ['Эзотерика и религия', ['Астрология / гороскоп', 'Таро / гадания', 'Эзотерика', 'Религия', 'Духовность', 'Магия / ритуалы']],
+        ['B2B и отрасли', ['Госзакупки / тендеры', 'Юриспруденция / право', 'Бухгалтерия / налоги', '1С / учёт', 'HR / подбор', 'Логистика / ВЭД', 'Промышленность', 'Строительство', 'Коммерческая недвижимость', 'Сельское хозяйство / агро', 'Энергетика', 'Медицина для врачей', 'Фармацевтика', 'IT-B2B / SaaS', 'Оптовые поставки', 'Оценка бизнеса / M&A']],
+        ['Гео и релокация', ['Каналы по городам', 'Региональные', 'Каналы по странам', 'Диаспоры', 'Эмиграция / релокация', 'ВНЖ / гражданство', 'Недвижимость за рубежом', 'Жизнь за границей', 'Городские афиши', 'Барахолки / объявления']],
+        ['Служебное', ['Каталоги каналов', 'Агрегаторы / переходники', 'Объявления / барахолка', 'Утилиты / сервисы', 'Прочее']]
+    ];
+    function _chipLM(c) { return (typeof c === 'string') ? { l: c, m: c } : { l: c[0], m: c[1] }; }
+    /* Точное совпадение ниши: равенство, зонтичная вертикаль (по префиксу «Вертикаль · »)
+       или совпадение последней части (подниши). Без утечки по общим словам («спорт»). */
+    function _nicheHit(sel, niche) {
+        if (!sel || !niche) return false;
+        var s = String(sel).toLowerCase().replace(/ё/g, 'е').trim();
+        var n = String(niche).toLowerCase().replace(/ё/g, 'е').trim();
+        if (s === n) return true;
+        if (n.indexOf(s + ' · ') === 0) return true;
+        if (s.indexOf(n + ' · ') === 0) return true;
+        return s.split(' · ').pop() === n.split(' · ').pop();
+    }
+    function _nicheCounts(arr) {
+        var uniq = {};
+        (arr || []).forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn) uniq[nn] = (uniq[nn] || 0) + 1; });
+        var keys = Object.keys(uniq);
+        return function countFor(match) {
+            var total = 0;
+            for (var i = 0; i < keys.length; i++) if (_nicheHit(match, keys[i])) total += uniq[keys[i]];
+            return total;
+        };
+    }
+    function openNichePick() {
+        var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
+        var countFor = _nicheCounts(arr);
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
         bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm';
-        bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-filter" style="color:#818cf8;"></i> Какая ниша интересует?</div>' +
-            '<div class="fmx-fxw" style="max-height:46vh;overflow-y:auto;">' + niches.map(function (n) { return '<button class="fmx-fx" data-np="' + _esc(n) + '">' + _esc(n) + '</button>'; }).join('') + '</div>' +
-            '<div class="fmx-cfm-r" style="margin-top:12px;"><button class="fmx-btn" data-no>Отмена</button></div></div>';
+        bg.innerHTML = '<div class="fmx-cfm-box" style="max-width:520px;width:94%;">' +
+            '<div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</div>' +
+            '<div class="fmx-search" style="margin-bottom:10px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
+            '<div id="fmx-nlist" style="max-height:56vh;overflow-y:auto;margin:0 -4px;padding:0 4px;"></div>' +
+            '<div class="fmx-cfm-r" style="margin-top:12px;gap:8px;">' + (_nicheSel ? '<button class="fmx-btn" data-clear>Сбросить фильтр</button>' : '') + '<button class="fmx-btn" data-no>Закрыть</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
+        function pick(m) { _nicheSel = m; _sort = 'niche'; done(); _haptic('light'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }
+        function draw(q) {
+            q = (q || '').toLowerCase().replace(/ё/g, 'е').trim();
+            var html = '', hits = 0;
+            NICHE_TAX.forEach(function (g) {
+                var chips = g[1].map(_chipLM).filter(function (c) { return !q || c.l.toLowerCase().replace(/ё/g, 'е').indexOf(q) >= 0 || g[0].toLowerCase().indexOf(q) >= 0; });
+                if (!chips.length) return;
+                hits += chips.length;
+                html += '<div class="fmx-npg">' + _esc(g[0]) + '</div><div class="fmx-fxw">' + chips.map(function (c) {
+                    var n = countFor(c.m), sel = (_nicheSel && String(_nicheSel).toLowerCase() === String(c.m).toLowerCase());
+                    return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(c.m) + '">' + _esc(c.l) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
+                }).join('') + '</div>';
+            });
+            var box = el('fmx-nlist'); if (box) box.innerHTML = hits ? html : '<div style="color:#565b73;font-size:12.5px;text-align:center;padding:22px 4px;">Ничего не нашлось. Попробуй другое слово.</div>';
+            qsa(bg, '[data-m]').forEach(function (b) { b.addEventListener('click', function () { pick(b.getAttribute('data-m')); }); });
+        }
         bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
         bg.querySelector('[data-no]').addEventListener('click', done);
-        qsa(bg, '[data-np]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                _nicheSel = String(b.getAttribute('data-np')).toLowerCase().trim();
-                _sort = 'niche'; done(); _haptic('light');
-                if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
-            });
-        });
+        var cl = bg.querySelector('[data-clear]'); if (cl) cl.addEventListener('click', function () { _nicheSel = null; _sort = 'all'; done(); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); });
+        var inp = bg.querySelector('#fmx-nq'); if (inp) inp.addEventListener('input', function () { draw(inp.value); });
+        draw('');
     }
     var REP_REASONS = [['scam', 'Скам / обман'], ['fake_metrics', 'Накрутка метрик'], ['illegal', 'Запрещённый контент'], ['other', 'Другое']];
     function openComplaint(target) { /* target: {listing_id} | {request_id} */
@@ -6672,14 +6743,7 @@
         qsa(el('fmx-main'), '[data-sort]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var v = b.getAttribute('data-sort');
-                if (v === 'niche') {
-                    var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
-                    var seen = {}, niches = [];
-                    arr.forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
-                    if (!niches.length) { toast('В ленте пока нет каналов с указанной нишей'); return; }
-                    openNichePick(niches);
-                    return;
-                }
+                if (v === 'niche') { openNichePick(); return; }
                 _nicheSel = null;
                 _sort = v;
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
@@ -6691,7 +6755,7 @@
         return '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
-            '<button class="fmx-seg' + (_sort === 'niche' ? ' on' : '') + '" data-sort="niche"><i class="ti ti-filter"></i> Выбрать нишу</button></div>';
+            '<button class="fmx-seg' + (_sort === 'niche' ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i> ' + ((_sort === 'niche' && _nicheSel) ? _esc(String(_nicheSel).length > 16 ? String(_nicheSel).slice(0, 15) + '…' : _nicheSel) : 'Ниши') + '</button></div>';
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
     function vtogHtml() {
