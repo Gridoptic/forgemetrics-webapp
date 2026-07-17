@@ -2904,10 +2904,12 @@
         pk.innerHTML = '<div class="in"><div id="fmx-peekIn"></div></div>';
         document.body.appendChild(pk);
     }
+    /* удержание оффера (карточка ИЛИ строка списка) — полноэкранное превью витрины,
+       отпустил — убралось. На строке списка: если сработал peek, следующий тап НЕ раскрывает строку */
     function bindPeek(host) {
         _ensurePeek();
         var t = null;
-        qsa(host, '.fmx-card[data-u]').forEach(function (c) {
+        qsa(host, '.fmx-card[data-u], .fmx-li[data-u]').forEach(function (c) {
             c.addEventListener('pointerdown', function () {
                 clearTimeout(t);
                 t = setTimeout(function () {
@@ -2916,6 +2918,7 @@
                     var ok = renderTablo(l.expand_content_json, el('fmx-peekIn'), { cut: false });
                     if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">Владелец пока не оформил витрину оффера</div></div>';
                     el('fmx-peek').style.display = 'flex';
+                    c.__peeked = true;   // подавить раскрытие строки при отпускании
                     _haptic('light');
                 }, 450);
             });
@@ -6240,31 +6243,12 @@
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
             row.addEventListener('click', function () {
+                if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
                 if (li.classList.contains('on')) { li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; return; }
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
-                /* витрина оффера — и в упрощённом виде (как в полном развороте), если владелец её оформил */
-                var ec = l.expand_content_json;
-                if (ec && ec.els && ec.els.length) {
-                    var tw = document.createElement('div');
-                    tw.innerHTML = '<div class="fmx-lssect" style="margin-top:12px;">Витрина</div><div class="fmx-litabin"></div>';
-                    box.appendChild(tw);
-                    try {
-                        renderTablo(ec, tw.querySelector('.fmx-litabin'), { cut: true });
-                        /* тап по самой мини-витрине раскрывает её (кнопка «Развернуть» мелкая, палец
-                           естественно бьёт по превью) — а не сворачивает строку */
-                        var _vp = tw.querySelector('.fmx-tabvp'), _more = tw.querySelector('.fmx-tabmore');
-                        if (_vp && _more) {
-                            _vp.style.cursor = 'pointer';
-                            _vp.addEventListener('click', function (ev) {
-                                if (ev.target.closest('.fmx-tabmore') || ev.target.closest('.fmx-tabless')) return;
-                                if (!_vp.classList.contains('open')) { ev.stopPropagation(); _more.click(); }
-                            });
-                        }
-                    } catch (e9) {}
-                }
                 box.style.display = 'block'; li.classList.add('on'); bindCards(box);
             });
         });
