@@ -9,6 +9,7 @@
     var _view = 'cards';
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
+    var _adultOk = false;   // пользователь подтвердил возраст 18+ (приходит из /marketplace/base)
     /* поиск, сортировка, фильтры и пагинация ленты «Купить» (считает бэкенд) */
     var _q = '', _sortBuy = 'smart', _fPriceMin = null, _fPriceMax = null, _fSubsMin = null, _fAud = null;
     /* аудитория канала: пол основной ЦА (male|female|mixed) — ось «тема × пол» */
@@ -1883,6 +1884,7 @@
         _catState = 'loading';
         apiGet('/api/v1/marketplace/base').then(function (r) {
             _catalog = (r && r.channels) ? r.channels : []; _catState = 'ready';
+            _adultOk = !!(r && r.adult_ok);
             if (_mainTab === 'catalog') renderCatalog();
         }).catch(function () { _catState = 'error'; if (_mainTab === 'catalog') renderCatalog(); });
     }
@@ -1934,7 +1936,7 @@
         var list = _catList();
         if (!list.length) { box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.'); return; }
         box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
-        bindCards(box); if (_view === 'list') bindList(box);
+        bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
     }
     function renderCatalog() {
         var host = el('fmx-main');
@@ -6609,7 +6611,25 @@
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + ';opacity:0.55;" data-act="analyze" data-u="' + _esc(l.username) + '" title="AI-разбор подключается"><i class="ti ti-report-analytics"></i>Разбор · скоро</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
     }
+    function _ageTile() {
+        return '<div class="fmx-scard fmx-agel" data-agegate="1" style="cursor:pointer;text-align:center;padding:22px 14px;">' +
+            '<div style="font-size:27px;line-height:1;">🔞</div>' +
+            '<div style="font-weight:650;margin-top:7px;">Канал 18+</div>' +
+            '<div style="font-size:11.5px;color:#8990a8;margin-top:3px;">Нажмите, чтобы подтвердить возраст и открыть</div></div>';
+    }
+    function _askAge() {
+        uiConfirm('В этом разделе есть каналы с контентом 18+. Подтвердите, что вам исполнилось 18 лет.', function () {
+            apiPost('/api/v1/marketplace/confirm-age', {}).then(function () {
+                _adultOk = true;
+                if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+            }).catch(function () { toast('Не удалось — попробуй ещё раз.'); });
+        });
+    }
+    function _bindAgeGate(scope) {
+        qsa(scope || el('fmx-main'), '[data-agegate]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _askAge(); }); });
+    }
     function simpleCard(l) {
+        if (l.is_adult && !_adultOk) return _ageTile();
         var accent = _accent(l), hc = _healthColor(l), t = l.title || l.username || '?';
         return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';' + (l.avatar_url ? 'overflow:hidden;' : '') + '">' + (l.avatar_url ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" style="width:100%;height:100%;object-fit:cover;">' : _esc(t.charAt(0))) + '</div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
@@ -6642,6 +6662,7 @@
         }).join('');
     }
     function listItem(l, fx, plain) {
+        if (l.is_adult && !_adultOk) return _ageTile();
         /* золотая рамка миниатюры — по той же логике, что и большая карточка: в превью по тумблеру glowCard, в ленте — Топ + флаг */
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
