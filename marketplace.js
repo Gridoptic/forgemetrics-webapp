@@ -6284,7 +6284,17 @@
                 setTimeout(function () { del.classList.remove('arm'); }, 2200);
                 return;
             }
-            toggleBm(del.getAttribute('data-del')); openBookmarks();
+            /* удаляем строку из DOM сразу; НЕ перезагружаем список с сервера — иначе DELETE ещё
+               в полёте и ответ вернул бы закладку обратно (карточка мигала и не удалялась) */
+            var _u = del.getAttribute('data-del');
+            var _row = del.closest('.fmx-bmrow');
+            toggleBm(_u);
+            if (_bmMap) delete _bmMap[_u];
+            if (_row) _row.remove();
+            var _box = el('fmx-bmBody');
+            if (_box && !_box.querySelector('.fmx-bmrow')) {
+                _box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Отмечай ★ на офферах, чтобы сохранить канал.</p></div>';
+            }
             return;
         }
         var row = t.closest('#fmx-bmBody .fmx-bmrow');
