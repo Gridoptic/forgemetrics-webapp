@@ -1120,6 +1120,7 @@
             '.fmx-peak b{color:#e8e8ed;font-family:ui-monospace,Menlo,Consolas,monospace;}',
             '.fmx-peaktag{font-size:8px;font-weight:800;letter-spacing:0.3px;color:#5ab0e6;background:rgba(90,176,230,0.14);border-radius:5px;padding:1px 6px;}',
             '.fmx-tsl.peak{border-color:rgba(90,176,230,0.4);background:rgba(90,176,230,0.06);}',
+            '.fmx-tsl.sel.peak{border-color:rgba(129,140,248,0.5);background:rgba(129,140,248,0.1);}',   // выбор важнее подсветки пика
             '.fmx-htog{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:12px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.08);margin-top:2px;}',
             '.fmx-htl{flex:1;min-width:0;font-size:12.5px;font-weight:600;color:#e8e8ed;}',
             '.fmx-htl i{display:block;font-size:9.5px;color:#8990a8;font-style:normal;font-weight:400;margin-top:2px;}',
