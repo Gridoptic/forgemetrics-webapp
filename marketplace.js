@@ -1028,6 +1028,11 @@
             '.fmx-pwc .pw-hbig{display:flex;align-items:baseline;gap:8px;margin-top:2px;position:relative;flex-wrap:wrap;}',
             '.fmx-pwc .pw-hbig .v{font-size:27px;font-weight:800;letter-spacing:-0.9px;line-height:1;background:linear-gradient(135deg,#fff,#a7f0d4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}',
             '.fmx-pwc .pw-hbig .u{font-size:10.5px;color:#565b73;}',
+            /* спарклайн: реальная динамика канала (без данных блок пуст) */
+            '.pw-spark{margin:9px 0 3px;}',
+            '.pw-spark svg{display:block;width:100%;height:46px;}',
+            '.pw-sphead{display:flex;align-items:center;justify-content:space-between;font-size:9.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:4px;}',
+            '.pw-sphead b{font-size:11px;letter-spacing:0;}',
             '.fmx-pwc .pw-mrow{display:flex;align-items:stretch;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);position:relative;}',
             '.fmx-pwc .pw-mcell{flex:1;min-width:0;}',
             '.fmx-pwc .pw-ml{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.1px;font-weight:600;line-height:1.15;min-height:2.2em;display:flex;align-items:flex-end;}',
@@ -6625,6 +6630,7 @@
         return '<div class="fmx-pwc">' +
             '<div class="pw-hlab">Охват поста</div>' +
             '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div>' +
+            '<div class="pw-spark" id="fmx-pwspark"></div>' +
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
@@ -6639,6 +6645,38 @@
             '<div class="pw-mdiv"></div>' +
             cell('Прогноз охвата', '—', true) +
             '</div></div>';
+    }
+    /* спарклайн разворота: ТОЛЬКО реальные снимки динамики канала; меньше 3 точек — не рисуем */
+    function _pwTrend(l) {
+        var box = el('fmx-pwspark'); if (!box || !l.id) return;
+        apiGet('/api/v1/marketplace/listings/' + l.id + '/trend').then(function (r) {
+            var pts = (r && r.ok && r.points) || [];
+            if (pts.length < 3) { box.innerHTML = ''; return; }
+            var W = 320, H = 46;
+            var vals = pts.map(function (p) { return p.s; });
+            var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+            var pad = (mx - mn) * 0.18 || Math.max(1, mx * 0.02);
+            mn -= pad; mx += pad;
+            var n = pts.length;
+            var xy = pts.map(function (p, i) {
+                return [(i / (n - 1)) * (W - 8) + 4, H - 5 - (p.s - mn) / (mx - mn) * (H - 12)];
+            });
+            var line = xy.map(function (c) { return c[0].toFixed(1) + ',' + c[1].toFixed(1); }).join(' ');
+            var area = '4,' + (H - 2) + ' ' + line + ' ' + (W - 4) + ',' + (H - 2);
+            var last = xy[n - 1];
+            var delta = vals[vals.length - 1] - vals[0];
+            var dcol = delta > 0 ? '#5DCAA5' : (delta < 0 ? '#ef8080' : '#8990a8');
+            var dtx = (delta > 0 ? '+' : '') + _num(delta);
+            box.innerHTML =
+                '<div class="pw-sphead"><span>Подписчики · ' + n + ' замер' + _plural(n, '', 'а', 'ов') + '</span>' +
+                '<b style="color:' + dcol + ';">' + dtx + '</b></div>' +
+                '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
+                '<defs><linearGradient id="pwsg" x1="0" y1="0" x2="0" y2="1">' +
+                '<stop offset="0" stop-color="rgba(93,202,165,0.26)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient></defs>' +
+                '<polygon points="' + area + '" fill="url(#pwsg)"/>' +
+                '<polyline points="' + line + '" fill="none" stroke="#5DCAA5" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>' +
+                '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2.4" fill="#5DCAA5"/></svg>';
+        }).catch(function () { box.innerHTML = ''; });
     }
     function _trustRows(l) {
         var dealN = l.deals_count || 0;
@@ -6748,6 +6786,7 @@
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         if (l.id) {
+            _pwTrend(l);
             loadBuyerSlots(el('fmx-slotsBox'), l, function (r) {
                 /* живые значения доверия */
                 var av = el('fmx-tr-accv');
