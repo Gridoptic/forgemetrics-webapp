@@ -505,6 +505,9 @@
             '.fmx-ftpr .cur{font-size:11px;color:#8990a8;}',
             '.fmx-ftc{font-size:9.5px;color:#5DCAA5;font-family:ui-monospace,Menlo,Consolas,monospace;min-height:12px;white-space:nowrap;}',
             '.fmx-ft:not(.on) .fmx-ftc{color:#565b73;}',
+            '.fmx-eridseg{display:flex;gap:7px;margin-top:2px;}',
+            '.fmx-eridb{flex:1;min-width:0;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:#8990a8;font-family:inherit;font-size:11px;font-weight:700;padding:10px 5px;border-radius:11px;cursor:pointer;line-height:1.25;transition:all .15s;}',
+            '.fmx-eridb.on{background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.4);color:#c7cdff;}',
             '.fmx-tog{display:flex;align-items:center;gap:10px;padding:11px;border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:9px;cursor:pointer;}',
             '.fmx-sw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.12);position:relative;transition:background 180ms;flex-shrink:0;}',
             '.fmx-sw i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left 180ms;}',
@@ -1067,6 +1070,39 @@
             '.fmx-dd.hot .c{background:rgba(245,191,79,0.12);color:#f5bf4f;border-color:rgba(245,191,79,0.5);}',
             '.fmx-dd.watch .c{box-shadow:inset 0 0 0 1.5px rgba(245,191,79,0.65);}',
             '.fmx-slmore{width:100%;margin-top:10px;}',
+            /* ===== БИРЖА 3.0 P1: слоты по времени ===== */
+            '.fmx-tslots{margin-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);padding-top:10px;}',
+            '.fmx-tslh{font-size:10.5px;font-weight:800;color:#c9cbe0;display:flex;align-items:center;gap:6px;margin-bottom:8px;}',
+            '.fmx-tslh i{color:#818cf8;}',
+            '.fmx-tsl{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:11px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.08);margin-bottom:6px;cursor:pointer;}',
+            '.fmx-tsl .tm{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;font-weight:800;width:46px;flex:0 0 auto;}',
+            '.fmx-tsl .st{margin-left:auto;font-size:10px;font-weight:700;color:#5DCAA5;}',
+            '.fmx-tsl.sel{border-color:rgba(129,140,248,0.5);background:rgba(129,140,248,0.1);}',
+            '.fmx-tsl.sel .st{color:#c7cdff;}',
+            '.fmx-tsl.bs{opacity:0.5;cursor:default;}',
+            '.fmx-tsl.bs .st{color:#565b73;}',
+            '.fmx-tsl[data-otog] .st{margin-left:0;}',
+            '.fmx-primetag{font-size:8px;font-weight:800;letter-spacing:0.3px;color:#f5bf4f;background:rgba(245,191,79,0.13);border-radius:5px;padding:1px 5px;}',
+            '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
+            '.fmx-osw::after{content:"";position:absolute;top:3px;left:17px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s;}',
+            '.fmx-osw.busy{background:rgba(255,255,255,0.12);}',
+            '.fmx-osw.busy::after{left:3px;}',
+            '.fmx-tsetup{margin-top:12px;border-top:0.5px solid rgba(255,255,255,0.08);padding-top:12px;}',
+            '.fmx-tsh{font-size:11px;font-weight:800;color:#c9cbe0;display:flex;align-items:center;gap:7px;margin-bottom:6px;}',
+            '.fmx-tsh i{color:#818cf8;}',
+            '.fmx-tshint{font-size:10px;color:#8990a8;line-height:1.5;margin-bottom:10px;}',
+            '.fmx-tchips{display:flex;flex-wrap:wrap;gap:6px;}',
+            '.fmx-tchip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;font-weight:700;padding:7px 11px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:#8990a8;cursor:pointer;}',
+            '.fmx-tchip.on{background:rgba(129,140,248,0.15);border-color:rgba(129,140,248,0.4);color:#c7cdff;}',
+            '.fmx-tchip.prime.on{background:rgba(245,191,79,0.14);border-color:rgba(245,191,79,0.42);color:#f5d78a;}',
+            '.fmx-tswrow{display:flex;align-items:center;gap:10px;margin-top:11px;font-size:12px;color:#c9cbe0;}',
+            '.fmx-tswrow span{flex:1;font-weight:600;}',
+            '.fmx-tswrow span i{display:block;font-size:9.5px;color:#8990a8;font-style:normal;font-weight:400;margin-top:1px;}',
+            '.fmx-tsw2{width:40px;height:23px;border-radius:99px;background:rgba(255,255,255,0.1);position:relative;flex:0 0 auto;cursor:pointer;}',
+            '.fmx-tsw2::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s;}',
+            '.fmx-tsw2.on{background:#818cf8;}',
+            '.fmx-tsw2.on::after{left:20px;}',
+            '.fmx-tsave{width:100%;margin-top:11px;}',
             /* нижняя шторка (утверждённый паттерн макета) */
             '.fmx-shbg{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9400;display:none;}',
             '.fmx-shbg.on{display:block;}',
@@ -2706,6 +2742,7 @@
             if (!past && !isBusy && hot[iso]) cls += ' hot';
             if (iso === todayIso) cls += ' today';
             if (!past && mode === 'view' && _lsSel && _lsSel.day === iso) cls += ' sel';
+            if (!past && mode === 'edit' && _ownerSelDay === iso) cls += ' sel';   // выбран для настройки слотов
             if (isBusy && watch[iso]) cls += ' watch';
             if (isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
             var clickable = !past && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
@@ -2719,8 +2756,10 @@
             '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-flame"></i><span>Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
-            (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '');
+            (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
+            (mode === 'edit' ? _ownerSlotsHtml(l, r) : '');   // владелец: настройка слотов по времени
         box.innerHTML = h;
+        if (mode === 'edit') _bindOwnerSlots(box, l);
         qsa(box, '[data-nav]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var nm = m + parseInt(b.getAttribute('data-nav'), 10);
@@ -2731,7 +2770,11 @@
         qsa(box, '[data-cd]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-cd');
-                if (mode === 'edit') { _calToggleDay(box, l, iso); return; }
+                if (mode === 'edit') {
+                    if (_slotCfg(r)) { _ownerSelDay = (_ownerSelDay === iso) ? null : iso; _haptic('light'); calDraw(box, l, 'edit'); }
+                    else { _calToggleDay(box, l, iso); }   // без слотов по времени — старое поведение (занять весь день)
+                    return;
+                }
                 if (busy[iso]) { _calWatchDay(box, l, iso); return; }
                 _lsSel.day = iso;
                 _haptic('light');
@@ -2775,6 +2818,103 @@
             calDraw(box, l, 'view');
         }).catch(function () {});
     }
+    /* ==================== Слоты по времени (P1) ==================== */
+    var _ownerSelDay = null;   // день, выбранный владельцем для настройки занятости слотов (edit)
+    var _SLOT_PRESETS = ['09:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '21:00'];
+    function _tmin(t) { var p = String(t || '').split(':'); return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0); }
+    function _fmtT(m) { return Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0'); }
+    function _isPrime(m) { return (m >= 720 && m <= 900) || (m >= 1140 && m <= 1320); }   // полдень 12–15, вечер 19–22
+    function _slotCfg(r) { return (r && r.slot_config && r.slot_config.times && r.slot_config.times.length) ? r.slot_config : null; }
+    function _busyTimes(r) { var s = {}; (r.busy_times || []).forEach(function (x) { s[x] = 1; }); return s; }
+
+    /* панель слотов дня для ПОКУПАТЕЛЯ: выбор свободного времени выхода */
+    function _buyerSlotsHtml(l, r) {
+        var cfg = _slotCfg(r); if (!cfg || !_lsSel || !_lsSel.day) return '';
+        var bt = _busyTimes(r), day = _lsSel.day, pct = cfg.prime_pct || 0;
+        var rows = cfg.times.map(function (t) {
+            var tm = _tmin(t.t), isBusy = !!bt[day + '|' + tm], sel = (_lsSel.time === tm);
+            return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
+                '<span class="tm">' + _esc(t.t) + '</span>' +
+                (t.prime ? '<span class="fmx-primetag">прайм' + (pct ? ' +' + pct + '%' : '') + '</span>' : '') +
+                '<span class="st">' + (isBusy ? 'Занято' : (sel ? 'Выбрано ✓' : 'Свободно')) + '</span></div>';
+        }).join('');
+        return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + rows + '</div>';
+    }
+    function _bindBuyerSlots(box, l) {
+        qsa(box, '.fmx-tsl[data-ts]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var tm = +b.getAttribute('data-ts');
+                _lsSel.time = (_lsSel.time === tm) ? null : tm;
+                _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+            });
+        });
+    }
+
+    /* панель слотов для ВЛАДЕЛЬЦА: стандартные времена + режим «1 выход/сутки» + занятость по дню */
+    function _ownerSlotsHtml(l, r) {
+        var cfg = r.slot_config || null;
+        var onSet = {}; ((cfg && cfg.times) || []).forEach(function (t) { onSet[t.t] = 1; });
+        var presets = _SLOT_PRESETS.slice();
+        Object.keys(onSet).forEach(function (t) { if (presets.indexOf(t) < 0) presets.push(t); });
+        presets.sort();
+        var chips = presets.map(function (t) {
+            return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + (_isPrime(_tmin(t)) ? ' prime' : '') + '" data-tc="' + t + '">' + t + '</button>';
+        }).join('');
+        var h = '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> Слоты по времени</div>' +
+            '<div class="fmx-tshint">Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот. Золотые — прайм-тайм (полдень и вечер).</div>' +
+            '<div class="fmx-tchips">' + chips + '</div>' +
+            '<div class="fmx-tswrow"><span>Только 1 выход в сутки<i>эксклюзив для премиум-каналов</i></span><div class="fmx-tsw2' + (cfg && cfg.one_per_day ? ' on' : '') + '" id="fmx-oneDay"></div></div>';
+        if (Object.keys(onSet).length) {
+            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-check"></i> Сохранить слоты</button>';
+            if (_ownerSelDay) {
+                var bt = _busyTimes(r);
+                var rows = cfg.times.map(function (t) {
+                    var tm = _tmin(t.t), isBusy = !!bt[_ownerSelDay + '|' + tm];
+                    return '<div class="fmx-tsl" data-otog="' + tm + '"><span class="tm">' + t.t + '</span>' +
+                        (t.prime ? '<span class="fmx-primetag">прайм</span>' : '') +
+                        '<span class="st">' + (isBusy ? 'Занято' : 'Свободно') + '</span>' +
+                        '<div class="fmx-osw' + (isBusy ? ' busy' : '') + '"></div></div>';
+                }).join('');
+                h += '<div class="fmx-tslots" style="margin-top:10px;"><div class="fmx-tslh"><i class="ti ti-calendar"></i> Занятость · ' + _fmtDayRu(_ownerSelDay) + '</div>' + rows + '</div>';
+            } else {
+                h += '<div class="fmx-tshint" style="margin-top:8px;"><i class="ti ti-hand-finger"></i> Тапни день в календаре — отметишь занятые слоты этого дня.</div>';
+            }
+        } else {
+            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-plus"></i> Включить слоты по времени</button>';
+        }
+        return h + '</div>';
+    }
+    function _saveSlotConfig(box, l) {
+        var times = qsa(box, '.fmx-tchip.on').map(function (c) { var t = c.getAttribute('data-tc'); return { t: t, prime: _isPrime(_tmin(t)) }; });
+        var od = box.querySelector('#fmx-oneDay');
+        var oneDay = !!(od && od.classList.contains('on'));
+        apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/config', { times: times, one_per_day: oneDay, prime_pct: 15 }).then(function (rr) {
+            if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось сохранить слоты'); return; }
+            _calData[l.id].slot_config = rr.slot_config;
+            if (!rr.slot_config) _ownerSelDay = null;
+            _haptic('light'); toast(rr.slot_config ? 'Слоты по времени сохранены' : 'Слоты по времени выключены');
+            calDraw(box, l, 'edit');
+        }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+    }
+    function _bindOwnerSlots(box, l) {
+        qsa(box, '.fmx-tchip').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); _haptic('light'); }); });
+        var od = box.querySelector('#fmx-oneDay'); if (od) od.addEventListener('click', function () { od.classList.toggle('on'); _haptic('light'); });
+        var sv = box.querySelector('#fmx-slotSave'); if (sv) sv.addEventListener('click', function () { _saveSlotConfig(box, l); });
+        qsa(box, '.fmx-tsl[data-otog]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var tm = +b.getAttribute('data-otog');
+                apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/time-toggle', { day: _ownerSelDay, tmin: tm }).then(function (rr) {
+                    if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить слот'); return; }
+                    var r = _calData[l.id]; r.busy_times = r.busy_times || [];
+                    var key = _ownerSelDay + '|' + tm;
+                    if (rr.busy) { if (r.busy_times.indexOf(key) < 0) r.busy_times.push(key); }
+                    else { r.busy_times = r.busy_times.filter(function (x) { return x !== key; }); }
+                    _haptic('light'); calDraw(box, l, 'edit');
+                }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            });
+        });
+    }
+
     /* Календарь разворота (вид закупщика), три состояния:
        1) владелец не вёл календарь — одна честная строка, без зелёной стены;
        2) ведёт — компактная полоса ближайших 14 дней + «Свободно с …»;
@@ -2833,6 +2973,7 @@
             (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> горящие −' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
+            _buyerSlotsHtml(l, r) +
             '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
         /* полоса пересоздаётся при выборе даты — позицию прокрутки сохраняем, чтобы не отбрасывало к началу */
@@ -2844,10 +2985,12 @@
             _hscrollify(strip, true);   /* палец, колесо, перетаскивание + индикатор */
             if (prevScroll) strip.scrollLeft = prevScroll;
         }
+        _bindBuyerSlots(box, l);
         qsa(box, '[data-bd]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-bd');
                 if (busy[iso]) { _calWatchBuyer(box, l, iso); return; }
+                if (_lsSel.day !== iso) _lsSel.time = null;   // сменил день — сбрасываем выбранное время
                 _lsSel.day = iso;
                 _haptic('light');
                 drawBuyerSlots(box, l);
@@ -3004,12 +3147,13 @@
         qsa(document, '.fmx-sheet').forEach(function (x) { x.classList.remove('on'); });
     }
     function _writeText() {
-        var f = _lsSel, d = f.day ? _fmtDayRu(f.day) : null;
+        var f = _lsSel, d = f.day ? _fmtDayRu(f.day) : null, tm = (f.time != null) ? _fmtT(f.time) : null;
         var t = 'Здравствуйте. Интересует размещение в вашем канале: формат ' + f.fmt;
         t += d ? ', дата ' + d : '';
+        t += tm ? ', время ' + tm : '';
         t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
         if (!d) t += ' Какие даты свободны в ближайшие две недели?';
-        else if (f.price) t += ' Подтвердите, свободна ли дата.';
+        else if (f.price) t += ' Подтвердите, свободн' + (tm ? ' ли слот' : 'а ли дата') + '.';
         return t;
     }
     function _hotPrice(l, price, dayIso) {
@@ -3083,16 +3227,16 @@
         });
         var f0 = (l.formats || [])[0] || {};
         _lsSel = {
-            l: l, edited: false, day: null,
+            l: l, edited: false, day: null, time: null,
             fmt: (best ? best.fmt : (f0.label || f0.format || 'размещение')),
             price: (best ? best.price : (f0.price || null))
         };
     }
     function _syncWriteBtn(l) {
         var b = el('fmx-lsGo'); if (!b) return;
-        var f = _lsSel;
+        var f = _lsSel, tm = (f.time != null) ? _fmtT(f.time) : null;
         b.innerHTML = '<i class="ti ti-brand-telegram"></i> Написать' +
-            ((f.day || f.fmt) ? ': ' + [(f.day ? _fmtDayRu(f.day) : null), f.fmt].filter(Boolean).join(' · ') : '');
+            ((f.day || f.fmt) ? ': ' + [(f.day ? _fmtDayRu(f.day) + (tm ? ' ' + tm : '') : null), f.fmt].filter(Boolean).join(' · ') : '');
     }
 
     /* ==================== редактор витрины (владелец, из кабинета) ====================
@@ -3966,7 +4110,7 @@
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
-            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _title: null, listingId: null, channelId: null };
+            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
         /* все форматы каталога как строки редактора; по умолчанию включён только опорный 1/24 */
@@ -4019,6 +4163,7 @@
         });
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._slots = l.slots_note || '';
+        _ss._erid = l.erid_who || null;
     }
     function selectChannel(id) {
         _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; _ss.channelId = id;
@@ -4564,7 +4709,13 @@
     function panePrice() {
         var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i> Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</div>';
         var slots = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-calendar"></i> Свободные слоты</span><input class="fmx-inp" id="fmx-slots" value="' + _esc(_ss._slots || '') + '" placeholder="напр. 2 слота в неделю">';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots;
+        var eridOpts = [['advertiser', 'Ставит рекламодатель'], ['channel', 'Ставит канал'], ['discuss', 'Обсуждается']];
+        var erid = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-tag"></i> Маркировка рекламы (erid)</span>' +
+            '<div class="fmx-eridseg" id="fmx-erid">' + eridOpts.map(function (o) {
+                return '<button type="button" class="fmx-eridb' + (_ss._erid === o[0] ? ' on' : '') + '" data-erid="' + o[0] + '">' + o[1] + '</button>';
+            }).join('') + '</div>' +
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> Кто ставит токен ОРД — условие размещения, видно закупщику. Авто-маркировка подключится с оплатой через площадку.</div>';
+        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots + erid;
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
@@ -4589,6 +4740,14 @@
     function bindPrice() {
         bindFmtRows();
         el('fmx-slots').addEventListener('input', function () { _ss._slots = this.value; });
+        qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var v = b.getAttribute('data-erid');
+                _ss._erid = (_ss._erid === v) ? null : v;   // повторный тап снимает выбор
+                qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-erid') === _ss._erid); });
+                _haptic('light');
+            });
+        });
     }
 
     function paneText() {
@@ -6110,6 +6269,7 @@
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
             slots_note: (sl ? sl.value : _ss._slots) || null,
+            erid_who: _ss._erid || null,
             custom_text: (de ? de.value : _ss._desc) || null,
             accent_color: _ss.color,
             cover_type: _ss.covType,
