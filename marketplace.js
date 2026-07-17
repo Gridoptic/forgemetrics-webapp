@@ -1084,7 +1084,6 @@
             '.fmx-tsl.bs{opacity:0.5;cursor:default;}',
             '.fmx-tsl.bs .st{color:#565b73;}',
             '.fmx-tsl[data-otog] .st{margin-left:0;}',
-            '.fmx-primetag{font-size:8px;font-weight:800;letter-spacing:0.3px;color:#f5bf4f;background:rgba(245,191,79,0.13);border-radius:5px;padding:1px 5px;}',
             '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
             '.fmx-osw::after{content:"";position:absolute;top:3px;left:17px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s;}',
             '.fmx-osw.busy{background:rgba(255,255,255,0.12);}',
@@ -1096,7 +1095,6 @@
             '.fmx-tchips{display:flex;flex-wrap:wrap;gap:6px;}',
             '.fmx-tchip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;font-weight:700;padding:7px 11px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:#8990a8;cursor:pointer;}',
             '.fmx-tchip.on{background:rgba(129,140,248,0.15);border-color:rgba(129,140,248,0.4);color:#c7cdff;}',
-            '.fmx-tchip.prime.on{background:rgba(245,191,79,0.14);border-color:rgba(245,191,79,0.42);color:#f5d78a;}',
             '.fmx-tswrow{display:flex;align-items:center;gap:10px;margin-top:11px;font-size:12px;color:#c9cbe0;}',
             '.fmx-tswrow span{flex:1;font-weight:600;}',
             '.fmx-tswrow span i{display:block;font-size:9.5px;color:#8990a8;font-style:normal;font-weight:400;margin-top:1px;}',
@@ -2840,7 +2838,6 @@
     var _SLOT_PRESETS = ['09:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '21:00'];
     function _tmin(t) { var p = String(t || '').split(':'); return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0); }
     function _fmtT(m) { return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
-    function _isPrime(m) { return (m >= 720 && m <= 900) || (m >= 1140 && m <= 1320); }   // полдень 12–15, вечер 19–22
     function _slotCfg(r) { return (r && r.slot_config && r.slot_config.times && r.slot_config.times.length) ? r.slot_config : null; }
     function _busyTimes(r) { var s = {}; (r.busy_times || []).forEach(function (x) { s[x] = 1; }); return s; }
     function _daySlot(r, iso) {   // {n, free} по слотам дня — для точек под числом
@@ -2861,12 +2858,11 @@
     /* панель слотов дня для ПОКУПАТЕЛЯ: выбор свободного времени выхода */
     function _buyerSlotsHtml(l, r) {
         var cfg = _slotCfg(r); if (!cfg || !_lsSel || !_lsSel.day) return '';
-        var bt = _busyTimes(r), day = _lsSel.day, pct = cfg.prime_pct || 0;
+        var bt = _busyTimes(r), day = _lsSel.day;
         var rows = cfg.times.map(function (t) {
             var tm = _tmin(t.t), isBusy = !!bt[day + '|' + tm], sel = (_lsSel.time === tm);
             return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
                 '<span class="tm">' + _esc(t.t) + '</span>' +
-                (t.prime ? '<span class="fmx-primetag">прайм' + (pct ? ' +' + pct + '%' : '') + '</span>' : '') +
                 '<span class="st">' + (isBusy ? 'Занято' : (sel ? 'Выбрано ✓' : 'Свободно')) + '</span></div>';
         }).join('');
         return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + rows + '</div>';
@@ -2900,10 +2896,10 @@
         Object.keys(onSet).forEach(function (t) { if (presets.indexOf(t) < 0) presets.push(t); });
         presets.sort();
         var chips = presets.map(function (t) {
-            return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + (_isPrime(_tmin(t)) ? ' prime' : '') + '" data-tc="' + t + '">' + t + '</button>';
+            return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + '" data-tc="' + t + '">' + t + '</button>';
         }).join('');
         var h = '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> Слоты по времени</div>' +
-            '<div class="fmx-tshint">Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот. Золотые — прайм-тайм (полдень и вечер).</div>' +
+            '<div class="fmx-tshint">Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот.</div>' +
             '<div class="fmx-tchips">' + chips + '</div>' +
             '<div class="fmx-tswrow"><span>Только 1 выход в сутки<i>эксклюзив для премиум-каналов</i></span><div class="fmx-tsw2' + (cfg && cfg.one_per_day ? ' on' : '') + '" id="fmx-oneDay"></div></div>';
         if (Object.keys(onSet).length) {
@@ -2913,7 +2909,6 @@
                 var rows = cfg.times.map(function (t) {
                     var tm = _tmin(t.t), isBusy = !!bt[_ownerSelDay + '|' + tm];
                     return '<div class="fmx-tsl" data-otog="' + tm + '"><span class="tm">' + t.t + '</span>' +
-                        (t.prime ? '<span class="fmx-primetag">прайм</span>' : '') +
                         '<span class="st">' + (isBusy ? 'Занято' : 'Свободно') + '</span>' +
                         '<div class="fmx-osw' + (isBusy ? ' busy' : '') + '"></div></div>';
                 }).join('');
@@ -2927,10 +2922,10 @@
         return h + '</div>';
     }
     function _saveSlotConfig(box, l) {
-        var times = qsa(box, '.fmx-tchip.on').map(function (c) { var t = c.getAttribute('data-tc'); return { t: t, prime: _isPrime(_tmin(t)) }; });
+        var times = qsa(box, '.fmx-tchip.on').map(function (c) { return { t: c.getAttribute('data-tc'), prime: false }; });
         var od = box.querySelector('#fmx-oneDay');
         var oneDay = !!(od && od.classList.contains('on'));
-        apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/config', { times: times, one_per_day: oneDay, prime_pct: 15 }).then(function (rr) {
+        apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/config', { times: times, one_per_day: oneDay, prime_pct: 0 }).then(function (rr) {
             if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось сохранить слоты'); return; }
             _calData[l.id].slot_config = rr.slot_config;
             if (!rr.slot_config) _ownerSelDay = null;
