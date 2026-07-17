@@ -2353,7 +2353,7 @@
                         if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось удалить'); return; }
                         _haptic('success'); toast('Оффер удалён');
                         _myListings = _myListings.filter(function (x) { return x.id !== l.id; });
-                        if (_ss.listingId === l.id) { _ss.listingId = null; _ss._status = null; }
+                        if (_ss && _ss.listingId === l.id) { _ss.listingId = null; _ss._status = null; }
                         _feed = null; _feedState = 'idle';
                         if (!_myListings.length) { setSubTab('buy', true); return; }
                         if (_subTab === 'mine') paintMine();
