@@ -222,7 +222,9 @@
         }
         return _minPrice(l);
     }
-    function _cpm(l) { var p = _basePrice(l); if (!p || !l.avg_views) return null; return Math.round(p / l.avg_views * 1000); }
+    /* охват для CPM: рекламный (ERR24, из замеров сделок) если есть, иначе авторский avg_views */
+    function _reach(l) { return (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : l.avg_views; }
+    function _cpm(l) { var v = _reach(l), p = _basePrice(l); if (!p || !v) return null; return Math.round(p / v * 1000); }
     var _nicheMap = null;  // словарь канонов с бэка; работает и без него (запасные основы)
     function loadNicheMap() {
         if (_nicheMap !== null) return;
@@ -1103,6 +1105,18 @@
             '.fmx-tsw2.on{background:#818cf8;}',
             '.fmx-tsw2.on::after{left:20px;}',
             '.fmx-tsave{width:100%;margin-top:11px;}',
+            '.fmx-sdots{display:flex;gap:1.5px;justify-content:center;align-items:center;line-height:0;margin-top:1px;}',
+            '.fmx-sdots i{width:3px;height:3px;border-radius:50%;display:inline-block;}',
+            '.fmx-sdots i.f{background:#5DCAA5;}',
+            '.fmx-sdots i.b{background:rgba(255,255,255,0.2);}',
+            '.fmx-sd{position:relative;}',
+            '.fmx-sd .fmx-sdots{position:absolute;bottom:2px;left:0;right:0;}',
+            '.fmx-basket{margin-top:10px;}',
+            '.fmx-bchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px;}',
+            '.fmx-blbl{font-size:10px;font-weight:800;color:#8990a8;}',
+            '.fmx-bchip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#c7cdff;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.35);border-radius:8px;padding:5px 9px;cursor:pointer;}',
+            '.fmx-bchip i{font-size:12px;color:#8990a8;}',
+            '.fmx-baddbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;border:1px dashed rgba(129,140,248,0.35);background:rgba(129,140,248,0.05);color:#a7b0f0;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;}',
             /* нижняя шторка (утверждённый паттерн макета) */
             '.fmx-shbg{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9400;display:none;}',
             '.fmx-shbg.on{display:block;}',
@@ -2747,7 +2761,7 @@
             if (isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
             var clickable = !past && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
             h += '<button class="' + cls + '"' + (clickable ? ' data-cd="' + iso + '"' : ' disabled') + '>' +
-                '<span class="fmx-sdn">' + d + '</span>' + (demand[iso] ? '<i class="dm"></i>' : '') + '</button>';
+                '<span class="fmx-sdn">' + d + '</span>' + (demand[iso] ? '<i class="dm"></i>' : '') + _dayDots(r, iso) + '</button>';
         }
         h += '</div>' +
             '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
@@ -2826,6 +2840,18 @@
     function _isPrime(m) { return (m >= 720 && m <= 900) || (m >= 1140 && m <= 1320); }   // полдень 12–15, вечер 19–22
     function _slotCfg(r) { return (r && r.slot_config && r.slot_config.times && r.slot_config.times.length) ? r.slot_config : null; }
     function _busyTimes(r) { var s = {}; (r.busy_times || []).forEach(function (x) { s[x] = 1; }); return s; }
+    function _daySlot(r, iso) {   // {n, free} по слотам дня — для точек под числом
+        var cfg = _slotCfg(r); if (!cfg) return null;
+        var bt = _busyTimes(r), busy = 0;
+        cfg.times.forEach(function (t) { if (bt[iso + '|' + _tmin(t.t)]) busy++; });
+        return { n: cfg.times.length, free: cfg.times.length - busy };
+    }
+    function _dayDots(r, iso) {
+        var s = _daySlot(r, iso); if (!s || !s.n) return '';
+        var show = Math.min(s.n, 4), fShow = Math.round(s.free / s.n * show), d = '';
+        for (var i = 0; i < show; i++) d += '<i class="' + (i < fShow ? 'f' : 'b') + '"></i>';
+        return '<span class="fmx-sdots">' + d + '</span>';
+    }
 
     /* панель слотов дня для ПОКУПАТЕЛЯ: выбор свободного времени выхода */
     function _buyerSlotsHtml(l, r) {
@@ -2963,7 +2989,7 @@
             if (isBusy && watch[iso]) cls += ' watch';
             var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
             h += '<div class="' + cls + '" data-bd="' + iso + '"><div class="c">' + d.getDate() + (demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
-                wlab + '</div>';
+                _dayDots(r, iso) + wlab + '</div>';
             d.setDate(d.getDate() + 1);
         }
         h += '</div>' +
@@ -2974,6 +3000,7 @@
             '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             _buyerSlotsHtml(l, r) +
+            _basketHtml(l) +
             '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
         /* полоса пересоздаётся при выборе даты — позицию прокрутки сохраняем, чтобы не отбрасывало к началу */
@@ -2986,6 +3013,7 @@
             if (prevScroll) strip.scrollLeft = prevScroll;
         }
         _bindBuyerSlots(box, l);
+        _bindBasket(box, l);
         qsa(box, '[data-bd]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-bd');
@@ -3146,15 +3174,52 @@
         var b = el('fmx-shbg'); if (b) b.classList.remove('on');
         qsa(document, '.fmx-sheet').forEach(function (x) { x.classList.remove('on'); });
     }
+    function _slotLabel(x) { return _fmtDayRu(x.day) + (x.time != null ? ' ' + _fmtT(x.time) : ''); }
     function _writeText() {
-        var f = _lsSel, d = f.day ? _fmtDayRu(f.day) : null, tm = (f.time != null) ? _fmtT(f.time) : null;
+        var f = _lsSel;
+        var items = (f.basket || []).slice();
+        if (f.day) items.push({ day: f.day, time: f.time });
         var t = 'Здравствуйте. Интересует размещение в вашем канале: формат ' + f.fmt;
-        t += d ? ', дата ' + d : '';
-        t += tm ? ', время ' + tm : '';
-        t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
-        if (!d) t += ' Какие даты свободны в ближайшие две недели?';
-        else if (f.price) t += ' Подтвердите, свободн' + (tm ? ' ли слот' : 'а ли дата') + '.';
+        if (items.length > 1) {   // пакетная заявка на несколько дат/слотов
+            t += '. Интересуют даты: ' + items.map(_slotLabel).join(', ') + '.';
+            t += f.price ? ' Ориентир по прайсу ' + _num(f.price) + ' ₽ за размещение. Подтвердите свободные слоты.' : ' Пришлите условия размещения.';
+        } else if (items.length === 1) {
+            var tm = items[0].time != null ? _fmtT(items[0].time) : null;
+            t += ', дата ' + _fmtDayRu(items[0].day) + (tm ? ', время ' + tm : '');
+            t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
+            if (f.price) t += ' Подтвердите, свободн' + (tm ? ' ли слот' : 'а ли дата') + '.';
+        } else {
+            t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
+            t += ' Какие даты свободны в ближайшие две недели?';
+        }
         return t;
+    }
+    function _basketHtml(l) {
+        var f = _lsSel, chips = (f.basket || []).map(function (x, i) {
+            return '<span class="fmx-bchip" data-bi="' + i + '">' + _slotLabel(x) + ' <i class="ti ti-x"></i></span>';
+        }).join('');
+        var addBtn = f.day ? '<button class="fmx-baddbtn" id="fmx-badd"><i class="ti ti-plus"></i> Добавить ещё дату к заявке</button>' : '';
+        if (!chips && !addBtn) return '';
+        return '<div class="fmx-basket">' + (chips ? '<div class="fmx-bchips"><span class="fmx-blbl">Заявка на ' + ((f.basket || []).length + (f.day ? 1 : 0)) + ':</span>' + chips + '</div>' : '') + addBtn + '</div>';
+    }
+    function _bindBasket(box, l) {
+        var addB = box.querySelector('#fmx-badd');
+        if (addB) addB.addEventListener('click', function () {
+            if (!_lsSel.day) return;
+            _lsSel.basket = _lsSel.basket || [];
+            var key = _lsSel.day + '|' + (_lsSel.time == null ? '' : _lsSel.time);
+            if (!_lsSel.basket.some(function (x) { return (x.day + '|' + (x.time == null ? '' : x.time)) === key; }))
+                _lsSel.basket.push({ day: _lsSel.day, time: _lsSel.time });
+            _lsSel.day = null; _lsSel.time = null;
+            _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+            toast('Дата добавлена в заявку — выбери ещё или нажми «Написать»');
+        });
+        qsa(box, '.fmx-bchip').forEach(function (c) {
+            c.addEventListener('click', function () {
+                _lsSel.basket.splice(+c.getAttribute('data-bi'), 1);
+                _haptic('light'); drawBuyerSlots(box, l); _syncWriteBtn(l);
+            });
+        });
     }
     function _hotPrice(l, price, dayIso) {
         var r = _calData[l.id];
@@ -3176,7 +3241,7 @@
                 return '<button class="fmx-seg' + ((lb === f.fmt) ? ' on' : '') + '" data-f="' + _esc(lb) + '" data-p="' + x.price + '">' + _esc(lb) + ' · ' + _num(x.price) + ' ₽</button>';
             }).join('') + '</div>' : '') +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;" class="num">' +
-            '<span>Дата: <b id="fmx-wd">' + (f.day ? _fmtDayRu(f.day) : 'уточню в чате') + '</b></span>' +
+            '<span>Дата: <b id="fmx-wd">' + ((f.basket && f.basket.length) ? (f.basket.length + (f.day ? 1 : 0)) + ' ' + _plural(f.basket.length + (f.day ? 1 : 0), 'дата', 'даты', 'дат') : (f.day ? _fmtDayRu(f.day) + (f.time != null ? ' ' + _fmtT(f.time) : '') : 'уточню в чате')) + '</b></span>' +
             '<button class="fmx-seg" id="fmx-wchg" style="min-height:28px;padding:4px 10px;">Изменить</button>' +
             '<span style="margin-left:auto;" id="fmx-wp">' + (priceNow != null ? 'По прайсу: <b>' + _num(priceNow) + ' ₽</b>' : '') + '</span></div>' +
             '<textarea class="fmx-inp" id="fmx-wtext" rows="4" style="margin-top:10px;width:100%;line-height:1.55;resize:none;"></textarea>' +
@@ -3219,24 +3284,26 @@
         sh.classList.add('on');
     }
     function _initSel(l) {
-        var best = null;
+        var best = null, _rv = _reach(l);
         (l.formats || []).forEach(function (x) {
-            if (!x.price || !l.avg_views) return;
-            var cpm = x.price / l.avg_views * 1000;
+            if (!x.price || !_rv) return;
+            var cpm = x.price / _rv * 1000;
             if (!best || cpm < best.cpm) best = { fmt: x.label || x.format, price: x.price, cpm: cpm };
         });
         var f0 = (l.formats || [])[0] || {};
         _lsSel = {
-            l: l, edited: false, day: null, time: null,
+            l: l, edited: false, day: null, time: null, basket: [],
             fmt: (best ? best.fmt : (f0.label || f0.format || 'размещение')),
             price: (best ? best.price : (f0.price || null))
         };
     }
     function _syncWriteBtn(l) {
         var b = el('fmx-lsGo'); if (!b) return;
-        var f = _lsSel, tm = (f.time != null) ? _fmtT(f.time) : null;
-        b.innerHTML = '<i class="ti ti-brand-telegram"></i> Написать' +
-            ((f.day || f.fmt) ? ': ' + [(f.day ? _fmtDayRu(f.day) + (tm ? ' ' + tm : '') : null), f.fmt].filter(Boolean).join(' · ') : '');
+        var f = _lsSel, tm = (f.time != null) ? _fmtT(f.time) : null, bn = (f.basket || []).length;
+        var label = 'Написать';
+        if (bn > 0) { var total = bn + (f.day ? 1 : 0); label += ': ' + total + ' ' + _plural(total, 'дата', 'даты', 'дат'); }
+        else if (f.day || f.fmt) label += ': ' + [(f.day ? _fmtDayRu(f.day) + (tm ? ' ' + tm : '') : null), f.fmt].filter(Boolean).join(' · ');
+        b.innerHTML = '<i class="ti ti-brand-telegram"></i> ' + label;
     }
 
     /* ==================== редактор витрины (владелец, из кабинета) ====================
@@ -6932,6 +6999,7 @@
        поделиться/жалоба → sticky-низ с живой кнопкой «Написать: дата · формат». */
     function _pwMetrics(l) {
         var cpm = _cpm(l);
+        var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
         function cell(label, val, dim) {
             return '<div class="pw-mcell' + (dim ? ' fmx-mdim' : '') + '"><div class="pw-ml">' + label + '</div>' +
                 '<div class="pw-mv num">' + val + '</div></div>';
@@ -6946,14 +7014,14 @@
             '<div class="pw-mdiv"></div>' +
             cell('Вовлечённость', l.er != null ? String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('CPM', cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
+            cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
             '<div class="pw-mrow num" style="border-top:none;padding-top:4px;margin-top:4px;">' +
             cell('Прирост 30 дн', '—', true) +
             '<div class="pw-mdiv"></div>' +
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
-            cell('Прогноз охвата', '—', true) +
+            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : cell('Прогноз охвата', '—', true)) +
             '</div></div>';
     }
     /* спарклайн разворота: ТОЛЬКО реальные снимки динамики канала; меньше 3 точек — не рисуем */
@@ -7024,14 +7092,14 @@
         ];
         var fmtsHtml = '';
         if (l.formats && l.formats.length) {
-            var bestCpm = null;
-            l.formats.forEach(function (f) { if (f.price && l.avg_views) { var c = f.price / l.avg_views * 1000; if (bestCpm == null || c < bestCpm) bestCpm = c; } });
+            var bestCpm = null, _rv = _reach(l);
+            l.formats.forEach(function (f) { if (f.price && _rv) { var c = f.price / _rv * 1000; if (bestCpm == null || c < bestCpm) bestCpm = c; } });
             fmtsHtml = '<div class="fmx-lssect">Форматы и цены</div>' +
                 '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;" id="fmx-fmtl" class="num">' +
                 l.formats.map(function (f) {
                     var lb = _esc(f.label || f.format);
                     var m = _fmtMeta(f.format), sub = m && m.sub ? _esc(m.sub) : '';
-                    var c = (f.price && l.avg_views) ? Math.round(f.price / l.avg_views * 1000) : null;
+                    var c = (f.price && _rv) ? Math.round(f.price / _rv * 1000) : null;
                     var isBest = c != null && bestCpm != null && Math.abs(c - Math.round(bestCpm)) < 1 && l.formats.length > 1;
                     return '<div class="fmx-fmt' + ((f.label || f.format) === _lsSel.fmt ? ' on' : '') + '" data-fmt="' + lb + '" data-p="' + (f.price || '') + '">' +
                         (isBest ? '<span class="bd"></span>' : '') +
@@ -7039,7 +7107,7 @@
                         '<span class="pr">' + (f.price ? _num(f.price) + ' ₽' : 'по договорённости') + '</span>' +
                         '<span class="cp">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : '') + '</span></div>';
                 }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. Тап по строке подставит формат в сообщение</div>' +
+                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. ' + (l.ad_reach_24h ? 'CPM по <b style="color:#5DCAA5;">рекламному охвату (ERR24)</b> из замеров сделок.' : 'Тап по строке подставит формат в сообщение') + '</div>' +
                 '<div class="fmx-guar"><i class="ti ti-shield-half"></i> <span>Сейчас — прямой контакт с владельцем. Сделка с гарантом, бронью по времени и маркировкой — в разработке.</span></div>';
         }
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
