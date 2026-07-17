@@ -2727,16 +2727,19 @@
             (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Ближайшие 90 дней заняты</span>') +
             (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">Обновлён ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
         h += '<div class="fmx-d14 num">';
+        var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
         var d = new Date(d0);
-        for (var i = 0; i < 14; i++) {
+        /* 45 дней: дальние даты выбираются прямо в полосе, «Весь месяц» — для планирования дальше */
+        for (var i = 0; i < 45; i++) {
             var iso = _isoOf(d);
             var isBusy = !!busy[iso];
             var cls = 'fmx-dd ' + (isBusy ? 'bs' : 'fr');
             if (!isBusy && hot[iso]) cls += ' hot';
             if (!isBusy && _lsSel && _lsSel.day === iso) cls += ' sel';
             if (isBusy && watch[iso]) cls += ' watch';
+            var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
             h += '<div class="' + cls + '" data-bd="' + iso + '"><div class="c">' + d.getDate() + (demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
-                '<div class="w">' + WD[d.getDay()] + '</div></div>';
+                wlab + '</div>';
             d.setDate(d.getDate() + 1);
         }
         h += '</div>' +
@@ -2748,7 +2751,15 @@
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
+        /* полоса пересоздаётся при выборе даты — позицию прокрутки сохраняем, чтобы не отбрасывало к началу */
+        var prevStrip = box.querySelector('.fmx-d14');
+        var prevScroll = prevStrip ? prevStrip.scrollLeft : 0;
         box.innerHTML = h;
+        var strip = box.querySelector('.fmx-d14');
+        if (strip) {
+            _hscrollify(strip, true);   /* палец, колесо, перетаскивание + индикатор */
+            if (prevScroll) strip.scrollLeft = prevScroll;
+        }
         qsa(box, '[data-bd]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-bd');
