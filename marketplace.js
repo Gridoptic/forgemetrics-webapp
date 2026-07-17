@@ -2596,7 +2596,7 @@
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
         bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm';
-        bg.innerHTML = '<div class="fmx-cfm-box" style="max-width:520px;width:94%;">' +
+        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:520px;">' +
             '<div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</div>' +
             '<div class="fmx-search" style="margin-bottom:10px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
             '<div id="fmx-nlist" style="max-height:56vh;overflow-y:auto;margin:0 -4px;padding:0 4px;"></div>' +
