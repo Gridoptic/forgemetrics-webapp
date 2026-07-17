@@ -1095,7 +1095,7 @@
             '.fmx-limbar{height:6px;border-radius:6px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:9px;}',
             '.fmx-limbar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#5DCAA5,#34d399);}',
             /* полоса 14 дней */
-            '.fmx-d14{display:flex;gap:5px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none;}',
+            '.fmx-d14{display:flex;gap:5px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}',
             '.fmx-d14::-webkit-scrollbar{display:none;}',
             '.fmx-dd{flex:0 0 auto;width:36px;text-align:center;cursor:pointer;}',
             '.fmx-dd .c{width:32px;height:32px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;border:1px solid;position:relative;}',
@@ -2182,7 +2182,7 @@
                 ? '<div class="fmx-minerej">Причина: ' + _esc(l.reject_reason) + ' — исправь и сохрани, оффер уйдёт на повторную проверку.</div>' : '') +
             '<div class="fmx-minemet" id="fmx-mst-' + l.id + '">За 7 дней: считаем…</div>' +
             '<div style="margin-top:11px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);">' +
-            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">Календарь занятости · 14 дней</div>' +
+            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">Календарь занятости · 45 дней</div>' +
             '<div class="fmx-d14 num" id="fmx-strip-' + l.id + '"></div>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
             '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">Тап по дню — занято/свободно. Точка — спрос на дату</span>' +
@@ -2208,16 +2208,21 @@
             var busy = {}; (r.busy || []).forEach(function (x) { busy[x] = 1; });
             var demand = r.demand || {};
             var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
             var h = '';
             var d = new Date(); d.setHours(12, 0, 0, 0);
-            for (var i = 0; i < 14; i++) {
+            /* 45 дней: дальние даты листаются прямо в полосе, полный календарь — для планирования ещё дальше */
+            for (var i = 0; i < 45; i++) {
                 var iso = _isoOf(d);
+                /* на 1-м числе вместо дня недели — метка месяца, чтобы не терять контекст при листании */
+                var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
                 h += '<div class="fmx-dd ' + (busy[iso] ? 'bs' : 'fr') + '" data-sd="' + iso + '">' +
                     '<div class="c num">' + d.getDate() + (demand[iso] ? '<i class="dm"></i>' : '') + '</div>' +
-                    '<div class="w">' + WD[d.getDay()] + '</div></div>';
+                    wlab + '</div>';
                 d.setDate(d.getDate() + 1);
             }
             box.innerHTML = h;
+            _hscrollify(box, true);   /* палец, колесо мыши, перетаскивание + индикатор и растворение края */
             qsa(box, '[data-sd]').forEach(function (dd) {
                 dd.addEventListener('click', function () {
                     var iso = dd.getAttribute('data-sd');
