@@ -532,8 +532,8 @@
             '.fmx-mclose{width:30px;height:30px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}',
             '.fmx-mbody{padding:16px 18px 22px;overflow-y:auto;-webkit-overflow-scrolling:touch;}',
             '.fmx-ftabs{display:flex;gap:6px;margin-bottom:14px;}',
-            '.fmx-ft{flex:1;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:9px;padding:9px;font-size:12px;cursor:pointer;transition:all 150ms;}',
-            '.fmx-ft.on{background:rgba(99,102,241,0.13);color:#818cf8;border-color:rgba(99,102,241,0.28);}',
+            '.fmx-ftab{flex:1;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:9px;padding:9px;font-size:12px;cursor:pointer;transition:all 150ms;}',
+            '.fmx-ftab.on{background:rgba(99,102,241,0.13);color:#818cf8;border-color:rgba(99,102,241,0.28);}',
             '.fmx-term{padding:11px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);}',
             '.fmx-term h4{margin:0 0 4px;font-size:13px;font-weight:700;}',
             '.fmx-term p{margin:0;font-size:12px;color:#8990a8;line-height:1.5;}',
@@ -976,8 +976,7 @@
             '.fmx-stl{font-size:11px;color:#8990a8;margin-top:3px;}',
             '.fmx-sts{font-size:10px;color:#565b73;margin-top:1px;}',
 
-            /* ===== календарь занятости слотов ===== */
-            '.fmx-slots{margin-top:16px;background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:13px;}',
+            /* ===== календарь занятости слотов (общие классы, используются v2) ===== */
             '.fmx-slh{display:flex;align-items:center;gap:8px;margin-bottom:4px;}',
             '.fmx-slh .t{font-size:12px;font-weight:700;color:#e8e8ed;display:flex;align-items:center;gap:6px;}',
             '.fmx-slh .t i{color:#5DCAA5;font-size:14px;}',
@@ -2663,75 +2662,8 @@
         return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> Доказательство размещения</div>' +
             '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
     }
-    /* ===== календарь занятости слотов =====
-       Владелец отмечает занятые дни; покупатель видит свободные и пишет уже с датой.
-       Брони покупателем нет — гонки за слот исключены. Перерисовываем ТОЛЬКО этот блок. */
-    var SL_WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    var SL_MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    var SL_WEEKS = 6;
-
-    function _isoDay(d) {
-        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    }
-
-    function renderSlotsBox(l, boxEl) {
-        var box = boxEl || el('fmx-slotsBox');   // boxEl — календарь владельца в кабинете, без него — разворот карточки
-        if (!box || !l.id) return;
-        apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
-            if (!r || !r.ok) { box.innerHTML = ''; return; }
-            _slotsDraw(box, l, r);
-        }).catch(function () { box.innerHTML = ''; });
-    }
-
-    function _slotsDraw(box, l, r) {
-        var busy = {};
-        (r.busy || []).forEach(function (s) { busy[s] = 1; });
-        var today = new Date(); today.setHours(12, 0, 0, 0);   // полдень: перевод часов не сдвинет дату
-        var todayIso = _isoDay(today);
-        var start = new Date(today);
-        start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   // понедельник текущей недели
-        var cells = '', freeCount = 0;
-        for (var i = 0; i < SL_WEEKS * 7; i++) {
-            var dt = new Date(start); dt.setDate(start.getDate() + i);
-            var iso = _isoDay(dt);
-            /* сравниваем ISO-строки, а не мс: у ISO-дат лексикографический порядок = хронологический,
-               и это не ломается на переходе часов (летнее время) в любом часовом поясе */
-            var past = iso < todayIso, isBusy = !!busy[iso], own = !past && !!r.is_owner;
-            if (!past && !isBusy) freeCount++;
-            var cls = 'fmx-sd ' + (past ? 'past' : (isBusy ? 'busy' : 'free')) +
-                (iso === todayIso ? ' today' : '') + (own ? ' own' : '');
-            /* лента идёт через границу месяцев (…31, 1, 2…) — подписываем месяц на его первом дне
-               и на первой клетке ленты, иначе не понять, август это или июль */
-            var mon = (i === 0 || dt.getDate() === 1) ? '<span class="fmx-sdm">' + SL_MON[dt.getMonth()] + '</span>' : '';
-            cells += '<button class="' + cls + '"' + (own ? ' data-slot="' + iso + '"' : ' disabled') + '>' +
-                mon + '<span class="fmx-sdn">' + dt.getDate() + '</span></button>';
-        }
-        box.innerHTML = '<div class="fmx-slots">' +
-            '<div class="fmx-slh"><span class="t"><i class="ti ti-calendar-check"></i> Свободные даты</span>' +
-            '<span class="fmx-slfree">' + freeCount + ' своб.</span></div>' +
-            '<div class="fmx-slhint">' + (r.is_owner
-                ? 'Отмечай занятые дни — покупатели сразу увидят свободные и не будут спрашивать в личке.'
-                : 'Зелёные — свободно. Напиши владельцу сразу с нужной датой.') + '</div>' +
-            '<div class="fmx-slgrid">' + SL_WD.map(function (w) { return '<span class="fmx-slw">' + w + '</span>'; }).join('') + cells + '</div>' +
-            '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
-            '<span><i style="background:rgba(255,255,255,0.12);"></i>занято</span></div>' +
-            (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
-            '</div>';
-        if (!r.is_owner) return;
-        box.querySelectorAll('[data-slot]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                var day = b.getAttribute('data-slot');
-                b.disabled = true;
-                apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/toggle', { day: day }).then(function (rr) {
-                    b.disabled = false;
-                    if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить день'); return; }
-                    _haptic('light');
-                    if (rr.busy) busy[day] = 1; else delete busy[day];
-                    _slotsDraw(box, l, { ok: true, is_owner: true, busy: Object.keys(busy), slots_note: r.slots_note });
-                }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
-            });
-        });
-    }
+    /* Старый день-only календарь (renderSlotsBox v1 + _slotsDraw + консты SL_ и _isoDay) удалён
+       17.07.2026: был перекрыт v2 (двойное объявление function) и не исполнялся. Живёт только v2 ниже. */
 
     /* ==================== Площадка 2.0: календарь v2 ==================== */
     /* Полноценный календарь: месяц + год, листание, «сегодня» в рамке (часовой пояс
@@ -2805,6 +2737,14 @@
                 }
                 if (busy[iso]) { _calWatchDay(box, l, iso); return; }
                 if (_lsSel.day !== iso) _lsSel.time = null;   // сменил день — сбрасываем время (как в полосе)
+                // день уже в заявке-корзине — не дублируем (как в полосе дат)
+                if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
+                    _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light');
+                    calDraw(box, l, 'view');
+                    var host0 = box.closest ? box.closest('#fmx-slotsBox') : null;
+                    if (host0) { _refreshBuyerExtra(host0, l); _redrawFullIfOpen(host0, l); }
+                    _syncWriteBtn(l); return;
+                }
                 _lsSel.day = iso;
                 _haptic('light');
                 calDraw(box, l, 'view');
@@ -7038,7 +6978,7 @@
         if (_faqTab === 'terms') body = TERMS.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> Единые правила Площадки. За контент отвечает разместивший; дополнительно действуют законы страны, на аудиторию которой направлена реклама.</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-bulb"></i> Практический разбор для обеих сторон: как закупать рекламу и как продавать размещения в своём канале.</div>' + TIPS.map(function (t) { return '<div class="fmx-term"><h4><i class="ti ti-circle-check" style="color:#5DCAA5;margin-right:5px;"></i>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
-        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ft' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button><button class="fmx-ft' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Метрики</button><button class="fmx-ft' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button></div>' + body;
+        el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ftab' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button><button class="fmx-ftab' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Метрики</button><button class="fmx-ftab' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button></div>' + body;
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
