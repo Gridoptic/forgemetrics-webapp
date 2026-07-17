@@ -1115,6 +1115,18 @@
             '.fmx-bchip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#c7cdff;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.35);border-radius:8px;padding:5px 9px;cursor:pointer;}',
             '.fmx-bchip i{font-size:12px;color:#8990a8;}',
             '.fmx-baddbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;border:1px dashed rgba(129,140,248,0.35);background:rgba(129,140,248,0.05);color:#a7b0f0;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;}',
+            '.fmx-peak{display:flex;align-items:center;gap:9px;margin-top:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(135deg,rgba(90,176,230,0.12),rgba(90,176,230,0.03));border:0.5px solid rgba(90,176,230,0.3);font-size:11.5px;color:#c9cbe0;}',
+            '.fmx-peak i{color:#5ab0e6;font-size:15px;flex:0 0 auto;}',
+            '.fmx-peak b{color:#e8e8ed;font-family:ui-monospace,Menlo,Consolas,monospace;}',
+            '.fmx-peaktag{font-size:8px;font-weight:800;letter-spacing:0.3px;color:#5ab0e6;background:rgba(90,176,230,0.14);border-radius:5px;padding:1px 6px;}',
+            '.fmx-tsl.peak{border-color:rgba(90,176,230,0.4);background:rgba(90,176,230,0.06);}',
+            '.fmx-htog{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:12px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.08);margin-top:2px;}',
+            '.fmx-htl{flex:1;min-width:0;font-size:12.5px;font-weight:600;color:#e8e8ed;}',
+            '.fmx-htl i{display:block;font-size:9.5px;color:#8990a8;font-style:normal;font-weight:400;margin-top:2px;}',
+            '.fmx-hsw{width:42px;height:24px;border-radius:99px;background:rgba(255,255,255,0.12);position:relative;flex:0 0 auto;cursor:pointer;transition:background .16s;}',
+            '.fmx-hsw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .16s;}',
+            '.fmx-hsw.on{background:#818cf8;}',
+            '.fmx-hsw.on::after{left:21px;}',
             /* нижняя шторка (утверждённый паттерн макета) */
             '.fmx-shbg{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9400;display:none;}',
             '.fmx-shbg.on{display:block;}',
@@ -2855,14 +2867,21 @@
         return '<span class="fmx-sdots">' + d + '</span>';
     }
 
+    /* час пик просмотров — считает платформа (l.peak_hours), None пока данных мало */
+    function _peakWin(l) { return (l && l.peak_hours && typeof l.peak_hours.from === 'number') ? l.peak_hours : null; }
+    function _peakLabel(l) { var p = _peakWin(l); return p ? (String(p.from).padStart(2, '0') + ':00–' + String(p.to).padStart(2, '0') + ':00') : ''; }
+    function _inPeak(l, tmin) { var p = _peakWin(l); if (!p) return false; var h = Math.floor(tmin / 60); return p.from <= p.to ? (h >= p.from && h < p.to) : (h >= p.from || h < p.to); }
+    function _peakBlock(l) { var lab = _peakLabel(l); if (!lab) return ''; return '<div class="fmx-peak"><i class="ti ti-chart-line"></i><span>Час пик просмотров · <b>' + lab + '</b></span></div>'; }
+
     /* панель слотов дня для ПОКУПАТЕЛЯ: выбор свободного времени выхода */
     function _buyerSlotsHtml(l, r) {
         var cfg = _slotCfg(r); if (!cfg || !_lsSel || !_lsSel.day) return '';
         var bt = _busyTimes(r), day = _lsSel.day;
         var rows = cfg.times.map(function (t) {
-            var tm = _tmin(t.t), isBusy = !!bt[day + '|' + tm], sel = (_lsSel.time === tm);
-            return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
+            var tm = _tmin(t.t), isBusy = !!bt[day + '|' + tm], sel = (_lsSel.time === tm), pk = _inPeak(l, tm);
+            return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + (pk ? ' peak' : '') + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
                 '<span class="tm">' + _esc(t.t) + '</span>' +
+                (pk ? '<span class="fmx-peaktag">час пик</span>' : '') +
                 '<span class="st">' + (isBusy ? 'Занято' : (sel ? 'Выбрано ✓' : 'Свободно')) + '</span></div>';
         }).join('');
         return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + rows + '</div>';
@@ -2907,8 +2926,9 @@
             if (_ownerSelDay) {
                 var bt = _busyTimes(r);
                 var rows = cfg.times.map(function (t) {
-                    var tm = _tmin(t.t), isBusy = !!bt[_ownerSelDay + '|' + tm];
-                    return '<div class="fmx-tsl" data-otog="' + tm + '"><span class="tm">' + t.t + '</span>' +
+                    var tm = _tmin(t.t), isBusy = !!bt[_ownerSelDay + '|' + tm], pk = _inPeak(l, tm);
+                    return '<div class="fmx-tsl' + (pk ? ' peak' : '') + '" data-otog="' + tm + '"><span class="tm">' + t.t + '</span>' +
+                        (pk ? '<span class="fmx-peaktag">час пик</span>' : '') +
                         '<span class="st">' + (isBusy ? 'Занято' : 'Свободно') + '</span>' +
                         '<div class="fmx-osw' + (isBusy ? ' busy' : '') + '"></div></div>';
                 }).join('');
@@ -4215,7 +4235,7 @@
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
-            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _title: null, listingId: null, channelId: null };
+            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _hideInsights: false, _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
         /* все форматы каталога как строки редактора; по умолчанию включён только опорный 1/24 */
@@ -4269,6 +4289,7 @@
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._slots = l.slots_note || '';
         _ss._erid = l.erid_who || null;
+        _ss._hideInsights = !!l.hide_insights;
     }
     function selectChannel(id) {
         _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; _ss.channelId = id;
@@ -4820,7 +4841,9 @@
                 return '<button type="button" class="fmx-eridb' + (_ss._erid === o[0] ? ' on' : '') + '" data-erid="' + o[0] + '">' + o[1] + '</button>';
             }).join('') + '</div>' +
             '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> Кто ставит токен ОРД — условие размещения, видно закупщику. Авто-маркировка подключится с оплатой через площадку.</div>';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots + erid;
+        var ins = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-chart-line"></i> Аналитика в витрине</span>' +
+            '<div class="fmx-htog" id="fmx-hideIns"><div class="fmx-htl">Показывать час пик и рекл. охват<i>' + (_ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала') + '</i></div><div class="fmx-hsw' + (_ss._hideInsights ? '' : ' on') + '"></div></div>';
+        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + slots + erid + ins;
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
@@ -4856,6 +4879,12 @@
                 qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-erid') === _ss._erid); });
                 _haptic('light');
             });
+        });
+        var hi = el('fmx-hideIns');
+        if (hi) hi.addEventListener('click', function () {
+            _ss._hideInsights = !_ss._hideInsights; _haptic('light');
+            var sw = hi.querySelector('.fmx-hsw'); if (sw) sw.classList.toggle('on', !_ss._hideInsights);
+            var sub = hi.querySelector('.fmx-htl i'); if (sub) sub.textContent = _ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала';
         });
     }
 
@@ -6379,6 +6408,7 @@
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
             slots_note: (sl ? sl.value : _ss._slots) || null,
             erid_who: _ss._erid || null,
+            hide_insights: !!_ss._hideInsights,
             custom_text: (de ? de.value : _ss._desc) || null,
             accent_color: _ss.color,
             cover_type: _ss.covType,
@@ -7158,6 +7188,7 @@
             '<div class="fmx-badges">' + badges(l) + '</div>' +
             '<div class="fmx-lssect">Метрики канала</div>' +
             _pwMetrics(l) +
+            _peakBlock(l) +
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
             (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) : '') +
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;">' + _esc(l.custom_text) + '</div>' : '') +
