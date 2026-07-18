@@ -6767,13 +6767,26 @@
             row.addEventListener('click', function () {
                 if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
-                if (li.classList.contains('on')) { li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; return; }
+                if (li.classList.contains('on')) { li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; _rescaleRow(li); return; }
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
-                box.style.display = 'block'; li.classList.add('on'); bindCards(box);
+                box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
             });
         });
+    }
+    /* Строка списка обёрнута в .fmx-zw (масштаб карточек под 350px через transform). scaleCards
+       фиксирует высоту обёртки по свёрнутой строке — а при развороте контент выше, и старая высота
+       оставляла раскрытую карточку налезать на строки ниже. Пересчитываем высоту обёртки этой строки
+       по фактическому содержимому. Без .fmx-zw (страница деталей) — просто no-op. */
+    function _rescaleRow(li) {
+        var w = (li && li.closest) ? li.closest('.fmx-zw') : null;
+        if (!w) return;
+        var card = w.firstElementChild; if (!card) return;
+        var ww = w.clientWidth; if (!ww) return;
+        var k = Math.min(1, ww / 350);
+        card.style.transform = k < 0.9995 ? 'scale(' + k + ')' : '';
+        w.style.height = Math.round(card.offsetHeight * k) + 'px';
     }
 
     function zw(html) { return '<div class="fmx-zw">' + html + '</div>'; }
