@@ -352,6 +352,11 @@
             '.fmx-note{font-size:11.5px;line-height:1.5;color:#8990a8;background:rgba(99,102,241,0.07);border:0.5px solid rgba(99,102,241,0.22);border-radius:10px;padding:10px 12px;margin-bottom:14px;display:flex;gap:7px;align-items:flex-start;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}',
             '.fmx-note i{color:#818cf8;flex-shrink:0;margin-top:1px;}',
             '.fmx-note.fmx-gr{background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.25);}.fmx-note.fmx-gr i{color:#5DCAA5;}',
+            '.fmx-nichebtn{display:flex;align-items:center;gap:9px;width:100%;margin-bottom:9px;padding:12px 14px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:650;color:#c7ccf7;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.06));border:1px solid rgba(129,140,248,0.4);transition:all 160ms;}',
+            '.fmx-nichebtn i:first-child{font-size:17px;color:#818cf8;}',
+            '.fmx-nichebtn span{flex:1;text-align:left;}',
+            '.fmx-nichebtn-chev{color:#818cf8;font-size:16px;}',
+            '.fmx-nichebtn.on{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));border-color:rgba(129,140,248,0.6);color:#fff;}',
             '.fmx-sortbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}',
             '.fmx-seg{flex-shrink:0;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;padding:8px 13px;font-size:11.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 160ms;}',
             '.fmx-seg.on{background:rgba(99,102,241,0.14);color:#818cf8;border-color:rgba(99,102,241,0.3);}',
@@ -1519,7 +1524,7 @@
         }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
-        if (t === 'catalog') renderCatalog();
+        if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }   // Радар по умолчанию — все каналы
         else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
         else if (t === 'pulse') renderPulse();
         else if (t === 'mod') { _modTab = 'queue'; renderMod(); }
@@ -6867,10 +6872,13 @@
     }
 
     function sortBarHtml() {
-        return '<div class="fmx-sortbar">' +
-            '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
+        var pickActive = (_sort === 'niche' && _nicheSel);
+        var pickLabel = pickActive ? ('Ниша: ' + _esc(String(_nicheSel).length > 20 ? String(_nicheSel).slice(0, 19) + '…' : _nicheSel)) : 'Выбрать нишу';
+        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>' +
+            '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
-            '<button class="fmx-seg' + (_sort === 'niche' ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i> ' + ((_sort === 'niche' && _nicheSel) ? _esc(String(_nicheSel).length > 16 ? String(_nicheSel).slice(0, 15) + '…' : _nicheSel) : 'Ниши') + '</button></div>';
+            '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
+            '</div>';
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
     function vtogHtml() {
