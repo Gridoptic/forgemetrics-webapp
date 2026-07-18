@@ -258,9 +258,18 @@
         return false;
     }
     function _myNichesStr() {
-        var parts = [];
-        (_channels || []).forEach(function (c) { if (c.niche) parts.push(String(c.niche)); });
-        return parts.join(', ');
+        // «под нишу» считаем ТОЛЬКО по активному каналу из главного меню, а не по всем каналам сразу
+        // (иначе объединение ниш нескольких каналов совпадает почти со всем Радаром).
+        var actId = null;
+        try { actId = (typeof window !== 'undefined' && window.__fmActiveChannelId != null) ? window.__fmActiveChannelId : null; } catch (e) {}
+        if (actId != null) {
+            for (var i = 0; i < (_channels || []).length; i++) {
+                if (String(_channels[i].id) === String(actId) && _channels[i].niche) return String(_channels[i].niche);
+            }
+        }
+        // запасной вариант: активный не определён, но канал ровно один — берём его нишу
+        if (_channels && _channels.length === 1 && _channels[0].niche) return String(_channels[0].niche);
+        return '';
     }
     function _nicheMatch(l) {
         if (!l || !l.niche) return false;

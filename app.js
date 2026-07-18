@@ -378,6 +378,8 @@ function renderChannelSelector(data) {
     const host = document.getElementById('channel-selector');
     if (!host) return;
     const ch = data.channel;
+    // активный канал из главного меню — чтобы Радар считал «под нишу» только по нему, а не по всем каналам
+    try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
     if (ch) {
         const title = ch.title || ch.username || 'Канал';
         const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
