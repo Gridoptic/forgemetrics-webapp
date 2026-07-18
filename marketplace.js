@@ -444,6 +444,29 @@
             '.fmx-scard:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-srow{display:flex;align-items:center;gap:11px;}',
             '.fmx-sav{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;}',
+            '.fmr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}',
+            '.fmr-niche{display:inline-flex;align-items:center;gap:6px;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.3);color:#c7ccf7;font-size:12px;font-weight:600;border-radius:8px;padding:5px 10px;}',
+            '.fmr-niche i{color:#818cf8;font-size:14px;}',
+            '.fmr-score{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}',
+            '.fmr-scorelbl{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#565b73;display:flex;align-items:center;gap:4px;}',
+            '.fmr-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#565b73;margin:13px 1px 5px;display:flex;align-items:center;gap:6px;}',
+            '.fmr-line{font-size:13px;color:#8990a8;line-height:1.6;}',
+            '.fmr-line b{color:#e8e8ed;font-weight:700;}',
+            '.fmr-line .fmr-big{font-size:18px;}',
+            '.fmr-line .fdot{color:#565b73;margin:0 6px;}',
+            '.fmr-sub{font-size:10px;color:#565b73;margin-top:3px;line-height:1.5;}',
+            '.fmr-sub b{color:#8990a8;}',
+            '.fmr-i{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.14);color:#565b73;font-size:9px;font-style:normal;font-weight:700;cursor:pointer;flex:0 0 auto;}',
+            '.fmr-i.push{margin-left:auto;}',
+            '.fmr-info{display:none;font-size:10px;color:#8990a8;line-height:1.55;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px;margin-top:6px;}',
+            '.fmr-info.on{display:block;}',
+            '.fmr-conv{width:52px;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.4);border-radius:7px;color:#c7ccf7;font-family:inherit;font-size:13px;font-weight:700;text-align:center;padding:3px 4px;-moz-appearance:textfield;}',
+            '.fmr-conv::-webkit-outer-spin-button,.fmr-conv::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}',
+            '.fmr-warn{display:none;font-size:10px;color:#f59e0b;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.22);border-radius:8px;padding:7px 10px;margin-top:7px;line-height:1.5;}',
+            '.fmr-warn.on{display:block;}',
+            '.fmr-pills{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0 11px;}',
+            '.fmr-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#c2c6d2;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:5px 9px;}',
+            '.fmr-pill i{font-size:13px;}',
             '.fmx-lrow{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color 160ms;}',
             '.fmx-lrow:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}',
@@ -6630,17 +6653,62 @@
     }
     function simpleCard(l) {
         if (l.is_adult && !_adultOk) return _ageTile();
-        var accent = _accent(l), hc = _healthColor(l), t = l.title || l.username || '?';
-        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '"><div class="fmx-srow"><div class="fmx-sav" style="background:' + accent + ';' + (l.avatar_url ? 'overflow:hidden;' : '') + '">' + (l.avatar_url ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" style="width:100%;height:100%;object-fit:cover;">' : _esc(t.charAt(0))) + '</div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-nm" style="padding-top:0;">' + _esc(t) + '</div><div class="fmx-meta">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
-            '<button class="fmx-star' + (_bookmarks[l.username] ? ' on' : '') + '" style="position:static;background:transparent;border:0.5px solid rgba(255,255,255,0.12);" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
-            (_audChip(l) ? '<div style="margin:11px 0 -2px;">' + _audChip(l) + '</div>' : '') +
-            '<div class="fmx-met" style="margin-top:11px;"><div><div class="l"><i class="ti ti-users"></i>Подписчики</div><div class="v">' + _num(l.subscribers) + '</div></div>' +
-            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
-            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
-            '</div>' +
-            '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div></div>';
+        var hc = _healthColor(l);
+        var subs = l.subscribers, av = l.avg_views;
+        var score = (l.health_score != null) ? l.health_score : null;
+        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : ((av && subs) ? Math.round(av / subs * 1000) / 10 : null));
+        var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
+        var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
+        var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
+        var conv = 7, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;
+        // кольцо индекса здоровья
+        var ring = '';
+        if (score != null) {
+            var rr0 = 17, circ = Math.round(2 * Math.PI * rr0 * 100) / 100, off = Math.round(circ * (1 - score / 100) * 100) / 100;
+            ring = '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + score + '</text></svg>';
+        }
+        var trHtml = '';
+        if (l.trend === 'growing') trHtml = ' <span style="font-size:11px;color:#5DCAA5;font-weight:600;">↗ растёт</span>';
+        else if (l.trend === 'declining') trHtml = ' <span style="font-size:11px;color:#f59e0b;font-weight:600;">↘ падает</span>';
+        var rrCol = (rstat === 'норма') ? '#5DCAA5' : '#f59e0b';
+        var rrHtml = '';
+        if (rr != null && rstat) {
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
+                '<div class="fmr-info" data-finfo="rr">Reach Rate = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): малый до 10к 30–60%, средний 15–30%, крупный 8–18%, миллионник 4–10%. Слишком низко для своего размера — признак накрутки.</div>';
+        }
+        var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
+            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml;
+        var ad = '';
+        if (pp) {
+            ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i push" data-fi="ad">i</i></div>' +
+                '<div class="fmr-line">Пост <b class="fmr-big">≈' + _num(pp) + ' ₽</b></div>' +
+                '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
+                (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 показов</div>' : '') +
+                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.</div>';
+        }
+        var flow = '';
+        if (pp && av) {
+            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i push" data-fi="flow">i</i></div>' +
+                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена поста)</div>' +
+                '<div class="fmr-warn">Меньше 1% — почти провал: подписалось совсем мало, поэтому каждый выходит космически дорого. В реальности конверсия обычно выше.</div>' +
+                '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
+        }
+        var pills = [];
+        if (l.antifraud === 'clean' || l.health_class === 'green') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
+        if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
+        var au = l.audience && _audText(l.audience);
+        if (au) pills.push('<span class="fmr-pill"><i class="ti ti-users"></i>' + au + ' аудитория</span>');
+        var pillsHtml = pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '<div style="height:11px;"></div>';
+        var nicheHtml = l.niche ? '<span class="fmr-niche"><i class="ti ti-target-arrow"></i>' + _esc(l.niche) + '</span>' : '<span></span>';
+        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i" data-fi="health">i</i></div></div>' : '<span></span>';
+        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '">' +
+            '<div class="fmr-top">' + nicheHtml + scoreHtml + '</div>' +
+            (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
+            facts + ad + flow + pillsHtml +
+            '<div class="fmx-acts"><button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
+            '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
     }
     /* компактные значки-параметры для упрощённого вида (в стиле иконки «в нишу») */
     function _liIcons(l) {
@@ -6667,7 +6735,7 @@
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
-        if (l.er != null) bits.push('ER <b>' + Math.round(l.er) + '%</b>');
+        if (l.er != null) bits.push('RR <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _short(cpm) + '₽</b>');
         if (l.audience && _audText(l.audience)) bits.push('<span style="color:' + _audColor(l.audience) + ';font-weight:700;">' + _audText(l.audience) + '</span>');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
@@ -6758,6 +6826,23 @@
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
+        // раскрытие пояснений ⓘ на карточке Радара
+        qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
+        // калькулятор перелива: пересчёт цены подписчика по введённой конверсии
+        qsa(host, '.fmr-conv').forEach(function (inp) {
+            inp.addEventListener('click', function (e) { e.stopPropagation(); });
+            inp.addEventListener('input', function (e) {
+                e.stopPropagation();
+                var line = inp.closest('[data-flow]'); if (!line) return;
+                var pp = +line.getAttribute('data-pp'), av = +line.getAttribute('data-av');
+                var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
+                var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
+                var card = inp.closest('.fmx-scard'); if (!card) return;
+                var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 1 ? '#f59e0b' : '#5DCAA5'; }
+                var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
+                var warn = card.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 1);
+            });
+        });
     }
     function bindView() { qsa(el('fmx-main'), '[data-view]').forEach(function (b) { b.addEventListener('click', function () { _view = b.getAttribute('data-view'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); }
     function bindSort() {
