@@ -276,7 +276,9 @@
         return nichesMatch(_myNichesStr(), l.niche);
     }
     function _applySort(arr) {
-        if (_sort === 'match') return arr.slice().sort(function (a, b) { return (_nicheMatch(b) ? 1 : 0) - (_nicheMatch(a) ? 1 : 0); });
+        // «Под мою нишу» — ФИЛЬТР (только каналы ниши активного канала), а не сортировка:
+        // сортировка «поднять совпадающие вверх» была незаметна, если совпадений мало/нет.
+        if (_sort === 'match') return arr.filter(_nicheMatch);
         if (_sort === 'niche' && _nicheSel) return arr.filter(function (l) { return l.niche && _nicheHit(_nicheSel, l.niche); });
         return arr;
     }
@@ -1978,7 +1980,16 @@
         if (_catState === 'error') { box.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.'); return; }
         if (!_catalog || !_catalog.length) { box.innerHTML = emptyHtml('ti-radar-2', 'Радар скоро наполнится', 'Здесь будет каталог каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.'); return; }
         var list = _catList();
-        if (!list.length) { box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.'); return; }
+        if (!list.length) {
+            if (_sort === 'match' && !_catQ) {
+                var myn = _myNichesStr();
+                if (myn) box.innerHTML = emptyHtml('ti-target-arrow', 'В твоей нише пока пусто', 'В Радаре пока нет каналов ниши «' + _esc(myn) + '». Открой «Все каналы» или подбери близкую нишу через «Выбрать нишу».');
+                else box.innerHTML = emptyHtml('ti-target-arrow', 'Ниша не определена', 'Выбери активный канал в главном меню — и Радар подберёт площадки твоей ниши. Пока открой «Все каналы».');
+                return;
+            }
+            box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.');
+            return;
+        }
         box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
         bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
     }
@@ -6782,17 +6793,20 @@
         if (ro) ro.disconnect();   // сбрасываем наблюдение за строками прошлого рендера
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
-            // страховка от наложения: следим за высотой строки и подгоняем масштабирующую
-            // обёртку при ЛЮБОМ изменении (разворот/сворачивание/догрузка шрифтов/ре-рендер)
-            if (ro && li.closest('.fmx-zw')) ro.observe(li);
             row.addEventListener('click', function () {
                 if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
-                if (li.classList.contains('on')) { li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; _rescaleRow(li); return; }
+                if (li.classList.contains('on')) {
+                    li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = '';
+                    if (ro) ro.unobserve(li);   // свернули — снимаем наблюдение (иначе на всех строках копятся reflow → лаги)
+                    _rescaleRow(li); return;
+                }
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
                 box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
+                // следим за высотой ТОЛЬКО пока строка развёрнута (догрузка иконок/перерисовка карточки)
+                if (ro && li.closest('.fmx-zw')) ro.observe(li);
             });
         });
     }
