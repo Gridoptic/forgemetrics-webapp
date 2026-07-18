@@ -459,6 +459,13 @@
             '.fmx-srow{display:flex;align-items:center;gap:11px;}',
             '.fmx-sav{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;}',
             '.fmr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}',
+            '.fmr-head{display:flex;align-items:center;gap:11px;margin-bottom:10px;}',
+            '.fmr-av{width:40px;height:40px;border-radius:11px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px;overflow:hidden;}',
+            '.fmr-av img{width:100%;height:100%;object-fit:cover;}',
+            '.fmr-id{flex:1;min-width:0;}',
+            '.fmr-name{font-size:15px;font-weight:700;color:#e8e8ed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25;}',
+            '.fmr-user{font-size:11px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}',
+            '.fmr-nicherow{margin-bottom:2px;}',
             '.fmr-niche{display:inline-flex;align-items:center;gap:6px;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.3);color:#c7ccf7;font-size:12px;font-weight:600;border-radius:8px;padding:5px 10px;}',
             '.fmr-niche i{color:#818cf8;font-size:14px;}',
             '.fmr-score{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}',
@@ -6715,11 +6722,20 @@
         var au = l.audience && _audText(l.audience);
         if (au) pills.push('<span class="fmr-pill"><i class="ti ti-users"></i>' + au + ' аудитория</span>');
         var pillsHtml = pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '<div style="height:11px;"></div>';
-        var nicheHtml = l.niche ? '<span class="fmr-niche"><i class="ti ti-target-arrow"></i>' + _esc(l.niche) + '</span>' : '<span></span>';
-        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i" data-fi="health">i</i></div></div>' : '<span></span>';
+        // шапка карточки: аватар + название канала + @юзернейм, справа — кольцо индекса
+        var _t = l.title || l.username || 'Канал', _acc = _accent(l);
+        var avHtml = l.avatar_url
+            ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
+            : '<div class="fmr-av" style="background:' + _esc(_acc) + ';">' + _esc(_t.charAt(0).toUpperCase()) + '</div>';
+        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i" data-fi="health">i</i></div></div>' : '';
+        var headHtml = '<div class="fmr-head">' + avHtml +
+            '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
+            (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+        var nicheHtml = l.niche ? '<div class="fmr-nicherow"><span class="fmr-niche"><i class="ti ti-target-arrow"></i>' + _esc(l.niche) + '</span></div>' : '';
         return '<div class="fmx-scard" data-u="' + _esc(l.username) + '">' +
-            '<div class="fmr-top">' + nicheHtml + scoreHtml + '</div>' +
+            headHtml +
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
+            nicheHtml +
             facts + ad + flow + pillsHtml +
             '<div class="fmx-acts"><button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
