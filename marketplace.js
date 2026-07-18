@@ -6762,8 +6762,13 @@
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
     function bindList(scope) {
+        var ro = _ensureRowRO();
+        if (ro) ro.disconnect();   // сбрасываем наблюдение за строками прошлого рендера
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
+            // страховка от наложения: следим за высотой строки и подгоняем масштабирующую
+            // обёртку при ЛЮБОМ изменении (разворот/сворачивание/догрузка шрифтов/ре-рендер)
+            if (ro && li.closest('.fmx-zw')) ro.observe(li);
             row.addEventListener('click', function () {
                 if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
@@ -6774,6 +6779,25 @@
                 box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
             });
         });
+    }
+    /* Единый ResizeObserver на все строки списка: как только высота строки меняется
+       (развернули карточку, догрузился шрифт иконок, ре-рендер) — синхронно подгоняем
+       высоту масштабирующей обёртки .fmx-zw. Так строки НИКОГДА не налезают друг на друга,
+       независимо от тайминга. _rescaleRow оставлен для мгновенной подгонки в момент клика. */
+    var _rowRO = null;
+    function _ensureRowRO() {
+        if (_rowRO || typeof ResizeObserver === 'undefined') return _rowRO;
+        _rowRO = new ResizeObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+                var li = entries[i].target;
+                var w = (li.closest) ? li.closest('.fmx-zw') : null;
+                if (!w) continue;
+                var ww = w.clientWidth; if (!ww) continue;
+                var k = Math.min(1, ww / 350);
+                w.style.height = Math.round(li.offsetHeight * k) + 'px';
+            }
+        });
+        return _rowRO;
     }
     /* Строка списка обёрнута в .fmx-zw (масштаб карточек под 350px через transform). scaleCards
        фиксирует высоту обёртки по свёрнутой строке — а при развороте контент выше, и старая высота
