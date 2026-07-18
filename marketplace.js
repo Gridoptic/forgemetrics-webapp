@@ -6640,7 +6640,7 @@
             (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽</div></div>' : ''; })() +
             '</div>' +
-            '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.contact || l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Связаться' + (l.contact ? ' по рекламе' : '') + '</button></div></div>';
+            '<div class="fmx-acts"><button class="fmx-btn" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div></div>';
     }
     /* компактные значки-параметры для упрощённого вида (в стиле иконки «в нишу») */
     function _liIcons(l) {
