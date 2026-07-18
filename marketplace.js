@@ -6793,38 +6793,42 @@
         if (ro) ro.disconnect();   // сбрасываем наблюдение за строками прошлого рендера
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
+            // следим за высотой КАЖДОЙ строки: если её содержимое станет выше уже после замера
+            // scaleCards (перенос метрик на 2-ю строку, догрузка иконок, разворот) — обёртка
+            // .fmx-zw подгонится и строки не налезут друг на друга. Колбэк батчится (см. ниже) — без лагов.
+            if (ro && li.closest('.fmx-zw')) ro.observe(li);
             row.addEventListener('click', function () {
                 if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
                 if (li.classList.contains('on')) {
-                    li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = '';
-                    if (ro) ro.unobserve(li);   // свернули — снимаем наблюдение (иначе на всех строках копятся reflow → лаги)
-                    _rescaleRow(li); return;
+                    li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; _rescaleRow(li); return;
                 }
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
                 box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
-                // следим за высотой ТОЛЬКО пока строка развёрнута (догрузка иконок/перерисовка карточки)
-                if (ro && li.closest('.fmx-zw')) ro.observe(li);
             });
         });
     }
-    /* Единый ResizeObserver на все строки списка: как только высота строки меняется
-       (развернули карточку, догрузился шрифт иконок, ре-рендер) — синхронно подгоняем
-       высоту масштабирующей обёртки .fmx-zw. Так строки НИКОГДА не налезают друг на друга,
-       независимо от тайминга. _rescaleRow оставлен для мгновенной подгонки в момент клика. */
+    /* Единый ResizeObserver на все строки списка: как только высота строки меняется (перенос
+       метрик на 2-ю строку, догрузка иконок, разворот, ре-рендер) — подгоняем высоту
+       масштабирующей обёртки .fmx-zw. Так строки НИКОГДА не налезают друг на друга.
+       ВАЖНО: колбэк разделён на фазы — сначала ВСЕ чтения offsetHeight, потом ВСЕ записи height.
+       Иначе чтение-запись вперемешку форсит reflow на каждую строку (120 строк = лаги). */
     var _rowRO = null;
     function _ensureRowRO() {
         if (_rowRO || typeof ResizeObserver === 'undefined') return _rowRO;
         _rowRO = new ResizeObserver(function (entries) {
-            for (var i = 0; i < entries.length; i++) {
+            var jobs = [];
+            for (var i = 0; i < entries.length; i++) {                 // фаза чтения
                 var li = entries[i].target;
                 var w = (li.closest) ? li.closest('.fmx-zw') : null;
                 if (!w) continue;
                 var ww = w.clientWidth; if (!ww) continue;
-                var k = Math.min(1, ww / 350);
-                w.style.height = Math.round(li.offsetHeight * k) + 'px';
+                jobs.push({ w: w, px: Math.round(li.offsetHeight * Math.min(1, ww / 350)) });
+            }
+            for (var j = 0; j < jobs.length; j++) {                    // фаза записи
+                if (jobs[j].w.style.height !== jobs[j].px + 'px') jobs[j].w.style.height = jobs[j].px + 'px';
             }
         });
         return _rowRO;
