@@ -4140,7 +4140,7 @@
     var CMP_ROWS = [
         { k: 'subs', label: 'Подписчики', dir: null, get: function (l) { return l.subscribers || null; }, fmt: function (v) { return _num(v); } },
         { k: 'views', label: 'Охват', dir: 'up', get: function (l) { return l.avg_views || null; }, fmt: function (v) { return '~' + _num(v); } },
-        { k: 'er', label: 'ER', dir: 'up', get: function (l) { return l.er != null ? l.er : null; }, fmt: function (v) { return (Math.round(v * 10) / 10) + '%'; } },
+        { k: 'er', label: 'RR', dir: 'up', get: function (l) { return l.er != null ? l.er : null; }, fmt: function (v) { return (Math.round(v * 10) / 10) + '%'; } },
         { k: 'reach', label: 'Охват к подп.', dir: 'up', get: _reachRate, fmt: function (v) { return v + '%'; } },
         { k: 'cpm', label: 'CPM', dir: 'down', get: _cpm, fmt: function (v) { return _num(v) + ' ₽'; } },
         { k: 'price', label: 'Цена от', dir: 'down', get: _minPrice, fmt: function (v) { return _num(v) + ' ₽'; } },
@@ -6658,7 +6658,7 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">ER</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
+            (l.er != null ? '<div><div class="l">RR</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
             /* строка дат убрана с карточки (17.07.2026, решение владельца): даты живут внутри
@@ -6692,7 +6692,7 @@
         var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
         var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
-        var conv = 7, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;
+        var conv = 1, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;  // дефолт 1% — реалистичен для холодного трафика (было 7%, завышало результат в разы)
         // кольцо индекса здоровья
         var ring = '';
         if (score != null) {
@@ -6709,8 +6709,16 @@
             rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
                 '<div class="fmr-info" data-finfo="rr">Reach Rate = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): малый до 10к 15–45%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак накрутки.</div>';
         }
+        // строка ER (вовлечённость по реакциям) — отдельно от Reach Rate; пусто, если реакции скрыты
+        var erHtml = '';
+        if (l.engagement_percent != null) {
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + (l.react_count != null ? ' <span style="font-size:11px;color:#565b73;">~' + _num(l.react_count) + ' реакций на пост</span>' : '') + '<i class="fmr-i push" data-fi="er">i</i></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = реакции ÷ охват — какая доля увидевших пост реагирует. Живой сигнал: просмотры накрутить дёшево, реакции — нет. У новостных норма ~0.3–1%, у узких экспертных выше. Если реакции у канала скрыты — ER не показываем. Комментарии и репосты добавятся у каналов, подключённых к боту.</div>';
+        }
+        // пометка «оценка» при малой/недозревшей выборке охвата — честно про уверенность
+        var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
         var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
-            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml;
+            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + reachEst + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml;
         var ad = '';
         if (pp) {
             ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i push" data-fi="ad">i</i></div>' +
@@ -6724,7 +6732,7 @@
             flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i push" data-fi="flow">i</i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
                 '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена поста)</div>' +
-                '<div class="fmr-warn">Меньше 1% — почти провал: подписалось совсем мало, поэтому каждый выходит космически дорого. В реальности конверсия обычно выше.</div>' +
+                '<div class="fmr-warn">Ниже 0.3% — совсем мало: почти никто не подписался, каждый выходит космически дорого. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
         var pills = [];
@@ -6923,9 +6931,9 @@
                 var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
                 var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
                 var card = inp.closest('.fmx-scard'); if (!card) return;
-                var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 1 ? '#f59e0b' : '#5DCAA5'; }
+                var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
                 var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
-                var warn = card.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 1);
+                var warn = card.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 0.3);
             });
         });
     }
@@ -7292,7 +7300,7 @@
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('Вовлечённость', l.er != null ? String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
+            cell('Reach Rate', l.er != null ? String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
             '<div class="pw-mdiv"></div>' +
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
