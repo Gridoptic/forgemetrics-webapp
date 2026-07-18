@@ -445,7 +445,7 @@ function renderPulse(pulse) {
       <div class="pw-mrow">
         ${pwCell('Подписчики', pulse.subscribers, { sep: true })}
         <div class="pw-mdiv"></div>
-        ${pwCell('Вовлечённость', pulse.er_percent, { suf: '%', dec: 1 })}
+        ${pwCell('Вовлечённость (ER)', pulse.engagement_percent, { suf: '%', dec: 2 })}
         <div class="pw-mdiv"></div>
         ${pwCell('Охват к базе', pulse.reach_rate, { suf: '%' })}
       </div>

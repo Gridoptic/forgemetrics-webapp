@@ -6659,6 +6659,7 @@
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
             (l.er != null ? '<div><div class="l">RR</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
+            (l.engagement_percent != null ? '<div><div class="l">ER</div><div class="v" style="color:#818cf8;">' + l.engagement_percent + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
             /* строка дат убрана с карточки (17.07.2026, решение владельца): даты живут внутри
