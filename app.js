@@ -533,20 +533,20 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
     grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
     svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
     svg += `<path d="${line}" fill="none" stroke="#5DCAA5" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
-    svg += `<path id="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    svg += `<path class="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
     svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="rgba(93,202,165,0.22)"/>`;
-    svg += `<circle id="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
+    svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
     svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
-    svg += `<line id="pw-cx" class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
-    svg += `<circle id="pw-cd" class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
-    host.innerHTML = svg + '<div class="pw-tip" id="pw-tip"></div>';
+    svg += `<line class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
+    svg += `<circle class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
+    host.innerHTML = svg + '<div class="pw-tip"></div>';
 
-    const cl = document.getElementById('pw-cl'), ar = host.querySelector('.pw-area');
+    const cl = host.querySelector('.pw-cl'), ar = host.querySelector('.pw-area');
     if (!reduce && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
 
-    const tip = document.getElementById('pw-tip'), cx = document.getElementById('pw-cx'), cd = document.getElementById('pw-cd'), ep = document.getElementById('pw-ep');
+    const tip = host.querySelector('.pw-tip'), cx = host.querySelector('.pw-cx'), cd = host.querySelector('.pw-cd'), ep = host.querySelector('.pw-ep');
     function at(clientX) {
         const r = host.getBoundingClientRect(); if (!r.width) return; const sx = (clientX - r.left) * (W / r.width);
         let i = Math.round((sx - padL) / ((W - padL - padR) / last)); i = Math.max(0, Math.min(last, i));
