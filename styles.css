@@ -3497,6 +3497,36 @@ html.cs-modal-open {
     overflow: hidden !important;
 }
 
+/* ── Оформление и оплата подписки (переиспользует .bs-overlay / .bs-sheet) ── */
+.co-title { font-size: 15px; font-weight: 700; color: #fff; margin: 2px 0 14px; }
+.co-plan { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.co-tile { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 21px; flex: 0 0 auto; border: 1px solid rgba(129, 140, 248, 0.35); background: linear-gradient(135deg, rgba(129, 140, 248, 0.18), rgba(129, 140, 248, 0.05)); color: #a5b4fc; }
+.co-t-bl { background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(96, 165, 250, 0.05)); border-color: rgba(96, 165, 250, 0.35); color: #93c5fd; }
+.co-t-pu { background: linear-gradient(135deg, rgba(129, 140, 248, 0.18), rgba(129, 140, 248, 0.05)); border-color: rgba(129, 140, 248, 0.35); color: #a5b4fc; }
+.co-t-gd { background: linear-gradient(135deg, rgba(245, 196, 81, 0.18), rgba(245, 196, 81, 0.05)); border-color: rgba(245, 196, 81, 0.35); color: #fcd669; }
+.co-t-gr { background: linear-gradient(135deg, rgba(52, 211, 153, 0.18), rgba(52, 211, 153, 0.05)); border-color: rgba(52, 211, 153, 0.35); color: #6ee7b7; }
+.co-t-pk { background: linear-gradient(135deg, rgba(244, 114, 182, 0.18), rgba(244, 114, 182, 0.05)); border-color: rgba(244, 114, 182, 0.35); color: #f9a8d4; }
+.co-plan-info { flex: 1 1 auto; min-width: 0; }
+.co-plan-name { font-size: 15px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.co-plan-sub { font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 1px; }
+.co-plan-price { text-align: right; flex: 0 0 auto; }
+.co-plan-price b { font-size: 16px; color: #fff; font-variant-numeric: tabular-nums; }
+.co-plan-price span { font-size: 11px; color: rgba(255, 255, 255, 0.45); display: block; }
+.co-rows { display: flex; flex-direction: column; gap: 10px; padding: 14px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 16px; }
+.co-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+.co-row > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.co-total { font-size: 15px; font-weight: 700; color: #fff; }
+.co-sum { color: #fff; }
+.co-pay { width: 100%; min-height: 50px; border: none; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 22px rgba(99, 102, 241, 0.35); }
+.co-pay:active { transform: translateY(1px); }
+.co-pay:disabled { opacity: 0.6; }
+.co-secure { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: rgba(255, 255, 255, 0.4); margin: 12px 0 4px; }
+.co-close { width: 100%; background: none; border: none; color: rgba(255, 255, 255, 0.55); font-size: 13px; padding: 12px; cursor: pointer; margin-top: 4px; }
+.co-pend { text-align: center; padding: 8px 4px 4px; }
+.co-pend-ic { width: 52px; height: 52px; border-radius: 50%; margin: 6px auto 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fcd669; background: linear-gradient(135deg, rgba(245, 196, 81, 0.18), rgba(245, 196, 81, 0.05)); border: 1px solid rgba(245, 196, 81, 0.3); }
+.co-pend-t { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.co-pend-s { font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.6); margin-bottom: 18px; }
+
 .bs-overlay {
     position: fixed;
     inset: 0;

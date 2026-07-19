@@ -1261,7 +1261,7 @@ function tfPlanCard(plan, d) {
     let cta;
     if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
     else if (d.booked_plan === plan.key) cta = `<button class="tp-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
-    else cta = `<button class="tp-cta" data-book="${plan.key}">Забронировать ${escapeHtml(plan.name)} — ${cabNum(price)} ₽</button>`;
+    else cta = `<button class="tp-cta" data-buy="${plan.key}">Оформить · ${cabNum(price)} ₽</button>`;
     const openCls = plan.popular ? ' open' : '';
     const popCls = plan.popular ? ' pop' : '';
     return `<div class="tp-card tp-${color}${popCls}${openCls}" data-plan="${escapeHtml(plan.key)}">
@@ -1348,7 +1348,7 @@ function renderTariffs(d) {
     const disc = d.annual_discount_pct || 17;
     let html = tfCurBanner(d);
     html += `<div class="tf-billtog"><button class="tf-bt${tfPeriod === 'month' ? ' on' : ''}" data-per="month">Месяц</button><button class="tf-bt${tfPeriod === 'year' ? ' on' : ''}" data-per="year">Год <span class="sv">−${disc}%</span></button></div>`;
-    html += '<div class="tf-sub">Забронируй план сейчас — оплату подключим к запуску и уведомим тебя. После триала остаётся бесплатный Free.</div>';
+    html += '<div class="tf-sub">Выбери план и оформи подписку. После триала остаётся бесплатный Free.</div>';
     if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
     if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
@@ -1357,7 +1357,7 @@ function renderTariffs(d) {
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
     const promos = (d.promotions || []).map((e) => tfErow(e, bx)).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
-    html += '<div class="tf-note"><b>Оплата подключится к запуску.</b> Бронь ни к чему не обязывает — при запуске подключим ЮKassa и уведомим тебя.</div>';
+    html += '<div class="tf-note"><i class="ti ti-shield-check"></i> Безопасная оплата · подписку можно отменить в любой момент.</div>';
     body.innerHTML = html;
     localizeTree(screens.tariffs);
     body.querySelectorAll('[data-per]').forEach((btn) => btn.addEventListener('click', () => {
@@ -1420,6 +1420,107 @@ function renderTariffs(d) {
             } catch (e) { btn.disabled = false; cabToast('Не удалось забронировать'); }
         });
     });
+    body.querySelectorAll('[data-buy]').forEach((btn) => {
+        btn.addEventListener('click', () => { hapticMed(); openCheckout(btn.getAttribute('data-buy')); });
+    });
+}
+
+
+// ==================== Оформление и оплата подписки ====================
+// Экран оформления в стиле приложения (bottom-sheet). Кнопка «Оплатить N ₽» —
+// реальный шаг оформления заказа. Приём платежей подключается вместе с ЮKassa;
+// до появления ключей карту НЕ списываем — показываем честный статус и
+// предлагаем закрепить цену. Когда ключи появятся, в coPay() встанет реальное
+// создание платежа ЮKassa (POST /api/v1/payment/create).
+let _coCtx = null;
+
+function coPeriodWord() { return tfPeriod === 'year' ? 'Год' : 'Месяц'; }
+
+function openCheckout(planKey) {
+    const d = tariffsData;
+    if (!d || !Array.isArray(d.plans)) return;
+    const plan = d.plans.find((p) => p.key === planKey);
+    if (!plan) return;
+    closeCheckout();
+    const isYear = tfPeriod === 'year';
+    const price = isYear ? plan.price_year : plan.price;
+    const per = isYear ? '/год' : '/мес';
+    const color = TP_COLOR[plan.key] || 'pu';
+    const pw = coPeriodWord();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet co-sheet';
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="co-title">Оформление заказа</div>
+        <div class="co-plan">
+          <div class="co-tile co-t-${color}"><i class="ti ti-${tfIcon(plan.key)}"></i></div>
+          <div class="co-plan-info">
+            <div class="co-plan-name">${escapeHtml(plan.name)}</div>
+            <div class="co-plan-sub">Подписка · ${pw}</div>
+          </div>
+          <div class="co-plan-price"><b>${cabNum(price)} ₽</b><span>${per}</span></div>
+        </div>
+        <div class="co-rows">
+          <div class="co-row"><span>Тариф ${escapeHtml(plan.name)}, ${pw.toLowerCase()}</span><span>${cabNum(price)} ₽</span></div>
+          <div class="co-row co-total"><span>К оплате</span><span class="co-sum">${cabNum(price)} ₽</span></div>
+        </div>
+        <button class="co-pay" data-copay="${escapeHtml(plan.key)}"><i class="ti ti-lock"></i> Оплатить ${cabNum(price)} ₽</button>
+        <div class="co-secure"><i class="ti ti-shield-check"></i> Безопасная оплата · защищённое соединение</div>
+        <button class="co-close">Закрыть</button>
+    `;
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+    _coCtx = { overlay, sheet, plan, price };
+    overlay.addEventListener('click', closeCheckout);
+    sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
+    const payBtn = sheet.querySelector('[data-copay]');
+    if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(plan, price); });
+}
+
+function coPay(plan, price) {
+    if (!_coCtx || !_coCtx.sheet) return;
+    const sheet = _coCtx.sheet;
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="co-pend">
+          <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
+          <div class="co-pend-t">Приём платежей подключается</div>
+          <div class="co-pend-s">Оплата станет доступна в ближайшее время. Можешь закрепить текущую цену — уведомим, когда откроем оплату.</div>
+          <button class="co-pay" data-cobook="${escapeHtml(plan.key)}"><i class="ti ti-lock-check"></i> Закрепить цену — ${cabNum(price)} ₽</button>
+          <button class="co-close">Закрыть</button>
+        </div>
+    `;
+    sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
+    const bookBtn = sheet.querySelector('[data-cobook]');
+    if (bookBtn) bookBtn.addEventListener('click', async () => {
+        hapticMed();
+        bookBtn.disabled = true;
+        try {
+            const r = await apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: plan.key }) });
+            if (r && r.ok) {
+                if (tariffsData) { tariffsData.booked_plan = plan.key; renderTariffs(tariffsData); }
+                closeCheckout();
+                cabToast('Цена закреплена — уведомим при запуске оплаты');
+            } else { bookBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
+        } catch (e) { bookBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
+    });
+}
+
+function closeCheckout() {
+    if (!_coCtx) return;
+    const { overlay, sheet } = _coCtx;
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+    setTimeout(() => { if (overlay.parentNode) overlay.remove(); if (sheet.parentNode) sheet.remove(); }, 300);
+    _coCtx = null;
 }
 
 
