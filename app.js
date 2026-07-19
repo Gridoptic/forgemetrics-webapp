@@ -480,11 +480,21 @@ async function loadReachSeries() {
     try {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
-            drawReachChart(host, r.series, r.dates || [], r.days || 30);
+            const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
+            drawReachChart(host, r.series, r.dates || [], r.days || 30, endLabel);
             const tr = document.getElementById('pw-trend');
-            if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
-            // проактивный крючок: охват просел → ИИ сразу предлагает вернуть его постами
-            renderPulseHook(r.trend_pct);
+            if (r.stale) {
+                // спящий канал: «+X% за 30 дней» и «сегодня» — ложь (последний пост давно).
+                // Тренд не показываем (он про старый период), статус метим честно, крючок не рвём.
+                if (tr) { tr.textContent = ''; tr.className = 'tr'; }
+                const lab = document.querySelector('.pw-hlab');
+                if (lab) lab.textContent = 'Средний охват · последние посты';
+                markPulseStale(r.stale_days, r.last_date);
+            } else {
+                if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
+                // проактивный крючок: охват просел → ИИ сразу предлагает вернуть его постами
+                renderPulseHook(r.trend_pct);
+            }
         } else {
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — заглядывай позже</div>';
         }
@@ -493,7 +503,17 @@ async function loadReachSeries() {
     }
 }
 
-function drawReachChart(host, DATA, dates, days) {
+// Спящий канал: честная метка статуса вместо «Живой канал» (последний пост давно).
+function markPulseStale(days, lastDate) {
+    const badge = document.querySelector('.pw-health');
+    if (!badge) return;
+    const word = (days != null && days > 60) ? 'Неактивен' : 'Редкая активность';
+    const sub = lastDate ? ('последний пост ' + lastDate) : ((days != null ? days : '') + ' дн без постов');
+    badge.className = 'pw-health amber';
+    badge.innerHTML = '<span class="pw-dot"></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
+}
+
+function drawReachChart(host, DATA, dates, days, endLabel) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const W = Math.max(260, host.clientWidth || 320), Hh = 100, padT = 16, padB = 20, padL = 6, padR = 6;
@@ -518,7 +538,7 @@ function drawReachChart(host, DATA, dates, days) {
     svg += `<circle id="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
-    svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">сегодня</text>`;
+    svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
     svg += `<line id="pw-cx" class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
     svg += `<circle id="pw-cd" class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
     host.innerHTML = svg + '<div class="pw-tip" id="pw-tip"></div>';
