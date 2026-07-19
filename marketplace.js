@@ -1197,7 +1197,7 @@
             '.fmx-pwc .pw-hbig .u{font-size:10.5px;color:#565b73;}',
             /* спарклайн: реальная динамика канала (без данных блок пуст) */
             '.pw-spark{margin:9px 0 3px;}',
-            '.pw-spark svg{display:block;width:100%;height:46px;}',
+            '.pw-spark svg{display:block;width:100%;height:100px;}',
             '.pw-sphead{display:flex;align-items:center;justify-content:space-between;font-size:9.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:4px;}',
             '.pw-sphead b{font-size:11px;letter-spacing:0;}',
             '.fmx-pwc .pw-mrow{display:flex;align-items:stretch;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);position:relative;}',
@@ -7313,37 +7313,63 @@
             (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
             '</div></div>';
     }
-    /* спарклайн разворота: динамика ОХВАТА — та же серия, что на главном экране
-       (реальные просмотры постов по датам). Меньше 3 точек — не рисуем */
+    /* спарклайн разворота: динамика ОХВАТА — та же серия и ТА ЖЕ отрисовка, что на
+       главном экране (drawReachChart): безье-сглаживание, тот же масштаб, заливка,
+       свечение, точка. Меньше 3 точек — не рисуем */
     function _pwTrend(l) {
         var box = el('fmx-pwspark'); if (!box || !l.id) return;
         apiGet('/api/v1/marketplace/listings/' + l.id + '/trend').then(function (r) {
             var pts = (r && r.ok && r.points) || [];
             if (pts.length < 3) { box.innerHTML = ''; return; }
-            var W = 320, H = 46;
-            var vals = pts.map(function (p) { return p.s; });
-            var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
-            var pad = (mx - mn) * 0.18 || Math.max(1, mx * 0.02);
-            mn -= pad; mx += pad;
-            var n = pts.length;
-            var xy = pts.map(function (p, i) {
-                return [(i / (n - 1)) * (W - 8) + 4, H - 5 - (p.s - mn) / (mx - mn) * (H - 12)];
-            });
-            var line = xy.map(function (c) { return c[0].toFixed(1) + ',' + c[1].toFixed(1); }).join(' ');
-            var area = '4,' + (H - 2) + ' ' + line + ' ' + (W - 4) + ',' + (H - 2);
-            var last = xy[n - 1];
-            var delta = vals[vals.length - 1] - vals[0];
+            var DATA = pts.map(function (p) { return p.s; });
+            var n = DATA.length, lastI = n - 1;
+            var W = 320, H = 100, padT = 16, padB = 20, padL = 6, padR = 6;
+            var mn = Math.min.apply(null, DATA), mx = Math.max.apply(null, DATA);
+            /* масштаб 1-в-1 с главным экраном */
+            var lo = mn - (mx - mn) * 0.5, hi = mx + (mx - mn) * 0.22, rng = (hi - lo) || 1;
+            function X(i) { return padL + i * (W - padL - padR) / lastI; }
+            function Y(v) { return padT + (1 - (v - lo) / rng) * (H - padT - padB); }
+            var p = DATA.map(function (v, i) { return [X(i), Y(v)]; });
+            function smooth(pp) {
+                if (pp.length < 2) return '';
+                var d = 'M' + pp[0][0].toFixed(1) + ',' + pp[0][1].toFixed(1);
+                for (var i = 0; i < pp.length - 1; i++) {
+                    var a = pp[i - 1] || pp[i], b = pp[i], c = pp[i + 1], e = pp[i + 2] || c;
+                    var c1x = b[0] + (c[0] - a[0]) / 6, c1y = b[1] + (c[1] - a[1]) / 6;
+                    var c2x = c[0] - (e[0] - b[0]) / 6, c2y = c[1] - (e[1] - b[1]) / 6;
+                    d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1);
+                }
+                return d;
+            }
+            var line = smooth(p);
+            var area = line + ' L' + X(lastI).toFixed(1) + ',' + (H - padB) + ' L' + X(0).toFixed(1) + ',' + (H - padB) + ' Z';
+            var delta = DATA[lastI] - DATA[0];
             var dcol = delta > 0 ? '#5DCAA5' : (delta < 0 ? '#ef8080' : '#8990a8');
             var dtx = (delta > 0 ? '+' : '') + _num(delta);
             box.innerHTML =
                 '<div class="pw-sphead"><span>Охват · ' + n + ' пост' + _plural(n, '', 'а', 'ов') + '</span>' +
                 '<b style="color:' + dcol + ';">' + dtx + '</b></div>' +
                 '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
-                '<defs><linearGradient id="pwsg" x1="0" y1="0" x2="0" y2="1">' +
-                '<stop offset="0" stop-color="rgba(93,202,165,0.26)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient></defs>' +
-                '<polygon points="' + area + '" fill="url(#pwsg)"/>' +
-                '<polyline points="' + line + '" fill="none" stroke="#5DCAA5" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>' +
-                '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2.4" fill="#5DCAA5"/></svg>';
+                '<defs><linearGradient id="pwsg2" x1="0" y1="0" x2="0" y2="1">' +
+                '<stop offset="0" stop-color="rgba(93,202,165,0.40)"/><stop offset="0.55" stop-color="rgba(93,202,165,0.10)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient>' +
+                '<linearGradient id="pwlg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37b487"/><stop offset="1" stop-color="#74edb4"/></linearGradient>' +
+                '<filter id="pwglf2" x="-20%" y="-60%" width="140%" height="240%"><feGaussianBlur stdDeviation="3"/></filter></defs>' +
+                '<path d="' + area + '" fill="url(#pwsg2)"/>' +
+                '<path d="' + line + '" fill="none" stroke="#5DCAA5" stroke-width="4" opacity="0.42" filter="url(#pwglf2)"/>' +
+                '<path class="pw-spcl" d="' + line + '" fill="none" stroke="url(#pwlg2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<circle cx="' + X(lastI).toFixed(1) + '" cy="' + Y(DATA[lastI]).toFixed(1) + '" r="5.4" fill="rgba(93,202,165,0.22)"/>' +
+                '<circle cx="' + X(lastI).toFixed(1) + '" cy="' + Y(DATA[lastI]).toFixed(1) + '" r="3" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/></svg>';
+            /* та же анимация появления, что на главной */
+            try {
+                var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                var cl = box.querySelector('.pw-spcl');
+                if (!reduce && cl && cl.getTotalLength) {
+                    var L = cl.getTotalLength();
+                    cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect();
+                    cl.style.transition = 'stroke-dashoffset 1.15s cubic-bezier(.3,.7,.3,1)';
+                    requestAnimationFrame(function () { cl.style.strokeDashoffset = 0; });
+                }
+            } catch (e) { }
         }).catch(function () { box.innerHTML = ''; });
     }
     function _trustRows(l) {
