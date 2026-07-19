@@ -1199,7 +1199,8 @@
             '.fmx-pwc .pw-hbig .u{font-size:10.5px;color:#565b73;}',
             /* спарклайн: реальная динамика канала (без данных блок пуст) */
             '.pw-spark{margin:9px 0 3px;position:relative;}',
-            '.pw-spark svg{display:block;width:100%;height:auto;}',
+            '.pw-spark svg{display:block;width:100%;height:auto;overflow:visible;}',
+            '.pw-spark svg text{font-family:inherit;}',
             '.pw-sphead{display:flex;align-items:center;justify-content:space-between;font-size:9.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:4px;}',
             '.pw-sphead b{font-size:11px;letter-spacing:0;}',
             '.fmx-pwc .pw-mrow{display:flex;align-items:stretch;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);position:relative;}',
