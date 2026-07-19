@@ -1036,7 +1036,7 @@ function renderCabinet(d) {
     if (d.upgrade) {
         const up = d.upgrade;
         const bens = (CAB_BENEFITS[up.target] || []).map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${escapeHtml(b)}</div>`).join('');
-        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('pu', 'rocket')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · базовый доступ</div></div></div><div class="cab-bens">${bens}</div><button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button><div class="cab-cta-note">Оплата подключится к запуску · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
+        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('pu', 'rocket')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · базовый доступ</div></div></div><div class="cab-bens">${bens}</div><button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button><div class="cab-cta-note">Помесячная подписка · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
     } else {
         html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
     }
@@ -1066,7 +1066,16 @@ function renderCabinet(d) {
 
 function wireCabinet(d) {
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    on('cab-upgrade', () => { openTariffs(); });
+    on('cab-upgrade', () => {
+        const up = d && d.upgrade;
+        if (!up || !up.target) { openTariffs(); return; }
+        hapticMed();
+        openCheckout({
+            name: up.target_display, price: up.price, sub: true, periodWord: 'Месяц', per: '/мес',
+            icon: 'rocket', color: 'pu', rowLabel: `Тариф ${up.target_display}, месяц`,
+            lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: up.target }) }).then((r) => r),
+        });
+    });
     on('cab-compare', () => { openTariffs(); });
     on('cab-channels', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
     on('cab-chan-open', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
@@ -1240,13 +1249,11 @@ function tfCurBanner(d) {
 
 function tfCta(plan, d) {
     if (d.current_tier === plan.key) return '<button class="tf-cta cur" disabled><i class="ti ti-circle-check"></i> Твой тариф</button>';
-    if (d.booked_plan === plan.key) return `<button class="tf-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
     const cls = plan.popular ? 'prime' : (plan.tile === 'gold' ? 'gold' : 'ghost');
     const shine = plan.popular ? '<span class="shine"></span>' : '';
     const isYear = tfPeriod === 'year';
     const price = isYear ? plan.price_year : plan.price;
-    const per = isYear ? '/год' : '';
-    return `<button class="tf-cta ${cls}" data-book="${plan.key}">${shine}Забронировать ${escapeHtml(plan.name)} — ${cabNum(price)} ₽${per}</button>`;
+    return `<button class="tf-cta ${cls}" data-buy="${plan.key}">${shine}Оформить · ${cabNum(price)} ₽</button>`;
 }
 
 function tfPlanCard(plan, d) {
@@ -1260,7 +1267,6 @@ function tfPlanCard(plan, d) {
     const save = isYear ? '<div class="tp-save">2 месяца в подарок</div>' : '';
     let cta;
     if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
-    else if (d.booked_plan === plan.key) cta = `<button class="tp-cta done" data-book="${plan.key}"><i class="ti ti-circle-check"></i> Забронировано · уведомим</button>`;
     else cta = `<button class="tp-cta" data-buy="${plan.key}">Оформить · ${cabNum(price)} ₽</button>`;
     const openCls = plan.popular ? ' open' : '';
     const popCls = plan.popular ? ' pop' : '';
@@ -1327,19 +1333,14 @@ function tfAnimateCard(card, open) {
     flipToggle(card, (o) => card.classList.toggle('open', o), open, '.tp-in');
 }
 
-function tfErow(e, bookedExtras) {
+function tfErow(e) {
     const hasEx = !!e.explain;
     const chev = hasEx ? '<i class="ti ti-chevron-down tf-exchev"></i>' : '';
-    const isBooked = !!(e.key && (bookedExtras || []).includes(e.key));
-    // бронь допа (лист ожидания до оплаты): кнопка внутри раскрытой строки, тап повторно — снять
     const cta = e.key
-        ? (isBooked
-            ? `<button class="tf-excta done" data-bex="${escapeHtml(e.key)}"><i class="ti ti-circle-check"></i> Забронировано · уведомим при запуске</button>`
-            : `<button class="tf-excta" data-bex="${escapeHtml(e.key)}"><i class="ti ti-bookmark"></i> Забронировать — уведомим при запуске</button>`)
+        ? `<button class="tf-excta" data-buyx="${escapeHtml(e.key)}"><i class="ti ti-shopping-cart"></i> Купить — ${cabNum(e.price)} ₽</button>`
         : '';
-    const bookedDot = isBooked ? '<i class="ti ti-circle-check" style="color:#34d399;margin-right:5px;"></i>' : '';
     const ex = hasEx ? `<div class="tf-ex"><div class="tf-exin">${escapeHtml(e.explain)}${cta}</div></div>` : '';
-    return `<div class="tf-erow${hasEx ? ' tap' : ''}${isBooked ? ' booked' : ''}"><div class="tf-erow-h"><span class="l">${bookedDot}${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
+    return `<div class="tf-erow${hasEx ? ' tap' : ''}"><div class="tf-erow-h"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
 }
 
 function renderTariffs(d) {
@@ -1352,10 +1353,9 @@ function renderTariffs(d) {
     if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
     if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
-    const bx = d.booked_extras || [];
-    const extras = (d.extras || []).map((e) => tfErow(e, bx)).join('');
+    const extras = (d.extras || []).map((e) => tfErow(e)).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
-    const promos = (d.promotions || []).map((e) => tfErow(e, bx)).join('');
+    const promos = (d.promotions || []).map((e) => tfErow(e)).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
     html += '<div class="tf-note"><i class="ti ti-shield-check"></i> Безопасная оплата · подписку можно отменить в любой момент.</div>';
     body.innerHTML = html;
@@ -1381,73 +1381,60 @@ function renderTariffs(d) {
         flipToggle(row, (o) => row.classList.toggle('open', o), open, '.tf-exin');
     }));
     // бронь допа/промо: тап — забронировать, повторный — снять; строка не сворачивается
-    body.querySelectorAll('[data-bex]').forEach((btn) => btn.addEventListener('click', async (ev) => {
+    body.querySelectorAll('[data-buyx]').forEach((btn) => btn.addEventListener('click', (ev) => {
         ev.stopPropagation();
-        const key = btn.getAttribute('data-bex');
         hapticMed();
-        btn.disabled = true;
-        try {
-            const r = await apiRequest('/api/v1/user/book-extra', { method: 'POST', body: JSON.stringify({ key }) });
-            if (r && r.ok) {
-                tariffsData.booked_extras = (tariffsData.booked_extras || []).filter((k) => k !== key);
-                if (r.booked) tariffsData.booked_extras.push(key);
-                const row = btn.closest('.tf-erow');
-                row.classList.toggle('booked', !!r.booked);
-                const dotHost = row.querySelector('.tf-erow-h .l');
-                const oldDot = dotHost.querySelector('.ti-circle-check');
-                if (r.booked && !oldDot) dotHost.insertAdjacentHTML('afterbegin', '<i class="ti ti-circle-check" style="color:#34d399;margin-right:5px;"></i>');
-                if (!r.booked && oldDot) oldDot.remove();
-                btn.classList.toggle('done', !!r.booked);
-                btn.innerHTML = r.booked
-                    ? '<i class="ti ti-circle-check"></i> Забронировано · уведомим при запуске'
-                    : '<i class="ti ti-bookmark"></i> Забронировать — уведомим при запуске';
-                localizeTree(btn);
-                cabToast(r.booked ? 'Пакет забронирован — уведомим при запуске' : 'Бронь снята');
-            } else cabToast('Не удалось забронировать');
-        } catch (e) { cabToast('Не удалось забронировать'); }
-        btn.disabled = false;
+        coBuyExtra(btn.getAttribute('data-buyx'));
     }));
-    body.querySelectorAll('[data-book]').forEach((btn) => {
-        if (btn.classList.contains('cur')) return;
-        btn.addEventListener('click', async () => {
-            const plan = btn.getAttribute('data-book');
-            hapticMed();
-            btn.disabled = true;
-            try {
-                const r = await apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan }) });
-                if (r && r.ok) { tariffsData.booked_plan = plan; renderTariffs(tariffsData); cabToast('Тариф забронирован — уведомим при запуске'); }
-                else { btn.disabled = false; cabToast('Не удалось забронировать'); }
-            } catch (e) { btn.disabled = false; cabToast('Не удалось забронировать'); }
-        });
-    });
     body.querySelectorAll('[data-buy]').forEach((btn) => {
-        btn.addEventListener('click', () => { hapticMed(); openCheckout(btn.getAttribute('data-buy')); });
+        btn.addEventListener('click', () => { hapticMed(); coBuyPlan(btn.getAttribute('data-buy')); });
     });
 }
 
 
-// ==================== Оформление и оплата подписки ====================
-// Экран оформления в стиле приложения (bottom-sheet). Кнопка «Оплатить N ₽» —
+// ==================== Оформление и оплата (подписки, допы, продвижение) ====================
+// Единый экран оформления в стиле приложения (bottom-sheet). Кнопка «Оплатить N ₽» —
 // реальный шаг оформления заказа. Приём платежей подключается вместе с ЮKassa;
-// до появления ключей карту НЕ списываем — показываем честный статус и
-// предлагаем закрепить цену. Когда ключи появятся, в coPay() встанет реальное
-// создание платежа ЮKassa (POST /api/v1/payment/create).
+// до появления ключей карту НЕ списываем — честный статус (для подписок ещё и
+// «закрепить цену»). Когда ключи появятся — реальное создание платежа ЮKassa
+// (POST /api/v1/payment/create) встаёт в coPay().
 let _coCtx = null;
 
 function coPeriodWord() { return tfPeriod === 'year' ? 'Год' : 'Месяц'; }
 
-function openCheckout(planKey) {
+// Покупка тарифа (подписка)
+function coBuyPlan(planKey) {
     const d = tariffsData;
     if (!d || !Array.isArray(d.plans)) return;
     const plan = d.plans.find((p) => p.key === planKey);
     if (!plan) return;
-    closeCheckout();
     const isYear = tfPeriod === 'year';
     const price = isYear ? plan.price_year : plan.price;
-    const per = isYear ? '/год' : '/мес';
-    const color = TP_COLOR[plan.key] || 'pu';
     const pw = coPeriodWord();
+    openCheckout({
+        name: plan.name, price, sub: true, periodWord: pw, per: isYear ? '/год' : '/мес',
+        icon: tfIcon(plan.key), color: TP_COLOR[plan.key] || 'pu',
+        rowLabel: `Тариф ${plan.name}, ${pw.toLowerCase()}`,
+        lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: plan.key }) })
+            .then((r) => { if (r && r.ok && tariffsData) { tariffsData.booked_plan = plan.key; renderTariffs(tariffsData); } return r; }),
+    });
+}
 
+// Покупка разового пакета или продвижения (без подписки)
+function coBuyExtra(key) {
+    const d = tariffsData;
+    if (!d) return;
+    const e = [].concat(d.extras || [], d.promotions || []).find((x) => x.key === key);
+    if (!e) return;
+    openCheckout({ name: e.label, price: e.price, sub: false, icon: 'shopping-cart', color: 'pu', rowLabel: e.label });
+}
+
+function openCheckout(opts) {
+    if (!opts || !opts.price) return;
+    closeCheckout();
+    const price = opts.price;
+    const subline = opts.sub ? `Подписка · ${opts.periodWord || 'Месяц'}` : 'Разовый пакет';
+    const perHtml = opts.per ? `<span>${opts.per}</span>` : '';
     const overlay = document.createElement('div');
     overlay.className = 'bs-overlay';
     const sheet = document.createElement('div');
@@ -1456,18 +1443,18 @@ function openCheckout(planKey) {
         <div class="bs-handle"></div>
         <div class="co-title">Оформление заказа</div>
         <div class="co-plan">
-          <div class="co-tile co-t-${color}"><i class="ti ti-${tfIcon(plan.key)}"></i></div>
+          <div class="co-tile co-t-${opts.color || 'pu'}"><i class="ti ti-${opts.icon || 'package'}"></i></div>
           <div class="co-plan-info">
-            <div class="co-plan-name">${escapeHtml(plan.name)}</div>
-            <div class="co-plan-sub">Подписка · ${pw}</div>
+            <div class="co-plan-name">${escapeHtml(opts.name)}</div>
+            <div class="co-plan-sub">${subline}</div>
           </div>
-          <div class="co-plan-price"><b>${cabNum(price)} ₽</b><span>${per}</span></div>
+          <div class="co-plan-price"><b>${cabNum(price)} ₽</b>${perHtml}</div>
         </div>
         <div class="co-rows">
-          <div class="co-row"><span>Тариф ${escapeHtml(plan.name)}, ${pw.toLowerCase()}</span><span>${cabNum(price)} ₽</span></div>
+          <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
           <div class="co-row co-total"><span>К оплате</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
-        <button class="co-pay" data-copay="${escapeHtml(plan.key)}"><i class="ti ti-lock"></i> Оплатить ${cabNum(price)} ₽</button>
+        <button class="co-pay" data-copay="1"><i class="ti ti-lock"></i> Оплатить ${cabNum(price)} ₽</button>
         <div class="co-secure"><i class="ti ti-shield-check"></i> Безопасная оплата · защищённое соединение</div>
         <button class="co-close">Закрыть</button>
     `;
@@ -1476,39 +1463,42 @@ function openCheckout(planKey) {
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
-    _coCtx = { overlay, sheet, plan, price };
+    _coCtx = { overlay, sheet, opts };
     overlay.addEventListener('click', closeCheckout);
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
     const payBtn = sheet.querySelector('[data-copay]');
-    if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(plan, price); });
+    if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(opts); });
 }
 
-function coPay(plan, price) {
+function coPay(opts) {
     if (!_coCtx || !_coCtx.sheet) return;
     const sheet = _coCtx.sheet;
+    const lockHtml = opts.lock
+        ? `<button class="co-pay" data-colock="1"><i class="ti ti-lock-check"></i> Закрепить цену — ${cabNum(opts.price)} ₽</button>`
+        : '';
+    const extraLine = opts.lock
+        ? ' Можешь закрепить текущую цену — уведомим, когда откроем оплату.'
+        : ' Мы уведомим, когда оплата откроется.';
     sheet.innerHTML = `
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
           <div class="co-pend-t">Приём платежей подключается</div>
-          <div class="co-pend-s">Оплата станет доступна в ближайшее время. Можешь закрепить текущую цену — уведомим, когда откроем оплату.</div>
-          <button class="co-pay" data-cobook="${escapeHtml(plan.key)}"><i class="ti ti-lock-check"></i> Закрепить цену — ${cabNum(price)} ₽</button>
+          <div class="co-pend-s">Оплата станет доступна в ближайшее время.${extraLine}</div>
+          ${lockHtml}
           <button class="co-close">Закрыть</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
-    const bookBtn = sheet.querySelector('[data-cobook]');
-    if (bookBtn) bookBtn.addEventListener('click', async () => {
+    const lockBtn = sheet.querySelector('[data-colock]');
+    if (lockBtn && opts.lock) lockBtn.addEventListener('click', async () => {
         hapticMed();
-        bookBtn.disabled = true;
+        lockBtn.disabled = true;
         try {
-            const r = await apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: plan.key }) });
-            if (r && r.ok) {
-                if (tariffsData) { tariffsData.booked_plan = plan.key; renderTariffs(tariffsData); }
-                closeCheckout();
-                cabToast('Цена закреплена — уведомим при запуске оплаты');
-            } else { bookBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
-        } catch (e) { bookBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
+            const r = await opts.lock();
+            if (r && r.ok) { closeCheckout(); cabToast('Цена закреплена — уведомим при запуске оплаты'); }
+            else { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
+        } catch (e) { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
     });
 }
 
