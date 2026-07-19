@@ -7310,7 +7310,7 @@
             '<div class="pw-mdiv"></div>' +
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
-            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : cell('Прогноз охвата', '—', true)) +
+            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
             '</div></div>';
     }
     /* спарклайн разворота: ТОЛЬКО реальные снимки динамики канала; меньше 3 точек — не рисуем */
