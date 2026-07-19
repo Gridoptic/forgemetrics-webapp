@@ -300,6 +300,8 @@
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
     function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
+    /* чёткий предупреждающий треугольник «!» (не эмодзи) — виден на тёмном фоне */
+    function _warnTri(sz) { sz = sz || 14; return '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" style="vertical-align:-2px;flex:0 0 auto;"><path d="M12 3.4 L21.7 20.2 A1.35 1.35 0 0 1 20.55 22.2 L3.45 22.2 A1.35 1.35 0 0 1 2.3 20.2 Z" fill="#f5b23d" stroke="#0a0d18" stroke-width="1.4" stroke-linejoin="round"/><rect x="10.9" y="8.4" width="2.2" height="6.2" rx="1.1" fill="#0a0d18"/><circle cx="12" cy="17.8" r="1.3" fill="#0a0d18"/></svg>'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
     function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
@@ -484,6 +486,9 @@
             '.fmr-i{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.14);color:#565b73;font-size:9px;font-style:normal;font-weight:700;cursor:pointer;flex:0 0 auto;}',
             '.fmr-i.push{margin-left:auto;}',
             '.fmr-info{display:none;font-size:10px;color:#8990a8;line-height:1.55;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px;margin-top:6px;}',
+            '.fmx-anom{display:flex;gap:9px;align-items:flex-start;margin-top:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(160deg,rgba(245,178,61,0.15),rgba(245,178,61,0.05));border:0.5px solid rgba(245,178,61,0.34);font-size:11.5px;line-height:1.5;color:#ecd6ac;-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);box-shadow:0 6px 18px -10px rgba(245,178,61,0.35);}',
+            '.fmx-anom .fmx-anom-i{flex:0 0 auto;margin-top:1px;}',
+            '.fmx-anom b{color:#f5b23d;font-weight:700;}',
             '.fmr-info.on{display:block;}',
             '.fmr-conv{width:52px;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.4);border-radius:7px;color:#c7ccf7;font-family:inherit;font-size:13px;font-weight:700;text-align:center;padding:3px 4px;-moz-appearance:textfield;}',
             '.fmr-conv::-webkit-outer-spin-button,.fmr-conv::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}',
@@ -6710,8 +6715,10 @@
         var rrHtml = '';
         if (rr != null && rstat) {
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
-            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
-                '<div class="fmr-info" data-finfo="rr">Reach Rate = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): малый до 10к 15–45%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак накрутки.</div>';
+            var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
+            var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
+                '<div class="fmr-info" data-finfo="rr">Reach Rate = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): малый до 10к 15–45%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак накрутки.' + rrAnom + '</div>';
         }
         // строка ER (вовлечённость по реакциям) — отдельно от Reach Rate; пусто, если реакции скрыты
         var erHtml = '';
@@ -7304,7 +7311,7 @@
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('Reach Rate', l.er != null ? (l.er > 100 ? '⚠ ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
+            cell('Reach Rate', l.er != null ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
             '<div class="pw-mdiv"></div>' +
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
@@ -7314,7 +7321,26 @@
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
             (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
-            '</div></div>';
+            '</div>' +
+            (l.er != null && l.er > 100 ?
+                '<div class="fmx-anom"><span class="fmx-anom-i">' + _warnTri(17) + '</span>' +
+                '<div><b>Reach Rate ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
+                'Разовый вирусный пост — не беда, но когда так почти всегда и без явной причины, цифру стоит перепроверить. ' +
+                'Обычно за этим стоят докрученные просмотры (канал изображает активность, чтобы дороже продавать рекламу) ' +
+                'либо закуп размещений в непрофильных каналах, куда стекается ботовый трафик. ' +
+                '<span style="display:block;margin-top:6px;">' + _erCheckTxt(l) + '</span></div></div>' : '') +
+            '</div>';
+    }
+    /* перекрёстная проверка аномального охвата по вовлечённости: боты открывают просмотры,
+       но реакции не ставят — живой ER доказывает настоящий охват, near-zero подтверждает накрутку */
+    function _erCheckTxt(l) {
+        if (l.engagement_percent != null) {
+            return 'Проверить помогает вовлечённость: сейчас ER <b>' + String(l.engagement_percent).replace('.', ',') + '%</b>. ' +
+                'Заметные реакции при таком охвате — знак, что просмотры живые; почти полное их отсутствие — что охват докручен ' +
+                '(боты просмотр открывают, а реакцию не ставят).';
+        }
+        return 'Проверить это по вовлечённости не выйдет — реакции у канала скрыты. Настоящий ли охват, ' +
+            'здесь показывают только реакции: их нет — значит, нужна ручная проверка источников охвата.';
     }
     /* спарклайн разворота: ТОЧНО тот же график, что на главном экране — вызываем ту же
        функцию drawReachChart (сетка, значения, даты, кривая, точка, тултип). Меньше 3 точек — не рисуем */

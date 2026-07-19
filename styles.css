@@ -4204,8 +4204,9 @@ html.cs-modal-open {
 .pw-chart svg{display:block;width:100%;height:auto;overflow:visible;}
 .pw-chart svg text{font-family:inherit;}
 .pw-gl{stroke:rgba(255,255,255,0.05);stroke-width:1;}
-.pw-gt{fill:var(--text-tertiary);font-size:8.5px;opacity:.8;}
-.pw-xt{fill:var(--text-tertiary);font-size:9px;}
+/* подписи на графике: тёмный ореол (paint-order stroke) + жирнее — чтобы не сливались с линией/свечением */
+.pw-gt{fill:#c2c6d2;font-size:9.5px;font-weight:600;opacity:1;paint-order:stroke;stroke:rgba(8,11,20,0.92);stroke-width:2.6px;stroke-linejoin:round;text-rendering:geometricPrecision;}
+.pw-xt{fill:#c2c6d2;font-size:9.5px;font-weight:600;paint-order:stroke;stroke:rgba(8,11,20,0.92);stroke-width:2.6px;stroke-linejoin:round;text-rendering:geometricPrecision;}
 .pw-cx{stroke:rgba(93,202,165,0.5);stroke-width:1;stroke-dasharray:3 3;transition:opacity .12s;}
 .pw-cd{fill:#fff;stroke:#5DCAA5;stroke-width:2.5;transition:opacity .12s;}
 .pw-empty{font-size:11.5px;color:var(--text-tertiary);text-align:center;padding:20px 8px;line-height:1.5;}
