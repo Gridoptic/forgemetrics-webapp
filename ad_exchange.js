@@ -503,6 +503,7 @@
             '<div class="adx-metrics">' +
                 '<div class="adx-metric"><div class="adx-metric-lbl">Охват рекламы</div><div class="adx-metric-val adx-accent">~' + _num(p.forecast_reach) + '</div></div>' +
                 '<div class="adx-metric"><div class="adx-metric-lbl">Цена поста</div><div class="adx-metric-val adx-price">' + _esc(p.price_estimate) + '</div></div>' +
+                (p.engagement_percent != null ? '<div class="adx-metric"><div class="adx-metric-lbl">Вовлечённость</div><div class="adx-metric-val" style="color:#818cf8;">' + String(p.engagement_percent).replace('.', ',') + '%</div></div>' : '') +
                 '<div class="adx-metric"><div class="adx-metric-lbl">Просмотры</div>' + (sparkSvg(p.views_spark, sparkCol) || '<div class="adx-metric-val">—</div>') + '</div>' +
             '</div>' +
             (p.verdict_text ?

@@ -164,7 +164,7 @@
 .adx-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 
 .adx-metrics {
-    display: flex; gap: 16px; margin-top: 11px; padding-top: 9px;
+    display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 11px; padding-top: 9px;
     border-top: 0.5px solid rgba(255, 255, 255, 0.05);
 }
 .adx-metric-lbl { font-size: 10px; color: #6b7088; }

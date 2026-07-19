@@ -7313,7 +7313,8 @@
             (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
             '</div></div>';
     }
-    /* спарклайн разворота: ТОЛЬКО реальные снимки динамики канала; меньше 3 точек — не рисуем */
+    /* спарклайн разворота: динамика ОХВАТА — та же серия, что на главном экране
+       (реальные просмотры постов по датам). Меньше 3 точек — не рисуем */
     function _pwTrend(l) {
         var box = el('fmx-pwspark'); if (!box || !l.id) return;
         apiGet('/api/v1/marketplace/listings/' + l.id + '/trend').then(function (r) {
@@ -7335,7 +7336,7 @@
             var dcol = delta > 0 ? '#5DCAA5' : (delta < 0 ? '#ef8080' : '#8990a8');
             var dtx = (delta > 0 ? '+' : '') + _num(delta);
             box.innerHTML =
-                '<div class="pw-sphead"><span>Подписчики · ' + n + ' замер' + _plural(n, '', 'а', 'ов') + '</span>' +
+                '<div class="pw-sphead"><span>Охват · ' + n + ' пост' + _plural(n, '', 'а', 'ов') + '</span>' +
                 '<b style="color:' + dcol + ';">' + dtx + '</b></div>' +
                 '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
                 '<defs><linearGradient id="pwsg" x1="0" y1="0" x2="0" y2="1">' +
