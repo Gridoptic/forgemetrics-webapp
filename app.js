@@ -430,7 +430,9 @@ function renderPulse(pulse) {
     if (!host) return;
     if (!pulse) { host.innerHTML = ''; return; }
     const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
-    const h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
+    let h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
+    // RR>100% (охват больше подписчиков) — не «живой/норма», а аномалия: репосты/внешний трафик/накрутка
+    if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: 'Охват выше базы', s: 'репосты или накрутка — проверь' };
     const heroNum = (pulse.avg_views != null)
         ? `<span class="v pw-num" data-to="${pulse.avg_views}" data-sep="1">0</span>`
         : '<span class="v">—</span>';

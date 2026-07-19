@@ -212,7 +212,7 @@
         }
         return m;
     }
-    function _reachRate(l) { if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
+    function _reachRate(l) { if (l.reach_rate != null) return Math.round(l.reach_rate); if (l.er != null) return Math.round(l.er); if (!l.subscribers || !l.avg_views) return null; return Math.round(l.avg_views / l.subscribers * 100); }
     /* Цена опорного формата 1/24 — по ней считается headline-CPM (нормализация к рынку). Нет 1/24 → min_price. */
     function _basePrice(l) {
         if (typeof l.base_price === 'number' && l.base_price > 0) return l.base_price;
@@ -285,7 +285,9 @@
     function _hlInfo(l) {
         var m = { green: ['#5DCAA5', 'Здоровый'], amber: ['#f59e0b', 'Средний'], yellow: ['#f59e0b', 'Средний'], red: ['#ef4444', 'Риск'] };
         var cls = l.health_class && m[l.health_class] ? (l.health_class === 'yellow' ? 'amber' : l.health_class) : null;
-        if (!cls) { var rr = _reachRate(l); if (rr != null) cls = rr >= 10 ? 'green' : (rr >= 3 ? 'amber' : 'red'); }
+        // класс здоровья — ТОЛЬКО из ядра: health_class, иначе статус охвата reach_status (тир+ниша,
+        // аномалия RR>100% = red). Никаких зашитых порогов RR 10/3 на фронте.
+        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма') ? 'green' : (st === 'низковат') ? 'amber' : 'red'; }
         if (!cls) return { cls: 'none', color: '#565b73', word: 'Нет данных' };
         return { cls: cls, color: m[cls][0], word: m[cls][1] };
     }
@@ -297,7 +299,7 @@
         if (mini) return '<span class="fmx-tl fmx-tlm" title="Здоровье канала: ' + h.word + '">' + dots + '</span>';
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
-    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; var rr = _reachRate(l); if (rr == null) return '#565b73'; if (rr >= 10) return '#5DCAA5'; if (rr >= 3) return '#f59e0b'; return '#ef4444'; }
+    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
     function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
@@ -5749,7 +5751,7 @@
     /* ===================== промо-постер: редактор = макет poster_mockup.html 1:1 ===================== */
     /* Открываем сам макет (byte-in-byte копия в poster_render.html) в полноэкранном iframe.
        Реальные данные и состояние — через слой-драйвер poster_glue.js; макет не трогаем. */
-    var PS_GLUE_V = '20260715i';
+    var PS_GLUE_V = '20260719d';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -6575,10 +6577,10 @@
                 var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
             });
         } else {
-            // бейджи только по РЕАЛЬНЫМ данным: «Живой» — охват ≥10% подписчиков, «Крупный» — ≥100k.
+            // бейджи только по РЕАЛЬНЫМ данным ИЗ ЯДРА: «Живой» — ad_health.is_alive (не порог RR≥10),
+            // и не аномальный охват (RR>100% = накрутка не бывает «живым»); «Крупный» — ≥100k.
             // «Безопасный» без критерия убран — это был фальшивый знак доверия (как галочка верификации).
-            var rr = _reachRate(l);
-            if (rr != null && rr >= 10) items.push({ k: 'live', h: _bk('live', '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>') });
+            if (l.is_alive === true && l.reach_status !== 'аномальный') items.push({ k: 'live', h: _bk('live', '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>') });
             if (l.subscribers && l.subscribers >= 100000) items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
         }
         return items;
@@ -6689,7 +6691,7 @@
         var hc = _healthColor(l);
         var subs = l.subscribers, av = l.avg_views;
         var score = (l.health_score != null) ? l.health_score : null;
-        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : ((av && subs) ? Math.round(av / subs * 1000) / 10 : null));
+        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);   // RR только из ядра, без ручного av/subs
         var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
         var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
@@ -6703,7 +6705,7 @@
         var trHtml = '';
         if (l.trend === 'growing') trHtml = ' <span style="font-size:11px;color:#5DCAA5;font-weight:600;">↗ растёт</span>';
         else if (l.trend === 'declining') trHtml = ' <span style="font-size:11px;color:#f59e0b;font-weight:600;">↘ падает</span>';
-        var rrCol = (rstat === 'норма') ? '#5DCAA5' : '#f59e0b';
+        var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
         var rrHtml = '';
         if (rr != null && rstat) {
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
@@ -6766,8 +6768,8 @@
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
         var au = l.audience && _audText(l.audience);
         if (au) out.push([_audIcon(l.audience), _audColor(l.audience), au + ' аудитория']);
-        var rr = _reachRate(l);
-        var live = (l.badges && l.badges.indexOf('live') >= 0) || (!(l.badges && l.badges.length) && rr != null && rr >= 10);
+        // «Живой» — из ядра: badges (score_health) или is_alive (ad_health.is_alive), не порог RR≥10
+        var live = (l.badges && l.badges.indexOf('live') >= 0) || (!(l.badges && l.badges.length) && l.is_alive === true);
         if (live) out.push(['ti-plant-2', '#5DCAA5', 'Живой канал']);
         if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Без накрутки']);
         if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
@@ -7301,7 +7303,7 @@
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('Reach Rate', l.er != null ? String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
+            cell('Reach Rate', l.er != null ? (l.er > 100 ? '⚠ ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
             '<div class="pw-mdiv"></div>' +
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +

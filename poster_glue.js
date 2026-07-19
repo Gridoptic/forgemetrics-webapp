@@ -325,7 +325,7 @@
     if (key === 'reach') return d.avg_views ? '~' + fmt(d.avg_views) : null;
     if (key === 'er') return (d.er != null && isFinite(d.er)) ? (Math.round(d.er * 10) / 10) + '%' : null;
     if (key === 'cpm') return (d.min_price && d.avg_views) ? fmt(d.min_price * 1000 / d.avg_views) + ' ₽' : null;
-    if (key === 'err') return (d.avg_views && d.subscribers) ? Math.round(d.avg_views / d.subscribers * 100) + '%' : null;
+    if (key === 'err') { var rr = (d.reach_rate != null) ? d.reach_rate : (d.er != null ? d.er : null); if (rr == null || !isFinite(rr)) return null; return (rr > 100 ? '⚠ ' : '') + Math.round(rr) + '%'; }  /* RR из ядра; >100% = аномалия (охват>подписчиков), не обычный процент */
     if (key === 'grow') return (d.grow != null && isFinite(d.grow)) ? (d.grow >= 0 ? '+' : '') + fmt(d.grow) : null;
     if (key === 'freq') return (d.freq != null && isFinite(d.freq)) ? (Math.round(d.freq * 10) / 10) + '/нед' : null;
     if (key === 'mv') return (d.mv != null && isFinite(d.mv)) ? (d.mv >= 1000 ? fmt(d.mv / 1000) + ' К' : fmt(d.mv)) : null;
