@@ -179,7 +179,7 @@
     function uiConfirm(msg, cb) {
         var old = el('fmx-cfmBg'); if (old) old.remove();
         var bg = document.createElement('div');
-        bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm';
+        bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t">' + _esc(String(msg)) + '</div>' +
             '<div class="fmx-cfm-r"><button class="fmx-btn" data-no>Отмена</button><button class="fmx-btn" data-yes style="background:#818cf8;color:#fff;border-color:transparent;">Да</button></div></div>';
         document.body.appendChild(bg);
@@ -843,7 +843,8 @@
             '.fmx-reqb.na{color:#565b73;font-weight:500;}',
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
             '.fmx-toast.err{border-color:rgba(239,68,68,0.4);color:#f87171;}',
-            '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',
+            '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',   /* базовый: плавающий (для цвет-пикера — чтобы видеть, что красишь) */
+            '.fmx-cfm.solid{pointer-events:auto;background:rgba(5,7,14,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}',   /* модальный: ловит клики, затемняет фон, тап мимо закрывает — было pointer-events:none, фон оставался кликабельным */
             '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;max-width:calc(100vw - 20px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
             '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
@@ -1708,7 +1709,7 @@
     function modPrompt(opts, cb) {
         var old = el('fmx-cfmBg'); if (old) old.remove();
         var bg = document.createElement('div');
-        bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm';
+        bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t">' + _esc(opts.title) + '</div>' +
             '<textarea class="fmx-inp" id="fmx-mpr" rows="3" maxlength="500" placeholder="' + _esc(opts.placeholder || '') + '" style="margin-top:10px;"></textarea>' +
             '<div class="fmx-cfm-r" style="margin-top:12px;"><button class="fmx-btn" data-no>Отмена</button>' +
@@ -2129,7 +2130,7 @@
     function openBuyFilters() {
         var old = el('fmx-bfBg'); if (old) old.remove();
         var bg = document.createElement('div');
-        bg.id = 'fmx-bfBg'; bg.className = 'fmx-cfm';
+        bg.id = 'fmx-bfBg'; bg.className = 'fmx-cfm solid';
         var _bfPair = function (lbl, id1, v1, id2, v2, step) {
             var st = step ? ' step="0.1" inputmode="decimal"' : ' inputmode="numeric"';
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + lbl + '</span>' +
@@ -2656,7 +2657,7 @@
         var countFor = _nicheCounts(arr);
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
-        bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm';
+        bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:520px;">' +
             '<div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</div>' +
             '<div class="fmx-search" style="margin-bottom:10px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
@@ -7010,7 +7011,7 @@
     function openListingStats(lid) {
         lid = parseInt(lid, 10); if (!lid) { toast('Сначала сохрани оффер'); return; }
         var old = el('fmx-statsBg'); if (old) old.remove();
-        var bg = document.createElement('div'); bg.id = 'fmx-statsBg'; bg.className = 'fmx-cfm';
+        var bg = document.createElement('div'); bg.id = 'fmx-statsBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box" style="max-width:440px;">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">' +
             '<div style="font-size:15px;font-weight:800;"><i class="ti ti-chart-bar" style="color:#5DCAA5;"></i> Статистика за 7 дней</div>' +
