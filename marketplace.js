@@ -6822,7 +6822,7 @@
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
         var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
             '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + reachEst + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml +
-            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала, не накрутишь</span></div>' : '');
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
             ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
@@ -6856,7 +6856,7 @@
                 var atx = apct + '% постов рекламные' + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : (l.ad_density <= 0.1 ? ' — реклама редкая, аудитория «свежая»' : ''));
                 sr.push('<div class="fmr-sub" style="color:' + (l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density <= 0.1 ? '#5DCAA5' : '#c2c6d2')) + ';">' + atx + '</div>');
             }
-            if (sr.length) struct = '<div class="fmr-sec">Структура охвата <span style="font-size:10px;color:#565b73;font-weight:400;">· доказательство, а не ярлык</span></div>' + sr.join('');
+            if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
         })();
         var pills = [];
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
@@ -7432,7 +7432,7 @@
             rows.push('<div class="fmx-tline" style="color:' + acol + ';"><i class="ti ti-ad"></i>' + at + '</div>');
         }
         if (!rows.length) return '';
-        return '<div class="fmx-lssect">Структура охвата <span style="font-weight:400;color:#565b73;font-size:10px;">· доказательство, а не ярлык</span></div><div class="fmx-terms">' + rows.join('') + '</div>';
+        return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
     }
     function _pwMetrics(l) {
         var cpm = _cpm(l);
