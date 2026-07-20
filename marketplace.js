@@ -6748,7 +6748,7 @@
         var avHtml = l.avatar_url
             ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
             : '<div class="fmr-av" style="background:' + _esc(_acc) + ';">' + _esc(_t.charAt(0).toUpperCase()) + '</div>';
-        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i" data-fi="health">i</i></div></div>' : '';
+        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div></div>' : '';
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
             (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') + '</div>' + scoreHtml + '</div>';
