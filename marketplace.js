@@ -6809,7 +6809,7 @@
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
-            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + erBits.join(' · ') + ' на пост</span>' : '';
+            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
             /* статус ER по тем же порогам, что двигают цену внутри вилки (3.5% / 1%) — чтобы главный
                несжульничаемый сигнал не был «одним индиго без опоры» (находка аудита) */
             var _erv = l.engagement_percent;
@@ -6851,11 +6851,12 @@
                 else { st = 'Кластер всплесков (~' + spct + '% постов) — возможен закуп просмотров, проверь'; sc = '#f59e0b'; }
                 sr.push('<div class="fmr-sub" style="color:' + sc + ';">' + st + '</div>');
             }
-            // рекламу заявляем ТОЛЬКО когда реально нашли заметную долю (≥15%): детектор ищет по тексту
-            // ~20 постов и нативку пропускает — «0% рекламных» недоказуемо, поэтому при малой доле молчим
-            if (l.ad_density != null && l.ad_density >= 0.15) {
+            // долю рекламы показываем со ЗНАМЕНАТЕЛЕМ «N постов» — это измерение (владелец просил «долю на N постов»),
+            // а не голое «0%»: «0% · 200 постов» = «в 200 проверенных постах явной рекламы не нашли». Нужен struct_posts.
+            if (l.ad_density != null && l.struct_posts) {
                 var apct = Math.round(l.ad_density * 100);
-                sr.push('<div class="fmr-sub" style="color:' + (l.ad_density >= 0.35 ? '#f59e0b' : '#c2c6d2') + ';">≈' + apct + '% постов — реклама' + (l.ad_density >= 0.35 ? ', лента подвыжжена — охват твоей рекламы ниже' : '') + '</div>');
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
+                sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
         })();
@@ -7426,10 +7427,10 @@
             else { t = 'Кластер всплесков (~' + pct + '% постов) — возможен закуп просмотров, проверь'; c = '#f59e0b'; ic = 'ti-alert-triangle'; }
             rows.push('<div class="fmx-tline" style="color:' + c + ';"><i class="ti ' + ic + '"></i>' + t + '</div>');
         }
-        // рекламу заявляем только при заметной доле (≥15%) — «0% рекламных» детектором недоказуемо (нативку пропускает)
-        if (ad != null && ad >= 0.15) {
+        // долю рекламы показываем со знаменателем «N постов» (измерение, а не голое «0%»); нужен struct_posts
+        if (ad != null && l.struct_posts) {
             var apct = Math.round(ad * 100);
-            rows.push('<div class="fmx-tline" style="color:' + (ad >= 0.35 ? '#f59e0b' : '#c2c6d2') + ';"><i class="ti ti-ad"></i>≈' + apct + '% постов — реклама' + (ad >= 0.35 ? ', лента подвыжжена — охват твоей рекламы ниже' : '') + '</div>');
+            rows.push('<div class="fmx-tline" style="color:' + (ad >= 0.35 ? '#f59e0b' : (ad < 0.05 ? '#5DCAA5' : '#c2c6d2')) + ';"><i class="ti ti-ad"></i>' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (ad >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
         }
         if (!rows.length) return '';
         return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
