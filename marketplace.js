@@ -115,7 +115,7 @@
         ['Средний охват поста', 'Сколько человек в среднем видит один пост (берут медиану за 20–50 постов, кроме самых свежих — за 1–2 суток они ещё недобрали охват и занижают среднее). Ключевое число при закупке: через него считаются CPM и цена контакта. Важно: рекламный пост почти всегда собирает меньше органического — его листают, а в формате с удалением он живёт ограниченное время. Планируй по охвату недавних рекламных постов, а не обычных, и проси эту статистику у владельца — иначе фактический CPM окажется выше ожидаемого.'],
         ['ER · вовлечённость', 'Engagement Rate — доля читателей, которые реагируют (реакции, репосты, комментарии, голоса) относительно охвата. Норма зависит от ниши: для новостных каналов 2–4% уже хорошо, для узких экспертных — 8–15%. Высокий охват при ER около нуля — тревожный сигнал: аудиторию привели, но канал ей неинтересен, и реклама пройдёт мимо.'],
         ['ERR · охват к базе', 'Какая доля подписчиков видит посты: охват ÷ подписчики × 100%. Ориентир: от 20% — сильно, 10–20% — норма, 5–10% — слабо, ниже 5% — почти наверняка выгоревшая или накрученная база. Пример: 100 000 подписчиков при охвате 1 000 — это 1%, база выгоревшая, а число в шапке — витрина. Поправка на размер: у небольших каналов процент естественно выше (40–100%), у очень крупных 10–15% — уже норма, а не тревога.'],
-        ['CPM · цена за 1000 показов', 'Стоимость донести рекламу до 1000 человек: цена ÷ охват × 1000. Главный инструмент сравнения каналов. Пример: пост за 5 000 ₽ при охвате 20 000 — CPM 250 ₽; пост за 8 000 ₽ при охвате 50 000 — CPM 160 ₽. Второй дороже на ценнике, но контакт в нём более чем в полтора раза дешевле. Сравнивай каналы одной ниши по CPM, а не по сумме размещения.'],
+        ['CPM · цена за 1000 просмотров', 'Стоимость донести рекламу до 1000 человек: цена ÷ охват × 1000. Главный инструмент сравнения каналов. Пример: пост за 5 000 ₽ при охвате 20 000 — CPM 250 ₽; пост за 8 000 ₽ при охвате 50 000 — CPM 160 ₽. Второй дороже на ценнике, но контакт в нём более чем в полтора раза дешевле. Сравнивай каналы одной ниши по CPM, а не по сумме размещения.'],
         ['CPA · цена целевого действия', 'Сколько стоило одно нужное действие: потрачено ÷ число результатов (подписка, заявка, продажа, установка). CPM показывает цену показа, CPA — цену результата, и именно он говорит, окупилась реклама или нет. Дешёвый по CPM канал с плохой аудиторией даёт дорогой CPA; узкий релевантный канал с виду дорогим CPM — дешёвый CPA. Считай CPA по каждому размещению через метки в ссылке (UTM, разные deep-link).'],
         ['ROI · окупаемость', 'Главный итоговый показатель: чистая прибыль ÷ затраты на размещение × 100%. Пример: пост за 5 000 ₽ принёс продаж на 12 000 ₽ при себестоимости 4 000 ₽ — прибыль 3 000 ₽, ROI 60%. Выше нуля — размещение в плюсе, ниже — в минусе. Считай ROI по каждому каналу отдельно: усреднённая цифра по кампании прячет убыточные каналы, которые тянут бюджет вниз.'],
         ['CTR · кликабельность', 'Доля увидевших пост, которые кликнули по ссылке: клики ÷ охват поста × 100%. В размещениях в каналах ориентир 0,5–2%: выше — креатив и аудитория попали друг в друга, ниже — пост не цепляет или аудитория не та. CTR — метрика твоего креатива, а не канала: один и тот же канал даст разный CTR разным объявлениям. Измеряется только метками в ссылке.'],
@@ -1653,7 +1653,7 @@
         if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новый оффер', 'новых оффера', 'новых офферов'));
         if (t.requests) bits.push('<b>' + t.requests + '</b> ' + _plural(t.requests, 'заявка', 'заявки', 'заявок'));
         if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
-        return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-flame" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
+        return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-discount-2" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
     }
     function renderPulse() {
         var host = el('fmx-main');
@@ -2723,7 +2723,7 @@
         var P = _rf.presets;
         if (P.large && !(l.subscribers >= 100000)) return false;
         if (P.alive && l.is_alive !== true) return false;
-        if (P.clean && !(l.antifraud === 'clean' || l.health_class === 'green')) return false;
+        if (P.clean && l.antifraud !== 'clean') return false;
         if (P.grow && l.trend !== 'growing') return false;
         var av = Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; });
         if (av.length && av.indexOf(l.audience) < 0) return false;
@@ -2793,7 +2793,7 @@
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось отправить'); return; }
                 _haptic('success'); hideModal('fmx-repBg');
-                toast(r && r.hidden ? 'Скрыто до проверки. Спасибо.' : 'Жалоба отправлена — проверим');
+                toast(r && r.hidden ? 'Скрыто до проверки' : 'Жалоба отправлена — проверим');
                 if (r && r.hidden) {
                     if (target.listing_id) { _feed = null; _feedState = 'idle'; if (_subTab === 'buy') renderBuy(); }
                     else { _reqs = null; _reqState = 'idle'; if (_subTab === 'sell') renderSell(); }
@@ -2935,7 +2935,7 @@
             '<span><i style="background:rgba(239,128,128,0.5);"></i>занято</span>' +
             (r.hot ? '<span><i style="background:rgba(245,191,79,0.6);"></i>горящие −' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
-            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-flame"></i><span>Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни</span></div>' : '') +
+            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
             (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _ownerSlotsHtml(l, r) + '</div>' : '');   // владелец: настройка слотов
@@ -3041,8 +3041,8 @@
         var em = { advertiser: 'ставит рекламодатель', channel: 'ставит канал', discuss: 'обсуждается' };
         var lines = [];
         if (l.erid_who && em[l.erid_who]) lines.push('Маркировка (erid) — ' + em[l.erid_who]);
-        lines.push('Оплата напрямую с владельцем');
-        lines.push('Гарант, бронь по времени и авто-маркировка — в разработке');
+        lines.push('Оплата напрямую с владельцем канала');
+        lines.push('Сделка и отзыв фиксируются в приложении после подтверждения сторонами');
         return '<div class="fmx-lssect">Условия размещения</div><div class="fmx-terms">' +
             lines.map(function (t) { return '<div class="fmx-tline"><i class="ti ti-point-filled"></i>' + _esc(t) + '</div>'; }).join('') + '</div>';
     }
@@ -4234,7 +4234,7 @@
     var CMP_ROWS = [
         { k: 'subs', label: 'Подписчики', dir: null, get: function (l) { return l.subscribers || null; }, fmt: function (v) { return _num(v); } },
         { k: 'views', label: 'Охват', dir: 'up', get: function (l) { return l.avg_views || null; }, fmt: function (v) { return '~' + _num(v); } },
-        { k: 'er', label: 'RR', dir: 'up', get: function (l) { return l.er != null ? l.er : null; }, fmt: function (v) { return (Math.round(v * 10) / 10) + '%'; } },
+        { k: 'er', label: 'ERR', dir: 'up', get: function (l) { return l.er != null ? l.er : null; }, fmt: function (v) { return (Math.round(v * 10) / 10) + '%'; } },
         { k: 'reach', label: 'Охват к подп.', dir: 'up', get: _reachRate, fmt: function (v) { return v + '%'; } },
         { k: 'cpm', label: 'CPM', dir: 'down', get: _cpm, fmt: function (v) { return _num(v) + ' ₽'; } },
         { k: 'price', label: 'Цена от', dir: 'down', get: _minPrice, fmt: function (v) { return _num(v) + ' ₽'; } },
@@ -4292,7 +4292,7 @@
                 box.innerHTML = _proofHtml(r) + '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
-                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен. Спасибо.</div>';
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен.</div>';
             } else {
                 box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
@@ -4332,7 +4332,7 @@
             apiPost('/api/v1/marketplace/deals/' + dealId + '/review', { rating: sel.v, text: el('fmx-rev-t').value }).then(function (r) {
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
-                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен. Спасибо.');
+                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен');
                 _feed = null; _feedState = 'idle';
             }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
         });
@@ -6646,7 +6646,7 @@
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
         // Горящие даты: скидка продавца на непроданные дни ближайшей недели
-        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-flame"></i>Горящие даты −' + l.hot_discount_pct + '%</span>') });
+        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты −' + l.hot_discount_pct + '%</span>') });
         if (l.badges && l.badges.length) {
             var m = { live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
             l.badges.filter(function (b) { return b !== 'match'; }).forEach(function (b) {
@@ -6736,7 +6736,7 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr" style="color:' + accent + ';">' + _priceFrom(l) + '</div></div>' +
             '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">RR</div><div class="v" style="color:' + hc + ';">' + Math.round(l.er) + '%</div></div>' : '') +
+            (l.er != null ? '<div><div class="l">ERR</div><div class="v" style="color:' + hc + ';">' + (Math.round(l.er * 10) / 10) + '%</div></div>' : '') +
             (l.engagement_percent != null ? '<div><div class="l">ER</div><div class="v" style="color:#818cf8;">' + l.engagement_percent + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
@@ -6748,9 +6748,9 @@
     }
     function _ageTile() {
         return '<div class="fmx-scard fmx-agel" data-agegate="1" style="cursor:pointer;text-align:center;padding:22px 14px;">' +
-            '<div style="font-size:27px;line-height:1;">🔞</div>' +
+            '<div style="font-size:24px;line-height:1;color:#f5bf4f;"><i class="ti ti-eye-off"></i></div>' +
             '<div style="font-weight:650;margin-top:7px;">Канал 18+</div>' +
-            '<div style="font-size:11.5px;color:#8990a8;margin-top:3px;">Нажмите, чтобы подтвердить возраст и открыть</div></div>';
+            '<div style="font-size:11.5px;color:#8990a8;margin-top:3px;">Нажми, чтобы подтвердить возраст и открыть</div></div>';
     }
     function _askAge() {
         uiConfirm('В этом разделе есть каналы с контентом 18+. Подтвердите, что вам исполнилось 18 лет.', function () {
@@ -6815,7 +6815,7 @@
             ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 показов' + (est ? ' · ориентир ниши' : '') + '</div>' : '') + /* при цене-поле («от N ₽» без вилки) CPM раздут и врёт — не показываем */
+                (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') + /* при цене-поле («от N ₽» без вилки) CPM раздут и врёт — не показываем */
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату (полному, за всё время жизни поста) и вовлечённости канала, а не названная владельцем цена: точные условия уточняются у владельца.' : '') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
@@ -6827,7 +6827,7 @@
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
         var pills = [];
-        if (l.antifraud === 'clean' || l.health_class === 'green') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
+        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var al = _audLabel(l);
         if (al) pills.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
@@ -6865,7 +6865,7 @@
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) out.push(['ti-heart-handshake', '#f5bf4f', dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок')]);
-        if (l.hot_discount_pct) out.push(['ti-flame', '#f5bf4f', 'Горящие даты −' + l.hot_discount_pct + '%']);
+        if (l.hot_discount_pct) out.push(['ti-discount-2', '#f5bf4f', 'Горящие даты −' + l.hot_discount_pct + '%']);
         return out.slice(0, 6).map(function (x) {
             return '<i class="ti ' + x[0] + '" title="' + _esc(x[2]) + '" style="color:' + x[1] + ';font-size:11.5px;flex:0 0 auto;"></i>';
         }).join('');
@@ -6876,7 +6876,7 @@
         var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
-        if (l.er != null) bits.push('RR <b>' + Math.round(l.er) + '%</b>');
+        if (l.er != null) bits.push('ERR <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push((l.price_low != null && l.min_price == null ? 'CPM ниши' : 'CPM') + ' <b>' + _short(cpm) + '₽</b>');
         var _alb = _audLabel(l);
         if (_alb) bits.push('<span style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>');
@@ -7394,7 +7394,7 @@
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('Reach Rate', l.er != null ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
+            cell('ERR', l.er != null ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
             '<div class="pw-mdiv"></div>' +
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
@@ -7407,7 +7407,7 @@
             '</div>' +
             (l.er != null && l.er > 100 ?
                 '<div class="fmx-anom"><span class="fmx-anom-i">' + _warnTri(17) + '</span>' +
-                '<div><b>Reach Rate ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
+                '<div><b>ERR ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
                 'Разовый вирусный пост — не беда, но когда так почти всегда и без явной причины, цифру стоит перепроверить. ' +
                 'Обычно за этим стоят докрученные просмотры (канал изображает активность, чтобы дороже продавать рекламу) ' +
                 'либо закуп размещений в непрофильных каналах, куда стекается ботовый трафик. ' +
