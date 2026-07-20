@@ -514,6 +514,13 @@ button:active {
 }
 .icon-amber i { color: var(--color-amber-400); }
 
+/* ИИ-стратег: индиго-подложка под иконку-карту, 1 в 1 с экраном стратегии (.stg-fic) */
+.icon-strategy {
+    background: linear-gradient(160deg, rgba(129, 140, 248, 0.18), rgba(129, 140, 248, 0.04));
+    border: 1px solid rgba(129, 140, 248, 0.45);
+}
+.icon-strategy svg { display: block; }
+
 .action-card-subtitle.highlight {
     color: var(--color-green-400);
     font-weight: 500;
