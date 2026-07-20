@@ -6708,10 +6708,11 @@
         // строка ER (вовлечённость по реакциям) — отдельно от Reach Rate; пусто, если реакции скрыты
         var erHtml = '';
         if (l.engagement_percent != null) {
+            /* нули не показываем — «~0 реакций · 0 комментариев» замусоривает строку; остаётся значимое */
             var erBits = [];
-            if (l.react_count != null) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
-            if (l.forward_count != null) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
-            if (l.comment_count != null) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
+            if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
+            if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
+            if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + erBits.join(' · ') + ' на пост</span>' : '';
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + erSub + '<i class="fmr-i push" data-fi="er">i</i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Норма зависит от жанра: новостные живут репостами, экспертные — реакциями и комментариями. Если взаимодействия у канала скрыты — ER не показываем.</div>';
