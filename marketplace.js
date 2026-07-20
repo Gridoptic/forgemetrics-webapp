@@ -483,8 +483,8 @@
             '.fmr-line .fdot{color:#565b73;margin:0 6px;}',
             '.fmr-sub{font-size:10px;color:#565b73;margin-top:3px;line-height:1.5;}',
             '.fmr-sub b{color:#8990a8;}',
-            '.fmr-i{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.14);color:#565b73;font-size:9px;font-style:normal;font-weight:700;cursor:pointer;flex:0 0 auto;}',
-            '.fmr-i.push{margin-left:auto;}',
+            '.fmr-i{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.14);color:#565b73;font-size:9px;font-style:normal;font-weight:700;cursor:pointer;flex:0 0 auto;vertical-align:-3px;}',
+            '.fmr-i.push{margin-left:2px;}',   /* раньше margin-left:auto прижимал «i» к краю карточки — висели кривой колонкой в отрыве от текста */
             '.fmr-info{display:none;font-size:10px;color:#8990a8;line-height:1.55;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px;margin-top:6px;}',
             '.fmx-anom{display:flex;gap:9px;align-items:flex-start;margin-top:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(160deg,rgba(245,178,61,0.15),rgba(245,178,61,0.05));border:0.5px solid rgba(245,178,61,0.34);font-size:11.5px;line-height:1.5;color:#ecd6ac;-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);box-shadow:0 6px 18px -10px rgba(245,178,61,0.35);}',
             '.fmx-anom .fmx-anom-i{flex:0 0 auto;margin-top:1px;}',
