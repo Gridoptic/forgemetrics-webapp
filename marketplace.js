@@ -78,7 +78,6 @@
     ];
     var COVER_NAMES = ['Фиолет', 'Изумруд', 'Закат', 'Океан', 'Огонь', 'Магента'];
     var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
-    var EMOJIS = ['🧬', '🔥', '💪', '🧠', '⚡', '🚀', '💎', '🎯', '📈', '🌿', '❤️', '✨', '🏆', '🎮', '📚', '🌟', '💰', '📊', '👑', '🌈'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
     var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок'], ['tilt3d', '3D-наклон'], ['pendulum', 'Маятник'], ['drift', 'Дрейф'], ['jelly', 'Желе'], ['flip', 'Переворот']];
     var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки'], ['scan', 'Сканер']];
@@ -141,7 +140,7 @@
         ['Закупщику · читай ER в паре с охватом', 'Высокий охват при ER около нуля означает, что аудиторию привели, но канал ей неинтересен. Живой канал с ER 5–10% нередко конвертирует лучше крупного с ER 1%. Реакции — лайки, репосты, комментарии — подделать дороже, чем просмотры, поэтому ER точнее показывает вовлечённость.'],
         ['Закупщику · проверяй метрики вживую, не по скриншотам', 'Скриншот статистики легко нарисовать или показать удачный день. Ориентируйся на живые метрики в оффере и на разворот канала, а не на присланные картинки. Если продавец отказывается показать актуальный охват и просит верить на слово — это повод насторожиться.'],
         ['Закупщику · оценивай динамику, а не снимок дня', 'Резкий скачок подписчиков за 30 дней без вирусного повода — частый признак закупки или накрутки; после него охват проседает, и реклама выходит на спаде. Плавный органический рост надёжнее. Жёлтый или красный светофор — сигнал открыть «Развернуть» и проверить график просмотров вручную.'],
-        ['Закупщику · релевантность ниши важнее размера', 'Реклама финансового оффера в профильном канале о финансах отработает лучше, чем во вдвое большем канале о рецептах. Бейдж «В точку» помечает каналы твоей ниши. Узкий, но релевантный канал обычно даёт более дешёвую и качественную конверсию, чем широкий, но нерелевантный охват.'],
+        ['Закупщику · релевантность ниши важнее размера', 'Реклама финансового оффера в профильном канале о финансах отработает лучше, чем во вдвое большем канале о рецептах. Бейдж «В нише» помечает каналы твоей ниши. Узкий, но релевантный канал обычно даёт более дешёвую и качественную конверсию, чем широкий, но нерелевантный охват.'],
         ['Закупщику · сверяй гео и язык аудитории с оффером', 'Отличные ER и охват на аудитории из недорогого гео или на чужом языке денег не принесут — оффер платит по конкретным странам. Перед закупкой уточни топ-страны и язык аудитории (у владельца или в статистике канала) и бери канал под гео и язык своего оффера, а не только под нишу.'],
         ['Закупщику · оценивай сам рекламный пост, не только канал', 'Даже в сильном канале слабый креатив не даст результата. Продумай пост: понятная выгода в первой строке, один призыв к действию, ссылка с меткой. Один и тот же канал на разных креативах даёт разный CPA — тестируй заход и формулировку, а не только площадку.'],
         ['Закупщику · начинай с теста, масштабируй по результату', 'Первое размещение в новом канале бери минимальным форматом. Замерь по одному посту переходы, подписки и продажи в окне 24–48 часов после выхода (за час рано — пост не добрал, через неделю поздно) и посчитай стоимость целевого действия (потрачено ÷ результат). Сработало — бери пакет и повторяй; нет — потеря невелика, а вывод получен. Не вкладывай весь бюджет в непроверенный канал.'],
@@ -653,8 +652,7 @@
             '@keyframes fmxGlowP{0%,100%{opacity:.35;}50%{opacity:.85;}}',
             '.fx-g-breath{box-shadow:0 0 18px 5px rgba(255,255,255,0.5);animation:fmxBreathH 3.4s ease-in-out infinite;}',
             '@keyframes fmxBreathH{0%,100%{transform:scale(0.94);opacity:.3;}50%{transform:scale(1.14);opacity:.8;}}',
-            '.fx-g-gold{box-shadow:0 0 12px rgba(245,191,79,.85),0 0 26px rgba(245,191,79,.5);animation:fmxGoldF 2.8s steps(1) infinite;}',
-            '@keyframes fmxGoldF{0%,100%{opacity:.55;}18%{opacity:.85;}34%{opacity:.6;}52%{opacity:.95;}68%{opacity:.7;}84%{opacity:.9;}}',
+            '.fx-g-gold{box-shadow:0 0 10px rgba(245,191,79,.5),0 0 22px rgba(245,191,79,.28);}',   /* ровное свечение без мигания: премиум сдержан */
             '.fx-g-aurora{background:conic-gradient(from 180deg,#0fd07f,#17b3a3,#3b82f6,#8b5cf6,#10b981,#0fd07f);filter:blur(9px);animation:fmxSpin 11s linear infinite;}',
             '.fx-g-aurora::after{content:"";position:absolute;inset:0;border-radius:inherit;animation:fmxAur 5.5s ease-in-out infinite;background:inherit;filter:blur(4px);}',
             '@keyframes fmxAur{0%,100%{opacity:.15;}50%{opacity:.7;}}',
@@ -1700,7 +1698,7 @@
         else if (_modTab === 'stats') renderModStats();
         else renderModUser();
     }
-    function _modFail(box) { box.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и попробуй ещё раз.'); }
+    function _modFail(box) { box.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори попытку.'); }
     function _modAfter(r) {
         if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
         _haptic('success'); toast((r && r.message) || 'Готово');
@@ -1728,13 +1726,13 @@
     }
     function modApprove(id) {
         uiConfirm('Одобрить оффер #' + id + ' и опубликовать?', function () {
-            apiPost('/api/v1/admin/listing/' + id + '/approve').then(_modAfter).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/approve').then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function modReject(id) {
         // причина необязательна: пусто → бэкенд подставит «Отклонено модератором после ручной проверки»
         modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина (необязательно) — автор увидит и сможет исправить', btn: 'Отклонить', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     var _CATRU = { white: 'белый', grey: 'серый', black: 'чёрный' };
@@ -1746,12 +1744,12 @@
     }
     function modRestore(id) {
         uiConfirm('Вернуть заявку R' + id + ' и снять жалобы?', function () {
-            apiPost('/api/v1/admin/request/' + id + '/restore').then(_modAfter).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            apiPost('/api/v1/admin/request/' + id + '/restore').then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function modRemove(id) {
         modPrompt({ title: 'Снять заявку R' + id, placeholder: 'Причина (необязательно)', btn: 'Снять', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function renderModQueue() {
@@ -1926,7 +1924,7 @@
                 /* продолжение не пришло: лента остаётся, страница откатывается, кнопка возвращается */
                 _feedOffset = Math.max(0, _feedOffset - _FEED_PAGE);
                 _feedState = 'ready';
-                toast('Не удалось загрузить продолжение — попробуй ещё раз');
+                toast('Не удалось загрузить продолжение. Повтори попытку.');
                 if (_mainTab === 'market' && _subTab === 'buy') paintBuyBody();
                 return;
             }
@@ -1985,7 +1983,7 @@
     function paintCatalogBody() {
         var box = el('fmx-catBody'); if (!box) return;
         if (_catState === 'loading') { box.innerHTML = loadHtml(); return; }
-        if (_catState === 'error') { box.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.'); return; }
+        if (_catState === 'error') { box.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.'); return; }
         if (!_catalog || !_catalog.length) { box.innerHTML = emptyHtml('ti-radar-2', 'Радар скоро наполнится', 'Здесь будет каталог каналов со всего Telegram — ищи по нише и договаривайся с владельцами напрямую.'); return; }
         var list = _catList();
         if (!list.length) {
@@ -2238,9 +2236,9 @@
         /* при клиентском фильтре ниши серверный остаток не обещает совпадений — кнопка без числа */
         else if (left > 0) moreBtn = '<button class="fmx-btn" id="fmx-more" style="width:100%;margin-top:12px;min-height:40px;"><i class="ti ti-chevron-down"></i> ' + (nicheOn ? 'Показать ещё — искать нишу дальше' : 'Показать ещё (' + left + ')') + '</button>';
         if (_feedState === 'loading' && !loadingMore) body = loadHtml();
-        else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
+        else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
         else if (!_feed || !_feed.length) body = hasFilters
-            ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Смягчи запрос или сбрось фильтры — и офферы вернутся.')
+            ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или сбрось фильтры.')
             : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер кнопкой «Выставить свой канал».');
         else {
             var feed = _applyBuyFilter(_feed);
@@ -2302,7 +2300,7 @@
         var head = [];
         if (r.niche) head.push('<span class="fmx-reqn">' + _esc(r.niche) + '</span>');
         head.push('<span class="fmx-reqf">' + (REQ_FMT[_fmtKey(r.format)] || REQ_FMT.any) + '</span>');
-        var cts = r.contacts ? ' · <span style="color:#f59e0b;">🔥 ' + r.contacts + ' ' + _plural(r.contacts, 'отклик', 'отклика', 'откликов') + '</span>' : '';
+        var cts = r.contacts ? ' · <span style="color:#f59e0b;">' + r.contacts + ' ' + _plural(r.contacts, 'отклик', 'отклика', 'откликов') + '</span>' : '';
         var leads = '';
         if (r.mine && r.leads && r.leads.length) {
             leads = '<div class="fmx-leads"><div class="fmx-leads-t"><i class="ti ti-users-group"></i> Заинтересовались:</div>' +
@@ -2324,7 +2322,7 @@
         if (_reqs == null && _reqState === 'idle') loadRequests();
         var body;
         if (_reqState === 'loading') body = loadHtml();
-        else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
+        else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
         sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: здесь ищут каналы для размещения. Твоя ниша подошла — пиши первым.</div>' +
@@ -2352,7 +2350,7 @@
                     apiPost('/api/v1/marketplace/requests/' + b.getAttribute('data-rclose') + '/close', {}).then(function (r) {
                         if (r && r.ok === false) { uiAlert(r.error || 'Не удалось закрыть'); return; }
                         toast('Заявка закрыта'); _reqs = null; _reqState = 'idle'; renderSell();
-                    }).catch(function () { uiAlert('Не удалось закрыть — попробуй ещё раз.'); });
+                    }).catch(function () { uiAlert('Не удалось закрыть. Повтори попытку.'); });
                 });
             });
         });
@@ -2449,7 +2447,7 @@
                         _calData[l.id] = r;
                         draw(r);
                         toast('Календарь обновлён — закупщики уже видят новые даты');
-                    }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+                    }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
                 });
             });
         }
@@ -2508,7 +2506,7 @@
                     _haptic('success');
                     toast(turnOn ? 'Горящие даты включены: −15% на свободные дни ближайшей недели'
                                  : 'Горящие даты выключены');
-                }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
             });
         });
         qsa(sub, '[data-mtablo]').forEach(function (b) {
@@ -2550,7 +2548,7 @@
                     toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
                     _feed = null; _feedState = 'idle';
                     if (_subTab === 'mine') paintMine();
-                }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+                }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
             });
         });
         qsa(sub, '[data-mdel]').forEach(function (b) {
@@ -2567,7 +2565,7 @@
                         _feed = null; _feedState = 'idle';
                         if (!_myListings.length) { setSubTab('buy', true); return; }
                         if (_subTab === 'mine') paintMine();
-                    }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
                 });
             });
         });
@@ -2590,7 +2588,7 @@
             if (!_myListings.length) { setSubTab('create', true); return; }   // кабинет без офферов не нужен
             paintMine();
         }).catch(function () {
-            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и попробуй ещё раз.');
+            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
         });
     }
 
@@ -2712,7 +2710,7 @@
                     if (target.listing_id) { _feed = null; _feedState = 'idle'; if (_subTab === 'buy') renderBuy(); }
                     else { _reqs = null; _reqState = 'idle'; if (_subTab === 'sell') renderSell(); }
                 }
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось отправить — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось отправить. Повтори попытку.'); });
         });
         showModal('fmx-repBg');
     }
@@ -2763,7 +2761,7 @@
                     _nsubs = rr.niches; _nsMetrics = rr.metrics || {};
                     renderNsBody();
                 }).catch(function () {});
-            }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+            }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         };
         el('fmx-ns-add').addEventListener('click', addFn);
         el('fmx-ns-inp').addEventListener('keydown', function (e) { if (e.key === 'Enter') addFn(); });
@@ -2911,7 +2909,7 @@
             r.slots_updated_at = new Date().toISOString();
             calDraw(box, l, 'edit');
             toast('Календарь обновлён — закупщики уже видят новые даты');
-        }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
     }
     function _calWatchDay(box, l, iso) {
         apiPost('/api/v1/marketplace/listings/' + l.id + '/date_watch', { day: iso }).then(function (rr) {
@@ -3039,7 +3037,7 @@
             if (!rr.slot_config) _ownerSelDay = null;
             _haptic('light'); toast(rr.slot_config ? 'Слоты по времени сохранены' : 'Слоты по времени выключены');
             calDraw(box, l, 'edit');
-        }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
     }
     function _bindOwnerSlots(box, l) {
         qsa(box, '.fmx-tchip').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); _haptic('light'); }); });
@@ -3055,7 +3053,7 @@
                     if (rr.busy) { if (r.busy_times.indexOf(key) < 0) r.busy_times.push(key); }
                     else { r.busy_times = r.busy_times.filter(function (x) { return x !== key; }); }
                     _haptic('light'); _refreshOwnerExtra(box, l);   // точечно: панель + точки дня, без пересбора месяца (лаг)
-                }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
             });
         });
     }
@@ -4017,7 +4015,7 @@
             _haptic('success');
             toast('Витрина сохранена — закупщики видят её в развороте оффера');
             hideModal('fmx-tedBg');
-        }).catch(function () { btn.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+        }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
     }
 
     /* ==================== кампания под бюджет ==================== */
@@ -4097,7 +4095,7 @@
                     copyText(lines.join('\n'));
                     toast('Скопировано: план кампании');
                 });
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
         });
         el('fmx-shbg').classList.add('on');
         sh.classList.add('on');
@@ -4215,7 +4213,7 @@
                             if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
                             _haptic('success'); toast('Отправлено владельцу на подтверждение');
                             renderDealBox(l);
-                        }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+                        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
                     });
                 });
             }
@@ -4248,7 +4246,7 @@
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
                 _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен. Спасибо.');
                 _feed = null; _feedState = 'idle';
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
         });
         showModal('fmx-revBg');
     }
@@ -4292,7 +4290,7 @@
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось опубликовать'); return; }
                 _haptic('success'); hideModal('fmx-reqBg'); toast('Заявка размещена');
                 _reqs = null; _reqState = 'idle'; renderSell();
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось опубликовать — попробуй ещё раз.'); });
+            }).catch(function () { btn.disabled = false; uiAlert('Не удалось опубликовать. Повтори попытку.'); });
         });
         showModal('fmx-reqBg');
     }
@@ -4314,7 +4312,7 @@
             if (def == null) def = pubs[0].id;
             selectChannel(def);
         }).catch(function () {
-            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить конструктор', 'Проверь связь и попробуй ещё раз.');
+            sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить конструктор', 'Проверь связь и повтори попытку.');
         });
     }
     function channelById(id) { for (var i = 0; i < _channels.length; i++) if (_channels[i].id === id) return _channels[i]; return null; }
@@ -4350,7 +4348,7 @@
         _ss.badgeFree = fx.badgeFree || null;
         if (l.title_style) _ss.font = l.title_style;
         if (l.avatar_type) _ss.avatar = l.avatar_type;
-        if (l.avatar_emoji) _ss.avEmoji = l.avatar_emoji;
+        if (_ss.avatar === 'emoji') _ss.avatar = 'tg';   // эмодзи-аватары убраны: старые офферы мягко переводим на аватар канала
         if (l.formats && l.formats.length) {
             _sfmts.forEach(function (f) { f.on = false; });
             l.formats.forEach(function (rf) {
@@ -4494,7 +4492,7 @@
     function updateAccSummaries() {
         var m = {
             cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
-            avatar: _ss.avatar === 'tg' ? 'Из Telegram' : (_ss.avatar === 'emoji' ? 'Эмодзи ' + _ss.avEmoji : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото')),
+            avatar: _ss.avatar === 'tg' ? 'Из Telegram' : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото'),
             fx: (function () { var n = ['move', 'over', 'glow', 'orbit', 'part'].filter(function (k) { return _ss[k] !== 'none'; }).length; if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
             price: (function () { var on = _sfmts.filter(function (f) { return f.on; }); if (!on.length) return 'Не выбраны'; return on.length + ' форм. · от ' + _num(Math.min.apply(null, on.map(function (f) { return f.p; }))) + ' ₽'; })(),
@@ -4554,9 +4552,7 @@
     function paneAvatar() {
         return '<div class="fmx-mtabs" id="fmx-avtype">' +
             '<button class="fmx-mt' + (_ss.avatar === 'tg' ? ' on' : '') + '" data-av="tg"><i class="ti ti-brand-telegram"></i> Канал</button>' +
-            '<button class="fmx-mt' + (_ss.avatar === 'emoji' ? ' on' : '') + '" data-av="emoji"><i class="ti ti-mood-smile"></i> Эмодзи</button>' +
             '<button class="fmx-mt' + (_ss.avatar === 'img' ? ' on' : '') + '" data-av="img"><i class="ti ti-photo"></i> Фото</button></div>' +
-            '<div id="fmx-avemoji" style="' + (_ss.avatar === 'emoji' ? '' : 'display:none;') + '"><div class="fmx-emg">' + EMOJIS.map(function (e) { return '<div class="fmx-em' + (e === _ss.avEmoji ? ' on' : '') + '" data-e="' + e + '">' + e + '</div>'; }).join('') + '</div></div>' +
             '<div id="fmx-avnote" class="fmx-note" style="margin-top:10px;' + (_ss.avatar === 'tg' ? '' : 'display:none;') + '"><i class="ti ti-info-circle"></i> Используется реальный аватар канала из Telegram.</div>' +
             '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 64 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
     }
@@ -4570,14 +4566,14 @@
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
-            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Топ месяца» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Продвигается» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
             '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение и «Топ месяца» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение и тег «Продвигается» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -4876,8 +4872,7 @@
     }
     function bindStyle() {
         bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цена и кнопки');
-        qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avemoji').style.display = _ss.avatar === 'emoji' ? 'block' : 'none'; el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
-        qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (e) { e.addEventListener('click', function () { _ss.avEmoji = e.getAttribute('data-e'); qsa(el('fmx-avemoji'), '.fmx-em').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on'); renderHero(); }); });
+        qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; }, 'Орбита');
@@ -4890,7 +4885,7 @@
             mb.disabled = true;
             apiPost('/api/v1/marketplace/mod/boost', { listing_id: base.id }).then(function (r) {
                 if (r && r.ok) {
-                    toast('Топ месяца включён на 30 дней');
+                    toast('Тег «Продвигается» включён на 30 дней');
                     loadMyListings().then(function () { renderHero(); });
                 } else { toast((r && r.error) || 'Не удалось'); }
                 mb.disabled = false;
@@ -5147,8 +5142,7 @@
         var pt = fx.part || 'none';
         var t = l.title || l.username || '?', core;
         if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
-        else if (l.avatar_type === 'emoji' && l.avatar_emoji) core = '<div class="fmx-av fx-c-' + ov + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _esc(l.avatar_emoji) + over + '</div>';
-        else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
+        else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';   /* эмодзи-аватары убраны: старые офферы показывают монограмму */
         return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + partHtml(pt) + '</div>';
     }
     function avatarInner(accent, goto) {
@@ -5157,7 +5151,6 @@
         var core;
         var av = _ss._media && _ss._media.avatar, ap = (_ss.att && typeof _ss.att.avatar === 'object') ? _ss.att.avatar : null;
         if (_ss.avatar === 'img' && av && ap) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + av.url + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + ap.x + '% ' + ap.y + '%;transform:scale(' + ap.s + ');transform-origin:' + ap.x + '% ' + ap.y + '%;">' + over + '</div>';
-        else if (_ss.avatar === 'emoji') core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:rgba(255,255,255,0.06);border-color:' + accent + ';">' + _ss.avEmoji + over + '</div>';
         else if (c.avatar_url) core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(c.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">' + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
@@ -5300,7 +5293,7 @@
                     toast(acc ? 'Сделка подтверждена — счётчик вырос' : 'Отклонено');
                     if (acc) { _feed = null; _feedState = 'idle'; }
                     loadPendingDeals();
-                }).catch(function () { uiAlert('Не удалось — попробуй ещё раз.'); });
+                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
             }
             qsa(box, '[data-dacc]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-dacc'), true); }); });
             qsa(box, '[data-ddec]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-ddec'), false); }); });
@@ -5313,7 +5306,7 @@
                         if (r2 && r2.ok === false) { b.disabled = false; _haptic('error'); uiAlert(r2.error || 'Не удалось'); return; }
                         _haptic('success'); toast('Размещение отмечено — замерим охват и отчитаемся покупателю');
                         loadPendingDeals();
-                    }).catch(function () { b.disabled = false; uiAlert('Не удалось — попробуй ещё раз.'); });
+                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
                 });
             });
         }).catch(function () {});
@@ -5376,7 +5369,7 @@
                         _stickers = _stickers.filter(function (x) { return x.id !== id; });
                         if (_ss.sticker && _ss.sticker.sticker_id === id) { _ss.sticker = null; renderHero(); }
                         renderStickerPane();
-                    }).catch(function () { uiAlert('Не удалось удалить — попробуй ещё раз.'); });
+                    }).catch(function () { uiAlert('Не удалось удалить. Повтори попытку.'); });
                 });
             });
         });
@@ -5663,7 +5656,7 @@
         pl.accent_color = _ss.color;
         pl._preview = true;
         pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
-        pl._realTop = base ? _isTop(base) : false; /* реальное 30-дневное продвижение — для таблички «Топ месяца» (её нельзя подделать тумблером) */
+        pl._realTop = base ? _isTop(base) : false; /* реальное 30-дневное продвижение — для тега «Продвигается» (его нельзя подделать тумблером) */
         var act = (_sfmts || []).filter(function (x) { return x.on; });
         pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
         var cm = _ss._media && _ss._media.cover;
@@ -6574,7 +6567,7 @@
         if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Без накрутки</span>') });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
-        if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>') });
+        if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
         // Горящие даты: скидка продавца на непроданные дни ближайшей недели
         if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-flame"></i>Горящие даты −' + l.hot_discount_pct + '%</span>') });
         if (l.badges && l.badges.length) {
@@ -6605,8 +6598,8 @@
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var _fxG = l.fx || null;
-        var _gold = _fxG ? !!_fxG.gold : top;   /* золото «Топ месяца»: ЭКСКЛЮЗИВ месячного продвижения */
-        var realTop = l._preview ? !!l._realTop : _gold; /* табличка «Топ месяца» — только реальное месячное продвижение */
+        var _gold = _fxG ? !!_fxG.gold : top;   /* золото: ЭКСКЛЮЗИВ месячного продвижения */
+        var realTop = l._preview ? !!l._realTop : _gold; /* тег «Продвигается» — только реальное месячное продвижение */
         /* золотое свечение карточки: в превью — по тумблеру; в живой ленте — только месяц */
         var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_gold && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
@@ -6654,7 +6647,7 @@
         var gs = glassKindStyles(gk, accent);
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
-            (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-rocket"></i> Топ месяца</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
+            (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-speakerphone"></i> Продвигается</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             /* стопка иконок сокращена до одной звезды (16.07.2026, решение владельца): безымянные
                кружки share и сравнения не считывались. Share вернётся подписанной кнопкой в кабинете
@@ -6672,7 +6665,7 @@
             '</div>' +
             /* строка дат убрана с карточки (17.07.2026, решение владельца): даты живут внутри
                разворота в календаре; «Новый на Площадке» не нёс смысла — сделки видны бейджем */
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + ';opacity:0.55;" data-act="analyze" data-u="' + _esc(l.username) + '" title="AI-разбор подключается"><i class="ti ti-report-analytics"></i>Разбор · скоро</button><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
+            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
     }
     function _ageTile() {
@@ -6686,7 +6679,7 @@
             apiPost('/api/v1/marketplace/confirm-age', {}).then(function () {
                 _adultOk = true;
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
-            }).catch(function () { toast('Не удалось — попробуй ещё раз.'); });
+            }).catch(function () { toast('Не удалось. Повтори попытку.'); });
         });
     }
     function _bindAgeGate(scope) {
@@ -6700,7 +6693,10 @@
         var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);   // RR только из ядра, без ручного av/subs
         var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
+        var est = (l.price_low != null);   // цена-оценка по нише (Радар), а не названная владельцем
+        var ph = (est && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;   // верх вилки: пол за точку не выдаём
         var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
+        var cpmHi = (cpm != null && ph && _reach(l)) ? Math.round(ph / _reach(l) * 1000) : null;
         var conv = 1, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;  // дефолт 1% — реалистичен для холодного трафика (было 7%, завышало результат в разы)
         // кольцо индекса здоровья
         var ring = '';
@@ -6733,17 +6729,17 @@
         var ad = '';
         if (pp) {
             ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i push" data-fi="ad">i</i></div>' +
-                '<div class="fmr-line">Пост <b class="fmr-big">≈' + _num(pp) + ' ₽</b></div>' +
+                '<div class="fmr-line">Пост <b class="fmr-big">' + (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽')) + '</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 показов</div>' : '') +
-                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.</div>';
+                (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 показов' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
+                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише и охвату, а не названная владельцем цена: точные условия уточняются у владельца канала.' : '') + '</div>';
         }
         var flow = '';
         if (pp && av) {
             flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i push" data-fi="flow">i</i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена поста)</div>' +
-                '<div class="fmr-warn">Ниже 0.3% — совсем мало: почти никто не подписался, каждый выходит космически дорого. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
+                '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
         var pills = [];
@@ -6796,7 +6792,7 @@
         var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('RR <b>' + Math.round(l.er) + '%</b>');
-        var cpm = _cpm(l); if (cpm != null) bits.push('CPM <b>' + _short(cpm) + '₽</b>');
+        var cpm = _cpm(l); if (cpm != null) bits.push((l.price_low != null && l.min_price == null ? 'CPM ниши' : 'CPM') + ' <b>' + _short(cpm) + '₽</b>');
         if (l.audience && _audText(l.audience)) bits.push('<span style="color:' + _audColor(l.audience) + ';font-weight:700;">' + _audText(l.audience) + '</span>');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
@@ -7087,7 +7083,7 @@
             if (prev) _bookmarks[u] = true; else delete _bookmarks[u];
             updateBmCount();
             qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', prev); });
-            toast('Не удалось обновить закладку — попробуй ещё раз');
+            toast('Не удалось обновить закладку. Повтори попытку.');
         }
         if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () { _revert(true); }); }
         else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () { _revert(false); }); }
@@ -7229,7 +7225,7 @@
                 'Средний охват поста — не менее 10% от числа подписчиков. Аудитория активно читает канал: признак живой, невыгоревшей базы.') +
             card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
                 'В канале от 100 000 подписчиков. Большой охват за размещение — подходит для масштабных запусков и широких проливов.') +
-            card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В точку</span>', 'В точку',
+            card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>', 'В нише',
                 'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
             card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4,8 · 3 сделки</span>', 'Сделки и рейтинг',
                 'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
@@ -7263,7 +7259,7 @@
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
         week: 'Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.',
-        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: орбита, анимированный фон, золото и тег «Топ месяца» — их не даёт ни один тариф.',
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: орбита, анимированный фон, золото и тег «Продвигается» — их не даёт ни один тариф.',
         pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
         pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
     };
