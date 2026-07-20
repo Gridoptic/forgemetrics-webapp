@@ -7391,6 +7391,29 @@
     /* Разворот оффера 2.0 (утверждённый макет): бейджи → окно метрик в стиле Пульса →
        табло продавца → Доверие → описание → форматы с CPM → календарь → отзывы → сделки →
        поделиться/жалоба → sticky-низ с живой кнопкой «Написать: дата · формат». */
+    /* CPV — цена за один просмотр (₽), интуитивнее CPM в дорогих нишах; = CPM/1000 */
+    function _cpvTxt(l) { var c = _cpm(l); if (c == null) return null; return (Math.round(c / 10) / 100).toString().replace('.', ',') + ' ₽'; }
+    /* возраст канала из даты создания (unix) — соц-доказательство; <2 мес не показываем */
+    function _chAge(ts) { if (!ts) return null; var mo = Math.floor((Date.now() / 1000 - ts) / 2629800); if (mo < 2) return null; if (mo < 12) return mo + ' ' + _plural(mo, 'месяц', 'месяца', 'месяцев'); var y = Math.floor(mo / 12), r = mo % 12; return y + ' ' + _plural(y, 'год', 'года', 'лет') + (r >= 1 ? ' ' + r + ' мес' : ''); }
+    /* доказательная антинакрутка: структура охвата (медиана vs всплески + доля рекламы) вместо бинарного щита */
+    function _reachStructBlock(l) {
+        var sp = l.spike_ratio, ad = l.ad_density, rows = [];
+        if (sp != null) {
+            var pct = Math.round(sp * 100), t, c, ic;
+            if (pct === 0) { t = 'Просмотры ровные — всплесков нет, следов закупа не видно'; c = '#5DCAA5'; ic = 'ti-wave-sine'; }
+            else if (sp < 0.2) { t = 'Отдельные вирусные посты (~' + pct + '%) — обычная органика'; c = '#818cf8'; ic = 'ti-chart-line'; }
+            else { t = 'Кластер всплесков (~' + pct + '% постов) — возможен закуп просмотров, проверь'; c = '#f59e0b'; ic = 'ti-alert-triangle'; }
+            rows.push('<div class="fmx-tline" style="color:' + c + ';"><i class="ti ' + ic + '"></i>' + t + '</div>');
+        }
+        if (ad != null) {
+            var apct = Math.round(ad * 100);
+            var at = apct + '% постов рекламные' + (ad >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : (ad <= 0.1 ? ' — реклама редкая, аудитория «свежая»' : ''));
+            var acol = ad >= 0.35 ? '#f59e0b' : (ad <= 0.1 ? '#5DCAA5' : '#c2c6d2');
+            rows.push('<div class="fmx-tline" style="color:' + acol + ';"><i class="ti ti-ad"></i>' + at + '</div>');
+        }
+        if (!rows.length) return '';
+        return '<div class="fmx-lssect">Структура охвата <span style="font-weight:400;color:#565b73;font-size:10px;">· доказательство, а не ярлык</span></div><div class="fmx-terms">' + rows.join('') + '</div>';
+    }
     function _pwMetrics(l) {
         var cpm = _cpm(l);
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
@@ -7403,6 +7426,7 @@
             '<div class="pw-hlab">Охват поста</div>' +
             '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div>' +
             '<div class="pw-spark" id="fmx-pwspark"></div>' +
+            (_chAge(l.channel_created_ts) ? '<div style="font-size:11px;color:#8990a8;margin:-2px 0 8px;"><i class="ti ti-calendar" style="font-size:11px;"></i> На рынке ' + _chAge(l.channel_created_ts) + '</div>' : '') +
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
@@ -7411,7 +7435,7 @@
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
             '<div class="pw-mrow num" style="border-top:none;padding-top:4px;margin-top:4px;">' +
-            cell('Прирост 30 дн', '—', true) +
+            cell('CPV · за просмотр', _cpvTxt(l) || '—', _cpvTxt(l) == null) +
             '<div class="pw-mdiv"></div>' +
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
@@ -7511,6 +7535,7 @@
             '<div class="fmx-badges">' + badges(l) + '</div>' +
             '<div class="fmx-lssect">Метрики канала</div>' +
             _pwMetrics(l) +
+            _reachStructBlock(l) +
             _peakBlock(l) +
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
             (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) : '') +
