@@ -6846,15 +6846,16 @@
             var sr = [];
             if (l.spike_ratio != null) {
                 var sp = l.spike_ratio, spct = Math.round(sp * 100), st, sc;
-                if (spct === 0) { st = 'Просмотры ровные — всплесков нет, следов закупа не видно'; sc = '#5DCAA5'; }
+                if (spct === 0) { st = 'Просмотры ровные — резких всплесков нет'; sc = '#5DCAA5'; }
                 else if (sp < 0.2) { st = 'Отдельные вирусные посты (~' + spct + '%) — обычная органика'; sc = '#818cf8'; }
                 else { st = 'Кластер всплесков (~' + spct + '% постов) — возможен закуп просмотров, проверь'; sc = '#f59e0b'; }
                 sr.push('<div class="fmr-sub" style="color:' + sc + ';">' + st + '</div>');
             }
-            if (l.ad_density != null) {
+            // рекламу заявляем ТОЛЬКО когда реально нашли заметную долю (≥15%): детектор ищет по тексту
+            // ~20 постов и нативку пропускает — «0% рекламных» недоказуемо, поэтому при малой доле молчим
+            if (l.ad_density != null && l.ad_density >= 0.15) {
                 var apct = Math.round(l.ad_density * 100);
-                var atx = apct + '% постов рекламные' + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : (l.ad_density <= 0.1 ? ' — реклама редкая, аудитория «свежая»' : ''));
-                sr.push('<div class="fmr-sub" style="color:' + (l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density <= 0.1 ? '#5DCAA5' : '#c2c6d2')) + ';">' + atx + '</div>');
+                sr.push('<div class="fmr-sub" style="color:' + (l.ad_density >= 0.35 ? '#f59e0b' : '#c2c6d2') + ';">≈' + apct + '% постов — реклама' + (l.ad_density >= 0.35 ? ', лента подвыжжена — охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
         })();
@@ -7420,16 +7421,15 @@
         var sp = l.spike_ratio, ad = l.ad_density, rows = [];
         if (sp != null) {
             var pct = Math.round(sp * 100), t, c, ic;
-            if (pct === 0) { t = 'Просмотры ровные — всплесков нет, следов закупа не видно'; c = '#5DCAA5'; ic = 'ti-wave-sine'; }
+            if (pct === 0) { t = 'Просмотры ровные — резких всплесков нет'; c = '#5DCAA5'; ic = 'ti-wave-sine'; }
             else if (sp < 0.2) { t = 'Отдельные вирусные посты (~' + pct + '%) — обычная органика'; c = '#818cf8'; ic = 'ti-chart-line'; }
             else { t = 'Кластер всплесков (~' + pct + '% постов) — возможен закуп просмотров, проверь'; c = '#f59e0b'; ic = 'ti-alert-triangle'; }
             rows.push('<div class="fmx-tline" style="color:' + c + ';"><i class="ti ' + ic + '"></i>' + t + '</div>');
         }
-        if (ad != null) {
+        // рекламу заявляем только при заметной доле (≥15%) — «0% рекламных» детектором недоказуемо (нативку пропускает)
+        if (ad != null && ad >= 0.15) {
             var apct = Math.round(ad * 100);
-            var at = apct + '% постов рекламные' + (ad >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : (ad <= 0.1 ? ' — реклама редкая, аудитория «свежая»' : ''));
-            var acol = ad >= 0.35 ? '#f59e0b' : (ad <= 0.1 ? '#5DCAA5' : '#c2c6d2');
-            rows.push('<div class="fmx-tline" style="color:' + acol + ';"><i class="ti ti-ad"></i>' + at + '</div>');
+            rows.push('<div class="fmx-tline" style="color:' + (ad >= 0.35 ? '#f59e0b' : '#c2c6d2') + ';"><i class="ti ti-ad"></i>≈' + apct + '% постов — реклама' + (ad >= 0.35 ? ', лента подвыжжена — охват твоей рекламы ниже' : '') + '</div>');
         }
         if (!rows.length) return '';
         return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
