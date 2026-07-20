@@ -14,6 +14,22 @@
     var _q = '', _sortBuy = 'smart', _fPriceMin = null, _fPriceMax = null, _fSubsMin = null, _fAud = null;
     /* аудитория канала: пол основной ЦА (male|female|mixed) — ось «тема × пол» */
     function _audText(a) { return a === 'male' ? 'Мужская' : a === 'female' ? 'Женская' : a === 'mixed' ? 'Смешанная' : ''; }
+    /* честная подпись пола: измерено по комментаторам → «≈N% комментаторов — женщины»;
+       очевидная ниша → «Женская · по нише»; иначе ИИ-оценка по теме → «· оценка».
+       Смешанную/пустую не выпячиваем (null). */
+    function _audLabel(l) {
+        if (l.audience_source === 'commenters' && l.female_pct != null && (l.gender_sample || 0) >= 15) {
+            var fp = l.female_pct, fem = fp >= 50;
+            return { icon: fem ? 'ti-gender-female' : 'ti-gender-male', color: fem ? '#ff6fae' : '#5b9dff',
+                short: (fem ? 'жен' : 'муж') + ' ≈' + (fem ? fp : 100 - fp) + '%',
+                text: '≈' + fp + '% комментаторов — женщины', note: 'оценка по ' + l.gender_sample + ' именам' };
+        }
+        var a = l.audience;
+        if (!a || a === 'mixed') return null;
+        var t = _audText(a);
+        if (l.audience_source === 'niche') return { icon: _audIcon(a), color: _audColor(a), short: t, text: t + ' · по нише', note: 'по нише' };
+        return { icon: _audIcon(a), color: _audColor(a), short: t, text: t + ' аудитория', note: 'оценка по теме' };
+    }
     function _audColor(a) { return a === 'male' ? '#5b9dff' : a === 'female' ? '#ff6fae' : '#9aa0b5'; }
     function _audIcon(a) { return a === 'male' ? 'ti-gender-male' : a === 'female' ? 'ti-gender-female' : 'ti-users-group'; }
     function _audChip(l) {
@@ -6742,8 +6758,8 @@
         var pills = [];
         if (l.antifraud === 'clean' || l.health_class === 'green') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
-        var au = l.audience && _audText(l.audience);
-        if (au) pills.push('<span class="fmr-pill"><i class="ti ti-users"></i>' + au + ' аудитория</span>');
+        var al = _audLabel(l);
+        if (al) pills.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
         var pillsHtml = pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '<div style="height:11px;"></div>';
         // шапка карточки: аватар + название канала + @юзернейм, справа — кольцо индекса
         var _t = l.title || l.username || 'Канал', _acc = _accent(l);
@@ -6768,8 +6784,8 @@
     function _liIcons(l) {
         var out = [];
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
-        var au = l.audience && _audText(l.audience);
-        if (au) out.push([_audIcon(l.audience), _audColor(l.audience), au + ' аудитория']);
+        var _alx = _audLabel(l);
+        if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
         // «Живой» — из ядра: badges (score_health) или is_alive (ad_health.is_alive), не порог RR≥10
         var live = (l.badges && l.badges.indexOf('live') >= 0) || (!(l.badges && l.badges.length) && l.is_alive === true);
         if (live) out.push(['ti-plant-2', '#5DCAA5', 'Живой канал']);
@@ -6791,7 +6807,8 @@
         if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
         if (l.er != null) bits.push('RR <b>' + Math.round(l.er) + '%</b>');
         var cpm = _cpm(l); if (cpm != null) bits.push((l.price_low != null && l.min_price == null ? 'CPM ниши' : 'CPM') + ' <b>' + _short(cpm) + '₽</b>');
-        if (l.audience && _audText(l.audience)) bits.push('<span style="color:' + _audColor(l.audience) + ';font-weight:700;">' + _audText(l.audience) + '</span>');
+        var _alb = _audLabel(l);
+        if (_alb) bits.push('<span style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
@@ -7297,7 +7314,7 @@
             return '<div class="pw-mcell' + (dim ? ' fmx-mdim' : '') + '"><div class="pw-ml">' + label + '</div>' +
                 '<div class="pw-mv num">' + val + '</div></div>';
         }
-        var audTx = l.audience ? _audText(l.audience) : null;
+        var _al = _audLabel(l), audTx = _al ? _al.text : null;
         return '<div class="fmx-pwc">' +
             '<div class="pw-hlab">Охват поста</div>' +
             '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div>' +
