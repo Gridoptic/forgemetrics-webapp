@@ -18,29 +18,24 @@
        очевидная ниша → «Женская · по нише»; иначе ИИ-оценка по теме → «· оценка».
        Смешанную/пустую не выпячиваем (null). */
     function _audLabel(l) {
+        // Пол показываем ТОЛЬКО по реальному замеру: доля женских имён среди комментаторов (>=15 имён).
+        // Пол «по нише»/«по теме» УБРАН: тема канала не определяет пол аудитории (косметолог-дерматолог с
+        // личным влогом = смешанная), а любой keyword-фильтр по нише неизбежно промахивается. Честнее не
+        // показывать, пока нет замера. Замер по комментаторам придёт с глубокого скана (классификатор готов).
         if (l.audience_source === 'commenters' && l.female_pct != null && (l.gender_sample || 0) >= 15) {
             var fp = l.female_pct, fem = fp >= 50;
             return { icon: fem ? 'ti-gender-female' : 'ti-gender-male', color: fem ? '#ff6fae' : '#5b9dff',
                 short: (fem ? 'жен' : 'муж') + ' ≈' + (fem ? fp : 100 - fp) + '%',
                 text: '≈' + fp + '% комментаторов — женщины', note: 'оценка по ' + l.gender_sample + ' именам' };
         }
-        var a = l.audience;
-        if (!a) return null;
-        if (l.audience_source === 'niche') {
-            if (a === 'mixed') return { icon: 'ti-users-group', color: '#9aa0b5', short: 'Смеш.', text: 'Смешанная · по нише', note: 'по нише' };
-            var tn = _audText(a);
-            return { icon: _audIcon(a), color: _audColor(a), short: tn, text: tn + ' · по нише', note: 'по нише' };
-        }
-        if (a === 'mixed') return null;   // неуверенная смешанная (ИИ/умолчание) — не выпячиваем
-        var t = _audText(a);
-        return { icon: _audIcon(a), color: _audColor(a), short: t, text: t + ' аудитория', note: 'оценка по теме' };
+        return null;
     }
     function _audColor(a) { return a === 'male' ? '#5b9dff' : a === 'female' ? '#ff6fae' : '#9aa0b5'; }
     function _audIcon(a) { return a === 'male' ? 'ti-gender-male' : a === 'female' ? 'ti-gender-female' : 'ti-users-group'; }
     function _audChip(l) {
-        var a = l && l.audience; var t = _audText(a); if (!t) return '';
-        var c = _audColor(a);
-        return '<span class="fmx-aud" style="color:' + c + ';border-color:' + c + '55;background:' + c + '1a;"><i class="ti ' + _audIcon(a) + '"></i>' + t + '</span>';
+        // консистентно с _audLabel: пол-чип только по реальному замеру (комментаторы), не по нише
+        var lab = _audLabel(l); if (!lab) return '';
+        return '<span class="fmx-aud" style="color:' + lab.color + ';border-color:' + lab.color + '55;background:' + lab.color + '1a;"><i class="ti ' + lab.icon + '"></i>' + lab.short + '</span>';
     }
     var _feedTotal = 0, _feedOffset = 0, _FEED_PAGE = 30;
     /* деп-линк карточки; необязательный суффикс _r_<код> — рефка владельца постера, вшитая в QR
@@ -2181,11 +2176,6 @@
             '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
             '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
             '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Аудитория</span>' +
-            '<div class="fmx-fxw" id="fmx-bf-aud">' +
-            [['', 'Все'], ['female', 'Женская'], ['male', 'Мужская'], ['mixed', 'Смешанная']].map(function (o) {
-                return '<button class="fmx-fx' + ((_fAud || '') === o[0] ? ' on' : '') + '" data-aud="' + o[0] + '">' + o[1] + '</button>';
-            }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Ниша</span>' +
             '<div class="fmx-fxw" id="fmx-bf-niche">' +
             '<button class="fmx-fx' + ((_sort !== 'match' && _sort !== 'niche') ? ' on' : '') + '" data-nf="all">Все каналы</button>' +
@@ -2772,7 +2762,7 @@
             '<button id="fmx-rf-x" style="margin-left:auto;width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div style="margin-top:6px;">' + rows + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Аудитория</span><div class="fmx-fxw" id="fmx-rf-aud">' + _RF_AUD.map(function (a) { return '<button class="fmx-fx' + (_rf.aud[a[0]] ? ' on' : '') + '" data-a="' + a[0] + '">' + a[1] + '</button>'; }).join('') + '</div>' +
+            /* секция «Аудитория» (пол) убрана: пол по нише ненадёжен, показываем/фильтруем только по замеру комментаторов (позже) */
             '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;"><span id="fmx-rf-cnt"></span></button></div></div>';
         document.body.appendChild(bg);
         function upd() { var c = el('fmx-rf-cnt'); if (c) c.textContent = 'Показать ' + (_catalog || []).filter(_rfPass).length; }
