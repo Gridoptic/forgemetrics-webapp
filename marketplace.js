@@ -6702,14 +6702,19 @@
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
-            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
-                '<div class="fmr-info" data-finfo="rr">Reach Rate = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): малый до 10к 15–45%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак накрутки.' + rrAnom + '</div>';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
+                '<div class="fmr-info" data-finfo="rr">ERR (Reach Rate) = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         // строка ER (вовлечённость по реакциям) — отдельно от Reach Rate; пусто, если реакции скрыты
         var erHtml = '';
         if (l.engagement_percent != null) {
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + (l.react_count != null ? ' <span style="font-size:11px;color:#565b73;">~' + _num(l.react_count) + ' реакций на пост</span>' : '') + '<i class="fmr-i push" data-fi="er">i</i></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = реакции ÷ охват — какая доля увидевших пост реагирует. Живой сигнал: просмотры накрутить дёшево, реакции — нет. У новостных норма ~0.3–1%, у узких экспертных выше. Если реакции у канала скрыты — ER не показываем. Комментарии и репосты добавятся у каналов, подключённых к боту.</div>';
+            var erBits = [];
+            if (l.react_count != null) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
+            if (l.forward_count != null) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
+            if (l.comment_count != null) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
+            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + erBits.join(' · ') + ' на пост</span>' : '';
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + erSub + '<i class="fmr-i push" data-fi="er">i</i></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Норма зависит от жанра: новостные живут репостами, экспертные — реакциями и комментариями. Если взаимодействия у канала скрыты — ER не показываем.</div>';
         }
         // пометка «оценка» при малой/недозревшей выборке охвата — честно про уверенность
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
@@ -6718,10 +6723,10 @@
         var ad = '';
         if (pp) {
             ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i push" data-fi="ad">i</i></div>' +
-                '<div class="fmr-line">Пост <b class="fmr-big">' + (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽')) + '</b></div>' +
+                '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 показов' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
-                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише и охвату, а не названная владельцем цена: точные условия уточняются у владельца канала.' : '') + '</div>';
+                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату (полному, за всё время жизни поста) и вовлечённости канала, а не названная владельцем цена: точные условия уточняются у владельца.' : '') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
         if (pp && av) {
