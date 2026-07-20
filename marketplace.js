@@ -2020,7 +2020,14 @@
             box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.');
             return;
         }
-        box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>');
+        // база грузится целиком (поиск ищет по всем каналам), но в браузинге без поиска рисуем топ-120
+        // по индексу — иначе 400 карточек тормозят. Есть запрос — показываем ВСЕ совпадения.
+        var _cap = 120, _capNote = '';
+        if (!_catQ && list.length > _cap) {
+            _capNote = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">Показаны ' + _cap + ' из ' + list.length + ' по индексу. Нужен конкретный канал — впиши в поиск, ищет по всей базе.</div>';
+            list = list.slice(0, _cap);
+        }
+        box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>') + _capNote;
         bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
     }
     function renderCatalog() {
