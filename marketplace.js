@@ -6777,6 +6777,19 @@
     function _bindAgeGate(scope) {
         qsa(scope || el('fmx-main'), '[data-agegate]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _askAge(); }); });
     }
+    /* Безопасно вытащить Telegram-ник из распознанного контакта для клика.
+       Только t.me/ник, @ник или ЦЕЛЬНЫЙ ник — иначе null (мусорную строку не линкуем, чтобы не
+       увести на чужой аккаунт: старая аудит-находка про скам-риск неверно распознанного контакта). */
+    function _ctcUser(c) {
+        if (!c) return null;
+        c = String(c).trim();
+        var m = c.match(/(?:t\.me|telegram\.me)\/([A-Za-z][A-Za-z0-9_]{3,31})/i);
+        if (m) return m[1];
+        m = c.match(/@([A-Za-z][A-Za-z0-9_]{3,31})\b/);
+        if (m) return m[1];
+        if (/^[A-Za-z][A-Za-z0-9_]{3,31}$/.test(c)) return c;
+        return null;
+    }
     function simpleCard(l) {
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l);
@@ -6888,9 +6901,12 @@
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             nicheHtml +
             facts + struct + ad + flow + pillsHtml +
-            // контакт — ПОДСКАЗКА, а не замок: где распознан, показываем; где нет — не прячем канал (крупные
-            // не пишут контакт в описании), закупщик находит через «Открыть канал» (закреп/чат/админ)
-            (l.contact ? '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ti-address-book" style="font-size:12px;color:#818cf8;"></i> Реклама: <b style="color:#c2c6d2;">' + _esc(l.contact) + '</b></div>' : '') +
+            // контакт — ПОДСКАЗКА, а не замок. Кликабелен, если уверенно вытащили ник (→ открыть чат);
+            // мусорную строку показываем текстом (не линкуем — чтоб не увести на чужой аккаунт)
+            (l.contact ? '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ti-address-book" style="font-size:12px;color:#818cf8;"></i> Реклама: ' +
+                (_ctcUser(l.contact)
+                    ? '<b class="fmr-ctc" data-ctc="' + _esc(_ctcUser(l.contact)) + '" style="color:#818cf8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">@' + _esc(_ctcUser(l.contact)) + '</b>'
+                    : '<b style="color:#c2c6d2;">' + _esc(l.contact) + '</b>') + '</div>' : '') +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
@@ -7056,6 +7072,8 @@
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
+        // клик по распознанному контакту рекламы → открыть чат с ним (не разворачивая карточку)
+        qsa(host, '[data-ctc]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-ctc')); }); });
         // раскрытие пояснений ⓘ на карточке Радара
         qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
         // калькулятор перелива: пересчёт цены подписчика по введённой конверсии
