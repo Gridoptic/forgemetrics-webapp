@@ -25,9 +25,14 @@
                 text: '≈' + fp + '% комментаторов — женщины', note: 'оценка по ' + l.gender_sample + ' именам' };
         }
         var a = l.audience;
-        if (!a || a === 'mixed') return null;
+        if (!a) return null;
+        if (l.audience_source === 'niche') {
+            if (a === 'mixed') return { icon: 'ti-users-group', color: '#9aa0b5', short: 'Смеш.', text: 'Смешанная · по нише', note: 'по нише' };
+            var tn = _audText(a);
+            return { icon: _audIcon(a), color: _audColor(a), short: tn, text: tn + ' · по нише', note: 'по нише' };
+        }
+        if (a === 'mixed') return null;   // неуверенная смешанная (ИИ/умолчание) — не выпячиваем
         var t = _audText(a);
-        if (l.audience_source === 'niche') return { icon: _audIcon(a), color: _audColor(a), short: t, text: t + ' · по нише', note: 'по нише' };
         return { icon: _audIcon(a), color: _audColor(a), short: t, text: t + ' аудитория', note: 'оценка по теме' };
     }
     function _audColor(a) { return a === 'male' ? '#5b9dff' : a === 'female' ? '#ff6fae' : '#9aa0b5'; }
@@ -2156,6 +2161,8 @@
         };
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты' +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;margin:-4px -4px -4px auto;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
+            '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
+            '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button></div>' +
             '<div class="fmx-bfgrid">' +
             _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
@@ -2164,8 +2171,6 @@
             '<div class="fmx-bfcell"><span class="fmx-lbl">Свободно · с / по</span>' +
             '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
             '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
-            '<div class="fmx-bfcell" style="display:flex;align-items:flex-end;">' +
-            '<div class="fmx-tgl' + (_fDeals ? ' on' : '') + '" id="fmx-bf-deals" style="padding:0 0 8px;"><span class="sw"></span>Только со сделками</div></div>' +
             '</div>' +
             '<span class="fmx-lbl fmx-mt2">Аудитория</span>' +
             '<div class="fmx-fxw" id="fmx-bf-aud">' +
@@ -2187,8 +2192,7 @@
         qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (b) {
             b.addEventListener('click', function () { qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); });
         });
-        var _bfd = bg.querySelector('#fmx-bf-deals');
-        if (_bfd) _bfd.addEventListener('click', function () { _bfd.classList.toggle('on'); });
+        qsa(bg, '#fmx-bf-pre [data-pre]').forEach(function (b) { b.addEventListener('click', function () { b.classList.toggle('on'); }); });
         qsa(bg, '#fmx-bf-niche [data-nf]').forEach(function (b) {
             b.addEventListener('click', function () {
                 if (b.getAttribute('data-nf') === 'pick') { done(); pickNiche(); return; }
@@ -2206,7 +2210,9 @@
             var _df = el('fmx-bf-df'), _dt2 = el('fmx-bf-dt');
             _fFreeFrom = (_df && _df.value) ? _df.value : null;
             _fFreeTo = (_fFreeFrom && _dt2 && _dt2.value && _dt2.value >= _fFreeFrom) ? _dt2.value : null;
-            _fDeals = !!(el('fmx-bf-deals') && el('fmx-bf-deals').classList.contains('on'));
+            var _preD = bg.querySelector('#fmx-bf-pre [data-pre="deals"]'), _preL = bg.querySelector('#fmx-bf-pre [data-pre="large"]');
+            _fDeals = !!(_preD && _preD.classList.contains('on'));
+            if (_preL && _preL.classList.contains('on')) _fSubsMin = (_fSubsMin != null) ? Math.max(_fSubsMin, 100000) : 100000;
             if (_fPriceMin != null && _fPriceMax != null && _fPriceMin > _fPriceMax) { var t = _fPriceMin; _fPriceMin = _fPriceMax; _fPriceMax = t; }
             var au = bg.querySelector('#fmx-bf-aud [data-aud].on');
             _fAud = (au && au.getAttribute('data-aud')) ? au.getAttribute('data-aud') : null;
