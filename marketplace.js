@@ -1900,6 +1900,8 @@
         if (_fSubsMax != null) p.push('subs_max=' + _fSubsMax);
         if (_fFreeFrom) p.push('free_from=' + _fFreeFrom + (_fFreeTo ? '&free_to=' + _fFreeTo : ''));
         if (_fDeals) p.push('deals_only=1');
+        if (_fClean) p.push('clean_only=1');
+        if (_fVerified) p.push('verified_only=1');
         return '/api/v1/marketplace/listings?' + p.join('&');
     }
     var _feedReq = 0, _feedMore = false;
@@ -2104,9 +2106,9 @@
         renderMarket();
     }
 
-    var _fCpmMax = null, _fErMin = null, _fFreeFrom = null, _fFreeTo = null, _fDeals = false;
+    var _fCpmMax = null, _fErMin = null, _fFreeFrom = null, _fFreeTo = null, _fDeals = false, _fClean = false, _fVerified = false;
     var _fSubsMax = null, _fCpmMin = null, _fErMax = null;
-    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fSubsMax != null ? 1 : 0); }
+    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fClean ? 1 : 0) + (_fVerified ? 1 : 0) + (_fSubsMax != null ? 1 : 0); }
     function buySortRowHtml() {
         var opts = [['smart', 'Умная'], ['price_asc', 'Цена ↑'], ['price_desc', 'Цена ↓'], ['reach', 'Охват'], ['cpm', 'CPM'], ['fresh', 'Свежие']];
         var nf = _buyFiltersCount();
@@ -2162,7 +2164,7 @@
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;margin:-4px -4px -4px auto;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
-            '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button></div>' +
+            '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button><button class="fmx-fx' + (_fClean ? ' on' : '') + '" data-pre="clean">Без накрутки</button><button class="fmx-fx' + (_fVerified ? ' on' : '') + '" data-pre="verified">Проверенный владелец</button></div>' +
             '<div class="fmx-bfgrid">' +
             _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
@@ -2213,6 +2215,9 @@
             _fFreeTo = (_fFreeFrom && _dt2 && _dt2.value && _dt2.value >= _fFreeFrom) ? _dt2.value : null;
             var _preD = bg.querySelector('#fmx-bf-pre [data-pre="deals"]'), _preL = bg.querySelector('#fmx-bf-pre [data-pre="large"]');
             _fDeals = !!(_preD && _preD.classList.contains('on'));
+            var _preC = bg.querySelector('#fmx-bf-pre [data-pre="clean"]'), _preV = bg.querySelector('#fmx-bf-pre [data-pre="verified"]');
+            _fClean = !!(_preC && _preC.classList.contains('on'));
+            _fVerified = !!(_preV && _preV.classList.contains('on'));
             if (_preL && _preL.classList.contains('on')) _fSubsMin = (_fSubsMin != null) ? Math.max(_fSubsMin, 100000) : 100000;
             if (_fPriceMin != null && _fPriceMax != null && _fPriceMin > _fPriceMax) { var t = _fPriceMin; _fPriceMin = _fPriceMax; _fPriceMax = t; }
             var au = bg.querySelector('#fmx-bf-aud [data-aud].on');
@@ -2237,7 +2242,7 @@
         bg.querySelector('[data-apply]').addEventListener('click', applyClose);
         bg.querySelector('[data-reset]').addEventListener('click', function () {
             _fPriceMin = _fPriceMax = _fSubsMin = null; _fAud = null; _sort = 'match'; _nicheSel = null;
-            _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false;
+            _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false; _fClean = false; _fVerified = false;
             _fSubsMax = _fCpmMin = _fErMax = null;
             done(); _refreshFilterChip(); loadFeed(false);
         });
