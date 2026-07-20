@@ -79,13 +79,14 @@
     var COVER_NAMES = ['Фиолет', 'Изумруд', 'Закат', 'Океан', 'Огонь', 'Магента'];
     var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
-    var FX_MOVE = [['none', 'Без'], ['levit', 'Левитация'], ['pscale', 'Пульс'], ['sway', 'Покачивание'], ['glitch', 'Сдвиг'], ['bounce', 'Прыжок'], ['tilt3d', '3D-наклон'], ['pendulum', 'Маятник'], ['drift', 'Дрейф'], ['jelly', 'Желе'], ['flip', 'Переворот']];
-    var FX_OVER = [['none', 'Без'], ['holo', 'Голограмма'], ['liquid', 'Жидкое золото'], ['rgb', 'Глитч'], ['chroma', 'Хрома'], ['vhs', 'VHS'], ['slice', 'Распад'], ['warp', 'Искажение'], ['shred', 'Помехи'], ['blocks', 'Блоки'], ['scan', 'Сканер']];
-    var FX_GLOW = [['none', 'Без'], ['neon', 'Неон'], ['breath', 'Дыхание'], ['gold', 'Золото'], ['aurora', 'Аврора'], ['rainbow', 'Радуга'], ['fire', 'Пламя'], ['ice', 'Иней'], ['pulsar', 'Пульсары'], ['electric', 'Электро'], ['corona', 'Корона']];
-    var FX_ORBIT = [['none', 'Без'], ['comet', 'Комета'], ['atom', 'Атом'], ['orbitals', 'Орбитали'], ['sphere', 'Сфера'], ['satellite', 'Спутник'], ['dualcomet', 'Двойная комета'], ['constellation', 'Созвездие'], ['saturn', 'Кольцо'], ['swarm', 'Рой'], ['meteor', 'Метеор']];
-    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['tint', 'Цветное'], ['dark', 'Дымка'], ['crystal', 'Кристалл'], ['goldglass', 'Золотое'], ['hologlass', 'Голо'], ['neonglass', 'Неон'], ['smoke', 'Дым'], ['mirror', 'Зеркало'], ['acid', 'Кислота']];
-    var FX_PART = [['none', 'Без'], ['sparks', 'Искры'], ['snow', 'Снег'], ['fireflies', 'Светлячки'], ['bubbles', 'Пузырьки'], ['stardust', 'Звёздная пыль'], ['embers', 'Угольки'], ['confetti', 'Конфетти'], ['rain', 'Дождь'], ['petals', 'Лепестки'], ['matrix', 'Матрица']];
-    var FX_VIP = { glow: ['neon', 'breath', 'gold', 'aurora', 'rainbow', 'fire', 'ice', 'pulsar', 'electric', 'corona'], orbit: ['comet', 'atom', 'orbitals', 'sphere', 'satellite', 'dualcomet', 'constellation', 'saturn', 'swarm', 'meteor'], glass: ['frost', 'tint', 'dark', 'crystal', 'goldglass', 'hologlass', 'neonglass', 'smoke', 'mirror', 'acid'] };
+    /* Сдержанный премиум (аудит 20.07): аляповатые эффекты (движение, глитчи/VHS, частицы,
+       орбиты, радуги) убраны. Остались тихие акценты: свечение (тонкое/золото) и стекло
+       (матовое/дымка). Сохранённые у старых офферов значения мягко гасятся через fxAllow(). */
+    var FX_GLOW = [['none', 'Без'], ['neon', 'Тонкое'], ['gold', 'Золото']];
+    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['dark', 'Дымка']];
+    var FX_KEEP = { move: ['none'], over: ['none'], part: ['none'], orbit: ['none'], glow: ['none', 'neon', 'gold'], glass: ['none', 'frost', 'dark'] };
+    function fxAllow(group, v) { return (v && FX_KEEP[group] && FX_KEEP[group].indexOf(v) >= 0) ? v : 'none'; }
+    var FX_VIP = { glow: ['neon', 'gold'], glass: ['frost', 'dark'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -648,8 +649,7 @@
             '@keyframes fmxJelly{0%,100%{transform:scale(1,1);}20%{transform:scale(1.08,0.92);}40%{transform:scale(0.94,1.06);}60%{transform:scale(1.04,0.96);}80%{transform:scale(0.98,1.02);}}',
             '.fx-m-flip{animation:fmxFlip 5s ease-in-out infinite;}',
             '@keyframes fmxFlip{0%,60%,100%{transform:perspective(320px) rotateY(0);}80%{transform:perspective(320px) rotateY(360deg);}}',
-            '.fx-g-neon{box-shadow:0 0 12px var(--fxa),0 0 24px var(--fxa);animation:fmxGlowP 2.6s ease-in-out infinite;}',
-            '@keyframes fmxGlowP{0%,100%{opacity:.35;}50%{opacity:.85;}}',
+            '.fx-g-neon{box-shadow:0 0 10px var(--fxa),0 0 20px var(--fxa);opacity:.55;}',   /* «Тонкое»: ровное свечение цветом бренда, без пульсации */
             '.fx-g-breath{box-shadow:0 0 18px 5px rgba(255,255,255,0.5);animation:fmxBreathH 3.4s ease-in-out infinite;}',
             '@keyframes fmxBreathH{0%,100%{transform:scale(0.94);opacity:.3;}50%{transform:scale(1.14);opacity:.8;}}',
             '.fx-g-gold{box-shadow:0 0 10px rgba(245,191,79,.5),0 0 22px rgba(245,191,79,.28);}',   /* ровное свечение без мигания: премиум сдержан */
@@ -4320,7 +4320,7 @@
 
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
-            move: 'levit', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
+            move: 'none', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
             coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _hideInsights: false, _title: null, listingId: null, channelId: null };
     }
     function defaultFmts() {
@@ -4338,10 +4338,10 @@
         if (l.cover_gradient) { var gi = COVERS.indexOf(l.cover_gradient); if (gi >= 0) { _ss.cover = gi; _ss.coverGrad = null; } else _ss.coverGrad = l.cover_gradient; }
         if (l.cover_type) _ss.covType = (l.cover_type === 'gif') ? 'img' : l.cover_type;
         var fx = l.effects_json || {};
-        ['move', 'over', 'glow', 'orbit', 'part'].forEach(function (k) { if (fx[k]) _ss[k] = fx[k]; });
+        ['move', 'over', 'glow', 'orbit', 'part'].forEach(function (k) { if (fx[k]) _ss[k] = fxAllow(k, fx[k]); });
         _ss.glowCard = !!fx.glowCard;
         _ss.fullBg = !!fx.fullBg;
-        _ss.glass = (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none');
+        _ss.glass = fxAllow('glass', (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none'));
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
         _ss.starPos = fx.starPos || 'cover';
         _ss.topTag = fx.topTag || 'on';
@@ -4493,7 +4493,7 @@
         var m = {
             cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
             avatar: _ss.avatar === 'tg' ? 'Из Telegram' : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото'),
-            fx: (function () { var n = ['move', 'over', 'glow', 'orbit', 'part'].filter(function (k) { return _ss[k] !== 'none'; }).length; if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
+            fx: (function () { var n = (_ss.glow !== 'none' ? 1 : 0); if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
             price: (function () { var on = _sfmts.filter(function (f) { return f.on; }); if (!on.length) return 'Не выбраны'; return on.length + ' форм. · от ' + _num(Math.min.apply(null, on.map(function (f) { return f.p; }))) + ' ₽'; })(),
             text: (_ss._desc ? 'Описание готово' : 'Заголовок и описание')
@@ -4557,12 +4557,7 @@
             '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 64 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
     }
     function paneFx() {
-        return fxChips('move', FX_MOVE, 'Движение') +
-            fxChips('over', FX_OVER, 'Поверхность') +
-            fxChips('part', FX_PART, 'Частицы') +
-            fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при любом продвижении или на тарифе Pro+') +
-            fxChips('orbit', FX_ORBIT, 'Орбита', 'Только при продвижении «Месяц в ленте» — не входит ни в один тариф') +
-            atomRow() +
+        return fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при любом продвижении или на тарифе Pro+') +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
             '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
@@ -4573,7 +4568,7 @@
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> Движение, Поверхность и Частицы — бесплатно. <span style="color:#f5bf4f;">Золотое свечение и тег «Продвигается» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> <span style="color:#f5bf4f;">Золотое свечение и тег «Продвигается» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
             (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
     }
     function paneStyleMin() {
@@ -4866,16 +4861,11 @@
             arr.map(function (o) { var vip = isVipFx(key, o[0]); return '<button class="fmx-fx' + (o[0] === _ss[key] ? ' on' : '') + (vip ? ' vip' : '') + '" data-v="' + o[0] + '">' + (vip ? '<i class="ti ti-lock"></i>' : '') + o[1] + '</button>'; }).join('') +
             '</div></div>';
     }
-    function atomRow() {
-        return '<div id="fmx-atomrow" class="fmx-fxg" style="' + (_ss.orbit !== 'none' ? '' : 'display:none;') + '"><div class="fmx-fxl vipc"><i class="ti ti-atom"></i> Цвет орбиты</div>' +
-            colorPick('fmx-atomc', _ss.atomColor, 26) + '</div>';
-    }
     function bindStyle() {
         bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цена и кнопки');
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
-        bindColorPick('fmx-atomc', function (v) { _ss.atomColor = v; }, 'Орбита');
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
         var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () { _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero(); });
         var mb = el('fmx-modboost');
@@ -5124,7 +5114,8 @@
     }
     function listingAvatar(l, accent) {
         var fx = l.effects_json || {}, at = l.emoji_attachments_json || {}, top = _isTop(l);
-        var mv = fx.move || 'none', ov = fx.over || 'none', gl = fx.glow || 'none', orb = fx.orbit || 'none';
+        /* fxAllow: убранные эффекты (движение/глитчи/частицы/орбиты) у старых офферов гаснут в 'none' */
+        var mv = fxAllow('move', fx.move), ov = fxAllow('over', fx.over), gl = fxAllow('glow', fx.glow), orb = fxAllow('orbit', fx.orbit);
         var oc = fx.atomColor || accent;
         /* гейтинг только в живой ленте; в превью конструктора (_preview) показываем всё — «примерить».
            Права приходят с бэкенда (l.fx: промо-уровень ИЛИ тариф/уровень рефералки владельца);
@@ -5132,14 +5123,12 @@
         if (!l._preview) {
             var _fx = l.fx || null, _boost = _isBoost(l);
             var _canGlow = _fx ? !!_fx.glow : (top || _boost);
-            var _canOrbit = _fx ? !!_fx.orbit : top;
             if (!_canGlow && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';   /* свечение: всплеск+ или Pro+ */
-            if (!_canOrbit && FX_VIP.orbit.indexOf(orb) >= 0) orb = 'none'; /* орбита: ТОЛЬКО месяц в ленте */
         }
         var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
         var over = '<i class="fmx-avover fx-o-' + ov + '"></i>';
         var orbH = orbitHtml(orb, oc);
-        var pt = fx.part || 'none';
+        var pt = fxAllow('part', fx.part);
         var t = l.title || l.username || '?', core;
         if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
         else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';   /* эмодзи-аватары убраны: старые офферы показывают монограмму */
@@ -7259,7 +7248,7 @@
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
         week: 'Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.',
-        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: орбита, анимированный фон, золото и тег «Продвигается» — их не даёт ни один тариф.',
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.',
         pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
         pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
     };
