@@ -1992,7 +1992,7 @@
     /* ===================== render: catalog ===================== */
     var _catQ = '', _catQTimer = null;
     function _catList() {
-        var list = _applySort(_catalog || []);
+        var list = _applySort(_catalog || []).filter(_rfPass);
         var q = (_catQ || '').toLowerCase();
         if (q) list = list.filter(function (l) { return (((l.title || '') + ' @' + (l.username || '') + ' ' + (l.niche || '')).toLowerCase()).indexOf(q) >= 0; });
         return list;
@@ -2022,6 +2022,7 @@
         var bar = sortBarHtml() + searchHtml('Поиск канала по теме…') + '<div class="fmx-toprow" style="justify-content:flex-end;">' + vtogHtml() + '</div>';
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + '<div id="fmx-catBody"></div>';
         bindSort(); bindView();
+        var _rfb = el('fmx-rfbtn'); if (_rfb) _rfb.addEventListener('click', openRadarFilters);
         var si = host.querySelector('.fmx-search input');
         if (si) { si.value = _catQ; si.addEventListener('input', function () { var v = si.value; clearTimeout(_catQTimer); _catQTimer = setTimeout(function () { _catQ = v.trim(); paintCatalogBody(); }, 300); }); }
         paintCatalogBody();
@@ -2703,6 +2704,70 @@
         var inp = bg.querySelector('#fmx-nq'); if (inp) inp.addEventListener('input', function () { draw(inp.value); });
         draw('');
     }
+
+    // ===== Фильтр Радара (клиентский, мгновенный; данные каталога уже на клиенте) =====
+    var _rf = { presets: {}, aud: {}, mn: {}, mx: {} };
+    function _rfCount() {
+        return Object.keys(_rf.presets).filter(function (k) { return _rf.presets[k]; }).length
+            + Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; }).length
+            + Object.keys(_rf.mn).filter(function (k) { return _rf.mn[k] != null; }).length
+            + Object.keys(_rf.mx).filter(function (k) { return _rf.mx[k] != null; }).length;
+    }
+    function _rfPass(l) {
+        var P = _rf.presets;
+        if (P.large && !(l.subscribers >= 100000)) return false;
+        if (P.alive && l.is_alive !== true) return false;
+        if (P.clean && !(l.antifraud === 'clean' || l.health_class === 'green')) return false;
+        if (P.grow && l.trend !== 'growing') return false;
+        var av = Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; });
+        if (av.length && av.indexOf(l.audience) < 0) return false;
+        var map = { s: l.subscribers, p: l.price_low, r: l.avg_views,
+            err: (l.reach_rate != null ? l.reach_rate : l.er), er: l.engagement_percent,
+            cpm: _cpm(l), h: l.health_score };
+        var k;
+        for (k in _rf.mn) { if (_rf.mn[k] != null && (map[k] == null || map[k] < _rf.mn[k])) return false; }
+        for (k in _rf.mx) { if (_rf.mx[k] != null && (map[k] == null || map[k] > _rf.mx[k])) return false; }
+        return true;
+    }
+    var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Живые'], ['clean', 'Без накрутки'], ['grow', 'Растут']];
+    var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс', 1]];
+    var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
+    function _rfBtnLabel() {
+        var b = el('fmx-rfbtn'); if (!b) return;
+        var n = _rfCount();
+        b.innerHTML = '<i class="ti ti-adjustments-horizontal"></i> Фильтры' + (n ? ' · ' + n : '');
+        b.classList.toggle('on', n > 0);
+    }
+    function openRadarFilters() {
+        _haptic('light');
+        var old = el('fmx-rfBg'); if (old) old.remove();
+        var bg = document.createElement('div'); bg.id = 'fmx-rfBg'; bg.className = 'fmx-cfm solid';
+        var rows = _RF_RANGES.map(function (r) {
+            var mn = _rf.mn[r[0]] != null ? _rf.mn[r[0]] : '', mx = _rf.mx[r[0]] != null ? _rf.mx[r[0]] : '';
+            var i2 = r[2] ? '<span style="flex:1;"></span>' : '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="до" value="' + mx + '" data-mx="' + r[0] + '">';
+            return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="от" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
+        }).join('');
+        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
+            '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры Радара' +
+            '<button id="fmx-rf-x" style="margin-left:auto;width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
+            '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div style="margin-top:6px;">' + rows + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Аудитория</span><div class="fmx-fxw" id="fmx-rf-aud">' + _RF_AUD.map(function (a) { return '<button class="fmx-fx' + (_rf.aud[a[0]] ? ' on' : '') + '" data-a="' + a[0] + '">' + a[1] + '</button>'; }).join('') + '</div>' +
+            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;"><span id="fmx-rf-cnt"></span></button></div></div>';
+        document.body.appendChild(bg);
+        function upd() { var c = el('fmx-rf-cnt'); if (c) c.textContent = 'Показать ' + (_catalog || []).filter(_rfPass).length; }
+        function done() { bg.remove(); _rfBtnLabel(); paintCatalogBody(); }
+        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        el('fmx-rf-x').addEventListener('click', done);
+        qsa(bg, '#fmx-rf-pre [data-p]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-p'); _rf.presets[k] = !_rf.presets[k]; b.classList.toggle('on', _rf.presets[k]); upd(); }); });
+        qsa(bg, '#fmx-rf-aud [data-a]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-a'); _rf.aud[k] = !_rf.aud[k]; b.classList.toggle('on', _rf.aud[k]); upd(); }); });
+        qsa(bg, '[data-mn]').forEach(function (i) { i.addEventListener('input', function () { var v = i.value.trim(); _rf.mn[i.getAttribute('data-mn')] = v === '' ? null : +v; upd(); }); });
+        qsa(bg, '[data-mx]').forEach(function (i) { i.addEventListener('input', function () { var v = i.value.trim(); _rf.mx[i.getAttribute('data-mx')] = v === '' ? null : +v; upd(); }); });
+        bg.querySelector('[data-reset]').addEventListener('click', function () { _rf = { presets: {}, aud: {}, mn: {}, mx: {} }; qsa(bg, '.fmx-fx.on').forEach(function (x) { x.classList.remove('on'); }); qsa(bg, '.fmx-inp').forEach(function (x) { x.value = ''; }); upd(); });
+        bg.querySelector('[data-apply]').addEventListener('click', done);
+        upd();
+    }
+
     var REP_REASONS = [['scam', 'Скам / обман'], ['fake_metrics', 'Накрутка метрик'], ['illegal', 'Запрещённый контент'], ['other', 'Другое']];
     function openComplaint(target) { /* target: {listing_id} | {request_id} */
         var chips = REP_REASONS.map(function (r, i) { return '<button class="fmx-fx' + (i === 0 ? ' on' : '') + '" data-rr="' + r[0] + '">' + r[1] + '</button>'; }).join('');
@@ -6979,6 +7044,7 @@
             '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
+            '<button class="fmx-seg' + (_rfCount() ? ' on' : '') + '" id="fmx-rfbtn"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (_rfCount() ? ' · ' + _rfCount() : '') + '</button>' +
             '</div>';
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
