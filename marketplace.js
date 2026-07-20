@@ -483,7 +483,7 @@
             '.fmr-line .fdot{color:#565b73;margin:0 6px;}',
             '.fmr-sub{font-size:10px;color:#565b73;margin-top:3px;line-height:1.5;}',
             '.fmr-sub b{color:#8990a8;}',
-            '.fmr-i{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.14);color:#565b73;font-size:9px;font-style:normal;font-weight:700;cursor:pointer;flex:0 0 auto;vertical-align:-3px;text-transform:none;letter-spacing:0;}',   /* в капс-заголовках секций «i» наследовала uppercase и разрядку → превращалась в «I» */
+            '.fmr-i{display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#6b7488;cursor:pointer;flex:0 0 auto;vertical-align:-2px;letter-spacing:0;}',   /* иконка ti-info-circle вместо самодельной буквы в кружке — узнаваемый знак «информация» */
             '.fmr-i.push{margin-left:2px;}',   /* раньше margin-left:auto прижимал «i» к краю карточки — висели кривой колонкой в отрыве от текста */
             '.fmr-info{display:none;font-size:10px;color:#8990a8;line-height:1.55;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px;margin-top:6px;}',
             '.fmx-anom{display:flex;gap:9px;align-items:flex-start;margin-top:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(160deg,rgba(245,178,61,0.15),rgba(245,178,61,0.05));border:0.5px solid rgba(245,178,61,0.34);font-size:11.5px;line-height:1.5;color:#ecd6ac;-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);box-shadow:0 6px 18px -10px rgba(245,178,61,0.35);}',
@@ -6702,7 +6702,7 @@
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
-            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i push" data-fi="rr">i</i></div>' +
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i ti ti-info-circle push" data-fi="rr"></i></div>' +
                 '<div class="fmr-info" data-finfo="rr">ERR (Reach Rate) = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         // строка ER (вовлечённость по реакциям) — отдельно от Reach Rate; пусто, если реакции скрыты
@@ -6714,7 +6714,7 @@
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + erBits.join(' · ') + ' на пост</span>' : '';
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + erSub + '<i class="fmr-i push" data-fi="er">i</i></div>' +
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Норма зависит от жанра: новостные живут репостами, экспертные — реакциями и комментариями. Если взаимодействия у канала скрыты — ER не показываем.</div>';
         }
         // пометка «оценка» при малой/недозревшей выборке охвата — честно про уверенность
@@ -6723,7 +6723,7 @@
             '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + reachEst + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml;
         var ad = '';
         if (pp) {
-            ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i push" data-fi="ad">i</i></div>' +
+            ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 показов' + (est ? ' · ориентир ниши' : '') + '</div>' : '') + /* при цене-поле («от N ₽» без вилки) CPM раздут и врёт — не показываем */
@@ -6731,7 +6731,7 @@
         }
         var flow = '';
         if (pp && av) {
-            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i push" data-fi="flow">i</i></div>' +
+            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
                 '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
