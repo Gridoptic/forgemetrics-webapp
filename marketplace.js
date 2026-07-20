@@ -2159,7 +2159,7 @@
                 '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="от" value="' + (v1 != null ? v1 : '') + '">' +
                 '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="до" value="' + (v2 != null ? v2 : '') + '"></div></div>';
         };
-        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры ленты' +
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact"><div class="fmx-cfm-t" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;margin:-4px -4px -4px auto;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
             '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button></div>' +
@@ -2186,9 +2186,10 @@
             '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#5DCAA5;color:#0a0d18;border-color:transparent;">Применить</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
-        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        // единое поведение с Радаром: тап по фону и «×» ПРИМЕНЯЮТ введённые фильтры, а не отменяют (находка аудита)
+        bg.addEventListener('click', function (e) { if (e.target === bg) applyClose(); });
         var bfx = bg.querySelector('#fmx-bf-x');
-        if (bfx) bfx.addEventListener('click', done);
+        if (bfx) bfx.addEventListener('click', applyClose);
         qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (b) {
             b.addEventListener('click', function () { qsa(bg, '#fmx-bf-aud [data-aud]').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); });
         });
@@ -2200,7 +2201,7 @@
             });
         });
         function val(id) { var n = el(id); var v = n && n.value !== '' ? parseInt(n.value, 10) : null; return (v == null || isNaN(v) || v < 0) ? null : Math.min(v, 100000000); }
-        bg.querySelector('[data-apply]').addEventListener('click', function () {
+        function applyClose() {
             _fPriceMin = val('fmx-bf-pmin'); _fPriceMax = val('fmx-bf-pmax'); _fSubsMin = val('fmx-bf-smin');
             _fCpmMax = val('fmx-bf-cpm'); _fErMin = val('fmx-bf-er');
             _fSubsMax = val('fmx-bf-smax'); _fCpmMin = val('fmx-bf-cpmn'); _fErMax = val('fmx-bf-erx');
@@ -2232,7 +2233,8 @@
                 } else if (nv === 'all') { _sort = 'all'; _nicheSel = null; }
             }
             done(); _haptic('light'); _refreshFilterChip(); loadFeed(false);
-        });
+        }
+        bg.querySelector('[data-apply]').addEventListener('click', applyClose);
         bg.querySelector('[data-reset]').addEventListener('click', function () {
             _fPriceMin = _fPriceMax = _fSubsMin = null; _fAud = null; _sort = 'match'; _nicheSel = null;
             _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false;
@@ -2754,7 +2756,7 @@
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="от" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
         }).join('');
         bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
-            '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры Радара' +
+            '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-rf-x" style="margin-left:auto;width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div style="margin-top:6px;">' + rows + '</div>' +
@@ -6744,7 +6746,7 @@
                разворота в календаре; «Новый на Площадке» не нёс смысла — сделки видны бейджем */
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Написать</button></div></div></div></div>';
+            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div></div></div></div>';
     }
     function _ageTile() {
         return '<div class="fmx-scard fmx-agel" data-agegate="1" style="cursor:pointer;text-align:center;padding:22px 14px;">' +
@@ -6803,8 +6805,13 @@
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + erBits.join(' · ') + ' на пост</span>' : '';
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:#818cf8;">' + l.engagement_percent + '%</b>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Норма зависит от жанра: новостные живут репостами, экспертные — реакциями и комментариями. Если взаимодействия у канала скрыты — ER не показываем.</div>';
+            /* статус ER по тем же порогам, что двигают цену внутри вилки (3.5% / 1%) — чтобы главный
+               несжульничаемый сигнал не был «одним индиго без опоры» (находка аудита) */
+            var _erv = l.engagement_percent;
+            var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
+            var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _erv + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
         // пометка «оценка» при малой/недозревшей выборке охвата — честно про уверенность
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
