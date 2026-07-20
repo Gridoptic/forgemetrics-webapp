@@ -6780,6 +6780,28 @@
         if (/^[A-Za-z][A-Za-z0-9_]{3,31}$/.test(c)) return c;
         return null;
     }
+    /* Классифицируем распознанный контакт: TG-ник / почта / сайт / просто текст. Возвращаем что показать
+       и что открыть по клику. Контакт бывает не только @ником, но и email или ссылкой на сайт (владелец). */
+    function _ctcInfo(c) {
+        if (!c) return null;
+        c = String(c).trim();
+        var u = _ctcUser(c);
+        if (u) return { kind: 'tg', label: '@' + u, val: u };
+        var em = c.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/);
+        if (em) return { kind: 'mail', label: em[0], val: em[0] };
+        var url = c.match(/https?:\/\/\S+/i);
+        if (url) return { kind: 'url', label: url[0].replace(/^https?:\/\//i, '').replace(/\/+$/, ''), val: url[0] };
+        var dom = c.match(/(?:www\.)?[A-Za-z0-9\-]+\.[A-Za-z]{2,}(?:\/\S*)?/);
+        if (dom) return { kind: 'url', label: dom[0].replace(/\/+$/, ''), val: 'https://' + dom[0] };
+        return { kind: 'text', label: c, val: null };
+    }
+    function _openCtc(kind, val) {
+        _haptic('light');
+        if (kind === 'tg') { openTg(val); return; }
+        var url = kind === 'mail' ? 'mailto:' + val : val;
+        try { if (typeof tg !== 'undefined' && tg && tg.openLink) { tg.openLink(url); return; } } catch (e) {}
+        try { window.open(url, '_blank'); } catch (e) {}
+    }
     function simpleCard(l) {
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l);
@@ -6891,12 +6913,17 @@
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             nicheHtml +
             facts + struct + ad + flow + pillsHtml +
-            // контакт — ПОДСКАЗКА, а не замок. Кликабелен, если уверенно вытащили ник (→ открыть чат);
-            // мусорную строку показываем текстом (не линкуем — чтоб не увести на чужой аккаунт)
-            (l.contact ? '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ti-address-book" style="font-size:12px;color:#818cf8;"></i> Реклама: ' +
-                (_ctcUser(l.contact)
-                    ? '<b class="fmr-ctc" data-ctc="' + _esc(_ctcUser(l.contact)) + '" style="color:#818cf8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">@' + _esc(_ctcUser(l.contact)) + '</b>'
-                    : '<b style="color:#c2c6d2;">' + _esc(l.contact) + '</b>') + '</div>' : '') +
+            // контакт — ПОДСКАЗКА, а не замок. Кликабелен для TG-ника, почты и сайта (открыть чат/почту/ссылку);
+            // невнятную строку показываем текстом (не линкуем — чтоб не увести не туда)
+            (function () {
+                var ci = l.contact ? _ctcInfo(l.contact) : null;
+                if (!ci) return '';
+                var ic = ci.kind === 'tg' ? 'ti-brand-telegram' : ci.kind === 'mail' ? 'ti-mail' : ci.kind === 'url' ? 'ti-link' : 'ti-address-book';
+                var body = (ci.kind === 'text')
+                    ? '<b style="color:#c2c6d2;word-break:break-all;">' + _esc(ci.label) + '</b>'
+                    : '<b class="fmr-ctc" data-ctc="' + _esc(ci.val) + '" data-ctk="' + ci.kind + '" style="color:#818cf8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;word-break:break-all;">' + _esc(ci.label) + '</b>';
+                return '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ' + ic + '" style="font-size:12px;color:#818cf8;flex:0 0 auto;"></i> Реклама: ' + body + '</div>';
+            })() +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
@@ -7062,8 +7089,8 @@
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
-        // клик по распознанному контакту рекламы → открыть чат с ним (не разворачивая карточку)
-        qsa(host, '[data-ctc]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openTg(b.getAttribute('data-ctc')); }); });
+        // клик по контакту рекламы → открыть чат/почту/сайт по типу (не разворачивая карточку)
+        qsa(host, '[data-ctc]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _openCtc(b.getAttribute('data-ctk') || 'tg', b.getAttribute('data-ctc')); }); });
         // раскрытие пояснений ⓘ на карточке Радара
         qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
         // калькулятор перелива: пересчёт цены подписчика по введённой конверсии
