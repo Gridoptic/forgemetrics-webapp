@@ -543,6 +543,45 @@ button:active {
 /* запас снизу, чтобы контент не прятался под фикс-панель */
 #app.bnav-on .screen { padding-bottom: calc(var(--space-2xl) + 82px); }
 
+/* ===== кабина главного экрана (вариант 3) ===== */
+#dash-cockpit { display: flex; flex-direction: column; gap: 12px; }
+.dc-hero { display: flex; align-items: center; gap: 13px; padding: 15px; border-radius: 20px; width: 100%; text-align: left; cursor: pointer;
+    background: linear-gradient(135deg, #6d63f0, #8b5cf6); border: 1px solid rgba(255,255,255,0.16);
+    box-shadow: 0 20px 42px -18px rgba(124,92,246,0.9); position: relative; overflow: hidden; }
+.dc-hero::before { content:""; position:absolute; top:-40px; right:-24px; width:140px; height:140px; background:radial-gradient(circle, rgba(255,255,255,0.22), transparent 68%); pointer-events:none; }
+.dc-hic { width:44px; height:44px; border-radius:14px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.18); color:#fff; }
+.dc-hic i { font-size:23px; }
+.dc-ht { flex:1; min-width:0; } .dc-htt { font-size:16px; font-weight:800; color:#fff; letter-spacing:-0.3px; } .dc-hts { font-size:11.5px; color:rgba(255,255,255,0.86); margin-top:2px; }
+.dc-hgo { color:#fff; opacity:.9; font-size:19px; flex:0 0 auto; }
+
+.dc-mkt, .dc-chan { width:100%; text-align:left; cursor:pointer;
+    background:linear-gradient(160deg,rgba(255,255,255,0.055),rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.10); border-radius:16px; }
+.dc-mkt { padding:14px 15px; position:relative; overflow:hidden; }
+.dc-mkt::after { content:""; position:absolute; top:-50px; right:-40px; width:160px; height:160px; pointer-events:none; background:radial-gradient(circle, rgba(246,198,90,0.13), transparent 66%); }
+.dc-mh { display:flex; align-items:center; gap:9px; }
+.dc-micon { width:29px; height:29px; border-radius:10px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(150deg,rgba(246,198,90,0.24),rgba(246,198,90,0.06)); border:1px solid rgba(246,198,90,0.36); color:#f6c65a; }
+.dc-micon i { font-size:16px; }
+.dc-mt { flex:1; min-width:0; } .dc-mtt { font-size:12.5px; font-weight:700; color:#f0f2f8; } .dc-mts { font-size:10.5px; color:#6f7590; }
+.dc-mrow { display:flex; margin-top:12px; }
+.dc-mc { flex:1; min-width:0; } .dc-ml { font-size:10px; color:#6f7590; } .dc-mv { font-size:18px; font-weight:800; letter-spacing:-0.5px; margin-top:2px; color:#f0f2f8; font-variant-numeric:tabular-nums; }
+.dc-md { width:1px; background:rgba(255,255,255,0.06); margin:2px 12px; }
+
+.dc-chan { display:flex; align-items:center; gap:11px; padding:11px 13px; }
+.dc-ca { width:34px; height:34px; border-radius:10px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:#0b0c16; background:linear-gradient(145deg,#f6c65a,#e0932f); }
+.dc-ca-add { background:linear-gradient(145deg,#8b93ff,#6d63f0); color:#fff; }
+.dc-ci { flex:1; min-width:0; } .dc-cn { font-size:13px; font-weight:700; color:#f0f2f8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .dc-cm { font-size:11px; color:#6f7590; margin-top:1px; }
+.dc-cgo { color:#6f7590; font-size:18px; flex:0 0 auto; }
+
+.dc-qh { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; color:#8b93ab; margin:6px 3px -4px; }
+.dc-quick { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; }
+.dc-qa { display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; padding:0; }
+.dc-qic { width:46px; height:46px; border-radius:15px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(160deg,rgba(255,255,255,0.055),rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.10); color:#8b93ff; transition:transform .16s; }
+.dc-qic i { font-size:21px; }
+.dc-qa:active .dc-qic { transform:scale(0.94); }
+.dc-ql { font-size:10.5px; color:#a2a8bd; }
+
 .action-card-subtitle.highlight {
     color: var(--color-green-400);
     font-weight: 500;

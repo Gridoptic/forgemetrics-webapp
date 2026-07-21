@@ -392,9 +392,7 @@ function renderDashboard(data) {
     els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
     els.greetingName.textContent = `Привет, ${firstName}`;
 
-    renderChannelSelector(data);
-    renderPulse(data.pulse);
-    renderActions(data.actions || []);
+    renderCockpit(data);
 
     if (data.has_unread_menu) {
         els.menuDot.classList.add('active');
@@ -402,6 +400,85 @@ function renderDashboard(data) {
         els.menuDot.classList.remove('active');
     }
     localizeTree(screens.dashboard);
+}
+
+// ===== Кабина главного экрана (вариант 3): герой + рыночный виджет + строка канала + быстрые действия =====
+function _dcQuick(action, icon, label) {
+    return '<button class="dc-qa" data-act="' + action + '"><span class="dc-qic"><i class="ti ' + icon + '"></i></span><span class="dc-ql">' + label + '</span></button>';
+}
+function renderCockpit(data) {
+    var host = document.getElementById('dash-cockpit');
+    if (!host) return;
+    var ch = data.channel;
+    // Радар «под нишу» опирается на этот id — сохраняем, как делал renderChannelSelector
+    try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
+    var niche = (data.pulse && data.pulse.niche) ? data.pulse.niche : '';
+    var av = (data.pulse && data.pulse.avg_views != null) ? data.pulse.avg_views : null;
+    var reach = (av != null) ? Math.round(av).toLocaleString('ru-RU') : null;
+
+    var chan = ch
+        ? '<button class="dc-chan" data-go="channels"><div class="dc-ca">' + escapeHtml((ch.title || ch.username || 'K').trim().charAt(0).toUpperCase() || 'K') + '</div>'
+          + '<div class="dc-ci"><div class="dc-cn">' + escapeHtml(ch.title || ch.username || 'Канал') + '</div>'
+          + '<div class="dc-cm">' + (reach ? 'охват ≈' + reach + (niche ? ' · ' + escapeHtml(niche) : '') : (niche ? escapeHtml(niche) : 'канал подключён')) + '</div></div>'
+          + '<i class="ti ti-chevron-right dc-cgo"></i></button>'
+        : '<button class="dc-chan" data-go="channels"><div class="dc-ca dc-ca-add"><i class="ti ti-plus"></i></div>'
+          + '<div class="dc-ci"><div class="dc-cn">Подключить канал</div><div class="dc-cm">метрики, AI-посты и стратегия</div></div>'
+          + '<i class="ti ti-chevron-right dc-cgo"></i></button>';
+
+    host.innerHTML =
+        '<button class="dc-hero" data-act="create_post"><div class="dc-hic"><i class="ti ti-sparkles"></i></div>'
+        + '<div class="dc-ht"><div class="dc-htt">Написать пост</div><div class="dc-hts">AI за 20 секунд · в голосе канала</div></div>'
+        + '<i class="ti ti-chevron-right dc-hgo"></i></button>'
+        + '<div id="dc-market"></div>'
+        + chan
+        + '<div class="dc-qh">Быстрые действия</div>'
+        + '<div class="dc-quick">'
+        + _dcQuick('ai_strategy', 'ti-route', 'Стратег')
+        + _dcQuick('ai_audit', 'ti-target', 'Разбор')
+        + _dcQuick('rewrite_post', 'ti-pencil', 'Рерайт')
+        + _dcQuick('competitor_analysis', 'ti-search', 'Конкуренты')
+        + '</div>';
+
+    host.querySelectorAll('[data-act]').forEach(function (b) {
+        b.addEventListener('click', function () { handleAction(b.getAttribute('data-act')); });
+    });
+    host.querySelectorAll('[data-go]').forEach(function (b) {
+        b.addEventListener('click', function () { if (b.getAttribute('data-go') === 'channels') openChannels(); });
+    });
+    loadMarketWidget(niche);
+}
+function loadMarketWidget(niche) {
+    var host = document.getElementById('dc-market');
+    if (!host) return;
+    apiRequest('/api/v1/marketplace/pulse').then(function (r) {
+        var arr = (r && r.base && r.base.length) ? r.base : ((r && r.market) ? r.market : []);
+        var nl = (niche || '').toLowerCase().trim();
+        var entry = null;
+        if (nl) {
+            for (var i = 0; i < arr.length; i++) {
+                var xn = (arr[i].niche || '').toLowerCase();
+                if (xn && (xn.indexOf(nl) >= 0 || nl.indexOf(xn) >= 0)) { entry = arr[i]; break; }
+            }
+        }
+        var title, cpm, count;
+        if (entry) { title = 'Рынок · ' + escapeHtml(entry.niche); cpm = entry.median_cpm; count = entry.count; }
+        else {
+            var cpms = [], tot = 0;
+            arr.forEach(function (x) { if (x.median_cpm != null) cpms.push(x.median_cpm); tot += (x.count || 0); });
+            cpms.sort(function (a, b) { return a - b; });
+            cpm = cpms.length ? cpms[Math.floor(cpms.length / 2)] : null;
+            count = tot; title = 'Рынок рекламы';
+        }
+        if (cpm == null && !count) { host.innerHTML = ''; return; }
+        host.innerHTML = '<button class="dc-mkt" data-act="marketplace">'
+            + '<div class="dc-mh"><span class="dc-micon"><i class="ti ti-arrows-exchange"></i></span>'
+            + '<div class="dc-mt"><div class="dc-mtt">' + title + '</div><div class="dc-mts">по данным Радара</div></div>'
+            + '<i class="ti ti-chevron-right dc-cgo"></i></div>'
+            + '<div class="dc-mrow"><div class="dc-mc"><div class="dc-ml">Медианный CPM</div><div class="dc-mv">' + (cpm != null ? Math.round(cpm).toLocaleString('ru-RU') + ' ₽' : '—') + '</div></div>'
+            + '<div class="dc-md"></div><div class="dc-mc"><div class="dc-ml">Площадок в нише</div><div class="dc-mv">' + (count || '—') + '</div></div></div></button>';
+        var btn = host.querySelector('[data-act]');
+        if (btn) btn.addEventListener('click', function () { handleAction('marketplace'); });
+    }).catch(function () { if (host) host.innerHTML = ''; });
 }
 
 // ---------- Пульс канала: селектор + виджет + график ----------
