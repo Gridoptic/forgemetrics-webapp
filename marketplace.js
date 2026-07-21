@@ -1176,6 +1176,11 @@
             'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
             'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
             'body.fmx-bgfreeze #fmx-main *,body.fmx-bgfreeze #app *{animation-play-state:paused!important;}',
+            /* рендер только в поле зрения (+запас) — браузер нативно пропускает то, что вне экрана,
+               и мгновенно дорисовывает при скролле (решение владельца 22.07). К карточкам Площадки
+               с эффектами не применяем: paint-containment обрезал бы выступающие стикеры */
+            '.fmx-scard{content-visibility:auto;contain-intrinsic-size:auto 620px;}',
+            '.fmx-li{content-visibility:auto;contain-intrinsic-size:auto 76px;}',
             /* GIF нельзя поставить на паузу (это картинка со встроенным циклом) — под оверлеем прячем */
             'body.fmx-bgfreeze #fmx-main img[src*=".gif"],body.fmx-bgfreeze #app img[src*=".gif"]{visibility:hidden;}',
             'body.fmx-bgfull #fmx-main,body.fmx-bgfull #app{visibility:hidden;}',
@@ -5572,6 +5577,7 @@
                         var a = lottie.loadAnimation({ container: n, renderer: 'svg', loop: true, autoplay: anim, animationData: data });
                         if (!anim) a.goToAndStop(0, true);
                         _lotAnims.push({ el: n, anim: a });
+                        try { _mediaApply(n); } catch (e) { }   // родился вне поля зрения/под модалкой — сразу на паузу
                     } catch (e) {}
                 };
                 if (_tgsData[url]) { play(_tgsData[url]); return; }
@@ -7411,6 +7417,7 @@
     function bindCards(scope) {
         hydrateTgs(scope);
         scaleCards(scope);
+        mediaWatch(scope);   // видео/стикеры играют только в поле зрения (+запас)
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
@@ -7708,13 +7715,37 @@
                 } catch (e) { }
             });
         } else if (!anyOv && was) {
-            _frozenVids.forEach(function (v) { try { v.play(); } catch (e) { } });
+            // возобновляем только то, что в поле зрения (_fmVis ставит медиа-наблюдатель ниже)
+            _frozenVids.forEach(function (v) { try { if (v._fmVis !== false) v.play(); } catch (e) { } });
             _frozenVids = [];
-            _frozenLots.forEach(function (a) { try { a.anim.play(); } catch (e) { } });
+            _frozenLots.forEach(function (a) { try { if (a.el && a.el._fmVis !== false) a.anim.play(); } catch (e) { } });
             _frozenLots = [];
         }
     }
     var _frozenLots = [];
+
+    /* ===== Медиа только в поле зрения (решение владельца 22.07) =====
+       Видео и лотти-стикеры играют лишь в зоне видимости с запасом ±120% экрана;
+       ушли из «слепой зоны» — на паузе. Снимает основной жор CPU/GPU длинных лент. */
+    var _mediaIO = null;
+    function _mediaApply(el) {
+        var frozen = document.body.classList.contains('fmx-bgfreeze');
+        var inOv = !!(el.closest && (el.closest(_OV_SEL) || el.closest(_OV_FULL)));
+        var want = el._fmVis !== false && (!frozen || inOv);
+        if (el.tagName === 'VIDEO') { try { if (want) { el.play(); } else { el.pause(); } } catch (e) { } return; }
+        var rec = null;
+        (typeof _lotAnims !== 'undefined' ? _lotAnims : []).some(function (a) { if (a.el === el) { rec = a; return true; } return false; });
+        if (rec && rec.anim) {
+            try { if (want && el.getAttribute('data-anim') === '1') { rec.anim.play(); } else { rec.anim.pause(); } } catch (e) { }
+        }
+    }
+    function mediaWatch(scope) {
+        if (typeof IntersectionObserver === 'undefined') return;
+        if (!_mediaIO) _mediaIO = new IntersectionObserver(function (ents) {
+            ents.forEach(function (en) { en.target._fmVis = en.isIntersecting; _mediaApply(en.target); });
+        }, { rootMargin: '120% 0px' });
+        qsa(scope || document, 'video, .fmx-stk-lot[data-anim="1"]').forEach(function (n) { _mediaIO.observe(n); });
+    }
     if (!window.__fmFreezeObs) {
         try {
             window.__fmFreezeObs = new MutationObserver(function () {
