@@ -197,6 +197,37 @@ function showScreen(screenName) {
     if (screens[screenName]) {
         screens[screenName].style.display = '';
     }
+    updateBottomNav(screenName);
+}
+
+// Нижняя навигация (вариант 3): фикс-панель вне объекта screens, переживает переключения.
+// Прячем на служебных/пост-флоу экранах; активная вкладка — по текущему экрану.
+function updateBottomNav(screenName) {
+    var nav = document.getElementById('bottom-nav');
+    if (!nav) return;
+    var hideOn = ['loading', 'error', 'postCreate', 'postThinking', 'postQuestion', 'postResult'];
+    var hide = hideOn.indexOf(screenName) >= 0;
+    nav.classList.toggle('hidden', hide);
+    var app = document.getElementById('app');
+    if (app) app.classList.toggle('bnav-on', !hide);
+    var active = (['cabinet', 'referral', 'tariffs', 'channels'].indexOf(screenName) >= 0) ? 'profile' : 'home';
+    nav.querySelectorAll('.bn-item').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-nav') === active);
+    });
+}
+function initBottomNav() {
+    var nav = document.getElementById('bottom-nav');
+    if (!nav) return;
+    nav.querySelectorAll('.bn-item').forEach(function (b) {
+        b.addEventListener('click', function () {
+            try { hapticLight(); } catch (e) {}
+            var t = b.getAttribute('data-nav');
+            if (t === 'home') showScreen('dashboard');
+            else if (t === 'create') handleAction('create_post');
+            else if (t === 'market') handleAction('marketplace');
+            else if (t === 'profile') handleAction('profile');
+        });
+    });
 }
 
 
@@ -4754,6 +4785,7 @@ async function main() {
 
     startLiveUpdate();
     initChannelsAutoRefresh();
+    initBottomNav();
     await loadDashboard();
 }
 
