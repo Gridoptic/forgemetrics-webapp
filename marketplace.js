@@ -1171,6 +1171,12 @@
             '.fmx-dd.off{opacity:0.22;pointer-events:none;}',
             '.fmx-dd.off2{opacity:0.35;}',   /* кабинет: приглушён, но тап даёт подсказку про закрытый месяц */
             '.fmx-calnav:disabled{opacity:0.25;cursor:default;}',
+            /* заморозка фона под модальными окнами: тапы/скролл блокированы, анимации на паузе;
+               полноэкранные окна прячут фон целиком — браузер его не рендерит вовсе */
+            'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
+            'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
+            'body.fmx-bgfreeze #fmx-main *,body.fmx-bgfreeze #app *{animation-play-state:paused!important;}',
+            'body.fmx-bgfull #fmx-main,body.fmx-bgfull #app{visibility:hidden;}',
             '.fmx-tsl[data-otog] .st{margin-left:0;}',
             '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
             '.fmx-osw::after{content:"";position:absolute;top:3px;left:17px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s;}',
@@ -7667,6 +7673,42 @@
     }
     function showModal(id) { var m = el(id); if (m) { document.body.appendChild(m); m.classList.add('fmx-show'); } }
     function hideModal(id) { var m = el(id); if (m) m.classList.remove('fmx-show'); }
+
+    /* ===== Заморозка фона под модальными окнами (решение владельца 22.07) =====
+       Пока открыто любое окно-оверлей: фон не принимает тапы/скролл, все его CSS-анимации
+       на паузе, видео остановлены; полноэкранные окна прячут фон целиком (браузер его
+       вообще не рендерит — blur-стоимость уходит). Механизм самосинхронизирующийся:
+       MutationObserver сам видит появление/закрытие ЛЮБОЙ модалки — новые окна
+       подхватываются автоматически, без ручной проводки каждого. */
+    var _OV_SEL = '.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov,#fmx-listBg.fmx-show,.bs-overlay,.drawer-overlay.active';
+    var _OV_FULL = '.fmx-psFull';   // полноэкранные непрозрачные окна — фон прячем целиком
+    var _frozenVids = [];
+    function _fmSyncFreeze() {
+        var anyOv = !!document.querySelector(_OV_SEL) || !!document.querySelector(_OV_FULL);
+        var anyFull = !!document.querySelector(_OV_FULL);
+        var b = document.body, was = b.classList.contains('fmx-bgfreeze');
+        b.classList.toggle('fmx-bgfreeze', anyOv);
+        b.classList.toggle('fmx-bgfull', anyFull);
+        document.documentElement.classList.toggle('fmx-bgfreeze', anyOv);
+        if (anyOv && !was) {
+            _frozenVids = [];
+            qsa(document, '#fmx-main video, #app video').forEach(function (v) {
+                if (!v.paused && !v.closest(_OV_SEL)) { _frozenVids.push(v); try { v.pause(); } catch (e) { } }
+            });
+        } else if (!anyOv && was) {
+            _frozenVids.forEach(function (v) { try { v.play(); } catch (e) { } });
+            _frozenVids = [];
+        }
+    }
+    if (!window.__fmFreezeObs) {
+        try {
+            window.__fmFreezeObs = new MutationObserver(function () {
+                if (window.__fmFreezeRaf) return;
+                window.__fmFreezeRaf = requestAnimationFrame(function () { window.__fmFreezeRaf = null; _fmSyncFreeze(); });
+            });
+            window.__fmFreezeObs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+        } catch (e) { }
+    }
 
     /* подсказка пульсирует, пока человек не откроет её хотя бы раз (запоминаем навсегда) */
     function _pulseHint(id, key) {
