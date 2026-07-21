@@ -405,6 +405,10 @@
             '.fmx-cwrap>.fmx-card{width:350px;transform-origin:top left;}',
             '.fmx-zw{width:100%;position:relative;}',
             '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
+            /* СТРОКИ СПИСКА — резиновые (flex), не фикс-350: заполняют экран до потолка 350px и НЕ
+               вылезают вправо на узком телефоне (баг 22.07). Карточки внутри уже умеют 240–350px
+               (так живут в сетке). Масштаб (transform) остаётся только фикс-карточкам закладок/детали. */
+            '.fmx-zw>.fmx-li{width:100%;max-width:350px;margin-left:auto;margin-right:auto;transform:none;}',
             '.fmx-card{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             /* золото продвижения (редизайн 22.07): вместо кричащего жёлтого кольца с ореолами —
@@ -7332,10 +7336,9 @@
         if (ro) ro.disconnect();   // сбрасываем наблюдение за строками прошлого рендера
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
-            // следим за высотой КАЖДОЙ строки: если её содержимое станет выше уже после замера
-            // scaleCards (перенос метрик на 2-ю строку, догрузка иконок, разворот) — обёртка
-            // .fmx-zw подгонится и строки не налезут друг на друга. Колбэк батчится (см. ниже) — без лагов.
-            if (ro && li.closest('.fmx-zw')) ro.observe(li);
+            // Строки резиновые и в обычном потоке: при развороте/переносе метрик высота меняется
+            // сама, соседи разъезжаются естественно — ручная подгонка высоты обёртки больше не нужна
+            // (раньше RO выставлял МАСШТАБИРОВАННУЮ высоту, что и давало зазоры/наложения). RO снят.
             row.addEventListener('click', function () {
                 if (li.__peeked) { li.__peeked = false; return; }   // это было удержание-превью, не раскрытие
                 var box = li.querySelector('.fmx-lbox');
@@ -7396,9 +7399,12 @@
             // transform+фикс-высота давали разнобой ширин при появлении скроллбара/развороте
             // (баг-репорт владельца 22.07). Масштаб — только 350px-макетам (.fmx-cwrap).
             if (w.classList.contains('fmx-zw')) {
-                if (card.classList && card.classList.contains('fmx-cwrap')) return;   // обработается веткой .fmx-cwrap
-                card.style.transform = ''; card.style.marginLeft = ''; w.style.height = '';
-                return;
+                // строка списка (.fmx-li) — резиновая: масштаб/фикс-высота не нужны, сбрасываем остатки
+                if (card.classList && card.classList.contains('fmx-li')) {
+                    card.style.transform = ''; card.style.marginLeft = ''; w.style.height = '';
+                    return;
+                }
+                // иначе внутри фикс-карточка 350px (закладки/деталь/заявки) — масштабируем как .fmx-cwrap
             }
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
