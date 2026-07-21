@@ -1161,6 +1161,11 @@
             '.fmx-hottag{font-size:9.5px;font-weight:800;color:#f5bf4f;background:rgba(245,191,79,0.14);border:0.5px solid rgba(245,191,79,0.4);border-radius:6px;padding:2px 6px;flex:0 0 auto;}',
             /* чипы панели скидок и переключателя режима: тап-зона ≥40px (правило проекта) */
             '#fmx-calMode .fmx-fx,#fmx-hotPcts .fmx-fx,#fmx-hotTimes .fmx-fx{min-height:40px;padding:9px 12px;}',
+            /* закрытые месяцы/за горизонтом: день не продаётся — нейтрально-приглушённый, не зелёный */
+            '.fmx-sd.off{opacity:0.22;cursor:default;}',
+            '.fmx-dd.off{opacity:0.22;pointer-events:none;}',
+            '.fmx-dd.off2{opacity:0.35;}',   /* кабинет: приглушён, но тап даёт подсказку про закрытый месяц */
+            '.fmx-calnav:disabled{opacity:0.25;cursor:default;}',
             '.fmx-tsl[data-otog] .st{margin-left:0;}',
             '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
             '.fmx-osw::after{content:"";position:absolute;top:3px;left:17px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s;}',
@@ -2490,11 +2495,13 @@
             var h = '';
             var d = new Date(); d.setHours(12, 0, 0, 0);
             /* 45 дней: дальние даты листаются прямо в полосе, полный календарь — для планирования ещё дальше */
+            var om = r.open_months || null;   // null = legacy: все месяцы открыты
             for (var i = 0; i < 45; i++) {
                 var iso = _isoOf(d);
+                var offD = om && om.indexOf(iso.slice(0, 7)) < 0;   // месяц закрыт — день не продаётся
                 /* на 1-м числе вместо дня недели — метка месяца, чтобы не терять контекст при листании */
                 var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
-                h += '<div class="fmx-dd ' + (busy[iso] ? 'bs' : 'fr') + '" data-sd="' + iso + '">' +
+                h += '<div class="fmx-dd ' + (offD ? 'off2' : (busy[iso] ? 'bs' : 'fr')) + '" data-sd="' + iso + '"' + (offD ? ' data-off="1"' : '') + '>' +
                     '<div class="c num">' + d.getDate() + (demand[iso] ? '<i class="dm"></i>' : '') + '</div>' +
                     wlab + '</div>';
                 d.setDate(d.getDate() + 1);
@@ -2504,6 +2511,7 @@
             qsa(box, '[data-sd]').forEach(function (dd) {
                 dd.addEventListener('click', function () {
                     var iso = dd.getAttribute('data-sd');
+                    if (dd.getAttribute('data-off')) { _haptic('light'); toast('Месяц закрыт для рекламы — открой его в «Весь календарь»'); return; }
                     apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/toggle', { day: iso }).then(function (rr) {
                         if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить день'); return; }
                         _haptic('light');
@@ -2962,34 +2970,46 @@
         var todayIso = _isoOf(today);
         var first = new Date(y, m, 1), dim = new Date(y, m + 1, 0).getDate();
         var off = (first.getDay() + 6) % 7;
+        /* открытые месяцы + горизонт: конец «бесконечно зелёного» календаря */
+        var om = r.open_months || null;                 // null = legacy: все открыты
+        var hm = r.months_horizon || null;              // месяцы, доступные навигации (90 дней)
+        var mKey = y + '-' + String(m + 1).padStart(2, '0');
+        var monthOpen = !om || om.indexOf(mKey) >= 0;
+        var inHorizon = !hm || hm.indexOf(mKey) >= 0;
+        var navPrevOff = hm && mKey <= hm[0], navNextOff = hm && mKey >= hm[hm.length - 1];
         var h = '<div class="fmx-calhead">' +
-            '<button class="fmx-calnav" data-nav="-1">‹</button>' +
+            '<button class="fmx-calnav" data-nav="-1"' + (navPrevOff ? ' disabled' : '') + '>‹</button>' +
             '<b>' + MON_IM[m] + ' ' + y + '</b>' +
-            '<button class="fmx-calnav" data-nav="1">›</button></div>' +
+            '<button class="fmx-calnav" data-nav="1"' + (navNextOff ? ' disabled' : '') + '>›</button></div>' +
+            /* владелец: тумблер месяца — одна галочка открывает/закрывает месяц для рекламы */
+            (mode === 'edit' && inHorizon ? '<div class="fmx-tgl' + (monthOpen ? ' on' : '') + '" id="fmx-mopen" style="margin:2px 0 8px;"><span class="sw"></span><span style="flex:1;">Месяц открыт для рекламы</span></div>' : '') +
             '<div class="fmx-slgrid">' + ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(function (w) { return '<span class="fmx-slw">' + w + '</span>'; }).join('');
         for (var i = 0; i < off; i++) h += '<span></span>';
         var freeCount = 0;
         for (var d = 1; d <= dim; d++) {
             var iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
             var past = iso < todayIso, isBusy = !!busy[iso];
-            if (!past && !isBusy) freeCount++;
-            var cls = 'fmx-sd ' + (past ? 'past' : (isBusy ? 'busy' : 'free'));
-            if (!past && !isBusy && hot[iso]) cls += ' hot';
+            var offD = !past && (!monthOpen || !inHorizon);   // закрытый месяц/за горизонтом — не продаётся
+            if (!past && !isBusy && !offD) freeCount++;
+            var cls = 'fmx-sd ' + (past ? 'past' : (offD ? 'off' : (isBusy ? 'busy' : 'free')));
+            if (!past && !offD && !isBusy && hot[iso]) cls += ' hot';
             if (iso === todayIso) cls += ' today';
-            if (!past && mode === 'view' && _lsSel && _lsSel.day === iso) cls += ' sel';
-            if (!past && mode === 'edit' && !_ownerCalHot && _ownerSelDay === iso) cls += ' sel';   // выбран для настройки слотов
-            if (!past && mode === 'edit' && _ownerCalHot && _ownerHotDay === iso) cls += ' sel';    // выбран для назначения скидки
-            if (isBusy && watch[iso]) cls += ' watch';
-            if (isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
-            var clickable = !past && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
+            if (!past && !offD && mode === 'view' && _lsSel && _lsSel.day === iso) cls += ' sel';
+            if (!past && !offD && mode === 'edit' && !_ownerCalHot && _ownerSelDay === iso) cls += ' sel';   // выбран для настройки слотов
+            if (!past && !offD && mode === 'edit' && _ownerCalHot && _ownerHotDay === iso) cls += ' sel';    // выбран для назначения скидки
+            if (!offD && isBusy && watch[iso]) cls += ' watch';
+            if (!offD && isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
+            var clickable = !past && !offD && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
             h += '<button class="' + cls + '"' + (clickable ? ' data-cd="' + iso + '"' : ' disabled') + '>' +
-                '<span class="fmx-sdn">' + d + '</span>' + (demand[iso] ? '<i class="dm"></i>' : '') + ((past || isBusy) ? '' : _dayDots(r, iso)) + '</button>';
+                '<span class="fmx-sdn">' + d + '</span>' + ((demand[iso] && !offD) ? '<i class="dm"></i>' : '') + ((past || isBusy || offD) ? '' : _dayDots(r, iso)) + '</button>';
         }
         h += '</div>' +
             '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
             '<span><i style="background:rgba(239,128,128,0.5);"></i>занято</span>' +
             (r.hot ? '<span><i style="background:rgba(245,191,79,0.6);"></i>горящие ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
+            (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на 90 дней вперёд</span></div>'
+                : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>Владелец не открыл этот месяц для продажи</span></div>' : '')) +
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>' + (r.hot.map ? 'Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%' : 'Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни') + '</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
@@ -2997,6 +3017,18 @@
         box.innerHTML = h;
         if (mode === 'edit') {
             _bindOwnerSlots(box, l);
+            /* тумблер месяца: одна галочка открывает/закрывает месяц для рекламы */
+            var _mo = box.querySelector('#fmx-mopen');
+            if (_mo) _mo.addEventListener('click', function () {
+                apiPost('/api/v1/marketplace/listings/' + l.id + '/months', { month: mKey, open: !monthOpen }).then(function (rr) {
+                    if (!rr || !rr.ok) { _haptic('error'); uiAlert(rr && rr.error === 'forbidden' ? 'Управлять календарём может только владелец оффера' : 'Не удалось изменить месяц'); return; }
+                    _haptic('success');
+                    var rd = _calData[l.id]; if (rd) rd.open_months = rr.open_months;
+                    l.open_months = rr.open_months;
+                    toast(!monthOpen ? 'Месяц открыт — покупатели видят свободные дни' : 'Месяц закрыт — покупатели его не видят');
+                    calDraw(box, l, 'edit');
+                }).catch(function () { _haptic('error'); uiAlert('Не удалось изменить месяц'); });
+            });
             qsa(box, '#fmx-calMode [data-cm]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     var hotOn = b.getAttribute('data-cm') === 'hot';
@@ -3240,7 +3272,8 @@
                 var m = { forbidden: 'Управлять скидками может только владелец оффера',
                     out_of_horizon: 'Скидку можно назначить максимум на ' + 90 + ' дней вперёд',
                     no_slots: 'У оффера не настроены слоты по времени — назначь скидку на весь день',
-                    bad_times: 'Выбранные времена не совпадают со слотами оффера' };
+                    bad_times: 'Выбранные времена не совпадают со слотами оффера',
+                    month_closed: 'Месяц закрыт для рекламы — открой его в режиме «Занятость»' };
                 uiAlert(m[rr && rr.error] || 'Не удалось сохранить скидку');
                 return;
             }
@@ -3359,10 +3392,13 @@
         var demand = r.demand || {};
         var watch = {}; (r.watch || []).forEach(function (x) { watch[x] = 1; });
         var hot = {}; ((r.hot && r.hot.days) || []).forEach(function (x) { hot[x] = 1; });
-        /* ближайшее свободное окно */
+        /* открытые месяцы: null = legacy (всё открыто); закрытые дни не продаются и не зелёные */
+        var om = r.open_months || null;
+        var _dOpen = function (iso) { return !om || om.indexOf(iso.slice(0, 7)) >= 0; };
+        /* ближайшее свободное окно — только в открытых месяцах */
         var d0 = new Date(); d0.setHours(12, 0, 0, 0);
         var freeFrom = null, dd = new Date(d0);
-        for (var k = 0; k < 90; k++) { var isoK = _isoOf(dd); if (!busy[isoK]) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
+        for (var k = 0; k < 90; k++) { var isoK = _isoOf(dd); if (!busy[isoK] && _dOpen(isoK)) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
         var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         var h = '<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:9px;">' +
             (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Ближайшие 90 дней заняты</span>') +
@@ -3374,13 +3410,14 @@
         for (var i = 0; i < 45; i++) {
             var iso = _isoOf(d);
             var isBusy = !!busy[iso];
-            var cls = 'fmx-dd ' + (isBusy ? 'bs' : 'fr');
-            if (!isBusy && hot[iso]) cls += ' hot';
-            if (!isBusy && _lsSel && _lsSel.day === iso) cls += ' sel';
-            if (isBusy && watch[iso]) cls += ' watch';
+            var offD = !_dOpen(iso);   // месяц закрыт владельцем — день не продаётся
+            var cls = 'fmx-dd ' + (offD ? 'off' : (isBusy ? 'bs' : 'fr'));
+            if (!offD && !isBusy && hot[iso]) cls += ' hot';
+            if (!offD && !isBusy && _lsSel && _lsSel.day === iso) cls += ' sel';
+            if (!offD && isBusy && watch[iso]) cls += ' watch';
             var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
-            h += '<div class="' + cls + '" data-bd="' + iso + '"><div class="c">' + d.getDate() + (demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
-                (isBusy ? '' : _dayDots(r, iso)) + wlab + '</div>';
+            h += '<div class="' + cls + '"' + (offD ? '' : ' data-bd="' + iso + '"') + '><div class="c">' + d.getDate() + (!offD && demand[iso] ? '<i class="dm" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;"></i>' : '') + '</div>' +
+                ((isBusy || offD) ? '' : _dayDots(r, iso)) + wlab + '</div>';
             d.setDate(d.getDate() + 1);
         }
         h += '</div>' +
