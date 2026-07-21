@@ -6710,6 +6710,79 @@
         if (part === 'status') return items.filter(function (i) { return i.k !== 'deal'; }).map(function (i) { return i.h; }).join('');
         return items.map(function (i) { return i.h; }).join('');
     }
+    /* Блоки развёрнутой карточки РАДАРА внутри карточки ленты ПЛОЩАДКИ — 1 в 1 (решение владельца 21.07).
+       Единственное смысловое отличие — цена: здесь она названа владельцем оффера (факт), а не оценка по нише,
+       поэтому без «≈» и без вилки. Тексты, стили и тултипы — те же, что в simpleCard. */
+    function _fmrBlocksBuy(l) {
+        var subs = l.subscribers, av = l.avg_views;
+        var rr = (l.er != null) ? l.er : null, rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
+        var pp = (l.min_price != null) ? l.min_price : null;
+        var cpm = _cpm(l);
+        var conv = 1, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;
+        var rrHtml = '';
+        if (rr != null && rstat) {
+            var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
+            var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i ti ti-info-circle push" data-fi="rr"></i></div>' +
+                '<div class="fmr-info" data-finfo="rr">ERR (Reach Rate) = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
+        }
+        var erHtml = '';
+        if (l.engagement_percent != null) {
+            var erBits = [];
+            if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
+            if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
+            if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
+            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
+            var _erv = l.engagement_percent;
+            var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
+            var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _erv + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
+        }
+        var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
+            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml +
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
+        var ad = '';
+        if (pp) {
+            ad = '<div class="fmr-sec">Реклама · цена владельца <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
+                '<div class="fmr-line">Пост <b class="fmr-big">от ' + _num(pp) + ' ₽</b></div>' +
+                '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
+                (cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
+                (cpm != null && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
+                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ охват × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.</div>';
+        }
+        var flow = '';
+        if (pp && av) {
+            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
+                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (минимальная цена)</div>' +
+                '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
+                '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
+        }
+        var struct = '';
+        (function () {
+            var sr = [];
+            if (l.spike_ratio != null) {
+                var sp = l.spike_ratio, spct = Math.round(sp * 100), st, sc;
+                if (spct === 0) { st = 'Просмотры ровные — резких всплесков нет'; sc = '#5DCAA5'; }
+                else if (sp < 0.2) { st = 'Отдельные вирусные посты (~' + spct + '%) — обычная органика'; sc = '#818cf8'; }
+                else { st = 'Кластер всплесков (~' + spct + '% постов) — возможен закуп просмотров, проверь'; sc = '#f59e0b'; }
+                sr.push('<div class="fmr-sub" style="color:' + sc + ';">' + st + '</div>');
+            }
+            if (l.ad_density != null && l.struct_posts) {
+                var apct = Math.round(l.ad_density * 100);
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
+                sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
+            }
+            if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
+        })();
+        var pills = [];
+        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
+        if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
+        return facts + ad + flow + struct + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
+    }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var _fxG = l.fx || null;
@@ -6768,7 +6841,12 @@
                кружки share и сравнения не считывались. Share вернётся подписанной кнопкой в кабинете
                и развороте, сравнение — кнопкой в закладках, когда офферов станет 3+ */
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
-            '<div><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div></div>' +
+            '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
+            (function () { /* кольцо индекса здоровья — 1 в 1 с шапкой карточки Радара */
+                if (l.health_score == null) return '';
+                var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
+                return '<svg width="42" height="42" viewBox="0 0 42 42" style="flex:0 0 auto;margin-left:auto;"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>';
+            })() + '</div>' +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
@@ -6778,6 +6856,7 @@
             (l.engagement_percent != null ? '<div><div class="l">ER</div><div class="v" style="color:#818cf8;">' + l.engagement_percent + '%</div></div>' : '') +
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
+            (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
             /* строка дат убрана с карточки (17.07.2026, решение владельца): даты живут внутри
                разворота в календаре; «Новый на Площадке» не нёс смысла — сделки видны бейджем */
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
@@ -7126,7 +7205,7 @@
         // клик по контакту рекламы → открыть чат/почту/сайт по типу (не разворачивая карточку)
         qsa(host, '[data-ctc]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _openCtc(b.getAttribute('data-ctk') || 'tg', b.getAttribute('data-ctc')); }); });
         // раскрытие пояснений ⓘ на карточке Радара
-        qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
+        qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard') || b.closest('.fmx-card'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
         // калькулятор перелива: пересчёт цены подписчика по введённой конверсии
         qsa(host, '.fmr-conv').forEach(function (inp) {
             inp.addEventListener('click', function (e) { e.stopPropagation(); });
@@ -7136,7 +7215,7 @@
                 var pp = +line.getAttribute('data-pp'), av = +line.getAttribute('data-av');
                 var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
                 var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
-                var card = inp.closest('.fmx-scard'); if (!card) return;
+                var card = inp.closest('.fmx-scard') || inp.closest('.fmx-card'); if (!card) return;
                 var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
                 var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
                 var warn = card.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 0.3);
