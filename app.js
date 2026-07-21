@@ -593,8 +593,18 @@ var STRATEGY_MAP_SVG = '<svg width="26" height="26" viewBox="0 0 44 44" fill="no
 
 function renderActions(actions) {
     els.actionsList.innerHTML = '';
+    let curSection = null;
 
     actions.forEach(action => {
+        // заголовок секции — когда меняется группа (Мой канал / Рынок / Аккаунт)
+        if (action.section && action.section !== curSection) {
+            curSection = action.section;
+            const sh = document.createElement('div');
+            sh.className = 'actions-section';
+            sh.textContent = action.section;
+            els.actionsList.appendChild(sh);
+        }
+
         const card = document.createElement('button');
         // все карточки единообразные — стеклянные (без сплошной заливки .primary): «Написать пост» в общем ряду
         card.className = 'action-card';
