@@ -428,10 +428,9 @@ function pwCell(label, val, opts) {
 // Каталог показателей канала для пульса. Показываем ТОЛЬКО реальные метрики; пустые видны в пикере как «нет данных».
 var PW_CATALOG = [
     { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
-    { id: 'reach', label: 'Средний охват', get: p => p.avg_views, o: { sep: true } },
-    { id: 'er', label: 'Вовлечённость (ER)', get: p => p.engagement_percent, o: { suf: '%', dec: 2 } },
-    { id: 'rr', label: 'Охват к базе', get: p => p.reach_rate, o: { suf: '%' } },
-    { id: 'viewsm', label: 'Просмотры · 30 дн', get: p => p.views_month, o: { sep: true } },
+    { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { sep: true } },
+    { id: 'rr', label: 'Reach Rate', get: p => p.reach_rate, o: { suf: '%' } },
+    { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 2 } },
 ];
 var PW_MAX = 4;
 var PW_LS = 'fm_pulse_metrics_v1';
@@ -444,7 +443,7 @@ function pwSelectedIds(pulse) {
         if (ok.length) return ok.slice(0, PW_MAX);
     }
     // дефолт: до 4 показателей, у которых РЕАЛЬНО есть данные, в приоритетном порядке
-    var order = ['subs', 'er', 'rr', 'viewsm', 'reach'];
+    var order = ['subs', 'reach', 'rr', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
