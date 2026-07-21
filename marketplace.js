@@ -414,8 +414,8 @@
             /* золото продвижения (редизайн 22.07): вместо кричащего жёлтого кольца с ореолами —
                тонкая градиентная кромка «металл» + мягкая тень-свечение. Дорого, не пластик. */
             /* золотое свечение карточки: тёплый мягкий ореол (медленно «дышит») + металлический кант */
-            '@keyframes fmxGoldGlow{0%,100%{box-shadow:0 0 7px -3px rgba(245,191,79,0.28),0 8px 20px -16px rgba(245,191,79,0.32),0 4px 16px rgba(0,0,0,0.45);}50%{box-shadow:0 0 13px -3px rgba(245,191,79,0.4),0 9px 24px -15px rgba(245,191,79,0.38),0 4px 16px rgba(0,0,0,0.45);}}',
-            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 10px -3px rgba(245,191,79,0.33),0 8px 22px -16px rgba(245,191,79,0.36),0 4px 16px rgba(0,0,0,0.45);animation:fmxGoldGlow 3.8s ease-in-out infinite;}',
+            '@keyframes fmxGoldGlow{0%,100%{box-shadow:0 0 9px -3px rgba(245,191,79,0.34),0 8px 20px -16px rgba(245,191,79,0.36),0 4px 16px rgba(0,0,0,0.45);}50%{box-shadow:0 0 16px -3px rgba(245,191,79,0.48),0 9px 24px -15px rgba(245,191,79,0.42),0 4px 16px rgba(0,0,0,0.45);}}',
+            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 12px -3px rgba(245,191,79,0.4),0 8px 22px -16px rgba(245,191,79,0.4),0 4px 16px rgba(0,0,0,0.45);animation:fmxGoldGlow 3.8s ease-in-out infinite;}',
             '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '@media (prefers-reduced-motion:reduce){.fmx-card.fmx-prem{animation:none;}}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
@@ -852,7 +852,7 @@
             '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
             '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}',
             /* золото мини-строки — единый стиль с карточкой: тёплый ореол + кромка + верхний блик */
-            '.fmx-li.prem>.fmx-lrow{border-color:rgba(245,191,79,0.6);box-shadow:0 0 7px -4px rgba(245,191,79,0.3),0 4px 12px -9px rgba(245,191,79,0.28),inset 0 1px 0 rgba(255,228,160,0.26);}',
+            '.fmx-li.prem>.fmx-lrow{border-color:rgba(245,191,79,0.62);box-shadow:0 0 9px -4px rgba(245,191,79,0.36),0 4px 12px -9px rgba(245,191,79,0.3),inset 0 1px 0 rgba(255,228,160,0.28);}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
             '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
