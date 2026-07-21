@@ -2495,10 +2495,10 @@
             var h = '';
             var d = new Date(); d.setHours(12, 0, 0, 0);
             /* 45 дней: дальние даты листаются прямо в полосе, полный календарь — для планирования ещё дальше */
-            var om = r.open_months || null;   // null = legacy: все месяцы открыты
+            var om = r.open_months || [];   // по умолчанию всё закрыто — владелец открывает месяцы
             for (var i = 0; i < 45; i++) {
                 var iso = _isoOf(d);
-                var offD = om && om.indexOf(iso.slice(0, 7)) < 0;   // месяц закрыт — день не продаётся
+                var offD = om.indexOf(iso.slice(0, 7)) < 0;   // месяц закрыт — день не продаётся
                 /* на 1-м числе вместо дня недели — метка месяца, чтобы не терять контекст при листании */
                 var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
                 h += '<div class="fmx-dd ' + (offD ? 'off2' : (busy[iso] ? 'bs' : 'fr')) + '" data-sd="' + iso + '"' + (offD ? ' data-off="1"' : '') + '>' +
@@ -2970,11 +2970,11 @@
         var todayIso = _isoOf(today);
         var first = new Date(y, m, 1), dim = new Date(y, m + 1, 0).getDate();
         var off = (first.getDay() + 6) % 7;
-        /* открытые месяцы + горизонт: конец «бесконечно зелёного» календаря */
-        var om = r.open_months || null;                 // null = legacy: все открыты
-        var hm = r.months_horizon || null;              // месяцы, доступные навигации (90 дней)
+        /* открытые месяцы + горизонт: по умолчанию месяц ЗАКРЫТ, владелец открывает галочкой */
+        var om = r.open_months || [];
+        var hm = r.months_horizon || null;              // месяцы, доступные навигации
         var mKey = y + '-' + String(m + 1).padStart(2, '0');
-        var monthOpen = !om || om.indexOf(mKey) >= 0;
+        var monthOpen = om.indexOf(mKey) >= 0;
         var inHorizon = !hm || hm.indexOf(mKey) >= 0;
         var navPrevOff = hm && mKey <= hm[0], navNextOff = hm && mKey >= hm[hm.length - 1];
         var h = '<div class="fmx-calhead">' +
@@ -3008,7 +3008,7 @@
             '<span><i style="background:rgba(239,128,128,0.5);"></i>занято</span>' +
             (r.hot ? '<span><i style="background:rgba(245,191,79,0.6);"></i>горящие ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
-            (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на 90 дней вперёд</span></div>'
+            (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на ' + (r.horizon_days || 180) + ' дней вперёд</span></div>'
                 : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>Владелец не открыл этот месяц для продажи</span></div>' : '')) +
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>' + (r.hot.map ? 'Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%' : 'Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни') + '</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
@@ -3059,8 +3059,8 @@
                         // занятый день: пускаем ТОЛЬКО если на нём осталась скидка — чтобы её можно было убрать (F5)
                         if (busy[iso] && !_hmap[iso]) { _haptic('error'); uiAlert('День занят — на занятые даты скидка не ставится'); return; }
                         // горизонт скидок — 90 дней вперёд; дальше бэкенд откажет, объясняем заранее (F6)
-                        var _lim = new Date(); _lim.setDate(_lim.getDate() + 90);
-                        if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert('Скидку можно назначить максимум на 90 дней вперёд'); return; }
+                        var _lim = new Date(); _lim.setDate(_lim.getDate() + (r.horizon_days || 180));
+                        if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert('Скидку можно назначить максимум на ' + (r.horizon_days || 180) + ' дней вперёд'); return; }
                         _ownerHotDay = (_ownerHotDay === iso) ? null : iso;
                         _ownerHotPct = null; _ownerHotTimes = null;
                         _haptic('light'); calDraw(box, l, 'edit');
@@ -3214,7 +3214,7 @@
         var map = (r.hot && r.hot.map) || {};
         var h = '';
         if (!_ownerHotDay) {
-            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт — 90 дней вперёд.</div>';
+            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт — ' + ((r && r.horizon_days) || 180) + ' дней вперёд.</div>';
             var keys = Object.keys(map).sort();
             if (keys.length) {
                 h += '<span class="fmx-lbl fmx-mt2">Назначено</span><div style="display:flex;flex-direction:column;gap:5px;">' + keys.map(function (d) {
@@ -3270,7 +3270,7 @@
             if (!rr || !rr.ok) {
                 _haptic('error');
                 var m = { forbidden: 'Управлять скидками может только владелец оффера',
-                    out_of_horizon: 'Скидку можно назначить максимум на ' + 90 + ' дней вперёд',
+                    out_of_horizon: 'Скидку можно назначить максимум на ' + ((_calData[l.id] || {}).horizon_days || 180) + ' дней вперёд',
                     no_slots: 'У оффера не настроены слоты по времени — назначь скидку на весь день',
                     bad_times: 'Выбранные времена не совпадают со слотами оффера',
                     month_closed: 'Месяц закрыт для рекламы — открой его в режиме «Занятость»' };
@@ -3392,16 +3392,17 @@
         var demand = r.demand || {};
         var watch = {}; (r.watch || []).forEach(function (x) { watch[x] = 1; });
         var hot = {}; ((r.hot && r.hot.days) || []).forEach(function (x) { hot[x] = 1; });
-        /* открытые месяцы: null = legacy (всё открыто); закрытые дни не продаются и не зелёные */
-        var om = r.open_months || null;
-        var _dOpen = function (iso) { return !om || om.indexOf(iso.slice(0, 7)) >= 0; };
+        /* открытые месяцы: по умолчанию всё закрыто — владелец открывает галочками */
+        var om = r.open_months || [];
+        var _dOpen = function (iso) { return om.indexOf(iso.slice(0, 7)) >= 0; };
         /* ближайшее свободное окно — только в открытых месяцах */
+        var _hz = r.horizon_days || 180;
         var d0 = new Date(); d0.setHours(12, 0, 0, 0);
         var freeFrom = null, dd = new Date(d0);
-        for (var k = 0; k < 90; k++) { var isoK = _isoOf(dd); if (!busy[isoK] && _dOpen(isoK)) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
+        for (var k = 0; k < _hz; k++) { var isoK = _isoOf(dd); if (!busy[isoK] && _dOpen(isoK)) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
         var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         var h = '<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:9px;">' +
-            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Ближайшие 90 дней заняты</span>') +
+            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : (!om.length ? '<span style="color:#8990a8;">●</span><span style="color:#8990a8;font-weight:600;">Владелец пока не открыл даты для продажи</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Открытые даты заняты</span>')) +
             (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">Обновлён ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
         h += '<div class="fmx-d14 num">';
         var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
