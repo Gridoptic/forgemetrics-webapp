@@ -516,7 +516,7 @@ function markPulseStale(days, lastDate) {
 function drawReachChart(host, DATA, dates, days, endLabel) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const W = Math.max(260, host.clientWidth || 320), Hh = 100, padT = 16, padB = 20, padL = 6, padR = 6;
+    const W = Math.max(260, host.clientWidth || 320), Hh = 112, padT = 18, padB = 22, padL = 6, padR = 6;
     const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
     const lo = min - (max - min) * 0.5, hi = max + (max - min) * 0.22, rng = (hi - lo) || 1, last = DATA.length - 1;
     const X = (i) => padL + i * (W - padL - padR) / last;
@@ -527,13 +527,14 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
     const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
     const grids = [max, min];
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
-    svg += '<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(93,202,165,0.40)"/><stop offset="0.55" stop-color="rgba(93,202,165,0.10)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient>';
-    svg += '<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37b487"/><stop offset="1" stop-color="#74edb4"/></linearGradient>';
+    svg += '<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(93,202,165,0.40)"/><stop offset="0.32" stop-color="rgba(93,202,165,0.17)"/><stop offset="0.68" stop-color="rgba(93,202,165,0.05)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient>';
+    svg += '<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2fb389"/><stop offset="0.5" stop-color="#57e0ab"/><stop offset="1" stop-color="#8af0cb"/></linearGradient>';
     svg += '<filter id="pwglf" x="-20%" y="-60%" width="140%" height="240%"><feGaussianBlur stdDeviation="3.2"/></filter></defs>';
     grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
     svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
     svg += `<path d="${line}" fill="none" stroke="#5DCAA5" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
     svg += `<path class="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    svg += `<circle class="pw-eppulse" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="none" stroke="#5DCAA5" stroke-width="1.6"/>`;
     svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="rgba(93,202,165,0.22)"/>`;
     svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
