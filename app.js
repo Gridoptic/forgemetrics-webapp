@@ -425,6 +425,92 @@ function pwCell(label, val, opts) {
     return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div></div>`;
 }
 
+// Каталог показателей канала для пульса. Показываем ТОЛЬКО реальные метрики; пустые видны в пикере как «нет данных».
+var PW_CATALOG = [
+    { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
+    { id: 'reach', label: 'Средний охват', get: p => p.avg_views, o: { sep: true } },
+    { id: 'er', label: 'Вовлечённость (ER)', get: p => p.engagement_percent, o: { suf: '%', dec: 2 } },
+    { id: 'rr', label: 'Охват к базе', get: p => p.reach_rate, o: { suf: '%' } },
+    { id: 'viewsm', label: 'Просмотры · 30 дн', get: p => p.views_month, o: { sep: true } },
+];
+var PW_MAX = 4;
+var PW_LS = 'fm_pulse_metrics_v1';
+
+function pwSelectedIds(pulse) {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PW_LS) || 'null'); } catch (e) { }
+    if (Array.isArray(saved) && saved.length) {
+        var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
+        if (ok.length) return ok.slice(0, PW_MAX);
+    }
+    // дефолт: до 4 показателей, у которых РЕАЛЬНО есть данные, в приоритетном порядке
+    var order = ['subs', 'er', 'rr', 'viewsm', 'reach'];
+    var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
+    return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
+}
+
+function pwPreview(v, o) {
+    o = o || {};
+    if (o.sep) return Math.round(v).toLocaleString('ru-RU') + (o.suf || '');
+    if (o.dec) return v.toFixed(o.dec) + (o.suf || '');
+    return String(Math.round(v)) + (o.suf || '');
+}
+
+function pwRenderMetrics(pulse) {
+    var grid = document.getElementById('pw-mgrid');
+    if (!grid) return;
+    var ids = pwSelectedIds(pulse);
+    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); return m ? pwCell(m.label, m.get(pulse), m.o) : ''; }).join('');
+    pwCountUp(grid);
+    var gear = document.getElementById('pw-mgear');
+    if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
+}
+
+// Шестерёнка: выбор показателей главной (до 4). Только реальные данные; пустые помечены «нет данных».
+function pwOpenPicker(pulse) {
+    var sel = new Set(pwSelectedIds(pulse));
+    var ov = document.createElement('div');
+    ov.className = 'pw-sheet-ov';
+    ov.innerHTML = '<div class="pw-sheet" role="dialog" aria-label="Показатели канала">'
+        + '<div class="pw-sheet-grip"></div>'
+        + '<div class="pw-sheet-h">Показатели канала</div>'
+        + '<div class="pw-sheet-sub">Выбери до ' + PW_MAX + ' показателей для главной</div>'
+        + '<div class="pw-sheet-list">'
+        + PW_CATALOG.map(m => {
+            var v = m.get(pulse), has = v != null, on = sel.has(m.id);
+            return '<button class="pw-opt' + (on ? ' on' : '') + (has ? '' : ' nodata') + '" data-id="' + m.id + '" type="button">'
+                + '<span class="pw-opt-tx"><span class="pw-opt-l">' + escapeHtml(m.label) + '</span>'
+                + '<span class="pw-opt-v">' + (has ? pwPreview(v, m.o) : 'нет данных') + '</span></span>'
+                + '<span class="pw-opt-ck"><i class="ti ti-check"></i></span></button>';
+        }).join('')
+        + '</div>'
+        + '<button class="pw-sheet-done" id="pw-sheet-done" type="button">Готово</button>'
+        + '</div>';
+    document.body.appendChild(ov);
+    requestAnimationFrame(() => ov.classList.add('show'));
+    var close = () => { ov.classList.remove('show'); setTimeout(() => { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 220); };
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
+    ov.querySelectorAll('.pw-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            var id = btn.dataset.id;
+            if (sel.has(id)) { sel.delete(id); btn.classList.remove('on'); }
+            else {
+                if (sel.size >= PW_MAX) { hapticLight(); btn.classList.add('shake'); setTimeout(() => btn.classList.remove('shake'), 400); return; }
+                sel.add(id); btn.classList.add('on');
+            }
+        });
+    });
+    var done = document.getElementById('pw-sheet-done');
+    if (done) done.addEventListener('click', () => {
+        var arr = PW_CATALOG.map(m => m.id).filter(id => sel.has(id));
+        if (!arr.length) arr = ['subs'];
+        try { localStorage.setItem(PW_LS, JSON.stringify(arr)); } catch (e) { }
+        hapticLight();
+        close();
+        pwRenderMetrics(pulse);
+    });
+}
+
 function renderPulse(pulse) {
     const host = document.getElementById('pulse-widget');
     if (!host) return;
@@ -444,16 +530,14 @@ function renderPulse(pulse) {
       <div class="pw-hlab">Средний охват · 30 дней</div>
       <div class="pw-hbig">${heroNum}<span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
       <div class="pw-chart" id="pw-chart"></div>
-      <div class="pw-mrow">
-        ${pwCell('Подписчики', pulse.subscribers, { sep: true })}
-        <div class="pw-mdiv"></div>
-        ${pwCell('Вовлечённость (ER)', pulse.engagement_percent, { suf: '%', dec: 2 })}
-        <div class="pw-mdiv"></div>
-        ${pwCell('Охват к базе', pulse.reach_rate, { suf: '%' })}
+      <div class="pw-msec">
+        <div class="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button></div>
+        <div class="pw-mgrid" id="pw-mgrid"></div>
       </div>
       <div id="pw-aihook"></div>
     </div>`;
     pwCountUp(host);
+    pwRenderMetrics(pulse);
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
     loadReachSeries();
@@ -509,8 +593,8 @@ function markPulseStale(days, lastDate) {
     if (!badge) return;
     const word = (days != null && days > 60) ? 'Неактивен' : 'Редкая активность';
     const sub = lastDate ? ('последний пост ' + lastDate) : ((days != null ? days : '') + ' дн без постов');
-    badge.className = 'pw-health amber';
-    badge.innerHTML = '<span class="pw-dot"></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
+    badge.className = 'pw-health dormant';
+    badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
 }
 
 function drawReachChart(host, DATA, dates, days, endLabel) {
