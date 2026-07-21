@@ -488,8 +488,15 @@ function pwOpenPicker(pulse) {
         + '<button class="pw-sheet-done" id="pw-sheet-done" type="button">Готово</button>'
         + '</div>';
     document.body.appendChild(ov);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
     requestAnimationFrame(() => ov.classList.add('show'));
-    var close = () => { ov.classList.remove('show'); setTimeout(() => { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 220); };
+    var close = () => {
+        document.documentElement.classList.remove('cs-modal-open');
+        document.body.classList.remove('cs-modal-open');
+        ov.classList.remove('show');
+        setTimeout(() => { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 220);
+    };
     ov.addEventListener('click', e => { if (e.target === ov) close(); });
     ov.querySelectorAll('.pw-opt').forEach(btn => {
         btn.addEventListener('click', () => {
