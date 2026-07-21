@@ -99,10 +99,10 @@
        орбиты, радуги) убраны. Остались тихие акценты: свечение (тонкое/золото) и стекло
        (матовое/дымка). Сохранённые у старых офферов значения мягко гасятся через fxAllow(). */
     var FX_GLOW = [['none', 'Без'], ['neon', 'Тонкое'], ['gold', 'Золото']];
-    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['dark', 'Дымка']];
+    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['dark', 'Дымка'], ['tint', 'Цветное']];
     var FX_KEEP = { move: ['none'], over: ['none'], part: ['none'], orbit: ['none'], glow: ['none', 'neon', 'gold'], glass: ['none', 'frost', 'dark'] };
     function fxAllow(group, v) { return (v && FX_KEEP[group] && FX_KEEP[group].indexOf(v) >= 0) ? v : 'none'; }
-    var FX_VIP = { glow: ['neon', 'gold'], glass: ['frost', 'dark'] };
+    var FX_VIP = { glow: ['neon', 'gold'], glass: ['frost', 'dark', 'tint'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -4988,7 +4988,7 @@
             '</div></div>';
     }
     function bindStyle() {
-        bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цена и кнопки');
+        bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цвет кнопки');
         qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
@@ -5846,12 +5846,12 @@
                 n.addEventListener('click', function (e) {
                     e.stopPropagation(); _haptic('light');
                     if (kind === 'cover') openColorStudio(coverSeedColor(), function (hex) { _ss.covType = 'grad'; _ss.coverGrad = gradFromHex(hex); _liveCover(_ss.coverGrad); _heroDebounced(); }, 'Шапка');
-                    else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цена и кнопки');
+                    else openColorStudio(_ss.color, function (hex) { setAccentColor(hex); }, 'Цвет кнопки');
                 });
             });
         }
         bindCEdit('.fmx-cov', 'cover');
-        bindCEdit('.v.pr', 'accent');
+        /* тап по цене больше НЕ открывает выбор цвета: цвет красит только кнопки (решение владельца 22.07) */
         bindCEdit('.fmx-btn', 'accent');
         qsa(card, '[data-act]').forEach(function (b) { b.removeAttribute('data-act'); });
         bindBadgeDrag(card);
