@@ -1903,6 +1903,10 @@
         if (_fEngMax != null) p.push('eng_max=' + _fEngMax);
         if (_fHealthMin != null) p.push('health_min=' + _fHealthMin);
         if (_fHealthMax != null) p.push('health_max=' + _fHealthMax);
+        if (_fAgeMin != null) p.push('age_min=' + _fAgeMin);
+        if (_fAgeMax != null) p.push('age_max=' + _fAgeMax);
+        if (_fAdpMin != null) p.push('adp_min=' + _fAdpMin);
+        if (_fAdpMax != null) p.push('adp_max=' + _fAdpMax);
         return '/api/v1/marketplace/listings?' + p.join('&');
     }
     var _feedReq = 0, _feedMore = false;
@@ -2117,7 +2121,8 @@
     var _fCpmMax = null, _fErMin = null, _fFreeFrom = null, _fFreeTo = null, _fDeals = false, _fClean = false, _fVerified = false;
     var _fSubsMax = null, _fCpmMin = null, _fErMax = null;
     var _fReachMin = null, _fReachMax = null, _fEngMin = null, _fEngMax = null, _fHealthMin = null, _fHealthMax = null;
-    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fClean ? 1 : 0) + (_fVerified ? 1 : 0) + (_fSubsMax != null ? 1 : 0) + (_fReachMin != null || _fReachMax != null ? 1 : 0) + (_fEngMin != null || _fEngMax != null ? 1 : 0) + (_fHealthMin != null || _fHealthMax != null ? 1 : 0); }
+    var _fAgeMin = null, _fAgeMax = null, _fAdpMin = null, _fAdpMax = null;
+    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fClean ? 1 : 0) + (_fVerified ? 1 : 0) + (_fSubsMax != null ? 1 : 0) + (_fReachMin != null || _fReachMax != null ? 1 : 0) + (_fEngMin != null || _fEngMax != null ? 1 : 0) + (_fHealthMin != null || _fHealthMax != null ? 1 : 0) + (_fAgeMin != null || _fAgeMax != null ? 1 : 0) + (_fAdpMin != null || _fAdpMax != null ? 1 : 0); }
     function buySortRowHtml() {
         var opts = [['smart', 'Умная'], ['price_asc', 'Цена ↑'], ['price_desc', 'Цена ↓'], ['reach', 'Охват'], ['cpm', 'CPM'], ['fresh', 'Свежие']];
         var nf = _buyFiltersCount();
@@ -2183,6 +2188,8 @@
             _bfPair('ER, %', 'fmx-bf-emin', _fEngMin, 'fmx-bf-emax', _fEngMax, true) +
             _bfPair('CPM, ₽', 'fmx-bf-cpmn', _fCpmMin, 'fmx-bf-cpm', _fCpmMax) +
             _bfPair('Индекс', 'fmx-bf-hmin', _fHealthMin, 'fmx-bf-hmax', _fHealthMax) +
+            _bfPair('Возраст, мес', 'fmx-bf-agmin', _fAgeMin, 'fmx-bf-agmax', _fAgeMax) +
+            _bfPair('Реклама, %', 'fmx-bf-admin', _fAdpMin, 'fmx-bf-admax', _fAdpMax) +
             '<div class="fmx-bfcell"><span class="fmx-lbl">Свободно · с / по</span>' +
             '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
             '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
@@ -2225,6 +2232,10 @@
             if (_fReachMin != null && _fReachMax != null && _fReachMin > _fReachMax) { var t5 = _fReachMin; _fReachMin = _fReachMax; _fReachMax = t5; }
             if (_fEngMin != null && _fEngMax != null && _fEngMin > _fEngMax) { var t6 = _fEngMin; _fEngMin = _fEngMax; _fEngMax = t6; }
             if (_fHealthMin != null && _fHealthMax != null && _fHealthMin > _fHealthMax) { var t7 = _fHealthMin; _fHealthMin = _fHealthMax; _fHealthMax = t7; }
+            _fAgeMin = val('fmx-bf-agmin'); _fAgeMax = val('fmx-bf-agmax');
+            _fAdpMin = val('fmx-bf-admin'); _fAdpMax = val('fmx-bf-admax');
+            if (_fAgeMin != null && _fAgeMax != null && _fAgeMin > _fAgeMax) { var t8 = _fAgeMin; _fAgeMin = _fAgeMax; _fAgeMax = t8; }
+            if (_fAdpMin != null && _fAdpMax != null && _fAdpMin > _fAdpMax) { var t9 = _fAdpMin; _fAdpMin = _fAdpMax; _fAdpMax = t9; }
             var _df = el('fmx-bf-df'), _dt2 = el('fmx-bf-dt');
             _fFreeFrom = (_df && _df.value) ? _df.value : null;
             _fFreeTo = (_fFreeFrom && _dt2 && _dt2.value && _dt2.value >= _fFreeFrom) ? _dt2.value : null;
@@ -2260,6 +2271,7 @@
             _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false; _fClean = false; _fVerified = false;
             _fSubsMax = _fCpmMin = _fErMax = null;
             _fReachMin = _fReachMax = _fEngMin = _fEngMax = _fHealthMin = _fHealthMax = null;
+            _fAgeMin = _fAgeMax = _fAdpMin = _fAdpMax = null;
             done(); _refreshFilterChip(); loadFeed(false);
         });
     }
