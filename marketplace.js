@@ -2754,14 +2754,14 @@
         var bg = document.createElement('div'); bg.id = 'fmx-rfBg'; bg.className = 'fmx-cfm solid';
         var rows = _RF_RANGES.map(function (r) {
             var mn = _rf.mn[r[0]] != null ? _rf.mn[r[0]] : '', mx = _rf.mx[r[0]] != null ? _rf.mx[r[0]] : '';
-            var i2 = r[2] ? '<span style="flex:1;"></span>' : '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="до" value="' + mx + '" data-mx="' + r[0] + '">';
+            var i2 = '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="до" value="' + mx + '" data-mx="' + r[0] + '">';
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="от" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
         }).join('');
-        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
             '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-rf-x" style="margin-left:auto;width:34px;height:34px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div style="margin-top:6px;">' + rows + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
             /* секция «Аудитория» (пол) убрана: пол по нише ненадёжен, показываем/фильтруем только по замеру комментаторов (позже) */
             '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;"><span id="fmx-rf-cnt"></span></button></div></div>';
         document.body.appendChild(bg);
