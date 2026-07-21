@@ -402,7 +402,8 @@ function renderChannelSelector(data) {
 }
 
 function pwFmt(v, el) {
-    const suf = el.dataset.suf || '', dec = +(el.dataset.dec || 0), sep = el.dataset.sep === '1';
+    const suf = el.dataset.suf || '', dec = +(el.dataset.dec || 0), sep = el.dataset.sep === '1', k = el.dataset.k === '1';
+    if (k) return formatNumber(Math.round(v)).replace('.', ',') + suf;
     if (sep) return Math.round(v).toLocaleString('ru-RU') + suf;
     if (dec) return v.toFixed(dec) + suf;
     return String(Math.round(v)) + suf;
@@ -420,17 +421,17 @@ function pwCountUp(root) {
 function pwCell(label, val, opts) {
     opts = opts || {};
     if (val == null) return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv">—</div></div>`;
-    const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
+    const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.k ? ' data-k="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
     const tr = opts.trend != null ? `<span class="${opts.trend >= 0 ? 'up' : 'dn'}">${opts.trend >= 0 ? '↗' : '↘'}${Math.abs(opts.trend)}%</span>` : '';
     return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div></div>`;
 }
 
 // Каталог показателей канала для пульса. Показываем ТОЛЬКО реальные метрики; пустые видны в пикере как «нет данных».
 var PW_CATALOG = [
-    { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
-    { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { sep: true } },
+    { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { k: true } },
+    { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
     { id: 'rr', label: 'Reach Rate', get: p => p.reach_rate, o: { suf: '%' } },
-    { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 2 } },
+    { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
 var PW_MAX = 4;
 var PW_LS = 'fm_pulse_metrics_v1';
@@ -450,6 +451,7 @@ function pwSelectedIds(pulse) {
 
 function pwPreview(v, o) {
     o = o || {};
+    if (o.k) return formatNumber(Math.round(v)).replace('.', ',') + (o.suf || '');
     if (o.sep) return Math.round(v).toLocaleString('ru-RU') + (o.suf || '');
     if (o.dec) return v.toFixed(o.dec) + (o.suf || '');
     return String(Math.round(v)) + (o.suf || '');
@@ -599,7 +601,7 @@ function markPulseStale(days, lastDate) {
 function drawReachChart(host, DATA, dates, days, endLabel) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const W = Math.max(260, host.clientWidth || 320), Hh = 112, padT = 18, padB = 22, padL = 6, padR = 6;
+    const W = Math.max(260, host.clientWidth || 320), Hh = 74, padT = 10, padB = 18, padL = 6, padR = 6;
     const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
     const lo = min - (max - min) * 0.5, hi = max + (max - min) * 0.22, rng = (hi - lo) || 1, last = DATA.length - 1;
     const X = (i) => padL + i * (W - padL - padR) / last;
