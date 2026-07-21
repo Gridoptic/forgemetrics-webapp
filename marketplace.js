@@ -1159,6 +1159,8 @@
             /* горящий тайм-слот: жёлтая подсветка + бейдж процента (точечные скидки владельца) */
             '.fmx-tsl.hot{border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.07);}',
             '.fmx-hottag{font-size:9.5px;font-weight:800;color:#f5bf4f;background:rgba(245,191,79,0.14);border:0.5px solid rgba(245,191,79,0.4);border-radius:6px;padding:2px 6px;flex:0 0 auto;}',
+            /* чипы панели скидок и переключателя режима: тап-зона ≥40px (правило проекта) */
+            '#fmx-calMode .fmx-fx,#fmx-hotPcts .fmx-fx,#fmx-hotTimes .fmx-fx{min-height:40px;padding:9px 12px;}',
             '.fmx-tsl[data-otog] .st{margin-left:0;}',
             '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
             '.fmx-osw::after{content:"";position:absolute;top:3px;left:17px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s;}',
@@ -2568,6 +2570,8 @@
         qsa(sub, '[data-mhot]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-mhot')); if (!l) return;
+                // при активных точечных скидках авто-режим не действует — честно говорим, а не делаем вид
+                if (l.hot_manual) { _haptic('light'); uiAlert('Действуют точечные скидки — они приоритетнее авто-режима. Чтобы включить авто-режим, сначала убери точечные скидки в «Точечные скидки».'); return; }
                 var turnOn = !b.classList.contains('on');
                 apiPost('/api/v1/marketplace/listings/' + l.id + '/hot', { pct: turnOn ? 15 : 0 }).then(function (r) {
                     if (!r || !r.ok) { _haptic('error'); uiAlert((r && r.error) || 'Не удалось'); return; }
@@ -2666,7 +2670,7 @@
     function openOwnerCalendar(l) {
         var box = el('fmx-calBox'); if (!box) return;
         _ownerSelDay = null;   // не тащим выбранный день из прошлого оффера
-        var s = el('fmx-calSub'); if (s) s.textContent = '@' + (l.username || '') + ' — отмечай занятые дни, покупатели увидят свободные';
+        var s = el('fmx-calSub'); if (s) s.textContent = '@' + (l.username || '') + (_ownerCalHot ? ' — выбери день и назначь скидку, покупатели увидят её жёлтой' : ' — отмечай занятые дни, покупатели увидят свободные');
         box.innerHTML = loadHtml();
         showModal('fmx-calBg');
         renderSlotsBox(l, box);
@@ -2998,6 +3002,9 @@
                     var hotOn = b.getAttribute('data-cm') === 'hot';
                     if (hotOn === _ownerCalHot) return;
                     _ownerCalHot = hotOn; _ownerHotDay = null; _ownerHotPct = null; _ownerHotTimes = null;
+                    // подзаголовок модалки следует за режимом — инструкция не противоречит действию (UX-1)
+                    var _cs = el('fmx-calSub');
+                    if (_cs) _cs.textContent = '@' + (l.username || '') + (hotOn ? ' — выбери день и назначь скидку, покупатели увидят её жёлтой' : ' — отмечай занятые дни, покупатели увидят свободные');
                     _haptic('light'); calDraw(box, l, 'edit');
                 });
             });
@@ -3014,9 +3021,14 @@
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-cd');
                 if (mode === 'edit') {
-                    // режим «Скидки»: тап по свободному дню — назначить/редактировать точечную скидку
+                    // режим «Скидки»: выбор свободного дня — назначить/редактировать точечную скидку
                     if (_ownerCalHot) {
-                        if (busy[iso]) { _haptic('error'); uiAlert('День занят — на занятые даты скидка не ставится'); return; }
+                        var _hmap = (r.hot && r.hot.map) || {};
+                        // занятый день: пускаем ТОЛЬКО если на нём осталась скидка — чтобы её можно было убрать (F5)
+                        if (busy[iso] && !_hmap[iso]) { _haptic('error'); uiAlert('День занят — на занятые даты скидка не ставится'); return; }
+                        // горизонт скидок — 90 дней вперёд; дальше бэкенд откажет, объясняем заранее (F6)
+                        var _lim = new Date(); _lim.setDate(_lim.getDate() + 90);
+                        if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert('Скидку можно назначить максимум на 90 дней вперёд'); return; }
                         _ownerHotDay = (_ownerHotDay === iso) ? null : iso;
                         _ownerHotPct = null; _ownerHotTimes = null;
                         _haptic('light'); calDraw(box, l, 'edit');
@@ -3132,7 +3144,11 @@
                 (hp ? '<span class="fmx-hottag">−' + hp + '%</span>' : '') +
                 '<span class="st">' + (isBusy ? 'Занято' : (sel ? 'Выбрано ✓' : 'Свободно')) + '</span></div>';
         }).join('');
-        return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + rows + '</div>';
+        // скидка «только на время»: день в календаре жёлтый целиком — поясняем, что скидка не на весь день (UX-4)
+        var _he = (_calData[l.id] && _calData[l.id].hot && _calData[l.id].hot.map) ? _calData[l.id].hot.map[day] : null;
+        var hotHint = (_he && _he.times && _he.times.length)
+            ? '<div style="font-size:10px;color:#f5bf4f;margin-bottom:6px;line-height:1.45;"><i class="ti ti-discount-2" style="font-size:11px;"></i> Скидка −' + _he.pct + '% действует на отдельное время — выбери жёлтый слот</div>' : '';
+        return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + hotHint + rows + '</div>';
     }
     function _bindBuyerSlots(box, l) {
         qsa(box, '.fmx-tsl[data-ts]').forEach(function (b) {
@@ -3166,7 +3182,7 @@
         var map = (r.hot && r.hot.map) || {};
         var h = '';
         if (!_ownerHotDay) {
-            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Тапни по свободному дню в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически.</div>';
+            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт — 90 дней вперёд.</div>';
             var keys = Object.keys(map).sort();
             if (keys.length) {
                 h += '<span class="fmx-lbl fmx-mt2">Назначено</span><div style="display:flex;flex-direction:column;gap:5px;">' + keys.map(function (d) {
@@ -3194,7 +3210,7 @@
                 '<div style="font-size:10px;color:#565b73;margin-top:4px;">Не выбрано время — скидка на весь день</div>';
         }
         h += '<div style="display:flex;gap:8px;margin-top:12px;">' +
-            (cur ? '<button class="fmx-btn" id="fmx-hotDel" style="color:#f7a58c;border-color:rgba(247,165,140,0.3);">Убрать</button>' : '') +
+            (cur ? '<button class="fmx-btn" id="fmx-hotDel" style="color:#f7a58c;border-color:rgba(247,165,140,0.3);">Убрать скидку</button>' : '') +
             '<button class="fmx-btn" id="fmx-hotSave" style="flex:1;background:#f5bf4f;color:#1c1503;border-color:transparent;font-weight:800;">Сохранить −' + _ownerHotPct + '%</button></div>';
         return h;
     }
@@ -3219,11 +3235,24 @@
             day: _ownerHotDay, pct: pct,
             times: (pct && _ownerHotTimes && _ownerHotTimes.length) ? _ownerHotTimes : null,
         }).then(function (rr) {
-            if (!rr || !rr.ok) { _haptic('error'); uiAlert(rr && rr.error === 'forbidden' ? 'Управлять скидками может только владелец оффера' : 'Не удалось сохранить скидку'); return; }
+            if (!rr || !rr.ok) {
+                _haptic('error');
+                var m = { forbidden: 'Управлять скидками может только владелец оффера',
+                    out_of_horizon: 'Скидку можно назначить максимум на ' + 90 + ' дней вперёд',
+                    no_slots: 'У оффера не настроены слоты по времени — назначь скидку на весь день',
+                    bad_times: 'Выбранные времена не совпадают со слотами оффера' };
+                uiAlert(m[rr && rr.error] || 'Не удалось сохранить скидку');
+                return;
+            }
             _haptic('success'); toast(pct ? 'Скидка сохранена — покупатели увидят дату жёлтой' : 'Скидка с даты убрана');
             _ownerHotDay = null; _ownerHotPct = null; _ownerHotTimes = null;
             delete _calData[l.id];
+            // синхронизируем объект листинга кабинета: метка «· вкл» и тумблер авто не устаревают (F4)
+            var ds = rr.days || {};
+            l.hot_manual = !!Object.keys(ds).length;
+            if (l.hot_manual) { l.hot_discount_pct = Math.max.apply(null, Object.keys(ds).map(function (k) { return ds[k].pct || 0; })); }
             loadCal(box, l, 'edit');
+            if (_subTab === 'mine') { try { paintMine(); } catch (e) { } }
         }).catch(function () { _haptic('error'); uiAlert('Не удалось сохранить'); });
     }
     /* панель слотов для ВЛАДЕЛЬЦА: стандартные времена + режим «1 выход/сутки» + занятость по дню */
@@ -3546,11 +3575,16 @@
         var t = 'Здравствуйте. Интересует размещение в вашем канале: формат ' + f.fmt;
         if (items.length > 1) {   // пакетная заявка на несколько дат/слотов
             t += '. Интересуют даты: ' + items.map(_slotLabel).join(', ') + '.';
-            t += f.price ? ' Ориентир по прайсу ' + _num(f.price) + ' ₽ за размещение. Подтвердите свободные слоты.' : ' Пришлите условия размещения.';
+            // у части дат может быть точечная скидка — одной цифрой не выразить, честно помечаем
+            var anyHot = f.l && items.some(function (x) { return _hotPct(f.l, x.day, x.time) != null; });
+            t += f.price ? ' Ориентир по прайсу ' + _num(f.price) + ' ₽ за размещение' + (anyHot ? ' (на части дат действует скидка — итог уточним)' : '') + '. Подтвердите свободные слоты.' : ' Пришлите условия размещения.';
         } else if (items.length === 1) {
             var tm = items[0].time != null ? _fmtT(items[0].time) : null;
             t += ', дата ' + _fmtDayRu(items[0].day) + (tm ? ', время ' + tm : '');
-            t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
+            // цена в тексте = та же, что в шапке шторки: со скидкой выбранной даты/времени (находка F1)
+            var _p1 = f.price != null && f.l ? _hotPrice(f.l, f.price, items[0].day, items[0].time) : f.price;
+            var _hp1 = f.price != null && f.l ? _hotPct(f.l, items[0].day, items[0].time) : null;
+            t += f.price ? ', по прайсу ' + _num(_p1) + ' ₽' + (_hp1 ? ' (с учётом скидки −' + _hp1 + '%)' : '') + '.' : '. Пришлите условия размещения.';
             if (f.price) t += ' Подтвердите, свободн' + (tm ? ' ли слот' : 'а ли дата') + '.';
         } else {
             t += f.price ? ', по прайсу ' + _num(f.price) + ' ₽.' : '. Пришлите условия размещения.';
@@ -3609,6 +3643,15 @@
         var sh = el('fmx-writeSheet');
         var fmts = (l.formats || []).filter(function (x) { return x.price; });
         var priceNow = f.price != null ? _hotPrice(l, f.price, f.day, f.time) : null;
+        // видимая скидка: зачёркнутая исходная цена + процент — покупатель понимает, что скидка применена (UX-6)
+        var _wpHtml = function (full, now) {
+            if (now == null) return '';
+            if (full != null && now < full) {
+                var _pp = _hotPct(l, f.day, f.time);
+                return 'По прайсу: <s style="color:#565b73;">' + _num(full) + '</s> <b style="color:#f5bf4f;">' + _num(now) + ' ₽</b>' + (_pp ? ' <span style="color:#f5bf4f;font-size:10px;">−' + _pp + '%</span>' : '');
+            }
+            return 'По прайсу: <b>' + _num(now) + ' ₽</b>';
+        };
         sh.innerHTML = '<div class="grip"></div><h3>Сообщение владельцу канала</h3>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:700;">' + _esc(l.title || l.username) +
             '<span style="font-size:10px;color:#8990a8;font-weight:500;">@' + _esc(l.username) + '</span></div>' +
@@ -3619,7 +3662,7 @@
             '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;" class="num">' +
             '<span>Дата: <b id="fmx-wd">' + ((f.basket && f.basket.length) ? (f.basket.length + (f.day ? 1 : 0)) + ' ' + _plural(f.basket.length + (f.day ? 1 : 0), 'дата', 'даты', 'дат') : (f.day ? _fmtDayRu(f.day) + (f.time != null ? ' ' + _fmtT(f.time) : '') : 'уточню в чате')) + '</b></span>' +
             '<button class="fmx-seg" id="fmx-wchg" style="min-height:28px;padding:4px 10px;">Изменить</button>' +
-            '<span style="margin-left:auto;" id="fmx-wp">' + (priceNow != null ? 'По прайсу: <b>' + _num(priceNow) + ' ₽</b>' : '') + '</span></div>' +
+            '<span style="margin-left:auto;" id="fmx-wp">' + _wpHtml(f.price, priceNow) + '</span></div>' +
             '<textarea class="fmx-inp" id="fmx-wtext" rows="4" style="margin-top:10px;width:100%;line-height:1.55;resize:none;"></textarea>' +
             '<button class="fmx-save" id="fmx-wgo" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i> Скопировать и открыть чат</button>' +
             '<button class="fmx-btn" id="fmx-wcopy" style="width:100%;margin-top:8px;">Скопировать текст</button>' +
@@ -3632,7 +3675,7 @@
                 b.classList.add('on');
                 _lsSel.fmt = b.getAttribute('data-f'); _lsSel.price = parseInt(b.getAttribute('data-p'), 10);
                 var pn = _hotPrice(l, _lsSel.price, _lsSel.day, _lsSel.time);
-                el('fmx-wp').innerHTML = 'По прайсу: <b>' + _num(pn) + ' ₽</b>';
+                el('fmx-wp').innerHTML = _wpHtml(_lsSel.price, pn);
                 if (!_lsSel.edited) el('fmx-wtext').value = _writeText();
                 _syncWriteBtn(l);
             });
