@@ -2053,15 +2053,35 @@
             box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.');
             return;
         }
-        // база грузится целиком (поиск ищет по всем каналам), но в браузинге без поиска рисуем топ-120
-        // по индексу — иначе 400 карточек тормозят. Есть запрос — показываем ВСЕ совпадения.
-        var _cap = 120, _capNote = '';
-        if (!_catQ && list.length > _cap) {
-            _capNote = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">Показаны ' + _cap + ' из ' + list.length + ' по индексу. Нужен конкретный канал — впиши в поиск, ищет по всей базе.</div>';
-            list = list.slice(0, _cap);
-        }
-        box.innerHTML = (_view === 'cards' ? '<div class="fmx-grid">' + list.map(simpleCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + list.map(function (x) { return zw(listItem(x, false, true)); }).join('') + '</div>') + _capNote;
+        // Рисуем ВСЮ базу (решение владельца 22.07): потолок топ-120 был из-за тормозов 400 карточек,
+        // но рендер вне экрана теперь дешёвый (content-visibility). Первая пачка — мгновенно,
+        // хвост — пачками через rAF, чтобы разовый парсинг HTML не блокировал скролл.
+        var _renderOne = (_view === 'cards') ? simpleCard : function (x) { return zw(listItem(x, false, true)); };
+        var FIRST = 120, CHUNK = 60;
+        var head = list.slice(0, FIRST).map(_renderOne).join('');
+        box.innerHTML = (_view === 'cards'
+            ? '<div class="fmx-grid" id="fmx-catGrid">' + head + '</div>'
+            : '<div style="display:flex;flex-direction:column;gap:8px;" id="fmx-catGrid">' + head + '</div>') +
+            '<div id="fmx-catTail"></div>';
         bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
+        var grid = el('fmx-catGrid'), token = (box._paintToken = (box._paintToken || 0) + 1);
+        (function drawTail(i) {
+            if (!grid || box._paintToken !== token || !grid.isConnected) return;   // каталог перерисован — гонку глушим
+            if (i >= list.length) {
+                var t = el('fmx-catTail');
+                if (t && list.length > FIRST) t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' — вся база на экране</div>';
+                return;
+            }
+            var tmp = document.createElement('div');
+            tmp.innerHTML = list.slice(i, i + CHUNK).map(_renderOne).join('');
+            var added = [];
+            while (tmp.firstChild) { added.push(tmp.firstChild); grid.appendChild(tmp.firstChild); }
+            added.forEach(function (n) {
+                if (!n || n.nodeType !== 1) return;
+                bindCards(n); if (_view === 'list') bindList(n); _bindAgeGate(n);
+            });
+            requestAnimationFrame(function () { drawTail(i + CHUNK); });
+        })(FIRST);
     }
     function renderCatalog() {
         var host = el('fmx-main');
