@@ -1176,6 +1176,8 @@
             'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
             'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
             'body.fmx-bgfreeze #fmx-main *,body.fmx-bgfreeze #app *{animation-play-state:paused!important;}',
+            /* GIF нельзя поставить на паузу (это картинка со встроенным циклом) — под оверлеем прячем */
+            'body.fmx-bgfreeze #fmx-main img[src*=".gif"],body.fmx-bgfreeze #app img[src*=".gif"]{visibility:hidden;}',
             'body.fmx-bgfull #fmx-main,body.fmx-bgfull #app{visibility:hidden;}',
             '.fmx-tsl[data-otog] .st{margin-left:0;}',
             '.fmx-osw{width:34px;height:20px;border-radius:99px;background:rgba(93,202,165,0.4);position:relative;flex:0 0 auto;margin-left:auto;}',
@@ -7692,14 +7694,27 @@
         document.documentElement.classList.toggle('fmx-bgfreeze', anyOv);
         if (anyOv && !was) {
             _frozenVids = [];
-            qsa(document, '#fmx-main video, #app video').forEach(function (v) {
-                if (!v.paused && !v.closest(_OV_SEL)) { _frozenVids.push(v); try { v.pause(); } catch (e) { } }
+            // видео: все играющие вне оверлеев (не только в #fmx-main — карточки живут в разных контейнерах)
+            qsa(document, 'video').forEach(function (v) {
+                if (!v.paused && !v.closest(_OV_SEL) && !v.closest(_OV_FULL)) { _frozenVids.push(v); try { v.pause(); } catch (e) { } }
+            });
+            // лотти-стикеры: их крутит JS-цикл — CSS-пауза не берёт, глушим плееры напрямую
+            _frozenLots = [];
+            (typeof _lotAnims !== 'undefined' ? _lotAnims : []).forEach(function (a) {
+                try {
+                    if (a.el && a.el.isConnected && !a.el.closest(_OV_SEL) && !a.el.closest(_OV_FULL) && a.anim && !a.anim.isPaused) {
+                        a.anim.pause(); _frozenLots.push(a);
+                    }
+                } catch (e) { }
             });
         } else if (!anyOv && was) {
             _frozenVids.forEach(function (v) { try { v.play(); } catch (e) { } });
             _frozenVids = [];
+            _frozenLots.forEach(function (a) { try { a.anim.play(); } catch (e) { } });
+            _frozenLots = [];
         }
     }
+    var _frozenLots = [];
     if (!window.__fmFreezeObs) {
         try {
             window.__fmFreezeObs = new MutationObserver(function () {
