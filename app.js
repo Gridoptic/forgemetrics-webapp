@@ -452,6 +452,10 @@ function loadMarketWidget(niche) {
     if (!host) return;
     apiRequest('/api/v1/marketplace/pulse').then(function (r) {
         var arr = (r && r.base && r.base.length) ? r.base : ((r && r.market) ? r.market : []);
+        if (!arr.length) { host.innerHTML = ''; return; }
+        // медиана CPM по ВСЕМ нишам — опора для честного сигнала «дешевле/дороже рынка» (не выдуманный тренд)
+        var allc = arr.map(function (x) { return x.median_cpm; }).filter(function (v) { return v != null; }).sort(function (a, b) { return a - b; });
+        var mktMed = allc.length ? allc[Math.floor(allc.length / 2)] : null;
         var nl = (niche || '').toLowerCase().trim();
         var entry = null;
         if (nl) {
@@ -460,22 +464,33 @@ function loadMarketWidget(niche) {
                 if (xn && (xn.indexOf(nl) >= 0 || nl.indexOf(xn) >= 0)) { entry = arr[i]; break; }
             }
         }
-        var title, cpm, count;
-        if (entry) { title = 'Рынок · ' + escapeHtml(entry.niche); cpm = entry.median_cpm; count = entry.count; }
+        var title, cpm, count, price;
+        if (entry) { title = 'Рынок · ' + escapeHtml(entry.niche); cpm = entry.median_cpm; count = entry.count; price = entry.median_price; }
         else {
-            var cpms = [], tot = 0;
-            arr.forEach(function (x) { if (x.median_cpm != null) cpms.push(x.median_cpm); tot += (x.count || 0); });
-            cpms.sort(function (a, b) { return a - b; });
-            cpm = cpms.length ? cpms[Math.floor(cpms.length / 2)] : null;
-            count = tot; title = 'Рынок рекламы';
+            var tot = 0; arr.forEach(function (x) { tot += (x.count || 0); });
+            cpm = mktMed; count = tot; title = 'Рынок рекламы';
         }
         if (cpm == null && !count) { host.innerHTML = ''; return; }
+        // позиция ниши относительно рынка — реальный сигнал (сравнение с медианой всех ниш)
+        var badge = '', bcls = '', note = '';
+        if (entry && cpm != null && mktMed) {
+            if (cpm < mktMed * 0.9) { badge = 'ниже рынка'; bcls = 'dc-mtag-lo'; note = 'CPM в твоей нише <b>ниже медианы рынка</b> — выгодный момент закупать охват.'; }
+            else if (cpm > mktMed * 1.1) { badge = 'дороже рынка'; bcls = 'dc-mtag-hi'; note = 'CPM в твоей нише <b>выше медианы рынка</b> — торгуйся или ищи альтернативы.'; }
+            else { badge = 'на уровне рынка'; bcls = 'dc-mtag-mid'; note = 'CPM в нише <b>на уровне рынка</b>. В Радаре — площадки под твой охват.'; }
+        } else {
+            note = 'Живые данные Радара по нишам. Найди площадки под свой охват и бюджет.';
+        }
+        var priceRow = (price != null && price > 0)
+            ? '<div class="dc-md"></div><div class="dc-mc"><div class="dc-ml">Цена поста ≈</div><div class="dc-mv">' + Math.round(price).toLocaleString('ru-RU') + ' ₽</div></div>'
+            : '<div class="dc-md"></div><div class="dc-mc"><div class="dc-ml">Площадок в нише</div><div class="dc-mv">' + (count || '—') + '</div></div>';
         host.innerHTML = '<button class="dc-mkt" data-act="marketplace">'
             + '<div class="dc-mh"><span class="dc-micon"><i class="ti ti-arrows-exchange"></i></span>'
-            + '<div class="dc-mt"><div class="dc-mtt">' + title + '</div><div class="dc-mts">по данным Радара</div></div>'
-            + '<i class="ti ti-chevron-right dc-cgo"></i></div>'
+            + '<div class="dc-mt"><div class="dc-mtt">' + title + '</div><div class="dc-mts">' + (count ? count + ' площадок · медиана' : 'по данным Радара') + '</div></div>'
+            + (badge ? '<span class="dc-mtag ' + bcls + '">' + badge + '</span>' : '') + '</div>'
             + '<div class="dc-mrow"><div class="dc-mc"><div class="dc-ml">Медианный CPM</div><div class="dc-mv">' + (cpm != null ? Math.round(cpm).toLocaleString('ru-RU') + ' ₽' : '—') + '</div></div>'
-            + '<div class="dc-md"></div><div class="dc-mc"><div class="dc-ml">Площадок в нише</div><div class="dc-mv">' + (count || '—') + '</div></div></div></button>';
+            + priceRow + '</div>'
+            + '<div class="dc-mnote">' + note + ' <span class="dc-mlink">Открыть Радар →</span></div>'
+            + '</button>';
         var btn = host.querySelector('[data-act]');
         if (btn) btn.addEventListener('click', function () { handleAction('marketplace'); });
     }).catch(function () { if (host) host.innerHTML = ''; });

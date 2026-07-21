@@ -566,6 +566,13 @@ button:active {
 .dc-mrow { display:flex; margin-top:12px; }
 .dc-mc { flex:1; min-width:0; } .dc-ml { font-size:10px; color:#6f7590; } .dc-mv { font-size:18px; font-weight:800; letter-spacing:-0.5px; margin-top:2px; color:#f0f2f8; font-variant-numeric:tabular-nums; }
 .dc-md { width:1px; background:rgba(255,255,255,0.06); margin:2px 12px; }
+.dc-mtag { flex:0 0 auto; font-size:9.5px; font-weight:700; border-radius:99px; padding:3px 9px; white-space:nowrap; letter-spacing:0.01em; }
+.dc-mtag-lo { color:#5dd0a8; background:rgba(93,208,168,0.13); border:1px solid rgba(93,208,168,0.28); }
+.dc-mtag-hi { color:#f6c65a; background:rgba(246,198,90,0.13); border:1px solid rgba(246,198,90,0.30); }
+.dc-mtag-mid { color:#a2a8bd; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.10); }
+.dc-mnote { font-size:11px; color:#a2a8bd; line-height:1.45; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,0.06); }
+.dc-mnote b { color:#f0f2f8; font-weight:700; }
+.dc-mlink { color:#8b93ff; font-weight:650; white-space:nowrap; }
 
 .dc-chan { display:flex; align-items:center; gap:11px; padding:11px 13px; }
 .dc-ca { width:34px; height:34px; border-radius:10px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:#0b0c16; background:linear-gradient(145deg,#f6c65a,#e0932f); }
