@@ -7377,13 +7377,12 @@
        оставляла раскрытую карточку налезать на строки ниже. Пересчитываем высоту обёртки этой строки
        по фактическому содержимому. Без .fmx-zw (страница деталей) — просто no-op. */
     function _rescaleRow(li) {
+        // строки больше не масштабируются (адаптивная вёрстка) — только сброс старых инлайнов,
+        // чтобы высота обёртки была естественной и ничего не съезжало при развороте
         var w = (li && li.closest) ? li.closest('.fmx-zw') : null;
         if (!w) return;
         var card = w.firstElementChild; if (!card) return;
-        var ww = w.clientWidth; if (!ww) return;
-        var k = Math.min(1, ww / 350);
-        card.style.transform = k < 0.9995 ? 'scale(' + k + ')' : '';
-        w.style.height = Math.round(card.offsetHeight * k) + 'px';
+        card.style.transform = ''; card.style.marginLeft = ''; w.style.height = '';
     }
 
     function zw(html) { return '<div class="fmx-zw">' + html + '</div>'; }
@@ -7393,6 +7392,14 @@
         var list = [];
         qsa(scope || document, '.fmx-cwrap,.fmx-zw').forEach(function (w) {
             var card = w.firstElementChild; if (!card) return;
+            // СТРОКИ (.fmx-li) и резиновые карточки масштабировать нельзя: они адаптивные, а
+            // transform+фикс-высота давали разнобой ширин при появлении скроллбара/развороте
+            // (баг-репорт владельца 22.07). Масштаб — только 350px-макетам (.fmx-cwrap).
+            if (w.classList.contains('fmx-zw')) {
+                if (card.classList && card.classList.contains('fmx-cwrap')) return;   // обработается веткой .fmx-cwrap
+                card.style.transform = ''; card.style.marginLeft = ''; w.style.height = '';
+                return;
+            }
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
             list.push({ w: w, card: card, k: k, off: Math.max(0, (ww - 350 * k) / 2) });
