@@ -370,30 +370,26 @@ button:active {
 }
 
 .actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
 }
 
 .action-card {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    padding: 12px;
+    padding: 14px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: 100%;
-    height: 100%;
     text-align: left;
     transition: all var(--transition-fast);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     cursor: pointer;
 }
-/* важные плитки во всю ширину (create_post/marketplace), остальные — парами по 2 в ряд */
-.action-card.wide { grid-column: 1 / -1; }
 
 .action-card:hover {
     background: var(--bg-card-hover);
@@ -422,18 +418,6 @@ button:active {
     font-size: 18px;
 }
 
-/* заголовок секции меню (Мой канал / Рынок / Аккаунт) */
-.actions-section {
-    grid-column: 1 / -1;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #8990a8;
-    margin: 11px 4px 5px;
-}
-.actions-section:first-child { margin-top: 2px; }
-
 .action-card-text {
     flex: 1;
     min-width: 0;
@@ -449,16 +433,13 @@ button:active {
 .action-card-subtitle {
     font-size: 11px;
     color: var(--text-secondary);
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
-/* стрелка справа не нужна в 2-колоночной сетке — экономим место */
 .action-card-arrow {
-    display: none;
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-left: var(--space-sm);
 }
 
 .action-card.primary {
