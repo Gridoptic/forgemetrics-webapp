@@ -7514,6 +7514,18 @@
         if (!rows.length) return '';
         return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
     }
+    /* перелив-калькулятор в развороте Площадки — 1 в 1 с Радаром (данные: цена от + охват) */
+    function _flowBlock(l) {
+        var pp = l.min_price, av = l.avg_views;
+        if (!pp || !av) return '';
+        var conv = 1, gained = Math.round(av * conv / 100), cps = Math.round(pp / Math.max(1, gained));
+        return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
+            '<div class="fmx-terms" id="fmx-flowBox">' +
+            '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="1"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
+            '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (минимальная цена)</div>' +
+            '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
+            '</div>';
+    }
     function _pwMetrics(l) {
         var cpm = _cpm(l);
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
@@ -7522,9 +7534,35 @@
                 '<div class="pw-mv num">' + val + '</div></div>';
         }
         var _al = _audLabel(l), audTx = _al ? _al.text : null;
+        // кольцо индекса здоровья — 1 в 1 с развёрнутой карточкой Радара
+        var _ring = '';
+        if (l.health_score != null) {
+            var _hcol = l.health_class === 'green' ? '#5DCAA5' : (l.health_class === 'red' ? '#ef4444' : '#f59e0b');
+            var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
+            _ring = '<svg width="42" height="42" viewBox="0 0 42 42" style="flex:0 0 auto;"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + _hcol + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>';
+        }
+        // ERR со статусом и нормой размера + ER с расшифровкой реакций — как на Радаре
+        var _xtra = '';
+        if (l.er != null && l.reach_status) {
+            var _rc = (l.reach_status === 'норма') ? '#5DCAA5' : ((l.reach_status === 'очень низкий' || l.reach_status === 'аномальный') ? '#ef4444' : '#f59e0b');
+            var _nrm = (l.reach_norm && l.reach_norm.length === 2) ? ' <span style="color:#565b73;">· норма для ' + _esc(l.reach_tier || '') + ' ' + l.reach_norm[0] + '–' + l.reach_norm[1] + '%</span>' : '';
+            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:6px;">ERR — <b style="color:' + _rc + ';">' + _esc(l.reach_status) + '</b>' + _nrm + '</div>';
+        }
+        if (l.engagement_percent != null) {
+            var _eb = [];
+            if (l.react_count) _eb.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
+            if (l.forward_count) _eb.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
+            if (l.comment_count) _eb.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
+            var _ev = l.engagement_percent;
+            var _es = _ev >= 3.5 ? 'высокая' : (_ev >= 1 ? 'норма' : 'низкая');
+            var _ec = _ev >= 3.5 ? '#5DCAA5' : (_ev >= 1 ? '#818cf8' : '#f59e0b');
+            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;">ER — <b style="color:' + _ec + ';">' + _es + '</b>' + (_eb.length ? ' <span style="color:#565b73;">— по ' + _eb.join(', ') + ' на пост</span>' : '') + '</div>';
+        }
         return '<div class="fmx-pwc">' +
-            '<div class="pw-hlab">Охват поста</div>' +
-            '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div>' +
+            '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">' +
+            '<div style="min-width:0;"><div class="pw-hlab">Охват поста</div>' +
+            '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div></div>' +
+            _ring + '</div>' +
             '<div class="pw-spark" id="fmx-pwspark"></div>' +
             (_chAge(l.channel_created_ts) ? '<div style="font-size:11px;color:#8990a8;margin:-2px 0 8px;"><i class="ti ti-calendar" style="font-size:11px;"></i> На рынке ' + _chAge(l.channel_created_ts) + '</div>' : '') +
             '<div class="pw-mrow num">' +
@@ -7541,6 +7579,7 @@
             '<div class="pw-mdiv"></div>' +
             (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
             '</div>' +
+            _xtra +
             (l.er != null && l.er > 100 ?
                 '<div class="fmx-anom"><span class="fmx-anom-i">' + _warnTri(17) + '</span>' +
                 '<div><b>ERR ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
@@ -7636,6 +7675,7 @@
             '<div class="fmx-lssect">Метрики канала</div>' +
             _pwMetrics(l) +
             _reachStructBlock(l) +
+            _flowBlock(l) +
             _peakBlock(l) +
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
             (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) : '') +
@@ -7659,6 +7699,21 @@
         /* доверие: расшифровки + живые значения */
         qsa(el('fmx-listBody'), '[data-tr]').forEach(function (r) {
             r.addEventListener('click', function () { uiAlert(_TRUST_EXPL[+r.getAttribute('data-tr')] || ''); });
+        });
+        /* перелив-калькулятор разворота: живой пересчёт при вводе конверсии (копия механики Радара) */
+        qsa(el('fmx-listBody'), '.fmr-conv').forEach(function (inp) {
+            inp.addEventListener('click', function (e) { e.stopPropagation(); });
+            inp.addEventListener('input', function (e) {
+                e.stopPropagation();
+                var line = inp.closest('[data-flow]'); if (!line) return;
+                var pp = +line.getAttribute('data-pp'), av = +line.getAttribute('data-av');
+                var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
+                var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
+                var box = el('fmx-flowBox'); if (!box) return;
+                var cpsEl = box.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
+                var gEl = box.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
+                var warn = box.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 0.3);
+            });
         });
         /* форматы: тап подставляет формат в живую кнопку */
         qsa(el('fmx-listBody'), '.fmx-fmt').forEach(function (f) {
