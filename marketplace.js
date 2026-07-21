@@ -1897,6 +1897,12 @@
         if (_fDeals) p.push('deals_only=1');
         if (_fClean) p.push('clean_only=1');
         if (_fVerified) p.push('verified_only=1');
+        if (_fReachMin != null) p.push('reach_min=' + _fReachMin);
+        if (_fReachMax != null) p.push('reach_max=' + _fReachMax);
+        if (_fEngMin != null) p.push('eng_min=' + _fEngMin);
+        if (_fEngMax != null) p.push('eng_max=' + _fEngMax);
+        if (_fHealthMin != null) p.push('health_min=' + _fHealthMin);
+        if (_fHealthMax != null) p.push('health_max=' + _fHealthMax);
         return '/api/v1/marketplace/listings?' + p.join('&');
     }
     var _feedReq = 0, _feedMore = false;
@@ -2110,7 +2116,8 @@
 
     var _fCpmMax = null, _fErMin = null, _fFreeFrom = null, _fFreeTo = null, _fDeals = false, _fClean = false, _fVerified = false;
     var _fSubsMax = null, _fCpmMin = null, _fErMax = null;
-    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fClean ? 1 : 0) + (_fVerified ? 1 : 0) + (_fSubsMax != null ? 1 : 0); }
+    var _fReachMin = null, _fReachMax = null, _fEngMin = null, _fEngMax = null, _fHealthMin = null, _fHealthMax = null;
+    function _buyFiltersCount() { return (_fPriceMin != null ? 1 : 0) + (_fPriceMax != null ? 1 : 0) + (_fSubsMin != null ? 1 : 0) + (_fAud ? 1 : 0) + ((_sort === 'niche' && _nicheSel) ? 1 : 0) + (_fCpmMax != null || _fCpmMin != null ? 1 : 0) + (_fErMin != null || _fErMax != null ? 1 : 0) + (_fFreeFrom ? 1 : 0) + (_fDeals ? 1 : 0) + (_fClean ? 1 : 0) + (_fVerified ? 1 : 0) + (_fSubsMax != null ? 1 : 0) + (_fReachMin != null || _fReachMax != null ? 1 : 0) + (_fEngMin != null || _fEngMax != null ? 1 : 0) + (_fHealthMin != null || _fHealthMax != null ? 1 : 0); }
     function buySortRowHtml() {
         var opts = [['smart', 'Умная'], ['price_asc', 'Цена ↑'], ['price_desc', 'Цена ↓'], ['reach', 'Охват'], ['cpm', 'CPM'], ['fresh', 'Свежие']];
         var nf = _buyFiltersCount();
@@ -2168,10 +2175,13 @@
             '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
             '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button><button class="fmx-fx' + (_fClean ? ' on' : '') + '" data-pre="clean">Без накрутки</button><button class="fmx-fx' + (_fVerified ? ' on' : '') + '" data-pre="verified">Проверенный владелец</button></div>' +
             '<div class="fmx-bfgrid">' +
-            _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
+            _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
+            _bfPair('Охват', 'fmx-bf-rmin', _fReachMin, 'fmx-bf-rmax', _fReachMax) +
+            _bfPair('ERR, %', 'fmx-bf-er', _fErMin, 'fmx-bf-erx', _fErMax, true) +
+            _bfPair('ER, %', 'fmx-bf-emin', _fEngMin, 'fmx-bf-emax', _fEngMax, true) +
             _bfPair('CPM, ₽', 'fmx-bf-cpmn', _fCpmMin, 'fmx-bf-cpm', _fCpmMax) +
-            _bfPair('ER, %', 'fmx-bf-er', _fErMin, 'fmx-bf-erx', _fErMax, true) +
+            _bfPair('Индекс', 'fmx-bf-hmin', _fHealthMin, 'fmx-bf-hmax', _fHealthMax) +
             '<div class="fmx-bfcell"><span class="fmx-lbl">Свободно · с / по</span>' +
             '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
             '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
@@ -2200,13 +2210,20 @@
             });
         });
         function val(id) { var n = el(id); var v = n && n.value !== '' ? parseInt(n.value, 10) : null; return (v == null || isNaN(v) || v < 0) ? null : Math.min(v, 100000000); }
+        function valF(id) { var n = el(id); var v = n && n.value !== '' ? parseFloat(n.value) : null; return (v == null || isNaN(v) || v < 0) ? null : Math.min(v, 100000000); }
         function applyClose() {
             _fPriceMin = val('fmx-bf-pmin'); _fPriceMax = val('fmx-bf-pmax'); _fSubsMin = val('fmx-bf-smin');
-            _fCpmMax = val('fmx-bf-cpm'); _fErMin = val('fmx-bf-er');
-            _fSubsMax = val('fmx-bf-smax'); _fCpmMin = val('fmx-bf-cpmn'); _fErMax = val('fmx-bf-erx');
+            _fCpmMax = val('fmx-bf-cpm'); _fErMin = valF('fmx-bf-er');
+            _fSubsMax = val('fmx-bf-smax'); _fCpmMin = val('fmx-bf-cpmn'); _fErMax = valF('fmx-bf-erx');
             if (_fSubsMin != null && _fSubsMax != null && _fSubsMin > _fSubsMax) { var t2 = _fSubsMin; _fSubsMin = _fSubsMax; _fSubsMax = t2; }
             if (_fCpmMin != null && _fCpmMax != null && _fCpmMin > _fCpmMax) { var t3 = _fCpmMin; _fCpmMin = _fCpmMax; _fCpmMax = t3; }
             if (_fErMin != null && _fErMax != null && _fErMin > _fErMax) { var t4 = _fErMin; _fErMin = _fErMax; _fErMax = t4; }
+            _fReachMin = val('fmx-bf-rmin'); _fReachMax = val('fmx-bf-rmax');
+            _fEngMin = valF('fmx-bf-emin'); _fEngMax = valF('fmx-bf-emax');
+            _fHealthMin = val('fmx-bf-hmin'); _fHealthMax = val('fmx-bf-hmax');
+            if (_fReachMin != null && _fReachMax != null && _fReachMin > _fReachMax) { var t5 = _fReachMin; _fReachMin = _fReachMax; _fReachMax = t5; }
+            if (_fEngMin != null && _fEngMax != null && _fEngMin > _fEngMax) { var t6 = _fEngMin; _fEngMin = _fEngMax; _fEngMax = t6; }
+            if (_fHealthMin != null && _fHealthMax != null && _fHealthMin > _fHealthMax) { var t7 = _fHealthMin; _fHealthMin = _fHealthMax; _fHealthMax = t7; }
             var _df = el('fmx-bf-df'), _dt2 = el('fmx-bf-dt');
             _fFreeFrom = (_df && _df.value) ? _df.value : null;
             _fFreeTo = (_fFreeFrom && _dt2 && _dt2.value && _dt2.value >= _fFreeFrom) ? _dt2.value : null;
@@ -2241,6 +2258,7 @@
             _fPriceMin = _fPriceMax = _fSubsMin = null; _fAud = null; _sort = 'match'; _nicheSel = null;
             _fCpmMax = _fErMin = _fFreeFrom = _fFreeTo = null; _fDeals = false; _fClean = false; _fVerified = false;
             _fSubsMax = _fCpmMin = _fErMax = null;
+            _fReachMin = _fReachMax = _fEngMin = _fEngMax = _fHealthMin = _fHealthMax = null;
             done(); _refreshFilterChip(); loadFeed(false);
         });
     }
