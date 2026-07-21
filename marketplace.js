@@ -407,7 +407,10 @@
             '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
             '.fmx-card{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
-            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.65),0 0 24px rgba(245,191,79,0.35),0 0 60px rgba(245,191,79,0.15);}',
+            /* золото продвижения (редизайн 22.07): вместо кричащего жёлтого кольца с ореолами —
+               тонкая градиентная кромка «металл» + мягкая тень-свечение. Дорого, не пластик. */
+            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 12px 34px -14px rgba(245,191,79,0.35),0 4px 16px rgba(0,0,0,0.45);}',
+            '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(165deg,rgba(255,228,160,0.95),rgba(245,191,79,0.45) 28%,rgba(150,104,32,0.35) 55%,rgba(245,191,79,0.5) 80%,rgba(255,220,140,0.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
             '.fmx-fullbg .fmx-crow{margin-top:0;}',
@@ -839,7 +842,8 @@
             '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
             '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
             '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}',
-            '.fmx-li.prem>.fmx-lrow{border-color:transparent;box-shadow:0 0 0 1.5px rgba(245,191,79,0.6),0 0 18px rgba(245,191,79,0.3);}',
+            /* золото мини-строки — единый стиль с карточкой: тонкая кромка + мягкая тень, без кольца */
+            '.fmx-li.prem>.fmx-lrow{border-color:rgba(245,191,79,0.55);box-shadow:0 6px 18px -8px rgba(245,191,79,0.35),inset 0 1px 0 rgba(255,228,160,0.25);}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
             '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
