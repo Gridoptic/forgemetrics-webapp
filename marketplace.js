@@ -2750,16 +2750,19 @@
         if (P.grow && l.trend !== 'growing') return false;
         var av = Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; });
         if (av.length && av.indexOf(l.audience) < 0) return false;
+        var _nowSec = Date.now() / 1000;
         var map = { s: l.subscribers, p: l.price_low, r: l.avg_views,
             err: (l.reach_rate != null ? l.reach_rate : l.er), er: l.engagement_percent,
-            cpm: _cpm(l), h: l.health_score };
+            cpm: _cpm(l), h: l.health_score,
+            age: (l.channel_created_ts ? Math.round((_nowSec - l.channel_created_ts) / 2629800) : null),
+            adp: (l.ad_density != null ? Math.round(l.ad_density * 100) : null) };
         var k;
         for (k in _rf.mn) { if (_rf.mn[k] != null && (map[k] == null || map[k] < _rf.mn[k])) return false; }
         for (k in _rf.mx) { if (_rf.mx[k] != null && (map[k] == null || map[k] > _rf.mx[k])) return false; }
         return true;
     }
     var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Живые'], ['clean', 'Без накрутки'], ['grow', 'Растут']];
-    var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс', 1]];
+    var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
     function _rfBtnLabel() {
         var b = el('fmx-rfbtn'); if (!b) return;
