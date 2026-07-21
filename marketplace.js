@@ -1183,9 +1183,10 @@
             /* рендер только в поле зрения (+запас) — браузер нативно пропускает то, что вне экрана,
                и мгновенно дорисовывает при скролле (решение владельца 22.07). К карточкам Площадки
                с эффектами не применяем: paint-containment обрезал бы выступающие стикеры */
-            '.fmx-scard{content-visibility:auto;contain-intrinsic-size:auto 620px;}',
-            /* .fmx-li НЕ оптимизируем: строки раскрываются, а content-visibility запоминает
-               свёрнутую высоту → зазоры и сдвиг при развороте (баг-репорт владельца 22.07) */
+            /* рендер по видимости — ТОЛЬКО статичные карточки сетки каталога. НЕ на .fmx-li (строки
+               раскрываются) и НЕ на карточку внутри разворота строки (.fmx-lbox) — content-visibility
+               ломает замер высоты обёртки: зазоры/перекрытия (баг-репорты владельца 22.07) */
+            '#fmx-catGrid>.fmx-scard{content-visibility:auto;contain-intrinsic-size:auto 620px;}',
             /* GIF нельзя поставить на паузу (это картинка со встроенным циклом) — под оверлеем прячем */
             'body.fmx-bgfreeze #fmx-main img[src*=".gif"],body.fmx-bgfreeze #app img[src*=".gif"]{visibility:hidden;}',
             'body.fmx-bgfull #fmx-main,body.fmx-bgfull #app{visibility:hidden;}',
