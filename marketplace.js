@@ -2469,8 +2469,7 @@
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
             '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">Тап по дню — занято/свободно. Точка — спрос на дату</span>' +
             '<button class="fmx-seg" data-mcal="' + l.id + '" style="flex:0 0 auto;min-height:30px;padding:5px 12px;">Весь календарь</button></div>' +
-            '<div class="fmx-tgl' + (l.hot_discount_pct && !l.hot_manual ? ' on' : '') + '" data-mhot="' + l.id + '"><span class="sw"></span>' +
-            '<span style="flex:1;">Горящие даты: −15% на непроданные дни ближайшей недели</span></div>' +
+            /* авто-режим «−15% на неделю» удалён (решение владельца 22.07) — только точечные скидки */
             '<button class="fmx-seg" data-mhotadv="' + l.id + '" style="width:100%;margin-top:6px;min-height:34px;padding:6px 12px;color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-discount-2"></i> Точечные скидки — свои даты, время и процент' + (l.hot_manual ? ' · вкл' : '') + '</button></div>' +
             '<div class="fmx-mineacts">' +
             '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' +
@@ -2575,23 +2574,7 @@
                 openOwnerCalendar(l);
             });
         });
-        qsa(sub, '[data-mhot]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                var l = _mineById(+b.getAttribute('data-mhot')); if (!l) return;
-                // при активных точечных скидках авто-режим не действует — честно говорим, а не делаем вид
-                if (l.hot_manual) { _haptic('light'); uiAlert('Действуют точечные скидки — они приоритетнее авто-режима. Чтобы включить авто-режим, сначала убери точечные скидки в «Точечные скидки».'); return; }
-                var turnOn = !b.classList.contains('on');
-                apiPost('/api/v1/marketplace/listings/' + l.id + '/hot', { pct: turnOn ? 15 : 0 }).then(function (r) {
-                    if (!r || !r.ok) { _haptic('error'); uiAlert((r && r.error) || 'Не удалось'); return; }
-                    b.classList.toggle('on', turnOn);
-                    l.hot_discount_pct = turnOn ? 15 : null;
-                    delete _calData[l.id];   // календарь перечитает горящие дни
-                    _haptic('success');
-                    toast(turnOn ? 'Горящие даты включены: −15% на свободные дни ближайшей недели'
-                                 : 'Горящие даты выключены');
-                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
-            });
-        });
+        /* авто-режим «−15%» удалён (решение владельца 22.07): скидки настраиваются только вручную — «Точечные скидки» */
         qsa(sub, '[data-mtablo]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-mtablo')); if (!l) return;
@@ -3010,7 +2993,7 @@
             '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
             (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на ' + (r.horizon_days || 180) + ' дней вперёд</span></div>'
                 : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>Владелец не открыл этот месяц для продажи</span></div>' : '')) +
-            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>' + (r.hot.map ? 'Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%' : 'Горящие даты: −' + r.hot.pct + '% на ближайшие свободные дни') + '</span></div>' : '') +
+            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
             (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _calModeHtml() + (_ownerCalHot ? _ownerHotHtml(l, r) : _ownerSlotsHtml(l, r)) + '</div>' : '');   // владелец: занятость | скидки
@@ -3657,18 +3640,15 @@
             });
         });
     }
-    /* процент горящей скидки для даты (и времени): точечный режим (map, свой % на дату,
-       опц. только на выбранные слоты) приоритетнее авто-режима (общий % на дни недели) */
+    /* процент горящей скидки для даты (и времени): только ручные точечные скидки владельца
+       (авто-режим удалён 22.07 — человек сам настраивает скидку) */
     function _hotPct(l, dayIso, tmin) {
         var r = _calData[l.id];
-        if (!r || !r.hot || !dayIso) return null;
-        if (r.hot.map) {
-            var e = r.hot.map[dayIso];
-            if (!e || !e.pct) return null;
-            if (e.times && e.times.length) { if (tmin == null || e.times.indexOf(+tmin) < 0) return null; }
-            return e.pct;
-        }
-        return (r.hot.days || []).indexOf(dayIso) >= 0 ? r.hot.pct : null;
+        if (!r || !r.hot || !r.hot.map || !dayIso) return null;
+        var e = r.hot.map[dayIso];
+        if (!e || !e.pct) return null;
+        if (e.times && e.times.length) { if (tmin == null || e.times.indexOf(+tmin) < 0) return null; }
+        return e.pct;
     }
     function _hotPrice(l, price, dayIso, tmin) {
         var p = _hotPct(l, dayIso, tmin);
