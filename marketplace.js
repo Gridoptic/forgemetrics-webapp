@@ -3014,8 +3014,7 @@
                     if (!rr || !rr.ok) { _haptic('error'); uiAlert(rr && rr.error === 'forbidden' ? 'Управлять календарём может только владелец оффера' : 'Не удалось изменить месяц'); return; }
                     _haptic('success');
                     var rd = _calData[l.id]; if (rd) rd.open_months = rr.open_months;
-                    l.open_months = rr.open_months;
-                    toast(!monthOpen ? 'Месяц открыт — покупатели видят свободные дни' : 'Месяц закрыт — покупатели его не видят');
+                    toast(!monthOpen ? 'Месяц открыт — покупатели видят свободные дни' : ('Месяц закрыт — покупатели его не видят' + (rr.removed_hot_days ? '. Сняты точечные скидки: ' + rr.removed_hot_days : '')));
                     calDraw(box, l, 'edit');
                 }).catch(function () { _haptic('error'); uiAlert('Не удалось изменить месяц'); });
             });
@@ -3048,7 +3047,7 @@
                         var _hmap = (r.hot && r.hot.map) || {};
                         // занятый день: пускаем ТОЛЬКО если на нём осталась скидка — чтобы её можно было убрать (F5)
                         if (busy[iso] && !_hmap[iso]) { _haptic('error'); uiAlert('День занят — на занятые даты скидка не ставится'); return; }
-                        // горизонт скидок — 90 дней вперёд; дальше бэкенд откажет, объясняем заранее (F6)
+                        // горизонт скидок = r.horizon_days (сейчас 180); дальше бэкенд откажет, объясняем заранее
                         var _lim = new Date(); _lim.setDate(_lim.getDate() + (r.horizon_days || 180));
                         if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert('Скидку можно назначить максимум на ' + (r.horizon_days || 180) + ' дней вперёд'); return; }
                         _ownerHotDay = (_ownerHotDay === iso) ? null : iso;
@@ -3075,8 +3074,9 @@
                 _haptic('light');
                 calDraw(box, l, 'view');
                 var host = box.closest ? box.closest('#fmx-slotsBox') : null;
-                if (host) drawBuyerSlots(host, l), (function () { var f = host.querySelector('#fmx-calFull'); if (f) { f.style.display = 'block'; var mb = host.querySelector('#fmx-calMonth'); if (mb) mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц'; calDraw(f, l, 'view'); } })();
-                _syncWriteBtn(l);
+                // точечное обновление панели/корзины: полный календарь уже перерисован на месте
+                // с сохранённым месяцем — пересбор полосы сбрасывал его на текущий (находка CAL-F1)
+                if (host) _refreshBuyerExtra(host, l);
                 var dq = demand[iso];
                 toast(dq ? 'Дата выбрана. На неё уже ' + dq + ' ' + _plural(dq, 'запрос', 'запроса', 'запросов') + ' за неделю — решай быстрее'
                          : 'Дата выбрана — кнопка «Написать» обновилась');
@@ -3206,6 +3206,7 @@
         var map = (r.hot && r.hot.map) || {};
         var h = '';
         if (!_ownerHotDay) {
+            if (!((r.open_months || []).length)) return h + '<div style="font-size:11px;color:#f5bf4f;line-height:1.5;margin-top:9px;">Сначала открой месяц для рекламы в режиме «Занятость» — скидки назначаются в открытых месяцах.</div>';
             h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт — ' + ((r && r.horizon_days) || 180) + ' дней вперёд.</div>';
             var keys = Object.keys(map).sort();
             if (keys.length) {
@@ -3265,7 +3266,8 @@
                     out_of_horizon: 'Скидку можно назначить максимум на ' + ((_calData[l.id] || {}).horizon_days || 180) + ' дней вперёд',
                     no_slots: 'У оффера не настроены слоты по времени — назначь скидку на весь день',
                     bad_times: 'Выбранные времена не совпадают со слотами оффера',
-                    month_closed: 'Месяц закрыт для рекламы — открой его в режиме «Занятость»' };
+                    month_closed: 'Месяц закрыт для рекламы — открой его в режиме «Занятость»',
+                    day_busy: 'День занят — скидка на проданную дату не ставится' };
                 uiAlert(m[rr && rr.error] || 'Не удалось сохранить скидку');
                 return;
             }
@@ -3394,7 +3396,7 @@
         for (var k = 0; k < _hz; k++) { var isoK = _isoOf(dd); if (!busy[isoK] && _dOpen(isoK)) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
         var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         var h = '<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:9px;">' +
-            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span style="color:#5DCAA5;font-weight:600;">Свободно с ' + _fmtDayRu(freeFrom) + '</span>' : (!om.length ? '<span style="color:#8990a8;">●</span><span style="color:#8990a8;font-weight:600;">Владелец пока не открыл даты для продажи</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Открытые даты заняты</span>')) +
+            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span id="fmx-freeFrom" style="color:#5DCAA5;font-weight:600;cursor:pointer;text-decoration:underline dotted rgba(93,202,165,0.5);">Свободно с ' + _fmtDayRu(freeFrom) + ' ›</span>' : (!om.length ? '<span style="color:#8990a8;">●</span><span style="color:#8990a8;font-weight:600;">Владелец пока не открыл даты для продажи</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Открытые даты заняты</span>')) +
             (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">Обновлён ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
         h += '<div class="fmx-d14 num">';
         var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
@@ -3458,10 +3460,22 @@
             var open = full.style.display !== 'none';
             if (open) { full.style.display = 'none'; mBtn.innerHTML = '<i class="ti ti-calendar-month"></i> Весь месяц'; }
             else {
+                // первый свободный день дальше полосы — открываем календарь сразу на его месяце (F3)
+                if (!full._ym && freeFrom) full._ym = { y: +freeFrom.slice(0, 4), m: +freeFrom.slice(5, 7) - 1 };
                 full.style.display = 'block';
                 mBtn.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц';
                 calDraw(full, l, 'view');
             }
+            _haptic('light');
+        });
+        /* «Свободно с …» — кликабельный путь к первому свободному месяцу (F3) */
+        var ffEl = box.querySelector('#fmx-freeFrom');
+        if (ffEl) ffEl.addEventListener('click', function () {
+            var full = box.querySelector('#fmx-calFull'); if (!full || !freeFrom) return;
+            full._ym = { y: +freeFrom.slice(0, 4), m: +freeFrom.slice(5, 7) - 1 };
+            full.style.display = 'block';
+            var mb = box.querySelector('#fmx-calMonth'); if (mb) mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц';
+            calDraw(full, l, 'view');
             _haptic('light');
         });
     }
@@ -3476,7 +3490,10 @@
             if (rr.on) { (r.watch = r.watch || []).push(iso); toast('Сообщим в бота, когда владелец освободит эту дату'); }
             else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast('Слежение за датой снято'); }
             _haptic('light');
+            // раскрытый месячный календарь не схлопываем при пересборе полосы (находка CAL-F3)
+            var _wasOpen = (function () { var f = box.querySelector('#fmx-calFull'); return f && f.style.display !== 'none'; })();
             drawBuyerSlots(box, l);
+            if (_wasOpen) { var _f2 = box.querySelector('#fmx-calFull'); if (_f2) _f2.style.display = 'block'; var _mb = box.querySelector('#fmx-calMonth'); if (_mb) _mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц'; }
             _redrawFullIfOpen(box, l);
         }).catch(function () {});
     }
@@ -6873,7 +6890,7 @@
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
         // Горящие даты: скидка продавца на непроданные дни ближайшей недели
-        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты −' + l.hot_discount_pct + '%</span>') });
+        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты до −' + l.hot_discount_pct + '%</span>') });
         if (l.badges && l.badges.length) {
             var m = { live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
             l.badges.filter(function (b) { return b !== 'match'; }).forEach(function (b) {
@@ -7244,7 +7261,7 @@
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) out.push(['ti-heart-handshake', '#f5bf4f', dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок')]);
-        if (l.hot_discount_pct) out.push(['ti-discount-2', '#f5bf4f', 'Горящие даты −' + l.hot_discount_pct + '%']);
+        if (l.hot_discount_pct) out.push(['ti-discount-2', '#f5bf4f', 'Горящие даты до −' + l.hot_discount_pct + '%']);
         return out.slice(0, 6).map(function (x) {
             return '<i class="ti ' + x[0] + '" title="' + _esc(x[2]) + '" style="color:' + x[1] + ';font-size:11.5px;flex:0 0 auto;"></i>';
         }).join('');
