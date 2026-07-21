@@ -1051,19 +1051,7 @@ function refCardHtml(r) {
   </div>
 
   <div class="rf-card rf-glow">
-    <div class="rf-lbl" style="margin-top:0">Твой промокод</div>
-    <div class="rf-field" id="cab-promo-view">
-      <span class="code" id="cab-code">${escapeHtml(r.promo_code || '—')}</span>
-      <button class="rf-fbtn" id="cab-copy" aria-label="Копировать промокод"><i class="ti ti-copy"></i></button>
-      <button class="rf-fbtn" id="cab-edit" aria-label="Изменить промокод"><i class="ti ti-pencil"></i></button>
-    </div>
-    <div class="rf-promoed" id="cab-promo-edit">
-      <input class="rf-pinp" id="cab-pinp" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ПРИДУМАЙ КОД">
-      <div class="rf-pmsg" id="cab-pmsg">4–12 символов: латиница, цифры, _</div>
-      <div class="rf-prow"><button class="rf-pbtn" id="cab-pcancel">Отмена</button><button class="rf-pbtn save" id="cab-psave" disabled>Сохранить</button></div>
-    </div>
-
-    <div class="rf-lbl">Твоя ссылка</div>
+    <div class="rf-lbl" style="margin-top:0">Твоя ссылка</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
@@ -1075,7 +1063,7 @@ function refCardHtml(r) {
 
   <div class="rf-how">
     <span class="rf-eyebrow">Как это работает</span>
-    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой или промокодом с админами каналов.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой с админами каналов.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первый месяц и ${fDays} дней триала вместо ${bDays}.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого из его первых ${firstN} платежей тебе идут кредиты — тем больше, чем выше уровень.</p></div>
   </div>
