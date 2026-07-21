@@ -1134,14 +1134,19 @@
             '.fmx-sd{position:relative;}',
             '.fmx-sd .dm{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;}',
             '.fmx-sd.hot{border-color:rgba(245,191,79,0.6);background:rgba(245,191,79,0.1);color:#f5bf4f;}',
-            '.fmx-sd.sel{border:1.5px solid #818cf8;background:rgba(129,140,248,0.15);color:#c7cdff;}',
+            '.fmx-sd.sel{border:1.5px solid transparent;background:linear-gradient(145deg,#8b93ff,#6d63f0);color:#fff;font-weight:800;box-shadow:0 0 0 2px rgba(139,147,255,0.35),0 4px 14px rgba(109,99,240,0.55);transform:scale(1.07);z-index:1;animation:fmxSelPop .18s ease-out;}',
+            '.fmx-sd.sel .fmx-sdn{color:#fff;}',
+            '@keyframes fmxSelPop{0%{transform:scale(0.92);}100%{transform:scale(1.07);}}',
+            '@keyframes fmxJustFlash{0%{box-shadow:0 0 0 3px rgba(245,191,79,0.9);}100%{box-shadow:0 0 0 3px rgba(245,191,79,0);}}',
+            '.fmx-sd.just,.fmx-dd.just .c{animation:fmxJustFlash .8s ease-out;}',
             '.fmx-sd.watch{box-shadow:inset 0 0 0 1.5px rgba(245,191,79,0.65);}',
             '.fmx-sd.busy2{cursor:pointer;}',
             /* календарь: свободное — тихий фон, глаз цепляется за занятое/горящее/выбранное */
             '.fmx-sd.free{background:rgba(93,202,165,0.05);border-color:rgba(93,202,165,0.14);color:#7fbfa8;}',
             '.fmx-sd.free.hot{background:rgba(245,191,79,0.1);border-color:rgba(245,191,79,0.6);color:#f5bf4f;}',
             /* полоса 14 дней в развороте (вид закупщика) */
-            '.fmx-dd.sel .c{border:1.5px solid #818cf8;background:rgba(129,140,248,0.15);color:#c7cdff;}',
+            '.fmx-dd.sel .c{border:1.5px solid transparent;background:linear-gradient(145deg,#8b93ff,#6d63f0);color:#fff;font-weight:800;box-shadow:0 0 0 2px rgba(139,147,255,0.35),0 3px 10px rgba(109,99,240,0.5);animation:fmxSelPop2 .18s ease-out;}',
+            '@keyframes fmxSelPop2{0%{transform:scale(0.9);}100%{transform:scale(1);}}',
             '.fmx-dd.hot .c{background:rgba(245,191,79,0.12);color:#f5bf4f;border-color:rgba(245,191,79,0.5);}',
             '.fmx-dd.watch .c{box-shadow:inset 0 0 0 1.5px rgba(245,191,79,0.65);}',
             '.fmx-slmore{width:100%;margin-top:10px;}',
@@ -2518,6 +2523,8 @@
                         r.slots_updated_at = new Date().toISOString();
                         _calData[l.id] = r;
                         draw(r);
+                        // вспышка на изменённом дне — видно, где сработал тап
+                        var _jd = box.querySelector('[data-sd="' + iso + '"]'); if (_jd) _jd.classList.add('just');
                         toast('Календарь обновлён — закупщики уже видят новые даты');
                     }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
                 });
@@ -3093,6 +3100,8 @@
             if (rr.busy) { r.busy.push(iso); } else { r.busy = r.busy.filter(function (x) { return x !== iso; }); }
             r.slots_updated_at = new Date().toISOString();
             calDraw(box, l, 'edit');
+            // вспышка на изменённом дне — визуально видно, где сработал тап
+            var _jc = box.querySelector('[data-cd="' + iso + '"]'); if (_jc) _jc.classList.add('just');
             toast('Календарь обновлён — закупщики уже видят новые даты');
         }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
     }
