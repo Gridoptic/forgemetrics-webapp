@@ -6920,6 +6920,8 @@
     function badgeItems(l) {
         var items = [];
         items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
+        // ниша — как на Радаре (владелец 22.07: «на карточке Площадки не отображается ниша»)
+        if (l.niche) items.push({ k: 'niche', h: _bk('niche', '<span class="fmx-bdg" style="color:#c7ccf7;border-color:rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><i class="ti ti-tag" style="color:#818cf8;"></i>' + _esc(l.niche) + '</span>') });
         // реальная проверка (бот — админ канала), не фейк-галочка: продавец действительно управляет размещением
         if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
         // антифрод-вердикт: показываем только на чистых (зелёное здоровье, аномалий и наплыва ботов нет)
