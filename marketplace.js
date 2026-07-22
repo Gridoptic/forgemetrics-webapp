@@ -7202,7 +7202,7 @@
         var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);   // RR только из ядра, без ручного av/subs
         var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
-        var est = (l.price_low != null);   // цена-оценка по нише (Радар), а не названная владельцем
+        var est = (l.price_low != null) && !l.owner_price;   // цена-оценка по нише; НО названная владельцем (owner_price) — не оценка → CPM/CPV честные, показываем
         var ph = (est && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;   // верх вилки: пол за точку не выдаём
         var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
         var cpmHi = (cpm != null && ph && _reach(l)) ? Math.round(ph / _reach(l) * 1000) : null;
