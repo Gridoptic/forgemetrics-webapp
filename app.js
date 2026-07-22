@@ -1708,6 +1708,9 @@ function setupEventListeners() {
             if (action) handleAction(action);
         });
     });
+    // иконка AI-стратегии в панели — тот же SVG-«маршрут», что на главном экране (единый источник)
+    const stIc = document.getElementById('dp-strategy-ic');
+    if (stIc && typeof STRATEGY_MAP_SVG !== 'undefined') stIc.innerHTML = STRATEGY_MAP_SVG;
 
     setupPostEventListeners();
 

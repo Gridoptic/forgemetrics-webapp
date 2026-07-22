@@ -540,6 +540,8 @@ button:active {
     border: 1px solid rgba(129, 140, 248, 0.45);
 }
 .icon-strategy svg { display: block; }
+/* в панели тайлы 30px и иконки мельче — ужимаем SVG-стратега под общий вид */
+.drawer-item-icon.icon-strategy svg { width: 18px; height: 18px; }
 
 .action-card-subtitle.highlight {
     color: var(--color-green-400);
