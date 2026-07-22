@@ -303,7 +303,7 @@
         var cls = l.health_class && m[l.health_class] ? (l.health_class === 'yellow' ? 'amber' : l.health_class) : null;
         // класс здоровья — ТОЛЬКО из ядра: health_class, иначе статус охвата reach_status (тир+ниша,
         // аномалия RR>100% = red). Никаких зашитых порогов RR 10/3 на фронте.
-        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма') ? 'green' : (st === 'низковат') ? 'amber' : 'red'; }
+        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма' || st === 'выше нормы') ? 'green' : (st === 'низковат') ? 'amber' : 'red'; }
         if (!cls) return { cls: 'none', color: '#565b73', word: 'Нет данных' };
         return { cls: cls, color: m[cls][0], word: m[cls][1] };
     }
@@ -315,7 +315,7 @@
         if (mini) return '<span class="fmx-tl fmx-tlm" title="Здоровье канала: ' + h.word + '">' + dots + '</span>';
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
-    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
+    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
     /* чёткий предупреждающий треугольник «!» (не эмодзи) — виден на тёмном фоне */
     function _warnTri(sz) { sz = sz || 14; return '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" style="vertical-align:-2px;flex:0 0 auto;"><path d="M12 3.4 L21.7 20.2 A1.35 1.35 0 0 1 20.55 22.2 L3.45 22.2 A1.35 1.35 0 0 1 2.3 20.2 Z" fill="#f5b23d" stroke="#0a0d18" stroke-width="1.4" stroke-linejoin="round"/><rect x="10.9" y="8.4" width="2.2" height="6.2" rx="1.1" fill="#0a0d18"/><circle cx="12" cy="17.8" r="1.3" fill="#0a0d18"/></svg>'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
@@ -6995,7 +6995,8 @@
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _erv + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
+            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');   /* 0.003% округлилось в 0 — не «0%» как мёртвый канал (аудит #4) */
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
         var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
@@ -7030,7 +7031,7 @@
             }
             if (l.ad_density != null && l.struct_posts) {
                 var apct = Math.round(l.ad_density * 100);
-                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');   /* 0% рекламных = нейтрально, не зелёный вердикт: отсутствие рекламы недоказуемо (аудит #5) */
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
@@ -7217,7 +7218,8 @@
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _erv + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
+            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');   /* 0.003% округлилось в 0 — не «0%» как мёртвый канал (аудит #4) */
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
         // пометка «оценка» при малой/недозревшей выборке охвата — честно про уверенность
@@ -7257,7 +7259,7 @@
             // а не голое «0%»: «0% · 200 постов» = «в 200 проверенных постах явной рекламы не нашли». Нужен struct_posts.
             if (l.ad_density != null && l.struct_posts) {
                 var apct = Math.round(l.ad_density * 100);
-                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');   /* 0% рекламных = нейтрально, не зелёный вердикт: отсутствие рекламы недоказуемо (аудит #5) */
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
