@@ -8263,4 +8263,6 @@
 
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
+    // прямой вход в Радар (каталог каналов) из бокового меню — открываем рынок и переключаем вкладку
+    window.__openRadar = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('catalog'); } catch (e) {} }, 220); };
 })();

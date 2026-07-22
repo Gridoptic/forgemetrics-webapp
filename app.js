@@ -738,9 +738,38 @@ function formatNumber(num) {
 
 
 function openDrawer() {
+    fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// шапка панели: реальный аватар Telegram (photo_url) + имя + чип тарифа (из кабинета, кэш)
+function fillDrawerHeader() {
+    const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+    const nameEl = document.getElementById('dp-name');
+    const avEl = document.getElementById('dp-av');
+    const chipEl = document.getElementById('dp-chip');
+    if (nameEl) nameEl.textContent = u.first_name || 'Профиль';
+    if (avEl) {
+        const letter = (u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U';
+        avEl.innerHTML = u.photo_url ? `<img src="${escapeHtml(u.photo_url)}" alt="">` : letter;
+    }
+    const setChip = (tier, paid) => {
+        if (!chipEl || !tier) return;
+        chipEl.className = 'dp-chip' + (paid ? ' gold' : '');
+        chipEl.innerHTML = `<i class="ti ti-crown"></i> ${escapeHtml(tier)}`;
+    };
+    const cu = cabinetData && cabinetData.user;
+    if (cu && cu.tier_display) {
+        setChip(cu.tier_display, cu.tier && cu.tier !== 'free' && cu.tier !== 'trial');
+    } else {
+        apiRequest('/api/v1/user/cabinet').then(d => {
+            cabinetData = d;
+            const x = d && d.user;
+            setChip((x && x.tier_display) || 'Free', x && x.tier && x.tier !== 'free' && x.tier !== 'trial');
+        }).catch(() => {});
+    }
 }
 
 
@@ -836,6 +865,13 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'radar') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openRadar === 'function') { window.__openRadar(); }
+        return;
+    }
+
+    if (actionId === 'settings') { openCabinet('settings'); return; }
 
     if (actionId === 'profile') { openCabinet(); return; }
     if (actionId === 'referral' || actionId === 'invite_friend') { openReferral(); return; }

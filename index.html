@@ -8,7 +8,7 @@
     <title>ForgeMetrics</title>
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css?v=20260721n">
+    <link rel="stylesheet" href="styles.css?v=20260722b">
     <link rel="stylesheet" href="audit.css?v=20260704f">
     <link rel="stylesheet" href="strategy.css?v=20260715h">
     <link rel="stylesheet" href="rewrite.css?v=20260715c">
@@ -66,8 +66,12 @@
     <div id="drawer-overlay" class="drawer-overlay"></div>
 
     <aside id="drawer" class="drawer">
-        <div class="drawer-header">
-            <div class="drawer-title">Меню</div>
+        <div class="drawer-header drawer-profile">
+            <div class="dp-av" id="dp-av">K</div>
+            <div class="dp-info">
+                <div class="dp-name" id="dp-name">Профиль</div>
+                <span class="dp-chip" id="dp-chip"><i class="ti ti-crown"></i> Free</span>
+            </div>
             <button class="drawer-close" id="drawer-close">
                 <i class="ti ti-x"></i>
             </button>
@@ -124,7 +128,21 @@
         </div>
 
         <div class="drawer-section">
-            <div class="drawer-section-label">Деньги</div>
+            <div class="drawer-section-label">Каналы и рынок</div>
+            <button class="drawer-item" data-action="my_channels">
+                <div class="drawer-item-icon icon-blue">
+                    <i class="ti ti-broadcast"></i>
+                </div>
+                <div class="drawer-item-text">Мои каналы</div>
+                <i class="ti ti-chevron-right drawer-item-chevron"></i>
+            </button>
+            <button class="drawer-item" data-action="radar">
+                <div class="drawer-item-icon icon-purple">
+                    <i class="ti ti-radar-2"></i>
+                </div>
+                <div class="drawer-item-text">Радар · каталог каналов</div>
+                <i class="ti ti-chevron-right drawer-item-chevron"></i>
+            </button>
             <button class="drawer-item" data-action="marketplace">
                 <div class="drawer-item-icon icon-green">
                     <i class="ti ti-building-store"></i>
@@ -132,32 +150,12 @@
                 <div class="drawer-item-text">Биржа рекламы</div>
                 <i class="ti ti-chevron-right drawer-item-chevron"></i>
             </button>
-            <button class="drawer-item" data-action="find_advertisers">
-                <div class="drawer-item-icon icon-green">
-                    <i class="ti ti-coin"></i>
-                </div>
-                <div class="drawer-item-text">Найти рекламодателей</div>
-                <i class="ti ti-chevron-right drawer-item-chevron"></i>
-            </button>
-            <button class="drawer-item" data-action="post_price">
-                <div class="drawer-item-icon icon-green">
-                    <i class="ti ti-calculator"></i>
-                </div>
-                <div class="drawer-item-text">Цена поста</div>
-                <i class="ti ti-chevron-right drawer-item-chevron"></i>
-            </button>
-            <button class="drawer-item" data-action="negotiation_templates">
-                <div class="drawer-item-icon icon-green">
-                    <i class="ti ti-message-circle"></i>
-                </div>
-                <div class="drawer-item-text">Шаблоны переговоров</div>
-                <i class="ti ti-chevron-right drawer-item-chevron"></i>
-            </button>
         </div>
 
         <div class="drawer-divider"></div>
 
         <div class="drawer-section">
+            <div class="drawer-section-label">Аккаунт</div>
             <button class="drawer-item" data-action="referral">
                 <div class="drawer-item-icon icon-pink">
                     <i class="ti ti-heart-handshake"></i>
@@ -172,11 +170,11 @@
                 <div class="drawer-item-text">Тариф и подписка</div>
                 <i class="ti ti-chevron-right drawer-item-chevron"></i>
             </button>
-            <button class="drawer-item" data-action="voice_settings">
+            <button class="drawer-item" data-action="settings">
                 <div class="drawer-item-icon icon-amber">
-                    <i class="ti ti-microphone"></i>
+                    <i class="ti ti-settings"></i>
                 </div>
-                <div class="drawer-item-text">Стиль письма</div>
+                <div class="drawer-item-text">Настройки и помощь</div>
                 <i class="ti ti-chevron-right drawer-item-chevron"></i>
             </button>
         </div>
@@ -596,14 +594,14 @@
     } catch (e) {}
 })();
 </script>
-<script src="app.js?v=20260722a"></script>
+<script src="app.js?v=20260722b"></script>
 <script src="audit.js?v=20260704f"></script>
 <script src="strategy.js?v=20260715h"></script>
 <script src="rewrite.js?v=20260715e"></script>
 <script src="content_plan.js?v=20260715e"></script>
 <script src="competitors.js?v=20260704f"></script>
 <script src="ad_exchange.js?v=20260719b"></script>
-<script src="marketplace.js?v=20260722w"></script>
+<script src="marketplace.js?v=20260722x"></script>
 
 </body>
 </html>
