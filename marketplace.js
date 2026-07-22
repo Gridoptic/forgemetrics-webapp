@@ -1647,7 +1647,7 @@
             meta.push('<span>' + x.count + ' ' + kindLabel + '</span>');
             return '<div class="fmx-ptile" style="border-color:' + col + ';">' +
                 '<div class="fmx-pthead"><span class="fmx-ptdot" style="background:' + (has ? col : 'rgba(255,255,255,0.15)') + ';"></span><span class="fmx-ptn">' + _esc(x.niche) + '</span></div>' +
-                '<div class="fmx-ptv">' + (has ? _num(x.median_cpm) + ' <span class="fmx-ptu">₽ · CPM</span>' : (x.median_er != null ? x.median_er + ' <span class="fmx-ptu">% · ER</span>' : '<span class="fmx-ptu">нет данных</span>')) + '</div>' +
+                '<div class="fmx-ptv">' + (has ? _num(x.median_cpm) + ' <span class="fmx-ptu">₽ · CPM' + (x.cpm_own === false ? ' · оценка' : '') + '</span>' : (x.median_er != null ? x.median_er + ' <span class="fmx-ptu">% · ER</span>' : '<span class="fmx-ptu">нет данных</span>')) + '</div>' +
                 (has ? '<div class="fmx-pbar"><div class="fmx-pbarf" style="width:' + gauge + '%;background:' + col + ';"></div></div>' : '') +
                 '<div class="fmx-ptmeta">' + meta.join('') + '</div>' +
                 '</div>';
@@ -2775,6 +2775,19 @@
     function openNichePick() {
         var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
         var countFor = _nicheCounts(arr);
+        // Авто-всплытие (План 22.07): ниши, что ЕСТЬ в каталоге, но НЕТ в хардкод-таксономии,
+        // показываем отдельной группой — новая ниша появляется сама, без ручной правки списка.
+        var _taxSet = {};
+        NICHE_TAX.forEach(function (g) { g[1].forEach(function (c) { _taxSet[String(_chipLM(c).m).toLowerCase().replace(/ё/g, 'е')] = 1; }); });
+        var _extra = {};
+        (arr || []).forEach(function (l) {
+            var nn = l.niche && String(l.niche).trim(); if (!nn) return;
+            var key = nn.toLowerCase().replace(/ё/g, 'е');
+            var covered = !!_taxSet[key];
+            if (!covered) { for (var t in _taxSet) { if (key.indexOf(t + ' · ') === 0) { covered = true; break; } } }
+            if (!covered) _extra[nn] = (_extra[nn] || 0) + 1;
+        });
+        var _extraNiches = Object.keys(_extra).sort(function (a, b) { return _extra[b] - _extra[a]; });
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
         bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm solid';
@@ -2798,6 +2811,14 @@
                     return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(c.m) + '">' + _esc(c.l) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
                 }).join('') + '</div>';
             });
+            var _ex = _extraNiches.filter(function (nm) { return !q || nm.toLowerCase().replace(/ё/g, 'е').indexOf(q) >= 0; });
+            if (_ex.length) {
+                hits += _ex.length;
+                html += '<div class="fmx-npg">Найдено в каталоге</div><div class="fmx-fxw">' + _ex.map(function (nm) {
+                    var n = countFor(nm), sel = (_nicheSel && String(_nicheSel).toLowerCase() === String(nm).toLowerCase());
+                    return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(nm) + '">' + _esc(nm) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
+                }).join('') + '</div>';
+            }
             var box = el('fmx-nlist'); if (box) box.innerHTML = hits ? html : '<div style="color:#565b73;font-size:12.5px;text-align:center;padding:22px 4px;">Ничего не нашлось. Попробуй другое слово.</div>';
             qsa(bg, '[data-m]').forEach(function (b) { b.addEventListener('click', function () { pick(b.getAttribute('data-m')); }); });
         }
