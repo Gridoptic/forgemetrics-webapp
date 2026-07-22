@@ -7250,9 +7250,9 @@
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
-            var priceTag = l.price_negotiable ? '' : (est
-                ? ' <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span>'
-                : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">цена владельца</span>');
+            // Бейдж только для ЦЕНЫ ВЛАДЕЛЬЦА (зелёный). У оценки ниши бейджа нет — заголовок «≈ Реклама ·
+            // оценка ниши» уже это говорит, второй «оценка ниши» дублировал. Зелёный станет виден по мере роста Площадки.
+            var priceTag = (est || l.price_negotiable) ? '' : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">цена владельца</span>';
             ad = '<div class="fmr-sec">' + (est ? '≈ Реклама · оценка ниши' : 'Реклама · цена владельца') + ' <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
