@@ -6975,7 +6975,7 @@
         var rr = (l.er != null) ? l.er : null, rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.min_price != null) ? l.min_price : null;
         var cpm = _cpm(l);
-        var conv = 1, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;
+        var conv = 1, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var rrHtml = '';
         if (rr != null && rstat) {
             var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
@@ -7185,7 +7185,7 @@
         var ph = (est && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;   // верх вилки: пол за точку не выдаём
         var cpm = _cpm(l);   // тот же CPM, что в строке списка — чтобы не было расхождения список↔карточка
         var cpmHi = (cpm != null && ph && _reach(l)) ? Math.round(ph / _reach(l) * 1000) : null;
-        var conv = 1, gained = (av ? Math.round(av * conv / 100) : 0), cps = (pp && gained) ? Math.round(pp / gained) : null;  // дефолт 1% — реалистичен для холодного трафика (было 7%, завышало результат в разы)
+        var conv = 1, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;  // дефолт 1% — реалистичен для холодного трафика (было 7%, завышало результат в разы)
         // кольцо индекса здоровья
         var ring = '';
         if (score != null) {
@@ -7483,7 +7483,7 @@
                 var line = inp.closest('[data-flow]'); if (!line) return;
                 var pp = +line.getAttribute('data-pp'), av = +line.getAttribute('data-av');
                 var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
-                var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
+                var _grw = av * c / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
                 var card = inp.closest('.fmx-scard') || inp.closest('.fmx-card'); if (!card) return;
                 var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
                 var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
@@ -7939,7 +7939,7 @@
     function _flowBlock(l) {
         var pp = l.min_price, av = l.avg_views;
         if (!pp || !av) return '';
-        var conv = 1, gained = Math.round(av * conv / 100), cps = Math.round(pp / Math.max(1, gained));
+        var conv = 1, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
         return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
             '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="1"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
@@ -8129,7 +8129,7 @@
                 var line = inp.closest('[data-flow]'); if (!line) return;
                 var pp = +line.getAttribute('data-pp'), av = +line.getAttribute('data-av');
                 var c = parseFloat(inp.value); if (isNaN(c) || c <= 0) return; if (c > 100) c = 100;
-                var gained = Math.round(av * c / 100), cps = Math.round(pp / Math.max(1, gained));
+                var _grw = av * c / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
                 var box = el('fmx-flowBox'); if (!box) return;
                 var cpsEl = box.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
                 var gEl = box.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
