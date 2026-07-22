@@ -7313,13 +7313,20 @@
             // контакт — ПОДСКАЗКА, а не замок. Кликабелен для TG-ника, почты и сайта (открыть чат/почту/ссылку);
             // невнятную строку показываем текстом (не линкуем — чтоб не увести не туда)
             (function () {
-                var ci = l.contact ? _ctcInfo(l.contact) : null;
-                if (!ci) return '';
-                var ic = ci.kind === 'tg' ? 'ti-brand-telegram' : ci.kind === 'mail' ? 'ti-mail' : ci.kind === 'url' ? 'ti-link' : 'ti-address-book';
-                var body = (ci.kind === 'text')
-                    ? '<b style="color:#c2c6d2;word-break:break-all;">' + _esc(ci.label) + '</b>'
-                    : '<b class="fmr-ctc" data-ctc="' + _esc(ci.val) + '" data-ctk="' + ci.kind + '" style="color:#818cf8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;word-break:break-all;">' + _esc(ci.label) + '</b>';
-                return '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ' + ic + '" style="font-size:12px;color:#818cf8;flex:0 0 auto;"></i> Реклама: ' + body + '</div>';
+                function _ctcLine(labelTxt, val) {
+                    var ci = val ? _ctcInfo(val) : null;
+                    if (!ci) return '';
+                    var ic = ci.kind === 'tg' ? 'ti-brand-telegram' : ci.kind === 'mail' ? 'ti-mail' : ci.kind === 'url' ? 'ti-link' : 'ti-address-book';
+                    var body = (ci.kind === 'text')
+                        ? '<b style="color:#c2c6d2;word-break:break-all;">' + _esc(ci.label) + '</b>'
+                        : '<b class="fmr-ctc" data-ctc="' + _esc(ci.val) + '" data-ctk="' + ci.kind + '" style="color:#818cf8;cursor:pointer;text-decoration:underline;text-underline-offset:2px;word-break:break-all;">' + _esc(ci.label) + '</b>';
+                    return '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ' + ic + '" style="font-size:12px;color:#818cf8;flex:0 0 auto;"></i> ' + labelTxt + ': ' + body + '</div>';
+                }
+                // Два контакта: реклама + сотрудничество (чётко помеченные Telegram-ссылки). Ссылка на сам
+                // канал сюда НЕ попадает — для перехода есть кнопка «Открыть канал». Нет пометки — не показываем.
+                var adc = l.contact_ad, coop = l.contact_coop;
+                if (!adc && !coop && l.contact) adc = l.contact;   // старые данные: один контакт → «Реклама»
+                return _ctcLine('Реклама', adc) + _ctcLine('Сотрудничество', coop);
             })() +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
