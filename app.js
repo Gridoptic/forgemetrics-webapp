@@ -758,7 +758,8 @@ function fillDrawerHeader() {
     const setChip = (tier, paid) => {
         if (!chipEl || !tier) return;
         chipEl.className = 'dp-chip' + (paid ? ' gold' : '');
-        chipEl.innerHTML = `<i class="ti ti-crown"></i> ${escapeHtml(tier)}`;
+        // корона — только у платных тарифов; Free без иконки (решение владельца 22.07)
+        chipEl.innerHTML = (paid ? '<i class="ti ti-crown"></i> ' : '') + escapeHtml(tier);
     };
     const cu = cabinetData && cabinetData.user;
     if (cu && cu.tier_display) {
