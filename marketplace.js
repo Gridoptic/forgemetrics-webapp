@@ -7229,7 +7229,7 @@
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
-            ad = '<div class="fmr-sec">≈ Реклама · оценка <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
+            ad = '<div class="fmr-sec">' + (est ? '≈ Реклама · оценка ниши' : 'Реклама · цена владельца') + ' <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') + /* при цене-поле («от N ₽» без вилки) CPM раздут и врёт — не показываем */
