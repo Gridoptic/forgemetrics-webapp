@@ -865,6 +865,32 @@ function fmClientLog(msg) {
     } catch (e) {}
 }
 
+// Учёт активности (аналитика владельца): открытия экранов/функций копятся в очередь и
+// уходят батчем (дебаунс 4с + сброс при сворачивании). ИИ-вызовы не шлём — они уже
+// учитываются на сервере по факту (api_calls).
+var _fmTrackQ = [], _fmTrackT = null;
+function fmTrack(e) {
+    try {
+        _fmTrackQ.push(String(e).slice(0, 48));
+        if (_fmTrackQ.length > 20) _fmTrackQ = _fmTrackQ.slice(-20);
+        clearTimeout(_fmTrackT);
+        _fmTrackT = setTimeout(_fmFlushTrack, 4000);
+    } catch (err) {}
+}
+function _fmFlushTrack() {
+    if (!_fmTrackQ.length) return;
+    var ev = _fmTrackQ.splice(0, 20);
+    try {
+        apiRequest('/api/v1/user/track', {
+            method: 'POST',
+            body: JSON.stringify({ events: ev }),
+            headers: { 'Content-Type': 'application/json' },
+        }).catch(function () {});
+    } catch (err) {}
+}
+document.addEventListener('visibilitychange', function () { if (document.hidden) _fmFlushTrack(); });
+window.__fmTrack = fmTrack;   // для marketplace.js (вкладки Площадки/Радара)
+
 function _fmElDesc(el) {
     try { return (el.tagName || '?') + (el.id ? '#' + el.id : '') + ' cls=' + String(el.className || '').slice(0, 70); } catch (e) { return '?'; }
 }
@@ -964,6 +990,7 @@ const PLACEHOLDER_CONFIG = {
 
 function handleAction(actionId) {
     closeDrawer();
+    fmTrack('fn_' + actionId);   // аналитика: какие функции открывают
 
     if (actionId === 'create_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
@@ -1513,6 +1540,7 @@ async function openTariffs() {
         }
     } catch (e) { tfReturn = 'dashboard'; }
     hapticLight();
+    fmTrack('tariffs');
     showScreen('tariffs');
     const body = document.getElementById('tariffs-body');
     if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Загрузка…</div>';
@@ -5110,6 +5138,7 @@ async function main() {
 
     startLiveUpdate();
     initChannelsAutoRefresh();
+    fmTrack('app_open');   // аналитика: вход в приложение
     // при возврате в приложение снимаем залипшие оверлеи/блокировку скролла — чтобы не нужен
     // был перезаход, если боковое меню/экран «застряли» после сворачивания
     document.addEventListener('visibilitychange', function () { if (!document.hidden) fmUnstick(); });
