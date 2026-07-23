@@ -787,6 +787,18 @@ function formatNumber(num) {
 }
 
 
+// Есть ли РЕАЛЬНО видимый модальный слой. Важно: проверка по видимости, а не по наличию
+// в DOM — статичные модалки index.html (model-picker, locked-feature) всегда в DOM со
+// style="display:none"; проверка «querySelector нашёл .modal-overlay» считала их открытыми,
+// из-за чего блокировка прокрутки не снималась никогда (приложение переставало листаться).
+function fmAnyModalVisible() {
+    var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active');
+    for (var i = 0; i < list.length; i++) {
+        try { if (getComputedStyle(list[i]).display !== 'none') return true; } catch (e) {}
+    }
+    return false;
+}
+
 // Снимает «залипшие» модальные состояния, из-за которых после сворачивания/возврата в
 // приложение экран становится не нажимаемым/не листается: осиротевший оверлей (не удалился
 // по таймеру при сворачивании/Telegram-назад) перекрывает всё, либо осталась блокировка
@@ -796,8 +808,7 @@ function fmUnstick() {
     try {
         document.querySelectorAll('.pw-sheet-ov:not(.show), .lang-ov:not(.show), .bs-overlay:not(.visible), .bs-sheet:not(.visible)')
             .forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
-        var openModal = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active');
-        if (!openModal) {
+        if (!fmAnyModalVisible()) {
             document.documentElement.classList.remove('cs-modal-open');
             document.body.classList.remove('cs-modal-open');
         }
@@ -849,9 +860,9 @@ function fillDrawerHeader() {
 function closeDrawer() {
     els.drawer.classList.remove('active');
     els.drawerOverlay.classList.remove('active');
-    // блокировку фона снимаем, только если поверх не открыт другой модальный слой
-    var _other = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay');
-    if (!_other) {
+    // блокировку фона снимаем, только если поверх не ВИДЕН другой модальный слой
+    // (проверка по видимости: статичные скрытые модалки index.html — не «открытые»)
+    if (!fmAnyModalVisible()) {
         document.documentElement.classList.remove('cs-modal-open');
         document.body.classList.remove('cs-modal-open');
     }
