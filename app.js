@@ -627,7 +627,16 @@ async function loadReachSeries() {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
-            drawReachChart(host, r.series, r.dates || [], r.days || 30, endLabel);
+            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel };
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel);
+            // Страховка от «сжатого» графика: Telegram при старте может отдать вьюпорт ШИРЕ
+            // финального — график рисовался под неё и потом ужимался вместе с экраном
+            // (пропорционально падала высота). Если фактическая ширина разошлась с той, под
+            // которую рисовали, — перерисовываем по фактической.
+            setTimeout(function () {
+                var svg = host.querySelector('svg');
+                if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
+            }, 300);
             const tr = document.getElementById('pw-trend');
             const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             if (r.stale) {
@@ -664,6 +673,19 @@ function markPulseStale(days, lastDate) {
     badge.className = 'pw-health dormant';
     badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
 }
+
+// последняя серия охвата — для перерисовки графика при смене размеров экрана
+var _reachLast = null, _reachRedrawT = null;
+function _reachRedraw() {
+    try {
+        var host = document.getElementById('pw-chart');
+        if (!host || !_reachLast || !host.clientWidth) return;
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel);
+    } catch (e) {}
+}
+function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
+window.addEventListener('resize', _reachRedrawSoon);
+try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
 function drawReachChart(host, DATA, dates, days, endLabel) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
