@@ -150,6 +150,12 @@ button:active {
     box-sizing: border-box;
 }
 
+/* Экраны «Написать пост» и «Мои каналы» прозрачны (как главный): задний фон у ВСЕХ экранов
+   рисует единый фикс-слой body::before — закреплено явно, чтобы будущая правка не добавила
+   экрану собственный фон и палитра не разъехалась с главным экраном */
+.screen-post-create, .screen-post-thinking, .screen-post-question, .screen-post-result,
+.screen-channels { background: transparent; }
+
 .screen-loading,
 .screen-error {
     display: flex;
@@ -4115,7 +4121,10 @@ html.cs-modal-open {
 }
 
 /* ===================== Личный кабинет ===================== */
-.screen-cabinet{background:var(--bg-base);background-image:var(--app-bg-image);}
+/* Кабинет прозрачен, как главный экран: задний фон рисует ЕДИНЫЙ фикс-слой body::before.
+   Раньше палитра красилась на самом экране — накладывалась второй раз поверх общей,
+   растягивалась на всю высоту прокрутки и ехала вместе с контентом (фон отличался от главного). */
+.screen-cabinet{background:transparent;}
 .cab-toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(16px);background:rgba(20,24,40,0.96);border:1px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;z-index:100050;transition:all .3s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:90vw;text-align:center;}
 .cab-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .cab-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
