@@ -828,6 +828,25 @@ function fmUnstick() {
 // Проверяем реальными пробными точками (elementFromPoint) внутри меню; чужой перехватчик
 // нейтрализуем (pointer-events:none) и пишем виновника в консоль — для точного диагноза.
 // Пока drawer открыт, легально НИЧТО не должно его перекрывать (все действия сперва закрывают меню).
+// Маячок диагностики: аномалии интерфейса (застрявшие слои, аварийные закрытия) уходят
+// в серверный журнал — виновник виден в journalctl без доступа к консоли устройства.
+var _fmLogSent = 0;
+function fmClientLog(msg) {
+    try {
+        if (_fmLogSent > 8) return;   // потолок на сессию — не спамим сервер
+        _fmLogSent++;
+        apiRequest('/api/v1/user/client-log', {
+            method: 'POST',
+            body: JSON.stringify({ events: [String(msg).slice(0, 280)] }),
+            headers: { 'Content-Type': 'application/json' },
+        }).catch(() => {});
+    } catch (e) {}
+}
+
+function _fmElDesc(el) {
+    try { return (el.tagName || '?') + (el.id ? '#' + el.id : '') + ' cls=' + String(el.className || '').slice(0, 70); } catch (e) { return '?'; }
+}
+
 function fmProbeDrawer() {
     try {
         if (!els.drawer || !els.drawer.classList.contains('active')) return;
@@ -839,6 +858,7 @@ function fmProbeDrawer() {
                 var hit = document.elementFromPoint(x, y);
                 if (!hit || hit === els.drawer || els.drawer.contains(hit)) break;
                 try { console.warn('[FM] слой поверх меню нейтрализован:', hit.tagName, hit.id || '', String(hit.className || '').slice(0, 80)); } catch (e) {}
+                fmClientLog('drawer-blocker: ' + _fmElDesc(hit));
                 hit.style.pointerEvents = 'none';
             }
         });
@@ -854,8 +874,10 @@ function openDrawer() {
     // «сквозь» затемнение (оверлей ловит клики, но не скролл)
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
-    // после завершения анимации выезда — проверка, что меню реально сверху (самолечение)
+    // после завершения анимации выезда — проверка, что меню реально сверху (самолечение);
+    // вторая проба позже ловит блокираторы, появившиеся после открытия
     setTimeout(fmProbeDrawer, 450);
+    setTimeout(fmProbeDrawer, 1400);
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
@@ -1772,6 +1794,29 @@ function setupEventListeners() {
     // свайп по затемнению не должен прокручивать задний экран (скролл «проваливался» сквозь
     // оверлей: фон листался, а меню не закрывалось — свайп не является кликом)
     els.drawerOverlay.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+    // АВАРИЙНОЕ закрытие меню (capture-фаза — срабатывает ПЕРВОЙ, до любого перехватчика):
+    // клик вне меню при открытом меню закрывает его, ДАЖЕ если тап съел посторонний слой.
+    // Если клик съел не наш оверлей — шлём виновника в серверный журнал (диагностика зависаний).
+    document.addEventListener('click', function (e) {
+        try {
+            if (!els.drawer || !els.drawer.classList.contains('active')) return;
+            var r = els.drawer.getBoundingClientRect();
+            var inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+            if (!inside) {
+                if (e.target !== els.drawerOverlay) fmClientLog('drawer-emergency-close, клик съел: ' + _fmElDesc(e.target || {}));
+                closeDrawer();
+            }
+        } catch (err) {}
+    }, true);
+    // самолечение при каждом касании, пока меню открыто: блокиратор поверх меню нейтрализуется
+    // сразу, а не только при открытии/возврате в приложение
+    document.addEventListener('touchstart', function () {
+        try { if (els.drawer && els.drawer.classList.contains('active')) fmProbeDrawer(); } catch (err) {}
+    }, { capture: true, passive: true });
+    // Esc на ПК закрывает меню
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && els.drawer && els.drawer.classList.contains('active')) closeDrawer();
+    });
 
     els.profileBtn.addEventListener('click', () => handleAction('profile'));
 

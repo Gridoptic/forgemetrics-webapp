@@ -2038,6 +2038,7 @@ button:active {
     gap: 8px;
     box-shadow: var(--shadow-lg);
     z-index: 99990;   /* тост виден и поверх бокового меню (drawer поднят до 9970) */
+    pointer-events: none;   /* тост не интерактивен — не должен перехватывать тапы, даже застряв */
     animation: toastSlide 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
