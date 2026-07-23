@@ -4788,8 +4788,9 @@
         _ss.topTag = fx.topTag || 'on';
         _ss.badgeFree = fx.badgeFree || null;
         if (l.title_style) _ss.font = l.title_style;
-        if (l.avatar_type) _ss.avatar = l.avatar_type;
-        if (_ss.avatar === 'emoji') _ss.avatar = 'tg';   // эмодзи-аватары убраны: старые офферы мягко переводим на аватар канала
+        // аватар не редактируется (решение владельца 24.07): всегда реальный аватар канала из
+        // Telegram; старые emoji/img-декоры мягко переводятся на канал при первом же сохранении
+        _ss.avatar = 'tg';
         if (l.formats && l.formats.length) {
             _sfmts.forEach(function (f) { f.on = false; });
             l.formats.forEach(function (rf) {
@@ -4864,7 +4865,8 @@
                 return '<div class="fmx-chnote">Редактируешь оффер · статус:' + _esc(existing.status_human || existing.status || '—') + '</div>';
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
-            accSec('avatar', 'ti-user-circle', 'Аватар', paneAvatar()) +
+            /* секция «Аватар» убрана (решение владельца 24.07): аватар не редактируется —
+               всегда реальный аватар канала из Telegram; эффекты на аватаре — в «Эффектах» */
             accSec('fx', 'ti-sparkles', 'Эффекты и анимация', paneFx()) +
             accSec('sticker', 'ti-sticker', 'Стикер', '<div id="fmx-stkBody">' + loadHtml() + '</div>') +
             accSec('style', 'ti-palette', 'Стиль', paneStyleMin()) +
@@ -4905,7 +4907,7 @@
         window.__fmxCdDock = _fmxBuildCardDock({
             scroll: el('fmx-scrollEl'), dockParent: sub, wrap: el('fmx-hero'), root: sub,
             tr: function (s2) { return (typeof window.t === 'function') ? window.t(s2) : s2; },
-            sections: [['cover', 'Обложка'], ['avatar', 'Аватар'], ['fx', 'Эффекты'], ['sticker', 'Стикер'], ['style', 'Стиль'], ['price', 'Цены'], ['text', 'Текст']],
+            sections: [['cover', 'Обложка'], ['fx', 'Эффекты'], ['sticker', 'Стикер'], ['style', 'Стиль'], ['price', 'Цены'], ['text', 'Текст']],
             openSection: function (id) { openAcc(id, false); },
             renderPreview: function (box) {
                 var pl = _previewListing();
@@ -4933,7 +4935,6 @@
     function updateAccSummaries() {
         var m = {
             cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
-            avatar: _ss.avatar === 'tg' ? 'Из Telegram' : ((_ss._media && _ss._media.avatar && _ss._media.avatar.name) || 'Своё фото'),
             fx: (function () { var n = (_ss.glow !== 'none' ? 1 : 0); if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
             price: (function () { var on = _sfmts.filter(function (f) { return f.on; }); if (!on.length) return 'Не выбраны'; return on.length + ' форм. · от ' + _num(Math.min.apply(null, on.map(function (f) { return f.p; }))) + ' ₽'; })(),
@@ -4990,13 +4991,7 @@
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="cover"]')[0]);
     }
 
-    function paneAvatar() {
-        return '<div class="fmx-mtabs" id="fmx-avtype">' +
-            '<button class="fmx-mt' + (_ss.avatar === 'tg' ? ' on' : '') + '" data-av="tg"><i class="ti ti-brand-telegram"></i> Канал</button>' +
-            '<button class="fmx-mt' + (_ss.avatar === 'img' ? ' on' : '') + '" data-av="img"><i class="ti ti-photo"></i> Фото</button></div>' +
-            '<div id="fmx-avnote" class="fmx-note" style="margin-top:10px;' + (_ss.avatar === 'tg' ? '' : 'display:none;') + '"><i class="ti ti-info-circle"></i> Используется реальный аватар канала из Telegram.</div>' +
-            '<div id="fmx-avbox" style="margin-top:10px;' + (_ss.avatar === 'img' ? '' : 'display:none;') + '">' + mediaBoxHtml('avatar', 'Фото или GIF, до 64 МБ. Лучше всего от 400×400 — подгонишь кадрированием. Правила — в Справке.') + '</div>';
-    }
+    /* paneAvatar удалена (24.07): аватар не редактируется — всегда реальный из Telegram */
     function paneFx() {
         return fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при любом продвижении или на тарифе Pro+') +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
@@ -5304,7 +5299,7 @@
     }
     function bindStyle() {
         bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цвет кнопки');
-        qsa(el('fmx-avtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.avatar = b.getAttribute('data-av'); qsa(el('fmx-avtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); el('fmx-avnote').style.display = _ss.avatar === 'tg' ? 'flex' : 'none'; el('fmx-avbox').style.display = _ss.avatar === 'img' ? 'block' : 'none'; renderHero(); sizePanes(); }); });
+        /* биндинг fmx-avtype удалён вместе с секцией «Аватар» (24.07) */
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
         el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
@@ -5322,7 +5317,7 @@
                 mb.disabled = false;
             }).catch(function () { toast('Сервер не ответил: проверь, что бэкенд-файлы залиты и forgemetrics-api перезапущен'); mb.disabled = false; });
         });
-        bindMediaBox(qsa(el('fmx-main'), '[data-ac="avatar"]')[0]);
+        /* mediaBox аватара удалён вместе с секцией «Аватар» (24.07) */
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
@@ -5585,7 +5580,8 @@
         else core = '<div class="fmx-av fx-c-' + _ss.over + '" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + over + '</div>';
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
         var oc = _ss.atomColor, orb = orbitHtml(_ss.orbit, oc);
-        return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="avatar" style="cursor:pointer;"' : '') + '>' + halo + core + orb + partHtml(_ss.part) + '</div>';
+        /* клик по аватару ведёт в «Эффекты»: сам аватар не редактируется (всегда из Telegram) */
+        return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="fx" style="cursor:pointer;"' : '') + '>' + halo + core + orb + partHtml(_ss.part) + '</div>';
     }
     function heroCoverHtml(gradient) {
         var mc = _ss._media && _ss._media.cover, pc = (_ss.att && typeof _ss.att.cover === 'object') ? _ss.att.cover : null;
@@ -6094,12 +6090,10 @@
         if (_ss.covType !== 'grad' && cm && cm.url) { pl.cover_type = cm.kind === 'video' ? 'video' : 'img'; pl.cover_url = cm.url; }
         else { pl.cover_type = 'grad'; pl.cover_url = null; }
         pl.cover_gradient = _ss.coverGrad || COVERS[_ss.cover];
-        pl.avatar_type = _ss.avatar;
-        var am = _ss._media && _ss._media.avatar;
-        if (_ss.avatar === 'img' && am && am.url) pl.avatar_url = am.url;
-        else if (_ss.avatar === 'tg') pl.avatar_url = c.avatar_url || null;
-        else pl.avatar_url = null;
-        pl.avatar_emoji = _ss.avEmoji;
+        // аватар всегда реальный, из канала (декор-аватары убраны 24.07)
+        pl.avatar_type = 'tg';
+        pl.avatar_url = c.avatar_url || null;
+        pl.avatar_emoji = null;
         pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
         /* превью фона оффера: до сохранения ссылка живёт в _media (blob) — прокидываем её в att.cardbg, иначе fullCard не видит фон */
         var _att = {}; for (var _ak in (_ss.att || {})) _att[_ak] = _ss.att[_ak];
@@ -6924,9 +6918,11 @@
             cover_type: _ss.covType,
             cover_gradient: _ss.covType === 'grad' ? (_ss.coverGrad || COVERS[_ss.cover]) : null,
             cover_url: (_ss.covType !== 'grad' && typeof _ss.att.cover === 'object' && _ss.att.cover && _ss.att.cover.url) ? _ss.att.cover.url : null,
-            avatar_url: (_ss.avatar === 'img' && typeof _ss.att.avatar === 'object' && _ss.att.avatar && _ss.att.avatar.url) ? _ss.att.avatar.url : null,
-            avatar_type: _ss.avatar,
-            avatar_emoji: _ss.avatar === 'emoji' ? _ss.avEmoji : null,
+            /* аватар всегда реальный из канала (декор убран 24.07); свежий url канала — чтобы
+               сохранение заодно подтягивало актуальный аватар */
+            avatar_url: (function () { var c = curChannel(); return (c && c.avatar_url) || null; })(),
+            avatar_type: 'tg',
+            avatar_emoji: null,
             sticker_json: (function () { if (!_ss.sticker) return null; var hc = el('fmx-hero') && el('fmx-hero').querySelector('.fmx-card'); if (hc && hc.offsetHeight) _ss.sticker.h0 = hc.offsetHeight; return _ss.sticker; })(),
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
