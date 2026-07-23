@@ -3266,6 +3266,12 @@ async function openActiveChannelSelector(opts) {
                         body: JSON.stringify({ channel_id: channelId }),
                         headers: { 'Content-Type': 'application/json' },
                     });
+                    // Единая точка распространения смены активного канала: обновляем глобал СРАЗУ,
+                    // независимо от того, с какого экрана открыт переключатель (главная или «Создать
+                    // пост»). Иначе смена из поста не доходила до бара главной и фильтра «под мою
+                    // нишу» на Радаре — они отставали на старый канал.
+                    try { window.__fmActiveChannelId = channelId; } catch (e) {}
+                    try { if (typeof window.__fmxActiveChannelChanged === 'function') window.__fmxActiveChannelChanged(); } catch (e) {}
                     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
                     if (typeof opts.onChanged === 'function') {
                         opts.onChanged(channelId);

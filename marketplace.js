@@ -287,6 +287,23 @@
         if (_channels && _channels.length === 1 && _channels[0].niche) return String(_channels[0].niche);
         return '';
     }
+
+    // Смена активного канала (из главной или «Создать пост») инвалидирует кэш каналов Площадки,
+    // чтобы фильтр «под мою нишу» и бейджи карточек пересчитались по новому активному каналу,
+    // а не залипали на старом (_chLoaded кэшировал _channels без инвалидации).
+    window.__fmxActiveChannelChanged = function () {
+        try {
+            _chLoaded = false;
+            _chLoading = false;
+            if (_mainTab === 'market' && _subTab === 'buy') {
+                loadChannels().then(function () {
+                    _chLoaded = true;
+                    if (typeof loadFeed === 'function') loadFeed(true);
+                    else if (typeof paintBuyBody === 'function') paintBuyBody();
+                }).catch(function () { _chLoaded = true; });
+            }
+        } catch (e) {}
+    };
     function _nicheMatch(l) {
         if (!l || !l.niche) return false;
         return nichesMatch(_myNichesStr(), l.niche);
@@ -4710,6 +4727,13 @@
             if (_mineEditCh != null) {
                 for (var k = 0; k < pubs.length; k++) if (pubs[k].id === _mineEditCh) { def = _mineEditCh; break; }
                 _mineEditCh = null;
+            }
+            // по умолчанию открываем АКТИВНЫЙ канал (тот, что выбран на главной) — чтобы конструктор
+            // работал с тем же каналом, что и остальное приложение, а не с первым попавшимся
+            if (def == null) {
+                var _actId = null;
+                try { _actId = window.__fmActiveChannelId; } catch (e) {}
+                if (_actId != null) for (var a = 0; a < pubs.length; a++) if (String(pubs[a].id) === String(_actId)) { def = pubs[a].id; break; }
             }
             if (def == null) for (var i = 0; i < pubs.length; i++) if (listingForChannel(pubs[i].id)) { def = pubs[i].id; break; }
             if (def == null) def = pubs[0].id;
