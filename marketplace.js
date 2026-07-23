@@ -325,7 +325,9 @@
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
     function _isMod() { try { return !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === 1263501641); } catch (e) { return false; } }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
-    function _priceFrom(l) { var p = _minPrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
+    /* Главная цена = опорный формат 1/24 (base_price), а не самый дешёвый формат. Так заголовок,
+       CPM и перелив считаются от ОДНОГО формата (1/24) и совпадают на Радаре и Площадке (решение «А»). */
+    function _priceFrom(l) { var p = _basePrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
 
     /* ===================== styles ===================== */
     function injectStyles() {
@@ -6994,7 +6996,7 @@
     function _fmrBlocksBuy(l) {
         var subs = l.subscribers, av = l.avg_views;
         var rr = (l.er != null) ? l.er : null, rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
-        var pp = (l.min_price != null) ? l.min_price : null;
+        var pp = _basePrice(l);   // опорный формат 1/24 (решение «А») — совпадает с CPM и Радаром
         var cpm = _cpm(l);
         var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var rrHtml = '';
@@ -7036,7 +7038,7 @@
         if (pp && av) {
             flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (минимальная цена)</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
@@ -7971,13 +7973,13 @@
     }
     /* перелив-калькулятор в развороте Площадки — 1 в 1 с Радаром (данные: цена от + охват) */
     function _flowBlock(l) {
-        var pp = l.min_price, av = l.avg_views;
+        var pp = _basePrice(l), av = l.avg_views;   // опорный формат 1/24 (решение «А»)
         if (!pp || !av) return '';
         var conv = 0.5, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
         return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
             '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="0.5"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-            '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (минимальная цена)</div>' +
+            '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
             '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
             '</div>';
     }
