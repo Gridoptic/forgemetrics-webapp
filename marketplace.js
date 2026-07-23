@@ -1207,6 +1207,8 @@
                полноэкранные окна прячут фон целиком — браузер его не рендерит вовсе */
             'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
             'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
+            /* боковое меню — НЕ фон Площадки: заморозка не должна его глушить (оно внутри #app) */
+            'body.fmx-bgfreeze #drawer,body.fmx-bgfreeze #drawer-overlay{pointer-events:auto;}',
             'body.fmx-bgfreeze #fmx-main *,body.fmx-bgfreeze #app *{animation-play-state:paused!important;}',
             /* рендер только в поле зрения (+запас) — браузер нативно пропускает то, что вне экрана,
                и мгновенно дорисовывает при скролле (решение владельца 22.07). К карточкам Площадки
@@ -7879,7 +7881,13 @@
        вообще не рендерит — blur-стоимость уходит). Механизм самосинхронизирующийся:
        MutationObserver сам видит появление/закрытие ЛЮБОЙ модалки — новые окна
        подхватываются автоматически, без ручной проводки каждого. */
-    var _OV_SEL = '.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov,#fmx-listBg.fmx-show,.bs-overlay,.drawer-overlay.active';
+    /* КОРЕНЬ зависаний меню (пойман маячком 23.07): в списке был .drawer-overlay.active —
+       открытие БОКОВОГО МЕНЮ само включало заморозку, а она делает pointer-events:none
+       всему #app, ВКЛЮЧАЯ само меню (оно внутри #app) → «меню не нажимается». Плюс
+       .pw-sheet-ov/.bs-overlay числились без модификатора видимости — застрявшая СКРЫТАЯ
+       панель держала заморозку вечно («ничего не листается», лечил только перезаход).
+       Теперь: только РЕАЛЬНО видимые модалки Площадки, боковое меню — не модалка Площадки. */
+    var _OV_SEL = '.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov.show,#fmx-listBg.fmx-show,.bs-overlay.visible';
     var _OV_FULL = '.fmx-psFull';   // полноэкранные непрозрачные окна — фон прячем целиком
     var _frozenVids = [];
     function _fmSyncFreeze() {

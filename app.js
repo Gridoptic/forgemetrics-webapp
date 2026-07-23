@@ -832,6 +832,20 @@ function fmAnyModalVisible() {
 // по таймеру при сворачивании/Telegram-назад) перекрывает всё, либо осталась блокировка
 // скролла cs-modal-open. Безопасно: удаляет только СКРЫТЫЕ (не показанные) оверлеи и снимает
 // блокировку, только если ни один оверлей реально не открыт. Раньше лечилось лишь перезаходом.
+// Снимает залипшую заморозку фона Площадки: fmx-bgfreeze глушит ВЕСЬ #app (включая боковое
+// меню внутри него) — корень эпизодов «ничего не нажимается/не листается». Снимаем только
+// когда реальных модалок Площадки на экране нет.
+function fmClearFreeze() {
+    try {
+        if (document.body.classList.contains('fmx-bgfreeze')
+            && !document.querySelector('.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov.show,#fmx-listBg.fmx-show,.bs-overlay.visible,.fmx-psFull')) {
+            document.body.classList.remove('fmx-bgfreeze', 'fmx-bgfull');
+            document.documentElement.classList.remove('fmx-bgfreeze');
+            fmClientLog('unstick: снята залипшая fmx-bgfreeze');
+        }
+    } catch (e) {}
+}
+
 function fmUnstick() {
     try {
         document.querySelectorAll('.pw-sheet-ov:not(.show), .lang-ov:not(.show), .bs-overlay:not(.visible), .bs-sheet:not(.visible)')
@@ -840,6 +854,14 @@ function fmUnstick() {
             document.documentElement.classList.remove('cs-modal-open');
             document.body.classList.remove('cs-modal-open');
         }
+        fmClearFreeze();
+        // ремонт после старой пробы: она могла обезвредить структурные элементы — возвращаем
+        ['#app', '#drawer-overlay', '#fmx-main'].forEach(function (s) {
+            var n = document.querySelector(s);
+            if (n && n.style.pointerEvents === 'none') n.style.pointerEvents = '';
+        });
+        if (document.body.style.pointerEvents === 'none') document.body.style.pointerEvents = '';
+        if (document.documentElement.style.pointerEvents === 'none') document.documentElement.style.pointerEvents = '';
         // если меню открыто в момент возврата в приложение — проверяем, что оно реально сверху
         fmProbeDrawer();
     } catch (e) {}
@@ -905,6 +927,15 @@ function fmProbeDrawer() {
             for (var n = 0; n < 4; n++) {   // максимум 4 слоя на точку — защита от цикла
                 var hit = document.elementFromPoint(x, y);
                 if (!hit || hit === els.drawer || els.drawer.contains(hit)) break;
+                // структурные элементы НЕ нейтрализуем НИКОГДА (обезвредить body = убить всё
+                // приложение — этот урок оплачен): попадание в них изнутри прямоугольника меню
+                // означает, что само меню заглушено (застрявшая заморозка) — лечится в fmUnstick
+                var tag = (hit.tagName || '').toUpperCase();
+                if (tag === 'HTML' || tag === 'BODY' || hit.id === 'app' || hit.id === 'fmx-main' || hit.id === 'drawer-overlay') {
+                    fmClientLog('drawer-under-freeze: ' + _fmElDesc(hit));
+                    fmClearFreeze();   // мгновенное лечение: снять залипшую заморозку
+                    break;
+                }
                 try { console.warn('[FM] слой поверх меню нейтрализован:', hit.tagName, hit.id || '', String(hit.className || '').slice(0, 80)); } catch (e) {}
                 fmClientLog('drawer-blocker: ' + _fmElDesc(hit));
                 hit.style.pointerEvents = 'none';
