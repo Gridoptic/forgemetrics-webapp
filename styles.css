@@ -3,6 +3,11 @@
     --bg-card: rgba(255, 255, 255, 0.03);
     --bg-card-hover: rgba(255, 255, 255, 0.06);
     --bg-elevated: #161a2c;
+    /* ЕДИНАЯ задняя палитра приложения (эталон главного экрана) — используется на body и всех
+       фон-контейнерах, чтобы фон везде был одинаковым (пурпур сверху-справа + индиго снизу-слева) */
+    --app-bg-image:
+        radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
 
     --border-subtle: rgba(255, 255, 255, 0.06);
     --border-medium: rgba(255, 255, 255, 0.10);
@@ -112,9 +117,7 @@ body::before {
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-image:
-        radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
+    background-image: var(--app-bg-image);   /* эталон единой палитры */
 }
 
 button {
@@ -573,7 +576,7 @@ button:active {
     width: 88%;
     max-width: 320px;
     background: var(--bg-base);
-    background-image: radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.18) 0%, transparent 50%);
+    background-image: var(--app-bg-image);   /* единая палитра как на главном экране */
     border-right: 1px solid var(--border-subtle);
     z-index: 100;
     padding: var(--space-lg);
@@ -2918,10 +2921,8 @@ button:active {
 .channel-settings-screen {
     position: fixed;
     inset: 0;
-    background: #0a0d18;
-    background-image:
-        radial-gradient(circle at 15% 10%, rgba(127, 119, 221, 0.08), transparent 40%),
-        radial-gradient(circle at 85% 90%, rgba(29, 158, 117, 0.06), transparent 40%);
+    background: var(--bg-base);
+    background-image: var(--app-bg-image);   /* единая палитра как на главном экране */
     z-index: 9999;
     overflow-y: auto;
     overflow-x: hidden;
@@ -4112,7 +4113,7 @@ html.cs-modal-open {
 }
 
 /* ===================== Личный кабинет ===================== */
-.screen-cabinet{background:var(--bg-base);background-image:radial-gradient(760px 460px at 88% -12%,rgba(99,102,241,0.16),transparent 60%),radial-gradient(620px 460px at -14% 20%,rgba(93,202,165,0.08),transparent 55%),radial-gradient(520px 380px at 50% 118%,rgba(245,191,79,0.06),transparent 60%);}
+.screen-cabinet{background:var(--bg-base);background-image:var(--app-bg-image);}
 .cab-toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(16px);background:rgba(20,24,40,0.96);border:1px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;z-index:100050;transition:all .3s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:90vw;text-align:center;}
 .cab-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .cab-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
@@ -4395,7 +4396,7 @@ html.cs-modal-open {
 @keyframes tfSpin{to{transform:rotate(360deg);}}
 @keyframes tfSweep{0%,55%{transform:translateX(-160%) skewX(-18deg);}100%{transform:translateX(420%) skewX(-18deg);}}
 .screen-tariffs{background:var(--bg-base);
-  background-image:radial-gradient(820px 500px at 88% -14%,rgba(99,102,241,0.18),transparent 60%),radial-gradient(640px 480px at -14% 22%,rgba(93,202,165,0.08),transparent 55%),radial-gradient(560px 440px at 50% 118%,rgba(245,191,79,0.06),transparent 60%);}
+  background-image:var(--app-bg-image);}
 .tf-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
 .tf-hbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border-medium);background:rgba(255,255,255,0.03);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:18px;transition:all .16s;}
 .tf-hbtn:hover{color:var(--text-primary);border-color:rgba(255,255,255,0.2);}
