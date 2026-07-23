@@ -8136,7 +8136,7 @@
                         '<span class="pr">' + (f.price ? _num(f.price) + ' ₽' : 'по договорённости') + '</span>' +
                         '<span class="cp">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : '') + '</span></div>';
                 }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. ' + (l.ad_reach_24h ? 'CPM по <b style="color:#5DCAA5;">рекламному охвату (ERR24)</b> из замеров сделок.' : 'Тап по строке подставит формат в сообщение') + '</div>' +
+                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. ' + (l.ad_reach_24h ? 'CPM по <b style="color:#5DCAA5;">охвату рекламного поста за первые 24 часа (ERR24)</b> — по фактическим замерам сделок.' : 'Тап по строке подставит формат в сообщение') + '</div>' +
                 _termsBlock(l);
         }
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
