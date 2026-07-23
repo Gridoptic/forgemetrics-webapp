@@ -439,6 +439,24 @@ var PW_CATALOG = [
 var PW_MAX = 4;
 var PW_LS = 'fm_pulse_metrics_v1';
 
+// Кэш статуса «спящий канал» (по id канала). Нужен, чтобы при входе плашка сразу рисовалась
+// серой, а не вспыхивала жёлтой («здоровье по охвату» из dashboard) с перекраской через секунду,
+// когда reach-series сообщит, что канал давно не постит. Свежий ответ reach-series каждый раз
+// подтверждает или снимает статус и обновляет кэш.
+var PW_DORM_LS = 'fm_pulse_dormant_v1';
+function pwDormantGet(chId) {
+    if (chId == null) return null;
+    try { return (JSON.parse(localStorage.getItem(PW_DORM_LS) || '{}'))[chId] || null; } catch (e) { return null; }
+}
+function pwDormantSet(chId, val) {
+    if (chId == null) return;
+    try {
+        var m = JSON.parse(localStorage.getItem(PW_DORM_LS) || '{}');
+        if (val) m[chId] = val; else delete m[chId];
+        localStorage.setItem(PW_DORM_LS, JSON.stringify(m));
+    } catch (e) {}
+}
+
 function pwSelectedIds(pulse) {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(PW_LS) || 'null'); } catch (e) { }
@@ -522,14 +540,31 @@ function pwOpenPicker(pulse) {
     });
 }
 
-function renderPulse(pulse) {
-    const host = document.getElementById('pulse-widget');
-    if (!host) return;
-    if (!pulse) { host.innerHTML = ''; return; }
+function pwHealthState(pulse) {
     const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
     let h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
     // RR>100% (охват больше подписчиков) — не «живой/норма», а аномалия: репосты/внешний трафик/накрутка
     if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: 'Охват выше базы', s: 'репосты или накрутка — проверь' };
+    return h;
+}
+
+// Возврат «живой» плашки здоровья (антипод markPulseStale): вызывается, когда reach-series
+// подтвердил, что канал активен, а из кэша могла быть нарисована серая «спящая».
+function markPulseHealthy(pulse) {
+    const badge = document.querySelector('.pw-health');
+    if (!badge || !pulse) return;
+    const h = pwHealthState(pulse);
+    badge.className = 'pw-health ' + h.c;
+    badge.innerHTML = '<span class="pw-dot"></span> ' + h.t + (h.s ? ' <span class="pw-hs">' + h.s + '</span>' : '');
+    const lab = document.querySelector('.pw-hlab');
+    if (lab) lab.textContent = 'Средний охват · 30 дней';
+}
+
+function renderPulse(pulse) {
+    const host = document.getElementById('pulse-widget');
+    if (!host) return;
+    if (!pulse) { host.innerHTML = ''; return; }
+    const h = pwHealthState(pulse);
     const heroNum = (pulse.avg_views != null)
         ? `<span class="v pw-num" data-to="${pulse.avg_views}" data-sep="1">0</span>`
         : '<span class="v">—</span>';
@@ -551,6 +586,16 @@ function renderPulse(pulse) {
     pwRenderMetrics(pulse);
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
+    // статус «спящий» рисуем сразу из кэша прошлого визита — без жёлтой вспышки с перекраской
+    try {
+        var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+        var _dorm = pwDormantGet(_dch);
+        if (_dorm) {
+            markPulseStale(_dorm.d, _dorm.ld);
+            var _lab2 = host.querySelector('.pw-hlab');
+            if (_lab2) _lab2.textContent = 'Средний охват · последние посты';
+        }
+    } catch (e) {}
     loadReachSeries();
 }
 
@@ -578,6 +623,7 @@ async function loadReachSeries() {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
             drawReachChart(host, r.series, r.dates || [], r.days || 30, endLabel);
             const tr = document.getElementById('pw-trend');
+            const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             if (r.stale) {
                 // спящий канал: «+X% за 30 дней» и «сегодня» — ложь (последний пост давно).
                 // Тренд не показываем (он про старый период), статус метим честно, крючок не рвём.
@@ -585,7 +631,12 @@ async function loadReachSeries() {
                 const lab = document.querySelector('.pw-hlab');
                 if (lab) lab.textContent = 'Средний охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
+                pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
             } else {
+                // канал активен: снимаем кэш «спящего» и возвращаем «живую» плашку,
+                // если из кэша была нарисована серая
+                pwDormantSet(chIdD, null);
+                markPulseHealthy(state.dashboard && state.dashboard.pulse);
                 if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
                 // проактивный крючок: охват просел → ИИ сразу предлагает вернуть его постами
                 renderPulseHook(r.trend_pct);
@@ -745,7 +796,7 @@ function fmUnstick() {
     try {
         document.querySelectorAll('.pw-sheet-ov:not(.show), .lang-ov:not(.show), .bs-overlay:not(.visible), .bs-sheet:not(.visible)')
             .forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
-        var openModal = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay');
+        var openModal = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active');
         if (!openModal) {
             document.documentElement.classList.remove('cs-modal-open');
             document.body.classList.remove('cs-modal-open');
@@ -758,6 +809,10 @@ function openDrawer() {
     fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
+    // блокируем задний экран, пока меню открыто: без этого фон прокручивался свайпом
+    // «сквозь» затемнение (оверлей ловит клики, но не скролл)
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
@@ -794,6 +849,12 @@ function fillDrawerHeader() {
 function closeDrawer() {
     els.drawer.classList.remove('active');
     els.drawerOverlay.classList.remove('active');
+    // блокировку фона снимаем, только если поверх не открыт другой модальный слой
+    var _other = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay');
+    if (!_other) {
+        document.documentElement.classList.remove('cs-modal-open');
+        document.body.classList.remove('cs-modal-open');
+    }
 }
 
 
@@ -1672,6 +1733,9 @@ function setupEventListeners() {
     if (tfBack) tfBack.addEventListener('click', () => { hapticLight(); showScreen(tfReturn || 'dashboard'); });
     els.drawerClose.addEventListener('click', closeDrawer);
     els.drawerOverlay.addEventListener('click', closeDrawer);
+    // свайп по затемнению не должен прокручивать задний экран (скролл «проваливался» сквозь
+    // оверлей: фон листался, а меню не закрывалось — свайп не является кликом)
+    els.drawerOverlay.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
 
     els.profileBtn.addEventListener('click', () => handleAction('profile'));
 

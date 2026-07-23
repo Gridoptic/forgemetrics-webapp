@@ -557,7 +557,8 @@ button:active {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    z-index: 90;
+    /* был z-index 90 — тосты и любые наложения могли встать выше затемнения */
+    z-index: 9960;
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-base);
@@ -578,10 +579,11 @@ button:active {
     background: var(--bg-base);
     background-image: var(--app-bg-image);   /* единая палитра как на главном экране */
     border-right: 1px solid var(--border-subtle);
-    z-index: 100;
+    z-index: 9970;   /* над оверлеем (9960), под модальными листами (9990+) */
     padding: var(--space-lg);
     overflow-y: auto;
     overflow-x: hidden;
+    overscroll-behavior: contain;   /* прокрутка меню не «проваливается» на задний экран */
     transform: translateX(-100%);
     transition: transform var(--transition-slow);
     -webkit-overflow-scrolling: touch;
@@ -2012,7 +2014,7 @@ button:active {
     align-items: center;
     gap: 8px;
     box-shadow: var(--shadow-lg);
-    z-index: 300;
+    z-index: 99990;   /* тост виден и поверх бокового меню (drawer поднят до 9970) */
     animation: toastSlide 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
