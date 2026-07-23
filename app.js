@@ -1784,7 +1784,19 @@ function coPay(opts) {
         lockBtn.disabled = true;
         try {
             const r = await opts.lock();
-            if (r && r.ok) { closeCheckout(); cabToast('Цена закреплена — уведомим при запуске оплаты'); }
+            if (r && r.ok) {
+                closeCheckout();
+                // мгновенно обновляем строку «Твоя бронь» на экране тарифов данными ответа
+                // сервера — иначе до перезахода могла висеть прежняя бронь/цена
+                try {
+                    if (r.booked && tariffsData) {
+                        tariffsData.booked_plan = r.booked;
+                        tariffsData.booked_price = r.booked_price;
+                        if (screens.tariffs && screens.tariffs.style.display !== 'none') renderTariffs(tariffsData);
+                    }
+                } catch (e) {}
+                cabToast('Цена закреплена — уведомим при запуске оплаты');
+            }
             else { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
         } catch (e) { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
     });
