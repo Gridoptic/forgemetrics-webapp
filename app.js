@@ -361,7 +361,13 @@ function initAutoLocalize() {
 
 function renderDashboard(data) {
     const firstName = data.user?.first_name || '';
-    els.avatarLetter.textContent = (firstName.charAt(0) || 'F').toUpperCase();
+    // кнопка кабинета в шапке: реальный аватар Telegram; нет фото — буква на индиго-стекле
+    const _hdrPhoto = tg?.initDataUnsafe?.user?.photo_url;
+    if (_hdrPhoto && els.avatarLetter) {
+        els.avatarLetter.innerHTML = `<img src="${escapeHtml(_hdrPhoto)}" alt="">`;
+    } else if (els.avatarLetter) {
+        els.avatarLetter.textContent = (firstName.charAt(0) || 'F').toUpperCase();
+    }
     els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
 
     renderChannelSelector(data);
