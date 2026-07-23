@@ -246,8 +246,7 @@ async function refreshDashboardSilent() {
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
-            Сначала запусти бота — он покажет возможности
-            и активирует бесплатный Trial на 7 дней.
+            Сначала запусти бота — он покажет возможности и активирует бесплатный Trial на 7 дней.
         </div>
     `;
 
