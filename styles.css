@@ -4391,9 +4391,11 @@ html.cs-modal-open {
 .pw-mgear:active{transform:rotate(50deg);}
 .pw-mgear i{font-size:15px;}
 .pw-mgrid{display:flex;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:11px;overflow:hidden;}
-.pw-mgrid .pw-mcell{flex:1;min-width:0;padding:7px 8px;border-left:1px solid rgba(255,255,255,0.06);}
+/* ячейки по содержимому (не равные доли): подпись всегда в ОДНУ строку — «ПОДПИСЧИКИ»
+   больше не рубится посередине (был overflow-wrap:anywhere + равные узкие ячейки) */
+.pw-mgrid .pw-mcell{flex:1 1 auto;padding:7px 8px;border-left:1px solid rgba(255,255,255,0.06);}
 .pw-mgrid .pw-mcell:first-child{border-left:0;}
-.pw-mgrid .pw-ml{min-height:2em;font-size:8.5px;letter-spacing:.1px;}
+.pw-mgrid .pw-ml{min-height:auto;font-size:8.5px;letter-spacing:.1px;white-space:nowrap;overflow-wrap:normal;}
 .pw-mgrid .pw-mv{font-size:14.5px;margin-top:1px;}
 
 /* bottom-sheet выбора показателей */
