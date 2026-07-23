@@ -812,6 +812,30 @@ function fmUnstick() {
             document.documentElement.classList.remove('cs-modal-open');
             document.body.classList.remove('cs-modal-open');
         }
+        // если меню открыто в момент возврата в приложение — проверяем, что оно реально сверху
+        fmProbeDrawer();
+    } catch (e) {}
+}
+
+// Самолечение меню: если поверх открытого drawer лежит ЛЮБОЙ посторонний слой (застрявший
+// оверлей, невидимая модалка и т.п.), он перехватывает тапы и скролл — «меню не нажимается».
+// Проверяем реальными пробными точками (elementFromPoint) внутри меню; чужой перехватчик
+// нейтрализуем (pointer-events:none) и пишем виновника в консоль — для точного диагноза.
+// Пока drawer открыт, легально НИЧТО не должно его перекрывать (все действия сперва закрывают меню).
+function fmProbeDrawer() {
+    try {
+        if (!els.drawer || !els.drawer.classList.contains('active')) return;
+        var r = els.drawer.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        [0.2, 0.5, 0.85].forEach(function (fy) {
+            var x = r.left + r.width / 2, y = r.top + r.height * fy;
+            for (var n = 0; n < 4; n++) {   // максимум 4 слоя на точку — защита от цикла
+                var hit = document.elementFromPoint(x, y);
+                if (!hit || hit === els.drawer || els.drawer.contains(hit)) break;
+                try { console.warn('[FM] слой поверх меню нейтрализован:', hit.tagName, hit.id || '', String(hit.className || '').slice(0, 80)); } catch (e) {}
+                hit.style.pointerEvents = 'none';
+            }
+        });
     } catch (e) {}
 }
 
@@ -824,6 +848,8 @@ function openDrawer() {
     // «сквозь» затемнение (оверлей ловит клики, но не скролл)
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
+    // после завершения анимации выезда — проверка, что меню реально сверху (самолечение)
+    setTimeout(fmProbeDrawer, 450);
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
@@ -4718,29 +4744,27 @@ function showToast(text, icon) {
 
 
 function handlePostApiError(err) {
+    // ОТКАЧЕНО по просьбе владельца 24.07 к доаудитной версии (классификация по подстроке
+    // текста ошибки, а не по err.status). Это единственная правка сессии внутри «Создать пост».
     const msg = err?.message || '';
-    // Классифицируем по РЕАЛЬНОМУ http-коду (apiRequest его проставляет). Раньше искали «429»/«500»
-    // подстрокой в теле ответа — и ошибка 400 с текстом вроде «лимит 500 символов» уводила не в ту ветку.
-    const st = err?.status;
-    const is = (code) => (st != null ? st === code : msg.includes(String(code)));
 
-    if (is(404) && msg.includes('User not found')) {
+    if (msg.includes('404') && msg.includes('User not found')) {
         showStartBotScreen();
         return;
     }
 
-    if (is(429)) {
+    if (msg.includes('429')) {
         showToast('Слишком часто. Повторите через несколько секунд', 'alert-triangle');
         showScreen('postCreate');
         return;
     }
 
-    if (is(401)) {
+    if (msg.includes('401')) {
         showToast('Сессия истекла, переоткрой Mini App', 'alert-triangle');
         return;
     }
 
-    if (is(500)) {
+    if (msg.includes('500')) {
         showToast('Что-то пошло не так. Попробуй ещё раз', 'alert-triangle');
         showScreen('postCreate');
         return;
