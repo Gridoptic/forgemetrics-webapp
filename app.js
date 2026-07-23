@@ -1288,13 +1288,8 @@ function renderCabinet(d) {
 
     html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Лимиты сегодня</h3><span class="cab-link">обновятся в 00:00</span></div>${(d.usage || []).map(cabUsageRow).join('')}</div>`;
 
-    if (d.channel) {
-        const ch = d.channel;
-        const chi = escapeHtml((ch.title || 'K').trim().charAt(0).toUpperCase() || 'K');
-        html += `<div class="cab-card"><div class="cab-stt"><h3>${cabTile('gr', 'broadcast', 'sm')} Мои каналы</h3><span class="cab-link" id="cab-channels">управление <i class="ti ti-chevron-right"></i></span></div><div class="cab-chan" id="cab-chan-open"><div class="cab-chav">${chi}</div><div class="cab-ci"><div class="cab-cnm"><span class="cab-live"></span> ${escapeHtml(ch.title || '')}</div><div class="cab-csub">${ch.username ? '@' + escapeHtml(ch.username) + ' · ' : ''}<b>${cabNum(ch.subscribers)}</b> подписчиков${ch.niche ? ' · ' + escapeHtml(ch.niche) : ''}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
-    } else {
-        html += `<div class="cab-card"><div class="cab-stt"><h3>${cabTile('gr', 'broadcast', 'sm')} Мои каналы</h3></div><div class="cab-chan" id="cab-chan-open"><div class="cab-chav"><i class="ti ti-plus"></i></div><div class="cab-ci"><div class="cab-cnm">Подключить канал</div><div class="cab-csub">Публикация, метрики и оффер на Площадке</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
-    }
+    // Блок «Мои каналы» удалён из кабинета (решение владельца 24.07): управление каналами —
+    // с главного экрана (переключатель) и из бокового меню.
 
     // Реферальная секция вынесена в отдельный экран (openReferral/renderReferral) —
     // в кабинете её больше нет; вход — кнопка «Друзья и промокод» на главном экране.
@@ -1322,8 +1317,6 @@ function wireCabinet(d) {
         });
     });
     on('cab-compare', () => { openTariffs(); });
-    on('cab-channels', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
-    on('cab-chan-open', () => { hapticLight(); showScreen('dashboard'); openChannels(); });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
     on('cab-theme', () => cabToast('Темы оформления — скоро'));
     on('cab-lang', () => openLangPicker());
