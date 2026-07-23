@@ -4726,10 +4726,24 @@
             move: 'none', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
             coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _hideInsights: false, _title: null, listingId: null, channelId: null };
     }
+    /* Грунтованная оценка цены поста 1/24 активного канала (охват×CPM ниши, с бэка) — чтобы форматы
+       предзаполнялись от РЫНКА, а не статичным числом. Владелец правит под себя, если знает точную. */
+    function _suggestBase() {
+        var id = _ss && _ss.channelId;
+        var arr = _channels || [];
+        for (var i = 0; i < arr.length; i++) {
+            if (id != null && String(arr[i].id) === String(id) && arr[i].suggested_base) return arr[i].suggested_base;
+        }
+        if (arr.length === 1 && arr[0].suggested_base) return arr[0].suggested_base;   // один канал — берём его
+        return null;
+    }
     function defaultFmts() {
-        /* все форматы каталога как строки редактора; по умолчанию включён только опорный 1/24 */
+        /* все форматы каталога как строки редактора; по умолчанию включён только опорный 1/24.
+           Цена = оценка 1/24 канала × (пресет ÷ 5500) — сохраняет пропорции форматов, но привязывает к рынку. */
+        var b = _suggestBase();
         return FMT_CATALOG.map(function (f) {
-            return { on: !!f.base, format: f.k, n: f.n, p: f.preset, core: f.core, sub: f.sub, base: !!f.base };
+            var p = b ? Math.round(b * f.preset / 5500 / 50) * 50 : f.preset;
+            return { on: !!f.base, format: f.k, n: f.n, p: (p > 0 ? p : f.preset), core: f.core, sub: f.sub, base: !!f.base };
         });
     }
     function hydrate(l) {
