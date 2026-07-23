@@ -4631,3 +4631,14 @@ html.cs-modal-open {
 .rf-pbtn{flex:1;height:42px;border-radius:12px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--rfstrokehi);background:rgba(255,255,255,0.03);color:var(--text-primary);}
 .rf-pbtn.save{color:var(--acc);background:linear-gradient(160deg,rgba(236,72,153,0.15),rgba(236,72,153,0.05));border-color:var(--pinkbd);}
 .rf-pbtn:disabled{opacity:.45;cursor:default;}
+/* ПК/планшет-адаптивность (23.07): на ширине от 600px контент экранов кабинета не тянется во всю
+   ширину, а центрируется колонкой — как в «ПК-окнах». Узкие телефоны (<600px) НЕ затрагиваются
+   (media min-width). Площадка/Радар (#fmx-screen, класс fmx-*, вне #app) НЕ используют .screen —
+   их адаптивные сетки не трогаются. */
+@media (min-width: 600px) {
+    .screen {
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

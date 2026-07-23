@@ -166,7 +166,7 @@ async function apiRequest(path, options = {}) {
     if (state.initData) {
         headers['X-Telegram-Init-Data'] = state.initData;
     }
-    // выбранный язык интерфейса — чтобы AI-ответы (аудит, конкуренты, биржа, посты) приходили на нём
+    // выбранный язык интерфейса — чтобы ИИ-ответы (аудит, конкуренты, биржа, посты) приходили на нём
     try { if (typeof getLang === 'function') headers['X-Lang'] = getLang(); } catch (e) {}
 
     const url = `${API_BASE_URL}${path}`;
@@ -242,8 +242,8 @@ async function refreshDashboardSilent() {
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
-            Сначала запусти бота — там я расскажу что умею
-            и активирую тебе бесплатный Trial на 7 дней.
+            Сначала запусти бота — он покажет возможности
+            и активирует бесплатный Trial на 7 дней.
         </div>
     `;
 
@@ -357,9 +357,9 @@ function initAutoLocalize() {
 }
 
 function renderDashboard(data) {
-    const firstName = data.user?.first_name || 'друг';
-    els.avatarLetter.textContent = firstName.charAt(0).toUpperCase();
-    els.greetingName.textContent = `Привет, ${firstName}`;
+    const firstName = data.user?.first_name || '';
+    els.avatarLetter.textContent = (firstName.charAt(0) || 'F').toUpperCase();
+    els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
 
     renderChannelSelector(data);
     renderPulse(data.pulse);
@@ -588,7 +588,7 @@ async function loadReachSeries() {
                 renderPulseHook(r.trend_pct);
             }
         } else {
-            host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — заглядывай позже</div>';
+            host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
         }
     } catch (e) {
         host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
@@ -784,8 +784,8 @@ const PLACEHOLDER_CONFIG = {
     create_post: { title: 'Создание поста', text: 'AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.', icon: 'sparkles' },
     rewrite_post: { title: 'Рерайт поста', text: 'Перепишем чужой пост в твоём стиле. Скоро будет готово.', icon: 'pencil' },
     content_plan: { title: 'Контент-план', text: 'AI составит план постов на неделю. Скоро запустим.', icon: 'calendar' },
-    ai_audit: { title: 'AI-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
-    competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них залетает и почему. Скоро будет готово.', icon: 'search' },
+    ai_audit: { title: 'ИИ-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
+    competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них набирает охват и почему. Функция готовится к запуску.', icon: 'search' },
     find_advertisers: { title: 'Поиск рекламодателей', text: 'Найдём тех, кто ищет размещение в твоей нише. Скоро запустим.', icon: 'coin' },
     post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
     negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
@@ -1160,7 +1160,7 @@ function renderCabinet(d) {
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
-    const streakChip = (u.streak_days || 0) >= 2 ? ` <span class="cab-chip"><i class="ti ti-flame"></i> Стрик ${cabNum(u.streak_days)} дн.</span>` : '';
+    const streakChip = '';   // геймификация «стрик»/🔥 убрана — не соответствует строго деловому тону B2B-инструмента
     let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span>${streakChip}</div></div>${cabStatusHtml(d.subscription)}</div>`;
 
     if (d.upgrade) {
@@ -1235,7 +1235,7 @@ function wireReferral(d) {
     on('cab-share', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = 'Присоединяйся к ForgeMetrics — AI-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:';
+        const text = 'Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:';
         const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
         if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
     });
@@ -1247,7 +1247,7 @@ function wireReferral(d) {
     on('cab-invite-copy', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = t('Присоединяйся к ForgeMetrics — AI-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:') + '\n' + link;
+        const text = t('Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:') + '\n' + link;
         const b = document.getElementById('cab-invite-copy');
         copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
@@ -1584,8 +1584,7 @@ function openCheckout(opts) {
           <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
           <div class="co-row co-total"><span>К оплате</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
-        <button class="co-pay" data-copay="1"><i class="ti ti-lock"></i> Оплатить ${cabNum(price)} ₽</button>
-        <div class="co-secure"><i class="ti ti-shield-check"></i> Безопасная оплата · защищённое соединение</div>
+        <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> Оплатить ${cabNum(price)} ₽</button>
         <button class="co-close">Закрыть</button>
     `;
     document.body.appendChild(overlay);
@@ -1708,7 +1707,7 @@ function setupEventListeners() {
             if (action) handleAction(action);
         });
     });
-    // иконка AI-стратегии в панели — тот же SVG-«маршрут», что на главном экране (единый источник)
+    // иконка ИИ-стратегии в панели — тот же SVG-«маршрут», что на главном экране (единый источник)
     const stIc = document.getElementById('dp-strategy-ic');
     if (stIc && typeof STRATEGY_MAP_SVG !== 'undefined') stIc.innerHTML = STRATEGY_MAP_SVG;
 
@@ -3553,7 +3552,7 @@ function renderSettingsAuditSection(data) {
             <button class="cs-btn-audit" data-audit-channel="${data.id}">
                 <span class="cs-btn-audit-icon"><i class="ti ti-target"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">AI-аудит канала</span>
+                    <span class="cs-btn-audit-title">ИИ-аудит канала</span>
                     <span class="cs-btn-audit-sub">Разбор, прогноз и план роста</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
@@ -4614,7 +4613,7 @@ function handlePostApiError(err) {
     }
 
     if (msg.includes('429')) {
-        showToast('Не так быстро, подожди пару секунд', 'alert-triangle');
+        showToast('Слишком часто. Повторите через несколько секунд', 'alert-triangle');
         showScreen('postCreate');
         return;
     }

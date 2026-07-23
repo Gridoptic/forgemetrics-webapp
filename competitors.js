@@ -29,7 +29,7 @@
     var THINKING_ANALYZE = [
         'Собираю метрики конкурентов...',
         'Сравниваю охваты и частоту...',
-        'Ищу, что у них залетает...',
+        'Ищу, что у них набирает охват…',
         'Нахожу твои окна возможностей...',
         'Собираю план обгона...',
         'Почти готово...',
@@ -400,7 +400,7 @@
                 '<div class="comp-intro-hero">' +
                     '<div class="comp-intro-icon"><i class="ti ti-binoculars"></i></div>' +
                     '<div class="comp-intro-title">Разведка конкурентов</div>' +
-                    '<div class="comp-intro-sub">AI найдёт каналы в твоей нише, проверит что они реальны, и покажет — что у них залетает, где они тебя обходят и как их обогнать.</div>' +
+                    '<div class="comp-intro-sub">ИИ найдёт каналы в твоей нише, проверит, что они существуют, и покажет — что у них набирает охват, где они тебя обходят и как их обогнать.</div>' +
                 '</div>' +
                 '<div class="comp-intro-feats">' +
                     introFeat('map-pin', 'Карта ниши', 'Твоя позиция среди конкурентов') +
@@ -538,7 +538,7 @@
                     ? '<div class="comp-niche-summary"><i class="ti ti-bulb"></i><span>' + _esc(_nicheSummary) + '</span></div>'
                     : '') +
                 (_candidates.length > 0
-                    ? '<div class="comp-select-hint">Отмечай до <b>' + _maxSelectable + '</b> каналов. Все проверены — реально существуют.</div>'
+                    ? '<div class="comp-select-hint">Отмечай до <b>' + _maxSelectable + '</b> каналов. Все проверены — подтверждённые каналы.</div>'
                     : '') +
                 '<div class="comp-cand-list" id="comp-cand-list">' + cards + '</div>' +
                 manualInputHtml() +
@@ -1332,7 +1332,7 @@
         }
         if (!items) return '';
         return '' +
-            '<div class="comp-block-label">Что у них залетает</div>' +
+            '<div class="comp-block-label">Что у них набирает охват</div>' +
             '<div class="comp-moves">' + items + '</div>';
     }
 
