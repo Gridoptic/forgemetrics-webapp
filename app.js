@@ -2093,7 +2093,19 @@ function renderPostChannelSelector(channel) {
             openActiveChannelSelector({
                 onChanged: async () => {
                     try {
-                        const data = await apiRequest('/api/v1/channels/active');
+                        // смена канала меняет и стиль, и лимиты, и авто-длину — перегружаем ВЕСЬ
+                        // контекст экрана. Раньше обновлялась только строка канала, и плашка
+                        // «Стиль письма не настроен» оставалась от прежнего канала (кейс: зашёл
+                        // с каналом без стиля → переключился на канал со стилем — плашка висела)
+                        const [limits, data] = await Promise.all([
+                            apiRequest('/api/v1/post/limits'),
+                            apiRequest('/api/v1/channels/active'),
+                        ]);
+                        state.post.limits = limits;
+                        renderLimitBanner(limits);
+                        updateStyleHint(limits);
+                        setProfanity(!!limits.profanity_default);
+                        updateLengthAutoNote(limits.style_profile);
                         const activeCh = (data.channels || []).find(c => c.id === data.active_channel_id);
                         state.post.activeChannel = activeCh || null;
                         renderPostChannelSelector(activeCh);
