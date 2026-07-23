@@ -736,7 +736,25 @@ function formatNumber(num) {
 }
 
 
+// Снимает «залипшие» модальные состояния, из-за которых после сворачивания/возврата в
+// приложение экран становится не нажимаемым/не листается: осиротевший оверлей (не удалился
+// по таймеру при сворачивании/Telegram-назад) перекрывает всё, либо осталась блокировка
+// скролла cs-modal-open. Безопасно: удаляет только СКРЫТЫЕ (не показанные) оверлеи и снимает
+// блокировку, только если ни один оверлей реально не открыт. Раньше лечилось лишь перезаходом.
+function fmUnstick() {
+    try {
+        document.querySelectorAll('.pw-sheet-ov:not(.show), .lang-ov:not(.show), .bs-overlay:not(.visible), .bs-sheet:not(.visible)')
+            .forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+        var openModal = document.querySelector('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay');
+        if (!openModal) {
+            document.documentElement.classList.remove('cs-modal-open');
+            document.body.classList.remove('cs-modal-open');
+        }
+    } catch (e) {}
+}
+
 function openDrawer() {
+    fmUnstick();   // защита: drawer всегда открывается в чистое состояние, без залипших блокировок
     fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
@@ -4902,6 +4920,10 @@ async function main() {
 
     startLiveUpdate();
     initChannelsAutoRefresh();
+    // при возврате в приложение снимаем залипшие оверлеи/блокировку скролла — чтобы не нужен
+    // был перезаход, если боковое меню/экран «застряли» после сворачивания
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) fmUnstick(); });
+    window.addEventListener('focus', fmUnstick);
     await loadDashboard();
 }
 
