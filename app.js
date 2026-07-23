@@ -1645,7 +1645,8 @@ function renderTariffs(d) {
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
     const promos = (d.promotions || []).map((e) => tfErow(e)).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
-    html += '<div class="tf-note"><i class="ti ti-shield-check"></i> Безопасная оплата · подписку можно отменить в любой момент.</div>';
+    // подпись «Безопасная оплата · подписку можно отменить…» удалена (решение владельца 24.07):
+    // оплата разовая, не автопродляемая подписка; обещание отмены/возврата вводило в заблуждение
     body.innerHTML = html;
     localizeTree(screens.tariffs);
     body.querySelectorAll('[data-per]').forEach((btn) => btn.addEventListener('click', () => {
