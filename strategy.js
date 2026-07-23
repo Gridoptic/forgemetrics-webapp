@@ -20,7 +20,8 @@
         if (s == null) return '';
         return String(s)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');   // единый стандарт экранирования во всех модулях
     }
 
     function haptic(kind) {

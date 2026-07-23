@@ -179,10 +179,14 @@ async function apiRequest(path, options = {}) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`API ${response.status}: ${errorText || response.statusText}`);
+            const apiErr = new Error(`API ${response.status}: ${errorText || response.statusText}`);
+            apiErr.status = response.status;   // реальный код — чтобы не угадывать ошибку по подстроке тела
+            throw apiErr;
         }
 
-        return await response.json();
+        // пустое тело (204 / пустой 200) — это успех, а не SyntaxError разбора JSON
+        const raw = await response.text();
+        return raw ? JSON.parse(raw) : null;
     } catch (err) {
         console.error('API request failed:', url, err);
         throw err;
@@ -720,12 +724,8 @@ function renderActions(actions) {
 }
 
 
-function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
+// (здесь был второй, мёртвый escapeHtml через textContent — из-за хойстинга работала версия ниже.
+//  Удалён как ловушка сопровождения: правка мёртвой копии не давала бы никакого эффекта.)
 
 
 function formatNumber(num) {
@@ -2330,7 +2330,8 @@ function escapeHtml(s) {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');   // и одинарная кавычка — единый стандарт с marketplace._esc
 }
 
 
@@ -2515,9 +2516,8 @@ async function _loadOneChannelAvatar(chId, attempt) {
         });
         if (!resp.ok) throw new Error('avatar ' + resp.status);
         const blob = await resp.blob();
-        const url = URL.createObjectURL(blob);
         const live = document.querySelector(`[data-avatar-for="${chId}"][data-has-avatar="1"]`) || node;
-        live.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
+        _setBlobImg(live, blob, 'channel-avatar-img');
         live.dataset.avatarLoaded = '1';
         delete live.dataset.avatarPending;
     } catch (e) {
@@ -2798,6 +2798,9 @@ let _voicePollTimer = null;
 function startVoicePollingIfNeeded() {
     if (_voicePollTimer) return;
     _voicePollTimer = setInterval(async () => {
+        // не дёргаем API и не пересобираем список, если экран каналов не активен или вкладка скрыта
+        // (иначе лишняя нагрузка и перезагрузка всех аватарок каждые 5 сек в фоне)
+        if (!_channelsScreenActive() || document.hidden) return;
         try {
             const data = await apiRequest('/api/v1/channels');
             const hasCollecting = (data.channels || []).some(c => c.voice_status === 'collecting');
@@ -2829,6 +2832,20 @@ function stopVoicePolling() {
    Канал подключается ВНЕ приложения (бота добавляют админом в Telegram), поэтому
    после возврата в мини-апп и пока пользователь ждёт на пустом экране — сами
    перечитываем список: канал и его аватарка появляются моментально. */
+// Ставит картинку из blob и ОСВОБОЖДАЕТ object URL после загрузки. Без revokeObjectURL каждый
+// blob висит в памяти до закрытия приложения, а опрос голоса пересобирает список каждые 5 сек и
+// перезагружает все аватарки — память росла линейно (утечка на телефоне).
+function _setBlobImg(node, blob, cls) {
+    if (!node || !blob) return;
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.alt = '';
+    if (cls) img.className = cls;
+    img.onload = img.onerror = () => URL.revokeObjectURL(url);
+    img.src = url;
+    node.replaceChildren(img);
+}
+
 function _channelsScreenActive() {
     return !!(screens.channels && screens.channels.style.display !== 'none');
 }
@@ -3196,8 +3213,7 @@ async function loadBottomSheetAvatar(channelId, node) {
         });
         if (!resp.ok) return;
         const blob = await resp.blob();
-        const url = URL.createObjectURL(blob);
-        if (node) node.innerHTML = `<img src="${url}" alt="">`;
+        _setBlobImg(node, blob, '');
     } catch (e) {}
 }
 
@@ -3954,8 +3970,7 @@ async function loadChannelSettingsAvatar(channelId) {
         });
         if (!resp.ok) return;
         const blob = await resp.blob();
-        const url = URL.createObjectURL(blob);
-        node.innerHTML = `<img src="${url}" alt="" class="channel-avatar-img">`;
+        _setBlobImg(node, blob, 'channel-avatar-img');
     } catch (e) {}
 }
 
@@ -4075,7 +4090,7 @@ function renderDemoPreview(data) {
     const subLine = subs ? `${subs} подписчиков` : 'Публичный канал';
 
     const posts = (data.posts || []).slice(0, 3).map(p => {
-        const txt = escapeHtml(p).slice(0, 220);
+        const txt = escapeHtml(p.slice(0, 220));   // режем сырой текст, потом экранируем — иначе можно обрубить HTML-сущность посередине
         return `<div class="channels-preview-post">${txt}${p.length > 220 ? '…' : ''}</div>`;
     }).join('');
 
@@ -4606,24 +4621,28 @@ function showToast(text, icon) {
 
 function handlePostApiError(err) {
     const msg = err?.message || '';
+    // Классифицируем по РЕАЛЬНОМУ http-коду (apiRequest его проставляет). Раньше искали «429»/«500»
+    // подстрокой в теле ответа — и ошибка 400 с текстом вроде «лимит 500 символов» уводила не в ту ветку.
+    const st = err?.status;
+    const is = (code) => (st != null ? st === code : msg.includes(String(code)));
 
-    if (msg.includes('404') && msg.includes('User not found')) {
+    if (is(404) && msg.includes('User not found')) {
         showStartBotScreen();
         return;
     }
 
-    if (msg.includes('429')) {
+    if (is(429)) {
         showToast('Слишком часто. Повторите через несколько секунд', 'alert-triangle');
         showScreen('postCreate');
         return;
     }
 
-    if (msg.includes('401')) {
+    if (is(401)) {
         showToast('Сессия истекла, переоткрой Mini App', 'alert-triangle');
         return;
     }
 
-    if (msg.includes('500')) {
+    if (is(500)) {
         showToast('Что-то пошло не так. Попробуй ещё раз', 'alert-triangle');
         showScreen('postCreate');
         return;
