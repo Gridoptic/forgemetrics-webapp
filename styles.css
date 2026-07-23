@@ -3,11 +3,11 @@
     --bg-card: rgba(255, 255, 255, 0.03);
     --bg-card-hover: rgba(255, 255, 255, 0.06);
     --bg-elevated: #161a2c;
-    /* ЕДИНАЯ задняя палитра приложения (эталон главного экрана) — используется на body и всех
-       фон-контейнерах, чтобы фон везде был одинаковым (пурпур сверху-справа + индиго снизу-слева) */
+    /* ЕДИНАЯ задняя палитра приложения = ТОЧНАЯ формула фона главного экрана (индиго-купол
+       сверху по центру). Раньше здесь была другая палитра (пурпур/индиго по углам) — а главный
+       рисовал свой фон поверх неё, поэтому остальные окна отличались цветом от главного. */
     --app-bg-image:
-        radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom left, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
+        radial-gradient(135% 55% at 50% -4%, rgba(99, 102, 241, 0.10), transparent 58%);
 
     --border-subtle: rgba(255, 255, 255, 0.06);
     --border-medium: rgba(255, 255, 255, 0.10);
@@ -227,9 +227,10 @@ button:active {
 }
 
 /* мягкое свечение сверху на главной — премиум-глубина, только этот экран */
-#dashboard-screen {
-    background: radial-gradient(135% 55% at 50% -4%, rgba(99, 102, 241, 0.10), transparent 58%), var(--bg-base);
-}
+/* Главный экран прозрачен, как все окна: его фирменный индиго-купол теперь рисует единый
+   фикс-слой body::before (формула перенесена в --app-bg-image). Собственный непрозрачный фон
+   здесь ПЕРЕКРЫВАЛ общий слой — из-за этого остальные окна отличались цветом от главного. */
+#dashboard-screen { background: transparent; }
 
 .header {
     display: flex;
@@ -4406,8 +4407,8 @@ html.cs-modal-open {
 @keyframes tfRise{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
 @keyframes tfSpin{to{transform:rotate(360deg);}}
 @keyframes tfSweep{0%,55%{transform:translateX(-160%) skewX(-18deg);}100%{transform:translateX(420%) skewX(-18deg);}}
-.screen-tariffs{background:var(--bg-base);
-  background-image:var(--app-bg-image);}
+/* прозрачен, как все окна — фон рисует единый фикс-слой (цвет главного экрана) */
+.screen-tariffs{background:transparent;}
 .tf-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
 .tf-hbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border-medium);background:rgba(255,255,255,0.03);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:18px;transition:all .16s;}
 .tf-hbtn:hover{color:var(--text-primary);border-color:rgba(255,255,255,0.2);}
