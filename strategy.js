@@ -1,18 +1,14 @@
-/* AI-стратегия канала — фронтенд по утверждённому макету (14.07).
-   Экраны: витрина -> интервью (5 шагов) -> генерация -> живой документ
-   (график площадок, шаги-галочки, ленивые гайды, термины) -> разбор недели -> чат.
-   Доступ: полный у админа/купивших; остальным витрина с бронью (до биллинга). */
 (function () {
     'use strict';
 
-    var _state = null;          // последний ответ GET /strategy
+    var _state = null;          
     var _pollTimer = null;
     var _genTimer = null;
-    var _channels = null;       // список каналов юзера (для шага 1)
-    var _iv = {};               // ответы интервью
+    var _channels = null;       
+    var _iv = {};               
     var _ivStep = 0;
-    var _started = false;       // строка strategies создана
-    var _guides = {};           // step_key -> guide json (кэш на клиенте)
+    var _started = false;       
+    var _guides = {};           
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
 
@@ -21,7 +17,7 @@
         return String(s)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;')
             .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');   // единый стандарт экранирования во всех модулях
+            .replace(/'/g, '&#39;');   
     }
 
     function haptic(kind) {
@@ -65,7 +61,6 @@
         week1: '<i class="ti ti-checklist"></i>' };
     var DIFF = { easy: { c: '#5DCAA5', l: 'Просто' }, medium: { c: '#f5bf4f', l: 'Средне' }, hard: { c: '#ef8080', l: 'Сложно' } };
 
-    // ==================== каркас экрана ====================
 
     function ensureScreen() {
         var host = document.getElementById('strategy-screen');
@@ -134,7 +129,6 @@
     }
 
     function normalizeDoc(d) {
-        // старые документы без флага checkable: метрики и варианты ниши — справочные пункты
         var doc = d && d.doc;
         if (!doc || !doc.sections) return;
         doc.sections.forEach(function (sec) {
@@ -167,7 +161,6 @@
         setView('<div class="stg-center"><div class="big">' + icon + '</div><div class="m">' + esc(msg) + '</div></div>');
     }
 
-    // ==================== 1. Витрина ====================
 
     function renderShowcase() {
         var locked = !_state || _state.access !== 'full';
@@ -209,7 +202,7 @@
         var btn = document.querySelector('#strategy-screen [data-act="book"]');
         if (btn) {
             btn.classList.add('booked');
-            btn.removeAttribute('data-act');   // повторные POST /book-extra исключены
+            btn.removeAttribute('data-act');   
             btn.innerHTML = '<i class="ti ti-circle-check"></i> ' + esc(T('Забронировано · уведомим при запуске'));
         }
     }
@@ -231,7 +224,6 @@
             .catch(function () { btn.disabled = false; toast(T('Не удалось забронировать — попробуй ещё раз')); });
     }
 
-    // ==================== 2. Интервью ====================
 
     var STEPS = [
         { key: 'start', icon: '<i class="ti ti-target"></i>', head: 'Знакомство со стратегом', q: 'С чего начинаем?',
@@ -345,7 +337,6 @@
         var st = STEPS[_ivStep];
         var custom = document.getElementById('stg-custom');
         if (custom && st.customField) _iv[st.customField] = custom.value.trim();
-        // валидация: нужен хотя бы один ответ (или свой вариант)
         if (st.type === 'double') {
             for (var i = 0; i < st.groups.length; i++) {
                 if (!_iv[st.groups[i].field]) { toast(T('Выбери вариант в каждой группе')); return; }
@@ -403,7 +394,6 @@
         }).catch(function () { toast(T('Не удалось запустить генерацию')); renderStep(); });
     }
 
-    // ==================== 3. Генерация ====================
 
     var GEN_TEXTS = [
         'Изучаю твои ответы и данные канала...',
@@ -426,7 +416,7 @@
             if (!el) return;
             if (i < GEN_TEXTS.length - 1) {
                 i++;
-                el.textContent = T(GEN_TEXTS[i]);   // доходим до последней фразы и останавливаемся
+                el.textContent = T(GEN_TEXTS[i]);   
             }
         }, 26000);
     }
@@ -436,7 +426,7 @@
         var ticks = 0;
         _pollTimer = setInterval(function () {
             ticks++;
-            if (ticks === 60) {   // ~6 минут: честно меняем обещание
+            if (ticks === 60) {   
                 var el = document.getElementById('stg-gen-text');
                 if (el) el.textContent = T('Собираю особенно тщательно — ещё чуть-чуть...');
             }
@@ -466,14 +456,13 @@
             .catch(function () { if (btn) btn.disabled = false; toast(T('Не удалось запустить генерацию')); });
     }
 
-    // ==================== 4. Документ ====================
 
     function docTotals() {
         var total = 0, done = 0;
         var prog = _state.progress || {};
         (_state.doc.sections || []).forEach(function (sec) {
             (sec.steps || []).forEach(function (s) {
-                if (s.checkable === false) return;   // метрики/варианты ниши — не задачи
+                if (s.checkable === false) return;   
                 total++;
                 if (prog[s.key]) done++;
             });
@@ -485,7 +474,6 @@
         return '<div class="stg-ring" style="background:conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)"><span>' + t.pct + '%</span></div>';
     }
 
-    // termWrap: экранирует текст и оборачивает первые вхождения терминов (до 3 на блок)
     function _isWordChar(ch) { return ch != null && /[0-9A-Za-z\u00C0-\u024F\u0400-\u04FF]/.test(ch); }
 
     function termWrap(text) {
@@ -496,7 +484,6 @@
         for (var k in terms) {
             if (!terms.hasOwnProperty(k) || k.length < 2 || k.length > 34) continue;
             var idx = low.indexOf(k.toLowerCase());
-            // совпадение только по границам слова (не внутри другого слова)
             if (idx >= 0 && !_isWordChar(plain[idx - 1]) && !_isWordChar(plain[idx + k.length])) {
                 found.push({ i: idx, len: k.length, key: k });
             }
@@ -529,7 +516,6 @@
         var done = (_state.progress || {})[s.key];
         var how = (s.has_guide && _state.access === 'full')
             ? '<button class="stg-how" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Как сделать')) + '</button>' : '';
-        // справочные пункты (метрики, варианты ниши) — без чекбокса; точка-маркер вместо него
         var mark = (s.checkable === false)
             ? '<span class="stg-dot"></span>'
             : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
@@ -538,7 +524,6 @@
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
     }
 
-    // стоимость в метке — коротко: до первой запятой/скобки, максимум ~26 символов
     function shortCost(c) {
         var t = String(c == null ? '' : c).trim();
         if (!t || t === '—' || t === '-') return '';
@@ -603,7 +588,7 @@
                 inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
             }
             if (sec.intro && sec.intro.trim()) {
-                inner += bodyHtml(fixDays(sec.intro), true);   // длинные intro сворачиваются как тела шагов
+                inner += bodyHtml(fixDays(sec.intro), true);   
             }
             inner += chartHtml(sec.chart);
             if (sec.steps && sec.steps.length) {
@@ -623,7 +608,6 @@
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // свёртка честная: если за окном прячется меньше полутора строк — показываем всё
     function unclampSmall(host) {
         try {
             host.querySelectorAll('.stg-body.clamp').forEach(function (b) {
@@ -636,7 +620,6 @@
         } catch (e) {}
     }
 
-    // ==================== 5. Разбор недели ====================
 
     function reviewHtml() {
         var revs = _state.reviews || [];
@@ -659,7 +642,6 @@
         return '<div class="stg-sec">' + inner + '</div>';
     }
 
-    // ==================== 6. Чат ====================
 
     function chatHtml() {
         var msgs = _state.messages || [];
@@ -691,7 +673,7 @@
         if (btn) btn.disabled = true;
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg u">' + esc(q) + '</div>');
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg a stg-typing">…</div>');
-        var typing = box.lastElementChild;   // ссылка на СВОЙ пузырь (id больше не путается)
+        var typing = box.lastElementChild;   
         box.scrollTop = box.scrollHeight;
         function done() { _chatBusy = false; if (btn) btn.disabled = false; }
         apiRequest('/api/v1/strategy/chat', { method: 'POST', body: JSON.stringify({ text: q }) })
@@ -749,7 +731,6 @@
             .catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); });
     }
 
-    // ==================== гайды и клики ====================
 
     function guideBlock(g) {
         var steps = (g.steps || []).map(function (s, i) {
@@ -818,10 +799,8 @@
         var def = terms[key];
         if (!def) return;
         haptic('light');
-        // повторный тап по тому же слову — закрыть
         var nxt = elm.nextElementSibling;
         if (nxt && nxt.classList && nxt.classList.contains('stg-tip')) { nxt.remove(); return; }
-        // подсказка раскрывается ПРЯМО ПОД словом, в месте тапа
         var sec = elm.closest('.stg-sec');
         if (sec) sec.querySelectorAll('.stg-tip[data-tip-for]').forEach(function (t) { t.remove(); });
         var body = elm.closest('.stg-body');
@@ -894,7 +873,6 @@
         }
     }
 
-    // чипы интервью — делегирование отдельно (динамический data-chip)
     document.addEventListener('click', function (ev) {
         var host = document.getElementById('strategy-screen');
         if (!host || host.style.display === 'none') return;
@@ -902,9 +880,8 @@
         if (chip && host.contains(chip)) chipTap(chip);
     });
 
-    // Enter в чате
     document.addEventListener('keydown', function (ev) {
-        if (ev.isComposing) return;   // Enter подтверждения IME (CJK) не отправляет вопрос
+        if (ev.isComposing) return;   
         if (ev.key === 'Enter' && ev.target && ev.target.id === 'stg-chat-inp') sendChat();
     });
 })();

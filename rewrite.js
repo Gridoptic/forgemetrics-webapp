@@ -1,11 +1,9 @@
-/* Рерайт чужого поста 2.0 — вставь текст или ссылку t.me, выбери канал (адаптируется под стиль),
-   эмодзи и длину, «Усилить» — получи свою версию. «Ещё вариант» — другой заход. */
 (function () {
     'use strict';
 
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _lastOriginal = '', _lastResult = '', _busy = false, _tab = 'res';
-    var _avCache = {};   // id канала -> objectURL картинки ('x' = аватарки нет/не загрузилась)
+    var _avCache = {};   
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -58,12 +56,10 @@
         return null;
     }
     function chAv(c) {
-        // буква-заглушка; реальная аватарка подгружается rwLoadAvatars() поверх — как в основном приложении
         var t = (c && (c.title || c.username)) || '?';
         return esc(String(t).charAt(0).toUpperCase());
     }
     function avAttr(c) {
-        // помечаем контейнер .av для отложенной подгрузки картинки (эндпоинт /channels/{id}/avatar)
         return (c && c.has_avatar && c.id != null) ? ' data-rwav="' + c.id + '"' : '';
     }
     function rwLoadAvatars(scope) {
@@ -85,7 +81,6 @@
                 .then(function (r) { if (!r.ok) throw 0; return r.blob(); })
                 .then(function (b) { var url = URL.createObjectURL(b); _avCache[id] = url; fill(id, url); })
                 .catch(function () {
-                    // серия повторов — на случай задержки Telegram сразу после подключения; остаёмся 'pending', чтобы не дёргать параллельно
                     if (tries < 3) setTimeout(function () { attempt(id, tries + 1); }, 1500 * (tries + 1));
                     else _avCache[id] = 'x';
                 });
@@ -228,9 +223,8 @@
         var opt = t.closest ? t.closest('.rw-chopt') : null;
         if (opt) {
             var cid = +opt.getAttribute('data-chid');
-            _chId = cid > 0 ? cid : null;              // 0 = «Без канала»
+            _chId = cid > 0 ? cid : null;              
             haptic('light');
-            // обновляем НА МЕСТЕ (не перерисовываем форму — иначе стирается введённый текст)
             var head = document.getElementById('rw-chhead');
             if (head) { head.innerHTML = chHead(curChannel()) + '<i class="ti ti-chevron-down chev"></i>'; rwLoadAvatars(head); }
             var list = document.getElementById('rw-chlist');

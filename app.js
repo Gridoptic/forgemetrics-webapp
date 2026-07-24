@@ -139,8 +139,6 @@ function initTelegram() {
 
     tg.ready();
     tg.expand();
-    // Свайп вниз больше не сворачивает приложение — свернуть можно только галочкой-шевроном
-    // в шапке Telegram. Метод доступен с Bot API 7.7; на старых клиентах просто игнорируется.
     if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
 
     if (tg.setHeaderColor) tg.setHeaderColor('#0a0d18');
@@ -166,7 +164,6 @@ async function apiRequest(path, options = {}) {
     if (state.initData) {
         headers['X-Telegram-Init-Data'] = state.initData;
     }
-    // выбранный язык интерфейса — чтобы ИИ-ответы (аудит, конкуренты, биржа, посты) приходили на нём
     try { if (typeof getLang === 'function') headers['X-Lang'] = getLang(); } catch (e) {}
 
     const url = `${API_BASE_URL}${path}`;
@@ -180,11 +177,10 @@ async function apiRequest(path, options = {}) {
         if (!response.ok) {
             const errorText = await response.text();
             const apiErr = new Error(`API ${response.status}: ${errorText || response.statusText}`);
-            apiErr.status = response.status;   // реальный код — чтобы не угадывать ошибку по подстроке тела
+            apiErr.status = response.status;   
             throw apiErr;
         }
 
-        // пустое тело (204 / пустой 200) — это успех, а не SyntaxError разбора JSON
         const raw = await response.text();
         return raw ? JSON.parse(raw) : null;
     } catch (err) {
@@ -238,7 +234,6 @@ async function refreshDashboardSilent() {
         state.dashboard = data;
         renderDashboard(data);
     } catch (e) {
-        // Тихо: пользователь не на дашборде, не нужно показывать ошибку
     }
 }
 
@@ -275,8 +270,6 @@ function showStartBotScreen() {
 }
 
 
-// Локализация поддерева: переводит статические текстовые узлы через t() (ru — как есть).
-// Перевод одной строки: точный ключ, затем шаблон с подстановкой. null — если перевода нет.
 function localizeStr(trimmed) {
     let tr = t(trimmed);
     if (tr && tr !== trimmed) return tr;
@@ -284,19 +277,16 @@ function localizeStr(trimmed) {
         const tt = translateTemplate(trimmed);
         if (tt && tt !== trimmed) return tt;
     }
-    // ведущий разделитель («— X», «· X»): перевести X, разделитель сохранить
     if (typeof stripSepTranslate === 'function') {
         const ts = stripSepTranslate(trimmed);
         if (ts) return ts;
     }
-    // составной узел с разделителями — перевести каждый отрезок
     if (typeof segmentTranslate === 'function') {
         const sg = segmentTranslate(trimmed);
         if (sg) return sg;
     }
     return null;
 }
-// Перевод видимых атрибутов элемента (подсказки, плейсхолдеры).
 const LOC_ATTRS = ['title', 'placeholder', 'aria-label', 'alt'];
 function localizeAttrs(el) {
     if (!el || el.nodeType !== 1 || !el.getAttribute) return;
@@ -310,7 +300,6 @@ function localizeAttrs(el) {
         if (tr) el.setAttribute(a, v.replace(trimmed, tr));
     }
 }
-// Перевод одного текстового узла (общая точка для обхода дерева и наблюдателя).
 function localizeTextNode(n) {
     try {
         const raw = n.nodeValue;
@@ -330,7 +319,6 @@ function localizeTree(root) {
         let node;
         while ((node = walker.nextNode())) nodes.push(node);
         nodes.forEach(localizeTextNode);
-        // атрибуты (подсказки/плейсхолдеры) на самом узле и всех вложенных
         localizeAttrs(root);
         if (root.querySelectorAll) {
             const els = root.querySelectorAll('[title],[placeholder],[aria-label],[alt]');
@@ -339,19 +327,17 @@ function localizeTree(root) {
     } catch (e) {}
 }
 
-// Авто-локализация: переводит любой новый DOM-контент (биржа, модалки) без ручной обвязки.
 function initAutoLocalize() {
     if (typeof getLang !== 'function' || getLang() === 'ru') return;
     try {
         localizeTree(document.body);
         const obs = new MutationObserver((muts) => {
             muts.forEach((m) => {
-                // текст, заданный через element.textContent / изменение nodeValue
                 if (m.type === 'characterData') { localizeTextNode(m.target); return; }
                 if (!m.addedNodes) return;
                 m.addedNodes.forEach((n) => {
-                    if (n.nodeType === 1) localizeTree(n);         // элемент — обходим целиком
-                    else if (n.nodeType === 3) localizeTextNode(n); // текстовый узел
+                    if (n.nodeType === 1) localizeTree(n);         
+                    else if (n.nodeType === 3) localizeTextNode(n); 
                 });
             });
         });
@@ -361,7 +347,6 @@ function initAutoLocalize() {
 
 function renderDashboard(data) {
     const firstName = data.user?.first_name || '';
-    // кнопка кабинета в шапке: реальный аватар Telegram; нет фото — буква на индиго-стекле
     const _hdrPhoto = tg?.initDataUnsafe?.user?.photo_url;
     if (_hdrPhoto && els.avatarLetter) {
         els.avatarLetter.innerHTML = `<img src="${escapeHtml(_hdrPhoto)}" alt="">`;
@@ -382,25 +367,21 @@ function renderDashboard(data) {
     localizeTree(screens.dashboard);
 }
 
-// ---------- Пульс канала: селектор + виджет + график ----------
 function renderChannelSelector(data) {
     const host = document.getElementById('channel-selector');
     if (!host) return;
     const ch = data.channel;
-    // активный канал из главного меню — чтобы Радар считал «под нишу» только по нему, а не по всем каналам
     try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
     if (ch) {
         const title = ch.title || ch.username || 'Канал';
         const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
         const niche = (data.pulse && data.pulse.niche) ? data.pulse.niche : '';
         const multi = (data.total_channels || 1) > 1;
-        // подпись: @username · ниша (подсказку не пишем — на баре есть шеврон-стрелка, и длинная подсказка обрезалась)
         const idn = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? (ch.username ? ' · ' : '') + escapeHtml(niche) : ''}`;
         const sub = idn || (multi ? 'нажми, чтобы сменить канал' : 'нажми для управления');
         host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">${escapeHtml(title)}</span><span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
-        // реальный аватар канала в баре (как в списке каналов); при отсутствии/ошибке остаётся буква
         const avEl = document.getElementById('pw-chav-el');
         if (avEl && ch.id) loadBottomSheetAvatar(ch.id, avEl);
     } else {
@@ -435,7 +416,6 @@ function pwCell(label, val, opts) {
     return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div></div>`;
 }
 
-// Каталог показателей канала для пульса. Показываем ТОЛЬКО реальные метрики; пустые видны в пикере как «нет данных».
 var PW_CATALOG = [
     { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { k: true } },
     { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
@@ -445,10 +425,6 @@ var PW_CATALOG = [
 var PW_MAX = 4;
 var PW_LS = 'fm_pulse_metrics_v1';
 
-// Кэш статуса «спящий канал» (по id канала). Нужен, чтобы при входе плашка сразу рисовалась
-// серой, а не вспыхивала жёлтой («здоровье по охвату» из dashboard) с перекраской через секунду,
-// когда reach-series сообщит, что канал давно не постит. Свежий ответ reach-series каждый раз
-// подтверждает или снимает статус и обновляет кэш.
 var PW_DORM_LS = 'fm_pulse_dormant_v1';
 function pwDormantGet(chId) {
     if (chId == null) return null;
@@ -470,7 +446,6 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    // дефолт: до 4 показателей, у которых РЕАЛЬНО есть данные, в приоритетном порядке
     var order = ['subs', 'reach', 'rr', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
@@ -494,7 +469,6 @@ function pwRenderMetrics(pulse) {
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
 }
 
-// Шестерёнка: выбор показателей главной (до 4). Только реальные данные; пустые помечены «нет данных».
 function pwOpenPicker(pulse) {
     var sel = new Set(pwSelectedIds(pulse));
     var ov = document.createElement('div');
@@ -549,13 +523,10 @@ function pwOpenPicker(pulse) {
 function pwHealthState(pulse) {
     const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
     let h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
-    // RR>100% (охват больше подписчиков) — не «живой/норма», а аномалия: репосты/внешний трафик/накрутка
     if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: 'Охват выше базы', s: 'репосты или накрутка — проверь' };
     return h;
 }
 
-// Возврат «живой» плашки здоровья (антипод markPulseStale): вызывается, когда reach-series
-// подтвердил, что канал активен, а из кэша могла быть нарисована серая «спящая».
 function markPulseHealthy(pulse) {
     const badge = document.querySelector('.pw-health');
     if (!badge || !pulse) return;
@@ -592,7 +563,6 @@ function renderPulse(pulse) {
     pwRenderMetrics(pulse);
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
-    // статус «спящий» рисуем сразу из кэша прошлого визита — без жёлтой вспышки с перекраской
     try {
         var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         var _dorm = pwDormantGet(_dch);
@@ -605,8 +575,6 @@ function renderPulse(pulse) {
     loadReachSeries();
 }
 
-// Крючок ИИ у пульса: когда охват просел — сразу предлагаем вернуть его постами.
-// Показываем только на реальном спаде (trend < 0), иначе прячем — без выдумок.
 function renderPulseHook(trendPct) {
     const hook = document.getElementById('pw-aihook');
     if (!hook) return;
@@ -629,10 +597,6 @@ async function loadReachSeries() {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
             _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel };
             drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel);
-            // Страховка от «сжатого» графика: Telegram при старте может отдать вьюпорт ШИРЕ
-            // финального — график рисовался под неё и потом ужимался вместе с экраном
-            // (пропорционально падала высота). Если фактическая ширина разошлась с той, под
-            // которую рисовали, — перерисовываем по фактической.
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
@@ -640,20 +604,15 @@ async function loadReachSeries() {
             const tr = document.getElementById('pw-trend');
             const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             if (r.stale) {
-                // спящий канал: «+X% за 30 дней» и «сегодня» — ложь (последний пост давно).
-                // Тренд не показываем (он про старый период), статус метим честно, крючок не рвём.
                 if (tr) { tr.textContent = ''; tr.className = 'tr'; }
                 const lab = document.querySelector('.pw-hlab');
                 if (lab) lab.textContent = 'Средний охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
                 pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
             } else {
-                // канал активен: снимаем кэш «спящего» и возвращаем «живую» плашку,
-                // если из кэша была нарисована серая
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
                 if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
-                // проактивный крючок: охват просел → ИИ сразу предлагает вернуть его постами
                 renderPulseHook(r.trend_pct);
             }
         } else {
@@ -664,7 +623,6 @@ async function loadReachSeries() {
     }
 }
 
-// Спящий канал: честная метка статуса вместо «Живой канал» (последний пост давно).
 function markPulseStale(days, lastDate) {
     const badge = document.querySelector('.pw-health');
     if (!badge) return;
@@ -674,7 +632,6 @@ function markPulseStale(days, lastDate) {
     badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
 }
 
-// последняя серия охвата — для перерисовки графика при смене размеров экрана
 var _reachLast = null, _reachRedrawT = null;
 function _reachRedraw() {
     try {
@@ -730,12 +687,11 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
         const dlab = (dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад');
         tip.innerHTML = `<div class="d">${dlab}</div>${DATA[i].toLocaleString('ru-RU')} охват`;
         tip.style.opacity = 1;
-        // держим рамку в пределах графика: у крайних точек не вылезает за края в невидимую зону
         const pxX = x / W * r.width, pxY = y / Hh * r.height;
         const half = tip.offsetWidth / 2 + 4;
         tip.style.left = Math.max(half, Math.min(r.width - half, pxX)) + 'px';
         tip.style.top = pxY + 'px';
-        tip.style.transform = 'translate(-50%,-128%)';   // всегда над точкой
+        tip.style.transform = 'translate(-50%,-128%)';   
     }
     function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
     host.addEventListener('pointermove', (e) => at(e.clientX));
@@ -757,7 +713,6 @@ function renderTrend(el, change, trend) {
 }
 
 
-// иконка ИИ-стратега 1 в 1 как внутри экрана стратегии (strategy.js MAP_SVG): карта с маршрутом и меткой
 var STRATEGY_MAP_SVG = '<svg width="26" height="26" viewBox="0 0 44 44" fill="none">' +
     '<rect x="5" y="10" width="34" height="26" rx="6" stroke="#8b8ff8" stroke-width="2" fill="rgba(129,140,248,0.09)"/>' +
     '<path d="M16.5 10v26M27.5 10v26" stroke="rgba(139,143,248,0.3)" stroke-width="1.4"/>' +
@@ -771,13 +726,10 @@ function renderActions(actions) {
 
     actions.forEach(action => {
         const card = document.createElement('button');
-        // все карточки единообразные — стеклянные (без сплошной заливки .primary): «Написать пост» в общем ряду
         card.className = 'action-card';
         card.dataset.action = action.id;
 
-        // ИИ-стратег — своя иконка-карта на индиго-подложке (1 в 1 с экраном стратегии), не шрифтовая иконка
         const isStrategy = action.id === 'ai_strategy';
-        // бэкенд помечает главное действие color:"primary" — класса .icon-primary нет, поэтому маплем на purple (плитка как у остальных)
         const iconColor = (action.color && action.color !== 'primary') ? action.color : 'purple';
         const colorClass = isStrategy ? 'icon-strategy' : `icon-${iconColor}`;
         const subtitleClass = (!isStrategy && action.color === 'green') ? 'highlight' : '';
@@ -802,8 +754,6 @@ function renderActions(actions) {
 }
 
 
-// (здесь был второй, мёртвый escapeHtml через textContent — из-за хойстинга работала версия ниже.
-//  Удалён как ловушка сопровождения: правка мёртвой копии не давала бы никакого эффекта.)
 
 
 function formatNumber(num) {
@@ -815,10 +765,6 @@ function formatNumber(num) {
 }
 
 
-// Есть ли РЕАЛЬНО видимый модальный слой. Важно: проверка по видимости, а не по наличию
-// в DOM — статичные модалки index.html (model-picker, locked-feature) всегда в DOM со
-// style="display:none"; проверка «querySelector нашёл .modal-overlay» считала их открытыми,
-// из-за чего блокировка прокрутки не снималась никогда (приложение переставало листаться).
 function fmAnyModalVisible() {
     var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active');
     for (var i = 0; i < list.length; i++) {
@@ -827,14 +773,6 @@ function fmAnyModalVisible() {
     return false;
 }
 
-// Снимает «залипшие» модальные состояния, из-за которых после сворачивания/возврата в
-// приложение экран становится не нажимаемым/не листается: осиротевший оверлей (не удалился
-// по таймеру при сворачивании/Telegram-назад) перекрывает всё, либо осталась блокировка
-// скролла cs-modal-open. Безопасно: удаляет только СКРЫТЫЕ (не показанные) оверлеи и снимает
-// блокировку, только если ни один оверлей реально не открыт. Раньше лечилось лишь перезаходом.
-// Снимает залипшую заморозку фона Площадки: fmx-bgfreeze глушит ВЕСЬ #app (включая боковое
-// меню внутри него) — корень эпизодов «ничего не нажимается/не листается». Снимаем только
-// когда реальных модалок Площадки на экране нет.
 function fmClearFreeze() {
     try {
         if (document.body.classList.contains('fmx-bgfreeze')
@@ -855,29 +793,20 @@ function fmUnstick() {
             document.body.classList.remove('cs-modal-open');
         }
         fmClearFreeze();
-        // ремонт после старой пробы: она могла обезвредить структурные элементы — возвращаем
         ['#app', '#drawer-overlay', '#fmx-main'].forEach(function (s) {
             var n = document.querySelector(s);
             if (n && n.style.pointerEvents === 'none') n.style.pointerEvents = '';
         });
         if (document.body.style.pointerEvents === 'none') document.body.style.pointerEvents = '';
         if (document.documentElement.style.pointerEvents === 'none') document.documentElement.style.pointerEvents = '';
-        // если меню открыто в момент возврата в приложение — проверяем, что оно реально сверху
         fmProbeDrawer();
     } catch (e) {}
 }
 
-// Самолечение меню: если поверх открытого drawer лежит ЛЮБОЙ посторонний слой (застрявший
-// оверлей, невидимая модалка и т.п.), он перехватывает тапы и скролл — «меню не нажимается».
-// Проверяем реальными пробными точками (elementFromPoint) внутри меню; чужой перехватчик
-// нейтрализуем (pointer-events:none) и пишем виновника в консоль — для точного диагноза.
-// Пока drawer открыт, легально НИЧТО не должно его перекрывать (все действия сперва закрывают меню).
-// Маячок диагностики: аномалии интерфейса (застрявшие слои, аварийные закрытия) уходят
-// в серверный журнал — виновник виден в journalctl без доступа к консоли устройства.
 var _fmLogSent = 0;
 function fmClientLog(msg) {
     try {
-        if (_fmLogSent > 8) return;   // потолок на сессию — не спамим сервер
+        if (_fmLogSent > 8) return;   
         _fmLogSent++;
         apiRequest('/api/v1/user/client-log', {
             method: 'POST',
@@ -887,9 +816,6 @@ function fmClientLog(msg) {
     } catch (e) {}
 }
 
-// Учёт активности (аналитика владельца): открытия экранов/функций копятся в очередь и
-// уходят батчем (дебаунс 4с + сброс при сворачивании). ИИ-вызовы не шлём — они уже
-// учитываются на сервере по факту (api_calls).
 var _fmTrackQ = [], _fmTrackT = null;
 function fmTrack(e) {
     try {
@@ -911,7 +837,7 @@ function _fmFlushTrack() {
     } catch (err) {}
 }
 document.addEventListener('visibilitychange', function () { if (document.hidden) _fmFlushTrack(); });
-window.__fmTrack = fmTrack;   // для marketplace.js (вкладки Площадки/Радара)
+window.__fmTrack = fmTrack;   
 
 function _fmElDesc(el) {
     try { return (el.tagName || '?') + (el.id ? '#' + el.id : '') + ' cls=' + String(el.className || '').slice(0, 70); } catch (e) { return '?'; }
@@ -924,16 +850,13 @@ function fmProbeDrawer() {
         if (!r.width || !r.height) return;
         [0.2, 0.5, 0.85].forEach(function (fy) {
             var x = r.left + r.width / 2, y = r.top + r.height * fy;
-            for (var n = 0; n < 4; n++) {   // максимум 4 слоя на точку — защита от цикла
+            for (var n = 0; n < 4; n++) {   
                 var hit = document.elementFromPoint(x, y);
                 if (!hit || hit === els.drawer || els.drawer.contains(hit)) break;
-                // структурные элементы НЕ нейтрализуем НИКОГДА (обезвредить body = убить всё
-                // приложение — этот урок оплачен): попадание в них изнутри прямоугольника меню
-                // означает, что само меню заглушено (застрявшая заморозка) — лечится в fmUnstick
                 var tag = (hit.tagName || '').toUpperCase();
                 if (tag === 'HTML' || tag === 'BODY' || hit.id === 'app' || hit.id === 'fmx-main' || hit.id === 'drawer-overlay') {
                     fmClientLog('drawer-under-freeze: ' + _fmElDesc(hit));
-                    fmClearFreeze();   // мгновенное лечение: снять залипшую заморозку
+                    fmClearFreeze();   
                     break;
                 }
                 try { console.warn('[FM] слой поверх меню нейтрализован:', hit.tagName, hit.id || '', String(hit.className || '').slice(0, 80)); } catch (e) {}
@@ -945,22 +868,17 @@ function fmProbeDrawer() {
 }
 
 function openDrawer() {
-    fmUnstick();   // защита: drawer всегда открывается в чистое состояние, без залипших блокировок
+    fmUnstick();   
     fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
-    // блокируем задний экран, пока меню открыто: без этого фон прокручивался свайпом
-    // «сквозь» затемнение (оверлей ловит клики, но не скролл)
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
-    // после завершения анимации выезда — проверка, что меню реально сверху (самолечение);
-    // вторая проба позже ловит блокираторы, появившиеся после открытия
     setTimeout(fmProbeDrawer, 450);
     setTimeout(fmProbeDrawer, 1400);
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
-// шапка панели: реальный аватар Telegram (photo_url) + имя + чип тарифа (из кабинета, кэш)
 function fillDrawerHeader() {
     const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
     const nameEl = document.getElementById('dp-name');
@@ -974,7 +892,6 @@ function fillDrawerHeader() {
     const setChip = (tier, paid) => {
         if (!chipEl || !tier) return;
         chipEl.className = 'dp-chip' + (paid ? ' gold' : '');
-        // корона — только у платных тарифов; Free без иконки (решение владельца 22.07)
         chipEl.innerHTML = (paid ? '<i class="ti ti-crown"></i> ' : '') + escapeHtml(tier);
     };
     const cu = cabinetData && cabinetData.user;
@@ -993,8 +910,6 @@ function fillDrawerHeader() {
 function closeDrawer() {
     els.drawer.classList.remove('active');
     els.drawerOverlay.classList.remove('active');
-    // блокировку фона снимаем, только если поверх не ВИДЕН другой модальный слой
-    // (проверка по видимости: статичные скрытые модалки index.html — не «открытые»)
     if (!fmAnyModalVisible()) {
         document.documentElement.classList.remove('cs-modal-open');
         document.body.classList.remove('cs-modal-open');
@@ -1021,7 +936,7 @@ const PLACEHOLDER_CONFIG = {
 
 function handleAction(actionId) {
     closeDrawer();
-    fmTrack('fn_' + actionId);   // аналитика: какие функции открывают
+    fmTrack('fn_' + actionId);   
 
     if (actionId === 'create_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
@@ -1118,7 +1033,6 @@ function handleAction(actionId) {
 }
 
 
-// ==================== Личный кабинет ====================
 let cabinetData = null;
 
 function cabNum(n) { return Number(n || 0).toLocaleString('ru-RU'); }
@@ -1222,8 +1136,6 @@ function cabUsageRow(u) {
     return `<div class="cab-use">${cabTile(u.color, u.icon, 'md')}<div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
 }
 
-// Модель C («гибрид»): ставки, пороги и перки приходят С БЭКЕНДА (r.ladder) — фронт
-// ничего не хардкодит, витрина не может разойтись с реальными начислениями.
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle' };
 const RF_PERK_TEXT = {
     burst24_monthly: '+1 всплеск 24 ч/мес',
@@ -1252,7 +1164,6 @@ function cabRefLadder(r) {
         const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
-        // первая ступень объясняет, ЧТО значит процент; дальше — короткая форма
         const rate = i === 0
             ? `${x.rate_pct}% от первых ${firstN} платежей — кредитами`
             : `${x.rate_pct}% от платежей`;
@@ -1357,7 +1268,6 @@ async function openReferral() {
     }
 }
 
-// Лидерборд недели (батч C): показываем ТОЛЬКО при ≥3 реальных участниках — без выдуманных цифр
 async function loadRefLeaderboard() {
     try {
         const r = await apiRequest('/api/v1/referral/leaderboard');
@@ -1372,7 +1282,7 @@ async function loadRefLeaderboard() {
         const foot = host.querySelector('.rf-foot');
         if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
         localizeTree(block);
-    } catch (e) { /* лидерборд необязателен */ }
+    } catch (e) {  }
 }
 
 function renderCabinet(d) {
@@ -1383,7 +1293,7 @@ function renderCabinet(d) {
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
-    const streakChip = '';   // геймификация «стрик»/🔥 убрана — не соответствует строго деловому тону B2B-инструмента
+    const streakChip = '';   
     let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span>${streakChip}</div></div>${cabStatusHtml(d.subscription)}</div>`;
 
     if (d.upgrade) {
@@ -1396,11 +1306,7 @@ function renderCabinet(d) {
 
     html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Лимиты сегодня</h3><span class="cab-link">обновятся в 00:00</span></div>${(d.usage || []).map(cabUsageRow).join('')}</div>`;
 
-    // Блок «Мои каналы» удалён из кабинета (решение владельца 24.07): управление каналами —
-    // с главного экрана (переключатель) и из бокового меню.
 
-    // Реферальная секция вынесена в отдельный экран (openReferral/renderReferral) —
-    // в кабинете её больше нет; вход — кнопка «Друзья и промокод» на главном экране.
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
     html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
@@ -1529,7 +1435,6 @@ function wireReferral(d) {
 }
 
 
-// ==================== Переключатель языка ====================
 function closeLang(ov) { ov.classList.remove('show'); setTimeout(() => { if (ov && ov.parentNode) ov.remove(); }, 260); }
 function openLangPicker() {
     hapticLight();
@@ -1554,17 +1459,14 @@ function openLangPicker() {
     });
 }
 
-// ==================== Витрина тарифов ====================
 let tariffsData = null;
-let tfPeriod = 'month'; // 'month' | 'year'
-let tfReturn = 'dashboard'; // куда возвращать по «назад» — экран, с которого открыли тарифы
-// цвет стекла по тарифу (в стиле рефералки, но у каждого свой оттенок)
+let tfPeriod = 'month'; 
+let tfReturn = 'dashboard'; 
 const TP_COLOR = { light: 'bl', pro: 'pu', pro_plus: 'gd', agency: 'gr', network: 'pk' };
 
 function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
 async function openTariffs() {
-    // запоминаем текущий видимый экран — «назад» вернёт туда же (главный или кабинет)
     try {
         for (const [name, el] of Object.entries(screens)) {
             if (el && name !== 'tariffs' && el.style.display !== 'none') { tfReturn = name; break; }
@@ -1632,12 +1534,6 @@ function tfPlanCard(plan, d) {
 
 const tfReduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-// FLIP-раскрытие (fix подлагивания): анимация высоты заставляла браузер пересчитывать
-// геометрию ВСЕЙ страницы и перерисовывать тени/градиенты 60 раз/сек — на телефонных
-// WebView это дёргалось. Теперь высота меняется мгновенно (один пересчёт), а видимое
-// движение — только transform у элементов ниже (GPU-композитор, без пересчёта и без
-// перерисовки); контент проявляется прозрачностью через CSS. Соседи собираются на всех
-// уровнях вложенности до контейнера экрана: строки внутри блока И следующие блоки целиком.
 function flipToggle(owner, toggle, open, fadeSel) {
     if (tfReduceMotion || typeof owner.animate !== 'function') { toggle(open); return; }
     const movers = [];
@@ -1668,7 +1564,6 @@ function flipToggle(owner, toggle, open, fadeSel) {
         });
     };
     if (open) { run(); return; }
-    // закрытие: сначала гасим контент (120 мс), потом схлопываем и съезжаем — без скачка исчезновения
     const fade = fadeSel ? owner.querySelector(fadeSel) : null;
     if (!fade) { run(); return; }
     fade.style.transition = 'opacity .12s ease';
@@ -1704,8 +1599,6 @@ function renderTariffs(d) {
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Разовые пакеты (без подписки)</div>${extras}</div>`;
     const promos = (d.promotions || []).map((e) => tfErow(e)).join('');
     if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
-    // подпись «Безопасная оплата · подписку можно отменить…» удалена (решение владельца 24.07):
-    // оплата разовая, не автопродляемая подписка; обещание отмены/возврата вводило в заблуждение
     body.innerHTML = html;
     localizeTree(screens.tariffs);
     body.querySelectorAll('[data-per]').forEach((btn) => btn.addEventListener('click', () => {
@@ -1728,7 +1621,6 @@ function renderTariffs(d) {
         const open = !row.classList.contains('open');
         flipToggle(row, (o) => row.classList.toggle('open', o), open, '.tf-exin');
     }));
-    // бронь допа/промо: тап — забронировать, повторный — снять; строка не сворачивается
     body.querySelectorAll('[data-buyx]').forEach((btn) => btn.addEventListener('click', (ev) => {
         ev.stopPropagation();
         hapticMed();
@@ -1740,17 +1632,10 @@ function renderTariffs(d) {
 }
 
 
-// ==================== Оформление и оплата (подписки, допы, продвижение) ====================
-// Единый экран оформления в стиле приложения (bottom-sheet). Кнопка «Оплатить N ₽» —
-// реальный шаг оформления заказа. Приём платежей подключается вместе с ЮKassa;
-// до появления ключей карту НЕ списываем — честный статус (для подписок ещё и
-// «закрепить цену»). Когда ключи появятся — реальное создание платежа ЮKassa
-// (POST /api/v1/payment/create) встаёт в coPay().
 let _coCtx = null;
 
 function coPeriodWord() { return tfPeriod === 'year' ? 'Год' : 'Месяц'; }
 
-// Покупка тарифа (подписка)
 function coBuyPlan(planKey) {
     const d = tariffsData;
     if (!d || !Array.isArray(d.plans)) return;
@@ -1768,7 +1653,6 @@ function coBuyPlan(planKey) {
     });
 }
 
-// Покупка разового пакета или продвижения (без подписки)
 function coBuyExtra(key) {
     const d = tariffsData;
     if (!d) return;
@@ -1845,8 +1729,6 @@ function coPay(opts) {
             const r = await opts.lock();
             if (r && r.ok) {
                 closeCheckout();
-                // мгновенно обновляем строку «Твоя бронь» на экране тарифов данными ответа
-                // сервера — иначе до перезахода могла висеть прежняя бронь/цена
                 try {
                     if (r.booked && tariffsData) {
                         tariffsData.booked_plan = r.booked;
@@ -1885,12 +1767,7 @@ function setupEventListeners() {
     if (tfBack) tfBack.addEventListener('click', () => { hapticLight(); showScreen(tfReturn || 'dashboard'); });
     els.drawerClose.addEventListener('click', closeDrawer);
     els.drawerOverlay.addEventListener('click', closeDrawer);
-    // свайп по затемнению не должен прокручивать задний экран (скролл «проваливался» сквозь
-    // оверлей: фон листался, а меню не закрывалось — свайп не является кликом)
     els.drawerOverlay.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
-    // АВАРИЙНОЕ закрытие меню (capture-фаза — срабатывает ПЕРВОЙ, до любого перехватчика):
-    // клик вне меню при открытом меню закрывает его, ДАЖЕ если тап съел посторонний слой.
-    // Если клик съел не наш оверлей — шлём виновника в серверный журнал (диагностика зависаний).
     document.addEventListener('click', function (e) {
         try {
             if (!els.drawer || !els.drawer.classList.contains('active')) return;
@@ -1902,12 +1779,9 @@ function setupEventListeners() {
             }
         } catch (err) {}
     }, true);
-    // самолечение при каждом касании, пока меню открыто: блокиратор поверх меню нейтрализуется
-    // сразу, а не только при открытии/возврате в приложение
     document.addEventListener('touchstart', function () {
         try { if (els.drawer && els.drawer.classList.contains('active')) fmProbeDrawer(); } catch (err) {}
     }, { capture: true, passive: true });
-    // Esc на ПК закрывает меню
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && els.drawer && els.drawer.classList.contains('active')) closeDrawer();
     });
@@ -1963,7 +1837,6 @@ function setupEventListeners() {
             if (action) handleAction(action);
         });
     });
-    // иконка ИИ-стратегии в панели — тот же SVG-«маршрут», что на главном экране (единый источник)
     const stIc = document.getElementById('dp-strategy-ic');
     if (stIc && typeof STRATEGY_MAP_SVG !== 'undefined') stIc.innerHTML = STRATEGY_MAP_SVG;
 
@@ -1991,7 +1864,7 @@ function resetPostState() {
     state.post.pendingInstruction = null;
     state.post.length = 'auto';
     state.post.emoji = 'auto';
-    state.post.styleUserChoice = null; // null = юзер ещё не трогал тумблер стиля
+    state.post.styleUserChoice = null; 
     state.post.lastStyleApplied = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
@@ -2017,8 +1890,6 @@ async function openPostCreate() {
     resetPostState();
     showScreen('postCreate');
 
-    // баннер лимитов перерисовывается через innerHTML — исходный #post-limit-text после
-    // первого рендера отсоединён, поэтому статусы пишем прямо в баннер
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
         els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Загружаю лимиты...</span>';
@@ -2055,7 +1926,6 @@ async function openPostCreate() {
 }
 
 
-// Подпись у «Авто»-длины: показываем, что длина возьмётся из канала
 function updateLengthAutoNote(styleProfile) {
     const note = document.getElementById('post-length-note');
     if (!note) return;
@@ -2087,7 +1957,6 @@ function setProfanity(on) {
 }
 
 
-// ===== Идеи тем следующего поста =====
 
 function hideTopicIdeas() {
     const list = document.getElementById('post-ideas-list');
@@ -2232,10 +2101,6 @@ function renderPostChannelSelector(channel) {
             openActiveChannelSelector({
                 onChanged: async () => {
                     try {
-                        // смена канала меняет и стиль, и лимиты, и авто-длину — перегружаем ВЕСЬ
-                        // контекст экрана. Раньше обновлялась только строка канала, и плашка
-                        // «Стиль письма не настроен» оставалась от прежнего канала (кейс: зашёл
-                        // с каналом без стиля → переключился на канал со стилем — плашка висела)
                         const [limits, data] = await Promise.all([
                             apiRequest('/api/v1/post/limits'),
                             apiRequest('/api/v1/channels/active'),
@@ -2284,10 +2149,6 @@ function renderStyleToggle(canEnable, defaultOn) {
         container.insertAdjacentElement('afterend', toggle);
     }
 
-    // ФИКС 13.07: плейсхолдер-рендер (canEnable=false, пока канал грузится) раньше
-    // ЗАПИСЫВАЛ useChannelStyle=false — тумблер навсегда открывался выключенным и стиль
-    // канала в генерацию не уходил. Теперь состояние пишем только когда стиль доступен,
-    // а выбор пользователя храним отдельно (styleUserChoice) и уважаем его.
     let enabled = false;
     if (canEnable) {
         enabled = (state.post.styleUserChoice === null || state.post.styleUserChoice === undefined)
@@ -2309,7 +2170,6 @@ function renderStyleToggle(canEnable, defaultOn) {
     const row = toggle.querySelector('.post-style-toggle');
     const btn = toggle.querySelector('#post-style-toggle-btn');
     if (row && btn && canEnable) {
-        // тап-зона — вся строка, не только пипка 30px
         row.addEventListener('click', () => {
             const newVal = !btn.classList.contains('on');
             state.post.styleUserChoice = newVal;
@@ -2486,7 +2346,6 @@ function handleConnectChannelHint() {
 }
 
 
-// системные диалоги идут мимо DOM-локализатора — переводим сообщение здесь
 function _trDialog(message) {
     try {
         if (typeof window.t === 'function') {
@@ -2599,7 +2458,7 @@ function escapeHtml(s) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');   // и одинарная кавычка — единый стандарт с marketplace._esc
+        .replace(/'/g, '&#39;');   
 }
 
 
@@ -2649,7 +2508,7 @@ function renderChannels(data) {
         if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = '';
         if (els.channelsStateList) els.channelsStateList.style.display = 'none';
         renderDeletedChannels(deleted, true);
-        startEmptyChannelsWatch();   // ждём первого подключения — подхватим его сами
+        startEmptyChannelsWatch();   
         return;
     }
 
@@ -2774,7 +2633,6 @@ function loadChannelAvatars() {
 }
 
 async function _loadOneChannelAvatar(chId, attempt) {
-    // актуальный узел ищем каждый раз заново — при ре-рендере он мог быть заменён
     const node = document.querySelector(`[data-avatar-for="${chId}"][data-has-avatar="1"]`);
     if (!node || node.dataset.avatarLoaded === '1') return;
     node.dataset.avatarPending = '1';
@@ -2790,9 +2648,7 @@ async function _loadOneChannelAvatar(chId, attempt) {
         delete live.dataset.avatarPending;
     } catch (e) {
         delete node.dataset.avatarPending;
-        // короткая серия повторов — на случай задержки Telegram сразу после подключения канала
         if (attempt < 3) setTimeout(() => _loadOneChannelAvatar(chId, attempt + 1), 1500 * (attempt + 1));
-        // флаг avatarLoaded НЕ ставим — при следующем рендере/рефреше тоже попробуем
     }
 }
 

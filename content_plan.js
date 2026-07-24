@@ -1,18 +1,15 @@
-/* Контент-план на неделю — MVP «Ассистент» (флагман, утверждён 15.07.2026).
-   Экраны: бриф (канал → цель → частота) → сборка (поллинг) → лента недели → карточка дня.
-   ИИ придумывает сюжет недели и идеи; тексты пишутся лениво по кнопке. Без автопостинга (фаза 1). */
 (function () {
     'use strict';
 
-    var _state = null;          // последний ответ GET /content-plan
+    var _state = null;          
     var _pollTimer = null, _genTimer = null;
-    var _channels = null;       // список каналов юзера
-    var _chId = null;           // выбранный канал брифа
+    var _channels = null;       
+    var _chId = null;           
     var _goal = 'engagement';
     var _freq = 7;
-    var _selDay = 0;            // выбранный день (day_index) для панели детали
-    var _dayBusy = {};          // post_id -> идёт генерация текста
-    var _batchTimer = null;     // поллинг батча «вся неделя разом» (не гасится stopTimers)
+    var _selDay = 0;            
+    var _dayBusy = {};          
+    var _batchTimer = null;     
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -40,7 +37,6 @@
         'Складываю неделю в единый сюжет...',
     ];
 
-    // ==================== каркас ====================
     function ensureScreen() {
         var host = document.getElementById('content-plan-screen');
         if (!host) {
@@ -99,7 +95,6 @@
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
         if (d.status === 'error') { renderError(); return; }
-        // none → бриф (сначала грузим каналы)
         if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
                 _channels = (cd && cd.channels) ? cd.channels.filter(function (c) { return c.username; }) : [];
@@ -110,7 +105,6 @@
         } else { renderBrief(); }
     }
 
-    // ==================== 1. Бриф ====================
     function chip(name, val, cur, label) {
         return '<button class="cp-chip' + (val === cur ? ' on' : '') + '" data-chip="' + name + '" data-v="' + esc(val) + '">' + esc(T(label)) + '</button>';
     }
@@ -162,12 +156,10 @@
             .catch(function () { if (btn) btn.disabled = false; toast(T('Не удалось запустить сборку')); });
     }
     function cap(r) {
-        // ответ потолка стоимости приходит как {detail:{...}} или {error}
         if (r && r.detail && r.detail.message) return r.detail.message;
         return T('Лимит на сегодня исчерпан — попробуй позже.');
     }
 
-    // ==================== 2. Сборка ====================
     function renderGenerating() {
         setView('<div class="cp-center"><div class="cp-genic"><i class="ti ti-calendar-week"></i></div>' +
             '<div class="cp-spin"></div>' +
@@ -199,7 +191,6 @@
             '<button class="cp-go" style="max-width:280px;" data-act="regen">' + esc(T('Собрать заново')) + '</button></div>');
     }
 
-    // ==================== 3. Лента недели (1-в-1 макет) ====================
     function fmtInfo(f) { return FMT[f] || ['Пост', 'ti-file-text']; }
     function statusOf(p) {
         var ps = p.publish_status;
@@ -217,7 +208,7 @@
             return new Date(iso + 'T00:00:00').toLocaleDateString(lang, { day: 'numeric', month: 'long' });
         } catch (e) { return ''; }
     }
-    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }   // ~30 мин/пост
+    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }   
 
     function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
 
@@ -238,7 +229,6 @@
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
             : '';
 
-        // «Штурман»: запланировать выход в канал (когда есть утверждённые с текстом) / снять с очереди
         var apprText = ps.filter(function (p) { return p.status === 'approved' && p.text; }).length;
         var scheduled = _state.status === 'scheduled' || ps.some(function (p) { return p.publish_status === 'queued'; });
         var schedBtn = '';
@@ -323,7 +313,6 @@
             slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + body + '</div>';
     }
 
-    // ==================== действия ====================
     function post(id) { return (_state && _state.posts || []).filter(function (p) { return p.id === id; })[0]; }
 
     function genDay(id, isVariant) {
@@ -351,7 +340,6 @@
         haptic('medium');
         pending.forEach(function (p) { _dayBusy[p.id] = true; });
         renderWeek();
-        // серверный батч всей недели: накопительный avoid-список + анти-плагиат (качество ×N)
         apiRequest('/api/v1/content-plan/generate-all', { method: 'POST', body: '{}' })
             .then(function (r) {
                 if (r && r.ok) { toast(T('Пишу всю неделю — карточки будут заполняться')); startBatchPoll(); }
@@ -369,7 +357,6 @@
         if (_batchTimer) clearInterval(_batchTimer);
         var prevN = (_state.posts || []).filter(function (p) { return p.text; }).length;
         var ticks = 0;
-        // _batchTimer НЕ очищается stopTimers() — переживает renderWeek(); гасится по завершению/close()
         _batchTimer = setInterval(function () {
             ticks++;
             apiRequest('/api/v1/content-plan').then(function (d) {
@@ -392,7 +379,6 @@
         var p = post(id);
         if (!p) return;
         haptic('light');
-        // оптимистично
         var was = p.status;
         p.status = (p.status === 'approved') ? (p.text ? 'draft' : 'idea') : 'approved';
         renderWeek();
@@ -458,7 +444,6 @@
         }
     }
 
-    // ==================== «Штурман»: планирование выхода ====================
     function doSchedule() {
         if (!_state.can_post) {
             toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));

@@ -1,4 +1,3 @@
-/* AI-стратегия канала — стили строго по утверждённому макету (14.07). Префикс stg-. */
 
 .stg-screen {
     position: fixed;
@@ -20,8 +19,6 @@
     overflow-wrap: break-word;
 }
 
-/* Экран — flex-колонка, а у карточек overflow:hidden: без запрета сжатия браузер
-   ужимает их по высоте под окно и режет текст (ловилось на десктопном Telegram). */
 .stg-screen > * { flex: 0 0 auto; }
 .stg-screen > .stg-center { flex: 1 1 auto; }
 
@@ -40,7 +37,6 @@
 @keyframes stgSpin { to { transform: rotate(360deg); } }
 .stg-spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(129,140,248,0.2); border-top-color: #818cf8; animation: stgSpin 0.9s linear infinite; }
 
-/* ===== Витрина ===== */
 @keyframes stgRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .stg-flag { position: relative; border-radius: 20px; overflow: hidden; animation: stgRise .5s cubic-bezier(.2,.8,.2,1) both;
     box-shadow: 0 22px 48px -22px rgba(99,102,241,0.6); }
@@ -74,7 +70,6 @@
 .stg-fcta.booked { background: rgba(93,202,165,0.14); color: #5DCAA5; border: 1px solid rgba(93,202,165,0.45); box-shadow: none; }
 .stg-fnote { text-align: center; font-size: 10.5px; color: #565b73; margin-top: 8px; }
 
-/* ===== Карточки-секции ===== */
 .stg-sec { position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 15px; margin-top: 12px; overflow: hidden;
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
@@ -86,7 +81,6 @@
     flex: 0 0 auto; color: #818cf8; border: 1px solid rgba(129,140,248,0.42); font-size: 13px;
     background: linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04)); }
 
-/* ===== Интервью ===== */
 .stg-prog { position: relative; height: 5px; border-radius: 99px; background: rgba(255,255,255,0.06); margin: 12px 0; overflow: hidden; }
 .stg-prog i { position: absolute; inset: 0; border-radius: 99px; background: linear-gradient(90deg,#6366f1,#8b5cf6); transition: width .35s ease; }
 .stg-q { position: relative; font-size: 15px; font-weight: 700; margin: 4px 0 10px; }
@@ -109,7 +103,6 @@
 .stg-note.mut { font-size: 10.5px; color: #8d93a8; }
 .stg-note b { color: #f5bf4f; }
 
-/* ===== Документ ===== */
 .stg-dochead { position: relative; display: flex; align-items: center; gap: 13px; }
 .stg-ring { width: 54px; height: 54px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center;
     justify-content: center; font-size: 12px; font-weight: 800; color: #5DCAA5; position: relative; }
@@ -143,7 +136,6 @@
     color: #c9cede; background: rgba(129,140,248,0.1); border: 1px solid rgba(129,140,248,0.35); overflow-wrap: break-word; }
 .stg-tip b { color: #818cf8; }
 
-/* график площадок */
 .stg-bar-row { position: relative; margin-top: 11px; }
 .stg-bar-l { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 12px; }
 .stg-bar-l b { font-weight: 600; flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -155,7 +147,6 @@
     box-shadow: 0 0 10px rgba(129,140,248,0.25); min-width: 6px; }
 .stg-bar-v { font-size: 11px; font-weight: 700; color: #e8eaf1; font-variant-numeric: tabular-nums; }
 
-/* гайд */
 .stg-guide { position: relative; margin-top: 10px; border-radius: 13px; border: 1px solid rgba(129,140,248,0.3);
     background: rgba(129,140,248,0.06); padding: 12px; }
 .stg-guide h4 { font-size: 13px; margin: 0 0 8px; }
@@ -170,7 +161,6 @@
     color: #818cf8; padding: 8px 13px; border-radius: 99px; background: rgba(129,140,248,0.12);
     border: 1px solid rgba(129,140,248,0.45); cursor: pointer; font-family: inherit; }
 
-/* посты */
 .stg-post { position: relative; border-top: 1px solid rgba(255,255,255,0.05); padding: 9px 0; }
 .stg-post .h { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; }
 .stg-post .h b { font-size: 12.5px; font-weight: 600; min-width: 0; flex: 1; overflow-wrap: break-word; }
@@ -180,7 +170,6 @@
 .stg-post .b { display: none; margin-top: 7px; font-size: 12px; line-height: 1.55; color: #a7aec6; white-space: pre-wrap; overflow-wrap: break-word; }
 .stg-post.open .b { display: block; }
 
-/* ===== Разбор недели ===== */
 .stg-verd { display: flex; gap: 9px; font-size: 12.5px; line-height: 1.5; color: #a7aec6; padding: 6px 0; }
 .stg-verd .ic { flex: 0 0 auto; }
 .stg-verd b { color: #e8eaf1; font-weight: 600; }
@@ -189,7 +178,6 @@
     background: linear-gradient(135deg,rgba(93,202,165,0.14),rgba(93,202,165,0.04)); border: 1px solid rgba(93,202,165,0.4); }
 .stg-task b { color: #5DCAA5; }
 
-/* ===== Чат ===== */
 .stg-msg { position: relative; max-width: 86%; padding: 10px 13px; border-radius: 14px; font-size: 12.5px; line-height: 1.5;
     margin-top: 9px; overflow-wrap: break-word; white-space: pre-wrap; }
 .stg-msg.u { margin-left: auto; background: rgba(129,140,248,0.16); border: 1px solid rgba(129,140,248,0.4); border-bottom-right-radius: 5px; }
@@ -205,13 +193,10 @@
     .stg-screen { padding-left: max(14px, calc(50vw - 260px)); padding-right: max(14px, calc(50vw - 260px)); }
 }
 
-/* точка-маркер для справочных пунктов (метрики, варианты ниши) — не чек-бокс */
 .stg-dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; margin: 8px 6px 0 6px;
     background: rgba(129,140,248,0.6); }
-/* быстрый переход к задачам недели в шапке документа */
 .stg-jump { display: inline-block; margin-top: 10px; padding: 8px 13px; border-radius: 99px;
     font-size: 11.5px; font-weight: 700; font-family: inherit; color: #5DCAA5; cursor: pointer;
     background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.4); }
-/* печатающий пузырь чата (уникальный по ссылке, без коллизии id) */
 @keyframes stgBlink { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
 .stg-msg.stg-typing { animation: stgBlink 1s ease-in-out infinite; }
