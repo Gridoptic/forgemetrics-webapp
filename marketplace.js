@@ -10,7 +10,6 @@
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
     var _adultOk = false;   
     var _q = '', _sortBuy = 'smart', _fPriceMin = null, _fPriceMax = null, _fSubsMin = null, _fAud = null;
-    function _audText(a) { return a === 'male' ? 'Мужская' : a === 'female' ? 'Женская' : a === 'mixed' ? 'Смешанная' : ''; }
     function _audLabel(l) {
         if (l.audience_source === 'commenters' && l.female_pct != null && (l.gender_sample || 0) >= 15) {
             var fp = l.female_pct, fem = fp >= 50;
@@ -20,8 +19,6 @@
         }
         return null;
     }
-    function _audColor(a) { return a === 'male' ? '#5b9dff' : a === 'female' ? '#ff6fae' : '#9aa0b5'; }
-    function _audIcon(a) { return a === 'male' ? 'ti-gender-male' : a === 'female' ? 'ti-gender-female' : 'ti-users-group'; }
     function _audChip(l) {
         var lab = _audLabel(l); if (!lab) return '';
         return '<span class="fmx-aud" style="color:' + lab.color + ';border-color:' + lab.color + '55;background:' + lab.color + '1a;"><i class="ti ' + lab.icon + '"></i>' + lab.short + '</span>';
@@ -1487,12 +1484,6 @@
             if (r && r.ok) { _pulse = r; _pulseTs = Date.now(); }
             if (cb) cb();
         }).catch(function () { if (cb) cb(); });
-    }
-    function _heatColor(v, min, max) {
-        if (v == null || max <= min) return 'rgba(255,255,255,0.05)';
-        var t = (v - min) / (max - min);  
-        var hue = 145 - t * 145;
-        return 'hsla(' + Math.round(hue) + ',65%,45%,0.16)';
     }
     function _heatBorder(v, min, max) {
         if (v == null || max <= min) return 'rgba(255,255,255,0.08)';
@@ -4670,13 +4661,6 @@
         Object.keys(m).forEach(function (k) { var e = el('fmx-accv-' + k); if (e) e.innerHTML = m[k]; });
     }
 
-    function setCreateSec(sc, force) {
-        _secCreate = sc;
-        qsa(el('fmx-pult'), '.fmx-pb').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-sc') === sc); });
-        movePill('fmx-pult', 'fmx-pultpill');
-        qsa(el('fmx-panes'), '.fmx-pane').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-sc') === sc); });
-        sizePanes();
-    }
     function sizePanes() { var p = el('fmx-panes'); if (!p) return; var a = p.querySelector('.fmx-pane.on'); if (a) p.style.height = a.offsetHeight + 'px'; }
 
     function mediaBoxHtml(target, hint) {
@@ -5112,7 +5096,6 @@
         el('fmx-tags').addEventListener('input', function () { _ss._tags = this.value; _heroDebounced(); });
     }
 
-    function glassStyles(accent) { return glassKindStyles(_ss.glass, accent); }
     function glassKindStyles(g, accent) {
         if (g === 'frost') return { s: 'background:rgba(255,255,255,0.10);border:0.5px solid rgba(255,255,255,0.25);backdrop-filter:blur(10px);color:#fff;', p: 'background:linear-gradient(135deg,' + accent + 'e6,' + accent + '99);border:0.5px solid ' + accent + 'aa;backdrop-filter:blur(10px);color:#fff;' };
         if (g === 'tint') return { s: 'background:' + accent + '22;border:0.5px solid ' + accent + '55;backdrop-filter:blur(10px);color:' + accent + ';', p: 'background:linear-gradient(135deg,' + accent + ',' + accent + 'aa);border:0.5px solid ' + accent + ';backdrop-filter:blur(10px);color:#fff;' };
@@ -5282,14 +5265,6 @@
         var halo = '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>';
         var oc = _ss.atomColor, orb = orbitHtml(_ss.orbit, oc);
         return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="fx" style="cursor:pointer;"' : '') + '>' + halo + core + orb + partHtml(_ss.part) + '</div>';
-    }
-    function heroCoverHtml(gradient) {
-        var mc = _ss._media && _ss._media.cover, pc = (_ss.att && typeof _ss.att.cover === 'object') ? _ss.att.cover : null;
-        if (_ss.covType !== 'grad' && mc && pc) {
-            var st = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + pc.x + '% ' + pc.y + '%;transform:scale(' + pc.s + ');transform-origin:' + pc.x + '% ' + pc.y + '%;';
-            return '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (mc.kind === 'video' ? '<video src="' + mc.url + '" style="' + st + '" autoplay muted loop playsinline preload="none"></video>' : '<img loading="lazy" decoding="async" src="' + mc.url + '" style="' + st + '">') + '</div>';
-        }
-        return '<div class="fmx-cov-bg" style="background:' + gradient + ';"></div>';
     }
     var SEAM = 84;  
     function stkSize(s, W) { return Math.max(32, Math.min(64 * (s.scale || 1), Math.min(220, W * 0.62))); }

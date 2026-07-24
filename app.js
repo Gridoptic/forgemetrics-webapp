@@ -702,15 +702,6 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
 }
 
 
-function renderTrend(el, change, trend) {
-    if (!change) {
-        el.innerHTML = '';
-        return;
-    }
-    const iconClass = trend === 'down' ? 'ti-trending-down' : 'ti-trending-up';
-    el.innerHTML = `<i class="ti ${iconClass}"></i>${change}`;
-    el.className = `metric-trend ${trend === 'down' ? 'down' : ''}`;
-}
 
 
 var STRATEGY_MAP_SVG = '<svg width="26" height="26" viewBox="0 0 44 44" fill="none">' +
@@ -1496,14 +1487,6 @@ function tfCurBanner(d) {
     return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">3 поста в день, 1 канал. Выбери план для полного доступа.</div></div></div>`;
 }
 
-function tfCta(plan, d) {
-    if (d.current_tier === plan.key) return '<button class="tf-cta cur" disabled><i class="ti ti-circle-check"></i> Твой тариф</button>';
-    const cls = plan.popular ? 'prime' : (plan.tile === 'gold' ? 'gold' : 'ghost');
-    const shine = plan.popular ? '<span class="shine"></span>' : '';
-    const isYear = tfPeriod === 'year';
-    const price = isYear ? plan.price_year : plan.price;
-    return `<button class="tf-cta ${cls}" data-buy="${plan.key}">${shine}Оформить · ${cabNum(price)} ₽</button>`;
-}
 
 function tfPlanCard(plan, d) {
     const isYear = tfPeriod === 'year';
@@ -4262,10 +4245,6 @@ const THINKING_TEXTS_GENERATE = [
     'Почти готово...',
 ];
 
-const THINKING_TEXTS_SUGGEST = [
-    'Перечитываю пост...',
-    'Думаю что можно улучшить...',
-];
 
 const THINKING_TEXTS_MODIFY = [
     'Применяю правку...',

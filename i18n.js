@@ -179,27 +179,6 @@
         if (window.stripSepTranslate) { var y = window.stripSepTranslate(seg); if (y) return y; }
         return null;
     }
-    window.edgeTranslate = function (trimmed) {
-        if (LANG === 'ru' || trimmed == null) return null;
-        var words = trimmed.split(' ');
-        if (words.length < 2) return null;
-        var lo = 0, hi = words.length, head = null, tail = null, take, p, tv;
-        for (take = Math.min(8, words.length - 1); take >= 1; take--) {   
-            p = words.slice(0, take).join(' ');
-            if (take === 1 && p.length < 3) continue;
-            tv = window.t(p);
-            if (tv && tv !== p) { head = tv; lo = take; break; }
-        }
-        for (take = Math.min(8, words.length - lo - 1); take >= 1; take--) {  
-            p = words.slice(words.length - take).join(' ');
-            if (take === 1 && p.length < 3) continue;
-            tv = window.t(p);
-            if (tv && tv !== p) { tail = tv; hi = words.length - take; break; }
-        }
-        if (head === null && tail === null) return null;
-        var mid = words.slice(lo, hi).join(' ');
-        return [head, mid, tail].filter(function (x) { return x !== null && x !== ''; }).join(' ');
-    };
     window.segmentTranslate = function (trimmed) {
         if (LANG === 'ru' || trimmed == null) return null;
         var parts = trimmed.split(/(\s[·—–|/]\s)/);
