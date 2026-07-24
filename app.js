@@ -355,6 +355,8 @@ function renderDashboard(data) {
     }
     els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
 
+    try { window.__fmIsMod = !!data.is_moderator; } catch (e) {}
+
     renderChannelSelector(data);
     renderPulse(data.pulse);
     renderActions(data.actions || []);
@@ -850,7 +852,6 @@ function fmProbeDrawer() {
                     fmClearFreeze();   
                     break;
                 }
-                try { console.warn('[FM] слой поверх меню нейтрализован:', hit.tagName, hit.id || '', String(hit.className || '').slice(0, 80)); } catch (e) {}
                 fmClientLog('drawer-blocker: ' + _fmElDesc(hit));
                 hit.style.pointerEvents = 'none';
             }

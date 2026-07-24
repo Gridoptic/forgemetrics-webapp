@@ -295,7 +295,7 @@
     function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
     function _accent(l) { return l.accent_color || '#818cf8'; }
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
-    function _isMod() { try { return !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === 1263501641); } catch (e) { return false; } }
+    function _isMod() { try { return !!window.__fmIsMod; } catch (e) { return false; } }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
     function _priceFrom(l) { var p = _basePrice(l); return p ? _num(p) + ' ₽' : 'по запросу'; }
 
@@ -1815,7 +1815,7 @@
         var box = el('fmx-modbody'); if (!box) return;
         box.innerHTML =
             '<div class="fmx-mcard"><span class="fmx-lbl">Telegram ID пользователя</span>' +
-            '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например, 1263501641" style="flex:1;">' +
+            '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например, 100000000" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div></div>' +
             '<div id="fmx-mures"></div>';
         var find = function () {
@@ -2321,7 +2321,7 @@
         if (r.mine && r.leads && r.leads.length) {
             leads = '<div class="fmx-leads"><div class="fmx-leads-t"><i class="ti ti-users-group"></i> Заинтересовались:</div>' +
                 r.leads.map(function (ld) {
-                    return '<a class="fmx-lead" href="https://t.me/' + _esc(ld.username) + '" target="_blank"><b>' + _esc(ld.title || '@' + ld.username) + '</b><span>@' + _esc(ld.username) + (ld.subscribers ? ' · ' + _short(ld.subscribers) + ' подп' : '') + '</span></a>';
+                    return '<a class="fmx-lead" href="https://t.me/' + _esc(ld.username) + '" target="_blank" rel="noopener noreferrer"><b>' + _esc(ld.title || '@' + ld.username) + '</b><span>@' + _esc(ld.username) + (ld.subscribers ? ' · ' + _short(ld.subscribers) + ' подп' : '') + '</span></a>';
                 }).join('') + '</div>';
         }
         return '<div class="fmx-req' + (r.mine ? ' mine' : '') + '">' +
