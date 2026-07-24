@@ -2680,7 +2680,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
                 </div>
                 <div class="channels-deleted-actions">
                     <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">Вернуть</button>
-                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, '${title.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')">Удалить полностью</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">Удалить полностью</button>
                 </div>
             </div>
         `;
@@ -3062,7 +3062,7 @@ function renderChannelCard(ch) {
                     <div class="channel-card-name">${title}</div>
                     ${badge}
                 </div>
-                <button class="channel-card-menu" onclick="event.stopPropagation();window.__channelMenu&&window.__channelMenu(${ch.id}, '${title.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')">
+                <button class="channel-card-menu" onclick="event.stopPropagation();window.__channelMenu&&window.__channelMenu(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">
                     <i class="ti ti-dots-vertical"></i>
                 </button>
             </div>
