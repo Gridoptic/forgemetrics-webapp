@@ -1,14 +1,14 @@
 (function () {
     'use strict';
 
-    var _state = null;          
+    var _state = null;
     var _pollTimer = null;
     var _genTimer = null;
-    var _channels = null;       
-    var _iv = {};               
+    var _channels = null;
+    var _iv = {};
     var _ivStep = 0;
-    var _started = false;       
-    var _guides = {};           
+    var _started = false;
+    var _guides = {};
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
 
@@ -17,7 +17,7 @@
         return String(s)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;')
             .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');   
+            .replace(/'/g, '&#39;');
     }
 
     function haptic(kind) {
@@ -202,7 +202,7 @@
         var btn = document.querySelector('#strategy-screen [data-act="book"]');
         if (btn) {
             btn.classList.add('booked');
-            btn.removeAttribute('data-act');   
+            btn.removeAttribute('data-act');
             btn.innerHTML = '<i class="ti ti-circle-check"></i> ' + esc(T('Забронировано · уведомим при запуске'));
         }
     }
@@ -416,7 +416,7 @@
             if (!el) return;
             if (i < GEN_TEXTS.length - 1) {
                 i++;
-                el.textContent = T(GEN_TEXTS[i]);   
+                el.textContent = T(GEN_TEXTS[i]);
             }
         }, 26000);
     }
@@ -426,7 +426,7 @@
         var ticks = 0;
         _pollTimer = setInterval(function () {
             ticks++;
-            if (ticks === 60) {   
+            if (ticks === 60) {
                 var el = document.getElementById('stg-gen-text');
                 if (el) el.textContent = T('Собираю особенно тщательно — ещё чуть-чуть...');
             }
@@ -462,7 +462,7 @@
         var prog = _state.progress || {};
         (_state.doc.sections || []).forEach(function (sec) {
             (sec.steps || []).forEach(function (s) {
-                if (s.checkable === false) return;   
+                if (s.checkable === false) return;
                 total++;
                 if (prog[s.key]) done++;
             });
@@ -588,7 +588,7 @@
                 inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
             }
             if (sec.intro && sec.intro.trim()) {
-                inner += bodyHtml(fixDays(sec.intro), true);   
+                inner += bodyHtml(fixDays(sec.intro), true);
             }
             inner += chartHtml(sec.chart);
             if (sec.steps && sec.steps.length) {
@@ -673,7 +673,7 @@
         if (btn) btn.disabled = true;
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg u">' + esc(q) + '</div>');
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg a stg-typing">…</div>');
-        var typing = box.lastElementChild;   
+        var typing = box.lastElementChild;
         box.scrollTop = box.scrollHeight;
         function done() { _chatBusy = false; if (btn) btn.disabled = false; }
         apiRequest('/api/v1/strategy/chat', { method: 'POST', body: JSON.stringify({ text: q }) })
@@ -881,7 +881,7 @@
     });
 
     document.addEventListener('keydown', function (ev) {
-        if (ev.isComposing) return;   
+        if (ev.isComposing) return;
         if (ev.key === 'Enter' && ev.target && ev.target.id === 'stg-chat-inp') sendChat();
     });
 })();

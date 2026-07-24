@@ -1,15 +1,15 @@
 (function () {
     'use strict';
 
-    var _state = null;          
+    var _state = null;
     var _pollTimer = null, _genTimer = null;
-    var _channels = null;       
-    var _chId = null;           
+    var _channels = null;
+    var _chId = null;
     var _goal = 'engagement';
     var _freq = 7;
-    var _selDay = 0;            
-    var _dayBusy = {};          
-    var _batchTimer = null;     
+    var _selDay = 0;
+    var _dayBusy = {};
+    var _batchTimer = null;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -208,7 +208,7 @@
             return new Date(iso + 'T00:00:00').toLocaleDateString(lang, { day: 'numeric', month: 'long' });
         } catch (e) { return ''; }
     }
-    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }   
+    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }
 
     function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
 

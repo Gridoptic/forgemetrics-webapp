@@ -164,7 +164,7 @@
             if (out == null || out === '') out = TEMPLATES[i].k;
             for (var g = m.length - 1; g >= 1; g--) {
                 var val = m[g];
-                var tv = window.t(val);            
+                var tv = window.t(val);
                 out = out.split('%' + g).join(tv != null ? tv : val);
             }
             return out;
@@ -195,9 +195,9 @@
     };
     window.stripSepTranslate = function (trimmed) {
         if (LANG === 'ru' || trimmed == null) return null;
-        var m = trimmed.match(/^([—–\-·|/]+\s+)(.+)$/);   
+        var m = trimmed.match(/^([—–\-·|/]+\s+)(.+)$/);
         if (m) { var ct = _segTr(m[2]); if (ct) return m[1] + ct; }
-        var e = trimmed.match(/^(.+?)(\s+[—–·|/]+)$/);    
+        var e = trimmed.match(/^(.+?)(\s+[—–·|/]+)$/);
         if (e) { var ct2 = _segTr(e[1]); if (ct2) return ct2 + e[2]; }
         return null;
     };

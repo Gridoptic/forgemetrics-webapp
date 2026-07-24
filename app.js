@@ -177,7 +177,7 @@ async function apiRequest(path, options = {}) {
         if (!response.ok) {
             const errorText = await response.text();
             const apiErr = new Error(`API ${response.status}: ${errorText || response.statusText}`);
-            apiErr.status = response.status;   
+            apiErr.status = response.status;
             throw apiErr;
         }
 
@@ -336,8 +336,8 @@ function initAutoLocalize() {
                 if (m.type === 'characterData') { localizeTextNode(m.target); return; }
                 if (!m.addedNodes) return;
                 m.addedNodes.forEach((n) => {
-                    if (n.nodeType === 1) localizeTree(n);         
-                    else if (n.nodeType === 3) localizeTextNode(n); 
+                    if (n.nodeType === 1) localizeTree(n);
+                    else if (n.nodeType === 3) localizeTextNode(n);
                 });
             });
         });
@@ -693,7 +693,7 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
         const half = tip.offsetWidth / 2 + 4;
         tip.style.left = Math.max(half, Math.min(r.width - half, pxX)) + 'px';
         tip.style.top = pxY + 'px';
-        tip.style.transform = 'translate(-50%,-128%)';   
+        tip.style.transform = 'translate(-50%,-128%)';
     }
     function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
     host.addEventListener('pointermove', (e) => at(e.clientX));
@@ -799,7 +799,7 @@ function fmUnstick() {
 var _fmLogSent = 0;
 function fmClientLog(msg) {
     try {
-        if (_fmLogSent > 8) return;   
+        if (_fmLogSent > 8) return;
         _fmLogSent++;
         apiRequest('/api/v1/user/client-log', {
             method: 'POST',
@@ -830,7 +830,7 @@ function _fmFlushTrack() {
     } catch (err) {}
 }
 document.addEventListener('visibilitychange', function () { if (document.hidden) _fmFlushTrack(); });
-window.__fmTrack = fmTrack;   
+window.__fmTrack = fmTrack;
 
 function _fmElDesc(el) {
     try { return (el.tagName || '?') + (el.id ? '#' + el.id : '') + ' cls=' + String(el.className || '').slice(0, 70); } catch (e) { return '?'; }
@@ -843,13 +843,13 @@ function fmProbeDrawer() {
         if (!r.width || !r.height) return;
         [0.2, 0.5, 0.85].forEach(function (fy) {
             var x = r.left + r.width / 2, y = r.top + r.height * fy;
-            for (var n = 0; n < 4; n++) {   
+            for (var n = 0; n < 4; n++) {
                 var hit = document.elementFromPoint(x, y);
                 if (!hit || hit === els.drawer || els.drawer.contains(hit)) break;
                 var tag = (hit.tagName || '').toUpperCase();
                 if (tag === 'HTML' || tag === 'BODY' || hit.id === 'app' || hit.id === 'fmx-main' || hit.id === 'drawer-overlay') {
                     fmClientLog('drawer-under-freeze: ' + _fmElDesc(hit));
-                    fmClearFreeze();   
+                    fmClearFreeze();
                     break;
                 }
                 fmClientLog('drawer-blocker: ' + _fmElDesc(hit));
@@ -860,7 +860,7 @@ function fmProbeDrawer() {
 }
 
 function openDrawer() {
-    fmUnstick();   
+    fmUnstick();
     fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
@@ -928,7 +928,7 @@ const PLACEHOLDER_CONFIG = {
 
 function handleAction(actionId) {
     closeDrawer();
-    fmTrack('fn_' + actionId);   
+    fmTrack('fn_' + actionId);
 
     if (actionId === 'create_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
@@ -1285,7 +1285,7 @@ function renderCabinet(d) {
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
-    const streakChip = '';   
+    const streakChip = '';
     let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span>${streakChip}</div></div>${cabStatusHtml(d.subscription)}</div>`;
 
     if (d.upgrade) {
@@ -1452,8 +1452,8 @@ function openLangPicker() {
 }
 
 let tariffsData = null;
-let tfPeriod = 'month'; 
-let tfReturn = 'dashboard'; 
+let tfPeriod = 'month';
+let tfReturn = 'dashboard';
 const TP_COLOR = { light: 'bl', pro: 'pu', pro_plus: 'gd', agency: 'gr', network: 'pk' };
 
 function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
@@ -1848,7 +1848,7 @@ function resetPostState() {
     state.post.pendingInstruction = null;
     state.post.length = 'auto';
     state.post.emoji = 'auto';
-    state.post.styleUserChoice = null; 
+    state.post.styleUserChoice = null;
     state.post.lastStyleApplied = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
@@ -2442,7 +2442,7 @@ function escapeHtml(s) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');   
+        .replace(/'/g, '&#39;');
 }
 
 
@@ -2492,7 +2492,7 @@ function renderChannels(data) {
         if (els.channelsStateEmpty) els.channelsStateEmpty.style.display = '';
         if (els.channelsStateList) els.channelsStateList.style.display = 'none';
         renderDeletedChannels(deleted, true);
-        startEmptyChannelsWatch();   
+        startEmptyChannelsWatch();
         return;
     }
 
@@ -2906,8 +2906,8 @@ let _voicePollTimer = null;
 function startVoicePollingIfNeeded() {
     if (_voicePollTimer) return;
     _voicePollTimer = setInterval(async () => {
-        // не дёргаем API и не пересобираем список, если экран каналов не активен или вкладка скрыта
-        // (иначе лишняя нагрузка и перезагрузка всех аватарок каждые 5 сек в фоне)
+
+
         if (!_channelsScreenActive() || document.hidden) return;
         try {
             const data = await apiRequest('/api/v1/channels');
@@ -2936,13 +2936,13 @@ function stopVoicePolling() {
 }
 
 
-/* Автоподхват нового канала без перезахода.
-   Канал подключается ВНЕ приложения (бота добавляют админом в Telegram), поэтому
-   после возврата в мини-апп и пока пользователь ждёт на пустом экране — сами
-   перечитываем список: канал и его аватарка появляются моментально. */
-// Ставит картинку из blob и ОСВОБОЖДАЕТ object URL после загрузки. Без revokeObjectURL каждый
-// blob висит в памяти до закрытия приложения, а опрос голоса пересобирает список каждые 5 сек и
-// перезагружает все аватарки — память росла линейно (утечка на телефоне).
+
+
+
+
+
+
+
 function _setBlobImg(node, blob, cls) {
     if (!node || !blob) return;
     const url = URL.createObjectURL(blob);
@@ -2963,7 +2963,7 @@ async function refreshChannelsOnReturn() {
     try {
         const data = await apiRequest('/api/v1/channels');
         state.channels = data;
-        renderChannels(data);   // сам обрабатывает переход пусто→список и грузит аватарки
+        renderChannels(data);
     } catch (e) {}
 }
 
@@ -2974,15 +2974,15 @@ function startEmptyChannelsWatch() {
     if (_emptyChWatch) return;
     _emptyChWatchN = 0;
     _emptyChWatch = setInterval(async () => {
-        if (!_channelsScreenActive()) { stopEmptyChannelsWatch(); return; }   // ушли с экрана — не крутим впустую
+        if (!_channelsScreenActive()) { stopEmptyChannelsWatch(); return; }
         if (document.hidden) return;
-        if (++_emptyChWatchN > 40) { stopEmptyChannelsWatch(); return; }        // защитный потолок ~3.5 мин
+        if (++_emptyChWatchN > 40) { stopEmptyChannelsWatch(); return; }
         try {
             const data = await apiRequest('/api/v1/channels');
             if (data && data.has_any && data.channels && data.channels.length) {
                 stopEmptyChannelsWatch();
                 state.channels = data;
-                renderChannels(data);   // покажет карточку канала + аватарку
+                renderChannels(data);
             }
         } catch (e) {}
     }, 5000);
@@ -2993,7 +2993,7 @@ function stopEmptyChannelsWatch() {
 }
 
 function initChannelsAutoRefresh() {
-    // возврат приложения в фокус (например, после добавления бота в Telegram) — обновить список каналов
+
     document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshChannelsOnReturn(); });
     window.addEventListener('focus', refreshChannelsOnReturn);
     window.addEventListener('pageshow', refreshChannelsOnReturn);
@@ -3375,10 +3375,10 @@ async function openActiveChannelSelector(opts) {
                         body: JSON.stringify({ channel_id: channelId }),
                         headers: { 'Content-Type': 'application/json' },
                     });
-                    // Единая точка распространения смены активного канала: обновляем глобал СРАЗУ,
-                    // независимо от того, с какого экрана открыт переключатель (главная или «Создать
-                    // пост»). Иначе смена из поста не доходила до бара главной и фильтра «под мою
-                    // нишу» на Радаре — они отставали на старый канал.
+
+
+
+
                     try { window.__fmActiveChannelId = channelId; } catch (e) {}
                     try { if (typeof window.__fmxActiveChannelChanged === 'function') window.__fmxActiveChannelChanged(); } catch (e) {}
                     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
@@ -3716,7 +3716,7 @@ function attachSettingsHandlers() {
         auditBtn.addEventListener('click', () => {
             const chId = parseInt(auditBtn.getAttribute('data-audit-channel'), 10);
             if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('medium');
-            // окно настроек — оверлей поверх всего: без закрытия аудит открывался ПОД ним
+
             closeChannelSettings();
             if (typeof window.__openAudit === 'function') window.__openAudit(chId);
         });
@@ -4204,7 +4204,7 @@ function renderDemoPreview(data) {
     const subLine = subs ? `${subs} подписчиков` : 'Публичный канал';
 
     const posts = (data.posts || []).slice(0, 3).map(p => {
-        const txt = escapeHtml(p.slice(0, 220));   // режем сырой текст, потом экранируем — иначе можно обрубить HTML-сущность посередине
+        const txt = escapeHtml(p.slice(0, 220));
         return `<div class="channels-preview-post">${txt}${p.length > 220 ? '…' : ''}</div>`;
     }).join('');
 
@@ -4314,7 +4314,7 @@ async function submitTopicForAnalysis() {
 
 
 async function handleAnalyzeResult(result) {
-    // защита от нецелевого использования: вопрос ассистенту вместо темы поста
+
     if (result.off_topic) {
         stopThinkingAnimation();
         showScreen('postCreate');
@@ -4437,7 +4437,7 @@ function renderResult(result) {
     els.postResultText.textContent = result.text;
     els.postResultModel.textContent = result.model_used || 'Модель';
 
-    // честный индикатор: применялся ли стиль канала к этому тексту
+
     const styleBadge = document.getElementById('post-result-style');
     if (styleBadge) {
         const applied = (result.style_applied !== undefined)
@@ -4617,8 +4617,8 @@ function regeneratePost() {
         return;
     }
 
-    // contextHistory сохраняем: ответы на уточняющие вопросы — часть задания,
-    // перегенерация не должна их выбрасывать
+
+
     showScreen('postThinking');
     startThinkingAnimation(THINKING_TEXTS_GENERATE);
     runGenerate();
@@ -4730,8 +4730,8 @@ function showToast(text, icon) {
 
 
 function handlePostApiError(err) {
-    // ОТКАЧЕНО по просьбе владельца 24.07 к доаудитной версии (классификация по подстроке
-    // текста ошибки, а не по err.status). Это единственная правка сессии внутри «Создать пост».
+
+
     const msg = err?.message || '';
 
     if (msg.includes('404') && msg.includes('User not found')) {
@@ -4777,7 +4777,7 @@ function setupPostEventListeners() {
         });
     }
 
-    // тап-зона мата — вся строка настройки, не только переключатель
+
     const profanityRow = document.getElementById('post-profanity-row');
     if (profanityRow) {
         profanityRow.addEventListener('click', toggleProfanity);
@@ -4927,13 +4927,13 @@ function setupPostEventListeners() {
 }
 
 
-/* ===================== live-обновление (без перезаходов) =====================
-   Пока приложение открыто, периодически (и при возврате фокуса) сверяем версии
-   ассетов из index.html на сервере с реально загруженными. Если вышла новая
-   версия — мягко перезагружаемся, не прерывая набор текста. Работает вместе с
-   no-store на index.html (vercel.json): перезагрузка получает свежую страницу. */
-// i18n_dict.js больше не грузится (словари пофайловые, лениво); отслеживаем i18n.js —
-// при обновлении переводов бампать ?v у i18n.js И у загрузчика словаря в index.html
+
+
+
+
+
+
+
 var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js'];
 function _fmVerFromDom() {
     return _FM_ASSETS.map(function (f) {
@@ -4956,21 +4956,21 @@ function _fmTyping() {
     return t === 'input' || t === 'textarea' || a.isContentEditable === true;
 }
 function _fmApply() {
-    if (_fmTyping()) { _fmPending = true; return; }   // не прерываем набор — применим, когда освободится
+    if (_fmTyping()) { _fmPending = true; return; }
     try {
         var now = Date.now();
         var t0 = +sessionStorage.getItem('fm_upd_t') || 0;
         var n = (now - t0 > 120000) ? 1 : (+sessionStorage.getItem('fm_upd_n') || 0) + 1;
-        /* якорь окна — только на первой перезагрузке серии: иначе каждая подавленная
-           попытка сдвигала окно вперёд и обновления отключались до конца сессии */
+
+
         if (n === 1) sessionStorage.setItem('fm_upd_t', now);
         sessionStorage.setItem('fm_upd_n', n);
-        if (n > 3) return;   // защита от петли: не больше 3 перезагрузок за 2 минуты
+        if (n > 3) return;
     } catch (e) {}
     try { showToast('Обновляю до новой версии…', 'refresh'); } catch (e) {}
-    // прячем устаревший вебвью (старый спарклайн/плашки статуса) за загрузчиком на время
-    // перезагрузки: иначе при возврате в приложение ~0,7с мелькает прежний вид со старыми
-    // данными (напр. жёлтая «Неактивен»), пока не подхватится новая версия
+
+
+
     try { showScreen('loading'); } catch (e) {}
     setTimeout(function () { try { location.reload(); } catch (e) {} }, 700);
 }
@@ -4980,13 +4980,13 @@ async function _fmCheck() {
         var r = await fetch('/index.html?fmv=' + Date.now(), { cache: 'no-store' });
         if (!r.ok) return;
         var cur = _fmVerFromHtml(await r.text());
-        if (!/:[0-9]/.test(cur)) return;                 // на сервере версий не нашли — молчим
+        if (!/:[0-9]/.test(cur)) return;
         if (_fmBaseVer && cur !== _fmBaseVer) _fmApply();
     } catch (e) {}
 }
 function startLiveUpdate() {
     _fmBaseVer = _fmVerFromDom();
-    if (!/:[0-9]/.test(_fmBaseVer)) return;               // нет версий в теге — не включаем (без ложных перезагрузок)
+    if (!/:[0-9]/.test(_fmBaseVer)) return;
     setInterval(_fmCheck, 60000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) _fmCheck(); });
     window.addEventListener('focus', _fmCheck);
@@ -5005,9 +5005,9 @@ async function main() {
 
     startLiveUpdate();
     initChannelsAutoRefresh();
-    fmTrack('app_open');   // аналитика: вход в приложение
-    // при возврате в приложение снимаем залипшие оверлеи/блокировку скролла — чтобы не нужен
-    // был перезаход, если боковое меню/экран «застряли» после сворачивания
+    fmTrack('app_open');
+
+
     document.addEventListener('visibilitychange', function () { if (!document.hidden) fmUnstick(); });
     window.addEventListener('focus', fmUnstick);
     await loadDashboard();
@@ -5016,8 +5016,8 @@ async function main() {
 
 document.addEventListener('DOMContentLoaded', main);
 
-// RTL-языки (арабский, персидский): направление текста в полях ввода — по содержимому,
-// чтобы набор шёл справа налево; на вёрстку не влияет (dir=auto только для текста поля)
+
+
 document.addEventListener('DOMContentLoaded', function () {
     try {
         document.querySelectorAll('textarea, input[type="text"], input:not([type])').forEach(function (el) {

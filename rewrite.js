@@ -3,7 +3,7 @@
 
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _lastOriginal = '', _lastResult = '', _busy = false, _tab = 'res';
-    var _avCache = {};   
+    var _avCache = {};
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -223,7 +223,7 @@
         var opt = t.closest ? t.closest('.rw-chopt') : null;
         if (opt) {
             var cid = +opt.getAttribute('data-chid');
-            _chId = cid > 0 ? cid : null;              
+            _chId = cid > 0 ? cid : null;
             haptic('light');
             var head = document.getElementById('rw-chhead');
             if (head) { head.innerHTML = chHead(curChannel()) + '<i class="ti ti-chevron-down chev"></i>'; rwLoadAvatars(head); }

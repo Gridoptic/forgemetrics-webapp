@@ -1,14 +1,14 @@
 (function () {
     'use strict';
 
-    var MEDIA_MAX_BYTES = 64 * 1024 * 1024;   
+    var MEDIA_MAX_BYTES = 64 * 1024 * 1024;
     var _root = null, _opened = false;
     var _mainTab = 'market';
     var _subTab = 'buy';
     var _view = 'cards';
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
-    var _adultOk = false;   
+    var _adultOk = false;
     var _q = '', _sortBuy = 'smart', _fPriceMin = null, _fPriceMax = null, _fSubsMin = null, _fAud = null;
     function _audLabel(l) {
         if (l.audience_source === 'commenters' && l.female_pct != null && (l.gender_sample || 0) >= 15) {
@@ -41,7 +41,7 @@
     var _chLoaded = false, _chLoading = false, _nicheSel = null;
     var _faqTab = 'rules';
     var _ss = null, _sfmts = null, _secCreate = 'cover';
-    var _stickers = null;  
+    var _stickers = null;
 
     var FMT_CATALOG = [
         { k: 'h1_24',  n: '1/24',         sub: '1 ч в топе · 24 ч в ленте',           core: true,  base: true, preset: 5500 },
@@ -55,11 +55,11 @@
         { k: 'circle', n: 'Кружок',       sub: 'Видеосообщение внутри поста',         core: false,            preset: 5000 },
         { k: 'stories', n: 'Сторис',      sub: 'Отдельный тип площадки, не пост в ленте', core: false,        preset: 3000 }
     ];
-    var FMT_LEGACY = { post_24h: 'h1_24', feed_native: 'native' };   
+    var FMT_LEGACY = { post_24h: 'h1_24', feed_native: 'native' };
     var _FMT_BY_K = {}; FMT_CATALOG.forEach(function (f) { _FMT_BY_K[f.k] = f; });
     function _fmtKey(k) { return FMT_LEGACY[k] || k; }
     function _fmtMeta(k) { return _FMT_BY_K[_fmtKey(k)] || null; }
-    function _isCode(n) { return /^\d+\/\d+$/.test(n || ''); }   
+    function _isCode(n) { return /^\d+\/\d+$/.test(n || ''); }
     function onTap(node, fn) {
         var t = 0;
         node.addEventListener('touchend', function (e) { t = Date.now(); e.preventDefault(); fn(e); }, { passive: false });
@@ -162,7 +162,7 @@
         if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); }
         t.innerHTML = '<i class="ti ti-alert-circle" style="color:#ef4444;"></i> ' + _esc(String(msg));
         t.classList.add('on', 'err');
-        clearTimeout(_toastTo);   
+        clearTimeout(_toastTo);
         _toastTo = setTimeout(function () { t.classList.remove('on', 'err'); }, 3600);
     }
     function uiConfirm(msg, cb) {
@@ -208,7 +208,7 @@
     }
     function _reach(l) { return (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : l.avg_views; }
     function _cpm(l) { var v = _reach(l), p = _basePrice(l); if (!p || !v) return null; return Math.round(p / v * 1000); }
-    var _nicheMap = null;  
+    var _nicheMap = null;
     function loadNicheMap() {
         if (_nicheMap !== null) return;
         _nicheMap = {};
@@ -469,8 +469,8 @@
             '.fmr-line .fdot{color:#565b73;margin:0 6px;}',
             '.fmr-sub{font-size:10px;color:#565b73;margin-top:3px;line-height:1.5;}',
             '.fmr-sub b{color:#8990a8;}',
-            '.fmr-i{display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#6b7488;cursor:pointer;flex:0 0 auto;vertical-align:-2px;letter-spacing:0;}',   
-            '.fmr-i.push{margin-left:2px;}',   
+            '.fmr-i{display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#6b7488;cursor:pointer;flex:0 0 auto;vertical-align:-2px;letter-spacing:0;}',
+            '.fmr-i.push{margin-left:2px;}',
             '.fmr-info{display:none;font-size:10px;color:#8990a8;line-height:1.55;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 10px;margin-top:6px;}',
             '.fmx-anom{display:flex;gap:9px;align-items:flex-start;margin-top:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(160deg,rgba(245,178,61,0.15),rgba(245,178,61,0.05));border:0.5px solid rgba(245,178,61,0.34);font-size:11.5px;line-height:1.5;color:#ecd6ac;-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);box-shadow:0 6px 18px -10px rgba(245,178,61,0.35);}',
             '.fmx-anom .fmx-anom-i{flex:0 0 auto;margin-top:1px;}',
@@ -632,10 +632,10 @@
             '@keyframes fmxJelly{0%,100%{transform:scale(1,1);}20%{transform:scale(1.08,0.92);}40%{transform:scale(0.94,1.06);}60%{transform:scale(1.04,0.96);}80%{transform:scale(0.98,1.02);}}',
             '.fx-m-flip{animation:fmxFlip 5s ease-in-out infinite;}',
             '@keyframes fmxFlip{0%,60%,100%{transform:perspective(320px) rotateY(0);}80%{transform:perspective(320px) rotateY(360deg);}}',
-            '.fx-g-neon{box-shadow:0 0 10px var(--fxa),0 0 20px var(--fxa);opacity:.55;}',   
+            '.fx-g-neon{box-shadow:0 0 10px var(--fxa),0 0 20px var(--fxa);opacity:.55;}',
             '.fx-g-breath{box-shadow:0 0 18px 5px rgba(255,255,255,0.5);animation:fmxBreathH 3.4s ease-in-out infinite;}',
             '@keyframes fmxBreathH{0%,100%{transform:scale(0.94);opacity:.3;}50%{transform:scale(1.14);opacity:.8;}}',
-            '.fx-g-gold{box-shadow:0 0 10px rgba(245,191,79,.5),0 0 22px rgba(245,191,79,.28);}',   
+            '.fx-g-gold{box-shadow:0 0 10px rgba(245,191,79,.5),0 0 22px rgba(245,191,79,.28);}',
             '.fx-g-aurora{background:conic-gradient(from 180deg,#0fd07f,#17b3a3,#3b82f6,#8b5cf6,#10b981,#0fd07f);filter:blur(9px);animation:fmxSpin 11s linear infinite;}',
             '.fx-g-aurora::after{content:"";position:absolute;inset:0;border-radius:inherit;animation:fmxAur 5.5s ease-in-out infinite;background:inherit;filter:blur(4px);}',
             '@keyframes fmxAur{0%,100%{opacity:.15;}50%{opacity:.7;}}',
@@ -826,8 +826,8 @@
             '.fmx-reqb.na{color:#565b73;font-weight:500;}',
             'textarea.fmx-inp{resize:vertical;min-height:84px;font-family:inherit;line-height:1.5;}',
             '.fmx-toast.err{border-color:rgba(239,68,68,0.4);color:#f87171;}',
-            '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',   
-            '.fmx-cfm.solid{pointer-events:auto;background:rgba(5,7,14,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}',   
+            '.fmx-cfm{position:fixed;inset:0;z-index:100005;pointer-events:none;}',
+            '.fmx-cfm.solid{pointer-events:auto;background:rgba(5,7,14,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}',
             '.fmx-cfm-box{position:fixed;left:50%;bottom:18px;margin-left:-126px;width:252px;max-width:calc(100vw - 20px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#141826;border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,0.6);pointer-events:auto;}',
             '.fmx-cp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cp-ttl{font-size:13px;font-weight:700;color:#e8e8ed;}',
@@ -1114,7 +1114,7 @@
             '#fmx-calMode .fmx-fx,#fmx-hotPcts .fmx-fx,#fmx-hotTimes .fmx-fx{min-height:40px;padding:9px 12px;}',
             '.fmx-sd.off{opacity:0.22;cursor:default;}',
             '.fmx-dd.off{opacity:0.22;pointer-events:none;}',
-            '.fmx-dd.off2{opacity:0.35;}',   
+            '.fmx-dd.off2{opacity:0.35;}',
             '.fmx-calnav:disabled{opacity:0.25;cursor:default;}',
             'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
             'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
@@ -1160,7 +1160,7 @@
             '.fmx-peak b{color:#e8e8ed;font-family:ui-monospace,Menlo,Consolas,monospace;}',
             '.fmx-peaktag{font-size:8px;font-weight:800;letter-spacing:0.3px;color:#5ab0e6;background:rgba(90,176,230,0.14);border-radius:5px;padding:1px 6px;}',
             '.fmx-tsl.peak{border-color:rgba(90,176,230,0.4);background:rgba(90,176,230,0.06);}',
-            '.fmx-tsl.sel.peak{border-color:rgba(129,140,248,0.5);background:rgba(129,140,248,0.1);}',   
+            '.fmx-tsl.sel.peak{border-color:rgba(129,140,248,0.5);background:rgba(129,140,248,0.1);}',
             '.fmx-htog{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:12px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.08);margin-top:2px;}',
             '.fmx-htl{flex:1;min-width:0;font-size:12.5px;font-weight:600;color:#e8e8ed;}',
             '.fmx-htl i{display:block;font-size:9.5px;color:#8990a8;font-style:normal;font-weight:400;margin-top:2px;}',
@@ -1397,16 +1397,16 @@
     function _mqUnreg(elm) { for (var i = 0; i < _mqActive.length; i++) { if (_mqActive[i].el === elm) { _mqActive.splice(i, 1); i--; } } }
     function _mqTick(ts) {
         _mqRaf = null;
-        if (!_opened) { _mqLast = 0; return; }               
+        if (!_opened) { _mqLast = 0; return; }
         if (!_mqLast) _mqLast = ts;
         var dt = ts - _mqLast; _mqLast = ts;
-        if (dt > 100) dt = 16;                               
+        if (dt > 100) dt = 16;
         for (var i = 0; i < _mqActive.length; i++) {
             var m = _mqActive[i];
             if (!m.el.isConnected) { _mqActive.splice(i, 1); i--; continue; }
-            if (m.el.offsetParent === null) continue;        
+            if (m.el.offsetParent === null) continue;
             m.offset += m.speed * dt / 1000;
-            if (m.offset >= m.period) m.offset -= m.period;  
+            if (m.offset >= m.period) m.offset -= m.period;
             m.inner.style.transform = 'translate3d(' + (-m.offset).toFixed(2) + 'px,0,0)';
         }
         if (_mqActive.length) _mqRaf = requestAnimationFrame(_mqTick); else _mqLast = 0;
@@ -1417,7 +1417,7 @@
         _mqUnreg(elm);
         elm.classList.add('fmx-mq');
         elm.setAttribute('data-mqt', text);
-        elm._mqSig = null;   
+        elm._mqSig = null;
         elm.classList.remove('fmx-mq-on');
         elm.style.removeProperty('--mqg');
         elm.textContent = '';
@@ -1458,7 +1458,7 @@
     function setMainTab(t, force) {
         if (!force && t === _mainTab) return;
         _mainTab = t;
-        try { if (window.__fmTrack) window.__fmTrack('mx_' + t); } catch (e) {}   
+        try { if (window.__fmTrack) window.__fmTrack('mx_' + t); } catch (e) {}
         var ti = el('fmx-htitle'), su = el('fmx-hsub');
         if (ti && su) {
             if (t === 'catalog') { _mqText(ti, 'Радар каналов'); _mqText(su, 'Все каналы, собранные ботом'); su.style.display = ''; }
@@ -1469,13 +1469,13 @@
         }
         var host = el('fmx-main');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
-        if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }   
+        if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }
         else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
         else if (t === 'pulse') renderPulse();
         else if (t === 'mod') { _modTab = 'queue'; renderMod(); }
         else renderEnter();
-        if (t !== 'market') _cmp = {};   
-        drawCmpBar();   
+        if (t !== 'market') _cmp = {};
+        drawCmpBar();
     }
 
     function loadPulse(cb) {
@@ -1753,7 +1753,7 @@
     function _modOpenUser(id) { _muPending = String(id); _modTab = 'user'; _haptic('light'); renderMod(); }
     function _modWireUids(scope) {
         qsa(scope, '[data-uid]').forEach(function (n) {
-            if (n.__uidWired) return;   
+            if (n.__uidWired) return;
             n.__uidWired = 1;
             n.addEventListener('click', function () { _modOpenUser(n.getAttribute('data-uid')); });
         });
@@ -1882,7 +1882,7 @@
         _feedMore = !!more;
         if (!more) paintBuyBody();
         apiGet(feedQuery()).then(function (r) {
-            if (rid !== _feedReq) return; 
+            if (rid !== _feedReq) return;
             var items = (r && r.listings) ? r.listings : [];
             if (more && _feed) {
                 var seen = {};
@@ -1995,7 +1995,7 @@
         bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
         var grid = el('fmx-catGrid'), token = (box._paintToken = (box._paintToken || 0) + 1);
         (function drawTail(i) {
-            if (!grid || box._paintToken !== token || !grid.isConnected) return;   
+            if (!grid || box._paintToken !== token || !grid.isConnected) return;
             if (i >= list.length) {
                 var t = el('fmx-catTail');
                 if (t && list.length > FIRST) t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' — вся база на экране</div>';
@@ -2027,7 +2027,7 @@
     function renderMarket() {
         var host = el('fmx-main');
         if (_subTab === 'create' || _subTab === 'sell' || _subTab === 'mine') {
-            host.innerHTML = '<div id="fmx-sub"></div>';  
+            host.innerHTML = '<div id="fmx-sub"></div>';
             if (_subTab === 'create') renderCreate(); else if (_subTab === 'sell') renderSell(); else renderMine();
             return;
         }
@@ -2070,17 +2070,17 @@
         n.textContent = has ? 'Мой оффер' : 'Выставить свой канал';
         var ic = cta.querySelector('.fmx-sellcta-ic i');
         if (ic) ic.className = 'ti ' + (has ? 'ti-adjustments-horizontal' : 'ti-plus');
-        _mqText(s, _sellCtaSub());   
+        _mqText(s, _sellCtaSub());
     }
     function updateSellCta() {
         if (typeof loadMyListings !== 'function') return;
-        _paintSellCta();   
+        _paintSellCta();
         loadMyListings().then(_paintSellCta).catch(function () {});
     }
     function setSubTab(t, force) {
         if (!force && t === _subTab && el('fmx-sub')) return;
         _subTab = t;
-        try { if (window.__fmTrack) window.__fmTrack('mxs_' + t); } catch (e) {}   
+        try { if (window.__fmTrack) window.__fmTrack('mxs_' + t); } catch (e) {}
         var host = el('fmx-main');
         if (host) { host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade'); }
         renderMarket();
@@ -2265,8 +2265,8 @@
         }
         host.innerHTML = body;
         bindCards(host); if (_view === 'list') bindList(host);
-        observeViews(host);   
-        bindPeek(host);       
+        observeViews(host);
+        bindPeek(host);
         var more = el('fmx-more');
         if (more) more.addEventListener('click', function () {
             more.disabled = true; more.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю…';
@@ -2296,7 +2296,7 @@
     }
 
     var REQ_FMT = { any: 'Любой формат' };
-    FMT_CATALOG.forEach(function (f) { REQ_FMT[f.k] = f.n; });   
+    FMT_CATALOG.forEach(function (f) { REQ_FMT[f.k] = f.n; });
     function loadRequests() {
         _reqState = 'loading';
         apiGet('/api/v1/marketplace/requests').then(function (r) {
@@ -2371,8 +2371,8 @@
             });
         });
     }
-    var _backTo = null;   
-    var _mineEditCh = null;   
+    var _backTo = null;
+    var _mineEditCh = null;
 
     function _mineChannelOf(l) {
         for (var i = 0; i < _channels.length; i++) {
@@ -2435,10 +2435,10 @@
             var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
             var h = '';
             var d = new Date(); d.setHours(12, 0, 0, 0);
-            var om = r.open_months || [];   
+            var om = r.open_months || [];
             for (var i = 0; i < 45; i++) {
                 var iso = _isoOf(d);
-                var offD = om.indexOf(iso.slice(0, 7)) < 0;   
+                var offD = om.indexOf(iso.slice(0, 7)) < 0;
                 var wlab = d.getDate() === 1 ? '<div class="w" style="color:#c9cbe0;font-weight:800;">' + MO[d.getMonth()] + '</div>' : '<div class="w">' + WD[d.getDay()] + '</div>';
                 h += '<div class="fmx-dd ' + (offD ? 'off2' : (busy[iso] ? 'bs' : 'fr')) + '" data-sd="' + iso + '"' + (offD ? ' data-off="1"' : '') + '>' +
                     '<div class="c num">' + d.getDate() + (demand[iso] ? '<i class="dm"></i>' : '') + '</div>' +
@@ -2446,7 +2446,7 @@
                 d.setDate(d.getDate() + 1);
             }
             box.innerHTML = h;
-            _hscrollify(box, true);   
+            _hscrollify(box, true);
             qsa(box, '[data-sd]').forEach(function (dd) {
                 dd.addEventListener('click', function () {
                     var iso = dd.getAttribute('data-sd');
@@ -2485,7 +2485,7 @@
             _myListings.map(mineCard).join('') +
             '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"' + (avail === 0 ? ' disabled style="margin-top:14px;opacity:0.5;"' : '') + '><i class="ti ti-plus"></i> Разместить ещё оффер' + (avail != null ? ' · ' + (avail > 0 ? 'доступен ещё ' + avail : 'лимит тарифа исчерпан') : '') + '</button>' +
             '<div style="font-size:10px;color:#565b73;margin-top:7px;text-align:center;">Один канал — один оффер. Доступное количество зависит от тарифа</div>';
-        loadPendingDeals();   
+        loadPendingDeals();
         el('fmx-mineNew').addEventListener('click', function () {
             if (avail === 0) { _haptic('error'); uiAlert('Лимит тарифа исчерпан. Повысь тариф или удали один из офферов.'); return; }
             _haptic('light'); _backTo = 'mine'; _mineEditCh = null; setSubTab('create');
@@ -2533,7 +2533,7 @@
                 var ch = _mineChannelOf(l);
                 if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении.'); return; }
                 if (!_ss) { _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; }
-                _haptic('light'); _ss.channelId = ch.id;   
+                _haptic('light'); _ss.channelId = ch.id;
                 openPosterStudio();
             });
         });
@@ -2587,7 +2587,7 @@
         sub.innerHTML = loadHtml();
         Promise.all([loadChannels(), loadMyListings()]).then(function () {
             if (_subTab !== 'mine') return;
-            if (!_myListings.length) { setSubTab('create', true); return; }   
+            if (!_myListings.length) { setSubTab('create', true); return; }
             paintMine();
         }).catch(function () {
             sub.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
@@ -2596,7 +2596,7 @@
 
     function openOwnerCalendar(l) {
         var box = el('fmx-calBox'); if (!box) return;
-        _ownerSelDay = null;   
+        _ownerSelDay = null;
         var s = el('fmx-calSub'); if (s) s.textContent = '@' + (l.username || '') + (_ownerCalHot ? ' — выбери день и назначь скидку, покупатели увидят её жёлтой' : ' — отмечай занятые дни, покупатели увидят свободные');
         box.innerHTML = loadHtml();
         showModal('fmx-calBg');
@@ -2767,7 +2767,7 @@
     }
 
     var REP_REASONS = [['scam', 'Скам / обман'], ['fake_metrics', 'Накрутка метрик'], ['illegal', 'Запрещённый контент'], ['other', 'Другое']];
-    function openComplaint(target) { 
+    function openComplaint(target) {
         var chips = REP_REASONS.map(function (r, i) { return '<button class="fmx-fx' + (i === 0 ? ' on' : '') + '" data-rr="' + r[0] + '">' + r[1] + '</button>'; }).join('');
         el('fmx-repBody').innerHTML =
             '<span class="fmx-lbl">Причина</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
@@ -2872,7 +2872,7 @@
             '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
     }
 
-    var _calData = {};   
+    var _calData = {};
     function _isoOf(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 
     function calDraw(box, l, mode) {
@@ -2889,7 +2889,7 @@
         var first = new Date(y, m, 1), dim = new Date(y, m + 1, 0).getDate();
         var off = (first.getDay() + 6) % 7;
         var om = r.open_months || [];
-        var hm = r.months_horizon || null;              
+        var hm = r.months_horizon || null;
         var mKey = y + '-' + String(m + 1).padStart(2, '0');
         var monthOpen = om.indexOf(mKey) >= 0;
         var inHorizon = !hm || hm.indexOf(mKey) >= 0;
@@ -2905,14 +2905,14 @@
         for (var d = 1; d <= dim; d++) {
             var iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
             var past = iso < todayIso, isBusy = !!busy[iso];
-            var offD = !past && (!monthOpen || !inHorizon);   
+            var offD = !past && (!monthOpen || !inHorizon);
             if (!past && !isBusy && !offD) freeCount++;
             var cls = 'fmx-sd ' + (past ? 'past' : (offD ? 'off' : (isBusy ? 'busy' : 'free')));
             if (!past && !offD && !isBusy && hot[iso]) cls += ' hot';
             if (iso === todayIso) cls += ' today';
             if (!past && !offD && mode === 'view' && _lsSel && _lsSel.day === iso) cls += ' sel';
-            if (!past && !offD && mode === 'edit' && !_ownerCalHot && _ownerSelDay === iso) cls += ' sel';   
-            if (!past && !offD && mode === 'edit' && _ownerCalHot && _ownerHotDay === iso) cls += ' sel';    
+            if (!past && !offD && mode === 'edit' && !_ownerCalHot && _ownerSelDay === iso) cls += ' sel';
+            if (!past && !offD && mode === 'edit' && _ownerCalHot && _ownerHotDay === iso) cls += ' sel';
             if (!offD && isBusy && watch[iso]) cls += ' watch';
             if (!offD && isBusy && mode === 'view' && !r.is_owner) cls += ' busy2';
             var clickable = !past && !offD && (mode === 'edit' || (mode === 'view' && (!isBusy || !r.is_owner)));
@@ -2929,7 +2929,7 @@
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%</span></div>' : '') +
             (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
-            (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _calModeHtml() + (_ownerCalHot ? _ownerHotHtml(l, r) : _ownerSlotsHtml(l, r)) + '</div>' : '');   
+            (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _calModeHtml() + (_ownerCalHot ? _ownerHotHtml(l, r) : _ownerSlotsHtml(l, r)) + '</div>' : '');
         box.innerHTML = h;
         if (mode === 'edit') {
             _bindOwnerSlots(box, l);
@@ -2981,7 +2981,7 @@
                     return;
                 }
                 if (busy[iso]) { _calWatchDay(box, l, iso); return; }
-                if (_lsSel.day !== iso) _lsSel.time = null;   
+                if (_lsSel.day !== iso) _lsSel.time = null;
                 if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
                     _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light');
                     calDraw(box, l, 'view');
@@ -3031,14 +3031,14 @@
             calDraw(box, l, 'view');
         }).catch(function () {});
     }
-    var _ownerSelDay = null;   
+    var _ownerSelDay = null;
     var _ownerCalHot = false, _ownerHotDay = null, _ownerHotPct = null, _ownerHotTimes = null;
     var _SLOT_PRESETS = ['09:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '21:00'];
     function _tmin(t) { var p = String(t || '').split(':'); return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0); }
     function _fmtT(m) { return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
     function _slotCfg(r) { return (r && r.slot_config && r.slot_config.times && r.slot_config.times.length) ? r.slot_config : null; }
     function _busyTimes(r) { var s = {}; (r.busy_times || []).forEach(function (x) { s[x] = 1; }); return s; }
-    function _daySlot(r, iso) {   
+    function _daySlot(r, iso) {
         var cfg = _slotCfg(r); if (!cfg) return null;
         var bt = _busyTimes(r), busy = 0;
         cfg.times.forEach(function (t) { if (bt[iso + '|' + _tmin(t.t)]) busy++; });
@@ -3047,8 +3047,8 @@
     function _dayDots(r, iso) {
         var s = _daySlot(r, iso); if (!s || !s.n) return '';
         var show = Math.min(s.n, 4), fShow = Math.round(s.free / s.n * show);
-        if (s.free < s.n && fShow >= show) fShow = show - 1;   
-        if (s.free > 0 && fShow <= 0) fShow = 1;               
+        if (s.free < s.n && fShow >= show) fShow = show - 1;
+        if (s.free > 0 && fShow <= 0) fShow = 1;
         var d = ''; for (var i = 0; i < show; i++) d += '<i class="' + (i < fShow ? 'f' : 'b') + '"></i>';
         return '<span class="fmx-sdots">' + d + '</span>';
     }
@@ -3072,7 +3072,7 @@
         var bt = _busyTimes(r), day = _lsSel.day;
         var rows = cfg.times.map(function (t) {
             var tm = _tmin(t.t), isBusy = !!bt[day + '|' + tm], sel = (_lsSel.time === tm), pk = _inPeak(l, tm);
-            var hp = isBusy ? null : _hotPct(l, day, tm);   
+            var hp = isBusy ? null : _hotPct(l, day, tm);
             return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + (pk ? ' peak' : '') + (hp ? ' hot' : '') + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
                 '<span class="tm">' + _esc(t.t) + '</span>' +
                 (pk ? '<span class="fmx-peaktag">час пик</span>' : '') +
@@ -3089,7 +3089,7 @@
             b.addEventListener('click', function () {
                 var tm = +b.getAttribute('data-ts');
                 _lsSel.time = (_lsSel.time === tm) ? null : tm;
-                _haptic('light'); _refreshBuyerExtra(box, l);   
+                _haptic('light'); _refreshBuyerExtra(box, l);
             });
         });
     }
@@ -3246,7 +3246,7 @@
                     var key = _ownerSelDay + '|' + tm;
                     if (rr.busy) { if (r.busy_times.indexOf(key) < 0) r.busy_times.push(key); }
                     else { r.busy_times = r.busy_times.filter(function (x) { return x !== key; }); }
-                    _haptic('light'); _refreshOwnerExtra(box, l);   
+                    _haptic('light'); _refreshOwnerExtra(box, l);
                 }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
             });
         });
@@ -3302,7 +3302,7 @@
         for (var i = 0; i < 45; i++) {
             var iso = _isoOf(d);
             var isBusy = !!busy[iso];
-            var offD = !_dOpen(iso);   
+            var offD = !_dOpen(iso);
             var cls = 'fmx-dd ' + (offD ? 'off' : (isBusy ? 'bs' : 'fr'));
             if (!offD && !isBusy && hot[iso]) cls += ' hot';
             if (!offD && !isBusy && _lsSel && _lsSel.day === iso) cls += ' sel';
@@ -3327,7 +3327,7 @@
         box.innerHTML = h;
         var strip = box.querySelector('.fmx-d14');
         if (strip) {
-            _hscrollify(strip, true);   
+            _hscrollify(strip, true);
             if (prevScroll) strip.scrollLeft = prevScroll;
         }
         _bindBuyerSlots(box, l);
@@ -3336,13 +3336,13 @@
             b.addEventListener('click', function () {
                 var iso = b.getAttribute('data-bd');
                 if (busy[iso]) { _calWatchBuyer(box, l, iso); return; }
-                if (_lsSel.day !== iso) _lsSel.time = null;   
+                if (_lsSel.day !== iso) _lsSel.time = null;
                 if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
                     _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light'); _refreshBuyerExtra(box, l); _redrawFullIfOpen(box, l); return;
                 }
                 _lsSel.day = iso;
                 _haptic('light');
-                _refreshBuyerExtra(box, l);   
+                _refreshBuyerExtra(box, l);
                 _redrawFullIfOpen(box, l);
                 var dq = demand[iso];
                 toast(dq ? 'Дата выбрана. На неё уже ' + dq + ' ' + _plural(dq, 'запрос', 'запроса', 'запросов') + ' за неделю — решай быстрее'
@@ -3474,7 +3474,7 @@
                     var ok = renderTablo(l.expand_content_json, el('fmx-peekIn'), { cut: false });
                     if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">Владелец пока не оформил витрину оффера</div></div>';
                     el('fmx-peek').style.display = 'flex';
-                    c.__peeked = true;   
+                    c.__peeked = true;
                     _haptic('light');
                 }, 450);
             });
@@ -3503,7 +3503,7 @@
         var items = (f.basket || []).slice();
         if (f.day) items.push({ day: f.day, time: f.time });
         var t = 'Здравствуйте. Интересует размещение в вашем канале: формат ' + f.fmt;
-        if (items.length > 1) {   
+        if (items.length > 1) {
             t += '. Интересуют даты: ' + items.map(_slotLabel).join(', ') + '.';
             var anyHot = f.l && items.some(function (x) { return _hotPct(f.l, x.day, x.time) != null; });
             t += f.price ? ' Ориентир по прайсу ' + _num(f.price) + ' ₽ за размещение' + (anyHot ? ' (на части дат действует скидка — итог уточним)' : '') + '. Подтвердите свободные слоты.' : ' Пришлите условия размещения.';
@@ -3728,7 +3728,7 @@
         el('fmx-tedSave').addEventListener('click', _tedSave);
         _hscrollify(body.querySelector('.fmx-tedbar'), true);
     }
-    var _hsBars = [], _hsResizeBound = false;   
+    var _hsBars = [], _hsResizeBound = false;
     function _hscrollify(bar, tight) {
         if (!bar || bar.__hsb) return;
         bar.__hsb = true;
@@ -3865,7 +3865,7 @@
     function _tedRow() {
         var row = el('fmx-tedRow'); if (!row) return;
         var e = _ted.els[_ted.sel];
-        if (!e) { row.innerHTML = ''; return; }   
+        if (!e) { row.innerHTML = ''; return; }
         var isTxt = (e.t === 'title' || e.t === 'text');
         row.innerHTML =
             (isTxt ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;min-width:150px;"><i class="ti ti-pencil"></i> Изменить текст</button>' : '') +
@@ -4018,8 +4018,8 @@
         inp.click();
     }
     var _tedDrag = null;
-    var _tedPts = {};      
-    var _tedLpT = null;    
+    var _tedPts = {};
+    var _tedLpT = null;
     function _tedBindCanvas(cv) {
         function pct(ev) {
             var r = cv.getBoundingClientRect();
@@ -4129,7 +4129,7 @@
                     clearTimeout(_tedLpT);
                 }
                 if (_tedDrag.moved) {
-                    cv.classList.add('moving');   
+                    cv.classList.add('moving');
                     e.x = Math.max(0, Math.min(96, _tedDrag.x0 + dx));
                     e.y = Math.max(0, Math.min(96, _tedDrag.y0 + dy));
                 }
@@ -4274,7 +4274,7 @@
     }
 
     var CMP_MAX = 3;
-    var _cmp = {};                       
+    var _cmp = {};
     function _cmpCount() { return Object.keys(_cmp).length; }
 
     function toggleCmp(u) {
@@ -4394,7 +4394,7 @@
         }).catch(function () {});
     }
     function openReviewForm(dealId) {
-        var sel = { v: 0 };   
+        var sel = { v: 0 };
         el('fmx-revBody').innerHTML =
             '<span class="fmx-lbl">Оценка</span><div class="fmx-fxw" id="fmx-rev-r">' +
             [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
@@ -4494,7 +4494,7 @@
         for (var i = 0; i < arr.length; i++) {
             if (id != null && String(arr[i].id) === String(id) && arr[i].suggested_base) return arr[i].suggested_base;
         }
-        if (arr.length === 1 && arr[0].suggested_base) return arr[0].suggested_base;   
+        if (arr.length === 1 && arr[0].suggested_base) return arr[0].suggested_base;
         return null;
     }
     function defaultFmts() {
@@ -4526,7 +4526,7 @@
         if (l.formats && l.formats.length) {
             _sfmts.forEach(function (f) { f.on = false; });
             l.formats.forEach(function (rf) {
-                var key = _fmtKey(rf.format), found = false;   
+                var key = _fmtKey(rf.format), found = false;
                 _sfmts.forEach(function (f) { if (f.format === key) { f.on = true; f.p = rf.price; found = true; } });
                 if (!found) {
                     var m = _fmtMeta(key);
@@ -4896,7 +4896,7 @@
             g2.addColorStop(0, 'rgba(0,0,0,0)'); g2.addColorStop(1, '#000');
             cx.fillStyle = g2; cx.fillRect(0, 0, cv.width, cv.height);
         }
-        var live = false; 
+        var live = false;
         function sync(keepHex) {
             var c = hsv2rgb(st.h, st.s, st.v), hex = rgb2hex(c[0], c[1], c[2]);
             if (!keepHex) el('fmx-cp-hex').value = hex;
@@ -5074,7 +5074,7 @@
         qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (b) {
             b.addEventListener('click', function () {
                 var v = b.getAttribute('data-erid');
-                _ss._erid = (_ss._erid === v) ? null : v;   
+                _ss._erid = (_ss._erid === v) ? null : v;
                 qsa(el('fmx-erid'), '.fmx-eridb').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-erid') === _ss._erid); });
                 _haptic('light');
             });
@@ -5147,8 +5147,8 @@
         if (_ss._media && _ss._media[target]) { try { URL.revokeObjectURL(_ss._media[target].url); } catch (e) {} delete _ss._media[target]; }
         _ss.att[target] = '';
         if (target === 'cover') _ss.covType = 'grad';
-        if (target === 'avatar') _ss.avatar = 'tg';   
-        if (target === 'cardbg') _ss.fullBg = false;   
+        if (target === 'avatar') _ss.avatar = 'tg';
+        if (target === 'cardbg') _ss.fullBg = false;
         paintCreate();
     }
     function startCrop(target, url, kind, name, x, y, s, file) {
@@ -5181,7 +5181,7 @@
         if (!_ss._media) _ss._media = {};
         var _old = _ss._media[_crop.target];
         if (_old && _old.url && _old.url !== _crop.url && String(_old.url).indexOf('blob:') === 0) {
-            try { URL.revokeObjectURL(_old.url); } catch (e) {}   
+            try { URL.revokeObjectURL(_old.url); } catch (e) {}
         }
         _ss._media[_crop.target] = { url: _crop.url, kind: _crop.kind, name: _crop.name, file: _crop.file || (_ss._media[_crop.target] ? _ss._media[_crop.target].file : null) };
         _ss.att[_crop.target] = { kind: _crop.kind, name: _crop.name, x: Math.round(_crop.x * 10) / 10, y: Math.round(_crop.y * 10) / 10, s: Math.round(_crop.s * 100) / 100 };
@@ -5243,7 +5243,7 @@
         if (!l._preview) {
             var _fx = l.fx || null, _boost = _isBoost(l);
             var _canGlow = _fx ? !!_fx.glow : (top || _boost);
-            if (!_canGlow && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';   
+            if (!_canGlow && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';
         }
         var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
         var over = '<i class="fmx-avover fx-o-' + ov + '"></i>';
@@ -5251,7 +5251,7 @@
         var pt = fxAllow('part', fx.part);
         var t = l.title || l.username || '?', core;
         if (l.avatar_url) core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';overflow:hidden;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '">' + over + '</div>';
-        else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';   
+        else core = '<div class="fmx-av fx-c-' + ov + '" style="background:' + accent + ';">' + _esc(t.charAt(0)) + over + '</div>';
         return '<div class="fmx-avw fx-m-' + mv + '">' + halo + core + orbH + partHtml(pt) + '</div>';
     }
     function avatarInner(accent, goto) {
@@ -5266,7 +5266,7 @@
         var oc = _ss.atomColor, orb = orbitHtml(_ss.orbit, oc);
         return '<div class="fmx-avw fx-m-' + _ss.move + '"' + (goto ? ' data-goto="fx" style="cursor:pointer;"' : '') + '>' + halo + core + orb + partHtml(_ss.part) + '</div>';
     }
-    var SEAM = 84;  
+    var SEAM = 84;
     function stkSize(s, W) { return Math.max(32, Math.min(64 * (s.scale || 1), Math.min(220, W * 0.62))); }
     function stkPos(s, W) {
         var size = stkSize(s, W);
@@ -5285,7 +5285,7 @@
         if (!s || !s.url) return '';
         var p = stkPos(s, W);
         var dm = s.dmode || 'bg';
-        if (dm === 'top') dm = 'blend';   
+        if (dm === 'top') dm = 'blend';
         var mcls = dm === 'blend' ? ' m-blend' : '';
         var boxSt;
         if (draggable) {
@@ -5319,10 +5319,10 @@
         ]);
         return _lotLibs;
     }
-    var _tgsData = {};  
+    var _tgsData = {};
     var _touchDev = (function () { try { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window; } catch (e) { return false; } })();
-    var STK_PHONE_DX = -0.5, STK_PHONE_DY = -2.5;  
-    var _lotAnims = [];  
+    var STK_PHONE_DX = -0.5, STK_PHONE_DY = -2.5;
+    var _lotAnims = [];
     function hydrateTgs(root) {
         _lotAnims = _lotAnims.filter(function (a) {
             if (a.el && a.el.isConnected) return true;
@@ -5342,7 +5342,7 @@
                         var a = lottie.loadAnimation({ container: n, renderer: 'svg', loop: true, autoplay: anim, animationData: data });
                         if (!anim) a.goToAndStop(0, true);
                         _lotAnims.push({ el: n, anim: a });
-                        try { _mediaApply(n); } catch (e) { }   
+                        try { _mediaApply(n); } catch (e) { }
                     } catch (e) {}
                 };
                 if (_tgsData[url]) { play(_tgsData[url]); return; }
@@ -5456,7 +5456,7 @@
                 if (!st) return;
                 var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0, dmode: 'bg' };
                 _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot, dmode: prev.dmode || 'bg' };
-                _ss.stickerSel = true; 
+                _ss.stickerSel = true;
                 _haptic('light'); renderStickerPane(); renderHero();
             });
         });
@@ -5515,7 +5515,7 @@
         st.addEventListener('touchstart', start, { passive: false });
     }
     function bindBadgeDrag(cardEl) {
-        return; 
+        return;
         var vip = !!_ss.glowCard || (function () { var b = listingForChannel(_ss.channelId); return b ? _isTop(b) : false; })();
         qsa(cardEl, '[data-bkey]').forEach(function (bd) {
             bd.style.cursor = vip ? 'grab' : 'pointer';
@@ -5751,7 +5751,7 @@
         pl.accent_color = _ss.color;
         pl._preview = true;
         pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
-        pl._realTop = base ? _isTop(base) : false; 
+        pl._realTop = base ? _isTop(base) : false;
         var act = (_sfmts || []).filter(function (x) { return x.on; });
         pl.formats = act.map(function (x) { return { format: x.k || x.format || '', label: x.n || x.label || x.k || '', price: x.p }; });
         var cm = _ss._media && _ss._media.cover;
@@ -5770,9 +5770,9 @@
         }
         pl.emoji_attachments_json = _att;
         pl.custom_text = _ss._desc || '';
-        pl.title_style = _ss.font;   
+        pl.title_style = _ss.font;
         pl.slots_note = _ss._slots || '';
-        pl.sticker_json = null;  
+        pl.sticker_json = null;
         if (_ss.showDeals === false) pl.show_deals = false;
         return pl;
     }
@@ -5830,7 +5830,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260724a';
+    var PS_GLUE_V = '20260724d';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -5884,7 +5884,7 @@
                 if (e.target === m) return done(null);
                 var b = e.target.closest('[data-f]'); if (!b) return;
                 var f = b.getAttribute('data-f');
-                if ((f === 'mp4' || f === 'gif') && !liveOk) {  
+                if ((f === 'mp4' || f === 'gif') && !liveOk) {
                     try { _haptic('warning'); } catch (e2) {}
                     toast('Живой постер (MP4/GIF) — на тарифах Pro+, Agency и Network. Картинка (PNG) доступна всем');
                     return;
@@ -5922,7 +5922,7 @@
             '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
         env.dockParent.insertBefore(dock, env.wrap);
         var prevOA = env.scroll.style.overflowAnchor;
-        env.scroll.style.overflowAnchor = 'none';   
+        env.scroll.style.overflowAnchor = 'none';
         var prev = dock.querySelector('#fmx-cdPrev');
         var box = prev.querySelector('.fmx-cdScale');
         var nav = dock.querySelector('.fmx-dkNav');
@@ -5950,7 +5950,7 @@
                     var bodies = env.root.querySelectorAll('.fmx-accb');
                     bodies.forEach(function (b) { b.style.transition = 'none'; });
                     env.openSection(sc[0]);
-                    void env.root.offsetHeight;   
+                    void env.root.offsetHeight;
                     requestAnimationFrame(function () {
                         bodies.forEach(function (b) { b.style.transition = ''; });
                     });
@@ -5975,7 +5975,7 @@
                     var y0 = anchorAbs();
                     if (y0 != null) {
                         env.scroll.scrollTo({ top: y0 - dockHeight(), behavior: 'smooth' });
-                        setTimeout(function () {   
+                        setTimeout(function () {
                             var yFin = anchorAbs(); if (yFin == null) return;
                             var tFin = yFin - dockHeight();
                             var maxS = env.scroll.scrollHeight - env.scroll.clientHeight;
@@ -6038,7 +6038,7 @@
             }
             tile.addEventListener('pointerup', peekUp);
             tile.addEventListener('pointercancel', peekUp);
-            return peekEnd;   
+            return peekEnd;
         }
         var _peekEnd = bindPeek(prev, box) || function () {};
         function onScroll() {
@@ -6068,7 +6068,7 @@
         function destroy() {
             if (destroyed) return;
             destroyed = true;
-            _peekEnd();   
+            _peekEnd();
             clearInterval(iv);
             env.scroll.style.overflowAnchor = prevOA || '';
             env.scroll.removeEventListener('scroll', onScroll);
@@ -6184,7 +6184,7 @@
                 var on = dock.classList.contains('dk-on');
                 var base = -675 * env.getK() * 0.8;
                 var d = fR.top - scR.top;
-                var vis = on ? d < base + 40 : d < base;   
+                var vis = on ? d < base + 40 : d < base;
                 var W = Math.min(scR.width - 20, 560);
                 dock.style.top = scR.top.toFixed(1) + 'px';
                 dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
@@ -6286,7 +6286,7 @@
             var win = frame.contentWindow;
             try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
             try { win.__fmxPosterUploader = uploadPosterBg; } catch (e) {}
-            try { win.__fmxPosterNotify = function (m) { toast(m, true); }; } catch (e) {}   
+            try { win.__fmxPosterNotify = function (m) { toast(m, true); }; } catch (e) {}
             try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
             try { if (win.__fmxPosterSetLang) win.__fmxPosterSetLang((hasSaved && saved && saved.lang) ? saved.lang : ((typeof getLang === 'function') ? getLang() : 'ru')); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
@@ -6392,20 +6392,20 @@
                     if (done) return;
                     if (r && r.done) {
                         done = true; clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo2);
-                        setPct(100); _haptic('success');   
+                        setPct(100); _haptic('success');
                         delete window.__fmxPosterJob[base.id];
                         var msg = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
                         bg.__fmxProgDone = setTimeout(function () { var b2 = sendBtn(); if (b2) b2.innerHTML = msg; }, 650);
                         toast(r.sent ? 'Живой постер в чате с ботом, можно переслать' : 'Живой постер не удалось создать — отправлен изображением');
                         bg.__fmxProgTo = setTimeout(restoreSend, 5300);
                     } else {
-                        if (r && r.pct) setPct(r.pct);   
+                        if (r && r.pct) setPct(r.pct);
                         bg.__fmxProgPoll = setTimeout(poll, 1200);
                     }
                 }).catch(function () { bg.__fmxProgPoll = setTimeout(poll, 3000); });
             }
             bg.__fmxProgPoll = setTimeout(poll, 1500);
-            bg.__fmxProgTo2 = setTimeout(function () { if (!done) { done = true; stop(); delete window.__fmxPosterJob[base.id]; restoreSend(); } }, 240000);  
+            bg.__fmxProgTo2 = setTimeout(function () { if (!done) { done = true; stop(); delete window.__fmxPosterJob[base.id]; restoreSend(); } }, 240000);
         }
 
         el('fmx-ps-send').addEventListener('click', function () {
@@ -6420,7 +6420,7 @@
                     if (r && r.ok) {
                         _haptic('success');
                         if (r.queued && r.job) {
-                            _startPosterProgress(r.job, fmt);   
+                            _startPosterProgress(r.job, fmt);
                         } else if (r.queued) {
                             btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> Идёт обработка…';
                         } else {
@@ -6429,7 +6429,7 @@
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
                     } else {
                         var msg = (r && r.error) || 'Не удалось';
-                        var wait = /через\s+(\d+)\s*с/.exec(msg);   
+                        var wait = /через\s+(\d+)\s*с/.exec(msg);
                         if (wait) waitSend(parseInt(wait[1], 10)); else restoreSend();
                         toast(msg, true);
                     }
@@ -6449,7 +6449,7 @@
                 var hasMotion = !!(state.bg && typeof state.bg === 'object' && state.bg.kind === 'video')
                     || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });
                 if (!hasMotion) { send('png'); return; }
-                btn.disabled = true;  
+                btn.disabled = true;
                 _posterPickFormat(extra && extra.live_ok).then(function (fmt) { if (fmt) send(fmt); else restoreSend(); });
             }
             var pend = null;
@@ -6524,7 +6524,7 @@
         if (savingId) p = apiPatch('/api/v1/marketplace/listings/' + savingId, body);
         else { if (!savingCh) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> Опубликовать на Площадке'; uiAlert('Сначала выбери канал.'); return; } body.channel_id = savingCh; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
-            var sameCtx = !!(_ss && _ss.channelId === savingCh);   
+            var sameCtx = !!(_ss && _ss.channelId === savingCh);
             if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (savingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
             _haptic('success');
             var savedId = (r && r.listing_id) || savingId;
@@ -6544,7 +6544,7 @@
             _feed = null; _feedState = 'idle';
             if (wasCreate && r && r.listing_id) _pollPublish(r.listing_id);
             setTimeout(function () {
-                if (!(_ss && _ss.channelId === savingCh)) return;   
+                if (!(_ss && _ss.channelId === savingCh)) return;
                 if (wasCreate) { paintCreate(); }
                 else { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить оффер'; btn.disabled = false; }
             }, 1600);
@@ -6600,7 +6600,7 @@
     function _fmrBlocksBuy(l) {
         var subs = l.subscribers, av = l.avg_views;
         var rr = (l.er != null) ? l.er : null, rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
-        var pp = _basePrice(l);   
+        var pp = _basePrice(l);
         var cpm = _cpm(l);
         var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var rrHtml = '';
@@ -6622,7 +6622,7 @@
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');   
+            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
@@ -6658,7 +6658,7 @@
             }
             if (l.ad_density != null && l.struct_posts) {
                 var apct = Math.round(l.ad_density * 100);
-                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');   
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
@@ -6671,12 +6671,12 @@
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var _fxG = l.fx || null;
-        var _gold = _fxG ? !!_fxG.gold : top;   
-        var realTop = l._preview ? !!l._realTop : _gold; 
+        var _gold = _fxG ? !!_fxG.gold : top;
+        var realTop = l._preview ? !!l._realTop : _gold;
         var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_gold && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
-        var freeMap = null; 
+        var freeMap = null;
         var flowArr = [], covBdg = '';
         bItems.forEach(function (it) {
             if (freeMap && freeMap[it.k]) covBdg += _freeStyleInject(it.h, freeMap[it.k]);
@@ -6690,18 +6690,18 @@
             if (stk.rot == null && l.effects_json.stickerRot != null) stk.rot = l.effects_json.stickerRot;
         }
         var _fxL = l.fx || null;
-        var _canStkAnim = _fxL ? !!_fxL.anim_sticker : top;   
+        var _canStkAnim = _fxL ? !!_fxL.anim_sticker : top;
         var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, (_canStkAnim || !!l._preview) && stk.kind !== 'webp', false) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
         var _cbRaw = (at.cardbg && typeof at.cardbg === 'object' && at.cardbg.url && (at.cardbg.kind === 'img' || at.cardbg.kind === 'gif' || at.cardbg.kind === 'video')) ? at.cardbg : null;
-        var _canAnimBg = _fxL ? !!_fxL.anim_bg : top;   
-        var cb = (_cbRaw && (_cbRaw.kind === 'img' || _canAnimBg || l._preview)) ? _cbRaw : null; 
+        var _canAnimBg = _fxL ? !!_fxL.anim_bg : top;
+        var cb = (_cbRaw && (_cbRaw.kind === 'img' || _canAnimBg || l._preview)) ? _cbRaw : null;
         var cbgHtml = cb ? '<div class="fmx-cbg">' + (cb.kind === 'video'
             ? '<video src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
             : '<img loading="lazy" decoding="async" src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
-        var fullBg = !!(cb && (l.effects_json || {}).fullBg); 
+        var fullBg = !!(cb && (l.effects_json || {}).fullBg);
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
         var covHtml;
@@ -6712,7 +6712,7 @@
             covHtml = '<div class="fmx-cov-bg" style="overflow:hidden;background:#11141f;">' + (l.cover_type === 'video' ? '<video src="' + cu + '" style="' + cst + '" muted playsinline preload="metadata"></video>' : '<img src="' + cu + '" style="' + cst + '">') + '</div>';
         } else covHtml = '<div class="fmx-cov-bg" style="background:' + _coverBg(l) + ';"></div>';
         var avHtml = listingAvatar(l, accent);
-        var _canGlass = _fxL ? !!_fxL.glass : top;   
+        var _canGlass = _fxL ? !!_fxL.glass : top;
         var gk = (_canGlass || l._preview) ? ((l.effects_json || {}).glass || 'none') : 'none';
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
@@ -6722,7 +6722,7 @@
             '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
-            (function () { 
+            (function () {
                 if (l.health_score == null) return '';
                 var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
                 return '<svg width="42" height="42" viewBox="0 0 42 42" style="flex:0 0 auto;margin-left:auto;"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>';
@@ -6737,7 +6737,7 @@
             (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
             '</div>' +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
-            _ctcLinesHtml(l) +   
+            _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div></div></div></div>';
@@ -6800,7 +6800,7 @@
             return '<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9aa0b8;margin:2px 0 2px;"><i class="ti ' + ic + '" style="font-size:12px;color:#818cf8;flex:0 0 auto;"></i> ' + labelTxt + ': ' + body + '</div>';
         }
         var adc = l.contact_ad, coop = l.contact_coop;
-        if (!adc && !coop && l.contact) adc = l.contact;   
+        if (!adc && !coop && l.contact) adc = l.contact;
         return line('Реклама', adc) + line('Сотрудничество', coop);
     }
     function simpleCard(l) {
@@ -6808,14 +6808,14 @@
         var hc = _healthColor(l);
         var subs = l.subscribers, av = l.avg_views;
         var score = (l.health_score != null) ? l.health_score : null;
-        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);   
+        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);
         var rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
-        var est = (l.price_low != null) && !l.owner_price;   
-        var ph = (est && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;   
-        var cpm = _cpm(l);   
+        var est = (l.price_low != null) && !l.owner_price;
+        var ph = (est && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
+        var cpm = _cpm(l);
         var cpmHi = (cpm != null && ph && _reach(l)) ? Math.round(ph / _reach(l) * 1000) : null;
-        var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;  
+        var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var ring = '';
         if (score != null) {
             var rr0 = 17, circ = Math.round(2 * Math.PI * rr0 * 100) / 100, off = Math.round(circ * (1 - score / 100) * 100) / 100;
@@ -6843,7 +6843,7 @@
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');   
+            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
@@ -6858,7 +6858,7 @@
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') + 
+                (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
                 (cpm && !(est && !ph) && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от полного охвата поста (за всё время). Реальная цена сделки обычно ниже — на бирже размещение котируют по охвату за первые 24 часа. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM и CPV посчитаны от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
@@ -6882,7 +6882,7 @@
             }
             if (l.ad_density != null && l.struct_posts) {
                 var apct = Math.round(l.ad_density * 100);
-                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');   
+                var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
             if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
@@ -6949,11 +6949,11 @@
     }
     function bindList(scope) {
         var ro = _ensureRowRO();
-        if (ro) ro.disconnect();   
+        if (ro) ro.disconnect();
         qsa(scope || el('fmx-main'), '.fmx-li').forEach(function (li) {
             var row = li.querySelector('.fmx-lrow'); if (!row) return;
             row.addEventListener('click', function () {
-                if (li.__peeked) { li.__peeked = false; return; }   
+                if (li.__peeked) { li.__peeked = false; return; }
                 var box = li.querySelector('.fmx-lbox');
                 if (li.classList.contains('on')) {
                     li.classList.remove('on'); box.style.display = 'none'; box.innerHTML = ''; _rescaleRow(li); return;
@@ -6970,14 +6970,14 @@
         if (_rowRO || typeof ResizeObserver === 'undefined') return _rowRO;
         _rowRO = new ResizeObserver(function (entries) {
             var jobs = [];
-            for (var i = 0; i < entries.length; i++) {                 
+            for (var i = 0; i < entries.length; i++) {
                 var li = entries[i].target;
                 var w = (li.closest) ? li.closest('.fmx-zw') : null;
                 if (!w) continue;
                 var ww = w.clientWidth; if (!ww) continue;
                 jobs.push({ w: w, px: Math.round(li.offsetHeight * Math.min(1, ww / 350)) });
             }
-            for (var j = 0; j < jobs.length; j++) {                    
+            for (var j = 0; j < jobs.length; j++) {
                 if (jobs[j].w.style.height !== jobs[j].px + 'px') jobs[j].w.style.height = jobs[j].px + 'px';
             }
         });
@@ -7051,7 +7051,7 @@
     function bindCards(scope) {
         hydrateTgs(scope);
         scaleCards(scope);
-        mediaWatch(scope);   
+        mediaWatch(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
@@ -7112,7 +7112,7 @@
     var _trackedWrite = {};
     function trackListing(lid, kind) {
         lid = parseInt(lid, 10); if (!lid) return;
-        if (kind === 'write') { if (_trackedWrite[lid]) return; _trackedWrite[lid] = 1; }  
+        if (kind === 'write') { if (_trackedWrite[lid]) return; _trackedWrite[lid] = 1; }
         try { apiPost('/api/v1/marketplace/listings/' + lid + '/track', { kind: kind }).catch(function () {}); } catch (e) {}
     }
     var _seenView = {}, _viewObs = null;
@@ -7200,7 +7200,7 @@
     function toggleBm(u) {
         if (!u) return; _haptic('light');
         var on;
-        function _revert(prev) {   
+        function _revert(prev) {
             if (prev) _bookmarks[u] = true; else delete _bookmarks[u];
             updateBmCount();
             qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', prev); });
@@ -7248,7 +7248,7 @@
         qsa(cmp, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-cmpBg'); }); });
 
         var cbar = document.createElement('div'); cbar.className = 'fmx-cmpBar'; cbar.id = 'fmx-cmpBar';
-        _root.appendChild(cbar);   
+        _root.appendChild(cbar);
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
         an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-report-analytics" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div><div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-hourglass-high"></i><h3>Скоро</h3><p>Глубокий разбор подключается. Пока смотри метрики в «Развернуть» и бейджи здоровья в оффере.</p></div></div></div>';
@@ -7303,7 +7303,7 @@
     function hideModal(id) { var m = el(id); if (m) m.classList.remove('fmx-show'); }
 
     var _OV_SEL = '.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov.show,#fmx-listBg.fmx-show,.bs-overlay.visible';
-    var _OV_FULL = '.fmx-psFull';   
+    var _OV_FULL = '.fmx-psFull';
     var _frozenVids = [];
     function _fmSyncFreeze() {
         var anyOv = !!document.querySelector(_OV_SEL) || !!document.querySelector(_OV_FULL);
@@ -7484,7 +7484,7 @@
         return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
     }
     function _flowBlock(l) {
-        var pp = _basePrice(l), av = l.avg_views;   
+        var pp = _basePrice(l), av = l.avg_views;
         if (!pp || !av) return '';
         var conv = 0.5, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
         return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
@@ -7716,7 +7716,7 @@
                         if (!busy[iso]) { _lsSel.day = iso; break; }
                         d.setDate(d.getDate() + 1);
                     }
-                    drawBuyerSlots(el('fmx-slotsBox'), l);   
+                    drawBuyerSlots(el('fmx-slotsBox'), l);
                 }
                 _syncWriteBtn(l);
             });
@@ -7737,7 +7737,7 @@
             bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
         }
         var _bmv = el('fmx-bmvBg');
-        document.body.appendChild(_bmv);   
+        document.body.appendChild(_bmv);
         _bmv.style.zIndex = '9300';
         el('fmx-bmvTitle').textContent = l.title || u;
         el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
@@ -7786,7 +7786,7 @@
         t.classList.toggle('err', !!err);
         t.innerHTML = '<i class="ti ' + (err ? 'ti-alert-circle' : 'ti-circle-check') + '"></i> ' + _esc(msg);
         t.classList.add('on');
-        clearTimeout(_toastTo);   
+        clearTimeout(_toastTo);
         _toastTo = setTimeout(function () { t.classList.remove('on', 'err'); }, 2400);
     }
 

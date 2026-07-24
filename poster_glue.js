@@ -34,8 +34,8 @@
     var e = document.querySelector('.mcell[data-m="' + m + '"] .l');
     if (e) e.innerHTML = _psEsc(main) + (suff ? ' <i>' + _psEsc(suff) + '</i>' : '');
   }
-  var _psNiche = null;   
-  var _psAsof = null;    
+  var _psNiche = null;
+  var _psAsof = null;
   function _psQr(m) { return 'card'; }
   function _psApplyCallout() {
     var poster = el('poster'); if (!poster) return;
@@ -55,7 +55,7 @@
     var t = el('titEl');
     function hit() {
       var a = c.getBoundingClientRect(), b = t.getBoundingClientRect();
-      if (!a.width || !b.width) return false;   
+      if (!a.width || !b.width) return false;
       return a.left < b.right + 2 && a.right > b.left && a.top < b.bottom && a.bottom > b.top + 4;
     }
     if (t && hit()) {
@@ -94,11 +94,11 @@
     _psLbl('grow', P.grow);
     _psLbl('freq', P.freq);
     _psLbl('mv', P.mv);
-    var ct = document.querySelector('.chart .ct span'); if (ct) ct.textContent = P.chart;   
+    var ct = document.querySelector('.chart .ct span'); if (ct) ct.textContent = P.chart;
     var cta = el('ctaEl'); if (cta) cta.innerHTML = _psEsc(P.cta) + ' <span class="arw">↓</span>';
     var hk = el('hookText'), hin = el('hookInp');
     if (hk && P.hook && (!hin || !String(hin.value || '').trim())) hk.textContent = P.hook;
-    if (P.hook) window.DEFAULT_HOOK = P.hook;   
+    if (P.hook) window.DEFAULT_HOOK = P.hook;
     _psApplyNiche();
     _psApplyCallout();
     _psProofLine();
@@ -114,15 +114,15 @@
       if (cur === 'Цена по договорённости' || cur.indexOf('Реклама от') === 0) pv.setAttribute('data-fmx-src', cur);
       var t = pv.getAttribute('data-fmx-src') || cur;
       ruVal = t;
-      if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;   
-      else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));  
+      if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;
+      else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));
       var nt = pv.textContent || '';
-      pv.style.fontSize = nt.length > 16 ? '21px' : '';   
+      pv.style.fontSize = nt.length > 16 ? '21px' : '';
     }
     var ps = el('prSub');
     var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
     if (ps) {
-      if (!fmtv) ps.textContent = (_psLang === 'ru') ? 'минимальный формат размещения' : P.prsub;   
+      if (!fmtv) ps.textContent = (_psLang === 'ru') ? 'минимальный формат размещения' : P.prsub;
     }
     if (box && pv) {
       if (_psLang === 'ru') {
@@ -135,7 +135,7 @@
         pv.style.fontSize = (ruVal && ruVal.length > 16) ? '21px' : '';
         if (ps && !fmtv) ps.textContent = 'минимальный формат размещения';
         box.style.width = '';
-        var ruW = box.offsetWidth;                       
+        var ruW = box.offsetWidth;
         pv.textContent = trVal; pv.style.fontSize = trValFs;
         if (ps && !fmtv) ps.textContent = trSub;
         if (ruW > 0) box.style.width = ruW + 'px';
@@ -163,7 +163,7 @@
     if (window.__fmxPsPriceHooked) return;
     var pi = el('prInp'), pf = el('prFmtInp');
     if (!pi && !pf) return;
-    window.__fmxPsPriceHooked = 1;   
+    window.__fmxPsPriceHooked = 1;
     if (pi) pi.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
     if (pf) pf.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
   }
@@ -172,7 +172,7 @@
     var panel = document.querySelector('.panel'); if (!panel) return;
     var anchor = panel.querySelector('.sub') || panel.querySelector('h2'); if (!anchor) return;
     var codes = [['ru', 'RU'], ['en', 'EN'], ['ar', 'AR'], ['hi', 'HI'], ['id', 'ID'], ['pt', 'PT'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], ['it', 'IT'], ['tr', 'TR'], ['fa', 'FA'], ['vi', 'VI'], ['bn', 'BN'], ['kk', 'KK'], ['uz', 'UZ'], ['be', 'BE'], ['az', 'AZ'], ['am', 'AM'], ['sw', 'SW']];
-    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Язык постера';   
+    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Язык постера';
     var chips = document.createElement('div'); chips.className = 'chips'; chips.id = 'fmxPsLang';
     codes.forEach(function (c) {
       var b = document.createElement('button'); b.className = 'chip' + (c[0] === _psLang ? ' on' : '');
@@ -200,11 +200,11 @@
   };
   window.__fmxPosterLang = function () { return _psLang; };
 
-  var _customBg = null;               
-  var _bgpan = { x: 0, y: 0, s: 1 };  
-  var _bgUploadPending = null;        
-  var _bgUploadError = null;          
-  var _bgCrop = false;                
+  var _customBg = null;
+  var _bgpan = { x: 0, y: 0, s: 1 };
+  var _bgUploadPending = null;
+  var _bgUploadError = null;
+  var _bgCrop = false;
   function _isPhotoBg() { var p = el('poster'); return !!(p && /\bbg-photo\b/.test(p.className)); }
   function _setBgCrop(on) {
     on = !!on && _isPhotoBg();
@@ -217,12 +217,12 @@
   }
   function _updateBgCropBtn() {
     var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'block' : 'none';
-    if (!_isPhotoBg() && _bgCrop) _setBgCrop(false);  
+    if (!_isPhotoBg() && _bgCrop) _setBgCrop(false);
   }
   function _bgEls() { var a = [], i = el('bgImg'), v = el('bgVid'); if (i) a.push(i); if (v) a.push(v); return a; }
   function _clampBgpan() {
     var s = Math.max(1, Math.min(+_bgpan.s || 1, 4)); _bgpan.s = s;
-    var mx = (s - 1) * 270, my = (s - 1) * 337.5;   
+    var mx = (s - 1) * 270, my = (s - 1) * 337.5;
     _bgpan.x = Math.max(-mx, Math.min(+_bgpan.x || 0, mx));
     _bgpan.y = Math.max(-my, Math.min(+_bgpan.y || 0, my));
   }
@@ -233,7 +233,7 @@
     var t = 'translate(' + _bgpan.x + 'px,' + _bgpan.y + 'px) scale(' + _bgpan.s + ')';
     _bgEls().forEach(function (e) {
       if (photo) { e.style.transformOrigin = 'center center'; e.style.transform = t; }
-      else { e.style.transform = ''; }  
+      else { e.style.transform = ''; }
     });
   }
 
@@ -283,7 +283,7 @@
     if (key === 'reach') return d.avg_views ? '~' + fmt(d.avg_views) : null;
     if (key === 'er') return (d.er != null && isFinite(d.er)) ? (Math.round(d.er * 10) / 10) + '%' : null;
     if (key === 'cpm') return (d.min_price && d.avg_views) ? fmt(d.min_price * 1000 / d.avg_views) + ' ₽' : null;
-    if (key === 'err') { var rr = (d.reach_rate != null) ? d.reach_rate : (d.er != null ? d.er : null); if (rr == null || !isFinite(rr)) return null; return (rr > 100 ? '⚠ ' : '') + Math.round(rr) + '%'; }  
+    if (key === 'err') { var rr = (d.reach_rate != null) ? d.reach_rate : (d.er != null ? d.er : null); if (rr == null || !isFinite(rr)) return null; return (rr > 100 ? '⚠ ' : '') + Math.round(rr) + '%'; }
     if (key === 'grow') return (d.grow != null && isFinite(d.grow)) ? (d.grow >= 0 ? '+' : '') + fmt(d.grow) : null;
     if (key === 'freq') return (d.freq != null && isFinite(d.freq)) ? (Math.round(d.freq * 10) / 10) + '/нед' : null;
     if (key === 'mv') return (d.mv != null && isFinite(d.mv)) ? (d.mv >= 1000 ? fmt(d.mv / 1000) + ' К' : fmt(d.mv)) : null;
@@ -348,7 +348,7 @@
     var meta = document.querySelector('.meta');
     if (meta && meta.firstChild) meta.firstChild.nodeValue = data.username ? '@' + String(data.username).replace(/^@/, '') : '';
     var hasNiche = !!(data.niche && String(data.niche).trim());
-    _psNiche = hasNiche ? { raw: data.niche, tr: data.niche_tr || null } : null;   
+    _psNiche = hasNiche ? { raw: data.niche, tr: data.niche_tr || null } : null;
     if (el('nicheEl')) { el('nicheEl').textContent = data.niche || ''; el('nicheEl').classList.remove('hide'); }
     _psApplyNiche();
     if (el('nicheSep')) { el('nicheSep').textContent = hasNiche ? ' · ' : ''; el('nicheSep').classList.remove('hide'); }
@@ -405,7 +405,7 @@
   function bgName() { var m = (document.getElementById('poster').className || '').match(/bg-(\S+)/); return m ? m[1] : 'blur'; }
 
   var _lot = null;
-  var _anims = [];  
+  var _anims = [];
   function _loadScript(u) { return new Promise(function (r, j) { var sc = document.createElement('script'); sc.src = u; sc.onload = r; sc.onerror = j; document.head.appendChild(sc); }); }
   function _loadLottie() {
     if (_lot) return _lot;
@@ -423,14 +423,14 @@
       v.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;'; v.src = url;
       v.addEventListener('loadeddata', function () { if (opts.static) { try { v.pause(); v.currentTime = 0.1; } catch (e) {} } });
       if (v.play) v.play().catch(function () {}); glyph.appendChild(v);
-      _anims.push({ kind: 'video', el: v });  
+      _anims.push({ kind: 'video', el: v });
     } else if (kind === 'tgs') {
       _loadLottie().then(function () {
         return fetch(url).then(function (r) { return r.arrayBuffer(); }).then(function (buf) {
           var json = JSON.parse(pako.inflate(new Uint8Array(buf), { to: 'string' }));
           var anim = lottie.loadAnimation({ container: glyph, renderer: 'svg', loop: !opts.static, autoplay: !opts.static, animationData: json });
           if (opts.static) anim.goToAndStop(0, true);
-          _anims.push({ kind: 'lottie', anim: anim });  
+          _anims.push({ kind: 'lottie', anim: anim });
         });
       }).catch(function () {});
     } else {
@@ -558,7 +558,7 @@
     st.price = {
       on: !(el('prBox') && el('prBox').classList.contains('hide')),
       val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,
-      fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 40) : ''  
+      fmt: el('prFmtInp') ? String(el('prFmtInp').value || '').trim().slice(0, 40) : ''
     };
     var qrOn = document.querySelector('#qrChips .chip.on'); st.qr = _psQr(qrOn ? qrOn.getAttribute('data-qr') : 'card');
     st.hook = el('hookInp') ? el('hookInp').value : '';
@@ -581,7 +581,7 @@
       else { var glyph = s.querySelector('.glyph'); it.glyph = glyph ? glyph.textContent : ''; }
       st.stickers.push(it);
     });
-    st.lang = _psLang;   
+    st.lang = _psLang;
     return st;
   };
 
@@ -593,9 +593,9 @@
 
   window.__fmxPosterApply = function (state) {
     if (!state) return;
-    if (state.lang && POSTER_L[state.lang]) _psLang = state.lang;   
+    if (state.lang && POSTER_L[state.lang]) _psLang = state.lang;
     var poster = el('poster');
-    _anims = [];  
+    _anims = [];
     if (state.bg) {
       var name = (typeof state.bg === 'object') ? 'photo' : state.bg;
       poster.className = poster.className.replace(/\bbg-\S+/g, '').replace(/\s+/g, ' ').trim() + ' bg-' + name;
@@ -642,7 +642,7 @@
     poster.querySelectorAll('.stk').forEach(function (s) { s.remove(); });
     (state.stickers || []).forEach(function (it) { if (it && typeof it === 'object') { try { _spawnSticker(it); } catch (e) {} } });
     if (typeof window.relayout === 'function') window.relayout();
-    _psEnsureLangUI(); _psApplyLabels(); _psFit(); _psMarkLangChips();   
+    _psEnsureLangUI(); _psApplyLabels(); _psFit(); _psMarkLangChips();
   };
 
   window.__fmxPosterReset = function (defaultState) {
@@ -658,7 +658,7 @@
     if (el('chartPct')) el('chartPct').style.color = '';
     document.querySelectorAll('.mcell').forEach(function (c) { delete c.dataset.hex; });
     window.COLORS = { tit: '#e8e8ed', niche: '#5DCAA5', pr: '#5DCAA5', chart: '#5DCAA5' };
-    _customBg = null; _bgpan = { x: 0, y: 0, s: 1 };  
+    _customBg = null; _bgpan = { x: 0, y: 0, s: 1 };
     _setBgCrop(false);
     window.__fmxPosterApply(defaultState || {});
   };
@@ -667,7 +667,7 @@
     if (!f || typeof window.__fmxPosterUploader !== 'function') return null;
     var drop = el('drop'), orig = drop ? drop.innerHTML : '';
     if (drop) drop.textContent = 'Загружаю фон на сервер…';
-    _bgUploadError = null;                              
+    _bgUploadError = null;
     var p = Promise.resolve(window.__fmxPosterUploader(f)).then(function (res) {
       if (res && res.url) { _customBg = { url: res.url, kind: res.kind || 'img' }; _bgUploadError = null; }
       else { _customBg = null; _bgUploadError = 'Не удалось загрузить фон'; }
@@ -710,13 +710,13 @@
           var d = el('drop');
           if (d) { var o = d.innerHTML; d.textContent = msg; setTimeout(function () { if (d) d.innerHTML = o; }, 3200); }
           try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(msg); } catch (e) {}
-          return;                                          
+          return;
         }
-        try { origSet(f); } catch (e) {}                 
-        _bgpan = { x: 0, y: 0, s: 1 };                    
-        _updateBgCropBtn();                               
+        try { origSet(f); } catch (e) {}
+        _bgpan = { x: 0, y: 0, s: 1 };
+        _updateBgCropBtn();
         _applyBgpan();
-        _uploadCustomBg(f);                                
+        _uploadCustomBg(f);
       };
     }
     if (!el('fmx-ed-bgcrop')) {
@@ -726,7 +726,7 @@
         b.innerHTML = '⤢ Кадрировать фон';
         b.style.cssText = 'display:none;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:#141828;border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
         b.addEventListener('click', function () { _setBgCrop(!_bgCrop); });
-        anchor.parentNode.insertBefore(b, anchor);  
+        anchor.parentNode.insertBefore(b, anchor);
       }
     }
     _ensureBgOverlay();
@@ -786,7 +786,7 @@
     c.addEventListener('pointerup', end);
     c.addEventListener('pointercancel', end);
     c.addEventListener('wheel', function (e) { e.preventDefault(); _bgpan.s = _bgpan.s * Math.exp(-e.deltaY * 0.0015); _applyBgpan(); }, { passive: false });
-    c.addEventListener('dblclick', function (e) { e.preventDefault(); _bgpan = { x: 0, y: 0, s: 1 }; _applyBgpan(); });  
+    c.addEventListener('dblclick', function (e) { e.preventDefault(); _bgpan = { x: 0, y: 0, s: 1 }; _applyBgpan(); });
   }
 
   window.__fmxPosterPanelScale = function (k) {
@@ -890,7 +890,7 @@
           if (a.anim.isLoaded) return fin();
           try { a.anim.addEventListener('DOMLoaded', fin); } catch (e) {}
         }
-        setTimeout(fin, 5000);  
+        setTimeout(fin, 5000);
       });
     }));
   };
