@@ -7313,11 +7313,8 @@
             return;
         }
         var row = t.closest('#fmx-bmBody .fmx-bmrow');
-        if (row) {
-            if (row.classList.contains('frz')) { _haptic('light'); toast('Оффер в заморозке — владелец приостановил продажу'); return; }
-            _haptic('light');
-            openBmView(row.getAttribute('data-open'));
-            return;
+        if (row && row.classList.contains('frz') && !t.closest('.fmx-lbox')) {
+            toast('Оффер в заморозке — владелец приостановил продажу');
         }
     });
     var _rsT = null;
@@ -7509,11 +7506,6 @@
         document.body.appendChild(faq);
         faq.addEventListener('click', function (e) { if (e.target === faq) hideModal('fmx-faqBg'); });
         faq.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-faqBg'); });
-        var bmv = document.createElement('div'); bmv.className = 'fmx-mbg'; bmv.id = 'fmx-bmvBg';
-        bmv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> <span id="fmx-bmvTitle"></span></h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmvBody"></div></div>';
-        document.body.appendChild(bmv);
-        bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
-
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
         promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть оффер</h2><p>Поднимает оффер выше в умной сортировке — его видит больше рекламодателей. Топ смешанный: платные и обычные офферы чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
         document.body.appendChild(promo);
@@ -8044,30 +8036,6 @@
         showModal('fmx-listBg');
     }
     var _bmMap = {};
-    function openBmView(u) {
-        var l = (_bmMap && _bmMap[u]) || findListing(u); if (!l) return;
-        if (!el('fmx-bmvBg')) {
-            var bmv = document.createElement('div'); bmv.className = 'fmx-mbg'; bmv.id = 'fmx-bmvBg';
-            bmv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> <span id="fmx-bmvTitle"></span></h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmvBody"></div></div>';
-            document.body.appendChild(bmv);
-            bmv.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmvBg'); });
-        }
-        var _bmv = el('fmx-bmvBg');
-        document.body.appendChild(_bmv);
-        _bmv.style.zIndex = '9300';
-        el('fmx-bmvTitle').textContent = l.title || u;
-        el('fmx-bmvBody').innerHTML = '<div style="max-width:372px;margin:0 auto;">' + zw(fullCard(l)) + '</div>';
-        bindCards(el('fmx-bmvBody'));
-        qsa(el('fmx-bmvBody'), '[data-act="expand"]').forEach(function (b) {
-            var nb = b.cloneNode(true); b.parentNode.replaceChild(nb, b);
-            nb.addEventListener('click', function () { hideModal('fmx-bmvBg'); openListing(u, l); });
-        });
-        qsa(el('fmx-bmvBody'), '[data-act="analyze"]').forEach(function (b) {
-            b.addEventListener('click', function () { hideModal('fmx-bmvBg'); });
-        });
-        showModal('fmx-bmvBg');
-        requestAnimationFrame(function () { scaleCards(el('fmx-bmvBody')); });
-    }
     function openBookmarks() {
         var box = el('fmx-bmBody');
         box.innerHTML = loadHtml();
@@ -8088,6 +8056,7 @@
                     (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> Заморожена</span>' : '') +
                     '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Удалить из закладок (два нажатия)"><i class="ti ti-trash"></i></button></div>';
             }).join('');
+            bindList(box);
             scaleCards(box);
             hydrateTgs(box);
         }).catch(function () {
