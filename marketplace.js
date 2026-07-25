@@ -443,28 +443,48 @@
             '.fmx-ht .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmr-sec.num{color:#c7cdfb;font-size:11px;letter-spacing:0.02em;text-transform:none;font-weight:700;border-bottom:0.5px solid rgba(255,255,255,0.07);padding-bottom:6px;}',
             '.fmr-sec.num .kn{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.16);color:#c7cdfb;font-size:10px;font-weight:750;margin-right:2px;}',
-            '.fmx-segw{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}',
-            '.fmx-al{border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03);padding:12px 13px;margin-bottom:10px;}',
-            '.fmx-al.off{opacity:0.55;}',
-            '.fmx-al-top{display:flex;align-items:center;gap:8px;margin-bottom:2px;}',
-            '.fmx-al-name{font-weight:700;font-size:14px;color:#e8e8ed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}',
-            '.fmx-al-scope{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;padding:2px 7px;border-radius:6px;flex:0 0 auto;white-space:nowrap;}',
-            '.fmx-al-scope.both{background:rgba(129,140,248,0.15);color:#c7cdfb;}',
-            '.fmx-al-scope.market{background:rgba(245,191,79,0.14);color:#f5bf4f;}',
-            '.fmx-al-scope.radar{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
-            '.fmx-tgl{margin-left:auto;width:38px;height:22px;border-radius:11px;background:rgba(129,140,248,0.9);position:relative;flex:0 0 auto;cursor:pointer;transition:background 160ms;}',
-            '.fmx-tgl::after{content:"";position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:all 160ms;}',
-            '.fmx-tgl.off{background:rgba(255,255,255,0.14);}',
-            '.fmx-tgl.off::after{right:auto;left:2px;}',
-            '.fmx-al-match{display:flex;align-items:center;gap:6px;font-size:11px;color:#9aa0b8;margin-top:8px;}',
-            '.fmx-al-acts{display:flex;gap:6px;margin-top:10px;}',
-            '.fmx-al-b{flex:1;text-align:center;font-size:11.5px;font-weight:600;padding:8px 6px;border-radius:9px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);color:#c2c6d2;cursor:pointer;font-family:inherit;}',
-            '.fmx-al-b.dz{flex:0 0 auto;width:40px;color:#ef4444;}',
-            '.fmx-ae-rows{display:flex;flex-direction:column;gap:1px;margin-top:4px;}',
-            '.fmx-ae-row{display:flex;align-items:center;gap:9px;padding:6px 0;}',
-            '.fmx-ae-lb{font-size:12.5px;color:#c2c6d2;flex:1;}',
-            '.fmx-ae-in{width:96px;flex:0 0 auto;text-align:center;}',
-            '.fmx-am-it{display:flex;align-items:center;gap:10px;padding:10px 11px;border:0.5px solid rgba(255,255,255,0.07);border-radius:11px;background:rgba(255,255,255,0.03);margin-bottom:8px;text-decoration:none;color:inherit;}',
+            '.fmx-fs{position:fixed;inset:0;z-index:100010;display:flex;flex-direction:column;background:#0a0d18;background-image:radial-gradient(900px 520px at 85% -12%,rgba(99,102,241,0.13),transparent 60%),radial-gradient(700px 520px at -12% 22%,rgba(93,202,165,0.06),transparent 55%);animation:fmxFsIn 260ms cubic-bezier(0.2,0.8,0.2,1);}',
+            '@keyframes fmxFsIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}',
+            '.fmx-fs-h{display:flex;align-items:center;gap:12px;padding:16px 18px 13px;border-bottom:0.5px solid rgba(255,255,255,0.06);position:sticky;top:0;background:rgba(10,13,24,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:2;}',
+            '.fmx-fs-h .ic{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:18px;flex:0 0 auto;box-shadow:0 4px 16px rgba(99,102,241,0.35);}',
+            '.fmx-fs-h .tt{font-size:17px;font-weight:750;letter-spacing:-0.01em;line-height:1.15;}',
+            '.fmx-fs-h .ts{font-size:11px;color:#9aa0b8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-fs-x{margin-left:auto;width:38px;height:38px;border-radius:12px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#c2c6d2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;font-size:16px;}',
+            '.fmx-fs-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 48px;width:100%;max-width:600px;margin:0 auto;}',
+            '.fmx-fs-lead{font-size:12.5px;color:#9aa0b8;line-height:1.55;margin:0 2px 16px;}',
+            '.fmx-segw{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}',
+            '.fmx-alnew{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;padding:14px;border-radius:14px;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;cursor:pointer;box-shadow:0 6px 20px rgba(99,102,241,0.3);font-family:inherit;}',
+            '.fmx-alnew[disabled]{opacity:0.45;box-shadow:none;}',
+            '.fmx-allim{font-size:11px;color:#565b73;text-align:center;margin:9px 0 20px;}',
+            '.fmx-al{border:0.5px solid rgba(255,255,255,0.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018));padding:15px 16px;margin-bottom:12px;}',
+            '.fmx-al.off{opacity:0.5;}',
+            '.fmx-al-top{display:flex;align-items:center;gap:9px;}',
+            '.fmx-al-name{font-weight:700;font-size:15px;color:#e8e8ed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;letter-spacing:-0.01em;}',
+            '.fmx-al-scope{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:3px 8px;border-radius:7px;flex:0 0 auto;white-space:nowrap;}',
+            '.fmx-al-scope.both{background:rgba(129,140,248,0.16);color:#c7cdfb;}',
+            '.fmx-al-scope.market{background:rgba(245,191,79,0.15);color:#f5bf4f;}',
+            '.fmx-al-scope.radar{background:rgba(93,202,165,0.14);color:#5DCAA5;}',
+            '.fmx-tgl{margin-left:auto;width:42px;height:25px;border-radius:13px;background:linear-gradient(145deg,#818cf8,#6366f1);position:relative;flex:0 0 auto;cursor:pointer;transition:all 180ms;}',
+            '.fmx-tgl::after{content:"";position:absolute;top:2.5px;right:2.5px;width:20px;height:20px;border-radius:50%;background:#fff;transition:all 180ms;box-shadow:0 1px 4px rgba(0,0,0,0.35);}',
+            '.fmx-tgl.off{background:rgba(255,255,255,0.13);}',
+            '.fmx-tgl.off::after{right:auto;left:2.5px;}',
+            '.fmx-al-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}',
+            '.fmx-alc{font-size:11px;font-weight:600;padding:5px 9px;border-radius:8px;background:rgba(129,140,248,0.1);border:0.5px solid rgba(129,140,248,0.22);color:#c7cdfb;}',
+            '.fmx-alc.g{background:rgba(93,202,165,0.11);border-color:rgba(93,202,165,0.28);color:#9fe3cc;}',
+            '.fmx-alc.mut{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);color:#8990a8;}',
+            '.fmx-al-match{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#9aa0b8;margin-top:13px;}',
+            '.fmx-al-acts{display:flex;gap:7px;margin-top:13px;}',
+            '.fmx-al-b{flex:1;text-align:center;font-size:12px;font-weight:600;padding:9px 6px;border-radius:11px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.09);color:#c2c6d2;cursor:pointer;font-family:inherit;}',
+            '.fmx-al-b.pr{background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.28);color:#c7cdfb;}',
+            '.fmx-al-b.dz{flex:0 0 auto;width:42px;color:#ef4444;}',
+            '.fmx-ae-card{border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;background:rgba(255,255,255,0.025);padding:2px 15px;margin-bottom:14px;}',
+            '.fmx-ae-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:0.5px solid rgba(255,255,255,0.055);}',
+            '.fmx-ae-row:last-child{border-bottom:0;}',
+            '.fmx-ae-lb{font-size:13px;color:#c2c6d2;font-weight:600;flex:1;min-width:0;}',
+            '.fmx-ae-in{width:104px;flex:0 0 auto;text-align:center;}',
+            '.fmx-ae-sec{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#565b73;margin:20px 3px 9px;}',
+            '.fmx-am-it{display:flex;align-items:center;gap:11px;padding:12px 13px;border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));margin-bottom:9px;text-decoration:none;color:inherit;}',
+            '.fmx-am-av{width:40px;height:40px;border-radius:12px;flex:0 0 auto;object-fit:cover;background:linear-gradient(145deg,#818cf8,#6366f1);display:grid;place-items:center;font-weight:750;color:#0b0c16;font-size:16px;}',
             '.fmx-met{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
             '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
             '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;}',
@@ -2789,8 +2809,7 @@
             '<button id="fmx-rf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
-            '<button class="fmx-btn" id="fmx-rf-bell" style="width:100%;margin-top:12px;background:rgba(129,140,248,0.12);color:#c7cdfb;border:0.5px solid rgba(129,140,248,0.3);"><i class="ti ti-bell"></i> Уведомлять о совпадениях</button>' +
-            '<div class="fmx-cfm-r" style="margin-top:10px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
+            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
         document.body.appendChild(bg);
         function upd() { var c = el('fmx-rf-cnt'); if (c) c.textContent = 'Показать ' + (_catalog || []).filter(_rfPass).length; }
         function done() { bg.remove(); _rfBtnLabel(); paintCatalogBody(); }
@@ -2802,7 +2821,6 @@
         qsa(bg, '[data-mx]').forEach(function (i) { i.addEventListener('input', function () { var v = i.value.trim(); _rf.mx[i.getAttribute('data-mx')] = v === '' ? null : +v; upd(); }); });
         bg.querySelector('[data-reset]').addEventListener('click', function () { _rf = { presets: {}, aud: {}, mn: {}, mx: {} }; qsa(bg, '.fmx-fx.on').forEach(function (x) { x.classList.remove('on'); }); qsa(bg, '.fmx-inp').forEach(function (x) { x.value = ''; }); upd(); });
         bg.querySelector('[data-apply]').addEventListener('click', done);
-        var _rfbell = el('fmx-rf-bell'); if (_rfbell) _rfbell.addEventListener('click', function () { done(); openAlertEditor(null); });
         upd();
     }
 
@@ -2900,24 +2918,24 @@
             renderNsBody();
         }).catch(function () { _nsubs = []; _nsMetrics = {}; renderNsBody(); });
     }
-    var _SCOPE_LBL = { both: 'Радар+Площадка', radar: 'Радар', market: 'Площадка' };
-    var _AL_RANGES = [['p', 'Цена ≤', 'mx'], ['cpm', 'CPM ≤', 'mx'], ['s', 'Подписчики ≥', 'mn'], ['err', 'Reach ≥ %', 'mn'], ['er', 'ER ≥ %', 'mn']];
+    var _SCOPE_LBL = { both: 'Радар + Площадка', radar: 'Радар', market: 'Площадка' };
+    var _AL_RANGES = [['p', 'Цена поста ≤, ₽', 'mx'], ['cpm', 'CPM ≤, ₽', 'mx'], ['s', 'Подписчики ≥', 'mn'], ['err', 'Reach Rate ≥, %', 'mn'], ['er', 'ER ≥, %', 'mn']];
     function _alertChips(f) {
         f = f || {}; var out = [];
-        (f.niches || []).forEach(function (n) { out.push('<span class="fmx-fx on">' + _esc(n) + '</span>'); });
+        (f.niches || []).forEach(function (n) { out.push('<span class="fmx-alc">' + _esc(n) + '</span>'); });
         var mx = f.mx || {}, mn = f.mn || {};
-        if (mx.p != null) out.push('<span class="fmx-fx on">≤ ' + _num(mx.p) + ' ₽</span>');
-        if (mx.cpm != null) out.push('<span class="fmx-fx on">CPM ≤ ' + _num(mx.cpm) + '</span>');
-        if (mn.s != null) out.push('<span class="fmx-fx on">' + _short(mn.s) + '+ подп</span>');
-        if (mn.err != null) out.push('<span class="fmx-fx on">Reach ≥ ' + mn.err + '%</span>');
-        if (mn.er != null) out.push('<span class="fmx-fx on">ER ≥ ' + mn.er + '%</span>');
+        if (mx.p != null) out.push('<span class="fmx-alc">≤ ' + _num(mx.p) + ' ₽</span>');
+        if (mx.cpm != null) out.push('<span class="fmx-alc">CPM ≤ ' + _num(mx.cpm) + '</span>');
+        if (mn.s != null) out.push('<span class="fmx-alc">' + _short(mn.s) + '+ подп</span>');
+        if (mn.err != null) out.push('<span class="fmx-alc">Reach ≥ ' + mn.err + '%</span>');
+        if (mn.er != null) out.push('<span class="fmx-alc">ER ≥ ' + mn.er + '%</span>');
         var P = f.presets || {};
-        if (P.clean) out.push('<span class="fmx-fx on" style="color:#5DCAA5;">без накрутки</span>');
-        if (P.grow) out.push('<span class="fmx-fx on">растут</span>');
-        if (P.large) out.push('<span class="fmx-fx on">100k+</span>');
+        if (P.clean) out.push('<span class="fmx-alc g">без накрутки</span>');
+        if (P.grow) out.push('<span class="fmx-alc">растут</span>');
+        if (P.large) out.push('<span class="fmx-alc">100k+</span>');
         var aud = Object.keys(f.aud || {}).filter(function (k) { return f.aud[k]; });
-        if (aud.length) out.push('<span class="fmx-fx on">' + aud.map(function (a) { return { male: 'муж', female: 'жен', mixed: 'смеш' }[a] || a; }).join('/') + '</span>');
-        return out.length ? out.join('') : '<span style="font-size:11px;color:#565b73;">любые каналы</span>';
+        if (aud.length) out.push('<span class="fmx-alc">' + aud.map(function (a) { return { male: 'муж', female: 'жен', mixed: 'смеш' }[a] || a; }).join('/') + '</span>');
+        return out.length ? out.join('') : '<span class="fmx-alc mut">любые каналы</span>';
     }
     function _alertFilterFromRf() {
         var f = { niches: [], presets: {}, aud: {}, mn: {}, mx: {} };
@@ -2937,34 +2955,37 @@
         if (!parts.length) parts.push('Все каналы');
         return parts.join(' · ').slice(0, 60);
     }
+    function _fsClose(id) { var b = el(id); if (b) b.remove(); }
+    function _fsHead(icon, title, sub, xid) {
+        return '<div class="fmx-fs-h"><div class="ic"><i class="ti ' + icon + '"></i></div>' +
+            '<div style="min-width:0;"><div class="tt">' + title + '</div><div class="ts">' + sub + '</div></div>' +
+            '<button class="fmx-fs-x" id="' + xid + '"><i class="ti ti-x"></i></button></div>';
+    }
     function openAlerts() {
         _haptic('light');
-        var old = el('fmx-alBg'); if (old) old.remove();
-        var bg = document.createElement('div'); bg.id = 'fmx-alBg'; bg.className = 'fmx-cfm solid';
-        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;max-height:88vh;overflow-y:auto;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-bell" style="color:#818cf8;"></i><b>Умные уведомления</b>' +
-            '<button id="fmx-al-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>' +
-            '<div style="font-size:12px;color:#9aa0b8;line-height:1.5;margin:-2px 1px 12px;">Сохранённый фильтр — придёт в @ForgeMetricsBot, как только на Радаре или Площадке появится подходящий канал.</div>' +
-            '<div id="fmx-al-body">' + loadHtml() + '</div></div>';
+        _fsClose('fmx-alBg');
+        var bg = document.createElement('div'); bg.id = 'fmx-alBg'; bg.className = 'fmx-fs';
+        bg.innerHTML = _fsHead('ti-bell', 'Умные уведомления', 'Появится нужный канал — сообщим в бот', 'fmx-al-x') +
+            '<div class="fmx-fs-b" id="fmx-al-body">' + loadHtml() + '</div>';
         document.body.appendChild(bg);
-        function done() { bg.remove(); }
-        el('fmx-al-x').addEventListener('click', done);
-        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        el('fmx-al-x').addEventListener('click', function () { bg.remove(); });
         loadAlerts();
     }
     function loadAlerts() {
         apiGet('/api/v1/marketplace/alerts').then(function (r) {
             if (!el('fmx-al-body')) return;
             renderAlertsList(r || { alerts: [] });
-        }).catch(function () { var b = el('fmx-al-body'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь.'); });
+        }).catch(function () { var b = el('fmx-al-body'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори.'); });
     }
     function renderAlertsList(r) {
         var body = el('fmx-al-body'); if (!body) return;
-        var alerts = r.alerts || [], lim = r.limit || 1, used = r.used || alerts.length;
+        var alerts = r.alerts || [], lim = r.limit || 1, used = r.used != null ? r.used : alerts.length;
         var canAdd = used < lim;
-        var h = '<button class="fmx-btn" id="fmx-al-new"' + (canAdd ? '' : ' disabled style="opacity:.5;"') + ' style="width:100%;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;font-weight:700;margin-bottom:6px;"><i class="ti ti-plus"></i> Новое уведомление</button>' +
-            '<div style="font-size:10.5px;color:#565b73;text-align:center;margin-bottom:14px;">Использовано ' + used + ' из ' + (lim >= 100 ? '∞' : lim) + (canAdd ? '' : ' · лимит тарифа') + '</div>';
+        var h = '<p class="fmx-fs-lead">Настрой условия закупки один раз — уведомление придёт в @ForgeMetricsBot, как только на Радаре или Площадке появится подходящий канал.</p>' +
+            '<button class="fmx-alnew" id="fmx-al-new"' + (canAdd ? '' : ' disabled') + '><i class="ti ti-plus"></i> Новое уведомление</button>' +
+            '<div class="fmx-allim">Активно ' + used + ' из ' + (lim >= 100 ? '∞' : lim) + (canAdd ? '' : ' · достигнут лимит тарифа') + '</div>';
         if (!alerts.length) {
-            h += emptyHtml('ti-bell-plus', 'Пока нет уведомлений', 'Настрой фильтр в ленте и нажми «Уведомлять о совпадениях», или создай здесь.');
+            h += emptyHtml('ti-bell-plus', 'Пока нет уведомлений', 'Создай первое: задай нишу, потолок цены и качество — и лови нужные каналы автоматически.');
         } else {
             alerts.forEach(function (a) {
                 var sc = a.scope || 'both';
@@ -2972,9 +2993,9 @@
                     '<div class="fmx-al-top"><span class="fmx-al-name">' + _esc(a.name) + '</span>' +
                     '<span class="fmx-al-scope ' + sc + '">' + _SCOPE_LBL[sc] + '</span>' +
                     '<span class="fmx-tgl' + (a.enabled ? '' : ' off') + '" data-tgl="' + a.id + '"></span></div>' +
-                    '<div class="fmx-fxw" style="margin:2px 0 0;">' + _alertChips(a.filter) + '</div>' +
-                    '<div class="fmx-al-match" style="' + (a.enabled ? '' : 'color:#565b73;') + '">' + (a.enabled ? '<span style="color:' + (a.mode === 'digest' ? '#f5bf4f' : '#5DCAA5') + ';">●</span> ' + (a.seen_count ? a.seen_count + ' найдено · ' : '') + (a.mode === 'digest' ? 'дайджест раз в день' : 'мгновенно') : 'выключено') + '</div>' +
-                    '<div class="fmx-al-acts"><button class="fmx-al-b" data-edit="' + a.id + '">Изменить</button><button class="fmx-al-b" data-mts="' + a.id + '">Показать совпадения</button><button class="fmx-al-b dz" data-del="' + a.id + '"><i class="ti ti-trash"></i></button></div></div>';
+                    '<div class="fmx-al-chips">' + _alertChips(a.filter) + '</div>' +
+                    '<div class="fmx-al-match">' + (a.enabled ? '<span style="color:' + (a.mode === 'digest' ? '#f5bf4f' : '#5DCAA5') + ';">●</span> ' + (a.seen_count ? a.seen_count + ' найдено · ' : '') + (a.mode === 'digest' ? 'сводка раз в день' : 'мгновенно') : '<span style="color:#565b73;">выключено</span>') + '</div>' +
+                    '<div class="fmx-al-acts"><button class="fmx-al-b pr" data-edit="' + a.id + '">Изменить</button><button class="fmx-al-b" data-mts="' + a.id + '">Совпадения</button><button class="fmx-al-b dz" data-del="' + a.id + '"><i class="ti ti-trash"></i></button></div></div>';
             });
         }
         body.innerHTML = h;
@@ -2990,23 +3011,23 @@
             : { id: null, name: '', scope: 'both', mode: 'instant', f: _alertFilterFromRf() };
         var f = _aEdit.f; f.niches = f.niches || []; f.presets = f.presets || {}; f.aud = f.aud || {}; f.mn = f.mn || {}; f.mx = f.mx || {};
         if (!_aEdit.name) _aEdit.name = _alertAutoName(f);
-        var old = el('fmx-aeBg'); if (old) old.remove();
-        var bg = document.createElement('div'); bg.id = 'fmx-aeBg'; bg.className = 'fmx-cfm solid';
+        _fsClose('fmx-aeBg');
+        var bg = document.createElement('div'); bg.id = 'fmx-aeBg'; bg.className = 'fmx-fs';
         function seg(cur, opts) { return opts.map(function (o) { return '<button class="fmx-seg' + (cur === o[0] ? ' on' : '') + '" data-seg="' + o[0] + '">' + o[1] + '</button>'; }).join(''); }
         var rangesHtml = _AL_RANGES.map(function (r) {
             var v = (_aEdit.f[r[2]] || {})[r[0]]; v = (v != null ? v : '');
             return '<div class="fmx-ae-row"><span class="fmx-ae-lb">' + r[1] + '</span><input class="fmx-inp fmx-ae-in" type="number" inputmode="numeric" min="0" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
         }).join('');
-        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;max-height:88vh;overflow-y:auto;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-bell-plus" style="color:#818cf8;"></i><b>' + (_aEdit.id ? 'Изменить' : 'Новое') + ' уведомление</b>' +
-            '<button id="fmx-ae-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>' +
-            '<span class="fmx-lbl">Название</span><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
-            '<span class="fmx-lbl fmx-mt2">Область</span><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Ниши (через запятую, пусто = любые)</span><input class="fmx-inp" id="fmx-ae-niches" placeholder="например, Криптовалюты, Финансы" value="' + _esc((f.niches || []).join(', ')) + '">' +
-            '<span class="fmx-lbl fmx-mt2">Параметры</span><div class="fmx-ae-rows">' + rangesHtml + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Пол аудитории</span><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Только</span><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
-            '<span class="fmx-lbl fmx-mt2">Как часто</span><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Дайджест']]) + '</div>' +
-            '<button class="fmx-btn fmx-mt2" id="fmx-ae-save" style="width:100%;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;font-weight:700;"><i class="ti ti-bell"></i> Сохранить уведомление</button></div>';
+        bg.innerHTML = _fsHead('ti-bell-plus', (_aEdit.id ? 'Изменить уведомление' : 'Новое уведомление'), 'Условия закупки', 'fmx-ae-x') +
+            '<div class="fmx-fs-b">' +
+            '<div class="fmx-ae-sec">Название</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
+            '<div class="fmx-ae-sec">Где искать</div><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
+            '<div class="fmx-ae-sec">Ниши <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">— через запятую, пусто = любые</span></div><input class="fmx-inp" id="fmx-ae-niches" placeholder="Криптовалюты, Финансы" value="' + _esc((f.niches || []).join(', ')) + '">' +
+            '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-ae-card">' + rangesHtml + '</div>' +
+            '<div class="fmx-ae-sec">Пол аудитории</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
+            '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
+            '<div class="fmx-ae-sec">Как часто уведомлять</div><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Сводка раз в день']]) + '</div>' +
+            '<button class="fmx-alnew" id="fmx-ae-save" style="margin-top:24px;"><i class="ti ti-bell"></i> Сохранить уведомление</button></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
         el('fmx-ae-x').addEventListener('click', done);
@@ -3033,23 +3054,23 @@
     }
     function openAlertMatches(id) {
         _haptic('light');
-        var old = el('fmx-amBg'); if (old) old.remove();
-        var bg = document.createElement('div'); bg.id = 'fmx-amBg'; bg.className = 'fmx-cfm solid';
-        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;max-height:88vh;overflow-y:auto;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-target-arrow" style="color:#818cf8;"></i><b>Совпадения сейчас</b>' +
-            '<button id="fmx-am-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>' +
-            '<div id="fmx-am-body">' + loadHtml() + '</div></div>';
+        _fsClose('fmx-amBg');
+        var bg = document.createElement('div'); bg.id = 'fmx-amBg'; bg.className = 'fmx-fs';
+        bg.innerHTML = _fsHead('ti-target-arrow', 'Совпадения сейчас', 'Каналы под этот фильтр', 'fmx-am-x') +
+            '<div class="fmx-fs-b" id="fmx-am-body">' + loadHtml() + '</div>';
         document.body.appendChild(bg);
         el('fmx-am-x').addEventListener('click', function () { bg.remove(); });
         apiGet('/api/v1/marketplace/alerts/' + id + '/matches').then(function (r) {
             var b = el('fmx-am-body'); if (!b) return;
             var items = (r && r.items) || [];
-            if (!items.length) { b.innerHTML = emptyHtml('ti-search', 'Пока пусто', 'Под этот фильтр сейчас нет каналов. Придёт уведомление, когда появится.'); return; }
-            var h = '<div style="font-size:11px;color:#565b73;margin-bottom:10px;">Сейчас подходит ' + (r.count || items.length) + ' ' + _plural(r.count || items.length, 'канал', 'канала', 'каналов') + ':</div>';
+            if (!items.length) { b.innerHTML = emptyHtml('ti-search', 'Пока пусто', 'Сейчас нет каналов под фильтр. Уведомление придёт, как только появится.'); return; }
+            var h = '<p class="fmx-fs-lead">Сейчас подходит ' + (r.count || items.length) + ' ' + _plural(r.count || items.length, 'канал', 'канала', 'каналов') + '. Нажми — откроется в Telegram.</p>';
             items.forEach(function (it) {
-                h += '<a href="https://t.me/' + _esc(it.username) + '" target="_blank" rel="noopener" class="fmx-am-it">' +
+                var av = it.avatar_url ? '<img class="fmx-am-av" src="' + _esc(mediaAbs(it.avatar_url)) + '" alt="">' : '<div class="fmx-am-av">' + _esc((it.title || it.username || '?').charAt(0).toUpperCase()) + '</div>';
+                h += '<a href="https://t.me/' + _esc(it.username) + '" target="_blank" rel="noopener" class="fmx-am-it">' + av +
                     '<div style="min-width:0;flex:1;"><div style="font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(it.title || ('@' + it.username)) + '</div>' +
-                    '<div style="font-size:11px;color:#9aa0b8;">@' + _esc(it.username) + (it.niche ? ' · ' + _esc(it.niche) : '') + '</div></div>' +
-                    '<div style="text-align:right;font-size:11px;color:#c2c6d2;white-space:nowrap;">' + (it.subscribers ? _short(it.subscribers) + ' подп' : '') + (it.cpm != null ? '<br>CPM ' + _num(it.cpm) + '₽' : '') + '</div></a>';
+                    '<div style="font-size:11.5px;color:#9aa0b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@' + _esc(it.username) + (it.niche ? ' · ' + _esc(it.niche) : '') + '</div></div>' +
+                    '<div style="text-align:right;font-size:11px;color:#c2c6d2;white-space:nowrap;flex:0 0 auto;">' + (it.subscribers ? _short(it.subscribers) + ' подп' : '') + (it.cpm != null ? '<br>CPM ' + _num(it.cpm) + '₽' : '') + '</div></a>';
             });
             b.innerHTML = h;
         }).catch(function () { var b = el('fmx-am-body'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Повтори попытку.'); });
