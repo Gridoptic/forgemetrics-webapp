@@ -444,12 +444,12 @@
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;}',
-            '.fmx-heroh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
-            '.fmx-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;}',
-            '.fmx-ht{background:#12162a;padding:9px 10px;min-width:0;}',
-            '.fmx-ht .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-ht .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
-            '.fmx-ht .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
+            '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;}',
+            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
+            '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmr-sec.num{color:#c7cdfb;font-size:11px;letter-spacing:0.02em;text-transform:none;font-weight:700;border-bottom:0.5px solid rgba(255,255,255,0.07);padding-bottom:6px;}',
             '.fmr-sec.num .kn{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.16);color:#c7cdfb;font-size:10px;font-weight:750;margin-right:2px;}',
             '.fmx-segw{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}',
@@ -6842,7 +6842,7 @@
         var rrHtml = '';
         if (rr != null && rstat) {
             var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
-            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
             rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i ti ti-info-circle push" data-fi="rr"></i></div>' +
@@ -6905,7 +6905,7 @@
         return ad + qualHdr + facts + struct + flow + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
     function _htile(label, val, valCol, sub, subCol) {
-        return '<div class="fmx-ht"><div class="l">' + label + '</div>' +
+        return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
             '<div class="v"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
             (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
     }
@@ -6939,8 +6939,8 @@
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
             _htile('CPM', cpm != null ? _short(cpm) + '₽' : '—', '#e8e8ed', isOwner ? 'от цены влад.' : 'ориентир ниши', '') +
             _htile(priceLabel, priceVal, priceCol, priceSub, '');
-        return '<div class="fmx-heroh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
-            '<div class="fmx-hero">' + tiles + '</div>';
+        return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
+            '<div class="fmx-kmg">' + tiles + '</div>';
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
@@ -7096,7 +7096,7 @@
         var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
         var rrHtml = '';
         if (rr != null && rstat) {
-            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для ' + _esc(rtier || '') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
             rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'Reach Rate <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<i class="fmr-i ti ti-info-circle push" data-fi="rr"></i></div>' +
