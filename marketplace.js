@@ -439,7 +439,9 @@
             '.fmx-bgd-health .fmx-tl b{font-size:10px;}',
             '.fmx-tldesc{flex:1;min-width:0;font-size:12px;color:#a9aec0;line-height:1.4;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
-            '.fmx-b-rare{background:rgba(245,158,11,0.13);color:#f59e0b;}',
+            '.fmx-b-mid{background:rgba(169,203,92,0.13);color:#a9cb5c;}',
+            '.fmx-b-rare{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
+            '.fmx-b-low{background:rgba(240,138,60,0.13);color:#f08a3c;}',
             '.fmx-b-dead{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
@@ -2773,7 +2775,7 @@
     function _rfPass(l) {
         var P = _rf.presets;
         if (P.large && !(l.subscribers >= 100000)) return false;
-        if (P.alive && l.activity !== 'high') return false;
+        if (P.alive && l.activity !== 'high' && l.activity !== 'mid') return false;
         if (P.clean && l.antifraud !== 'clean') return false;
         if (P.grow && l.trend !== 'growing') return false;
         var av = Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; });
@@ -6862,7 +6864,9 @@
     function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
     var _ACT = {
         high: ['fmx-b-live', '#5DCAA5', 'Активный'],
-        rare: ['fmx-b-rare', '#f59e0b', 'Редкие посты'],
+        mid: ['fmx-b-mid', '#a9cb5c', 'Регулярный'],
+        rare: ['fmx-b-rare', '#f5bf4f', 'Редкие посты'],
+        low: ['fmx-b-low', '#f08a3c', 'Единичные посты'],
         none: ['fmx-b-dead', '#ef4444', 'Без постов']
     };
     function _actInfo(l) { var a = l && l.activity; return (a && _ACT[a]) ? _ACT[a] : null; }
@@ -7796,8 +7800,10 @@
             '<div class="fmx-bgd-card fmx-bgd-health">' +
             '<div class="fmx-bgd-title">Пульс канала · как часто выходят посты</div>' +
             '<div class="fmx-bgd-desc">Считается по датам публикаций: когда был последний пост и сколько постов в неделю выходит в среднем.</div>' +
-            pulseRow('high', 'Активный', 'последний пост не старше недели, выходит от 3 постов в неделю.') +
-            pulseRow('rare', 'Редкие посты', 'публикации есть, но с большими паузами — от 0,5 поста в неделю, последний не старше месяца.') +
+            pulseRow('high', 'Активный', 'публикует ежедневно — от 7 постов в неделю, последний не старше недели.') +
+            pulseRow('mid', 'Регулярный', 'от 3 до 7 постов в неделю — несколько раз в неделю, без больших пауз.') +
+            pulseRow('rare', 'Редкие посты', 'от 1 до 3 постов в неделю либо пауза дольше недели.') +
+            pulseRow('low', 'Единичные посты', 'меньше поста в неделю либо тишина дольше двух недель.') +
             pulseRow('none', 'Без постов', 'канал молчит больше месяца либо публикует реже одного поста в две недели.') +
             '<div class="fmx-bgd-desc" style="margin-top:9px;">Редкие посты — не приговор: у нишевых и авторских каналов такой ритм нормален. Но размещение в молчащем канале охвата почти не даст.</div>' +
             '</div>' +

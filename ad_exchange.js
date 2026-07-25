@@ -391,7 +391,7 @@
     function platformsNow() {
         var list = (_report && _report.platforms) || [];
         var d = list.slice();
-        if (_segment === 'alive') d = d.filter(function (x) { return x.activity === 'high'; });
+        if (_segment === 'alive') d = d.filter(function (x) { return x.activity === 'high' || x.activity === 'mid'; });
         else if (_segment === 'clean') d = d.filter(function (x) { return x.health_class === 'green'; });
 
         if (_segment === 'match') d.sort(function (a, b) { return (b.match_percent || 0) - (a.match_percent || 0); });
@@ -442,7 +442,7 @@
 
     function badges(p) {
         var b = '';
-        var A = { high: ['adx-badge-alive', 'Активный'], rare: ['adx-badge-rare', 'Редкие посты'], none: ['adx-badge-dead', 'Без постов'] };
+        var A = { high: ['adx-badge-alive', 'Активный'], mid: ['adx-badge-mid', 'Регулярный'], rare: ['adx-badge-rare', 'Редкие посты'], low: ['adx-badge-low', 'Единичные посты'], none: ['adx-badge-dead', 'Без постов'] };
         var a = A[p.activity];
         if (a) b += '<span class="adx-badge ' + a[0] + '"><i class="ti ti-heartbeat"></i> ' + a[1] + '</span>';
         if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В точку</span>';
