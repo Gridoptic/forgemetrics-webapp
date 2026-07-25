@@ -1389,12 +1389,14 @@
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
-            '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-albell" title="Умные уведомления"><i class="ti ti-bell"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-faq" style="margin-left:7px;" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
         _root = d;
+        el('fmx-albell').addEventListener('click', openAlerts);
         el('fmx-faq').addEventListener('click', openFaq);
         el('fmx-bhelp').addEventListener('click', openBadgeGuide);
         el('fmx-bm').addEventListener('click', openBookmarks);
@@ -7327,7 +7329,6 @@
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
             });
         });
-        var _alb = el('fmx-albtn'); if (_alb) _alb.addEventListener('click', function () { openAlerts(); });
     }
 
     function sortBarHtml() {
@@ -7338,7 +7339,6 @@
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
             '<button class="fmx-seg' + (_rfCount() ? ' on' : '') + '" id="fmx-rfbtn"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (_rfCount() ? ' · ' + _rfCount() : '') + '</button>' +
-            '<button class="fmx-seg" id="fmx-albtn"><i class="ti ti-bell"></i> Уведомления</button>' +
             '</div>';
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
