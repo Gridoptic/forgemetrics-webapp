@@ -1118,7 +1118,7 @@
             '.fmx-calnav:disabled{opacity:0.25;cursor:default;}',
             'html.fmx-bgfreeze,body.fmx-bgfreeze{overflow:hidden!important;}',
             'body.fmx-bgfreeze #fmx-main,body.fmx-bgfreeze #app{pointer-events:none;}',
-            'body.fmx-bgfreeze #drawer,body.fmx-bgfreeze #drawer-overlay{pointer-events:auto;}',
+            'body.fmx-bgfreeze #drawer.active,body.fmx-bgfreeze #drawer-overlay.active{pointer-events:auto;}',
             'body.fmx-bgfreeze #fmx-main *,body.fmx-bgfreeze #app *{animation-play-state:paused!important;}',
             '#fmx-catGrid>.fmx-scard{content-visibility:auto;contain-intrinsic-size:auto 620px;}',
             'body.fmx-bgfreeze #fmx-main img[src*=".gif"],body.fmx-bgfreeze #app img[src*=".gif"]{visibility:hidden;}',
