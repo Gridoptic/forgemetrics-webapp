@@ -3095,7 +3095,7 @@
                     h += '<a href="https://t.me/' + _esc(it.username) + '" target="_blank" rel="noopener" class="fmx-am-it">' + av +
                         '<div style="min-width:0;flex:1;"><div style="font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(it.title || ('@' + it.username)) + '</div>' +
                         '<div style="font-size:11.5px;color:#9aa0b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">' + src + ' @' + _esc(it.username) + (it.niche ? ' · ' + _esc(it.niche) : '') + '</div></div>' +
-                        '<div style="text-align:right;font-size:11px;color:#c2c6d2;white-space:nowrap;flex:0 0 auto;">' + (it.subscribers ? _short(it.subscribers) + ' подп' : '') + (it.cpm != null ? '<br>CPM ' + _num(it.cpm) + '₽' : '') + '</div></a>';
+                        '<div style="text-align:right;font-size:11px;color:#c2c6d2;white-space:nowrap;flex:0 0 auto;">' + (it.subscribers ? _short(it.subscribers) : '') + (it.cpm != null ? '<br>CPM ' + _short(it.cpm) + ' ₽' : '') + '</div></a>';
                 });
                 b.innerHTML = h;
             }).catch(function () { var b = el('fmx-am-body'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Повтори попытку.'); });
