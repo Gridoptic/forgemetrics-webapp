@@ -457,6 +457,9 @@
             '.fmx-alic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:17px;flex:0 0 auto;}',
             '.fmx-alback,.fmx-alx{width:34px;height:34px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#c2c6d2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;font-size:16px;font-family:inherit;}',
             '.fmx-alsub{font-size:10.5px;color:#8990a8;line-height:1.45;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-algrid{display:grid;grid-template-columns:1fr 1fr;gap:11px 10px;margin-top:2px;}',
+            '.fmx-algrid .fmx-lbl{margin:0 0 5px;font-size:9.5px;letter-spacing:0.3px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-algrid .fmx-inp{width:100%;min-width:0;padding:9px 10px;font-size:12.5px;min-height:38px;}',
             '.fmx-alnew{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;padding:14px;border-radius:14px;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;cursor:pointer;box-shadow:0 6px 20px rgba(99,102,241,0.3);font-family:inherit;}',
             '.fmx-alnew[disabled]{opacity:0.45;box-shadow:none;}',
             '.fmx-allim{font-size:11px;color:#565b73;text-align:center;margin:9px 0 20px;}',
@@ -481,11 +484,6 @@
             '.fmx-al-b{flex:1;text-align:center;font-size:12px;font-weight:600;padding:9px 6px;border-radius:11px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.09);color:#c2c6d2;cursor:pointer;font-family:inherit;}',
             '.fmx-al-b.pr{background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.28);color:#c7cdfb;}',
             '.fmx-al-b.dz{flex:0 0 auto;width:42px;color:#ef4444;}',
-            '.fmx-ae-card{border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;background:rgba(255,255,255,0.025);padding:2px 15px;margin-bottom:14px;}',
-            '.fmx-ae-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:0.5px solid rgba(255,255,255,0.055);}',
-            '.fmx-ae-row:last-child{border-bottom:0;}',
-            '.fmx-ae-lb{font-size:13px;color:#c2c6d2;font-weight:600;flex:1;min-width:0;}',
-            '.fmx-ae-in{width:104px;flex:0 0 auto;text-align:center;}',
             '.fmx-ae-sec{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#565b73;margin:20px 3px 9px;}',
             '.fmx-am-it{display:flex;align-items:center;gap:11px;padding:12px 13px;border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));margin-bottom:9px;text-decoration:none;color:inherit;}',
             '.fmx-am-av{width:40px;height:40px;border-radius:12px;flex:0 0 auto;object-fit:cover;background:linear-gradient(145deg,#818cf8,#6366f1);display:grid;place-items:center;font-weight:750;color:#0b0c16;font-size:16px;}',
@@ -2919,7 +2917,7 @@
         }).catch(function () { _nsubs = []; _nsMetrics = {}; renderNsBody(); });
     }
     var _SCOPE_LBL = { both: 'Радар + Площадка', radar: 'Радар', market: 'Площадка' };
-    var _AL_RANGES = [['p', 'Цена поста ≤, ₽', 'mx'], ['cpm', 'CPM ≤, ₽', 'mx'], ['s', 'Подписчики ≥', 'mn'], ['err', 'Reach Rate ≥, %', 'mn'], ['er', 'ER ≥, %', 'mn']];
+    var _AL_RANGES = [['p', 'Цена не дороже, ₽', 'mx'], ['cpm', 'CPM не дороже, ₽', 'mx'], ['s', 'Подписчиков от', 'mn'], ['err', 'Reach Rate от, %', 'mn'], ['er', 'ER от, %', 'mn']];
     function _alertChips(f) {
         f = f || {}; var out = [];
         (f.niches || []).forEach(function (n) { out.push('<span class="fmx-alc">' + _esc(n) + '</span>'); });
@@ -3037,13 +3035,14 @@
         function seg(cur, opts) { return opts.map(function (o) { return '<button class="fmx-seg' + (cur === o[0] ? ' on' : '') + '" data-seg="' + o[0] + '">' + o[1] + '</button>'; }).join(''); }
         var rangesHtml = _AL_RANGES.map(function (r) {
             var v = (_aEdit.f[r[2]] || {})[r[0]]; v = (v != null ? v : '');
-            return '<div class="fmx-ae-row"><span class="fmx-ae-lb">' + r[1] + '</span><input class="fmx-inp fmx-ae-in" type="number" inputmode="numeric" min="0" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
+            return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span>' +
+                '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="не важно" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
         }).join('');
         var sh = _alSheet(_alHead((_aEdit.id ? 'Изменить уведомление' : 'Новое уведомление'), 'Условия закупки', true) +
             '<div class="fmx-ae-sec">Название</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
             '<div class="fmx-ae-sec">Где искать</div><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
             '<div class="fmx-ae-sec">Ниши <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">— через запятую, пусто = любые</span></div><input class="fmx-inp" id="fmx-ae-niches" placeholder="Криптовалюты, Финансы" value="' + _esc((f.niches || []).join(', ')) + '">' +
-            '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-ae-card">' + rangesHtml + '</div>' +
+            '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-algrid">' + rangesHtml + '</div>' +
             '<div class="fmx-ae-sec">Пол аудитории</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
             '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
             '<div class="fmx-ae-sec">Как часто уведомлять</div><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Сводка раз в день']]) + '</div>' +
