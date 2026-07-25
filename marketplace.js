@@ -1765,6 +1765,14 @@
         apiGet('/api/v1/admin/activity').then(function (a) {
             if (_mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
             var h = '';
+            if (a.all_users && a.all_users.length) {
+                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Все пользователи · ' + _num(a.all_users.length) + '</div>';
+                a.all_users.forEach(function (v) {
+                    var nm = (v.name ? _esc(v.name) + ' · ' : '') + (v.username ? '@' + _esc(v.username) + ' · ' : '');
+                    h += '<div class="fmx-mstatrow" data-uid="' + v.user_id + '" style="cursor:pointer;"><span>' + nm + 'ID <u>' + v.user_id + '</u></span><b>' + _esc(_TIERN[v.tier] || v.tier) + ' · ' + _esc(v.at) + '</b></div>';
+                });
+                h += '</div>';
+            }
             if (a.visitors_7d && a.visitors_7d.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-mtitle">Кто заходил · 7 дней</div>';
                 a.visitors_7d.forEach(function (v) {
