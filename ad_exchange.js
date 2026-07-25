@@ -442,9 +442,12 @@
 
     function badges(p) {
         var b = '';
-        var A = { high: ['adx-badge-alive', 'Активный'], mid: ['adx-badge-mid', 'Регулярный'], rare: ['adx-badge-rare', 'Редкие посты'], low: ['adx-badge-low', 'Единичные посты'], none: ['adx-badge-dead', 'Без постов'] };
+        var A = { high: ['p1', 'Активный'], mid: ['p2', 'Регулярный'], rare: ['p3', 'Редкие посты'], low: ['p4', 'Единичные посты'], none: ['p5', 'Без постов'] };
         var a = A[p.activity];
-        if (a) b += '<span class="adx-badge ' + a[0] + '"><i class="ti ti-heartbeat"></i> ' + a[1] + '</span>';
+        if (a) b += '<span class="adx-badge adx-pulse ' + a[0] + '">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M19.5 12.57 12 20.07l-7.5-7.5a5 5 0 1 1 7.5-6.6 5 5 0 1 1 7.5 6.6z"/>' +
+            '<path d="M4.3 12.4h4l1.5-3.2 2.2 6.4 1.6-3.2h5.6"/></svg>' + a[1] + '</span>';
         if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В точку</span>';
         return b;
     }

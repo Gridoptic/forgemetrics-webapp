@@ -154,11 +154,13 @@
     font-size: 9.5px; padding: 2px 7px; border-radius: 6px;
     display: inline-flex; align-items: center; gap: 3px;
 }
-.adx-badge-alive { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-.adx-badge-mid { background: rgba(169, 203, 92, 0.15); color: #a9cb5c; }
-.adx-badge-rare { background: rgba(245, 191, 79, 0.15); color: #f5bf4f; }
-.adx-badge-low { background: rgba(240, 138, 60, 0.15); color: #f08a3c; }
-.adx-badge-dead { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.adx-pulse { background: transparent; border: 1px solid; display: inline-flex; align-items: center; gap: 5px; }
+.adx-pulse svg { display: block; flex: 0 0 auto; }
+.adx-pulse.p1 { color: #5dcaa5; border-color: rgba(93, 202, 165, 0.34); }
+.adx-pulse.p2 { color: #a9cb5c; border-color: rgba(169, 203, 92, 0.34); }
+.adx-pulse.p3 { color: #f5bf4f; border-color: rgba(245, 191, 79, 0.34); }
+.adx-pulse.p4 { color: #f08a3c; border-color: rgba(240, 138, 60, 0.34); }
+.adx-pulse.p5 { color: #ef4444; border-color: rgba(239, 68, 68, 0.36); }
 .adx-badge-match { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
 
 .adx-health-tag {

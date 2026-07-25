@@ -438,11 +438,13 @@
             '.fmx-bgd-health .fmx-tl i{width:8px;height:8px;}',
             '.fmx-bgd-health .fmx-tl b{font-size:10px;}',
             '.fmx-tldesc{flex:1;min-width:0;font-size:12px;color:#a9aec0;line-height:1.4;}',
-            '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
-            '.fmx-b-mid{background:rgba(169,203,92,0.13);color:#a9cb5c;}',
-            '.fmx-b-rare{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
-            '.fmx-b-low{background:rgba(240,138,60,0.13);color:#f08a3c;}',
-            '.fmx-b-dead{background:rgba(239,68,68,0.13);color:#ef4444;}',
+            '.fmx-bp{background:transparent;border:1px solid;}',
+            '.fmx-bp.p1{color:#5dcaa5;border-color:rgba(93,202,165,0.34);}',
+            '.fmx-bp.p2{color:#a9cb5c;border-color:rgba(169,203,92,0.34);}',
+            '.fmx-bp.p3{color:#f5bf4f;border-color:rgba(245,191,79,0.34);}',
+            '.fmx-bp.p4{color:#f08a3c;border-color:rgba(240,138,60,0.34);}',
+            '.fmx-bp.p5{color:#ef4444;border-color:rgba(239,68,68,0.36);}',
+            '.fmx-bp svg{display:block;flex:0 0 auto;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -6863,17 +6865,20 @@
 
     function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
     var _ACT = {
-        high: ['fmx-b-live', '#5DCAA5', 'Активный'],
-        mid: ['fmx-b-mid', '#a9cb5c', 'Регулярный'],
-        rare: ['fmx-b-rare', '#f5bf4f', 'Редкие посты'],
-        low: ['fmx-b-low', '#f08a3c', 'Единичные посты'],
-        none: ['fmx-b-dead', '#ef4444', 'Без постов']
+        high: ['p1', '#5DCAA5', 'Активный'],
+        mid: ['p2', '#a9cb5c', 'Регулярный'],
+        rare: ['p3', '#f5bf4f', 'Редкие посты'],
+        low: ['p4', '#f08a3c', 'Единичные посты'],
+        none: ['p5', '#ef4444', 'Без постов']
     };
+    var _PULSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M19.5 12.57 12 20.07l-7.5-7.5a5 5 0 1 1 7.5-6.6 5 5 0 1 1 7.5 6.6z"/>' +
+        '<path d="M4.3 12.4h4l1.5-3.2 2.2 6.4 1.6-3.2h5.6"/></svg>';
     function _actInfo(l) { var a = l && l.activity; return (a && _ACT[a]) ? _ACT[a] : null; }
     function _actBadge(l) {
         var a = _actInfo(l);
         if (!a) return '';
-        return '<span class="fmx-bdg ' + a[0] + '"><i class="ti ti-heartbeat"></i>' + a[2] + '</span>';
+        return '<span class="fmx-bdg fmx-bp ' + a[0] + '">' + _PULSE_SVG + a[2] + '</span>';
     }
     function _deltaPill(l) {
         var d = l.niche_delta_pct;
@@ -7776,7 +7781,7 @@
         var pulseRow = function (state, name, text) {
             var a = _ACT[state];
             return '<div class="fmx-tlrow"><div class="fmx-bgd-badge" style="flex:0 0 auto;">' +
-                '<span class="fmx-bdg ' + a[0] + '"><i class="ti ti-heartbeat"></i>' + name + '</span></div>' +
+                '<span class="fmx-bdg fmx-bp ' + a[0] + '">' + _PULSE_SVG + name + '</span></div>' +
                 '<div class="fmx-tldesc">' + text + '</div></div>';
         };
         var tlRow = function (state, name, hex, text) {
