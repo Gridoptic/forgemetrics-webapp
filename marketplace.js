@@ -347,6 +347,15 @@
             '.fmx-nichebtn i:first-child{font-size:17px;color:#818cf8;}',
             '.fmx-nichebtn span{flex:1;text-align:left;}',
             '.fmx-nichebtn-chev{color:#818cf8;font-size:16px;}',
+            '.fmx-picks{display:flex;gap:7px;align-items:stretch;margin-bottom:9px;}',
+            '.fmx-picks>.fmx-nichebtn{width:auto;flex:1 1 0;min-width:0;margin-bottom:0;padding:11px 12px;gap:7px;font-size:12.5px;}',
+            '.fmx-picks>.fmx-nichebtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-picks .fmx-nichebtn-chev{display:none;}',
+            '.fmx-campbtn{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:650;color:#9fe3cc;background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.34);transition:all 160ms;}',
+            '.fmx-campbtn>i{font-size:15px;flex:0 0 auto;color:#5DCAA5;}',
+            '.fmx-campbtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-bellbtn{flex:0 0 auto;width:46px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#818cf8;font-family:inherit;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.06));border:1px solid rgba(129,140,248,0.4);transition:all 160ms;}',
+            '.fmx-bellbtn:active{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));}',
             '.fmx-nichebtn.on{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));border-color:rgba(129,140,248,0.6);color:#fff;}',
             '.fmx-sortbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}',
             '.fmx-seg{flex-shrink:0;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;padding:8px 13px;font-size:11.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 160ms;}',
@@ -1291,8 +1300,6 @@
             '.fmx-tabmore{border:0.5px solid rgba(255,255,255,0.22);background:rgba(16,20,34,0.72);color:#fff;border-radius:99px;padding:9px 20px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;backdrop-filter:blur(10px);min-height:38px;box-shadow:0 8px 24px rgba(0,0,0,0.45);}',
             '#fmx-peek{position:fixed;inset:0;z-index:9500;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);pointer-events:none;}',
             '#fmx-peek .in{width:82%;max-width:340px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.18);box-shadow:0 30px 80px rgba(0,0,0,0.7);}',
-            '.fmx-campcta{display:flex;align-items:center;gap:11px;margin:0 0 12px;padding:12px 13px;border-radius:16px;cursor:pointer;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);backdrop-filter:blur(10px);}',
-            '.fmx-campic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto;}',
             '.fmx-sumrow{display:flex;justify-content:space-between;padding:13px 14px;}',
             '.fmx-sumrow .l{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;}',
             '.fmx-sumrow .v{font-size:14.5px;font-weight:800;margin-top:2px;white-space:nowrap;}',
@@ -1389,14 +1396,12 @@
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
-            '<button class="fmx-ibtn" id="fmx-albell" title="Умные уведомления"><i class="ti ti-bell"></i></button>' +
-            '<button class="fmx-ibtn" id="fmx-faq" style="margin-left:7px;" title="Справка"><i class="ti ti-help"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
         _root = d;
-        el('fmx-albell').addEventListener('click', openAlerts);
         el('fmx-faq').addEventListener('click', openFaq);
         el('fmx-bhelp').addEventListener('click', openBadgeGuide);
         el('fmx-bm').addEventListener('click', openBookmarks);
@@ -2342,10 +2347,8 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
-            '<div class="fmx-campcta" id="fmx-campCta"><div class="fmx-campic"><i class="ti ti-calculator"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div style="font-size:12.5px;font-weight:700;">Собрать кампанию под бюджет</div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;">Укажи бюджет и нишу — соберём готовый медиаплан со свободными датами</div></div>' +
-            '<span style="color:#5DCAA5;">›</span></div>' +
+            '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>Кампания</span></button>' +
+            _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
         var cc = el('fmx-campCta');
@@ -7329,12 +7332,20 @@
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
             });
         });
+        qsa(el('fmx-main'), '[data-alerts]').forEach(function (b) { b.addEventListener('click', function () { openAlerts(); }); });
     }
 
-    function sortBarHtml() {
+    function _nicheBtnHtml() {
         var pickActive = (_sort === 'niche' && _nicheSel);
-        var pickLabel = pickActive ? ('Ниша: ' + _esc(String(_nicheSel).length > 20 ? String(_nicheSel).slice(0, 19) + '…' : _nicheSel)) : 'Выбрать нишу';
-        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>' +
+        var s = String(_nicheSel || '');
+        var pickLabel = pickActive ? ('Ниша: ' + _esc(s.length > 14 ? s.slice(0, 13) + '…' : s)) : 'Выбрать нишу';
+        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
+    }
+    function _bellBtnHtml() {
+        return '<button class="fmx-bellbtn" data-alerts="1" title="Умные уведомления"><i class="ti ti-bell"></i></button>';
+    }
+    function sortBarHtml() {
+        return '<div class="fmx-picks">' + _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
             '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
