@@ -405,6 +405,7 @@
             '.fmx-tag.gold{background:linear-gradient(135deg,#fde68a,#f5bf4f);color:#2a1c00;}',
             '.fmx-star{position:absolute;bottom:9px;right:9px;width:30px;height:30px;border-radius:8px;background:rgba(10,13,24,0.45);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);z-index:2;}',
             '.fmx-star.on{color:#f59e0b;}',
+            '.fmx-btn.on{color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);}',
             '.fmx-cb{padding:11px 13px 12px;position:relative;z-index:3;}',
             '.fmx-crow{display:flex;align-items:center;gap:10px;margin-top:-32px;margin-bottom:9px;position:relative;z-index:2;}',
             '.fmx-av{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;border:2.5px solid #0d1019;flex-shrink:0;}',
@@ -459,6 +460,7 @@
             '.fmx-alback,.fmx-alx{width:34px;height:34px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#c2c6d2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;font-size:16px;font-family:inherit;}',
             '.fmx-alsub{font-size:10.5px;color:#8990a8;line-height:1.45;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-algrid{display:grid;grid-template-columns:1fr 1fr;gap:11px 10px;margin-top:2px;}',
+            '.fmx-albody{min-height:296px;}',
             '.fmx-algrid .fmx-lbl{margin:0 0 5px;font-size:9.5px;letter-spacing:0.3px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-algrid .fmx-inp{width:100%;min-width:0;padding:9px 10px;font-size:12.5px;min-height:38px;}',
             '.fmx-alnew{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;padding:14px;border-radius:14px;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;cursor:pointer;box-shadow:0 6px 20px rgba(99,102,241,0.3);font-family:inherit;}',
@@ -2957,10 +2959,14 @@
     function _alSheet(html) {
         _ensureSheets();
         var sh = el('fmx-writeSheet');
+        var wasOpen = sh.classList.contains('on');
         sh.innerHTML = html;
         sh.scrollTop = 0;
-        el('fmx-shbg').classList.add('on');
-        sh.classList.add('on');
+        if (!wasOpen) {
+            el('fmx-shbg').classList.add('on');
+            sh.offsetHeight;
+            requestAnimationFrame(function () { sh.classList.add('on'); });
+        }
         return sh;
     }
     function _alHead(title, sub, withBack) {
@@ -2978,7 +2984,7 @@
     function openAlerts() {
         _haptic('light');
         _alSheet(_alHead('Умные уведомления', 'Появится нужный канал — сообщим в бот', false) +
-            '<div id="fmx-al-body">' + loadHtml() + '</div>');
+            '<div id="fmx-al-body" class="fmx-albody">' + loadHtml() + '</div>');
         _alBindHead(function () {});
         loadAlerts();
     }
@@ -3079,7 +3085,7 @@
                 [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']].map(function (o) {
                     return '<button class="fmx-seg' + (cur === o[0] ? ' on' : '') + '" data-msc="' + o[0] + '">' + o[1] + '</button>';
                 }).join('') + '</div>' +
-                '<div id="fmx-am-body" style="margin-top:12px;">' + loadHtml() + '</div>');
+                '<div id="fmx-am-body" class="fmx-albody" style="margin-top:12px;">' + loadHtml() + '</div>');
             _alBindHead(openAlerts);
             qsa(el('fmx-am-sc'), '[data-msc]').forEach(function (b) {
                 b.addEventListener('click', function () { cur = b.getAttribute('data-msc'); _haptic('light'); draw(); });
@@ -7476,19 +7482,25 @@
             doShare();
         }).catch(doShare);
     }
+    function _bmPaint(u, on) {
+        qsa(document, '[data-bm="' + u + '"]').forEach(function (s) {
+            s.classList.toggle('on', on);
+            if (s.style) { s.style.color = ''; s.style.borderColor = ''; }
+        });
+    }
     function toggleBm(u) {
         if (!u) return; _haptic('light');
         var on;
         function _revert(prev) {
             if (prev) _bookmarks[u] = true; else delete _bookmarks[u];
             updateBmCount();
-            qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', prev); });
+            _bmPaint(u, prev);
             toast('Не удалось обновить закладку. Повтори попытку.');
         }
         if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () { _revert(true); }); }
         else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () { _revert(false); }); }
         updateBmCount();
-        qsa(document, '.fmx-star[data-bm="' + u + '"]').forEach(function (s) { s.classList.toggle('on', on); });
+        _bmPaint(u, on);
     }
 
     function buildModals() {
