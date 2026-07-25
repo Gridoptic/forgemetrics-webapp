@@ -3029,8 +3029,8 @@
     }
     var _aEdit = null;
     function openAlertEditor(a) {
-        _aEdit = a ? { id: a.id, name: a.name, scope: a.scope, mode: a.mode, f: JSON.parse(JSON.stringify(a.filter || {})) }
-            : { id: null, name: '', scope: 'both', mode: 'instant', f: _alertFilterFromRf() };
+        _aEdit = a ? { id: a.id, name: a.name, scope: a.scope, mode: a.mode, enabled: a.enabled !== false, f: JSON.parse(JSON.stringify(a.filter || {})) }
+            : { id: null, name: '', scope: 'both', mode: 'instant', enabled: true, f: _alertFilterFromRf() };
         var f = _aEdit.f; f.niches = f.niches || []; f.presets = f.presets || {}; f.aud = f.aud || {}; f.mn = f.mn || {}; f.mx = f.mx || {};
         if (!_aEdit.name) _aEdit.name = _alertAutoName(f);
         function seg(cur, opts) { return opts.map(function (o) { return '<button class="fmx-seg' + (cur === o[0] ? ' on' : '') + '" data-seg="' + o[0] + '">' + o[1] + '</button>'; }).join(''); }
@@ -3054,7 +3054,10 @@
         qsa(el('fmx-ae-aud'), '[data-seg]').forEach(function (b) { b.addEventListener('click', function () { qsa(el('fmx-ae-aud'), '[data-seg]').forEach(function (z) { z.classList.remove('on'); }); b.classList.add('on'); }); });
         qsa(el('fmx-ae-pre'), '[data-pp]').forEach(function (b) { b.addEventListener('click', function () { b.classList.toggle('on'); }); });
         el('fmx-ae-save').addEventListener('click', function () {
+            var _keep = _aEdit.f || {}, _vis = {};
+            _AL_RANGES.forEach(function (r) { _vis[r[2] + ':' + r[0]] = 1; });
             var f2 = { niches: [], presets: {}, aud: {}, mn: {}, mx: {} };
+            ['mn', 'mx'].forEach(function (b) { var src = _keep[b] || {}; for (var k in src) { if (!_vis[b + ':' + k] && src[k] != null) f2[b][k] = src[k]; } });
             var nv = el('fmx-ae-niches').value.trim();
             if (nv) f2.niches = nv.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
             qsa(el('fmx-ae-pre'), '[data-pp].on').forEach(function (b) { f2.presets[b.getAttribute('data-pp')] = true; });
@@ -3062,7 +3065,7 @@
             if (avv) f2.aud[avv] = true;
             qsa(sh, '[data-rng]').forEach(function (i) { var val = i.value.trim(); if (val !== '') { var num = parseFloat(val.replace(',', '.')); if (!isNaN(num)) f2[i.getAttribute('data-bnd')][i.getAttribute('data-rng')] = num; } });
             var nm = el('fmx-ae-name').value.trim() || _alertAutoName(f2);
-            var payload = { id: _aEdit.id, name: nm, scope: _aEdit.scope, mode: _aEdit.mode, filter: f2, enabled: true };
+            var payload = { id: _aEdit.id, name: nm, scope: _aEdit.scope, mode: _aEdit.mode, filter: f2, enabled: _aEdit.enabled !== false };
             var sv = el('fmx-ae-save'); sv.disabled = true;
             apiPost('/api/v1/marketplace/alerts', payload).then(function (r) {
                 if (r && r.ok === false) { uiAlert(r.message || r.error || 'Не удалось'); sv.disabled = false; return; }
@@ -3070,6 +3073,7 @@
             }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); sv.disabled = false; });
         });
     }
+    var _amSeq = 0;
     function openAlertMatches(id, scope) {
         _haptic('light');
         var cur = (scope === 'radar' || scope === 'market' || scope === 'both') ? scope : 'both';
@@ -3084,8 +3088,9 @@
             qsa(el('fmx-am-sc'), '[data-msc]').forEach(function (b) {
                 b.addEventListener('click', function () { cur = b.getAttribute('data-msc'); _haptic('light'); draw(); });
             });
+            var _req = ++_amSeq;
             apiGet('/api/v1/marketplace/alerts/' + id + '/matches?scope=' + cur).then(function (r) {
-                var b = el('fmx-am-body'); if (!b) return;
+                var b = el('fmx-am-body'); if (!b || _req !== _amSeq) return;
                 var items = (r && r.items) || [];
                 if (!items.length) { b.innerHTML = emptyHtml('ti-search', 'Пока пусто', 'Здесь нет каналов под фильтр. Уведомление придёт, как только появится.'); return; }
                 var h = '<div class="fmx-allim" style="margin:0 0 10px;">Подходит ' + (r.count || items.length) + ' ' + _plural(r.count || items.length, 'канал', 'канала', 'каналов') + ' — нажми, чтобы открыть в Telegram</div>';
