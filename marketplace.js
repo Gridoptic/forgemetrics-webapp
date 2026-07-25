@@ -281,12 +281,11 @@
         if (!cls) return { cls: 'none', color: '#565b73', word: 'Нет данных' };
         return { cls: cls, color: m[cls][0], word: m[cls][1] };
     }
-    function trafficLight(l, mini) {
+    function trafficLight(l) {
         var h = _hlInfo(l);
         var dots = ['red', 'amber', 'green'].map(function (c) {
             return '<i class="' + c + (h.cls === c ? ' on' : '') + '"></i>';
         }).join('');
-        if (mini) return '<span class="fmx-tl fmx-tlm" title="Здоровье канала: ' + h.word + '">' + dots + '</span>';
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
     function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
@@ -535,7 +534,13 @@
             '.fmx-lrow{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color 160ms,background 160ms,box-shadow 160ms;}',
             '.fmx-lrow:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}',
-            '.fmx-lname{font-size:13px;font-weight:600;}',
+            '.fmx-lname{font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;min-width:0;}',
+            '.fmx-lt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}',
+            '.fmx-lmid{flex:1 1 auto;min-width:0;overflow:hidden;}',
+            '.fmx-lm{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;}',
+            '.fmx-lm i{font-size:10px;color:#565b73;}',
+            '.fmx-lcpm{font-size:10px;color:#8990a8;white-space:nowrap;font-variant-numeric:tabular-nums;}',
+            '.fmx-lcpm b{color:#c2c6d2;font-weight:650;}',
             '.fmx-lsub{font-size:10.5px;color:#8990a8;}',
             '.fmx-lprice{margin-left:auto;font-size:13px;font-weight:700;color:#5DCAA5;}',
             '.fmx-hero{display:flex;align-items:flex-start;justify-content:center;padding:4px 0 18px;min-width:0;}.fmx-hero>.fmx-card{min-width:0;}',
@@ -810,7 +815,7 @@
             '@keyframes fmxSph{0%{transform:translate(27px,0) scale(1.1);opacity:1;}12.5%{transform:translate(19px,7px) scale(1.25);opacity:1;}25%{transform:translate(0,10px) scale(1.3);opacity:1;}37.5%{transform:translate(-19px,7px) scale(1.1);opacity:.95;}50%{transform:translate(-27px,0) scale(0.85);opacity:.7;}62.5%{transform:translate(-19px,-7px) scale(0.55);opacity:.4;}75%{transform:translate(0,-10px) scale(0.5);opacity:.35;}87.5%{transform:translate(19px,-7px) scale(0.75);opacity:.6;}100%{transform:translate(27px,0) scale(1.1);opacity:1;}}',
             '.fmx-chrow.dis{opacity:.55;}',
             '.fmx-lav{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}',
-            '.fmx-lav-fx{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}',
+            '.fmx-lav-fx{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:11px;}',
             '.fmx-lav-fx .fmx-avw{transform:scale(0.74);}',
             '.fmx-lchev{transition:transform 200ms;color:#565b73;flex-shrink:0;font-size:15px;}',
             '.fmx-li.on .fmx-lchev{transform:rotate(180deg);}',
@@ -848,10 +853,10 @@
             '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}',
             '.fmx-fchips span{font-size:9.5px;color:#8990a8;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);padding:3px 8px;border-radius:6px;}',
             '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
-            '.fmx-lmet{font-size:10px;color:#8990a8;margin-top:3px;display:flex;align-items:center;gap:3px 6px;flex-wrap:wrap;line-height:1.45;}',
+            '.fmx-lmet{font-size:10px;color:#8990a8;margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:nowrap;white-space:nowrap;min-width:0;overflow:hidden;line-height:1.45;}',
             '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
             '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
-            '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}',
+            '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:0 0 auto;max-width:40%;}',
             '.fmx-li.prem>.fmx-lrow{border-color:rgba(245,191,79,0.62);box-shadow:0 0 9px -4px rgba(245,191,79,0.36),0 4px 12px -9px rgba(245,191,79,0.3),inset 0 1px 0 rgba(255,228,160,0.28);}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
@@ -914,7 +919,6 @@
             '.fmx-tl i.amber.on{background:#f59e0b;box-shadow:0 0 7px rgba(245,158,11,0.8);}',
             '.fmx-tl i.green.on{background:#5DCAA5;box-shadow:0 0 7px rgba(93,202,165,0.8);}',
             '.fmx-tl b{font-size:9.5px;font-weight:700;margin-left:2px;}',
-            '.fmx-tlm{background:transparent;border:none;padding:0 2px 0 0;gap:3px;flex-shrink:0;}',
             '.fmx-stk{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35));}',
             '.fmx-stkGrab{position:absolute;z-index:9;cursor:grab;touch-action:none;}',
             '.fmx-stkGrab:active{cursor:grabbing;}',
@@ -998,7 +1002,6 @@
             '.fmx-pend-t{font-size:11px;font-weight:700;color:#e8e8ed;margin-bottom:8px;display:flex;align-items:center;gap:6px;}',
             '.fmx-pend-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;font-size:11px;color:#8990a8;border-top:0.5px solid rgba(255,255,255,0.05);}',
             '.fmx-pend-r:first-of-type{border-top:none;}',
-            '.fmx-tlm i{width:6px;height:6px;}',
             '.fmx-leads{margin-top:11px;padding:10px 11px;background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.18);border-radius:11px;}',
             '.fmx-leads-t{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.3px;display:flex;align-items:center;gap:5px;margin-bottom:8px;}',
             '.fmx-lead{display:flex;flex-direction:column;gap:1px;padding:7px 0;border-top:0.5px solid rgba(255,255,255,0.05);text-decoration:none;}',
@@ -7193,25 +7196,44 @@
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) out.push(['ti-heart-handshake', '#f5bf4f', dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок')]);
         if (l.hot_discount_pct) out.push(['ti-discount-2', '#f5bf4f', 'Горящие даты до −' + l.hot_discount_pct + '%']);
-        return out.slice(0, 6).map(function (x) {
+        return out.slice(0, 3).map(function (x) {
             return '<i class="ti ' + x[0] + '" title="' + _esc(x[2]) + '" style="color:' + x[1] + ';font-size:11.5px;flex:0 0 auto;"></i>';
         }).join('');
     }
+    function _cleanTitle(t) {
+        t = String(t || '');
+        var i = t.search(/\s[|·—–]\s/);
+        return (i >= 8) ? t.slice(0, i).trim() : t;
+    }
+    function _rrColor(l) {
+        var st = l.reach_status;
+        if (st === 'норма' || st === 'выше нормы') return '#5DCAA5';
+        if (st === 'аномальный' || st === 'очень низкий') return '#ef4444';
+        return st ? '#f59e0b' : '#8990a8';
+    }
     function listItem(l, fx, plain) {
         if (l.is_adult && !_adultOk) return _ageTile();
-        var hc = _healthColor(l), accent = _accent(l), t = l.title || l.username || '?', prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
-        var bits = ['<b>' + _short(l.subscribers) + '</b> подп'];
-        if (l.avg_views) bits.push('<b>~' + _short(l.avg_views) + '</b> охв');
-        if (l.er != null) bits.push('Reach Rate <b>' + Math.round(l.er) + '%</b>');
-        var cpm = _cpm(l); if (cpm != null) bits.push((l.price_low != null && l.min_price == null ? 'CPM ниши' : 'CPM') + ' <b>' + _short(cpm) + '₽</b>');
+        var hc = _healthColor(l), accent = _accent(l), t = _cleanTitle(l.title || l.username || '?');
+        var prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
+        var rr = _reachRate(l), rrc = _rrColor(l), warn = (l.reach_status === 'аномальный') ? '⚠ ' : '';
+        var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
+        if (l.avg_views) {
+            mets += '<s></s><span class="fmx-lm"><i class="ti ti-eye"></i><b>~' + _short(l.avg_views) + '</b>' +
+                (rr != null ? ' <b style="color:' + rrc + ';">' + warn + rr + '%</b>' : '') + '</span>';
+        } else if (rr != null) {
+            mets += '<s></s><span class="fmx-lm"><b style="color:' + rrc + ';">' + warn + rr + '%</b></span>';
+        }
         var _alb = _audLabel(l);
-        if (_alb) bits.push('<span style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>');
+        if (_alb) mets += '<s></s><span class="fmx-lm" style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>';
+        var cpm = _cpm(l);
+        var right = (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') +
+            (cpm != null ? '<span class="fmx-lcpm">CPM <b>' + _short(cpm) + ' ₽</b></span>' : '');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
-            '<span class="fmx-lav-fx">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-lname" style="display:flex;align-items:center;gap:5px;"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;">' + _esc(t) + '</span><span style="flex:0 0 auto;">' + trafficLight(l, true) + '</span>' + _liIcons(l) + '</div>' +
-            '<div class="fmx-lmet">' + bits.join('<s></s>') + '</div></div>' +
-            '<div class="fmx-lright">' + (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') + '</div>' +
+            '<span class="fmx-lav-fx" style="box-shadow:0 0 0 2px ' + hc + ';">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
+            '<div class="fmx-lmid"><div class="fmx-lname"><span class="fmx-lt">' + _esc(t) + '</span>' + _liIcons(l) + '</div>' +
+            '<div class="fmx-lmet">' + mets + '</div></div>' +
+            '<div class="fmx-lright">' + right + '</div>' +
             '<i class="ti ti-chevron-down fmx-lchev"></i></div>' +
             '<div class="fmx-lbox" style="display:none;"></div></div>';
     }
