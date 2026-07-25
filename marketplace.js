@@ -445,6 +445,7 @@
             '.fmx-bp.p4{color:#f08a3c;border-color:rgba(240,138,60,0.34);}',
             '.fmx-bp.p5{color:#ef4444;border-color:rgba(239,68,68,0.36);}',
             '.fmx-bp svg{display:block;flex:0 0 auto;}',
+            '.fmr-pulse{margin-top:6px;display:flex;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -7260,9 +7261,11 @@
             ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
             : '<div class="fmr-av" style="background:' + _esc(_acc) + ';">' + _esc(_t.charAt(0).toUpperCase()) + '</div>';
         var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div></div>' : '';
+        var _pb = _actBadge(l);
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
-            (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+            (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
+            (_pb ? '<div class="fmr-pulse">' + _pb + '</div>' : '') + '</div>' + scoreHtml + '</div>';
         var nicheHtml = l.niche ? '<div class="fmr-nicherow"><span class="fmr-niche"><i class="ti ti-tag"></i>' + _esc(l.niche) + '</span></div>' : '';
         return '<div class="fmx-scard" data-u="' + _esc(l.username) + '">' +
             headHtml +
@@ -7276,11 +7279,11 @@
     }
     function _liIcons(l) {
         var out = [];
+        var _ai = _actInfo(l);
+        if (_ai) out.push(['ti-heartbeat', _ai[1], _ai[2]]);
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
         var _alx = _audLabel(l);
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
-        var _ai = _actInfo(l);
-        if (_ai) out.push(['ti-heartbeat', _ai[1], _ai[2]]);
         if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Без накрутки']);
         if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
