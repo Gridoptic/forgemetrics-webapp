@@ -157,6 +157,7 @@
         return String(n);
     }
     function _num(n) { if (n == null || isNaN(n)) return '—'; return Number(n).toLocaleString('ru-RU'); }
+    function _kmNum(n) { if (n == null || isNaN(n)) return '—'; n = Number(n); return Math.abs(n) >= 100000 ? _short(n) : _num(Math.round(n)); }
     function uiAlert(msg) {
         var t = el('fmx-toastEl');
         if (!t) { t = document.createElement('div'); t.id = 'fmx-toastEl'; t.className = 'fmx-toast'; document.body.appendChild(t); }
@@ -6921,23 +6922,25 @@
         var isOwner = !!(l.owner_price || l.min_price != null);
         var g = l.subs_growth_30d;
         var subsSub, subsSubCol = '';
-        if (typeof g === 'number' && g !== 0) { subsSub = (g > 0 ? '+' : '') + _num(g) + ' за 30 дн'; subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b'; }
-        else subsSub = _chAge(l.channel_created_ts) ? _chAge(l.channel_created_ts) : '';
+        if (typeof g === 'number' && g !== 0) {
+            subsSub = (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + (l.subs_growth_days || 30) + ' дн';
+            subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
+        } else subsSub = _chAge(l.channel_created_ts) ? _chAge(l.channel_created_ts) : '';
         var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
         if (mode === 'market') {
-            priceLabel = 'Цена от'; priceVal = pp ? _num(pp) + '₽' : '—'; priceSub = 'формат 1/24';
+            priceLabel = 'Цена от, ₽'; priceVal = pp ? _kmNum(pp) : '—'; priceSub = 'формат 1/24';
         } else {
             var plo = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
             var phi = (l.price_low != null && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
-            priceLabel = 'Цена'; priceVal = plo ? ('≈' + _short(plo) + (phi ? '–' + _short(phi) : '')) : '—';
+            priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? '≈' + _short(plo) + '–' + _short(phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : 'оценка ниши'));
         }
         var tiles =
-            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
-            _htile('Охват', av ? '~' + _short(av) : '—', '#e8e8ed', 'медиана постов', '') +
+            _htile('Подписчики', _kmNum(subs), '#e8e8ed', subsSub, subsSubCol) +
+            _htile('Охват', av ? '~' + _kmNum(av) : '—', '#e8e8ed', 'медиана постов', '') +
             _htile('Reach', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
-            _htile('CPM', cpm != null ? _short(cpm) + '₽' : '—', '#e8e8ed', isOwner ? 'от цены влад.' : 'ориентир ниши', '') +
+            _htile('CPM, ₽', cpm != null ? _kmNum(cpm) : '—', '#e8e8ed', isOwner ? 'от цены владельца' : 'ориентир ниши', '') +
             _htile(priceLabel, priceVal, priceCol, priceSub, '');
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + tiles + '</div>';
