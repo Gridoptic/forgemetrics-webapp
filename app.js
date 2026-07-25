@@ -815,24 +815,9 @@ function fmModalOpen() {
     return false;
 }
 
-var _fmDiagTaps = 0;
-document.addEventListener('pointerdown', function (ev) {
+document.addEventListener('pointerdown', function () {
     try {
         var b = document.body;
-        if (_fmDiagTaps < 6) {
-            _fmDiagTaps++;
-            var x = ev.clientX || Math.round(window.innerWidth / 2);
-            var y = ev.clientY || Math.round(window.innerHeight / 2);
-            var top = document.elementFromPoint(x, y);
-            var chain = [], n = top;
-            for (var i = 0; i < 5 && n; i++) {
-                var d = (n.id ? '#' + n.id : (n.tagName || '?') + '.' + String(n.className || '').replace(/\s+/g, '.').slice(0, 22));
-                var pe = '?'; try { pe = getComputedStyle(n).pointerEvents; } catch (e) {}
-                chain.push(d + '[' + pe + ']');
-                n = n.parentElement;
-            }
-            fmClientLog('TAP top=' + chain.join('>') + ' body=' + String(b.className).slice(0, 45) + ' modal=' + fmModalOpen());
-        }
         if ((b.classList.contains('fmx-bgfreeze') || b.classList.contains('cs-modal-open')) && !fmModalOpen()) {
             b.classList.remove('fmx-bgfreeze', 'fmx-bgfull', 'cs-modal-open');
             document.documentElement.classList.remove('fmx-bgfreeze', 'cs-modal-open');
@@ -840,7 +825,6 @@ document.addEventListener('pointerdown', function (ev) {
                 var nn = document.querySelector(sel);
                 if (nn && nn.style.pointerEvents === 'none') nn.style.pointerEvents = '';
             });
-            fmClientLog('safety: снята залипшая заморозка по тапу');
         }
     } catch (e) {}
 }, true);
@@ -848,7 +832,7 @@ document.addEventListener('pointerdown', function (ev) {
 var _fmLogSent = 0;
 function fmClientLog(msg) {
     try {
-        if (_fmLogSent > 30) return;
+        if (_fmLogSent > 8) return;
         _fmLogSent++;
         apiRequest('/api/v1/user/client-log', {
             method: 'POST',
@@ -857,8 +841,6 @@ function fmClientLog(msg) {
         }).catch(() => {});
     } catch (e) {}
 }
-
-setTimeout(function () { try { fmClientLog('BUILD 20260725d loaded'); } catch (e) {} }, 2500);
 
 var _fmTrackQ = [], _fmTrackT = null;
 function fmTrack(e) {
