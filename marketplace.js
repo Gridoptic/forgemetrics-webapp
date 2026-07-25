@@ -7223,15 +7223,15 @@
         var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
         if (l.avg_views) {
             mets += '<s></s><span class="fmx-lm"><i class="ti ti-eye"></i><b>~' + _short(l.avg_views) + '</b>' +
-                (rr != null ? ' <b style="color:' + rrc + ';">' + warn + rr + '%</b>' : '') + '</span>';
+                (rr != null ? ' <b style="color:' + rrc + ';">(' + warn + rr + '%)</b>' : '') + '</span>';
         } else if (rr != null) {
             mets += '<s></s><span class="fmx-lm"><b style="color:' + rrc + ';">' + warn + rr + '%</b></span>';
         }
         var _alb = _audLabel(l);
         if (_alb) mets += '<s></s><span class="fmx-lm" style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>';
-        var cpm = _cpm(l);
+        var cpm = _cpm(l), estPrice = !(l.owner_price || l.min_price != null);
         var right = (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') +
-            (cpm != null ? '<span class="fmx-lcpm">CPM <b>' + _short(cpm) + ' ₽</b></span>' : '');
+            (cpm != null ? '<span class="fmx-lcpm">CPM <b>' + (estPrice ? '≈' : '') + _short(cpm) + ' ₽</b></span>' : '');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx" style="box-shadow:0 0 0 2px ' + hc + ';">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
