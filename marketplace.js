@@ -7305,9 +7305,19 @@
     var _OV_SEL = '.fmx-mbg.fmx-show,.fmx-cfm.solid,.pw-sheet-ov.show,#fmx-listBg.fmx-show,.bs-overlay.visible';
     var _OV_FULL = '.fmx-psFull';
     var _frozenVids = [];
+    function _fmVisMatch(sel) {
+        var nodes = document.querySelectorAll(sel);
+        for (var i = 0; i < nodes.length; i++) {
+            try {
+                var cs = getComputedStyle(nodes[i]);
+                if (cs.display !== 'none' && cs.visibility !== 'hidden' && nodes[i].getBoundingClientRect().width > 0) return true;
+            } catch (e) { return true; }
+        }
+        return false;
+    }
     function _fmSyncFreeze() {
-        var anyOv = !!document.querySelector(_OV_SEL) || !!document.querySelector(_OV_FULL);
-        var anyFull = !!document.querySelector(_OV_FULL);
+        var anyOv = _fmVisMatch(_OV_SEL) || _fmVisMatch(_OV_FULL);
+        var anyFull = _fmVisMatch(_OV_FULL);
         var b = document.body, was = b.classList.contains('fmx-bgfreeze');
         b.classList.toggle('fmx-bgfreeze', anyOv);
         b.classList.toggle('fmx-bgfull', anyFull);

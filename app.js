@@ -801,6 +801,35 @@ function fmUnstick() {
     } catch (e) {}
 }
 
+function fmModalOpen() {
+    var sels = ['.pw-sheet-ov.show', '.lang-ov.show', '.bs-overlay.visible', '.modal-overlay', '.cs-modal-overlay', '.drawer.active', '.fmx-mbg.fmx-show', '.fmx-cfm.solid', '#fmx-listBg.fmx-show', '.fmx-psFull'];
+    for (var s = 0; s < sels.length; s++) {
+        var nodes = document.querySelectorAll(sels[s]);
+        for (var i = 0; i < nodes.length; i++) {
+            try {
+                var cs = getComputedStyle(nodes[i]);
+                if (cs.display !== 'none' && cs.visibility !== 'hidden' && nodes[i].getBoundingClientRect().width > 0) return true;
+            } catch (e) { return true; }
+        }
+    }
+    return false;
+}
+
+document.addEventListener('pointerdown', function () {
+    try {
+        var b = document.body;
+        if ((b.classList.contains('fmx-bgfreeze') || b.classList.contains('cs-modal-open')) && !fmModalOpen()) {
+            b.classList.remove('fmx-bgfreeze', 'fmx-bgfull', 'cs-modal-open');
+            document.documentElement.classList.remove('fmx-bgfreeze', 'cs-modal-open');
+            ['#app', '#fmx-main', '#drawer-overlay'].forEach(function (sel) {
+                var n = document.querySelector(sel);
+                if (n && n.style.pointerEvents === 'none') n.style.pointerEvents = '';
+            });
+            fmClientLog('safety: снята залипшая заморозка по тапу');
+        }
+    } catch (e) {}
+}, true);
+
 var _fmLogSent = 0;
 function fmClientLog(msg) {
     try {
