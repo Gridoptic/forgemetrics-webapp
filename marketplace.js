@@ -380,7 +380,7 @@
             '.fmx-load{text-align:center;padding:54px;color:#8990a8;}',
             '.fmx-cwrap{width:100%;position:relative;overflow:visible;}',
             ".fmx-cwrap>.fmx-card,.fmx-zw>*{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;}",
-            '.fmx-met .v,.fmx-lprice{font-variant-numeric:tabular-nums;}',
+            '.fmx-lprice{font-variant-numeric:tabular-nums;}',
             '.fmx-cwrap>.fmx-card{width:350px;transform-origin:top left;}',
             '.fmx-zw{width:100%;position:relative;}',
             '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
@@ -490,12 +490,6 @@
             '.fmx-ae-sec{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#565b73;margin:20px 3px 9px;}',
             '.fmx-am-it{display:flex;align-items:center;gap:11px;padding:12px 13px;border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));margin-bottom:9px;text-decoration:none;color:inherit;}',
             '.fmx-am-av{width:40px;height:40px;border-radius:12px;flex:0 0 auto;object-fit:cover;background:linear-gradient(145deg,#818cf8,#6366f1);display:grid;place-items:center;font-weight:750;color:#0b0c16;font-size:16px;}',
-            '.fmx-met{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
-            '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
-            '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;}',
-            '.fmx-met .l{font-size:8.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.2px;display:flex;align-items:center;gap:3px;margin-bottom:3px;white-space:nowrap;}',
-            '.fmx-met .v{font-size:13.5px;font-weight:700;white-space:nowrap;}',
-            '.fmx-met .pr{color:#5DCAA5;}',
             '.fmx-sp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-start;}',
             '.fmx-sp svg{display:block;margin-top:-1px;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;}',
@@ -853,9 +847,6 @@
             '.fmx-cbg-s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,24,0.35),rgba(10,13,24,0.86) 72%);}',
             '.fmx-fchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}',
             '.fmx-fchips span{font-size:9.5px;color:#8990a8;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);padding:3px 8px;border-radius:6px;}',
-            '.fmx-met2{display:flex;align-items:center;gap:8px;font-size:10px;color:#8990a8;margin-top:8px;flex-wrap:wrap;}',
-            '.fmx-met2 b{color:#565b73;font-weight:600;margin-right:2px;}',
-            '.fmx-met2 i{width:3px;height:3px;border-radius:50%;background:#3a3f55;flex-shrink:0;}',
             '.fmx-lsp{flex-shrink:0;display:flex;align-items:center;}',
             '.fmx-lmet{font-size:10px;color:#8990a8;margin-top:3px;display:flex;align-items:center;gap:3px 6px;flex-wrap:wrap;line-height:1.45;}',
             '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
@@ -5045,7 +5036,7 @@
     }
     var _heroColorT = null;
     function _heroDebounced() { clearTimeout(_heroColorT); _heroColorT = setTimeout(function () { _heroColorT = null; renderHero(); }, 150); }
-    function _liveAccent(hex) { var h = el('fmx-hero'); if (h) qsa(h, '.fmx-met .v.pr').forEach(function (n) { n.style.color = hex; }); }
+    function _liveAccent(hex) { var h = el('fmx-hero'); if (h) qsa(h, '.fmx-kmg .v.pr').forEach(function (n) { n.style.color = hex; }); }
     function _liveCover(grad) { var h = el('fmx-hero'); if (h) qsa(h, '.fmx-cov-bg').forEach(function (n) { n.style.background = grad; }); }
     function setAccentColor(hex) {
         _ss.color = hex;
@@ -5771,7 +5762,7 @@
                 ['.fmx-avw', '.fmx-nm', '.fmx-meta'].forEach(function (sel) {
                     var e = cardEl.querySelector(sel); if (e) ban.push(_zr(e, d));
                 });
-                var met = cardEl.querySelector('.fmx-met');
+                var met = cardEl.querySelector('.fmx-kmg');
                 if (met) { var mr = _zr(met, d); ban.push({ x1: 0, y1: mr.y1 - 5, x2: 350, y2: (cardEl.offsetHeight || 500) + 10 }); }
                 var row = cardEl.querySelector('.fmx-cb .fmx-badges');
                 var home;
@@ -6043,7 +6034,7 @@
             st.title = 'Потяни вверх/вниз';
             bindStarDrag(card);
         }
-        [['.fmx-avw', 'avatar'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-met', 'price']].forEach(function (z) {
+        [['.fmx-avw', 'avatar'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-kmg', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
@@ -6911,9 +6902,9 @@
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
         return ad + qualHdr + facts + struct + flow + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
-    function _htile(label, val, valCol, sub, subCol) {
+    function _htile(label, val, valCol, sub, subCol, isPrice) {
         return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
-            '<div class="v"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
+            '<div class="v' + (isPrice ? ' pr' : '') + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
             (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
     }
     function _heroTiles(l, mode) {
@@ -6947,7 +6938,7 @@
             _htile('Reach', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
             _htile('CPM, ₽', cpm != null ? _kmNum(cpm) : '—', '#e8e8ed', isOwner ? 'от цены владельца' : 'ориентир ниши', '') +
-            _htile(priceLabel, priceVal, priceCol, priceSub, '');
+            _htile(priceLabel, priceVal, priceCol, priceSub, '', true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + tiles + '</div>';
     }
