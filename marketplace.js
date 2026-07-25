@@ -460,6 +460,7 @@
             '.fmx-alsub{font-size:10.5px;color:#8990a8;line-height:1.45;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-algrid{display:grid;grid-template-columns:1fr 1fr;gap:11px 10px;margin-top:2px;}',
             '.fmx-albody{min-height:296px;}',
+            '#fmx-ae-nw .fmx-fx{padding:12px 13px;font-size:11.5px;}',
             '.fmx-algrid .fmx-lbl{margin:0 0 5px;font-size:9.5px;letter-spacing:0.3px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-algrid .fmx-inp{width:100%;min-width:0;padding:9px 10px;font-size:12.5px;min-height:38px;}',
             '.fmx-alnew{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;padding:14px;border-radius:14px;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border:0;cursor:pointer;box-shadow:0 6px 20px rgba(99,102,241,0.3);font-family:inherit;}',
@@ -2700,7 +2701,7 @@
             return total;
         };
     }
-    function openNichePick() {
+    function openNichePick(onPick) {
         var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
         var countFor = _nicheCounts(arr);
         var _taxSet = {};
@@ -2721,10 +2722,15 @@
             '<div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</div>' +
             '<div class="fmx-search" style="margin-bottom:10px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
             '<div id="fmx-nlist" style="max-height:56vh;overflow-y:auto;margin:0 -4px;padding:0 4px;"></div>' +
-            '<div class="fmx-cfm-r" style="margin-top:12px;gap:8px;">' + (_nicheSel ? '<button class="fmx-btn" data-clear>Сбросить фильтр</button>' : '') + '<button class="fmx-btn" data-no>Закрыть</button></div></div>';
+            '<div class="fmx-cfm-r" style="margin-top:12px;gap:8px;">' + ((_nicheSel && !onPick) ? '<button class="fmx-btn" data-clear>Сбросить фильтр</button>' : '') + '<button class="fmx-btn" data-no>Закрыть</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
-        function pick(m) { _nicheSel = m; _sort = 'niche'; done(); _haptic('light'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }
+        function pick(m) {
+            done(); _haptic('light');
+            if (onPick) { onPick(m); return; }
+            _nicheSel = m; _sort = 'niche';
+            if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+        }
         function draw(q) {
             q = (q || '').toLowerCase().replace(/ё/g, 'е').trim();
             var html = '', hits = 0;
@@ -2733,7 +2739,7 @@
                 if (!chips.length) return;
                 hits += chips.length;
                 html += '<div class="fmx-npg">' + _esc(g[0]) + '</div><div class="fmx-fxw">' + chips.map(function (c) {
-                    var n = countFor(c.m), sel = (_nicheSel && String(_nicheSel).toLowerCase() === String(c.m).toLowerCase());
+                    var n = countFor(c.m), sel = (!onPick && _nicheSel && String(_nicheSel).toLowerCase() === String(c.m).toLowerCase());
                     return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(c.m) + '">' + _esc(c.l) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
                 }).join('') + '</div>';
             });
@@ -2741,7 +2747,7 @@
             if (_ex.length) {
                 hits += _ex.length;
                 html += '<div class="fmx-npg">Найдено в каталоге</div><div class="fmx-fxw">' + _ex.map(function (nm) {
-                    var n = countFor(nm), sel = (_nicheSel && String(_nicheSel).toLowerCase() === String(nm).toLowerCase());
+                    var n = countFor(nm), sel = (!onPick && _nicheSel && String(_nicheSel).toLowerCase() === String(nm).toLowerCase());
                     return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(nm) + '">' + _esc(nm) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
                 }).join('') + '</div>';
             }
@@ -2914,7 +2920,9 @@
         }).catch(function () { _nsubs = []; _nsMetrics = {}; renderNsBody(); });
     }
     var _SCOPE_LBL = { both: 'Радар + Площадка', radar: 'Радар', market: 'Площадка' };
-    var _AL_RANGES = [['p', 'Цена не дороже, ₽', 'mx'], ['cpm', 'CPM не дороже, ₽', 'mx'], ['s', 'Подписчиков от', 'mn'], ['err', 'Reach Rate от, %', 'mn'], ['er', 'ER от, %', 'mn']];
+    var _AL_RANGES = [['p', 'Цена не дороже, ₽', 'mx'], ['cpm', 'CPM не дороже, ₽', 'mx'], ['s', 'Подписчиков от', 'mn'],
+        ['r', 'Охват от', 'mn'], ['err', 'Reach Rate от, %', 'mn'], ['er', 'ER от, %', 'mn'],
+        ['h', 'Индекс от', 'mn'], ['age', 'Возраст от, мес', 'mn'], ['adp', 'Рекламы не больше, %', 'mx']];
     function _alertChips(f) {
         f = f || {}; var out = [];
         (f.niches || []).forEach(function (n) { out.push('<span class="fmx-alc">' + _esc(n) + '</span>'); });
@@ -2922,8 +2930,12 @@
         if (mx.p != null) out.push('<span class="fmx-alc">≤ ' + _num(mx.p) + ' ₽</span>');
         if (mx.cpm != null) out.push('<span class="fmx-alc">CPM ≤ ' + _num(mx.cpm) + '</span>');
         if (mn.s != null) out.push('<span class="fmx-alc">' + _short(mn.s) + '+ подп</span>');
+        if (mn.r != null) out.push('<span class="fmx-alc">охват ' + _short(mn.r) + '+</span>');
         if (mn.err != null) out.push('<span class="fmx-alc">Reach ≥ ' + mn.err + '%</span>');
         if (mn.er != null) out.push('<span class="fmx-alc">ER ≥ ' + mn.er + '%</span>');
+        if (mn.h != null) out.push('<span class="fmx-alc">индекс ≥ ' + mn.h + '</span>');
+        if (mn.age != null) out.push('<span class="fmx-alc">от ' + mn.age + ' мес</span>');
+        if (mx.adp != null) out.push('<span class="fmx-alc">рекламы ≤ ' + mx.adp + '%</span>');
         var P = f.presets || {};
         if (P.clean) out.push('<span class="fmx-alc g">без накрутки</span>');
         if (P.grow) out.push('<span class="fmx-alc">растут</span>');
@@ -2936,6 +2948,20 @@
         var f = { niches: [], presets: {}, aud: {}, mn: {}, mx: {} };
         if (_nicheSel) f.niches = [_nicheSel];
         var k;
+        if (_mainTab === 'market') {
+            if (_fPriceMax != null) f.mx.p = _fPriceMax;
+            if (_fCpmMax != null) f.mx.cpm = _fCpmMax;
+            if (_fAdpMax != null) f.mx.adp = _fAdpMax;
+            if (_fSubsMin != null) f.mn.s = _fSubsMin;
+            if (_fReachMin != null) f.mn.r = _fReachMin;
+            if (_fErMin != null) f.mn.err = _fErMin;
+            if (_fEngMin != null) f.mn.er = _fEngMin;
+            if (_fHealthMin != null) f.mn.h = _fHealthMin;
+            if (_fAgeMin != null) f.mn.age = _fAgeMin;
+            if (_fClean) f.presets.clean = true;
+            if (_fAud) f.aud[_fAud] = true;
+            return f;
+        }
         for (k in _rf.presets) if (_rf.presets[k]) f.presets[k] = true;
         for (k in _rf.aud) if (_rf.aud[k]) f.aud[k] = true;
         for (k in _rf.mn) if (_rf.mn[k] != null) f.mn[k] = _rf.mn[k];
@@ -3043,7 +3069,9 @@
         var sh = _alSheet(_alHead((_aEdit.id ? 'Изменить уведомление' : 'Новое уведомление'), 'Условия закупки', true) +
             '<div class="fmx-ae-sec">Название</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
             '<div class="fmx-ae-sec">Где искать</div><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
-            '<div class="fmx-ae-sec">Ниши <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">— через запятую, пусто = любые</span></div><input class="fmx-inp" id="fmx-ae-niches" placeholder="Криптовалюты, Финансы" value="' + _esc((f.niches || []).join(', ')) + '">' +
+            '<div class="fmx-ae-sec">Ниши <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">— пусто = любые</span></div><div class="fmx-fxw" id="fmx-ae-nw">' +
+            (f.niches || []).map(function (n) { return '<button class="fmx-fx on" data-nrm="' + _esc(n) + '">' + _esc(n) + ' <i class="ti ti-x" style="font-size:11px;opacity:0.7;"></i></button>'; }).join('') +
+            '<button class="fmx-fx" id="fmx-ae-nadd"><i class="ti ti-plus" style="font-size:11px;"></i> Добавить нишу</button></div>' +
             '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-algrid">' + rangesHtml + '</div>' +
             '<div class="fmx-ae-sec">Пол аудитории</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
             '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
@@ -3054,17 +3082,39 @@
         qsa(el('fmx-ae-mode'), '[data-seg]').forEach(function (b) { b.addEventListener('click', function () { _aEdit.mode = b.getAttribute('data-seg'); qsa(el('fmx-ae-mode'), '[data-seg]').forEach(function (z) { z.classList.remove('on'); }); b.classList.add('on'); }); });
         qsa(el('fmx-ae-aud'), '[data-seg]').forEach(function (b) { b.addEventListener('click', function () { qsa(el('fmx-ae-aud'), '[data-seg]').forEach(function (z) { z.classList.remove('on'); }); b.classList.add('on'); }); });
         qsa(el('fmx-ae-pre'), '[data-pp]').forEach(function (b) { b.addEventListener('click', function () { b.classList.toggle('on'); }); });
-        el('fmx-ae-save').addEventListener('click', function () {
+        function collect() {
             var _keep = _aEdit.f || {}, _vis = {};
             _AL_RANGES.forEach(function (r) { _vis[r[2] + ':' + r[0]] = 1; });
-            var f2 = { niches: [], presets: {}, aud: {}, mn: {}, mx: {} };
+            var f2 = { niches: (_keep.niches || []).slice(), presets: {}, aud: {}, mn: {}, mx: {} };
             ['mn', 'mx'].forEach(function (b) { var src = _keep[b] || {}; for (var k in src) { if (!_vis[b + ':' + k] && src[k] != null) f2[b][k] = src[k]; } });
-            var nv = el('fmx-ae-niches').value.trim();
-            if (nv) f2.niches = nv.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
             qsa(el('fmx-ae-pre'), '[data-pp].on').forEach(function (b) { f2.presets[b.getAttribute('data-pp')] = true; });
             var av = qsa(el('fmx-ae-aud'), '[data-seg].on')[0]; var avv = av ? av.getAttribute('data-seg') : '';
             if (avv) f2.aud[avv] = true;
             qsa(sh, '[data-rng]').forEach(function (i) { var val = i.value.trim(); if (val !== '') { var num = parseFloat(val.replace(',', '.')); if (!isNaN(num)) f2[i.getAttribute('data-bnd')][i.getAttribute('data-rng')] = num; } });
+            return f2;
+        }
+        function reopen(f2) {
+            var nm = el('fmx-ae-name').value.trim();
+            if (nm === _alertAutoName(_aEdit.f)) nm = '';
+            openAlertEditor({ id: _aEdit.id, name: nm, scope: _aEdit.scope,
+                mode: _aEdit.mode, enabled: _aEdit.enabled, filter: f2 });
+        }
+        el('fmx-ae-nadd').addEventListener('click', function () {
+            var f2 = collect();
+            openNichePick(function (m) {
+                if ((f2.niches || []).indexOf(m) < 0) f2.niches.push(m);
+                reopen(f2);
+            });
+        });
+        qsa(el('fmx-ae-nw'), '[data-nrm]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var nm = b.getAttribute('data-nrm'), f2 = collect();
+                f2.niches = (f2.niches || []).filter(function (x) { return x !== nm; });
+                _haptic('light'); reopen(f2);
+            });
+        });
+        el('fmx-ae-save').addEventListener('click', function () {
+            var f2 = collect();
             var nm = el('fmx-ae-name').value.trim() || _alertAutoName(f2);
             var payload = { id: _aEdit.id, name: nm, scope: _aEdit.scope, mode: _aEdit.mode, filter: f2, enabled: _aEdit.enabled !== false };
             var sv = el('fmx-ae-save'); sv.disabled = true;
