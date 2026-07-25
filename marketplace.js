@@ -6930,7 +6930,9 @@
         if (typeof g === 'number' && g !== 0) {
             subsSub = (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + (l.subs_growth_days || 30) + ' дн';
             subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
-        } else subsSub = _chAge(l.channel_created_ts) ? _chAge(l.channel_created_ts) : '';
+        } else if (l.trend === 'growing') { subsSub = '↗ растёт'; subsSubCol = '#5DCAA5'; }
+        else if (l.trend === 'declining') { subsSub = '↘ падает'; subsSubCol = '#f59e0b'; }
+        else subsSub = '';
         var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
         if (mode === 'market') {
             priceLabel = 'Цена от, ₽'; priceVal = pp ? _kmNum(pp) : '—'; priceSub = 'формат 1/24';
@@ -7098,9 +7100,6 @@
             var rr0 = 17, circ = Math.round(2 * Math.PI * rr0 * 100) / 100, off = Math.round(circ * (1 - score / 100) * 100) / 100;
             ring = '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + score + '</text></svg>';
         }
-        var trHtml = '';
-        if (l.trend === 'growing') trHtml = ' <span style="font-size:11px;color:#5DCAA5;font-weight:600;">↗ растёт</span>';
-        else if (l.trend === 'declining') trHtml = ' <span style="font-size:11px;color:#f59e0b;font-weight:600;">↘ падает</span>';
         var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
         var rrHtml = '';
         if (rr != null && rstat) {
@@ -7126,7 +7125,7 @@
         }
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
         var facts = rrHtml + erHtml +
-            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span>' + trHtml + '</div>' : (trHtml ? '<div class="fmr-line">Динамика' + trHtml + '</div>' : ''));
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
             var priceTag = (est || l.price_negotiable) ? '' : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">цена владельца</span>';
