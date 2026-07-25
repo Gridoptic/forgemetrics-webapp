@@ -168,10 +168,13 @@ async function apiRequest(path, options = {}) {
 
     const url = `${API_BASE_URL}${path}`;
 
+    const _ctrl = new AbortController();
+    const _to = setTimeout(() => _ctrl.abort(), 60000);
     try {
         const response = await fetch(url, {
             ...options,
             headers,
+            signal: _ctrl.signal,
         });
 
         if (!response.ok) {
@@ -186,6 +189,8 @@ async function apiRequest(path, options = {}) {
     } catch (err) {
         console.error('API request failed:', url, err);
         throw err;
+    } finally {
+        clearTimeout(_to);
     }
 }
 
