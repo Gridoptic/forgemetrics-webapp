@@ -435,6 +435,14 @@
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;}',
+            '.fmx-heroh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
+            '.fmx-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;}',
+            '.fmx-ht{background:#12162a;padding:9px 10px;min-width:0;}',
+            '.fmx-ht .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-ht .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.fmx-ht .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmr-sec.num{color:#c7cdfb;font-size:11px;letter-spacing:0.02em;text-transform:none;font-weight:700;border-bottom:0.5px solid rgba(255,255,255,0.07);padding-bottom:6px;}',
+            '.fmr-sec.num .kn{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.16);color:#c7cdfb;font-size:10px;font-weight:750;margin-right:2px;}',
             '.fmx-met{display:flex;align-items:flex-start;justify-content:space-between;gap:0;padding:11px 0;border-top:0.5px solid rgba(255,255,255,0.08);flex-wrap:nowrap;min-width:0;}',
             '.fmx-met>div+div{border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;margin-left:7px;}',
             '.fmx-met>.fmx-sp{margin-left:auto !important;border-left:1px solid rgba(255,255,255,0.08);padding-left:7px;}',
@@ -6629,12 +6637,11 @@
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
-        var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
-            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml +
+        var facts = rrHtml + erHtml +
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
-            ad = '<div class="fmr-sec">Реклама · цена владельца <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
+            ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">от ' + _num(pp) + ' ₽</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
@@ -6643,7 +6650,7 @@
         }
         var flow = '';
         if (pp && av) {
-            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
                 '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
@@ -6664,12 +6671,51 @@
                 var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
-            if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
+            if (sr.length) struct = sr.join('');
         })();
         var pills = [];
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
-        return facts + ad + flow + struct + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
+        var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
+        return ad + qualHdr + facts + struct + flow + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
+    }
+    function _htile(label, val, valCol, sub, subCol) {
+        return '<div class="fmx-ht"><div class="l">' + label + '</div>' +
+            '<div class="v"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
+            (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
+    }
+    function _heroTiles(l, mode) {
+        var subs = l.subscribers, av = _reach(l), cpm = _cpm(l), pp = _basePrice(l);
+        var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);
+        var rstat = l.reach_status;
+        var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : (rstat ? '#f59e0b' : '#c2c6d2'));
+        var erv = l.engagement_percent;
+        var erCol = (erv == null) ? '#c2c6d2' : (erv >= 3.5 ? '#5DCAA5' : (erv >= 1 ? '#818cf8' : '#f59e0b'));
+        var erStat = (erv == null) ? '' : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
+        var ervTxt = (erv == null) ? '—' : (((erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(erv).replace('.', ',')) + '%');
+        var isOwner = !!(l.owner_price || l.min_price != null);
+        var g = l.subs_growth_30d;
+        var subsSub, subsSubCol = '';
+        if (typeof g === 'number' && g !== 0) { subsSub = (g > 0 ? '+' : '') + _num(g) + ' за 30 дн'; subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b'; }
+        else subsSub = _chAge(l.channel_created_ts) ? _chAge(l.channel_created_ts) : '';
+        var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
+        if (mode === 'market') {
+            priceLabel = 'Цена от'; priceVal = pp ? _num(pp) + '₽' : '—'; priceSub = 'формат 1/24';
+        } else {
+            var plo = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
+            var phi = (l.price_low != null && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
+            priceLabel = 'Цена'; priceVal = plo ? ('≈' + _short(plo) + (phi ? '–' + _short(phi) : '')) : '—';
+            priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : 'оценка ниши'));
+        }
+        var tiles =
+            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
+            _htile('Охват', av ? '~' + _short(av) : '—', '#e8e8ed', 'медиана постов', '') +
+            _htile('Reach', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
+            _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
+            _htile('CPM', cpm != null ? _short(cpm) + '₽' : '—', '#e8e8ed', isOwner ? 'от цены влад.' : 'ориентир ниши', '') +
+            _htile(priceLabel, priceVal, priceCol, priceSub, '');
+        return '<div class="fmx-heroh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
+            '<div class="fmx-hero">' + tiles + '</div>';
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
@@ -6733,12 +6779,7 @@
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
-            '<div class="fmx-met" style="' + fmet + '"><div><div class="l">Цена от</div><div class="v pr">' + _priceFrom(l) + '</div></div>' +
-            '<div><div class="l"><i class="ti ti-eye"></i>Охват</div><div class="v" style="color:' + hc + ';">' + (l.avg_views ? '~' + _num(l.avg_views) : '—') + '</div></div>' +
-            (l.er != null ? '<div><div class="l">Reach %</div><div class="v" style="color:' + hc + ';">' + (Math.round(l.er * 10) / 10) + '%</div></div>' : '') +
-            (l.engagement_percent != null ? '<div><div class="l">ER</div><div class="v" style="color:#818cf8;">' + l.engagement_percent + '%</div></div>' : '') +
-            (function () { var cpmX = _cpm(l); return cpmX != null ? '<div><div class="l">CPM</div><div class="v">' + _num(cpmX) + ' ₽' + _deltaPill(l) + '</div></div>' : ''; })() +
-            '</div>' +
+            _heroTiles(l, 'market') +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
@@ -6851,23 +6892,22 @@
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
-        var facts = '<div class="fmr-sec"><span style="color:#34d399;">●</span>Факты · из Telegram</div>' +
-            '<div class="fmr-line">Подписчики <b>' + _num(subs) + '</b>' + (av ? '<span class="fdot">·</span>Охват <b>~' + _num(av) + '</b>' + reachEst + trHtml : '<span class="fdot">·</span><span style="color:#565b73;">охват уточняется</span>') + '</div>' + rrHtml + erHtml +
-            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
+        var facts = rrHtml + erHtml +
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span>' + trHtml + '</div>' : (trHtml ? '<div class="fmr-line">Динамика' + trHtml + '</div>' : ''));
         var ad = '';
         if (pp) {
             var priceTag = (est || l.price_negotiable) ? '' : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">цена владельца</span>';
-            ad = '<div class="fmr-sec">' + (est ? '≈ Реклама · оценка ниши' : 'Реклама · цена владельца') + ' <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
+            ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <span style="font-size:10px;color:#565b73;text-transform:none;letter-spacing:0;font-weight:600;">' + (est ? '· оценка ниши' : '· цена владельца') + '</span> <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
                 (cpm && !(est && !ph) && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
-                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, стори — по договорённости с каналом. CPM = цена ÷ охват × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от полного охвата поста (за всё время). Реальная цена сделки обычно ниже — на бирже размещение котируют по охвату за первые 24 часа. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM и CPV посчитаны от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
+                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ охват × 1000, для сравнения каналов; где известен рекламный охват за 24 часа, CPM считаем от него.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM и CPV посчитаны от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
         if (pp && av) {
-            flow = '<div class="fmr-sec">≈ Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
                 '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
@@ -6888,7 +6928,7 @@
                 var acol = l.ad_density >= 0.35 ? '#f59e0b' : (l.ad_density > 0 && l.ad_density < 0.05 ? '#5DCAA5' : '#c2c6d2');
                 sr.push('<div class="fmr-sub" style="color:' + acol + ';">' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (l.ad_density >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
             }
-            if (sr.length) struct = '<div class="fmr-sec">Структура охвата</div>' + sr.join('');
+            if (sr.length) struct = sr.join('');
         })();
         var pills = [];
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
@@ -6909,7 +6949,7 @@
             headHtml +
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             nicheHtml +
-            facts + struct + ad + flow + pillsHtml +
+            _heroTiles(l, 'radar') + ad + ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct + flow + pillsHtml +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
