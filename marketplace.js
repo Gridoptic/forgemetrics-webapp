@@ -439,6 +439,8 @@
             '.fmx-bgd-health .fmx-tl b{font-size:10px;}',
             '.fmx-tldesc{flex:1;min-width:0;font-size:12px;color:#a9aec0;line-height:1.4;}',
             '.fmx-b-live{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
+            '.fmx-b-rare{background:rgba(245,158,11,0.13);color:#f59e0b;}',
+            '.fmx-b-dead{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -2771,7 +2773,7 @@
     function _rfPass(l) {
         var P = _rf.presets;
         if (P.large && !(l.subscribers >= 100000)) return false;
-        if (P.alive && l.is_alive !== true) return false;
+        if (P.alive && l.activity !== 'high') return false;
         if (P.clean && l.antifraud !== 'clean') return false;
         if (P.grow && l.trend !== 'growing') return false;
         var av = Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; });
@@ -2787,7 +2789,7 @@
         for (k in _rf.mx) { if (_rf.mx[k] != null && (map[k] == null || map[k] > _rf.mx[k])) return false; }
         return true;
     }
-    var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Живые'], ['clean', 'Без накрутки'], ['grow', 'Растут']];
+    var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Активные'], ['clean', 'Без накрутки'], ['grow', 'Растут']];
     var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'Reach Rate, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
     function _rfBtnLabel() {
@@ -6858,6 +6860,17 @@
     }
 
     function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
+    var _ACT = {
+        high: ['fmx-b-live', '#5DCAA5', 'Активный'],
+        rare: ['fmx-b-rare', '#f59e0b', 'Редкие посты'],
+        none: ['fmx-b-dead', '#ef4444', 'Без постов']
+    };
+    function _actInfo(l) { var a = l && l.activity; return (a && _ACT[a]) ? _ACT[a] : null; }
+    function _actBadge(l) {
+        var a = _actInfo(l);
+        if (!a) return '';
+        return '<span class="fmx-bdg ' + a[0] + '"><i class="ti ti-heartbeat"></i>' + a[2] + '</span>';
+    }
     function _deltaPill(l) {
         var d = l.niche_delta_pct;
         if (d == null || !isFinite(d)) return '';
@@ -6882,14 +6895,15 @@
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
         if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты до −' + l.hot_discount_pct + '%</span>') });
+        var _ab = _actBadge(l);
+        if (_ab) items.push({ k: 'live', h: _bk('live', _ab) });
         if (l.badges && l.badges.length) {
-            var m = { live: ['fmx-b-live', 'ti-plant-2', 'Живой'], safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
+            var m = { safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
             l.badges.filter(function (b) { return b !== 'match'; }).forEach(function (b) {
                 var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
             });
-        } else {
-            if (l.is_alive === true && l.reach_status !== 'аномальный') items.push({ k: 'live', h: _bk('live', '<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>') });
-            if (l.subscribers && l.subscribers >= 100000) items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
+        } else if (l.subscribers && l.subscribers >= 100000) {
+            items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
         }
         return items;
     }
@@ -7256,8 +7270,8 @@
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
         var _alx = _audLabel(l);
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
-        var live = (l.badges && l.badges.indexOf('live') >= 0) || (!(l.badges && l.badges.length) && l.is_alive === true);
-        if (live) out.push(['ti-plant-2', '#5DCAA5', 'Живой канал']);
+        var _ai = _actInfo(l);
+        if (_ai) out.push(['ti-heartbeat', _ai[1], _ai[2]]);
         if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Без накрутки']);
         if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
@@ -7755,6 +7769,12 @@
                 '<div class="fmx-bgd-txt"><div class="fmx-bgd-title">' + title + '</div>' +
                 '<div class="fmx-bgd-desc">' + desc + '</div></div></div>';
         };
+        var pulseRow = function (state, name, text) {
+            var a = _ACT[state];
+            return '<div class="fmx-tlrow"><div class="fmx-bgd-badge" style="flex:0 0 auto;">' +
+                '<span class="fmx-bdg ' + a[0] + '"><i class="ti ti-heartbeat"></i>' + name + '</span></div>' +
+                '<div class="fmx-tldesc">' + text + '</div></div>';
+        };
         var tlRow = function (state, name, hex, text) {
             return '<div class="fmx-tlrow"><div class="fmx-tlcell">' + trafficLight({ health_class: state }) + '</div>' +
                 '<div class="fmx-tldesc"><b style="color:' + hex + ';">' + name + '</b> — ' + text + '</div></div>';
@@ -7773,8 +7793,14 @@
                 'Наш бот — администратор этого канала: продавец действительно управляет размещением и может опубликовать твою рекламу. Это техническая проверка доступа, а не самоназвание — без бейджа доступ не подтверждён.') +
             card('<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Без накрутки</span>', 'Без накрутки',
                 'Автопроверка по публичным метрикам не нашла следов накрутки: охват в норме относительно подписчиков, просмотры по постам не прыгают, резкого ботового наплыва подписчиков во времени нет. Показывается только когда данных достаточно и всё чисто; при сомнениях бейдж не выдаётся, а «светофор» желтеет.') +
-            card('<span class="fmx-bdg fmx-b-live"><i class="ti ti-plant-2"></i>Живой</span>', 'Живой',
-                'Средний охват поста — не менее 10% от числа подписчиков. Аудитория активно читает канал: признак живой, невыгоревшей базы.') +
+            '<div class="fmx-bgd-card fmx-bgd-health">' +
+            '<div class="fmx-bgd-title">Пульс канала · как часто выходят посты</div>' +
+            '<div class="fmx-bgd-desc">Считается по датам публикаций: когда был последний пост и сколько постов в неделю выходит в среднем.</div>' +
+            pulseRow('high', 'Активный', 'последний пост не старше недели, выходит от 3 постов в неделю.') +
+            pulseRow('rare', 'Редкие посты', 'публикации есть, но с большими паузами — от 0,5 поста в неделю, последний не старше месяца.') +
+            pulseRow('none', 'Без постов', 'канал молчит больше месяца либо публикует реже одного поста в две недели.') +
+            '<div class="fmx-bgd-desc" style="margin-top:9px;">Редкие посты — не приговор: у нишевых и авторских каналов такой ритм нормален. Но размещение в молчащем канале охвата почти не даст.</div>' +
+            '</div>' +
             card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
                 'В канале от 100 000 подписчиков. Большой охват за размещение — подходит для масштабных запусков и широких проливов.') +
             card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>', 'В нише',

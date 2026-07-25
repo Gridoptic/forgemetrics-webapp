@@ -391,7 +391,7 @@
     function platformsNow() {
         var list = (_report && _report.platforms) || [];
         var d = list.slice();
-        if (_segment === 'alive') d = d.filter(function (x) { return x.is_alive; });
+        if (_segment === 'alive') d = d.filter(function (x) { return x.activity === 'high'; });
         else if (_segment === 'clean') d = d.filter(function (x) { return x.health_class === 'green'; });
 
         if (_segment === 'match') d.sort(function (a, b) { return (b.match_percent || 0) - (a.match_percent || 0); });
@@ -442,7 +442,9 @@
 
     function badges(p) {
         var b = '';
-        if (p.is_alive) b += '<span class="adx-badge adx-badge-alive"><i class="ti ti-plant-2"></i> Живой</span>';
+        var A = { high: ['adx-badge-alive', 'Активный'], rare: ['adx-badge-rare', 'Редкие посты'], none: ['adx-badge-dead', 'Без постов'] };
+        var a = A[p.activity];
+        if (a) b += '<span class="adx-badge ' + a[0] + '"><i class="ti ti-heartbeat"></i> ' + a[1] + '</span>';
         if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В точку</span>';
         return b;
     }
@@ -558,7 +560,7 @@
         var segs = [
             ['all', 'ti-layout-grid', 'Все'],
             ['match', 'ti-target-arrow', 'По нише'],
-            ['alive', 'ti-plant-2', 'Живой контент'],
+            ['alive', 'ti-heartbeat', 'Активные'],
             ['clean', 'ti-shield-check', 'Чистые']
         ];
         return '<div class="adx-segments">' + segs.map(function (s) {

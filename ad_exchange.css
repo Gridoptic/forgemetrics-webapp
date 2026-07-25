@@ -155,6 +155,8 @@
     display: inline-flex; align-items: center; gap: 3px;
 }
 .adx-badge-alive { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.adx-badge-rare { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.adx-badge-dead { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 .adx-badge-match { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
 
 .adx-health-tag {
