@@ -165,6 +165,7 @@ async function apiRequest(path, options = {}) {
         headers['X-Telegram-Init-Data'] = state.initData;
     }
     try { if (typeof getLang === 'function') headers['X-Lang'] = getLang(); } catch (e) {}
+    try { if (localStorage.getItem('fm_lang')) headers['X-Lang-Manual'] = '1'; } catch (e) {}
 
     const url = `${API_BASE_URL}${path}`;
 
@@ -216,6 +217,9 @@ async function loadDashboard() {
 
     try {
         const data = await apiRequest('/api/v1/user/dashboard');
+        try {
+            if (window.applyServerLang && window.applyServerLang(data.lang)) { location.reload(); return; }
+        } catch (e) {}
         state.dashboard = data;
         renderDashboard(data);
         showScreen('dashboard');

@@ -2927,7 +2927,6 @@
             (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на ' + (r.horizon_days || 180) + ' дней вперёд</span></div>'
                 : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>Владелец не открыл этот месяц для продажи</span></div>' : '')) +
             (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%</span></div>' : '') +
-            (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
             (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _calModeHtml() + (_ownerCalHot ? _ownerHotHtml(l, r) : _ownerSlotsHtml(l, r)) + '</div>' : '');
         box.innerHTML = h;
@@ -3318,7 +3317,6 @@
             '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(239,128,128,0.5);"></i> занято</span>' +
             (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> горящие ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
             '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
-            (l.slots_note ? '<div class="fmx-slnote"><i class="ti ti-info-circle"></i><span>' + _esc(l.slots_note) + '</span></div>' : '') +
             '<div id="fmx-buyerExtra">' + _buyerSlotsHtml(l, r) + _basketHtml(l) + '</div>' +
             '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
@@ -4486,7 +4484,7 @@
     function defaultState() {
         return { cover: 1, covType: 'grad', avatar: 'tg', avEmoji: '🧬', color: '#5DCAA5', font: 'bold',
             move: 'none', over: 'none', glow: 'none', orbit: 'none', part: 'none', atomColor: '#5DCAA5', glowCard: false, fullBg: false, glass: 'none',
-            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _slots: '', _erid: null, _hideInsights: false, _title: null, listingId: null, channelId: null };
+            coverGrad: null, att: { avatar: '', cover: '', body: [], list: [] }, _media: {}, _desc: '', _tags: '', _erid: null, _hideInsights: false, _title: null, listingId: null, channelId: null };
     }
     function _suggestBase() {
         var id = _ss && _ss.channelId;
@@ -4547,7 +4545,6 @@
             _ss._media[k] = { url: mediaAbs(srvUrl), kind: kk, name: a.name || 'файл на сервере' };
         });
         _ss._tags = (l.tags_json || []).join(', ');
-        _ss._slots = l.slots_note || '';
         _ss._erid = l.erid_who || null;
         _ss._hideInsights = !!l.hide_insights;
     }
@@ -5771,7 +5768,6 @@
         pl.emoji_attachments_json = _att;
         pl.custom_text = _ss._desc || '';
         pl.title_style = _ss.font;
-        pl.slots_note = _ss._slots || '';
         pl.sticker_json = null;
         if (_ss.showDeals === false) pl.show_deals = false;
         return pl;
@@ -6498,10 +6494,9 @@
         });
     }
     function _saveListing(btn) {
-        var de = el('fmx-desc'), ta = el('fmx-tags'), sl = el('fmx-slots');
+        var de = el('fmx-desc'), ta = el('fmx-tags');
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
-            slots_note: (sl ? sl.value : _ss._slots) || null,
             erid_who: _ss._erid || null,
             hide_insights: !!_ss._hideInsights,
             custom_text: (de ? de.value : _ss._desc) || null,
@@ -7534,6 +7529,22 @@
             var _ec = _ev >= 3.5 ? '#5DCAA5' : (_ev >= 1 ? '#818cf8' : '#f59e0b');
             _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;">ER — <b style="color:' + _ec + ';">' + _es + '</b>' + (_eb.length ? ' <span style="color:#565b73;">— по ' + _eb.join(', ') + ' на пост</span>' : '') + '</div>';
         }
+        if (l.niche_median_cpm && (ad || l.avg_views)) {
+            var _mrv = ad || l.avg_views;
+            var _mlo = Math.max(50, Math.round(l.niche_median_cpm * 0.85 * _mrv / 1000 / 50) * 50);
+            var _mhi = Math.max(_mlo, Math.round(l.niche_median_cpm * 1.15 * _mrv / 1000 / 50) * 50);
+            var _md = l.niche_delta_pct, _mv, _mc;
+            if (_md == null || Math.abs(_md) <= 15) { _mv = '<span>в рынке</span>'; _mc = '#5DCAA5'; }
+            else if (_md > 0) { _mv = '<span>выше рынка на</span> <span class="num">' + Math.round(_md) + '%</span>'; _mc = '#f59e0b'; }
+            else { _mv = '<span>ниже рынка на</span> <span class="num">' + Math.abs(Math.round(_md)) + '%</span>'; _mc = '#818cf8'; }
+            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;"><span>Похожие каналы ниши</span>: <b class="num" style="color:#cdd0de;">' + _num(_mlo) + '–' + _num(_mhi) + ' ₽</b> <span>за 1/24</span> — <b style="color:' + _mc + ';">' + _mv + '</b></div>';
+        }
+        if (typeof l.subs_growth_30d === 'number') {
+            var _sg = l.subs_growth_30d;
+            var _sgc = _sg > 0 ? '#5DCAA5' : (_sg < 0 ? '#ef4444' : '#8990a8');
+            var _sgs = (_sg > 0 ? '+' : (_sg < 0 ? '−' : '')) + _num(Math.abs(_sg));
+            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;"><span>Прирост за 30 дней</span> — <b class="num" style="color:' + _sgc + ';">' + _sgs + '</b> <span style="color:#565b73;">подписчиков</span></div>';
+        }
         return '<div class="fmx-pwc">' +
             '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">' +
             '<div style="min-width:0;"><div class="pw-hlab">Охват поста</div>' +
@@ -7652,8 +7663,7 @@
             (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) : '') +
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;">' + _esc(l.custom_text) + '</div>' : '') +
             fmtsHtml +
-            (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>'
-                  : (l.slots_note ? '<div style="font-size:11.5px;color:#5DCAA5;margin-top:11px;"><i class="ti ti-calendar-check"></i> ' + _esc(l.slots_note) + '</div>' : '')) +
+            (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div>' : '') +
             (l.id ? '<div style="display:flex;gap:8px;margin-top:14px;">' +
                 '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share-2"></i> Поделиться оффером</button>' +

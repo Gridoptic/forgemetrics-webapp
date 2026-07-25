@@ -43,6 +43,10 @@
             if (saved && SUPPORTED.indexOf(saved) >= 0) return saved;
         } catch (e) {}
         try {
+            var srv = localStorage.getItem('fm_lang_srv');
+            if (srv && SUPPORTED.indexOf(srv) >= 0) return srv;
+        } catch (e) {}
+        try {
             var tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user;
             var code = (tg && tg.language_code ? String(tg.language_code) : '').slice(0, 2).toLowerCase();
             if (SUPPORTED.indexOf(code) >= 0) return code;
@@ -59,6 +63,12 @@
         if (SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
         LANG = l;
         try { localStorage.setItem('fm_lang', l); } catch (e) {}
+        return true;
+    };
+    window.applyServerLang = function (l) {
+        try { if (localStorage.getItem('fm_lang')) return false; } catch (e) {}
+        if (!l || SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
+        try { localStorage.setItem('fm_lang_srv', l); } catch (e) { return false; }
         return true;
     };
     window.t = function (s) {

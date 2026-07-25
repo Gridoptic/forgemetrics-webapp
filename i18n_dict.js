@@ -389,7 +389,7 @@ window.__I18N_DICT = {
   "Как именно выходит реклама — это меняет и охват, и цену. Основные: размещение в ленте на сутки с удалением (в рыночной терминологии «1/24»), на двое суток («2/48»), без удаления (вечный пост), закреп сверху канала, нативная интеграция в авторский пост и формат-кружок. Пост, удаляемый через сутки, соберёт меньше вечного или закреплённого. Сравнивай CPM только между одинаковыми форматами и всегда уточняй, удаляется ли пост и когда.": "Exactly how the ad runs — this changes both reach and price. The main ones: a feed placement for 24 hours with deletion (\"1/24\" in market terms), for two days (\"2/48\"), without deletion (a permanent post), a pin at the top of the channel, a native integration into an author's post, and the round-video (circle) format. A post deleted after 24 hours will get less reach than a permanent or pinned one. Compare CPM only between identical formats, and always clarify whether the post gets deleted and when.",
   "Гео и язык аудитории": "Audience geo and language",
   "Из каких стран и на каком языке аудитория канала. Для перелива и арбитража это решает не меньше ниши: оффер платит по конкретным гео, и канал с отличными метриками, но аудиторией из недорогого гео или на другом языке сольёт бюджет. Перед закупкой сверь топ-страны и язык аудитории со своим оффером — уточни у владельца или в статистике канала.": "Which countries the channel's audience is from and what language they speak. For traffic funneling and arbitrage this matters no less than the niche: an offer pays for specific geos, and a channel with excellent metrics but an audience from a low-value geo or in a different language will burn your budget. Before buying, match the top countries and audience language against your offer — check with the owner or in the channel's stats.",
-  "Прирост за 30 дней": "30-day growth",
+  "Прирост за 30 дней": "Growth over 30 days",
   "Насколько изменилось число подписчиков за месяц. Плавный органический рост — признак живого канала. Резкий скачок вверх без вирусного повода почти всегда означает закупку или накрутку: после неё охват проседает, и реклама, купленная сразу после разгона, выходит на спаде. Заметный отток — тоже сигнал: аудитория теряет интерес.": "How much the subscriber count changed over the month. Smooth organic growth is a sign of a live channel. A sharp spike upward with no viral trigger almost always means a buy-in or inflation: afterward reach sags, and an ad bought right after the surge runs on the decline. A noticeable outflow is also a signal: the audience is losing interest.",
   "Частота постов": "Posting frequency",
   "Сколько публикаций выходит в неделю. Слишком редко (1–2 в неделю) — аудитория отвыкает и слабее реагирует; слишком часто (5+ в день) — реклама быстро тонет в потоке и живёт считаные часы. Оптимум зависит от ниши. Частота напрямую влияет на то, как долго твой пост держится на виду у читателя до того, как его перекроют новыми. Отдельно оценивай рекламную нагрузку: канал с 4–5 рекламными постами в день выжигает аудиторию, и твоё объявление в нём тонет — это важнее общей частоты.": "How many posts go out per week. Too rarely (1–2 per week) and the audience loses the habit and reacts more weakly; too often (5+ per day) and ads quickly sink in the stream and live only a few hours. The optimum depends on the niche. Frequency directly affects how long your post stays in a reader's view before newer ones bury it. Assess ad load separately: a channel with 4–5 ad posts per day burns out its audience, and your ad sinks in it — that matters more than overall frequency.",
@@ -2219,7 +2219,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Hold the preview to expand it full screen · quick tap — back to the poster",
   "Эффекты": "Effects",
   "Цены": "Prices",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Hold the preview to expand it full screen · quick tap — back to the card"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Hold the preview to expand it full screen · quick tap — back to the card",
+  "Похожие каналы ниши": "Similar channels in the niche",
+  "за 1/24": "for 1/24",
+  "в рынке": "at market",
+  "выше рынка на": "above market by",
+  "ниже рынка на": "below market by"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4434,7 +4439,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Mantén pulsada la vista previa para ampliarla a pantalla completa · toque rápido: al póster",
   "Эффекты": "Efectos",
   "Цены": "Precios",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Mantén pulsada la vista previa para ampliarla a pantalla completa · toque rápido: a la tarjeta"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Mantén pulsada la vista previa para ampliarla a pantalla completa · toque rápido: a la tarjeta",
+  "Похожие каналы ниши": "Canales similares del nicho",
+  "за 1/24": "por 1/24",
+  "в рынке": "en mercado",
+  "выше рынка на": "por encima del mercado en",
+  "ниже рынка на": "por debajo del mercado en"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -6649,7 +6659,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Vorschau gedrückt halten — Vollbild · kurzes Tippen: zum Poster",
   "Эффекты": "Effekte",
   "Цены": "Preise",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Vorschau gedrückt halten — Vollbild · kurzes Tippen: zur Karte"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Vorschau gedrückt halten — Vollbild · kurzes Tippen: zur Karte",
+  "Похожие каналы ниши": "Ähnliche Kanäle der Nische",
+  "за 1/24": "für 1/24",
+  "в рынке": "marktgerecht",
+  "выше рынка на": "über dem Markt um",
+  "ниже рынка на": "unter dem Markt um"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -8859,7 +8874,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Алдын ала қарауды басып тұр — толық экранға ашылады · жылдам түрту — постерге",
   "Эффекты": "Эффектілер",
   "Цены": "Бағалар",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Алдын ала қарауды басып тұр — толық экранға ашылады · жылдам түрту — карточкаға"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Алдын ала қарауды басып тұр — толық экранға ашылады · жылдам түрту — карточкаға",
+  "Похожие каналы ниши": "Осы саладағы ұқсас арналар",
+  "за 1/24": "1/24 үшін",
+  "в рынке": "нарық деңгейінде",
+  "выше рынка на": "нарықтан жоғары",
+  "ниже рынка на": "нарықтан төмен"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -9244,7 +9264,7 @@ window.__I18N_DICT = {
   "Как именно выходит реклама — это меняет и охват, и цену. Основные: размещение в ленте на сутки с удалением (в рыночной терминологии «1/24»), на двое суток («2/48»), без удаления (вечный пост), закреп сверху канала, нативная интеграция в авторский пост и формат-кружок. Пост, удаляемый через сутки, соберёт меньше вечного или закреплённого. Сравнивай CPM только между одинаковыми форматами и всегда уточняй, удаляется ли пост и когда.": "Reklama qanday koʻrinishda chiqishi — bu ham qamrovni, ham narxni oʻzgartiradi. Asosiylari: lentaga bir sutkaga oʻchirish bilan joylashtirish (bozor terminologiyasida «1/24»), ikki sutkaga («2/48»), oʻchirilmasdan (abadiy post), kanal tepasiga qadab qoʻyish, muallif postiga nativ integratsiya va krujok-format. Bir sutkadan keyin oʻchiriladigan post abadiy yoki qadalgan postdan kamroq yigʻadi. CPM ni faqat bir xil formatlar orasida solishtir va har doim post oʻchiriladimi va qachon — shuni aniqlab ol.",
   "Гео и язык аудитории": "Auditoriya geosi va tili",
   "Из каких стран и на каком языке аудитория канала. Для перелива и арбитража это решает не меньше ниши: оффер платит по конкретным гео, и канал с отличными метриками, но аудиторией из недорогого гео или на другом языке сольёт бюджет. Перед закупкой сверь топ-страны и язык аудитории со своим оффером — уточни у владельца или в статистике канала.": "Kanal auditoriyasi qaysi mamlakatlardan va qaysi tilda. Trafik quyish (proliv) va arbitraj uchun bu nishadan kam ahamiyatli emas: offer aniq geolar boʻyicha toʻlaydi va zoʻr koʻrsatkichli, lekin arzon geo yoki boshqa tildagi auditoriyali kanal byudjetni behuda sarflaydi. Sotib olishdan oldin top-mamlakatlar va auditoriya tilini oʻz offering bilan solishtir — egadan yoki kanal statistikasidan aniqlab ol.",
-  "Прирост за 30 дней": "30 kunlik oʻsish",
+  "Прирост за 30 дней": "30 kunlik o‘sish",
   "Насколько изменилось число подписчиков за месяц. Плавный органический рост — признак живого канала. Резкий скачок вверх без вирусного повода почти всегда означает закупку или накрутку: после неё охват проседает, и реклама, купленная сразу после разгона, выходит на спаде. Заметный отток — тоже сигнал: аудитория теряет интерес.": "Bir oyda obunachilar soni qanchalik oʻzgargani. Bir tekis organik oʻsish — tirik kanal belgisi. Viral sababsiz keskin sakrash deyarli har doim sotib olish yoki sun'iy oshirishni bildiradi: undan keyin qamrov pasayadi va koʻtarilishdan soʻng darrov sotib olingan reklama tushish paytida chiqadi. Sezilarli chiqib ketish (obunachilar oqimi) — ham signal: auditoriya qiziqishini yoʻqotmoqda.",
   "Частота постов": "Postlar chastotasi",
   "Сколько публикаций выходит в неделю. Слишком редко (1–2 в неделю) — аудитория отвыкает и слабее реагирует; слишком часто (5+ в день) — реклама быстро тонет в потоке и живёт считаные часы. Оптимум зависит от ниши. Частота напрямую влияет на то, как долго твой пост держится на виду у читателя до того, как его перекроют новыми. Отдельно оценивай рекламную нагрузку: канал с 4–5 рекламными постами в день выжигает аудиторию, и твоё объявление в нём тонет — это важнее общей частоты.": "Haftada nechta publikatsiya chiqadi. Juda kam bo'lsa (haftada 1–2) — auditoriya sovib qoladi va zaifroq javob beradi; juda tez-tez bo'lsa (kuniga 5+) — reklama oqimda tez cho'kib ketadi va bir necha soatgina yashaydi. Optimal ko'rsatkich nishaga bog'liq. Chastota postingiz yangilari bilan bosib ketilgunga qadar o'quvchi ko'z oldida qancha vaqt turishiga bevosita ta'sir qiladi. Reklama yukini alohida baholang: kuniga 4–5 reklama posti chiqadigan kanal auditoriyani kuydiradi va sizning e'loningiz unda cho'kib ketadi — bu umumiy chastotadan muhimroq.",
@@ -11074,7 +11094,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Ko‘rib chiqishni bosib tur — to‘liq ekranga ochiladi · tez bosish — posterga",
   "Эффекты": "Effektlar",
   "Цены": "Narxlar",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Ko‘rib chiqishni bosib tur — to‘liq ekranga ochiladi · tez bosish — kartochkaga"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Ko‘rib chiqishni bosib tur — to‘liq ekranga ochiladi · tez bosish — kartochkaga",
+  "Похожие каналы ниши": "Ushbu sohadagi o‘xshash kanallar",
+  "за 1/24": "1/24 uchun",
+  "в рынке": "bozor darajasida",
+  "выше рынка на": "bozordan yuqori",
+  "ниже рынка на": "bozordan past"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -13288,7 +13313,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Заціскай прэв'ю — разгорнецца на ўвесь экран · хуткі тап — да постара",
   "Эффекты": "Эфекты",
   "Цены": "Цэны",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Заціскай прэв'ю — разгорнецца на ўвесь экран · хуткі тап — да карткі"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Заціскай прэв'ю — разгорнецца на ўвесь экран · хуткі тап — да карткі",
+  "Похожие каналы ниши": "Падобныя каналы нішы",
+  "за 1/24": "за 1/24",
+  "в рынке": "у рынку",
+  "выше рынка на": "вышэй за рынак на",
+  "ниже рынка на": "ніжэй за рынак на"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -13673,7 +13703,7 @@ window.__I18N_DICT = {
   "Как именно выходит реклама — это меняет и охват, и цену. Основные: размещение в ленте на сутки с удалением (в рыночной терминологии «1/24»), на двое суток («2/48»), без удаления (вечный пост), закреп сверху канала, нативная интеграция в авторский пост и формат-кружок. Пост, удаляемый через сутки, соберёт меньше вечного или закреплённого. Сравнивай CPM только между одинаковыми форматами и всегда уточняй, удаляется ли пост и когда.": "Reklamın tam olaraq necə çıxması — bu, həm əhatəni, həm də qiyməti dəyişir. Əsasları: lentdə bir günlük silinməklə yerləşdirmə (bazar terminologiyasında «1/24»), iki günlük («2/48»), silinmədən (əbədi post), kanalın yuxarısında sancaq, müəllif postuna nativ inteqrasiya və dairəvi video (kruq) formatı. Bir gündən sonra silinən post əbədi və ya sancaqlı postdan az yığacaq. CPM-i yalnız eyni formatlar arasında müqayisə et və postun silinib-silinmədiyini və nə vaxt silindiyini həmişə dəqiqləşdir.",
   "Гео и язык аудитории": "Geo və auditoriyanın dili",
   "Из каких стран и на каком языке аудитория канала. Для перелива и арбитража это решает не меньше ниши: оффер платит по конкретным гео, и канал с отличными метриками, но аудиторией из недорогого гео или на другом языке сольёт бюджет. Перед закупкой сверь топ-страны и язык аудитории со своим оффером — уточни у владельца или в статистике канала.": "Kanalın auditoriyası hansı ölkələrdən və hansı dildədir. Trafik perelivi və arbitraj üçün bu, nişadan az önəm daşımır: offer konkret geolara görə ödəyir və əla metrikalı, lakin ucuz geodan və ya başqa dildə auditoriyalı kanal büdcəni boşa çıxaracaq. Yerləşdirmədən əvvəl top-ölkələri və auditoriyanın dilini öz offerinlə tutuşdur — kanal sahibindən və ya kanal statistikasından dəqiqləşdir.",
-  "Прирост за 30 дней": "30 gün ərzində artım",
+  "Прирост за 30 дней": "30 günlük artım",
   "Насколько изменилось число подписчиков за месяц. Плавный органический рост — признак живого канала. Резкий скачок вверх без вирусного повода почти всегда означает закупку или накрутку: после неё охват проседает, и реклама, купленная сразу после разгона, выходит на спаде. Заметный отток — тоже сигнал: аудитория теряет интерес.": "Bir ay ərzində abunəçi sayının nə qədər dəyişdiyi. Hamar orqanik artım — canlı kanalın əlamətidir. Viral səbəb olmadan kəskin sıçrayış demək olar ki, həmişə satın alma və ya şişirtmə deməkdir: ondan sonra əhatə enir və artımdan dərhal sonra alınan reklam eniş fazasında çıxır. Nəzərəçarpan abunəçi itkisi də siqnaldır: auditoriya marağını itirir.",
   "Частота постов": "Post tezliyi",
   "Сколько публикаций выходит в неделю. Слишком редко (1–2 в неделю) — аудитория отвыкает и слабее реагирует; слишком часто (5+ в день) — реклама быстро тонет в потоке и живёт считаные часы. Оптимум зависит от ниши. Частота напрямую влияет на то, как долго твой пост держится на виду у читателя до того, как его перекроют новыми. Отдельно оценивай рекламную нагрузку: канал с 4–5 рекламными постами в день выжигает аудиторию, и твоё объявление в нём тонет — это важнее общей частоты.": "Həftədə neçə paylaşım çıxır. Çox nadir (həftədə 1–2) — auditoriya vərdişdən çıxır və zəif reaksiya verir; çox tez-tez (gündə 5+) — reklam axında sürətlə batır və cəmi bir neçə saat yaşayır. Optimum nişədən asılıdır. Tezlik birbaşa sənin postunun yenilərlə əvəz olunanadək oxucunun gözü önündə nə qədər qalacağına təsir edir. Reklam yükünü ayrıca qiymətləndir: gündə 4–5 reklam postu olan kanal auditoriyanı yandırır və sənin elanın orada batır — bu, ümumi tezlikdən daha vacibdir.",
@@ -15503,7 +15533,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Önizləməni basılı saxla — tam ekrana açılır · sürətli toxunuş — postere",
   "Эффекты": "Effektlər",
   "Цены": "Qiymətlər",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Önizləməni basılı saxla — tam ekrana açılır · sürətli toxunuş — karta"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Önizləməni basılı saxla — tam ekrana açılır · sürətli toxunuş — karta",
+  "Похожие каналы ниши": "Nişdəki oxşar kanallar",
+  "за 1/24": "1/24 üçün",
+  "в рынке": "bazara uyğun",
+  "выше рынка на": "bazardan yuxarı",
+  "ниже рынка на": "bazardan aşağı"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -16850,7 +16885,7 @@ window.__I18N_DICT = {
   "Приоритетный рендер MP4, экспорт отчётов о размещении": "رندر MP4 بأولوية وتصدير تقارير النشر",
   "Приоритетный рендер MP4/GIF (мес)": "رندر MP4/GIF بأولوية (شهرياً)",
   "Прирост": "النمو",
-  "Прирост за 30 дней": "النمو خلال 30 يوماً",
+  "Прирост за 30 дней": "النمو خلال 30 يومًا",
   "Прислал картинкой": "أرسلها كصورة",
   "Прислать постер в чат с ботом": "إرسال الملصق إلى محادثة البوت",
   "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "انضم إلى ForgeMetrics — أداة AI وبورصة إعلانات لمديري قنوات تيليجرام. عبر رابطي خصم −15% على الشهر الأول:",
@@ -17718,7 +17753,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "اضغط مطولًا على المعاينة لتكبيرها لملء الشاشة · نقرة سريعة — إلى الملصق",
   "Эффекты": "التأثيرات",
   "Цены": "الأسعار",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "اضغط مطولًا على المعاينة لتكبيرها لملء الشاشة · نقرة سريعة — إلى البطاقة"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "اضغط مطولًا على المعاينة لتكبيرها لملء الشاشة · نقرة سريعة — إلى البطاقة",
+  "Похожие каналы ниши": "قنوات مشابهة في المجال",
+  "за 1/24": "مقابل 1/24",
+  "в рынке": "ضمن السوق",
+  "выше рынка на": "أعلى من السوق بـ",
+  "ниже рынка на": "أدنى من السوق بـ"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -19065,7 +19105,7 @@ window.__I18N_DICT = {
   "Приоритетный рендер MP4, экспорт отчётов о размещении": "رندر MP4 با اولویت، خروجی گزارش‌های انتشار",
   "Приоритетный рендер MP4/GIF (мес)": "رندر MP4/GIF با اولویت (ماه)",
   "Прирост": "رشد",
-  "Прирост за 30 дней": "رشد ۳۰ روزه",
+  "Прирост за 30 дней": "رشد در ۳۰ روز",
   "Прислал картинкой": "به‌صورت تصویر ارسال شد",
   "Прислать постер в чат с ботом": "ارسال پوستر به چت با بات",
   "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "به ForgeMetrics بپیوندید — ابزار AI و بازار تبلیغات برای ادمین‌های کانال‌های تلگرام. با لینک من −15% تخفیف ماه اول:",
@@ -19933,7 +19973,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "پیش‌نمایش را نگه دار تا تمام‌صفحه شود · ضربهٔ سریع — به پوستر",
   "Эффекты": "جلوه‌ها",
   "Цены": "قیمت‌ها",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "پیش‌نمایش را نگه دار تا تمام‌صفحه شود · ضربهٔ سریع — به کارت"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "پیش‌نمایش را نگه دار تا تمام‌صفحه شود · ضربهٔ سریع — به کارت",
+  "Похожие каналы ниши": "کانال‌های مشابه در این حوزه",
+  "за 1/24": "برای 1/24",
+  "в рынке": "در حد بازار",
+  "выше рынка на": "بالاتر از بازار به میزان",
+  "ниже рынка на": "پایین‌تر از بازار به میزان"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -22148,7 +22193,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Önizlemeyi basılı tut — tam ekran açılır · hızlı dokunuş: postere",
   "Эффекты": "Efektler",
   "Цены": "Fiyatlar",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Önizlemeyi basılı tut — tam ekran açılır · hızlı dokunuş: karta"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Önizlemeyi basılı tut — tam ekran açılır · hızlı dokunuş: karta",
+  "Похожие каналы ниши": "Nişteki benzer kanallar",
+  "за 1/24": "1/24 için",
+  "в рынке": "piyasada",
+  "выше рынка на": "piyasanın üzerinde",
+  "ниже рынка на": "piyasanın altında"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -23492,7 +23542,7 @@ window.__I18N_DICT = {
   "Приоритетный рендер MP4, экспорт отчётов о размещении": "प्राथमिकता MP4 रेंडर, प्लेसमेंट रिपोर्ट एक्सपोर्ट",
   "Приоритетный рендер MP4/GIF (мес)": "प्राथमिकता MP4/GIF रेंडर (माह)",
   "Прирост": "वृद्धि",
-  "Прирост за 30 дней": "30 दिन की वृद्धि",
+  "Прирост за 30 дней": "30 दिनों में वृद्धि",
   "Прислал картинкой": "इमेज के रूप में भेजा",
   "Прислать постер в чат с ботом": "पोस्टर बॉट की चैट में भेजें",
   "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics से जुड़ें — Telegram चैनल एडमिन के लिए AI-टूल और ऐड एक्सचेंज। मेरे लिंक से पहले महीने पर −15%:",
@@ -24363,7 +24413,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "प्रीव्यू को दबाकर रखें — फुल स्क्रीन खुलेगा · तेज़ टैप — पोस्टर पर",
   "Эффекты": "इफ़ेक्ट्स",
   "Цены": "क़ीमतें",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "प्रीव्यू को दबाकर रखें — फुल स्क्रीन खुलेगा · तेज़ टैप — कार्ड पर"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "प्रीव्यू को दबाकर रखें — फुल स्क्रीन खुलेगा · तेज़ टैप — कार्ड पर",
+  "Похожие каналы ниши": "इस क्षेत्र के समान चैनल",
+  "за 1/24": "1/24 के लिए",
+  "в рынке": "बाज़ार के अनुरूप",
+  "выше рынка на": "बाज़ार से ऊपर",
+  "ниже рынка на": "बाज़ार से नीचे"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -25704,7 +25759,7 @@ window.__I18N_DICT = {
   "Приоритетный рендер MP4, экспорт отчётов о размещении": "অগ্রাধিকার MP4 রেন্ডার, প্লেসমেন্ট রিপোর্ট এক্সপোর্ট",
   "Приоритетный рендер MP4/GIF (мес)": "অগ্রাধিকার MP4/GIF রেন্ডার (মাস)",
   "Прирост": "বৃদ্ধি",
-  "Прирост за 30 дней": "৩০ দিনের বৃদ্ধি",
+  "Прирост за 30 дней": "৩০ দিনে বৃদ্ধি",
   "Прислал картинкой": "ছবি হিসেবে পাঠিয়েছে",
   "Прислать постер в чат с ботом": "বটের চ্যাটে পোস্টার পাঠান",
   "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-এ যোগ দিন — Telegram-চ্যানেল অ্যাডমিনদের জন্য AI-টুল ও অ্যাড এক্সচেঞ্জ। আমার লিংকে প্রথম মাসে −15%:",
@@ -26578,7 +26633,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "প্রিভিউ চেপে ধরুন — ফুল স্ক্রিনে খুলবে · দ্রুত ট্যাপ — পোস্টারে",
   "Эффекты": "ইফেক্ট",
   "Цены": "দাম",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "প্রিভিউ চেপে ধরুন — ফুল স্ক্রিনে খুলবে · দ্রুত ট্যাপ — কার্ডে"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "প্রিভিউ চেপে ধরুন — ফুল স্ক্রিনে খুলবে · দ্রুত ট্যাপ — কার্ডে",
+  "Похожие каналы ниши": "এই নিশের অনুরূপ চ্যানেল",
+  "за 1/24": "1/24-এর জন্য",
+  "в рынке": "বাজার অনুযায়ী",
+  "выше рынка на": "বাজারের চেয়ে বেশি",
+  "ниже рынка на": "বাজারের চেয়ে কম"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -28793,7 +28853,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Tahan pratinjau untuk membukanya layar penuh · ketuk cepat — ke poster",
   "Эффекты": "Efek",
   "Цены": "Harga",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Tahan pratinjau untuk membukanya layar penuh · ketuk cepat — ke kartu"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Tahan pratinjau untuk membukanya layar penuh · ketuk cepat — ke kartu",
+  "Похожие каналы ниши": "Kanal serupa di niche ini",
+  "за 1/24": "untuk 1/24",
+  "в рынке": "sesuai pasar",
+  "выше рынка на": "di atas pasar sebesar",
+  "ниже рынка на": "di bawah pasar sebesar"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -31008,7 +31073,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Giữ bản xem trước để phóng to toàn màn hình · chạm nhanh — về poster",
   "Эффекты": "Hiệu ứng",
   "Цены": "Giá",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Giữ bản xem trước để phóng to toàn màn hình · chạm nhanh — về thẻ"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Giữ bản xem trước để phóng to toàn màn hình · chạm nhanh — về thẻ",
+  "Похожие каналы ниши": "Các kênh tương tự trong ngách",
+  "за 1/24": "cho 1/24",
+  "в рынке": "đúng giá thị trường",
+  "выше рынка на": "cao hơn thị trường",
+  "ниже рынка на": "thấp hơn thị trường"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -33223,7 +33293,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Segure a prévia para ampliar em tela cheia · toque rápido: para o pôster",
   "Эффекты": "Efeitos",
   "Цены": "Preços",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Segure a prévia para ampliar em tela cheia · toque rápido: para o cartão"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Segure a prévia para ampliar em tela cheia · toque rápido: para o cartão",
+  "Похожие каналы ниши": "Canais semelhantes do nicho",
+  "за 1/24": "por 1/24",
+  "в рынке": "dentro do mercado",
+  "выше рынка на": "acima do mercado em",
+  "ниже рынка на": "abaixo do mercado em"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -35438,7 +35513,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Maintiens l'aperçu pour l'agrandir en plein écran · tap rapide : vers l'affiche",
   "Эффекты": "Effets",
   "Цены": "Prix",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Maintiens l'aperçu pour l'agrandir en plein écran · tap rapide : vers la fiche"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Maintiens l'aperçu pour l'agrandir en plein écran · tap rapide : vers la fiche",
+  "Похожие каналы ниши": "Chaînes similaires de la niche",
+  "за 1/24": "pour 1/24",
+  "в рынке": "dans le marché",
+  "выше рынка на": "au-dessus du marché de",
+  "ниже рынка на": "en dessous du marché de"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -37653,7 +37733,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Tieni premuta l'anteprima per ingrandirla a schermo intero · tocco rapido: al poster",
   "Эффекты": "Effetti",
   "Цены": "Prezzi",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Tieni premuta l'anteprima per ingrandirla a schermo intero · tocco rapido: alla scheda"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Tieni premuta l'anteprima per ingrandirla a schermo intero · tocco rapido: alla scheda",
+  "Похожие каналы ниши": "Canali simili della nicchia",
+  "за 1/24": "per 1/24",
+  "в рынке": "in linea col mercato",
+  "выше рынка на": "sopra il mercato del",
+  "ниже рынка на": "sotto il mercato del"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -39001,7 +39086,7 @@ window.__I18N_DICT = {
   "Приоритетный рендер MP4, экспорт отчётов о размещении": "ቅድሚያ MP4 ማዘጋጀት፣ የምደባ ሪፖርቶች ወደ ውጭ መላክ",
   "Приоритетный рендер MP4/GIF (мес)": "ቅድሚያ MP4/GIF ማዘጋጀት (ወር)",
   "Прирост": "እድገት",
-  "Прирост за 30 дней": "የ30 ቀን እድገት",
+  "Прирост за 30 дней": "በ30 ቀናት እድገት",
   "Прислал картинкой": "እንደ ምስል ልኳል",
   "Прислать постер в чат с ботом": "ፖስተሩን ወደ ቦቱ ቻት ላክ",
   "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics ተቀላቀል — ለTelegram ቻናል አድሚኖች የAI መሣሪያ እና የማስታወቂያ ልውውጥ። በሊንኬ ለመጀመሪያ ወር −15%፦",
@@ -39868,7 +39953,12 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "ቅድመ-እይታውን ተጭነህ ያዝ — ሙሉ ማያ ይከፈታል · ፈጣን ንክኪ — ወደ ፖስተሩ",
   "Эффекты": "ተፅእኖዎች",
   "Цены": "ዋጋዎች",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "ቅድመ-እይታውን ተጭነህ ያዝ — ሙሉ ማያ ይከፈታል · ፈጣን ንክኪ — ወደ ካርዱ"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "ቅድመ-እይታውን ተጭነህ ያዝ — ሙሉ ማያ ይከፈታል · ፈጣን ንክኪ — ወደ ካርዱ",
+  "Похожие каналы ниши": "በዘርፉ ያሉ ተመሳሳይ ቻናሎች",
+  "за 1/24": "ለ1/24",
+  "в рынке": "በገበያ ደረጃ",
+  "выше рынка на": "ከገበያ በላይ በ",
+  "ниже рынка на": "ከገበያ በታች በ"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -42083,6 +42173,11 @@ window.__I18N_DICT = {
   "Зажми превью — развернётся на весь экран · быстрый тап — к постеру": "Shikilia hakikisho — litafunguka skrini nzima · gusa haraka — kwenye bango",
   "Эффекты": "Athari",
   "Цены": "Bei",
-  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Shikilia hakikisho — litafunguka skrini nzima · gusa haraka — kwenye kadi"
+  "Зажми превью — развернётся на весь экран · быстрый тап — к карточке": "Shikilia hakikisho — litafunguka skrini nzima · gusa haraka — kwenye kadi",
+  "Похожие каналы ниши": "Chaneli zinazofanana katika sekta",
+  "за 1/24": "kwa 1/24",
+  "в рынке": "katika soko",
+  "выше рынка на": "juu ya soko kwa",
+  "ниже рынка на": "chini ya soko kwa"
  }
 };
