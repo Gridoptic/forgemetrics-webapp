@@ -2956,6 +2956,7 @@
         var wasOpen = sh.classList.contains('on');
         sh.innerHTML = html;
         sh.scrollTop = 0;
+        _sheetOwn('alerts');
         if (!wasOpen) {
             el('fmx-shbg').classList.add('on');
             sh.offsetHeight;
@@ -3738,6 +3739,14 @@
         var sh = document.createElement('div'); sh.className = 'fmx-sheet'; sh.id = 'fmx-writeSheet';
         document.body.appendChild(sh);
     }
+    function _sheetOwn(name) {
+        var sh = el('fmx-writeSheet');
+        if (sh) sh.setAttribute('data-own', name);
+    }
+    function _sheetIs(name) {
+        var sh = el('fmx-writeSheet');
+        return !!(sh && sh.classList.contains('on') && sh.getAttribute('data-own') === name);
+    }
     function closeSheet() {
         var b = el('fmx-shbg'); if (b) b.classList.remove('on');
         qsa(document, '.fmx-sheet').forEach(function (x) { x.classList.remove('on'); });
@@ -4186,7 +4195,9 @@
             closeSheet(); _haptic('light'); _tedDrawCanvas();
         }
         function paint() {
+            if (!_sheetIs('sticker')) return;
             var lst = _stickers || [];
+            _sheetOwn('sticker');
             sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
                 '<span class="fmx-lbl fmx-mt2">Твоя коллекция из бота</span>' +
                 (lst.length ? '<div class="fmx-stkgrid" style="margin-top:8px;">' +
@@ -4218,6 +4229,7 @@
         }
         if (_stickers) paint();
         else {
+            _sheetOwn('sticker');
             sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3><div style="font-size:11px;color:#8990a8;padding:14px 0;">Загружаю коллекцию…</div>';
             apiGet('/api/v1/marketplace/stickers').then(function (r) {
                 _stickers = (r && r.stickers) ? r.stickers : [];
@@ -4442,6 +4454,7 @@
         var niches = [];
         var seen = {};
         (_feed || []).forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
+        _sheetOwn('campaign');
         sh.innerHTML = '<div class="grip"></div><h3>Собрать кампанию под бюджет</h3>' +
             '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;">Готовый медиаплан из офферов со свободными датами — без ручного перебора</div>' +
             '<span class="fmx-lbl fmx-mt2">Бюджет, ₽</span>' +
@@ -4464,6 +4477,7 @@
             if (!bud || bud < 500) { uiAlert('Укажи бюджет от 500 ₽'); return; }
             var btn = el('fmx-cgo'); btn.disabled = true;
             apiPost('/api/v1/marketplace/campaign', { budget: Math.min(bud, 100000000), niche: selN || null }).then(function (r) {
+                if (!_sheetIs('campaign')) return;
                 btn.disabled = false;
                 if (!r || !r.ok) { uiAlert((r && r.error) || 'Не удалось собрать план'); return; }
                 _haptic('success');
