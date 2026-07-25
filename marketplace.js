@@ -1807,7 +1807,7 @@
                 });
                 h += '</div>';
             }
-            box.insertAdjacentHTML('beforeend', h);
+            box.innerHTML = h;
             _modWireUids(box);
         }).catch(function () {});
     }
