@@ -2320,7 +2320,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Deal unlinked",
   "Без ссылки за период": "Without a link during the period",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Joined during the attribution window without a link tag: they came via the channel's @username, search or a forwarded post. Telegram does not report their source.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "The link will stop working; the entry and its statistics will be deleted permanently. Continue?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "The link will stop working; the entry and its statistics will be deleted permanently. Continue?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Counters refresh automatically every 10 seconds. \"Remaining\" is how many joiners are in the channel right now."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4636,7 +4637,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Operación desvinculada",
   "Без ссылки за период": "Sin enlace durante el período",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Se unieron durante la ventana de atribución sin etiqueta de enlace: llegaron por el @nombre del canal, la búsqueda o una publicación reenviada. Telegram no informa su origen.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "El enlace dejará de funcionar; el registro y sus estadísticas se eliminarán de forma permanente. ¿Continuar?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "El enlace dejará de funcionar; el registro y sus estadísticas se eliminarán de forma permanente. ¿Continuar?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Los contadores se actualizan automáticamente cada 10 segundos. «Quedan» es cuántos de los que se unieron siguen en el canal ahora."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -6952,7 +6954,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Deal getrennt",
   "Без ссылки за период": "Ohne Link im Zeitraum",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Sind im Attributionszeitraum ohne Link-Kennung beigetreten: über den @Namen des Kanals, die Suche oder einen weitergeleiteten Beitrag. Telegram nennt ihre Quelle nicht.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Der Link funktioniert dann nicht mehr; der Eintrag und seine Statistik werden unwiderruflich gelöscht. Fortfahren?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Der Link funktioniert dann nicht mehr; der Eintrag und seine Statistik werden unwiderruflich gelöscht. Fortfahren?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Die Zähler aktualisieren sich automatisch alle 10 Sekunden. „Verbleiben“ zeigt, wie viele Beigetretene jetzt im Kanal sind."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9263,7 +9266,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Мәміле ажыратылды",
   "Без ссылки за период": "Кезең ішінде сілтемесіз",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Атрибуция кезеңінде сілтеме белгісінсіз қосылды: арнаның @атауы, іздеу немесе қайта жіберілген жазба арқылы келді. Telegram олардың көзін хабарламайды.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Сілтеме жұмыс істемей қалады; жазба және оның статистикасы біржола жойылады. Жалғастыру керек пе?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Сілтеме жұмыс істемей қалады; жазба және оның статистикасы біржола жойылады. Жалғастыру керек пе?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Есептегіштер әр 10 секунд сайын өздігінен жаңарады. «Қалды» — қосылғандардың қазір арнада қаншасы барын көрсетеді."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11579,7 +11583,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Bitim uzildi",
   "Без ссылки за период": "Davr ichida havolasiz",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atributsiya davrida havola belgisisiz qo'shildi: kanalning @nomi, qidiruv yoki uzatilgan post orqali kelgan. Telegram ularning manbasini bildirmaydi.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Havola ishlamay qoladi; yozuv va uning statistikasi butunlay o'chiriladi. Davom etilsinmi?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Havola ishlamay qoladi; yozuv va uning statistikasi butunlay o'chiriladi. Davom etilsinmi?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Hisoblagichlar har 10 soniyada o'z-o'zidan yangilanadi. «Qoldi» — qo'shilganlardan hozir kanalda nechtasi borligi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -13894,7 +13899,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Здзелка адвязана",
   "Без ссылки за период": "Без спасылкі за перыяд",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Далучыліся за час атрыбуцыі без пазнакі спасылкі: прыйшлі праз @імя канала, з пошуку або па перасланым пасце. Telegram не паведамляе іх крыніцу.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Спасылка перастане працаваць; запіс і яе статыстыка будуць выдалены беззваротна. Працягнуць?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Спасылка перастане працаваць; запіс і яе статыстыка будуць выдалены беззваротна. Працягнуць?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Лічыльнікі абнаўляюцца самі кожныя 10 секунд. «Засталося» — колькі з далучаных зараз у канале."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16210,7 +16216,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Sövdələşmə ayrıldı",
   "Без ссылки за период": "Dövr ərzində keçidsiz",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atribusiya dövründə keçid işarəsi olmadan qoşuldular: kanalın @adı, axtarış və ya yönləndirilmiş post vasitəsilə gəliblər. Telegram mənbələrini bildirmir.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Keçid işləməyəcək; qeyd və onun statistikası birdəfəlik silinəcək. Davam edilsin?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Keçid işləməyəcək; qeyd və onun statistikası birdəfəlik silinəcək. Davam edilsin?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Sayğaclar hər 10 saniyədən bir avtomatik yenilənir. «Qalıb» — qoşulanlardan hazırda kanalda neçəsinin olduğunu göstərir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18526,7 +18533,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "تم فك ربط الصفقة",
   "Без ссылки за период": "بدون رابط خلال الفترة",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "انضموا خلال فترة الإسناد دون وسم الرابط: جاؤوا عبر @اسم القناة أو البحث أو منشور معاد توجيهه. تليجرام لا يُبلغ عن مصدرهم.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "سيتوقف الرابط عن العمل وسيُحذف السجل وإحصاءاته نهائيًا. المتابعة؟"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "سيتوقف الرابط عن العمل وسيُحذف السجل وإحصاءاته نهائيًا. المتابعة؟",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "تتحدث العدادات تلقائيًا كل 10 ثوانٍ. «المتبقون» هو عدد المنضمين الموجودين في القناة الآن."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -20842,7 +20850,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "پیوند معامله لغو شد",
   "Без ссылки за период": "بدون پیوند در این دوره",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "در بازه انتساب بدون نشان پیوند پیوستند: از طریق @نام کانال، جستجو یا پست بازارسال‌شده آمده‌اند. تلگرام منبع آن‌ها را اعلام نمی‌کند.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "پیوند از کار می‌افتد؛ رکورد و آمار آن برای همیشه حذف می‌شود. ادامه می‌دهید؟"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "پیوند از کار می‌افتد؛ رکورد و آمار آن برای همیشه حذف می‌شود. ادامه می‌دهید؟",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "شمارنده‌ها هر ۱۰ ثانیه خودکار به‌روز می‌شوند. «مانده» یعنی چند نفر از پیوستگان اکنون در کانال هستند."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23158,7 +23167,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Anlaşma bağı kaldırıldı",
   "Без ссылки за период": "Dönem içinde bağlantısız",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atıf döneminde bağlantı etiketi olmadan katıldılar: kanalın @adı, arama veya iletilen bir gönderi üzerinden geldiler. Telegram kaynaklarını bildirmez.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Bağlantı çalışmayı durduracak; kayıt ve istatistikleri kalıcı olarak silinecek. Devam edilsin mi?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Bağlantı çalışmayı durduracak; kayıt ve istatistikleri kalıcı olarak silinecek. Devam edilsin mi?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Sayaçlar her 10 saniyede bir otomatik yenilenir. «Kalan», katılanlardan şu anda kanalda kaç kişi olduğudur."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -25474,7 +25484,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "डील अनलिंक हुई",
   "Без ссылки за период": "अवधि में बिना लिंक के",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "एट्रिब्यूशन अवधि में बिना लिंक टैग के जुड़े: चैनल के @नाम, खोज या फ़ॉरवर्ड पोस्ट से आए। Telegram उनका स्रोत नहीं बताता।",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "लिंक काम करना बंद कर देगा; रिकॉर्ड और उसके आँकड़े स्थायी रूप से हट जाएंगे। जारी रखें?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "लिंक काम करना बंद कर देगा; रिकॉर्ड और उसके आँकड़े स्थायी रूप से हट जाएंगे। जारी रखें?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "काउंटर हर 10 सेकंड में अपने आप अपडेट होते हैं। «शेष» — जुड़ने वालों में से अभी चैनल में कितने हैं।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -27790,7 +27801,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "ডিল আনলিঙ্ক হয়েছে",
   "Без ссылки за период": "সময়কালে লিংক ছাড়া",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "অ্যাট্রিবিউশন সময়ে লিংক ট্যাগ ছাড়া যুক্ত হয়েছে: চ্যানেলের @নাম, সার্চ বা ফরোয়ার্ড পোস্টের মাধ্যমে এসেছে। Telegram তাদের উৎস জানায় না।",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "লিংকটি কাজ করা বন্ধ করবে; রেকর্ড ও তার পরিসংখ্যান স্থায়ীভাবে মুছে যাবে। চালিয়ে যাবেন?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "লিংকটি কাজ করা বন্ধ করবে; রেকর্ড ও তার পরিসংখ্যান স্থায়ীভাবে মুছে যাবে। চালিয়ে যাবেন?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "কাউন্টার প্রতি ১০ সেকেন্ডে নিজে থেকে আপডেট হয়। «অবশিষ্ট» — যোগদানকারীদের মধ্যে এখন কতজন চ্যানেলে আছে।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30106,7 +30118,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Tautan transaksi diputus",
   "Без ссылки за период": "Tanpa tautan selama periode",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Bergabung selama periode atribusi tanpa tanda tautan: datang lewat @nama kanal, pencarian, atau posting terusan. Telegram tidak melaporkan sumbernya.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Tautan akan berhenti berfungsi; catatan dan statistiknya akan dihapus permanen. Lanjutkan?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Tautan akan berhenti berfungsi; catatan dan statistiknya akan dihapus permanen. Lanjutkan?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Penghitung diperbarui otomatis setiap 10 detik. \"Tersisa\" adalah berapa banyak yang bergabung dan masih di kanal sekarang."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -32422,7 +32435,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Đã hủy liên kết giao dịch",
   "Без ссылки за период": "Không qua liên kết trong kỳ",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Tham gia trong thời gian phân bổ nhưng không có nhãn liên kết: đến qua @tên kênh, tìm kiếm hoặc bài chuyển tiếp. Telegram không cho biết nguồn của họ.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Liên kết sẽ ngừng hoạt động; bản ghi và số liệu của nó sẽ bị xóa vĩnh viễn. Tiếp tục?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Liên kết sẽ ngừng hoạt động; bản ghi và số liệu của nó sẽ bị xóa vĩnh viễn. Tiếp tục?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Bộ đếm tự cập nhật mỗi 10 giây. «Còn lại» là số người đã tham gia hiện đang ở trong kênh."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -34738,7 +34752,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Negócio desvinculado",
   "Без ссылки за период": "Sem link durante o período",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Entraram durante a janela de atribuição sem marca de link: vieram pelo @nome do canal, busca ou post encaminhado. O Telegram não informa a origem.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "O link deixará de funcionar; o registro e suas estatísticas serão excluídos permanentemente. Continuar?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "O link deixará de funcionar; o registro e suas estatísticas serão excluídos permanentemente. Continuar?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Os contadores atualizam automaticamente a cada 10 segundos. «Restam» é quantos dos que entraram estão no canal agora."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37054,7 +37069,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Transaction déliée",
   "Без ссылки за период": "Sans lien durant la période",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Ont rejoint pendant la période d'attribution sans marque de lien : via le @nom de la chaîne, la recherche ou un post transféré. Telegram n'indique pas leur source.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Le lien cessera de fonctionner ; l'entrée et ses statistiques seront supprimées définitivement. Continuer ?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Le lien cessera de fonctionner ; l'entrée et ses statistiques seront supprimées définitivement. Continuer ?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Les compteurs se mettent à jour automatiquement toutes les 10 secondes. « Restants » indique combien d'arrivants sont encore dans la chaîne."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -39370,7 +39386,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Accordo scollegato",
   "Без ссылки за период": "Senza link nel periodo",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Si sono uniti nel periodo di attribuzione senza tag del link: arrivati tramite lo @nome del canale, la ricerca o un post inoltrato. Telegram non ne indica la fonte.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Il link smetterà di funzionare; la voce e le sue statistiche saranno eliminate definitivamente. Continuare?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Il link smetterà di funzionare; la voce e le sue statistiche saranno eliminate definitivamente. Continuare?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "I contatori si aggiornano automaticamente ogni 10 secondi. «Rimasti» indica quanti degli iscritti sono ora nel canale."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -41686,7 +41703,8 @@ window.__I18N_DICT = {
   "Сделка отвязана": "ስምምነት ተለያይቷል",
   "Без ссылки за период": "በወቅቱ ያለ አገናኝ",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "በምደባ ጊዜው ውስጥ ያለ አገናኝ ምልክት ተቀላቅለዋል፦ በሰርጡ @ስም፣ በፍለጋ ወይም በተላከ ልጥፍ መጥተዋል። Telegram ምንጫቸውን አይገልጽም።",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "አገናኙ መስራት ያቆማል፤ መዝገቡ እና ስታቲስቲክሱ ለዘላለም ይሰረዛሉ። ይቀጥሉ?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "አገናኙ መስራት ያቆማል፤ መዝገቡ እና ስታቲስቲክሱ ለዘላለም ይሰረዛሉ። ይቀጥሉ?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "ቆጣሪዎቹ በየ10 ሰከንዱ በራሳቸው ይታደሳሉ። «ቀሪ» — ከተቀላቀሉት አሁን በሰርጡ ውስጥ ስንት እንዳሉ ነው።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -44002,6 +44020,7 @@ window.__I18N_DICT = {
   "Сделка отвязана": "Mkataba umetenganishwa",
   "Без ссылки за период": "Bila kiungo katika kipindi",
   "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Walijiunga katika kipindi cha uhusishaji bila alama ya kiungo: walikuja kupitia @jina la kituo, utafutaji au chapisho lililosambazwa. Telegram haitoi chanzo chao.",
-  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Kiungo kitaacha kufanya kazi; rekodi na takwimu zake zitafutwa kabisa. Endelea?"
+  "Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?": "Kiungo kitaacha kufanya kazi; rekodi na takwimu zake zitafutwa kabisa. Endelea?",
+  "Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.": "Vihesabu vinajisasisha kila sekunde 10. «Waliobaki» ni wangapi kati ya waliojiunga wapo kwenye kituo sasa."
  }
 };

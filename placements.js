@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var _channels = null, _chId = null, _items = [], _right = null, _busy = false;
+    var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -28,7 +28,7 @@
             '.pl-back{width:38px;height:38px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#c9cede;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;}',
             '.pl-ht{font-size:16px;font-weight:800;}',
             '.pl-hs{font-size:11px;color:#8990a8;padding:0 16px 10px;}',
-            '.pl-body{flex:1;overflow-y:auto;padding:4px 16px 90px;}',
+            '.pl-body{flex:1;overflow-y:auto;padding:4px 16px 90px;overscroll-behavior:contain;}',
             '.pl-new{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:13px;border:0;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:14px;}',
             '.pl-card{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:12px 13px;margin-bottom:9px;}',
             '.pl-r1{display:flex;align-items:center;gap:8px;}',
@@ -69,7 +69,7 @@
             '.pl-cfbtn.ok.danger{background:rgba(201,129,129,0.16);color:#e09a9a;}',
             '.pl-sheetbg{position:fixed;inset:0;z-index:9300;background:rgba(5,7,14,0.6);display:none;}',
             '.pl-sheetbg.on{display:block;}',
-            '.pl-sheet{position:fixed;bottom:0;left:50%;transform:translate(-50%,105%);width:100%;max-width:520px;z-index:9310;background:rgba(20,24,40,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px 20px 0 0;border:0.5px solid rgba(255,255,255,0.1);border-bottom:none;padding:10px 16px 24px;transition:transform 240ms cubic-bezier(0.3,0.9,0.3,1);max-height:84dvh;overflow-y:auto;}',
+            '.pl-sheet{position:fixed;bottom:0;left:50%;transform:translate(-50%,105%);width:100%;max-width:520px;z-index:9310;background:rgba(20,24,40,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px 20px 0 0;border:0.5px solid rgba(255,255,255,0.1);border-bottom:none;padding:10px 16px 24px;transition:transform 240ms cubic-bezier(0.3,0.9,0.3,1);max-height:84dvh;overflow-y:auto;overscroll-behavior:contain;}',
             '.pl-sheet.on{transform:translate(-50%,0);}',
             '.pl-grip{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,0.18);margin:2px auto 12px;}',
             '.pl-flabel{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;margin:12px 0 6px;}',
@@ -109,8 +109,42 @@
         host.classList.add('on');
         document.body.classList.add('pl-noscroll');
         document.documentElement.classList.add('pl-noscroll');
+        startPoll();
         try { if (typeof tg !== 'undefined' && tg && tg.BackButton) { tg.BackButton.offClick(close); tg.BackButton.onClick(close); tg.BackButton.show(); } } catch (e) {}
         return host;
+    }
+
+    function startPoll() {
+        stopPoll();
+        _pollTimer = setInterval(silentRefresh, 10000);
+    }
+
+    function stopPoll() {
+        if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
+    }
+
+    function silentRefresh() {
+        var host = document.getElementById('pl-screen');
+        if (!host || !host.classList.contains('on') || _chId == null || _busy) return;
+        var sh = document.getElementById('pl-sheet');
+        if (sh && sh.classList.contains('on')) return;
+        apiRequest('/api/v1/placements/links?channel_id=' + _chId).then(function (r) {
+            if (!r || !r.ok) return;
+            var items = r.items || [];
+            if (JSON.stringify(items) === JSON.stringify(_items) && r.right === _right) return;
+            _items = items; _right = r.right;
+            var openIds = [];
+            var boxes = document.querySelectorAll('#pl-screen .pl-who');
+            for (var i = 0; i < boxes.length; i++) {
+                if (boxes[i].style.display !== 'none') openIds.push(boxes[i].id.replace('pl-who-', ''));
+            }
+            var body = document.querySelector('#pl-screen .pl-body');
+            var st = body ? body.scrollTop : 0;
+            render();
+            body = document.querySelector('#pl-screen .pl-body');
+            if (body) body.scrollTop = st;
+            openIds.forEach(function (id) { openWhoPanel(parseInt(id, 10)); });
+        }).catch(function () {});
     }
 
     function close() {
@@ -118,6 +152,7 @@
         if (host) host.classList.remove('on');
         document.body.classList.remove('pl-noscroll');
         document.documentElement.classList.remove('pl-noscroll');
+        stopPoll();
         closeSheet();
         try { if (typeof tg !== 'undefined' && tg && tg.BackButton) { tg.BackButton.offClick(close); tg.BackButton.hide(); } } catch (e) {}
     }
@@ -190,7 +225,7 @@
                     '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
             } else {
                 body += _items.map(linkCard).join('');
-                body += '<div class="pl-note">' + esc(T('Счётчики обновляются при каждом открытии экрана. «Осталось» — сколько вступивших сейчас в канале.')) + '</div>';
+                body += '<div class="pl-note">' + esc(T('Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.')) + '</div>';
             }
         }
         host.innerHTML = head() + '<div class="pl-body">' + body + '</div>' +
@@ -410,6 +445,13 @@
         box.style.display = 'block';
         box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Загружаю...')) + '</div>';
         haptic('light');
+        openWhoPanel(id);
+    }
+
+    function openWhoPanel(id) {
+        var box = document.getElementById('pl-who-' + id);
+        if (!box) return;
+        box.style.display = 'block';
         apiRequest('/api/v1/placements/links/' + id + '/joiners').then(function (r) {
             if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
             var items = r.items || [];
