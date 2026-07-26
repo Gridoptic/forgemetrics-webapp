@@ -113,7 +113,7 @@
         ['Частота постов', 'Сколько публикаций выходит в неделю. Слишком редко (1–2 в неделю) — аудитория отвыкает и слабее реагирует; слишком часто (5+ в день) — реклама быстро тонет в потоке и живёт считаные часы. Оптимум зависит от ниши. Частота напрямую влияет на то, как долго твой пост держится на виду у читателя до того, как его перекроют новыми. Отдельно оценивай рекламную нагрузку: канал с 4–5 рекламными постами в день выжигает аудиторию, и твоё объявление в нём тонет — это важнее общей частоты.'],
         ['Просмотры в месяц', 'Суммарные просмотры всех постов за месяц — общий трафик канала. Помогает прикинуть масштаб: сколько всего показов канал даёт за пределами одного поста и сколько размещений способен продать, не перегружая аудиторию рекламой. На цену контакта напрямую не влияет — для сравнения каналов используй охват и CPM.'],
         ['Медиана CPM ниши', 'Серединная рыночная цена контакта в конкретной нише (половина офферов дешевле, половина дороже) — ориентир справедливой цены. Если медиана CPM в нише 300 ₽, а канал просит эквивалент 600 ₽ — размещение переоценено вдвое; 150 ₽ — недооценено, для закупщика это окно. Медианы по нишам считаются на данных Площадки и Радара и показываются в Рыночном терминале: продавцу — обоснование цены, покупателю — защита от переплаты.'],
-        ['Накрутка', 'Искусственные подписчики, просмотры или реакции. Признаки: большая база при крошечном охвате (низкий Reach Rate), резкие скачки просмотров без причины, ровные «полки» и ночные пики на графике, ER около нуля. Как проверить вручную: открой комментарии — живые ли профили с историей и осмысленные ли тексты; сопоставь реакции с комментариями — много реакций при пустом обсуждении часто означает купленные реакции (они дешевле просмотров и встречаются чаще, чем думают). Индикатор здоровья подсвечивает подозрительные каналы жёлтым или красным, а бейдж «Без накрутки» выдаётся только при достаточных данных и без следов накрутки.'],
+        ['Накрутка', 'Искусственные подписчики, просмотры или реакции. Признаки: большая база при крошечном охвате (низкий Reach Rate), резкие скачки просмотров без причины, ровные «полки» и ночные пики на графике, ER около нуля. Как проверить вручную: открой комментарии — живые ли профили с историей и осмысленные ли тексты; сопоставь реакции с комментариями — много реакций при пустом обсуждении часто означает купленные реакции (они дешевле просмотров и встречаются чаще, чем думают). Индикатор здоровья подсвечивает подозрительные каналы жёлтым или красным, а бейдж «Следов накрутки нет» выдаётся только при достаточных данных и когда ни одна из проверок не сработала. Это результат проверок, а не гарантия: полностью исключить накрутку по публичным данным нельзя.'],
         ['Маркировка · erid', 'В ряде стран интернет-реклама подлежит обязательной маркировке (в России — токен erid, присваивается через оператора рекламных данных). Поле erid в оффере опциональное: заполняй для сделок, где маркировка обязательна. Площадка — посредник и сводит стороны; ответственность за маркировку несут стороны сделки. Согласуй erid и текст пометки до выхода поста.']
     ];
     var RULES = [
@@ -144,7 +144,7 @@
         ['Владельцу · заполняй оффер полностью', 'Оффер с обложкой, чётким форматом, ценой и живыми метриками собирает больше откликов, чем пустой. Рекламодатель отсеивает каналы за секунды: не видит охват, ER и цену — переходит к следующему. Каждое незаполненное поле — это потерянный клиент.'],
         ['Владельцу · назначай цену от реального охвата', 'Считай стоимость размещения через CPM своей ниши. При медиане CPM 300 ₽ и среднем охвате 10 000 рыночная цена поста — около 3 000 ₽. Завысишь вдвое — оффер провисит без сделок; занизишь — недозаработаешь. Ориентиры по нишам смотри в Рыночном терминале.'],
         ['Владельцу · наращивай подтверждённую репутацию', 'Бейдж «Владелец подтверждён» (бот — администратор канала) и подтверждённые сделки с рейтингом снимают у покупателя главный вопрос «заплачу — и что получу». Канал с тремя сделками и рейтингом 4,8 продаёт дороже и быстрее безымянного. Репутация копится только по сделкам, проведённым через Площадку.'],
-        ['Владельцу · держи метрики честными', 'Накрутка подписчиков роняет Reach Rate и включает красный светофор — опытный закупщик это видит и уходит. Живой канал с бейджем «Без накрутки» вызывает больше доверия, чем формально крупный с выгоревшей базой. Честные метрики — это актив, который работает на цену размещения.'],
+        ['Владельцу · держи метрики честными', 'Накрутка подписчиков роняет Reach Rate и включает красный светофор — опытный закупщик это видит и уходит. Живой канал с бейджем «Следов накрутки нет» вызывает больше доверия, чем формально крупный с выгоревшей базой. Честные метрики — это актив, который работает на цену размещения.'],
         ['Обеим сторонам · согласуй условия до оплаты и фиксируй сделку', 'Площадка сводит стороны, но условия ведёте вы: дата выхода, формат, длительность закрепа, маркировка — обсуди их до перевода денег. С новым продавцом безопаснее постоплата или дробление оплаты, с проверенным можно предоплату; заранее оговори возврат или бесплатное переразмещение при недоборе охвата. Оформляй размещение через сделку на Площадке: так фиксируется факт и копится рейтинг, а на случай спора сохрани ссылку на пост и скриншот и сверь фактическую длительность размещения с договорённостью.'],
         ['Обеим сторонам · не забывай о маркировке рекламы', 'Если реклама направлена на аудиторию страны, где действует обязательная маркировка (в России — токен erid), заполни поле erid в оффере и согласуй маркировку со второй стороной до выхода поста. Ответственность за маркировку несут стороны сделки, а не Площадка.']
     ];
@@ -2219,7 +2219,7 @@
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
-            '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button><button class="fmx-fx' + (_fClean ? ' on' : '') + '" data-pre="clean">Без накрутки</button><button class="fmx-fx' + (_fVerified ? ' on' : '') + '" data-pre="verified">Проверенный владелец</button></div>' +
+            '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button><button class="fmx-fx' + (_fClean ? ' on' : '') + '" data-pre="clean">Без следов накрутки</button><button class="fmx-fx' + (_fVerified ? ' on' : '') + '" data-pre="verified">Проверенный владелец</button></div>' +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span>' +
             '<div class="fmx-bfgrid">' +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
@@ -2806,7 +2806,7 @@
         for (k in _rf.mx) { if (_rf.mx[k] != null && (map[k] == null || map[k] > _rf.mx[k])) return false; }
         return true;
     }
-    var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Активные'], ['clean', 'Без накрутки'], ['grow', 'Растут']];
+    var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Активные'], ['clean', 'Без следов накрутки'], ['grow', 'Растут']];
     var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'Reach Rate, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
     function _rfBtnLabel() {
@@ -3093,7 +3093,7 @@
             '<button class="fmx-fx" id="fmx-ae-nadd"><i class="ti ti-plus" style="font-size:11px;"></i> Добавить нишу</button></div>' +
             '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-algrid">' + rangesHtml + '</div>' +
             '<div class="fmx-ae-sec">Пол аудитории</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
-            '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
+            '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Без следов накрутки</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
             '<div class="fmx-ae-sec">Как часто уведомлять</div><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Сводка раз в день']]) + '</div>' +
             '<button class="fmx-alnew" id="fmx-ae-save" style="margin-top:20px;"><i class="ti ti-bell"></i> Сохранить уведомление</button>');
         _alBindHead(openAlerts);
@@ -6925,7 +6925,7 @@
         items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
         if (l.niche) items.push({ k: 'niche', h: _bk('niche', '<span class="fmx-bdg" style="color:#c7ccf7;border-color:rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><i class="ti ti-tag" style="color:#818cf8;"></i>' + _esc(l.niche) + '</span>') });
         if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
-        if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Без накрутки</span>') });
+        if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Следов накрутки нет</span>') });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
@@ -6981,7 +6981,7 @@
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<i class="fmr-i ti ti-info-circle push" data-fi="er"></i></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
-        var facts = rrHtml + erHtml +
+        var facts = rrHtml + erHtml + _spikeLine(l) +
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
@@ -7018,7 +7018,7 @@
             if (sr.length) struct = sr.join('');
         })();
         var pills = [];
-        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
+        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Следов накрутки нет</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
         return ad + qualHdr + facts + struct + flow + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
@@ -7240,7 +7240,7 @@
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
         }
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
-        var facts = rrHtml + erHtml +
+        var facts = rrHtml + erHtml + _spikeLine(l) +
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
         var ad = '';
         if (pp) {
@@ -7279,7 +7279,7 @@
             if (sr.length) struct = sr.join('');
         })();
         var pills = [];
-        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Без накрутки</span></span>');
+        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Следов накрутки нет</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var al = _audLabel(l);
         if (al) pills.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
@@ -7305,6 +7305,20 @@
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
     }
+    function _spikeLine(l) {
+        var sp = l && l.subs_spike;
+        if (!sp || sp.pct == null) return '';
+        var col = sp.level === 'bad' ? '#ef4444' : (sp.level === 'ok' ? '#5DCAA5' : '#f59e0b');
+        var ic = sp.level === 'bad' ? 'ti-alert-triangle' : (sp.level === 'ok' ? 'ti-trending-up' : 'ti-info-circle');
+        var when = sp.days <= 1.5 ? 'за сутки' : ('за ' + Math.round(sp.days) + ' дн');
+        var head = sp.level === 'ok' ? 'Резкий рост подписчиков' : 'Скачок подписчиков';
+        var reach = (sp.reach_pct == null) ? '' :
+            ' · <span style="color:#9aa0b8;">охват</span> <b style="color:' + (sp.reach_pct >= 0 ? '#c2c6d2' : '#ef4444') + ';">' +
+            (sp.reach_pct >= 0 ? '+' : '−') + Math.abs(Math.round(sp.reach_pct * 10) / 10) + '%</b>';
+        return '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ' + ic + '" style="font-size:12px;color:' + col + ';"></i> ' +
+            head + ' <b style="color:' + col + ';">+' + (Math.round(sp.pct * 10) / 10) + '%</b> ' + when + reach + '</div>' +
+            '<div class="fmr-sub">' + _esc(sp.hint || '') + '</div>';
+    }
     function _liIcons(l) {
         var out = [];
         var _ai = _actInfo(l);
@@ -7312,7 +7326,7 @@
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
         var _alx = _audLabel(l);
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
-        if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Без накрутки']);
+        if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Следов накрутки нет']);
         if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
         var dealN = l.deals_count || 0;
@@ -7832,7 +7846,7 @@
             healthCard +
             card('<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>', 'Владелец подтверждён',
                 'Наш бот — администратор этого канала: продавец действительно управляет размещением и может опубликовать твою рекламу. Это техническая проверка доступа, а не самоназвание — без бейджа доступ не подтверждён.') +
-            card('<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Без накрутки</span>', 'Без накрутки',
+            card('<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Следов накрутки нет</span>', 'Следов накрутки нет',
                 'Автопроверка по публичным метрикам не нашла следов накрутки: охват в норме относительно подписчиков, просмотры по постам не прыгают, резкого ботового наплыва подписчиков во времени нет. Показывается только когда данных достаточно и всё чисто; при сомнениях бейдж не выдаётся, а «светофор» желтеет.') +
             '<div class="fmx-bgd-card fmx-bgd-health">' +
             '<div class="fmx-bgd-title">Пульс канала · как часто выходят посты</div>' +
