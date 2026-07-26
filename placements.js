@@ -149,7 +149,9 @@
             '<div class="pl-st"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + ret + '</div></div>' +
             '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
             ((l.joined > 0 || l.late_joined > 0)
-                ? '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button><div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>'
+                ? '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button>' +
+                  '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;"><i class="ti ti-link"></i> ' + esc(T('Связать со сделкой Площадки')) + '</button>' +
+                  '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>'
                 : '') +
             (l.status === 'active'
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
@@ -171,7 +173,7 @@
                     '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
             } else {
                 body += _items.map(linkCard).join('');
-                body += '<div class="pl-note">' + esc(T('Счётчики обновляются при каждом открытии экрана. «Осталось · 7 дн» появится, когда накопится неделя наблюдений.')) + '</div>';
+                body += '<div class="pl-note">' + esc(T('Счётчики обновляются при каждом открытии экрана. «Осталось» — сколько вступивших сейчас в канале.')) + '</div>';
             }
         }
         host.innerHTML = head() + '<div class="pl-body">' + body + '</div>' +
@@ -283,6 +285,18 @@
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
         if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'deal') { openDealPick(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'deal-pick') {
+            var lid = parseInt(b.getAttribute('data-link'), 10);
+            var dv = b.getAttribute('data-deal');
+            apiRequest('/api/v1/placements/links/' + lid + '/deal', {
+                method: 'POST', body: JSON.stringify({ deal_id: dv ? parseInt(dv, 10) : null })
+            }).then(function (r) {
+                if (r && r.ok) { haptic('medium'); toast(dv ? T('Сделка привязана — показы появятся в воронке') : T('Сделка отвязана')); closeSheet(); }
+                else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
         if (act === 'del') {
             var did = parseInt(b.getAttribute('data-id'), 10);
             var doDel = function () {
@@ -305,6 +319,40 @@
         }
     }
 
+    function openDealPick(linkId) {
+        haptic('light');
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        sh.innerHTML = '<div class="pl-grip"></div><div class="pl-ht" style="font-size:15px;">' + esc(T('Связать со сделкой Площадки')) + '</div>' +
+            '<div class="pl-note">' + esc(T('Выбери сделку, по которой вышел этот рекламный пост, — в воронке появятся его показы.')) + '</div>' +
+            '<div id="pl-deals" style="margin-top:10px;"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div>';
+        bg.classList.add('on'); sh.classList.add('on');
+        apiRequest('/api/v1/placements/deals').then(function (r) {
+            var box = document.getElementById('pl-deals');
+            if (!box) return;
+            var items = (r && r.items) || [];
+            if (!items.length) {
+                box.innerHTML = '<div class="pl-center" style="padding:8px 0;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>';
+                return;
+            }
+            box.innerHTML = items.map(function (d) {
+                var m = d.measured && (d.reach_24h || d.reach_48h)
+                    ? ' · ~' + num(d.reach_24h || d.reach_48h) + ' ' + esc(T('показов'))
+                    : ' · ' + esc(T('замер ожидается'));
+                return '<div class="pl-whorow" data-act="deal-pick" data-link="' + linkId + '" data-deal="' + d.deal_id + '">' +
+                    '<div class="pl-whoav"><i class="ti ti-receipt"></i></div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(d.channel) + '</div>' +
+                    '<div class="pl-whosub">' + esc(T('сделка')) + ' №' + d.deal_id + m + '</div></div></div>';
+            }).join('') +
+            '<div class="pl-whorow" data-act="deal-pick" data-link="' + linkId + '" data-deal="">' +
+                '<div class="pl-whoav"><i class="ti ti-link-off"></i></div>' +
+                '<div class="pl-whomid"><div class="pl-whonm">' + esc(T('Отвязать сделку')) + '</div></div></div>';
+        }).catch(function () {
+            var box = document.getElementById('pl-deals');
+            if (box) box.innerHTML = '<div class="pl-center">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>';
+        });
+    }
+
     function fmtTime(iso) {
         try { var d = new Date(iso); return fmtDay(iso) + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
         catch (e) { return ''; }
@@ -324,6 +372,7 @@
             var q = r.quality || {};
             var stayed = (q.total || 0) - (q.left || 0);
             var head = '<div class="pl-funnel">' +
+                (r.impressions ? '<div class="pl-fr"><b>~' + num(r.impressions) + '</b> ' + esc(T('увидели рекламный пост')) + '</div>' : '') +
                 '<div class="pl-fr"><b>' + num(q.total || 0) + '</b> ' + esc(T('подписались')) + '</div>' +
                 '<div class="pl-fr"><b style="color:' + (stayed === q.total ? '#5DCAA5' : '#f5bf4f') + ';">' + num(stayed) + '</b> ' +
                     esc(T('остаются в канале')) + (q.total ? ' · ' + Math.round(stayed / q.total * 100) + '%' : '') + '</div>' +
