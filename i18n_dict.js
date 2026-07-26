@@ -2317,7 +2317,9 @@ window.__I18N_DICT = {
   "показов": "impressions",
   "Отвязать сделку": "Unlink deal",
   "Сделка привязана — показы появятся в воронке": "Deal linked — impressions will appear in the funnel",
-  "Сделка отвязана": "Deal unlinked"
+  "Сделка отвязана": "Deal unlinked",
+  "Без ссылки за период": "Without a link during the period",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Joined during the attribution window without a link tag: they came via the channel's @username, search or a forwarded post. Telegram does not report their source."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4630,7 +4632,9 @@ window.__I18N_DICT = {
   "показов": "impresiones",
   "Отвязать сделку": "Desvincular operación",
   "Сделка привязана — показы появятся в воронке": "Operación vinculada: las impresiones aparecerán en el embudo",
-  "Сделка отвязана": "Operación desvinculada"
+  "Сделка отвязана": "Operación desvinculada",
+  "Без ссылки за период": "Sin enlace durante el período",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Se unieron durante la ventana de atribución sin etiqueta de enlace: llegaron por el @nombre del canal, la búsqueda o una publicación reenviada. Telegram no informa su origen."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -6943,7 +6947,9 @@ window.__I18N_DICT = {
   "показов": "Impressionen",
   "Отвязать сделку": "Deal trennen",
   "Сделка привязана — показы появятся в воронке": "Deal verknüpft — Impressionen erscheinen im Funnel",
-  "Сделка отвязана": "Deal getrennt"
+  "Сделка отвязана": "Deal getrennt",
+  "Без ссылки за период": "Ohne Link im Zeitraum",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Sind im Attributionszeitraum ohne Link-Kennung beigetreten: über den @Namen des Kanals, die Suche oder einen weitergeleiteten Beitrag. Telegram nennt ihre Quelle nicht."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9251,7 +9257,9 @@ window.__I18N_DICT = {
   "показов": "көрсетілім",
   "Отвязать сделку": "Мәмілені ажырату",
   "Сделка привязана — показы появятся в воронке": "Мәміле байланыстырылды — көрсетілімдер воронкада пайда болады",
-  "Сделка отвязана": "Мәміле ажыратылды"
+  "Сделка отвязана": "Мәміле ажыратылды",
+  "Без ссылки за период": "Кезең ішінде сілтемесіз",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Атрибуция кезеңінде сілтеме белгісінсіз қосылды: арнаның @атауы, іздеу немесе қайта жіберілген жазба арқылы келді. Telegram олардың көзін хабарламайды."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11564,7 +11572,9 @@ window.__I18N_DICT = {
   "показов": "ko'rsatish",
   "Отвязать сделку": "Bitimni uzish",
   "Сделка привязана — показы появятся в воронке": "Bitim bog'landi — ko'rsatishlar voronkada paydo bo'ladi",
-  "Сделка отвязана": "Bitim uzildi"
+  "Сделка отвязана": "Bitim uzildi",
+  "Без ссылки за период": "Davr ichida havolasiz",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atributsiya davrida havola belgisisiz qo'shildi: kanalning @nomi, qidiruv yoki uzatilgan post orqali kelgan. Telegram ularning manbasini bildirmaydi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -13876,7 +13886,9 @@ window.__I18N_DICT = {
   "показов": "паказаў",
   "Отвязать сделку": "Адвязаць здзелку",
   "Сделка привязана — показы появятся в воронке": "Здзелка звязана — паказы з'явяцца ў варонцы",
-  "Сделка отвязана": "Здзелка адвязана"
+  "Сделка отвязана": "Здзелка адвязана",
+  "Без ссылки за период": "Без спасылкі за перыяд",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Далучыліся за час атрыбуцыі без пазнакі спасылкі: прыйшлі праз @імя канала, з пошуку або па перасланым пасце. Telegram не паведамляе іх крыніцу."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16189,7 +16201,9 @@ window.__I18N_DICT = {
   "показов": "göstərim",
   "Отвязать сделку": "Sövdələşməni ayır",
   "Сделка привязана — показы появятся в воронке": "Sövdələşmə bağlandı — göstərimlər hunidə görünəcək",
-  "Сделка отвязана": "Sövdələşmə ayrıldı"
+  "Сделка отвязана": "Sövdələşmə ayrıldı",
+  "Без ссылки за период": "Dövr ərzində keçidsiz",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atribusiya dövründə keçid işarəsi olmadan qoşuldular: kanalın @adı, axtarış və ya yönləndirilmiş post vasitəsilə gəliblər. Telegram mənbələrini bildirmir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18502,7 +18516,9 @@ window.__I18N_DICT = {
   "показов": "ظهور",
   "Отвязать сделку": "فك ربط الصفقة",
   "Сделка привязана — показы появятся в воронке": "تم ربط الصفقة — ستظهر مرات الظهور في القمع",
-  "Сделка отвязана": "تم فك ربط الصفقة"
+  "Сделка отвязана": "تم فك ربط الصفقة",
+  "Без ссылки за период": "بدون رابط خلال الفترة",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "انضموا خلال فترة الإسناد دون وسم الرابط: جاؤوا عبر @اسم القناة أو البحث أو منشور معاد توجيهه. تليجرام لا يُبلغ عن مصدرهم."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -20815,7 +20831,9 @@ window.__I18N_DICT = {
   "показов": "نمایش",
   "Отвязать сделку": "لغو پیوند معامله",
   "Сделка привязана — показы появятся в воронке": "معامله پیوند شد — نمایش‌ها در قیف ظاهر می‌شوند",
-  "Сделка отвязана": "پیوند معامله لغو شد"
+  "Сделка отвязана": "پیوند معامله لغو شد",
+  "Без ссылки за период": "بدون پیوند در این دوره",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "در بازه انتساب بدون نشان پیوند پیوستند: از طریق @نام کانال، جستجو یا پست بازارسال‌شده آمده‌اند. تلگرام منبع آن‌ها را اعلام نمی‌کند."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23128,7 +23146,9 @@ window.__I18N_DICT = {
   "показов": "gösterim",
   "Отвязать сделку": "Anlaşma bağını kaldır",
   "Сделка привязана — показы появятся в воронке": "Anlaşma bağlandı — gösterimler hunide görünecek",
-  "Сделка отвязана": "Anlaşma bağı kaldırıldı"
+  "Сделка отвязана": "Anlaşma bağı kaldırıldı",
+  "Без ссылки за период": "Dönem içinde bağlantısız",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Atıf döneminde bağlantı etiketi olmadan katıldılar: kanalın @adı, arama veya iletilen bir gönderi üzerinden geldiler. Telegram kaynaklarını bildirmez."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -25441,7 +25461,9 @@ window.__I18N_DICT = {
   "показов": "इंप्रेशन",
   "Отвязать сделку": "डील अनलिंक करें",
   "Сделка привязана — показы появятся в воронке": "डील जुड़ गई — इंप्रेशन फ़नल में दिखेंगे",
-  "Сделка отвязана": "डील अनलिंक हुई"
+  "Сделка отвязана": "डील अनलिंक हुई",
+  "Без ссылки за период": "अवधि में बिना लिंक के",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "एट्रिब्यूशन अवधि में बिना लिंक टैग के जुड़े: चैनल के @नाम, खोज या फ़ॉरवर्ड पोस्ट से आए। Telegram उनका स्रोत नहीं बताता।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -27754,7 +27776,9 @@ window.__I18N_DICT = {
   "показов": "ইম্প্রেশন",
   "Отвязать сделку": "ডিল আনলিঙ্ক করুন",
   "Сделка привязана — показы появятся в воронке": "ডিল যুক্ত হয়েছে — ইম্প্রেশন ফানেলে দেখা যাবে",
-  "Сделка отвязана": "ডিল আনলিঙ্ক হয়েছে"
+  "Сделка отвязана": "ডিল আনলিঙ্ক হয়েছে",
+  "Без ссылки за период": "সময়কালে লিংক ছাড়া",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "অ্যাট্রিবিউশন সময়ে লিংক ট্যাগ ছাড়া যুক্ত হয়েছে: চ্যানেলের @নাম, সার্চ বা ফরোয়ার্ড পোস্টের মাধ্যমে এসেছে। Telegram তাদের উৎস জানায় না।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30067,7 +30091,9 @@ window.__I18N_DICT = {
   "показов": "impresi",
   "Отвязать сделку": "Putuskan tautan transaksi",
   "Сделка привязана — показы появятся в воронке": "Transaksi tertaut — impresi akan muncul di corong",
-  "Сделка отвязана": "Tautan transaksi diputus"
+  "Сделка отвязана": "Tautan transaksi diputus",
+  "Без ссылки за период": "Tanpa tautan selama periode",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Bergabung selama periode atribusi tanpa tanda tautan: datang lewat @nama kanal, pencarian, atau posting terusan. Telegram tidak melaporkan sumbernya."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -32380,7 +32406,9 @@ window.__I18N_DICT = {
   "показов": "lượt hiển thị",
   "Отвязать сделку": "Hủy liên kết giao dịch",
   "Сделка привязана — показы появятся в воронке": "Đã liên kết — lượt hiển thị sẽ xuất hiện trong phễu",
-  "Сделка отвязана": "Đã hủy liên kết giao dịch"
+  "Сделка отвязана": "Đã hủy liên kết giao dịch",
+  "Без ссылки за период": "Không qua liên kết trong kỳ",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Tham gia trong thời gian phân bổ nhưng không có nhãn liên kết: đến qua @tên kênh, tìm kiếm hoặc bài chuyển tiếp. Telegram không cho biết nguồn của họ."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -34693,7 +34721,9 @@ window.__I18N_DICT = {
   "показов": "impressões",
   "Отвязать сделку": "Desvincular negócio",
   "Сделка привязана — показы появятся в воронке": "Negócio vinculado — impressões aparecerão no funil",
-  "Сделка отвязана": "Negócio desvinculado"
+  "Сделка отвязана": "Negócio desvinculado",
+  "Без ссылки за период": "Sem link durante o período",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Entraram durante a janela de atribuição sem marca de link: vieram pelo @nome do canal, busca ou post encaminhado. O Telegram não informa a origem."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37006,7 +37036,9 @@ window.__I18N_DICT = {
   "показов": "impressions",
   "Отвязать сделку": "Délier la transaction",
   "Сделка привязана — показы появятся в воронке": "Transaction liée — les impressions apparaîtront dans l'entonnoir",
-  "Сделка отвязана": "Transaction déliée"
+  "Сделка отвязана": "Transaction déliée",
+  "Без ссылки за период": "Sans lien durant la période",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Ont rejoint pendant la période d'attribution sans marque de lien : via le @nom de la chaîne, la recherche ou un post transféré. Telegram n'indique pas leur source."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -39319,7 +39351,9 @@ window.__I18N_DICT = {
   "показов": "impressioni",
   "Отвязать сделку": "Scollega accordo",
   "Сделка привязана — показы появятся в воронке": "Accordo collegato — le impressioni appariranno nel funnel",
-  "Сделка отвязана": "Accordo scollegato"
+  "Сделка отвязана": "Accordo scollegato",
+  "Без ссылки за период": "Senza link nel periodo",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Si sono uniti nel periodo di attribuzione senza tag del link: arrivati tramite lo @nome del canale, la ricerca o un post inoltrato. Telegram non ne indica la fonte."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -41632,7 +41666,9 @@ window.__I18N_DICT = {
   "показов": "ማሳያዎች",
   "Отвязать сделку": "ስምምነቱን አለያይ",
   "Сделка привязана — показы появятся в воронке": "ስምምነት ተያይዟል — ማሳያዎች በፈንል ውስጥ ይታያሉ",
-  "Сделка отвязана": "ስምምነት ተለያይቷል"
+  "Сделка отвязана": "ስምምነት ተለያይቷል",
+  "Без ссылки за период": "በወቅቱ ያለ አገናኝ",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "በምደባ ጊዜው ውስጥ ያለ አገናኝ ምልክት ተቀላቅለዋል፦ በሰርጡ @ስም፣ በፍለጋ ወይም በተላከ ልጥፍ መጥተዋል። Telegram ምንጫቸውን አይገልጽም።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -43945,6 +43981,8 @@ window.__I18N_DICT = {
   "показов": "maonyesho",
   "Отвязать сделку": "Tenganisha mkataba",
   "Сделка привязана — показы появятся в воронке": "Mkataba umeunganishwa — maonyesho yataonekana kwenye funeli",
-  "Сделка отвязана": "Mkataba umetenganishwa"
+  "Сделка отвязана": "Mkataba umetenganishwa",
+  "Без ссылки за период": "Bila kiungo katika kipindi",
+  "Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.": "Walijiunga katika kipindi cha uhusishaji bila alama ya kiungo: walikuja kupitia @jina la kituo, utafutaji au chapisho lililosambazwa. Telegram haitoi chanzo chao."
  }
 };

@@ -67,6 +67,7 @@
             '.pl-who{margin-top:8px;border-top:0.5px solid rgba(255,255,255,0.06);padding-top:4px;}',
             '.pl-whorow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;min-height:40px;}',
             '.pl-whorow:last-child{border-bottom:0;}',
+            '.pl-nolink-hd{margin-top:14px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.08);font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}',
             '.pl-whoav{width:30px;height:30px;border-radius:9px;flex:0 0 auto;background:linear-gradient(140deg,#2a3350,#171d30);display:flex;align-items:center;justify-content:center;color:#aeb6cf;font-size:12px;font-weight:700;}',
             '.pl-whomid{flex:1;min-width:0;}',
             '.pl-whonm{font-size:12px;font-weight:600;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
@@ -368,7 +369,35 @@
         apiRequest('/api/v1/placements/links/' + id + '/joiners').then(function (r) {
             if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
             var items = r.items || [];
-            if (!items.length) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>'; return; }
+            var nolink = r.nolink_items || [];
+            if (!items.length && !nolink.length) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>'; return; }
+            function whoRow(u) {
+                var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
+                var bits = [];
+                if (u.username) bits.push('@' + u.username);
+                bits.push(fmtTime(u.ts));
+                if (u.acc_year) bits.push('≈' + u.acc_year);
+                if (u.premium) bits.push('Premium');
+                var sub = bits.join(' · ');
+                var tags = '';
+                if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
+                else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
+                var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
+                return '<div class="pl-whorow"' + open + '>' +
+                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
+                    '<div class="pl-whosub">' + esc(sub) + (u.username ? '' : ' · ' + T('профиль без @имени')) + '</div></div>' + tags + '</div>';
+            }
+            var nolinkHtml = '';
+            if (nolink.length) {
+                nolinkHtml = '<div class="pl-nolink-hd">' + esc(T('Без ссылки за период')) + ' · ' + nolink.length + '</div>' +
+                    '<div class="pl-qnote">' + esc(T('Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.')) + '</div>' +
+                    nolink.map(whoRow).join('');
+            }
+            if (!items.length) {
+                box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml;
+                return;
+            }
             var q = r.quality || {};
             var stayed = (q.total || 0) - (q.left || 0);
             var head = '<div class="pl-funnel">' +
@@ -394,23 +423,7 @@
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
             }
-            box.innerHTML = head + items.map(function (u) {
-                var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
-                var bits = [];
-                if (u.username) bits.push('@' + u.username);
-                bits.push(fmtTime(u.ts));
-                if (u.acc_year) bits.push('≈' + u.acc_year);
-                if (u.premium) bits.push('Premium');
-                var sub = bits.join(' · ');
-                var tags = '';
-                if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
-                else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
-                var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
-                return '<div class="pl-whorow"' + open + '>' +
-                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
-                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
-                    '<div class="pl-whosub">' + esc(sub) + (u.username ? '' : ' · ' + T('профиль без @имени')) + '</div></div>' + tags + '</div>';
-            }).join('');
+            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml;
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
