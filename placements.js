@@ -148,7 +148,7 @@
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
                   '<button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отозвать ссылку')) + '</button>'
-                : '') +
+                : '<button class="pl-revoke" data-act="del" data-id="' + l.id + '">' + esc(T('Удалить из списка')) + '</button>') +
             '</div>';
     }
 
@@ -276,6 +276,19 @@
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
         if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'del') {
+            var did = parseInt(b.getAttribute('data-id'), 10);
+            var doDel = function () {
+                apiRequest('/api/v1/placements/links/' + did + '/delete', { method: 'POST', body: '{}' })
+                    .then(function (r) {
+                        if (r && r.ok) { haptic('light'); toast(T('Запись удалена')); load(); }
+                        else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                    }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            };
+            if (typeof confirmDialog === 'function') confirmDialog(T('Удалить запись вместе с её статистикой? Действие необратимо.'), doDel);
+            else doDel();
+            return;
+        }
         if (act === 'open-user') {
             var u = b.getAttribute('data-u');
             if (!u) return;
