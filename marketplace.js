@@ -423,8 +423,11 @@
             '.fmx-bslot.hot i{color:#5DCAA5;}',
             '.fmx-bdg{font-size:10px;font-weight:600;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}',
             '.fmx-bdg i{font-size:11px;}',
-            '.fmx-bgd-card{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:12px 13px;margin-bottom:9px;}',
-            '.fmx-bgd-badge{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:150px;}',
+            '.fmx-bgd-card{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:12px 13px;margin-bottom:9px;}',
+            '.fmx-bgd-badge{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:9px;}',
+            '.fmx-bgd-badge .fmx-bdg{white-space:nowrap;}',
+            '.fmx-tlrow .fmx-bgd-badge{flex:0 0 134px;margin-bottom:0;}',
+            '@media (max-width:359px){.fmx-tlrow .fmx-bgd-badge{flex:0 0 118px;}}',
             '.fmx-bgd-txt{flex:1;min-width:0;}',
             '.fmx-bgd-title{font-size:13px;font-weight:700;color:#e8e8ed;margin-bottom:4px;}',
             '.fmx-bgd-desc{font-size:12px;color:#a9aec0;line-height:1.5;}',
@@ -432,7 +435,7 @@
             '.fmx-bgd-badge .fmx-bdg{font-size:11px;padding:5px 10px;font-weight:700;}',
             '.fmx-bgd-badge .fmx-bdg i{font-size:14px;}',
             '.fmx-bgd-health{flex-direction:column;align-items:stretch;gap:0;}',
-            '.fmx-tlrow{display:flex;gap:10px;align-items:center;margin-top:8px;}',
+            '.fmx-tlrow{display:flex;gap:10px;align-items:flex-start;margin-top:9px;}',
             '.fmx-tlcell{flex-shrink:0;}',
             '.fmx-bgd-health .fmx-tl{width:112px;box-sizing:border-box;justify-content:flex-start;padding:5px 10px;white-space:nowrap;}',
             '.fmx-bgd-health .fmx-tl i{width:8px;height:8px;}',
@@ -7819,14 +7822,16 @@
     function openBadgeGuide() {
         var old = el('fmx-bgdBg'); if (old) old.remove();
         var card = function (badge, title, desc) {
+            var bt = String(badge).replace(/<[^>]*>/g, '').trim();
+            var head = (title && title.trim() !== bt) ? '<div class="fmx-bgd-title">' + title + '</div>' : '';
             return '<div class="fmx-bgd-card">' +
                 '<div class="fmx-bgd-badge">' + badge + '</div>' +
-                '<div class="fmx-bgd-txt"><div class="fmx-bgd-title">' + title + '</div>' +
+                '<div class="fmx-bgd-txt">' + head +
                 '<div class="fmx-bgd-desc">' + desc + '</div></div></div>';
         };
         var pulseRow = function (state, name, text) {
             var a = _ACT[state];
-            return '<div class="fmx-tlrow"><div class="fmx-bgd-badge" style="flex:0 0 auto;">' +
+            return '<div class="fmx-tlrow"><div class="fmx-bgd-badge">' +
                 '<span class="fmx-bdg fmx-bp ' + a[0] + '">' + _PULSE_SVG + name + '</span></div>' +
                 '<div class="fmx-tldesc">' + text + '</div></div>';
         };
