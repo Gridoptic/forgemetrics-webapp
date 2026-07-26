@@ -149,11 +149,9 @@
             '<div class="pl-st"><div class="k">' + esc(T('Вступило')) + '</div><div class="v">' + joined + '</div></div>' +
             '<div class="pl-st"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + ret + '</div></div>' +
             '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
-            ((l.joined > 0 || l.late_joined > 0)
-                ? '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button>' +
-                  '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;"><i class="ti ti-link"></i> ' + esc(T('Связать со сделкой Площадки')) + '</button>' +
-                  '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>'
-                : '') +
+            '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button>' +
+            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;"><i class="ti ti-link"></i> ' + esc(T('Связать со сделкой Площадки')) + '</button>' +
+            '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
             (l.status === 'active'
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
