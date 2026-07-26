@@ -4572,7 +4572,7 @@
                     '<div class="fmx-glassbox fmx-sumrow num" style="margin-top:14px;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;">' +
                     '<div><div class="l">Офферов</div><div class="v">' + t.count + '</div></div>' +
                     '<div><div class="l">Сумма</div><div class="v">' + _num(t.sum) + ' ₽</div></div>' +
-                    '<div><div class="l">Охват</div><div class="v">~' + _num(t.reach) + '</div></div>' +
+                    '<div><div class="l">Показы</div><div class="v">~' + _num(t.impressions != null ? t.impressions : t.reach) + '</div></div>' +
                     '<div><div class="l">Ср. CPM</div><div class="v" style="color:#5DCAA5;">' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—') + '</div></div></div>' +
                     '<div style="margin-top:8px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:4px 12px;">' +
                     r.items.map(function (it) {
@@ -4582,7 +4582,8 @@
                             (it.hot_pct ? ' <span style="color:#f5bf4f;">−' + it.hot_pct + '%</span>' : '') + '</div>' +
                             '<b style="white-space:nowrap;">' + _num(it.price_final) + ' ₽</b></div>';
                     }).join('') + '</div>' +
-                    '<div style="font-size:10px;color:#565b73;margin-top:8px;">Остаток бюджета ' + _num(t.rest) + ' ₽</div>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.45;">Остаток бюджета ' + _num(t.rest) + ' ₽<br>' +
+                    'Показы — сумма просмотров всех размещений. Уникальных людей будет меньше: аудитории каналов одной ниши пересекаются.</div>' +
                     '<div style="display:flex;gap:8px;margin-top:12px;">' +
                     '<button class="fmx-btn" id="fmx-cbm" style="flex:1;">В закладки весь план</button>' +
                     '<button class="fmx-btn" id="fmx-ccopy" style="flex:1;">Скопировать план</button></div>';
@@ -4604,7 +4605,8 @@
                     r.items.forEach(function (it) {
                         lines.push('@' + it.username + ' — ' + it.format + (it.day ? ' — ' + _fmtDayRu(it.day) : '') + ' — ' + _num(it.price_final) + ' ₽');
                     });
-                    lines.push('Итого: ' + _num(t.sum) + ' ₽ · охват ~' + _num(t.reach) + ' · средний CPM ' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—'));
+                    lines.push('Итого: ' + _num(t.sum) + ' ₽ · показы ~' + _num(t.impressions != null ? t.impressions : t.reach) + ' · средний CPM ' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—'));
+                    lines.push('Показы — сумма просмотров; уникальный охват меньше из-за пересечения аудиторий.');
                     copyText(lines.join('\n'));
                     toast('Скопировано: план кампании');
                 });

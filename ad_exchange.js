@@ -458,7 +458,7 @@
         if (a) b += '<span class="adx-badge adx-pulse ' + a[0] + '">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" style="display:block;flex:0 0 auto;">' +
             '<path d="M12 20.9 4.3 13.2a5.1 5.1 0 1 1 7.7-6.7 5.1 5.1 0 1 1 7.7 6.7z" fill="currentColor" mask="url(#fmxPulseCut)"/></svg>' + a[1] + '</span>';
-        if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В точку</span>';
+        if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В нишу</span>';
         return b;
     }
 
@@ -477,8 +477,8 @@
     function cardHtml(p, idx) {
         var col = healthColor(p.health_class);
         var sparkCol = col;
-        var match = p.match_percent != null ? p.match_percent : 50;
-        var dash = (match / 100 * 119).toFixed(0);
+        var match = p.match_percent;
+        var dash = (match != null ? (match / 100 * 119) : 0).toFixed(0);
         var contactBtn = p.contact
             ? '<button class="adx-msg" data-u="' + _esc(p.contact) + '"><i class="ti ti-brand-telegram"></i> Написать</button>'
             : '<button class="adx-msg adx-msg-alt" data-u="' + _esc(p.username) + '"><i class="ti ti-external-link"></i> Канал</button>';
@@ -502,9 +502,11 @@
                 '<div class="adx-match-ring">' +
                     '<svg width="46" height="46" viewBox="0 0 46 46">' +
                         '<circle cx="23" cy="23" r="19" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>' +
-                        '<circle cx="23" cy="23" r="19" fill="none" stroke="#818cf8" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + dash + ' 119" transform="rotate(-90 23 23)"/>' +
+                        (match != null ? '<circle cx="23" cy="23" r="19" fill="none" stroke="#818cf8" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + dash + ' 119" transform="rotate(-90 23 23)"/>' : '') +
                     '</svg>' +
-                    '<div class="adx-match-num"><span>' + match + '</span><small>match</small></div>' +
+                    '<div class="adx-match-num">' + (match != null
+                        ? '<span>' + match + '</span><small>совпадение</small>'
+                        : '<span style="font-size:15px;color:#565b73;">—</span><small>не оценено</small>') + '</div>' +
                 '</div>' +
                 '<div class="adx-card-main">' +
                     '<div class="adx-card-title">' + _esc(p.title) + '</div>' +
@@ -532,7 +534,7 @@
             '<div class="adx-detail" id="adx-det-' + idx + '">' +
                 (flagsHtml || '<div class="adx-flag-explain">Недостаточно данных для подробного разбора.</div>') +
                 (p.match_reason ? '<div class="adx-match-reason"><i class="ti ti-bulb"></i> ' + _esc(p.match_reason) + '</div>' : '') +
-                '<div class="adx-aud-line">Аудитория: <b>' + _esc(p.audience_guess || 'Общая') + '</b> <span class="adx-aud-note">~по тематике</span></div>' +
+                (p.audience_guess ? '<div class="adx-aud-line">Аудитория: <b>' + _esc(p.audience_guess) + '</b> <span class="adx-aud-note">~по тематике</span></div>' : '') +
             '</div>' +
         '</div>';
     }
