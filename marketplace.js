@@ -456,7 +456,7 @@
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;}',
             '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
-            '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;}',
+            '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:12px;}',
             '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
             '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
@@ -7263,8 +7263,8 @@
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm && !(est && !ph) ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
-                (cpm && !(est && !ph) && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
+                (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
+                (cpm && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ охват × 1000, для сравнения каналов; где известен рекламный охват за 24 часа, CPM считаем от него.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM и CPV посчитаны от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
