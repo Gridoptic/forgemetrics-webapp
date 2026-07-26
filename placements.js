@@ -56,6 +56,16 @@
             '.pl-empty i{font-size:26px;color:#565b73;}',
             '.pl-empty h3{font-size:14px;color:#c9cede;margin:9px 0 4px;}',
             '.pl-empty p{font-size:11.5px;margin:0;line-height:1.5;}',
+            '.pl-cfbg{position:fixed;inset:0;z-index:9400;background:rgba(5,7,14,0.62);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 160ms ease;}',
+            '.pl-cfbg.on{opacity:1;pointer-events:auto;}',
+            '.pl-cf{width:100%;max-width:320px;background:rgba(24,28,46,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px 14px;transform:scale(0.95);transition:transform 160ms ease;}',
+            '.pl-cfbg.on .pl-cf{transform:scale(1);}',
+            '.pl-cftxt{font-size:13px;line-height:1.55;color:#d9dce8;}',
+            '.pl-cfrow{display:flex;gap:10px;margin-top:16px;}',
+            '.pl-cfbtn{flex:1;border:0;border-radius:11px;padding:11px 8px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;min-height:40px;}',
+            '.pl-cfbtn.cancel{background:rgba(255,255,255,0.07);color:#aeb6cf;}',
+            '.pl-cfbtn.ok{background:rgba(129,140,248,0.18);color:#a5b0ff;}',
+            '.pl-cfbtn.ok.danger{background:rgba(201,129,129,0.16);color:#e09a9a;}',
             '.pl-sheetbg{position:fixed;inset:0;z-index:9300;background:rgba(5,7,14,0.6);display:none;}',
             '.pl-sheetbg.on{display:block;}',
             '.pl-sheet{position:fixed;bottom:0;left:50%;transform:translate(-50%,105%);width:100%;max-width:520px;z-index:9310;background:rgba(20,24,40,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px 20px 0 0;border:0.5px solid rgba(255,255,255,0.1);border-bottom:none;padding:10px 16px 24px;transition:transform 240ms cubic-bezier(0.3,0.9,0.3,1);max-height:84dvh;overflow-y:auto;}',
@@ -264,6 +274,32 @@
         } catch (e) {}
     }
 
+    function domConfirm(msg, okLabel, danger) {
+        return new Promise(function (resolve) {
+            var old = document.getElementById('pl-cfbg');
+            if (old) old.remove();
+            var bg = document.createElement('div');
+            bg.className = 'pl-cfbg';
+            bg.id = 'pl-cfbg';
+            bg.innerHTML = '<div class="pl-cf"><div class="pl-cftxt"></div>' +
+                '<div class="pl-cfrow"><button class="pl-cfbtn cancel"></button>' +
+                '<button class="pl-cfbtn ok' + (danger ? ' danger' : '') + '"></button></div></div>';
+            bg.querySelector('.pl-cftxt').textContent = msg;
+            bg.querySelector('.cancel').textContent = T('Отмена');
+            bg.querySelector('.ok').textContent = okLabel;
+            var done = function (ok) {
+                bg.classList.remove('on');
+                setTimeout(function () { bg.remove(); }, 180);
+                resolve(ok);
+            };
+            bg.addEventListener('click', function (e) { if (e.target === bg) done(false); });
+            bg.querySelector('.cancel').addEventListener('click', function () { done(false); });
+            bg.querySelector('.ok').addEventListener('click', function () { haptic('light'); done(true); });
+            document.body.appendChild(bg);
+            requestAnimationFrame(function () { bg.classList.add('on'); });
+        });
+    }
+
     function doRevoke(id) {
         var go = function () {
             apiRequest('/api/v1/placements/links/' + id + '/revoke', { method: 'POST', body: '{}' })
@@ -272,8 +308,8 @@
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
         };
-        if (typeof confirmDialog === 'function') confirmDialog(T('Отозвать ссылку? Она перестанет работать, статистика сохранится.')).then(function (ok) { if (ok) go(); });
-        else go();
+        domConfirm(T('Отозвать ссылку? Она перестанет работать, статистика сохранится.'), T('Отозвать ссылку'), false)
+            .then(function (ok) { if (ok) go(); });
     }
 
     function onClick(e) {
@@ -311,8 +347,7 @@
             var delMsg = b.getAttribute('data-st') === 'active'
                 ? T('Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?')
                 : T('Удалить запись вместе с её статистикой? Действие необратимо.');
-            if (typeof confirmDialog === 'function') confirmDialog(delMsg).then(function (ok) { if (ok) doDel(); });
-            else doDel();
+            domConfirm(delMsg, T('Удалить'), true).then(function (ok) { if (ok) doDel(); });
             return;
         }
         if (act === 'open-user') {
