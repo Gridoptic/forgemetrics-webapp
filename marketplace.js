@@ -461,8 +461,18 @@
             '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmr-sec.num{color:#c7cdfb;font-size:11px;letter-spacing:0.02em;text-transform:none;font-weight:700;border-bottom:0.5px solid rgba(255,255,255,0.07);padding-bottom:6px;}',
-            '.fmr-sec.num .kn{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.16);color:#c7cdfb;font-size:10px;font-weight:750;margin-right:2px;}',
+            '.fmr-sec.num{font-size:12.5px;letter-spacing:0.02em;text-transform:none;font-weight:700;color:#c7cdfb;margin:0 0 8px;}',
+            '.fmr-blk{border-radius:14px;padding:12px 13px;margin-bottom:10px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}',
+            '.fmr-blk.b1{background:linear-gradient(180deg,rgba(245,191,79,0.09),rgba(245,191,79,0.03));border:1px solid rgba(245,191,79,0.26);}',
+            '.fmr-blk.b2{background:linear-gradient(180deg,rgba(129,140,248,0.09),rgba(129,140,248,0.03));border:1px solid rgba(129,140,248,0.26);}',
+            '.fmr-blk.b3{background:linear-gradient(180deg,rgba(93,202,165,0.09),rgba(93,202,165,0.03));border:1px solid rgba(93,202,165,0.26);}',
+            '.fmr-blk.b1 .fmr-sec.num{color:#f5bf4f;}',
+            '.fmr-blk.b2 .fmr-sec.num{color:#a9b2fb;}',
+            '.fmr-blk.b3 .fmr-sec.num{color:#7fdcbd;}',
+            '.fmr-blk.b1 .fmr-sec.num .kn{background:rgba(245,191,79,0.2);color:#f5bf4f;}',
+            '.fmr-blk.b2 .fmr-sec.num .kn{background:rgba(129,140,248,0.2);color:#c7cdfb;}',
+            '.fmr-blk.b3 .fmr-sec.num .kn{background:rgba(93,202,165,0.2);color:#7fdcbd;}',
+            '.fmr-sec.num .kn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:7px;background:rgba(129,140,248,0.16);color:#c7cdfb;font-size:11px;font-weight:750;margin-right:2px;}',
             '.fmx-segw{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}',
             '.fmx-alhd{display:flex;align-items:center;gap:10px;margin-bottom:12px;}',
             '.fmx-alic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:17px;flex:0 0 auto;}',
@@ -7024,7 +7034,8 @@
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Следов накрутки нет</span></span>');
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
-        return ad + qualHdr + facts + struct + flow + (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
+        return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow) +
+            (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
     function _htile(label, val, valCol, sub, subCol, isPrice) {
         return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
@@ -7302,11 +7313,16 @@
             headHtml +
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, Reach Rate, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             nicheHtml +
-            _heroTiles(l, 'radar') + ad + ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct + flow + pillsHtml +
+            _heroTiles(l, 'radar') + _blk(1, ad) +
+            _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
+            _blk(3, flow) + pillsHtml +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div></div>';
+    }
+    function _blk(n, html) {
+        return html ? '<div class="fmr-blk b' + n + '">' + html + '</div>' : '';
     }
     function _spikeLine(l) {
         var sp = l && l.subs_spike;
