@@ -7009,7 +7009,7 @@
         if (pp && av) {
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _gainTxt(_grw) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
@@ -7051,7 +7051,7 @@
         var erCol = (erv == null) ? '#c2c6d2' : (erv >= 3.5 ? '#5DCAA5' : (erv >= 1 ? '#818cf8' : '#f59e0b'));
         var erStat = (erv == null) ? '' : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
         var ervTxt = (erv == null) ? '—' : (((erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(erv).replace('.', ',')) + '%');
-        var isOwner = !!(l.owner_price || l.min_price != null);
+        var isOwner = !!l.owner_price || mode === 'market';
         var g = l.subs_growth_30d;
         var subsSub, subsSubCol = '';
         if (typeof g === 'number' && g !== 0) {
@@ -7067,14 +7067,15 @@
             var plo = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
             var phi = (l.price_low != null && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
             priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? '≈' + _short(plo) + '–' + _short(phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
-            priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : 'оценка ниши'));
+            priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var tiles =
             _htile('Подписчики', _kmNum(subs), '#e8e8ed', subsSub, subsSubCol) +
             _htile('Охват', av ? '~' + _kmNum(av) : '—', '#e8e8ed', 'медиана постов', '') +
             _htile('Reach', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
-            _htile('CPM, ₽', cpm != null ? _kmNum(cpm) : '—', '#e8e8ed', isOwner ? 'от цены владельца' : 'ориентир ниши', '') +
+            _htile('CPM, ₽', (cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed',
+                l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши'), '') +
             _htile(priceLabel, priceVal, priceCol, priceSub, '', true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + tiles + '</div>';
@@ -7263,15 +7264,17 @@
                 '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
-                (cpm && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '') +
+                (l.price_floored
+                    ? '<div class="fmr-sub" style="color:#f59e0b;">Это минимальный чек ниши, а не расчёт от охвата: при ' + _num(av) + ' просмотрах размещение по нише дешевле не продают. CPM и CPV здесь неинформативны.</div>'
+                    : (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
+                      (cpm && _cpvTxt(l) ? '<div class="fmr-sub"><b style="color:#c2c6d2;">CPV ≈ ' + _cpvTxt(l) + '</b> — цена одного просмотра</div>' : '')) +
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ охват × 1000, для сравнения каналов; где известен рекламный охват за 24 часа, CPM считаем от него.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM и CPV посчитаны от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
         if (pp && av) {
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
+                '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _gainTxt(_grw) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
                 '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Впиши свою. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
         }
@@ -7512,7 +7515,7 @@
                 var _grw = av * c / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
                 var card = inp.closest('.fmx-scard') || inp.closest('.fmx-card'); if (!card) return;
                 var cpsEl = card.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
-                var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
+                var gEl = card.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _gainTxt(_grw);
                 var warn = card.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 0.3);
             });
         });
@@ -7943,6 +7946,9 @@
         var nm = el('fmx-anName'); if (nm) nm.textContent = '@' + u;
         showModal('fmx-anBg');
     }
+    function _gainTxt(g) {
+        return (g >= 1) ? _num(Math.round(g)) : 'меньше одного';
+    }
     function _cpvTxt(l) { var c = _cpm(l); if (c == null) return null; return (Math.round(c / 10) / 100).toString().replace('.', ',') + ' ₽'; }
     function _chAge(ts) { if (!ts) return null; var mo = Math.floor((Date.now() / 1000 - ts) / 2629800); if (mo < 2) return null; if (mo < 12) return mo + ' ' + _plural(mo, 'месяц', 'месяца', 'месяцев'); var y = Math.floor(mo / 12), r = mo % 12; return y + ' ' + _plural(y, 'год', 'года', 'лет') + (r >= 1 ? ' ' + r + ' мес' : ''); }
     function _reachStructBlock(l) {
@@ -7968,7 +7974,7 @@
         return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
             '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="0.5"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b>/подписчик</div>' +
-            '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _num(gained) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
+            '<div class="fmr-sub">получишь ≈<span class="fmr-gained">' + _gainTxt(_grw) + '</span> подписчиков за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
             '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
             '</div>';
     }
@@ -8162,7 +8168,7 @@
                 var _grw = av * c / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
                 var box = el('fmx-flowBox'); if (!box) return;
                 var cpsEl = box.querySelector('.fmr-cps'); if (cpsEl) { cpsEl.textContent = '≈' + _num(cps) + ' ₽'; cpsEl.style.color = c < 0.3 ? '#f59e0b' : '#5DCAA5'; }
-                var gEl = box.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _num(gained);
+                var gEl = box.querySelector('.fmr-gained'); if (gEl) gEl.textContent = _gainTxt(_grw);
                 var warn = box.querySelector('.fmr-warn'); if (warn) warn.classList.toggle('on', c < 0.3);
             });
         });
