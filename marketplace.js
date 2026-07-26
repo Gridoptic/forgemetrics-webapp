@@ -6948,7 +6948,8 @@
         var _ab = _actBadge(l);
         if (_ab) items.push({ k: 'live', h: _bk('live', _ab) });
         if (l.badges && l.badges.length) {
-            var m = { safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'] };
+            var m = { safe: ['fmx-b-safe', 'ti-shield-check', 'Безопасный'], big: ['fmx-b-big', 'ti-crown', 'Крупный'],
+                risk: ['fmx-b-dead', 'ti-alert-triangle', 'Требует проверки'] };
             l.badges.filter(function (b) { return b !== 'match'; }).forEach(function (b) {
                 var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
             });
@@ -6989,6 +6990,7 @@
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
+            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
@@ -7250,6 +7252,7 @@
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
+            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
             var _erv = l.engagement_percent;
             var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
             var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
@@ -7352,6 +7355,7 @@
         var _alx = _audLabel(l);
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
         if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Фрод-контроль пройден']);
+        else if (l.antifraud === 'suspect') out.push(['ti-alert-triangle', '#ef4444', 'Требует проверки']);
         if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
         var dealN = l.deals_count || 0;
