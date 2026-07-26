@@ -120,13 +120,16 @@
         var cpf = (l.cpf != null) ? num(l.cpf) + ' ₽' : '—';
         var joined = (l.joined != null) ? num(l.joined) : '—';
         var ret = (l.retained_7d != null) ? num(l.retained_7d) : '—';
+        var lateNote = (l.late_joined > 0)
+            ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
+            : '';
         return '<div class="pl-card" data-id="' + l.id + '">' +
             '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
             '<div class="pl-stats">' +
             '<div class="pl-st"><div class="k">' + esc(T('Вступило')) + '</div><div class="v">' + joined + '</div></div>' +
             '<div class="pl-st"><div class="k">' + esc(T('Осталось · 7 дн')) + '</div><div class="v">' + ret + '</div></div>' +
-            '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' +
+            '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
             (l.status === 'active'
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
@@ -147,7 +150,7 @@
                     '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
             } else {
                 body += _items.map(linkCard).join('');
-                body += '<div class="pl-note">' + esc(T('Учёт вступивших по ссылкам включится на следующем шаге — цифры появятся в этих карточках.')) + '</div>';
+                body += '<div class="pl-note">' + esc(T('Счётчики обновляются при каждом открытии экрана. «Осталось · 7 дн» появится, когда накопится неделя наблюдений.')) + '</div>';
             }
         }
         host.innerHTML = head() + '<div class="pl-body">' + body + '</div>' +
