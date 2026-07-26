@@ -272,7 +272,7 @@
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
         };
-        if (typeof confirmDialog === 'function') confirmDialog(T('Отозвать ссылку? Она перестанет работать, статистика сохранится.'), go);
+        if (typeof confirmDialog === 'function') confirmDialog(T('Отозвать ссылку? Она перестанет работать, статистика сохранится.')).then(function (ok) { if (ok) go(); });
         else go();
     }
 
@@ -311,7 +311,7 @@
             var delMsg = b.getAttribute('data-st') === 'active'
                 ? T('Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?')
                 : T('Удалить запись вместе с её статистикой? Действие необратимо.');
-            if (typeof confirmDialog === 'function') confirmDialog(delMsg, doDel);
+            if (typeof confirmDialog === 'function') confirmDialog(delMsg).then(function (ok) { if (ok) doDel(); });
             else doDel();
             return;
         }
