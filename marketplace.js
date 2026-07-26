@@ -6872,9 +6872,22 @@
         low: ['p4', '#f08a3c', 'Единичные посты'],
         none: ['p5', '#ef4444', 'Без постов']
     };
-    var _PULSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M19.5 12.57 12 20.07l-7.5-7.5a5 5 0 1 1 7.5-6.6 5 5 0 1 1 7.5 6.6z"/>' +
-        '<path d="M4.3 12.4h4l1.5-3.2 2.2 6.4 1.6-3.2h5.6"/></svg>';
+    function _ensurePulseMask() {
+        if (document.getElementById('fmxPulseCut')) return;
+        var d = document.createElement('div');
+        d.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;';
+        d.innerHTML = '<svg width="0" height="0"><defs><mask id="fmxPulseCut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">' +
+            '<rect x="0" y="0" width="24" height="24" fill="#fff"/>' +
+            '<path d="M6.6 12.4h2.9l1.5-3.4 2.2 6.6 1.6-3.2h2.6" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</mask></defs></svg>';
+        document.body.appendChild(d);
+    }
+    function _pulseSvg(size, color) {
+        _ensurePulseMask();
+        return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" style="display:block;flex:0 0 auto;">' +
+            '<path d="M12 20.9 4.3 13.2a5.1 5.1 0 1 1 7.7-6.7 5.1 5.1 0 1 1 7.7 6.7z" fill="' + (color || 'currentColor') + '" mask="url(#fmxPulseCut)"/></svg>';
+    }
+    var _PULSE_SVG = _pulseSvg(13);
     function _actInfo(l) { var a = l && l.activity; return (a && _ACT[a]) ? _ACT[a] : null; }
     function _actBadge(l) {
         var a = _actInfo(l);
@@ -7280,7 +7293,7 @@
     function _liIcons(l) {
         var out = [];
         var _ai = _actInfo(l);
-        if (_ai) out.push(['ti-heartbeat', _ai[1], _ai[2]]);
+        if (_ai) out.push([_pulseSvg(13, _ai[1]), _ai[1], _ai[2], 1]);
         if (_nicheMatch(l)) out.push(['ti-target-arrow', '#818cf8', 'В твою нишу']);
         var _alx = _audLabel(l);
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
@@ -7291,6 +7304,7 @@
         if (l.show_deals !== false && dealN >= 1) out.push(['ti-heart-handshake', '#f5bf4f', dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок')]);
         if (l.hot_discount_pct) out.push(['ti-discount-2', '#f5bf4f', 'Горящие даты до −' + l.hot_discount_pct + '%']);
         return out.slice(0, 3).map(function (x) {
+            if (x[3]) return '<span title="' + _esc(x[2]) + '" style="display:flex;flex:0 0 auto;">' + x[0] + '</span>';
             return '<i class="ti ' + x[0] + '" title="' + _esc(x[2]) + '" style="color:' + x[1] + ';font-size:11.5px;flex:0 0 auto;"></i>';
         }).join('');
     }

@@ -440,14 +440,24 @@
         return 'ti-alert-triangle';
     }
 
+    function _ensurePulseMask() {
+        if (document.getElementById('fmxPulseCut')) return;
+        var d = document.createElement('div');
+        d.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;';
+        d.innerHTML = '<svg width="0" height="0"><defs><mask id="fmxPulseCut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">' +
+            '<rect x="0" y="0" width="24" height="24" fill="#fff"/>' +
+            '<path d="M6.6 12.4h2.9l1.5-3.4 2.2 6.6 1.6-3.2h2.6" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</mask></defs></svg>';
+        document.body.appendChild(d);
+    }
     function badges(p) {
+        _ensurePulseMask();
         var b = '';
         var A = { high: ['p1', 'Активный'], mid: ['p2', 'Регулярный'], rare: ['p3', 'Редкие посты'], low: ['p4', 'Единичные посты'], none: ['p5', 'Без постов'] };
         var a = A[p.activity];
         if (a) b += '<span class="adx-badge adx-pulse ' + a[0] + '">' +
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
-            '<path d="M19.5 12.57 12 20.07l-7.5-7.5a5 5 0 1 1 7.5-6.6 5 5 0 1 1 7.5 6.6z"/>' +
-            '<path d="M4.3 12.4h4l1.5-3.2 2.2 6.4 1.6-3.2h5.6"/></svg>' + a[1] + '</span>';
+            '<svg width="13" height="13" viewBox="0 0 24 24" style="display:block;flex:0 0 auto;">' +
+            '<path d="M12 20.9 4.3 13.2a5.1 5.1 0 1 1 7.7-6.7 5.1 5.1 0 1 1 7.7 6.7z" fill="currentColor" mask="url(#fmxPulseCut)"/></svg>' + a[1] + '</span>';
         if ((p.match_percent || 0) >= 80) b += '<span class="adx-badge adx-badge-match"><i class="ti ti-target-arrow"></i> В точку</span>';
         return b;
     }
