@@ -44,6 +44,8 @@
             '.pl-linkrow code{font-size:11px;color:#5DCAA5;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,monospace;}',
             '.pl-copy{border:0;background:rgba(93,202,165,0.16);color:#5DCAA5;border-radius:8px;padding:7px 11px;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;min-height:32px;}',
             '.pl-revoke{border:0;background:transparent;color:#8990a8;font-size:10.5px;font-weight:600;font-family:inherit;cursor:pointer;padding:7px 4px;margin-top:4px;}',
+            '.pl-actrow{display:flex;align-items:center;gap:16px;}',
+            '.pl-revoke.danger{color:#c98181;}',
             '.pl-note{font-size:9.5px;color:#565b73;margin-top:7px;line-height:1.5;}',
             '.pl-perm{background:rgba(245,191,79,0.06);border:1px solid rgba(245,191,79,0.28);border-radius:14px;padding:13px;margin-bottom:12px;}',
             '.pl-perm .t{font-size:12.5px;font-weight:700;color:#f5bf4f;display:flex;gap:7px;align-items:center;margin-bottom:6px;}',
@@ -155,7 +157,8 @@
             (l.status === 'active'
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
-                  '<button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отозвать ссылку')) + '</button>'
+                  '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отозвать ссылку')) + '</button>' +
+                  '<button class="pl-revoke danger" data-act="del" data-st="active" data-id="' + l.id + '">' + esc(T('Удалить')) + '</button></div>'
                 : '<button class="pl-revoke" data-act="del" data-id="' + l.id + '">' + esc(T('Удалить из списка')) + '</button>') +
             '</div>';
     }
@@ -305,7 +308,10 @@
                         else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                     }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             };
-            if (typeof confirmDialog === 'function') confirmDialog(T('Удалить запись вместе с её статистикой? Действие необратимо.'), doDel);
+            var delMsg = b.getAttribute('data-st') === 'active'
+                ? T('Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?')
+                : T('Удалить запись вместе с её статистикой? Действие необратимо.');
+            if (typeof confirmDialog === 'function') confirmDialog(delMsg, doDel);
             else doDel();
             return;
         }
