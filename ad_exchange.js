@@ -453,7 +453,7 @@
     function badges(p) {
         _ensurePulseMask();
         var b = '';
-        var A = { high: ['p1', 'Активный'], mid: ['p2', 'Регулярный'], rare: ['p3', 'Редкие посты'], low: ['p4', 'Единичные посты'], none: ['p5', 'Без постов'] };
+        var A = { high: ['p1', 'Активный'], mid: ['p2', 'Регулярный'], rare: ['p3', 'Редкие посты'], low: ['p4', 'Единичные посты'], none: ['p5', 'Не публикует'] };
         var a = A[p.activity];
         if (a) b += '<span class="adx-badge adx-pulse ' + a[0] + '">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" style="display:block;flex:0 0 auto;">' +
