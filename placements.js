@@ -63,7 +63,18 @@
             '.pl-inp{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:11px;padding:11px 12px;font-size:13px;color:#e8e8ed;font-family:inherit;outline:none;}',
             '.pl-spin{width:26px;height:26px;border:3px solid rgba(255,255,255,0.1);border-top-color:#818cf8;border-radius:50%;margin:40px auto 12px;animation:plSpin 0.8s linear infinite;}',
             '@keyframes plSpin{to{transform:rotate(360deg);}}',
-            '.pl-center{text-align:center;color:#8990a8;font-size:12px;}'
+            '.pl-center{text-align:center;color:#8990a8;font-size:12px;}',
+            '.pl-who{margin-top:8px;border-top:0.5px solid rgba(255,255,255,0.06);padding-top:4px;}',
+            '.pl-whorow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;min-height:40px;}',
+            '.pl-whorow:last-child{border-bottom:0;}',
+            '.pl-whoav{width:30px;height:30px;border-radius:9px;flex:0 0 auto;background:linear-gradient(140deg,#2a3350,#171d30);display:flex;align-items:center;justify-content:center;color:#aeb6cf;font-size:12px;font-weight:700;}',
+            '.pl-whomid{flex:1;min-width:0;}',
+            '.pl-whonm{font-size:12px;font-weight:600;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.pl-whosub{font-size:9.5px;color:#565b73;}',
+            '.pl-whotag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:99px;flex:0 0 auto;}',
+            '.pl-whotag.left{background:rgba(239,68,68,0.13);color:#ef4444;}',
+            '.pl-whotag.late{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
+            '.pl-whobtn{border:0;background:transparent;color:#818cf8;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:8px 4px 2px;display:flex;align-items:center;gap:5px;}'
         ].join('');
         document.head.appendChild(s);
     }
@@ -130,6 +141,9 @@
             '<div class="pl-st"><div class="k">' + esc(T('Вступило')) + '</div><div class="v">' + joined + '</div></div>' +
             '<div class="pl-st"><div class="k">' + esc(T('Осталось · 7 дн')) + '</div><div class="v">' + ret + '</div></div>' +
             '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
+            ((l.joined > 0 || l.late_joined > 0)
+                ? '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button><div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>'
+                : '') +
             (l.status === 'active'
                 ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
@@ -261,6 +275,45 @@
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
+        if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'open-user') {
+            var u = b.getAttribute('data-u');
+            if (!u) return;
+            try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) { tg.openTelegramLink('https://t.me/' + u); return; } } catch (e2) {}
+            try { window.open('https://t.me/' + u, '_blank'); } catch (e3) {}
+            return;
+        }
+    }
+
+    function fmtTime(iso) {
+        try { var d = new Date(iso); return fmtDay(iso) + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+        catch (e) { return ''; }
+    }
+
+    function toggleWho(id) {
+        var box = document.getElementById('pl-who-' + id);
+        if (!box) return;
+        if (box.style.display !== 'none') { box.style.display = 'none'; return; }
+        box.style.display = 'block';
+        box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Загружаю...')) + '</div>';
+        haptic('light');
+        apiRequest('/api/v1/placements/links/' + id + '/joiners').then(function (r) {
+            if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
+            var items = r.items || [];
+            if (!items.length) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>'; return; }
+            box.innerHTML = items.map(function (u) {
+                var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
+                var sub = (u.username ? '@' + u.username + ' · ' : '') + fmtTime(u.ts);
+                var tags = '';
+                if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
+                else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
+                var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
+                return '<div class="pl-whorow"' + open + '>' +
+                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
+                    '<div class="pl-whosub">' + esc(sub) + (u.username ? '' : ' · ' + T('профиль без @имени')) + '</div></div>' + tags + '</div>';
+            }).join('');
+        }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
     window.__openPlacements = function () {
