@@ -1017,6 +1017,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'placements') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openPlacements === 'function') {
+            window.__openPlacements();
+        }
+        return;
+    }
+
     if (actionId === 'marketplace') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openMarketplace === 'function') {
