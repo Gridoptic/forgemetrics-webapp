@@ -22,6 +22,7 @@
         s.id = 'pl-style';
         s.textContent = [
             '.pl-screen{position:fixed;inset:0;z-index:9200;display:none;flex-direction:column;background:#0a0d18;color:#e8e8ed;font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;}',
+            'html.pl-noscroll,body.pl-noscroll{overflow:hidden!important;}',
             '.pl-screen.on{display:flex;}',
             '.pl-head{display:flex;align-items:center;gap:10px;padding:14px 16px 8px;flex:0 0 auto;}',
             '.pl-back{width:38px;height:38px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#c9cede;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;}',
@@ -106,6 +107,8 @@
             (document.getElementById('app') || document.body).appendChild(host);
         }
         host.classList.add('on');
+        document.body.classList.add('pl-noscroll');
+        document.documentElement.classList.add('pl-noscroll');
         try { if (typeof tg !== 'undefined' && tg && tg.BackButton) { tg.BackButton.offClick(close); tg.BackButton.onClick(close); tg.BackButton.show(); } } catch (e) {}
         return host;
     }
@@ -113,6 +116,8 @@
     function close() {
         var host = document.getElementById('pl-screen');
         if (host) host.classList.remove('on');
+        document.body.classList.remove('pl-noscroll');
+        document.documentElement.classList.remove('pl-noscroll');
         closeSheet();
         try { if (typeof tg !== 'undefined' && tg && tg.BackButton) { tg.BackButton.offClick(close); tg.BackButton.hide(); } } catch (e) {}
     }
