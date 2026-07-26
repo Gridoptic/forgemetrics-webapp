@@ -74,7 +74,12 @@
             '.pl-whotag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:99px;flex:0 0 auto;}',
             '.pl-whotag.left{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.pl-whotag.late{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
-            '.pl-whobtn{border:0;background:transparent;color:#818cf8;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:8px 4px 2px;display:flex;align-items:center;gap:5px;}'
+            '.pl-whobtn{border:0;background:transparent;color:#818cf8;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:8px 4px 2px;display:flex;align-items:center;gap:5px;}',
+            '.pl-funnel{background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.22);border-radius:10px;padding:9px 11px;margin:6px 0 4px;}',
+            '.pl-fr{font-size:11.5px;color:#a9aec0;padding:2px 0;}',
+            '.pl-fr b{color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.pl-qnote{font-size:9.5px;color:#8990a8;margin-top:5px;line-height:1.5;}',
+            '.pl-qwarn{font-size:10px;color:#f5bf4f;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.25);border-radius:9px;padding:8px 10px;margin-top:7px;line-height:1.5;}'
         ].join('');
         document.head.appendChild(s);
     }
@@ -130,7 +135,9 @@
         if (l.status === 'active' && l.attribution_until) meta.push(T('окно атрибуции до') + ' ' + fmtDay(l.attribution_until));
         var cpf = (l.cpf != null) ? num(l.cpf) + ' ₽' : '—';
         var joined = (l.joined != null) ? num(l.joined) : '—';
-        var ret = (l.retained_7d != null) ? num(l.retained_7d) : '—';
+        var ret = (l.retained_now != null && l.joined > 0)
+            ? num(l.retained_now) + ' <small style="font-size:9px;color:#8990a8;">' + Math.round(l.retained_now / l.joined * 100) + '%</small>'
+            : '—';
         var lateNote = (l.late_joined > 0)
             ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
             : '';
@@ -139,7 +146,7 @@
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
             '<div class="pl-stats">' +
             '<div class="pl-st"><div class="k">' + esc(T('Вступило')) + '</div><div class="v">' + joined + '</div></div>' +
-            '<div class="pl-st"><div class="k">' + esc(T('Осталось · 7 дн')) + '</div><div class="v">' + ret + '</div></div>' +
+            '<div class="pl-st"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + ret + '</div></div>' +
             '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
             ((l.joined > 0 || l.late_joined > 0)
                 ? '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button><div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>'
@@ -314,9 +321,38 @@
             if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
             var items = r.items || [];
             if (!items.length) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>'; return; }
-            box.innerHTML = items.map(function (u) {
+            var q = r.quality || {};
+            var stayed = (q.total || 0) - (q.left || 0);
+            var head = '<div class="pl-funnel">' +
+                '<div class="pl-fr"><b>' + num(q.total || 0) + '</b> ' + esc(T('подписались')) + '</div>' +
+                '<div class="pl-fr"><b style="color:' + (stayed === q.total ? '#5DCAA5' : '#f5bf4f') + ';">' + num(stayed) + '</b> ' +
+                    esc(T('остаются в канале')) + (q.total ? ' · ' + Math.round(stayed / q.total * 100) + '%' : '') + '</div>' +
+                ((r.price_rub && stayed) ? '<div class="pl-fr">' + esc(T('цена оставшегося')) + ' <b>' + num(Math.round(r.price_rub / stayed)) + ' ₽</b></div>' : '') +
+                '</div>';
+            var ch = q.churn || {};
+            if ((q.left || 0) > 0) {
+                head += '<div class="pl-qnote">' + esc(T('Отписки по времени жизни:')) + ' ' +
+                    (ch.h1 ? '&lt;1 ч — ' + ch.h1 + ' · ' : '') + (ch.d1 ? '&lt;1 дн — ' + ch.d1 + ' · ' : '') +
+                    (ch.d7 ? '&lt;7 дн — ' + ch.d7 + ' · ' : '') + (ch.later ? esc(T('позже')) + ' — ' + ch.later : '') + '</div>';
+            }
+            var flags = [];
+            if (q.fresh_2024) flags.push(esc(T('свежие аккаунты (2024+)')) + ': ' + q.fresh_2024);
+            if (q.digit_names) flags.push(esc(T('юзернеймы с цифрами')) + ': ' + q.digit_names);
+            if (q.no_username) flags.push(esc(T('без @имени')) + ': ' + q.no_username);
+            if (q.premium) flags.push('Premium: ' + q.premium);
+            if (flags.length) head += '<div class="pl-qnote">' + flags.join(' · ') + '</div>';
+            var susp = (q.fresh_2024 || 0) + (q.digit_names || 0);
+            if (q.total >= 10 && susp / q.total > 0.5) {
+                head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
+            }
+            box.innerHTML = head + items.map(function (u) {
                 var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
-                var sub = (u.username ? '@' + u.username + ' · ' : '') + fmtTime(u.ts);
+                var bits = [];
+                if (u.username) bits.push('@' + u.username);
+                bits.push(fmtTime(u.ts));
+                if (u.acc_year) bits.push('≈' + u.acc_year);
+                if (u.premium) bits.push('Premium');
+                var sub = bits.join(' · ');
                 var tags = '';
                 if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
                 else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
