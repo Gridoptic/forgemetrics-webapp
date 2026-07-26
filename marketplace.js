@@ -990,7 +990,18 @@
             '.fmx-frzTag{position:absolute;top:8px;right:36px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
             '.fmx-bmdel{position:absolute;top:10px;right:7px;width:40px;height:40px;border-radius:11px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;transition:all 140ms;}',
             '.fmx-bmdel.arm{background:#ef4444;border-color:#ef4444;color:#fff;transform:scale(1.1);}',
-            '.fmx-bmrow .fmx-lrow{padding-right:56px;}',
+            '.fmx-bmrow .fmx-lrow{padding-right:52px;}',
+            '.fmx-bmrow .fmx-lchev{display:none;}',
+            '@media (max-width:375px){' +
+            '.fmx-bmrow .fmx-lrow{padding-right:44px;padding-left:10px;gap:8px;}' +
+            '.fmx-bmrow .fmx-lmet{gap:5px;}' +
+            '.fmx-bmdel{width:36px;height:36px;top:12px;right:5px;}' +
+            '}',
+            '@media (max-width:330px){' +
+            '.fmx-bmrow .fmx-lrow{padding-right:40px;padding-left:9px;}' +
+            '.fmx-bmrow .fmx-lmet .fmx-lm:first-child i{display:none;}' +
+            '.fmx-bmdel{width:34px;height:34px;top:13px;right:4px;}' +
+            '}',
             '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
             '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
             '.fmx-proof{margin-top:10px;background:rgba(90,176,230,0.08);border:0.5px solid rgba(90,176,230,0.25);border-radius:10px;padding:10px 12px;font-size:12px;color:#c9cbe0;line-height:1.5;}',
