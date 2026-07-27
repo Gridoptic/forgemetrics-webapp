@@ -110,6 +110,7 @@
             '.pl-whomid{flex:1;min-width:0;}',
             '.pl-whonm{font-size:12px;font-weight:600;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.pl-whosub{font-size:9.5px;color:#565b73;}',
+            '.pl-year{color:#8ab4f8;font-weight:700;}',
             '.pl-whotag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:99px;flex:0 0 auto;}',
             '.pl-whotag.left{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.pl-whotag.late{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
@@ -545,9 +546,9 @@
             function whoRow(u) {
                 var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
                 var bits = [];
-                if (u.username) bits.push('@' + u.username);
-                bits.push(fmtTime(u.ts));
-                if (u.acc_year) bits.push('≈' + u.acc_year);
+                if (u.username) bits.push(esc('@' + u.username));
+                bits.push(esc(fmtTime(u.ts)));
+                if (u.acc_year) bits.push('<span class="pl-year">≈' + esc(String(u.acc_year)) + '</span>');
                 if (u.premium) bits.push('Premium');
                 var sub = bits.join(' · ');
                 var tags = '';
@@ -558,7 +559,7 @@
                 return '<div class="pl-whorow"' + open + '>' +
                     '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
                     '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
-                    '<div class="pl-whosub">' + esc(sub) + (u.username ? '' : ' · ' + T('профиль без @имени')) + '</div></div>' + tags + '</div>';
+                    '<div class="pl-whosub">' + sub + (u.username ? '' : ' · ' + esc(T('профиль без @имени'))) + '</div></div>' + tags + '</div>';
             }
             var nolinkHtml = '';
             if (nolink.length) {
