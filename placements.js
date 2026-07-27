@@ -57,8 +57,9 @@
             '.pl-fbar.g{background:linear-gradient(90deg,rgba(93,202,165,0.9),rgba(93,202,165,0.5));}',
             '.pl-fnum{width:56px;flex:0 0 auto;text-align:right;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;}',
             '.pl-fconv{margin:1px 0 0 116px;font-size:9px;color:#565b73;}',
-            '.pl-fx{display:flex;gap:8px;margin-top:10px;padding-top:9px;border-top:0.5px solid rgba(255,255,255,0.05);}',
+            '.pl-fx{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:9px;border-top:0.5px solid rgba(255,255,255,0.05);}',
             '.pl-fxi{flex:1;min-width:0;}',
+            '@media (max-width:379px){.pl-fxi{flex:1 1 40%;}}',
             '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-fxv{font-size:13.5px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}',
             '.pl-fxv small{font-size:9px;color:#8990a8;font-weight:600;}',
@@ -221,6 +222,7 @@
                 '<div class="pl-fnum">' + num(r.v) + '</div></div>';
         });
         var fx = [];
+        if (l.impressions && l.price_rub) fx.push({ k: 'CPM', v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
         if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
         if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
