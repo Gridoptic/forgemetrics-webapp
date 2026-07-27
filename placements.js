@@ -592,7 +592,7 @@
         loading();
         apiRequest('/api/v1/channels/active').then(function (d) {
             _channels = (d && d.channels) ? d.channels : [];
-            if (_chId == null && d && d.active_channel_id) _chId = d.active_channel_id;
+            if (d && d.active_channel_id) _chId = d.active_channel_id;
             if (_chId == null && _channels.length) _chId = _channels[0].id;
             if (_chId == null) {
                 var host = ensureScreen();
