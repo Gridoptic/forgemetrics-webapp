@@ -286,8 +286,8 @@
         });
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
         var fx = [];
-        if (l.impressions && l.price_rub && !badImp) fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
-        if (l.clicks && l.impressions && !badImp) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
+        if (l.impressions >= 100 && l.price_rub && !badImp) fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
+        if (l.clicks && l.impressions >= 100 && !badImp) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
         if (l.clicks && l.price_rub) fx.push({ k: 'CPC · ' + T('цена перехода'), v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
         if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
