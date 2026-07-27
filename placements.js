@@ -230,9 +230,9 @@
                 '<div class="pl-fnum">' + num(r.v) + '</div></div>';
         });
         var fx = [];
-        if (l.impressions && l.price_rub) fx.push({ k: 'CPM', v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
-        if (l.clicks && l.impressions) fx.push({ k: 'CTR', v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
-        if (l.clicks && l.price_rub) fx.push({ k: 'CPC', v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
+        if (l.impressions && l.price_rub) fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
+        if (l.clicks && l.impressions) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
+        if (l.clicks && l.price_rub) fx.push({ k: 'CPC · ' + T('цена перехода'), v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
         if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
         if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
@@ -246,6 +246,9 @@
         var lateNote = (l.late_joined > 0)
             ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
             : '';
+        if (l.joined_approx > 0) {
+            lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
+        }
         var dealLabel = l.deal_id
             ? T('Показы поста привязаны к сделке · изменить')
             : T('Показы поста — из сделки Площадки, если размещение куплено там');
@@ -549,6 +552,7 @@
                 var sub = bits.join(' · ');
                 var tags = '';
                 if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
+                else if (u.approx) tags += '<span class="pl-whotag late">≈ ' + esc(T('по клику')) + '</span>';
                 else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
                 var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
                 return '<div class="pl-whorow"' + open + '>' +

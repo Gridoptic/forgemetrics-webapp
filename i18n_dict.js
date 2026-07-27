@@ -2353,7 +2353,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Direct Telegram link",
   "Привычный t.me — считает подписавшихся и качество трафика.": "The familiar t.me — counts subscribers and traffic quality.",
   "Ссылка с учётом переходов": "Link with click tracking",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Also counts clicks: CTR and CPC are added — you see where people drop off between the view and the subscription."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Also counts clicks: CTR and CPC are added — you see where people drop off between the view and the subscription.",
+  "цена 1000 показов": "cost per 1000 views",
+  "кликабельность": "click-through rate",
+  "цена перехода": "cost per click",
+  "по клику": "via click",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "counted by timing — joined within 15 minutes after clicking the link"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4702,7 +4707,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Enlace directo de Telegram",
   "Привычный t.me — считает подписавшихся и качество трафика.": "El t.me habitual: cuenta suscriptores y calidad del tráfico.",
   "Ссылка с учётом переходов": "Enlace con conteo de clics",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "También cuenta clics: se añaden CTR y CPC — ves dónde se pierde la gente entre la vista y la suscripción."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "También cuenta clics: se añaden CTR y CPC — ves dónde se pierde la gente entre la vista y la suscripción.",
+  "цена 1000 показов": "coste por 1000 vistas",
+  "кликабельность": "tasa de clics",
+  "цена перехода": "coste por clic",
+  "по клику": "por clic",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "contados por tiempo: se unieron en los 15 minutos tras el clic"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -7051,7 +7061,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Direkter Telegram-Link",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Das gewohnte t.me — zählt Abonnenten und Traffic-Qualität.",
   "Ссылка с учётом переходов": "Link mit Klick-Zählung",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Zählt auch Klicks: CTR und CPC kommen dazu — du siehst, wo Leute zwischen Ansicht und Abo verloren gehen."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Zählt auch Klicks: CTR und CPC kommen dazu — du siehst, wo Leute zwischen Ansicht und Abo verloren gehen.",
+  "цена 1000 показов": "Kosten pro 1000 Ansichten",
+  "кликабельность": "Klickrate",
+  "цена перехода": "Kosten pro Klick",
+  "по клику": "per Klick",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "nach Timing gezählt — innerhalb von 15 Minuten nach dem Klick beigetreten"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9395,7 +9410,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Тікелей Telegram сілтемесі",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Таныс t.me — жазылғандарды және трафик сапасын есептейді.",
   "Ссылка с учётом переходов": "Өтулерді есептейтін сілтеме",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Кликтерді де есептейді: CTR мен CPC қосылады — көру мен жазылу арасында адамдар қайда жоғалатыны көрінеді."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Кликтерді де есептейді: CTR мен CPC қосылады — көру мен жазылу арасында адамдар қайда жоғалатыны көрінеді.",
+  "цена 1000 показов": "1000 көрсетілім бағасы",
+  "кликабельность": "кликтелу деңгейі",
+  "цена перехода": "өту бағасы",
+  "по клику": "клик бойынша",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "уақыт бойынша есептелді — сілтемені басқаннан кейін 15 минут ішінде қосылды"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11744,7 +11764,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "To'g'ridan-to'g'ri Telegram havolasi",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Odatiy t.me — obunachilarni va trafik sifatini hisoblaydi.",
   "Ссылка с учётом переходов": "O'tishlarni hisoblaydigan havola",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Kliklarni ham hisoblaydi: CTR va CPC qo'shiladi — ko'rish va obuna orasida odamlar qayerda yo'qolishi ko'rinadi."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Kliklarni ham hisoblaydi: CTR va CPC qo'shiladi — ko'rish va obuna orasida odamlar qayerda yo'qolishi ko'rinadi.",
+  "цена 1000 показов": "1000 ko'rsatish narxi",
+  "кликабельность": "bosish darajasi",
+  "цена перехода": "o'tish narxi",
+  "по клику": "klik orqali",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "vaqt bo'yicha hisoblandi — havolani bosgandan keyin 15 daqiqa ichida qo'shildi"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -14092,7 +14117,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Прамая спасылка Telegram",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Звыклы t.me — лічыць падпісчыкаў і якасць трафіку.",
   "Ссылка с учётом переходов": "Спасылка з улікам пераходаў",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Лічыць і клікі: дадаюцца CTR і CPC — відаць, дзе губляюцца людзі паміж праглядам і падпіскай."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Лічыць і клікі: дадаюцца CTR і CPC — відаць, дзе губляюцца людзі паміж праглядам і падпіскай.",
+  "цена 1000 показов": "цана 1000 паказаў",
+  "кликабельность": "клікабельнасць",
+  "цена перехода": "цана пераходу",
+  "по клику": "па кліку",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "залічаны па часе — далучыліся на працягу 15 хвілін пасля кліку"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16441,7 +16471,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Birbaşa Telegram keçidi",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Tanış t.me — abunəçiləri və trafik keyfiyyətini sayır.",
   "Ссылка с учётом переходов": "Keçidləri sayan keçid",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Klikləri də sayır: CTR və CPC əlavə olunur — baxışla abunə arasında insanların harada itdiyi görünür."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Klikləri də sayır: CTR və CPC əlavə olunur — baxışla abunə arasında insanların harada itdiyi görünür.",
+  "цена 1000 показов": "1000 göstərimin qiyməti",
+  "кликабельность": "klik nisbəti",
+  "цена перехода": "keçid qiyməti",
+  "по клику": "kliklə",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "vaxta görə sayıldı — keçidə klikdən sonra 15 dəqiqə ərzində qoşuldular"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18790,7 +18825,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "رابط تليجرام مباشر",
   "Привычный t.me — считает подписавшихся и качество трафика.": "رابط t.me المعتاد — يحسب المشتركين وجودة الزيارات.",
   "Ссылка с учётом переходов": "رابط مع تتبع النقرات",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "يحسب النقرات أيضًا: يُضاف CTR وCPC — ترى أين يضيع الناس بين المشاهدة والاشتراك."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "يحسب النقرات أيضًا: يُضاف CTR وCPC — ترى أين يضيع الناس بين المشاهدة والاشتراك.",
+  "цена 1000 показов": "تكلفة 1000 ظهور",
+  "кликабельность": "معدل النقر",
+  "цена перехода": "تكلفة النقرة",
+  "по клику": "عبر النقرة",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "محسوبون حسب التوقيت — انضموا خلال 15 دقيقة بعد النقر على الرابط"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -21139,7 +21179,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "پیوند مستقیم تلگرام",
   "Привычный t.me — считает подписавшихся и качество трафика.": "همان t.me آشنا — عضوها و کیفیت ترافیک را می‌شمارد.",
   "Ссылка с учётом переходов": "پیوند با شمارش کلیک",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "کلیک‌ها را هم می‌شمارد: CTR و CPC اضافه می‌شوند — می‌بینی مردم کجا بین دیدن و عضویت گم می‌شوند."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "کلیک‌ها را هم می‌شمارد: CTR و CPC اضافه می‌شوند — می‌بینی مردم کجا بین دیدن و عضویت گم می‌شوند.",
+  "цена 1000 показов": "هزینه ۱۰۰۰ نمایش",
+  "кликабельность": "نرخ کلیک",
+  "цена перехода": "هزینه هر کلیک",
+  "по клику": "از طریق کلیک",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "بر اساس زمان شمرده شدند — طی ۱۵ دقیقه پس از کلیک عضو شدند"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23488,7 +23533,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Doğrudan Telegram bağlantısı",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Alışıldık t.me — aboneleri ve trafik kalitesini sayar.",
   "Ссылка с учётом переходов": "Tıklama sayan bağlantı",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Tıklamaları da sayar: CTR ve CPC eklenir — görüntüleme ile abonelik arasında insanların nerede kaybolduğunu görürsün."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Tıklamaları da sayar: CTR ve CPC eklenir — görüntüleme ile abonelik arasında insanların nerede kaybolduğunu görürsün.",
+  "цена 1000 показов": "1000 gösterim maliyeti",
+  "кликабельность": "tıklanma oranı",
+  "цена перехода": "tıklama maliyeti",
+  "по клику": "tıklamayla",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "zamana göre sayıldı — bağlantıya tıkladıktan sonra 15 dakika içinde katıldılar"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -25837,7 +25887,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "सीधा Telegram लिंक",
   "Привычный t.me — считает подписавшихся и качество трафика.": "परिचित t.me — सब्सक्राइबर और ट्रैफ़िक गुणवत्ता गिनता है।",
   "Ссылка с учётом переходов": "क्लिक ट्रैकिंग वाला लिंक",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "क्लिक भी गिनता है: CTR और CPC जुड़ते हैं — दिखता है कि व्यू और सब्सक्रिप्शन के बीच लोग कहां छूटते हैं।"
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "क्लिक भी गिनता है: CTR और CPC जुड़ते हैं — दिखता है कि व्यू और सब्सक्रिप्शन के बीच लोग कहां छूटते हैं।",
+  "цена 1000 показов": "1000 व्यू की लागत",
+  "кликабельность": "क्लिक दर",
+  "цена перехода": "प्रति क्लिक लागत",
+  "по клику": "क्लिक से",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "समय से गिने गए — लिंक क्लिक के 15 मिनट के भीतर जुड़े"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -28186,7 +28241,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "সরাসরি Telegram লিংক",
   "Привычный t.me — считает подписавшихся и качество трафика.": "পরিচিত t.me — সাবস্ক্রাইবার ও ট্রাফিক মান গণনা করে।",
   "Ссылка с учётом переходов": "ক্লিক ট্র্যাকিং সহ লিংক",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ক্লিকও গণনা করে: CTR ও CPC যুক্ত হয় — দেখা যায় ভিউ ও সাবস্ক্রিপশনের মাঝে মানুষ কোথায় হারিয়ে যায়।"
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ক্লিকও গণনা করে: CTR ও CPC যুক্ত হয় — দেখা যায় ভিউ ও সাবস্ক্রিপশনের মাঝে মানুষ কোথায় হারিয়ে যায়।",
+  "цена 1000 показов": "১০০০ ভিউয়ের খরচ",
+  "кликабельность": "ক্লিকের হার",
+  "цена перехода": "প্রতি ক্লিকের খরচ",
+  "по клику": "ক্লিকের মাধ্যমে",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "সময় অনুযায়ী গণনা — লিংকে ক্লিকের ১৫ মিনিটের মধ্যে যুক্ত হয়েছে"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30535,7 +30595,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Tautan Telegram langsung",
   "Привычный t.me — считает подписавшихся и качество трафика.": "t.me yang familiar — menghitung pelanggan dan kualitas trafik.",
   "Ссылка с учётом переходов": "Tautan dengan penghitung klik",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Juga menghitung klik: CTR dan CPC ditambahkan — terlihat di mana orang hilang antara tayangan dan berlangganan."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Juga menghitung klik: CTR dan CPC ditambahkan — terlihat di mana orang hilang antara tayangan dan berlangganan.",
+  "цена 1000 показов": "biaya per 1000 tayangan",
+  "кликабельность": "rasio klik",
+  "цена перехода": "biaya per klik",
+  "по клику": "lewat klik",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "dihitung berdasarkan waktu — bergabung dalam 15 menit setelah klik tautan"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -32884,7 +32949,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Liên kết Telegram trực tiếp",
   "Привычный t.me — считает подписавшихся и качество трафика.": "t.me quen thuộc — đếm người đăng ký và chất lượng traffic.",
   "Ссылка с учётом переходов": "Liên kết có đếm lượt bấm",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Đếm cả lượt bấm: thêm CTR và CPC — thấy rõ người dùng rơi rụng ở đâu giữa lượt xem và đăng ký."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Đếm cả lượt bấm: thêm CTR và CPC — thấy rõ người dùng rơi rụng ở đâu giữa lượt xem và đăng ký.",
+  "цена 1000 показов": "giá 1000 lượt xem",
+  "кликабельность": "tỷ lệ bấm",
+  "цена перехода": "giá mỗi lượt bấm",
+  "по клику": "qua lượt bấm",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "tính theo thời gian — tham gia trong 15 phút sau khi bấm liên kết"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -35233,7 +35303,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Link direto do Telegram",
   "Привычный t.me — считает подписавшихся и качество трафика.": "O t.me habitual — conta inscritos e qualidade do tráfego.",
   "Ссылка с учётом переходов": "Link com contagem de cliques",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Também conta cliques: CTR e CPC são adicionados — você vê onde as pessoas se perdem entre a visualização e a inscrição."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Também conta cliques: CTR e CPC são adicionados — você vê onde as pessoas se perdem entre a visualização e a inscrição.",
+  "цена 1000 показов": "custo por 1000 visualizações",
+  "кликабельность": "taxa de cliques",
+  "цена перехода": "custo por clique",
+  "по клику": "via clique",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "contados por tempo — entraram em até 15 minutos após o clique"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37582,7 +37657,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Lien Telegram direct",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Le t.me habituel — compte les abonnés et la qualité du trafic.",
   "Ссылка с учётом переходов": "Lien avec suivi des clics",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Compte aussi les clics : CTR et CPC s'ajoutent — tu vois où les gens se perdent entre la vue et l'abonnement."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Compte aussi les clics : CTR et CPC s'ajoutent — tu vois où les gens se perdent entre la vue et l'abonnement.",
+  "цена 1000 показов": "coût pour 1000 vues",
+  "кликабельность": "taux de clics",
+  "цена перехода": "coût par clic",
+  "по клику": "via clic",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "comptés par timing — ont rejoint dans les 15 minutes après le clic"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -39931,7 +40011,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Link Telegram diretto",
   "Привычный t.me — считает подписавшихся и качество трафика.": "Il solito t.me — conta iscritti e qualità del traffico.",
   "Ссылка с учётом переходов": "Link con conteggio dei clic",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Conta anche i clic: si aggiungono CTR e CPC — vedi dove si perdono le persone tra la visualizzazione e l'iscrizione."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Conta anche i clic: si aggiungono CTR e CPC — vedi dove si perdono le persone tra la visualizzazione e l'iscrizione.",
+  "цена 1000 показов": "costo per 1000 visualizzazioni",
+  "кликабельность": "tasso di clic",
+  "цена перехода": "costo per clic",
+  "по клику": "via clic",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "contati per tempistica — entrati entro 15 minuti dal clic"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -42280,7 +42365,12 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "ቀጥታ የTelegram አገናኝ",
   "Привычный t.me — считает подписавшихся и качество трафика.": "የተለመደው t.me — ተመዝጋቢዎችን እና የትራፊክ ጥራት ይቆጥራል።",
   "Ссылка с учётом переходов": "ጠቅታዎችን የሚቆጥር አገናኝ",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ጠቅታዎችንም ይቆጥራል፦ CTR እና CPC ይታከላሉ — በእይታና በምዝገባ መካከል ሰዎች የት እንደሚጠፉ ይታያል።"
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ጠቅታዎችንም ይቆጥራል፦ CTR እና CPC ይታከላሉ — በእይታና በምዝገባ መካከል ሰዎች የት እንደሚጠፉ ይታያል።",
+  "цена 1000 показов": "የ1000 እይታ ዋጋ",
+  "кликабельность": "የጠቅታ መጠን",
+  "цена перехода": "የአንድ ጠቅታ ዋጋ",
+  "по клику": "በጠቅታ",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "በጊዜ ተቆጥረዋል — አገናኙን ከጠቀጡ በኋላ በ15 ደቂቃ ውስጥ ተቀላቅለዋል"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -44629,6 +44719,11 @@ window.__I18N_DICT = {
   "Прямая ссылка Telegram": "Kiungo cha moja kwa moja cha Telegram",
   "Привычный t.me — считает подписавшихся и качество трафика.": "t.me ya kawaida — inahesabu wasajili na ubora wa trafiki.",
   "Ссылка с учётом переходов": "Kiungo chenye kuhesabu mibofyo",
-  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Pia inahesabu mibofyo: CTR na CPC zinaongezwa — unaona watu wanapotea wapi kati ya kuona na kujisajili."
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Pia inahesabu mibofyo: CTR na CPC zinaongezwa — unaona watu wanapotea wapi kati ya kuona na kujisajili.",
+  "цена 1000 показов": "gharama ya maoni 1000",
+  "кликабельность": "kiwango cha mibofyo",
+  "цена перехода": "gharama kwa mbofyo",
+  "по клику": "kwa mbofyo",
+  "засчитаны по времени — вступили в течение 15 минут после перехода по ссылке": "wamehesabiwa kwa muda — walijiunga ndani ya dakika 15 baada ya kubofya kiungo"
  }
 };
