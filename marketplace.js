@@ -7359,7 +7359,8 @@
         var gv = function (v) {
             if (v == null) return '<span style="color:#565b73;">—</span>';
             var c = v > 0 ? '#5DCAA5' : (v < 0 ? '#ef4444' : '#8990a8');
-            return '<span style="color:' + c + ';font-weight:750;font-variant-numeric:tabular-nums;">' + (v > 0 ? '+' : '') + _num(v) + '</span>';
+            var ap = (v !== 0 && v % 1000 === 0) ? '≈' : '';
+            return '<span style="color:' + c + ';font-weight:750;font-variant-numeric:tabular-nums;">' + ap + (v > 0 ? '+' : '') + _num(v) + '</span>';
         };
         if (l.subs_d1 != null || l.subs_d7 != null || l.subs_d30 != null) {
             out += '<div class="fmr-gtab">' +
