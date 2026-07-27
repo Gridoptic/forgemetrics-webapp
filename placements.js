@@ -45,6 +45,8 @@
             '.pl-gstep b{display:inline-flex;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.25);color:#a5b0ff;font-size:10.5px;font-weight:800;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}',
             '.pl-gstep span{font-size:11.5px;color:#a9aec0;line-height:1.5;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
+            '.pl-cmp{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;padding:9px 11px;margin-bottom:9px;font-size:10.5px;color:#a9aec0;line-height:1.55;}',
+            '.pl-cmp b{color:#e8e8ed;}',
             '.pl-linkrow2{background:rgba(93,202,165,0.06);border:0.5px solid rgba(93,202,165,0.25);border-radius:10px;padding:8px 10px;margin-top:10px;}',
             '.pl-lcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5DCAA5;opacity:0.85;margin-bottom:5px;}',
             '.pl-lval{display:flex;align-items:center;gap:8px;}',
@@ -198,7 +200,42 @@
         var ch = curChannel();
         return '<div class="pl-head"><button class="pl-back" data-act="close"><i class="ti ti-arrow-left"></i></button>' +
             '<div class="pl-ht">' + esc(T('Отслеживание размещений')) + '</div></div>' +
-            '<div class="pl-hs">' + (ch ? esc(ch.title || ('@' + ch.username)) + (ch.username ? ' · @' + esc(ch.username) : '') : '') + '</div>';
+            '<div class="pl-hs" data-act="chpick" style="cursor:pointer;">' +
+            (ch ? esc(ch.title || ('@' + ch.username)) + (ch.username ? ' · @' + esc(ch.username) : '') : '') +
+            ' <span style="color:#818cf8;">▾</span></div>';
+    }
+
+    function openChannelSheet() {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg || !(_channels || []).length) return;
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Канал для отслеживания')) + '</div>' +
+            '<div style="margin-top:8px;">' + _channels.map(function (c) {
+                var un = c.username || c.channel_username || '';
+                var nm = c.title || ('@' + un);
+                return '<div class="pl-whorow" data-act="chpick-go" data-ch="' + c.id + '">' +
+                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
+                    (un ? '<div class="pl-whosub">@' + esc(un) + '</div>' : '') + '</div>' +
+                    (c.id === _chId ? '<span class="pl-whotag late">✓</span>' : '') + '</div>';
+            }).join('') + '</div>';
+        bg.classList.add('on');
+        sh.classList.add('on');
+    }
+
+    function openImpSheet(id) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        var l = null;
+        _items.forEach(function (x) { if (x.id === id) l = x; });
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Показы поста')) + '</div>' +
+            '<div class="pl-flabel">' + esc(T('Сколько человек увидело рекламный пост — число просмотров у продавца')) + '</div>' +
+            '<input class="pl-inp" id="pl-imp" type="number" inputmode="numeric" min="0" value="' + (l && l.impressions_manual ? l.impressions_manual : '') + '">' +
+            '<div class="pl-note">' + esc(T('Оставь поле пустым, чтобы убрать значение.')) + '</div>' +
+            '<button class="pl-new" style="margin:13px 0 0;" data-act="imp-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
+        bg.classList.add('on');
+        sh.classList.add('on');
     }
 
     function permCard() {
@@ -262,6 +299,12 @@
         var dealLabel = l.deal_id
             ? T('Показы поста привязаны к сделке · изменить')
             : T('Показы поста — из сделки Площадки, если размещение куплено там');
+        var impBtn = !l.deal_id
+            ? '<button class="pl-whobtn" data-act="imp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-eye"></i> ' +
+              esc(l.impressions_manual
+                  ? (T('Показы поста') + ': ' + num(l.impressions_manual) + ' · ' + T('изменить'))
+                  : T('Указать показы поста — если купил не через Площадку')) + '</button>'
+            : '';
         return '<div class="pl-card" data-id="' + l.id + '">' +
             '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
@@ -272,7 +315,7 @@
                 : '') +
             fun + lateNote +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
-            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' +
+            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
             (active
                 ? '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отключить ссылку')) + '</button>' +
@@ -296,6 +339,15 @@
                   '<div class="pl-gstep"><b>2</b><span>' + esc(T('Вставь её в рекламный пост вместо обычной ссылки на канал')) + '</span></div>' +
                   '<div class="pl-gstep"><b>3</b><span>' + esc(T('Смотри здесь, сколько людей пришло, сколько осталось и во сколько обошёлся подписчик')) + '</span></div></div>';
             body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
+            var withCpf = _items.filter(function (x) { return x.cpf != null; });
+            if (withCpf.length >= 2) {
+                var best = withCpf[0], worst = withCpf[0];
+                withCpf.forEach(function (x) { if (x.cpf < best.cpf) best = x; if (x.cpf > worst.cpf) worst = x; });
+                if (best.id !== worst.id) {
+                    body += '<div class="pl-cmp">🏆 ' + esc(T('Лучшая по CPF')) + ': <b>' + esc(best.name) + '</b> — ' + num(best.cpf) + ' ₽ · ' +
+                        esc(T('худшая')) + ': <b>' + esc(worst.name) + '</b> — ' + num(worst.cpf) + ' ₽</div>';
+                }
+            }
             if (!_items.length) {
                 body += '<div class="pl-empty"><i class="ti ti-link"></i><h3>' + esc(T('Ссылок пока нет')) + '</h3>' +
                     '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
@@ -446,6 +498,35 @@
         if (act === 'guide-hide') { try { localStorage.setItem('pl_guide_hidden', '1'); } catch (e2) {} render(); return; }
         if (act === 'guide-show') { try { localStorage.removeItem('pl_guide_hidden'); } catch (e2) {} render(); return; }
         if (act === 'new') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'chpick') { haptic('light'); openChannelSheet(); return; }
+        if (act === 'chpick-go') {
+            var nch = parseInt(b.getAttribute('data-ch'), 10);
+            closeSheet();
+            if (nch && nch !== _chId) { _chId = nch; load(); }
+            return;
+        }
+        if (act === 'imp') { haptic('light'); openImpSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'imp-save') {
+            var iid = parseInt(b.getAttribute('data-id'), 10);
+            var iv = ((document.getElementById('pl-imp') || {}).value || '').trim();
+            apiRequest('/api/v1/placements/links/' + iid + '/impressions', {
+                method: 'POST', body: JSON.stringify({ impressions: iv ? parseInt(iv, 10) : null })
+            }).then(function (r) {
+                if (r && r.ok) { haptic('medium'); closeSheet(); load(); toast(T('Показы сохранены — CPM и CTR посчитаны')); }
+                else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'csv') {
+            var cid = parseInt(b.getAttribute('data-id'), 10);
+            haptic('light');
+            apiRequest('/api/v1/placements/links/' + cid + '/export', { method: 'POST', body: '{}' })
+                .then(function (r) {
+                    if (r && r.ok) toast(T('Файл отправлен ботом в личные сообщения'));
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
         if (act === 'ltype') {
             var opts = document.querySelectorAll('#pl-sheet .pl-ltopt');
             for (var oi = 0; oi < opts.length; oi++) opts[oi].classList.remove('sel');
@@ -633,8 +714,10 @@
                     '<div class="pl-qnote">' + esc(T('Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.')) + '</div>' +
                     nolink.map(whoRow).join('');
             }
+            var csvBtn = '<button class="pl-whobtn" data-act="csv" data-id="' + id + '" style="color:#8990a8;"><i class="ti ti-download"></i> ' +
+                esc(T('Выгрузить список — бот пришлёт CSV-файл')) + '</button>';
             if (!items.length) {
-                box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml;
+                box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml + (nolink.length ? csvBtn : '');
                 return;
             }
             var q = r.quality || {};
@@ -655,7 +738,7 @@
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
             }
-            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml;
+            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml + csvBtn;
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
