@@ -459,7 +459,10 @@
             '.fmr-gbar .gm{background:linear-gradient(90deg,#4f7ef0,#6ea8ff);}',
             '.fmr-gbar .gf{background:linear-gradient(90deg,#e26a99,#f08bb4);}',
             '.fmr-gsrc{font-size:9px;color:#565b73;margin-top:4px;}',
-            '.fmr-grow{font-size:11px;color:#a9aec0;margin-top:8px;line-height:1.6;}',
+            '.fmr-gtab{margin-top:8px;}',
+            '.fmr-gtab .r{display:flex;align-items:center;justify-content:space-between;padding:4px 2px;font-size:11px;border-bottom:0.5px solid rgba(255,255,255,0.05);}',
+            '.fmr-gtab .r:last-child{border-bottom:0;}',
+            '.fmr-gtab .l{color:#8990a8;}',
             '.fmr-agerow{font-size:11px;color:#a9aec0;margin-top:6px;}',
             '.fmr-agerow b{color:#e8e8ed;}',
             '.fmr-blk{border-radius:14px;padding:12px 13px;margin-bottom:10px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}',
@@ -7351,13 +7354,17 @@
                 '<span class="gl f">Ж ' + (approx ? '≈' : '') + female + '%</span></div>' +
                 '<div class="fmr-gsrc">' + src + '</div>';
         }
-        var dd = function (v, lab) {
-            if (v == null) return '';
+        var gv = function (v) {
+            if (v == null) return '<span style="color:#565b73;">—</span>';
             var c = v > 0 ? '#5DCAA5' : (v < 0 ? '#ef4444' : '#8990a8');
-            return '<span style="color:' + c + ';font-weight:700;font-variant-numeric:tabular-nums;">' + (v > 0 ? '+' : '') + _num(v) + '</span> <span style="color:#8990a8;">' + lab + '</span>';
+            return '<span style="color:' + c + ';font-weight:750;font-variant-numeric:tabular-nums;">' + (v > 0 ? '+' : '') + _num(v) + '</span>';
         };
-        var grow = [dd(l.subs_d1, 'сегодня'), dd(l.subs_d7, 'за неделю'), dd(l.subs_d30, 'за месяц')].filter(Boolean).join(' <span style="color:#3a3f55;">·</span> ');
-        if (grow) out += '<div class="fmr-grow">' + grow + '</div>';
+        if (l.subs_d1 != null || l.subs_d7 != null || l.subs_d30 != null) {
+            out += '<div class="fmr-gtab">' +
+                '<div class="r"><span class="l">Сегодня</span>' + gv(l.subs_d1) + '</div>' +
+                '<div class="r"><span class="l">Неделя</span>' + gv(l.subs_d7) + '</div>' +
+                '<div class="r"><span class="l">Месяц</span>' + gv(l.subs_d30) + '</div></div>';
+        }
         if (l.channel_created_ts) {
             var months = Math.floor((Date.now() / 1000 - l.channel_created_ts) / 2629800);
             var yrs = Math.floor(months / 12), rm = months % 12;
