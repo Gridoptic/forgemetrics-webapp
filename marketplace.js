@@ -7059,12 +7059,14 @@
         var erStat = (erv == null) ? '' : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
         var ervTxt = (erv == null) ? '—' : (((erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(erv).replace('.', ',')) + '%');
         var isOwner = !!l.owner_price || mode === 'market';
-        var g = l.subs_growth_30d;
+        var g = (l.subs_d30 != null) ? l.subs_d30 : ((l.subs_d7 != null) ? l.subs_d7 : null);
+        var gDays = (l.subs_d30 != null) ? 30 : 7;
         var subsSub, subsSubCol = '';
         if (typeof g === 'number' && g !== 0) {
-            subsSub = (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + (l.subs_growth_days || 30) + ' дн';
+            subsSub = (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + gDays + ' дн';
             subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
-        } else if (l.trend === 'growing') { subsSub = '↗ растёт'; subsSubCol = '#5DCAA5'; }
+        } else if (typeof g === 'number') { subsSub = 'стабильно'; subsSubCol = '#8990a8'; }
+        else if (l.trend === 'growing') { subsSub = '↗ растёт'; subsSubCol = '#5DCAA5'; }
         else if (l.trend === 'declining') { subsSub = '↘ падает'; subsSubCol = '#f59e0b'; }
         else subsSub = '';
         var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
