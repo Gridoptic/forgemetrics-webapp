@@ -7063,7 +7063,7 @@
         var gDays = (l.subs_d30 != null) ? 30 : 7;
         var subsSub, subsSubCol = '';
         if (typeof g === 'number' && g !== 0) {
-            subsSub = (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + gDays + ' дн';
+            subsSub = ((Math.abs(g) % 1000 === 0) ? '≈' : '') + (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + gDays + ' дн';
             subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
         } else if (typeof g === 'number') { subsSub = 'стабильно'; subsSubCol = '#8990a8'; }
         else if (l.trend === 'growing') { subsSub = '↗ растёт'; subsSubCol = '#5DCAA5'; }
