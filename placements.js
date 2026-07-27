@@ -203,13 +203,9 @@
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
         if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
         if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
-        var clickUrl = l.click_code ? ((typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '') + '/r/' + l.click_code) : l.invite_link;
-
         var rows = [];
         if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
-        if (l.clicks) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: T('от увидевших') });
-        rows.push({ lab: T('Подписались'), v: l.joined || 0,
-                    cap: rows.length ? (rows[rows.length - 1].lab === T('Перешли по ссылке') ? T('от перешедших') : T('от увидевших')) : null });
+        rows.push({ lab: T('Подписались'), v: l.joined || 0, cap: rows.length ? T('от увидевших') : null });
         rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
         var maxV = 0;
         rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
@@ -246,8 +242,8 @@
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
             (active
                 ? '<div class="pl-linkrow2"><div class="pl-lcap">' + esc(T('Эта ссылка — в рекламный пост')) + '</div>' +
-                  '<div class="pl-lval"><code>' + esc(clickUrl) + '</code>' +
-                  '<button class="pl-copy" data-act="copy" data-link="' + esc(clickUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
+                  '<div class="pl-lval"><code>' + esc(l.invite_link) + '</code>' +
+                  '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div></div>'
                 : '') +
             fun + lateNote +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
@@ -345,12 +341,7 @@
                 haptic('medium');
                 closeSheet();
                 load();
-                if (r.item) {
-                    var cu = r.item.click_code
-                        ? ((typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '') + '/r/' + r.item.click_code)
-                        : r.item.invite_link;
-                    if (cu) copyText(cu, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
-                }
+                if (r.item && r.item.invite_link) copyText(r.item.invite_link, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
             } else if (r && r.error === 'no_right') {
                 closeSheet(); _right = false; render();
             } else {
