@@ -37,12 +37,31 @@
             '.pl-tag.on{background:rgba(93,202,165,0.14);color:#5DCAA5;}',
             '.pl-tag.off{background:rgba(255,255,255,0.06);color:#8990a8;}',
             '.pl-meta{font-size:10.5px;color:#565b73;margin-top:2px;}',
-            '.pl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;overflow:hidden;margin-top:10px;}',
-            '.pl-st{background:#10141f;padding:8px 9px;min-width:0;}',
-            '.pl-st .k{font-size:8.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.pl-st .v{font-size:15px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}',
-            '.pl-linkrow{display:flex;align-items:center;gap:8px;background:rgba(93,202,165,0.06);border:0.5px solid rgba(93,202,165,0.25);border-radius:10px;padding:8px 10px;margin-top:10px;}',
-            '.pl-linkrow code{font-size:11px;color:#5DCAA5;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,monospace;}',
+            '.pl-guide{background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.3);border-radius:13px;padding:11px 12px;margin-bottom:12px;}',
+            '.pl-guide .gt{font-size:12px;font-weight:800;color:#a5b0ff;display:flex;justify-content:space-between;align-items:center;}',
+            '.pl-guide .gh{font-size:10.5px;color:#565b73;font-weight:600;cursor:pointer;padding:4px 0 4px 12px;}',
+            '.pl-gstep{display:flex;gap:9px;align-items:flex-start;margin-top:7px;}',
+            '.pl-gstep b{display:inline-flex;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.25);color:#a5b0ff;font-size:10.5px;font-weight:800;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}',
+            '.pl-gstep span{font-size:11.5px;color:#a9aec0;line-height:1.5;}',
+            '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
+            '.pl-linkrow2{background:rgba(93,202,165,0.06);border:0.5px solid rgba(93,202,165,0.25);border-radius:10px;padding:8px 10px;margin-top:10px;}',
+            '.pl-lcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5DCAA5;opacity:0.85;margin-bottom:5px;}',
+            '.pl-lval{display:flex;align-items:center;gap:8px;}',
+            '.pl-lval code{font-size:11px;color:#5DCAA5;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,monospace;}',
+            '.pl-fun{margin-top:11px;}',
+            '.pl-fcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#565b73;margin-bottom:6px;}',
+            '.pl-frow2{display:flex;align-items:center;gap:8px;margin-top:5px;}',
+            '.pl-flab{width:108px;flex:0 0 auto;font-size:10.5px;color:#a9aec0;}',
+            '.pl-fbarw{flex:1;height:14px;border-radius:5px;background:rgba(255,255,255,0.04);overflow:hidden;}',
+            '.pl-fbar{height:100%;border-radius:5px;background:linear-gradient(90deg,rgba(129,140,248,0.85),rgba(129,140,248,0.5));}',
+            '.pl-fbar.g{background:linear-gradient(90deg,rgba(93,202,165,0.9),rgba(93,202,165,0.5));}',
+            '.pl-fnum{width:56px;flex:0 0 auto;text-align:right;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;}',
+            '.pl-fconv{margin:1px 0 0 116px;font-size:9px;color:#565b73;}',
+            '.pl-fx{display:flex;gap:8px;margin-top:10px;padding-top:9px;border-top:0.5px solid rgba(255,255,255,0.05);}',
+            '.pl-fxi{flex:1;min-width:0;}',
+            '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-fxv{font-size:13.5px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}',
+            '.pl-fxv small{font-size:9px;color:#8990a8;font-weight:600;}',
             '.pl-copy{border:0;background:rgba(93,202,165,0.16);color:#5DCAA5;border-radius:8px;padding:7px 11px;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;min-height:32px;}',
             '.pl-revoke{border:0;background:transparent;color:#8990a8;font-size:10.5px;font-weight:600;font-family:inherit;cursor:pointer;padding:7px 4px;margin-top:4px;}',
             '.pl-actrow{display:flex;align-items:center;gap:16px;}',
@@ -88,10 +107,7 @@
             '.pl-whotag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:99px;flex:0 0 auto;}',
             '.pl-whotag.left{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.pl-whotag.late{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
-            '.pl-whobtn{border:0;background:transparent;color:#818cf8;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:8px 4px 2px;display:flex;align-items:center;gap:5px;}',
-            '.pl-funnel{background:rgba(129,140,248,0.06);border:0.5px solid rgba(129,140,248,0.22);border-radius:10px;padding:9px 11px;margin:6px 0 4px;}',
-            '.pl-fr{font-size:11.5px;color:#a9aec0;padding:2px 0;}',
-            '.pl-fr b{color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.pl-whobtn{border:0;background:transparent;color:#818cf8;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:8px 4px 2px;display:flex;align-items:flex-start;gap:5px;}',
             '.pl-qnote{font-size:9.5px;color:#8990a8;margin-top:5px;line-height:1.5;}',
             '.pl-qwarn{font-size:10px;color:#f5bf4f;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.25);border-radius:9px;padding:8px 10px;margin-top:7px;line-height:1.5;}'
         ].join('');
@@ -179,35 +195,66 @@
     }
 
     function linkCard(l) {
-        var st = l.status === 'active'
-            ? '<span class="pl-tag on">' + esc(T('активна')) + '</span>'
-            : '<span class="pl-tag off">' + esc(T('отозвана')) + '</span>';
+        var active = l.status === 'active';
+        var st = active
+            ? '<span class="pl-tag on">' + esc(T('работает')) + '</span>'
+            : '<span class="pl-tag off">' + esc(T('отключена')) + '</span>';
         var meta = [];
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
         if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
-        if (l.status === 'active' && l.attribution_until) meta.push(T('окно атрибуции до') + ' ' + fmtDay(l.attribution_until));
-        var cpf = (l.cpf != null) ? num(l.cpf) + ' ₽' : '—';
-        var joined = (l.joined != null) ? num(l.joined) : '—';
-        var ret = (l.retained_now != null && l.joined > 0)
-            ? num(l.retained_now) + ' <small style="font-size:9px;color:#8990a8;">' + Math.round(l.retained_now / l.joined * 100) + '%</small>'
-            : '—';
+        if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
+        var clickUrl = l.click_code ? ((typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '') + '/r/' + l.click_code) : l.invite_link;
+
+        var rows = [];
+        if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
+        if (l.clicks) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: T('от увидевших') });
+        rows.push({ lab: T('Подписались'), v: l.joined || 0,
+                    cap: rows.length ? (rows[rows.length - 1].lab === T('Перешли по ссылке') ? T('от перешедших') : T('от увидевших')) : null });
+        rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
+        var maxV = 0;
+        rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
+        var fun = '<div class="pl-fun"><div class="pl-fcap">' + esc(T('Воронка размещения')) + '</div>';
+        rows.forEach(function (r, i) {
+            if (i > 0 && rows[i - 1].v > 0 && r.cap) {
+                var pct = Math.round(r.v / rows[i - 1].v * 1000) / 10;
+                fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
+            }
+            var w = maxV > 0 ? Math.max(3, Math.round(r.v / maxV * 100)) : 3;
+            fun += '<div class="pl-frow2"><div class="pl-flab">' + esc(r.lab) + '</div>' +
+                '<div class="pl-fbarw"><div class="pl-fbar' + (r.g ? ' g' : '') + '" style="width:' + w + '%;"></div></div>' +
+                '<div class="pl-fnum">' + num(r.v) + '</div></div>';
+        });
+        var fx = [];
+        if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
+        if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
+        if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
+        if (fx.length) {
+            fun += '<div class="pl-fx">' + fx.map(function (x) {
+                return '<div class="pl-fxi"><div class="pl-fxk">' + esc(x.k) + '</div><div class="pl-fxv">' + x.v + '</div></div>';
+            }).join('') + '</div>';
+        }
+        fun += '</div>';
+
         var lateNote = (l.late_joined > 0)
             ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
             : '';
+        var dealLabel = l.deal_id
+            ? T('Показы поста привязаны к сделке · изменить')
+            : T('Показы поста — из сделки Площадки, если размещение куплено там');
         return '<div class="pl-card" data-id="' + l.id + '">' +
             '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
-            '<div class="pl-stats">' +
-            '<div class="pl-st"><div class="k">' + esc(T('Вступило')) + '</div><div class="v">' + joined + '</div></div>' +
-            '<div class="pl-st"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + ret + '</div></div>' +
-            '<div class="pl-st"><div class="k">CPF</div><div class="v">' + cpf + '</div></div></div>' + lateNote +
-            '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Подробная статистика')) + '</button>' +
-            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;"><i class="ti ti-link"></i> ' + esc(T('Связать со сделкой Площадки')) + '</button>' +
+            (active
+                ? '<div class="pl-linkrow2"><div class="pl-lcap">' + esc(T('Эта ссылка — в рекламный пост')) + '</div>' +
+                  '<div class="pl-lval"><code>' + esc(clickUrl) + '</code>' +
+                  '<button class="pl-copy" data-act="copy" data-link="' + esc(clickUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
+                : '') +
+            fun + lateNote +
+            '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
+            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
-            (l.status === 'active'
-                ? '<div class="pl-linkrow"><code>' + esc(l.invite_link) + '</code>' +
-                  '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div>' +
-                  '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отозвать ссылку')) + '</button>' +
+            (active
+                ? '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отключить ссылку')) + '</button>' +
                   '<button class="pl-revoke danger" data-act="del" data-st="active" data-id="' + l.id + '">' + esc(T('Удалить')) + '</button></div>'
                 : '<button class="pl-revoke" data-act="del" data-id="' + l.id + '">' + esc(T('Удалить из списка')) + '</button>') +
             '</div>';
@@ -219,7 +266,15 @@
         if (_right === false) {
             body = permCard();
         } else {
-            body = '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
+            var guideHidden = false;
+            try { guideHidden = localStorage.getItem('pl_guide_hidden') === '1'; } catch (e) {}
+            body = guideHidden
+                ? '<div class="pl-glink" data-act="guide-show">' + esc(T('Как это работает')) + ' ↓</div>'
+                : '<div class="pl-guide"><div class="gt"><span>' + esc(T('Как это работает')) + '</span><span class="gh" data-act="guide-hide">' + esc(T('Скрыть')) + '</span></div>' +
+                  '<div class="pl-gstep"><b>1</b><span>' + esc(T('Создай ссылку под конкретное размещение — у каждой рекламы своя ссылка')) + '</span></div>' +
+                  '<div class="pl-gstep"><b>2</b><span>' + esc(T('Вставь её в рекламный пост вместо обычной ссылки на канал')) + '</span></div>' +
+                  '<div class="pl-gstep"><b>3</b><span>' + esc(T('Смотри здесь, сколько людей пришло, сколько осталось и во сколько обошёлся подписчик')) + '</span></div></div>';
+            body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
             if (!_items.length) {
                 body += '<div class="pl-empty"><i class="ti ti-link"></i><h3>' + esc(T('Ссылок пока нет')) + '</h3>' +
                     '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
@@ -290,7 +345,12 @@
                 haptic('medium');
                 closeSheet();
                 load();
-                if (r.item && r.item.invite_link) copyText(r.item.invite_link, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
+                if (r.item) {
+                    var cu = r.item.click_code
+                        ? ((typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '') + '/r/' + r.item.click_code)
+                        : r.item.invite_link;
+                    if (cu) copyText(cu, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
+                }
             } else if (r && r.error === 'no_right') {
                 closeSheet(); _right = false; render();
             } else {
@@ -344,11 +404,11 @@
         var go = function () {
             apiRequest('/api/v1/placements/links/' + id + '/revoke', { method: 'POST', body: '{}' })
                 .then(function (r) {
-                    if (r && r.ok) { haptic('light'); toast(T('Ссылка отозвана — новые вступления по ней невозможны')); load(); }
+                    if (r && r.ok) { haptic('light'); toast(T('Ссылка отключена — новые вступления по ней невозможны')); load(); }
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
         };
-        domConfirm(T('Отозвать ссылку? Она перестанет работать, статистика сохранится.'), T('Отозвать ссылку'), false)
+        domConfirm(T('Отключить ссылку? Она перестанет работать, статистика сохранится.'), T('Отключить ссылку'), false)
             .then(function (ok) { if (ok) go(); });
     }
 
@@ -357,6 +417,8 @@
         if (!b) return;
         var act = b.getAttribute('data-act');
         if (act === 'close') { close(); return; }
+        if (act === 'guide-hide') { try { localStorage.setItem('pl_guide_hidden', '1'); } catch (e2) {} render(); return; }
+        if (act === 'guide-show') { try { localStorage.removeItem('pl_guide_hidden'); } catch (e2) {} render(); return; }
         if (act === 'new') { haptic('light'); openCreateSheet(); return; }
         if (act === 'create') { doCreate(); return; }
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
@@ -476,8 +538,8 @@
             }
             var nolinkHtml = '';
             if (nolink.length) {
-                nolinkHtml = '<div class="pl-nolink-hd">' + esc(T('Без ссылки за период')) + ' · ' + nolink.length + '</div>' +
-                    '<div class="pl-qnote">' + esc(T('Вступили за время атрибуции без метки ссылки: пришли через @имя канала, из поиска или по пересланному посту. Telegram не сообщает их источник.')) + '</div>' +
+                nolinkHtml = '<div class="pl-nolink-hd">' + esc(T('Пришли сами в эти дни')) + ' · ' + nolink.length + ' <span style="font-size:9.5px;font-weight:600;color:#565b73;">' + esc(T('без ссылки')) + '</span></div>' +
+                    '<div class="pl-qnote">' + esc(T('Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.')) + '</div>' +
                     nolink.map(whoRow).join('');
             }
             if (!items.length) {
@@ -485,14 +547,7 @@
                 return;
             }
             var q = r.quality || {};
-            var stayed = (q.total || 0) - (q.left || 0);
-            var head = '<div class="pl-funnel">' +
-                (r.impressions ? '<div class="pl-fr"><b>~' + num(r.impressions) + '</b> ' + esc(T('увидели рекламный пост')) + '</div>' : '') +
-                '<div class="pl-fr"><b>' + num(q.total || 0) + '</b> ' + esc(T('подписались')) + '</div>' +
-                '<div class="pl-fr"><b style="color:' + (stayed === q.total ? '#5DCAA5' : '#f5bf4f') + ';">' + num(stayed) + '</b> ' +
-                    esc(T('остаются в канале')) + (q.total ? ' · ' + Math.round(stayed / q.total * 100) + '%' : '') + '</div>' +
-                ((r.price_rub && stayed) ? '<div class="pl-fr">' + esc(T('цена оставшегося')) + ' <b>' + num(Math.round(r.price_rub / stayed)) + ' ₽</b></div>' : '') +
-                '</div>';
+            var head = '';
             var ch = q.churn || {};
             if ((q.left || 0) > 0) {
                 head += '<div class="pl-qnote">' + esc(T('Отписки по времени жизни:')) + ' ' +
