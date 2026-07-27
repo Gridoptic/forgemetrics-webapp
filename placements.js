@@ -28,7 +28,6 @@
             '.pl-head{display:flex;align-items:center;gap:10px;padding:14px 16px 8px;flex:0 0 auto;}',
             '.pl-back{width:38px;height:38px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#c9cede;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;}',
             '.pl-ht{font-size:16px;font-weight:800;}',
-            '.pl-hs{font-size:11px;color:#8990a8;padding:0 16px 10px;}',
             '.pl-body{flex:1;overflow-y:auto;padding:4px 16px 90px;overscroll-behavior:contain;}',
             '.pl-new{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:13px;border:0;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:14px;}',
             '.pl-card{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:12px 13px;margin-bottom:9px;}',
@@ -198,11 +197,20 @@
 
     function head() {
         var ch = curChannel();
-        return '<div class="pl-head"><button class="pl-back" data-act="close"><i class="ti ti-arrow-left"></i></button>' +
-            '<div class="pl-ht">' + esc(T('Отслеживание размещений')) + '</div></div>' +
-            '<div class="pl-hs" data-act="chpick" style="cursor:pointer;">' +
-            (ch ? esc(ch.title || ('@' + ch.username)) + (ch.username ? ' · @' + esc(ch.username) : '') : '') +
-            ' <span style="color:#818cf8;">▾</span></div>';
+        var h = '<div class="pl-head"><button class="pl-back" data-act="close"><i class="ti ti-arrow-left"></i></button>' +
+            '<div class="pl-ht">' + esc(T('Отслеживание размещений')) + '</div></div>';
+        if (ch) {
+            var un = ch.username || ch.channel_username || '';
+            var title = ch.title || ('@' + un);
+            var initial = (String(title).trim().charAt(0) || 'K').toUpperCase();
+            h += '<div style="padding:0 16px;">' +
+                '<button class="pw-chansel" data-act="chpick" style="margin-bottom:8px;">' +
+                '<div class="pw-chav">' + esc(initial) + '</div>' +
+                '<div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">' + esc(title) + '</span></div>' +
+                '<div class="pw-chnb">' + (un ? '@' + esc(un) + ' · ' : '') + esc(T('нажми, чтобы сменить канал')) + '</div></div>' +
+                '<div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button></div>';
+        }
+        return h;
     }
 
     function openChannelSheet() {
