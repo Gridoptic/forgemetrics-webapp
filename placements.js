@@ -277,16 +277,17 @@
         rows.forEach(function (r, i) {
             if (i > 0 && rows[i - 1].v > 0 && r.cap) {
                 var pct = Math.round(r.v / rows[i - 1].v * 1000) / 10;
-                fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
+                if (pct <= 100) fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
             }
             var w = maxV > 0 ? Math.max(3, Math.round(r.v / maxV * 100)) : 3;
             fun += '<div class="pl-frow2"><div class="pl-flab">' + esc(r.lab) + '</div>' +
                 '<div class="pl-fbarw"><div class="pl-fbar' + (r.g ? ' g' : '') + '" style="width:' + w + '%;"></div></div>' +
                 '<div class="pl-fnum">' + num(r.v) + '</div></div>';
         });
+        var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
         var fx = [];
-        if (l.impressions && l.price_rub) fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
-        if (l.clicks && l.impressions) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
+        if (l.impressions && l.price_rub && !badImp) fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
+        if (l.clicks && l.impressions && !badImp) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
         if (l.clicks && l.price_rub) fx.push({ k: 'CPC · ' + T('цена перехода'), v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
         if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
@@ -303,6 +304,9 @@
             : '';
         if (l.joined_approx > 0) {
             lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
+        }
+        if (badImp) {
+            lateNote += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
         var dealLabel = l.deal_id
             ? T('Показы поста привязаны к сделке · изменить')

@@ -2374,7 +2374,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Best by CPF",
   "худшая": "worst",
   "Выгрузить список — бот пришлёт CSV-файл": "Export the list — the bot will send a CSV file",
-  "Файл отправлен ботом в личные сообщения": "The bot sent the file to your private messages"
+  "Файл отправлен ботом в личные сообщения": "The bot sent the file to your private messages",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions are lower than the click count — looks like a typo. Check the “Post impressions” value; CPM and CTR are paused until then."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4744,7 +4745,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Mejor por CPF",
   "худшая": "peor",
   "Выгрузить список — бот пришлёт CSV-файл": "Exportar la lista: el bot enviará un archivo CSV",
-  "Файл отправлен ботом в личные сообщения": "El bot envió el archivo a tus mensajes privados"
+  "Файл отправлен ботом в личные сообщения": "El bot envió el archivo a tus mensajes privados",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Las impresiones son menores que los clics: parece una errata. Revisa «Impresiones del post»; CPM y CTR quedan en pausa."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -7114,7 +7116,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Beste nach CPF",
   "худшая": "schlechteste",
   "Выгрузить список — бот пришлёт CSV-файл": "Liste exportieren — der Bot sendet eine CSV-Datei",
-  "Файл отправлен ботом в личные сообщения": "Der Bot hat die Datei in deine Privatnachrichten gesendet"
+  "Файл отправлен ботом в личные сообщения": "Der Bot hat die Datei in deine Privatnachrichten gesendet",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressionen sind niedriger als die Klickzahl — sieht nach einem Tippfehler aus. Prüfe „Beitrags-Impressionen“; CPM und CTR pausieren solange."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9479,7 +9482,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF бойынша үздік",
   "худшая": "нашары",
   "Выгрузить список — бот пришлёт CSV-файл": "Тізімді жүктеп алу — бот CSV-файл жібереді",
-  "Файл отправлен ботом в личные сообщения": "Бот файлды жеке хабарламаға жіберді"
+  "Файл отправлен ботом в личные сообщения": "Бот файлды жеке хабарламаға жіберді",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Көрсетілімдер өтулер санынан аз — қате енгізілген сияқты. «Жазба көрсетілімдері» мәнін тексер; CPM мен CTR әзірге есептелмейді."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11849,7 +11853,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF bo'yicha eng yaxshi",
   "худшая": "eng yomoni",
   "Выгрузить список — бот пришлёт CSV-файл": "Ro'yxatni yuklab olish — bot CSV-fayl yuboradi",
-  "Файл отправлен ботом в личные сообщения": "Bot faylni shaxsiy xabarlarga yubordi"
+  "Файл отправлен ботом в личные сообщения": "Bot faylni shaxsiy xabarlarga yubordi",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Ko'rsatishlar o'tishlar sonidan kam — xato kiritilganga o'xshaydi. «Post ko'rsatishlari» qiymatini tekshiring; CPM va CTR hozircha hisoblanmaydi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -14218,7 +14223,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Лепшая па CPF",
   "худшая": "горшая",
   "Выгрузить список — бот пришлёт CSV-файл": "Выгрузіць спіс — бот прышле CSV-файл",
-  "Файл отправлен ботом в личные сообщения": "Бот адправіў файл у асабістыя паведамленні"
+  "Файл отправлен ботом в личные сообщения": "Бот адправіў файл у асабістыя паведамленні",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Паказы менш за лік пераходаў — падобна на памылку. Правер значэнне ў «Паказы паста»; CPM і CTR пакуль не лічацца."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16588,7 +16594,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF üzrə ən yaxşı",
   "худшая": "ən pisi",
   "Выгрузить список — бот пришлёт CSV-файл": "Siyahını yüklə — bot CSV faylı göndərəcək",
-  "Файл отправлен ботом в личные сообщения": "Bot faylı şəxsi mesajlara göndərdi"
+  "Файл отправлен ботом в личные сообщения": "Bot faylı şəxsi mesajlara göndərdi",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Göstərimlər keçid sayından azdır — səhvə oxşayır. «Post göstərimləri» dəyərini yoxla; CPM və CTR hələlik hesablanmır."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18958,7 +18965,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "الأفضل حسب CPF",
   "худшая": "الأسوأ",
   "Выгрузить список — бот пришлёт CSV-файл": "تصدير القائمة — سيرسل البوت ملف CSV",
-  "Файл отправлен ботом в личные сообщения": "أرسل البوت الملف إلى رسائلك الخاصة"
+  "Файл отправлен ботом в личные сообщения": "أرسل البوت الملف إلى رسائلك الخاصة",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "مرات الظهور أقل من عدد النقرات — يبدو خطأ إملائيًا. تحقق من قيمة «مرات ظهور المنشور»؛ CPM وCTR متوقفان حتى ذلك الحين."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -21328,7 +21336,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "بهترین بر اساس CPF",
   "худшая": "بدترین",
   "Выгрузить список — бот пришлёт CSV-файл": "خروجی فهرست — ربات فایل CSV می‌فرستد",
-  "Файл отправлен ботом в личные сообщения": "ربات فایل را به پیام‌های خصوصی فرستاد"
+  "Файл отправлен ботом в личные сообщения": "ربات فایل را به پیام‌های خصوصی فرستاد",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "نمایش‌ها از تعداد کلیک کمتر است — به نظر اشتباه تایپی است. مقدار «نمایش‌های پست» را بررسی کن؛ CPM و CTR فعلاً محاسبه نمی‌شوند."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23698,7 +23707,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF'ye göre en iyi",
   "худшая": "en kötü",
   "Выгрузить список — бот пришлёт CSV-файл": "Listeyi dışa aktar — bot CSV dosyası gönderecek",
-  "Файл отправлен ботом в личные сообщения": "Bot dosyayı özel mesajlarına gönderdi"
+  "Файл отправлен ботом в личные сообщения": "Bot dosyayı özel mesajlarına gönderdi",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Gösterimler tıklama sayısından az — yazım hatası gibi görünüyor. «Gönderi gösterimleri» değerini kontrol et; CPM ve CTR şimdilik hesaplanmıyor."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -26068,7 +26078,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF से सर्वश्रेष्ठ",
   "худшая": "सबसे खराब",
   "Выгрузить список — бот пришлёт CSV-файл": "सूची निर्यात करें — बॉट CSV फ़ाइल भेजेगा",
-  "Файл отправлен ботом в личные сообщения": "बॉट ने फ़ाइल आपके निजी संदेशों में भेजी"
+  "Файл отправлен ботом в личные сообщения": "बॉट ने फ़ाइल आपके निजी संदेशों में भेजी",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "इंप्रेशन क्लिक से कम हैं — टाइपो लगता है। «पोस्ट इंप्रेशन» मान जांचें; तब तक CPM और CTR रुके हैं।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -28438,7 +28449,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "CPF অনুযায়ী সেরা",
   "худшая": "সবচেয়ে খারাপ",
   "Выгрузить список — бот пришлёт CSV-файл": "তালিকা রপ্তানি করুন — বট CSV ফাইল পাঠাবে",
-  "Файл отправлен ботом в личные сообщения": "বট ফাইলটি আপনার ব্যক্তিগত বার্তায় পাঠিয়েছে"
+  "Файл отправлен ботом в личные сообщения": "বট ফাইলটি আপনার ব্যক্তিগত বার্তায় পাঠিয়েছে",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ইম্প্রেশন ক্লিকের চেয়ে কম — টাইপো মনে হচ্ছে। «পোস্ট ইম্প্রেশন» মান যাচাই করুন; ততক্ষণ CPM ও CTR গণনা হবে না।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30808,7 +30820,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Terbaik menurut CPF",
   "худшая": "terburuk",
   "Выгрузить список — бот пришлёт CSV-файл": "Ekspor daftar — bot akan mengirim file CSV",
-  "Файл отправлен ботом в личные сообщения": "Bot mengirim file ke pesan pribadimu"
+  "Файл отправлен ботом в личные сообщения": "Bot mengirim file ke pesan pribadimu",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impresi lebih rendah dari jumlah klik — sepertinya salah ketik. Periksa nilai “Impresi posting”; CPM dan CTR dijeda dulu."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -33178,7 +33191,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Tốt nhất theo CPF",
   "худшая": "kém nhất",
   "Выгрузить список — бот пришлёт CSV-файл": "Xuất danh sách — bot sẽ gửi file CSV",
-  "Файл отправлен ботом в личные сообщения": "Bot đã gửi file vào tin nhắn riêng"
+  "Файл отправлен ботом в личные сообщения": "Bot đã gửi file vào tin nhắn riêng",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Lượt hiển thị thấp hơn số lượt bấm — có vẻ nhập nhầm. Kiểm tra «Lượt hiển thị bài»; CPM và CTR tạm không tính."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -35548,7 +35562,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Melhor por CPF",
   "худшая": "pior",
   "Выгрузить список — бот пришлёт CSV-файл": "Exportar a lista — o bot enviará um arquivo CSV",
-  "Файл отправлен ботом в личные сообщения": "O bot enviou o arquivo nas suas mensagens privadas"
+  "Файл отправлен ботом в личные сообщения": "O bot enviou o arquivo nas suas mensagens privadas",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressões menores que o número de cliques — parece um erro de digitação. Verifique «Impressões do post»; CPM e CTR ficam pausados."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37918,7 +37933,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Meilleure par CPF",
   "худшая": "pire",
   "Выгрузить список — бот пришлёт CSV-файл": "Exporter la liste — le bot enverra un fichier CSV",
-  "Файл отправлен ботом в личные сообщения": "Le bot a envoyé le fichier dans tes messages privés"
+  "Файл отправлен ботом в личные сообщения": "Le bot a envoyé le fichier dans tes messages privés",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions inférieures au nombre de clics — probablement une faute de frappe. Vérifie « Impressions du post » ; CPM et CTR sont en pause."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -40288,7 +40304,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Migliore per CPF",
   "худшая": "peggiore",
   "Выгрузить список — бот пришлёт CSV-файл": "Esporta l'elenco — il bot invierà un file CSV",
-  "Файл отправлен ботом в личные сообщения": "Il bot ha inviato il file nei tuoi messaggi privati"
+  "Файл отправлен ботом в личные сообщения": "Il bot ha inviato il file nei tuoi messaggi privati",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressioni inferiori al numero di clic — sembra un refuso. Controlla «Impressioni del post»; CPM e CTR restano in pausa."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -42658,7 +42675,8 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "በCPF ምርጥ",
   "худшая": "መጥፎው",
   "Выгрузить список — бот пришлёт CSV-файл": "ዝርዝሩን አውጣ — ቦቱ የCSV ፋይል ይልካል",
-  "Файл отправлен ботом в личные сообщения": "ቦቱ ፋይሉን ወደ የግል መልዕክቶችህ ልኳል"
+  "Файл отправлен ботом в личные сообщения": "ቦቱ ፋይሉን ወደ የግል መልዕክቶችህ ልኳል",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ማሳያዎች ከጠቅታ ብዛት ያነሱ ናቸው — ስህተት ይመስላል። የ«የልጥፍ ማሳያዎች» እሴት አረጋግጥ፤ CPM እና CTR ለጊዜው አይሰሉም።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -45028,6 +45046,7 @@ window.__I18N_DICT = {
   "Лучшая по CPF": "Bora kwa CPF",
   "худшая": "mbaya zaidi",
   "Выгрузить список — бот пришлёт CSV-файл": "Hamisha orodha — boti itatuma faili ya CSV",
-  "Файл отправлен ботом в личные сообщения": "Boti imetuma faili kwenye ujumbe wako binafsi"
+  "Файл отправлен ботом в личные сообщения": "Boti imetuma faili kwenye ujumbe wako binafsi",
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Maonyesho ni machache kuliko idadi ya mibofyo — inaonekana kosa la kuandika. Kagua thamani ya «Maonyesho ya chapisho»; CPM na CTR zimesimamishwa kwa sasa."
  }
 };
