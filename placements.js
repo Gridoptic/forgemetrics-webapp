@@ -61,7 +61,7 @@
             '.pl-fx{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:9px;border-top:0.5px solid rgba(255,255,255,0.05);}',
             '.pl-fxi{flex:1;min-width:0;}',
             '@media (max-width:379px){.pl-fxi{flex:1 1 40%;}}',
-            '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;line-height:1.35;}',
             '.pl-fxv{font-size:13.5px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}',
             '.pl-fxv small{font-size:9px;color:#8990a8;font-weight:600;}',
             '.pl-copy{border:0;background:rgba(93,202,165,0.16);color:#5DCAA5;border-radius:8px;padding:7px 11px;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;min-height:32px;}',
