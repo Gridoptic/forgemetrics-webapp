@@ -46,6 +46,10 @@
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
             '.pl-cmp{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;padding:9px 11px;margin-bottom:9px;font-size:10.5px;color:#a9aec0;line-height:1.55;}',
             '.pl-cmp b{color:#e8e8ed;}',
+            '.pl-big3{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:1px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;overflow:hidden;margin-top:10px;}',
+            '.pl-bt{background:#10141f;padding:8px 9px;min-width:0;}',
+            '.pl-bt .k{font-size:8.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-bt .v{font-size:15px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
             '.pl-linkrow2{background:rgba(93,202,165,0.06);border:0.5px solid rgba(93,202,165,0.25);border-radius:10px;padding:8px 10px;margin-top:10px;}',
             '.pl-lcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5DCAA5;opacity:0.85;margin-bottom:5px;}',
             '.pl-lval{display:flex;align-items:center;gap:8px;}',
@@ -304,15 +308,22 @@
         }
         fun += '</div>';
 
+        var joinedN = l.joined || 0, retN = l.retained_now || 0, leftN = Math.max(0, joinedN - retN);
+        var big = '<div class="pl-big3">' +
+            '<div class="pl-bt"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div>' +
+            '<div class="pl-bt"><div class="k">' + esc(T('Отписались')) + '</div><div class="v" style="color:' + (leftN ? '#ef4444' : '#8990a8') + ';">' + (leftN ? '−' + num(leftN) : '0') + '</div></div>' +
+            '<div class="pl-bt"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(retN) + '</div></div>' +
+            (l.cpf != null ? '<div class="pl-bt"><div class="k">CPF</div><div class="v">' + num(l.cpf) + ' ₽</div></div>' : '') +
+            '</div>';
         var lateNote = (l.late_joined > 0)
             ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
             : '';
         if (l.joined_approx > 0) {
             lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
         }
-        lateNote += cpmWarn;
+        var warns = cpmWarn;
         if (badImp) {
-            lateNote += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
+            warns += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
         var dealLabel = l.deal_id
             ? T('Показы поста привязаны к сделке · изменить')
@@ -331,7 +342,9 @@
                   '<div class="pl-lval"><code>' + esc(postUrl) + '</code>' +
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(postUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
                 : '') +
-            fun + lateNote +
+            big + lateNote +
+            '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
+            '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>' +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
             '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
@@ -556,6 +569,12 @@
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
+        if (act === 'adv') {
+            var advBox = document.getElementById('pl-adv-' + b.getAttribute('data-id'));
+            if (advBox) advBox.style.display = advBox.style.display === 'none' ? 'block' : 'none';
+            haptic('light');
+            return;
+        }
         if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'deal') { openDealPick(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'deal-pick') {
