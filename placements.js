@@ -110,7 +110,16 @@
             '.pl-whomid{flex:1;min-width:0;}',
             '.pl-whonm{font-size:12px;font-weight:600;color:#e8e8ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
             '.pl-whosub{font-size:9.5px;color:#565b73;}',
-            '.pl-year{color:#8ab4f8;font-weight:700;}',
+            '.pl-year{color:#2f6bff;font-weight:800;}',
+            '.pl-prem{color:#5DCAA5;font-weight:800;}',
+            '.pl-days{display:flex;gap:5px;align-items:flex-end;overflow-x:auto;padding:4px 0 2px;}',
+            '.pl-dcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:22px;flex:0 0 auto;}',
+            '.pl-dbar{width:12px;border-radius:3px;}',
+            '.pl-dbar.j{background:#5DCAA5;}',
+            '.pl-dbar.l{background:#ef4444;margin-top:1px;}',
+            '.pl-dnum{font-size:8.5px;color:#8990a8;height:11px;font-variant-numeric:tabular-nums;}',
+            '.pl-dnum.l2{color:#ef4444;}',
+            '.pl-dday{font-size:8px;color:#565b73;margin-top:2px;white-space:nowrap;}',
             '.pl-whotag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:99px;flex:0 0 auto;}',
             '.pl-whotag.left{background:rgba(239,68,68,0.13);color:#ef4444;}',
             '.pl-whotag.late{background:rgba(245,191,79,0.13);color:#f5bf4f;}',
@@ -524,6 +533,63 @@
         catch (e) { return ''; }
     }
 
+    function daysChart(items) {
+        var buckets = {};
+        items.forEach(function (u) {
+            if (u.ts) {
+                var d = u.ts.slice(0, 10);
+                (buckets[d] = buckets[d] || { j: 0, l: 0 }).j++;
+            }
+            if (u.left_ts) {
+                var d2 = u.left_ts.slice(0, 10);
+                (buckets[d2] = buckets[d2] || { j: 0, l: 0 }).l++;
+            }
+        });
+        var days = Object.keys(buckets).sort();
+        if (!days.length) return '';
+        var out = [];
+        var cur = new Date(days[0] + 'T00:00:00Z');
+        var end = new Date(days[days.length - 1] + 'T00:00:00Z');
+        var guard = 0;
+        while (cur <= end && guard < 31) {
+            var key = cur.toISOString().slice(0, 10);
+            out.push({ d: key, j: (buckets[key] || {}).j || 0, l: (buckets[key] || {}).l || 0 });
+            cur.setUTCDate(cur.getUTCDate() + 1);
+            guard++;
+        }
+        var mx = 1;
+        out.forEach(function (b) { if (b.j > mx) mx = b.j; if (b.l > mx) mx = b.l; });
+        var cols = out.map(function (b) {
+            var jh = b.j ? Math.max(3, Math.round(b.j / mx * 30)) : 0;
+            var lh = b.l ? Math.max(3, Math.round(b.l / mx * 30)) : 0;
+            return '<div class="pl-dcol"><div class="pl-dnum">' + (b.j || '') + '</div>' +
+                '<div class="pl-dbar j" style="height:' + jh + 'px;"></div>' +
+                '<div class="pl-dbar l" style="height:' + lh + 'px;"></div>' +
+                '<div class="pl-dnum l2">' + (b.l || '') + '</div>' +
+                '<div class="pl-dday">' + b.d.slice(8, 10) + '.' + b.d.slice(5, 7) + '</div></div>';
+        }).join('');
+        return '<div class="pl-fcap" style="margin-top:10px;">' + esc(T('Динамика по дням')) + '</div>' +
+            '<div class="pl-days">' + cols + '</div>' +
+            '<div class="pl-qnote"><span style="color:#5DCAA5;">▮</span> ' + esc(T('вступления')) + ' · <span style="color:#ef4444;">▮</span> ' + esc(T('отписки')) + '</div>';
+    }
+
+    function statsSummary(items) {
+        var total = items.length;
+        if (!total) return '';
+        var prem = 0, langs = {}, years = {};
+        items.forEach(function (u) {
+            if (u.premium) prem++;
+            if (u.lang) langs[u.lang] = (langs[u.lang] || 0) + 1;
+            if (u.acc_year) years[u.acc_year] = (years[u.acc_year] || 0) + 1;
+        });
+        var s = '<div class="pl-qnote"><span class="pl-prem">Premium</span>: ' + prem + ' ' + esc(T('из')) + ' ' + total + ' · ' + Math.round(prem / total * 100) + '%</div>';
+        var lk = Object.keys(langs).sort(function (a, b) { return langs[b] - langs[a]; }).slice(0, 4);
+        if (lk.length) s += '<div class="pl-qnote">' + esc(T('Языки:')) + ' ' + lk.map(function (k) { return esc(k) + ' ×' + langs[k]; }).join(' · ') + '</div>';
+        var yk = Object.keys(years).sort();
+        if (yk.length) s += '<div class="pl-qnote">' + esc(T('Годы аккаунтов:')) + ' ' + yk.map(function (k) { return '<span class="pl-year">≈' + esc(k) + '</span> ×' + years[k]; }).join(' · ') + '</div>';
+        return s;
+    }
+
     function toggleWho(id) {
         var box = document.getElementById('pl-who-' + id);
         if (!box) return;
@@ -549,7 +615,7 @@
                 if (u.username) bits.push(esc('@' + u.username));
                 bits.push(esc(fmtTime(u.ts)));
                 if (u.acc_year) bits.push('<span class="pl-year">≈' + esc(String(u.acc_year)) + '</span>');
-                if (u.premium) bits.push('Premium');
+                if (u.premium) bits.push('<span class="pl-prem">Premium</span>');
                 var sub = bits.join(' · ');
                 var tags = '';
                 if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
@@ -583,8 +649,8 @@
             if (q.fresh_2024) flags.push(esc(T('свежие аккаунты (2024+)')) + ': ' + q.fresh_2024);
             if (q.digit_names) flags.push(esc(T('юзернеймы с цифрами')) + ': ' + q.digit_names);
             if (q.no_username) flags.push(esc(T('без @имени')) + ': ' + q.no_username);
-            if (q.premium) flags.push('Premium: ' + q.premium);
             if (flags.length) head += '<div class="pl-qnote">' + flags.join(' · ') + '</div>';
+            head += statsSummary(items) + daysChart(items);
             var susp = (q.fresh_2024 || 0) + (q.digit_names || 0);
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
