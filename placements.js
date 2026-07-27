@@ -2,6 +2,7 @@
     'use strict';
 
     var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
+    var CLICK_BASE = 'https://fmtr.click';
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -94,6 +95,10 @@
             '.pl-grip{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,0.18);margin:2px auto 12px;}',
             '.pl-flabel{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;margin:12px 0 6px;}',
             '.pl-inp{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:11px;padding:11px 12px;font-size:13px;color:#e8e8ed;font-family:inherit;outline:none;}',
+            '.pl-ltopt{border:0.5px solid rgba(255,255,255,0.12);border-radius:11px;padding:10px 12px;margin-top:8px;cursor:pointer;}',
+            '.pl-ltopt b{display:block;font-size:12px;font-weight:700;color:#e8e8ed;}',
+            '.pl-ltopt span{display:block;font-size:10.5px;color:#8990a8;line-height:1.45;margin-top:2px;}',
+            '.pl-ltopt.sel{border-color:rgba(129,140,248,0.7);background:rgba(129,140,248,0.08);}',
             '.pl-spin{width:26px;height:26px;border:3px solid rgba(255,255,255,0.1);border-top-color:#818cf8;border-radius:50%;margin:40px auto 12px;animation:plSpin 0.8s linear infinite;}',
             '@keyframes plSpin{to{transform:rotate(360deg);}}',
             '.pl-center{text-align:center;color:#8990a8;font-size:12px;}',
@@ -204,9 +209,12 @@
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
         if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
         if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
+        var postUrl = l.click_code ? (CLICK_BASE + '/r/' + l.click_code) : l.invite_link;
         var rows = [];
         if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
-        rows.push({ lab: T('Подписались'), v: l.joined || 0, cap: rows.length ? T('от увидевших') : null });
+        if (l.clicks != null) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: rows.length ? T('от увидевших') : null });
+        rows.push({ lab: T('Подписались'), v: l.joined || 0,
+                    cap: rows.length ? (l.clicks != null ? T('от перешедших') : T('от увидевших')) : null });
         rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
         var maxV = 0;
         rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
@@ -223,6 +231,8 @@
         });
         var fx = [];
         if (l.impressions && l.price_rub) fx.push({ k: 'CPM', v: num(Math.round(l.price_rub / l.impressions * 1000)) + ' ₽' });
+        if (l.clicks && l.impressions) fx.push({ k: 'CTR', v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
+        if (l.clicks && l.price_rub) fx.push({ k: 'CPC', v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
         if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
         if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
@@ -244,8 +254,8 @@
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
             (active
                 ? '<div class="pl-linkrow2"><div class="pl-lcap">' + esc(T('Эта ссылка — в рекламный пост')) + '</div>' +
-                  '<div class="pl-lval"><code>' + esc(l.invite_link) + '</code>' +
-                  '<button class="pl-copy" data-act="copy" data-link="' + esc(l.invite_link) + '">' + esc(T('Скопировать')) + '</button></div></div>'
+                  '<div class="pl-lval"><code>' + esc(postUrl) + '</code>' +
+                  '<button class="pl-copy" data-act="copy" data-link="' + esc(postUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
                 : '') +
             fun + lateNote +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
@@ -319,6 +329,11 @@
             '<input class="pl-inp" id="pl-name" maxlength="80" placeholder="' + esc(T('Реклама у @канал')) + '" value="">' +
             '<div class="pl-flabel">' + esc(T('Цена размещения, ₽ — для расчёта CPF')) + '</div>' +
             '<input class="pl-inp" id="pl-price" type="number" inputmode="numeric" min="0" placeholder="' + esc(T('не обязательно')) + '">' +
+            '<div class="pl-flabel">' + esc(T('Тип ссылки')) + '</div>' +
+            '<div class="pl-ltopt sel" data-act="ltype"><b>' + esc(T('Прямая ссылка Telegram')) + '</b>' +
+            '<span>' + esc(T('Привычный t.me — считает подписавшихся и качество трафика.')) + '</span></div>' +
+            '<div class="pl-ltopt" data-act="ltype" data-track="1"><b>' + esc(T('Ссылка с учётом переходов')) + '</b>' +
+            '<span>' + esc(T('Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.')) + '</span></div>' +
             '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
@@ -333,17 +348,22 @@
         var price = (document.getElementById('pl-price') || {}).value || '';
         name = name.trim();
         if (!name) { toast(T('Укажи название размещения')); return; }
+        var selOpt = document.querySelector('#pl-sheet .pl-ltopt.sel');
+        var track = !!(selOpt && selOpt.getAttribute('data-track'));
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null })
+            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track })
         }).then(function (r) {
             _busy = false;
             if (r && r.ok) {
                 haptic('medium');
                 closeSheet();
                 load();
-                if (r.item && r.item.invite_link) copyText(r.item.invite_link, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
+                if (r.item) {
+                    var cu = r.item.click_code ? (CLICK_BASE + '/r/' + r.item.click_code) : r.item.invite_link;
+                    if (cu) copyText(cu, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
+                }
             } else if (r && r.error === 'no_right') {
                 closeSheet(); _right = false; render();
             } else {
@@ -413,6 +433,13 @@
         if (act === 'guide-hide') { try { localStorage.setItem('pl_guide_hidden', '1'); } catch (e2) {} render(); return; }
         if (act === 'guide-show') { try { localStorage.removeItem('pl_guide_hidden'); } catch (e2) {} render(); return; }
         if (act === 'new') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'ltype') {
+            var opts = document.querySelectorAll('#pl-sheet .pl-ltopt');
+            for (var oi = 0; oi < opts.length; oi++) opts[oi].classList.remove('sel');
+            b.classList.add('sel');
+            haptic('light');
+            return;
+        }
         if (act === 'create') { doCreate(); return; }
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }

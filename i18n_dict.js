@@ -2348,7 +2348,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Disable the link? It will stop working; the statistics will be kept.",
   "Пришли сами в эти дни": "Came on their own in these days",
   "без ссылки": "without a link",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "They came via the channel's @username, search or a forwarded post — Telegram does not report their source. They may be from the ad or organic."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "They came via the channel's @username, search or a forwarded post — Telegram does not report their source. They may be from the ad or organic.",
+  "Тип ссылки": "Link type",
+  "Прямая ссылка Telegram": "Direct Telegram link",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "The familiar t.me — counts subscribers and traffic quality.",
+  "Ссылка с учётом переходов": "Link with click tracking",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Also counts clicks: CTR and CPC are added — you see where people drop off between the view and the subscription."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4692,7 +4697,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "¿Desactivar el enlace? Dejará de funcionar; las estadísticas se conservan.",
   "Пришли сами в эти дни": "Llegaron por su cuenta en esos días",
   "без ссылки": "sin enlace",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Llegaron por el @nombre del canal, la búsqueda o un post reenviado; Telegram no informa su origen. Pueden venir del anuncio o ser orgánicos."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Llegaron por el @nombre del canal, la búsqueda o un post reenviado; Telegram no informa su origen. Pueden venir del anuncio o ser orgánicos.",
+  "Тип ссылки": "Tipo de enlace",
+  "Прямая ссылка Telegram": "Enlace directo de Telegram",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "El t.me habitual: cuenta suscriptores y calidad del tráfico.",
+  "Ссылка с учётом переходов": "Enlace con conteo de clics",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "También cuenta clics: se añaden CTR y CPC — ves dónde se pierde la gente entre la vista y la suscripción."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -7036,7 +7046,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Link deaktivieren? Er funktioniert dann nicht mehr; die Statistik bleibt erhalten.",
   "Пришли сами в эти дни": "In diesen Tagen von selbst gekommen",
   "без ссылки": "ohne Link",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Sie kamen über den @Namen des Kanals, die Suche oder einen weitergeleiteten Beitrag — Telegram nennt ihre Quelle nicht. Sie können von der Anzeige oder organisch sein."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Sie kamen über den @Namen des Kanals, die Suche oder einen weitergeleiteten Beitrag — Telegram nennt ihre Quelle nicht. Sie können von der Anzeige oder organisch sein.",
+  "Тип ссылки": "Link-Typ",
+  "Прямая ссылка Telegram": "Direkter Telegram-Link",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Das gewohnte t.me — zählt Abonnenten und Traffic-Qualität.",
+  "Ссылка с учётом переходов": "Link mit Klick-Zählung",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Zählt auch Klicks: CTR und CPC kommen dazu — du siehst, wo Leute zwischen Ansicht und Abo verloren gehen."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9375,7 +9390,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Сілтемені өшіру керек пе? Ол жұмыс істемей қалады; статистика сақталады.",
   "Пришли сами в эти дни": "Осы күндері өздері келді",
   "без ссылки": "сілтемесіз",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Арнаның @атауы, іздеу немесе қайта жіберілген жазба арқылы кірді — Telegram олардың көзін айтпайды. Жарнамадан да, органикадан да болуы мүмкін."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Арнаның @атауы, іздеу немесе қайта жіберілген жазба арқылы кірді — Telegram олардың көзін айтпайды. Жарнамадан да, органикадан да болуы мүмкін.",
+  "Тип ссылки": "Сілтеме түрі",
+  "Прямая ссылка Telegram": "Тікелей Telegram сілтемесі",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Таныс t.me — жазылғандарды және трафик сапасын есептейді.",
+  "Ссылка с учётом переходов": "Өтулерді есептейтін сілтеме",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Кликтерді де есептейді: CTR мен CPC қосылады — көру мен жазылу арасында адамдар қайда жоғалатыны көрінеді."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11719,7 +11739,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Havola o'chirilsinmi? U ishlamay qoladi; statistika saqlanadi.",
   "Пришли сами в эти дни": "Shu kunlarda o'zlari kelgan",
   "без ссылки": "havolasiz",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalning @nomi, qidiruv yoki uzatilgan post orqali kirgan — Telegram manbasini aytmaydi. Reklamadan ham, organikdan ham bo'lishi mumkin."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalning @nomi, qidiruv yoki uzatilgan post orqali kirgan — Telegram manbasini aytmaydi. Reklamadan ham, organikdan ham bo'lishi mumkin.",
+  "Тип ссылки": "Havola turi",
+  "Прямая ссылка Telegram": "To'g'ridan-to'g'ri Telegram havolasi",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Odatiy t.me — obunachilarni va trafik sifatini hisoblaydi.",
+  "Ссылка с учётом переходов": "O'tishlarni hisoblaydigan havola",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Kliklarni ham hisoblaydi: CTR va CPC qo'shiladi — ko'rish va obuna orasida odamlar qayerda yo'qolishi ko'rinadi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -14062,7 +14087,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Адключыць спасылку? Яна перастане працаваць; статыстыка захаваецца.",
   "Пришли сами в эти дни": "Прыйшлі самі ў гэтыя дні",
   "без ссылки": "без спасылкі",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Зайшлі праз @імя канала, з пошуку або па перасланым пасце — Telegram не паведамляе іх крыніцу. Могуць быць і ад рэкламы, і арганікай."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Зайшлі праз @імя канала, з пошуку або па перасланым пасце — Telegram не паведамляе іх крыніцу. Могуць быць і ад рэкламы, і арганікай.",
+  "Тип ссылки": "Тып спасылкі",
+  "Прямая ссылка Telegram": "Прамая спасылка Telegram",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Звыклы t.me — лічыць падпісчыкаў і якасць трафіку.",
+  "Ссылка с учётом переходов": "Спасылка з улікам пераходаў",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Лічыць і клікі: дадаюцца CTR і CPC — відаць, дзе губляюцца людзі паміж праглядам і падпіскай."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16406,7 +16436,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Keçid söndürülsün? İşləməyəcək; statistika saxlanılacaq.",
   "Пришли сами в эти дни": "Bu günlərdə özləri gəliblər",
   "без ссылки": "keçidsiz",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalın @adı, axtarış və ya yönləndirilmiş post vasitəsilə giriblər — Telegram mənbəni bildirmir. Həm reklamdan, həm də orqanik ola bilərlər."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalın @adı, axtarış və ya yönləndirilmiş post vasitəsilə giriblər — Telegram mənbəni bildirmir. Həm reklamdan, həm də orqanik ola bilərlər.",
+  "Тип ссылки": "Keçid növü",
+  "Прямая ссылка Telegram": "Birbaşa Telegram keçidi",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Tanış t.me — abunəçiləri və trafik keyfiyyətini sayır.",
+  "Ссылка с учётом переходов": "Keçidləri sayan keçid",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Klikləri də sayır: CTR və CPC əlavə olunur — baxışla abunə arasında insanların harada itdiyi görünür."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18750,7 +18785,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "تعطيل الرابط؟ سيتوقف عن العمل وستبقى الإحصاءات.",
   "Пришли сами в эти дни": "جاؤوا بأنفسهم في هذه الأيام",
   "без ссылки": "بدون رابط",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "دخلوا عبر @اسم القناة أو البحث أو منشور معاد توجيهه — تليجرام لا يُبلغ عن مصدرهم. قد يكونون من الإعلان أو زيارات طبيعية."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "دخلوا عبر @اسم القناة أو البحث أو منشور معاد توجيهه — تليجرام لا يُبلغ عن مصدرهم. قد يكونون من الإعلان أو زيارات طبيعية.",
+  "Тип ссылки": "نوع الرابط",
+  "Прямая ссылка Telegram": "رابط تليجرام مباشر",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "رابط t.me المعتاد — يحسب المشتركين وجودة الزيارات.",
+  "Ссылка с учётом переходов": "رابط مع تتبع النقرات",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "يحسب النقرات أيضًا: يُضاف CTR وCPC — ترى أين يضيع الناس بين المشاهدة والاشتراك."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -21094,7 +21134,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "پیوند غیرفعال شود؟ از کار می‌افتد؛ آمار حفظ می‌شود.",
   "Пришли сами в эти дни": "در این روزها خودشان آمدند",
   "без ссылки": "بدون پیوند",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "از طریق @نام کانال، جستجو یا پست بازارسالی آمده‌اند — تلگرام منبع را نمی‌گوید. ممکن است از تبلیغ یا ارگانیک باشند."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "از طریق @نام کانال، جستجو یا پست بازارسالی آمده‌اند — تلگرام منبع را نمی‌گوید. ممکن است از تبلیغ یا ارگانیک باشند.",
+  "Тип ссылки": "نوع پیوند",
+  "Прямая ссылка Telegram": "پیوند مستقیم تلگرام",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "همان t.me آشنا — عضوها و کیفیت ترافیک را می‌شمارد.",
+  "Ссылка с учётом переходов": "پیوند با شمارش کلیک",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "کلیک‌ها را هم می‌شمارد: CTR و CPC اضافه می‌شوند — می‌بینی مردم کجا بین دیدن و عضویت گم می‌شوند."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23438,7 +23483,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Bağlantı kapatılsın mı? Çalışmayı durdurur; istatistikler korunur.",
   "Пришли сами в эти дни": "Bu günlerde kendiliğinden geldi",
   "без ссылки": "bağlantısız",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalın @adı, arama veya iletilen bir gönderiyle geldiler — Telegram kaynağı bildirmez. Reklamdan da organik de olabilirler."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Kanalın @adı, arama veya iletilen bir gönderiyle geldiler — Telegram kaynağı bildirmez. Reklamdan da organik de olabilirler.",
+  "Тип ссылки": "Bağlantı türü",
+  "Прямая ссылка Telegram": "Doğrudan Telegram bağlantısı",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Alışıldık t.me — aboneleri ve trafik kalitesini sayar.",
+  "Ссылка с учётом переходов": "Tıklama sayan bağlantı",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Tıklamaları da sayar: CTR ve CPC eklenir — görüntüleme ile abonelik arasında insanların nerede kaybolduğunu görürsün."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -25782,7 +25832,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "लिंक बंद करें? यह काम करना बंद कर देगा; आँकड़े बने रहेंगे।",
   "Пришли сами в эти дни": "इन दिनों खुद आए",
   "без ссылки": "बिना लिंक",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "चैनल के @नाम, खोज या फ़ॉरवर्ड पोस्ट से आए — Telegram स्रोत नहीं बताता। ये विज्ञापन से भी हो सकते हैं और ऑर्गेनिक भी।"
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "चैनल के @नाम, खोज या फ़ॉरवर्ड पोस्ट से आए — Telegram स्रोत नहीं बताता। ये विज्ञापन से भी हो सकते हैं और ऑर्गेनिक भी।",
+  "Тип ссылки": "लिंक प्रकार",
+  "Прямая ссылка Telegram": "सीधा Telegram लिंक",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "परिचित t.me — सब्सक्राइबर और ट्रैफ़िक गुणवत्ता गिनता है।",
+  "Ссылка с учётом переходов": "क्लिक ट्रैकिंग वाला लिंक",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "क्लिक भी गिनता है: CTR और CPC जुड़ते हैं — दिखता है कि व्यू और सब्सक्रिप्शन के बीच लोग कहां छूटते हैं।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -28126,7 +28181,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "লিংক বন্ধ করবেন? এটি কাজ করা বন্ধ করবে; পরিসংখ্যান থাকবে।",
   "Пришли сами в эти дни": "এই দিনগুলিতে নিজে এসেছে",
   "без ссылки": "লিংক ছাড়া",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "চ্যানেলের @নাম, সার্চ বা ফরোয়ার্ড পোস্টের মাধ্যমে এসেছে — Telegram উৎস জানায় না। বিজ্ঞাপন থেকেও হতে পারে, অর্গানিকও।"
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "চ্যানেলের @নাম, সার্চ বা ফরোয়ার্ড পোস্টের মাধ্যমে এসেছে — Telegram উৎস জানায় না। বিজ্ঞাপন থেকেও হতে পারে, অর্গানিকও।",
+  "Тип ссылки": "লিংকের ধরন",
+  "Прямая ссылка Telegram": "সরাসরি Telegram লিংক",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "পরিচিত t.me — সাবস্ক্রাইবার ও ট্রাফিক মান গণনা করে।",
+  "Ссылка с учётом переходов": "ক্লিক ট্র্যাকিং সহ লিংক",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ক্লিকও গণনা করে: CTR ও CPC যুক্ত হয় — দেখা যায় ভিউ ও সাবস্ক্রিপশনের মাঝে মানুষ কোথায় হারিয়ে যায়।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30470,7 +30530,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Nonaktifkan tautan? Akan berhenti berfungsi; statistik tetap tersimpan.",
   "Пришли сами в эти дни": "Datang sendiri di hari-hari ini",
   "без ссылки": "tanpa tautan",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Masuk lewat @nama kanal, pencarian, atau posting terusan — Telegram tidak melaporkan sumbernya. Bisa dari iklan maupun organik."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Masuk lewat @nama kanal, pencarian, atau posting terusan — Telegram tidak melaporkan sumbernya. Bisa dari iklan maupun organik.",
+  "Тип ссылки": "Jenis tautan",
+  "Прямая ссылка Telegram": "Tautan Telegram langsung",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "t.me yang familiar — menghitung pelanggan dan kualitas trafik.",
+  "Ссылка с учётом переходов": "Tautan dengan penghitung klik",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Juga menghitung klik: CTR dan CPC ditambahkan — terlihat di mana orang hilang antara tayangan dan berlangganan."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -32814,7 +32879,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Tắt liên kết? Nó sẽ ngừng hoạt động; số liệu vẫn được giữ.",
   "Пришли сами в эти дни": "Tự đến trong những ngày này",
   "без ссылки": "không qua liên kết",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Vào qua @tên kênh, tìm kiếm hoặc bài chuyển tiếp — Telegram không cho biết nguồn. Có thể từ quảng cáo hoặc tự nhiên."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Vào qua @tên kênh, tìm kiếm hoặc bài chuyển tiếp — Telegram không cho biết nguồn. Có thể từ quảng cáo hoặc tự nhiên.",
+  "Тип ссылки": "Loại liên kết",
+  "Прямая ссылка Telegram": "Liên kết Telegram trực tiếp",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "t.me quen thuộc — đếm người đăng ký và chất lượng traffic.",
+  "Ссылка с учётом переходов": "Liên kết có đếm lượt bấm",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Đếm cả lượt bấm: thêm CTR và CPC — thấy rõ người dùng rơi rụng ở đâu giữa lượt xem và đăng ký."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -35158,7 +35228,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Desativar o link? Ele deixará de funcionar; as estatísticas ficam.",
   "Пришли сами в эти дни": "Vieram por conta própria nesses dias",
   "без ссылки": "sem link",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entraram pelo @nome do canal, busca ou post encaminhado — o Telegram não informa a origem. Podem vir do anúncio ou ser orgânicos."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entraram pelo @nome do canal, busca ou post encaminhado — o Telegram não informa a origem. Podem vir do anúncio ou ser orgânicos.",
+  "Тип ссылки": "Tipo de link",
+  "Прямая ссылка Telegram": "Link direto do Telegram",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "O t.me habitual — conta inscritos e qualidade do tráfego.",
+  "Ссылка с учётом переходов": "Link com contagem de cliques",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Também conta cliques: CTR e CPC são adicionados — você vê onde as pessoas se perdem entre a visualização e a inscrição."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37502,7 +37577,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Désactiver le lien ? Il cessera de fonctionner ; les statistiques sont conservées.",
   "Пришли сами в эти дни": "Venus d'eux-mêmes ces jours-ci",
   "без ссылки": "sans lien",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entrés via le @nom de la chaîne, la recherche ou un post transféré — Telegram n'indique pas leur source. Ils peuvent venir de la pub ou être organiques."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entrés via le @nom de la chaîne, la recherche ou un post transféré — Telegram n'indique pas leur source. Ils peuvent venir de la pub ou être organiques.",
+  "Тип ссылки": "Type de lien",
+  "Прямая ссылка Telegram": "Lien Telegram direct",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Le t.me habituel — compte les abonnés et la qualité du trafic.",
+  "Ссылка с учётом переходов": "Lien avec suivi des clics",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Compte aussi les clics : CTR et CPC s'ajoutent — tu vois où les gens se perdent entre la vue et l'abonnement."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -39846,7 +39926,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Disattivare il link? Smetterà di funzionare; le statistiche restano.",
   "Пришли сами в эти дни": "Arrivati da soli in questi giorni",
   "без ссылки": "senza link",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entrati tramite lo @nome del canale, la ricerca o un post inoltrato — Telegram non ne indica la fonte. Possono venire dall'annuncio o essere organici."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Entrati tramite lo @nome del canale, la ricerca o un post inoltrato — Telegram non ne indica la fonte. Possono venire dall'annuncio o essere organici.",
+  "Тип ссылки": "Tipo di link",
+  "Прямая ссылка Telegram": "Link Telegram diretto",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "Il solito t.me — conta iscritti e qualità del traffico.",
+  "Ссылка с учётом переходов": "Link con conteggio dei clic",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Conta anche i clic: si aggiungono CTR e CPC — vedi dove si perdono le persone tra la visualizzazione e l'iscrizione."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -42190,7 +42275,12 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "አገናኙ ይሰናከል? መስራት ያቆማል፤ ስታቲስቲክሱ ይቀመጣል።",
   "Пришли сами в эти дни": "በእነዚህ ቀናት በራሳቸው መጡ",
   "без ссылки": "ያለ አገናኝ",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "በሰርጡ @ስም፣ በፍለጋ ወይም በተላከ ልጥፍ ገብተዋል — Telegram ምንጫቸውን አይናገርም። ከማስታወቂያም ሆነ ተፈጥሯዊ ሊሆኑ ይችላሉ።"
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "በሰርጡ @ስም፣ በፍለጋ ወይም በተላከ ልጥፍ ገብተዋል — Telegram ምንጫቸውን አይናገርም። ከማስታወቂያም ሆነ ተፈጥሯዊ ሊሆኑ ይችላሉ።",
+  "Тип ссылки": "የአገናኝ አይነት",
+  "Прямая ссылка Telegram": "ቀጥታ የTelegram አገናኝ",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "የተለመደው t.me — ተመዝጋቢዎችን እና የትራፊክ ጥራት ይቆጥራል።",
+  "Ссылка с учётом переходов": "ጠቅታዎችን የሚቆጥር አገናኝ",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "ጠቅታዎችንም ይቆጥራል፦ CTR እና CPC ይታከላሉ — በእይታና በምዝገባ መካከል ሰዎች የት እንደሚጠፉ ይታያል።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -44534,6 +44624,11 @@ window.__I18N_DICT = {
   "Отключить ссылку? Она перестанет работать, статистика сохранится.": "Zima kiungo? Kitaacha kufanya kazi; takwimu zitabaki.",
   "Пришли сами в эти дни": "Walikuja wenyewe siku hizi",
   "без ссылки": "bila kiungo",
-  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Waliingia kupitia @jina la kituo, utafutaji au chapisho lililosambazwa — Telegram haisemi chanzo chao. Wanaweza kuwa wa tangazo au wa kawaida."
+  "Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.": "Waliingia kupitia @jina la kituo, utafutaji au chapisho lililosambazwa — Telegram haisemi chanzo chao. Wanaweza kuwa wa tangazo au wa kawaida.",
+  "Тип ссылки": "Aina ya kiungo",
+  "Прямая ссылка Telegram": "Kiungo cha moja kwa moja cha Telegram",
+  "Привычный t.me — считает подписавшихся и качество трафика.": "t.me ya kawaida — inahesabu wasajili na ubora wa trafiki.",
+  "Ссылка с учётом переходов": "Kiungo chenye kuhesabu mibofyo",
+  "Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.": "Pia inahesabu mibofyo: CTR na CPC zinaongezwa — unaona watu wanapotea wapi kati ya kuona na kujisajili."
  }
 };
