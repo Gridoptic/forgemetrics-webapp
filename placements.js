@@ -103,6 +103,9 @@
             '.pl-ltopt b{display:block;font-size:12px;font-weight:700;color:#e8e8ed;}',
             '.pl-ltopt span{display:block;font-size:10.5px;color:#8990a8;line-height:1.45;margin-top:2px;}',
             '.pl-ltopt.sel{border-color:rgba(129,140,248,0.7);background:rgba(129,140,248,0.08);}',
+            '.pl-fmtrow{display:flex;flex-wrap:wrap;gap:6px;}',
+            '.pl-fmt{border:0.5px solid rgba(255,255,255,0.14);border-radius:99px;padding:6px 12px;font-size:11px;color:#a9aec0;cursor:pointer;}',
+            '.pl-fmt.sel{border-color:rgba(129,140,248,0.7);color:#c7cdfb;background:rgba(129,140,248,0.12);}',
             '.pl-spin{width:26px;height:26px;border:3px solid rgba(255,255,255,0.1);border-top-color:#818cf8;border-radius:50%;margin:40px auto 12px;animation:plSpin 0.8s linear infinite;}',
             '@keyframes plSpin{to{transform:rotate(360deg);}}',
             '.pl-center{text-align:center;color:#8990a8;font-size:12px;}',
@@ -264,6 +267,8 @@
             ? '<span class="pl-tag on">' + esc(T('работает')) + '</span>'
             : '<span class="pl-tag off">' + esc(T('отключена')) + '</span>';
         var meta = [];
+        var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
+        if (l.placement_format && _fmtMap[l.placement_format]) meta.push(T(_fmtMap[l.placement_format]));
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
         if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
         if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
@@ -321,7 +326,14 @@
         if (l.joined_approx > 0) {
             lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
         }
-        var warns = cpmWarn;
+        var fairNote = '';
+        if (l.impressions > 0) {
+            var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
+            var fLo = Math.max(1, Math.round(l.impressions / 1000 * 300 * fk));
+            var fHi = Math.max(fLo, Math.round(l.impressions / 1000 * 1500 * fk));
+            fairNote = '<div class="pl-note">' + esc(T('Справедливая цена такого охвата')) + ': ≈' + num(fLo) + '–' + num(fHi) + ' ₽</div>';
+        }
+        var warns = fairNote + cpmWarn;
         if (badImp) {
             warns += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
@@ -430,6 +442,10 @@
             '<span>' + esc(T('Привычный t.me — считает подписавшихся и качество трафика.')) + '</span></div>' +
             '<div class="pl-ltopt" data-act="ltype" data-track="1"><b>' + esc(T('Ссылка с учётом переходов')) + '</b>' +
             '<span>' + esc(T('Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.')) + '</span></div>' +
+            '<div class="pl-flabel">' + esc(T('Формат размещения')) + '</div>' +
+            '<div class="pl-fmtrow">' + [['post','пост'],['pin','закреп'],['story','сторис'],['circle','кружок'],['repost','репост'],['other','другое']].map(function (f, i) {
+                return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="fmt" data-fmt="' + f[0] + '">' + esc(T(f[1])) + '</span>';
+            }).join('') + '</div>' +
             '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
@@ -449,7 +465,7 @@
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track })
+            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt') })
         }).then(function (r) {
             _busy = false;
             if (r && r.ok) {
@@ -556,6 +572,13 @@
                     if (r && r.ok) toast(T('Файл отправлен ботом в личные сообщения'));
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'fmt') {
+            var fms = document.querySelectorAll('#pl-sheet .pl-fmt');
+            for (var fi = 0; fi < fms.length; fi++) fms[fi].classList.remove('sel');
+            b.classList.add('sel');
+            haptic('light');
             return;
         }
         if (act === 'ltype') {
