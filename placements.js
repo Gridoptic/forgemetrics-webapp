@@ -286,11 +286,12 @@
         });
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
         var fx = [];
+        var cpmWarn = '';
         if (l.impressions >= 100 && l.price_rub && !badImp) {
             var cpmV = Math.round(l.price_rub / l.impressions * 1000);
             var cpmCol = cpmV <= 800 ? '#5DCAA5' : (cpmV <= 2000 ? '#f5bf4f' : '#ef4444');
-            var cpmLab = cpmV <= 800 ? T('в рынке') : (cpmV <= 2000 ? T('дороговато') : T('сильно дороже рынка'));
-            fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: '<span style="color:' + cpmCol + ';">' + num(cpmV) + ' ₽</span> <small>' + esc(cpmLab) + ' · <span>рынок</span> ≈300–1 500 ₽</small>' });
+            fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: '<span style="color:' + cpmCol + ';">' + num(cpmV) + ' ₽</span>' });
+            if (cpmV > 2000) cpmWarn = '<div class="pl-qwarn">' + esc(T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
         }
         if (l.clicks && l.impressions >= 100 && !badImp) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
         if (l.clicks && l.price_rub) fx.push({ k: 'CPC · ' + T('цена перехода'), v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
@@ -310,6 +311,7 @@
         if (l.joined_approx > 0) {
             lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
         }
+        lateNote += cpmWarn;
         if (badImp) {
             lateNote += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
