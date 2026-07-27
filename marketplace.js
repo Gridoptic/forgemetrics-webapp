@@ -451,6 +451,17 @@
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmr-sec.num{font-size:12.5px;letter-spacing:0.02em;text-transform:none;font-weight:700;color:#c7cdfb;margin:0 0 8px;}',
+            '.fmr-gline{display:flex;align-items:center;gap:8px;margin-top:4px;}',
+            '.fmr-gline .gl{font-size:10.5px;font-weight:700;flex:0 0 auto;white-space:nowrap;}',
+            '.fmr-gline .gl.m{color:#6ea8ff;}',
+            '.fmr-gline .gl.f{color:#f08bb4;}',
+            '.fmr-gbar{flex:1;height:12px;border-radius:7px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);}',
+            '.fmr-gbar .gm{background:linear-gradient(90deg,#4f7ef0,#6ea8ff);}',
+            '.fmr-gbar .gf{background:linear-gradient(90deg,#e26a99,#f08bb4);}',
+            '.fmr-gsrc{font-size:9px;color:#565b73;margin-top:4px;}',
+            '.fmr-grow{font-size:11px;color:#a9aec0;margin-top:8px;line-height:1.6;}',
+            '.fmr-agerow{font-size:11px;color:#a9aec0;margin-top:6px;}',
+            '.fmr-agerow b{color:#e8e8ed;}',
             '.fmr-blk{border-radius:14px;padding:12px 13px;margin-bottom:10px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}',
             '.fmr-blk.b1{background:linear-gradient(180deg,rgba(245,191,79,0.09),rgba(245,191,79,0.03));border:1px solid rgba(245,191,79,0.26);}',
             '.fmr-blk.b2{background:linear-gradient(180deg,rgba(129,140,248,0.09),rgba(129,140,248,0.03));border:1px solid rgba(129,140,248,0.26);}',
@@ -7141,6 +7152,7 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             _heroTiles(l, 'market') +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
+            _blk(2, _audBlock(l)) +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
@@ -7313,6 +7325,7 @@
             nicheHtml +
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
+            _blk(2, _audBlock(l)) +
             _blk(3, flow) + pillsHtml +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
@@ -7321,6 +7334,40 @@
     }
     function _blk(n, html) {
         return html ? '<div class="fmr-blk b' + n + '">' + html + '</div>' : '';
+    }
+    function _audBlock(l) {
+        var out = '';
+        var female = null, male = null, approx = false;
+        if (l.female_pct != null) { female = Math.max(0, Math.min(100, l.female_pct)); male = 100 - female; }
+        else if (l.audience === 'female') { female = 70; male = 30; approx = true; }
+        else if (l.audience === 'male') { female = 30; male = 70; approx = true; }
+        else if (l.audience === 'mixed') { female = 50; male = 50; approx = true; }
+        if (male != null) {
+            var src = (l.audience_source === 'commenters' && !approx)
+                ? ('<span>по комментаторам</span>' + (l.gender_sample ? ' · <span>выборка</span> ' + l.gender_sample : ''))
+                : '<span>оценка по нише</span>';
+            out += '<div class="fmr-gline"><span class="gl m">М ' + (approx ? '≈' : '') + male + '%</span>' +
+                '<div class="fmr-gbar"><div class="gm" style="width:' + male + '%;"></div><div class="gf" style="width:' + female + '%;"></div></div>' +
+                '<span class="gl f">Ж ' + (approx ? '≈' : '') + female + '%</span></div>' +
+                '<div class="fmr-gsrc">' + src + '</div>';
+        }
+        var dd = function (v, lab) {
+            if (v == null) return '';
+            var c = v > 0 ? '#5DCAA5' : (v < 0 ? '#ef4444' : '#8990a8');
+            return '<span style="color:' + c + ';font-weight:700;font-variant-numeric:tabular-nums;">' + (v > 0 ? '+' : '') + _num(v) + '</span> <span style="color:#8990a8;">' + lab + '</span>';
+        };
+        var grow = [dd(l.subs_d1, 'сегодня'), dd(l.subs_d7, 'за неделю'), dd(l.subs_d30, 'за месяц')].filter(Boolean).join(' <span style="color:#3a3f55;">·</span> ');
+        if (grow) out += '<div class="fmr-grow">' + grow + '</div>';
+        if (l.channel_created_ts) {
+            var months = Math.floor((Date.now() / 1000 - l.channel_created_ts) / 2629800);
+            var yrs = Math.floor(months / 12), rm = months % 12;
+            var age = yrs > 0 ? (yrs + ' г' + (rm ? ' ' + rm + ' мес' : '')) : (months >= 1 ? (months + ' мес') : 'меньше месяца');
+            var d = new Date(l.channel_created_ts * 1000);
+            out += '<div class="fmr-agerow"><span>Возраст канала</span>: <b>' + age + '</b> · <span>создан</span> ' +
+                ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear() + '</div>';
+        }
+        if (!out) return '';
+        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>Аудитория и динамика</div>' + out;
     }
     function _spikeLine(l) {
         var sp = l && l.subs_spike;

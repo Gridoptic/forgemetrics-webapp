@@ -2375,7 +2375,16 @@ window.__I18N_DICT = {
   "худшая": "worst",
   "Выгрузить список — бот пришлёт CSV-файл": "Export the list — the bot will send a CSV file",
   "Файл отправлен ботом в личные сообщения": "The bot sent the file to your private messages",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions are lower than the click count — looks like a typo. Check the “Post impressions” value; CPM and CTR are paused until then."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions are lower than the click count — looks like a typo. Check the “Post impressions” value; CPM and CTR are paused until then.",
+  "Аудитория и динамика": "Audience & dynamics",
+  "по комментаторам": "by commenters",
+  "выборка": "sample",
+  "оценка по нише": "estimate by niche",
+  "Возраст канала": "Channel age",
+  "создан": "created",
+  "за неделю": "per week",
+  "за месяц": "per month",
+  "меньше месяца": "under a month"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -4746,7 +4755,16 @@ window.__I18N_DICT = {
   "худшая": "peor",
   "Выгрузить список — бот пришлёт CSV-файл": "Exportar la lista: el bot enviará un archivo CSV",
   "Файл отправлен ботом в личные сообщения": "El bot envió el archivo a tus mensajes privados",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Las impresiones son menores que los clics: parece una errata. Revisa «Impresiones del post»; CPM y CTR quedan en pausa."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Las impresiones son menores que los clics: parece una errata. Revisa «Impresiones del post»; CPM y CTR quedan en pausa.",
+  "Аудитория и динамика": "Audiencia y dinámica",
+  "по комментаторам": "por comentaristas",
+  "выборка": "muestra",
+  "оценка по нише": "estimación por nicho",
+  "Возраст канала": "Edad del canal",
+  "создан": "creado",
+  "за неделю": "en la semana",
+  "за месяц": "en el mes",
+  "меньше месяца": "menos de un mes"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -7117,7 +7135,16 @@ window.__I18N_DICT = {
   "худшая": "schlechteste",
   "Выгрузить список — бот пришлёт CSV-файл": "Liste exportieren — der Bot sendet eine CSV-Datei",
   "Файл отправлен ботом в личные сообщения": "Der Bot hat die Datei in deine Privatnachrichten gesendet",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressionen sind niedriger als die Klickzahl — sieht nach einem Tippfehler aus. Prüfe „Beitrags-Impressionen“; CPM und CTR pausieren solange."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressionen sind niedriger als die Klickzahl — sieht nach einem Tippfehler aus. Prüfe „Beitrags-Impressionen“; CPM und CTR pausieren solange.",
+  "Аудитория и динамика": "Publikum & Dynamik",
+  "по комментаторам": "nach Kommentatoren",
+  "выборка": "Stichprobe",
+  "оценка по нише": "Schätzung nach Nische",
+  "Возраст канала": "Kanalalter",
+  "создан": "erstellt",
+  "за неделю": "pro Woche",
+  "за месяц": "pro Monat",
+  "меньше месяца": "unter einem Monat"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9483,7 +9510,16 @@ window.__I18N_DICT = {
   "худшая": "нашары",
   "Выгрузить список — бот пришлёт CSV-файл": "Тізімді жүктеп алу — бот CSV-файл жібереді",
   "Файл отправлен ботом в личные сообщения": "Бот файлды жеке хабарламаға жіберді",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Көрсетілімдер өтулер санынан аз — қате енгізілген сияқты. «Жазба көрсетілімдері» мәнін тексер; CPM мен CTR әзірге есептелмейді."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Көрсетілімдер өтулер санынан аз — қате енгізілген сияқты. «Жазба көрсетілімдері» мәнін тексер; CPM мен CTR әзірге есептелмейді.",
+  "Аудитория и динамика": "Аудитория және динамика",
+  "по комментаторам": "комментаторлар бойынша",
+  "выборка": "іріктеме",
+  "оценка по нише": "ниша бойынша бағалау",
+  "Возраст канала": "Арна жасы",
+  "создан": "құрылған",
+  "за неделю": "апта ішінде",
+  "за месяц": "ай ішінде",
+  "меньше месяца": "бір айдан аз"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -11854,7 +11890,16 @@ window.__I18N_DICT = {
   "худшая": "eng yomoni",
   "Выгрузить список — бот пришлёт CSV-файл": "Ro'yxatni yuklab olish — bot CSV-fayl yuboradi",
   "Файл отправлен ботом в личные сообщения": "Bot faylni shaxsiy xabarlarga yubordi",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Ko'rsatishlar o'tishlar sonidan kam — xato kiritilganga o'xshaydi. «Post ko'rsatishlari» qiymatini tekshiring; CPM va CTR hozircha hisoblanmaydi."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Ko'rsatishlar o'tishlar sonidan kam — xato kiritilganga o'xshaydi. «Post ko'rsatishlari» qiymatini tekshiring; CPM va CTR hozircha hisoblanmaydi.",
+  "Аудитория и динамика": "Auditoriya va dinamika",
+  "по комментаторам": "kommentatorlar bo'yicha",
+  "выборка": "tanlanma",
+  "оценка по нише": "nisha bo'yicha baho",
+  "Возраст канала": "Kanal yoshi",
+  "создан": "yaratilgan",
+  "за неделю": "hafta ichida",
+  "за месяц": "oy ichida",
+  "меньше месяца": "bir oydan kam"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -14224,7 +14269,16 @@ window.__I18N_DICT = {
   "худшая": "горшая",
   "Выгрузить список — бот пришлёт CSV-файл": "Выгрузіць спіс — бот прышле CSV-файл",
   "Файл отправлен ботом в личные сообщения": "Бот адправіў файл у асабістыя паведамленні",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Паказы менш за лік пераходаў — падобна на памылку. Правер значэнне ў «Паказы паста»; CPM і CTR пакуль не лічацца."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Паказы менш за лік пераходаў — падобна на памылку. Правер значэнне ў «Паказы паста»; CPM і CTR пакуль не лічацца.",
+  "Аудитория и динамика": "Аўдыторыя і дынаміка",
+  "по комментаторам": "па каментатарах",
+  "выборка": "выбарка",
+  "оценка по нише": "ацэнка па нішы",
+  "Возраст канала": "Узрост канала",
+  "создан": "створаны",
+  "за неделю": "за тыдзень",
+  "за месяц": "за месяц",
+  "меньше месяца": "менш за месяц"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -16595,7 +16649,16 @@ window.__I18N_DICT = {
   "худшая": "ən pisi",
   "Выгрузить список — бот пришлёт CSV-файл": "Siyahını yüklə — bot CSV faylı göndərəcək",
   "Файл отправлен ботом в личные сообщения": "Bot faylı şəxsi mesajlara göndərdi",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Göstərimlər keçid sayından azdır — səhvə oxşayır. «Post göstərimləri» dəyərini yoxla; CPM və CTR hələlik hesablanmır."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Göstərimlər keçid sayından azdır — səhvə oxşayır. «Post göstərimləri» dəyərini yoxla; CPM və CTR hələlik hesablanmır.",
+  "Аудитория и динамика": "Auditoriya və dinamika",
+  "по комментаторам": "şərhçilərə görə",
+  "выборка": "seçmə",
+  "оценка по нише": "nişə görə qiymətləndirmə",
+  "Возраст канала": "Kanalın yaşı",
+  "создан": "yaradılıb",
+  "за неделю": "həftə ərzində",
+  "за месяц": "ay ərzində",
+  "меньше месяца": "bir aydan az"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -18966,7 +19029,16 @@ window.__I18N_DICT = {
   "худшая": "الأسوأ",
   "Выгрузить список — бот пришлёт CSV-файл": "تصدير القائمة — سيرسل البوت ملف CSV",
   "Файл отправлен ботом в личные сообщения": "أرسل البوت الملف إلى رسائلك الخاصة",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "مرات الظهور أقل من عدد النقرات — يبدو خطأ إملائيًا. تحقق من قيمة «مرات ظهور المنشور»؛ CPM وCTR متوقفان حتى ذلك الحين."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "مرات الظهور أقل من عدد النقرات — يبدو خطأ إملائيًا. تحقق من قيمة «مرات ظهور المنشور»؛ CPM وCTR متوقفان حتى ذلك الحين.",
+  "Аудитория и динамика": "الجمهور والديناميكا",
+  "по комментаторам": "حسب المعلقين",
+  "выборка": "عينة",
+  "оценка по нише": "تقدير حسب المجال",
+  "Возраст канала": "عمر القناة",
+  "создан": "أُنشئت",
+  "за неделю": "في الأسبوع",
+  "за месяц": "في الشهر",
+  "меньше месяца": "أقل من شهر"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -21337,7 +21409,16 @@ window.__I18N_DICT = {
   "худшая": "بدترین",
   "Выгрузить список — бот пришлёт CSV-файл": "خروجی فهرست — ربات فایل CSV می‌فرستد",
   "Файл отправлен ботом в личные сообщения": "ربات فایل را به پیام‌های خصوصی فرستاد",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "نمایش‌ها از تعداد کلیک کمتر است — به نظر اشتباه تایپی است. مقدار «نمایش‌های پست» را بررسی کن؛ CPM و CTR فعلاً محاسبه نمی‌شوند."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "نمایش‌ها از تعداد کلیک کمتر است — به نظر اشتباه تایپی است. مقدار «نمایش‌های پست» را بررسی کن؛ CPM و CTR فعلاً محاسبه نمی‌شوند.",
+  "Аудитория и динамика": "مخاطب و روند",
+  "по комментаторам": "بر اساس کامنت‌گذاران",
+  "выборка": "نمونه",
+  "оценка по нише": "برآورد بر اساس حوزه",
+  "Возраст канала": "عمر کانال",
+  "создан": "ایجاد شده",
+  "за неделю": "در هفته",
+  "за месяц": "در ماه",
+  "меньше месяца": "کمتر از یک ماه"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -23708,7 +23789,16 @@ window.__I18N_DICT = {
   "худшая": "en kötü",
   "Выгрузить список — бот пришлёт CSV-файл": "Listeyi dışa aktar — bot CSV dosyası gönderecek",
   "Файл отправлен ботом в личные сообщения": "Bot dosyayı özel mesajlarına gönderdi",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Gösterimler tıklama sayısından az — yazım hatası gibi görünüyor. «Gönderi gösterimleri» değerini kontrol et; CPM ve CTR şimdilik hesaplanmıyor."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Gösterimler tıklama sayısından az — yazım hatası gibi görünüyor. «Gönderi gösterimleri» değerini kontrol et; CPM ve CTR şimdilik hesaplanmıyor.",
+  "Аудитория и динамика": "Kitle ve dinamik",
+  "по комментаторам": "yorumculara göre",
+  "выборка": "örneklem",
+  "оценка по нише": "nişe göre tahmin",
+  "Возраст канала": "Kanal yaşı",
+  "создан": "oluşturuldu",
+  "за неделю": "haftada",
+  "за месяц": "ayda",
+  "меньше месяца": "bir aydan az"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -26079,7 +26169,16 @@ window.__I18N_DICT = {
   "худшая": "सबसे खराब",
   "Выгрузить список — бот пришлёт CSV-файл": "सूची निर्यात करें — बॉट CSV फ़ाइल भेजेगा",
   "Файл отправлен ботом в личные сообщения": "बॉट ने फ़ाइल आपके निजी संदेशों में भेजी",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "इंप्रेशन क्लिक से कम हैं — टाइपो लगता है। «पोस्ट इंप्रेशन» मान जांचें; तब तक CPM और CTR रुके हैं।"
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "इंप्रेशन क्लिक से कम हैं — टाइपो लगता है। «पोस्ट इंप्रेशन» मान जांचें; तब तक CPM और CTR रुके हैं।",
+  "Аудитория и динамика": "ऑडियंस और गतिशीलता",
+  "по комментаторам": "कमेंट करने वालों से",
+  "выборка": "नमूना",
+  "оценка по нише": "निच के आधार पर अनुमान",
+  "Возраст канала": "चैनल की आयु",
+  "создан": "बनाया गया",
+  "за неделю": "सप्ताह में",
+  "за месяц": "महीने में",
+  "меньше месяца": "एक महीने से कम"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -28450,7 +28549,16 @@ window.__I18N_DICT = {
   "худшая": "সবচেয়ে খারাপ",
   "Выгрузить список — бот пришлёт CSV-файл": "তালিকা রপ্তানি করুন — বট CSV ফাইল পাঠাবে",
   "Файл отправлен ботом в личные сообщения": "বট ফাইলটি আপনার ব্যক্তিগত বার্তায় পাঠিয়েছে",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ইম্প্রেশন ক্লিকের চেয়ে কম — টাইপো মনে হচ্ছে। «পোস্ট ইম্প্রেশন» মান যাচাই করুন; ততক্ষণ CPM ও CTR গণনা হবে না।"
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ইম্প্রেশন ক্লিকের চেয়ে কম — টাইপো মনে হচ্ছে। «পোস্ট ইম্প্রেশন» মান যাচাই করুন; ততক্ষণ CPM ও CTR গণনা হবে না।",
+  "Аудитория и динамика": "অডিয়েন্স ও গতিশীলতা",
+  "по комментаторам": "মন্তব্যকারীদের ভিত্তিতে",
+  "выборка": "নমুনা",
+  "оценка по нише": "নিশ অনুযায়ী অনুমান",
+  "Возраст канала": "চ্যানেলের বয়স",
+  "создан": "তৈরি",
+  "за неделю": "সপ্তাহে",
+  "за месяц": "মাসে",
+  "меньше месяца": "এক মাসের কম"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -30821,7 +30929,16 @@ window.__I18N_DICT = {
   "худшая": "terburuk",
   "Выгрузить список — бот пришлёт CSV-файл": "Ekspor daftar — bot akan mengirim file CSV",
   "Файл отправлен ботом в личные сообщения": "Bot mengirim file ke pesan pribadimu",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impresi lebih rendah dari jumlah klik — sepertinya salah ketik. Periksa nilai “Impresi posting”; CPM dan CTR dijeda dulu."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impresi lebih rendah dari jumlah klik — sepertinya salah ketik. Periksa nilai “Impresi posting”; CPM dan CTR dijeda dulu.",
+  "Аудитория и динамика": "Audiens & dinamika",
+  "по комментаторам": "berdasarkan komentator",
+  "выборка": "sampel",
+  "оценка по нише": "perkiraan menurut niche",
+  "Возраст канала": "Usia kanal",
+  "создан": "dibuat",
+  "за неделю": "seminggu",
+  "за месяц": "sebulan",
+  "меньше месяца": "kurang dari sebulan"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -33192,7 +33309,16 @@ window.__I18N_DICT = {
   "худшая": "kém nhất",
   "Выгрузить список — бот пришлёт CSV-файл": "Xuất danh sách — bot sẽ gửi file CSV",
   "Файл отправлен ботом в личные сообщения": "Bot đã gửi file vào tin nhắn riêng",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Lượt hiển thị thấp hơn số lượt bấm — có vẻ nhập nhầm. Kiểm tra «Lượt hiển thị bài»; CPM và CTR tạm không tính."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Lượt hiển thị thấp hơn số lượt bấm — có vẻ nhập nhầm. Kiểm tra «Lượt hiển thị bài»; CPM và CTR tạm không tính.",
+  "Аудитория и динамика": "Khán giả & diễn biến",
+  "по комментаторам": "theo người bình luận",
+  "выборка": "mẫu",
+  "оценка по нише": "ước tính theo ngách",
+  "Возраст канала": "Tuổi kênh",
+  "создан": "tạo",
+  "за неделю": "trong tuần",
+  "за месяц": "trong tháng",
+  "меньше месяца": "dưới một tháng"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -35563,7 +35689,16 @@ window.__I18N_DICT = {
   "худшая": "pior",
   "Выгрузить список — бот пришлёт CSV-файл": "Exportar a lista — o bot enviará um arquivo CSV",
   "Файл отправлен ботом в личные сообщения": "O bot enviou o arquivo nas suas mensagens privadas",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressões menores que o número de cliques — parece um erro de digitação. Verifique «Impressões do post»; CPM e CTR ficam pausados."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressões menores que o número de cliques — parece um erro de digitação. Verifique «Impressões do post»; CPM e CTR ficam pausados.",
+  "Аудитория и динамика": "Audiência e dinâmica",
+  "по комментаторам": "por comentaristas",
+  "выборка": "amostra",
+  "оценка по нише": "estimativa por nicho",
+  "Возраст канала": "Idade do canal",
+  "создан": "criado",
+  "за неделю": "na semana",
+  "за месяц": "no mês",
+  "меньше месяца": "menos de um mês"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -37934,7 +38069,16 @@ window.__I18N_DICT = {
   "худшая": "pire",
   "Выгрузить список — бот пришлёт CSV-файл": "Exporter la liste — le bot enverra un fichier CSV",
   "Файл отправлен ботом в личные сообщения": "Le bot a envoyé le fichier dans tes messages privés",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions inférieures au nombre de clics — probablement une faute de frappe. Vérifie « Impressions du post » ; CPM et CTR sont en pause."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressions inférieures au nombre de clics — probablement une faute de frappe. Vérifie « Impressions du post » ; CPM et CTR sont en pause.",
+  "Аудитория и динамика": "Audience et dynamique",
+  "по комментаторам": "selon les commentateurs",
+  "выборка": "échantillon",
+  "оценка по нише": "estimation par niche",
+  "Возраст канала": "Âge de la chaîne",
+  "создан": "créé",
+  "за неделю": "sur la semaine",
+  "за месяц": "sur le mois",
+  "меньше месяца": "moins d'un mois"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -40305,7 +40449,16 @@ window.__I18N_DICT = {
   "худшая": "peggiore",
   "Выгрузить список — бот пришлёт CSV-файл": "Esporta l'elenco — il bot invierà un file CSV",
   "Файл отправлен ботом в личные сообщения": "Il bot ha inviato il file nei tuoi messaggi privati",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressioni inferiori al numero di clic — sembra un refuso. Controlla «Impressioni del post»; CPM e CTR restano in pausa."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Impressioni inferiori al numero di clic — sembra un refuso. Controlla «Impressioni del post»; CPM e CTR restano in pausa.",
+  "Аудитория и динамика": "Pubblico e dinamica",
+  "по комментаторам": "dai commentatori",
+  "выборка": "campione",
+  "оценка по нише": "stima per nicchia",
+  "Возраст канала": "Età del canale",
+  "создан": "creato",
+  "за неделю": "nella settimana",
+  "за месяц": "nel mese",
+  "меньше месяца": "meno di un mese"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -42676,7 +42829,16 @@ window.__I18N_DICT = {
   "худшая": "መጥፎው",
   "Выгрузить список — бот пришлёт CSV-файл": "ዝርዝሩን አውጣ — ቦቱ የCSV ፋይል ይልካል",
   "Файл отправлен ботом в личные сообщения": "ቦቱ ፋይሉን ወደ የግል መልዕክቶችህ ልኳል",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ማሳያዎች ከጠቅታ ብዛት ያነሱ ናቸው — ስህተት ይመስላል። የ«የልጥፍ ማሳያዎች» እሴት አረጋግጥ፤ CPM እና CTR ለጊዜው አይሰሉም።"
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "ማሳያዎች ከጠቅታ ብዛት ያነሱ ናቸው — ስህተት ይመስላል። የ«የልጥፍ ማሳያዎች» እሴት አረጋግጥ፤ CPM እና CTR ለጊዜው አይሰሉም።",
+  "Аудитория и динамика": "ታዳሚ እና ተለዋዋጭነት",
+  "по комментаторам": "በአስተያየት ሰጪዎች",
+  "выборка": "ናሙና",
+  "оценка по нише": "በኒሽ ግምት",
+  "Возраст канала": "የሰርጥ ዕድሜ",
+  "создан": "ተፈጥሯል",
+  "за неделю": "በሳምንት",
+  "за месяц": "በወር",
+  "меньше месяца": "ከወር በታች"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -45047,6 +45209,15 @@ window.__I18N_DICT = {
   "худшая": "mbaya zaidi",
   "Выгрузить список — бот пришлёт CSV-файл": "Hamisha orodha — boti itatuma faili ya CSV",
   "Файл отправлен ботом в личные сообщения": "Boti imetuma faili kwenye ujumbe wako binafsi",
-  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Maonyesho ni machache kuliko idadi ya mibofyo — inaonekana kosa la kuandika. Kagua thamani ya «Maonyesho ya chapisho»; CPM na CTR zimesimamishwa kwa sasa."
+  "Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.": "Maonyesho ni machache kuliko idadi ya mibofyo — inaonekana kosa la kuandika. Kagua thamani ya «Maonyesho ya chapisho»; CPM na CTR zimesimamishwa kwa sasa.",
+  "Аудитория и динамика": "Hadhira na mwenendo",
+  "по комментаторам": "kwa watoa maoni",
+  "выборка": "sampuli",
+  "оценка по нише": "makadirio kwa niche",
+  "Возраст канала": "Umri wa kituo",
+  "создан": "imeundwa",
+  "за неделю": "kwa wiki",
+  "за месяц": "kwa mwezi",
+  "меньше месяца": "chini ya mwezi"
  }
 };
