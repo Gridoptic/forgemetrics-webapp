@@ -7545,13 +7545,18 @@
                 (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '') + '</div>';
         })(r);
     }
+    function _tpClean(t) {
+        t = String(t || '').replace(/\uFE0F/g, '');
+        try { t = t.replace(new RegExp('([^\\p{L}\\p{N}\\s])(?:\\s*\\1){2,}', 'gu'), '$1'); } catch (e) {}
+        return t.replace(/\s{2,}/g, ' ').trim();
+    }
     function _topPostsBlock(l) {
         var tp = l && l.top_posts;
         if (!tp || !tp.length) return '';
         var rows = tp.slice(0, 5).map(function (p, i) {
             var d = p.date ? new Date(p.date) : null;
             var ds = d ? (('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2)) : '';
-            var txt = (p.text || '').trim() || '(без текста)';
+            var txt = _tpClean(p.text) || 'Публикация без текста';
             var open = p.link ? ' data-toppost="' + _esc(p.link) + '"' : '';
             return '<div class="fmr-tp"' + open + '><span class="n">' + (i + 1) + '</span>' +
                 '<span class="t">' + _esc(txt) + '</span>' +
@@ -7559,7 +7564,7 @@
                 (ds ? '<span class="d">' + ds + '</span>' : '') + '</div>';
         }).join('');
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>Топ публикаций</div>' +
-            rows + '<div class="fmr-gsrc">по просмотрам за последние дни · нажми, чтобы открыть пост</div>';
+            rows + '<div class="fmr-gsrc"><span>топ последних публикаций по просмотрам</span> · <span>нажми, чтобы открыть пост</span></div>';
     }
     function _spikeLine(l) {
         var sp = l && l.subs_spike;
