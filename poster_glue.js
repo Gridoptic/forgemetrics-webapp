@@ -375,8 +375,12 @@
     renderQrsSafe(qmode);
     var qc = el('qrChips');
     if (qc && !qc.__fmxRelabel) { qc.__fmxRelabel = 1; qc.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('.chip') : null; if (b) setTimeout(function () { relabelQr(b.getAttribute('data-qr')); }, 0); }); }
-    if (data.chart && data.chart.series) drawChart(data.chart.series, data.chart.days);
-    else if (el('chart')) el('chart').classList.add('hide');
+    window.__psHasChart = !!(data.chart && data.chart.series);
+    if (window.__psHasChart) { drawChart(data.chart.series, data.chart.days); }
+    else {
+      var _ch = el('chart'); if (_ch) _ch.classList.add('hide');
+      var _cc = el('chartChip'); if (_cc) _cc.classList.add('hide');
+    }
     if (typeof window.relayout === 'function') window.relayout();
     _psEnsurePriceHooks(); _psEnsureLangUI(); _psApplyLabels(); _psFit();
   };
@@ -615,7 +619,7 @@
     if (el('nicheEl')) el('nicheEl').classList.toggle('hide', !showN);
     if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !showN);
     var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', showN);
-    if (el('chart') && state.chart != null) el('chart').classList.toggle('hide', !state.chart);
+    if (el('chart') && state.chart != null) el('chart').classList.toggle('hide', !state.chart || window.__psHasChart === false);
     var cch = el('chartChip'); if (cch) cch.classList.toggle('on', state.chart !== false);
     if (state.metrics) METRIC_KEYS.forEach(function (k) {
       if (!(k in state.metrics)) return;

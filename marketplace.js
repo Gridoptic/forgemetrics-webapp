@@ -5013,7 +5013,7 @@
                 box.innerHTML = fullCard(pl) + '<div style="margin-top:12px;">' + listItem(pl) + '</div>';
                 try { hydrateTgs(box); } catch (e2) {}
             },
-            stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts); } catch (e2) { return String(Date.now()); } }
+            stateKey: function () { try { return JSON.stringify(_previewListing()) + '|' + JSON.stringify(_sfmts) + '|' + JSON.stringify((_ss && _ss.sticker) || null); } catch (e2) { return String(Date.now()); } }
         });
     }
     function accSec(id, icon, title, body) {
@@ -6173,7 +6173,7 @@
             st.title = 'Потяни вверх/вниз';
             bindStarDrag(card);
         }
-        [['.fmx-avw', 'avatar'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-kmg', 'price']].forEach(function (z) {
+        [['.fmx-avw', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-kmg', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
                 n.style.cursor = 'pointer';
                 n.addEventListener('click', function (e) {
@@ -6204,7 +6204,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260724d';
+    var PS_GLUE_V = '20260729a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7507,10 +7507,13 @@
     }
     function _sbRenderTrend(box, r) {
         var hideSec = function () {
+            var blk = box.closest && box.closest('.fmr-blk');
+            if (blk) { blk.style.display = 'none'; }
             var sec = box.previousElementSibling;
             if (sec && sec.classList.contains('fmr-sbsec')) sec.style.display = 'none';
             box.innerHTML = '';
             box.style.display = 'none';
+            window.requestAnimationFrame(function () { try { scaleCards(document); } catch (e) {} });
         };
         (function (r) {
             var pts = (r && r.ok && r.points) || [];
@@ -7579,6 +7582,7 @@
             box.innerHTML = '<div class="fmr-sbchart"><div class="fmr-sbaxis" style="top:' + upH + '%;"></div>' + bars + '</div>' +
                 '<div class="fmr-gsrc">' + cap + '</div>';
             _sbTipBind(box);
+            window.requestAnimationFrame(function () { try { scaleCards(document); } catch (e) {} });
         })(r);
     }
     function _sbTipBind(box) {
