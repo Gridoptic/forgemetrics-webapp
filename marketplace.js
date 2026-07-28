@@ -7517,9 +7517,16 @@
             var g = pts.filter(function (p) { return p.g != null || p.j != null || p.l != null; });
             if (g.length < 3) {
                 if (pts.length >= 3 && !g.length) {
-                    box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
-                        (r.noise ? '<span>Колебания за месяц меньше</span> ±' + _num(r.noise)
-                                 : '<span>За месяц число подписчиков не менялось</span>') + '</div>';
+                    var emsg;
+                    if (r.span) {
+                        emsg = '<span>За месяц</span>: ≈' + (r.span > 0 ? '+' : '−') + _num(Math.abs(r.span)) +
+                            (r.noise ? ' · <span>колебания по дням меньше</span> ±' + _num(r.noise) : '');
+                    } else if (r.noise) {
+                        emsg = '<span>Колебания за месяц меньше</span> ±' + _num(r.noise);
+                    } else {
+                        emsg = '<span>За месяц число подписчиков не менялось</span>';
+                    }
+                    box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' + emsg + '</div>';
                     return;
                 }
                 if (pts.length >= 2) {
