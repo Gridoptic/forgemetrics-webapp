@@ -6635,7 +6635,7 @@
                 id: base.id, username: base.username, title: base.title, niche: realNiche || extra.niche || '',
                 niche_tr: extra.niche_tr || null, ref_code: extra.ref_code || null,
                 avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
-                er: base.er, min_price: minPrice,
+                er: (base.engagement_percent != null ? base.engagement_percent : null), reach_rate: base.er, min_price: minPrice,
                 grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
             };
         }
