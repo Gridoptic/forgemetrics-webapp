@@ -4558,7 +4558,8 @@
             if (!r || !r.ok) { _haptic('error'); uiAlert((r && r.error) || 'Не удалось сохранить витрину'); return; }
             _ted.l.expand_content_json = { v: 2, els: _ted.els, bg: _ted.bg };
             _haptic('success');
-            toast('Витрина сохранена — закупщики видят её в развороте оффера');
+            toast(r.resubmitted ? 'Витрина отправлена на проверку — оффер вернётся на Площадку после модерации'
+                : 'Витрина сохранена — закупщики видят её в развороте оффера');
             hideModal('fmx-tedBg');
         }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
     }
@@ -6204,7 +6205,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260729a';
+    var PS_GLUE_V = '20260729b';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
