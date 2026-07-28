@@ -472,9 +472,10 @@
             '.fmr-cvvl{font-size:9px;color:#a9aec0;font-variant-numeric:tabular-nums;white-space:nowrap;}',
             '.fmr-cvwarn{font-size:10px;color:#f0a24f;margin-top:7px;line-height:1.35;overflow-wrap:anywhere;}',
             '.fmr-sbwrap{margin-top:9px;}',
-            '.fmr-sbchart{display:flex;align-items:stretch;gap:1px;height:60px;overflow:hidden;}',
+            '.fmr-sbchart{display:flex;align-items:stretch;gap:1px;height:60px;overflow:hidden;position:relative;}',
+            '.fmr-sbaxis{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,0.22);pointer-events:none;z-index:1;}',
             '.fmr-sbcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;}',
-            '.fmr-sbslot{flex:1 1 50%;display:flex;align-items:flex-end;}',
+            '.fmr-sbslot{flex:0 0 auto;display:flex;align-items:flex-end;}',
             '.fmr-sbslot.dn{align-items:flex-start;}',
             '.fmr-sbbar{width:100%;border-radius:2px 2px 0 0;min-height:2px;}',
             '.fmr-sbbar.up{background:linear-gradient(180deg,#5DCAA5,#3f9d80);}',
@@ -7515,7 +7516,7 @@
         };
         (function (r) {
             var pts = (r && r.ok && r.points) || [];
-            var g = pts.filter(function (p) { return p.g != null; });
+            var g = pts.filter(function (p) { return p.g != null || p.j != null || p.l != null; });
             if (g.length < 3) {
                 if (pts.length >= 3 && !g.length) {
                     box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
@@ -7530,21 +7531,40 @@
                 hideSec();
                 return;
             }
-            var mx = Math.max.apply(null, g.map(function (p) { return Math.abs(p.g); })) || 1;
+            var hasEv = g.some(function (p) { return p.j != null || p.l != null; });
+            var mxUp = 0, mxDn = 0;
+            g.forEach(function (p) {
+                var ev = p.j != null || p.l != null;
+                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g : 0);
+                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g : 0);
+                if (uv > mxUp) mxUp = uv;
+                if (dv > mxDn) mxDn = dv;
+            });
+            var upH = (mxUp || mxDn) ? Math.round(mxUp / (mxUp + mxDn) * 100) : 50;
+            if (mxUp && upH < 18) upH = 18;
+            if (mxDn && upH > 82) upH = 82;
             var bars = g.slice(-30).map(function (p) {
-                var h = Math.max(2, Math.round(Math.abs(p.g) / mx * 100));
-                var up = p.g >= 0;
+                var ev = p.j != null || p.l != null;
+                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g : 0);
+                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g : 0);
+                var hu = (uv && mxUp) ? Math.max(4, Math.round(uv / mxUp * 100)) : 0;
+                var hd = (dv && mxDn) ? Math.max(4, Math.round(dv / mxDn * 100)) : 0;
                 var d = p.d.slice(8) + '.' + p.d.slice(5, 7);
-                return '<div class="fmr-sbcol" data-d="' + d + '" data-g="' + p.g + '">' +
-                    '<div class="fmr-sbslot">' + (up ? '<div class="fmr-sbbar up" style="height:' + h + '%;"></div>' : '') + '</div>' +
-                    '<div class="fmr-sbslot dn">' + (!up ? '<div class="fmr-sbbar dn" style="height:' + h + '%;"></div>' : '') + '</div>' +
+                var attrs = ev ? (' data-j="' + uv + '" data-l="' + dv + '"') : (' data-g="' + p.g + '"');
+                return '<div class="fmr-sbcol" data-d="' + d + '"' + attrs + '>' +
+                    '<div class="fmr-sbslot" style="height:' + upH + '%;">' + (hu ? '<div class="fmr-sbbar up" style="height:' + hu + '%;"></div>' : '') + '</div>' +
+                    '<div class="fmr-sbslot dn" style="height:' + (100 - upH) + '%;">' + (hd ? '<div class="fmr-sbbar dn" style="height:' + hd + '%;"></div>' : '') + '</div>' +
                     '</div>';
             }).join('');
             var tot = r.total;
-            box.innerHTML = '<div class="fmr-sbchart">' + bars + '</div>' +
-                '<div class="fmr-gsrc"><span>Прирост по дням за месяц</span>' +
-                (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
-                (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '') + '</div>';
+            var cap = hasEv
+                ? '<span>зелёное — подписались, красное — отписались</span>' +
+                  (r.joins != null ? ' · <b style="color:#5DCAA5;">+' + _num(r.joins) + '</b> / <b style="color:#ef4444;">−' + _num(r.leaves || 0) + '</b>' : '')
+                : '<span>Прирост по дням за месяц</span>' +
+                  (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
+                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '');
+            box.innerHTML = '<div class="fmr-sbchart"><div class="fmr-sbaxis" style="top:' + upH + '%;"></div>' + bars + '</div>' +
+                '<div class="fmr-gsrc">' + cap + '</div>';
             _sbTipBind(box);
         })(r);
     }
@@ -7568,8 +7588,13 @@
             if (col !== cur) {
                 if (cur) cur.classList.remove('act');
                 cur = col; col.classList.add('act');
-                var gv = +col.getAttribute('data-g');
-                tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:' + (gv >= 0 ? '#5DCAA5' : '#ef4444') + ';">' + (gv > 0 ? '+' : '') + _num(gv) + '</b>';
+                var j = col.getAttribute('data-j');
+                if (j != null) {
+                    tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:#5DCAA5;">+' + j + '</b> / <b style="color:#ef4444;">−' + col.getAttribute('data-l') + '</b>';
+                } else {
+                    var gv = +col.getAttribute('data-g');
+                    tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:' + (gv >= 0 ? '#5DCAA5' : '#ef4444') + ';">' + (gv > 0 ? '+' : '') + _num(gv) + '</b>';
+                }
                 tip.style.display = 'block';
             }
             place(col);
