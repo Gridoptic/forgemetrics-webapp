@@ -1752,6 +1752,11 @@
             apiPost('/api/v1/admin/listing/' + id + '/approve').then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
+    function modAdultOff(id) {
+        uiConfirm('Снять метку 18+ с оффера #' + id + '? Если оффер уже одобрен, он сразу выйдет в общую ленту.', function () {
+            apiPost('/api/v1/admin/listing/' + id + '/adult', { adult: false }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        });
+    }
     function modReject(id) {
         modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина (необязательно) — автор увидит и сможет исправить', btn: 'Отклонить', optional: true }, function (reason) {
             apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
@@ -1798,7 +1803,8 @@
                     (l.ai_reason ? '<div class="fmx-mai">ИИ: ' + _esc(l.ai_reason) + '</div>' : '') +
                     (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> Открыть канал</button>' : '') +
                     '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-appr="' + l.id + '">Одобрить</button>' +
-                    '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button></div>' +
+                    '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button>' +
+                    (l.is_adult ? '<button class="fmx-mbtn" data-adoff="' + l.id + '">Снять 18+</button>' : '') + '</div>' +
                     '</div>';
             });
             (r.requests || []).forEach(function (q) {
@@ -1815,6 +1821,7 @@
             box.innerHTML = h;
             qsa(box, '[data-appr]').forEach(function (b) { b.addEventListener('click', function () { modApprove(+b.getAttribute('data-appr')); }); });
             qsa(box, '[data-rej]').forEach(function (b) { b.addEventListener('click', function () { modReject(+b.getAttribute('data-rej')); }); });
+            qsa(box, '[data-adoff]').forEach(function (b) { b.addEventListener('click', function () { modAdultOff(+b.getAttribute('data-adoff')); }); });
             qsa(box, '[data-open]').forEach(function (b) { b.addEventListener('click', function () { _openChannel(b.getAttribute('data-open')); }); });
             qsa(box, '[data-rest]').forEach(function (b) { b.addEventListener('click', function () { modRestore(+b.getAttribute('data-rest')); }); });
             qsa(box, '[data-rem]').forEach(function (b) { b.addEventListener('click', function () { modRemove(+b.getAttribute('data-rem')); }); });
