@@ -68,6 +68,9 @@
                         '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;line-height:1.35;overflow-wrap:anywhere;}',
             '.pl-fxv{font-size:13.5px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
             '.pl-fxv small{font-size:9px;color:#8990a8;font-weight:600;}',
+            '.pl-minfo{font-size:10.5px;color:#8990a8;line-height:1.6;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:9px;padding:9px 11px;margin-top:2px;}',
+            '.pl-minfo b{color:#c9cede;font-weight:700;}',
+            '.pl-minfo div{margin:3px 0;}',
             '.pl-copy{border:0;background:rgba(93,202,165,0.16);color:#5DCAA5;border-radius:8px;padding:7px 11px;font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;min-height:32px;}',
             '.pl-revoke{border:0;background:transparent;color:#8990a8;font-size:10.5px;font-weight:600;font-family:inherit;cursor:pointer;padding:7px 4px;margin-top:4px;}',
             '.pl-actrow{display:flex;align-items:center;gap:16px;}',
@@ -310,6 +313,15 @@
             fun += '<div class="pl-fx">' + fx.map(function (x) {
                 return '<div class="pl-fxi"><div class="pl-fxk">' + esc(x.k) + '</div><div class="pl-fxv">' + x.v + '</div></div>';
             }).join('') + '</div>';
+            fun += '<button class="pl-whobtn" data-act="metricinfo" data-id="' + l.id + '" style="color:#565b73;font-weight:600;"><i class="ti ti-info-circle"></i> ' + esc(T('Что значат эти метрики')) + '</button>' +
+                '<div class="pl-minfo" id="pl-minfo-' + l.id + '" style="display:none;">' +
+                '<div><b>CPM</b> — ' + esc(T('цена 1000 показов: цена ÷ показы × 1000. Дорого ли обошлась площадка.')) + '</div>' +
+                '<div><b>CTR</b> — ' + esc(T('кликабельность: клики ÷ показы. Цепляет ли креатив.')) + '</div>' +
+                '<div><b>CPC</b> — ' + esc(T('цена перехода: цена ÷ клики.')) + '</div>' +
+                '<div><b>CPF</b> — ' + esc(T('цена подписчика: цена ÷ подписавшиеся.')) + '</div>' +
+                '<div><b>' + esc(T('Цена оставшегося')) + '</b> — ' + esc(T('цена ÷ те, кто ещё в канале. Показывает, сколько трафика слилось.')) + '</div>' +
+                '<div><b>' + esc(T('Удержание 7 дней')) + '</b> — ' + esc(T('сколько из вступивших остаются в канале через неделю.')) + '</div>' +
+                '</div>';
         }
         fun += '</div>';
 
@@ -582,6 +594,12 @@
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
+        if (act === 'metricinfo') {
+            var mi = document.getElementById('pl-minfo-' + b.getAttribute('data-id'));
+            if (mi) mi.style.display = mi.style.display === 'none' ? 'block' : 'none';
+            haptic('light');
+            return;
+        }
         if (act === 'adv') {
             var advBox = document.getElementById('pl-adv-' + b.getAttribute('data-id'));
             if (advBox) advBox.style.display = advBox.style.display === 'none' ? 'block' : 'none';
