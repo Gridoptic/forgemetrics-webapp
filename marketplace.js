@@ -465,6 +465,12 @@
             '.fmr-gtab .l{color:#8990a8;}',
             '.fmr-agerow{font-size:11px;color:#a9aec0;margin-top:6px;}',
             '.fmr-agerow b{color:#e8e8ed;}',
+            '.fmr-tp{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;}',
+            '.fmr-tp:last-of-type{border-bottom:0;}',
+            '.fmr-tp .n{width:15px;flex:0 0 auto;font-size:9.5px;font-weight:800;color:#565b73;}',
+            '.fmr-tp .t{flex:1;min-width:0;font-size:11px;color:#c9cede;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmr-tp .v{flex:0 0 auto;font-size:11px;font-weight:750;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.fmr-tp .d{flex:0 0 auto;font-size:9.5px;color:#565b73;width:34px;text-align:right;}',
             '.fmr-blk{border-radius:14px;padding:12px 13px;margin-bottom:10px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}',
             '.fmr-blk.b1{background:linear-gradient(180deg,rgba(245,191,79,0.09),rgba(245,191,79,0.03));border:1px solid rgba(245,191,79,0.26);}',
             '.fmr-blk.b2{background:linear-gradient(180deg,rgba(129,140,248,0.09),rgba(129,140,248,0.03));border:1px solid rgba(129,140,248,0.26);}',
@@ -7079,7 +7085,7 @@
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var tiles =
-            _htile('Подписчики', _kmNum(subs), '#e8e8ed', subsSub, subsSubCol) +
+            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
             _htile('Охват', av ? '~' + _kmNum(av) : '—', '#e8e8ed',
                 (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов', '') +
             _htile('ERR', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
@@ -7158,6 +7164,7 @@
             _heroTiles(l, 'market') +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
             _blk(2, _audBlock(l)) +
+            _blk(2, _topPostsBlock(l)) +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
@@ -7331,6 +7338,7 @@
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
             _blk(2, _audBlock(l)) +
+            _blk(2, _topPostsBlock(l)) +
             _blk(3, flow) + pillsHtml +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
@@ -7376,8 +7384,31 @@
             out += '<div class="fmr-agerow"><span>Возраст канала</span>: <b>' + age + '</b> · <span>создан</span> ' +
                 ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear() + '</div>';
         }
+        if (l.reach_24h_median && l.subscribers) {
+            var p24 = Math.round(l.reach_24h_median / l.subscribers * 1000) / 10;
+            if (p24 > 0 && p24 <= 100) {
+                out += '<div class="fmr-agerow"><span>Читают за сутки</span>: <b>' + String(p24).replace('.', ',') +
+                    '%</b> <span style="color:#565b73;">(' + _num(l.reach_24h_median) + ' из ' + _num(l.subscribers) + ')</span></div>';
+            }
+        }
         if (!out) return '';
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>Аудитория и динамика</div>' + out;
+    }
+    function _topPostsBlock(l) {
+        var tp = l && l.top_posts;
+        if (!tp || !tp.length) return '';
+        var rows = tp.slice(0, 5).map(function (p, i) {
+            var d = p.date ? new Date(p.date) : null;
+            var ds = d ? (('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2)) : '';
+            var txt = (p.text || '').trim() || '(без текста)';
+            var open = p.link ? ' data-toppost="' + _esc(p.link) + '"' : '';
+            return '<div class="fmr-tp"' + open + '><span class="n">' + (i + 1) + '</span>' +
+                '<span class="t">' + _esc(txt) + '</span>' +
+                '<span class="v">' + _kmNum(p.views) + '</span>' +
+                (ds ? '<span class="d">' + ds + '</span>' : '') + '</div>';
+        }).join('');
+        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>Топ публикаций</div>' +
+            rows + '<div class="fmr-gsrc">по просмотрам за последние дни · нажми, чтобы открыть пост</div>';
     }
     function _spikeLine(l) {
         var sp = l && l.subs_spike;
@@ -7553,6 +7584,7 @@
         mediaWatch(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
+        qsa(host, '[data-toppost]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var u = b.getAttribute('data-toppost'); if (!u) return; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) return tg.openTelegramLink(u); } catch (err) {} window.open(u, '_blank'); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
