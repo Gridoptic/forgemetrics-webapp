@@ -7465,8 +7465,10 @@
         return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>Прирост подписчиков</div>' +
             '<div class="fmr-sbwrap" data-u="' + _esc(uname) + '"></div>';
     }
-    function _drawSubsChart(root) {
-        var box = (root || document).querySelector('.fmr-sbwrap[data-u]');
+    function _drawSubsChart() {
+        qsa(document, '.fmr-sbwrap[data-u]').forEach(_drawOneSubs);
+    }
+    function _drawOneSubs(box) {
         if (!box || box.getAttribute('data-done')) return;
         box.setAttribute('data-done', '1');
         var uname = box.getAttribute('data-u');
@@ -7474,6 +7476,7 @@
             var sec = box.previousElementSibling;
             if (sec && sec.classList.contains('fmr-sbsec')) sec.style.display = 'none';
             box.innerHTML = '';
+            box.style.display = 'none';
         };
         apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
             var pts = (r && r.ok && r.points) || [];
@@ -7596,7 +7599,9 @@
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
-                box.style.display = 'block'; li.classList.add('on'); bindCards(box); _drawSubsChart(box); _rescaleRow(li);
+                box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
+                _drawSubsChart();
+                window.requestAnimationFrame(_drawSubsChart);
             });
         });
     }
@@ -8389,7 +8394,8 @@
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         if (l.id) {
             _pwTrend(l);
-            _drawSubsChart(el('fmx-listBg') || document);
+            _drawSubsChart();
+            window.requestAnimationFrame(_drawSubsChart);
             loadBuyerSlots(el('fmx-slotsBox'), l, function (r) {
                 var av = el('fmx-tr-accv');
                 if (av) av.textContent = (r.accuracy_pct != null)
