@@ -479,6 +479,8 @@
             '.fmr-sbbar{width:100%;border-radius:2px 2px 0 0;min-height:2px;}',
             '.fmr-sbbar.up{background:linear-gradient(180deg,#5DCAA5,#3f9d80);}',
             '.fmr-sbbar.dn{background:linear-gradient(180deg,#c0433f,#ef4444);border-radius:0 0 2px 2px;}',
+            '.fmr-sbtip{display:none;position:absolute;top:2px;transform:translateX(-50%);background:rgba(16,19,31,0.96);border:0.5px solid rgba(255,255,255,0.16);border-radius:8px;padding:4px 9px;font-size:10px;color:#a9aec0;white-space:nowrap;pointer-events:none;z-index:6;font-variant-numeric:tabular-nums;box-shadow:0 6px 18px rgba(0,0,0,0.45);}',
+            '.fmr-sbcol.act{background:rgba(255,255,255,0.07);border-radius:3px;}',
             '.fmr-tp{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;}',
             '.fmr-tp:last-of-type{border-bottom:0;}',
             '.fmr-tp .n{width:15px;flex:0 0 auto;font-size:9.5px;font-weight:800;color:#565b73;}',
@@ -7533,7 +7535,7 @@
                 var h = Math.max(2, Math.round(Math.abs(p.g) / mx * 100));
                 var up = p.g >= 0;
                 var d = p.d.slice(8) + '.' + p.d.slice(5, 7);
-                return '<div class="fmr-sbcol" title="' + d + ': ' + (up ? '+' : '') + p.g + '">' +
+                return '<div class="fmr-sbcol" data-d="' + d + '" data-g="' + p.g + '">' +
                     '<div class="fmr-sbslot">' + (up ? '<div class="fmr-sbbar up" style="height:' + h + '%;"></div>' : '') + '</div>' +
                     '<div class="fmr-sbslot dn">' + (!up ? '<div class="fmr-sbbar dn" style="height:' + h + '%;"></div>' : '') + '</div>' +
                     '</div>';
@@ -7543,7 +7545,50 @@
                 '<div class="fmr-gsrc"><span>Прирост по дням за месяц</span>' +
                 (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
                 (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '') + '</div>';
+            _sbTipBind(box);
         })(r);
+    }
+    function _sbTipBind(box) {
+        var chart = box.querySelector('.fmr-sbchart');
+        if (!chart) return;
+        box.style.position = 'relative';
+        var tip = document.createElement('div');
+        tip.className = 'fmr-sbtip';
+        box.appendChild(tip);
+        var cur = null, hideT = null;
+        function place(col) {
+            var br = box.getBoundingClientRect(), cr = col.getBoundingClientRect();
+            var x = cr.left - br.left + cr.width / 2;
+            var w = tip.offsetWidth || 60;
+            x = Math.max(w / 2 + 2, Math.min(br.width - w / 2 - 2, x));
+            tip.style.left = x + 'px';
+        }
+        function show(col) {
+            if (hideT) { clearTimeout(hideT); hideT = null; }
+            if (col !== cur) {
+                if (cur) cur.classList.remove('act');
+                cur = col; col.classList.add('act');
+                var gv = +col.getAttribute('data-g');
+                tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:' + (gv >= 0 ? '#5DCAA5' : '#ef4444') + ';">' + (gv > 0 ? '+' : '') + _num(gv) + '</b>';
+                tip.style.display = 'block';
+            }
+            place(col);
+        }
+        function hide() {
+            if (cur) cur.classList.remove('act');
+            cur = null; tip.style.display = 'none';
+        }
+        function colAt(e) {
+            var t = e.touches && e.touches[0] ? e.touches[0] : e;
+            var el2 = document.elementFromPoint(t.clientX, t.clientY);
+            return el2 && el2.closest ? el2.closest('.fmr-sbcol') : null;
+        }
+        function onMove(e) { var c = colAt(e); if (c) show(c); }
+        chart.addEventListener('touchstart', onMove, { passive: true });
+        chart.addEventListener('touchmove', onMove, { passive: true });
+        chart.addEventListener('touchend', function () { hideT = setTimeout(hide, 1200); });
+        chart.addEventListener('mousemove', function (e) { var c = colAt(e); if (c) show(c); else hide(); });
+        chart.addEventListener('mouseleave', hide);
     }
     function _tpClean(t) {
         t = String(t || '').replace(/\uFE0F/g, '');
