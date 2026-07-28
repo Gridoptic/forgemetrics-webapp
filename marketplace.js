@@ -7465,49 +7465,53 @@
         return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>Прирост подписчиков</div>' +
             '<div class="fmr-sbwrap" data-u="' + _esc(uname) + '"></div>';
     }
-    var _sbSeen = {};
-    function _diagBeacon(tag) {
-        try {
-            tag = String(tag).toLowerCase().replace(/[^a-z0-9_]+/g, '_').slice(0, 60);
-            if (tag.length < 3) tag += '_xx';
-            if (_sbSeen[tag]) return; _sbSeen[tag] = 1;
-            apiGet('/api/v1/channels/' + tag + '/subs-trend').catch(function () {});
-        } catch (e) {}
+    var _sbCache = {};
+    var _sbIO = null, _sbMO = null, _sbPend = false;
+    function _sbEnsureObs() {
+        if (!_sbIO && typeof IntersectionObserver !== 'undefined') {
+            _sbIO = new IntersectionObserver(function (ents) {
+                ents.forEach(function (en) {
+                    if (en.isIntersecting) { _sbIO.unobserve(en.target); _drawOneSubs(en.target); }
+                });
+            }, { rootMargin: '300px 0px' });
+        }
+        if (!_sbMO && typeof MutationObserver !== 'undefined' && document.body) {
+            _sbMO = new MutationObserver(function () {
+                if (_sbPend) return; _sbPend = true;
+                window.requestAnimationFrame(function () { _sbPend = false; _drawSubsChart(); });
+            });
+            _sbMO.observe(document.body, { childList: true, subtree: true });
+        }
     }
     function _drawSubsChart() {
-        var boxes = qsa(document, '.fmr-sbwrap[data-u]');
-        var fresh = boxes.filter(function (b) { return !b.getAttribute('data-done'); });
-        _diagBeacon('diag_scan_' + fresh.length + 'of' + boxes.length);
-        fresh.forEach(_drawOneSubs);
-    }
-    var _sbMO = null, _sbPend = false;
-    function _ensureSbMO() {
-        if (_sbMO || typeof MutationObserver === 'undefined' || !document.body) return;
-        _sbMO = new MutationObserver(function () {
-            if (_sbPend) return; _sbPend = true;
-            window.requestAnimationFrame(function () {
-                _sbPend = false;
-                qsa(document, '.fmr-sbwrap[data-u]').forEach(_drawOneSubs);
-            });
+        _sbEnsureObs();
+        qsa(document, '.fmr-sbwrap[data-u]').forEach(function (b) {
+            if (b.getAttribute('data-done') || b.__sbObs) return;
+            if (_sbCache[b.getAttribute('data-u')] !== undefined || !_sbIO) { _drawOneSubs(b); return; }
+            b.__sbObs = 1; _sbIO.observe(b);
         });
-        _sbMO.observe(document.body, { childList: true, subtree: true });
     }
-    if (document.body) { _ensureSbMO(); } else { document.addEventListener('DOMContentLoaded', _ensureSbMO); }
-    window.addEventListener('error', function (ev) { _diagBeacon('err_js_' + (ev && ev.message)); });
+    if (document.body) { _sbEnsureObs(); } else { document.addEventListener('DOMContentLoaded', _sbEnsureObs); }
     function _drawOneSubs(box) {
-        try { _drawOneSubsIn(box); } catch (e) { _diagBeacon('err_draw_' + (e && e.message)); }
+        try {
+            if (!box || box.getAttribute('data-done')) return;
+            box.setAttribute('data-done', '1');
+            var uname = box.getAttribute('data-u');
+            if (_sbCache[uname] !== undefined) { _sbRenderTrend(box, _sbCache[uname]); return; }
+            apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
+                if (r && r.ok) _sbCache[uname] = r;
+                _sbRenderTrend(box, r);
+            }).catch(function () { _sbRenderTrend(box, null); });
+        } catch (e) {}
     }
-    function _drawOneSubsIn(box) {
-        if (!box || box.getAttribute('data-done')) return;
-        box.setAttribute('data-done', '1');
-        var uname = box.getAttribute('data-u');
+    function _sbRenderTrend(box, r) {
         var hideSec = function () {
             var sec = box.previousElementSibling;
             if (sec && sec.classList.contains('fmr-sbsec')) sec.style.display = 'none';
             box.innerHTML = '';
             box.style.display = 'none';
         };
-        apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
+        (function (r) {
             var pts = (r && r.ok && r.points) || [];
             var g = pts.filter(function (p) { return p.g != null; });
             if (g.length < 3) {
@@ -7539,7 +7543,7 @@
                 '<div class="fmr-gsrc"><span>Прирост по дням за месяц</span>' +
                 (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
                 (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '') + '</div>';
-        }).catch(hideSec);
+        })(r);
     }
     function _topPostsBlock(l) {
         var tp = l && l.top_posts;
