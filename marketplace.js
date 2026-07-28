@@ -7096,8 +7096,6 @@
             subsSub = ((Math.abs(g) % 1000 === 0) ? '≈' : '') + (g > 0 ? '+' : '−') + _kmNum(Math.abs(g)) + ' за ' + gDays + ' дн';
             subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
         } else if (typeof g === 'number') { subsSub = 'стабильно'; subsSubCol = '#8990a8'; }
-        else if (l.trend === 'growing') { subsSub = '↗ растёт'; subsSubCol = '#5DCAA5'; }
-        else if (l.trend === 'declining') { subsSub = '↘ падает'; subsSubCol = '#f59e0b'; }
         else subsSub = '';
         var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
         if (mode === 'market') {
@@ -7520,7 +7518,8 @@
             if (g.length < 3) {
                 if (pts.length >= 3 && !g.length) {
                     box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
-                        '<span>За месяц число подписчиков не менялось</span></div>';
+                        (r.noise ? '<span>Колебания за месяц меньше</span> ±' + _num(r.noise)
+                                 : '<span>За месяц число подписчиков не менялось</span>') + '</div>';
                     return;
                 }
                 if (pts.length >= 2) {
