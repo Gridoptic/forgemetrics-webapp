@@ -465,6 +465,20 @@
             '.fmr-gtab .l{color:#8990a8;}',
             '.fmr-agerow{font-size:11px;color:#a9aec0;margin-top:6px;}',
             '.fmr-agerow b{color:#e8e8ed;}',
+            '.fmr-cvwrap{display:flex;align-items:flex-end;gap:3px;height:78px;margin-top:9px;}',
+            '.fmr-cvcol{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;}',
+            '.fmr-cvbar{width:100%;max-width:26px;border-radius:4px 4px 0 0;min-height:4px;}',
+            '.fmr-cvlb{font-size:8.5px;color:#565b73;white-space:nowrap;}',
+            '.fmr-cvvl{font-size:9px;color:#a9aec0;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.fmr-cvwarn{font-size:10px;color:#f0a24f;margin-top:7px;line-height:1.35;overflow-wrap:anywhere;}',
+            '.fmr-sbwrap{margin-top:9px;}',
+            '.fmr-sbchart{display:flex;align-items:stretch;gap:1px;height:60px;overflow:hidden;}',
+            '.fmr-sbcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;}',
+            '.fmr-sbslot{flex:1 1 50%;display:flex;align-items:flex-end;}',
+            '.fmr-sbslot.dn{align-items:flex-start;}',
+            '.fmr-sbbar{width:100%;border-radius:2px 2px 0 0;min-height:2px;}',
+            '.fmr-sbbar.up{background:linear-gradient(180deg,#5DCAA5,#3f9d80);}',
+            '.fmr-sbbar.dn{background:linear-gradient(180deg,#c0433f,#ef4444);border-radius:0 0 2px 2px;}',
             '.fmr-tp{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;}',
             '.fmr-tp:last-of-type{border-bottom:0;}',
             '.fmr-tp .n{width:15px;flex:0 0 auto;font-size:9.5px;font-weight:800;color:#565b73;}',
@@ -7171,6 +7185,8 @@
             _heroTiles(l, 'market') +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
             _blk(2, _audBlock(l)) +
+            _blk(2, _subsChart(l)) +
+            _blk(2, _curveBlock(l)) +
             _blk(2, _topPostsBlock(l)) +
             _ctcLinesHtml(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
@@ -7345,6 +7361,8 @@
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
             _blk(2, _audBlock(l)) +
+            _blk(2, _subsChart(l)) +
+            _blk(2, _curveBlock(l)) +
             _blk(2, _topPostsBlock(l)) +
             _blk(3, flow) + pillsHtml +
             _ctcLinesHtml(l) +
@@ -7402,8 +7420,81 @@
                     '%</b> <span style="color:#565b73;">(' + _num(l.reach_24h_median) + ' из ' + _num(l.subscribers) + ')</span></div>';
             }
         }
+        out += _reachWinRows(l);
         if (!out) return '';
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>Аудитория и динамика</div>' + out;
+    }
+    function _reachWinRows(l) {
+        var w = [['12 часов', l.reach_12h_median], ['24 часа', l.reach_24h_median], ['48 часов', l.reach_48h_median]];
+        var have = w.filter(function (x) { return x[1]; });
+        if (have.length < 2) return '';
+        return '<div class="fmr-agerow" style="margin-top:8px;"><span>Сколько наберёт рекламная публикация</span></div>' +
+            '<div class="fmr-gtab">' + w.map(function (x) {
+                return '<div class="r"><span class="l">' + x[0] + '</span>' +
+                    (x[1] ? '<span style="font-weight:750;font-variant-numeric:tabular-nums;">' + _num(x[1]) + '</span>'
+                          : '<span style="color:#565b73;">—</span>') + '</div>';
+            }).join('') + '</div>';
+    }
+    function _curveBlock(l) {
+        var c = l && l.view_curve;
+        if (!c) return '';
+        var marks = ['1', '3', '6', '12', '24', '48'];
+        var pts = marks.filter(function (m) { return c[m] != null; });
+        if (pts.length < 4) return '';
+        var mx = Math.max(100, Math.max.apply(null, pts.map(function (m) { return c[m]; })));
+        var bars = pts.map(function (m) {
+            var h = Math.max(4, Math.round(c[m] / mx * 100));
+            var col = (m === '48' && c[m] > 130) ? '#ef4444' : '#5ab0e6';
+            return '<div class="fmr-cvcol"><div class="fmr-cvbar" style="height:' + h + '%;background:' + col + ';"></div>' +
+                '<span class="fmr-cvlb">' + m + ' ч</span><span class="fmr-cvvl">' + Math.round(c[m]) + '%</span></div>';
+        }).join('');
+        var note = '';
+        if (l.curve_flag === 'step') {
+            note = '<div class="fmr-cvwarn">Просмотры прибавляются ступенью — так растёт закупленный охват, а не читательский интерес.</div>';
+        } else if (l.curve_flag === 'late') {
+            note = '<div class="fmr-cvwarn">Публикации продолжают набирать просмотры спустя сутки после выхода. У живой аудитории охват к этому времени выходит на плато.</div>';
+        }
+        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>Как набирается охват</div>' +
+            '<div class="fmr-cvwrap">' + bars + '</div>' +
+            '<div class="fmr-gsrc">За 100% принят охват за первые сутки' +
+            (c.posts ? ' · по ' + c.posts + ' публикациям' : '') + '</div>' + note;
+    }
+    function _subsChart(l) {
+        var uname = (l && (l.username || l.channel_username) || '').replace('@', '');
+        if (!uname) return '';
+        return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>Прирост подписчиков</div>' +
+            '<div class="fmr-sbwrap" data-u="' + _esc(uname) + '"></div>';
+    }
+    function _drawSubsChart(root) {
+        var box = (root || document).querySelector('.fmr-sbwrap[data-u]');
+        if (!box || box.getAttribute('data-done')) return;
+        box.setAttribute('data-done', '1');
+        var uname = box.getAttribute('data-u');
+        var hideSec = function () {
+            var sec = box.previousElementSibling;
+            if (sec && sec.classList.contains('fmr-sbsec')) sec.style.display = 'none';
+            box.innerHTML = '';
+        };
+        apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
+            var pts = (r && r.ok && r.points) || [];
+            var g = pts.filter(function (p) { return p.g != null; });
+            if (g.length < 3) { hideSec(); return; }
+            var mx = Math.max.apply(null, g.map(function (p) { return Math.abs(p.g); })) || 1;
+            var bars = g.slice(-30).map(function (p) {
+                var h = Math.max(2, Math.round(Math.abs(p.g) / mx * 100));
+                var up = p.g >= 0;
+                var d = p.d.slice(8) + '.' + p.d.slice(5, 7);
+                return '<div class="fmr-sbcol" title="' + d + ': ' + (up ? '+' : '') + p.g + '">' +
+                    '<div class="fmr-sbslot">' + (up ? '<div class="fmr-sbbar up" style="height:' + h + '%;"></div>' : '') + '</div>' +
+                    '<div class="fmr-sbslot dn">' + (!up ? '<div class="fmr-sbbar dn" style="height:' + h + '%;"></div>' : '') + '</div>' +
+                    '</div>';
+            }).join('');
+            var tot = r.total;
+            box.innerHTML = '<div class="fmr-sbchart">' + bars + '</div>' +
+                '<div class="fmr-gsrc">За ' + (r.days || 30) + ' дней' +
+                (tot != null ? ' · итог ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
+                (r.best != null && r.best > 0 ? ' · лучший день +' + _num(r.best) : '') + '</div>';
+        }).catch(hideSec);
     }
     function _topPostsBlock(l) {
         var tp = l && l.top_posts;
@@ -7505,7 +7596,7 @@
                 var l = findListing(li.getAttribute('data-u')); if (!l) return;
                 _haptic('light');
                 box.innerHTML = li.getAttribute('data-b') ? simpleCard(l) : fullCard(l);
-                box.style.display = 'block'; li.classList.add('on'); bindCards(box); _rescaleRow(li);
+                box.style.display = 'block'; li.classList.add('on'); bindCards(box); _drawSubsChart(box); _rescaleRow(li);
             });
         });
     }
@@ -8298,6 +8389,7 @@
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
         if (l.id) {
             _pwTrend(l);
+            _drawSubsChart(el('fmx-listBg') || document);
             loadBuyerSlots(el('fmx-slotsBox'), l, function (r) {
                 var av = el('fmx-tr-accv');
                 if (av) av.textContent = (r.accuracy_pct != null)
