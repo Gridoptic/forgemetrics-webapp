@@ -7535,8 +7535,9 @@
             var mxUp = 0, mxDn = 0;
             g.forEach(function (p) {
                 var ev = p.j != null || p.l != null;
-                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g : 0);
-                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g : 0);
+                var nn = (!ev && p.n > 1) ? p.n : 1;
+                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g / nn : 0);
+                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g / nn : 0);
                 if (uv > mxUp) mxUp = uv;
                 if (dv > mxDn) mxDn = dv;
             });
@@ -7545,12 +7546,18 @@
             if (mxDn && upH > 82) upH = 82;
             var bars = g.slice(-30).map(function (p) {
                 var ev = p.j != null || p.l != null;
-                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g : 0);
-                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g : 0);
+                var nn = (!ev && p.n > 1) ? p.n : 1;
+                var uv = ev ? (p.j || 0) : (p.g > 0 ? p.g / nn : 0);
+                var dv = ev ? (p.l || 0) : (p.g < 0 ? -p.g / nn : 0);
                 var hu = (uv && mxUp) ? Math.max(4, Math.round(uv / mxUp * 100)) : 0;
                 var hd = (dv && mxDn) ? Math.max(4, Math.round(dv / mxDn * 100)) : 0;
                 var d = p.d.slice(8) + '.' + p.d.slice(5, 7);
-                var attrs = ev ? (' data-j="' + uv + '" data-l="' + dv + '"') : (' data-g="' + p.g + '"');
+                if (nn > 1) {
+                    var t0 = new Date(p.d + 'T00:00:00Z');
+                    t0.setUTCDate(t0.getUTCDate() - (nn - 1));
+                    d = ('0' + t0.getUTCDate()).slice(-2) + '.' + ('0' + (t0.getUTCMonth() + 1)).slice(-2) + '\u2013' + d;
+                }
+                var attrs = ev ? (' data-j="' + uv + '" data-l="' + dv + '"') : (' data-g="' + p.g + '"' + (p.a ? ' data-a="1"' : ''));
                 return '<div class="fmr-sbcol" data-d="' + d + '"' + attrs + '>' +
                     '<div class="fmr-sbslot" style="height:' + upH + '%;">' + (hu ? '<div class="fmr-sbbar up" style="height:' + hu + '%;"></div>' : '') + '</div>' +
                     '<div class="fmr-sbslot dn" style="height:' + (100 - upH) + '%;">' + (hd ? '<div class="fmr-sbbar dn" style="height:' + hd + '%;"></div>' : '') + '</div>' +
@@ -7560,9 +7567,9 @@
             var cap = hasEv
                 ? '<span>зелёное — подписались, красное — отписались</span>' +
                   (r.joins != null ? ' · <b style="color:#5DCAA5;">+' + _num(r.joins) + '</b> / <b style="color:#ef4444;">−' + _num(r.leaves || 0) + '</b>' : '')
-                : '<span>Прирост по дням за месяц</span>' +
-                  (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
-                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '');
+                : '<span>чистый прирост за месяц: подписки минус отписки</span>' +
+                  (tot != null ? ' · <span>итог</span>: ' + (r.approx ? '≈ ' : '') + (tot > 0 ? '+' : '') + _num(tot) : '') +
+                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: ' + (r.approx ? '≈ ' : '') + '+' + _num(r.best) : '');
             box.innerHTML = '<div class="fmr-sbchart"><div class="fmr-sbaxis" style="top:' + upH + '%;"></div>' + bars + '</div>' +
                 '<div class="fmr-gsrc">' + cap + '</div>';
             _sbTipBind(box);
@@ -7593,7 +7600,7 @@
                     tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:#5DCAA5;">+' + j + '</b> / <b style="color:#ef4444;">−' + col.getAttribute('data-l') + '</b>';
                 } else {
                     var gv = +col.getAttribute('data-g');
-                    tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:' + (gv >= 0 ? '#5DCAA5' : '#ef4444') + ';">' + (gv > 0 ? '+' : '') + _num(gv) + '</b>';
+                    tip.innerHTML = col.getAttribute('data-d') + ' <b style="color:' + (gv >= 0 ? '#5DCAA5' : '#ef4444') + ';">' + (col.getAttribute('data-a') ? '≈ ' : '') + (gv > 0 ? '+' : '') + _num(gv) + '</b>';
                 }
                 tip.style.display = 'block';
             }
