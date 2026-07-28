@@ -7456,8 +7456,8 @@
         }
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>Как набирается охват</div>' +
             '<div class="fmr-cvwrap">' + bars + '</div>' +
-            '<div class="fmr-gsrc">За 100% принят охват за первые сутки' +
-            (c.posts ? ' · по ' + c.posts + ' публикациям' : '') + '</div>' + note;
+            '<div class="fmr-gsrc"><span>За 100% принят охват за первые сутки</span>' +
+            (c.posts ? ' · <span>публикаций</span>: ' + c.posts : '') + '</div>' + note;
     }
     function _subsChart(l) {
         var uname = (l && (l.username || l.channel_username) || '').replace('@', '');
@@ -7491,9 +7491,9 @@
             }).join('');
             var tot = r.total;
             box.innerHTML = '<div class="fmr-sbchart">' + bars + '</div>' +
-                '<div class="fmr-gsrc">За ' + (r.days || 30) + ' дней' +
-                (tot != null ? ' · итог ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
-                (r.best != null && r.best > 0 ? ' · лучший день +' + _num(r.best) : '') + '</div>';
+                '<div class="fmr-gsrc"><span>Прирост по дням за месяц</span>' +
+                (tot != null ? ' · <span>итог</span>: ' + (tot > 0 ? '+' : '') + _num(tot) : '') +
+                (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: +' + _num(r.best) : '') + '</div>';
         }).catch(hideSec);
     }
     function _topPostsBlock(l) {
