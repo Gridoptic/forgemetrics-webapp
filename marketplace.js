@@ -7481,7 +7481,20 @@
         apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
             var pts = (r && r.ok && r.points) || [];
             var g = pts.filter(function (p) { return p.g != null; });
-            if (g.length < 3) { hideSec(); return; }
+            if (g.length < 3) {
+                if (pts.length >= 3 && !g.length) {
+                    box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
+                        '<span>За месяц число подписчиков не менялось</span></div>';
+                    return;
+                }
+                if (pts.length >= 2) {
+                    box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
+                        '<span>Данные копятся: замеров пока мало для графика</span></div>';
+                    return;
+                }
+                hideSec();
+                return;
+            }
             var mx = Math.max.apply(null, g.map(function (p) { return Math.abs(p.g); })) || 1;
             var bars = g.slice(-30).map(function (p) {
                 var h = Math.max(2, Math.round(Math.abs(p.g) / mx * 100));
