@@ -564,16 +564,6 @@
             }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             return;
         }
-        if (act === 'csv') {
-            var cid = parseInt(b.getAttribute('data-id'), 10);
-            haptic('light');
-            apiRequest('/api/v1/placements/links/' + cid + '/export', { method: 'POST', body: '{}' })
-                .then(function (r) {
-                    if (r && r.ok) toast(T('Файл отправлен ботом в личные сообщения'));
-                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
-                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
-            return;
-        }
         if (act === 'fmt') {
             var fms = document.querySelectorAll('#pl-sheet .pl-fmt');
             for (var fi = 0; fi < fms.length; fi++) fms[fi].classList.remove('sel');
@@ -774,10 +764,8 @@
                     '<div class="pl-qnote">' + esc(T('Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.')) + '</div>' +
                     nolink.map(whoRow).join('');
             }
-            var csvBtn = '<button class="pl-whobtn" data-act="csv" data-id="' + id + '" style="color:#8990a8;"><i class="ti ti-download"></i> ' +
-                esc(T('Выгрузить список — бот пришлёт CSV-файл')) + '</button>';
             if (!items.length) {
-                box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml + (nolink.length ? csvBtn : '');
+                box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml;
                 return;
             }
             var q = r.quality || {};
@@ -798,7 +786,7 @@
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
             }
-            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml + csvBtn;
+            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml;
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
