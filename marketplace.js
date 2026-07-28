@@ -2802,7 +2802,7 @@
         draw('');
     }
 
-    var _rf = { presets: {}, aud: {}, mn: {}, mx: {} };
+    var _rf = { presets: {}, aud: {}, geo: {}, mn: {}, mx: {} };
     function _rfCount() {
         return Object.keys(_rf.presets).filter(function (k) { return _rf.presets[k]; }).length
             + Object.keys(_rf.aud).filter(function (k) { return _rf.aud[k]; }).length
@@ -2823,6 +2823,9 @@
             cpm: _cpm(l), h: l.health_score,
             age: (l.channel_created_ts ? Math.round((_nowSec - l.channel_created_ts) / 2629800) : null),
             adp: (l.ad_density != null ? Math.round(l.ad_density * 100) : null) };
+        var _gsel = [];
+        for (var gk in (_rf.geo || {})) { if (_rf.geo[gk]) _gsel.push(gk); }
+        if (_gsel.length && _gsel.indexOf(l.geo) < 0) return false;
         var k;
         for (k in _rf.mn) { if (_rf.mn[k] != null && (map[k] == null || map[k] < _rf.mn[k])) return false; }
         for (k in _rf.mx) { if (_rf.mx[k] != null && (map[k] == null || map[k] > _rf.mx[k])) return false; }
@@ -2831,6 +2834,8 @@
     var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Активные'], ['clean', 'Прошли фрод-контроль'], ['grow', 'Растут']];
     var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
+    var _GEO_NAMES = { ru: 'Россия', ua: 'Украина', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Киргизия', az: 'Азербайджан', ge: 'Грузия', am: 'Армения', int: 'Международный' };
+    var _RF_GEO = [['ru', 'Россия'], ['kz', 'Казахстан'], ['by', 'Беларусь'], ['ua', 'Украина'], ['uz', 'Узбекистан'], ['kg', 'Киргизия'], ['az', 'Азербайджан'], ['ge', 'Грузия'], ['am', 'Армения'], ['int', 'Международный']];
     function _rfBtnLabel() {
         var b = el('fmx-rfbtn'); if (!b) return;
         var n = _rfCount();
@@ -2850,6 +2855,7 @@
             '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-rf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">Страна аудитории</span><div class="fmx-fxw" id="fmx-rf-geo">' + _RF_GEO.map(function (g) { return '<button class="fmx-fx' + (_rf.geo && _rf.geo[g[0]] ? ' on' : '') + '" data-g="' + g[0] + '">' + g[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
             '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
         document.body.appendChild(bg);
@@ -2859,9 +2865,10 @@
         el('fmx-rf-x').addEventListener('click', done);
         qsa(bg, '#fmx-rf-pre [data-p]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-p'); _rf.presets[k] = !_rf.presets[k]; b.classList.toggle('on', _rf.presets[k]); upd(); }); });
         qsa(bg, '#fmx-rf-aud [data-a]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-a'); _rf.aud[k] = !_rf.aud[k]; b.classList.toggle('on', _rf.aud[k]); upd(); }); });
+        qsa(bg, '#fmx-rf-geo [data-g]').forEach(function (b) { b.addEventListener('click', function () { if (!_rf.geo) _rf.geo = {}; var k = b.getAttribute('data-g'); _rf.geo[k] = !_rf.geo[k]; b.classList.toggle('on', _rf.geo[k]); upd(); }); });
         qsa(bg, '[data-mn]').forEach(function (i) { i.addEventListener('input', function () { var v = i.value.trim(); _rf.mn[i.getAttribute('data-mn')] = v === '' ? null : +v; upd(); }); });
         qsa(bg, '[data-mx]').forEach(function (i) { i.addEventListener('input', function () { var v = i.value.trim(); _rf.mx[i.getAttribute('data-mx')] = v === '' ? null : +v; upd(); }); });
-        bg.querySelector('[data-reset]').addEventListener('click', function () { _rf = { presets: {}, aud: {}, mn: {}, mx: {} }; qsa(bg, '.fmx-fx.on').forEach(function (x) { x.classList.remove('on'); }); qsa(bg, '.fmx-inp').forEach(function (x) { x.value = ''; }); upd(); });
+        bg.querySelector('[data-reset]').addEventListener('click', function () { _rf = { presets: {}, aud: {}, geo: {}, mn: {}, mx: {} }; qsa(bg, '.fmx-fx.on').forEach(function (x) { x.classList.remove('on'); }); qsa(bg, '.fmx-inp').forEach(function (x) { x.value = ''; }); upd(); });
         bg.querySelector('[data-apply]').addEventListener('click', done);
         upd();
     }
@@ -7350,6 +7357,10 @@
     }
     function _audBlock(l) {
         var out = '';
+        if (l.geo && _GEO_NAMES[l.geo]) {
+            out += '<div class="fmr-agerow"><span>Страна аудитории</span>: <b>' + _esc(_GEO_NAMES[l.geo]) + '</b>' +
+                (l.lang_code && l.lang_code !== 'ru' ? ' <span style="color:#565b73;">· язык: ' + _esc(l.lang_code) + '</span>' : '') + '</div>';
+        }
         var female = null, male = null, approx = false;
         if (l.female_pct != null) { female = Math.max(0, Math.min(100, l.female_pct)); male = 100 - female; }
         else if (l.audience === 'female') { female = 70; male = 30; approx = true; }
