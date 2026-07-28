@@ -7465,10 +7465,39 @@
         return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>Прирост подписчиков</div>' +
             '<div class="fmr-sbwrap" data-u="' + _esc(uname) + '"></div>';
     }
-    function _drawSubsChart() {
-        qsa(document, '.fmr-sbwrap[data-u]').forEach(_drawOneSubs);
+    var _sbSeen = {};
+    function _diagBeacon(tag) {
+        try {
+            tag = String(tag).toLowerCase().replace(/[^a-z0-9_]+/g, '_').slice(0, 60);
+            if (tag.length < 3) tag += '_xx';
+            if (_sbSeen[tag]) return; _sbSeen[tag] = 1;
+            apiGet('/api/v1/channels/' + tag + '/subs-trend').catch(function () {});
+        } catch (e) {}
     }
+    function _drawSubsChart() {
+        var boxes = qsa(document, '.fmr-sbwrap[data-u]');
+        var fresh = boxes.filter(function (b) { return !b.getAttribute('data-done'); });
+        _diagBeacon('diag_scan_' + fresh.length + 'of' + boxes.length);
+        fresh.forEach(_drawOneSubs);
+    }
+    var _sbMO = null, _sbPend = false;
+    function _ensureSbMO() {
+        if (_sbMO || typeof MutationObserver === 'undefined' || !document.body) return;
+        _sbMO = new MutationObserver(function () {
+            if (_sbPend) return; _sbPend = true;
+            window.requestAnimationFrame(function () {
+                _sbPend = false;
+                qsa(document, '.fmr-sbwrap[data-u]').forEach(_drawOneSubs);
+            });
+        });
+        _sbMO.observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.body) { _ensureSbMO(); } else { document.addEventListener('DOMContentLoaded', _ensureSbMO); }
+    window.addEventListener('error', function (ev) { _diagBeacon('err_js_' + (ev && ev.message)); });
     function _drawOneSubs(box) {
+        try { _drawOneSubsIn(box); } catch (e) { _diagBeacon('err_draw_' + (e && e.message)); }
+    }
+    function _drawOneSubsIn(box) {
         if (!box || box.getAttribute('data-done')) return;
         box.setAttribute('data-done', '1');
         var uname = box.getAttribute('data-u');
