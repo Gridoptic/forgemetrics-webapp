@@ -407,6 +407,9 @@
             '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
             '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>' +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
+            ((l.placement_format === 'story' || l.placement_format === 'circle' || l.placement_format === 'repost')
+                ? '<div class="pl-note" style="margin-top:2px;">' + esc(T('Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.')) + '</div>'
+                : '') +
             '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn + priceBtn +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
             (active
@@ -546,6 +549,7 @@
             '<div class="pl-fmtrow">' + [['post','пост'],['pin','закреп'],['story','сторис'],['circle','кружок'],['repost','репост'],['other','другое']].map(function (f, i) {
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="fmt" data-fmt="' + f[0] + '">' + esc(T(f[1])) + '</span>';
             }).join('') + '</div>' +
+            '<div id="pl-fmt-hint" class="pl-note" style="display:none;margin-top:8px;"></div>' +
             '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
@@ -771,6 +775,17 @@
             var fms = document.querySelectorAll('#pl-sheet .pl-fmt');
             for (var fi = 0; fi < fms.length; fi++) fms[fi].classList.remove('sel');
             b.classList.add('sel');
+            var fh = document.getElementById('pl-fmt-hint');
+            if (fh) {
+                var fmap = {
+                    story: T('Попроси админа прикрепить эту ссылку к сторис — без неё переходы не считаются, а вступившие попадут в «Пришли сами».'),
+                    circle: T('В кружок ссылку вшить нельзя. Попроси админа отправить её отдельным сообщением сразу после кружка.'),
+                    repost: T('Вшей эту ссылку в текст поста до пересылки — переходы по шапке репоста проходят мимо ссылки и попадают в «Пришли сами».')
+                };
+                var ft = fmap[b.getAttribute('data-fmt')];
+                fh.textContent = ft || '';
+                fh.style.display = ft ? 'block' : 'none';
+            }
             haptic('light');
             return;
         }
