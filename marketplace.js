@@ -2832,14 +2832,6 @@
         bg.addEventListener('click', function (e) { if (e.target === bg) bg.remove(); });
         bg.querySelector('[data-c]').addEventListener('click', function () { bg.remove(); });
         el('fmx-netSel').addEventListener('click', function () { netMode(!_net.mode); });
-        el('fmx-netAll').addEventListener('click', function () {
-            _haptic('light');
-            _net.ch.forEach(function (ch) {
-                var l = netListingOf(ch);
-                if (l && (l.status === 'published' || l.status === 'paused')) _net.sel[l.id] = true;
-            });
-            netPaint();
-        });
         netReload();
     }
 
@@ -2849,8 +2841,6 @@
         if (!on) _net.sel = {};
         var sb = el('fmx-netSel');
         if (sb) sb.innerHTML = '<span>' + (on ? 'Отмена' : 'Выбрать') + '</span>';
-        var ab = el('fmx-netAll');
-        if (ab) ab.style.display = on ? '' : 'none';
         netPaint();
     }
 
@@ -2991,6 +2981,21 @@
         }
         var sub = el('fmx-netSub');
         if (sub) sub.innerHTML = _net.mode ? '<span>Выбрано:</span> <b class="num">' + netSelIds().length + '</b>' : '<span>Каналы, офферы и пакетные операции</span>';
+        var ab = el('fmx-netAll');
+        if (ab) {
+            if (_net.mode) {
+                var selectable = list.filter(function (r) { return r.l && (r.l.status === 'published' || r.l.status === 'paused'); });
+                var allSel = selectable.length > 0 && selectable.every(function (r) { return _net.sel[r.l.id]; });
+                ab.style.display = '';
+                ab.innerHTML = allSel ? '<span>Сброс</span>' : '<span>Все</span>' + (selectable.length ? ' <b class="num" style="font-weight:800;">' + selectable.length + '</b>' : '');
+                ab.onclick = function () {
+                    _haptic('light');
+                    if (allSel) _net.sel = {};
+                    else selectable.forEach(function (r) { _net.sel[r.l.id] = true; });
+                    netPaint();
+                };
+            } else { ab.style.display = 'none'; ab.onclick = null; }
+        }
         qsa(body, '[data-netchip]').forEach(function (b) {
             b.addEventListener('click', function () { _haptic('light'); _net.filter = b.getAttribute('data-netchip'); netPaint(); });
         });
