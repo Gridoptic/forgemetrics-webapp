@@ -482,7 +482,8 @@
             if (!box) return;
             var items = (r && r.items) || [];
             if (!items.length) {
-                box.innerHTML = '<div class="pl-center" style="padding:6px 0 2px;font-size:10.5px;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>';
+                box.innerHTML = '<div class="pl-center" style="padding:6px 0 2px;font-size:10.5px;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>' +
+                    '<button class="pl-copy" data-act="go-market" style="display:block;width:100%;margin-top:8px;padding:10px;text-align:center;">' + esc(T('Открыть Площадку и выбрать канал')) + '</button>';
                 return;
             }
             box.innerHTML = items.map(function (d) {
@@ -628,6 +629,14 @@
                 if (ha) ha.textContent = open ? '▼' : '▲';
                 try { localStorage.setItem('fm_pl_how', open ? '0' : '1'); } catch (e) {}
             }
+            return;
+        }
+        if (act === 'go-market') {
+            haptic('light');
+            var shx = document.getElementById('pl-sheet'), bgx = document.getElementById('pl-sheetbg');
+            if (shx) shx.classList.remove('on');
+            if (bgx) bgx.classList.remove('on');
+            try { window.__openMarketplace(); } catch (e) {}
             return;
         }
         if (act === 'from-deal') {
