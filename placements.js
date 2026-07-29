@@ -656,7 +656,8 @@
             if (!box) return;
             var items = (r && r.items) || [];
             if (!items.length) {
-                box.innerHTML = '<div class="pl-center" style="padding:8px 0;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>';
+                box.innerHTML = '<div class="pl-center" style="padding:8px 0;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>' +
+                    '<div class="pl-note" style="margin-top:6px;">' + esc(T('Здесь появятся сделки, где ты покупатель: найди оффер на Площадке, отметь сделку в его развороте — после подтверждения владельцем она появится в этом списке.')) + '</div>';
                 return;
             }
             box.innerHTML = items.map(function (d) {
