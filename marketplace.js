@@ -2291,12 +2291,9 @@
         var nf = _buyFiltersCount();
         return '<div class="fmx-sortbar" id="fmx-buysort" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">' +
             opts.map(function (o) { return '<button class="fmx-seg' + (_sortBuy === o[0] ? ' on' : '') + '" data-bsort="' + o[0] + '" style="flex:0 0 auto;">' + o[1] + '</button>'; }).join('') +
-            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button>' +
-            '<button class="fmx-seg" id="fmx-bterms" style="flex:0 0 auto;padding-left:10px;padding-right:10px;" aria-label="Как работает Площадка"><i class="ti ti-help-circle"></i></button></div>';
+            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button></div>';
     }
     function _refreshFilterChip() {
-        var bt = el('fmx-bterms');
-        if (bt) bt.addEventListener('click', function () { _haptic('light'); openTermsPassport('b'); });
         var bf = el('fmx-bfilters'); if (!bf) return;
         var nf = _buyFiltersCount();
         bf.classList.toggle('on', nf > 0);
