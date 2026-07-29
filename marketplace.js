@@ -8605,6 +8605,7 @@
             (l.id ? '<div style="display:flex;gap:8px;margin-top:14px;">' +
                 '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share-2"></i> Поделиться оффером</button>' +
                 '<button class="fmx-btn" id="fmx-ls-rep" style="flex:1;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться</button></div>' : '') +
+            (!l.id ? '<button class="fmx-btn" id="fmx-lsTrack" style="width:100%;margin-top:14px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> Ссылка отслеживания в рекламный пост</button>' : '') +
             '<div class="fmx-lsfoot">' +
             '<button class="fmx-btn bm" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i></button>' +
             '<button class="fmx-btn fmx-btn-p go" id="fmx-lsGo" style="background:' + accent + ';color:#fff;"><i class="ti ti-brand-telegram"></i> Написать</button></div>';
@@ -8656,6 +8657,11 @@
         });
         var _lsRep = el('fmx-ls-rep');
         if (_lsRep) _lsRep.addEventListener('click', function () { hideModal('fmx-listBg'); openComplaint({ listing_id: l.id }); });
+        var _lsTrk = el('fmx-lsTrack');
+        if (_lsTrk) _lsTrk.addEventListener('click', function () {
+            hideModal('fmx-listBg');
+            try { window.__openPlacementsCreate(u); } catch (e) {}
+        });
         if (l.id) {
             _pwTrend(l);
             _drawSubsChart();

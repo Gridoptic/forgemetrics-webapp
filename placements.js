@@ -474,12 +474,23 @@
         host.innerHTML = head() + '<div class="pl-body"><div class="pl-spin"></div><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div>';
     }
 
+    var _prefillChan = null;
     function load() {
         loading();
         apiRequest('/api/v1/placements/links?channel_id=' + _chId).then(function (r) {
             if (r && r.ok) { _items = r.items || []; _right = r.right; }
             else { _items = []; _right = null; if (r && r.message) toast(r.message); }
             render();
+            if (_prefillChan && _right !== false) {
+                var pu = _prefillChan;
+                _prefillChan = null;
+                openCreateSheet();
+                var ci = document.getElementById('pl-chan');
+                if (ci) {
+                    ci.value = 't.me/' + pu;
+                    try { ci.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
+                }
+            }
         }).catch(function () { _items = []; _right = null; render(); toast(T('Не загрузилось. Открой ещё раз.')); });
     }
 
@@ -1023,7 +1034,13 @@
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
+    window.__openPlacementsCreate = function (uname) {
+        window.__openPlacements();
+        _prefillChan = uname || null;
+    };
+
     window.__openPlacements = function () {
+        _prefillChan = null;
         loading();
         apiRequest('/api/v1/channels/active').then(function (d) {
             _channels = (d && d.channels) ? d.channels : [];
