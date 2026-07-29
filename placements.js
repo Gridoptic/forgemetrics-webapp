@@ -211,11 +211,20 @@
             for (var i = 0; i < boxes.length; i++) {
                 if (boxes[i].style.display !== 'none') openIds.push(boxes[i].id.replace('pl-who-', ''));
             }
+            var openPanels = [];
+            var panels = document.querySelectorAll('#pl-screen [id^="pl-adv-"], #pl-screen [id^="pl-minfo-"]');
+            for (var p = 0; p < panels.length; p++) {
+                if (panels[p].style.display !== 'none') openPanels.push(panels[p].id);
+            }
             var body = document.querySelector('#pl-screen .pl-body');
             var st = body ? body.scrollTop : 0;
             render();
             body = document.querySelector('#pl-screen .pl-body');
             if (body) body.scrollTop = st;
+            openPanels.forEach(function (pid) {
+                var elp = document.getElementById(pid);
+                if (elp) elp.style.display = 'block';
+            });
             openIds.forEach(function (id) { openWhoPanel(parseInt(id, 10)); });
         }).catch(function () {});
     }
@@ -325,7 +334,12 @@
             if (!box) return;
             var items = (r && r.items) || [];
             var inCamp = {};
-            if (!isNew) _cands.forEach(function (c) { if (c.campaign_id === campId && c.username) inCamp[c.username.toLowerCase()] = 1; });
+            if (!isNew) {
+                _cands.forEach(function (c) { if (c.campaign_id === campId && c.username) inCamp[c.username.toLowerCase()] = 1; });
+                _campaigns.forEach(function (c) {
+                    if (c.id === campId && c.taken) c.taken.forEach(function (u2) { inCamp[String(u2).toLowerCase()] = 1; });
+                });
+            }
             if (!items.length) {
                 box.innerHTML = '<div class="pl-note" style="margin-top:0;">' + esc(T('Закладок пока нет — отмечай ★ на офферах и в Радаре.')) + '</div>';
                 return;
@@ -358,6 +372,7 @@
                     if (!v || v.length < 4) { if (info) info.style.display = 'none'; return; }
                     apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
                         if (!info || !r || document.getElementById('pl-camp-chan') !== mi) return;
+                        if (mi.value.trim() !== v) return;
                         if (!r.username) { info.style.display = 'none'; return; }
                         _campManual = { username: r.username, title: r.title || null, subscribers: r.subscribers || null, listing_id: r.listing_id || null };
                         if (r.found) {
@@ -428,7 +443,10 @@
             apiRequest('/api/v1/placements/campaigns/' + mode + '/items', { method: 'POST', body: JSON.stringify({ picks: picks }) })
                 .then(function (r) {
                     _busy = false;
-                    if (r && r.ok) { haptic('medium'); closeSheet(); load(); }
+                    if (r && r.ok) {
+                        haptic('medium'); closeSheet(); load();
+                        if (!r.added) toast(T('Эти каналы уже в кампании'));
+                    }
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
         }
@@ -697,7 +715,7 @@
                 _campaigns = r.campaigns || []; _cands = r.candidates || [];
                 _syncCamp();
             }
-            else { _items = []; _right = null; if (r && r.message) toast(r.message); }
+            else { _items = []; _right = null; _campaigns = []; _cands = []; _campId = null; if (r && r.message) toast(r.message); }
             render();
             if (_prefillChan && _right !== false) {
                 var pu = _prefillChan;
@@ -709,7 +727,7 @@
                     try { ci.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
                 }
             }
-        }).catch(function () { _items = []; _right = null; render(); toast(T('Не загрузилось. Открой ещё раз.')); });
+        }).catch(function () { _items = []; _right = null; _campaigns = []; _cands = []; _campId = null; render(); toast(T('Не загрузилось. Открой ещё раз.')); });
     }
 
     function closeSheet() {
@@ -785,6 +803,8 @@
         sh.classList.add('on');
         _resolvedDeal = null;
         _pendingItem = null;
+        var nmIn = document.getElementById('pl-name');
+        if (nmIn) nmIn.addEventListener('input', function () { nmIn.removeAttribute('data-auto'); });
         var chIn = document.getElementById('pl-chan');
         if (chIn) {
             var _rt = null;
@@ -797,6 +817,7 @@
                     if (!v || v.length < 4) { if (info) info.style.display = 'none'; return; }
                     apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
                         if (!info || !r || document.getElementById('pl-chan') !== chIn) return;
+                        if (chIn.value.trim() !== v) return;
                         if (!r.username) { info.style.display = 'none'; return; }
                         var nameIn = document.getElementById('pl-name');
                         if (nameIn && (!nameIn.value.trim() || nameIn.getAttribute('data-auto'))) {
@@ -830,7 +851,7 @@
         name = name.trim();
         if (!name) {
             var chv = ((document.getElementById('pl-chan') || {}).value || '').trim();
-            var mch = chv.match(/(?:t\.me\/|@)?([A-Za-z0-9_]{4,32})/);
+            var mch = chv.match(/(?:t\.me\/|@)([A-Za-z0-9_]{4,32})/) || chv.match(/^([A-Za-z0-9_]{4,32})$/);
             if (mch) name = T('Реклама у') + ' @' + mch[1];
             else { toast(T('Вставь ссылку на канал или укажи название')); return; }
         }
@@ -845,14 +866,16 @@
             if (r && r.ok) {
                 haptic('medium');
                 _pendingItem = null;
-                if (_resolvedDeal && r.item && r.item.id) {
-                    apiRequest('/api/v1/placements/links/' + r.item.id + '/deal', {
-                        method: 'POST', body: JSON.stringify({ deal_id: _resolvedDeal })
-                    }).catch(function () {});
-                    _resolvedDeal = null;
-                }
                 closeSheet();
-                load();
+                if (_resolvedDeal && r.item && r.item.id) {
+                    var _bd = _resolvedDeal;
+                    _resolvedDeal = null;
+                    apiRequest('/api/v1/placements/links/' + r.item.id + '/deal', {
+                        method: 'POST', body: JSON.stringify({ deal_id: _bd })
+                    }).then(load, load);
+                } else {
+                    load();
+                }
                 if (r.item) {
                     var cu = r.item.click_code ? (CLICK_BASE + '/r/' + r.item.click_code) : r.item.invite_link;
                     if (cu) copyText(cu, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
@@ -1017,11 +1040,14 @@
             return;
         }
         if (act === 'from-deal') {
+            if (_busy) return;
             haptic('light');
             var fdid = parseInt(b.getAttribute('data-deal'), 10);
+            _busy = true;
             apiRequest('/api/v1/placements/from-deal', {
                 method: 'POST', body: JSON.stringify({ deal_id: fdid, channel_id: _chId })
             }).then(function (r) {
+                _busy = false;
                 if (!r || r.ok === false) { toast((r && r.message) || T('Не удалось. Повтори попытку.')); return; }
                 var it = r.item || {};
                 var url = it.click_code ? ('https://fmtr.click/r/' + it.click_code) : (it.invite_link || '');
@@ -1033,7 +1059,7 @@
                         '<div class="hint">' + esc(T('Админ вставит её в рекламный пост. Подписки, клики и показы посчитаются в этой записи автоматически.')) + '</div></div>';
                 }
                 load();
-            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
             return;
         }
         if (act === 'chpick') { haptic('light'); openChannelSheet(); return; }

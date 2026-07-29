@@ -3311,7 +3311,7 @@
         if (r.reach_24h != null) lines += '<div>Охват за 24 ч: <b style="color:#5ab0e6;">' + _num(r.reach_24h) + '</b></div>';
         if (r.reach_48h != null) lines += '<div>Охват за 48 ч: <b style="color:#5ab0e6;">' + _num(r.reach_48h) + '</b></div>';
         var note;
-        if (r.proof_status === 'measured') note = (r.reach_24h == null && r.reach_48h == null) ? '<div style="color:#8990a8;">Охват замерить не удалось — пост не в публичной ленте.</div>' : '';
+        if (r.proof_status === 'measured') note = (r.reach_12h == null && r.reach_24h == null && r.reach_48h == null) ? '<div style="color:#8990a8;">Охват замерить не удалось — пост не в публичной ленте.</div>' : '';
         else note = '<div style="color:#8990a8;">Замеряем охват — отчёт придёт через 12, 24 и 48 часов.</div>';
         return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> Доказательство размещения</div>' +
             '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
@@ -4823,10 +4823,13 @@
         var go = el('fmx-dealTrkGo');
         if (go) go.addEventListener('click', function () { _haptic('light'); _dealTrackCreate(dealId, null); });
     }
+    var _trkBusy = false;
     function _dealTrackCreate(dealId, channelId) {
-        var boxT = el('fmx-dealTrk'); if (!boxT) return;
+        var boxT = el('fmx-dealTrk'); if (!boxT || _trkBusy) return;
+        _trkBusy = true;
         var body = channelId ? { deal_id: dealId, channel_id: channelId } : { deal_id: dealId };
         apiPost('/api/v1/placements/from-deal', body).then(function (r) {
+            _trkBusy = false;
             if (!r || r.ok === false) { _haptic('error'); uiAlert((r && r.message) || 'Не удалось. Повтори попытку.'); return; }
             if (r.need_channel) {
                 boxT.innerHTML = '<div class="fmx-dealline" style="justify-content:flex-start;margin-top:8px;"><i class="ti ti-route"></i> <span>В какой канал вести подписчиков?</span></div>' +
@@ -4846,7 +4849,7 @@
                 try { navigator.clipboard.writeText(url); } catch (e) {}
                 _haptic('light'); toast('Ссылка скопирована — вставь её в рекламный пост');
             });
-        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        }).catch(function () { _trkBusy = false; uiAlert('Не удалось. Повтори попытку.'); });
     }
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
@@ -5867,14 +5870,15 @@
                 html += '<div class="fmx-pend-t" style="margin-top:' + (pend.length ? '12px' : '0') + ';"><i class="ti ti-chart-line" style="color:#5ab0e6;"></i> Размещение и охват</div>' +
                     conf.map(function (d) {
                         if (!d.proof_status) {
-                            return '<div class="fmx-plc"><div style="font-size:11.5px;color:#c9cbe0;">' + who(d) + ' — отметь вышедший рекламный пост</div>' +
+                            return '<div class="fmx-plc"><div style="font-size:11.5px;color:#c9cbe0;">' + who(d) + ' ' + (window.t ? window.t('— отметь вышедший рекламный пост') : '— отметь вышедший рекламный пост') + '</div>' +
                                 '<div style="display:flex;gap:6px;margin-top:6px;"><input class="fmx-inp fmx-plc-in" placeholder="https://t.me/канал/123"><button class="fmx-btn fmx-plc-go" data-pdid="' + d.deal_id + '" style="padding:6px 11px;color:#5ab0e6;border-color:rgba(90,176,230,0.4);flex:0 0 auto;"><i class="ti ti-send"></i></button></div></div>';
                         }
+                        var _lt = window.t || function (s) { return s; };
                         var rr = '';
-                        if (d.reach_12h != null) rr += ' · 12ч: ' + _num(d.reach_12h);
-                        if (d.reach_24h != null) rr += ' · 24ч: ' + _num(d.reach_24h);
-                        if (d.reach_48h != null) rr += ' · 48ч: ' + _num(d.reach_48h);
-                        return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-circle-check" style="color:#5DCAA5;"></i> ' + who(d) + ' — замеряем охват' + rr + '</div></div>';
+                        if (d.reach_12h != null) rr += ' ' + _lt('· 12ч:') + ' ' + _num(d.reach_12h);
+                        if (d.reach_24h != null) rr += ' ' + _lt('· 24ч:') + ' ' + _num(d.reach_24h);
+                        if (d.reach_48h != null) rr += ' ' + _lt('· 48ч:') + ' ' + _num(d.reach_48h);
+                        return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-circle-check" style="color:#5DCAA5;"></i> ' + who(d) + ' ' + _lt('— замеряем охват') + rr + '</div></div>';
                     }).join('') +
                     '<div style="font-size:10px;color:#565b73;margin-top:6px;">Пришли ссылку на пост — платформа сама замерит охват через 12, 24 и 48 часов и отчитается покупателю.</div>';
             }
