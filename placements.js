@@ -301,25 +301,29 @@
         if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
         if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
         var postUrl = l.click_code ? (CLICK_BASE + '/r/' + l.click_code) : l.invite_link;
-        var rows = [];
-        if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
-        if (l.clicks != null) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: rows.length ? T('от увидевших') : null });
-        rows.push({ lab: T('Подписались'), v: l.joined || 0,
-                    cap: rows.length ? (l.clicks != null ? T('от перешедших') : T('от увидевших')) : null });
-        rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
-        var maxV = 0;
-        rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
-        var fun = '<div class="pl-fun"><div class="pl-fcap">' + esc(T('Воронка размещения')) + '</div>';
-        rows.forEach(function (r, i) {
-            if (i > 0 && rows[i - 1].v > 0 && r.cap) {
-                var pct = Math.round(r.v / rows[i - 1].v * 1000) / 10;
-                if (pct <= 100) fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
-            }
-            var w = maxV > 0 ? Math.max(3, Math.round(r.v / maxV * 100)) : 3;
-            fun += '<div class="pl-frow2"><div class="pl-flab">' + esc(r.lab) + '</div>' +
-                '<div class="pl-fbarw"><div class="pl-fbar' + (r.g ? ' g' : '') + '" style="width:' + w + '%;"></div></div>' +
-                '<div class="pl-fnum">' + num(r.v) + '</div></div>';
-        });
+        var hasFunnel = !!(l.impressions || l.clicks != null);
+        var fun = '<div class="pl-fun">';
+        if (hasFunnel) {
+            var rows = [];
+            if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
+            if (l.clicks != null) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: rows.length ? T('от увидевших') : null });
+            rows.push({ lab: T('Подписались'), v: l.joined || 0,
+                        cap: rows.length ? (l.clicks != null ? T('от перешедших') : T('от увидевших')) : null });
+            rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
+            var maxV = 0;
+            rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
+            fun += '<div class="pl-fcap">' + esc(T('Воронка размещения')) + '</div>';
+            rows.forEach(function (r, i) {
+                if (i > 0 && rows[i - 1].v > 0 && r.cap) {
+                    var pct = Math.round(r.v / rows[i - 1].v * 1000) / 10;
+                    if (pct <= 100) fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
+                }
+                var w = maxV > 0 ? Math.max(3, Math.round(r.v / maxV * 100)) : 3;
+                fun += '<div class="pl-frow2"><div class="pl-flab">' + esc(r.lab) + '</div>' +
+                    '<div class="pl-fbarw"><div class="pl-fbar' + (r.g ? ' g' : '') + '" style="width:' + w + '%;"></div></div>' +
+                    '<div class="pl-fnum">' + num(r.v) + '</div></div>';
+            });
+        }
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
         var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500, hasBand = !!(l.cpm_lo && l.cpm_hi);
         var fx = [];
@@ -405,8 +409,10 @@
                   '<button class="pl-copy" data-act="copy" data-link="' + esc(postUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
                 : '') +
             big + lateNote +
-            '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
-            '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>' +
+            ((hasFunnel || fx.length || warns)
+                ? '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
+                  '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>'
+                : '') +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
             ((l.placement_format === 'story' || l.placement_format === 'circle' || l.placement_format === 'repost')
                 ? '<div class="pl-note" style="margin-top:2px;">' + esc(T('Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.')) + '</div>'
