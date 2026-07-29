@@ -4816,14 +4816,48 @@
         showModal('fmx-cmpBg');
     }
 
+    function _dealTrackHtml() {
+        return '<div id="fmx-dealTrk"><button class="fmx-btn" id="fmx-dealTrkGo" style="width:100%;margin-top:8px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> <span>Ссылка отслеживания в рекламный пост</span></button></div>';
+    }
+    function _dealTrackBind(dealId) {
+        var go = el('fmx-dealTrkGo');
+        if (go) go.addEventListener('click', function () { _haptic('light'); _dealTrackCreate(dealId, null); });
+    }
+    function _dealTrackCreate(dealId, channelId) {
+        var boxT = el('fmx-dealTrk'); if (!boxT) return;
+        var body = channelId ? { deal_id: dealId, channel_id: channelId } : { deal_id: dealId };
+        apiPost('/api/v1/placements/from-deal', body).then(function (r) {
+            if (!r || r.ok === false) { _haptic('error'); uiAlert((r && r.message) || 'Не удалось. Повтори попытку.'); return; }
+            if (r.need_channel) {
+                boxT.innerHTML = '<div class="fmx-dealline" style="justify-content:flex-start;margin-top:8px;"><i class="ti ti-route"></i> <span>В какой канал вести подписчиков?</span></div>' +
+                    r.need_channel.map(function (c) { return '<button class="fmx-btn" data-trkch="' + c.id + '" style="width:100%;margin-top:6px;">' + _esc(c.title || ('@' + (c.username || ''))) + '</button>'; }).join('');
+                qsa(boxT, '[data-trkch]').forEach(function (b) { b.addEventListener('click', function () { _dealTrackCreate(dealId, +b.getAttribute('data-trkch')); }); });
+                return;
+            }
+            var it = r.item || {};
+            var url = it.click_code ? ('https://fmtr.click/r/' + it.click_code) : (it.invite_link || '');
+            _haptic('success');
+            boxT.innerHTML = '<div class="fmx-proof" style="margin-top:8px;"><div class="fmx-proof-t"><i class="ti ti-route"></i> <span>Отслеживание готово — запись уже в Трекере</span></div>' +
+                '<div style="font-size:11px;color:#8990a8;margin-top:4px;"><span>Эта ссылка — в рекламный пост: подписки, показы и цена подписчика посчитаются автоматически</span></div>' +
+                '<div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><code style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;">' + _esc(url) + '</code>' +
+                '<button class="fmx-btn" id="fmx-trkCopy" style="flex:0 0 auto;padding:6px 10px;"><span>Скопировать</span></button></div></div>';
+            var cp = el('fmx-trkCopy');
+            if (cp) cp.addEventListener('click', function () {
+                try { navigator.clipboard.writeText(url); } catch (e) {}
+                _haptic('light'); toast('Ссылка скопирована — вставь её в рекламный пост');
+            });
+        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+    }
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
             if (!r || !r.ok) return;
             if (r.state === 'pending') {
-                box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>';
+                box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>' + _dealTrackHtml();
+                _dealTrackBind(r.deal_id);
             } else if (r.state === 'confirmed') {
-                box.innerHTML = _proofHtml(r) + '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                box.innerHTML = _proofHtml(r) + _dealTrackHtml() + '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                _dealTrackBind(r.deal_id);
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
                 box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен.</div>';
