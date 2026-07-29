@@ -499,7 +499,7 @@
             '<span>' + esc(T('Выбери сделку — название, формат и привязка заполнятся сами, а показы поста приедут из автозамеров.')) + '</span>' +
             '<div id="pl-src-deals"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div></div>' +
             '<div class="pl-src" data-act="new-direct" style="cursor:pointer;"><b>' + esc(T('Напрямую у админа')) + '</b>' +
-            '<span>' + esc(T('Обычная форма: название, цена, тип ссылки и формат.')) + '</span></div>';
+            '<span>' + esc(T('Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.')) + '</span></div>';
         bg.classList.add('on'); sh.classList.add('on');
         apiRequest('/api/v1/placements/deals').then(function (r) {
             var box = document.getElementById('pl-src-deals');
@@ -709,10 +709,9 @@
         }
         if (act === 'go-market') {
             haptic('light');
-            var shx = document.getElementById('pl-sheet'), bgx = document.getElementById('pl-sheetbg');
-            if (shx) shx.classList.remove('on');
-            if (bgx) bgx.classList.remove('on');
+            close();
             try { window.__openMarketplace(); } catch (e) {}
+            toast(T('Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере'));
             return;
         }
         if (act === 'from-deal') {
