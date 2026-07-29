@@ -326,6 +326,11 @@
             '.fmx-scroll::-webkit-scrollbar-track{background:transparent;}',
             '.fmx-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}',
             '.fmx-scroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}',
+            '.fmx-hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;}',
+            '.fmx-hscroll::-webkit-scrollbar{height:8px;}',
+            '.fmx-hscroll::-webkit-scrollbar-track{background:transparent;}',
+            '.fmx-hscroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}',
+            '.fmx-hscroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}',
             '.fmx-pad{padding:14px 16px 28px;max-width:640px;margin:0 auto;width:100%;min-width:0;}',
             '@keyframes fmxFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}',
             '.fmx-fade{animation:fmxFade 320ms cubic-bezier(.2,.8,.2,1);}',
@@ -2902,7 +2907,7 @@
             { k: 'none', t: 'Без оффера', n: none },
             { k: 'attn', t: 'Внимание', n: attn }
         ];
-        var chips = '<div id="fmx-netChips" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin:0 -2px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;">' + chipDefs.map(function (c) {
+        var chips = '<div id="fmx-netChips" class="fmx-hscroll" style="display:flex;gap:6px;padding-bottom:7px;margin:0 -2px 3px;cursor:grab;">' + chipDefs.map(function (c) {
             var on = _net.filter === c.k;
             var warn = c.k === 'attn' && c.n > 0;
             return '<button data-netchip="' + c.k + '" style="flex:0 0 auto;font-size:11.5px;font-family:inherit;cursor:pointer;border-radius:999px;padding:6px 11px;' +
