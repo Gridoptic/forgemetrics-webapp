@@ -264,7 +264,7 @@
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Показы поста')) + '</div>' +
             '<div class="pl-flabel">' + esc(T('Сколько человек увидело рекламный пост — число просмотров у продавца')) + '</div>' +
-            '<input class="pl-inp" id="pl-imp" type="number" inputmode="numeric" min="0" value="' + (l && l.impressions_manual ? l.impressions_manual : '') + '">' +
+            '<input class="pl-inp" id="pl-imp" type="number" inputmode="numeric" min="0" autocomplete="off" value="' + (l && l.impressions_manual ? l.impressions_manual : '') + '">' +
             '<div class="pl-note">' + esc(T('Оставь поле пустым, чтобы убрать значение.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="imp-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
         bg.classList.add('on');
@@ -279,7 +279,7 @@
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Цена размещения')) + '</div>' +
             '<div class="pl-flabel">' + esc(T('Сколько заплатил за это размещение, ₽')) + '</div>' +
-            '<input class="pl-inp" id="pl-price-edit" type="number" inputmode="numeric" min="0" value="' + (l && l.price_rub ? l.price_rub : '') + '">' +
+            '<input class="pl-inp" id="pl-price-edit" type="number" inputmode="numeric" min="0" autocomplete="off" value="' + (l && l.price_rub ? l.price_rub : '') + '">' +
             '<div class="pl-note">' + esc(T('Оставь поле пустым, чтобы убрать значение.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="price-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
         bg.classList.add('on');
@@ -529,14 +529,14 @@
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
             '<div class="pl-flabel">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
-            '<input class="pl-inp" id="pl-chan" maxlength="120" placeholder="https://t.me/канал" value="">' +
+            '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал" value="">' +
             '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:-4px 0 8px;line-height:1.45;"></div>' +
             '<div class="pl-glink" id="pl-rename-lnk" data-act="rename-toggle" style="margin:2px 0 8px;">' + esc(T('Изменить название записи')) + '</div>' +
             '<div id="pl-name-wrap" style="display:none;">' +
             '<div class="pl-flabel">' + esc(T('Название записи')) + '</div>' +
-            '<input class="pl-inp" id="pl-name" maxlength="80" placeholder="' + esc(T('Реклама у @канал')) + '" value="" style="margin-bottom:8px;"></div>' +
+            '<input class="pl-inp" id="pl-name" maxlength="80" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="' + esc(T('Реклама у @канал')) + '" value="" style="margin-bottom:8px;"></div>' +
             '<div class="pl-flabel">' + esc(T('Цена размещения, ₽ — для расчёта CPF')) + '</div>' +
-            '<input class="pl-inp" id="pl-price" type="number" inputmode="numeric" min="0" placeholder="' + esc(T('не обязательно')) + '">' +
+            '<input class="pl-inp" id="pl-price" type="number" inputmode="numeric" min="0" autocomplete="off" placeholder="' + esc(T('не обязательно')) + '">' +
             '<div class="pl-flabel">' + esc(T('Тип ссылки')) + '</div>' +
             '<div class="pl-ltopt sel" data-act="ltype"><b>' + esc(T('Прямая ссылка Telegram')) + '</b>' +
             '<span>' + esc(T('Привычный t.me — считает подписавшихся и качество трафика.')) + '</span></div>' +
