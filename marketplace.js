@@ -463,6 +463,19 @@
             '.fmr-gtab .r{display:flex;align-items:center;justify-content:space-between;padding:4px 2px;font-size:11px;border-bottom:0.5px solid rgba(255,255,255,0.05);}',
             '.fmr-gtab .r:last-child{border-bottom:0;}',
             '.fmr-gtab .l{color:#8990a8;}',
+            '.fmx-tpbox{max-width:480px;width:calc(100vw - 20px);left:50%;transform:translateX(-50%);margin-left:0;}',
+            '.fmx-tpx{margin-left:auto;color:#565b73;cursor:pointer;padding:4px;}',
+            '.fmx-tptabs{display:flex;gap:6px;background:rgba(255,255,255,0.04);border-radius:11px;padding:4px;margin:10px 0 11px;}',
+            '.fmx-tptab{flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#8990a8;cursor:pointer;border:1px solid transparent;}',
+            '.fmx-tptab.on{background:rgba(129,140,248,0.16);color:#c3c9f4;border-color:rgba(129,140,248,0.3);}',
+            '.fmx-tpbody{max-height:min(56vh, 460px);overflow-y:auto;overscroll-behavior:contain;}',
+            '.fmx-tpsec{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:11px 12px;margin-bottom:8px;}',
+            '.fmx-tpsec .t{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:750;color:#e8e8ed;margin-bottom:5px;}',
+            '.fmx-tpsec p{margin:0;font-size:11.5px;color:#a9aec0;line-height:1.5;overflow-wrap:anywhere;}',
+            '.fmx-tpsec p + p{margin-top:5px;}',
+            '.fmx-tpfoot{font-size:9.5px;color:#565b73;text-align:center;margin-top:9px;line-height:1.5;}',
+            '.fmx-tplink{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:9px;font-size:11.5px;color:#8990a8;cursor:pointer;border:0.5px dashed rgba(255,255,255,0.14);border-radius:11px;min-height:40px;}',
+            '.fmx-tplink i{color:#818cf8;}',
             '.fmr-agerow{font-size:11px;color:#a9aec0;margin-top:6px;}',
             '.fmr-agerow b{color:#e8e8ed;}',
             '.fmr-cvwrap{display:flex;align-items:flex-end;gap:3px;height:78px;margin-top:9px;}',
@@ -1728,6 +1741,67 @@
         _haptic('success'); toast((r && r.message) || 'Готово');
         renderModQueue();
     }
+    var _TERMS_B = [
+        ['ti-brand-telegram', '#5DCAA5', 'Сделка — напрямую с владельцем', [
+            'Кнопка «Написать» открывает личный диалог с владельцем канала: в сообщении уже подставлены оффер, формат и выбранная дата.',
+            'Договорённость и оплата — напрямую между вами, без комиссии. Площадка зарабатывает на инструментах, а не на сделках: деньги не держит и гарантом расчётов не выступает.']],
+        ['ti-heart-handshake', '#818cf8', 'Фиксация сделки — обеими сторонами', [
+            'После договорённости отметь сделку в развороте оффера. Она засчитывается, когда владелец подтвердит её со своей стороны. Счётчик сделок в карточке растёт только по подтверждённым.']],
+        ['ti-chart-bar', '#818cf8', 'Замер результата — автоматический', [
+            'Владелец присылает ссылку на вышедший рекламный пост — не старше 72 часов. Охват поста замеряется автоматически через 12, 24 и 48 часов, отчёты придут в бот.',
+            'Из замеров складывается «Рекламный охват» карточки и точность заявленных цифр.']],
+        ['ti-star', '#818cf8', 'Отзыв и рейтинг', [
+            'После подтверждённой сделки можно оставить отзыв и оценку — они видны всем в карточке оффера.']],
+        ['ti-file-certificate', '#818cf8', 'Маркировка рекламы', [
+            'В каждом оффере указано, кто оформляет erid: рекламодатель, канал или по договорённости. Уточни это до выхода поста.']],
+        ['ti-shield-check', '#f5bf4f', 'Что гарантируется, а что нет', [
+            'Метрики карточек обновляются автоматически, признаки накрутки помечаются, жалоба — в один тап из карточки.',
+            'Результат размещения не гарантируется: подписчики и продажи зависят от креатива и совпадения аудитории. Оценивай канал по метрикам до сделки.']],
+    ];
+    var _TERMS_S = [
+        ['ti-door-enter', '#5DCAA5', 'Вход — публичный канал, без порогов', [
+            'Нужен канал с публичным @именем, подключённый к боту. Минимума подписчиков нет — решают метрики, а не размер.']],
+        ['ti-coin', '#5DCAA5', 'Цены и форматы — только твои', [
+            'Форматы включаешь сам, обязательных нет. Цену каждого формата назначаешь сам — Площадка её не диктует и не корректирует.',
+            'Комиссии нет: оплата приходит напрямую от рекламодателя. Площадка зарабатывает на инструментах, а не на твоих сделках.']],
+        ['ti-shield-search', '#818cf8', 'Модерация — до публикации', [
+            'Оффер выходит на витрину после проверки. Правка содержимого живого оффера — текст, обложка, стикер, фон, витрина — отправляет его на повторную проверку, на это время оффер снимается с витрины. Лимит — 10 отправок в день.',
+            'Цены, форматы и календарь правятся без повторной проверки.']],
+        ['ti-heart-handshake', '#818cf8', 'Сделки и замеры', [
+            'Сделку подтверждаешь вручную. Ссылку на рекламный пост пришли в течение 72 часов после выхода — охват замерится автоматически через 12, 24 и 48 часов и попадёт в карточку как «Рекламный охват».']],
+        ['ti-activity', '#818cf8', 'Метрики — автоматические и честные', [
+            'Цифры оффера поддерживаются без твоего участия. Признаки накрутки помечаются в карточке — честные метрики поднимают доверие и цену размещения.']],
+        ['ti-alert-triangle', '#f5bf4f', 'Ограничения тематик', [
+            'Контент 18+ не показывается в общей ленте. Запрещённые законом тематики не публикуются — причина отказа приходит с результатом проверки, оффер можно исправить и отправить снова.']],
+    ];
+    function _termsSecs(list) {
+        return list.map(function (x) {
+            return '<div class="fmx-tpsec"><div class="t"><span class="ictile" style="width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:linear-gradient(135deg,' + x[1] + '26,' + x[1] + '0d);border:1px solid ' + x[1] + '52;color:' + x[1] + ';"><i class="ti ' + x[0] + '" style="font-size:13px;"></i></span><span>' + x[2] + '</span></div>' +
+                x[3].map(function (t) { return '<p>' + t + '</p>'; }).join('') + '</div>';
+        }).join('');
+    }
+    function openTermsPassport(tab) {
+        var old = el('fmx-tpBg'); if (old) old.remove();
+        var bg = document.createElement('div');
+        bg.id = 'fmx-tpBg'; bg.className = 'fmx-cfm solid';
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-tpbox">' +
+            '<div class="fmx-cfm-t" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-clipboard-text" style="color:#818cf8;"></i><span>Как работает Площадка</span><span class="fmx-tpx"><i class="ti ti-x"></i></span></div>' +
+            '<div class="fmx-tptabs"><div class="fmx-tptab" data-tt="b">Покупателю рекламы</div><div class="fmx-tptab" data-tt="s">Владельцу канала</div></div>' +
+            '<div class="fmx-tpbody" id="fmx-tpbody"></div>' +
+            '<div class="fmx-tpfoot">Условия описывают действующие механики Площадки и обновляются вместе с ними.</div></div>';
+        document.body.appendChild(bg);
+        function show(t) {
+            qsa(bg, '.fmx-tptab').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-tt') === t); });
+            el('fmx-tpbody').innerHTML = _termsSecs(t === 's' ? _TERMS_S : _TERMS_B);
+            el('fmx-tpbody').scrollTop = 0;
+            try { if (window.autoLocalize) window.autoLocalize(); } catch (e) {}
+        }
+        qsa(bg, '.fmx-tptab').forEach(function (x) { x.addEventListener('click', function () { _haptic('light'); show(x.getAttribute('data-tt')); }); });
+        bg.addEventListener('click', function (e) { if (e.target === bg) bg.remove(); });
+        bg.querySelector('.fmx-tpx').addEventListener('click', function () { bg.remove(); });
+        show(tab === 's' ? 's' : 'b');
+        try { if (window.autoLocalize) window.autoLocalize(); } catch (e) {}
+    }
     function modPrompt(opts, cb) {
         var old = el('fmx-cfmBg'); if (old) old.remove();
         var bg = document.createElement('div');
@@ -2217,9 +2291,12 @@
         var nf = _buyFiltersCount();
         return '<div class="fmx-sortbar" id="fmx-buysort" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">' +
             opts.map(function (o) { return '<button class="fmx-seg' + (_sortBuy === o[0] ? ' on' : '') + '" data-bsort="' + o[0] + '" style="flex:0 0 auto;">' + o[1] + '</button>'; }).join('') +
-            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button></div>';
+            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button>' +
+            '<button class="fmx-seg" id="fmx-bterms" style="flex:0 0 auto;padding-left:10px;padding-right:10px;" aria-label="Как работает Площадка"><i class="ti ti-help-circle"></i></button></div>';
     }
     function _refreshFilterChip() {
+        var bt = el('fmx-bterms');
+        if (bt) bt.addEventListener('click', function () { _haptic('light'); openTermsPassport('b'); });
         var bf = el('fmx-bfilters'); if (!bf) return;
         var nf = _buyFiltersCount();
         bf.classList.toggle('on', nf > 0);
@@ -4982,6 +5059,7 @@
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
             '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке') + '</button>' +
+            '<div class="fmx-tplink" data-terms="s"><i class="ti ti-clipboard-text"></i> <span>Условия размещения</span></div>' +
             (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> Кабинет «Мои офферы»: статус, статистика, календарь</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
             '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
@@ -7751,6 +7829,10 @@
             });
         });
     }
+    document.addEventListener('click', function (e) {
+        var t = e.target && e.target.closest ? e.target.closest('[data-terms]') : null;
+        if (t) { _haptic('light'); openTermsPassport(t.getAttribute('data-terms')); }
+    });
     var _rowRO = null;
     function _ensureRowRO() {
         if (_rowRO || typeof ResizeObserver === 'undefined') return _rowRO;
@@ -8479,7 +8561,8 @@
             _flowBlock(l) +
             _peakBlock(l) +
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
-            (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) : '') +
+            (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) +
+                '<div class="fmx-tplink" data-terms="b"><i class="ti ti-clipboard-text"></i> <span>Как проходит сделка</span></div>' : '') +
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;">' + _esc(l.custom_text) + '</div>' : '') +
             fmtsHtml +
             (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
