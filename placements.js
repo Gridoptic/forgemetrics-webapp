@@ -645,6 +645,24 @@
         }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
     }
 
+    function infoNote(msg) {
+        var old = document.getElementById('pl-infonote');
+        if (old) old.remove();
+        var d = document.createElement('div');
+        d.id = 'pl-infonote';
+        d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;z-index:9600;background:rgba(24,28,46,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.12);border-radius:14px;padding:13px 14px;display:flex;gap:8px;align-items:flex-start;box-shadow:0 8px 32px rgba(0,0,0,0.45);';
+        var t = document.createElement('div');
+        t.style.cssText = 'flex:1;font-size:12.5px;line-height:1.55;color:#d9dce8;padding-top:2px;';
+        t.textContent = msg;
+        var x = document.createElement('button');
+        x.style.cssText = 'flex:0 0 auto;width:40px;height:40px;margin:-6px -8px -6px 0;border:0;background:transparent;color:#8990a8;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
+        x.innerHTML = '<i class="ti ti-x"></i>';
+        x.addEventListener('click', function () { d.remove(); });
+        d.appendChild(t);
+        d.appendChild(x);
+        document.body.appendChild(d);
+    }
+
     function copyText(text, okMsg) {
         try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -722,7 +740,7 @@
             haptic('light');
             close();
             try { window.__openMarketplace(); } catch (e) {}
-            toast(T('Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере'));
+            infoNote(T('Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере'));
             return;
         }
         if (act === 'from-deal') {
