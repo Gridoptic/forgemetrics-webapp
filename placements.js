@@ -383,12 +383,14 @@
         var dealLabel = l.deal_id
             ? T('Показы поста привязаны к сделке · изменить')
             : T('Показы поста — из сделки Площадки, если размещение куплено там');
-        var impBtn = !l.deal_id
-            ? '<button class="pl-whobtn" data-act="imp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-eye"></i> ' +
-              esc(l.impressions_manual
-                  ? (T('Показы поста') + ': ' + num(l.impressions_manual) + ' · ' + T('изменить'))
-                  : T('Указать показы поста — если купил не через Площадку')) + '</button>'
-            : '';
+        var impSrc = (l.impressions_manual != null) ? 'manual'
+            : ((l.deal_id && l.impressions != null) ? 'deal' : null);
+        var impLabel = (impSrc === 'manual')
+            ? (T('Показы поста') + ': ' + num(l.impressions_manual) + ' · ' + T('вручную') + ' · ' + T('изменить'))
+            : (impSrc === 'deal')
+                ? (T('Показы поста') + ': ' + num(l.impressions) + ' · ' + T('замер сделки') + ' · ' + T('уточнить вручную'))
+                : T('Указать показы поста');
+        var impBtn = '<button class="pl-whobtn" data-act="imp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-eye"></i> ' + esc(impLabel) + '</button>';
         var priceBtn = '<button class="pl-whobtn" data-act="price" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-cash"></i> ' +
             esc(l.price_rub
                 ? (T('Цена размещения') + ': ' + num(l.price_rub) + ' ₽ · ' + T('изменить'))
@@ -529,8 +531,10 @@
             '<div class="pl-flabel">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
             '<input class="pl-inp" id="pl-chan" maxlength="120" placeholder="https://t.me/канал" value="">' +
             '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:-4px 0 8px;line-height:1.45;"></div>' +
-            '<div class="pl-flabel">' + esc(T('Название — где размещаешься')) + '</div>' +
-            '<input class="pl-inp" id="pl-name" maxlength="80" placeholder="' + esc(T('Реклама у @канал')) + '" value="">' +
+            '<div class="pl-glink" id="pl-rename-lnk" data-act="rename-toggle" style="margin:2px 0 8px;">' + esc(T('Изменить название записи')) + '</div>' +
+            '<div id="pl-name-wrap" style="display:none;">' +
+            '<div class="pl-flabel">' + esc(T('Название записи')) + '</div>' +
+            '<input class="pl-inp" id="pl-name" maxlength="80" placeholder="' + esc(T('Реклама у @канал')) + '" value="" style="margin-bottom:8px;"></div>' +
             '<div class="pl-flabel">' + esc(T('Цена размещения, ₽ — для расчёта CPF')) + '</div>' +
             '<input class="pl-inp" id="pl-price" type="number" inputmode="numeric" min="0" placeholder="' + esc(T('не обязательно')) + '">' +
             '<div class="pl-flabel">' + esc(T('Тип ссылки')) + '</div>' +
@@ -590,7 +594,12 @@
         var name = (document.getElementById('pl-name') || {}).value || '';
         var price = (document.getElementById('pl-price') || {}).value || '';
         name = name.trim();
-        if (!name) { toast(T('Укажи название размещения')); return; }
+        if (!name) {
+            var chv = ((document.getElementById('pl-chan') || {}).value || '').trim();
+            var mch = chv.match(/(?:t\.me\/|@)?([A-Za-z0-9_]{4,32})/);
+            if (mch) name = T('Реклама у') + ' @' + mch[1];
+            else { toast(T('Вставь ссылку на канал или укажи название')); return; }
+        }
         var selOpt = document.querySelector('#pl-sheet .pl-ltopt.sel');
         var track = !!(selOpt && selOpt.getAttribute('data-track'));
         _busy = true;
@@ -762,6 +771,15 @@
             var fms = document.querySelectorAll('#pl-sheet .pl-fmt');
             for (var fi = 0; fi < fms.length; fi++) fms[fi].classList.remove('sel');
             b.classList.add('sel');
+            haptic('light');
+            return;
+        }
+        if (act === 'rename-toggle') {
+            var nw = document.getElementById('pl-name-wrap');
+            if (nw) nw.style.display = 'block';
+            b.style.display = 'none';
+            var ni = document.getElementById('pl-name');
+            if (ni) { try { ni.focus(); } catch (e) {} }
             haptic('light');
             return;
         }
