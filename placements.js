@@ -544,7 +544,7 @@
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
             '<div class="pl-flabel">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
             '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал" value="">' +
-            '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:-4px 0 8px;line-height:1.45;"></div>' +
+            '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:8px 0 4px;line-height:1.45;"></div>' +
             '<div class="pl-glink" id="pl-rename-lnk" data-act="rename-toggle" style="margin:2px 0 8px;">' + esc(T('Изменить название записи')) + '</div>' +
             '<div id="pl-name-wrap" style="display:none;">' +
             '<div class="pl-flabel">' + esc(T('Название записи')) + '</div>' +
