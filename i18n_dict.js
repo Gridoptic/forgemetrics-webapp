@@ -2507,7 +2507,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "For this format some joins bypass the link — see \"Came on their own\" in the joiners list.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "A video circle cannot contain a link. Agree with the admin: right below the circle he publishes a channel post with this link.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "You arranged it with the admin yourself — including a channel from Radar. Paste the channel link: joins, traffic quality and CPF are counted in full; post impressions you enter manually.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Open the offer of the channel you need and tap \"Mark deal\" — once the owner confirms, the deal will appear in the Tracker"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Open the offer of the channel you need and tap \"Mark deal\" — once the owner confirms, the deal will appear in the Tracker",
+  "Сводка по размещениям": "Placements summary",
+  "Расход": "Spend",
+  "Средний CPF": "Average CPF",
+  "Рейтинг по CPF": "CPF ranking",
+  "Справедливая цена такого охвата в этой нише": "Fair price for this reach in this niche",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "The CPM of this placement is well above the market range for this niche — looks like an overpay."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5010,7 +5016,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "En este formato parte de las altas llega sin pasar por el enlace: mira «Llegaron por su cuenta» en la lista.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Un círculo de video no puede contener un enlace. Acuerda con el admin: justo debajo del círculo publica en el canal un post con este enlace.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Lo acordaste con el admin directamente, incluido un canal del Radar. Pega el enlace del canal: altas, calidad del tráfico y CPF se calculan al completo; las impresiones las indicas a mano.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Abre el oferto del canal que necesitas y pulsa «Marcar operación»: tras la confirmación del propietario aparecerá en el Rastreador"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Abre el oferto del canal que necesitas y pulsa «Marcar operación»: tras la confirmación del propietario aparecerá en el Rastreador",
+  "Сводка по размещениям": "Resumen de colocaciones",
+  "Расход": "Gasto",
+  "Средний CPF": "CPF medio",
+  "Рейтинг по CPF": "Clasificación por CPF",
+  "Справедливая цена такого охвата в этой нише": "Precio justo de este alcance en esta nicho",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "El CPM de esta colocación está muy por encima del rango de mercado de esta nicho: parece un sobrepago."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -7513,7 +7525,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Bei diesem Format kommen manche Beitritte am Link vorbei — siehe „Kamen von selbst\" in der Beitrittsliste.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "In ein Videokreis-Video lässt sich kein Link einbetten. Vereinbare mit dem Admin: direkt unter dem Kreis veröffentlicht er im Kanal einen Beitrag mit diesem Link.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Direkt mit dem Admin vereinbart — auch mit einem Kanal aus dem Radar. Füge den Kanal-Link ein: Beitritte, Traffic-Qualität und CPF werden vollständig gezählt; Impressionen trägst du manuell ein.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Öffne das Angebot des gewünschten Kanals und tippe auf „Deal vermerken\" — nach Bestätigung durch den Inhaber erscheint der Deal im Tracker"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Öffne das Angebot des gewünschten Kanals und tippe auf „Deal vermerken\" — nach Bestätigung durch den Inhaber erscheint der Deal im Tracker",
+  "Сводка по размещениям": "Platzierungsübersicht",
+  "Расход": "Ausgaben",
+  "Средний CPF": "Durchschnittlicher CPF",
+  "Рейтинг по CPF": "CPF-Rangliste",
+  "Справедливая цена такого охвата в этой нише": "Fairer Preis für diese Reichweite in dieser Nische",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Der CPM dieser Platzierung liegt deutlich über der Marktspanne dieser Nische — sieht nach Überzahlung aus."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10011,7 +10029,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Бұл форматта кірулердің бір бөлігі сілтемені айналып өтеді — кіргендер тізіміндегі «Өздері келді» бөлімін қара.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Дөңгелек видеоға сілтеме енгізу мүмкін емес. Әкімшімен келіс: дөңгелектің астына ол арнада осы сілтемесі бар пост жариялайды.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Әкімшімен өзің келістің — соның ішінде Радардағы арнамен. Арна сілтемесін қой: кірулер, трафик сапасы және CPF толық есептеледі; пост көрсетілімдерін қолмен енгізесің.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Керек арнаның офферін ашып, «Мәмілені белгілеу» дегенді бас — иесі растағаннан кейін мәміле Трекерде пайда болады"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Керек арнаның офферін ашып, «Мәмілені белгілеу» дегенді бас — иесі растағаннан кейін мәміле Трекерде пайда болады",
+  "Сводка по размещениям": "Орналастырулар бойынша жиынтық",
+  "Расход": "Шығын",
+  "Средний CPF": "Орташа CPF",
+  "Рейтинг по CPF": "CPF бойынша рейтинг",
+  "Справедливая цена такого охвата в этой нише": "Осы нишадағы мұндай қамтудың әділ бағасы",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Бұл орналастырудың CPM-і осы нишаның нарықтық аралығынан айтарлықтай жоғары — артық төлемге ұқсайды."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -12514,7 +12538,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Bu formatda kirishlarning bir qismi havoladan chetlab o'tadi — kirganlar ro'yxatidagi «O'zlari kelgan»ni ko'r.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Doira videoga havola joylab bo'lmaydi. Admin bilan kelish: doiraning tagida u kanalda shu havolali post chiqaradi.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Admin bilan o'zing kelishding — jumladan Radar kanali bilan. Kanal havolasini qo'y: kirishlar, trafik sifati va CPF to'liq hisoblanadi; post ko'rsatishlarini qo'lda kiritasan.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Kerakli kanal offerini ochib, «Bitimni belgilash»ni bos — egasi tasdiqlagach bitim Trekerda paydo bo'ladi"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Kerakli kanal offerini ochib, «Bitimni belgilash»ni bos — egasi tasdiqlagach bitim Trekerda paydo bo'ladi",
+  "Сводка по размещениям": "Joylashtirishlar bo'yicha xulosa",
+  "Расход": "Xarajat",
+  "Средний CPF": "O'rtacha CPF",
+  "Рейтинг по CPF": "CPF bo'yicha reyting",
+  "Справедливая цена такого охвата в этой нише": "Bu nishadagi bunday qamrovning adolatli narxi",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Bu joylashtirishning CPM-i ushbu nisha bozor oralig'idan ancha yuqori — ortiqcha to'lovga o'xshaydi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -15016,7 +15046,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Для гэтага фармату частка ўступленняў абмінае спасылку — глядзі «Прыйшлі самі» ў спісе ўступіўшых.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "У кружок спасылку ўшыць нельга. Дамоўся з адмінам: адразу пад кружком ён публікуе ў канале пост з гэтай спасылкай.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Дамовіўся з адмінам сам — у тым ліку з каналам з Радара. Устаў спасылку на канал: уступленні, якасць трафіку і CPF палічацца цалкам; паказы паста ўкажаш уручную.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Адкрый офер патрэбнага канала і націсні «Адзначыць здзелку» — пасля пацвярджэння ўладальнікам здзелка з'явіцца ў Трэкеры"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Адкрый офер патрэбнага канала і націсні «Адзначыць здзелку» — пасля пацвярджэння ўладальнікам здзелка з'явіцца ў Трэкеры",
+  "Сводка по размещениям": "Зводка па размяшчэннях",
+  "Расход": "Выдаткі",
+  "Средний CPF": "Сярэдні CPF",
+  "Рейтинг по CPF": "Рэйтынг па CPF",
+  "Справедливая цена такого охвата в этой нише": "Справядлівая цана такога ахопу ў гэтай нішы",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM гэтага размяшчэння значна вышэйшы за рынкавую вілку гэтай нішы — падобна на пераплату."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -17519,7 +17555,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Bu formatda daxilolmaların bir hissəsi keçiddən yan keçir — daxil olanlar siyahısında «Özləri gəlib» bölməsinə bax.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Dairəvi videoya keçid yerləşdirmək olmur. Adminlə razılaş: dairənin altında o, kanalda bu keçidlə post dərc edir.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Adminlə özün razılaşdın — o cümlədən Radardakı kanalla. Kanal keçidini yerləşdir: daxilolmalar, trafik keyfiyyəti və CPF tam sayılır; post göstərişlərini əl ilə daxil edərsən.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Lazımi kanalın offerini aç və «Sövdələşməni qeyd et» düyməsini bas — sahibi təsdiqlədikdən sonra sövdələşmə Trekerdə görünəcək"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Lazımi kanalın offerini aç və «Sövdələşməni qeyd et» düyməsini bas — sahibi təsdiqlədikdən sonra sövdələşmə Trekerdə görünəcək",
+  "Сводка по размещениям": "Yerləşdirmələr üzrə xülasə",
+  "Расход": "Xərc",
+  "Средний CPF": "Orta CPF",
+  "Рейтинг по CPF": "CPF üzrə reytinq",
+  "Справедливая цена такого охвата в этой нише": "Bu nişdə belə əhatənin ədalətli qiyməti",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Bu yerləşdirmənin CPM-i bu nişin bazar aralığından xeyli yüksəkdir — artıq ödəməyə bənzəyir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -20022,7 +20064,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "في هذا التنسيق يتجاوز بعض المنضمين الرابط — راجع «جاؤوا بأنفسهم» في قائمة المنضمين.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "لا يمكن تضمين رابط في الفيديو الدائري. اتفق مع المشرف: ينشر في القناة منشوراً بهذا الرابط مباشرة أسفل الفيديو.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "اتفقت مع المشرف بنفسك — بما في ذلك قناة من الرادار. ألصق رابط القناة: الانضمامات وجودة الزيارات وCPF تُحسب كاملة؛ ومرات ظهور المنشور تدخلها يدوياً.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "افتح عرض القناة المطلوبة واضغط «تحديد الصفقة» — بعد تأكيد المالك ستظهر الصفقة في المتتبع"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "افتح عرض القناة المطلوبة واضغط «تحديد الصفقة» — بعد تأكيد المالك ستظهر الصفقة في المتتبع",
+  "Сводка по размещениям": "ملخص المنشورات",
+  "Расход": "الإنفاق",
+  "Средний CPF": "متوسط CPF",
+  "Рейтинг по CPF": "الترتيب حسب CPF",
+  "Справедливая цена такого охвата в этой нише": "السعر العادل لهذا الوصول في هذا المجال",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM لهذا النشر أعلى بكثير من نطاق السوق لهذا المجال — يبدو أنه دفع زائد."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -22525,7 +22573,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "در این قالب بخشی از ورودها از لینک عبور می‌کند — «خودشان آمدند» را در فهرست واردشدگان ببین.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "در ویدیوی دایره‌ای نمی‌توان لینک گذاشت. با ادمین توافق کن: درست زیر دایره، پستی با این لینک در کانال منتشر کند.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "خودت با ادمین توافق کردی — از جمله کانالی از رادار. لینک کانال را بگذار: ورودها، کیفیت ترافیک و CPF کامل محاسبه می‌شوند؛ نمایش‌های پست را دستی وارد می‌کنی.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "آفر کانال موردنظر را باز کن و «ثبت معامله» را بزن — پس از تأیید مالک، معامله در ردیاب ظاهر می‌شود"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "آفر کانال موردنظر را باز کن و «ثبت معامله» را بزن — پس از تأیید مالک، معامله در ردیاب ظاهر می‌شود",
+  "Сводка по размещениям": "خلاصه انتشارها",
+  "Расход": "هزینه",
+  "Средний CPF": "CPF میانگین",
+  "Рейтинг по CPF": "رتبه‌بندی بر اساس CPF",
+  "Справедливая цена такого охвата в этой нише": "قیمت منصفانه این دسترسی در این حوزه",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM این انتشار به‌مراتب بالاتر از بازه بازار این حوزه است — شبیه پرداخت اضافی است."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -25028,7 +25082,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Bu formatta katılımların bir kısmı bağlantıyı atlar — katılanlar listesinde \"Kendiliğinden geldi\" bölümüne bak.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Yuvarlak videoya bağlantı eklenemez. Yöneticiyle anlaş: videonun hemen altında kanalda bu bağlantıyı içeren bir gönderi yayınlar.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Yöneticiyle kendin anlaştın — Radar'daki bir kanal dahil. Kanal bağlantısını yapıştır: katılımlar, trafik kalitesi ve CPF eksiksiz sayılır; gönderi gösterimlerini elle girersin.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "İstediğin kanalın teklifini aç ve \"Anlaşmayı işaretle\"ye bas — sahibi onayladıktan sonra anlaşma Takipçi'de görünür"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "İstediğin kanalın teklifini aç ve \"Anlaşmayı işaretle\"ye bas — sahibi onayladıktan sonra anlaşma Takipçi'de görünür",
+  "Сводка по размещениям": "Yerleşim özeti",
+  "Расход": "Harcama",
+  "Средний CPF": "Ortalama CPF",
+  "Рейтинг по CPF": "CPF sıralaması",
+  "Справедливая цена такого охвата в этой нише": "Bu nişte böyle bir erişimin adil fiyatı",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Bu yerleşimin CPM'si bu nişin piyasa aralığının belirgin şekilde üzerinde — fazla ödeme gibi görünüyor."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -27531,7 +27591,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "इस फॉर्मेट में कुछ जॉइन लिंक के बिना आते हैं — सूची में «खुद आए» देखें।",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "वीडियो सर्कल में लिंक नहीं डाला जा सकता। एडमिन से तय करें: सर्कल के ठीक नीचे वह चैनल में इस लिंक वाली पोस्ट प्रकाशित करे।",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "आपने एडमिन से सीधे तय किया — रडार के चैनल समेत। चैनल लिंक डालें: जॉइन, ट्रैफ़िक गुणवत्ता और CPF पूरी तरह गिने जाएंगे; पोस्ट इंप्रेशन हाथ से डालें।",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "जिस चैनल की जरूरत है उसका ऑफ़र खोलें और «सौदा चिह्नित करें» दबाएं — मालिक की पुष्टि के बाद सौदा ट्रैकर में दिखेगा"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "जिस चैनल की जरूरत है उसका ऑफ़र खोलें और «सौदा चिह्नित करें» दबाएं — मालिक की पुष्टि के बाद सौदा ट्रैकर में दिखेगा",
+  "Сводка по размещениям": "प्लेसमेंट सारांश",
+  "Расход": "खर्च",
+  "Средний CPF": "औसत CPF",
+  "Рейтинг по CPF": "CPF रैंकिंग",
+  "Справедливая цена такого охвата в этой нише": "इस निच में ऐसी पहुंच की उचित कीमत",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "इस प्लेसमेंट का CPM इस निच की बाजार सीमा से काफी ऊपर है — अधिक भुगतान लगता है।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -30034,7 +30100,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "এই ফরম্যাটে কিছু যোগদান লিঙ্ক এড়িয়ে আসে — তালিকায় «নিজে এসেছে» দেখুন।",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "ভিডিও সার্কেলে লিঙ্ক দেওয়া যায় না। অ্যাডমিনের সঙ্গে ঠিক করুন: সার্কেলের ঠিক নিচে তিনি চ্যানেলে এই লিঙ্কসহ পোস্ট প্রকাশ করবেন।",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "অ্যাডমিনের সঙ্গে নিজে ঠিক করেছেন — রাডারের চ্যানেলসহ। চ্যানেল লিঙ্ক দিন: যোগদান, ট্র্যাফিক মান ও CPF সম্পূর্ণ গণনা হবে; পোস্ট ইম্প্রেশন নিজে দেবেন।",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "প্রয়োজনীয় চ্যানেলের অফার খুলুন এবং «চুক্তি চিহ্নিত করুন» চাপুন — মালিকের নিশ্চিতকরণের পরে চুক্তিটি ট্র্যাকারে দেখা যাবে"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "প্রয়োজনীয় চ্যানেলের অফার খুলুন এবং «চুক্তি চিহ্নিত করুন» চাপুন — মালিকের নিশ্চিতকরণের পরে চুক্তিটি ট্র্যাকারে দেখা যাবে",
+  "Сводка по размещениям": "প্লেসমেন্ট সারসংক্ষেপ",
+  "Расход": "ব্যয়",
+  "Средний CPF": "গড় CPF",
+  "Рейтинг по CPF": "CPF র‍্যাঙ্কিং",
+  "Справедливая цена такого охвата в этой нише": "এই নিশে এমন রিচের ন্যায্য দাম",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "এই প্লেসমেন্টের CPM এই নিশের বাজার সীমার অনেক উপরে — অতিরিক্ত অর্থপ্রদান মনে হচ্ছে।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -32537,7 +32609,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Pada format ini sebagian yang bergabung melewati tautan — lihat \"Datang sendiri\" di daftar.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Video bulat tidak bisa memuat tautan. Sepakati dengan admin: tepat di bawah video bulat ia menerbitkan post channel berisi tautan ini.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Kamu sepakat langsung dengan admin — termasuk channel dari Radar. Tempel tautan channel: gabung, kualitas trafik, dan CPF dihitung penuh; tayangan postingan kamu isi manual.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Buka offer channel yang kamu butuhkan dan tekan \"Tandai transaksi\" — setelah dikonfirmasi pemilik, transaksi muncul di Tracker"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Buka offer channel yang kamu butuhkan dan tekan \"Tandai transaksi\" — setelah dikonfirmasi pemilik, transaksi muncul di Tracker",
+  "Сводка по размещениям": "Ringkasan penempatan",
+  "Расход": "Pengeluaran",
+  "Средний CPF": "CPF rata-rata",
+  "Рейтинг по CPF": "Peringkat CPF",
+  "Справедливая цена такого охвата в этой нише": "Harga wajar jangkauan ini di niche ini",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM penempatan ini jauh di atas kisaran pasar niche ini — tampak seperti bayar berlebih."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -35040,7 +35118,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Với định dạng này một phần người tham gia bỏ qua liên kết — xem «Tự đến» trong danh sách.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Video tròn không thể chứa liên kết. Thỏa thuận với admin: ngay dưới video tròn, admin đăng một bài trong kênh kèm liên kết này.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Bạn tự thỏa thuận với admin — kể cả kênh từ Radar. Dán liên kết kênh: lượt tham gia, chất lượng lưu lượng và CPF được tính đầy đủ; lượt hiển thị bài đăng bạn nhập thủ công.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Mở offer của kênh cần thiết và nhấn «Đánh dấu giao dịch» — sau khi chủ sở hữu xác nhận, giao dịch sẽ xuất hiện trong Trình theo dõi"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Mở offer của kênh cần thiết và nhấn «Đánh dấu giao dịch» — sau khi chủ sở hữu xác nhận, giao dịch sẽ xuất hiện trong Trình theo dõi",
+  "Сводка по размещениям": "Tổng quan đặt quảng cáo",
+  "Расход": "Chi tiêu",
+  "Средний CPF": "CPF trung bình",
+  "Рейтинг по CPF": "Xếp hạng theo CPF",
+  "Справедливая цена такого охвата в этой нише": "Giá hợp lý cho phạm vi này trong ngách này",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM của lần đặt này cao hơn hẳn khoảng thị trường của ngách — có vẻ trả quá giá."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -37543,7 +37627,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Neste formato parte das entradas passa ao largo do link — veja \"Vieram por conta própria\" na lista.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Um vídeo circular não pode conter link. Combine com o admin: logo abaixo do círculo ele publica no canal um post com este link.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Você combinou direto com o admin — inclusive um canal do Radar. Cole o link do canal: entradas, qualidade do tráfego e CPF são contados por completo; as impressões você informa manualmente.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Abra o oferta do canal desejado e toque em \"Marcar negócio\" — após a confirmação do dono, o negócio aparecerá no Rastreador"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Abra o oferta do canal desejado e toque em \"Marcar negócio\" — após a confirmação do dono, o negócio aparecerá no Rastreador",
+  "Сводка по размещениям": "Resumo das inserções",
+  "Расход": "Gasto",
+  "Средний CPF": "CPF médio",
+  "Рейтинг по CPF": "Ranking por CPF",
+  "Справедливая цена такого охвата в этой нише": "Preço justo deste alcance neste nicho",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "O CPM desta inserção está bem acima da faixa de mercado deste nicho — parece pagamento excessivo."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -40046,7 +40136,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Pour ce format, une partie des arrivées contourne le lien — voir « Venus d'eux-mêmes » dans la liste.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Une vidéo ronde ne peut pas contenir de lien. Convenez avec l'admin : juste sous la vidéo, il publie dans la chaîne un post avec ce lien.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Tu t'es arrangé directement avec l'admin — y compris une chaîne du Radar. Colle le lien de la chaîne : adhésions, qualité du trafic et CPF sont comptés entièrement ; les impressions, tu les saisis à la main.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Ouvre l'offre de la chaîne voulue et appuie sur « Marquer l'accord » — après confirmation du propriétaire, l'accord apparaîtra dans le Traqueur"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Ouvre l'offre de la chaîne voulue et appuie sur « Marquer l'accord » — après confirmation du propriétaire, l'accord apparaîtra dans le Traqueur",
+  "Сводка по размещениям": "Synthèse des placements",
+  "Расход": "Dépense",
+  "Средний CPF": "CPF moyen",
+  "Рейтинг по CPF": "Classement par CPF",
+  "Справедливая цена такого охвата в этой нише": "Prix équitable de cette portée dans cette niche",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Le CPM de ce placement dépasse nettement la fourchette du marché de cette niche — cela ressemble à un surpaiement."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -42549,7 +42645,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Per questo formato parte degli ingressi aggira il link — vedi «Arrivati da soli» nell'elenco.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Un video circolare non può contenere link. Accordati con l'admin: subito sotto il cerchio pubblica nel canale un post con questo link.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Ti sei accordato direttamente con l'admin — anche con un canale dal Radar. Incolla il link del canale: ingressi, qualità del traffico e CPF vengono contati per intero; le impression le inserisci a mano.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Apri l'offerta del canale desiderato e premi «Segna accordo» — dopo la conferma del proprietario l'accordo apparirà nel Tracker"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Apri l'offerta del canale desiderato e premi «Segna accordo» — dopo la conferma del proprietario l'accordo apparirà nel Tracker",
+  "Сводка по размещениям": "Riepilogo pubblicazioni",
+  "Расход": "Spesa",
+  "Средний CPF": "CPF medio",
+  "Рейтинг по CPF": "Classifica per CPF",
+  "Справедливая цена такого охвата в этой нише": "Prezzo equo di questa copertura in questa nicchia",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "Il CPM di questa pubblicazione è ben oltre la fascia di mercato di questa nicchia — sembra un sovrapprezzo."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -45052,7 +45154,13 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "ለዚህ ቅርጸት አንዳንድ መግቢያዎች አገናኙን ያልፋሉ — በዝርዝሩ ውስጥ «በራሳቸው መጡ»ን ተመልከት።",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "በክብ ቪዲዮ ውስጥ አገናኝ ማስገባት አይቻልም። ከአድሚኑ ጋር ተስማማ፦ ከክቡ በታች ወዲያውኑ ይህን አገናኝ የያዘ ልጥፍ በቻናሉ ያወጣል።",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "ከአድሚኑ ጋር ራስህ ተስማማህ — ከራዳር ቻናልንም ጨምሮ። የቻናሉን አገናኝ ለጥፍ፦ መግቢያዎች፣ የትራፊክ ጥራት እና CPF ሙሉ በሙሉ ይቆጠራሉ፤ የልጥፍ ማሳያዎችን በእጅ ታስገባለህ።",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "የሚፈልገውን ቻናል ኦፈር ክፈትና «ስምምነት ምልክት አድርግ»ን ተጫን — ባለቤቱ ካረጋገጠ በኋላ ስምምነቱ በትራከር ውስጥ ይታያል"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "የሚፈልገውን ቻናል ኦፈር ክፈትና «ስምምነት ምልክት አድርግ»ን ተጫን — ባለቤቱ ካረጋገጠ በኋላ ስምምነቱ በትራከር ውስጥ ይታያል",
+  "Сводка по размещениям": "የማስቀመጫዎች ማጠቃለያ",
+  "Расход": "ወጪ",
+  "Средний CPF": "አማካይ CPF",
+  "Рейтинг по CPF": "በCPF ደረጃ",
+  "Справедливая цена такого охвата в этой нише": "በዚህ ኒሽ ውስጥ የዚህ ተደራሽነት ፍትሐዊ ዋጋ",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "የዚህ ማስቀመጫ CPM ከዚህ ኒሽ የገበያ ክልል በእጅጉ ከፍ ያለ ነው — ከመጠን በላይ ክፍያ ይመስላል።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -47555,6 +47663,12 @@ window.__I18N_DICT = {
   "Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.": "Kwa muundo huu baadhi ya wanaojiunga hupita kiungo — angalia \"Walikuja wenyewe\" kwenye orodha.",
   "В кружок ссылку вшить нельзя. Договорись с админом: сразу под кружком он публикует в канале пост с этой ссылкой.": "Video ya duara haiwezi kubeba kiungo. Kubaliana na admin: chini kabisa ya duara atachapisha kwenye kituo chapisho lenye kiungo hiki.",
   "Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.": "Ulikubaliana na admin mwenyewe — ikiwemo kituo kutoka Radar. Bandika kiungo cha kituo: kujiunga, ubora wa trafiki na CPF vitahesabiwa kikamilifu; maonyesho ya chapisho utaweka mwenyewe.",
-  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Fungua ofa ya kituo unachohitaji na ubonyeze \"Weka alama ya mpango\" — baada ya mmiliki kuthibitisha, mpango utaonekana kwenye Tracker"
+  "Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере": "Fungua ofa ya kituo unachohitaji na ubonyeze \"Weka alama ya mpango\" — baada ya mmiliki kuthibitisha, mpango utaonekana kwenye Tracker",
+  "Сводка по размещениям": "Muhtasari wa uwekaji",
+  "Расход": "Matumizi",
+  "Средний CPF": "CPF wastani",
+  "Рейтинг по CPF": "Orodha kwa CPF",
+  "Справедливая цена такого охвата в этой нише": "Bei ya haki ya ufikiaji huu katika niche hii",
+  "CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.": "CPM ya uwekaji huu iko juu sana ya wigo wa soko wa niche hii — inaonekana kama malipo ya ziada."
  }
 };

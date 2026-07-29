@@ -53,12 +53,6 @@
             '.pl-tag.on{background:rgba(93,202,165,0.14);color:#5DCAA5;}',
             '.pl-tag.off{background:rgba(255,255,255,0.06);color:#8990a8;}',
             '.pl-meta{font-size:10.5px;color:#565b73;margin-top:2px;}',
-            '.pl-guide{background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.3);border-radius:13px;padding:11px 12px;margin-bottom:12px;}',
-            '.pl-guide .gt{font-size:12px;font-weight:800;color:#a5b0ff;display:flex;justify-content:space-between;align-items:center;}',
-            '.pl-guide .gh{font-size:10.5px;color:#565b73;font-weight:600;cursor:pointer;padding:4px 0 4px 12px;}',
-            '.pl-gstep{display:flex;gap:9px;align-items:flex-start;margin-top:7px;}',
-            '.pl-gstep b{display:inline-flex;width:18px;height:18px;border-radius:6px;background:rgba(129,140,248,0.25);color:#a5b0ff;font-size:10.5px;font-weight:800;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}',
-            '.pl-gstep span{font-size:11.5px;color:#a9aec0;line-height:1.5;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
             '.pl-cmp{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;padding:9px 11px;margin-bottom:9px;font-size:10.5px;color:#a9aec0;line-height:1.55;}',
             '.pl-cmp b{color:#e8e8ed;}',
@@ -250,7 +244,7 @@
                     '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
                     '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
                     (un ? '<div class="pl-whosub">@' + esc(un) + '</div>' : '') + '</div>' +
-                    (c.id === _chId ? '<span class="pl-whotag late">✓</span>' : '') + '</div>';
+                    (c.id === _chId ? '<span class="pl-whotag" style="background:rgba(93,202,165,0.14);color:#5DCAA5;">✓</span>' : '') + '</div>';
             }).join('') + '</div>';
         bg.classList.add('on');
         sh.classList.add('on');
@@ -327,17 +321,22 @@
                 '<div class="pl-fnum">' + num(r.v) + '</div></div>';
         });
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
+        var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500, hasBand = !!(l.cpm_lo && l.cpm_hi);
         var fx = [];
         var cpmWarn = '';
         if (l.impressions >= 100 && l.price_rub && !badImp) {
             var cpmV = Math.round(l.price_rub / l.impressions * 1000);
-            var cpmCol = cpmV <= 800 ? '#5DCAA5' : (cpmV <= 2000 ? '#f5bf4f' : '#ef4444');
-            fx.push({ k: 'CPM · ' + T('цена 1000 показов'), v: '<span style="color:' + cpmCol + ';">' + num(cpmV) + ' ₽</span>' });
-            if (cpmV > 2000) cpmWarn = '<div class="pl-qwarn">' + esc(T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
+            var cpmMid = (bandLo + bandHi) / 2, cpmBad = bandHi * 4 / 3;
+            var cpmCol = cpmV <= cpmMid ? '#5DCAA5' : (cpmV <= cpmBad ? '#f5bf4f' : '#ef4444');
+            fx.push({ k: 'CPM', v: '<span style="color:' + cpmCol + ';">' + num(cpmV) + ' ₽</span>' });
+            if (cpmV > cpmBad) {
+                cpmWarn = '<div class="pl-qwarn">' + esc(hasBand
+                    ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
+                    : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
+            }
         }
-        if (l.clicks && l.impressions >= 100 && !badImp) fx.push({ k: 'CTR · ' + T('кликабельность'), v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
-        if (l.clicks && l.price_rub) fx.push({ k: 'CPC · ' + T('цена перехода'), v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
-        if (l.cpf != null) fx.push({ k: 'CPF · ' + T('цена подписчика'), v: num(l.cpf) + ' ₽' });
+        if (l.clicks && l.impressions >= 100 && !badImp) fx.push({ k: 'CTR', v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
+        if (l.clicks && l.price_rub) fx.push({ k: 'CPC', v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
         if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
         if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
         if (fx.length) {
@@ -372,9 +371,11 @@
         var fairNote = '';
         if (l.impressions > 0) {
             var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
-            var fLo = Math.max(1, Math.round(l.impressions / 1000 * 300 * fk));
-            var fHi = Math.max(fLo, Math.round(l.impressions / 1000 * 1500 * fk));
-            fairNote = '<div class="pl-note">' + esc(T('Справедливая цена такого охвата')) + ': ≈' + num(fLo) + '–' + num(fHi) + ' ₽</div>';
+            var fLo = Math.max(1, Math.round(l.impressions / 1000 * bandLo * fk));
+            var fHi = Math.max(fLo, Math.round(l.impressions / 1000 * bandHi * fk));
+            fairNote = '<div class="pl-note">' + esc(hasBand
+                ? T('Справедливая цена такого охвата в этой нише')
+                : T('Справедливая цена такого охвата')) + ': ≈' + num(fLo) + '–' + num(fHi) + ' ₽</div>';
         }
         var warns = fairNote + cpmWarn;
         if (badImp) {
@@ -425,17 +426,9 @@
         if (_right === false) {
             body = permCard();
         } else {
-            var guideHidden = false;
-            try { guideHidden = localStorage.getItem('pl_guide_hidden') === '1'; } catch (e) {}
-            body = guideHidden
-                ? '<div class="pl-glink" data-act="guide-show">' + esc(T('Как это работает')) + ' ↓</div>'
-                : '<div class="pl-guide"><div class="gt"><span>' + esc(T('Как это работает')) + '</span><span class="gh" data-act="guide-hide">' + esc(T('Скрыть')) + '</span></div>' +
-                  '<div class="pl-gstep"><b>1</b><span>' + esc(T('Создай ссылку под конкретное размещение — у каждой рекламы своя ссылка')) + '</span></div>' +
-                  '<div class="pl-gstep"><b>2</b><span>' + esc(T('Вставь её в рекламный пост вместо обычной ссылки на канал')) + '</span></div>' +
-                  '<div class="pl-gstep"><b>3</b><span>' + esc(T('Смотри здесь, сколько людей пришло, сколько осталось и во сколько обошёлся подписчик')) + '</span></div></div>';
             var _howOpen = false;
             try { _howOpen = localStorage.getItem('fm_pl_how') === '1'; } catch (e) {}
-            body += '<div class="pl-how"><div class="pl-howt" data-act="how">🎯 ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
+            body = '<div class="pl-how"><div class="pl-howt" data-act="how"><i class="ti ti-target"></i> ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
                 '<div id="pl-howbody" style="display:' + (_howOpen ? 'block' : 'none') + ';">' +
                 [[T('Купи размещение'), T('Найди канал на Площадке или договорись с админом напрямую.')],
                  [T('Создай ссылку здесь'), T('Она ведёт в твой канал и считает каждого, кто пришёл именно с этой рекламы.')],
@@ -444,14 +437,33 @@
                     return '<div class="pl-step"><span class="n">' + (i + 1) + '</span><div><b>' + esc(st[0]) + '</b><span>' + esc(st[1]) + '</span></div></div>';
                 }).join('') + '</div></div>';
             body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
-            var withCpf = _items.filter(function (x) { return x.cpf != null; });
-            if (withCpf.length >= 2) {
-                var best = withCpf[0], worst = withCpf[0];
-                withCpf.forEach(function (x) { if (x.cpf < best.cpf) best = x; if (x.cpf > worst.cpf) worst = x; });
-                if (best.id !== worst.id) {
-                    body += '<div class="pl-cmp">🏆 ' + esc(T('Лучшая по CPF')) + ': <b>' + esc(best.name) + '</b> — ' + num(best.cpf) + ' ₽ · ' +
-                        esc(T('худшая')) + ': <b>' + esc(worst.name) + '</b> — ' + num(worst.cpf) + ' ₽</div>';
+            if (_items.length >= 2) {
+                var sumSpend = 0, sumJoin = 0, sumRet = 0, sumJoinPriced = 0;
+                _items.forEach(function (x) {
+                    sumJoin += x.joined || 0;
+                    sumRet += x.retained_now || 0;
+                    if (x.price_rub) { sumSpend += x.price_rub; sumJoinPriced += x.joined || 0; }
+                });
+                var blended = (sumSpend > 0 && sumJoinPriced > 0) ? Math.round(sumSpend / sumJoinPriced) : null;
+                body += '<div class="pl-fcap" style="margin:2px 0 0;">' + esc(T('Сводка по размещениям')) + '</div>' +
+                    '<div class="pl-big3" style="margin:6px 0 4px;">' +
+                    '<div class="pl-bt"><div class="k">' + esc(T('Расход')) + '</div><div class="v">' + (sumSpend ? num(sumSpend) + ' ₽' : '—') + '</div></div>' +
+                    '<div class="pl-bt"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (sumJoin ? '+' + num(sumJoin) : '0') + '</div></div>' +
+                    '<div class="pl-bt"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(sumRet) + '</div></div>' +
+                    '<div class="pl-bt"><div class="k">' + esc(T('Средний CPF')) + '</div><div class="v">' + (blended != null ? num(blended) + ' ₽' : '—') + '</div></div></div>';
+                var rated = _items.filter(function (x) { return x.cpf != null; }).sort(function (a, b) { return a.cpf - b.cpf; });
+                if (rated.length >= 2) {
+                    body += '<div class="pl-fcap" style="margin:8px 0 0;">' + esc(T('Рейтинг по CPF')) + '</div>' +
+                        '<div class="pl-cmp" style="margin:6px 0 4px;padding:3px 11px;">' +
+                        rated.map(function (x, i) {
+                            return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;' + (i < rated.length - 1 ? 'border-bottom:0.5px solid rgba(255,255,255,0.05);' : '') + '">' +
+                                '<span style="flex:0 0 auto;width:16px;font-size:10px;color:#565b73;font-weight:700;">' + (i + 1) + '</span>' +
+                                '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:600;color:#e8e8ed;">' + esc(x.name) + '</span>' +
+                                '<span style="flex:0 0 auto;font-size:10px;color:#8990a8;">+' + num(x.joined || 0) + '</span>' +
+                                '<span style="flex:0 0 auto;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;color:' + (i === 0 ? '#5DCAA5' : '#e8e8ed') + ';">' + num(x.cpf) + ' ₽</span></div>';
+                        }).join('') + '</div>';
                 }
+                body += '<div style="height:6px;"></div>';
             }
             if (!_items.length) {
                 body += '<div class="pl-empty"><i class="ti ti-link"></i><h3>' + esc(T('Ссылок пока нет')) + '</h3>' +
@@ -721,8 +733,6 @@
         if (!b) return;
         var act = b.getAttribute('data-act');
         if (act === 'close') { close(); return; }
-        if (act === 'guide-hide') { try { localStorage.setItem('pl_guide_hidden', '1'); } catch (e2) {} render(); return; }
-        if (act === 'guide-show') { try { localStorage.removeItem('pl_guide_hidden'); } catch (e2) {} render(); return; }
         if (act === 'new') { haptic('light'); openSourceSheet(); return; }
         if (act === 'new-direct') { haptic('light'); openCreateSheet(); return; }
         if (act === 'how') {
