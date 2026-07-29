@@ -271,6 +271,21 @@
         sh.classList.add('on');
     }
 
+    function openPriceSheet(id) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        var l = null;
+        _items.forEach(function (x) { if (x.id === id) l = x; });
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Цена размещения')) + '</div>' +
+            '<div class="pl-flabel">' + esc(T('Сколько заплатил за это размещение, ₽')) + '</div>' +
+            '<input class="pl-inp" id="pl-price-edit" type="number" inputmode="numeric" min="0" value="' + (l && l.price_rub ? l.price_rub : '') + '">' +
+            '<div class="pl-note">' + esc(T('Оставь поле пустым, чтобы убрать значение.')) + '</div>' +
+            '<button class="pl-new" style="margin:13px 0 0;" data-act="price-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
+        bg.classList.add('on');
+        sh.classList.add('on');
+    }
+
     function permCard() {
         return '<div class="pl-perm"><div class="t"><i class="ti ti-alert-triangle"></i> ' + esc(T('Нужно право «Пригласительные ссылки»')) + '</div>' +
             '<div class="d">' + esc(T('Чтобы создавать ссылки, боту @ForgeMetricsBot не хватает одного права администратора. Это делается один раз:')) + '</div>' +
@@ -374,6 +389,10 @@
                   ? (T('Показы поста') + ': ' + num(l.impressions_manual) + ' · ' + T('изменить'))
                   : T('Указать показы поста — если купил не через Площадку')) + '</button>'
             : '';
+        var priceBtn = '<button class="pl-whobtn" data-act="price" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-cash"></i> ' +
+            esc(l.price_rub
+                ? (T('Цена размещения') + ': ' + num(l.price_rub) + ' ₽ · ' + T('изменить'))
+                : T('Указать цену размещения — для CPF/CPM')) + '</button>';
         return '<div class="pl-card" data-id="' + l.id + '">' +
             '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
@@ -386,7 +405,7 @@
             '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
             '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>' +
             '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
-            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn +
+            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn + priceBtn +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
             (active
                 ? '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отключить ссылку')) + '</button>' +
@@ -717,7 +736,24 @@
             apiRequest('/api/v1/placements/links/' + iid + '/impressions', {
                 method: 'POST', body: JSON.stringify({ impressions: iv ? parseInt(iv, 10) : null })
             }).then(function (r) {
-                if (r && r.ok) { haptic('medium'); closeSheet(); load(); toast(T('Показы сохранены — CPM и CTR посчитаны')); }
+                if (r && r.ok) {
+                    haptic('medium'); closeSheet(); load();
+                    var _lk = null; _items.forEach(function (x) { if (x.id === iid) _lk = x; });
+                    toast((_lk && _lk.price_rub)
+                        ? T('Показы сохранены — CPM и CTR посчитаны')
+                        : T('Показы сохранены. Укажи цену размещения, чтобы увидеть CPM'));
+                } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'price') { haptic('light'); openPriceSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'price-save') {
+            var pid = parseInt(b.getAttribute('data-id'), 10);
+            var pv = ((document.getElementById('pl-price-edit') || {}).value || '').trim();
+            apiRequest('/api/v1/placements/links/' + pid + '/price', {
+                method: 'POST', body: JSON.stringify({ price_rub: pv ? parseInt(pv, 10) : null })
+            }).then(function (r) {
+                if (r && r.ok) { haptic('medium'); closeSheet(); load(); toast(T('Цена сохранена')); }
                 else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
             }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             return;
