@@ -507,6 +507,9 @@
         if (!sh || !bg) return;
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
+            '<div class="pl-flabel">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
+            '<input class="pl-inp" id="pl-chan" maxlength="120" placeholder="https://t.me/канал" value="">' +
+            '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:-4px 0 8px;line-height:1.45;"></div>' +
             '<div class="pl-flabel">' + esc(T('Название — где размещаешься')) + '</div>' +
             '<input class="pl-inp" id="pl-name" maxlength="80" placeholder="' + esc(T('Реклама у @канал')) + '" value="">' +
             '<div class="pl-flabel">' + esc(T('Цена размещения, ₽ — для расчёта CPF')) + '</div>' +
@@ -524,10 +527,45 @@
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
         sh.classList.add('on');
-        var inp = document.getElementById('pl-name');
-        if (inp) setTimeout(function () { try { inp.focus(); } catch (e) {} }, 250);
+        _resolvedDeal = null;
+        var chIn = document.getElementById('pl-chan');
+        if (chIn) {
+            var _rt = null;
+            chIn.addEventListener('input', function () {
+                if (_rt) clearTimeout(_rt);
+                _rt = setTimeout(function () {
+                    var v = chIn.value.trim();
+                    var info = document.getElementById('pl-chinfo');
+                    _resolvedDeal = null;
+                    if (!v || v.length < 4) { if (info) info.style.display = 'none'; return; }
+                    apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
+                        if (!info || !r || document.getElementById('pl-chan') !== chIn) return;
+                        if (!r.username) { info.style.display = 'none'; return; }
+                        var nameIn = document.getElementById('pl-name');
+                        if (nameIn && (!nameIn.value.trim() || nameIn.getAttribute('data-auto'))) {
+                            nameIn.value = T('Реклама у') + ' @' + r.username;
+                            nameIn.setAttribute('data-auto', '1');
+                        }
+                        if (r.found) {
+                            var bits = ['✓ ' + (r.title || '@' + r.username)];
+                            if (r.subscribers) bits.push(num(r.subscribers) + ' ' + T('подписчиков'));
+                            if (r.market) bits.push(T('есть на Площадке'));
+                            if (r.deal_id) { _resolvedDeal = r.deal_id; bits.push(T('сделка привяжется автоматически')); }
+                            info.style.color = '#5DCAA5';
+                            info.textContent = bits.join(' · ');
+                        } else {
+                            info.style.color = '#8990a8';
+                            info.textContent = T('Канала нет в нашем каталоге — учёт всё равно будет работать полностью.');
+                        }
+                        info.style.display = 'block';
+                    }).catch(function () {});
+                }, 400);
+            });
+            setTimeout(function () { try { chIn.focus(); } catch (e) {} }, 250);
+        }
     }
 
+    var _resolvedDeal = null;
     function doCreate() {
         if (_busy) return;
         var name = (document.getElementById('pl-name') || {}).value || '';
@@ -544,6 +582,12 @@
             _busy = false;
             if (r && r.ok) {
                 haptic('medium');
+                if (_resolvedDeal && r.item && r.item.id) {
+                    apiRequest('/api/v1/placements/links/' + r.item.id + '/deal', {
+                        method: 'POST', body: JSON.stringify({ deal_id: _resolvedDeal })
+                    }).catch(function () {});
+                    _resolvedDeal = null;
+                }
                 closeSheet();
                 load();
                 if (r.item) {
