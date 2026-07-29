@@ -2,7 +2,12 @@
     'use strict';
 
     var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
+    var _campaigns = [], _cands = [], _campId = null, _pendingItem = null, _campManual = null;
     var CLICK_BASE = 'https://fmtr.click';
+
+    function _syncCamp() {
+        if (_campId != null && !_campaigns.some(function (c) { return c.id === _campId; })) _campId = null;
+    }
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -54,6 +59,18 @@
             '.pl-tag.off{background:rgba(255,255,255,0.06);color:#8990a8;}',
             '.pl-meta{font-size:10.5px;color:#565b73;margin-top:2px;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
+            '.pl-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch;}',
+            '.pl-chip{flex:0 0 auto;font-size:11px;font-weight:700;padding:7px 13px;border-radius:99px;border:0.5px solid rgba(255,255,255,0.14);color:#8990a8;cursor:pointer;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;}',
+            '.pl-chip.on{border-color:rgba(129,140,248,0.7);background:rgba(129,140,248,0.12);color:#c7cdfb;}',
+            '.pl-chip.add{color:#818cf8;border-style:dashed;}',
+            '.pl-cand{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:12px;padding:10px 11px;margin-bottom:7px;}',
+            '.pl-cand .nm{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.pl-cand .mt{font-size:10px;color:#8990a8;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.pl-cand .bts{display:flex;gap:7px;margin-top:9px;}',
+            '.pl-cand .go{flex:1;border:0;border-radius:10px;padding:9px 8px;font-size:11px;font-weight:700;background:rgba(129,140,248,0.16);color:#a5b0ff;font-family:inherit;cursor:pointer;min-height:36px;}',
+            '.pl-cand .rm{flex:0 0 auto;border:0.5px solid rgba(255,255,255,0.14);background:transparent;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:600;color:#8990a8;font-family:inherit;cursor:pointer;min-height:36px;}',
+            '.pl-cb{width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;color:#0b0c16;}',
+            '.pl-cb.on{background:#818cf8;border-color:#818cf8;}',
             '.pl-cmp{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;padding:9px 11px;margin-bottom:9px;font-size:10.5px;color:#a9aec0;line-height:1.55;}',
             '.pl-cmp b{color:#e8e8ed;}',
             '.pl-big3{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:1px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;overflow:hidden;margin-top:10px;}',
@@ -183,8 +200,12 @@
         apiRequest('/api/v1/placements/links?channel_id=' + _chId).then(function (r) {
             if (!r || !r.ok) return;
             var items = r.items || [];
-            if (JSON.stringify(items) === JSON.stringify(_items) && r.right === _right) return;
+            var sigNew = JSON.stringify([items, r.campaigns || [], r.candidates || [], r.right]);
+            var sigOld = JSON.stringify([_items, _campaigns, _cands, _right]);
+            if (sigNew === sigOld) return;
             _items = items; _right = r.right;
+            _campaigns = r.campaigns || []; _cands = r.candidates || [];
+            _syncCamp();
             var openIds = [];
             var boxes = document.querySelectorAll('#pl-screen .pl-who');
             for (var i = 0; i < boxes.length; i++) {
@@ -280,6 +301,139 @@
         sh.classList.add('on');
     }
 
+    function openCampSheet(campId) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        _campManual = null;
+        var isNew = campId == null;
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(isNew ? T('Новая кампания') : T('Добавить каналы')) + '</div>' +
+            (isNew
+                ? '<div class="pl-flabel">' + esc(T('Название кампании')) + '</div>' +
+                  '<input class="pl-inp" id="pl-camp-name" maxlength="80" autocomplete="off" value="' + esc(T('Закуп от') + ' ' + fmtDay(new Date().toISOString())) + '">'
+                : '') +
+            '<div class="pl-flabel">' + esc(T('Каналы из закладок')) + '</div>' +
+            '<div id="pl-camp-bms"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div>' +
+            '<div class="pl-flabel">' + esc(T('Или вставь ссылку на канал')) + '</div>' +
+            '<input class="pl-inp" id="pl-camp-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал">' +
+            '<div id="pl-camp-chinfo" style="display:none;font-size:10.5px;margin:8px 0 0;line-height:1.45;"></div>' +
+            '<button class="pl-new" style="margin:13px 0 0;" data-act="camp-save" data-mode="' + (isNew ? 'new' : campId) + '">' + esc(isNew ? T('Создать кампанию') : T('Добавить')) + '</button>';
+        bg.classList.add('on');
+        sh.classList.add('on');
+        apiRequest('/api/v1/marketplace/bookmarks/cards').then(function (r) {
+            var box = document.getElementById('pl-camp-bms');
+            if (!box) return;
+            var items = (r && r.items) || [];
+            var inCamp = {};
+            if (!isNew) _cands.forEach(function (c) { if (c.campaign_id === campId && c.username) inCamp[c.username.toLowerCase()] = 1; });
+            if (!items.length) {
+                box.innerHTML = '<div class="pl-note" style="margin-top:0;">' + esc(T('Закладок пока нет — отмечай ★ на офферах и в Радаре.')) + '</div>';
+                return;
+            }
+            box.innerHTML = items.map(function (it) {
+                var l = it.listing || {};
+                var u = (l.username || '').toLowerCase();
+                var taken = !!inCamp[u];
+                var sub = taken ? T('уже в кампании')
+                    : [u ? '@' + u : '', l.subscribers ? num(l.subscribers) : ''].filter(Boolean).join(' · ');
+                return '<div class="pl-whorow" data-act="cb"' + (taken ? ' style="opacity:0.45;pointer-events:none;"' : '') + '>' +
+                    '<span class="pl-cb" data-u="' + esc(l.username || '') + '" data-t="' + esc(l.title || '') + '" data-s="' + (l.subscribers || '') + '" data-lid="' + (l.id || '') + '"></span>' +
+                    '<div class="pl-whoav">' + esc(String(l.title || u || '?').charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(l.title || ('@' + u)) + '</div>' +
+                    '<div class="pl-whosub">' + esc(sub) + '</div></div></div>';
+            }).join('');
+        }).catch(function () {
+            var box = document.getElementById('pl-camp-bms');
+            if (box) box.innerHTML = '<div class="pl-center">' + esc(T('Не удалось. Повтори попытку.')) + '</div>';
+        });
+        var mi = document.getElementById('pl-camp-chan');
+        if (mi) {
+            var _mt = null;
+            mi.addEventListener('input', function () {
+                if (_mt) clearTimeout(_mt);
+                _mt = setTimeout(function () {
+                    var v = mi.value.trim();
+                    var info = document.getElementById('pl-camp-chinfo');
+                    _campManual = null;
+                    if (!v || v.length < 4) { if (info) info.style.display = 'none'; return; }
+                    apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
+                        if (!info || !r || document.getElementById('pl-camp-chan') !== mi) return;
+                        if (!r.username) { info.style.display = 'none'; return; }
+                        _campManual = { username: r.username, title: r.title || null, subscribers: r.subscribers || null, listing_id: r.listing_id || null };
+                        if (r.found) {
+                            var bits = ['✓ ' + (r.title || '@' + r.username)];
+                            if (r.subscribers) bits.push(num(r.subscribers) + ' ' + T('подписчиков'));
+                            info.style.color = '#5DCAA5';
+                            info.textContent = bits.join(' · ');
+                        } else {
+                            info.style.color = '#8990a8';
+                            info.textContent = '@' + r.username;
+                        }
+                        info.style.display = 'block';
+                    }).catch(function () {});
+                }, 400);
+            });
+        }
+    }
+
+    function openToCampSheet(linkId) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg || !_campaigns.length) return;
+        var cur = null;
+        _items.forEach(function (x) { if (x.id === linkId) cur = x.campaign_id; });
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('В кампанию…')) + '</div>' +
+            '<div style="margin-top:8px;">' +
+            _campaigns.map(function (c) {
+                return '<div class="pl-whorow" data-act="tocamp-pick" data-link="' + linkId + '" data-camp="' + c.id + '">' +
+                    '<div class="pl-whoav"><i class="ti ti-folder"></i></div>' +
+                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(c.name) + '</div></div>' +
+                    (cur === c.id ? '<span class="pl-whotag" style="background:rgba(93,202,165,0.14);color:#5DCAA5;">✓</span>' : '') + '</div>';
+            }).join('') +
+            (cur != null
+                ? '<div class="pl-whorow" data-act="tocamp-pick" data-link="' + linkId + '" data-camp="">' +
+                  '<div class="pl-whoav"><i class="ti ti-folder-off"></i></div>' +
+                  '<div class="pl-whomid"><div class="pl-whonm">' + esc(T('Без кампании')) + '</div></div></div>'
+                : '') + '</div>';
+        bg.classList.add('on');
+        sh.classList.add('on');
+    }
+
+    function doCampSave(mode) {
+        if (_busy) return;
+        var picks = [];
+        var cbs = document.querySelectorAll('#pl-sheet .pl-cb.on');
+        for (var i = 0; i < cbs.length; i++) {
+            picks.push({
+                username: cbs[i].getAttribute('data-u'),
+                title: cbs[i].getAttribute('data-t') || null,
+                subscribers: parseInt(cbs[i].getAttribute('data-s'), 10) || null,
+                listing_id: parseInt(cbs[i].getAttribute('data-lid'), 10) || null
+            });
+        }
+        if (_campManual && _campManual.username) picks.push(_campManual);
+        if (mode === 'new') {
+            var nmv = ((document.getElementById('pl-camp-name') || {}).value || '').trim();
+            if (!nmv) { toast(T('Укажи название кампании')); return; }
+            _busy = true;
+            apiRequest('/api/v1/placements/campaigns', { method: 'POST', body: JSON.stringify({ channel_id: _chId, name: nmv, picks: picks }) })
+                .then(function (r) {
+                    _busy = false;
+                    if (r && r.ok) { haptic('medium'); _campId = (r.campaign || {}).id || null; closeSheet(); load(); toast(T('Кампания создана')); }
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
+        } else {
+            if (!picks.length) { toast(T('Выбери каналы или вставь ссылку')); return; }
+            _busy = true;
+            apiRequest('/api/v1/placements/campaigns/' + mode + '/items', { method: 'POST', body: JSON.stringify({ picks: picks }) })
+                .then(function (r) {
+                    _busy = false;
+                    if (r && r.ok) { haptic('medium'); closeSheet(); load(); }
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
+        }
+    }
+
     function permCard() {
         return '<div class="pl-perm"><div class="t"><i class="ti ti-alert-triangle"></i> ' + esc(T('Нужно право «Пригласительные ссылки»')) + '</div>' +
             '<div class="d">' + esc(T('Чтобы создавать ссылки, боту @ForgeMetricsBot не хватает одного права администратора. Это делается один раз:')) + '</div>' +
@@ -287,6 +441,17 @@
             '<li>' + esc(T('Администраторы → @ForgeMetricsBot')) + '</li>' +
             '<li>' + esc(T('Включи «Пригласительные ссылки» и сохрани')) + '</li></ol>' +
             '<button class="pl-ghost" data-act="recheck"><i class="ti ti-refresh"></i> ' + esc(T('Проверить право')) + '</button></div>';
+    }
+
+    function candCard(c) {
+        var meta = [];
+        if (c.username) meta.push('@' + c.username);
+        if (c.subscribers) meta.push(num(c.subscribers) + ' ' + T('подписчиков'));
+        if (c.price) meta.push(num(c.price) + ' ₽');
+        return '<div class="pl-cand"><div class="nm">' + esc(c.title || ('@' + (c.username || ''))) + '</div>' +
+            '<div class="mt">' + esc(meta.join(' · ')) + '</div>' +
+            '<div class="bts"><button class="go" data-act="cand-go" data-item="' + c.id + '" data-u="' + esc(c.username || '') + '">' + esc(T('Договорился — создать ссылку')) + '</button>' +
+            '<button class="rm" data-act="cand-del" data-item="' + c.id + '">' + esc(T('Убрать')) + '</button></div></div>';
     }
 
     function linkCard(l) {
@@ -400,6 +565,13 @@
             esc(l.price_rub
                 ? (T('Цена размещения') + ': ' + num(l.price_rub) + ' ₽ · ' + T('изменить'))
                 : T('Указать цену размещения — для CPF/CPM')) + '</button>';
+        var campBtn = '';
+        if (_campaigns.length) {
+            var _cname = null;
+            _campaigns.forEach(function (c) { if (c.id === l.campaign_id) _cname = c.name; });
+            campBtn = '<button class="pl-whobtn" data-act="tocamp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-folder"></i> ' +
+                esc(_cname ? (T('Кампания') + ': ' + _cname + ' · ' + T('изменить')) : T('В кампанию…')) + '</button>';
+        }
         return '<div class="pl-card" data-id="' + l.id + '">' +
             '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
             '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
@@ -417,7 +589,7 @@
             ((l.placement_format === 'story' || l.placement_format === 'circle' || l.placement_format === 'repost')
                 ? '<div class="pl-note" style="margin-top:2px;">' + esc(T('Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.')) + '</div>'
                 : '') +
-            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn + priceBtn +
+            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn + priceBtn + campBtn +
             '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
             (active
                 ? '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отключить ссылку')) + '</button>' +
@@ -432,9 +604,15 @@
         if (_right === false) {
             body = permCard();
         } else {
+            var view = _campId == null ? _items : _items.filter(function (x) { return x.campaign_id === _campId; });
+            var cands = _campId == null ? [] : _cands.filter(function (c) { return c.campaign_id === _campId; });
+            body = '<div class="pl-chips"><span class="pl-chip' + (_campId == null ? ' on' : '') + '" data-act="chip" data-camp="">' + esc(T('Все')) + '</span>' +
+                _campaigns.map(function (c) { return '<span class="pl-chip' + (_campId === c.id ? ' on' : '') + '" data-act="chip" data-camp="' + c.id + '">' + esc(c.name) + '</span>'; }).join('') +
+                '<span class="pl-chip add" data-act="camp-new">+ ' + esc(T('Кампания')) + '</span></div>';
             var _howOpen = false;
             try { _howOpen = localStorage.getItem('fm_pl_how') === '1'; } catch (e) {}
-            body = '<div class="pl-how"><div class="pl-howt" data-act="how"><i class="ti ti-target"></i> ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
+            if (_campId == null) {
+            body += '<div class="pl-how"><div class="pl-howt" data-act="how"><i class="ti ti-target"></i> ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
                 '<div id="pl-howbody" style="display:' + (_howOpen ? 'block' : 'none') + ';">' +
                 [[T('Купи размещение'), T('Найди канал на Площадке или договорись с админом напрямую.')],
                  [T('Создай ссылку здесь'), T('Она ведёт в твой канал и считает каждого, кто пришёл именно с этой рекламы.')],
@@ -443,21 +621,22 @@
                     return '<div class="pl-step"><span class="n">' + (i + 1) + '</span><div><b>' + esc(st[0]) + '</b><span>' + esc(st[1]) + '</span></div></div>';
                 }).join('') + '</div></div>';
             body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
-            if (_items.length >= 2) {
+            }
+            if (view.length >= 2) {
                 var sumSpend = 0, sumJoin = 0, sumRet = 0, sumJoinPriced = 0;
-                _items.forEach(function (x) {
+                view.forEach(function (x) {
                     sumJoin += x.joined || 0;
                     sumRet += x.retained_now || 0;
                     if (x.price_rub) { sumSpend += x.price_rub; sumJoinPriced += x.joined || 0; }
                 });
                 var blended = (sumSpend > 0 && sumJoinPriced > 0) ? Math.round(sumSpend / sumJoinPriced) : null;
-                body += '<div class="pl-fcap" style="margin:2px 0 0;">' + esc(T('Сводка по размещениям')) + '</div>' +
+                body += '<div class="pl-fcap" style="margin:2px 0 0;">' + esc(T(_campId == null ? 'Сводка по размещениям' : 'Сводка по кампании')) + '</div>' +
                     '<div class="pl-big3" style="margin:6px 0 4px;">' +
                     '<div class="pl-bt"><div class="k">' + esc(T('Расход')) + '</div><div class="v">' + (sumSpend ? num(sumSpend) + ' ₽' : '—') + '</div></div>' +
                     '<div class="pl-bt"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (sumJoin ? '+' + num(sumJoin) : '0') + '</div></div>' +
                     '<div class="pl-bt"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(sumRet) + '</div></div>' +
                     '<div class="pl-bt"><div class="k">' + esc(T('Средний CPF')) + '</div><div class="v">' + (blended != null ? num(blended) + ' ₽' : '—') + '</div></div></div>';
-                var rated = _items.filter(function (x) { return x.cpf != null; }).sort(function (a, b) { return a.cpf - b.cpf; });
+                var rated = view.filter(function (x) { return x.cpf != null; }).sort(function (a, b) { return a.cpf - b.cpf; });
                 if (rated.length >= 2) {
                     body += '<div class="pl-fcap" style="margin:8px 0 0;">' + esc(T('Рейтинг по CPF')) + '</div>' +
                         '<div class="pl-cmp" style="margin:6px 0 4px;padding:3px 11px;">' +
@@ -471,12 +650,29 @@
                 }
                 body += '<div style="height:6px;"></div>';
             }
-            if (!_items.length) {
-                body += '<div class="pl-empty"><i class="ti ti-link"></i><h3>' + esc(T('Ссылок пока нет')) + '</h3>' +
-                    '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
+            if (_campId != null) {
+                if (cands.length) {
+                    body += '<div class="pl-fcap" style="margin:8px 0 6px;">' + esc(T('Кандидаты')) + ' · ' + cands.length + '</div>' + cands.map(candCard).join('');
+                }
+                body += '<button class="pl-ghost" data-act="camp-add" style="margin-top:6px;"><i class="ti ti-plus"></i> ' + esc(T('Добавить канал')) + '</button>';
+                var activeCnt = _items.filter(function (x) { return x.status === 'active'; }).length;
+                if (activeCnt >= 15) body += '<div class="pl-note">' + esc(T('Активных ссылок')) + ': ' + activeCnt + ' ' + esc(T('из')) + ' 20</div>';
+            }
+            if (!view.length) {
+                if (_campId == null) {
+                    body += '<div class="pl-empty"><i class="ti ti-link"></i><h3>' + esc(T('Ссылок пока нет')) + '</h3>' +
+                        '<p>' + esc(T('Создай ссылку под размещение и вставь её в рекламный пост вместо @имени канала — увидишь, сколько подписчиков принесла реклама.')) + '</p></div>';
+                } else if (!cands.length) {
+                    body += '<div class="pl-empty"><i class="ti ti-folder"></i><h3>' + esc(T('Кампания пока пуста')) + '</h3>' +
+                        '<p>' + esc(T('Добавь каналы — из закладок или ссылкой на канал.')) + '</p></div>';
+                }
             } else {
-                body += _items.map(linkCard).join('');
+                if (_campId != null) body += '<div class="pl-fcap" style="margin:12px 0 6px;">' + esc(T('Ссылки кампании')) + ' · ' + view.length + '</div>';
+                body += view.map(linkCard).join('');
                 body += '<div class="pl-note">' + esc(T('Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.')) + '</div>';
+            }
+            if (_campId != null) {
+                body += '<div class="pl-actrow" style="margin-top:8px;"><button class="pl-revoke danger" data-act="camp-del">' + esc(T('Удалить кампанию')) + '</button></div>';
             }
         }
         host.innerHTML = head() + '<div class="pl-body">' + body + '</div>' +
@@ -496,7 +692,11 @@
     function load() {
         loading();
         apiRequest('/api/v1/placements/links?channel_id=' + _chId).then(function (r) {
-            if (r && r.ok) { _items = r.items || []; _right = r.right; }
+            if (r && r.ok) {
+                _items = r.items || []; _right = r.right;
+                _campaigns = r.campaigns || []; _cands = r.candidates || [];
+                _syncCamp();
+            }
             else { _items = []; _right = null; if (r && r.message) toast(r.message); }
             render();
             if (_prefillChan && _right !== false) {
@@ -584,6 +784,7 @@
         bg.classList.add('on');
         sh.classList.add('on');
         _resolvedDeal = null;
+        _pendingItem = null;
         var chIn = document.getElementById('pl-chan');
         if (chIn) {
             var _rt = null;
@@ -638,11 +839,12 @@
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt') })
+            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt'), campaign_item_id: _pendingItem || null })
         }).then(function (r) {
             _busy = false;
             if (r && r.ok) {
                 haptic('medium');
+                _pendingItem = null;
                 if (_resolvedDeal && r.item && r.item.id) {
                     apiRequest('/api/v1/placements/links/' + r.item.id + '/deal', {
                         method: 'POST', body: JSON.stringify({ deal_id: _resolvedDeal })
@@ -741,6 +943,61 @@
         if (act === 'close') { close(); return; }
         if (act === 'new') { haptic('light'); openSourceSheet(); return; }
         if (act === 'new-direct') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'chip') { haptic('light'); var cv = b.getAttribute('data-camp'); _campId = cv ? parseInt(cv, 10) : null; render(); return; }
+        if (act === 'camp-new') { haptic('light'); openCampSheet(null); return; }
+        if (act === 'camp-add') { haptic('light'); openCampSheet(_campId); return; }
+        if (act === 'camp-save') { doCampSave(b.getAttribute('data-mode')); return; }
+        if (act === 'camp-del') {
+            var cdid = _campId;
+            domConfirm(T('Кандидаты будут удалены. Ссылки и их статистика сохранятся в общем списке.'), T('Удалить кампанию'), true).then(function (ok) {
+                if (!ok || cdid == null) return;
+                apiRequest('/api/v1/placements/campaigns/' + cdid + '/delete', { method: 'POST', body: '{}' }).then(function (r) {
+                    if (r && r.ok) { haptic('light'); _campId = null; load(); }
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            });
+            return;
+        }
+        if (act === 'cand-del') {
+            var cndid = parseInt(b.getAttribute('data-item'), 10);
+            domConfirm(T('Убрать канал из кампании?'), T('Убрать'), false).then(function (ok) {
+                if (!ok) return;
+                apiRequest('/api/v1/placements/campaign-items/' + cndid + '/delete', { method: 'POST', body: '{}' }).then(function (r) {
+                    if (r && r.ok) { haptic('light'); load(); }
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            });
+            return;
+        }
+        if (act === 'cand-go') {
+            haptic('light');
+            var cgi = parseInt(b.getAttribute('data-item'), 10), cgu = b.getAttribute('data-u');
+            openCreateSheet();
+            _pendingItem = cgi;
+            var cgin = document.getElementById('pl-chan');
+            if (cgin && cgu) {
+                cgin.value = 't.me/' + cgu;
+                try { cgin.dispatchEvent(new Event('input', { bubbles: true })); } catch (e3) {}
+            }
+            return;
+        }
+        if (act === 'cb') {
+            var cbe = b.querySelector('.pl-cb');
+            if (cbe) { cbe.classList.toggle('on'); cbe.textContent = cbe.classList.contains('on') ? '✓' : ''; haptic('light'); }
+            return;
+        }
+        if (act === 'tocamp') { haptic('light'); openToCampSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'tocamp-pick') {
+            var tlid = parseInt(b.getAttribute('data-link'), 10);
+            var tcv = b.getAttribute('data-camp');
+            apiRequest('/api/v1/placements/links/' + tlid + '/campaign', {
+                method: 'POST', body: JSON.stringify({ campaign_id: tcv ? parseInt(tcv, 10) : null })
+            }).then(function (r) {
+                if (r && r.ok) { haptic('medium'); closeSheet(); load(); }
+                else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
         if (act === 'how') {
             haptic('light');
             var hb = document.getElementById('pl-howbody'), ha = document.getElementById('pl-howarr');
@@ -783,7 +1040,7 @@
         if (act === 'chpick-go') {
             var nch = parseInt(b.getAttribute('data-ch'), 10);
             closeSheet();
-            if (nch && nch !== _chId) { _chId = nch; load(); }
+            if (nch && nch !== _chId) { _chId = nch; _campId = null; load(); }
             return;
         }
         if (act === 'imp') { haptic('light'); openImpSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
