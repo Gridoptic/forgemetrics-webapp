@@ -463,7 +463,7 @@
             '.fmr-gtab .r{display:flex;align-items:center;justify-content:space-between;padding:4px 2px;font-size:11px;border-bottom:0.5px solid rgba(255,255,255,0.05);}',
             '.fmr-gtab .r:last-child{border-bottom:0;}',
             '.fmr-gtab .l{color:#8990a8;}',
-            '.fmx-tpbox{max-width:480px;width:calc(100vw - 20px);left:50%;transform:translateX(-50%);margin-left:0;}',
+            '.fmx-cfm-box.fmx-tpbox{max-width:480px;width:calc(100vw - 24px);left:50%;transform:translateX(-50%);margin-left:0;bottom:14px;}',
             '.fmx-tpx{margin-left:auto;color:#565b73;cursor:pointer;padding:4px;}',
             '.fmx-tptabs{display:flex;gap:6px;background:rgba(255,255,255,0.04);border-radius:11px;padding:4px;margin:10px 0 11px;}',
             '.fmx-tptab{flex:1;text-align:center;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:#8990a8;cursor:pointer;border:1px solid transparent;}',
