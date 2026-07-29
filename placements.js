@@ -29,6 +29,22 @@
             '.pl-back{width:38px;height:38px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#c9cede;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;}',
             '.pl-ht{font-size:16px;font-weight:800;}',
             '.pl-body{flex:1;overflow-y:auto;padding:4px 16px 90px;overscroll-behavior:contain;}',
+            '.pl-how{background:linear-gradient(180deg,rgba(129,140,248,0.09),rgba(129,140,248,0.03));border:1px solid rgba(129,140,248,0.28);border-radius:13px;padding:11px 12px;margin-bottom:12px;}',
+            '.pl-howt{font-size:12.5px;font-weight:750;display:flex;align-items:center;gap:8px;color:#c3c9f4;cursor:pointer;min-height:24px;}',
+            '.pl-step{display:flex;gap:10px;margin-top:10px;align-items:flex-start;}',
+            '.pl-step .n{width:24px;height:24px;flex:0 0 auto;border-radius:8px;background:rgba(129,140,248,0.15);border:1px solid rgba(129,140,248,0.4);color:#a5b0ff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;}',
+            '.pl-step b{font-size:12px;display:block;color:#e8e8ed;}',
+            '.pl-step span{font-size:10.5px;color:#8990a8;line-height:1.45;display:block;margin-top:1px;}',
+            '.pl-src{border:1px solid rgba(255,255,255,0.12);border-radius:13px;padding:12px;margin-top:8px;}',
+            '.pl-src.mk{border-color:rgba(93,202,165,0.45);background:rgba(93,202,165,0.06);}',
+            '.pl-src b{font-size:12.5px;display:flex;align-items:center;gap:7px;color:#e8e8ed;}',
+            '.pl-src > span{font-size:10.5px;color:#8990a8;display:block;margin-top:3px;line-height:1.45;}',
+            '.pl-deal{background:#10131f;border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 11px;margin-top:7px;display:flex;align-items:center;gap:9px;cursor:pointer;min-height:44px;}',
+            '.pl-ready{background:rgba(93,202,165,0.08);border:1px solid rgba(93,202,165,0.35);border-radius:13px;padding:12px;margin-top:8px;}',
+            '.pl-ready .t{font-size:12.5px;font-weight:750;color:#5DCAA5;}',
+            '.pl-ready .lnk{display:flex;gap:6px;margin-top:8px;align-items:center;}',
+            '.pl-ready code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;background:rgba(0,0,0,0.3);border-radius:8px;padding:7px 9px;color:#9fd6a9;}',
+            '.pl-ready .hint{font-size:10.5px;color:#8990a8;margin-top:7px;line-height:1.45;}',
             '.pl-new{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:13px;border:0;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:14px;}',
             '.pl-card{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:12px 13px;margin-bottom:9px;}',
             '.pl-r1{display:flex;align-items:center;gap:8px;}',
@@ -393,6 +409,16 @@
                   '<div class="pl-gstep"><b>1</b><span>' + esc(T('Создай ссылку под конкретное размещение — у каждой рекламы своя ссылка')) + '</span></div>' +
                   '<div class="pl-gstep"><b>2</b><span>' + esc(T('Вставь её в рекламный пост вместо обычной ссылки на канал')) + '</span></div>' +
                   '<div class="pl-gstep"><b>3</b><span>' + esc(T('Смотри здесь, сколько людей пришло, сколько осталось и во сколько обошёлся подписчик')) + '</span></div></div>';
+            var _howOpen = false;
+            try { _howOpen = localStorage.getItem('fm_pl_how') === '1'; } catch (e) {}
+            body += '<div class="pl-how"><div class="pl-howt" data-act="how">🎯 ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
+                '<div id="pl-howbody" style="display:' + (_howOpen ? 'block' : 'none') + ';">' +
+                [[T('Купи размещение'), T('Найди канал на Площадке или договорись с админом напрямую.')],
+                 [T('Создай ссылку здесь'), T('Она ведёт в твой канал и считает каждого, кто пришёл именно с этой рекламы.')],
+                 [T('Отдай ссылку админу'), T('Он вставит её в рекламный пост вместо обычной t.me-ссылки.')],
+                 [T('Смотри воронку'), T('Показы, клики, подписки, отписки и цена подписчика считаются сами.')]].map(function (st, i) {
+                    return '<div class="pl-step"><span class="n">' + (i + 1) + '</span><div><b>' + esc(st[0]) + '</b><span>' + esc(st[1]) + '</span></div></div>';
+                }).join('') + '</div></div>';
             body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
             var withCpf = _items.filter(function (x) { return x.cpf != null; });
             if (withCpf.length >= 2) {
@@ -437,6 +463,41 @@
         var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
         if (sh) sh.classList.remove('on');
         if (bg) bg.classList.remove('on');
+    }
+
+    function openSourceSheet() {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
+            '<div class="pl-note" style="margin-top:2px;">' + esc(T('Где куплено размещение?')) + '</div>' +
+            '<div class="pl-src mk"><b>' + esc(T('На Площадке')) + '</b>' +
+            '<span>' + esc(T('Выбери сделку — название, формат и привязка заполнятся сами, а показы поста приедут из автозамеров.')) + '</span>' +
+            '<div id="pl-src-deals"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div></div>' +
+            '<div class="pl-src" data-act="new-direct" style="cursor:pointer;"><b>' + esc(T('Напрямую у админа')) + '</b>' +
+            '<span>' + esc(T('Обычная форма: название, цена, тип ссылки и формат.')) + '</span></div>';
+        bg.classList.add('on'); sh.classList.add('on');
+        apiRequest('/api/v1/placements/deals').then(function (r) {
+            var box = document.getElementById('pl-src-deals');
+            if (!box) return;
+            var items = (r && r.items) || [];
+            if (!items.length) {
+                box.innerHTML = '<div class="pl-center" style="padding:6px 0 2px;font-size:10.5px;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>';
+                return;
+            }
+            box.innerHTML = items.map(function (d) {
+                var m = d.measured && (d.reach_24h || d.reach_48h)
+                    ? ' · ~' + num(d.reach_24h || d.reach_48h) + ' ' + esc(T('показов'))
+                    : ' · ' + esc(T('замер ожидается'));
+                return '<div class="pl-deal" data-act="from-deal" data-deal="' + d.deal_id + '">' +
+                    '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(d.channel || ('@' + (d.username || ''))) + '</div>' +
+                    '<div style="font-size:10px;color:#8990a8;">' + esc(T('сделка')) + m + '</div></div>' +
+                    '<span style="color:#818cf8;flex:0 0 auto;">→</span></div>';
+            }).join('');
+        }).catch(function () {
+            var box = document.getElementById('pl-src-deals');
+            if (box) box.innerHTML = '<div class="pl-center">' + esc(T('Не удалось. Повтори попытку.')) + '</div>';
+        });
     }
 
     function openCreateSheet() {
@@ -556,7 +617,39 @@
         if (act === 'close') { close(); return; }
         if (act === 'guide-hide') { try { localStorage.setItem('pl_guide_hidden', '1'); } catch (e2) {} render(); return; }
         if (act === 'guide-show') { try { localStorage.removeItem('pl_guide_hidden'); } catch (e2) {} render(); return; }
-        if (act === 'new') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'new') { haptic('light'); openSourceSheet(); return; }
+        if (act === 'new-direct') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'how') {
+            haptic('light');
+            var hb = document.getElementById('pl-howbody'), ha = document.getElementById('pl-howarr');
+            if (hb) {
+                var open = hb.style.display !== 'none';
+                hb.style.display = open ? 'none' : 'block';
+                if (ha) ha.textContent = open ? '▼' : '▲';
+                try { localStorage.setItem('fm_pl_how', open ? '0' : '1'); } catch (e) {}
+            }
+            return;
+        }
+        if (act === 'from-deal') {
+            haptic('light');
+            var fdid = parseInt(b.getAttribute('data-deal'), 10);
+            apiRequest('/api/v1/placements/from-deal', {
+                method: 'POST', body: JSON.stringify({ deal_id: fdid, channel_id: _chId })
+            }).then(function (r) {
+                if (!r || r.ok === false) { toast((r && r.message) || T('Не удалось. Повтори попытку.')); return; }
+                var it = r.item || {};
+                var url = it.click_code ? ('https://fmtr.click/r/' + it.click_code) : (it.invite_link || '');
+                haptic('medium');
+                var box = document.getElementById('pl-src-deals');
+                if (box) {
+                    box.innerHTML = '<div class="pl-ready"><div class="t">✓ ' + esc(T('Ссылка готова — отдай её админу канала')) + '</div>' +
+                        '<div class="lnk"><code>' + esc(url) + '</code><button class="pl-copy" data-act="copy" data-link="' + esc(url) + '">' + esc(T('Скопировать')) + '</button></div>' +
+                        '<div class="hint">' + esc(T('Админ вставит её в рекламный пост. Подписки, клики и показы посчитаются в этой записи автоматически.')) + '</div></div>';
+                }
+                load();
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
         if (act === 'chpick') { haptic('light'); openChannelSheet(); return; }
         if (act === 'chpick-go') {
             var nch = parseInt(b.getAttribute('data-ch'), 10);
