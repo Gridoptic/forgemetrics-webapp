@@ -2879,18 +2879,20 @@
             else if (r.l.status === 'pending') pend++;
         });
         var er = erN ? Math.round(erSum / erN * 10) / 10 : null;
-        function tile(label, val, hint) {
-            return '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:10px 12px;min-width:0;">' +
-                '<div style="font-size:10px;color:#8990a8;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span>' + label + '</span></div>' +
-                '<div class="num" style="font-size:18px;font-weight:800;margin-top:2px;white-space:nowrap;">' + val + '</div>' +
-                (hint ? '<div style="font-size:10px;color:#565b73;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + hint + '</div>' : '') +
+        function tile(icon, color, bgc, label, val, hint) {
+            return '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px 12px;min-width:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">' +
+                '<div style="display:flex;align-items:center;gap:7px;min-width:0;">' +
+                '<span style="width:24px;height:24px;border-radius:8px;flex:0 0 24px;display:flex;align-items:center;justify-content:center;background:' + bgc + ';"><i class="ti ' + icon + '" style="font-size:13px;color:' + color + ';"></i></span>' +
+                '<span style="font-size:9.5px;color:#8990a8;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span>' + label + '</span></span></div>' +
+                '<div class="num" style="font-size:19px;font-weight:800;margin-top:7px;white-space:nowrap;">' + val + '</div>' +
+                (hint ? '<div style="font-size:10px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + hint + '</div>' : '') +
                 '</div>';
         }
-        var tiles = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">' +
-            tile('Каналы', _num(_net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;color:#8990a8;">/ ' + _num(_net.chLim) + '</span>' : ''), '') +
-            tile('Суммарный охват', netShort(reach), '') +
-            tile('Средний ER', er != null ? String(er).replace('.', ',') + '%' : '—', '') +
-            tile('Офферы', _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;color:#8990a8;">/ ' + _num(_net.lim) + '</span>' : ''),
+        var tiles = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
+            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', 'Каналы', _num(_net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), '') +
+            tile('ti-eye', '#60a5fa', 'rgba(59,130,246,0.15)', 'Суммарный охват', netShort(reach), '') +
+            tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', 'Средний ER', er != null ? String(er).replace('.', ',') + '%' : '—', '') +
+            tile('ti-briefcase', '#f5bf4f', 'rgba(245,191,79,0.15)', 'Офферы', _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.lim) + '</span>' : ''),
                 pend ? '<span>На модерации:</span> <b class="num">' + pend + '</b>' : '') +
             '</div>';
         var chipDefs = [
@@ -2900,7 +2902,7 @@
             { k: 'none', t: 'Без оффера', n: none },
             { k: 'attn', t: 'Внимание', n: attn }
         ];
-        var chips = '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin:0 -2px 2px;-webkit-overflow-scrolling:touch;">' + chipDefs.map(function (c) {
+        var chips = '<div id="fmx-netChips" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin:0 -2px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;">' + chipDefs.map(function (c) {
             var on = _net.filter === c.k;
             var warn = c.k === 'attn' && c.n > 0;
             return '<button data-netchip="' + c.k + '" style="flex:0 0 auto;font-size:11.5px;font-family:inherit;cursor:pointer;border-radius:999px;padding:6px 11px;' +
@@ -2923,10 +2925,9 @@
             var reachV = (l && (l.ad_reach_24h || l.avg_views)) || ch.avg_views;
             var cpm = (l && l.base_price && reachV) ? Math.round(l.base_price / reachV * 1000) : null;
             var av = _net.mode
-                ? '<span style="width:22px;height:22px;border-radius:7px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;' + (checked ? 'background:#6366f1;' : 'border:2px solid #4a4d61;') + '">' + (checked ? '<i class="ti ti-check" style="font-size:13px;color:#fff;"></i>' : '') + '</span>'
-                : (ch.avatar_url
-                    ? '<img src="' + _esc(ch.avatar_url) + '" style="width:38px;height:38px;border-radius:12px;object-fit:cover;flex:0 0 38px;">'
-                    : '<span style="width:38px;height:38px;border-radius:12px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.18);color:#818cf8;font-weight:800;font-size:15px;">' + _esc((ch.title || '?').charAt(0).toUpperCase()) + '</span>');
+                ? '<span style="width:22px;height:22px;border-radius:7px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;' + (checked ? 'background:#6366f1;box-shadow:0 0 10px rgba(99,102,241,0.5);' : 'border:2px solid #4a4d61;') + '">' + (checked ? '<i class="ti ti-check" style="font-size:13px;color:#fff;"></i>' : '') + '</span>'
+                : '<span style="position:relative;width:38px;height:38px;border-radius:12px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.16);color:#818cf8;font-weight:800;font-size:15px;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.1);overflow:hidden;">' + _esc((ch.title || ch.username || '?').charAt(0).toUpperCase()) +
+                    (ch.avatar_url ? '<img data-netav src="' + _esc(mediaAbs(ch.avatar_url)) + '" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">' : '') + '</span>';
             var right;
             if (l) {
                 right = '<span style="text-align:right;flex:0 0 auto;">' +
@@ -2945,10 +2946,44 @@
                 '<span class="num" style="display:block;font-size:11px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (ch.username ? '@' + _esc(ch.username) + ' · ' : '') + netShort(ch.subscribers) + '</span>' +
                 (a ? '<span style="display:block;font-size:10.5px;color:' + (a.lvl === 'r' ? '#f87171' : '#f5bf4f') + ';margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span>' + a.text + '</span></span>' : '') +
                 '</span>' + right +
-                '<span style="width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:' + dotC + ';"></span></div>';
+                '<span style="width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:' + dotC + ';box-shadow:0 0 8px ' + dotC + '55;"></span></div>';
         }).join('');
         if (!html) html = '<div class="fmx-empty" style="padding:26px 0;"><i class="ti ti-inbox"></i><div><span>Здесь пока пусто</span></div></div>';
         body.innerHTML = tiles + chips + html;
+        qsa(body, '[data-netav]').forEach(function (im) {
+            im.addEventListener('error', function () { im.remove(); });
+        });
+        var chRow = el('fmx-netChips');
+        if (chRow) {
+            var updFade = function () {
+                var canL = chRow.scrollLeft > 2;
+                var canR = chRow.scrollLeft < chRow.scrollWidth - chRow.clientWidth - 2;
+                var m = 'linear-gradient(90deg,' + (canL ? 'transparent 0,#000 22px' : '#000 0') + ',' + (canR ? '#000 calc(100% - 26px),transparent 100%' : '#000 100%') + ')';
+                chRow.style.webkitMaskImage = m;
+                chRow.style.maskImage = m;
+            };
+            updFade();
+            chRow.addEventListener('scroll', updFade, { passive: true });
+            chRow.addEventListener('wheel', function (e) {
+                var d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+                if (d && chRow.scrollWidth > chRow.clientWidth) { e.preventDefault(); chRow.scrollLeft += d; }
+            }, { passive: false });
+            var drag = { on: false, x: 0, sl: 0, moved: false };
+            chRow.addEventListener('pointerdown', function (e) {
+                if (e.pointerType !== 'mouse') return;
+                drag.on = true; drag.x = e.clientX; drag.sl = chRow.scrollLeft; drag.moved = false;
+            });
+            chRow.addEventListener('pointermove', function (e) {
+                if (!drag.on) return;
+                var dx = e.clientX - drag.x;
+                if (Math.abs(dx) > 5) drag.moved = true;
+                if (drag.moved) chRow.scrollLeft = drag.sl - dx;
+            });
+            var endDrag = function () { drag.on = false; setTimeout(function () { drag.moved = false; }, 0); };
+            chRow.addEventListener('pointerup', endDrag);
+            chRow.addEventListener('pointerleave', endDrag);
+            chRow.addEventListener('click', function (e) { if (drag.moved) { e.stopPropagation(); e.preventDefault(); } }, true);
+        }
         var sub = el('fmx-netSub');
         if (sub) sub.innerHTML = _net.mode ? '<span>Выбрано:</span> <b class="num">' + netSelIds().length + '</b>' : '<span>Каналы, офферы и пакетные операции</span>';
         qsa(body, '[data-netchip]').forEach(function (b) {
