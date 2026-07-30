@@ -5706,7 +5706,7 @@
         _ss.fullBg = !!fx.fullBg;
         _ss.glass = fxAllow('glass', (fx.glass === true) ? 'frost' : (typeof fx.glass === 'string' ? fx.glass : 'none'));
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
-        _ss.starPos = fx.starPos || 'cover';
+
         _ss.topTag = fx.topTag || 'on';
         _ss.badgeFree = fx.badgeFree || null;
         if (l.title_style) _ss.font = l.title_style;
@@ -6695,36 +6695,6 @@
         var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В слоте' : 'Свободно') : 'Нет';
         hydrateTgs(box);
     }
-    var STAR_SLOTS = { top: 8, cover: SEAM - 39, body: SEAM + 9 };
-    function starTop(pos) { return STAR_SLOTS[pos] != null ? STAR_SLOTS[pos] : STAR_SLOTS.cover; }
-    function bindStarDrag(cardEl) {
-        var st = el('fmx-heroStar'); if (!st || !cardEl) return;
-        function start(e) {
-            e.preventDefault(); e.stopPropagation();
-            var moved = false;
-            var mm = function (ev) {
-                var t = ev.touches ? ev.touches[0] : ev;
-                var r = cardEl.getBoundingClientRect();
-                var k = r.width ? r.width / 350 : 1;
-                var y = Math.max(STAR_SLOTS.top, Math.min((t.clientY - r.top) / k - 15, STAR_SLOTS.body));
-                st.style.top = y + 'px'; moved = true;
-            };
-            var up = function (ev) {
-                document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
-                document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
-                if (!moved) return;
-                var top = parseFloat(st.style.top), best = 'cover', bd = 1e9;
-                for (var k in STAR_SLOTS) { var d = Math.abs(top - STAR_SLOTS[k]); if (d < bd) { bd = d; best = k; } }
-                _ss.starPos = best;
-                st.style.top = starTop(best) + 'px';
-                _haptic('light');
-            };
-            document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
-            document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
-        }
-        st.addEventListener('mousedown', start);
-        st.addEventListener('touchstart', start, { passive: false });
-    }
     function bindBadgeDrag(cardEl) {
         return;
         var vip = !!_ss.glowCard || (function () { var b = listingForChannel(_ss.channelId); return b ? _isTop(b) : false; })();
@@ -6972,7 +6942,7 @@
         pl.avatar_type = 'tg';
         pl.avatar_url = c.avatar_url || null;
         pl.avatar_emoji = null;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
         var _att = {}; for (var _ak in (_ss.att || {})) _att[_ak] = _ss.att[_ak];
         var _cbg = _ss._media && _ss._media.cardbg;
         if (_cbg && _cbg.url) {
@@ -7005,9 +6975,6 @@
         var st = card.querySelector('.fmx-star');
         if (st) {
             st.removeAttribute('data-bm');
-            st.id = 'fmx-heroStar';
-            st.title = 'Потяни вверх/вниз';
-            bindStarDrag(card);
         }
         [['.fmx-avw', 'cover'], ['.fmx-crow', 'text'], ['.fmx-desc', 'text'], ['.fmx-kmg', 'price']].forEach(function (z) {
             qsa(card, z[0]).forEach(function (n) {
@@ -7725,7 +7692,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, starPos: _ss.starPos || 'cover', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? ((_ss.sticker.dmode === 'top' ? 'blend' : _ss.sticker.dmode) || 'bg') : null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? ((_ss.sticker.dmode === 'top' ? 'blend' : _ss.sticker.dmode) || 'bg') : null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -8005,7 +7972,7 @@
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-speakerphone"></i> Продвигается</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
-            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:' + starTop((l.effects_json || {}).starPos) + 'px;z-index:7;"><i class="ti ti-star"></i></button>' +
+            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>' +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             (function () {
