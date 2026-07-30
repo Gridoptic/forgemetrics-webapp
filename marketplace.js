@@ -8496,7 +8496,6 @@
         var inner = _blk(2, _audBlock(l)) + _blk(2, _subsChart(l)) + _blk(2, _curveBlock(l)) + _blk(2, _topPostsBlock(l));
         if (!inner) return '';
         return '<details class="fmr-more"><summary><i class="ti ti-chart-dots" style="color:#818cf8;"></i> <span>Подробная статистика</span>' +
-            '<span class="sub"><span>аудитория, прирост, охват, топ публикаций</span></span>' +
             '<i class="ti ti-chevron-down chev"></i></summary>' +
             '<div class="fmr-morebody">' + inner + '</div></details>';
     }
