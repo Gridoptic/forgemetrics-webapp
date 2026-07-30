@@ -6548,9 +6548,16 @@
                         if (d.reach_12h != null) rr += ' ' + _lt('· 12ч:') + ' ' + _num(d.reach_12h);
                         if (d.reach_24h != null) rr += ' ' + _lt('· 24ч:') + ' ' + _num(d.reach_24h);
                         if (d.reach_48h != null) rr += ' ' + _lt('· 48ч:') + ' ' + _num(d.reach_48h);
+                        if (d.proof_status === 'measured' && d.report_token) {
+                            var ru = 'https://fmtr.click/p/' + d.report_token;
+                            return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-file-check" style="color:#5DCAA5;"></i> ' + who(d) + ' <span>' + _lt('— замеры завершены') + '</span>' + rr +
+                                (d.post_deleted ? ' <span style="color:#f87171;">' + _lt('· пост был удалён') + '</span>' : '') + '</div>' +
+                                '<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;"><button class="fmx-btn" data-repopen="' + _esc(ru) + '" style="padding:6px 11px;color:#818cf8;border-color:rgba(129,140,248,0.4);"><i class="ti ti-report-analytics"></i> <span>' + _lt('Отчёт') + '</span></button>' +
+                                '<button class="fmx-btn" data-repcopy="' + _esc(ru) + '" style="padding:6px 11px;"><i class="ti ti-copy"></i> <span>' + _lt('Ссылка для рекламодателя') + '</span></button></div></div>';
+                        }
                         return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-circle-check" style="color:#5DCAA5;"></i> ' + who(d) + ' ' + _lt('— замеряем охват') + rr + '</div></div>';
                     }).join('') +
-                    '<div style="font-size:10px;color:#565b73;margin-top:6px;">Пришли ссылку на пост — платформа сама замерит охват через 12, 24 и 48 часов и отчитается покупателю.</div>';
+                    '<div style="font-size:10px;color:#565b73;margin-top:6px;">Пришли ссылку на пост — платформа сама замерит охват через 12, 24 и 48 часов и подготовит отчёт обеим сторонам.</div>';
             }
             html += '</div>';
             box.innerHTML = html;
@@ -6573,10 +6580,22 @@
                     apiPost('/api/v1/marketplace/deals/' + b.getAttribute('data-pdid') + '/placement', { post_url: url }).then(function (r2) {
                         if (r2 && r2.ok === false) { b.disabled = false; _haptic('error'); uiAlert(r2.error || 'Не удалось'); return; }
                         _haptic('success');
-                        toast(r2 && r2.stale ? 'Размещение засчитано. Пост старше 72 часов — охват не замеряется'
-                            : 'Размещение отмечено — замерим охват и отчитаемся покупателю');
+                        toast('Размещение отмечено — замерим охват и подготовим отчёт обеим сторонам');
                         loadPendingDeals();
                     }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                });
+            });
+            qsa(box, '[data-repopen]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var u = b.getAttribute('data-repopen');
+                    _haptic('light');
+                    try { if (typeof tg !== 'undefined' && tg && tg.openLink) tg.openLink(u); else window.open(u, '_blank'); } catch (e) { window.open(u, '_blank'); }
+                });
+            });
+            qsa(box, '[data-repcopy]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    _haptic('light');
+                    try { navigator.clipboard.writeText(b.getAttribute('data-repcopy')); toast('Ссылка скопирована'); } catch (e) { uiAlert(b.getAttribute('data-repcopy')); }
                 });
             });
         }).catch(function () {});
