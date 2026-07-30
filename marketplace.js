@@ -2845,7 +2845,7 @@
     }
 
     function netReload() {
-        Promise.all([apiGet('/api/v1/channels'), apiGet('/api/v1/marketplace/my')]).then(function (rr) {
+        Promise.all([apiGet('/api/v1/channels'), apiGet('/api/v1/marketplace/my'), apiGet('/api/v1/marketplace/network/batch').catch(function () { return null; })]).then(function (rr) {
             if (!el('fmx-netBody')) return;
             var chR = rr[0] || {}, myR = rr[1] || {};
             _net.ch = chR.channels || [];
@@ -2853,10 +2853,17 @@
             _net.my = myR.listings || [];
             _net.lim = myR.limit != null ? myR.limit : null;
             _net.used = myR.used != null ? myR.used : _net.my.length;
+            _net.ov = rr[2] && rr[2].ok ? rr[2] : null;
             netPaint();
         }).catch(function () {
             var body = el('fmx-netBody');
             if (body) body.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
+        });
+    }
+
+    function netEligible() {
+        return _net.ch.filter(function (ch) {
+            return ch.username && ch.bot_status === 'connected' && !netListingOf(ch);
         });
     }
 
@@ -2944,7 +2951,26 @@
                 '<span style="width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:' + dotC + ';box-shadow:0 0 8px ' + dotC + '55;"></span></div>';
         }).join('');
         if (!html) html = '<div class="fmx-empty" style="padding:26px 0;"><i class="ti ti-inbox"></i><div><span>Здесь пока пусто</span></div></div>';
-        body.innerHTML = tiles + chips + html;
+        var batchRunning = !!(_net.ov && _net.ov.batch && _net.ov.batch.status === 'running');
+        var plate = '';
+        if (batchRunning) {
+            var bb = _net.ov.batch;
+            plate = '<div id="fmx-nbPlate" style="display:flex;align-items:center;gap:10px;background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.3);border-radius:14px;padding:11px 13px;margin-bottom:10px;cursor:pointer;">' +
+                '<i class="ti ti-loader-2" style="color:#818cf8;font-size:16px;animation:fmxSpin 0.9s linear infinite;flex:0 0 auto;"></i>' +
+                '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">Создание офферов</span>' +
+                '<span style="display:block;height:5px;border-radius:99px;background:rgba(255,255,255,0.06);margin-top:6px;overflow:hidden;"><i style="display:block;height:100%;width:' + Math.round(bb.done / Math.max(1, bb.total) * 100) + '%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;"></i></span></span>' +
+                '<span class="num" style="font-size:12px;color:#8990a8;flex:0 0 auto;">' + bb.done + ' / ' + bb.total + '</span></div>';
+        }
+        var elig = netEligible();
+        var mkBtn = '';
+        if (!_net.mode && elig.length && !batchRunning) {
+            mkBtn = '<button id="fmx-nbStart" class="fmx-save" style="margin-top:4px;"><i class="ti ti-stack-2"></i> <span>Создать офферы</span> <span class="num">· ' + elig.length + '</span></button>';
+        }
+        body.innerHTML = plate + tiles + chips + html + mkBtn;
+        var plEl = el('fmx-nbPlate');
+        if (plEl) plEl.addEventListener('click', function () { nbOpen(); });
+        var mkEl = el('fmx-nbStart');
+        if (mkEl) mkEl.addEventListener('click', function () { nbOpen(); });
         qsa(body, '[data-netav]').forEach(function (im) {
             im.addEventListener('error', function () { im.remove(); });
         });
@@ -3189,6 +3215,234 @@
                 netAfterApply();
             }).catch(function () { _net.busy = false; _haptic('error'); toast('Не удалось. Повтори попытку.', true); });
         });
+    }
+
+    var _nb = { step: 1, sel: {}, text: '', ov: null, poll: null };
+
+    function nbStop() {
+        if (_nb.poll) { clearInterval(_nb.poll); _nb.poll = null; }
+    }
+
+    function nbClose() {
+        nbStop();
+        var bg = el('fmx-nbBg'); if (bg) bg.remove();
+        if (el('fmx-netBody')) netReload();
+    }
+
+    function nbOpen() {
+        _haptic('light');
+        var old = el('fmx-nbBg'); if (old) old.remove();
+        nbStop();
+        _nb.step = 1; _nb.sel = {}; _nb.text = '';
+        var bg = document.createElement('div'); bg.id = 'fmx-nbBg'; bg.className = 'fmx-mbg fmx-show';
+        bg.innerHTML = '<div class="fmx-modal">' +
+            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2 id="fmx-nbTtl"></h2><p id="fmx-nbStp"></p></div>' +
+            '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
+            '<div class="fmx-mbody" id="fmx-nbBody"><div class="fmx-empty" style="padding:36px 0;"><i class="ti ti-loader-2" style="animation:fmxSpin 0.9s linear infinite;"></i></div></div>' +
+            '<div id="fmx-nbFoot" style="display:grid;gap:8px;padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));border-top:0.5px solid rgba(255,255,255,0.08);"></div></div>';
+        document.body.appendChild(bg);
+        bg.addEventListener('click', function (e) { if (e.target === bg) nbClose(); });
+        bg.querySelector('[data-c]').addEventListener('click', function () { nbClose(); });
+        apiGet('/api/v1/marketplace/network/batch').then(function (r) {
+            if (!el('fmx-nbBody')) return;
+            _nb.ov = r && r.ok ? r : null;
+            if (_nb.ov && _nb.ov.batch && _nb.ov.batch.status === 'running') { nbProgress(); nbPoll(); }
+            else nbPaint();
+        }).catch(function () {
+            var b = el('fmx-nbBody');
+            if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
+        });
+    }
+
+    function nbHead(step) {
+        var t = el('fmx-nbTtl'), s = el('fmx-nbStp');
+        if (t) t.innerHTML = '<i class="ti ti-stack-2" style="color:#818cf8;"></i> <span>' + (step ? 'Новые офферы' : 'Создание офферов') + '</span>';
+        if (s) s.innerHTML = step ? '<span>' + (step === 1 ? 'Шаг 1 из 3' : step === 2 ? 'Шаг 2 из 3' : 'Шаг 3 из 3') + '</span>' : '';
+    }
+
+    function nbBar(step) {
+        var h = '<div style="display:flex;gap:6px;margin-bottom:12px;">';
+        for (var i = 1; i <= 3; i++) h += '<span style="flex:1;height:3px;border-radius:99px;background:' + (i <= step ? '#6366f1' : 'rgba(255,255,255,0.07)') + ';"></span>';
+        return h + '</div>';
+    }
+
+    function nbLimits() {
+        var ov = _nb.ov || {};
+        var ll = (ov.listings_limit != null && ov.listings_used != null) ? Math.max(0, ov.listings_limit - ov.listings_used) : 50;
+        var ml = (ov.mod_limit != null && ov.mod_used != null) ? Math.max(0, ov.mod_limit - ov.mod_used) : 10;
+        return { listings: ll, mod: ml, max: Math.max(0, Math.min(ll, ml, 50)) };
+    }
+
+    function nbSelIds() {
+        return Object.keys(_nb.sel).filter(function (k) { return _nb.sel[k]; }).map(Number);
+    }
+
+    function nbPaint() {
+        var body = el('fmx-nbBody'), foot = el('fmx-nbFoot');
+        if (!body || !foot) return;
+        nbHead(_nb.step);
+        var lim = nbLimits();
+        if (_nb.step === 1) {
+            var elig = netEligible();
+            var rest = _net.ch.filter(function (ch) {
+                return !netListingOf(ch) && !(ch.username && ch.bot_status === 'connected');
+            });
+            var n = nbSelIds().length;
+            var over = n > lim.max;
+            var rows = elig.map(function (ch) {
+                var on = !!_nb.sel[ch.id];
+                return '<div data-nbrow="' + ch.id + '" style="display:flex;align-items:center;gap:10px;min-height:44px;background:' + (on ? 'rgba(129,140,248,0.1)' : 'rgba(255,255,255,0.03)') + ';border:0.5px solid ' + (on ? 'rgba(129,140,248,0.4)' : 'rgba(255,255,255,0.07)') + ';border-radius:14px;padding:9px 12px;margin-bottom:8px;cursor:pointer;">' +
+                    '<span style="width:22px;height:22px;border-radius:7px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#6366f1;' : 'border:2px solid #4a4d61;') + '">' + (on ? '<i class="ti ti-check" style="font-size:13px;color:#fff;"></i>' : '') + '</span>' +
+                    '<span style="flex:1;min-width:0;"><span style="display:block;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(ch.title || '@' + ch.username) + '</span>' +
+                    '<span class="num" style="display:block;font-size:11px;color:#8990a8;">@' + _esc(ch.username) + ' · ' + netShort(ch.subscribers) + '</span></span></div>';
+            }).join('');
+            rows += rest.map(function (ch) {
+                var why = !ch.username ? 'Нужен публичный @username' : 'Бот не подключён к каналу';
+                return '<div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;padding:9px 12px;margin-bottom:8px;opacity:0.42;">' +
+                    '<span style="width:22px;height:22px;border-radius:7px;border:2px solid #4a4d61;flex:0 0 22px;"></span>' +
+                    '<span style="flex:1;min-width:0;"><span style="display:block;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(ch.title || 'Канал') + '</span>' +
+                    '<span style="display:block;font-size:10.5px;color:#565b73;"><span>' + why + '</span></span></span></div>';
+            }).join('');
+            body.innerHTML = nbBar(1) +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-bottom:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span><span>Офферов свободно по тарифу:</span> <b class="num">' + lim.listings + '</b> · <span>Показаны каналы без оффера</span></span></div>' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+                '<span style="font-size:12px;color:#8990a8;"><span>Выбрано:</span> <b class="num" style="color:#e8e8ed;">' + n + '</b><span class="num"> / ' + elig.length + '</span></span>' +
+                '<button id="fmx-nbAll" style="font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;color:#a9aec0;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:999px;padding:6px 12px;"><span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? 'Сброс' : 'Все') + '</span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? '' : ' <b class="num">' + Math.min(elig.length, lim.max) + '</b>') + '</button></div>' +
+                rows +
+                (over ? '<div style="display:flex;gap:8px;font-size:12px;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.25);border-radius:11px;padding:9px 11px;color:#f5bf4f;"><i class="ti ti-alert-triangle"></i> <span><span>Доступно сейчас:</span> <b class="num">' + lim.max + '</b> · <span>сними лишние отметки</span></span></div>' : '');
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"' + (!n || over ? ' disabled style="opacity:0.5;"' : '') + '><span>Дальше</span>' + (n ? ' <span class="num">· ' + n + '</span>' : '') + '</button>';
+            qsa(body, '[data-nbrow]').forEach(function (r) {
+                r.addEventListener('click', function () {
+                    var id = +r.getAttribute('data-nbrow');
+                    _haptic('light');
+                    if (_nb.sel[id]) delete _nb.sel[id]; else _nb.sel[id] = true;
+                    nbPaint();
+                });
+            });
+            var ab = el('fmx-nbAll');
+            if (ab) ab.addEventListener('click', function () {
+                _haptic('light');
+                var full = nbSelIds().length >= Math.min(elig.length, lim.max) && nbSelIds().length > 0;
+                _nb.sel = {};
+                if (!full) elig.slice(0, lim.max).forEach(function (ch) { _nb.sel[ch.id] = true; });
+                nbPaint();
+            });
+            var nx = el('fmx-nbNext');
+            if (nx) nx.addEventListener('click', function () { if (!nbSelIds().length) return; _haptic('light'); _nb.step = 2; nbPaint(); });
+        } else if (_nb.step === 2) {
+            body.innerHTML = nbBar(2) +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(93,202,165,0.08);border:0.5px solid rgba(93,202,165,0.22);border-radius:11px;padding:9px 11px;margin-bottom:12px;color:#5DCAA5;"><i class="ti ti-circle-check"></i> <span>Цены рассчитаются автоматически для каждого канала: охват и CPM ниши. После создания любую цену можно поменять на экране «Сетка» или в карточке.</span></div>' +
+                '<div style="font-size:11px;color:#8990a8;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;"><span>Текст оффера · один на все каналы</span></div>' +
+                '<textarea id="fmx-nbText" maxlength="400" style="width:100%;min-height:96px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8ed;font-family:inherit;font-size:13px;padding:11px 12px;resize:vertical;">' + _esc(_nb.text) + '</textarea>' +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-top:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Можно оставить пустым — текст возьмётся стандартный. Оформление у всех будет базовое: доведёшь позже в карточке любого оффера.</span></div>';
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"><span>Дальше</span></button>' +
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><span>Назад</span></button>';
+            el('fmx-nbNext').addEventListener('click', function () {
+                _nb.text = (el('fmx-nbText') || {}).value || '';
+                _haptic('light'); _nb.step = 3; nbPaint();
+            });
+            el('fmx-nbBack').addEventListener('click', function () {
+                _nb.text = (el('fmx-nbText') || {}).value || '';
+                _haptic('light'); _nb.step = 1; nbPaint();
+            });
+        } else {
+            var cnt = nbSelIds().length;
+            body.innerHTML = nbBar(3) +
+                '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 14px;display:grid;gap:8px;margin-bottom:10px;">' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>Каналов</span></span><b class="num">' + cnt + '</b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;gap:12px;"><span style="color:#8990a8;"><span>Цены</span></span><b style="text-align:right;"><span>автоматически · охват и CPM ниши</span></b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>Текст</span></span><b><span>' + (_nb.text.trim() ? 'свой, один на все' : 'стандартный') + '</span></b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>На модерацию сегодня</span></span><b class="num">' + cnt + ' / ' + lim.mod + '</b></div>' +
+                '</div>' +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Офферы создадутся сразу и уйдут на модерацию по очереди в фоне. Приложение можно закрыть — бот пришлёт итог.</span></div>';
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbGo"><i class="ti ti-rocket"></i> <span>Создать офферы</span> <span class="num">· ' + cnt + '</span></button>' +
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><span>Назад</span></button>';
+            el('fmx-nbBack').addEventListener('click', function () { _haptic('light'); _nb.step = 2; nbPaint(); });
+            el('fmx-nbGo').addEventListener('click', function () {
+                var ids = nbSelIds(); if (!ids.length) return;
+                var btn = el('fmx-nbGo'); btn.disabled = true; btn.style.opacity = '0.5';
+                apiPost('/api/v1/marketplace/network/batch', { channel_ids: ids, custom_text: _nb.text.trim() || null }).then(function (r) {
+                    if (!r || r.ok === false) {
+                        btn.disabled = false; btn.style.opacity = '';
+                        _haptic('error'); toast(r && r.error ? r.error : 'Не удалось. Повтори попытку.', true);
+                        return;
+                    }
+                    _haptic('success');
+                    _nb.ov = r;
+                    nbProgress();
+                    nbPoll();
+                }).catch(function () {
+                    btn.disabled = false; btn.style.opacity = '';
+                    _haptic('error'); toast('Не удалось. Повтори попытку.', true);
+                });
+            });
+        }
+    }
+
+    function nbPoll() {
+        nbStop();
+        _nb.poll = setInterval(function () {
+            if (!el('fmx-nbBg')) { nbStop(); return; }
+            apiGet('/api/v1/marketplace/network/batch').then(function (r) {
+                if (!el('fmx-nbBg')) { nbStop(); return; }
+                if (r && r.ok) {
+                    _nb.ov = r;
+                    nbProgress();
+                    if (!r.batch || r.batch.status !== 'running') nbStop();
+                }
+            }).catch(function () {});
+        }, 4000);
+    }
+
+    function nbProgress() {
+        var body = el('fmx-nbBody'), foot = el('fmx-nbFoot');
+        if (!body || !foot) return;
+        nbHead(0);
+        var b = (_nb.ov || {}).batch;
+        if (!b) { body.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.'); return; }
+        var c = b.counts || {};
+        var running = b.status === 'running';
+        var pubItems = (b.items || []).filter(function (it) { return it.status === 'published'; });
+        var badItems = (b.items || []).filter(function (it) { return it.status === 'rejected' || it.status === 'failed'; });
+        var revItems = (b.items || []).filter(function (it) { return it.status === 'review'; });
+        var qN = (c.queued || 0) + (c.moderating || 0);
+        function group(icon, iconStyle, title, n, sub, extra) {
+            return '<div ' + (extra || '') + ' style="display:flex;align-items:flex-start;gap:10px;font-size:13px;background:rgba(255,255,255,0.03);border:0.5px solid ' + iconStyle.br + ';border-radius:12px;padding:10px 12px;margin-bottom:8px;' + (extra ? 'cursor:pointer;' : '') + '">' +
+                '<span style="width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 26px;background:' + iconStyle.bg + ';color:' + iconStyle.c + ';">' + icon + '</span>' +
+                '<span style="flex:1;min-width:0;"><span style="display:block;font-weight:700;font-size:13px;"><span>' + title + '</span> <span class="num">— ' + n + '</span></span>' +
+                (sub ? '<span style="display:block;font-size:11.5px;color:#8990a8;margin-top:2px;">' + sub + '</span>' : '') + '</span></div>';
+        }
+        var html = '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:12px;">' +
+            '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span><span>' + (running ? 'Модерация в фоне' : 'Готово') + '</span></span><b class="num">' + b.done + ' / ' + b.total + '</b></div>' +
+            '<div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;"><i style="display:block;height:100%;width:' + Math.round(b.done / Math.max(1, b.total) * 100) + '%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;"></i></div></div>';
+        if (pubItems.length) {
+            var names = pubItems.slice(0, 3).map(function (it) { return _esc(it.title || ''); }).join(' · ');
+            if (pubItems.length > 3) names += ' <span class="num">+' + (pubItems.length - 3) + '</span>';
+            html += group('✓', { bg: 'rgba(16,185,129,0.15)', c: '#34d399', br: 'rgba(16,185,129,0.3)' }, 'Опубликовано', pubItems.length, names);
+        }
+        if (revItems.length) {
+            html += group('👁', { bg: 'rgba(245,158,11,0.15)', c: '#fbbf24', br: 'rgba(245,158,11,0.3)' }, 'На ручной проверке', revItems.length, '<span>Проверим и опубликуем — обычно до суток</span>');
+        }
+        badItems.forEach(function (it) {
+            html += group('✕', { bg: 'rgba(239,68,68,0.15)', c: '#f87171', br: 'rgba(239,68,68,0.35)' }, _esc(it.title || 'Канал'), 1,
+                (it.reason ? _esc(it.reason) + ' · ' : '') + '<span>Открыть и исправить</span>', 'data-nbfix="' + it.channel_id + '"');
+        });
+        if (qN) {
+            html += group('…', { bg: 'rgba(59,130,246,0.15)', c: '#60a5fa', br: 'rgba(59,130,246,0.3)' }, 'В очереди', qN, '');
+        }
+        html += '<div style="display:flex;gap:9px;align-items:flex-start;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:12px;padding:10px 12px;font-size:12px;color:#60a5fa;margin-top:2px;">🤖 <span>Можно закрыть приложение — по завершении бот пришлёт итог: сколько опубликовано и что требует правок.</span></div>';
+        body.innerHTML = html;
+        qsa(body, '[data-nbfix]').forEach(function (r) {
+            r.addEventListener('click', function () {
+                var cid = +r.getAttribute('data-nbfix'); if (!cid) return;
+                nbStop();
+                var nbg = el('fmx-nbBg'); if (nbg) nbg.remove();
+                var netbg = el('fmx-netBg'); if (netbg) netbg.remove();
+                _haptic('light'); _mineEditCh = cid; _backTo = 'mine'; setSubTab('create');
+            });
+        });
+        foot.innerHTML = '<button class="fmx-btn" id="fmx-nbToNet" style="width:100%;color:#a9aec0;"><i class="ti ti-sitemap"></i> <span>К экрану «Сетка»</span></button>';
+        el('fmx-nbToNet').addEventListener('click', function () { _haptic('light'); nbClose(); });
     }
 
     function renderMine() {
