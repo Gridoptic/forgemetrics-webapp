@@ -536,13 +536,6 @@ button:active {
 }
 .icon-amber i { color: var(--color-amber-400); }
 
-.icon-strategy {
-    background: linear-gradient(160deg, rgba(129, 140, 248, 0.18), rgba(129, 140, 248, 0.04));
-    border: 1px solid rgba(129, 140, 248, 0.45);
-}
-.icon-strategy svg { display: block; }
-.drawer-item-icon.icon-strategy svg { width: 18px; height: 18px; }
-
 .action-card-subtitle.highlight {
     color: var(--color-green-400);
     font-weight: 500;
