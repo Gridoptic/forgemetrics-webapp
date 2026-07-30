@@ -33,13 +33,7 @@
         try { if (typeof alertDialog === 'function') return alertDialog(msg); } catch (e) {}
     }
 
-    var MAP_SVG = '<svg width="30" height="30" viewBox="0 0 44 44" fill="none">' +
-        '<rect x="5" y="10" width="34" height="26" rx="6" stroke="#8b8ff8" stroke-width="2" fill="rgba(129,140,248,0.09)"/>' +
-        '<path d="M16.5 10v26M27.5 10v26" stroke="rgba(139,143,248,0.3)" stroke-width="1.4"/>' +
-        '<path d="M10.5 29.5c5.5-8 9.5 3.5 14.5-3.5 3-4.2 5.5-6 8.5-7.5" stroke="#8b5cf6" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="0.6 4.6"/>' +
-        '<circle cx="10.5" cy="29.5" r="2.7" fill="#8b8ff8"/><circle cx="10.5" cy="29.5" r="4.6" stroke="rgba(139,143,248,0.4)" stroke-width="1.2"/>' +
-        '<path d="M34 8.5c2.5 0 4.5 1.9 4.5 4.3 0 3.2-4.5 7.4-4.5 7.4s-4.5-4.2-4.5-7.4c0-2.4 2-4.3 4.5-4.3z" fill="#5DCAA5"/>' +
-        '<circle cx="34" cy="12.9" r="1.7" fill="#06231a"/></svg>';
+    var STG_ICON = '<i class="ti ti-target-arrow" style="font-size:23px;color:#34d399;"></i>';
 
     var DAYS_EN = {
         monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда', thursday: 'Четверг',
@@ -182,7 +176,7 @@
         setView(
             '<div class="stg-flag"><div class="glow"></div>' +
             '<span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
-            '<div class="inner"><div class="stg-fhead"><div class="stg-fic">' + MAP_SVG + '</div>' +
+            '<div class="inner"><div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
             '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка')) + '</div></div></div>' +
             '<div class="stg-fwhat">' + what + '</div>' +
@@ -406,7 +400,7 @@
     ];
 
     function renderGenerating() {
-        setView('<div class="stg-center"><div class="stg-fic" style="width:64px;height:64px;border-radius:18px;">' + MAP_SVG + '</div>' +
+        setView('<div class="stg-center"><div class="stg-fic" style="width:64px;height:64px;border-radius:18px;">' + STG_ICON + '</div>' +
             '<div class="stg-spin"></div>' +
             '<div class="m" id="stg-gen-text">' + esc(T(GEN_TEXTS[0])) + '</div>' +
             '<div class="m" style="font-size:11px;color:#565b73;">' + esc(T('Обычно это занимает 2–4 минуты. Можно закрыть — стратегия соберётся сама')) + '</div></div>');
