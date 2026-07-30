@@ -477,6 +477,13 @@ function pwRenderMetrics(pulse) {
     var ids = pwSelectedIds(pulse);
     grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); return m ? pwCell(m.label, m.get(pulse), m.o) : ''; }).join('');
     pwCountUp(grid);
+    if (ids.indexOf('rr') >= 0 && pulse && pulse.rr_status && pulse.rr_status !== 'норма') {
+        var rrCell = grid.querySelectorAll('.pw-mcell')[ids.indexOf('rr')];
+        if (rrCell) {
+            var rrCol = pulse.rr_status === 'выше нормы' ? '#f5bf4f' : '#ef8080';
+            rrCell.insertAdjacentHTML('beforeend', '<div style="font-size:9px;color:' + rrCol + ';margin-top:1px;white-space:nowrap;"><span>' + escapeHtml(pulse.rr_status) + '</span></div>');
+        }
+    }
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
 }
@@ -607,8 +614,8 @@ async function loadReachSeries() {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
-            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel };
-            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel);
+            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale };
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted);
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
@@ -649,15 +656,22 @@ function _reachRedraw() {
     try {
         var host = document.getElementById('pw-chart');
         if (!host || !_reachLast || !host.clientWidth) return;
-        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel);
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted);
     } catch (e) {}
 }
 function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
 window.addEventListener('resize', _reachRedrawSoon);
 try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
-function drawReachChart(host, DATA, dates, days, endLabel) {
+function drawReachChart(host, DATA, dates, days, endLabel, muted) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
+    const PC = muted
+        ? { a1: 'rgba(107,112,136,0.30)', a2: 'rgba(107,112,136,0.13)', a3: 'rgba(107,112,136,0.04)',
+            l1: '#565b73', l2: '#8990a8', l3: '#a5aabf', glow: '#6b7088',
+            ep: '#e2e4ee', eps: '#8990a8', halo: 'rgba(107,112,136,0.20)' }
+        : { a1: 'rgba(93,202,165,0.40)', a2: 'rgba(93,202,165,0.17)', a3: 'rgba(93,202,165,0.05)',
+            l1: '#2fb389', l2: '#57e0ab', l3: '#8af0cb', glow: '#5DCAA5',
+            ep: '#eafff6', eps: '#5DCAA5', halo: 'rgba(93,202,165,0.22)' };
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const W = Math.max(260, host.clientWidth || 320), Hh = 74, padT = 10, padB = 18, padL = 6, padR = 6;
     const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
@@ -670,16 +684,16 @@ function drawReachChart(host, DATA, dates, days, endLabel) {
     const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
     const grids = [max, min];
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
-    svg += '<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(93,202,165,0.40)"/><stop offset="0.32" stop-color="rgba(93,202,165,0.17)"/><stop offset="0.68" stop-color="rgba(93,202,165,0.05)"/><stop offset="1" stop-color="rgba(93,202,165,0)"/></linearGradient>';
-    svg += '<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2fb389"/><stop offset="0.5" stop-color="#57e0ab"/><stop offset="1" stop-color="#8af0cb"/></linearGradient>';
+    svg += `<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PC.a1}"/><stop offset="0.32" stop-color="${PC.a2}"/><stop offset="0.68" stop-color="${PC.a3}"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></linearGradient>`;
+    svg += `<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${PC.l1}"/><stop offset="0.5" stop-color="${PC.l2}"/><stop offset="1" stop-color="${PC.l3}"/></linearGradient>`;
     svg += '<filter id="pwglf" x="-20%" y="-60%" width="140%" height="240%"><feGaussianBlur stdDeviation="3.2"/></filter></defs>';
     grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
     svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
-    svg += `<path d="${line}" fill="none" stroke="#5DCAA5" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
+    svg += `<path d="${line}" fill="none" stroke="${PC.glow}" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
     svg += `<path class="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-    svg += `<circle class="pw-eppulse" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="none" stroke="#5DCAA5" stroke-width="1.6"/>`;
-    svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="rgba(93,202,165,0.22)"/>`;
-    svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="#eafff6" stroke="#5DCAA5" stroke-width="2"/>`;
+    svg += `<circle class="pw-eppulse" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="none" stroke="${PC.eps}" stroke-width="1.6"/>`;
+    svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="${PC.halo}"/>`;
+    svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="${PC.ep}" stroke="${PC.eps}" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
     svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
