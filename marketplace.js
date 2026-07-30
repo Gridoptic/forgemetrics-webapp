@@ -9429,4 +9429,5 @@
     var _open0 = open;
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
     window.__openRadar = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('catalog'); } catch (e) {} }, 220); };
+    window.__openTerminal = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('pulse'); } catch (e) {} }, 220); };
 })();

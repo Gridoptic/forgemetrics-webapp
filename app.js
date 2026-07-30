@@ -798,12 +798,6 @@ function openHomeConfig() {
         <div class="bs-handle"></div>
         <div class="hc-title">Главный экран</div>
         <div class="hc-hint">Включай нужные функции и расставляй в своём порядке — перетаскивай за ручку.</div>
-        <div class="hc-row hc-locked">
-            <span class="hc-grip" style="opacity:0.25;cursor:default;"><i class="ti ti-grip-vertical"></i></span>
-            <span class="hc-ic icon-purple"><i class="ti ti-sparkles"></i></span>
-            <span class="hc-t">Написать пост<i>всегда первая</i></span>
-            <span class="hc-lock"><i class="ti ti-lock"></i></span>
-        </div>
         <div class="hc-list" id="hc-list">${rowsHtml}</div>
         <button class="co-pay" id="hc-save"><i class="ti ti-check"></i> Сохранить</button>
         <button class="co-close" id="hc-reset">Вернуть стандартный набор</button>
@@ -1162,6 +1156,11 @@ function handleAction(actionId) {
         if (typeof window.__openContentPlan === 'function') {
             window.__openContentPlan();
         }
+        return;
+    }
+
+    if (actionId === 'market_terminal') {
+        if (typeof window.__openTerminal === 'function') { window.__openTerminal(); }
         return;
     }
 
