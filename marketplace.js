@@ -5528,6 +5528,21 @@
             });
         }).catch(function () { _trkBusy = false; uiAlert('Не удалось. Повтори попытку.'); });
     }
+    function _cardDealMark(lid) {
+        if (!lid) return;
+        _haptic('light');
+        apiGet('/api/v1/marketplace/deals/state?listing_id=' + lid).then(function (r) {
+            var st = r && r.ok ? r.state : null;
+            if (st === 'pending') { toast('Сделка уже отмечена — ждём подтверждения владельца'); return; }
+            if (st === 'confirmed' || st === 'reviewed') { toast('Сделка по этому офферу уже есть — статус в развороте карточки'); return; }
+            uiConfirm('Отмечай только реальную сделку. Сразу появится ссылка отслеживания для рекламного поста; владелец получит запрос на подтверждение — после него добавятся автозамеры охвата и возможность отзыва.', function () {
+                apiPost('/api/v1/marketplace/deals', { listing_id: lid }).then(function (rr) {
+                    if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
+                    _haptic('success'); toast('Отправлено владельцу на подтверждение');
+                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            });
+        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+    }
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
@@ -8187,6 +8202,7 @@
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
+            (l.id ? '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="deal" data-lid="' + l.id + '"><i class="ti ti-heart-handshake"></i>Отметить сделку</button></div>' : '') +
             '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div></div>';
     }
     function _blk(n, html) {
@@ -8669,6 +8685,7 @@
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () { trackListing(b.getAttribute('data-lid'), 'expand'); openListing(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="analyze"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); openAnalyze(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="track"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); try { window.__openPlacementsCreate(b.getAttribute('data-u')); } catch (er) {} }); });
+        qsa(host, '[data-act="deal"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _cardDealMark(+b.getAttribute('data-lid')); }); });
         qsa(host, '[data-ctc]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); _openCtc(b.getAttribute('data-ctk') || 'tg', b.getAttribute('data-ctc')); }); });
         qsa(host, '.fmr-i[data-fi]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var card = b.closest('.fmx-scard') || b.closest('.fmx-card'); if (!card) return; var box = card.querySelector('.fmr-info[data-finfo="' + b.getAttribute('data-fi') + '"]'); if (box) box.classList.toggle('on'); }); });
         qsa(host, '.fmr-conv').forEach(function (inp) {
