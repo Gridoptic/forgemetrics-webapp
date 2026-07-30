@@ -726,7 +726,7 @@ function renderActions(actions) {
 
         const iconColor = (action.color && action.color !== 'primary') ? action.color : 'purple';
         const colorClass = `icon-${iconColor}`;
-        const subtitleClass = action.color === 'green' ? 'highlight' : '';
+        const subtitleClass = '';
         const iconInner = `<i class="ti ti-${action.icon}"></i>`;
 
         card.innerHTML = `

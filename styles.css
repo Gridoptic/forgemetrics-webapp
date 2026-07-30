@@ -536,9 +536,6 @@ button:active {
 }
 .icon-amber i { color: var(--color-amber-400); }
 
-.action-card-subtitle.highlight {
-    color: var(--color-green-400);
-    font-weight: 500;
 }
 
 .drawer-overlay {
