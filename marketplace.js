@@ -5542,7 +5542,7 @@
             } else if (r.state === 'reviewed') {
                 box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен.</div>';
             } else {
-                box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-heart-handshake"></i> Отметить сделку</button>';
+                box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-heart-handshake"></i> Отметить сделку</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
                     uiConfirm('Отмечай только реальную сделку. Сразу появится ссылка отслеживания для рекламного поста; владелец получит запрос на подтверждение — после него добавятся автозамеры охвата и возможность отзыва.', function () {
                         apiPost('/api/v1/marketplace/deals', { listing_id: l.id }).then(function (rr) {
