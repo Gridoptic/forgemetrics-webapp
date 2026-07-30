@@ -8191,11 +8191,15 @@
     function _blk(n, html) {
         return html ? '<div class="fmr-blk b' + n + '">' + html + '</div>' : '';
     }
+    var _DASH = '<span style="color:#565b73;">—</span>';
+    var _COLLECT = ' <span style="color:#565b73;">· <span>данные копятся</span></span>';
     function _audBlock(l) {
         var out = '';
         if (l.geo && _GEO_NAMES[l.geo]) {
             out += '<div class="fmr-agerow"><span>Страна аудитории</span>: <b>' + _esc(_GEO_NAMES[l.geo]) + '</b>' +
                 (l.lang_code && l.lang_code !== 'ru' ? ' <span style="color:#565b73;">· язык: ' + _esc(l.lang_code) + '</span>' : '') + '</div>';
+        } else {
+            out += '<div class="fmr-agerow"><span>Страна аудитории</span>: ' + _DASH + '</div>';
         }
         var female = null, male = null, approx = false;
         if (l.female_pct != null) { female = Math.max(0, Math.min(100, l.female_pct)); male = 100 - female; }
@@ -8210,19 +8214,19 @@
                 '<div class="fmr-gbar"><div class="gm" style="width:' + male + '%;"></div><div class="gf" style="width:' + female + '%;"></div></div>' +
                 '<span class="gl f">Ж ' + (approx ? '≈' : '') + female + '%</span></div>' +
                 '<div class="fmr-gsrc">' + src + '</div>';
+        } else {
+            out += '<div class="fmr-agerow"><span>Пол аудитории</span>: ' + _DASH + _COLLECT + '</div>';
         }
         var gv = function (v) {
-            if (v == null) return '<span style="color:#565b73;">—</span>';
+            if (v == null) return _DASH;
             var c = v > 0 ? '#5DCAA5' : (v < 0 ? '#ef4444' : '#8990a8');
             var ap = (v !== 0 && v % 1000 === 0) ? '≈' : '';
             return '<span style="color:' + c + ';font-weight:750;font-variant-numeric:tabular-nums;">' + ap + (v > 0 ? '+' : '') + _num(v) + '</span>';
         };
-        if (l.subs_d1 != null || l.subs_d7 != null || l.subs_d30 != null) {
-            out += '<div class="fmr-gtab">' +
-                '<div class="r"><span class="l">Сегодня</span>' + gv(l.subs_d1) + '</div>' +
-                '<div class="r"><span class="l">Неделя</span>' + gv(l.subs_d7) + '</div>' +
-                '<div class="r"><span class="l">Месяц</span>' + gv(l.subs_d30) + '</div></div>';
-        }
+        out += '<div class="fmr-gtab">' +
+            '<div class="r"><span class="l">Сегодня</span>' + gv(l.subs_d1) + '</div>' +
+            '<div class="r"><span class="l">Неделя</span>' + gv(l.subs_d7) + '</div>' +
+            '<div class="r"><span class="l">Месяц</span>' + gv(l.subs_d30) + '</div></div>';
         if (l.channel_created_ts) {
             var months = Math.floor((Date.now() / 1000 - l.channel_created_ts) / 2629800);
             var yrs = Math.floor(months / 12), rm = months % 12;
@@ -8230,37 +8234,50 @@
             var d = new Date(l.channel_created_ts * 1000);
             out += '<div class="fmr-agerow"><span>Возраст канала</span>: <b>' + age + '</b> · <span>создан</span> ' +
                 ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear() + '</div>';
+        } else {
+            out += '<div class="fmr-agerow"><span>Возраст канала</span>: ' + _DASH + '</div>';
         }
+        var p24ok = false;
         if (l.reach_24h_median && l.subscribers) {
             var p24 = Math.round(l.reach_24h_median / l.subscribers * 1000) / 10;
             if (p24 > 0 && p24 <= 100) {
+                p24ok = true;
                 out += '<div class="fmr-agerow"><span>Читают за сутки</span>: <b>' + String(p24).replace('.', ',') +
                     '%</b> <span style="color:#565b73;">(' + _num(l.reach_24h_median) + ' из ' + _num(l.subscribers) + ')</span></div>';
             }
         }
+        if (!p24ok) {
+            out += '<div class="fmr-agerow"><span>Читают за сутки</span>: ' + _DASH + _COLLECT + '</div>';
+        }
         out += _reachWinRows(l);
-        if (!out) return '';
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>Аудитория и динамика</div>' + out;
     }
     function _reachWinRows(l) {
         var w = [['12 часов', l.reach_12h_median], ['24 часа', l.reach_24h_median], ['48 часов', l.reach_48h_median]];
         var have = w.filter(function (x) { return x[1]; });
-        if (have.length < 2) return '';
+        if (!have.length) {
+            return '<div class="fmr-agerow" style="margin-top:8px;"><span>Сколько наберёт рекламная публикация</span>: ' + _DASH + _COLLECT + '</div>';
+        }
         return '<div class="fmr-agerow" style="margin-top:8px;"><span>Сколько наберёт рекламная публикация</span></div>' +
             '<div class="fmr-gtab">' + w.map(function (x) {
                 return '<div class="r"><span class="l">' + x[0] + '</span>' +
                     (x[1] ? '<span style="font-weight:750;font-variant-numeric:tabular-nums;">' + _num(x[1]) + '</span>'
-                          : '<span style="color:#565b73;">—</span>') + '</div>';
+                          : _DASH) + '</div>';
             }).join('') + '</div>';
     }
     function _curveBlock(l) {
+        var head = '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>Как набирается охват</div>';
         var c = l && l.view_curve;
-        if (!c) return '';
         var marks = ['1', '3', '6', '12', '24', '48'];
-        var pts = marks.filter(function (m) { return c[m] != null; });
-        if (pts.length < 4) return '';
+        var pts = c ? marks.filter(function (m) { return c[m] != null; }) : [];
+        if (pts.length < 4) {
+            return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>Данные копятся: замеров пока мало для графика</span></div>';
+        }
         var mx = Math.max(100, Math.max.apply(null, pts.map(function (m) { return c[m]; })));
-        var bars = pts.map(function (m) {
+        var bars = marks.map(function (m) {
+            if (c[m] == null) {
+                return '<div class="fmr-cvcol"><span class="fmr-cvlb">' + m + ' ч</span><span class="fmr-cvvl" style="color:#565b73;">—</span></div>';
+            }
             var h = Math.max(4, Math.round(c[m] / mx * 100));
             var col = (m === '48' && c[m] > 130) ? '#ef4444' : '#5ab0e6';
             return '<div class="fmr-cvcol"><div class="fmr-cvbar" style="height:' + h + '%;background:' + col + ';"></div>' +
@@ -8272,7 +8289,7 @@
         } else if (l.curve_flag === 'late') {
             note = '<div class="fmr-cvwarn">Публикации продолжают набирать просмотры спустя сутки после выхода. У живой аудитории охват к этому времени выходит на плато.</div>';
         }
-        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>Как набирается охват</div>' +
+        return head +
             '<div class="fmr-cvwrap">' + bars + '</div>' +
             '<div class="fmr-gsrc"><span>За 100% принят охват за первые сутки</span>' +
             (c.posts ? ' · <span>публикаций</span>: ' + c.posts : '') + '</div>' + note;
@@ -8323,15 +8340,6 @@
         } catch (e) {}
     }
     function _sbRenderTrend(box, r) {
-        var hideSec = function () {
-            var blk = box.closest && box.closest('.fmr-blk');
-            if (blk) { blk.style.display = 'none'; }
-            var sec = box.previousElementSibling;
-            if (sec && sec.classList.contains('fmr-sbsec')) sec.style.display = 'none';
-            box.innerHTML = '';
-            box.style.display = 'none';
-            window.requestAnimationFrame(function () { try { scaleCards(document); } catch (e) {} });
-        };
         (function (r) {
             var pts = (r && r.ok && r.points) || [];
             var g = pts.filter(function (p) { return p.g != null || p.j != null || p.l != null; });
@@ -8349,12 +8357,8 @@
                     box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' + emsg + '</div>';
                     return;
                 }
-                if (pts.length >= 2) {
-                    box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
-                        '<span>Данные копятся: замеров пока мало для графика</span></div>';
-                    return;
-                }
-                hideSec();
+                box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
+                    '<span>Данные копятся: замеров пока мало для графика</span></div>';
                 return;
             }
             var hasEv = g.some(function (p) { return p.j != null || p.l != null; });
@@ -8395,7 +8399,8 @@
                   (r.joins != null ? ' · <b style="color:#5DCAA5;">+' + _num(r.joins) + '</b> / <b style="color:#ef4444;">−' + _num(r.leaves || 0) + '</b>' : '')
                 : '<span>чистый прирост за месяц: подписки минус отписки</span>' +
                   (tot != null ? ' · <span>итог</span>: ' + (r.approx ? '≈ ' : '') + (tot > 0 ? '+' : '') + _num(tot) : '') +
-                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: ' + (r.approx ? '≈ ' : '') + '+' + _num(r.best) : '');
+                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: ' + (r.approx ? '≈ ' : '') + '+' + _num(r.best) : '') +
+                  (r.approx ? ' · <span>мелкие колебания могут не отображаться</span>' : '');
             box.innerHTML = '<div class="fmr-sbchart"><div class="fmr-sbaxis" style="top:' + upH + '%;"></div>' + bars + '</div>' +
                 '<div class="fmr-gsrc">' + cap + '</div>';
             _sbTipBind(box);
