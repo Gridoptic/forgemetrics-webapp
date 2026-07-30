@@ -369,6 +369,7 @@ function renderDashboard(data) {
     renderChannelSelector(data);
     renderPulse(data.pulse);
     renderActions(data.actions || []);
+    window._homeCfg = data.home_config || null;
 
     if (data.has_unread_menu) {
         els.menuDot.classList.add('active');
@@ -753,6 +754,129 @@ function renderActions(actions) {
         card.addEventListener('click', () => handleAction(action.id));
         els.actionsList.appendChild(card);
     });
+}
+
+let _hcCtx = null;
+let _hcDragMoved = false;
+
+function closeHomeConfig() {
+    if (!_hcCtx) return;
+    const { overlay, sheet } = _hcCtx;
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+    setTimeout(() => { overlay.remove(); sheet.remove(); }, 260);
+    _hcCtx = null;
+}
+
+function openHomeConfig() {
+    hapticLight();
+    const cfg = window._homeCfg;
+    if (!cfg || !cfg.catalog || !cfg.catalog.length) return;
+    closeHomeConfig();
+    const enabled = (cfg.enabled || []).slice();
+    const byId = {};
+    cfg.catalog.forEach(c => { byId[c.id] = c; });
+    const order = enabled.filter(id => byId[id])
+        .concat(cfg.catalog.map(c => c.id).filter(id => enabled.indexOf(id) < 0));
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet hc-sheet';
+    const rowsHtml = order.map(id => {
+        const c = byId[id];
+        const on = enabled.indexOf(id) >= 0;
+        return `<div class="hc-row${on ? '' : ' off'}" data-id="${c.id}">
+            <span class="hc-grip"><i class="ti ti-grip-vertical"></i></span>
+            <span class="hc-ic icon-${c.color === 'primary' ? 'purple' : c.color}"><i class="ti ti-${c.icon}"></i></span>
+            <span class="hc-t">${escapeHtml(c.title)}</span>
+            <span class="hc-sw${on ? ' on' : ''}"></span>
+        </div>`;
+    }).join('');
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="hc-title">Главный экран</div>
+        <div class="hc-hint">Включай нужные функции и расставляй в своём порядке — перетаскивай за ручку.</div>
+        <div class="hc-row hc-locked">
+            <span class="hc-grip" style="opacity:0.25;cursor:default;"><i class="ti ti-grip-vertical"></i></span>
+            <span class="hc-ic icon-purple"><i class="ti ti-sparkles"></i></span>
+            <span class="hc-t">Написать пост<i>всегда первая</i></span>
+            <span class="hc-lock"><i class="ti ti-lock"></i></span>
+        </div>
+        <div class="hc-list" id="hc-list">${rowsHtml}</div>
+        <button class="co-pay" id="hc-save"><i class="ti ti-check"></i> Сохранить</button>
+        <button class="co-close" id="hc-reset">Вернуть стандартный набор</button>
+    `;
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+    _hcCtx = { overlay, sheet };
+    overlay.addEventListener('click', closeHomeConfig);
+    const list = sheet.querySelector('#hc-list');
+    list.addEventListener('click', (e) => {
+        if (e.target.closest('.hc-grip') || _hcDragMoved) return;
+        const row = e.target.closest('.hc-row');
+        if (!row) return;
+        hapticLight();
+        row.classList.toggle('off');
+        const sw = row.querySelector('.hc-sw');
+        if (sw) sw.classList.toggle('on', !row.classList.contains('off'));
+    });
+    bindHcDrag(list);
+    sheet.querySelector('#hc-save').addEventListener('click', () => { hcSave(false); });
+    sheet.querySelector('#hc-reset').addEventListener('click', () => { hcSave(true); });
+}
+
+function bindHcDrag(list) {
+    let dragEl = null;
+    list.addEventListener('pointerdown', (e) => {
+        const grip = e.target.closest('.hc-grip');
+        if (!grip) return;
+        dragEl = grip.closest('.hc-row');
+        if (!dragEl) return;
+        _hcDragMoved = false;
+        e.preventDefault();
+        dragEl.classList.add('dragging');
+        try { list.setPointerCapture(e.pointerId); } catch (er) {}
+    });
+    list.addEventListener('pointermove', (e) => {
+        if (!dragEl) return;
+        e.preventDefault();
+        _hcDragMoved = true;
+        const rows = Array.from(list.querySelectorAll('.hc-row:not(.dragging)'));
+        const after = rows.find(r => e.clientY < r.getBoundingClientRect().top + r.offsetHeight / 2);
+        if (after) {
+            if (after !== dragEl.nextElementSibling) list.insertBefore(dragEl, after);
+        } else {
+            list.appendChild(dragEl);
+        }
+    });
+    const end = () => {
+        if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; hapticLight(); }
+        setTimeout(() => { _hcDragMoved = false; }, 0);
+    };
+    list.addEventListener('pointerup', end);
+    list.addEventListener('pointercancel', end);
+}
+
+async function hcSave(reset) {
+    if (!_hcCtx) return;
+    const body = reset ? { reset: true } : {
+        actions: Array.from(_hcCtx.sheet.querySelectorAll('.hc-row[data-id]:not(.off)')).map(r => r.dataset.id),
+    };
+    try {
+        const r = await apiRequest('/api/v1/user/home-actions', { method: 'POST', body: JSON.stringify(body) });
+        if (r && r.ok) {
+            showToast('Сохранено', 'check');
+            closeHomeConfig();
+            loadDashboard();
+            return;
+        }
+    } catch (e) {}
+    showToast('Не удалось сохранить. Повтори попытку', 'alert-triangle');
 }
 
 
@@ -1786,6 +1910,8 @@ function closeCheckout() {
 
 function setupEventListeners() {
     els.menuBtn.addEventListener('click', openDrawer);
+    const hcBtn = document.getElementById('home-config-btn');
+    if (hcBtn) hcBtn.addEventListener('click', openHomeConfig);
     const cabBack = document.getElementById('cabinet-back');
     if (cabBack) cabBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
     const refBack = document.getElementById('referral-back');

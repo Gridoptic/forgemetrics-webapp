@@ -8,7 +8,7 @@
     <title>ForgeMetrics</title>
     <link rel="stylesheet" href="fonts.css?v=20260724a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css?v=20260724c">
+    <link rel="stylesheet" href="styles.css?v=20260731a">
     <link rel="stylesheet" href="audit.css?v=20260724a">
     <link rel="stylesheet" href="strategy.css?v=20260724a">
     <link rel="stylesheet" href="rewrite.css?v=20260724a">
@@ -56,7 +56,10 @@
         <div id="channel-selector"></div>
         <div id="pulse-widget"></div>
 
-        <div class="section-label">Выберите действие</div>
+        <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Выберите действие</span>
+            <button id="home-config-btn" style="width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#6b7088;cursor:pointer;padding:0;"><i class="ti ti-settings" style="font-size:14px;"></i></button>
+        </div>
 
         <div class="actions" id="actions-list">
         </div>
@@ -592,12 +595,12 @@
     try {
         var l = window.getLang ? window.getLang() : 'ru';
         if (l && l !== 'ru') {
-            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=125"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=126"></scr' + 'ipt>');
         }
     } catch (e) {}
 })();
 </script>
-<script src="app.js?v=20260730a"></script>
+<script src="app.js?v=20260731a"></script>
 <script src="audit.js?v=20260724d"></script>
 <script src="strategy.js?v=20260724d"></script>
 <script src="rewrite.js?v=20260724d"></script>
