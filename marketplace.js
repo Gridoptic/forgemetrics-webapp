@@ -8470,7 +8470,7 @@
             return '<div class="fmr-tp"' + open + '><span class="n">' + (i + 1) + '</span>' +
                 '<span class="t">' + _esc(txt) + '</span>' +
                 '<span class="v">' + _kmNum(p.views) + '</span>' +
-                (ds ? '<span class="d">' + ds + '</span>' : '') + '</div>';
+                '<span class="d"' + (ds ? '' : ' style="color:#3c3f52;"') + '>' + (ds || '—') + '</span></div>';
         }).join('');
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>Топ публикаций</div>' +
             rows + '<div class="fmr-gsrc"><span>топ последних публикаций по просмотрам</span> · <span>нажми, чтобы открыть пост</span></div>';
