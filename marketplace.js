@@ -576,6 +576,13 @@
             '.fmr-score{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}',
             '.fmr-scorelbl{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#565b73;display:flex;align-items:center;gap:4px;}',
             '.fmr-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#565b73;margin:13px 1px 5px;display:flex;align-items:center;gap:6px;}',
+            '.fmr-more{margin-top:10px;border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.02);}',
+            '.fmr-more summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 12px;font-size:12.5px;font-weight:700;color:#c7cdfb;min-height:44px;}',
+            '.fmr-more summary::-webkit-details-marker{display:none;}',
+            '.fmr-more summary .sub{min-width:0;font-size:10px;font-weight:400;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmr-more summary .chev{margin-left:auto;color:#565b73;flex:0 0 auto;transition:transform 200ms;}',
+            '.fmr-more[open] summary .chev{transform:rotate(180deg);}',
+            '.fmr-morebody{padding:0 12px 12px;}',
             '.fmr-line{font-size:13px;color:#8990a8;line-height:1.6;}',
             '.fmr-line b{color:#e8e8ed;font-weight:700;}',
             '.fmr-line .fmr-big{font-size:18px;}',
@@ -7999,11 +8006,8 @@
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
             _heroTiles(l, 'market') +
             (cb ? '<div style="background:rgba(10,13,24,0.55);border-radius:10px;padding:2px 11px 9px;margin-top:9px;">' + _fmrBlocksBuy(l) + '</div>' : _fmrBlocksBuy(l)) +
-            _blk(2, _audBlock(l)) +
-            _blk(2, _subsChart(l)) +
-            _blk(2, _curveBlock(l)) +
-            _blk(2, _topPostsBlock(l)) +
             _ctcLinesHtml(l) +
+            _moreBlock(l) +
             '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
@@ -8177,12 +8181,9 @@
             nicheHtml +
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
-            _blk(2, _audBlock(l)) +
-            _blk(2, _subsChart(l)) +
-            _blk(2, _curveBlock(l)) +
-            _blk(2, _topPostsBlock(l)) +
             _blk(3, flow) + pillsHtml +
             _ctcLinesHtml(l) +
+            _moreBlock(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
             '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
             '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
@@ -8474,6 +8475,14 @@
         }).join('');
         return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>Топ публикаций</div>' +
             rows + '<div class="fmr-gsrc"><span>топ последних публикаций по просмотрам</span> · <span>нажми, чтобы открыть пост</span></div>';
+    }
+    function _moreBlock(l) {
+        var inner = _blk(2, _audBlock(l)) + _blk(2, _subsChart(l)) + _blk(2, _curveBlock(l)) + _blk(2, _topPostsBlock(l));
+        if (!inner) return '';
+        return '<details class="fmr-more"><summary><i class="ti ti-chart-dots" style="color:#818cf8;"></i> <span>Подробная статистика</span>' +
+            '<span class="sub"><span>аудитория, прирост, охват, топ публикаций</span></span>' +
+            '<i class="ti ti-chevron-down chev"></i></summary>' +
+            '<div class="fmr-morebody">' + inner + '</div></details>';
     }
     function _spikeLine(l) {
         var sp = l && l.subs_spike;
