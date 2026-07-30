@@ -431,7 +431,7 @@ function pwCell(label, val, opts) {
 var PW_CATALOG = [
     { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { k: true } },
     { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
-    { id: 'rr', label: 'Reach Rate', get: p => p.reach_rate, o: { suf: '%' } },
+    { id: 'rr', label: 'ERR', get: p => p.reach_rate, o: { suf: '%' } },
     { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
 var PW_MAX = 4;
