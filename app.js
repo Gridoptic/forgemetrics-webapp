@@ -935,12 +935,14 @@ function _tmAv(av, name, cls) {
     return `<span class="tm-av${cls ? ' ' + cls : ''}">${letter}${img}</span>`;
 }
 
+let _tmMulti = false;
 async function openTeam() {
     hapticLight();
     let r = null;
     try { r = await apiRequest('/api/v1/team/overview'); } catch (e) {}
     const chs = (r && r.channels) || [];
     if (!chs.length) { cabToast('Сначала подключи канал — роли настраиваются для подключённых каналов'); return; }
+    _tmMulti = chs.length > 1;
     if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
     const rows = chs.map(c => {
         const role = TM_ROLES[c.my_role] || TM_ROLES.viewer;
@@ -967,7 +969,7 @@ async function openTeamChannel(chId) {
 
 function _tmHead(d) {
     const c = d.channel;
-    return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
+    return `<div class="tm-title">${_tmMulti ? '<button class="tm-back" id="tm-back"><i class="ti ti-chevron-left"></i></button>' : ''}<span class="tm-tile"><i class="ti ti-users"></i></span>
         <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
         <div class="tm-hero">${_tmAv(c.avatar_url, c.title, 'tm-av-hero')}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
@@ -1093,6 +1095,8 @@ function _tmOwnerView(d) {
         showToast('Не удалось сбросить', 'alert-triangle');
     });
     sheet.querySelector('#tm-refresh').addEventListener('click', () => { hapticLight(); openTeamChannel(chId); });
+    const bk = sheet.querySelector('#tm-back');
+    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(); });
     localizeTree(sheet);
 }
 
@@ -1150,7 +1154,7 @@ function _tmMemberView(d) {
         const ok = !!p[a[0]];
         return `<div class="tm-abtn${ok ? ' ok' : ''}"><i class="ti ti-${a[1]}"></i> ${a[2]}${ok ? '' : ' <span class="tm-lk"><i class="ti ti-lock"></i></span>'}</div>`;
     }).join('');
-    _tmSheet(`${_tmHead(d)}
+    const sheet = _tmSheet(`${_tmHead(d)}
         <div class="tm-sect">Твой доступ к офферу</div>
         <div class="tm-mem tm-head"><span class="tm-rt ${role.cls} tm-rt-big"><i class="ti ti-${role.ic}"></i></span>
         <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-tg">${role.d || ''}</div></div></div>
@@ -1159,6 +1163,8 @@ function _tmMemberView(d) {
         <div class="tm-sect">Доступные действия</div>
         <div class="tm-actions">${btns}</div>
         <div class="tm-mhint" style="display:block;">Оффер этого канала доступен в «Площадка → Мои офферы» с учётом твоей роли.</div>`);
+    const bk = sheet.querySelector('#tm-back');
+    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(); });
 }
 
 
