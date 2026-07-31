@@ -1157,7 +1157,7 @@ function _tmMemberView(d) {
     const sheet = _tmSheet(`${_tmHead(d)}
         <div class="tm-sect">Твой доступ к офферу</div>
         <div class="tm-mem tm-head"><span class="tm-rt ${role.cls} tm-rt-big"><i class="ti ti-${role.ic}"></i></span>
-        <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-tg">${role.d || ''}</div></div></div>
+        <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-desc">${role.d || ''}</div></div></div>
         <div class="tm-denied"><div class="dh"><i class="ti ti-lock"></i> Часть действий закрыта</div>
         <p>Операции с замком доступны только ролям выше. Доступ выдаёт владелец канала в разделе «Команда».</p></div>
         <div class="tm-sect">Доступные действия</div>
