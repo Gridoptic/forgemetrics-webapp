@@ -2634,6 +2634,7 @@
             : _esc(t.charAt(0));
         var frozen = l.status === 'paused';
         var tp = l.team_perms || null;
+        var own = !tp || !!l.team_self;
         var can = tp ? function (k) { return !!tp[k]; } : function () { return true; };
         var roleChip = l.team_role
             ? '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;color:#5DCAA5;background:rgba(93,202,165,0.1);border:0.5px solid rgba(93,202,165,0.35);border-radius:7px;padding:2px 7px;margin-left:6px;vertical-align:1px;"><i class="ti ti-users"></i>' + (_TEAM_ROLE_RU[l.team_role] || l.team_role) + '</span>'
@@ -2653,11 +2654,11 @@
             '<button class="fmx-seg" data-mcal="' + l.id + '" style="flex:0 0 auto;min-height:30px;padding:5px 12px;">Весь календарь</button></div>' +
             '<button class="fmx-seg" data-mhotadv="' + l.id + '" style="width:100%;margin-top:6px;min-height:34px;padding:6px 12px;color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-discount-2"></i> Точечные скидки — свои даты, время и процент' + (l.hot_manual ? ' · вкл' : '') + '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            (!tp && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' : '') +
+            (own && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' : '') +
             '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar"></i>Статистика</button>' +
             (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Витрина</button>' : '') +
-            (tp ? '' : '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
-                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>') +
+            (own ? '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
+                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>' : '') +
             (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' : '') +
             (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
             '</div></div>';

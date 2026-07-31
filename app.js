@@ -977,23 +977,22 @@ function _tmOwnerView(d) {
             : (m.tg_status === 'administrator' ? 'Администратор' : 'Владелец в приложении');
         const letter = escapeHtml((m.name || '?').trim().charAt(0).toUpperCase());
         if (m.is_owner) {
+            const inApp = m.in_app === false ? ' · <span>ещё не заходил в приложение</span>' : '';
             return `<div class="tm-mem"><span class="tm-av tm-av-own">${letter}</span>
                 <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
-                <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${tgLab}</span></div></div>
+                <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${tgLab}</span>${inApp}</div></div>
                 <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> Владелец</span></div>`;
         }
-        const crHint = m.tg_status === 'creator'
-            ? ' · <span>владение перейдёт после его первого входа в приложение</span>' : '';
         return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${'<span class="tm-av">' + letter + '</span>'}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
-            <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор'}</span>${crHint}</div></div>
+            <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор'}</span></div></div>
             <span class="tm-chip ${role.cls}" id="tm-role-${m.user_id}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
             <i class="ti ti-chevron-down tm-chev"></i></div>
             <div class="tm-rolepick" id="tm-pick-${m.user_id}" style="display:none;"></div>`;
     }).join('');
     const sheet = _tmSheet(`${_tmHead(d)}
         <div class="tm-info"><div class="h"><i class="ti ti-info-circle"></i> Права берутся из самого Telegram</div>
-        <p>Бот видит владельца и администраторов канала и сверяет их автоматически. Роли раздаёт только владелец. Владелец на Площадке — создатель канала: если канал подключил другой админ, владение перейдёт создателю после его первого входа. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.</p></div>
+        <p>Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.</p></div>
         <div class="tm-sect"><span>Участники</span><span class="num"> · ${members.length}</span></div>
         <div class="tm-list" id="tm-mems">${memRows}</div>
         <div class="tm-sect">Что может каждая роль</div>
