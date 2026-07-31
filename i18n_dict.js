@@ -2735,8 +2735,8 @@ window.__I18N_DICT = {
   "Набл.": "View.",
   "Роли и права — отдельно для каждого канала": "Roles and permissions — separate for each channel",
   "Владелец в приложении": "Owner in the app",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "The bot sees the channel's creator and admins and verifies them automatically. Full access and roles belong to the channel's creator only. An admin who connected someone else's channel becomes a Manager right away. Remove someone from the admins in Telegram — their access here disappears too.",
-  "ещё не заходил в приложение": "hasn't opened the app yet"
+  "ещё не заходил в приложение": "hasn't opened the app yet",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "The bot sees the channel's creator and admins and verifies them automatically. Every admin immediately gets the Manager role and can run the offer. Deleting the offer and assigning roles belong to the channel's creator only: they can demote anyone or close access. Remove someone from the admins in Telegram — their access here disappears too."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5467,8 +5467,8 @@ window.__I18N_DICT = {
   "Набл.": "Obs.",
   "Роли и права — отдельно для каждого канала": "Roles y permisos — por separado para cada canal",
   "Владелец в приложении": "Propietario en la aplicación",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "El bot ve al creador y a los admins del canal y los verifica automáticamente. El acceso completo y los roles son solo del creador del canal. Un admin que conectó un canal ajeno se convierte de inmediato en Gestor. Si quitan a alguien de admin en Telegram, su acceso aquí desaparece.",
-  "ещё не заходил в приложение": "aún no ha entrado en la aplicación"
+  "ещё не заходил в приложение": "aún no ha entrado en la aplicación",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "El bot ve al creador y a los admins del canal y los verifica automáticamente. Cada admin recibe de inmediato el rol de Gestor y puede llevar la oferta. Eliminar la oferta y asignar roles es solo del creador del canal: puede degradar a cualquiera o cerrar el acceso. Si quitan a alguien de admin en Telegram, su acceso aquí desaparece."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8199,8 +8199,8 @@ window.__I18N_DICT = {
   "Набл.": "Beob.",
   "Роли и права — отдельно для каждого канала": "Rollen und Rechte — für jeden Kanal separat",
   "Владелец в приложении": "Inhaber in der App",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Der Bot sieht Ersteller und Admins des Kanals und prüft sie automatisch. Vollzugriff und Rollen hat nur der Ersteller des Kanals. Ein Admin, der einen fremden Kanal verbunden hat, wird sofort Manager. Wird jemand in Telegram als Admin entfernt, verschwindet sein Zugriff auch hier.",
-  "ещё не заходил в приложение": "hat die App noch nicht geöffnet"
+  "ещё не заходил в приложение": "hat die App noch nicht geöffnet",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Der Bot sieht Ersteller und Admins des Kanals und prüft sie automatisch. Jeder Admin erhält sofort die Manager-Rolle und kann das Offer führen. Löschen des Offers und Rollenvergabe hat nur der Ersteller des Kanals: er kann jeden herabstufen oder den Zugriff schließen. Wird jemand in Telegram als Admin entfernt, verschwindet sein Zugriff auch hier."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10926,8 +10926,8 @@ window.__I18N_DICT = {
   "Набл.": "Бақ.",
   "Роли и права — отдельно для каждого канала": "Рөлдер мен құқықтар — әр арнаға бөлек",
   "Владелец в приложении": "Қосымшадағы иесі",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот арна құрушысы мен әкімшілерін көріп, автоматты салыстырады. Толық қатынас пен рөлдер тек арна құрушысында. Бөтен арнаны қосқан әкімші бірден Басқарушы болады. Telegram-да әкімшіліктен алынса — мұндағы қатынас та жоғалады.",
-  "ещё не заходил в приложение": "қосымшаға әлі кірген жоқ"
+  "ещё не заходил в приложение": "қосымшаға әлі кірген жоқ",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот арна құрушысы мен әкімшілерін көріп, автоматты салыстырады. Әр әкімші бірден Басқарушы рөлін алып, офферді жүргізе алады. Офферді өшіру мен рөл беру — тек арна құрушысында: ол кез келгенді төмендете немесе қатынасты жаба алады. Telegram-да әкімшіліктен алынса — мұндағы қатынас та жоғалады."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13658,8 +13658,8 @@ window.__I18N_DICT = {
   "Набл.": "Kuz.",
   "Роли и права — отдельно для каждого канала": "Rollar va huquqlar — har kanal uchun alohida",
   "Владелец в приложении": "Ilovadagi ega",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanal yaratuvchisi va adminlarini ko'rib, avtomatik tekshiradi. To'liq kirish va rollar faqat kanal yaratuvchisiniki. Birovning kanalini ulagan admin darhol Boshqaruvchi bo'ladi. Telegramda adminlikdan olingan — bu yerdagi kirish ham yo'qoladi.",
-  "ещё не заходил в приложение": "ilovaga hali kirmagan"
+  "ещё не заходил в приложение": "ilovaga hali kirmagan",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanal yaratuvchisi va adminlarini ko'rib, avtomatik tekshiradi. Har bir admin darhol Boshqaruvchi rolini oladi va offerni yurita oladi. Offerni o'chirish va rol berish faqat kanal yaratuvchisiniki: u istalgan odamni pasaytirishi yoki kirishni yopishi mumkin. Telegramda adminlikdan olingan — bu yerdagi kirish ham yo'qoladi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16389,8 +16389,8 @@ window.__I18N_DICT = {
   "Набл.": "Наз.",
   "Роли и права — отдельно для каждого канала": "Ролі і правы — асобна для кожнага канала",
   "Владелец в приложении": "Уладальнік у прыкладанні",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот бачыць стваральніка і адмінаў канала і звярае іх аўтаматычна. Поўны доступ і ролі — толькі ў стваральніка канала. Адмін, які падключыў чужы канал, адразу становіцца Кіраўніком. Знялі чалавека з адмінаў у Telegram — доступ тут знікне сам.",
-  "ещё не заходил в приложение": "яшчэ не заходзіў у прыкладанне"
+  "ещё не заходил в приложение": "яшчэ не заходзіў у прыкладанне",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот бачыць стваральніка і адмінаў канала і звярае іх аўтаматычна. Кожны адмін адразу атрымлівае ролю Кіраўніка і можа весці офер. Выдаленне офера і ролі — толькі ў стваральніка канала: ён можа панізіць любога ці закрыць доступ. Знялі чалавека з адмінаў у Telegram — доступ тут знікне сам."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19121,8 +19121,8 @@ window.__I18N_DICT = {
   "Набл.": "Müş.",
   "Роли и права — отдельно для каждого канала": "Rollar və icazələr — hər kanal üçün ayrı",
   "Владелец в приложении": "Tətbiqdə sahib",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanalın yaradıcısını və adminlərini görür və avtomatik yoxlayır. Tam giriş və rollar yalnız kanal yaradıcısınındır. Başqasının kanalını qoşan admin dərhal İdarəçi olur. Telegram-da adminlikdən çıxarılanın buradakı girişi də itir.",
-  "ещё не заходил в приложение": "tətbiqə hələ girməyib"
+  "ещё не заходил в приложение": "tətbiqə hələ girməyib",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanalın yaradıcısını və adminlərini görür və avtomatik yoxlayır. Hər admin dərhal İdarəçi rolunu alır və offeri apara bilir. Offeri silmək və rol vermək yalnız kanal yaradıcısınındır: o, istənilən adamı endirə və ya girişi bağlaya bilər. Telegram-da adminlikdən çıxarılanın buradakı girişi də itir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21853,8 +21853,8 @@ window.__I18N_DICT = {
   "Набл.": "مراقب",
   "Роли и права — отдельно для каждого канала": "الأدوار والصلاحيات — لكل قناة على حدة",
   "Владелец в приложении": "المالك في التطبيق",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "يرى البوت منشئ القناة ومشرفيها ويتحقق منهم تلقائياً. الوصول الكامل والأدوار للمنشئ وحده. المشرف الذي ربط قناة غيره يصبح مديراً فوراً. من أُزيل من المشرفين في تيليجرام يفقد وصوله هنا أيضاً.",
-  "ещё не заходил в приложение": "لم يدخل التطبيق بعد"
+  "ещё не заходил в приложение": "لم يدخل التطبيق بعد",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "يرى البوت منشئ القناة ومشرفيها ويتحقق منهم تلقائياً. كل مشرف يحصل فوراً على دور المدير ويمكنه إدارة العرض. حذف العرض ومنح الأدوار للمنشئ وحده: يمكنه تخفيض أي شخص أو إغلاق الوصول. من أُزيل من المشرفين في تيليجرام يفقد وصوله هنا أيضاً."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24585,8 +24585,8 @@ window.__I18N_DICT = {
   "Набл.": "ناظر",
   "Роли и права — отдельно для каждого канала": "نقش‌ها و دسترسی‌ها — برای هر کانال جداگانه",
   "Владелец в приложении": "مالک در اپلیکیشن",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "بات سازنده و ادمین‌های کانال را می‌بیند و خودکار بررسی می‌کند. دسترسی کامل و نقش‌ها فقط برای سازنده کانال است. ادمینی که کانال دیگری را وصل کرده بلافاصله مدیر می‌شود. اگر کسی در تلگرام از ادمینی برداشته شود، دسترسی‌اش اینجا هم می‌رود.",
-  "ещё не заходил в приложение": "هنوز وارد اپلیکیشن نشده است"
+  "ещё не заходил в приложение": "هنوز وارد اپلیکیشن نشده است",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "بات سازنده و ادمین‌های کانال را می‌بیند و خودکار بررسی می‌کند. هر ادمین بلافاصله نقش مدیر می‌گیرد و می‌تواند آفر را اداره کند. حذف آفر و دادن نقش‌ها فقط با سازنده کانال است: می‌تواند هر کسی را پایین بیاورد یا دسترسی را ببندد. اگر کسی در تلگرام از ادمینی برداشته شود، دسترسی‌اش اینجا هم می‌رود."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27317,8 +27317,8 @@ window.__I18N_DICT = {
   "Набл.": "Göz.",
   "Роли и права — отдельно для каждого канала": "Roller ve yetkiler — her kanal için ayrı",
   "Владелец в приложении": "Uygulamada sahip",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot, kanalın kurucusunu ve adminlerini görür ve otomatik doğrular. Tam erişim ve roller yalnızca kanal kurucusuna aittir. Başkasının kanalını bağlayan admin hemen İdareci olur. Telegram'da adminlikten alınan kişinin buradaki erişimi de kaybolur.",
-  "ещё не заходил в приложение": "uygulamaya henüz girmedi"
+  "ещё не заходил в приложение": "uygulamaya henüz girmedi",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot, kanalın kurucusunu ve adminlerini görür ve otomatik doğrular. Her admin hemen İdareci rolünü alır ve teklifi yönetebilir. Teklifi silmek ve rol vermek yalnızca kanal kurucusuna aittir: herkesi düşürebilir veya erişimi kapatabilir. Telegram'da adminlikten alınan kişinin buradaki erişimi de kaybolur."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30049,8 +30049,8 @@ window.__I18N_DICT = {
   "Набл.": "दर्श.",
   "Роли и права — отдельно для каждого канала": "भूमिकाएँ और अधिकार — हर चैनल के लिए अलग",
   "Владелец в приложении": "ऐप में मालिक",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "बॉट चैनल के निर्माता और एडमिन देखता है और अपने आप जाँचता है। पूरा एक्सेस और भूमिकाएँ सिर्फ़ चैनल निर्माता की हैं। दूसरे का चैनल जोड़ने वाला एडमिन तुरंत प्रबंधक बन जाता है। Telegram में एडमिन से हटाया — यहाँ भी पहुँच चली जाती है।",
-  "ещё не заходил в приложение": "अभी ऐप में नहीं आया"
+  "ещё не заходил в приложение": "अभी ऐप में नहीं आया",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "बॉट चैनल के निर्माता और एडमिन देखता है और अपने आप जाँचता है। हर एडमिन को तुरंत प्रबंधक भूमिका मिलती है और वह ऑफ़र चला सकता है। ऑफ़र हटाना और भूमिकाएँ देना सिर्फ़ चैनल निर्माता का है: वह किसी को भी नीचे कर सकता है या पहुँच बंद कर सकता है। Telegram में एडमिन से हटाया — यहाँ भी पहुँच चली जाती है।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32781,8 +32781,8 @@ window.__I18N_DICT = {
   "Набл.": "পর্য.",
   "Роли и права — отдельно для каждого канала": "ভূমিকা ও অনুমতি — প্রতিটি চ্যানেলের জন্য আলাদা",
   "Владелец в приложении": "অ্যাপে মালিক",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "বট চ্যানেলের নির্মাতা ও অ্যাডমিনদের দেখে এবং স্বয়ংক্রিয়ভাবে যাচাই করে। পূর্ণ অ্যাক্সেস ও ভূমিকা শুধু চ্যানেল নির্মাতার। অন্যের চ্যানেল যুক্ত করা অ্যাডমিন সঙ্গে সঙ্গে ম্যানেজার হয়। Telegram-এ অ্যাডমিন থেকে বাদ — এখানকার অ্যাক্সেসও চলে যায়।",
-  "ещё не заходил в приложение": "এখনও অ্যাপে আসেনি"
+  "ещё не заходил в приложение": "এখনও অ্যাপে আসেনি",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "বট চ্যানেলের নির্মাতা ও অ্যাডমিনদের দেখে এবং স্বয়ংক্রিয়ভাবে যাচাই করে। প্রতিটি অ্যাডমিন সঙ্গে সঙ্গে ম্যানেজার ভূমিকা পায় এবং অফার চালাতে পারে। অফার মোছা ও ভূমিকা দেওয়া শুধু চ্যানেল নির্মাতার: তিনি যে কাউকে নামাতে বা অ্যাক্সেস বন্ধ করতে পারেন। Telegram-এ অ্যাডমিন থেকে বাদ — এখানকার অ্যাক্সেসও চলে যায়।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35513,8 +35513,8 @@ window.__I18N_DICT = {
   "Набл.": "Amat",
   "Роли и права — отдельно для каждого канала": "Peran dan izin — terpisah untuk tiap channel",
   "Владелец в приложении": "Pemilik di aplikasi",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot melihat pembuat dan admin channel lalu memverifikasinya otomatis. Akses penuh dan peran hanya milik pembuat channel. Admin yang menghubungkan channel orang lain langsung menjadi Pengelola. Dicabut dari admin di Telegram — aksesnya di sini juga hilang.",
-  "ещё не заходил в приложение": "belum pernah membuka aplikasi"
+  "ещё не заходил в приложение": "belum pernah membuka aplikasi",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot melihat pembuat dan admin channel lalu memverifikasinya otomatis. Setiap admin langsung mendapat peran Pengelola dan bisa menjalankan penawaran. Menghapus penawaran dan memberi peran hanya milik pembuat channel: dia bisa menurunkan siapa pun atau menutup akses. Dicabut dari admin di Telegram — aksesnya di sini juga hilang."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38245,8 +38245,8 @@ window.__I18N_DICT = {
   "Набл.": "Xem",
   "Роли и права — отдельно для каждого канала": "Vai trò và quyền — riêng cho từng kênh",
   "Владелец в приложении": "Chủ sở hữu trong ứng dụng",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot thấy người tạo kênh và các admin, tự động đối chiếu. Toàn quyền và vai trò chỉ thuộc về người tạo kênh. Admin kết nối kênh của người khác lập tức trở thành Quản lý. Bị gỡ khỏi admin trong Telegram — quyền ở đây cũng mất.",
-  "ещё не заходил в приложение": "chưa từng vào ứng dụng"
+  "ещё не заходил в приложение": "chưa từng vào ứng dụng",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot thấy người tạo kênh và các admin, tự động đối chiếu. Mỗi admin lập tức nhận vai trò Quản lý và có thể vận hành offer. Xóa offer và cấp vai trò chỉ thuộc về người tạo kênh: họ có thể hạ cấp bất kỳ ai hoặc đóng quyền truy cập. Bị gỡ khỏi admin trong Telegram — quyền ở đây cũng mất."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -40977,8 +40977,8 @@ window.__I18N_DICT = {
   "Набл.": "Obs.",
   "Роли и права — отдельно для каждого канала": "Papéis e permissões — separados para cada canal",
   "Владелец в приложении": "Dono no aplicativo",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "O bot vê o criador e os admins do canal e os verifica automaticamente. Acesso total e papéis pertencem só ao criador do canal. Um admin que conectou canal alheio vira Gestor imediatamente. Removido dos admins no Telegram — o acesso aqui some também.",
-  "ещё не заходил в приложение": "ainda não entrou no aplicativo"
+  "ещё не заходил в приложение": "ainda não entrou no aplicativo",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "O bot vê o criador e os admins do canal e os verifica automaticamente. Cada admin recebe imediatamente o papel de Gestor e pode conduzir a oferta. Apagar a oferta e atribuir papéis é só do criador do canal: ele pode rebaixar qualquer um ou fechar o acesso. Removido dos admins no Telegram — o acesso aqui some também."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43709,8 +43709,8 @@ window.__I18N_DICT = {
   "Набл.": "Obs.",
   "Роли и права — отдельно для каждого канала": "Rôles et droits — séparés pour chaque chaîne",
   "Владелец в приложении": "Propriétaire dans l'appli",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Le bot voit le créateur et les admins de la chaîne et les vérifie automatiquement. L'accès complet et les rôles n'appartiennent qu'au créateur de la chaîne. Un admin qui a connecté la chaîne d'autrui devient aussitôt Gestionnaire. Retiré des admins dans Telegram — l'accès ici disparaît aussi.",
-  "ещё не заходил в приложение": "n'a pas encore ouvert l'appli"
+  "ещё не заходил в приложение": "n'a pas encore ouvert l'appli",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Le bot voit le créateur et les admins de la chaîne et les vérifie automatiquement. Chaque admin reçoit aussitôt le rôle de Gestionnaire et peut gérer l'offre. La suppression de l'offre et les rôles n'appartiennent qu'au créateur de la chaîne : il peut rétrograder quiconque ou fermer l'accès. Retiré des admins dans Telegram — l'accès ici disparaît aussi."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46441,8 +46441,8 @@ window.__I18N_DICT = {
   "Набл.": "Oss.",
   "Роли и права — отдельно для каждого канала": "Ruoli e permessi — separati per ogni canale",
   "Владелец в приложении": "Proprietario nell'app",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Il bot vede il creatore e gli admin del canale e li verifica automaticamente. Accesso completo e ruoli spettano solo al creatore del canale. Un admin che ha collegato un canale altrui diventa subito Gestore. Rimosso dagli admin in Telegram — l'accesso qui sparisce.",
-  "ещё не заходил в приложение": "non ha ancora aperto l'app"
+  "ещё не заходил в приложение": "non ha ancora aperto l'app",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Il bot vede il creatore e gli admin del canale e li verifica automaticamente. Ogni admin riceve subito il ruolo di Gestore e può gestire l'offerta. Eliminare l'offerta e assegnare i ruoli spetta solo al creatore del canale: può retrocedere chiunque o chiudere l'accesso. Rimosso dagli admin in Telegram — l'accesso qui sparisce."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49173,8 +49173,8 @@ window.__I18N_DICT = {
   "Набл.": "ተመል.",
   "Роли и права — отдельно для каждого канала": "ሚናዎች እና ፈቃዶች — ለእያንዳንዱ ቻናል ለየብቻ",
   "Владелец в приложении": "በመተግበሪያው ውስጥ ባለቤት",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "ቦቱ የቻናሉን ፈጣሪ እና አስተዳዳሪዎች ያያል፣ በራስ-ሰር ያረጋግጣል። ሙሉ መዳረሻ እና ሚናዎች የቻናሉ ፈጣሪ ብቻ ናቸው። የሌላውን ቻናል ያገናኘ አስተዳዳሪ ወዲያውኑ ሥራ አስኪያጅ ይሆናል። በቴሌግራም ከአስተዳዳሪነት ከተነሳ — እዚህም መዳረሻው ይጠፋል።",
-  "ещё не заходил в приложение": "እስካሁን መተግበሪያውን አልከፈተም"
+  "ещё не заходил в приложение": "እስካሁን መተግበሪያውን አልከፈተም",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "ቦቱ የቻናሉን ፈጣሪ እና አስተዳዳሪዎች ያያል፣ በራስ-ሰር ያረጋግጣል። እያንዳንዱ አስተዳዳሪ ወዲያውኑ የሥራ አስኪያጅ ሚና ያገኛል እና ኦፈሩን መምራት ይችላል። ኦፈሩን መሰረዝ እና ሚና መስጠት የቻናሉ ፈጣሪ ብቻ ነው፦ ማንኛውንም ሰው ማውረድ ወይም መዳረሻ መዝጋት ይችላል። በቴሌግራም ከአስተዳዳሪነት ከተነሳ — እዚህም መዳረሻው ይጠፋል።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -51905,7 +51905,7 @@ window.__I18N_DICT = {
   "Набл.": "Mtaz.",
   "Роли и права — отдельно для каждого канала": "Majukumu na ruhusa — tofauti kwa kila channel",
   "Владелец в приложении": "Mmiliki kwenye programu",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Полный доступ и роли — только у создателя канала. Админ, подключивший чужой канал, сразу становится Управляющим. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Boti huona muundaji na maadmin wa channel na kuwahakiki kiotomatiki. Ufikiaji kamili na majukumu ni vya muundaji wa channel pekee. Admin aliyeunganisha channel ya mwingine mara moja anakuwa Msimamizi. Aliyeondolewa uadmin kwenye Telegram — ufikiaji wake hapa pia hupotea.",
-  "ещё не заходил в приложение": "bado hajafungua programu"
+  "ещё не заходил в приложение": "bado hajafungua programu",
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Boti huona muundaji na maadmin wa channel na kuwahakiki kiotomatiki. Kila admin mara moja anapata jukumu la Msimamizi na anaweza kuendesha ofa. Kufuta ofa na kutoa majukumu ni vya muundaji wa channel pekee: anaweza kumshusha yeyote au kufunga ufikiaji. Aliyeondolewa uadmin kwenye Telegram — ufikiaji wake hapa pia hupotea."
  }
 };
