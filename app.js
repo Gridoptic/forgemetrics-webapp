@@ -892,6 +892,7 @@ const TM_ACTS = [
     { k: 'view', t: 'Метрики и статистика', ic: 'chart-bar', lock: 'base' },
     { k: 'edit', t: 'Редактировать оффер и календарь', ic: 'pencil' },
     { k: 'pub', t: 'Публиковать · замораживать', ic: 'rocket' },
+    { k: 'links', t: 'Ссылки отслеживания и кампании', ic: 'link' },
     { k: 'del', t: 'Удалить оффер', ic: 'trash' },
     { k: 'team', t: 'Управлять командой', ic: 'users', lock: 'owner' },
 ];
@@ -996,7 +997,7 @@ function _tmOwnerView(d) {
     }).join('');
     const sheet = _tmSheet(`${_tmHead(d)}
         <div class="tm-info">
-        <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.</p></div>
+        <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.</p></div>
         <div class="row"><span class="ic"><i class="ti ti-key"></i></span><p>Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.</p></div></div>
         <div class="tm-sect"><span>Участники</span><span class="num"> · ${members.length}</span></div>
         <div class="tm-list" id="tm-mems">${memRows}</div>
@@ -1076,7 +1077,7 @@ function _tmOwnerView(d) {
     sheet.querySelector('#tm-apply').addEventListener('click', async () => {
         const perms = {};
         ['trustee', 'manager', 'editor', 'viewer'].forEach(r => {
-            perms[r] = { edit: !!(matrix[r] && matrix[r].edit), pub: !!(matrix[r] && matrix[r].pub), del: !!(matrix[r] && matrix[r].del) };
+            perms[r] = { edit: !!(matrix[r] && matrix[r].edit), pub: !!(matrix[r] && matrix[r].pub), links: !!(matrix[r] && matrix[r].links), del: !!(matrix[r] && matrix[r].del) };
         });
         try {
             const rr = await apiRequest('/api/v1/team/' + chId + '/perms', { method: 'POST', body: JSON.stringify({ perms }) });

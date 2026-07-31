@@ -2738,12 +2738,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "A trusted admin can't change another trusted admin's role",
   "Назначать доверенных может только владелец канала": "Only the channel owner can appoint trusted admins",
   "Свою роль изменить нельзя": "You can't change your own role",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "The admin list and permissions sync with Telegram automatically. Removed from admins there — access disappears here.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Every admin is a Manager right away. Deleting the offer and roles — only the channel's creator.",
   "Настроить права вручную": "Set permissions manually",
   "галочками по каждой роли · пресеты — быстрый старт": "checkboxes per role · presets are a quick start",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tap a checkbox to grant or revoke a right. Locks are the fixed rights of the owner and the trusted admin.",
-  "подключён · бот — администратор": "connected · bot is an admin"
+  "подключён · бот — администратор": "connected · bot is an admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "The admin list and permissions sync with Telegram automatically: if someone is removed from the channel's admins, their access in the app disappears too.",
+  "Ссылки отслеживания и кампании": "Tracking links & campaigns"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5477,12 +5478,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Un admin de confianza no puede cambiar el rol de otro de confianza",
   "Назначать доверенных может только владелец канала": "Solo el propietario del canal puede nombrar admins de confianza",
   "Свою роль изменить нельзя": "No puedes cambiar tu propio rol",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente. Quitado de admin allí — el acceso desaparece aquí.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Cada admin es Gestor de inmediato. Eliminar la oferta y los roles — solo el creador del canal.",
   "Настроить права вручную": "Configurar permisos manualmente",
   "галочками по каждой роли · пресеты — быстрый старт": "casillas por rol · los preajustes son un inicio rápido",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Toca una casilla para dar o quitar un permiso. Los candados son los derechos fijos del propietario y del admin de confianza.",
-  "подключён · бот — администратор": "conectado · el bot es admin"
+  "подключён · бот — администратор": "conectado · el bot es admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente: si quitan a alguien de los admins del canal, su acceso en la aplicación también desaparece.",
+  "Ссылки отслеживания и кампании": "Enlaces de seguimiento y campañas"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8216,12 +8218,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Eine Vertrauensperson kann die Rolle einer anderen Vertrauensperson nicht ändern",
   "Назначать доверенных может только владелец канала": "Vertrauenspersonen ernennt nur der Kanal-Inhaber",
   "Свою роль изменить нельзя": "Die eigene Rolle lässt sich nicht ändern",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen. Dort als Admin entfernt — Zugriff verschwindet auch hier.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Jeder Admin ist sofort Manager. Offer löschen und Rollen — nur der Ersteller des Kanals.",
   "Настроить права вручную": "Rechte manuell einstellen",
   "галочками по каждой роли · пресеты — быстрый старт": "Häkchen je Rolle · Presets als schneller Start",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tippe auf ein Häkchen, um ein Recht zu vergeben oder zu entziehen. Schlösser sind die festen Rechte von Inhaber und Vertrauensperson.",
-  "подключён · бот — администратор": "verbunden · Bot ist Admin"
+  "подключён · бот — администратор": "verbunden · Bot ist Admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen: wird jemand aus den Kanal-Admins entfernt, verschwindet sein Zugriff auch in der App.",
+  "Ссылки отслеживания и кампании": "Tracking-Links und Kampagnen"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10950,12 +10953,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Сенімді басқа сенімдінің рөлін өзгерте алмайды",
   "Назначать доверенных может только владелец канала": "Сенімділерді тек арна иесі тағайындайды",
   "Свою роль изменить нельзя": "Өз рөліңді өзгерте алмайсың",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі. Онда әкімшіліктен алынса — мұндағы қатынас та кетеді.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Әр әкімші бірден Басқарушы. Офферді өшіру мен рөлдер — тек арна құрушысында.",
   "Настроить права вручную": "Құқықтарды қолмен баптау",
   "галочками по каждой роли · пресеты — быстрый старт": "әр рөлге белгі · пресеттер — жылдам бастау",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Құқық беру не алу үшін белгіні бас. Құлыптар — иесі мен сенімдінің тұрақты құқықтары.",
-  "подключён · бот — администратор": "қосылған · бот — әкімші"
+  "подключён · бот — администратор": "қосылған · бот — әкімші",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі: адам арна әкімшілерінен алынса, қосымшадағы қатынасы да жоғалады.",
+  "Ссылки отслеживания и кампании": "Бақылау сілтемелері мен науқандар"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13689,12 +13693,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Ishonchli admin boshqa ishonchlining rolini o'zgartira olmaydi",
   "Назначать доверенных может только владелец канала": "Ishonchlilarni faqat kanal egasi tayinlaydi",
   "Свою роль изменить нельзя": "O'z rolingni o'zgartira olmaysan",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi. U yerda adminlikdan olingan — bu yerdagi kirish ham yo'qoladi.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Har bir admin darhol Boshqaruvchi. Offerni o'chirish va rollar — faqat kanal yaratuvchisi.",
   "Настроить права вручную": "Huquqlarni qo'lda sozlash",
   "галочками по каждой роли · пресеты — быстрый старт": "har rolga belgi · presetlar tez boshlash uchun",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Huquq berish yoki olish uchun belgini bosing. Qulflar — ega va ishonchlining doimiy huquqlari.",
-  "подключён · бот — администратор": "ulangan · bot admin"
+  "подключён · бот — администратор": "ulangan · bot admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi: kimdir kanal adminlaridan olinsa, ilovadagi kirishi ham yo'qoladi.",
+  "Ссылки отслеживания и кампании": "Kuzatuv havolalari va kampaniyalar"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16427,12 +16432,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Давераны не можа мяняць ролю іншага даверанага",
   "Назначать доверенных может только владелец канала": "Прызначаць давераных можа толькі ўладальнік канала",
   "Свою роль изменить нельзя": "Сваю ролю змяніць нельга",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна. Знялі з адмінаў там — доступ знікне тут.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Кожны адмін адразу — Кіраўнік. Выдаленне офера і ролі — толькі ў стваральніка канала.",
   "Настроить права вручную": "Наладзіць правы ўручную",
   "галочками по каждой роли · пресеты — быстрый старт": "галачкамі па кожнай ролі · прэсеты — хуткі старт",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Тапні па галачцы, каб даць ці зняць права. Замкі — фіксаваныя правы ўладальніка і даверанага.",
-  "подключён · бот — администратор": "падключаны · бот — адміністратар"
+  "подключён · бот — администратор": "падключаны · бот — адміністратар",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна: калі чалавека знялі з адміністратараў канала — доступ у прыкладанні знікне сам.",
+  "Ссылки отслеживания и кампании": "Спасылкі адсочвання і кампаніі"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19166,12 +19172,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Etibarlı admin başqa etibarlının rolunu dəyişə bilməz",
   "Назначать доверенных может только владелец канала": "Etibarlıları yalnız kanal sahibi təyin edə bilər",
   "Свою роль изменить нельзя": "Öz rolunu dəyişə bilməzsən",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır. Orada adminlikdən çıxarılan — buradakı girişi də itir.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Hər admin dərhal İdarəçidir. Offeri silmək və rollar — yalnız kanal yaradıcısı.",
   "Настроить права вручную": "İcazələri əllə qur",
   "галочками по каждой роли · пресеты — быстрый старт": "hər rola işarə · presetlər sürətli başlanğıcdır",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "İcazə vermək və ya almaq üçün işarəyə toxun. Kilidlər sahibin və etibarlının sabit hüquqlarıdır.",
-  "подключён · бот — администратор": "qoşulub · bot admindir"
+  "подключён · бот — администратор": "qoşulub · bot admindir",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır: kimsə kanal adminlərindən çıxarılsa, tətbiqdəki girişi də itir.",
+  "Ссылки отслеживания и кампании": "İzləmə linkləri və kampaniyalar"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21905,12 +21912,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "لا يمكن للموثوق تغيير دور موثوق آخر",
   "Назначать доверенных может только владелец канала": "تعيين الموثوقين للمالك وحده",
   "Свою роль изменить нельзя": "لا يمكنك تغيير دورك",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً. أُزيل من المشرفين هناك — يختفي وصوله هنا.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "كل مشرف يصبح مديراً فوراً. حذف العرض والأدوار — لمنشئ القناة وحده.",
   "Настроить права вручную": "ضبط الصلاحيات يدوياً",
   "галочками по каждой роли · пресеты — быстрый старт": "مربعات لكل دور · الإعدادات الجاهزة بداية سريعة",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "اضغط على المربع لمنح صلاحية أو سحبها. الأقفال هي الحقوق الثابتة للمالك والموثوق.",
-  "подключён · бот — администратор": "مربوطة · البوت مشرف"
+  "подключён · бот — администратор": "مربوطة · البوت مشرف",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً: إذا أُزيل أحد من مشرفي القناة، يختفي وصوله في التطبيق أيضاً.",
+  "Ссылки отслеживания и кампании": "روابط التتبع والحملات"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24644,12 +24652,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "معتمد نمی‌تواند نقش معتمد دیگر را تغییر دهد",
   "Назначать доверенных может только владелец канала": "تعیین معتمدها فقط با مالک کانال است",
   "Свою роль изменить нельзя": "نقش خودت را نمی‌توانی تغییر دهی",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود. آنجا از ادمینی برداشته شد — دسترسی اینجا هم می‌رود.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "هر ادمین بلافاصله مدیر است. حذف آفر و نقش‌ها — فقط سازنده کانال.",
   "Настроить права вручную": "تنظیم دستی دسترسی‌ها",
   "галочками по каждой роли · пресеты — быстрый старт": "تیک برای هر نقش · پیش‌فرض‌ها شروع سریع",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "برای دادن یا گرفتن دسترسی روی تیک بزن. قفل‌ها حقوق ثابت مالک و معتمد هستند.",
-  "подключён · бот — администратор": "وصل است · بات ادمین است"
+  "подключён · бот — администратор": "وصل است · بات ادمین است",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود: اگر کسی از ادمین‌های کانال برداشته شود، دسترسی‌اش در اپلیکیشن هم می‌رود.",
+  "Ссылки отслеживания и кампании": "لینک‌های ردیابی و کمپین‌ها"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27383,12 +27392,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Güvenilir bir admin, başka bir güvenilirin rolünü değiştiremez",
   "Назначать доверенных может только владелец канала": "Güvenilirleri yalnızca kanal sahibi atayabilir",
   "Свою роль изменить нельзя": "Kendi rolünü değiştiremezsin",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir. Orada adminlikten alınan — buradaki erişimini de kaybeder.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Her admin hemen İdarecidir. Teklifi silmek ve roller — yalnızca kanal kurucusu.",
   "Настроить права вручную": "Yetkileri elle ayarla",
   "галочками по каждой роли · пресеты — быстрый старт": "role göre onay kutuları · ön ayarlar hızlı başlangıç",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Bir yetkiyi vermek veya almak için kutuya dokun. Kilitler, sahibin ve güvenilirin sabit haklarıdır.",
-  "подключён · бот — администратор": "bağlı · bot admin"
+  "подключён · бот — администратор": "bağlı · bot admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir: biri kanal adminlerinden çıkarılırsa uygulamadaki erişimi de kaybolur.",
+  "Ссылки отслеживания и кампании": "Takip bağlantıları ve kampanyalar"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30122,12 +30132,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "विश्वस्त दूसरे विश्वस्त की भूमिका नहीं बदल सकता",
   "Назначать доверенных может только владелец канала": "विश्वस्त सिर्फ़ चैनल मालिक नियुक्त कर सकता है",
   "Свою роль изменить нельзя": "अपनी भूमिका नहीं बदल सकते",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं। वहाँ एडमिन से हटाया — यहाँ भी पहुँच चली जाती है।",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "हर एडमिन तुरंत प्रबंधक है। ऑफ़र हटाना और भूमिकाएँ — सिर्फ़ चैनल निर्माता।",
   "Настроить права вручную": "अधिकार हाथ से सेट करो",
   "галочками по каждой роли · пресеты — быстрый старт": "हर भूमिका के लिए चेकबॉक्स · प्रीसेट से तेज़ शुरुआत",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "अधिकार देने या हटाने के लिए चेकबॉक्स पर टैप करो। ताले मालिक और विश्वस्त के स्थायी अधिकार हैं।",
-  "подключён · бот — администратор": "जुड़ा है · बॉट एडमिन है"
+  "подключён · бот — администратор": "जुड़ा है · बॉट एडमिन है",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं: अगर किसी को चैनल के एडमिन से हटाया गया, तो ऐप में उसकी पहुँच भी चली जाती है।",
+  "Ссылки отслеживания и кампании": "ट्रैकिंग लिंक और कैंपेन"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32861,12 +32872,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "বিশ্বস্ত অন্য বিশ্বস্তের ভূমিকা বদলাতে পারে না",
   "Назначать доверенных может только владелец канала": "বিশ্বস্ত নিয়োগ শুধু চ্যানেল মালিক করতে পারেন",
   "Свою роль изменить нельзя": "নিজের ভূমিকা বদলানো যায় না",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "অ্যাডমিন তালিকা ও অনুমতি Telegram-এর সাথে স্বয়ংক্রিয়ভাবে সিঙ্ক হয়। সেখানে অ্যাডমিন থেকে বাদ — এখানে অ্যাক্সেসও যায়।",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "প্রতিটি অ্যাডমিন সঙ্গে সঙ্গে ম্যানেজার। অফার মোছা ও ভূমিকা — শুধু চ্যানেল নির্মাতা।",
   "Настроить права вручную": "অনুমতি নিজে সেট করো",
   "галочками по каждой роли · пресеты — быстрый старт": "ভূমিকাপ্রতি চেকবক্স · প্রিসেট দ্রুত শুরু",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "অনুমতি দিতে বা কাড়তে চেকবক্সে ট্যাপ করো। তালা মালিক ও বিশ্বস্তের স্থায়ী অধিকার।",
-  "подключён · бот — администратор": "যুক্ত · বট অ্যাডমিন"
+  "подключён · бот — администратор": "যুক্ত · বট অ্যাডমিন",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "অ্যাডমিন তালিকা ও অনুমতি Telegram-এর সাথে স্বয়ংক্রিয়ভাবে সিঙ্ক হয়: কাউকে চ্যানেলের অ্যাডমিন থেকে বাদ দিলে অ্যাপে তার অ্যাক্সেসও চলে যায়।",
+  "Ссылки отслеживания и кампании": "ট্র্যাকিং লিংক ও ক্যাম্পেইন"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35600,12 +35612,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Admin tepercaya tidak bisa mengubah peran tepercaya lain",
   "Назначать доверенных может только владелец канала": "Hanya pemilik channel yang bisa menunjuk admin tepercaya",
   "Свою роль изменить нельзя": "Kamu tidak bisa mengubah peranmu sendiri",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Daftar admin dan izin tersinkron otomatis dengan Telegram. Dicabut dari admin di sana — akses di sini juga hilang.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Setiap admin langsung Pengelola. Menghapus penawaran dan peran — hanya pembuat channel.",
   "Настроить права вручную": "Atur izin manual",
   "галочками по каждой роли · пресеты — быстрый старт": "centang per peran · preset untuk mulai cepat",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Ketuk centang untuk memberi atau mencabut hak. Gembok adalah hak tetap pemilik dan admin tepercaya.",
-  "подключён · бот — администратор": "terhubung · bot adalah admin"
+  "подключён · бот — администратор": "terhubung · bot adalah admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Daftar admin dan izin tersinkron otomatis dengan Telegram: jika seseorang dicabut dari admin channel, aksesnya di aplikasi juga hilang.",
+  "Ссылки отслеживания и кампании": "Tautan pelacakan dan kampanye"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38339,12 +38352,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Người tin cậy không thể đổi vai trò của người tin cậy khác",
   "Назначать доверенных может только владелец канала": "Chỉ chủ kênh mới bổ nhiệm được người tin cậy",
   "Свою роль изменить нельзя": "Bạn không thể đổi vai trò của chính mình",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Danh sách admin và quyền tự động đồng bộ với Telegram. Bị gỡ admin ở đó — quyền ở đây cũng mất.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Mỗi admin lập tức là Quản lý. Xóa offer và vai trò — chỉ người tạo kênh.",
   "Настроить права вручную": "Thiết lập quyền thủ công",
   "галочками по каждой роли · пресеты — быстрый старт": "tích chọn theo vai trò · thiết lập sẵn để bắt đầu nhanh",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Chạm vào ô để cấp hoặc thu quyền. Ổ khóa là quyền cố định của chủ kênh và người tin cậy.",
-  "подключён · бот — администратор": "đã kết nối · bot là admin"
+  "подключён · бот — администратор": "đã kết nối · bot là admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Danh sách admin và quyền tự động đồng bộ với Telegram: nếu ai đó bị gỡ khỏi admin của kênh, quyền trong ứng dụng cũng mất.",
+  "Ссылки отслеживания и кампании": "Liên kết theo dõi và chiến dịch"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -41078,12 +41092,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Um admin de confiança não pode mudar o papel de outro de confiança",
   "Назначать доверенных может только владелец канала": "Só o dono do canal pode nomear admins de confiança",
   "Свою роль изменить нельзя": "Você não pode mudar seu próprio papel",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "A lista de admins e as permissões sincronizam com o Telegram automaticamente. Removido dos admins lá — o acesso some aqui.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Todo admin é Gestor de imediato. Apagar a oferta e os papéis — só o criador do canal.",
   "Настроить права вручную": "Configurar permissões manualmente",
   "галочками по каждой роли · пресеты — быстрый старт": "caixas por papel · presets para começar rápido",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Toque numa caixa para dar ou tirar um direito. Os cadeados são os direitos fixos do dono e do admin de confiança.",
-  "подключён · бот — администратор": "conectado · o bot é admin"
+  "подключён · бот — администратор": "conectado · o bot é admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "A lista de admins e as permissões sincronizam automaticamente com o Telegram: se alguém for removido dos admins do canal, o acesso dele no aplicativo some também.",
+  "Ссылки отслеживания и кампании": "Links de rastreamento e campanhas"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43817,12 +43832,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Une personne de confiance ne peut pas changer le rôle d'une autre personne de confiance",
   "Назначать доверенных может только владелец канала": "Seul le propriétaire de la chaîne peut nommer des personnes de confiance",
   "Свою роль изменить нельзя": "Tu ne peux pas changer ton propre rôle",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "La liste des admins et les droits se synchronisent avec Telegram automatiquement. Retiré des admins là-bas — l'accès disparaît ici.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Chaque admin est aussitôt Gestionnaire. Supprimer l'offre et les rôles — seul le créateur de la chaîne.",
   "Настроить права вручную": "Régler les droits manuellement",
   "галочками по каждой роли · пресеты — быстрый старт": "cases par rôle · les préréglages pour démarrer vite",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Touche une case pour donner ou retirer un droit. Les cadenas sont les droits fixes du propriétaire et de la personne de confiance.",
-  "подключён · бот — администратор": "connectée · le bot est admin"
+  "подключён · бот — администратор": "connectée · le bot est admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La liste des admins et les droits se synchronisent automatiquement avec Telegram : si quelqu'un est retiré des admins de la chaîne, son accès dans l'appli disparaît aussi.",
+  "Ссылки отслеживания и кампании": "Liens de suivi et campagnes"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46556,12 +46572,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Un fiduciario non può cambiare il ruolo di un altro fiduciario",
   "Назначать доверенных может только владелец канала": "Solo il proprietario del canale può nominare fiduciari",
   "Свою роль изменить нельзя": "Non puoi cambiare il tuo ruolo",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "L'elenco degli admin e i permessi si sincronizzano con Telegram automaticamente. Rimosso dagli admin lì — l'accesso sparisce qui.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Ogni admin è subito Gestore. Eliminare l'offerta e i ruoli — solo il creatore del canale.",
   "Настроить права вручную": "Impostare i permessi manualmente",
   "галочками по каждой роли · пресеты — быстрый старт": "caselle per ruolo · i preset per partire subito",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tocca una casella per dare o togliere un permesso. I lucchetti sono i diritti fissi del proprietario e del fiduciario.",
-  "подключён · бот — администратор": "collegato · il bot è admin"
+  "подключён · бот — администратор": "collegato · il bot è admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "L'elenco degli admin e i permessi si sincronizzano automaticamente con Telegram: se qualcuno viene rimosso dagli admin del canale, il suo accesso nell'app sparisce.",
+  "Ссылки отслеживания и кампании": "Link di tracciamento e campagne"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49295,12 +49312,13 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "የታመነ ሰው የሌላ የታመነን ሚና መለወጥ አይችልም",
   "Назначать доверенных может только владелец канала": "የታመኑትን መሾም የቻናሉ ባለቤት ብቻ ነው",
   "Свою роль изменить нельзя": "የራስህን ሚና መለወጥ አትችልም",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ። እዚያ ከአስተዳዳሪነት ከተነሳ — እዚህም መዳረሻው ይጠፋል።",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "እያንዳንዱ አስተዳዳሪ ወዲያውኑ ሥራ አስኪያጅ ነው። ኦፈር መሰረዝ እና ሚናዎች — የቻናሉ ፈጣሪ ብቻ።",
   "Настроить права вручную": "ፈቃዶችን በእጅ አዘጋጅ",
   "галочками по каждой роли · пресеты — быстрый старт": "ለእያንዳንዱ ሚና ምልክት · ቅድመ-ቅንብሮች ፈጣን መጀመሪያ",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "ፈቃድ ለመስጠት ወይም ለመንሳት ምልክቱን ንካ። ቁልፎቹ የባለቤቱ እና የታመነው ቋሚ መብቶች ናቸው።",
-  "подключён · бот — администратор": "ተገናኝቷል · ቦቱ አስተዳዳሪ ነው"
+  "подключён · бот — администратор": "ተገናኝቷል · ቦቱ አስተዳዳሪ ነው",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ፦ አንድ ሰው ከቻናሉ አስተዳዳሪዎች ከተነሳ፣ በመተግበሪያው ያለው መዳረሻውም ይጠፋል።",
+  "Ссылки отслеживания и кампании": "የመከታተያ ሊንኮች እና ዘመቻዎች"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -52034,11 +52052,12 @@ window.__I18N_DICT = {
   "Доверенный не может менять роль другого доверенного": "Admin wa kuaminika hawezi kubadilisha jukumu la mwingine wa kuaminika",
   "Назначать доверенных может только владелец канала": "Wa kuaminika huteuliwa na mmiliki wa channel pekee",
   "Свою роль изменить нельзя": "Huwezi kubadilisha jukumu lako mwenyewe",
-  "Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki. Aliyeondolewa uadmin huko — ufikiaji hapa pia hupotea.",
   "Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.": "Kila admin ni Msimamizi mara moja. Kufuta ofa na majukumu — muundaji wa channel pekee.",
   "Настроить права вручную": "Weka ruhusa mwenyewe",
   "галочками по каждой роли · пресеты — быстрый старт": "visanduku kwa kila jukumu · preset ni mwanzo wa haraka",
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Gusa kisanduku kutoa au kuondoa haki. Kufuli ni haki za kudumu za mmiliki na wa kuaminika.",
-  "подключён · бот — администратор": "imeunganishwa · boti ni admin"
+  "подключён · бот — администратор": "imeunganishwa · boti ni admin",
+  "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki: mtu akiondolewa kwenye maadmin wa channel, ufikiaji wake kwenye programu pia hupotea.",
+  "Ссылки отслеживания и кампании": "Viungo vya ufuatiliaji na kampeni"
  }
 };
