@@ -838,7 +838,11 @@ html {
     background: rgba(129,140,248,0.22);
     border-radius: 99px;
 }
-body :hover::-webkit-scrollbar-thumb {
+.drawer:hover::-webkit-scrollbar-thumb,
+.bs-sheet:hover::-webkit-scrollbar-thumb,
+.channel-settings-screen:hover::-webkit-scrollbar-thumb,
+.pw-sheet-list:hover::-webkit-scrollbar-thumb,
+.lang-list:hover::-webkit-scrollbar-thumb {
     background: rgba(129,140,248,0.55);
 }
 ::-webkit-scrollbar-thumb:hover {
