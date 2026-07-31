@@ -4609,6 +4609,7 @@ html.cs-modal-open {
 .tm-chev { color: #565b73; flex: 0 0 auto; font-size: 14px; }
 .tm-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 8px; flex: 0 0 auto; white-space: nowrap; letter-spacing: 0.1px; }
 .tm-r-owner { color: #f5bf4f; background: rgba(245,191,79,0.12); border: 1px solid rgba(245,191,79,0.4); }
+.tm-r-trustee { color: #5ab0e6; background: rgba(90,176,230,0.12); border: 1px solid rgba(90,176,230,0.4); }
 .tm-r-manager { color: #5DCAA5; background: rgba(93,202,165,0.12); border: 1px solid rgba(93,202,165,0.4); }
 .tm-r-editor { color: #818cf8; background: rgba(129,140,248,0.12); border: 1px solid rgba(129,140,248,0.4); }
 .tm-r-viewer { color: #8990a8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
@@ -4636,14 +4637,14 @@ html.cs-modal-open {
 .tm-sw.on { background: #818cf8; }
 .tm-sw.on::after { left: 19px; }
 .tm-matrix { border-radius: 14px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
-.tm-matrix table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 300px; }
+.tm-matrix table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 340px; }
 .tm-matrix th, .tm-matrix td { padding: 9px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .tm-matrix th { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2px; color: #8990a8; }
 .tm-matrix thead th:first-child, .tm-matrix td:first-child { text-align: left; padding-left: 12px; font-size: 10.5px; color: var(--text-secondary); font-weight: 600; }
 .tm-matrix tr:last-child td { border-bottom: none; }
 .tm-yes { color: #5DCAA5; }
 .tm-no { color: #565b73; }
-.tm-co { color: #f5bf4f; } .tm-cm { color: #5DCAA5; } .tm-ce { color: #818cf8; } .tm-cv { color: #8990a8; }
+.tm-co { color: #f5bf4f; } .tm-ct { color: #5ab0e6; } .tm-cm { color: #5DCAA5; } .tm-ce { color: #818cf8; } .tm-cv { color: #8990a8; }
 .tm-cell.tm-tap { cursor: pointer; }
 .tm-cbx { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid #565b73; color: transparent; transition: all 130ms; }
 .tm-cbx.on { background: rgba(93,202,165,0.9); border-color: #5DCAA5; color: #0a0d18; }

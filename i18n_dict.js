@@ -2736,7 +2736,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Roles and permissions — separate for each channel",
   "Владелец в приложении": "Owner in the app",
   "ещё не заходил в приложение": "hasn't opened the app yet",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "The bot sees the channel's creator and admins and verifies them automatically. Every admin immediately gets the Manager role and can run the offer. Deleting the offer and assigning roles belong to the channel's creator only: they can demote anyone or close access. Remove someone from the admins in Telegram — their access here disappears too."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "The bot sees the channel's creator and admins and verifies them automatically. Every admin immediately gets the Manager role and can run the offer. Deleting the offer and assigning roles belong to the channel's creator only: they can demote anyone or close access. Remove someone from the admins in Telegram — their access here disappears too.",
+  "Доверенный": "Trusted",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus assigns roles to admins. Can't change the owner, themselves or other trusted admins.",
+  "Дов.": "Trust.",
+  "Доверенный не может менять роль другого доверенного": "A trusted admin can't change another trusted admin's role",
+  "Назначать доверенных может только владелец канала": "Only the channel owner can appoint trusted admins",
+  "Свою роль изменить нельзя": "You can't change your own role"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5468,7 +5474,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Roles y permisos — por separado para cada canal",
   "Владелец в приложении": "Propietario en la aplicación",
   "ещё не заходил в приложение": "aún no ha entrado en la aplicación",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "El bot ve al creador y a los admins del canal y los verifica automáticamente. Cada admin recibe de inmediato el rol de Gestor y puede llevar la oferta. Eliminar la oferta y asignar roles es solo del creador del canal: puede degradar a cualquiera o cerrar el acceso. Si quitan a alguien de admin en Telegram, su acceso aquí desaparece."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "El bot ve al creador y a los admins del canal y los verifica automáticamente. Cada admin recibe de inmediato el rol de Gestor y puede llevar la oferta. Eliminar la oferta y asignar roles es solo del creador del canal: puede degradar a cualquiera o cerrar el acceso. Si quitan a alguien de admin en Telegram, su acceso aquí desaparece.",
+  "Доверенный": "De confianza",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza.",
+  "Дов.": "Conf.",
+  "Доверенный не может менять роль другого доверенного": "Un admin de confianza no puede cambiar el rol de otro de confianza",
+  "Назначать доверенных может только владелец канала": "Solo el propietario del canal puede nombrar admins de confianza",
+  "Свою роль изменить нельзя": "No puedes cambiar tu propio rol"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8200,7 +8212,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Rollen und Rechte — für jeden Kanal separat",
   "Владелец в приложении": "Inhaber in der App",
   "ещё не заходил в приложение": "hat die App noch nicht geöffnet",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Der Bot sieht Ersteller und Admins des Kanals und prüft sie automatisch. Jeder Admin erhält sofort die Manager-Rolle und kann das Offer führen. Löschen des Offers und Rollenvergabe hat nur der Ersteller des Kanals: er kann jeden herabstufen oder den Zugriff schließen. Wird jemand in Telegram als Admin entfernt, verschwindet sein Zugriff auch hier."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Der Bot sieht Ersteller und Admins des Kanals und prüft sie automatisch. Jeder Admin erhält sofort die Manager-Rolle und kann das Offer führen. Löschen des Offers und Rollenvergabe hat nur der Ersteller des Kanals: er kann jeden herabstufen oder den Zugriff schließen. Wird jemand in Telegram als Admin entfernt, verschwindet sein Zugriff auch hier.",
+  "Доверенный": "Vertrauensperson",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, vergibt zusätzlich Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen.",
+  "Дов.": "Vertr.",
+  "Доверенный не может менять роль другого доверенного": "Eine Vertrauensperson kann die Rolle einer anderen Vertrauensperson nicht ändern",
+  "Назначать доверенных может только владелец канала": "Vertrauenspersonen ernennt nur der Kanal-Inhaber",
+  "Свою роль изменить нельзя": "Die eigene Rolle lässt sich nicht ändern"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10927,7 +10945,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Рөлдер мен құқықтар — әр арнаға бөлек",
   "Владелец в приложении": "Қосымшадағы иесі",
   "ещё не заходил в приложение": "қосымшаға әлі кірген жоқ",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот арна құрушысы мен әкімшілерін көріп, автоматты салыстырады. Әр әкімші бірден Басқарушы рөлін алып, офферді жүргізе алады. Офферді өшіру мен рөл беру — тек арна құрушысында: ол кез келгенді төмендете немесе қатынасты жаба алады. Telegram-да әкімшіліктен алынса — мұндағы қатынас та жоғалады."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот арна құрушысы мен әкімшілерін көріп, автоматты салыстырады. Әр әкімші бірден Басқарушы рөлін алып, офферді жүргізе алады. Офферді өшіру мен рөл беру — тек арна құрушысында: ол кез келгенді төмендете немесе қатынасты жаба алады. Telegram-да әкімшіліктен алынса — мұндағы қатынас та жоғалады.",
+  "Доверенный": "Сенімді",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді.",
+  "Дов.": "Сен.",
+  "Доверенный не может менять роль другого доверенного": "Сенімді басқа сенімдінің рөлін өзгерте алмайды",
+  "Назначать доверенных может только владелец канала": "Сенімділерді тек арна иесі тағайындайды",
+  "Свою роль изменить нельзя": "Өз рөліңді өзгерте алмайсың"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13659,7 +13683,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Rollar va huquqlar — har kanal uchun alohida",
   "Владелец в приложении": "Ilovadagi ega",
   "ещё не заходил в приложение": "ilovaga hali kirmagan",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanal yaratuvchisi va adminlarini ko'rib, avtomatik tekshiradi. Har bir admin darhol Boshqaruvchi rolini oladi va offerni yurita oladi. Offerni o'chirish va rol berish faqat kanal yaratuvchisiniki: u istalgan odamni pasaytirishi yoki kirishni yopishi mumkin. Telegramda adminlikdan olingan — bu yerdagi kirish ham yo'qoladi."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanal yaratuvchisi va adminlarini ko'rib, avtomatik tekshiradi. Har bir admin darhol Boshqaruvchi rolini oladi va offerni yurita oladi. Offerni o'chirish va rol berish faqat kanal yaratuvchisiniki: u istalgan odamni pasaytirishi yoki kirishni yopishi mumkin. Telegramda adminlikdan olingan — bu yerdagi kirish ham yo'qoladi.",
+  "Доверенный": "Ishonchli",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi.",
+  "Дов.": "Ish.",
+  "Доверенный не может менять роль другого доверенного": "Ishonchli admin boshqa ishonchlining rolini o'zgartira olmaydi",
+  "Назначать доверенных может только владелец канала": "Ishonchlilarni faqat kanal egasi tayinlaydi",
+  "Свою роль изменить нельзя": "O'z rolingni o'zgartira olmaysan"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16390,7 +16420,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Ролі і правы — асобна для кожнага канала",
   "Владелец в приложении": "Уладальнік у прыкладанні",
   "ещё не заходил в приложение": "яшчэ не заходзіў у прыкладанне",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот бачыць стваральніка і адмінаў канала і звярае іх аўтаматычна. Кожны адмін адразу атрымлівае ролю Кіраўніка і можа весці офер. Выдаленне офера і ролі — толькі ў стваральніка канала: ён можа панізіць любога ці закрыць доступ. Знялі чалавека з адмінаў у Telegram — доступ тут знікне сам."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Бот бачыць стваральніка і адмінаў канала і звярае іх аўтаматычна. Кожны адмін адразу атрымлівае ролю Кіраўніка і можа весці офер. Выдаленне офера і ролі — толькі ў стваральніка канала: ён можа панізіць любога ці закрыць доступ. Знялі чалавека з адмінаў у Telegram — доступ тут знікне сам.",
+  "Доверенный": "Давераны",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных.",
+  "Дов.": "Дав.",
+  "Доверенный не может менять роль другого доверенного": "Давераны не можа мяняць ролю іншага даверанага",
+  "Назначать доверенных может только владелец канала": "Прызначаць давераных можа толькі ўладальнік канала",
+  "Свою роль изменить нельзя": "Сваю ролю змяніць нельга"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19122,7 +19158,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Rollar və icazələr — hər kanal üçün ayrı",
   "Владелец в приложении": "Tətbiqdə sahib",
   "ещё не заходил в приложение": "tətbiqə hələ girməyib",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanalın yaradıcısını və adminlərini görür və avtomatik yoxlayır. Hər admin dərhal İdarəçi rolunu alır və offeri apara bilir. Offeri silmək və rol vermək yalnız kanal yaradıcısınındır: o, istənilən adamı endirə və ya girişi bağlaya bilər. Telegram-da adminlikdən çıxarılanın buradakı girişi də itir."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot kanalın yaradıcısını və adminlərini görür və avtomatik yoxlayır. Hər admin dərhal İdarəçi rolunu alır və offeri apara bilir. Offeri silmək və rol vermək yalnız kanal yaradıcısınındır: o, istənilən adamı endirə və ya girişi bağlaya bilər. Telegram-da adminlikdən çıxarılanın buradakı girişi də itir.",
+  "Доверенный": "Etibarlı",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir.",
+  "Дов.": "Etb.",
+  "Доверенный не может менять роль другого доверенного": "Etibarlı admin başqa etibarlının rolunu dəyişə bilməz",
+  "Назначать доверенных может только владелец канала": "Etibarlıları yalnız kanal sahibi təyin edə bilər",
+  "Свою роль изменить нельзя": "Öz rolunu dəyişə bilməzsən"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21854,7 +21896,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "الأدوار والصلاحيات — لكل قناة على حدة",
   "Владелец в приложении": "المالك في التطبيق",
   "ещё не заходил в приложение": "لم يدخل التطبيق بعد",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "يرى البوت منشئ القناة ومشرفيها ويتحقق منهم تلقائياً. كل مشرف يحصل فوراً على دور المدير ويمكنه إدارة العرض. حذف العرض ومنح الأدوار للمنشئ وحده: يمكنه تخفيض أي شخص أو إغلاق الوصول. من أُزيل من المشرفين في تيليجرام يفقد وصوله هنا أيضاً."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "يرى البوت منشئ القناة ومشرفيها ويتحقق منهم تلقائياً. كل مشرف يحصل فوراً على دور المدير ويمكنه إدارة العرض. حذف العرض ومنح الأدوار للمنشئ وحده: يمكنه تخفيض أي شخص أو إغلاق الوصول. من أُزيل من المشرفين في تيليجرام يفقد وصوله هنا أيضاً.",
+  "Доверенный": "موثوق",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويمنح الأدوار للمشرفين أيضاً. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين.",
+  "Дов.": "موثوق",
+  "Доверенный не может менять роль другого доверенного": "لا يمكن للموثوق تغيير دور موثوق آخر",
+  "Назначать доверенных может только владелец канала": "تعيين الموثوقين للمالك وحده",
+  "Свою роль изменить нельзя": "لا يمكنك تغيير دورك"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24586,7 +24634,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "نقش‌ها و دسترسی‌ها — برای هر کانال جداگانه",
   "Владелец в приложении": "مالک در اپلیکیشن",
   "ещё не заходил в приложение": "هنوز وارد اپلیکیشن نشده است",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "بات سازنده و ادمین‌های کانال را می‌بیند و خودکار بررسی می‌کند. هر ادمین بلافاصله نقش مدیر می‌گیرد و می‌تواند آفر را اداره کند. حذف آفر و دادن نقش‌ها فقط با سازنده کانال است: می‌تواند هر کسی را پایین بیاورد یا دسترسی را ببندد. اگر کسی در تلگرام از ادمینی برداشته شود، دسترسی‌اش اینجا هم می‌رود."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "بات سازنده و ادمین‌های کانال را می‌بیند و خودکار بررسی می‌کند. هر ادمین بلافاصله نقش مدیر می‌گیرد و می‌تواند آفر را اداره کند. حذف آفر و دادن نقش‌ها فقط با سازنده کانال است: می‌تواند هر کسی را پایین بیاورد یا دسترسی را ببندد. اگر کسی در تلگرام از ادمینی برداشته شود، دسترسی‌اش اینجا هم می‌رود.",
+  "Доверенный": "معتمد",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد.",
+  "Дов.": "معتمد",
+  "Доверенный не может менять роль другого доверенного": "معتمد نمی‌تواند نقش معتمد دیگر را تغییر دهد",
+  "Назначать доверенных может только владелец канала": "تعیین معتمدها فقط با مالک کانال است",
+  "Свою роль изменить нельзя": "نقش خودت را نمی‌توانی تغییر دهی"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27318,7 +27372,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Roller ve yetkiler — her kanal için ayrı",
   "Владелец в приложении": "Uygulamada sahip",
   "ещё не заходил в приложение": "uygulamaya henüz girmedi",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot, kanalın kurucusunu ve adminlerini görür ve otomatik doğrular. Her admin hemen İdareci rolünü alır ve teklifi yönetebilir. Teklifi silmek ve rol vermek yalnızca kanal kurucusuna aittir: herkesi düşürebilir veya erişimi kapatabilir. Telegram'da adminlikten alınan kişinin buradaki erişimi de kaybolur."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot, kanalın kurucusunu ve adminlerini görür ve otomatik doğrular. Her admin hemen İdareci rolünü alır ve teklifi yönetebilir. Teklifi silmek ve rol vermek yalnızca kanal kurucusuna aittir: herkesi düşürebilir veya erişimi kapatabilir. Telegram'da adminlikten alınan kişinin buradaki erişimi de kaybolur.",
+  "Доверенный": "Güvenilir",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez.",
+  "Дов.": "Güv.",
+  "Доверенный не может менять роль другого доверенного": "Güvenilir bir admin, başka bir güvenilirin rolünü değiştiremez",
+  "Назначать доверенных может только владелец канала": "Güvenilirleri yalnızca kanal sahibi atayabilir",
+  "Свою роль изменить нельзя": "Kendi rolünü değiştiremezsin"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30050,7 +30110,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "भूमिकाएँ और अधिकार — हर चैनल के लिए अलग",
   "Владелец в приложении": "ऐप में मालिक",
   "ещё не заходил в приложение": "अभी ऐप में नहीं आया",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "बॉट चैनल के निर्माता और एडमिन देखता है और अपने आप जाँचता है। हर एडमिन को तुरंत प्रबंधक भूमिका मिलती है और वह ऑफ़र चला सकता है। ऑफ़र हटाना और भूमिकाएँ देना सिर्फ़ चैनल निर्माता का है: वह किसी को भी नीचे कर सकता है या पहुँच बंद कर सकता है। Telegram में एडमिन से हटाया — यहाँ भी पहुँच चली जाती है।"
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "बॉट चैनल के निर्माता और एडमिन देखता है और अपने आप जाँचता है। हर एडमिन को तुरंत प्रबंधक भूमिका मिलती है और वह ऑफ़र चला सकता है। ऑफ़र हटाना और भूमिकाएँ देना सिर्फ़ चैनल निर्माता का है: वह किसी को भी नीचे कर सकता है या पहुँच बंद कर सकता है। Telegram में एडमिन से हटाया — यहाँ भी पहुँच चली जाती है।",
+  "Доверенный": "विश्वस्त",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।",
+  "Дов.": "विश्व.",
+  "Доверенный не может менять роль другого доверенного": "विश्वस्त दूसरे विश्वस्त की भूमिका नहीं बदल सकता",
+  "Назначать доверенных может только владелец канала": "विश्वस्त सिर्फ़ चैनल मालिक नियुक्त कर सकता है",
+  "Свою роль изменить нельзя": "अपनी भूमिका नहीं बदल सकते"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32782,7 +32848,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "ভূমিকা ও অনুমতি — প্রতিটি চ্যানেলের জন্য আলাদা",
   "Владелец в приложении": "অ্যাপে মালিক",
   "ещё не заходил в приложение": "এখনও অ্যাপে আসেনি",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "বট চ্যানেলের নির্মাতা ও অ্যাডমিনদের দেখে এবং স্বয়ংক্রিয়ভাবে যাচাই করে। প্রতিটি অ্যাডমিন সঙ্গে সঙ্গে ম্যানেজার ভূমিকা পায় এবং অফার চালাতে পারে। অফার মোছা ও ভূমিকা দেওয়া শুধু চ্যানেল নির্মাতার: তিনি যে কাউকে নামাতে বা অ্যাক্সেস বন্ধ করতে পারেন। Telegram-এ অ্যাডমিন থেকে বাদ — এখানকার অ্যাক্সেসও চলে যায়।"
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "বট চ্যানেলের নির্মাতা ও অ্যাডমিনদের দেখে এবং স্বয়ংক্রিয়ভাবে যাচাই করে। প্রতিটি অ্যাডমিন সঙ্গে সঙ্গে ম্যানেজার ভূমিকা পায় এবং অফার চালাতে পারে। অফার মোছা ও ভূমিকা দেওয়া শুধু চ্যানেল নির্মাতার: তিনি যে কাউকে নামাতে বা অ্যাক্সেস বন্ধ করতে পারেন। Telegram-এ অ্যাডমিন থেকে বাদ — এখানকার অ্যাক্সেসও চলে যায়।",
+  "Доверенный": "বিশ্বস্ত",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।",
+  "Дов.": "বিশ্ব.",
+  "Доверенный не может менять роль другого доверенного": "বিশ্বস্ত অন্য বিশ্বস্তের ভূমিকা বদলাতে পারে না",
+  "Назначать доверенных может только владелец канала": "বিশ্বস্ত নিয়োগ শুধু চ্যানেল মালিক করতে পারেন",
+  "Свою роль изменить нельзя": "নিজের ভূমিকা বদলানো যায় না"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35514,7 +35586,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Peran dan izin — terpisah untuk tiap channel",
   "Владелец в приложении": "Pemilik di aplikasi",
   "ещё не заходил в приложение": "belum pernah membuka aplikasi",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot melihat pembuat dan admin channel lalu memverifikasinya otomatis. Setiap admin langsung mendapat peran Pengelola dan bisa menjalankan penawaran. Menghapus penawaran dan memberi peran hanya milik pembuat channel: dia bisa menurunkan siapa pun atau menutup akses. Dicabut dari admin di Telegram — aksesnya di sini juga hilang."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot melihat pembuat dan admin channel lalu memverifikasinya otomatis. Setiap admin langsung mendapat peran Pengelola dan bisa menjalankan penawaran. Menghapus penawaran dan memberi peran hanya milik pembuat channel: dia bisa menurunkan siapa pun atau menutup akses. Dicabut dari admin di Telegram — aksesnya di sini juga hilang.",
+  "Доверенный": "Tepercaya",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain.",
+  "Дов.": "Perc.",
+  "Доверенный не может менять роль другого доверенного": "Admin tepercaya tidak bisa mengubah peran tepercaya lain",
+  "Назначать доверенных может только владелец канала": "Hanya pemilik channel yang bisa menunjuk admin tepercaya",
+  "Свою роль изменить нельзя": "Kamu tidak bisa mengubah peranmu sendiri"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38246,7 +38324,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Vai trò và quyền — riêng cho từng kênh",
   "Владелец в приложении": "Chủ sở hữu trong ứng dụng",
   "ещё не заходил в приложение": "chưa từng vào ứng dụng",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot thấy người tạo kênh và các admin, tự động đối chiếu. Mỗi admin lập tức nhận vai trò Quản lý và có thể vận hành offer. Xóa offer và cấp vai trò chỉ thuộc về người tạo kênh: họ có thể hạ cấp bất kỳ ai hoặc đóng quyền truy cập. Bị gỡ khỏi admin trong Telegram — quyền ở đây cũng mất."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Bot thấy người tạo kênh và các admin, tự động đối chiếu. Mỗi admin lập tức nhận vai trò Quản lý và có thể vận hành offer. Xóa offer và cấp vai trò chỉ thuộc về người tạo kênh: họ có thể hạ cấp bất kỳ ai hoặc đóng quyền truy cập. Bị gỡ khỏi admin trong Telegram — quyền ở đây cũng mất.",
+  "Доверенный": "Tin cậy",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác.",
+  "Дов.": "T.cậy",
+  "Доверенный не может менять роль другого доверенного": "Người tin cậy không thể đổi vai trò của người tin cậy khác",
+  "Назначать доверенных может только владелец канала": "Chỉ chủ kênh mới bổ nhiệm được người tin cậy",
+  "Свою роль изменить нельзя": "Bạn không thể đổi vai trò của chính mình"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -40978,7 +41062,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Papéis e permissões — separados para cada canal",
   "Владелец в приложении": "Dono no aplicativo",
   "ещё не заходил в приложение": "ainda não entrou no aplicativo",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "O bot vê o criador e os admins do canal e os verifica automaticamente. Cada admin recebe imediatamente o papel de Gestor e pode conduzir a oferta. Apagar a oferta e atribuir papéis é só do criador do canal: ele pode rebaixar qualquer um ou fechar o acesso. Removido dos admins no Telegram — o acesso aqui some também."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "O bot vê o criador e os admins do canal e os verifica automaticamente. Cada admin recebe imediatamente o papel de Gestor e pode conduzir a oferta. Apagar a oferta e atribuir papéis é só do criador do canal: ele pode rebaixar qualquer um ou fechar o acesso. Removido dos admins no Telegram — o acesso aqui some também.",
+  "Доверенный": "De confiança",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança.",
+  "Дов.": "Conf.",
+  "Доверенный не может менять роль другого доверенного": "Um admin de confiança não pode mudar o papel de outro de confiança",
+  "Назначать доверенных может только владелец канала": "Só o dono do canal pode nomear admins de confiança",
+  "Свою роль изменить нельзя": "Você não pode mudar seu próprio papel"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43710,7 +43800,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Rôles et droits — séparés pour chaque chaîne",
   "Владелец в приложении": "Propriétaire dans l'appli",
   "ещё не заходил в приложение": "n'a pas encore ouvert l'appli",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Le bot voit le créateur et les admins de la chaîne et les vérifie automatiquement. Chaque admin reçoit aussitôt le rôle de Gestionnaire et peut gérer l'offre. La suppression de l'offre et les rôles n'appartiennent qu'au créateur de la chaîne : il peut rétrograder quiconque ou fermer l'accès. Retiré des admins dans Telegram — l'accès ici disparaît aussi."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Le bot voit le créateur et les admins de la chaîne et les vérifie automatiquement. Chaque admin reçoit aussitôt le rôle de Gestionnaire et peut gérer l'offre. La suppression de l'offre et les rôles n'appartiennent qu'au créateur de la chaîne : il peut rétrograder quiconque ou fermer l'accès. Retiré des admins dans Telegram — l'accès ici disparaît aussi.",
+  "Доверенный": "De confiance",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et attribue en plus les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance.",
+  "Дов.": "Conf.",
+  "Доверенный не может менять роль другого доверенного": "Une personne de confiance ne peut pas changer le rôle d'une autre personne de confiance",
+  "Назначать доверенных может только владелец канала": "Seul le propriétaire de la chaîne peut nommer des personnes de confiance",
+  "Свою роль изменить нельзя": "Tu ne peux pas changer ton propre rôle"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46442,7 +46538,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Ruoli e permessi — separati per ogni canale",
   "Владелец в приложении": "Proprietario nell'app",
   "ещё не заходил в приложение": "non ha ancora aperto l'app",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Il bot vede il creatore e gli admin del canale e li verifica automaticamente. Ogni admin riceve subito il ruolo di Gestore e può gestire l'offerta. Eliminare l'offerta e assegnare i ruoli spetta solo al creatore del canale: può retrocedere chiunque o chiudere l'accesso. Rimosso dagli admin in Telegram — l'accesso qui sparisce."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Il bot vede il creatore e gli admin del canale e li verifica automaticamente. Ogni admin riceve subito il ruolo di Gestore e può gestire l'offerta. Eliminare l'offerta e assegnare i ruoli spetta solo al creatore del canale: può retrocedere chiunque o chiudere l'accesso. Rimosso dagli admin in Telegram — l'accesso qui sparisce.",
+  "Доверенный": "Fiduciario",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari.",
+  "Дов.": "Fid.",
+  "Доверенный не может менять роль другого доверенного": "Un fiduciario non può cambiare il ruolo di un altro fiduciario",
+  "Назначать доверенных может только владелец канала": "Solo il proprietario del canale può nominare fiduciari",
+  "Свою роль изменить нельзя": "Non puoi cambiare il tuo ruolo"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49174,7 +49276,13 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "ሚናዎች እና ፈቃዶች — ለእያንዳንዱ ቻናል ለየብቻ",
   "Владелец в приложении": "በመተግበሪያው ውስጥ ባለቤት",
   "ещё не заходил в приложение": "እስካሁን መተግበሪያውን አልከፈተም",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "ቦቱ የቻናሉን ፈጣሪ እና አስተዳዳሪዎች ያያል፣ በራስ-ሰር ያረጋግጣል። እያንዳንዱ አስተዳዳሪ ወዲያውኑ የሥራ አስኪያጅ ሚና ያገኛል እና ኦፈሩን መምራት ይችላል። ኦፈሩን መሰረዝ እና ሚና መስጠት የቻናሉ ፈጣሪ ብቻ ነው፦ ማንኛውንም ሰው ማውረድ ወይም መዳረሻ መዝጋት ይችላል። በቴሌግራም ከአስተዳዳሪነት ከተነሳ — እዚህም መዳረሻው ይጠፋል።"
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "ቦቱ የቻናሉን ፈጣሪ እና አስተዳዳሪዎች ያያል፣ በራስ-ሰር ያረጋግጣል። እያንዳንዱ አስተዳዳሪ ወዲያውኑ የሥራ አስኪያጅ ሚና ያገኛል እና ኦፈሩን መምራት ይችላል። ኦፈሩን መሰረዝ እና ሚና መስጠት የቻናሉ ፈጣሪ ብቻ ነው፦ ማንኛውንም ሰው ማውረድ ወይም መዳረሻ መዝጋት ይችላል። በቴሌግራም ከአስተዳዳሪነት ከተነሳ — እዚህም መዳረሻው ይጠፋል።",
+  "Доверенный": "የታመነ",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።",
+  "Дов.": "የታመ.",
+  "Доверенный не может менять роль другого доверенного": "የታመነ ሰው የሌላ የታመነን ሚና መለወጥ አይችልም",
+  "Назначать доверенных может только владелец канала": "የታመኑትን መሾም የቻናሉ ባለቤት ብቻ ነው",
+  "Свою роль изменить нельзя": "የራስህን ሚና መለወጥ አትችልም"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -51906,6 +52014,12 @@ window.__I18N_DICT = {
   "Роли и права — отдельно для каждого канала": "Majukumu na ruhusa — tofauti kwa kila channel",
   "Владелец в приложении": "Mmiliki kwenye programu",
   "ещё не заходил в приложение": "bado hajafungua programu",
-  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Boti huona muundaji na maadmin wa channel na kuwahakiki kiotomatiki. Kila admin mara moja anapata jukumu la Msimamizi na anaweza kuendesha ofa. Kufuta ofa na kutoa majukumu ni vya muundaji wa channel pekee: anaweza kumshusha yeyote au kufunga ufikiaji. Aliyeondolewa uadmin kwenye Telegram — ufikiaji wake hapa pia hupotea."
+  "Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.": "Boti huona muundaji na maadmin wa channel na kuwahakiki kiotomatiki. Kila admin mara moja anapata jukumu la Msimamizi na anaweza kuendesha ofa. Kufuta ofa na kutoa majukumu ni vya muundaji wa channel pekee: anaweza kumshusha yeyote au kufunga ufikiaji. Aliyeondolewa uadmin kwenye Telegram — ufikiaji wake hapa pia hupotea.",
+  "Доверенный": "Wa kuaminika",
+  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine.",
+  "Дов.": "Amin.",
+  "Доверенный не может менять роль другого доверенного": "Admin wa kuaminika hawezi kubadilisha jukumu la mwingine wa kuaminika",
+  "Назначать доверенных может только владелец канала": "Wa kuaminika huteuliwa na mmiliki wa channel pekee",
+  "Свою роль изменить нельзя": "Huwezi kubadilisha jukumu lako mwenyewe"
  }
 };

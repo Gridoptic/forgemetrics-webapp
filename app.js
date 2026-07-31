@@ -882,6 +882,7 @@ async function hcSave(reset) {
 let _tmCtx = null;
 const TM_ROLES = {
     owner: { nm: 'Владелец', ic: 'crown', cls: 'tm-r-owner' },
+    trustee: { nm: 'Доверенный', ic: 'key', cls: 'tm-r-trustee', d: 'Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.' },
     manager: { nm: 'Управляющий', ic: 'shield-check', cls: 'tm-r-manager', d: 'Редактирует, публикует, замораживает, ведёт календарь. Не удаляет оффер и не меняет команду.' },
     editor: { nm: 'Редактор', ic: 'pencil', cls: 'tm-r-editor', d: 'Меняет оформление, тексты и календарь. Не публикует, не замораживает, не удаляет.' },
     viewer: { nm: 'Наблюдатель', ic: 'eye', cls: 'tm-r-viewer', d: 'Видит оффер, метрики и сделки. Ничего не меняет.' },
@@ -960,7 +961,7 @@ async function openTeamChannel(chId) {
     let d = null;
     try { d = await apiRequest('/api/v1/team/' + chId + '?sync=1'); } catch (e) {}
     if (!d || !d.ok) { cabToast('Не удалось загрузить команду канала'); return; }
-    if (d.my_role === 'owner') _tmOwnerView(d); else _tmMemberView(d);
+    if (d.my_role === 'owner' || d.my_role === 'trustee') _tmOwnerView(d); else _tmMemberView(d);
 }
 
 function _tmHead(d) {
@@ -1007,16 +1008,24 @@ function _tmOwnerView(d) {
         <button class="co-close" id="tm-refresh"><i class="ti ti-refresh"></i> Обновить из Telegram</button>`);
 
     const chId = d.channel.id;
+    const isOwner = d.my_role === 'owner';
+    const myId = tg?.initDataUnsafe?.user?.id;
     members.filter(m => !m.is_owner).forEach(m => {
         const row = sheet.querySelector(`[data-tmu="${m.user_id}"]`);
         if (!row) return;
-        row.addEventListener('click', () => _tmTogglePick(sheet, chId, m));
+        if (!isOwner && (m.role === 'trustee' || m.user_id === myId)) {
+            const chev = row.querySelector('.tm-chev');
+            if (chev) chev.remove();
+            row.classList.remove('tm-pick');
+            return;
+        }
+        row.addEventListener('click', () => _tmTogglePick(sheet, chId, m, isOwner));
     });
 
     let matrix = JSON.parse(JSON.stringify(d.matrix || {}));
     let editMode = false;
     const drawMatrix = () => {
-        const cols = [['owner', 'Влад.', 'tm-co'], ['manager', 'Упр.', 'tm-cm'], ['editor', 'Ред.', 'tm-ce'], ['viewer', 'Набл.', 'tm-cv']];
+        const cols = [['owner', 'Влад.', 'tm-co'], ['trustee', 'Дов.', 'tm-ct'], ['manager', 'Упр.', 'tm-cm'], ['editor', 'Ред.', 'tm-ce'], ['viewer', 'Набл.', 'tm-cv']];
         const ownerP = { view: true, edit: true, pub: true, del: true, team: true };
         let h = '<table><thead><tr><th>Действие</th>' + cols.map(c => `<th class="${c[2]}">${c[1]}</th>`).join('') + '</tr></thead><tbody>';
         TM_ACTS.forEach(a => {
@@ -1053,7 +1062,9 @@ function _tmOwnerView(d) {
     drawMatrix();
 
     const mtog = sheet.querySelector('#tm-mtog');
+    if (!isOwner) mtog.style.display = 'none';
     mtog.addEventListener('click', () => {
+        if (!isOwner) return;
         editMode = !editMode;
         mtog.querySelector('.tm-sw').classList.toggle('on', editMode || d.custom);
         sheet.querySelector('#tm-mhint').style.display = editMode ? 'block' : 'none';
@@ -1062,7 +1073,7 @@ function _tmOwnerView(d) {
     });
     sheet.querySelector('#tm-apply').addEventListener('click', async () => {
         const perms = {};
-        ['manager', 'editor', 'viewer'].forEach(r => {
+        ['trustee', 'manager', 'editor', 'viewer'].forEach(r => {
             perms[r] = { edit: !!(matrix[r] && matrix[r].edit), pub: !!(matrix[r] && matrix[r].pub), del: !!(matrix[r] && matrix[r].del) };
         });
         try {
@@ -1082,14 +1093,14 @@ function _tmOwnerView(d) {
     localizeTree(sheet);
 }
 
-function _tmTogglePick(sheet, chId, m) {
+function _tmTogglePick(sheet, chId, m, isOwner) {
     const box = sheet.querySelector('#tm-pick-' + m.user_id);
     if (!box) return;
     const open = box.style.display !== 'none';
     sheet.querySelectorAll('.tm-rolepick').forEach(b => { b.style.display = 'none'; });
     if (open) return;
     hapticLight();
-    const opts = ['manager', 'editor', 'viewer', 'none'].map(rk => {
+    const opts = (isOwner ? ['trustee', 'manager', 'editor', 'viewer', 'none'] : ['manager', 'editor', 'viewer', 'none']).map(rk => {
         const r = TM_ROLES[rk];
         const sel = (m.role === rk) || (rk === 'none' && (!m.role || m.role === 'none'));
         return `<div class="tm-ropt${sel ? ' sel' : ''}" data-rset="${rk}">

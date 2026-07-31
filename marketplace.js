@@ -2626,7 +2626,7 @@
         return '<span class="fmx-mine-st" style="color:' + s[0] + ';border-color:' + s[0] + '33;background:' + s[0] + '14;">' + _esc(l.status_human || s[1]) + '</span>';
     }
 
-    var _TEAM_ROLE_RU = { manager: 'Управляющий', editor: 'Редактор', viewer: 'Наблюдатель' };
+    var _TEAM_ROLE_RU = { owner: 'Владелец', trustee: 'Доверенный', manager: 'Управляющий', editor: 'Редактор', viewer: 'Наблюдатель' };
     function mineCard(l) {
         var t = l.title || l.username || '?';
         var av = l.avatar_url
