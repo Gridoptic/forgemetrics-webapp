@@ -2733,7 +2733,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Owner in the app",
   "ещё не заходил в приложение": "hasn't opened the app yet",
   "Доверенный": "Trusted",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus assigns roles to admins. Can't change the owner, themselves or other trusted admins.",
   "Дов.": "Trust.",
   "Доверенный не может менять роль другого доверенного": "A trusted admin can't change another trusted admin's role",
   "Назначать доверенных может только владелец канала": "Only the channel owner can appoint trusted admins",
@@ -2744,7 +2743,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tap a checkbox to grant or revoke a right. Locks are the fixed rights of the owner and the trusted admin.",
   "подключён · бот — администратор": "connected · bot is an admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "The admin list and permissions sync with Telegram automatically: if someone is removed from the channel's admins, their access in the app disappears too.",
-  "Ссылки отслеживания и кампании": "Tracking links & campaigns"
+  "Ссылки отслеживания и кампании": "Tracking links & campaigns",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus deletes the offer and assigns roles to admins. Can't change the owner, themselves or other trusted admins."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5473,7 +5473,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Propietario en la aplicación",
   "ещё не заходил в приложение": "aún no ha entrado en la aplicación",
   "Доверенный": "De confianza",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza.",
   "Дов.": "Conf.",
   "Доверенный не может менять роль другого доверенного": "Un admin de confianza no puede cambiar el rol de otro de confianza",
   "Назначать доверенных может только владелец канала": "Solo el propietario del canal puede nombrar admins de confianza",
@@ -5484,7 +5483,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Toca una casilla para dar o quitar un permiso. Los candados son los derechos fijos del propietario y del admin de confianza.",
   "подключён · бот — администратор": "conectado · el bot es admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente: si quitan a alguien de los admins del canal, su acceso en la aplicación también desaparece.",
-  "Ссылки отслеживания и кампании": "Enlaces de seguimiento y campañas"
+  "Ссылки отслеживания и кампании": "Enlaces de seguimiento y campañas",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además elimina la oferta y asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8213,7 +8213,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Inhaber in der App",
   "ещё не заходил в приложение": "hat die App noch nicht geöffnet",
   "Доверенный": "Vertrauensperson",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, vergibt zusätzlich Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen.",
   "Дов.": "Vertr.",
   "Доверенный не может менять роль другого доверенного": "Eine Vertrauensperson kann die Rolle einer anderen Vertrauensperson nicht ändern",
   "Назначать доверенных может только владелец канала": "Vertrauenspersonen ernennt nur der Kanal-Inhaber",
@@ -8224,7 +8223,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tippe auf ein Häkchen, um ein Recht zu vergeben oder zu entziehen. Schlösser sind die festen Rechte von Inhaber und Vertrauensperson.",
   "подключён · бот — администратор": "verbunden · Bot ist Admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen: wird jemand aus den Kanal-Admins entfernt, verschwindet sein Zugriff auch in der App.",
-  "Ссылки отслеживания и кампании": "Tracking-Links und Kampagnen"
+  "Ссылки отслеживания и кампании": "Tracking-Links und Kampagnen",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, löscht zusätzlich das Offer und vergibt Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10948,7 +10948,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Қосымшадағы иесі",
   "ещё не заходил в приложение": "қосымшаға әлі кірген жоқ",
   "Доверенный": "Сенімді",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді.",
   "Дов.": "Сен.",
   "Доверенный не может менять роль другого доверенного": "Сенімді басқа сенімдінің рөлін өзгерте алмайды",
   "Назначать доверенных может только владелец канала": "Сенімділерді тек арна иесі тағайындайды",
@@ -10959,7 +10958,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Құқық беру не алу үшін белгіні бас. Құлыптар — иесі мен сенімдінің тұрақты құқықтары.",
   "подключён · бот — администратор": "қосылған · бот — әкімші",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі: адам арна әкімшілерінен алынса, қосымшадағы қатынасы да жоғалады.",
-  "Ссылки отслеживания и кампании": "Бақылау сілтемелері мен науқандар"
+  "Ссылки отслеживания и кампании": "Бақылау сілтемелері мен науқандар",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса офферді өшіреді және әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13688,7 +13688,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Ilovadagi ega",
   "ещё не заходил в приложение": "ilovaga hali kirmagan",
   "Доверенный": "Ishonchli",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi.",
   "Дов.": "Ish.",
   "Доверенный не может менять роль другого доверенного": "Ishonchli admin boshqa ishonchlining rolini o'zgartira olmaydi",
   "Назначать доверенных может только владелец канала": "Ishonchlilarni faqat kanal egasi tayinlaydi",
@@ -13699,7 +13698,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Huquq berish yoki olish uchun belgini bosing. Qulflar — ega va ishonchlining doimiy huquqlari.",
   "подключён · бот — администратор": "ulangan · bot admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi: kimdir kanal adminlaridan olinsa, ilovadagi kirishi ham yo'qoladi.",
-  "Ссылки отслеживания и кампании": "Kuzatuv havolalari va kampaniyalar"
+  "Ссылки отслеживания и кампании": "Kuzatuv havolalari va kampaniyalar",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha offerni o'chiradi va adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16427,7 +16427,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Уладальнік у прыкладанні",
   "ещё не заходил в приложение": "яшчэ не заходзіў у прыкладанне",
   "Доверенный": "Давераны",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных.",
   "Дов.": "Дав.",
   "Доверенный не может менять роль другого доверенного": "Давераны не можа мяняць ролю іншага даверанага",
   "Назначать доверенных может только владелец канала": "Прызначаць давераных можа толькі ўладальнік канала",
@@ -16438,7 +16437,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Тапні па галачцы, каб даць ці зняць права. Замкі — фіксаваныя правы ўладальніка і даверанага.",
   "подключён · бот — администратор": "падключаны · бот — адміністратар",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна: калі чалавека знялі з адміністратараў канала — доступ у прыкладанні знікне сам.",
-  "Ссылки отслеживания и кампании": "Спасылкі адсочвання і кампаніі"
+  "Ссылки отслеживания и кампании": "Спасылкі адсочвання і кампаніі",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс выдаляе офер і раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19167,7 +19167,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Tətbiqdə sahib",
   "ещё не заходил в приложение": "tətbiqə hələ girməyib",
   "Доверенный": "Etibarlı",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir.",
   "Дов.": "Etb.",
   "Доверенный не может менять роль другого доверенного": "Etibarlı admin başqa etibarlının rolunu dəyişə bilməz",
   "Назначать доверенных может только владелец канала": "Etibarlıları yalnız kanal sahibi təyin edə bilər",
@@ -19178,7 +19177,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "İcazə vermək və ya almaq üçün işarəyə toxun. Kilidlər sahibin və etibarlının sabit hüquqlarıdır.",
   "подключён · бот — администратор": "qoşulub · bot admindir",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır: kimsə kanal adminlərindən çıxarılsa, tətbiqdəki girişi də itir.",
-  "Ссылки отслеживания и кампании": "İzləmə linkləri və kampaniyalar"
+  "Ссылки отслеживания и кампании": "İzləmə linkləri və kampaniyalar",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik offeri silir və adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21907,7 +21907,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "المالك في التطبيق",
   "ещё не заходил в приложение": "لم يدخل التطبيق بعد",
   "Доверенный": "موثوق",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويمنح الأدوار للمشرفين أيضاً. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين.",
   "Дов.": "موثوق",
   "Доверенный не может менять роль другого доверенного": "لا يمكن للموثوق تغيير دور موثوق آخر",
   "Назначать доверенных может только владелец канала": "تعيين الموثوقين للمالك وحده",
@@ -21918,7 +21917,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "اضغط على المربع لمنح صلاحية أو سحبها. الأقفال هي الحقوق الثابتة للمالك والموثوق.",
   "подключён · бот — администратор": "مربوطة · البوت مشرف",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً: إذا أُزيل أحد من مشرفي القناة، يختفي وصوله في التطبيق أيضاً.",
-  "Ссылки отслеживания и кампании": "روابط التتبع والحملات"
+  "Ссылки отслеживания и кампании": "روابط التتبع والحملات",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويحذف العرض أيضاً ويمنح الأدوار للمشرفين. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24647,7 +24647,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "مالک در اپلیکیشن",
   "ещё не заходил в приложение": "هنوز وارد اپلیکیشن نشده است",
   "Доверенный": "معتمد",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد.",
   "Дов.": "معتمد",
   "Доверенный не может менять роль другого доверенного": "معتمد نمی‌تواند نقش معتمد دیگر را تغییر دهد",
   "Назначать доверенных может только владелец канала": "تعیین معتمدها فقط با مالک کانال است",
@@ -24658,7 +24657,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "برای دادن یا گرفتن دسترسی روی تیک بزن. قفل‌ها حقوق ثابت مالک و معتمد هستند.",
   "подключён · бот — администратор": "وصل است · بات ادمین است",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود: اگر کسی از ادمین‌های کانال برداشته شود، دسترسی‌اش در اپلیکیشن هم می‌رود.",
-  "Ссылки отслеживания и кампании": "لینک‌های ردیابی و کمپین‌ها"
+  "Ссылки отслеживания и кампании": "لینک‌های ردیابی و کمپین‌ها",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه آفر را حذف می‌کند و به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27387,7 +27387,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Uygulamada sahip",
   "ещё не заходил в приложение": "uygulamaya henüz girmedi",
   "Доверенный": "Güvenilir",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez.",
   "Дов.": "Güv.",
   "Доверенный не может менять роль другого доверенного": "Güvenilir bir admin, başka bir güvenilirin rolünü değiştiremez",
   "Назначать доверенных может только владелец канала": "Güvenilirleri yalnızca kanal sahibi atayabilir",
@@ -27398,7 +27397,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Bir yetkiyi vermek veya almak için kutuya dokun. Kilitler, sahibin ve güvenilirin sabit haklarıdır.",
   "подключён · бот — администратор": "bağlı · bot admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir: biri kanal adminlerinden çıkarılırsa uygulamadaki erişimi de kaybolur.",
-  "Ссылки отслеживания и кампании": "Takip bağlantıları ve kampanyalar"
+  "Ссылки отслеживания и кампании": "Takip bağlantıları ve kampanyalar",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca teklifi siler ve adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30127,7 +30127,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "ऐप में मालिक",
   "ещё не заходил в приложение": "अभी ऐप में नहीं आया",
   "Доверенный": "विश्वस्त",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।",
   "Дов.": "विश्व.",
   "Доверенный не может менять роль другого доверенного": "विश्वस्त दूसरे विश्वस्त की भूमिका नहीं बदल सकता",
   "Назначать доверенных может только владелец канала": "विश्वस्त सिर्फ़ चैनल मालिक नियुक्त कर सकता है",
@@ -30138,7 +30137,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "अधिकार देने या हटाने के लिए चेकबॉक्स पर टैप करो। ताले मालिक और विश्वस्त के स्थायी अधिकार हैं।",
   "подключён · бот — администратор": "जुड़ा है · बॉट एडमिन है",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं: अगर किसी को चैनल के एडमिन से हटाया गया, तो ऐप में उसकी पहुँच भी चली जाती है।",
-  "Ссылки отслеживания и кампании": "ट्रैकिंग लिंक और कैंपेन"
+  "Ссылки отслеживания и кампании": "ट्रैकिंग लिंक और कैंपेन",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही ऑफ़र हटाता है और एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32867,7 +32867,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "অ্যাপে মালিক",
   "ещё не заходил в приложение": "এখনও অ্যাপে আসেনি",
   "Доверенный": "বিশ্বস্ত",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।",
   "Дов.": "বিশ্ব.",
   "Доверенный не может менять роль другого доверенного": "বিশ্বস্ত অন্য বিশ্বস্তের ভূমিকা বদলাতে পারে না",
   "Назначать доверенных может только владелец канала": "বিশ্বস্ত নিয়োগ শুধু চ্যানেল মালিক করতে পারেন",
@@ -32878,7 +32877,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "অনুমতি দিতে বা কাড়তে চেকবক্সে ট্যাপ করো। তালা মালিক ও বিশ্বস্তের স্থায়ী অধিকার।",
   "подключён · бот — администратор": "যুক্ত · বট অ্যাডমিন",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "অ্যাডমিন তালিকা ও অনুমতি Telegram-এর সাথে স্বয়ংক্রিয়ভাবে সিঙ্ক হয়: কাউকে চ্যানেলের অ্যাডমিন থেকে বাদ দিলে অ্যাপে তার অ্যাক্সেসও চলে যায়।",
-  "Ссылки отслеживания и кампании": "ট্র্যাকিং লিংক ও ক্যাম্পেইন"
+  "Ссылки отслеживания и кампании": "ট্র্যাকিং লিংক ও ক্যাম্পেইন",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অফার মোছে ও অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35607,7 +35607,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Pemilik di aplikasi",
   "ещё не заходил в приложение": "belum pernah membuka aplikasi",
   "Доверенный": "Tepercaya",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain.",
   "Дов.": "Perc.",
   "Доверенный не может менять роль другого доверенного": "Admin tepercaya tidak bisa mengubah peran tepercaya lain",
   "Назначать доверенных может только владелец канала": "Hanya pemilik channel yang bisa menunjuk admin tepercaya",
@@ -35618,7 +35617,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Ketuk centang untuk memberi atau mencabut hak. Gembok adalah hak tetap pemilik dan admin tepercaya.",
   "подключён · бот — администратор": "terhubung · bot adalah admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Daftar admin dan izin tersinkron otomatis dengan Telegram: jika seseorang dicabut dari admin channel, aksesnya di aplikasi juga hilang.",
-  "Ссылки отслеживания и кампании": "Tautan pelacakan dan kampanye"
+  "Ссылки отслеживания и кампании": "Tautan pelacakan dan kampanye",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus menghapus penawaran dan memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38347,7 +38347,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Chủ sở hữu trong ứng dụng",
   "ещё не заходил в приложение": "chưa từng vào ứng dụng",
   "Доверенный": "Tin cậy",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác.",
   "Дов.": "T.cậy",
   "Доверенный не может менять роль другого доверенного": "Người tin cậy không thể đổi vai trò của người tin cậy khác",
   "Назначать доверенных может только владелец канала": "Chỉ chủ kênh mới bổ nhiệm được người tin cậy",
@@ -38358,7 +38357,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Chạm vào ô để cấp hoặc thu quyền. Ổ khóa là quyền cố định của chủ kênh và người tin cậy.",
   "подключён · бот — администратор": "đã kết nối · bot là admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Danh sách admin và quyền tự động đồng bộ với Telegram: nếu ai đó bị gỡ khỏi admin của kênh, quyền trong ứng dụng cũng mất.",
-  "Ссылки отслеживания и кампании": "Liên kết theo dõi và chiến dịch"
+  "Ссылки отслеживания и кампании": "Liên kết theo dõi và chiến dịch",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền xóa offer và cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -41087,7 +41087,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Dono no aplicativo",
   "ещё не заходил в приложение": "ainda não entrou no aplicativo",
   "Доверенный": "De confiança",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança.",
   "Дов.": "Conf.",
   "Доверенный не может менять роль другого доверенного": "Um admin de confiança não pode mudar o papel de outro de confiança",
   "Назначать доверенных может только владелец канала": "Só o dono do canal pode nomear admins de confiança",
@@ -41098,7 +41097,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Toque numa caixa para dar ou tirar um direito. Os cadeados são os direitos fixos do dono e do admin de confiança.",
   "подключён · бот — администратор": "conectado · o bot é admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "A lista de admins e as permissões sincronizam automaticamente com o Telegram: se alguém for removido dos admins do canal, o acesso dele no aplicativo some também.",
-  "Ссылки отслеживания и кампании": "Links de rastreamento e campanhas"
+  "Ссылки отслеживания и кампании": "Links de rastreamento e campanhas",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda apaga a oferta e atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43827,7 +43827,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Propriétaire dans l'appli",
   "ещё не заходил в приложение": "n'a pas encore ouvert l'appli",
   "Доверенный": "De confiance",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et attribue en plus les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance.",
   "Дов.": "Conf.",
   "Доверенный не может менять роль другого доверенного": "Une personne de confiance ne peut pas changer le rôle d'une autre personne de confiance",
   "Назначать доверенных может только владелец канала": "Seul le propriétaire de la chaîne peut nommer des personnes de confiance",
@@ -43838,7 +43837,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Touche une case pour donner ou retirer un droit. Les cadenas sont les droits fixes du propriétaire et de la personne de confiance.",
   "подключён · бот — администратор": "connectée · le bot est admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La liste des admins et les droits se synchronisent automatiquement avec Telegram : si quelqu'un est retiré des admins de la chaîne, son accès dans l'appli disparaît aussi.",
-  "Ссылки отслеживания и кампании": "Liens de suivi et campagnes"
+  "Ссылки отслеживания и кампании": "Liens de suivi et campagnes",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et en plus supprime l'offre et attribue les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46567,7 +46567,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Proprietario nell'app",
   "ещё не заходил в приложение": "non ha ancora aperto l'app",
   "Доверенный": "Fiduciario",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari.",
   "Дов.": "Fid.",
   "Доверенный не может менять роль другого доверенного": "Un fiduciario non può cambiare il ruolo di un altro fiduciario",
   "Назначать доверенных может только владелец канала": "Solo il proprietario del canale può nominare fiduciari",
@@ -46578,7 +46577,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Tocca una casella per dare o togliere un permesso. I lucchetti sono i diritti fissi del proprietario e del fiduciario.",
   "подключён · бот — администратор": "collegato · il bot è admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "L'elenco degli admin e i permessi si sincronizzano automaticamente con Telegram: se qualcuno viene rimosso dagli admin del canale, il suo accesso nell'app sparisce.",
-  "Ссылки отслеживания и кампании": "Link di tracciamento e campagne"
+  "Ссылки отслеживания и кампании": "Link di tracciamento e campagne",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più elimina l'offerta e assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49307,7 +49307,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "በመተግበሪያው ውስጥ ባለቤት",
   "ещё не заходил в приложение": "እስካሁን መተግበሪያውን አልከፈተም",
   "Доверенный": "የታመነ",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።",
   "Дов.": "የታመ.",
   "Доверенный не может менять роль другого доверенного": "የታመነ ሰው የሌላ የታመነን ሚና መለወጥ አይችልም",
   "Назначать доверенных может только владелец канала": "የታመኑትን መሾም የቻናሉ ባለቤት ብቻ ነው",
@@ -49318,7 +49317,8 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "ፈቃድ ለመስጠት ወይም ለመንሳት ምልክቱን ንካ። ቁልፎቹ የባለቤቱ እና የታመነው ቋሚ መብቶች ናቸው።",
   "подключён · бот — администратор": "ተገናኝቷል · ቦቱ አስተዳዳሪ ነው",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ፦ አንድ ሰው ከቻናሉ አስተዳዳሪዎች ከተነሳ፣ በመተግበሪያው ያለው መዳረሻውም ይጠፋል።",
-  "Ссылки отслеживания и кампании": "የመከታተያ ሊንኮች እና ዘመቻዎች"
+  "Ссылки отслеживания и кампании": "የመከታተያ ሊንኮች እና ዘመቻዎች",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ኦፈሩን ይሰርዛል እና ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -52047,7 +52047,6 @@ window.__I18N_DICT = {
   "Владелец в приложении": "Mmiliki kwenye programu",
   "ещё не заходил в приложение": "bado hajafungua programu",
   "Доверенный": "Wa kuaminika",
-  "Как Управляющий, плюс раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine.",
   "Дов.": "Amin.",
   "Доверенный не может менять роль другого доверенного": "Admin wa kuaminika hawezi kubadilisha jukumu la mwingine wa kuaminika",
   "Назначать доверенных может только владелец канала": "Wa kuaminika huteuliwa na mmiliki wa channel pekee",
@@ -52058,6 +52057,7 @@ window.__I18N_DICT = {
   "Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.": "Gusa kisanduku kutoa au kuondoa haki. Kufuli ni haki za kudumu za mmiliki na wa kuaminika.",
   "подключён · бот — администратор": "imeunganishwa · boti ni admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki: mtu akiondolewa kwenye maadmin wa channel, ufikiaji wake kwenye programu pia hupotea.",
-  "Ссылки отслеживания и кампании": "Viungo vya ufuatiliaji na kampeni"
+  "Ссылки отслеживания и кампании": "Viungo vya ufuatiliaji na kampeni",
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hufuta ofa na kutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine."
  }
 };
