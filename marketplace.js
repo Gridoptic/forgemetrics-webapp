@@ -8255,6 +8255,9 @@
         var marks = ['1', '3', '6', '12', '24', '48'];
         var pts = c ? marks.filter(function (m) { return c[m] != null; }) : [];
         if (pts.length < 4) {
+            if (l && l.days_since_last_post != null && l.days_since_last_post > 2) {
+                return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>Кривая строится по свежим публикациям — появится после новых постов канала</span></div>';
+            }
             return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>Данные копятся: замеров пока мало для графика</span></div>';
         }
         var mx = Math.max(100, Math.max.apply(null, pts.map(function (m) { return c[m]; })));
