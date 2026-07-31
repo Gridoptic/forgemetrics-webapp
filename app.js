@@ -1031,7 +1031,7 @@ function _tmOwnerView(d) {
     let editMode = false;
     const drawMatrix = () => {
         const cols = [['owner', 'Влад.'], ['trustee', 'Дов.'], ['manager', 'Упр.'], ['editor', 'Ред.'], ['viewer', 'Набл.']];
-        const ownerP = { view: true, edit: true, pub: true, del: true, team: true };
+        const ownerP = { view: true, edit: true, pub: true, links: true, del: true, team: true };
         let h = '<div class="tm-mxhead"><div class="a">Действие</div>' +
             cols.map(c => `<div class="tm-mxh h-${c[0]}"><span class="d"></span>${c[1]}</div>`).join('') + '</div>';
         TM_ACTS.forEach(a => {
