@@ -889,11 +889,11 @@ const TM_ROLES = {
     none: { nm: 'Нет доступа', ic: 'x', cls: 'tm-r-none', d: 'Полностью закрыть доступ к офферу этому админу.' },
 };
 const TM_ACTS = [
-    { k: 'view', t: 'Метрики и статистика', lock: 'base' },
-    { k: 'edit', t: 'Редактировать оффер и календарь' },
-    { k: 'pub', t: 'Публиковать · замораживать' },
-    { k: 'del', t: 'Удалить оффер' },
-    { k: 'team', t: 'Управлять командой', lock: 'owner' },
+    { k: 'view', t: 'Метрики и статистика', ic: 'chart-bar', lock: 'base' },
+    { k: 'edit', t: 'Редактировать оффер и календарь', ic: 'pencil' },
+    { k: 'pub', t: 'Публиковать · замораживать', ic: 'rocket' },
+    { k: 'del', t: 'Удалить оффер', ic: 'trash' },
+    { k: 'team', t: 'Управлять командой', ic: 'users', lock: 'owner' },
 ];
 
 function closeTeam() {
@@ -928,10 +928,10 @@ function _tmAbs(u) {
     return u && u.charAt(0) === '/' ? API_BASE_URL + u : u;
 }
 
-function _tmAv(av, name, own) {
+function _tmAv(av, name, cls) {
     const letter = escapeHtml((name || '?').trim().charAt(0).toUpperCase() || '?');
     const img = av ? `<img src="${escapeHtml(_tmAbs(av))}" alt="" onerror="this.remove()">` : '';
-    return `<span class="tm-av${own ? ' tm-av-own' : ''}">${letter}${img}</span>`;
+    return `<span class="tm-av${cls ? ' ' + cls : ''}">${letter}${img}</span>`;
 }
 
 async function openTeam() {
@@ -968,9 +968,10 @@ function _tmHead(d) {
     const c = d.channel;
     return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
         <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
-        <div class="tm-mem tm-head">${_tmAv(c.avatar_url, c.title)}
+        <div class="tm-hero">${_tmAv(c.avatar_url, c.title, 'tm-av-hero')}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
-        <div class="tm-tg">@${escapeHtml(c.username || '')} · <span>${c.connected ? 'подключён, бот — администратор' : 'бот не администратор — список может быть неполным'}</span></div></div></div>`;
+        <div class="tm-tg">@${escapeHtml(c.username || '')}</div>
+        <div class="tm-hst${c.connected ? '' : ' warn'}"><span class="dot"></span> <span>${c.connected ? 'подключён · бот — администратор' : 'бот не администратор — список может быть неполным'}</span></div></div></div>`;
 }
 
 function _tmOwnerView(d) {
@@ -981,12 +982,12 @@ function _tmOwnerView(d) {
             : (m.tg_status === 'administrator' ? 'Администратор' : 'Владелец в приложении');
         if (m.is_owner) {
             const inApp = m.in_app === false ? ' · <span>ещё не заходил в приложение</span>' : '';
-            return `<div class="tm-mem">${_tmAv(m.avatar_url, m.name, true)}
+            return `<div class="tm-mem">${_tmAv(m.avatar_url, m.name, 'tm-av-own tm-avr-owner')}
                 <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
                 <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${tgLab}</span>${inApp}</div></div>
                 <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> Владелец</span></div>`;
         }
-        return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${_tmAv(m.avatar_url, m.name)}
+        return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${_tmAv(m.avatar_url, m.name, 'tm-avr-' + (m.role || 'none'))}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
             <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор'}</span></div></div>
             <span class="tm-chip ${role.cls}" id="tm-role-${m.user_id}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
@@ -994,18 +995,21 @@ function _tmOwnerView(d) {
             <div class="tm-rolepick" id="tm-pick-${m.user_id}" style="display:none;"></div>`;
     }).join('');
     const sheet = _tmSheet(`${_tmHead(d)}
-        <div class="tm-info"><div class="h"><i class="ti ti-info-circle"></i> Права берутся из самого Telegram</div>
-        <p>Бот видит создателя и администраторов канала и сверяет их автоматически. Каждый админ сразу получает роль Управляющего и может вести оффер. Удаление оффера и роли — только у создателя канала: он может понизить любого или закрыть доступ. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.</p></div>
+        <div class="tm-info">
+        <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>Список админов и права сверяются с Telegram автоматически. Сняли с админов там — доступ пропадёт здесь.</p></div>
+        <div class="row"><span class="ic"><i class="ti ti-key"></i></span><p>Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.</p></div></div>
         <div class="tm-sect"><span>Участники</span><span class="num"> · ${members.length}</span></div>
         <div class="tm-list" id="tm-mems">${memRows}</div>
         <div class="tm-sect">Что может каждая роль</div>
-        <div class="tm-mtog" id="tm-mtog"><span class="tm-sw${d.custom ? ' on' : ''}"></span><span>Настроить права вручную — галочками по каждой роли</span></div>
+        <div class="tm-mtog" id="tm-mtog"><span class="ic"><i class="ti ti-adjustments-horizontal"></i></span>
+            <div class="t"><b>Настроить права вручную</b><span>галочками по каждой роли · пресеты — быстрый старт</span></div>
+            <span class="tm-sw${d.custom ? ' on' : ''}"></span></div>
         <div class="tm-matrix" id="tm-matrix"></div>
-        <div class="tm-mhint" id="tm-mhint" style="display:none;">Тапни по галочке, чтобы дать или снять право у роли. У владельца права снять нельзя.</div>
+        <div class="tm-mhint" id="tm-mhint" style="display:none;">Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.</div>
         <div class="tm-savebar" id="tm-save" style="display:none;">
             <button class="tm-btn" id="tm-reset">Сбросить к пресетам</button>
             <button class="tm-btn tm-primary" id="tm-apply">Сохранить права</button></div>
-        <button class="co-close" id="tm-refresh"><i class="ti ti-refresh"></i> Обновить из Telegram</button>`);
+        <button class="tm-refresh" id="tm-refresh"><i class="ti ti-refresh"></i> Обновить из Telegram</button>`);
 
     const chId = d.channel.id;
     const isOwner = d.my_role === 'owner';
@@ -1025,32 +1029,30 @@ function _tmOwnerView(d) {
     let matrix = JSON.parse(JSON.stringify(d.matrix || {}));
     let editMode = false;
     const drawMatrix = () => {
-        const cols = [['owner', 'Влад.', 'tm-co'], ['trustee', 'Дов.', 'tm-ct'], ['manager', 'Упр.', 'tm-cm'], ['editor', 'Ред.', 'tm-ce'], ['viewer', 'Набл.', 'tm-cv']];
+        const cols = [['owner', 'Влад.'], ['trustee', 'Дов.'], ['manager', 'Упр.'], ['editor', 'Ред.'], ['viewer', 'Набл.']];
         const ownerP = { view: true, edit: true, pub: true, del: true, team: true };
-        let h = '<table><thead><tr><th>Действие</th>' + cols.map(c => `<th class="${c[2]}">${c[1]}</th>`).join('') + '</tr></thead><tbody>';
+        let h = '<div class="tm-mxhead"><div class="a">Действие</div>' +
+            cols.map(c => `<div class="tm-mxh h-${c[0]}"><span class="d"></span>${c[1]}</div>`).join('') + '</div>';
         TM_ACTS.forEach(a => {
-            h += `<tr><td>${a.t}</td>`;
+            h += `<div class="tm-mxrow"><div class="tm-mxact"><span class="ic"><i class="ti ti-${a.ic}"></i></span><span>${a.t}</span></div>`;
             cols.forEach(c => {
                 const role = c[0];
                 const on = role === 'owner' ? ownerP[a.k] : !!(matrix[role] && matrix[role][a.k]);
                 const locked = role === 'owner' || a.lock === 'base' || a.lock === 'owner';
                 if (editMode) {
-                    h += `<td class="tm-cell${locked ? '' : ' tm-tap'}" data-r="${role}" data-a="${a.k}">
-                        <span class="tm-cbx${on ? ' on' : ''}${locked ? ' lock' : ''}">${on ? '<i class="ti ti-check"></i>' : ''}</span></td>`;
+                    h += `<div class="tm-mxc"><span class="tm-cbx${on ? ' on' : ''}${locked ? ' lock' : ''}${locked && role === 'trustee' ? ' b' : ''}" data-r="${role}" data-a="${a.k}">${on ? '<i class="ti ti-check"></i>' : ''}</span></div>`;
                 } else {
-                    h += `<td class="${on ? 'tm-yes' : 'tm-no'}">${on ? '✓' : '—'}</td>`;
+                    h += `<div class="tm-mxc ${on ? 'y-' + role : 'tm-no'}">${on ? '✓' : '—'}</div>`;
                 }
             });
-            h += '</tr>';
+            h += '</div>';
         });
-        h += '</tbody></table>';
         const box = sheet.querySelector('#tm-matrix');
         box.innerHTML = h;
-        box.classList.toggle('edit', editMode);
         if (editMode) {
-            box.querySelectorAll('td.tm-tap').forEach(td => {
-                td.addEventListener('click', () => {
-                    const role = td.dataset.r, act = td.dataset.a;
+            box.querySelectorAll('.tm-cbx:not(.lock)').forEach(cb => {
+                cb.addEventListener('click', () => {
+                    const role = cb.dataset.r, act = cb.dataset.a;
                     if (!matrix[role]) matrix[role] = {};
                     matrix[role][act] = !matrix[role][act];
                     hapticLight();
@@ -1121,6 +1123,8 @@ function _tmTogglePick(sheet, chId, m, isOwner) {
                     const chip = sheet.querySelector('#tm-role-' + m.user_id);
                     const rd = TM_ROLES[role];
                     if (chip) { chip.className = 'tm-chip ' + rd.cls; chip.innerHTML = `<i class="ti ti-${rd.ic}"></i> ` + rd.nm; localizeTree(chip); }
+                    const rowAv = sheet.querySelector(`[data-tmu="${m.user_id}"] .tm-av`);
+                    if (rowAv) rowAv.className = 'tm-av tm-avr-' + role;
                     box.style.display = 'none';
                     hapticMed();
                     showToast(role === 'none' ? 'Доступ закрыт' : 'Роль назначена', 'check');
