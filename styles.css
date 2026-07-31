@@ -823,30 +823,15 @@ button:active {
     }
 }
 
-html {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(129,140,248,0.35) transparent;
-}
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 4px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(129,140,248,0.22);
-    border-radius: 99px;
-}
-.drawer:hover::-webkit-scrollbar-thumb,
-.bs-sheet:hover::-webkit-scrollbar-thumb,
-.channel-settings-screen:hover::-webkit-scrollbar-thumb,
-.pw-sheet-list:hover::-webkit-scrollbar-thumb,
-.lang-list:hover::-webkit-scrollbar-thumb {
-    background: rgba(129,140,248,0.55);
-}
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(165,173,255,0.8);
+    background: var(--border-medium);
+    border-radius: var(--radius-full);
 }
 
 
