@@ -8630,8 +8630,6 @@
         } else if (rr != null) {
             mets += '<s></s><span class="fmx-lm"><b style="color:' + rrc + ';">' + warn + rr + '%</b></span>';
         }
-        var _alb = _audLabel(l);
-        if (_alb) mets += '<s></s><span class="fmx-lm" style="color:' + _alb.color + ';font-weight:700;">' + _alb.short + '</span>';
         var cpm = _cpm(l), estPrice = !l.owner_price;
         var right = (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') +
             (cpm != null ? '<span class="fmx-lcpm">CPM <b>' + (estPrice ? '≈' : '') + _short(cpm) + ' ₽</b></span>' : '');
