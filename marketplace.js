@@ -584,7 +584,12 @@
             '.fmr-more[open] summary .chev{transform:rotate(180deg);}',
             '.fmr-morebody{padding:0 12px 12px;}',
             '.fmx-georow{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 10px;min-height:40px;cursor:pointer;}',
-            '.fmx-georow .gf{font-size:15px;flex:0 0 24px;text-align:center;}',
+            '.fmx-georow .gf{flex:0 0 22px;display:flex;align-items:center;}',
+            '.fmx-bf-compact{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;}',
+            '.fmx-bf-compact::-webkit-scrollbar{width:9px;}',
+            '.fmx-bf-compact::-webkit-scrollbar-track{background:transparent;}',
+            '.fmx-bf-compact::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}',
+            '.fmx-bf-compact::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}',
             '.fmx-georow .gc{font-size:10px;color:#8990a8;font-weight:750;flex:0 0 28px;letter-spacing:0.04em;}',
             '.fmx-georow .gn{flex:1;min-width:0;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-georow .gk{opacity:0;color:#818cf8;flex:0 0 auto;font-size:14px;}',
@@ -3617,11 +3622,46 @@
     var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
     var _GEO_NAMES = { ru: 'Россия', ua: 'Украина', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Киргизия', az: 'Азербайджан', ge: 'Грузия', am: 'Армения', us: 'США', gb: 'Великобритания', de: 'Германия', at: 'Австрия', ch: 'Швейцария', es: 'Испания', mx: 'Мексика', ar: 'Аргентина', br: 'Бразилия', pt: 'Португалия', fr: 'Франция', it: 'Италия', tr: 'Турция', ae: 'ОАЭ', sa: 'Саудовская Аравия', eg: 'Египет', ir: 'Иран', tj: 'Таджикистан', 'in': 'Индия', bd: 'Бангладеш', id: 'Индонезия', vn: 'Вьетнам', et: 'Эфиопия', tz: 'Танзания', ke: 'Кения', int: 'Международный' };
+    var _gflw = function (inner) { return '<svg viewBox="0 0 24 18" preserveAspectRatio="none" style="width:22px;height:16px;border-radius:3px;display:block;">' + inner + '</svg>'; };
+    var _GEO_FLAGS = {
+        ru: _gflw('<rect width="24" height="6" fill="#fff"/><rect y="6" width="24" height="6" fill="#0039A6"/><rect y="12" width="24" height="6" fill="#D52B1E"/>'),
+        ua: _gflw('<rect width="24" height="9" fill="#005BBB"/><rect y="9" width="24" height="9" fill="#FFD500"/>'),
+        by: _gflw('<rect width="24" height="12" fill="#CE1720"/><rect y="12" width="24" height="6" fill="#007C30"/><rect width="3" height="18" fill="#fff"/>'),
+        kz: _gflw('<rect width="24" height="18" fill="#00AFCA"/><circle cx="12" cy="8" r="3.4" fill="#FEC50C"/><rect x="7" y="14" width="10" height="1.4" fill="#FEC50C"/>'),
+        uz: _gflw('<rect width="24" height="6" fill="#0099B5"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#1EB53A"/><rect y="5.3" width="24" height="0.7" fill="#CE1126"/><rect y="12" width="24" height="0.7" fill="#CE1126"/>'),
+        kg: _gflw('<rect width="24" height="18" fill="#E8112D"/><circle cx="12" cy="9" r="4" fill="#FFEF00"/><circle cx="12" cy="9" r="2" fill="#E8112D"/>'),
+        az: _gflw('<rect width="24" height="6" fill="#0092BC"/><rect y="6" width="24" height="6" fill="#EF3340"/><rect y="12" width="24" height="6" fill="#509E2F"/><circle cx="11.5" cy="9" r="2.6" fill="#fff"/><circle cx="12.4" cy="9" r="2.2" fill="#EF3340"/>'),
+        ge: _gflw('<rect width="24" height="18" fill="#fff"/><rect x="10" width="4" height="18" fill="#F00"/><rect y="7" width="24" height="4" fill="#F00"/>'),
+        am: _gflw('<rect width="24" height="6" fill="#D90012"/><rect y="6" width="24" height="6" fill="#0033A0"/><rect y="12" width="24" height="6" fill="#F2A800"/>'),
+        tj: _gflw('<rect width="24" height="5" fill="#C00"/><rect y="5" width="24" height="8" fill="#fff"/><rect y="13" width="24" height="5" fill="#060"/><circle cx="12" cy="9" r="1.8" fill="#F8C300"/>'),
+        tr: _gflw('<rect width="24" height="18" fill="#E30A17"/><circle cx="10" cy="9" r="4" fill="#fff"/><circle cx="11.2" cy="9" r="3.2" fill="#E30A17"/><polygon points="15.6,9 18.4,9.9 16.7,7.5 16.7,10.5 18.4,8.1" fill="#fff"/>'),
+        ae: _gflw('<rect width="24" height="6" fill="#00732F"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#000"/><rect width="7" height="18" fill="#F00"/>'),
+        sa: _gflw('<rect width="24" height="18" fill="#165d31"/><rect x="4" y="7" width="16" height="1.6" fill="#fff"/><rect x="4" y="10.4" width="12" height="1.2" fill="#fff"/>'),
+        eg: _gflw('<rect width="24" height="6" fill="#CE1126"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#000"/><circle cx="12" cy="9" r="1.8" fill="#C09300"/>'),
+        ir: _gflw('<rect width="24" height="6" fill="#239F40"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#DA0000"/><circle cx="12" cy="9" r="1.8" fill="none" stroke="#DA0000" stroke-width="0.9"/>'),
+        'in': _gflw('<rect width="24" height="6" fill="#FF9933"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#138808"/><circle cx="12" cy="9" r="2.2" fill="none" stroke="#000080" stroke-width="0.8"/>'),
+        bd: _gflw('<rect width="24" height="18" fill="#006A4E"/><circle cx="10.5" cy="9" r="4.4" fill="#F42A41"/>'),
+        id: _gflw('<rect width="24" height="9" fill="#CE1126"/><rect y="9" width="24" height="9" fill="#fff"/>'),
+        vn: _gflw('<rect width="24" height="18" fill="#DA251D"/><polygon points="12,4.6 13.4,8.4 17.4,8.4 14.2,10.8 15.4,14.6 12,12.3 8.6,14.6 9.8,10.8 6.6,8.4 10.6,8.4" fill="#FFFF00"/>'),
+        us: _gflw('<rect width="24" height="18" fill="#B22234"/><g fill="#fff"><rect y="2.6" width="24" height="1.4"/><rect y="5.4" width="24" height="1.4"/><rect y="8.2" width="24" height="1.4"/><rect y="11" width="24" height="1.4"/><rect y="13.8" width="24" height="1.4"/><rect y="16.6" width="24" height="1.4"/></g><rect width="10" height="9" fill="#3C3B6E"/>'),
+        gb: _gflw('<rect width="24" height="18" fill="#012169"/><path d="M0,0 L24,18 M24,0 L0,18" stroke="#fff" stroke-width="3.6"/><path d="M0,0 L24,18 M24,0 L0,18" stroke="#C8102E" stroke-width="1.6"/><rect x="9.5" width="5" height="18" fill="#fff"/><rect y="6.5" width="24" height="5" fill="#fff"/><rect x="10.5" width="3" height="18" fill="#C8102E"/><rect y="7.5" width="24" height="3" fill="#C8102E"/>'),
+        de: _gflw('<rect width="24" height="6" fill="#000"/><rect y="6" width="24" height="6" fill="#DD0000"/><rect y="12" width="24" height="6" fill="#FFCE00"/>'),
+        at: _gflw('<rect width="24" height="6" fill="#ED2939"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#ED2939"/>'),
+        ch: _gflw('<rect width="24" height="18" fill="#D52B1E"/><rect x="10" y="4" width="4" height="10" fill="#fff"/><rect x="7" y="7" width="10" height="4" fill="#fff"/>'),
+        fr: _gflw('<rect width="8" height="18" fill="#0055A4"/><rect x="8" width="8" height="18" fill="#fff"/><rect x="16" width="8" height="18" fill="#EF4135"/>'),
+        it: _gflw('<rect width="8" height="18" fill="#009246"/><rect x="8" width="8" height="18" fill="#fff"/><rect x="16" width="8" height="18" fill="#CE2B37"/>'),
+        es: _gflw('<rect width="24" height="18" fill="#AA151B"/><rect y="4.5" width="24" height="9" fill="#F1BF00"/>'),
+        pt: _gflw('<rect width="9" height="18" fill="#060"/><rect x="9" width="15" height="18" fill="#F00"/><circle cx="9" cy="9" r="3" fill="#FF0"/>'),
+        br: _gflw('<rect width="24" height="18" fill="#009B3A"/><polygon points="12,2.5 21.5,9 12,15.5 2.5,9" fill="#FEDF00"/><circle cx="12" cy="9" r="3.4" fill="#002776"/>'),
+        mx: _gflw('<rect width="8" height="18" fill="#006847"/><rect x="8" width="8" height="18" fill="#fff"/><rect x="16" width="8" height="18" fill="#CE1126"/><circle cx="12" cy="9" r="2" fill="#8a6d3b"/>'),
+        ar: _gflw('<rect width="24" height="6" fill="#74ACDF"/><rect y="6" width="24" height="6" fill="#fff"/><rect y="12" width="24" height="6" fill="#74ACDF"/><circle cx="12" cy="9" r="1.8" fill="#F6B40E"/>'),
+        et: _gflw('<rect width="24" height="6" fill="#078930"/><rect y="6" width="24" height="6" fill="#FCDD09"/><rect y="12" width="24" height="6" fill="#DA121A"/><circle cx="12" cy="9" r="3.4" fill="#0F47AF"/><polygon points="12,6.6 12.7,8.4 14.6,8.4 13.1,9.6 13.7,11.4 12,10.3 10.3,11.4 10.9,9.6 9.4,8.4 11.3,8.4" fill="#FCDD09"/>'),
+        tz: _gflw('<rect width="24" height="18" fill="#1EB53A"/><polygon points="0,18 24,0 24,18" fill="#00A3DD"/><polygon points="0,18 0,13 17,0 24,0 24,5 7,18" fill="#000"/><polygon points="0,13 0,11.6 15.4,0 17,0" fill="#FCD116"/><polygon points="7,18 8.6,18 24,6.4 24,5" fill="#FCD116"/>'),
+        ke: _gflw('<rect width="24" height="5" fill="#000"/><rect y="5" width="24" height="1.4" fill="#fff"/><rect y="6.4" width="24" height="5.2" fill="#B00"/><rect y="11.6" width="24" height="1.4" fill="#fff"/><rect y="13" width="24" height="5" fill="#060"/>'),
+        int: _gflw('<rect width="24" height="18" fill="#1c2340"/><circle cx="12" cy="9" r="6" fill="none" stroke="#818cf8" stroke-width="1.2"/><ellipse cx="12" cy="9" rx="2.6" ry="6" fill="none" stroke="#818cf8" stroke-width="0.9"/><path d="M6 9h12M7.6 5.6h8.8M7.6 12.4h8.8" stroke="#818cf8" stroke-width="0.9" fill="none"/>'),
+    };
     function _geoFlag(cc) {
-        if (!cc || cc === 'int') return '🌐';
-        var up = cc.toUpperCase();
-        if (up.length !== 2) return '🌐';
-        return String.fromCodePoint(0x1F1E6 + up.charCodeAt(0) - 65, 0x1F1E6 + up.charCodeAt(1) - 65);
+        return _GEO_FLAGS[cc] || _GEO_FLAGS.int;
     }
     var _RF_GEO = [['ru', 'Россия'], ['kz', 'Казахстан'], ['by', 'Беларусь'], ['ua', 'Украина'], ['uz', 'Узбекистан'], ['kg', 'Киргизия'], ['az', 'Азербайджан'], ['ge', 'Грузия'], ['am', 'Армения'], ['tj', 'Таджикистан'], ['tr', 'Турция'], ['ae', 'ОАЭ'], ['sa', 'Саудовская Аравия'], ['eg', 'Египет'], ['ir', 'Иран'], ['in', 'Индия'], ['bd', 'Бангладеш'], ['id', 'Индонезия'], ['vn', 'Вьетнам'], ['us', 'США'], ['gb', 'Великобритания'], ['de', 'Германия'], ['at', 'Австрия'], ['ch', 'Швейцария'], ['fr', 'Франция'], ['it', 'Италия'], ['es', 'Испания'], ['pt', 'Португалия'], ['br', 'Бразилия'], ['mx', 'Мексика'], ['ar', 'Аргентина'], ['et', 'Эфиопия'], ['tz', 'Танзания'], ['ke', 'Кения'], ['int', 'Международный']];
     function _rfBtnLabel() {
