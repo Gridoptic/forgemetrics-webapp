@@ -583,6 +583,13 @@
             '.fmr-more summary .chev{margin-left:auto;color:#565b73;flex:0 0 auto;transition:transform 200ms;}',
             '.fmr-more[open] summary .chev{transform:rotate(180deg);}',
             '.fmr-morebody{padding:0 12px 12px;}',
+            '.fmx-georow{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 10px;min-height:40px;cursor:pointer;}',
+            '.fmx-georow .gf{font-size:15px;flex:0 0 24px;text-align:center;}',
+            '.fmx-georow .gc{font-size:10px;color:#8990a8;font-weight:750;flex:0 0 28px;letter-spacing:0.04em;}',
+            '.fmx-georow .gn{flex:1;min-width:0;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-georow .gk{opacity:0;color:#818cf8;flex:0 0 auto;font-size:14px;}',
+            '.fmx-georow.on{border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.1);}',
+            '.fmx-georow.on .gk{opacity:1;}',
             '.fmr-line{font-size:13px;color:#8990a8;line-height:1.6;}',
             '.fmr-line b{color:#e8e8ed;font-weight:700;}',
             '.fmr-line .fmr-big{font-size:18px;}',
@@ -3609,8 +3616,14 @@
     var _RF_PRESETS = [['large', 'Только крупные 100k+'], ['alive', 'Активные'], ['clean', 'Прошли фрод-контроль'], ['grow', 'Растут']];
     var _RF_RANGES = [['s', 'Подписчики'], ['p', 'Цена поста, ₽'], ['r', 'Охват'], ['err', 'ERR, %'], ['er', 'ER, %'], ['cpm', 'CPM, ₽'], ['h', 'Индекс'], ['age', 'Возраст, мес'], ['adp', 'Реклама, %']];
     var _RF_AUD = [['male', 'Мужская'], ['female', 'Женская'], ['mixed', 'Смешанная']];
-    var _GEO_NAMES = { ru: 'Россия', ua: 'Украина', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Киргизия', az: 'Азербайджан', ge: 'Грузия', am: 'Армения', int: 'Международный' };
-    var _RF_GEO = [['ru', 'Россия'], ['kz', 'Казахстан'], ['by', 'Беларусь'], ['ua', 'Украина'], ['uz', 'Узбекистан'], ['kg', 'Киргизия'], ['az', 'Азербайджан'], ['ge', 'Грузия'], ['am', 'Армения'], ['int', 'Международный']];
+    var _GEO_NAMES = { ru: 'Россия', ua: 'Украина', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Киргизия', az: 'Азербайджан', ge: 'Грузия', am: 'Армения', us: 'США', gb: 'Великобритания', de: 'Германия', at: 'Австрия', ch: 'Швейцария', es: 'Испания', mx: 'Мексика', ar: 'Аргентина', br: 'Бразилия', pt: 'Португалия', fr: 'Франция', it: 'Италия', tr: 'Турция', ae: 'ОАЭ', sa: 'Саудовская Аравия', eg: 'Египет', ir: 'Иран', tj: 'Таджикистан', 'in': 'Индия', bd: 'Бангладеш', id: 'Индонезия', vn: 'Вьетнам', et: 'Эфиопия', tz: 'Танзания', ke: 'Кения', int: 'Международный' };
+    function _geoFlag(cc) {
+        if (!cc || cc === 'int') return '🌐';
+        var up = cc.toUpperCase();
+        if (up.length !== 2) return '🌐';
+        return String.fromCodePoint(0x1F1E6 + up.charCodeAt(0) - 65, 0x1F1E6 + up.charCodeAt(1) - 65);
+    }
+    var _RF_GEO = [['ru', 'Россия'], ['kz', 'Казахстан'], ['by', 'Беларусь'], ['ua', 'Украина'], ['uz', 'Узбекистан'], ['kg', 'Киргизия'], ['az', 'Азербайджан'], ['ge', 'Грузия'], ['am', 'Армения'], ['tj', 'Таджикистан'], ['tr', 'Турция'], ['ae', 'ОАЭ'], ['sa', 'Саудовская Аравия'], ['eg', 'Египет'], ['ir', 'Иран'], ['in', 'Индия'], ['bd', 'Бангладеш'], ['id', 'Индонезия'], ['vn', 'Вьетнам'], ['us', 'США'], ['gb', 'Великобритания'], ['de', 'Германия'], ['at', 'Австрия'], ['ch', 'Швейцария'], ['fr', 'Франция'], ['it', 'Италия'], ['es', 'Испания'], ['pt', 'Португалия'], ['br', 'Бразилия'], ['mx', 'Мексика'], ['ar', 'Аргентина'], ['et', 'Эфиопия'], ['tz', 'Танзания'], ['ke', 'Кения'], ['int', 'Международный']];
     function _rfBtnLabel() {
         var b = el('fmx-rfbtn'); if (!b) return;
         var n = _rfCount();
@@ -3630,7 +3643,22 @@
             '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
             '<button id="fmx-rf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
             '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Страна аудитории</span><div class="fmx-fxw" id="fmx-rf-geo">' + _RF_GEO.map(function (g) { return '<button class="fmx-fx' + (_rf.geo && _rf.geo[g[0]] ? ' on' : '') + '" data-g="' + g[0] + '">' + g[1] + '</button>'; }).join('') + '</div>' +
+            (function () {
+                var selN = 0;
+                for (var gk in (_rf.geo || {})) { if (_rf.geo[gk]) selN++; }
+                var rows = _RF_GEO.map(function (g) {
+                    var on = !!(_rf.geo && _rf.geo[g[0]]);
+                    return '<div class="fmx-georow' + (on ? ' on' : '') + '" data-g="' + g[0] + '">' +
+                        '<span class="gf">' + _geoFlag(g[0]) + '</span>' +
+                        '<span class="gc num">' + (g[0] === 'int' ? 'INT' : g[0].toUpperCase()) + '</span>' +
+                        '<span class="gn">' + g[1] + '</span>' +
+                        '<span class="gk"><i class="ti ti-check"></i></span></div>';
+                }).join('');
+                return '<details class="fmr-more" style="margin-top:12px;"' + (selN ? ' open' : '') + '><summary><i class="ti ti-world" style="color:#818cf8;"></i> <span>Страна аудитории</span>' +
+                    (selN ? ' <b class="num" style="color:#818cf8;">· ' + selN + '</b>' : '') +
+                    '<i class="ti ti-chevron-down chev"></i></summary>' +
+                    '<div class="fmr-morebody" id="fmx-rf-geo" style="display:grid;gap:6px;">' + rows + '</div></details>';
+            })() +
             '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
             '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
         document.body.appendChild(bg);
