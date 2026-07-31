@@ -879,6 +879,267 @@ async function hcSave(reset) {
 }
 
 
+let _tmCtx = null;
+const TM_ROLES = {
+    owner: { nm: 'Владелец', ic: 'crown', cls: 'tm-r-owner' },
+    manager: { nm: 'Управляющий', ic: 'shield-check', cls: 'tm-r-manager', d: 'Редактирует, публикует, замораживает, ведёт календарь. Не удаляет оффер и не меняет команду.' },
+    editor: { nm: 'Редактор', ic: 'pencil', cls: 'tm-r-editor', d: 'Меняет оформление, тексты и календарь. Не публикует, не замораживает, не удаляет.' },
+    viewer: { nm: 'Наблюдатель', ic: 'eye', cls: 'tm-r-viewer', d: 'Видит оффер, метрики и сделки. Ничего не меняет.' },
+    none: { nm: 'Нет доступа', ic: 'x', cls: 'tm-r-none', d: 'Полностью закрыть доступ к офферу этому админу.' },
+};
+const TM_ACTS = [
+    { k: 'view', t: 'Метрики и статистика', lock: 'base' },
+    { k: 'edit', t: 'Редактировать оффер и календарь' },
+    { k: 'pub', t: 'Публиковать · замораживать' },
+    { k: 'del', t: 'Удалить оффер' },
+    { k: 'team', t: 'Управлять командой', lock: 'owner' },
+];
+
+function closeTeam() {
+    if (!_tmCtx) return;
+    const { overlay, sheet } = _tmCtx;
+    overlay.classList.remove('visible'); sheet.classList.remove('visible');
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+    setTimeout(() => { overlay.remove(); sheet.remove(); }, 220);
+    _tmCtx = null;
+}
+
+function _tmSheet(html) {
+    closeTeam();
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet tm-sheet';
+    sheet.innerHTML = `<div class="bs-handle"></div>` + html;
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+    overlay.addEventListener('click', closeTeam);
+    _tmCtx = { overlay, sheet };
+    localizeTree(sheet);
+    return sheet;
+}
+
+function _tmAv(c) {
+    const letter = escapeHtml((c.title || '?').trim().charAt(0).toUpperCase());
+    return c.avatar_url
+        ? `<span class="tm-av"><img src="${escapeHtml(c.avatar_url)}" alt=""></span>`
+        : `<span class="tm-av">${letter}</span>`;
+}
+
+async function openTeam() {
+    hapticLight();
+    let r = null;
+    try { r = await apiRequest('/api/v1/team/overview'); } catch (e) {}
+    const chs = (r && r.channels) || [];
+    if (!chs.length) { cabToast('Сначала подключи канал — роли настраиваются для подключённых каналов'); return; }
+    if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
+    const rows = chs.map(c => {
+        const role = TM_ROLES[c.my_role] || TM_ROLES.viewer;
+        return `<div class="tm-mem tm-pick" data-tmch="${c.id}">${_tmAv(c)}
+            <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
+            <div class="tm-tg">@${escapeHtml(c.username || '')} · <i class="ti ti-users" style="font-size:10px;"></i> ${c.members}</div></div>
+            <span class="tm-chip ${role.cls}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
+            <i class="ti ti-chevron-right tm-chev"></i></div>`;
+    }).join('');
+    const sheet = _tmSheet(`<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
+        <div><h3>Команда канала</h3><div class="tm-sub">Выбери канал — роли и права настраиваются отдельно для каждого</div></div></div>
+        <div class="tm-list">${rows}</div>`);
+    sheet.querySelectorAll('[data-tmch]').forEach(el => {
+        el.addEventListener('click', () => { hapticLight(); openTeamChannel(+el.dataset.tmch); });
+    });
+}
+
+async function openTeamChannel(chId) {
+    let d = null;
+    try { d = await apiRequest('/api/v1/team/' + chId + '?sync=1'); } catch (e) {}
+    if (!d || !d.ok) { cabToast('Не удалось загрузить команду канала'); return; }
+    if (d.my_role === 'owner') _tmOwnerView(d); else _tmMemberView(d);
+}
+
+function _tmHead(d) {
+    const c = d.channel;
+    return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
+        <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
+        <div class="tm-mem tm-head">${_tmAv(c)}
+        <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
+        <div class="tm-tg">@${escapeHtml(c.username || '')} · <span>${c.connected ? 'подключён, бот — администратор' : 'бот не администратор — список может быть неполным'}</span></div></div></div>`;
+}
+
+function _tmOwnerView(d) {
+    const members = d.members || [];
+    const memRows = members.map(m => {
+        const role = TM_ROLES[m.role] || TM_ROLES.none;
+        const tgLab = m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор';
+        const letter = escapeHtml((m.name || '?').trim().charAt(0).toUpperCase());
+        if (m.is_owner) {
+            return `<div class="tm-mem"><span class="tm-av tm-av-own">${letter}</span>
+                <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
+                <div class="tm-tg"><i class="ti ti-brand-telegram"></i> ${tgLab}</div></div>
+                <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> Владелец</span></div>`;
+        }
+        return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${'<span class="tm-av">' + letter + '</span>'}
+            <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
+            <div class="tm-tg"><i class="ti ti-brand-telegram"></i> ${tgLab}</div></div>
+            <span class="tm-chip ${role.cls}" id="tm-role-${m.user_id}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
+            <i class="ti ti-chevron-down tm-chev"></i></div>
+            <div class="tm-rolepick" id="tm-pick-${m.user_id}" style="display:none;"></div>`;
+    }).join('');
+    const sheet = _tmSheet(`${_tmHead(d)}
+        <div class="tm-info"><div class="h"><i class="ti ti-info-circle"></i> Права берутся из самого Telegram</div>
+        <p>Бот видит владельца и администраторов канала и сверяет их автоматически. Роли раздаёт только владелец. Сняли человека с админов в Telegram — доступ здесь пропадёт сам.</p></div>
+        <div class="tm-sect"><span>Участники</span><span class="num"> · ${members.length}</span></div>
+        <div class="tm-list" id="tm-mems">${memRows}</div>
+        <div class="tm-sect">Что может каждая роль</div>
+        <div class="tm-mtog" id="tm-mtog"><span class="tm-sw${d.custom ? ' on' : ''}"></span><span>Настроить права вручную — галочками по каждой роли</span></div>
+        <div class="tm-matrix" id="tm-matrix"></div>
+        <div class="tm-mhint" id="tm-mhint" style="display:none;">Тапни по галочке, чтобы дать или снять право у роли. У владельца права снять нельзя.</div>
+        <div class="tm-savebar" id="tm-save" style="display:none;">
+            <button class="tm-btn" id="tm-reset">Сбросить к пресетам</button>
+            <button class="tm-btn tm-primary" id="tm-apply">Сохранить права</button></div>
+        <button class="co-close" id="tm-refresh"><i class="ti ti-refresh"></i> Обновить из Telegram</button>`);
+
+    const chId = d.channel.id;
+    members.filter(m => !m.is_owner).forEach(m => {
+        const row = sheet.querySelector(`[data-tmu="${m.user_id}"]`);
+        if (!row) return;
+        row.addEventListener('click', () => _tmTogglePick(sheet, chId, m));
+    });
+
+    let matrix = JSON.parse(JSON.stringify(d.matrix || {}));
+    let editMode = false;
+    const drawMatrix = () => {
+        const cols = [['owner', 'Влад.', 'tm-co'], ['manager', 'Упр.', 'tm-cm'], ['editor', 'Ред.', 'tm-ce'], ['viewer', 'Набл.', 'tm-cv']];
+        const ownerP = { view: true, edit: true, pub: true, del: true, team: true };
+        let h = '<table><thead><tr><th>Действие</th>' + cols.map(c => `<th class="${c[2]}">${c[1]}</th>`).join('') + '</tr></thead><tbody>';
+        TM_ACTS.forEach(a => {
+            h += `<tr><td>${a.t}</td>`;
+            cols.forEach(c => {
+                const role = c[0];
+                const on = role === 'owner' ? ownerP[a.k] : !!(matrix[role] && matrix[role][a.k]);
+                const locked = role === 'owner' || a.lock === 'base' || a.lock === 'owner';
+                if (editMode) {
+                    h += `<td class="tm-cell${locked ? '' : ' tm-tap'}" data-r="${role}" data-a="${a.k}">
+                        <span class="tm-cbx${on ? ' on' : ''}${locked ? ' lock' : ''}">${on ? '<i class="ti ti-check"></i>' : ''}</span></td>`;
+                } else {
+                    h += `<td class="${on ? 'tm-yes' : 'tm-no'}">${on ? '✓' : '—'}</td>`;
+                }
+            });
+            h += '</tr>';
+        });
+        h += '</tbody></table>';
+        const box = sheet.querySelector('#tm-matrix');
+        box.innerHTML = h;
+        box.classList.toggle('edit', editMode);
+        if (editMode) {
+            box.querySelectorAll('td.tm-tap').forEach(td => {
+                td.addEventListener('click', () => {
+                    const role = td.dataset.r, act = td.dataset.a;
+                    if (!matrix[role]) matrix[role] = {};
+                    matrix[role][act] = !matrix[role][act];
+                    hapticLight();
+                    drawMatrix();
+                });
+            });
+        }
+    };
+    drawMatrix();
+
+    const mtog = sheet.querySelector('#tm-mtog');
+    mtog.addEventListener('click', () => {
+        editMode = !editMode;
+        mtog.querySelector('.tm-sw').classList.toggle('on', editMode || d.custom);
+        sheet.querySelector('#tm-mhint').style.display = editMode ? 'block' : 'none';
+        sheet.querySelector('#tm-save').style.display = editMode ? 'flex' : 'none';
+        drawMatrix();
+    });
+    sheet.querySelector('#tm-apply').addEventListener('click', async () => {
+        const perms = {};
+        ['manager', 'editor', 'viewer'].forEach(r => {
+            perms[r] = { edit: !!(matrix[r] && matrix[r].edit), pub: !!(matrix[r] && matrix[r].pub), del: !!(matrix[r] && matrix[r].del) };
+        });
+        try {
+            const rr = await apiRequest('/api/v1/team/' + chId + '/perms', { method: 'POST', body: JSON.stringify({ perms }) });
+            if (rr && rr.ok) { showToast('Права сохранены', 'check'); openTeamChannel(chId); return; }
+        } catch (e) {}
+        showToast('Не удалось сохранить права', 'alert-triangle');
+    });
+    sheet.querySelector('#tm-reset').addEventListener('click', async () => {
+        try {
+            const rr = await apiRequest('/api/v1/team/' + chId + '/perms', { method: 'POST', body: JSON.stringify({ reset: true }) });
+            if (rr && rr.ok) { showToast('Права сброшены к пресетам', 'check'); openTeamChannel(chId); return; }
+        } catch (e) {}
+        showToast('Не удалось сбросить', 'alert-triangle');
+    });
+    sheet.querySelector('#tm-refresh').addEventListener('click', () => { hapticLight(); openTeamChannel(chId); });
+    localizeTree(sheet);
+}
+
+function _tmTogglePick(sheet, chId, m) {
+    const box = sheet.querySelector('#tm-pick-' + m.user_id);
+    if (!box) return;
+    const open = box.style.display !== 'none';
+    sheet.querySelectorAll('.tm-rolepick').forEach(b => { b.style.display = 'none'; });
+    if (open) return;
+    hapticLight();
+    const opts = ['manager', 'editor', 'viewer', 'none'].map(rk => {
+        const r = TM_ROLES[rk];
+        const sel = (m.role === rk) || (rk === 'none' && (!m.role || m.role === 'none'));
+        return `<div class="tm-ropt${sel ? ' sel' : ''}" data-rset="${rk}">
+            <span class="tm-rt ${r.cls}"><i class="ti ti-${r.ic}"></i></span>
+            <div class="tm-rw"><div class="tm-rn">${r.nm}</div><div class="tm-rd">${r.d}</div></div>
+            <span class="tm-rk"><i class="ti ti-check"></i></span></div>`;
+    }).join('');
+    box.innerHTML = `<div class="tm-rph"><span>Роль на Площадке</span> · <b>${escapeHtml(m.name || '')}</b></div>` + opts;
+    box.style.display = 'block';
+    localizeTree(box);
+    box.querySelectorAll('[data-rset]').forEach(o => {
+        o.addEventListener('click', async () => {
+            const role = o.dataset.rset;
+            try {
+                const rr = await apiRequest('/api/v1/team/' + chId + '/role', { method: 'POST', body: JSON.stringify({ user_id: m.user_id, role }) });
+                if (rr && rr.ok) {
+                    m.role = role;
+                    const chip = sheet.querySelector('#tm-role-' + m.user_id);
+                    const rd = TM_ROLES[role];
+                    if (chip) { chip.className = 'tm-chip ' + rd.cls; chip.innerHTML = `<i class="ti ti-${rd.ic}"></i> ` + rd.nm; localizeTree(chip); }
+                    box.style.display = 'none';
+                    hapticMed();
+                    showToast(role === 'none' ? 'Доступ закрыт' : 'Роль назначена', 'check');
+                    return;
+                }
+                showToast((rr && rr.error) || 'Не удалось назначить роль', 'alert-triangle');
+            } catch (e) { showToast('Не удалось назначить роль', 'alert-triangle'); }
+        });
+    });
+}
+
+function _tmMemberView(d) {
+    const role = TM_ROLES[d.my_role] || TM_ROLES.viewer;
+    const p = d.my_perms || {};
+    const acts = [
+        ['edit', 'pencil', 'Редактировать'],
+        ['pub', 'rocket', 'Опубликовать · заморозить'],
+        ['del', 'trash', 'Удалить оффер'],
+        ['team', 'users', 'Команда'],
+    ];
+    const btns = acts.map(a => {
+        const ok = !!p[a[0]];
+        return `<div class="tm-abtn${ok ? ' ok' : ''}"><i class="ti ti-${a[1]}"></i> ${a[2]}${ok ? '' : ' <span class="tm-lk"><i class="ti ti-lock"></i></span>'}</div>`;
+    }).join('');
+    _tmSheet(`${_tmHead(d)}
+        <div class="tm-sect">Твой доступ к офферу</div>
+        <div class="tm-mem tm-head"><span class="tm-rt ${role.cls} tm-rt-big"><i class="ti ti-${role.ic}"></i></span>
+        <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-tg">${role.d || ''}</div></div></div>
+        <div class="tm-denied"><div class="dh"><i class="ti ti-lock"></i> Часть действий закрыта</div>
+        <p>Операции с замком доступны только ролям выше. Доступ выдаёт владелец канала в разделе «Команда».</p></div>
+        <div class="tm-sect">Доступные действия</div>
+        <div class="tm-actions">${btns}</div>
+        <div class="tm-mhint" style="display:block;">Оффер этого канала доступен в «Площадка → Мои офферы» с учётом твоей роли.</div>`);
+}
 
 
 function formatNumber(num) {
@@ -1474,7 +1735,7 @@ function renderCabinet(d) {
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
 
@@ -1496,6 +1757,7 @@ function wireCabinet(d) {
         });
     });
     on('cab-compare', () => { openTariffs(); });
+    on('cab-team', () => { openTeam(); });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
     on('cab-theme', () => cabToast('Темы оформления — скоро'));
     on('cab-lang', () => openLangPicker());

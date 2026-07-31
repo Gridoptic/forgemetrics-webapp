@@ -2626,34 +2626,40 @@
         return '<span class="fmx-mine-st" style="color:' + s[0] + ';border-color:' + s[0] + '33;background:' + s[0] + '14;">' + _esc(l.status_human || s[1]) + '</span>';
     }
 
+    var _TEAM_ROLE_RU = { manager: 'Управляющий', editor: 'Редактор', viewer: 'Наблюдатель' };
     function mineCard(l) {
         var t = l.title || l.username || '?';
         var av = l.avatar_url
             ? '<img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt="">'
             : _esc(t.charAt(0));
         var frozen = l.status === 'paused';
+        var tp = l.team_perms || null;
+        var can = tp ? function (k) { return !!tp[k]; } : function () { return true; };
+        var roleChip = l.team_role
+            ? '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;color:#5DCAA5;background:rgba(93,202,165,0.1);border:0.5px solid rgba(93,202,165,0.35);border-radius:7px;padding:2px 7px;margin-left:6px;vertical-align:1px;"><i class="ti ti-users"></i>' + (_TEAM_ROLE_RU[l.team_role] || l.team_role) + '</span>'
+            : '';
         return '<div class="fmx-minecard" data-mine="' + l.id + '">' +
             '<div class="fmx-minehead"><div class="fmx-mineav" style="background:' + _esc(_accent(l)) + ';">' + av + '</div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-minenm">' + _esc(t) + '</div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-minenm">' + _esc(t) + roleChip + '</div>' +
             '<div class="fmx-mineu">@' + _esc(l.username || '') + '</div></div>' + _mineStatus(l) + '</div>' +
             (l.status === 'rejected' && l.reject_reason
                 ? '<div class="fmx-minerej">Причина: ' + _esc(l.reject_reason) + ' — исправь и сохрани, оффер уйдёт на повторную проверку.</div>' : '') +
             '<div class="fmx-minemet" id="fmx-mst-' + l.id + '">За 7 дней: считаем…</div>' +
-            '<div style="margin-top:11px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);">' +
+            (can('edit') ? '<div style="margin-top:11px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);">' +
             '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">Календарь занятости · 45 дней</div>' +
             '<div class="fmx-d14 num" id="fmx-strip-' + l.id + '"></div>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
             '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">Тап по дню — занято/свободно. Точка — спрос на дату</span>' +
             '<button class="fmx-seg" data-mcal="' + l.id + '" style="flex:0 0 auto;min-height:30px;padding:5px 12px;">Весь календарь</button></div>' +
-            '<button class="fmx-seg" data-mhotadv="' + l.id + '" style="width:100%;margin-top:6px;min-height:34px;padding:6px 12px;color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-discount-2"></i> Точечные скидки — свои даты, время и процент' + (l.hot_manual ? ' · вкл' : '') + '</button></div>' +
+            '<button class="fmx-seg" data-mhotadv="' + l.id + '" style="width:100%;margin-top:6px;min-height:34px;padding:6px 12px;color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-discount-2"></i> Точечные скидки — свои даты, время и процент' + (l.hot_manual ? ' · вкл' : '') + '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' +
+            (!tp && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' : '') +
             '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar"></i>Статистика</button>' +
-            '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Витрина</button>' +
-            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
-            '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>' +
-            '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' +
-            '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить оффер</button>' +
+            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Витрина</button>' : '') +
+            (tp ? '' : '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
+                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>') +
+            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' : '') +
+            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
             '</div></div>';
     }
 
