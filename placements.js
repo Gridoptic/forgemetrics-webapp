@@ -17,6 +17,16 @@
     function haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(k || 'light'); } catch (e) {} }
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} }
     function num(n) { try { return new Intl.NumberFormat('ru-RU').format(n); } catch (e) { return String(n); } }
+    function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
+    function avInner(title, url) {
+        return esc(String(title || '?').trim().charAt(0).toUpperCase() || '?') +
+            (url ? '<img data-plav src="' + esc(mediaAbs(url)) + '" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : '');
+    }
+    function bindAv(scope) {
+        (scope || document).querySelectorAll('img[data-plav]').forEach(function (im) {
+            im.addEventListener('error', function () { im.remove(); });
+        });
+    }
     function fmtDay(iso) {
         try { var d = new Date(iso); return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2); }
         catch (e) { return ''; }
@@ -251,10 +261,9 @@
         if (ch) {
             var un = ch.username || ch.channel_username || '';
             var title = ch.title || ('@' + un);
-            var initial = (String(title).trim().charAt(0) || 'K').toUpperCase();
             h += '<div style="padding:0 16px;">' +
                 '<button class="pw-chansel" data-act="chpick" style="margin-bottom:8px;">' +
-                '<div class="pw-chav">' + esc(initial) + '</div>' +
+                '<div class="pw-chav" style="position:relative;overflow:hidden;">' + avInner(title, ch.avatar_url) + '</div>' +
                 '<div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">' + esc(title) + '</span></div>' +
                 '<div class="pw-chnb">' + (un ? '@' + esc(un) + ' · ' : '') + esc(T('нажми, чтобы сменить канал')) + '</div></div>' +
                 '<div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button></div>';
@@ -271,11 +280,12 @@
                 var un = c.username || c.channel_username || '';
                 var nm = c.title || ('@' + un);
                 return '<div class="pl-whorow" data-act="chpick-go" data-ch="' + c.id + '">' +
-                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whoav" style="position:relative;overflow:hidden;">' + avInner(nm, c.avatar_url) + '</div>' +
                     '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
                     (un ? '<div class="pl-whosub">@' + esc(un) + '</div>' : '') + '</div>' +
                     (c.id === _chId ? '<span class="pl-whotag" style="background:rgba(93,202,165,0.14);color:#5DCAA5;">✓</span>' : '') + '</div>';
             }).join('') + '</div>';
+        bindAv(sh);
         bg.classList.add('on');
         sh.classList.add('on');
     }
@@ -352,10 +362,11 @@
                     : [u ? '@' + u : '', l.subscribers ? num(l.subscribers) : ''].filter(Boolean).join(' · ');
                 return '<div class="pl-whorow" data-act="cb"' + (taken ? ' style="opacity:0.45;pointer-events:none;"' : '') + '>' +
                     '<span class="pl-cb" data-u="' + esc(l.username || '') + '" data-t="' + esc(l.title || '') + '" data-s="' + (l.subscribers || '') + '" data-lid="' + (l.id || '') + '"></span>' +
-                    '<div class="pl-whoav">' + esc(String(l.title || u || '?').charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="pl-whoav" style="position:relative;overflow:hidden;">' + avInner(l.title || u, l.avatar_url) + '</div>' +
                     '<div class="pl-whomid"><div class="pl-whonm">' + esc(l.title || ('@' + u)) + '</div>' +
                     '<div class="pl-whosub">' + esc(sub) + '</div></div></div>';
             }).join('');
+            bindAv(box);
         }).catch(function () {
             var box = document.getElementById('pl-camp-bms');
             if (box) box.innerHTML = '<div class="pl-center">' + esc(T('Не удалось. Повтори попытку.')) + '</div>';
@@ -696,6 +707,7 @@
         host.innerHTML = head() + '<div class="pl-body">' + body + '</div>' +
             '<div class="pl-sheetbg" id="pl-sheetbg"></div>' +
             '<div class="pl-sheet" id="pl-sheet"></div>';
+        bindAv(host);
         host.onclick = onClick;
         var bg = document.getElementById('pl-sheetbg');
         if (bg) bg.addEventListener('click', closeSheet);
