@@ -2066,6 +2066,7 @@
 
     function feedQuery() {
         var p = ['limit=' + _FEED_PAGE, 'offset=' + _feedOffset];
+        if (!_regionAll && !_regionFb) p.push('region=' + _uiSeg());
         if (_q) p.push('q=' + encodeURIComponent(_q));
         if (_sortBuy && _sortBuy !== 'smart') p.push('sort=' + _sortBuy);
         if (_fPriceMin != null) p.push('price_min=' + _fPriceMin);
@@ -2113,6 +2114,11 @@
             } else {
                 _feed = items;
                 _feedTotal = (r && typeof r.total === 'number') ? r.total : _feed.length;
+                if (!_regionAll && !_regionFb && !_q && !_buyFiltersCount() && _feedTotal < 6) {
+                    _regionFb = true; _regionFbBase = _feedTotal;
+                    loadFeed(false);
+                    return;
+                }
             }
             _feedState = 'ready';
             if (_deepCard) {
@@ -2184,6 +2190,12 @@
     var _catQ = '', _catQTimer = null;
     function _catList() {
         var list = _applySort(_catalog || []).filter(_rfPass);
+        _regionNote = false;
+        if (!_regionAll) {
+            var seg = list.filter(_segPass);
+            if (seg.length >= 6) list = seg;
+            else if (seg.length < list.length) _regionNote = true;
+        }
         var q = (_catQ || '').toLowerCase();
         if (q) list = list.filter(function (l) { return (((l.title || '') + ' @' + (l.username || '') + ' ' + (l.niche || '')).toLowerCase()).indexOf(q) >= 0; });
         return list;
@@ -2207,7 +2219,7 @@
         var _renderOne = (_view === 'cards') ? simpleCard : function (x) { return zw(listItem(x, false, true)); };
         var FIRST = 120, CHUNK = 60;
         var head = list.slice(0, FIRST).map(_renderOne).join('');
-        box.innerHTML = (_view === 'cards'
+        box.innerHTML = (_regionNote ? _regionNoteHtml() : '') + (_view === 'cards'
             ? '<div class="fmx-grid" id="fmx-catGrid">' + head + '</div>'
             : '<div style="display:flex;flex-direction:column;gap:8px;" id="fmx-catGrid">' + head + '</div>') +
             '<div id="fmx-catTail"></div>';
@@ -2238,6 +2250,7 @@
         host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + '<div id="fmx-catBody"></div>';
         bindSort(); bindView();
         var _rfb = el('fmx-rfbtn'); if (_rfb) _rfb.addEventListener('click', openRadarFilters);
+        _bindRegionChip(host, paintCatalogBody);
         var si = host.querySelector('.fmx-search input');
         if (si) { si.value = _catQ; si.addEventListener('input', function () { var v = si.value; clearTimeout(_catQTimer); _catQTimer = setTimeout(function () { _catQ = v.trim(); paintCatalogBody(); }, 300); }); }
         paintCatalogBody();
@@ -2314,6 +2327,7 @@
         var opts = [['smart', 'Умная'], ['price_asc', 'Цена ↑'], ['price_desc', 'Цена ↓'], ['reach', 'Охват'], ['cpm', 'CPM'], ['fresh', 'Свежие']];
         var nf = _buyFiltersCount();
         return '<div class="fmx-sortbar" id="fmx-buysort" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">' +
+            _regionChipHtml() +
             opts.map(function (o) { return '<button class="fmx-seg' + (_sortBuy === o[0] ? ' on' : '') + '" data-bsort="' + o[0] + '" style="flex:0 0 auto;">' + o[1] + '</button>'; }).join('') +
             '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button></div>';
     }
@@ -2342,6 +2356,7 @@
         });
         var bf = el('fmx-bfilters');
         if (bf) bf.addEventListener('click', openBuyFilters);
+        _bindRegionChip(sub, function () { loadFeed(false); });
     }
     function pickNiche() {
         var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
@@ -2479,8 +2494,9 @@
             : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер кнопкой «Выставить свой канал».');
         else {
             var feed = _applyBuyFilter(_feed);
+            var rnote = (_regionFb && _regionFbBase != null && _feedTotal > _regionFbBase) ? _regionNoteHtml() : '';
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы» — или догрузи ленту дальше.') + moreBtn;
-            else body = (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return zw(listItem(x)); }).join('') + '</div>') + moreBtn;
+            else body = rnote + (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return zw(listItem(x)); }).join('') + '</div>') + moreBtn;
         }
         host.innerHTML = body;
         bindCards(host); if (_view === 'list') bindList(host);
@@ -3589,6 +3605,25 @@
         draw('');
     }
 
+    var _regionAll = false, _regionFb = false, _regionFbBase = null, _regionNote = false;
+    try { _regionAll = localStorage.getItem('fm_region_all') === '1'; } catch (e) {}
+    var _CIS_UI = { ru: 1, be: 1, kk: 1, uz: 1, az: 1 };
+    var _CIS_LANGS = { ru: 1, uk: 1, be: 1, kk: 1, uz: 1 };
+    function _uiSeg() { try { return _CIS_UI[window.getLang ? getLang() : 'ru'] ? 'cis' : 'intl'; } catch (e) { return 'cis'; } }
+    function _segPass(l) { var lc = l.lang_code || null; return _uiSeg() === 'cis' ? (lc == null || !!_CIS_LANGS[lc]) : (lc != null && !_CIS_LANGS[lc]); }
+    function _regionChipHtml() { return '<button class="fmx-seg' + (_regionAll ? '' : ' on') + '" data-region style="flex:0 0 auto;"><i class="ti ti-world"></i> <span>' + (_regionAll ? 'Все регионы' : 'Мой регион') + '</span></button>'; }
+    function _regionNoteHtml() { return '<div class="fmx-note"><i class="ti ti-world"></i> <span>В твоём регионе площадок пока немного — показаны все регионы.</span></div>'; }
+    function _bindRegionChip(scope, after) {
+        var rc = scope.querySelector('[data-region]');
+        if (!rc) return;
+        rc.addEventListener('click', function () {
+            _regionAll = !_regionAll; _regionFb = false; _regionFbBase = null; _haptic('light');
+            try { localStorage.setItem('fm_region_all', _regionAll ? '1' : '0'); } catch (e) {}
+            rc.classList.toggle('on', !_regionAll);
+            var sp = rc.querySelector('span'); if (sp) sp.textContent = _regionAll ? 'Все регионы' : 'Мой регион';
+            after();
+        });
+    }
     var _rf = { presets: {}, aud: {}, geo: {}, mn: {}, mx: {} };
     function _rfCount() {
         return Object.keys(_rf.presets).filter(function (k) { return _rf.presets[k]; }).length
@@ -8771,6 +8806,7 @@
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
             '<button class="fmx-seg' + (_rfCount() ? ' on' : '') + '" id="fmx-rfbtn"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (_rfCount() ? ' · ' + _rfCount() : '') + '</button>' +
+            _regionChipHtml() +
             '</div>';
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
