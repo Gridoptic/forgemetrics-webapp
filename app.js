@@ -923,11 +923,14 @@ function _tmSheet(html) {
     return sheet;
 }
 
-function _tmAv(c) {
-    const letter = escapeHtml((c.title || '?').trim().charAt(0).toUpperCase());
-    return c.avatar_url
-        ? `<span class="tm-av"><img src="${escapeHtml(c.avatar_url)}" alt=""></span>`
-        : `<span class="tm-av">${letter}</span>`;
+function _tmAbs(u) {
+    return u && u.charAt(0) === '/' ? API_BASE_URL + u : u;
+}
+
+function _tmAv(av, name, own) {
+    const letter = escapeHtml((name || '?').trim().charAt(0).toUpperCase() || '?');
+    const img = av ? `<img src="${escapeHtml(_tmAbs(av))}" alt="" onerror="this.remove()">` : '';
+    return `<span class="tm-av${own ? ' tm-av-own' : ''}">${letter}${img}</span>`;
 }
 
 async function openTeam() {
@@ -939,7 +942,7 @@ async function openTeam() {
     if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
     const rows = chs.map(c => {
         const role = TM_ROLES[c.my_role] || TM_ROLES.viewer;
-        return `<div class="tm-mem tm-pick" data-tmch="${c.id}">${_tmAv(c)}
+        return `<div class="tm-mem tm-pick" data-tmch="${c.id}">${_tmAv(c.avatar_url, c.title)}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
             <div class="tm-tg">@${escapeHtml(c.username || '')} · <i class="ti ti-users" style="font-size:10px;"></i> ${c.members}</div></div>
             <span class="tm-chip ${role.cls}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
@@ -964,7 +967,7 @@ function _tmHead(d) {
     const c = d.channel;
     return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
         <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
-        <div class="tm-mem tm-head">${_tmAv(c)}
+        <div class="tm-mem tm-head">${_tmAv(c.avatar_url, c.title)}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
         <div class="tm-tg">@${escapeHtml(c.username || '')} · <span>${c.connected ? 'подключён, бот — администратор' : 'бот не администратор — список может быть неполным'}</span></div></div></div>`;
 }
@@ -975,15 +978,14 @@ function _tmOwnerView(d) {
         const role = TM_ROLES[m.role] || TM_ROLES.none;
         const tgLab = m.tg_status === 'creator' ? 'Создатель канала'
             : (m.tg_status === 'administrator' ? 'Администратор' : 'Владелец в приложении');
-        const letter = escapeHtml((m.name || '?').trim().charAt(0).toUpperCase());
         if (m.is_owner) {
             const inApp = m.in_app === false ? ' · <span>ещё не заходил в приложение</span>' : '';
-            return `<div class="tm-mem"><span class="tm-av tm-av-own">${letter}</span>
+            return `<div class="tm-mem">${_tmAv(m.avatar_url, m.name, true)}
                 <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
                 <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${tgLab}</span>${inApp}</div></div>
                 <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> Владелец</span></div>`;
         }
-        return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${'<span class="tm-av">' + letter + '</span>'}
+        return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${_tmAv(m.avatar_url, m.name)}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
             <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор'}</span></div></div>
             <span class="tm-chip ${role.cls}" id="tm-role-${m.user_id}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
