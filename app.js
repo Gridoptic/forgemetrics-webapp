@@ -475,7 +475,10 @@ function pwRenderMetrics(pulse) {
     var grid = document.getElementById('pw-mgrid');
     if (!grid) return;
     var ids = pwSelectedIds(pulse);
-    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); return m ? pwCell(m.label, m.get(pulse), m.o) : ''; }).join('');
+    var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+    var _dorm = pwDormantGet(_dch);
+    var hideReach = _dorm && !(_dorm.d != null && _dorm.d <= 30);
+    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; return pwCell(m.label, v, m.o); }).join('');
     pwCountUp(grid);
     if (ids.indexOf('rr') >= 0 && pulse && pulse.rr_status && pulse.rr_status !== 'норма') {
         var rrCell = grid.querySelectorAll('.pw-mcell')[ids.indexOf('rr')];
@@ -628,6 +631,7 @@ async function loadReachSeries() {
                 if (lab) lab.textContent = 'Средний охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
                 pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
+                pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
             } else {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);

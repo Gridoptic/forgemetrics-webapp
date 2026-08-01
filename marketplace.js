@@ -472,7 +472,8 @@
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;overflow-wrap:anywhere;word-break:break-word;}',
             '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
             '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:12px;}',
-            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
+            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;position:relative;overflow:hidden;}',
+            '.fmx-spark{position:absolute;right:4px;bottom:4px;width:58px;height:20px;opacity:0.55;pointer-events:none;}',
             '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
@@ -6904,6 +6905,7 @@
         if (c.health_class) pl.health_class = c.health_class;
         if (c.niche) pl.niche = c.niche;
         if (c.audience) pl.audience = c.audience;
+        if (c.activity) pl.activity = c.activity;
         pl.accent_color = _ss.color;
         pl._preview = true;
         pl.is_top = !!_ss.glowCard || (base ? _isTop(base) : false); pl.is_vip = false; pl.top_until = null; pl.boost_until = null;
@@ -7411,12 +7413,13 @@
             } catch (e) {}
         }
         function posterData() {
+            var _pd = base.activity === 'none';
             return {
                 id: base.id, username: base.username, title: base.title, niche: realNiche || extra.niche || '',
                 niche_tr: extra.niche_tr || null, ref_code: extra.ref_code || null,
-                avatar_url: realAvatar, subscribers: base.subscribers, avg_views: base.avg_views,
-                er: (base.engagement_percent != null ? base.engagement_percent : null), reach_rate: base.er, min_price: minPrice,
-                grow: extra.grow, freq: extra.freq, mv: extra.mv, chart: extra.chart
+                avatar_url: realAvatar, subscribers: base.subscribers, avg_views: _pd ? null : base.avg_views,
+                er: (_pd || base.engagement_percent == null) ? null : base.engagement_percent, reach_rate: _pd ? null : base.er, min_price: minPrice,
+                grow: extra.grow, freq: extra.freq, mv: _pd ? null : extra.mv, chart: _pd ? null : extra.chart
             };
         }
         function uploadPosterBg(file) {
@@ -7786,9 +7789,12 @@
         var rr = (l.er != null) ? l.er : null, rstat = l.reach_status, rtier = l.reach_tier, rnorm = l.reach_norm;
         var pp = _basePrice(l);
         var cpm = _cpm(l);
+        var dead = l.activity === 'none';
         var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var rrHtml = '';
-        if (rr != null && rstat) {
+        if (dead) {
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
+        } else if (rr != null && rstat) {
             var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
@@ -7818,12 +7824,12 @@
             ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <i class="fmr-i ti ti-info-circle push" data-fi="ad"></i></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">от ' + _num(pp) + ' ₽</b></div>' +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
+                (!dead && cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
 
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.</div>';
         }
         var flow = '';
-        if (pp && av) {
+        if (pp && av && !dead) {
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
                 '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
@@ -7854,8 +7860,8 @@
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow) +
             (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
-    function _htile(label, val, valCol, sub, subCol, isPrice) {
-        return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
+    function _htile(label, val, valCol, sub, subCol, isPrice, extra) {
+        return '<div class="fmx-kmt">' + (extra || '') + '<div class="l">' + label + '</div>' +
             '<div class="v' + (isPrice ? ' pr' : '') + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
             (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
     }
@@ -7886,14 +7892,17 @@
             priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? '≈' + _short(plo) + '–' + _short(phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
+        var dead = l.activity === 'none';
+        var _spU = (l.username || l.channel_username || '').replace('@', '');
+        var spark = _spU ? '<span class="fmx-spark" data-su="' + _esc(_spU) + '"></span>' : '';
         var tiles =
-            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
-            _htile('Охват', av ? '~' + _kmNum(av) : '—', '#e8e8ed',
-                (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов', '') +
-            _htile('ERR', rr != null ? rr + '%' : '—', rrCol, rstat || 'уточняется', rstat ? rrCol : '') +
+            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol, false, spark) +
+            _htile('Охват', dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed',
+                dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : '') +
+            _htile('ERR', dead ? '—' : (rr != null ? rr + '%' : '—'), dead ? '#c2c6d2' : rrCol, dead ? 'нет свежих постов' : (rstat || 'уточняется'), dead ? '' : (rstat ? rrCol : '')) +
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
-            _htile('CPM, ₽', (cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed',
-                l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши'), '') +
+            _htile('CPM, ₽', (!dead && cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed',
+                dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), '') +
             _htile(priceLabel, priceVal, priceCol, priceSub, '', true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + tiles + '</div>';
@@ -8057,8 +8066,11 @@
             ring = '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + rr0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + score + '</text></svg>';
         }
         var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
+        var dead = l.activity === 'none';
         var rrHtml = '';
-        if (rr != null && rstat) {
+        if (dead) {
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
+        } else if (rr != null && rstat) {
             var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
@@ -8092,12 +8104,12 @@
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (l.price_floored
                     ? '<div class="fmr-sub" style="color:#f59e0b;">Это минимальный чек ниши, а не расчёт от охвата: при ' + _num(av) + ' просмотрах размещение по нише дешевле не продают. CPM здесь неинформативен.</div>'
-                    : (cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
+                    : (!dead && cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
                       '') +
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM посчитан от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
-        if (pp && av) {
+        if (pp && av && !dead) {
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
                 '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
@@ -8275,7 +8287,7 @@
         if (!_sbIO && typeof IntersectionObserver !== 'undefined') {
             _sbIO = new IntersectionObserver(function (ents) {
                 ents.forEach(function (en) {
-                    if (en.isIntersecting) { _sbIO.unobserve(en.target); _drawOneSubs(en.target); }
+                    if (en.isIntersecting) { _sbIO.unobserve(en.target); if (en.target.classList.contains('fmx-spark')) _drawOneSpark(en.target); else _drawOneSubs(en.target); }
                 });
             }, { rootMargin: '300px 0px' });
         }
@@ -8294,6 +8306,42 @@
             if (_sbCache[b.getAttribute('data-u')] !== undefined || !_sbIO) { _drawOneSubs(b); return; }
             b.__sbObs = 1; _sbIO.observe(b);
         });
+        qsa(document, '.fmx-spark[data-su]').forEach(function (b) {
+            if (b.getAttribute('data-done') || b.__sbObs) return;
+            if (_sbCache[b.getAttribute('data-su')] !== undefined || !_sbIO) { _drawOneSpark(b); return; }
+            b.__sbObs = 1; _sbIO.observe(b);
+        });
+    }
+    function _drawOneSpark(box) {
+        try {
+            if (!box || box.getAttribute('data-done')) return;
+            box.setAttribute('data-done', '1');
+            var uname = box.getAttribute('data-su');
+            if (_sbCache[uname] !== undefined) { _sparkRender(box, _sbCache[uname]); return; }
+            apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
+                if (r && r.ok) _sbCache[uname] = r;
+                _sparkRender(box, r);
+            }).catch(function () {});
+        } catch (e) {}
+    }
+    function _sparkRender(box, r) {
+        try {
+            var pts = (r && r.ok && r.points) || [];
+            var vals = [], cum = 0, has = false;
+            pts.forEach(function (p) {
+                var d = (p.g != null) ? p.g : ((p.j != null || p.l != null) ? (p.j || 0) - (p.l || 0) : null);
+                if (d != null) has = true;
+                cum += (d || 0); vals.push(cum);
+            });
+            if (!has || vals.length < 3) return;
+            var W = 58, H = 20, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+            var rng = (mx - mn) || 1, step = W / (vals.length - 1);
+            var pl = vals.map(function (v, i) { return (i * step).toFixed(1) + ',' + (H - 2 - (v - mn) / rng * (H - 4)).toFixed(1); }).join(' ');
+            var last = vals[vals.length - 1], col = last > 0 ? '#5DCAA5' : (last < 0 ? '#ef4444' : '#8990a8');
+            box.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" style="display:block;">' +
+                '<path d="M0,' + H + ' L' + pl.split(' ').join(' L') + ' L' + W + ',' + H + ' Z" fill="' + col + '" opacity="0.14"/>' +
+                '<polyline points="' + pl + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/></svg>';
+        } catch (e) {}
     }
     if (document.body) { _sbEnsureObs(); } else { document.addEventListener('DOMContentLoaded', _sbEnsureObs); }
     function _drawOneSubs(box) {
@@ -8499,9 +8547,12 @@
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l), accent = _accent(l), t = _cleanTitle(l.title || l.username || '?');
         var prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : ((l.fx ? !!l.fx.gold : _isTop(l)) && (l.effects_json || {}).glowCard !== false));
+        var dead = l.activity === 'none';
         var rr = _reachRate(l), rrc = _rrColor(l), warn = (l.reach_status === 'аномальный') ? '⚠ ' : '';
         var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
-        if (l.avg_views) {
+        if (dead) {
+            mets += '<s></s><span class="fmx-lm" style="color:#ef4444;"><i class="ti ti-eye-off"></i><span>не публикует</span></span>';
+        } else if (l.avg_views) {
             mets += '<s></s><span class="fmx-lm"><i class="ti ti-eye"></i><b>~' + _short(l.avg_views) + '</b>' +
                 (rr != null ? ' <b style="color:' + rrc + ';">(' + warn + rr + '%)</b>' : '') + '</span>';
         } else if (rr != null) {
@@ -8509,7 +8560,7 @@
         }
         var cpm = _cpm(l), estPrice = !l.owner_price;
         var right = (plain ? '' : '<span class="fmx-lprice">' + _priceFrom(l) + '</span>') +
-            (cpm != null ? '<span class="fmx-lcpm">CPM <b>' + (estPrice ? '≈' : '') + _short(cpm) + ' ₽</b></span>' : '');
+            (!dead && cpm != null ? '<span class="fmx-lcpm">CPM <b>' + (estPrice ? '≈' : '') + _short(cpm) + ' ₽</b></span>' : '');
         return '<div class="fmx-li' + (prem ? ' prem' : '') + '" data-u="' + _esc(l.username) + '"' + (plain ? ' data-b="1"' : '') + '>' +
             '<div class="fmx-lrow">' +
             '<span class="fmx-lav-fx" style="box-shadow:0 0 0 2px ' + hc + ';">' + (fx ? avatarInner(accent) : listingAvatar(l, accent)) + '</span>' +
@@ -9104,7 +9155,7 @@
     }
     function _flowBlock(l) {
         var pp = _basePrice(l), av = l.avg_views;
-        if (!pp || !av) return '';
+        if (!pp || !av || l.activity === 'none') return '';
         var conv = 0.5, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
         return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
@@ -9114,7 +9165,8 @@
             '</div>';
     }
     function _pwMetrics(l) {
-        var cpm = _cpm(l);
+        var dead = l.activity === 'none';
+        var cpm = dead ? null : _cpm(l);
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
         function cell(label, val, dim) {
             return '<div class="pw-mcell' + (dim ? ' fmx-mdim' : '') + '"><div class="pw-ml">' + label + '</div>' +
@@ -9128,7 +9180,10 @@
             _ring = '<svg width="42" height="42" viewBox="0 0 42 42" style="flex:0 0 auto;"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + _hcol + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>';
         }
         var _xtra = '';
-        if (l.er != null && l.reach_status) {
+        if (dead) {
+            _xtra += '<div style="font-size:11px;color:#ef4444;margin-top:6px;"><span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
+        }
+        if (!dead && l.er != null && l.reach_status) {
             var _rc = (l.reach_status === 'норма') ? '#5DCAA5' : ((l.reach_status === 'очень низкий' || l.reach_status === 'аномальный') ? '#ef4444' : '#f59e0b');
             var _nrm = (l.reach_norm && l.reach_norm.length === 2) ? ' <span style="color:#565b73;">· норма для ' + _esc(l.reach_tier || '') + ' ' + l.reach_norm[0] + '–' + l.reach_norm[1] + '%</span>' : '';
             _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:6px;">ERR — <b style="color:' + _rc + ';">' + _esc(l.reach_status) + '</b>' + _nrm + '</div>';
@@ -9143,7 +9198,7 @@
             var _ec = _ev >= 3.5 ? '#5DCAA5' : (_ev >= 1 ? '#818cf8' : '#f59e0b');
             _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;">ER — <b style="color:' + _ec + ';">' + _es + '</b>' + (_eb.length ? ' <span style="color:#565b73;">— по ' + _eb.join(', ') + ' на пост</span>' : '') + '</div>';
         }
-        if (l.niche_median_cpm && (ad || l.avg_views)) {
+        if (!dead && l.niche_median_cpm && (ad || l.avg_views)) {
             var _mrv = ad || l.avg_views;
             var _mlo = Math.max(50, Math.round(l.niche_median_cpm * 0.85 * _mrv / 1000 / 50) * 50);
             var _mhi = Math.max(_mlo, Math.round(l.niche_median_cpm * 1.15 * _mrv / 1000 / 50) * 50);
@@ -9162,14 +9217,14 @@
         return '<div class="fmx-pwc">' +
             '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">' +
             '<div style="min-width:0;"><div class="pw-hlab">Охват поста</div>' +
-            '<div class="pw-hbig num"><span class="v">' + (l.avg_views != null ? _num(l.avg_views) : '—') + '</span><span class="u">на пост</span></div></div>' +
+            '<div class="pw-hbig num"><span class="v">' + ((!dead && l.avg_views != null) ? _num(l.avg_views) : '—') + '</span><span class="u"' + (dead ? ' style="color:#ef4444;"' : '') + '>' + (dead ? 'не публикует' : 'на пост') + '</span></div></div>' +
             _ring + '</div>' +
             '<div class="pw-spark" id="fmx-pwspark"></div>' +
             (_chAge(l.channel_created_ts) ? '<div style="font-size:11px;color:#8990a8;margin:-2px 0 8px;"><i class="ti ti-calendar" style="font-size:11px;"></i> На рынке ' + _chAge(l.channel_created_ts) + '</div>' : '') +
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('ERR', l.er != null ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', l.er == null) +
+            cell('ERR', (!dead && l.er != null) ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', dead || l.er == null) +
             '<div class="pw-mdiv"></div>' +
             cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
             '</div>' +
@@ -9246,7 +9301,7 @@
         ];
         var fmtsHtml = '';
         if (l.formats && l.formats.length) {
-            var bestCpm = null, _rv = _reach(l);
+            var bestCpm = null, _rv = (l.activity === 'none') ? null : _reach(l);
             l.formats.forEach(function (f) { if (f.price && _rv) { var c = f.price / _rv * 1000; if (bestCpm == null || c < bestCpm) bestCpm = c; } });
             fmtsHtml = '<div class="fmx-lssect">Форматы и цены</div>' +
                 '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;" id="fmx-fmtl" class="num">' +
