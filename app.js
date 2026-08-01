@@ -1760,7 +1760,7 @@ function renderCabinet(d) {
     })() : '';
     const _sk = (d.subscription || {}).kind;
     const _hbottom = (_sk === 'trial' || _sk === 'paid') ? cabStatusHtml(d.subscription) : '';
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-avw"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><i class="cab-avr"></i></div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill${isPaid ? ' paid' : ''}">${escapeHtml((u.tier_display || 'Free').toUpperCase())}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) : ''}</span></div>${_hstats}${_hbottom}</div>`;
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill${isPaid ? ' paid' : ''}">${escapeHtml((u.tier_display || 'Free').toUpperCase())}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) : ''}</span></div>${_hstats}${_hbottom}</div>`;
 
     if (d.upgrade) {
         const up = d.upgrade;

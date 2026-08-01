@@ -4111,9 +4111,8 @@ html.cs-modal-open {
 .cab-hero{position:relative;overflow:hidden;}
 .cab-hero::before{content:"";position:absolute;top:-40px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(99,102,241,0.22),transparent 68%);pointer-events:none;}
 .cab-hrow{display:flex;align-items:center;gap:14px;position:relative;}
-.cab-av{width:60px;height:60px;border-radius:50%;flex-shrink:0;position:relative;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 6px 20px -6px rgba(99,102,241,0.7);overflow:hidden;}
+.cab-av{width:60px;height:60px;border-radius:50%;flex-shrink:0;position:relative;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 0 0 3.5px var(--bg-card),0 0 0 5px rgba(129,140,248,0.45),0 6px 20px -6px rgba(99,102,241,0.7);overflow:hidden;}
 .cab-av img{width:100%;height:100%;object-fit:cover;}
-.cab-av::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.4);}
 .cab-hi{flex:1;min-width:0;}
 .cab-nm{font-size:19px;font-weight:800;letter-spacing:-0.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cab-hsub{font-size:12.5px;color:var(--text-secondary);margin-top:3px;display:flex;align-items:center;gap:5px;}
@@ -4125,9 +4124,6 @@ html.cs-modal-open {
 .cab-hstat .n{font-size:18px;font-weight:800;letter-spacing:-0.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cab-hstat .l{font-size:10.5px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cab-up{color:#5DCAA5;font-size:11px;font-weight:700;}
-.cab-avw{position:relative;flex-shrink:0;}
-.cab-avr{position:absolute;inset:-4.5px;border-radius:50%;border:1.5px solid rgba(129,140,248,0.45);pointer-events:none;}
-.cab-avw .cab-av::after{content:none;}
 .cab-tarpill{margin-left:auto;align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:0.04em;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-subtle);color:var(--text-secondary);white-space:nowrap;flex-shrink:0;}
 .cab-tarpill.paid{background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);color:#5DCAA5;}
 .cab-pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-top:1px solid rgba(255,255,255,0.07);margin:15px -16px -16px;position:relative;}
