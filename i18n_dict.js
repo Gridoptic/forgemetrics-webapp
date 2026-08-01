@@ -2745,7 +2745,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "The admin list and permissions sync with Telegram automatically: if someone is removed from the channel's admins, their access in the app disappears too.",
   "Ссылки отслеживания и кампании": "Tracking links & campaigns",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus deletes the offer and assigns roles to admins. Can't change the owner, themselves or other trusted admins.",
-  "Кабинет «Мои офферы»": "My offers cabinet"
+  "Кабинет «Мои офферы»": "My offers cabinet",
+  "Фон кнопок карточки": "Card button background",
+  "Все — в цвет": "All in color",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "“All in color” paints all three card buttons in the chosen color: the main one solid, the others with a translucent tint."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5486,7 +5489,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente: si quitan a alguien de los admins del canal, su acceso en la aplicación también desaparece.",
   "Ссылки отслеживания и кампании": "Enlaces de seguimiento y campañas",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además elimina la oferta y asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza.",
-  "Кабинет «Мои офферы»": "Panel «Mis ofertas»"
+  "Кабинет «Мои офферы»": "Panel «Mis ofertas»",
+  "Фон кнопок карточки": "Fondo de los botones de la tarjeta",
+  "Все — в цвет": "Todos en color",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Todos en color» pinta los tres botones de la tarjeta con el color elegido: el principal con relleno, los demás con un tinte translúcido."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8227,7 +8233,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen: wird jemand aus den Kanal-Admins entfernt, verschwindet sein Zugriff auch in der App.",
   "Ссылки отслеживания и кампании": "Tracking-Links und Kampagnen",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, löscht zusätzlich das Offer und vergibt Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen.",
-  "Кабинет «Мои офферы»": "Bereich «Meine Offers»"
+  "Кабинет «Мои офферы»": "Bereich «Meine Offers»",
+  "Фон кнопок карточки": "Hintergrund der Kartenbuttons",
+  "Все — в цвет": "Alle in Farbe",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Alle in Farbe» färbt alle drei Buttons der Karte in der gewählten Farbe: der Haupt-Button gefüllt, die übrigen mit halbtransparentem Ton."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10963,7 +10972,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі: адам арна әкімшілерінен алынса, қосымшадағы қатынасы да жоғалады.",
   "Ссылки отслеживания и кампании": "Бақылау сілтемелері мен науқандар",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса офферді өшіреді және әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді.",
-  "Кабинет «Мои офферы»": "«Менің офферлерім» кабинеті"
+  "Кабинет «Мои офферы»": "«Менің офферлерім» кабинеті",
+  "Фон кнопок карточки": "Карточка түймелерінің фоны",
+  "Все — в цвет": "Барлығы түспен",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Барлығы түспен» карточканың үш түймесін таңдалған түске бояйды: негізгісі толық, қалғандары жартылай мөлдір реңкпен."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13704,7 +13716,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi: kimdir kanal adminlaridan olinsa, ilovadagi kirishi ham yo'qoladi.",
   "Ссылки отслеживания и кампании": "Kuzatuv havolalari va kampaniyalar",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha offerni o'chiradi va adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi.",
-  "Кабинет «Мои офферы»": "«Mening offerlarim» kabineti"
+  "Кабинет «Мои офферы»": "«Mening offerlarim» kabineti",
+  "Фон кнопок карточки": "Kartochka tugmalari foni",
+  "Все — в цвет": "Hammasi rangda",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Hammasi rangda» kartochkaning uchala tugmasini tanlangan rangga bo'yaydi: asosiysi to'liq, qolganlari yarim shaffof rangda."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16444,7 +16459,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна: калі чалавека знялі з адміністратараў канала — доступ у прыкладанні знікне сам.",
   "Ссылки отслеживания и кампании": "Спасылкі адсочвання і кампаніі",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс выдаляе офер і раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных.",
-  "Кабинет «Мои офферы»": "Кабінет «Мае оферы»"
+  "Кабинет «Мои офферы»": "Кабінет «Мае оферы»",
+  "Фон кнопок карточки": "Фон кнопак карткі",
+  "Все — в цвет": "Усе — у колер",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Усе — у колер» фарбуе ўсе тры кнопкі карткі ў абраны колер: галоўная — заліўкай, астатнія — паўпразрыстым адценнем."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19185,7 +19203,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır: kimsə kanal adminlərindən çıxarılsa, tətbiqdəki girişi də itir.",
   "Ссылки отслеживания и кампании": "İzləmə linkləri və kampaniyalar",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik offeri silir və adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir.",
-  "Кабинет «Мои офферы»": "«Mənim offerlərim» kabineti"
+  "Кабинет «Мои офферы»": "«Mənim offerlərim» kabineti",
+  "Фон кнопок карточки": "Kart düymələrinin fonu",
+  "Все — в цвет": "Hamısı rəngdə",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Hamısı rəngdə» kartın üç düyməsini seçilmiş rəngə boyayır: əsas düymə dolu, qalanları yarımşəffaf tonda."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21926,7 +21947,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً: إذا أُزيل أحد من مشرفي القناة، يختفي وصوله في التطبيق أيضاً.",
   "Ссылки отслеживания и кампании": "روابط التتبع والحملات",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويحذف العرض أيضاً ويمنح الأدوار للمشرفين. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين.",
-  "Кабинет «Мои офферы»": "لوحة «عروضي»"
+  "Кабинет «Мои офферы»": "لوحة «عروضي»",
+  "Фон кнопок карточки": "خلفية أزرار البطاقة",
+  "Все — в цвет": "الكل بلون",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«الكل بلون» يلوّن أزرار البطاقة الثلاثة باللون المختار: الرئيسي بتعبئة كاملة والبقية بلون شفاف."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24667,7 +24691,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود: اگر کسی از ادمین‌های کانال برداشته شود، دسترسی‌اش در اپلیکیشن هم می‌رود.",
   "Ссылки отслеживания и кампании": "لینک‌های ردیابی و کمپین‌ها",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه آفر را حذف می‌کند و به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد.",
-  "Кабинет «Мои офферы»": "بخش «آفرهای من»"
+  "Кабинет «Мои офферы»": "بخش «آفرهای من»",
+  "Фон кнопок карточки": "پس‌زمینه دکمه‌های کارت",
+  "Все — в цвет": "همه رنگی",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«همه رنگی» هر سه دکمه کارت را به رنگ انتخابی درمی‌آورد: دکمه اصلی توپر و بقیه با ته‌رنگ نیمه‌شفاف."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27408,7 +27435,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir: biri kanal adminlerinden çıkarılırsa uygulamadaki erişimi de kaybolur.",
   "Ссылки отслеживания и кампании": "Takip bağlantıları ve kampanyalar",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca teklifi siler ve adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez.",
-  "Кабинет «Мои офферы»": "«Tekliflerim» paneli"
+  "Кабинет «Мои офферы»": "«Tekliflerim» paneli",
+  "Фон кнопок карточки": "Kart düğmelerinin arka planı",
+  "Все — в цвет": "Hepsi renkli",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Hepsi renkli», kartın üç düğmesini seçilen renge boyar: ana düğme dolu, diğerleri yarı saydam tonda."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30149,7 +30179,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं: अगर किसी को चैनल के एडमिन से हटाया गया, तो ऐप में उसकी पहुँच भी चली जाती है।",
   "Ссылки отслеживания и кампании": "ट्रैकिंग लिंक और कैंपेन",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही ऑफ़र हटाता है और एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।",
-  "Кабинет «Мои офферы»": "«मेरे ऑफ़र» कैबिनेट"
+  "Кабинет «Мои офферы»": "«मेरे ऑफ़र» कैबिनेट",
+  "Фон кнопок карточки": "कार्ड बटन की पृष्ठभूमि",
+  "Все — в цвет": "सब रंग में",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«सब रंग में» कार्ड के तीनों बटन चुने रंग में रंगता है: मुख्य भरा हुआ, बाकी पारभासी।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32890,7 +32923,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "অ্যাডমিন তালিকা ও অনুমতি Telegram-এর সাথে স্বয়ংক্রিয়ভাবে সিঙ্ক হয়: কাউকে চ্যানেলের অ্যাডমিন থেকে বাদ দিলে অ্যাপে তার অ্যাক্সেসও চলে যায়।",
   "Ссылки отслеживания и кампании": "ট্র্যাকিং লিংক ও ক্যাম্পেইন",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অফার মোছে ও অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।",
-  "Кабинет «Мои офферы»": "«আমার অফার» কেবিনেট"
+  "Кабинет «Мои офферы»": "«আমার অফার» কেবিনেট",
+  "Фон кнопок карточки": "কার্ড বোতামের পটভূমি",
+  "Все — в цвет": "সব রঙে",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«সব রঙে» কার্ডের তিনটি বোতামই বাছাই করা রঙে রাঙায়: প্রধানটি ভরাট, বাকিগুলো স্বচ্ছ আভায়।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35631,7 +35667,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Daftar admin dan izin tersinkron otomatis dengan Telegram: jika seseorang dicabut dari admin channel, aksesnya di aplikasi juga hilang.",
   "Ссылки отслеживания и кампании": "Tautan pelacakan dan kampanye",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus menghapus penawaran dan memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain.",
-  "Кабинет «Мои офферы»": "Kabinet «Penawaran saya»"
+  "Кабинет «Мои офферы»": "Kabinet «Penawaran saya»",
+  "Фон кнопок карточки": "Latar tombol kartu",
+  "Все — в цвет": "Semua berwarna",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Semua berwarna» mewarnai ketiga tombol kartu dengan warna pilihan: tombol utama penuh, lainnya dengan rona tembus pandang."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38372,7 +38411,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Danh sách admin và quyền tự động đồng bộ với Telegram: nếu ai đó bị gỡ khỏi admin của kênh, quyền trong ứng dụng cũng mất.",
   "Ссылки отслеживания и кампании": "Liên kết theo dõi và chiến dịch",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền xóa offer và cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác.",
-  "Кабинет «Мои офферы»": "Khu «Offer của tôi»"
+  "Кабинет «Мои офферы»": "Khu «Offer của tôi»",
+  "Фон кнопок карточки": "Nền các nút của thẻ",
+  "Все — в цвет": "Tất cả theo màu",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Tất cả theo màu» tô cả ba nút của thẻ theo màu đã chọn: nút chính tô đặc, các nút còn lại phủ màu bán trong suốt."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -41113,7 +41155,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "A lista de admins e as permissões sincronizam automaticamente com o Telegram: se alguém for removido dos admins do canal, o acesso dele no aplicativo some também.",
   "Ссылки отслеживания и кампании": "Links de rastreamento e campanhas",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda apaga a oferta e atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança.",
-  "Кабинет «Мои офферы»": "Painel «Minhas ofertas»"
+  "Кабинет «Мои офферы»": "Painel «Minhas ofertas»",
+  "Фон кнопок карточки": "Fundo dos botões do cartão",
+  "Все — в цвет": "Todos na cor",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Todos na cor» pinta os três botões do cartão na cor escolhida: o principal preenchido, os demais com tom translúcido."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43854,7 +43899,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La liste des admins et les droits se synchronisent automatiquement avec Telegram : si quelqu'un est retiré des admins de la chaîne, son accès dans l'appli disparaît aussi.",
   "Ссылки отслеживания и кампании": "Liens de suivi et campagnes",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et en plus supprime l'offre et attribue les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance.",
-  "Кабинет «Мои офферы»": "Espace « Mes offres »"
+  "Кабинет «Мои офферы»": "Espace « Mes offres »",
+  "Фон кнопок карточки": "Fond des boutons de la carte",
+  "Все — в цвет": "Tous en couleur",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "« Tous en couleur » peint les trois boutons de la carte dans la couleur choisie : le principal en plein, les autres en teinte translucide."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46595,7 +46643,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "L'elenco degli admin e i permessi si sincronizzano automaticamente con Telegram: se qualcuno viene rimosso dagli admin del canale, il suo accesso nell'app sparisce.",
   "Ссылки отслеживания и кампании": "Link di tracciamento e campagne",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più elimina l'offerta e assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari.",
-  "Кабинет «Мои офферы»": "Area «Le mie offerte»"
+  "Кабинет «Мои офферы»": "Area «Le mie offerte»",
+  "Фон кнопок карточки": "Sfondo dei pulsanti della card",
+  "Все — в цвет": "Tutti a colore",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Tutti a colore» colora i tre pulsanti della card con il colore scelto: il principale pieno, gli altri con velatura translucida."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49336,7 +49387,10 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ፦ አንድ ሰው ከቻናሉ አስተዳዳሪዎች ከተነሳ፣ በመተግበሪያው ያለው መዳረሻውም ይጠፋል።",
   "Ссылки отслеживания и кампании": "የመከታተያ ሊንኮች እና ዘመቻዎች",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ኦፈሩን ይሰርዛል እና ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።",
-  "Кабинет «Мои офферы»": "«የእኔ ኦፈሮች» ክፍል"
+  "Кабинет «Мои офферы»": "«የእኔ ኦፈሮች» ክፍል",
+  "Фон кнопок карточки": "የካርድ አዝራሮች ዳራ",
+  "Все — в цвет": "ሁሉም በቀለም",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«ሁሉም በቀለም» የካርዱን ሦስቱን አዝራሮች በተመረጠው ቀለም ይቀባል፦ ዋናው ሙሉ፣ ሌሎቹ ግማሽ ግልጽ በሆነ ቃና።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -52077,6 +52131,9 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki: mtu akiondolewa kwenye maadmin wa channel, ufikiaji wake kwenye programu pia hupotea.",
   "Ссылки отслеживания и кампании": "Viungo vya ufuatiliaji na kampeni",
   "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hufuta ofa na kutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine.",
-  "Кабинет «Мои офферы»": "Kabati «Ofa zangu»"
+  "Кабинет «Мои офферы»": "Kabati «Ofa zangu»",
+  "Фон кнопок карточки": "Mandhari ya vitufe vya kadi",
+  "Все — в цвет": "Vyote kwa rangi",
+  "«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.": "«Vyote kwa rangi» hupaka vitufe vitatu vya kadi rangi uliyochagua: kikuu kikiwa kimejaa, vingine kwa rangi ya nusu-uwazi."
  }
 };
