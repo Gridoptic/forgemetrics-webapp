@@ -5711,7 +5711,7 @@
         var b = _suggestBase();
         return FMT_CATALOG.map(function (f) {
             var p = b ? Math.round(b * f.preset / 5500 / 50) * 50 : f.preset;
-            return { on: !!f.base, format: f.k, n: f.n, p: (p > 0 ? p : f.preset), core: f.core, sub: f.sub, base: !!f.base };
+            return { on: !!f.base, format: f.k, n: f.n, p: (p > 0 ? p : f.preset), core: f.core, sub: f.sub, base: !!f.base, auto: true };
         });
     }
     function hydrate(l) {
@@ -5738,10 +5738,12 @@
             _sfmts.forEach(function (f) { f.on = false; });
             l.formats.forEach(function (rf) {
                 var key = _fmtKey(rf.format), found = false;
-                _sfmts.forEach(function (f) { if (f.format === key) { f.on = true; f.p = rf.price; found = true; } });
+                var cat = _FMT_BY_K[key];
+                var wasAuto = !!(cat && rf.price === cat.preset);
+                _sfmts.forEach(function (f) { if (f.format === key) { f.on = true; f.p = rf.price; f.auto = wasAuto; found = true; } });
                 if (!found) {
                     var m = _fmtMeta(key);
-                    _sfmts.push({ on: true, format: key, n: m ? m.n : (rf.label || key), p: rf.price, core: m ? m.core : false, sub: m ? m.sub : '', base: m ? !!m.base : false });
+                    _sfmts.push({ on: true, format: key, n: m ? m.n : (rf.label || key), p: rf.price, core: m ? m.core : false, sub: m ? m.sub : '', base: m ? !!m.base : false, auto: wasAuto });
                 }
             });
         }
@@ -6253,7 +6255,7 @@
     }
     function fmtRows() {
         var av = (curChannel() || {}).avg_views || 0, core = [], sec = [];
-        _sfmts.forEach(function (f) { if (!f.p) { var r = _fmtReco(f.format); if (r) f.p = r; } });
+        _sfmts.forEach(function (f) { if (f.auto || !f.p) { var r = _fmtReco(f.format); if (r) f.p = r; } });
         _sfmts.forEach(function (f, i) { (f.core ? core : sec).push(_fmtTile(f, i, av)); });
         var h = '<div class="fmx-fgrp"><div class="fmx-fghd">Основные форматы</div>' + core.join('') + '</div>';
         if (sec.length) h += '<div class="fmx-fgrp"><div class="fmx-fghd">Доп-опции</div>' + sec.join('') + '</div>';
@@ -6286,7 +6288,7 @@
             inp.addEventListener('click', function (e) { e.stopPropagation(); });
             inp.addEventListener('input', function () {
                 var v = Math.max(0, Math.min(999999, +inp.value || 0)), idx = +inp.getAttribute('data-pi');
-                _sfmts[idx].p = v; if ((+inp.value || 0) > 999999) inp.value = v;
+                _sfmts[idx].p = v; _sfmts[idx].auto = false; if ((+inp.value || 0) > 999999) inp.value = v;
                 var cell = inp.closest('.fmx-ft'), cc = cell ? cell.querySelector('.fmx-ftc') : null;
                 var av = (curChannel() || {}).avg_views || 0;
                 if (cc && _sfmts[idx].on && _fmtReco(_sfmts[idx].format) == null) cc.textContent = (av && v) ? 'CPM ' + _num(Math.round(v / av * 1000)) + ' ₽' : '';
