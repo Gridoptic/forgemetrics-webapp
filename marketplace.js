@@ -5740,7 +5740,7 @@
             l.formats.forEach(function (rf) {
                 var key = _fmtKey(rf.format), found = false;
                 var cat = _FMT_BY_K[key];
-                var wasAuto = !!(cat && rf.price === cat.preset);
+                var wasAuto = !!(cat && (rf.price === cat.preset || rf.price === 5500));
                 _sfmts.forEach(function (f) { if (f.format === key) { f.on = true; f.p = rf.price; f.auto = wasAuto; found = true; } });
                 if (!found) {
                     var m = _fmtMeta(key);
