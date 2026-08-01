@@ -1482,6 +1482,7 @@ document.addEventListener('pointerdown', function () {
     try {
         var b = document.body;
         if ((b.classList.contains('fmx-bgfreeze') || b.classList.contains('cs-modal-open')) && !fmModalOpen()) {
+            fmClientLog('watchdog: pointerdown снял cs-modal-open');
             b.classList.remove('fmx-bgfreeze', 'fmx-bgfull', 'cs-modal-open');
             document.documentElement.classList.remove('fmx-bgfreeze', 'cs-modal-open');
             ['#app', '#fmx-main', '#drawer-overlay'].forEach(function (sel) {
