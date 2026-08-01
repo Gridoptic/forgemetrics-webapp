@@ -407,8 +407,6 @@
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
             '.fmx-fullbg .fmx-crow{margin-top:0;}',
             '.fmx-fullbg .fmx-cb{padding-top:34px;}',
-            '.fmx-nohead .fmx-crow{margin-top:0;}',
-            '.fmx-nohead .fmx-cb{padding-top:34px;}',
             '.fmx-fullbg .fmx-cbg-s{background:linear-gradient(180deg,rgba(10,13,24,0.5),rgba(10,13,24,0.55) 35%,rgba(10,13,24,0.9));}',
             '.fmx-cov,.fmx-cov *,.fmx-av,.fmx-av *,.fmx-avw,.fmx-avw *{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cov img,.fmx-av img,.fmx-avw img{pointer-events:none;}',
@@ -7958,20 +7956,39 @@
         var gs = glassKindStyles(gk, accent);
         if (gk === 'none' && (l.effects_json || {}).btns === 'accent') gs = { s: 'background:' + accent + '1f;border:0.5px solid ' + accent + '55;color:' + accent + ';', p: 'background:' + accent + ';color:#fff;' };
         var starFlow = '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="position:static;margin-top:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);"><i class="ti ti-star"></i></button>';
+        var scoreHtml = (function () {
+            if (l.health_score == null) return noHead ? '<div style="margin-left:auto;align-self:flex-start;">' + starFlow + '</div>' : '';
+            var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
+            return '<div class="fmr-score" style="margin-left:auto;">' +
+                '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
+                '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div>' + (noHead ? starFlow : '') + '</div>';
+        })();
+        var headHtml;
+        if (noHead) {
+            var _rAv = l.avatar_url
+                ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
+                : '<div class="fmr-av" style="background:' + _esc(accent) + ';">' + _esc(t.charAt(0).toUpperCase()) + '</div>';
+            var _pb = _actBadge(l);
+            headHtml = '<div class="fmr-head">' + _rAv +
+                '<div class="fmr-id"><div class="fmr-name" style="' + fontStyle(l.title_style) + '">' + _esc(t) + '</div>' +
+                (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' : '') +
+                (_pb ? '<div class="fmr-pulse">' + _pb + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+        } else {
+            headHtml = '<div class="fmx-crow">' + avHtml +
+                '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
+                scoreHtml + '</div>';
+        }
+        var _tagPos = noHead ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
+        var tagHtml = realTop
+            ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" style="' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
+            : '<span class="fmx-tag" style="' + _tagPos + '"><i class="ti ti-circle-check-filled"></i> на продаже</span>';
         return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
-            (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-speakerphone"></i> Продвигается</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
+            (noHead ? '' : tagHtml) +
             (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
-            '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
-            '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
-            (function () {
-                if (l.health_score == null) return noHead ? '<div style="margin-left:auto;align-self:flex-start;">' + starFlow + '</div>' : '';
-                var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
-                return '<div class="fmr-score" style="margin-left:auto;">' +
-                    '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
-                    '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div>' + (noHead ? starFlow : '') + '</div>';
-            })() + '</div>' +
+            '<div class="fmx-cb">' + headHtml +
             (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
+            (noHead ? tagHtml : '') +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
