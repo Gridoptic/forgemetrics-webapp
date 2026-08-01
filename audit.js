@@ -302,7 +302,7 @@
         var locked = limits && limits.limit === 0 && !limits.is_tester;
 
         var btnHtml;
-        if (locked) {
+        if (locked && !(limits && limits.has_basic_package)) {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-pricing"><i class="ti ti-crown"></i><span>Посмотреть тарифы</span></button>';
         } else if (!runnable) {
             var t = (limits && limits.seconds_until_reset && typeof formatRemainingTime === 'function')
@@ -310,6 +310,12 @@
             btnHtml = '<button class="audit-primary-btn" disabled><i class="ti ti-clock"></i><span>Лимит исчерпан' + (t ? ' · ' + _esc(t) : '') + '</span></button>';
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i><span>Запустить аудит</span></button>';
+        }
+        if (limits && (limits.has_deep_package || limits.is_tester)) {
+            btnHtml += '<button class="audit-deep-btn" id="audit-intro-deep"><i class="ti ti-diamond"></i><span>Запустить глубокий аудит</span></button>' +
+                (limits.has_deep_package
+                    ? '<div class="audit-deep-note">Куплен глубокий аудит — доступен 1 запуск</div>'
+                    : '');
         }
 
         host.innerHTML = headerHtml() +
@@ -334,6 +340,8 @@
 
         var s = host.querySelector('#audit-intro-start');
         if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(); });
+        var dp = host.querySelector('#audit-intro-deep');
+        if (dp) dp.addEventListener('click', function () { _haptic('medium'); startAudit(true); });
         var pr = host.querySelector('#audit-intro-pricing');
         if (pr) pr.addEventListener('click', function () {
             closeAudit();
@@ -352,10 +360,10 @@
             '</div>';
     }
 
-    function startAudit() {
+    function startAudit(deep) {
         if (!_channelId) return;
         showThinking();
-        apiRequest('/api/v1/channels/' + _channelId + '/audit/start', { method: 'POST' })
+        apiRequest('/api/v1/channels/' + _channelId + '/audit/start' + (deep ? '?deep=1' : ''), { method: 'POST' })
             .then(function (res) {
                 _currentAuditId = res && res.audit_id;
                 if (!_currentAuditId) {
@@ -476,6 +484,7 @@
     function renderReport(audit) {
         var host = ensureScreen();
         var r = (audit && audit.report) || {};
+        if (r.deep) { renderDeepReport(audit, r); return; }
         var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
         var zone = _zone(score);
 
@@ -505,6 +514,232 @@
         attachAccordion(host);
         animateScore(score, zone, r);
         loadRerunNote();
+    }
+
+    function _daNum(n) {
+        if (n == null) return '';
+        try { return Number(n).toLocaleString('ru-RU'); } catch (e) { return String(n); }
+    }
+
+    function _daSection(icon, title, hint, inner) {
+        return '<div class="audit-card da-card">' +
+            '<div class="da-sechead"><span class="da-ic">' + icon + '</span><b>' + _esc(title) + '</b>' +
+            (hint ? '<span class="da-hint">' + _esc(hint) + '</span>' : '') + '</div>' + inner + '</div>';
+    }
+
+    function _daPctRow(label, pct, accent) {
+        if (pct == null) return '';
+        var top = Math.max(1, 100 - pct);
+        var col = accent ? 'linear-gradient(90deg,#2b8f6f,#5DCAA5)' : 'linear-gradient(90deg,#4649b8,#6366f1)';
+        return '<div class="da-pctrow"><div class="da-pctlbl"><span>' + _esc(label) + '</span>' +
+            '<span' + (accent ? ' style="color:#5DCAA5"' : '') + '>топ-' + top + '%</span></div>' +
+            '<div class="da-bar"><i style="width:' + pct + '%;background:' + col + '"></i></div></div>';
+    }
+
+    function renderDeepHero(r, score) {
+        var v = _g(r, 'verdict', {}) || {};
+        var pctFill = (score != null) ? Math.max(0, Math.min(100, score)) : 0;
+        var rows = '';
+        var defs = [
+            ['#5DCAA5', 'Сильное', v.strong],
+            ['#ef4444', 'Слабое', v.weak],
+            ['#f0b45a', 'Главное действие', v.action],
+        ];
+        defs.forEach(function (d) {
+            if (!_hasText(d[2])) return;
+            rows += '<div class="da-vrow"><span class="da-vdot" style="background:' + d[0] + '"></span>' +
+                '<span><b>' + _esc(d[1]) + ':</b> ' + _esc(d[2]) + '</span></div>';
+        });
+        return '<div class="da-hero">' +
+            '<span class="da-badge">◆ Глубокий аудит</span>' +
+            '<div class="da-herorow"><div class="da-herotxt">' +
+            '<div class="da-heroname">Коммерческий разбор площадки</div>' +
+            '<div class="da-herosub">позиция в нише · качество трафика · цены</div></div>' +
+            (score != null
+                ? '<div class="da-ring" style="background:conic-gradient(#f0b45a 0 ' + pctFill + '%,rgba(255,255,255,0.08) ' + pctFill + '% 100%)"><i>' + score + '</i></div>'
+                : '') +
+            '</div>' +
+            (rows ? '<div class="da-vrd">' + rows + '</div>' : '') +
+            '</div>';
+    }
+
+    function renderDeepPosition(r) {
+        var d = (r.data || {});
+        var pct = d.pct || {};
+        var price = d.price || {};
+        var inner = '';
+        inner += _daPctRow('Охват поста', pct.reach, pct.reach != null && pct.reach >= 70);
+        inner += _daPctRow('Вовлечённость (ER)', pct.er, pct.er != null && pct.er >= 70);
+        inner += _daPctRow('Частота выхода постов', pct.freq, pct.freq != null && pct.freq >= 70);
+        if (!inner) inner = '<div class="da-empty">Недостаточно данных ниши для сравнения</div>';
+        if (price.lo && price.hi) {
+            var lo = price.min || Math.round(price.lo * 0.7);
+            var hi = price.max || Math.round(price.hi * 1.25);
+            var span = Math.max(1, hi - lo);
+            var youHtml = '';
+            if (price.now) {
+                var x = Math.max(2, Math.min(98, Math.round((price.now - lo) * 100 / span)));
+                youHtml = '<span class="da-youl" style="left:' + x + '%">ты · ' + _daNum(price.now) + ' ₽</span>' +
+                    '<span class="da-you" style="left:' + x + '%"></span>';
+            }
+            inner += '<div class="da-pricebox">' +
+                '<div class="da-pt">Цена поста 1/24 против рыночной вилки ниши</div>' +
+                '<div class="da-range">' + youHtml + '</div>' +
+                '<div class="da-rangel"><span>' + _daNum(lo) + ' ₽</span>' +
+                '<span>вилка ' + _daNum(price.lo) + '–' + _daNum(price.hi) + ' ₽</span>' +
+                '<span>' + _daNum(hi) + '+</span></div>' +
+                (_hasText(r.position_note) ? '<div class="da-note">' + _esc(r.position_note) + '</div>' : '') +
+                '</div>';
+        } else if (_hasText(r.position_note)) {
+            inner += '<div class="da-note" style="margin-top:10px">' + _esc(r.position_note) + '</div>';
+        }
+        var pool = d.pool ? ((d.pool_wide ? 'вся база · ' : '') + d.pool + ' каналов') : '';
+        return _daSection('▦', 'Позиция в нише', pool, inner);
+    }
+
+    function renderDeepTraffic(r) {
+        var d = (r.data || {});
+        var curve = (d.curve || {});
+        var flag = curve.flag;
+        var pts = curve.points || null;
+        if (!flag && !pts && !_hasText(r.traffic_note)) return '';
+        var pill;
+        if (flag === 'clean' || (!flag && pts)) {
+            pill = '<span class="da-pill da-pill-ok">● Трафик живой</span>';
+        } else if (flag) {
+            pill = '<span class="da-pill da-pill-warn">● Есть признаки накрутки</span>';
+        } else {
+            pill = '<span class="da-pill da-pill-mute">● Замеры кривой ещё копятся</span>';
+        }
+        var svg = '';
+        if (pts && typeof pts === 'object') {
+            var arr = [];
+            Object.keys(pts).forEach(function (k) {
+                var h = parseFloat(k);
+                if (!isNaN(h) && typeof pts[k] === 'number') arr.push([h, pts[k]]);
+            });
+            arr.sort(function (a, b) { return a[0] - b[0]; });
+            if (arr.length >= 3) {
+                var maxH = arr[arr.length - 1][0];
+                var line = arr.map(function (p) {
+                    var x = Math.round(4 + (Math.sqrt(p[0]) / Math.sqrt(maxH)) * 112);
+                    var y = Math.round(56 - (Math.min(100, p[1]) / 100) * 50);
+                    return x + ',' + y;
+                }).join(' ');
+                svg = '<svg width="120" height="64" viewBox="0 0 120 64">' +
+                    '<polyline points="4,56 ' + line + '" fill="none" stroke="#5DCAA5" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<text x="2" y="63" fill="#565b73" font-size="7">старт</text>' +
+                    '<text x="100" y="63" fill="#565b73" font-size="7">' + Math.round(maxH) + 'ч</text></svg>';
+            }
+        }
+        var inner = '<div class="da-fraud">' + svg +
+            '<div class="da-fraudtxt">' + pill +
+            (_hasText(r.traffic_note) ? '<div class="da-note" style="margin-top:6px">' + _esc(r.traffic_note) + '</div>' : '') +
+            '</div></div>';
+        return _daSection('✓', 'Проверка трафика', 'кривая набора просмотров', inner);
+    }
+
+    function renderDeepAudience(r) {
+        var d = (r.data || {});
+        var a = d.audience || {};
+        var tiles = '';
+        if (a.geo) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.geo).toUpperCase()) + '</div><div class="l">ОСНОВНОЕ ГЕО</div></div>';
+        if (a.female_pct != null) {
+            var male = 100 - a.female_pct;
+            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? 'М ' + male : 'Ж ' + a.female_pct) + '%</div><div class="l">ПОЛ АУДИТОРИИ</div></div>';
+        }
+        if (a.lang) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.lang).toUpperCase()) + '</div><div class="l">ЯЗЫК</div></div>';
+        if (!tiles && !_hasText(r.audience_note)) return '';
+        var inner = (tiles ? '<div class="da-demrow">' + tiles + '</div>' : '<div class="da-empty">Портрет аудитории ещё собирается</div>') +
+            (_hasText(r.audience_note) ? '<div class="da-insight">' + _esc(r.audience_note) + '</div>' : '');
+        return _daSection('◉', 'Аудитория', 'гео · пол · язык', inner);
+    }
+
+    function renderDeepContent(r) {
+        var c = _g(r, 'content', {}) || {};
+        var d = (r.data || {});
+        var rows = '';
+        (c.top || []).slice(0, 3).forEach(function (f) {
+            rows += '<div class="da-fmt"><span class="da-tag da-tag-top">ТОП</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
+                (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#5DCAA5">' + _esc(f.metric) + '</span>' : '') + '</div>' +
+                (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
+        });
+        (c.weak || []).slice(0, 2).forEach(function (f) {
+            rows += '<div class="da-fmt"><span class="da-tag da-tag-weak">СЛАБО</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
+                (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#f87171">' + _esc(f.metric) + '</span>' : '') + '</div>' +
+                (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
+        });
+        var hoursHtml = '';
+        var hrs = d.hours || [];
+        if (hrs.length) {
+            var cells = '';
+            hrs.forEach(function (b) {
+                var op = Math.max(0.05, Math.min(0.85, (b.w || 0) * 0.85));
+                cells += '<div class="da-h"><div class="da-hc" style="background:rgba(93,202,165,' + op.toFixed(2) + ')"></div>' + _esc(b.h) + '</div>';
+            });
+            hoursHtml = '<div class="da-hours">' + cells + '</div>' +
+                '<div class="da-hourslbl">относительный охват по времени выхода (UTC)</div>' +
+                (_hasText(c.hours_note) ? '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>' : '');
+        } else if (_hasText(c.hours_note)) {
+            hoursHtml = '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>';
+        }
+        if (!rows && !hoursHtml) return '';
+        return _daSection('▤', 'Контент: что работает', 'по последним постам', rows + hoursHtml);
+    }
+
+    function renderDeepMonetize(r) {
+        var m = _g(r, 'monetize', {}) || {};
+        var rows = '';
+        (m.formats || []).slice(0, 4).forEach(function (f) {
+            rows += '<div class="da-mon"><span>' + _esc(f.label || '') + '</span><span class="da-monp">' +
+                (f.price_now_rub ? '<s>' + _daNum(f.price_now_rub) + '</s> ' : '') +
+                _daNum(f.price_reco_rub) + ' ₽</span></div>';
+        });
+        var fc = '';
+        if (m.monthly_lo_rub && m.monthly_hi_rub) {
+            fc = '<div class="da-fc"><div class="t">Потенциал дохода</div>' +
+                '<div class="v">' + _daNum(m.monthly_lo_rub) + ' – ' + _daNum(m.monthly_hi_rub) + ' ₽/мес</div>' +
+                ((_hasText(m.note) || _hasText(m.stage))
+                    ? '<div class="s">' + _esc(m.note || '') + (_hasText(m.stage) ? ' Стадия: ' + _esc(m.stage) + '.' : '') + '</div>'
+                    : '') + '</div>';
+        } else if (_hasText(m.note)) {
+            fc = '<div class="da-note" style="margin-top:9px">' + _esc(m.note) + '</div>';
+        }
+        if (!rows && !fc) return '';
+        return _daSection('₽', 'Монетизация', 'честные цены форматов', rows + fc);
+    }
+
+    function renderDeepPlan(r) {
+        var plan = _g(r, 'plan', []) || [];
+        if (!plan.length) return '';
+        var pmap = { critical: ['критично', 'da-pri-c'], important: ['важно', 'da-pri-i'], minor: ['не срочно', 'da-pri-m'] };
+        var rows = '';
+        plan.slice(0, 7).forEach(function (p, i) {
+            var pri = pmap[p.pri] || null;
+            rows += '<div class="da-plan"><span class="da-plann">' + (i + 1) + '</span><span>' + _esc(p.text || '') +
+                (pri ? '<span class="da-pri ' + pri[1] + '">' + pri[0] + '</span>' : '') + '</span></div>';
+        });
+        return _daSection('➤', 'План на 30 дней', '', rows);
+    }
+
+    function renderDeepReport(audit, r) {
+        var host = ensureScreen();
+        var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
+        var dq = _g(r, 'data_quality', {}) || {};
+        var html = headerHtml() +
+            '<div class="audit-body" id="audit-report-body">' +
+                renderDeepHero(r, score) +
+                renderDeepPosition(r) +
+                renderDeepTraffic(r) +
+                renderDeepAudience(r) +
+                renderDeepContent(r) +
+                renderDeepMonetize(r) +
+                renderDeepPlan(r) +
+                (_hasText(dq.confidence_note)
+                    ? '<div class="da-foot">' + _esc(dq.confidence_note) + '</div>' : '') +
+            '</div>';
+        host.innerHTML = html;
+        attachBack(host);
     }
 
     function confirmRerun() {
