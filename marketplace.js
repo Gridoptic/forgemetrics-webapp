@@ -402,7 +402,7 @@
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
             '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(150deg,rgba(255,241,196,0.95),rgba(245,191,79,0.5) 22%,rgba(150,102,30,0.5) 48%,rgba(245,191,79,0.45) 72%,rgba(255,236,178,0.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '.fmx-goldw{position:relative;z-index:2;}',
-            '.fmx-goldw::after{content:"";position:absolute;inset:0;border-radius:16px;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;}',
+            '.fmx-goldw::after{content:"";position:absolute;top:0;bottom:0;left:var(--fmx-go,0);width:var(--fmx-gw,100%);border-radius:16px;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;}',
             '@media (prefers-reduced-motion:reduce){.fmx-goldw::after,.fmx-li.prem>.fmx-lrow::after{animation:none;}}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
@@ -8621,6 +8621,8 @@
         list.forEach(function (it) {
             it.card.style.transform = it.k < 0.9995 ? 'scale(' + it.k + ')' : '';
             it.card.style.marginLeft = it.off > 0.05 ? it.off.toFixed(2) + 'px' : '';
+            it.w.style.setProperty('--fmx-gw', Math.round(350 * it.k) + 'px');
+            it.w.style.setProperty('--fmx-go', it.off > 0.05 ? it.off.toFixed(2) + 'px' : '0px');
         });
         list.forEach(function (it) { it.h = it.card.offsetHeight; });
         list.forEach(function (it) { it.w.style.height = Math.round(it.h * it.k) + 'px'; });
@@ -8658,6 +8660,13 @@
         clearTimeout(_rsT);
         _rsT = setTimeout(function () { scaleCards(document); }, 120);
     });
+    document.addEventListener('toggle', function (e) {
+        var t = e.target;
+        if (t && t.closest && t.closest('.fmx-cwrap,.fmx-zw')) {
+            window.requestAnimationFrame(function () { try { scaleCards(document); } catch (err) {} });
+            setTimeout(function () { try { scaleCards(document); } catch (err) {} }, 320);
+        }
+    }, true);
     function bindCards(scope) {
         hydrateTgs(scope);
         scaleCards(scope);
