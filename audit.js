@@ -345,37 +345,58 @@
         });
     }
 
+    function _caDiff(icon, cls, title, text) {
+        return '<div class="ca-dr"><div class="ca-dico ' + cls + '"><i class="ti ti-' + icon + '"></i></div>' +
+            '<div><b>' + _esc(title) + '</b><p>' + _esc(text) + '</p></div></div>';
+    }
+
     function renderCommercialIntro(limits) {
         var host = ensureScreen();
         var canDeep = limits && (limits.has_deep_package || limits.is_tester);
         var ctaHtml;
         if (canDeep) {
-            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-report-money"></i><span>Запустить коммерческий аудит</span></button>' +
+            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i><span>Запустить коммерческий аудит</span></button>' +
                 (limits && limits.has_deep_package
                     ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
                     : '');
         } else {
-            ctaHtml = '<div class="da-offerhead" style="margin-top:2px"><span class="da-offerprice-l">Разовая услуга</span><b class="da-offerprice">1 490 ₽</b></div>' +
-                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-report-money"></i><span>Приобрести</span></button>';
+            ctaHtml = '<div class="ca-ctarow"><span class="l">Разовая услуга · отчёт сохраняется</span><b>1 490 ₽</b></div>' +
+                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-briefcase"></i><span>Приобрести</span></button>';
         }
         host.innerHTML = headerHtml('Коммерческий аудит') +
             '<div class="audit-body">' +
-                '<div class="da-hero" style="margin-bottom:16px">' +
-                    '<span class="da-badge">◆ Коммерческий аудит</span>' +
-                    '<div class="da-herorow"><div class="da-herotxt">' +
-                    '<div class="da-heroname">Сколько стоит твоя площадка</div>' +
-                    '<div class="da-herosub">Разбор строится на рыночных данных, а не только на постах канала</div>' +
-                    '</div></div>' +
+                '<div class="ca-hero">' +
+                    '<div class="ca-htop">' +
+                        '<div class="ca-hico"><i class="ti ti-briefcase"></i></div>' +
+                        '<div><div class="ca-hname">Сколько стоит твоя площадка</div>' +
+                        '<div class="ca-hsub">Оценка канала как рекламной площадки — глазами рекламодателя</div></div>' +
+                    '</div>' +
+                    '<div class="ca-hprev">' +
+                        '<div class="l"><span>Пример: охват поста</span><b>топ-18% ниши</b></div>' +
+                        '<div class="ca-hbar"><i></i></div>' +
+                        '<div class="cap">Так выглядит твоя позиция среди всех каналов ниши — эти цифры не видны ни в карточках Площадки, ни в обычном разборе</div>' +
+                    '</div>' +
                 '</div>' +
-                '<div class="audit-intro-feats">' +
-                    introFeat('chart-bar', 'Позиция в нише', 'Охват, ER и цена против каналов твоей ниши') +
-                    introFeat('shield-check', 'Проверка трафика', 'Кривая просмотров: живой или накрученный') +
-                    introFeat('users', 'Аудитория', 'Гео, пол и язык подписчиков') +
-                    introFeat('coin', 'Монетизация', 'Честные цены форматов и потенциал дохода') +
-                    introFeat('list-check', 'План на 30 дней', 'Приоритеты: что сделать в первую очередь') +
+                '<div class="ca-secl">Чего нет больше нигде</div>' +
+                '<div class="ca-diff">' +
+                    _caDiff('chart-bar', 'g', 'Позиция канала на рынке ниши',
+                        'Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.') +
+                    _caDiff('wallet', 'a', 'Аудит прайса и упущенный доход',
+                        'Рыночная вилка стоимости размещения под фактический охват, рекомендованная цена каждого формата и оценка недополученного дохода за месяц при текущем прайсе.') +
+                    _caDiff('shield-check', 'v', 'Верификация качества трафика',
+                        'Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.') +
+                '</div>' +
+                '<div class="ca-inc">' +
+                    '<div class="t">Также в отчёте</div>' +
+                    '<div class="ca-chips">' +
+                        '<span class="ca-chip"><i class="ti ti-users"></i> <span>Гео, пол и язык аудитории</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-layout-grid"></i> <span>Форматы, которые работают</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-clock"></i> <span>Пиковые часы охвата</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-list-check"></i> <span>План продаж на 30 дней</span></span>' +
+                    '</div>' +
                 '</div>' +
                 ctaHtml +
-                '<div class="audit-intro-foot">Анализ занимает 20–40 секунд</div>' +
+                '<div class="audit-intro-foot">Отчёт формируется за 20–40 секунд и сохраняется в истории разборов</div>' +
             '</div>';
         attachBack(host);
 
@@ -386,7 +407,7 @@
             _haptic('medium');
             if (typeof openCheckout === 'function') {
                 openCheckout({ name: 'Коммерческий аудит', price: 1490, sub: false,
-                               icon: 'report-money', color: 'am', rowLabel: 'Коммерческий аудит' });
+                               icon: 'briefcase', color: 'am', rowLabel: 'Коммерческий аудит' });
             }
         });
     }
