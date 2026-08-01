@@ -425,7 +425,7 @@ function pwCell(label, val, opts) {
     if (val == null) return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv">—</div></div>`;
     const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.k ? ' data-k="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
     const tr = opts.trend != null ? `<span class="${opts.trend >= 0 ? 'up' : 'dn'}">${opts.trend >= 0 ? '↗' : '↘'}${Math.abs(opts.trend)}%</span>` : '';
-    return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div>${opts.extra || ''}</div>`;
+    return `<div class="pw-mcell${opts.cls ? ' ' + opts.cls : ''}"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div>${opts.extra || ''}</div>`;
 }
 
 var PW_CATALOG = [
@@ -478,7 +478,7 @@ function pwRenderMetrics(pulse) {
     var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
     var _dorm = pwDormantGet(_dch);
     var hideReach = _dorm && !(_dorm.d != null && _dorm.d <= 30);
-    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs' && pulse.subs_join_today != null) { o = Object.assign({}, m.o, { extra: `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>` }); } return pwCell(m.label, v, o); }).join('');
+    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } return pwCell(m.label, v, o); }).join('');
     pwCountUp(grid);
     if (ids.indexOf('rr') >= 0 && pulse && pulse.rr_status && pulse.rr_status !== 'норма') {
         var rrCell = grid.querySelectorAll('.pw-mcell')[ids.indexOf('rr')];

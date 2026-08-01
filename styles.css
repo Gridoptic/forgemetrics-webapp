@@ -4134,7 +4134,10 @@ html.cs-modal-open {
 .cab-ps .v s{font-size:10.5px;font-weight:600;color:var(--text-tertiary);text-decoration:none;}
 .cab-ps .l{font-size:9.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-tertiary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 3px;}
 .cab-pstats+.cab-status,.cab-hrow+.cab-status{margin-top:15px;}
-.pw-md{font-size:10px;margin-top:3px;font-variant-numeric:tabular-nums;color:var(--text-tertiary);font-weight:600;}
+.pw-md{font-size:10px;margin-top:3px;font-variant-numeric:tabular-nums;color:var(--text-tertiary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.pw-mv{min-width:0;}
+.pw-num{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.pw-mcell.long .pw-mv{font-size:12.5px;letter-spacing:-0.3px;}
 .cab-usec{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-secondary);font-weight:800;margin:13px 0 4px;}
 .cab-usec i{font-style:normal;font-weight:600;letter-spacing:0;text-transform:none;font-size:10px;color:#565b73;white-space:nowrap;}
 .cab-usec~.cab-usec{border-top:1px solid rgba(255,255,255,0.06);padding-top:13px;margin-top:15px;}
