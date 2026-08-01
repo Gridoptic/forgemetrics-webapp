@@ -400,9 +400,10 @@
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '@keyframes fmxGoldGlow{0%,100%{opacity:.25;}50%{opacity:1;}}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
-            '.fmx-card.fmx-prem::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
-            '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
-            '@media (prefers-reduced-motion:reduce){.fmx-card.fmx-prem::after{animation:none;}}',
+            '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(150deg,rgba(255,241,196,0.95),rgba(245,191,79,0.5) 22%,rgba(150,102,30,0.5) 48%,rgba(245,191,79,0.45) 72%,rgba(255,236,178,0.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
+            '.fmx-goldw{position:relative;z-index:2;}',
+            '.fmx-goldw::after{content:"";position:absolute;inset:0;border-radius:16px;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;}',
+            '@media (prefers-reduced-motion:reduce){.fmx-goldw::after,.fmx-li.prem>.fmx-lrow::after{animation:none;}}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
             '.fmx-fullbg .fmx-crow{margin-top:0;}',
@@ -814,7 +815,7 @@
             '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:0 0 auto;max-width:40%;}',
             '.fmx-li.prem>.fmx-lrow{position:relative;border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
             '.fmx-li.prem>.fmx-lrow::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
-            '.fmx-li.prem>.fmx-lrow::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
+            '.fmx-li.prem>.fmx-lrow::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(150deg,rgba(255,241,196,0.95),rgba(245,191,79,0.5) 22%,rgba(150,102,30,0.5) 48%,rgba(245,191,79,0.45) 72%,rgba(255,236,178,0.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
             '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
@@ -7982,7 +7983,7 @@
         var tagHtml = realTop
             ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" style="' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
             : '<span class="fmx-tag" style="' + _tagPos + '"><i class="ti ti-circle-check-filled"></i> на продаже</span>';
-        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
+        return '<div class="fmx-cwrap' + (glowOn ? ' fmx-goldw' : '') + '"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (noHead ? '' : tagHtml) +
             (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
