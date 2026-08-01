@@ -2582,6 +2582,7 @@ function resetPostState() {
     state.post.pendingInstruction = null;
     state.post.length = 'auto';
     state.post.emoji = 'auto';
+    state.post.emojiMode = 'auto';
     state.post.styleUserChoice = null;
     state.post.lastStyleApplied = false;
 
@@ -2592,6 +2593,9 @@ function resetPostState() {
     setProfanity(false);
     setChipGroup('post-length-chips', 'auto');
     setChipGroup('post-emoji-chips', 'auto');
+    setEmojiSwitch(true);
+    const ctaHint = document.getElementById('post-cta-hint');
+    if (ctaHint) ctaHint.classList.remove('hide');
     hideTopicIdeas();
     if (els.postStyleInputWrapper) els.postStyleInputWrapper.style.display = 'none';
     if (els.postGenerateBtn) els.postGenerateBtn.disabled = true;
@@ -2610,6 +2614,7 @@ async function openPostCreate() {
 
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
+        els.postLimitBanner.classList.add('plain');
         els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Загружаю лимиты...</span>';
     }
 
@@ -2617,6 +2622,8 @@ async function openPostCreate() {
     state.post.activeChannel = null;
 
     renderPostChannelSelector(null);
+    requestAnimationFrame(pgSegSyncAll);
+    setTimeout(pgSegSyncAll, 350);
 
     try {
         const [limits, activeData] = await Promise.all([
@@ -2638,21 +2645,34 @@ async function openPostCreate() {
         console.error('Failed to load limits/channel:', err);
         if (els.postLimitBanner) {
             els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Не удалось загрузить лимиты</span>';
-            els.postLimitBanner.classList.add('exhausted');
+            els.postLimitBanner.classList.add('exhausted', 'plain');
         }
     }
+    updateCtaHint();
 }
 
+
+const POST_LENGTH_NOTES = {
+    short: '≈ 300 знаков',
+    medium: '≈ 650 знаков',
+    long: '≈ 1300 знаков',
+};
 
 function updateLengthAutoNote(styleProfile) {
     const note = document.getElementById('post-length-note');
     if (!note) return;
-    if (styleProfile && styleProfile.median_chars) {
-        note.textContent = `Авто — как в канале (~${styleProfile.median_chars} знаков)`;
-        note.style.display = state.post.length === 'auto' ? '' : 'none';
+    const len = state.post.length || 'auto';
+    if (len === 'auto') {
+        if (styleProfile && styleProfile.median_chars) {
+            note.textContent = `Авто — как в канале (~${styleProfile.median_chars} знаков)`;
+            note.style.display = '';
+        } else {
+            note.textContent = '';
+            note.style.display = 'none';
+        }
     } else {
-        note.textContent = '';
-        note.style.display = 'none';
+        note.textContent = POST_LENGTH_NOTES[len] || '';
+        note.style.display = POST_LENGTH_NOTES[len] ? '' : 'none';
     }
 }
 
@@ -2663,6 +2683,65 @@ function setChipGroup(groupId, value) {
     group.querySelectorAll('.post-chip').forEach(ch => {
         ch.classList.toggle('on', ch.dataset.val === value);
     });
+    pgSegSync(groupId);
+}
+
+
+function pgSegSync(groupId) {
+    const group = document.getElementById(groupId);
+    if (!group || !group.classList.contains('pg-seg')) return;
+    let thumb = group.querySelector('.pg-seg-thumb');
+    if (!thumb) {
+        thumb = document.createElement('span');
+        thumb.className = 'pg-seg-thumb';
+        group.appendChild(thumb);
+    }
+    const on = group.querySelector('.post-chip.on');
+    if (!on || !group.offsetWidth) {
+        thumb.style.width = '0px';
+        thumb.style.height = '0px';
+        return;
+    }
+    if (!group.classList.contains('pg-grid')) {
+        const chips = group.querySelectorAll('.post-chip');
+        for (const ch of chips) {
+            if (ch.scrollWidth > ch.clientWidth + 1) {
+                group.classList.add('pg-grid');
+                break;
+            }
+        }
+    }
+    thumb.style.width = on.offsetWidth + 'px';
+    thumb.style.height = on.offsetHeight + 'px';
+    thumb.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop}px)`;
+}
+
+
+function pgSegSyncAll() {
+    pgSegSync('post-length-chips');
+    pgSegSync('post-emoji-chips');
+}
+
+
+function setEmojiSwitch(on) {
+    const sw = document.getElementById('post-emoji-switch');
+    const wrap = document.getElementById('post-emoji-wrap');
+    if (sw) {
+        sw.classList.toggle('on', !!on);
+        sw.dataset.active = String(!!on);
+    }
+    if (wrap) wrap.classList.toggle('closed', !on);
+    state.post.emoji = on ? (state.post.emojiMode || 'auto') : 'none';
+    if (on) setTimeout(() => pgSegSync('post-emoji-chips'), 280);
+}
+
+
+function updateCtaHint() {
+    const hint = document.getElementById('post-cta-hint');
+    if (!hint) return;
+    const topicEmpty = !els.postTopicInput || els.postTopicInput.value.trim().length === 0;
+    const exhausted = !!(els.postLimitBanner && els.postLimitBanner.classList.contains('exhausted'));
+    hint.classList.toggle('hide', !topicEmpty || exhausted);
 }
 
 
@@ -2902,7 +2981,7 @@ function renderStyleToggle(canEnable, defaultOn) {
 function renderLimitBanner(limits) {
     if (!els.postLimitBanner) return;
 
-    els.postLimitBanner.classList.remove('exhausted', 'warning');
+    els.postLimitBanner.classList.remove('exhausted', 'warning', 'plain');
 
     const bars = limits.bars || [];
     const limitState = limits.limit_state || {};
@@ -2910,6 +2989,7 @@ function renderLimitBanner(limits) {
     if (bars.length === 0) {
         if (els.postLimitText) els.postLimitText.textContent = '';
         els.postLimitBanner.innerHTML = '';
+        updateCtaHint();
         return;
     }
 
@@ -2940,6 +3020,18 @@ function renderLimitBanner(limits) {
             ? `<span class="limit-row-count">${used}<span class="limit-row-count-total"></span></span>`
             : `<span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>`;
 
+        let segsTxt = '';
+        let barTxt = '';
+        if (limit != null && limit <= 5) {
+            let segs = '';
+            for (let i = 0; i < limit; i++) {
+                segs += `<u${(remaining != null && i < remaining) ? '' : ' class="off"'}></u>`;
+            }
+            segsTxt = `<span class="limit-segs">${segs}</span>`;
+        } else {
+            barTxt = `<div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>`;
+        }
+
         const rowClass = exhausted
             ? `limit-row limit-row-${b.color} limit-row-exhausted`
             : `limit-row limit-row-${b.color}`;
@@ -2952,12 +3044,14 @@ function renderLimitBanner(limits) {
                     <span class="limit-row-label">${b.label}</span>
                     ${testerNote}
                     ${countTxt}
+                    ${segsTxt}
                 </div>
-                <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
+                ${barTxt}
                 ${timerTxt}
             </div>
         `;
     }).join('');
+    updateCtaHint();
 }
 
 
@@ -5515,6 +5609,7 @@ function setupPostEventListeners() {
             els.postTopicCounter.textContent = String(val.length);
             const canSubmit = val.trim().length > 0 && state.post.limits?.limit_state?.state !== 'exhausted';
             els.postGenerateBtn.disabled = !canSubmit;
+            updateCtaHint();
         });
     }
 
@@ -5541,11 +5636,25 @@ function setupPostEventListeners() {
         emojiChips.addEventListener('click', (ev) => {
             const chip = ev.target.closest('.post-chip');
             if (!chip) return;
-            state.post.emoji = chip.dataset.val || 'auto';
-            setChipGroup('post-emoji-chips', state.post.emoji);
+            state.post.emojiMode = chip.dataset.val || 'auto';
+            state.post.emoji = state.post.emojiMode;
+            setChipGroup('post-emoji-chips', state.post.emojiMode);
             if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged?.();
         });
     }
+
+    const emojiRow = document.getElementById('post-emoji-row');
+    if (emojiRow) {
+        emojiRow.addEventListener('click', (ev) => {
+            if (ev.target.closest('#post-emoji-wrap')) return;
+            const sw = document.getElementById('post-emoji-switch');
+            const newVal = !(sw && sw.classList.contains('on'));
+            setEmojiSwitch(newVal);
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+        });
+    }
+
+    window.addEventListener('resize', pgSegSyncAll);
 
     const ideasBtn = document.getElementById('post-ideas-btn');
     if (ideasBtn) {

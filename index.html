@@ -8,7 +8,7 @@
     <title>ForgeMetrics</title>
     <link rel="stylesheet" href="fonts.css?v=20260724a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css?v=20260801x">
+    <link rel="stylesheet" href="styles.css?v=20260801y">
     <link rel="stylesheet" href="audit.css?v=20260801f">
     <link rel="stylesheet" href="strategy.css?v=20260801b">
     <link rel="stylesheet" href="rewrite.css?v=20260724a">
@@ -331,6 +331,11 @@
         </header>
 
         <div class="post-form">
+            <div class="post-sec-label"><span class="post-label">Стиль</span></div>
+            <div class="pg-hero">
+                <div id="post-channel-selector-wrap"></div>
+            </div>
+
             <div class="post-label-row">
                 <label class="post-label" for="post-topic-input">О чём пост?</label>
                 <button class="post-ideas-btn" id="post-ideas-btn">
@@ -339,21 +344,24 @@
                 </button>
             </div>
             <div class="post-ideas-list" id="post-ideas-list" style="display: none;"></div>
-            <textarea
-                id="post-topic-input"
-                class="post-topic-textarea"
-                placeholder="Например: разбор частой ошибки подписчиков"
-                maxlength="500"
-                rows="4"
-            ></textarea>
-            <div class="post-topic-counter">
-                <span id="post-topic-counter-value">0</span> / 500
+            <div class="pg-topic">
+                <textarea
+                    id="post-topic-input"
+                    class="post-topic-textarea"
+                    placeholder="Например: разбор частой ошибки подписчиков"
+                    maxlength="500"
+                    rows="4"
+                ></textarea>
+                <div class="post-topic-counter">
+                    <span id="post-topic-counter-value">0</span> / 500
+                </div>
             </div>
 
+            <div class="post-sec-label"><span class="post-label">Параметры</span></div>
             <div class="post-settings">
                 <div class="post-setting-row">
                     <div class="post-setting-label"><i class="ti ti-ruler-2"></i><span>Длина</span></div>
-                    <div class="post-chip-group" id="post-length-chips">
+                    <div class="post-chip-group pg-seg" id="post-length-chips">
                         <button class="post-chip on" data-val="auto">Авто</button>
                         <button class="post-chip" data-val="short">Короткий</button>
                         <button class="post-chip" data-val="medium">Средний</button>
@@ -361,13 +369,17 @@
                     </div>
                     <div class="post-setting-note" id="post-length-note" style="display: none;"></div>
                 </div>
-                <div class="post-setting-row">
+                <div class="post-setting-row" id="post-emoji-row">
                     <div class="post-setting-label"><i class="ti ti-mood-smile"></i><span>Эмодзи</span></div>
-                    <div class="post-chip-group" id="post-emoji-chips">
-                        <button class="post-chip on" data-val="auto">Авто</button>
-                        <button class="post-chip" data-val="none">Без них</button>
-                        <button class="post-chip" data-val="few">Немного</button>
-                        <button class="post-chip" data-val="many">Много</button>
+                    <button class="cs-toggle-switch on" id="post-emoji-switch" data-active="true">
+                        <span class="cs-toggle-knob"></span>
+                    </button>
+                    <div class="pg-seg-wrap" id="post-emoji-wrap">
+                        <div class="post-chip-group pg-seg" id="post-emoji-chips">
+                            <button class="post-chip on" data-val="auto">Авто</button>
+                            <button class="post-chip" data-val="few">Немного</button>
+                            <button class="post-chip" data-val="many">Много</button>
+                        </div>
                     </div>
                 </div>
                 <div class="post-setting-row toggle-row" id="post-profanity-row">
@@ -427,6 +439,7 @@
                 <i class="ti ti-sparkles"></i>
                 <span>Сгенерировать</span>
             </button>
+            <div class="post-cta-hint" id="post-cta-hint">Укажи тему поста</div>
         </div>
     </div>
 
@@ -604,12 +617,12 @@
     try {
         var l = window.getLang ? window.getLang() : 'ru';
         if (l && l !== 'ru') {
-            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=170"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=171"></scr' + 'ipt>');
         }
     } catch (e) {}
 })();
 </script>
-<script src="app.js?v=20260801zg"></script>
+<script src="app.js?v=20260801zh"></script>
 <script src="audit.js?v=20260801f"></script>
 <script src="strategy.js?v=20260801b"></script>
 <script src="rewrite.js?v=20260724d"></script>
