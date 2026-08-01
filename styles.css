@@ -4130,17 +4130,12 @@ html.cs-modal-open {
 .cab-avw .cab-av::after{content:none;}
 .cab-tarpill{margin-left:auto;align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:0.04em;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-subtle);color:var(--text-secondary);white-space:nowrap;flex-shrink:0;}
 .cab-tarpill.paid{background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);color:#5DCAA5;}
-.cab-pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-top:1px solid rgba(255,255,255,0.07);margin:15px -16px 0;position:relative;}
+.cab-pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-top:1px solid rgba(255,255,255,0.07);margin:15px -16px -16px;position:relative;}
+.cab-pstats:has(+.cab-status){margin-bottom:0;}
 .cab-ps{padding:11px 6px 12px;text-align:center;min-width:0;}
 .cab-ps+.cab-ps{border-left:1px solid rgba(255,255,255,0.07);}
 .cab-ps .v{font-size:16px;font-weight:800;letter-spacing:-0.2px;}
 .cab-ps .l{font-size:9.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-tertiary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 3px;}
-.cab-hup{display:flex;align-items:center;gap:10px;padding:11px 16px;background:linear-gradient(90deg,rgba(129,140,248,0.10),rgba(129,140,248,0.03));border-top:1px solid rgba(255,255,255,0.07);margin:0 -16px -16px;position:relative;}
-.cab-pstats+.cab-hup{margin-top:0;}
-.cab-hup .t{font-size:11.5px;color:var(--text-secondary);line-height:1.45;flex:1;min-width:0;}
-.cab-hup .t b{color:var(--text-primary);}
-.cab-hupbtn{flex:0 0 auto;font-size:11.5px;font-weight:700;color:#fff;background:#6366f1;border:none;border-radius:9px;padding:9px 14px;min-height:36px;cursor:pointer;font-family:inherit;}
-.cab-hupbtn:active{transform:scale(0.96);}
 .cab-pstats+.cab-status,.cab-hrow+.cab-status{margin-top:15px;}
 .cab-hero .cab-status{padding-bottom:2px;}
 .cab-status{margin-top:15px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07);position:relative;}

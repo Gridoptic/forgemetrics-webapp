@@ -1758,9 +1758,7 @@ function renderCabinet(d) {
             `</div>`;
     })() : '';
     const _sk = (d.subscription || {}).kind;
-    const _hbottom = (_sk === 'trial' || _sk === 'paid')
-        ? cabStatusHtml(d.subscription)
-        : `<div class="cab-hup"><div class="t"><b>Pro</b> — <span>больше постов в день, аудиты и приоритет на Площадке</span></div><button class="cab-hupbtn" id="cab-up-hero">Оформить</button></div>`;
+    const _hbottom = (_sk === 'trial' || _sk === 'paid') ? cabStatusHtml(d.subscription) : '';
     let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-avw"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><i class="cab-avr"></i></div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill${isPaid ? ' paid' : ''}">${escapeHtml((u.tier_display || 'Free').toUpperCase())}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) : ''}</span></div>${_hstats}${_hbottom}</div>`;
 
     if (d.upgrade) {
@@ -1798,7 +1796,6 @@ function wireCabinet(d) {
         });
     };
     on('cab-upgrade', goUpgrade);
-    on('cab-up-hero', goUpgrade);
     on('cab-compare', () => { openTariffs(); });
     on('cab-team', () => { openTeam(); });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
