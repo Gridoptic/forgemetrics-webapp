@@ -86,7 +86,6 @@
     var COVER_NAMES = ['Фиолет', 'Изумруд', 'Закат', 'Океан', 'Огонь', 'Магента'];
     var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
-    var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['dark', 'Дымка'], ['tint', 'Цветное']];
     var FX_KEEP = { move: ['none'], over: ['none'], part: ['none'], orbit: ['none'], glow: ['none'], glass: ['none', 'frost', 'dark'] };
     function fxAllow(group, v) { return (v && FX_KEEP[group] && FX_KEEP[group].indexOf(v) >= 0) ? v : 'none'; }
     var FX_VIP = { glass: ['frost', 'dark'] };
@@ -463,7 +462,7 @@
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
             '.fmx-b-big{background:rgba(245,158,11,0.13);color:#f59e0b;}',
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
-            '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;}',
+            '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;overflow-wrap:anywhere;word-break:break-word;}',
             '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
             '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:12px;}',
             '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
@@ -808,8 +807,9 @@
             '.fmx-lmet b{color:#c9cbe0;font-weight:600;}',
             '.fmx-lmet s{width:3px;height:3px;border-radius:50%;background:#3a3f55;text-decoration:none;flex-shrink:0;display:inline-block;}',
             '.fmx-lright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:0 0 auto;max-width:40%;}',
-            '.fmx-li.prem>.fmx-lrow{position:relative;border-color:rgba(245,191,79,0.62);box-shadow:0 0 12px -4px rgba(245,191,79,0.42),0 6px 16px -10px rgba(245,191,79,0.38),inset 0 1px 0 rgba(255,228,160,0.28);}',
+            '.fmx-li.prem>.fmx-lrow{position:relative;border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
             '.fmx-li.prem>.fmx-lrow::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
+            '.fmx-li.prem>.fmx-lrow::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '.fmx-chk .fmx-box i{opacity:0;transition:opacity 130ms;}',
             '.fmx-chk.on .fmx-box i{opacity:1;}',
             '.fmx-huerow{display:none;align-items:center;gap:10px;margin-top:10px;}',
@@ -5854,7 +5854,7 @@
     function updateAccSummaries() {
         var m = {
             cover: _ss.covType === 'grad' ? (_ss.coverGrad ? 'Свой градиент' : (COVER_NAMES[_ss.cover] || 'Градиент')) : ((_ss._media && _ss._media.cover && _ss._media.cover.name) || 'Свой файл'),
-            fx: (function () { var n = (_ss.glow !== 'none' ? 1 : 0); if (_ss.glass !== 'none') n++; if (_ss.glowCard) n++; return n ? n + ' актив.' : 'Выключены'; })(),
+            fx: (function () { var n = (_ss.glass !== 'none' ? 1 : 0); if (_ss.glowCard) n++; if (_ss.btns === 'accent') n++; return n ? n + ' актив.' : 'Выключены'; })(),
             style: (FONTS.filter(function (f) { return f[0] === _ss.font; })[0] || ['', 'Обычный'])[1] + ' · <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + _ss.color + ';vertical-align:-1px;"></span>',
             price: (function () { var on = _sfmts.filter(function (f) { return f.on; }); if (!on.length) return 'Не выбраны'; return on.length + ' форм. · от ' + _num(Math.min.apply(null, on.map(function (f) { return f.p; }))) + ' ₽'; })(),
             text: (_ss._desc ? 'Описание готово' : 'Заголовок и описание')
@@ -5910,7 +5910,16 @@
             '<button class="fmx-fx' + (!_ss.glowCard ? ' on' : '') + '" data-gc="off">Выключено</button>' +
             '<button class="fmx-fx vip' + (_ss.glowCard ? ' on' : '') + '" data-gc="on"><i class="ti ti-lock"></i>Золотое свечение</button>' +
             '</div></div>' +
-            fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
+            '<div class="fmx-fxg"><div class="fmx-fxl vipc">Кнопки карточки <i class="ti ti-lock"></i></div>' +
+            '<div class="fmx-fxlock">Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.</div>' +
+            '<div class="fmx-fxw" id="fmx-btnstyle">' +
+            (function () {
+                var cur = _ss.glass !== 'none' ? _ss.glass : (_ss.btns === 'accent' ? 'accent' : 'std');
+                return [['std', 'Стандарт', 0], ['frost', 'Матовое стекло', 1], ['dark', 'Дымка', 1], ['accent', 'Все — в цвет', 0]].map(function (o) {
+                    return '<button class="fmx-fx' + (cur === o[0] ? ' on' : '') + (o[2] ? ' vip' : '') + '" data-bs="' + o[0] + '">' + (o[2] ? '<i class="ti ti-lock"></i>' : '') + o[1] + '</button>';
+                }).join('');
+            })() +
+            '</div></div>' +
             '<div style="margin-top:10px;">' +
             '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Продвигается» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
             '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
@@ -5922,10 +5931,6 @@
     }
     function paneStyleMin() {
         return '<span class="fmx-lbl">Цвет кнопки</span>' + colorPick('fmx-colors', _ss.color) +
-            '<span class="fmx-lbl fmx-mt2">Фон кнопок карточки</span><div class="fmx-mtabs" id="fmx-btns">' +
-            '<button class="fmx-mt' + (_ss.btns !== 'accent' ? ' on' : '') + '" data-b="std">Стандарт</button>' +
-            '<button class="fmx-mt' + (_ss.btns === 'accent' ? ' on' : '') + '" data-b="accent">Все — в цвет</button></div>' +
-            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">«Все — в цвет» красит все три кнопки карточки в выбранный цвет: главная — заливкой, остальные — полупрозрачным фоном.</div>' +
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Фон оффера</span>' +
@@ -6190,20 +6195,10 @@
         setTimeout(function () { document.addEventListener('mousedown', _outside); document.addEventListener('touchstart', _outside); }, 0);
         draw(); sync(); live = true;
     }
-    function isVipFx(key, v) { return !!(FX_VIP[key] && FX_VIP[key].indexOf(v) >= 0); }
-    function fxChips(key, arr, label, lockNote) {
-        var paid = !!lockNote;
-        return '<div class="fmx-fxg"><div class="fmx-fxl' + (paid ? ' vipc' : '') + '">' + label + (paid ? ' <i class="ti ti-lock"></i>' : '') + '</div>' +
-            (paid ? '<div class="fmx-fxlock">' + lockNote + '</div>' : '') +
-            '<div class="fmx-fxw" data-fxg="' + key + '">' +
-            arr.map(function (o) { var vip = isVipFx(key, o[0]); return '<button class="fmx-fx' + (o[0] === _ss[key] ? ' on' : '') + (vip ? ' vip' : '') + '" data-v="' + o[0] + '">' + (vip ? '<i class="ti ti-lock"></i>' : '') + o[1] + '</button>'; }).join('') +
-            '</div></div>';
-    }
     function bindStyle() {
         bindColorPick('fmx-colors', function (v) { _ss.color = v; }, 'Цвет кнопки');
-        qsa(el('fmx-btns'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.btns = b.getAttribute('data-b'); qsa(el('fmx-btns'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
-        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
+        qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); sizePanes(); }); }); });
         qsa(el('fmx-glowcard'), 'button').forEach(function (b) {
             b.addEventListener('click', function () {
                 _ss.glowCard = b.getAttribute('data-gc') === 'on';
@@ -6212,7 +6207,21 @@
                 _haptic('light'); renderHero();
             });
         });
-        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () { _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero(); });
+        qsa(el('fmx-btnstyle'), 'button').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var v = b.getAttribute('data-bs');
+                if (v === 'frost' || v === 'dark') { _ss.glass = v; _ss.btns = 'std'; }
+                else if (v === 'accent') { _ss.glass = 'none'; _ss.btns = 'accent'; }
+                else { _ss.glass = 'none'; _ss.btns = 'std'; }
+                qsa(el('fmx-btnstyle'), 'button').forEach(function (x) { x.classList.remove('on'); });
+                b.classList.add('on');
+                _haptic('light'); renderHero();
+            });
+        });
+        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () {
+            if (!(_ss._media && _ss._media.cardbg)) { _haptic('error'); toast('Сначала загрузи фон оффера — картинку, GIF или видео'); return; }
+            _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero();
+        });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
@@ -7864,7 +7873,7 @@
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
         var _fxG = l.fx || null;
         var _gold = _fxG ? !!_fxG.gold : top;
-        var realTop = l._preview ? !!l._realTop : _gold;
+        var realTop = l._preview ? true : _gold;
         var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_gold && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
@@ -9236,7 +9245,7 @@
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
             (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) +
                 '<div class="fmx-tplink" data-terms="b"><i class="ti ti-clipboard-text"></i> <span>Как проходит сделка</span></div>' : '') +
-            (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;">' + _esc(l.custom_text) + '</div>' : '') +
+            (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;overflow-wrap:anywhere;word-break:break-word;">' + _esc(l.custom_text) + '</div>' : '') +
             fmtsHtml +
             (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div>' : '') +
