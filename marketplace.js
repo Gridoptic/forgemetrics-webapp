@@ -407,6 +407,8 @@
             '.fmx-cov-sep{box-shadow:0 1px 0 rgba(255,255,255,0.16),0 5px 12px -4px rgba(0,0,0,0.6);}',
             '.fmx-fullbg .fmx-crow{margin-top:0;}',
             '.fmx-fullbg .fmx-cb{padding-top:34px;}',
+            '.fmx-nohead .fmx-crow{margin-top:0;}',
+            '.fmx-nohead .fmx-cb{padding-top:34px;}',
             '.fmx-fullbg .fmx-cbg-s{background:linear-gradient(180deg,rgba(10,13,24,0.5),rgba(10,13,24,0.55) 35%,rgba(10,13,24,0.9));}',
             '.fmx-cov,.fmx-cov *,.fmx-av,.fmx-av *,.fmx-avw,.fmx-avw *{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none;-webkit-user-select:none;}',
             '.fmx-cov img,.fmx-av img,.fmx-avw img{pointer-events:none;}',
@@ -5895,7 +5897,9 @@
             '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
             mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 64 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
-        return seg + grads + upl;
+        var noHead = '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Карточка без шапки</span></div>' +
+            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.</div>';
+        return seg + grads + upl + noHead;
     }
     function bindCover() {
         qsa(el('fmx-covtype'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.covType = b.getAttribute('data-ct'); qsa(el('fmx-covtype'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var gb = el('fmx-gradbox'), ub = el('fmx-uplbox'); if (gb) gb.style.display = _ss.covType === 'grad' ? '' : 'none'; if (ub) ub.style.display = _ss.covType === 'grad' ? 'none' : ''; renderHero(); sizePanes(); }); });
@@ -5905,6 +5909,9 @@
         var grb = gr ? gr.querySelector('[data-grb]') : null;
         if (grb) grb.addEventListener('click', function () { if (!ghue) return; var open = ghue.style.display !== 'none'; ghue.style.display = open ? 'none' : 'flex'; if (!open && gsl) { _ss.coverGrad = gradOf(+gsl.value); qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); grb.classList.add('on'); if (gprev) gprev.style.background = _ss.coverGrad; renderHero(); } });
         if (gsl) gsl.addEventListener('input', function () { _ss.coverGrad = gradOf(+this.value); if (gprev) gprev.style.background = _ss.coverGrad; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); if (grb) grb.classList.add('on'); _liveCover(_ss.coverGrad); _heroDebounced(); });
+        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () {
+            _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); _haptic('light'); renderHero();
+        });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="cover"]')[0]);
     }
 
@@ -5939,9 +5946,7 @@
             '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
             '<span class="fmx-lbl fmx-mt2">Фон оффера</span>' +
-            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>' +
-            '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Фон во всю карточку — без шапки</span></div>' +
-            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается, фон занимает всю карточку — доступно всем. Анимированный фон (GIF/MP4) — только при продвижении «Месяц в ленте».</div>';
+            '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
     }
     function hslHex(h) {
         var s = 0.85, l = 0.62, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
@@ -6223,10 +6228,6 @@
                 _haptic('light'); renderHero();
             });
         });
-        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () {
-            if (!(_ss._media && _ss._media.cardbg)) { _haptic('error'); toast('Сначала загрузи фон оффера — картинку, GIF или видео'); return; }
-            _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero();
-        });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
@@ -6356,7 +6357,6 @@
         _ss.att[target] = '';
         if (target === 'cover') _ss.covType = 'grad';
         if (target === 'avatar') _ss.avatar = 'tg';
-        if (target === 'cardbg') _ss.fullBg = false;
         paintCreate();
     }
     function startCrop(target, url, kind, name, x, y, s, file) {
@@ -7908,6 +7908,7 @@
             ? '<video src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '" muted loop playsinline autoplay preload="metadata"></video>'
             : '<img loading="lazy" decoding="async" src="' + _esc(mediaAbs(cb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(cb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
         var fullBg = !!(cb && (l.effects_json || {}).fullBg);
+        var noHead = !!((l.effects_json || {}).fullBg && !cb);
         var fts = cb ? 'text-shadow:0 1px 3px rgba(0,0,0,0.65);' : '';
         var fmet = cb ? 'background:rgba(10,13,24,0.55);border-radius:10px;padding:9px 11px;border-top:none;margin-top:11px;' : '';
         var covHtml;
@@ -7923,18 +7924,19 @@
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         if (gk === 'none' && (l.effects_json || {}).btns === 'accent') gs = { s: 'background:' + accent + '1f;border:0.5px solid ' + accent + '55;color:' + accent + ';', p: 'background:' + accent + ';color:#fff;' };
-        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
-            (fullBg ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
+        var starFlow = '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="position:static;margin-top:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);"><i class="ti ti-star"></i></button>';
+        return '<div class="fmx-cwrap"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
+            ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (realTop ? (topTag === 'off' ? '' : '<span class="fmx-tag gold"' + (topTag === 'ghost' ? ' style="background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);"' : '') + '><i class="ti ti-speakerphone"></i> Продвигается</span>') : '<span class="fmx-tag"><i class="ti ti-circle-check-filled"></i> на продаже</span>') +
-            '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>' +
+            (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
             '<div class="fmx-cb"><div class="fmx-crow">' + avHtml +
             '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
             (function () {
-                if (l.health_score == null) return '';
+                if (l.health_score == null) return noHead ? '<div style="margin-left:auto;align-self:flex-start;">' + starFlow + '</div>' : '';
                 var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
                 return '<div class="fmr-score" style="margin-left:auto;">' +
                     '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
-                    '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div></div>';
+                    '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div>' + (noHead ? starFlow : '') + '</div>';
             })() + '</div>' +
             (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             bodyBdg +
