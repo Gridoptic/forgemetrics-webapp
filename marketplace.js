@@ -7955,13 +7955,13 @@
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         if (gk === 'none' && (l.effects_json || {}).btns === 'accent') gs = { s: 'background:' + accent + '1f;border:0.5px solid ' + accent + '55;color:' + accent + ';', p: 'background:' + accent + ';color:#fff;' };
-        var starFlow = '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="position:static;margin-top:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);"><i class="ti ti-star"></i></button>';
+        var starFlow = '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="position:static;margin-bottom:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);"><i class="ti ti-star"></i></button>';
         var scoreHtml = (function () {
             if (l.health_score == null) return noHead ? '<div style="margin-left:auto;align-self:flex-start;">' + starFlow + '</div>' : '';
             var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
-            return '<div class="fmr-score" style="margin-left:auto;">' +
+            return '<div class="fmr-score" style="margin-left:auto;">' + (noHead ? starFlow : '') +
                 '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
-                '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div>' + (noHead ? starFlow : '') + '</div>';
+                '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div></div>';
         })();
         var headHtml;
         if (noHead) {
