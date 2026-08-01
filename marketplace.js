@@ -1211,6 +1211,8 @@
             '.fmx-pwc .pw-mcell{flex:1;min-width:0;}',
             '.fmx-pwc .pw-ml{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.1px;font-weight:600;line-height:1.15;min-height:2.2em;display:flex;align-items:flex-end;}',
             '.fmx-pwc .pw-mv{font-size:15px;font-weight:800;margin-top:3px;letter-spacing:-0.4px;display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;color:#e8e8ed;}',
+            '.fmx-pwc .pw-mn{font-size:9.5px;color:#8990a8;margin-top:2px;line-height:1.25;overflow-wrap:anywhere;}',
+            '.fmx-pwc .fmx-mdim .pw-mn{opacity:1;}',
             '.fmx-pwc .pw-mdiv{width:1px;background:rgba(255,255,255,0.07);margin:1px 7px;flex-shrink:0;}',
             '.fmx-trust .row{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;}',
             '.fmx-trust .row:last-child{border-bottom:none;}',
@@ -7803,7 +7805,7 @@
                 '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         var erHtml = '';
-        if (l.engagement_percent != null) {
+        if (!dead && l.engagement_percent != null) {
             var erBits = [];
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
@@ -7870,9 +7872,10 @@
         var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);
         var rstat = l.reach_status;
         var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : (rstat ? '#f59e0b' : '#c2c6d2'));
-        var erv = l.engagement_percent;
+        var _deadT = l.activity === 'none';
+        var erv = _deadT ? null : l.engagement_percent;
         var erCol = (erv == null) ? '#c2c6d2' : (erv >= 3.5 ? '#5DCAA5' : (erv >= 1 ? '#818cf8' : '#f59e0b'));
-        var erStat = (erv == null) ? '' : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
+        var erStat = (erv == null) ? (_deadT ? 'нет свежих постов' : '') : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
         var ervTxt = (erv == null) ? '—' : (((erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(erv).replace('.', ',')) + '%');
         var isOwner = !!l.owner_price || mode === 'market';
         var g = (l.subs_d30 != null) ? l.subs_d30 : ((l.subs_d7 != null) ? l.subs_d7 : null);
@@ -7892,7 +7895,7 @@
             priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? '≈' + _short(plo) + '–' + _short(phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
-        var dead = l.activity === 'none';
+        var dead = _deadT;
         var _spU = (l.username || l.channel_username || '').replace('@', '');
         var spark = _spU ? '<span class="fmx-spark" data-su="' + _esc(_spU) + '"></span>' : '';
         var tiles =
@@ -8078,7 +8081,7 @@
                 '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         var erHtml = '';
-        if (l.engagement_percent != null) {
+        if (!dead && l.engagement_percent != null) {
             var erBits = [];
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
@@ -9172,9 +9175,10 @@
         var dead = l.activity === 'none';
         var cpm = dead ? null : _cpm(l);
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
-        function cell(label, val, dim) {
+        function cell(label, val, dim, note) {
             return '<div class="pw-mcell' + (dim ? ' fmx-mdim' : '') + '"><div class="pw-ml">' + label + '</div>' +
-                '<div class="pw-mv num">' + val + '</div></div>';
+                '<div class="pw-mv num">' + val + '</div>' +
+                (note ? '<div class="pw-mn">' + note + '</div>' : '') + '</div>';
         }
         var _al = _audLabel(l), audTx = _al ? _al.text : null;
         var _ring = '';
@@ -9192,7 +9196,7 @@
             var _nrm = (l.reach_norm && l.reach_norm.length === 2) ? ' <span style="color:#565b73;">· норма для ' + _esc(l.reach_tier || '') + ' ' + l.reach_norm[0] + '–' + l.reach_norm[1] + '%</span>' : '';
             _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:6px;">ERR — <b style="color:' + _rc + ';">' + _esc(l.reach_status) + '</b>' + _nrm + '</div>';
         }
-        if (l.engagement_percent != null) {
+        if (!dead && l.engagement_percent != null) {
             var _eb = [];
             if (l.react_count) _eb.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) _eb.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
@@ -9228,16 +9232,15 @@
             '<div class="pw-mrow num">' +
             cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
             '<div class="pw-mdiv"></div>' +
-            cell('ERR', (!dead && l.er != null) ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', dead || l.er == null) +
+            cell('ERR', (!dead && l.er != null) ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', dead || l.er == null, dead ? 'нет свежих постов' : '') +
             '<div class="pw-mdiv"></div>' +
-            cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null) +
+            cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null, dead ? 'нет охвата' : '') +
             '</div>' +
             '<div class="pw-mrow num" style="border-top:none;padding-top:4px;margin-top:4px;">' +
-
-            '<div class="pw-mdiv"></div>' +
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
-            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false) : (l.engagement_percent != null ? cell('Вовлечённость (ERR)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Прогноз охвата', '—', true))) +
+            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false)
+                : ((!dead && l.engagement_percent != null) ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Вовлечённость (ER)', '—', true, dead ? 'нет свежих постов' : ''))) +
             '</div>' +
             _xtra +
             (l.er != null && l.er > 100 ?
