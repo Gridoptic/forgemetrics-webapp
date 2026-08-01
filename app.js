@@ -1582,12 +1582,12 @@ async function openCabinet(scrollTo) {
 function cabUsageRow(u) {
     const limit = u.limit, used = u.used;
     let vtext, fillCls, pct;
-    if (limit >= 999999) { vtext = `<b>${cabNum(used)}</b> / ∞`; fillCls = 'gr'; pct = 8; }
-    else if (limit <= 0) { vtext = 'недоступно на этом тарифе'; fillCls = 'pu'; pct = 0; }
+    if (limit >= 999999) { vtext = `<b>${cabNum(used)}</b> · <span>без ограничений</span>`; fillCls = 'gr'; pct = 8; }
+    else if (limit <= 0) { vtext = '<span>недоступно на этом тарифе</span>'; fillCls = 'pu'; pct = 0; }
     else {
         vtext = `<b>${cabNum(used)}</b> / ${cabNum(limit)}`;
         pct = Math.min(100, Math.round(used / limit * 100));
-        fillCls = used >= limit ? 'full' : (pct >= 70 ? 'am' : 'gr');
+        fillCls = used >= limit ? 'full' : (pct >= 75 ? 'am' : 'gr');
     }
     return `<div class="cab-use">${cabTile(u.color, u.icon, 'md')}<div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
 }
@@ -1769,7 +1769,12 @@ function renderCabinet(d) {
         html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
     }
 
-    html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Лимиты сегодня</h3><span class="cab-link">обновятся в 00:00</span></div>${(d.usage || []).map(cabUsageRow).join('')}</div>`;
+    const _uday = (d.usage || []).filter(x => x.period === 'day');
+    const _umon = (d.usage || []).filter(x => x.period === 'month');
+    html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Лимиты</h3></div>` +
+        (_uday.length ? `<div class="cab-usec"><span>Сегодня</span><i>обновятся в 00:00</i></div>` + _uday.map(cabUsageRow).join('') : '') +
+        (_umon.length ? `<div class="cab-usec"><span>В этом месяце</span><i>скользящие 30 дней</i></div>` + _umon.map(cabUsageRow).join('') : '') +
+        `</div>`;
 
 
 
