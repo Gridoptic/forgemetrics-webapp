@@ -1226,7 +1226,12 @@ function apConfirm(text, onYes) {
 }
 
 function apErr(e) {
-    showToast((e && e.message) ? e.message : t('Не получилось — попробуй ещё раз'), 'alert-triangle');
+    let m = (e && e.message) ? e.message : '';
+    const j = m.indexOf('{');
+    if (j >= 0) {
+        try { m = (JSON.parse(m.slice(j)) || {}).detail || m; } catch (err) {}
+    }
+    showToast(m || t('Не получилось — попробуй ещё раз'), 'alert-triangle');
 }
 
 function publishPostNow() {

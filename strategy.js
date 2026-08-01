@@ -135,6 +135,7 @@
     function route(d) {
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
+        if (d.access === 'expired') { renderShowcase(); return; }
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'active') { renderDoc(); return; }
         if (d.status === 'error') { renderGenError(); return; }
@@ -157,13 +158,25 @@
 
 
     function renderShowcase() {
+        if (_state && _state.access === 'expired') {
+            setView(
+                '<div class="stg-flag"><div class="glow"></div>' +
+                '<span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
+                '<div class="inner"><div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
+                '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
+                '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
+                '<div class="stg-fprice"><b>990 ₽</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
+                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + '</button>' +
+                '</div></div>');
+            return;
+        }
         var locked = !_state || _state.access !== 'full';
         var rows = [
             ['Ниша под твои интересы.', 'Стратег расспросит, чем ты горишь и сколько времени готов тратить, и предложит 3 ниши, где сходятся твой интерес, спрос рекламодателей и невысокая конкуренция. Уже есть канал — оценит его по реальным постам и скажет, что усилить'],
             ['Контент-план + первые 10 постов.', 'Не «пиши о пользе», а готовые рубрики по дням недели, сколько постить и почему именно столько, и 10 первых постов готовыми текстами: открыл, вставил, опубликовал'],
             ['Трафик под твою страну.', 'Бесплатные и платные способы с гайдами до уровня «скачай вот это приложение, смонтируй ролик по этой формуле, выложи в это время». С правилами каждой площадки — как расти и не улететь в бан'],
             ['Все модели заработка.', 'Реклама в канале, перелив трафика, партнёрки, свой продукт. По каждой: с какого размера канала включать, сколько это даёт в месяц в твоей нише и что подготовить заранее'],
-            ['4 недели ведения за руку.', 'Каждую неделю стратег сам сверяет план с фактом по данным твоего канала: что сработало, где отстаёшь, что делать дальше. Плюс чат — задавай вопросы в любой момент'],
+            ['Месяц ведения за руку.', 'Каждую неделю стратег сам сверяет план с фактом по данным твоего канала: что сработало, где отстаёшь, что делать дальше. Плюс чат — задавай вопросы в любой момент'],
         ];
         var what = rows.map(function (r) {
             return '<div class="stg-fw"><span class="tick">✓</span><span><b>' + esc(T(r[0])) + '</b> ' + esc(T(r[1])) + '</span></div>';
@@ -831,6 +844,14 @@
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
         if (act === 'start') { startFlow(); return; }
         if (act === 'book') { doBook(actEl); return; }
+        if (act === 'renew') {
+            haptic('medium');
+            if (typeof openCheckout === 'function') {
+                openCheckout({ name: T('Продление AI-стратегии'), price: 990, sub: false,
+                               icon: 'shopping-cart', color: 'pu', rowLabel: T('Продление AI-стратегии') });
+            }
+            return;
+        }
         if (act === 'next') { stepNext(); return; }
         if (act === 'prev') { haptic('light'); _ivStep = Math.max(0, _ivStep - 1); renderStep(); return; }
         if (act === 'regen') { regen(actEl); return; }
