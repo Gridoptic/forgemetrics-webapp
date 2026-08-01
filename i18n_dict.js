@@ -2761,7 +2761,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Glass — with promotion from a week or on the Agency plan. “All in color” paints the three buttons in the chosen color, available to everyone.",
   "Матовое стекло": "Frosted glass",
   "Карточка без шапки": "Card without header",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "The cover is hidden — the card starts with the name and metrics, the bookmark star moves below the index. If an offer background is uploaded, it fills the whole card. Available to everyone."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "The cover is hidden — the card starts with the name and metrics, the bookmark star moves below the index. If an offer background is uploaded, it fills the whole card. Available to everyone.",
+  "по CPM": "at CPM"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5518,7 +5519,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Cristal — con promoción desde una semana o en el plan Agency. «Todos en color» pinta los tres botones con el color elegido, disponible para todos.",
   "Матовое стекло": "Cristal mate",
   "Карточка без шапки": "Tarjeta sin cabecera",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La portada se oculta — la tarjeta empieza con el nombre y las métricas, la estrella de marcador pasa debajo del índice. Si hay un fondo de oferta cargado, ocupa toda la tarjeta. Disponible para todos."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La portada se oculta — la tarjeta empieza con el nombre y las métricas, la estrella de marcador pasa debajo del índice. Si hay un fondo de oferta cargado, ocupa toda la tarjeta. Disponible para todos.",
+  "по CPM": "según CPM"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8275,7 +8277,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Glas — bei Promotion ab einer Woche oder im Agency-Tarif. «Alle in Farbe» färbt die drei Buttons in der gewählten Farbe, für alle verfügbar.",
   "Матовое стекло": "Milchglas",
   "Карточка без шапки": "Karte ohne Kopfbereich",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Das Cover wird ausgeblendet — die Karte beginnt mit Name und Metriken, der Lesezeichen-Stern rückt unter den Index. Ist ein Offer-Hintergrund geladen, füllt er die ganze Karte. Für alle verfügbar."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Das Cover wird ausgeblendet — die Karte beginnt mit Name und Metriken, der Lesezeichen-Stern rückt unter den Index. Ist ein Offer-Hintergrund geladen, füllt er die ganze Karte. Für alle verfügbar.",
+  "по CPM": "nach CPM"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -11027,7 +11030,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Шыны — бір аптадан жарнамалауда немесе Agency тарифінде. «Барлығы түспен» үш түймені таңдалған түске бояйды, бәріне қолжетімді.",
   "Матовое стекло": "Күңгірт шыны",
   "Карточка без шапки": "Қалқымасыз карточка",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Мұқаба жасырылады — карточка атау мен метрикадан басталады, бетбелгі жұлдызы индекстің астына өтеді. Оффер фоны жүктелген болса, ол бүкіл карточканы алады. Бәріне қолжетімді."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Мұқаба жасырылады — карточка атау мен метрикадан басталады, бетбелгі жұлдызы индекстің астына өтеді. Оффер фоны жүктелген болса, ол бүкіл карточканы алады. Бәріне қолжетімді.",
+  "по CPM": "CPM бойынша"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13784,7 +13788,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Shisha — bir haftadan targ'ibotda yoki Agency tarifida. «Hammasi rangda» uchta tugmani tanlangan rangga bo'yaydi, hammaga ochiq.",
   "Матовое стекло": "Xira shisha",
   "Карточка без шапки": "Sarlavhasiz kartochka",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Muqova yashiriladi — kartochka nom va metrikalardan boshlanadi, xatcho'p yulduzi indeks ostiga o'tadi. Offer foni yuklangan bo'lsa, u butun kartochkani egallaydi. Hammaga ochiq."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Muqova yashiriladi — kartochka nom va metrikalardan boshlanadi, xatcho'p yulduzi indeks ostiga o'tadi. Offer foni yuklangan bo'lsa, u butun kartochkani egallaydi. Hammaga ochiq.",
+  "по CPM": "CPM bo'yicha"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16540,7 +16545,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Шкло — пры прасоўванні ад тыдня або на тарыфе Agency. «Усе — у колер» фарбуе тры кнопкі ў абраны колер, даступна ўсім.",
   "Матовое стекло": "Матавае шкло",
   "Карточка без шапки": "Картка без шапкі",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Вокладка хаваецца — картка пачынаецца з назвы і метрык, зорка закладкі становіцца пад індэкс. Калі загружаны фон офера, ён займае ўсю картку. Даступна ўсім."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Вокладка хаваецца — картка пачынаецца з назвы і метрык, зорка закладкі становіцца пад індэкс. Калі загружаны фон офера, ён займае ўсю картку. Даступна ўсім.",
+  "по CPM": "па CPM"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19297,7 +19303,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Şüşə — bir həftədən tanıtımla və ya Agency tarifində. «Hamısı rəngdə» üç düyməni seçilmiş rəngə boyayır, hamıya açıqdır.",
   "Матовое стекло": "Tutqun şüşə",
   "Карточка без шапки": "Başlıqsız kart",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Üz qabığı gizlədilir — kart ad və metriklərlə başlayır, əlfəcin ulduzu indeksin altına keçir. Offer fonu yüklənibsə, bütün kartı tutur. Hamıya açıqdır."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Üz qabığı gizlədilir — kart ad və metriklərlə başlayır, əlfəcin ulduzu indeksin altına keçir. Offer fonu yüklənibsə, bütün kartı tutur. Hamıya açıqdır.",
+  "по CPM": "CPM üzrə"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -22054,7 +22061,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "الزجاج — مع ترويج من أسبوع أو في خطة Agency. «الكل بلون» يلوّن الأزرار الثلاثة باللون المختار، متاح للجميع.",
   "Матовое стекло": "زجاج مصنفر",
   "Карточка без шапки": "بطاقة بدون ترويسة",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "يُخفى الغلاف — تبدأ البطاقة بالاسم والمقاييس، وتنتقل نجمة الإشارة المرجعية أسفل المؤشر. إذا حُمّلت خلفية للعرض فإنها تملأ البطاقة كاملة. متاح للجميع."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "يُخفى الغلاف — تبدأ البطاقة بالاسم والمقاييس، وتنتقل نجمة الإشارة المرجعية أسفل المؤشر. إذا حُمّلت خلفية للعرض فإنها تملأ البطاقة كاملة. متاح للجميع.",
+  "по CPM": "حسب CPM"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24811,7 +24819,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "شیشه — با تبلیغ از یک هفته یا در تعرفه Agency. «همه رنگی» سه دکمه را به رنگ انتخابی درمی‌آورد، برای همه در دسترس.",
   "Матовое стекло": "شیشه مات",
   "Карточка без шапки": "کارت بدون سربرگ",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "کاور پنهان می‌شود — کارت با نام و متریک‌ها شروع می‌شود و ستاره نشانک زیر شاخص می‌رود. اگر پس‌زمینه آفر بارگذاری شده باشد، کل کارت را می‌پوشاند. برای همه در دسترس."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "کاور پنهان می‌شود — کارت با نام و متریک‌ها شروع می‌شود و ستاره نشانک زیر شاخص می‌رود. اگر پس‌زمینه آفر بارگذاری شده باشد، کل کارت را می‌پوشاند. برای همه در دسترس.",
+  "по CPM": "بر اساس CPM"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27568,7 +27577,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Cam — bir haftadan itibaren tanıtımla veya Agency tarifesinde. «Hepsi renkli» üç düğmeyi seçilen renge boyar, herkese açık.",
   "Матовое стекло": "Buzlu cam",
   "Карточка без шапки": "Başlıksız kart",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Kapak gizlenir — kart ad ve metriklerle başlar, yer imi yıldızı endeksin altına geçer. Teklif arka planı yüklüyse tüm kartı kaplar. Herkese açık."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Kapak gizlenir — kart ad ve metriklerle başlar, yer imi yıldızı endeksin altına geçer. Teklif arka planı yüklüyse tüm kartı kaplar. Herkese açık.",
+  "по CPM": "CPM'e göre"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30325,7 +30335,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "ग्लास — एक हफ़्ते से प्रमोशन के साथ या Agency प्लान पर। «सब रंग में» तीनों बटन चुने रंग में रंगता है, सबके लिए उपलब्ध।",
   "Матовое стекло": "मैट ग्लास",
   "Карточка без шапки": "बिना हेडर वाला कार्ड",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "कवर छिप जाता है — कार्ड नाम और मेट्रिक्स से शुरू होता है, बुकमार्क तारा इंडेक्स के नीचे आ जाता है। अगर ऑफ़र की पृष्ठभूमि अपलोड है, तो वह पूरे कार्ड को भर देती है। सबके लिए उपलब्ध।"
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "कवर छिप जाता है — कार्ड नाम और मेट्रिक्स से शुरू होता है, बुकमार्क तारा इंडेक्स के नीचे आ जाता है। अगर ऑफ़र की पृष्ठभूमि अपलोड है, तो वह पूरे कार्ड को भर देती है। सबके लिए उपलब्ध।",
+  "по CPM": "CPM के अनुसार"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -33082,7 +33093,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "গ্লাস — এক সপ্তাহ থেকে প্রমোশনে বা Agency প্ল্যানে। «সব রঙে» তিনটি বোতাম বাছাই রঙে রাঙায়, সবার জন্য।",
   "Матовое стекло": "ম্যাট গ্লাস",
   "Карточка без шапки": "হেডার ছাড়া কার্ড",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "কভার লুকিয়ে যায় — কার্ড নাম ও মেট্রিক্স দিয়ে শুরু হয়, বুকমার্ক তারা ইনডেক্সের নিচে চলে যায়। অফারের পটভূমি আপলোড থাকলে তা পুরো কার্ড জুড়ে থাকে। সবার জন্য উপলব্ধ।"
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "কভার লুকিয়ে যায় — কার্ড নাম ও মেট্রিক্স দিয়ে শুরু হয়, বুকমার্ক তারা ইনডেক্সের নিচে চলে যায়। অফারের পটভূমি আপলোড থাকলে তা পুরো কার্ড জুড়ে থাকে। সবার জন্য উপলব্ধ।",
+  "по CPM": "CPM অনুযায়ী"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35839,7 +35851,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Kaca — dengan promosi dari seminggu atau di paket Agency. «Semua berwarna» mewarnai ketiga tombol dengan warna pilihan, tersedia untuk semua.",
   "Матовое стекло": "Kaca buram",
   "Карточка без шапки": "Kartu tanpa header",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Sampul disembunyikan — kartu dimulai dengan nama dan metrik, bintang penanda pindah ke bawah indeks. Jika latar penawaran diunggah, latar itu mengisi seluruh kartu. Tersedia untuk semua."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Sampul disembunyikan — kartu dimulai dengan nama dan metrik, bintang penanda pindah ke bawah indeks. Jika latar penawaran diunggah, latar itu mengisi seluruh kartu. Tersedia untuk semua.",
+  "по CPM": "menurut CPM"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38596,7 +38609,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Kính — với gói quảng bá từ một tuần hoặc gói Agency. «Tất cả theo màu» tô ba nút theo màu đã chọn, ai cũng dùng được.",
   "Матовое стекло": "Kính mờ",
   "Карточка без шапки": "Thẻ không có phần đầu",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Ảnh bìa được ẩn — thẻ bắt đầu bằng tên và các chỉ số, ngôi sao đánh dấu chuyển xuống dưới chỉ số. Nếu đã tải nền offer, nền sẽ phủ toàn bộ thẻ. Ai cũng dùng được."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Ảnh bìa được ẩn — thẻ bắt đầu bằng tên và các chỉ số, ngôi sao đánh dấu chuyển xuống dưới chỉ số. Nếu đã tải nền offer, nền sẽ phủ toàn bộ thẻ. Ai cũng dùng được.",
+  "по CPM": "theo CPM"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -41353,7 +41367,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Vidro — com promoção a partir de uma semana ou no plano Agency. «Todos na cor» pinta os três botões na cor escolhida, disponível para todos.",
   "Матовое стекло": "Vidro fosco",
   "Карточка без шапки": "Cartão sem cabeçalho",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "A capa fica oculta — o cartão começa com o nome e as métricas, a estrela de favoritos passa para baixo do índice. Se houver um fundo da oferta enviado, ele ocupa todo o cartão. Disponível para todos."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "A capa fica oculta — o cartão começa com o nome e as métricas, a estrela de favoritos passa para baixo do índice. Se houver um fundo da oferta enviado, ele ocupa todo o cartão. Disponível para todos.",
+  "по CPM": "pelo CPM"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -44110,7 +44125,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Verre — avec une promotion d'une semaine ou plus, ou sur le plan Agency. « Tous en couleur » peint les trois boutons dans la couleur choisie, accessible à tous.",
   "Матовое стекло": "Verre dépoli",
   "Карточка без шапки": "Carte sans en-tête",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La couverture est masquée — la carte commence par le nom et les métriques, l'étoile de signet passe sous l'indice. Si un fond d'offre est chargé, il occupe toute la carte. Accessible à tous."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La couverture est masquée — la carte commence par le nom et les métriques, l'étoile de signet passe sous l'indice. Si un fond d'offre est chargé, il occupe toute la carte. Accessible à tous.",
+  "по CPM": "au CPM"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46867,7 +46883,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Vetro — con promozione da una settimana o sul piano Agency. «Tutti a colore» colora i tre pulsanti con il colore scelto, disponibile a tutti.",
   "Матовое стекло": "Vetro smerigliato",
   "Карточка без шапки": "Card senza intestazione",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La copertina viene nascosta — la card inizia con nome e metriche, la stella dei segnalibri passa sotto l'indice. Se è caricato uno sfondo dell'offerta, occupa tutta la card. Disponibile a tutti."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "La copertina viene nascosta — la card inizia con nome e metriche, la stella dei segnalibri passa sotto l'indice. Se è caricato uno sfondo dell'offerta, occupa tutta la card. Disponibile a tutti.",
+  "по CPM": "a CPM"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49624,7 +49641,8 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "መስታወት — ከሳምንት ጀምሮ ማስተዋወቂያ ጋር ወይም በAgency ታሪፍ። «ሁሉም በቀለም» ሦስቱን አዝራሮች በተመረጠው ቀለም ይቀባል፣ ለሁሉም ይገኛል።",
   "Матовое стекло": "ደብዛዛ መስታወት",
   "Карточка без шапки": "ያለ ራስጌ ካርድ",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "ሽፋኑ ይደበቃል — ካርዱ በስም እና በመለኪያዎች ይጀምራል፣ የዕልባት ኮከቡ ከጠቋሚው በታች ይሆናል። የኦፈር ዳራ ከተጫነ ካርዱን ሙሉ ይሞላል። ለሁሉም ይገኛል።"
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "ሽፋኑ ይደበቃል — ካርዱ በስም እና በመለኪያዎች ይጀምራል፣ የዕልባት ኮከቡ ከጠቋሚው በታች ይሆናል። የኦፈር ዳራ ከተጫነ ካርዱን ሙሉ ይሞላል። ለሁሉም ይገኛል።",
+  "по CPM": "በCPM መሠረት"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -52381,6 +52399,7 @@ window.__I18N_DICT = {
   "Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.": "Kioo — na promosheni ya wiki moja au zaidi, au kwenye mpango wa Agency. «Vyote kwa rangi» hupaka vitufe vitatu rangi uliyochagua, inapatikana kwa wote.",
   "Матовое стекло": "Kioo hafifu",
   "Карточка без шапки": "Kadi bila kichwa",
-  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Jalada linafichwa — kadi inaanza na jina na vipimo, nyota ya alamisho inahamia chini ya kielezo. Ikiwa mandhari ya ofa imepakiwa, inajaza kadi nzima. Inapatikana kwa wote."
+  "Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.": "Jalada linafichwa — kadi inaanza na jina na vipimo, nyota ya alamisho inahamia chini ya kielezo. Ikiwa mandhari ya ofa imepakiwa, inajaza kadi nzima. Inapatikana kwa wote.",
+  "по CPM": "kwa CPM"
  }
 };

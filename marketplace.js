@@ -5701,6 +5701,12 @@
         if (arr.length === 1 && arr[0].suggested_base) return arr[0].suggested_base;
         return null;
     }
+    function _fmtReco(fmt) {
+        var b = _suggestBase(); if (!b) return null;
+        var cat = _FMT_BY_K[_fmtKey(fmt)]; if (!cat) return null;
+        var p = Math.round(b * cat.preset / 5500 / 50) * 50;
+        return p > 0 ? p : null;
+    }
     function defaultFmts() {
         var b = _suggestBase();
         return FMT_CATALOG.map(function (f) {
@@ -6233,6 +6239,7 @@
 
     function _fmtTile(f, i, av) {
         var c = (f.on && av && f.p) ? Math.round(f.p / av * 1000) : null;
+        var reco = _fmtReco(f.format);
         var title = _isCode(f.n)
             ? '<span class="fmx-ftcode">' + _esc(f.n) + '</span>'
             : '<span class="fmx-ftnm">' + _esc(f.n) + '</span>';
@@ -6242,10 +6249,11 @@
             '<div class="fmx-ftm"><div class="fmx-ftt">' + title + '</div>' +
             (f.sub ? '<div class="fmx-fts">' + _esc(f.sub) + '</div>' : '') + '</div>' +
             '<div class="fmx-ftr"><div class="fmx-ftpr"><input class="fmx-ftp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100" min="0" max="999999" inputmode="numeric"><span class="cur">₽</span></div>' +
-            '<div class="fmx-ftc">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : (f.on ? '' : 'выкл')) + '</div></div></div>';
+            '<div class="fmx-ftc">' + (reco != null ? '<span>по CPM</span> ≈' + _num(reco) + ' ₽' : (c != null ? 'CPM ' + _num(c) + ' ₽' : (f.on ? '' : 'выкл'))) + '</div></div></div>';
     }
     function fmtRows() {
         var av = (curChannel() || {}).avg_views || 0, core = [], sec = [];
+        _sfmts.forEach(function (f) { if (!f.p) { var r = _fmtReco(f.format); if (r) f.p = r; } });
         _sfmts.forEach(function (f, i) { (f.core ? core : sec).push(_fmtTile(f, i, av)); });
         var h = '<div class="fmx-fgrp"><div class="fmx-fghd">Основные форматы</div>' + core.join('') + '</div>';
         if (sec.length) h += '<div class="fmx-fgrp"><div class="fmx-fghd">Доп-опции</div>' + sec.join('') + '</div>';
@@ -6270,7 +6278,7 @@
                 var i = +c.getAttribute('data-fi'); _sfmts[i].on = !_sfmts[i].on; _haptic('light');
                 c.classList.toggle('on', _sfmts[i].on);
                 var cc = c.querySelector('.fmx-ftc'), av = (curChannel() || {}).avg_views || 0, p = _sfmts[i].p;
-                if (cc) cc.textContent = (_sfmts[i].on && av && p) ? 'CPM ' + _num(Math.round(p / av * 1000)) + ' ₽' : (_sfmts[i].on ? '' : 'выкл');
+                if (cc && _fmtReco(_sfmts[i].format) == null) cc.textContent = (_sfmts[i].on && av && p) ? 'CPM ' + _num(Math.round(p / av * 1000)) + ' ₽' : (_sfmts[i].on ? '' : 'выкл');
                 _heroDebounced();
             });
         });
@@ -6281,7 +6289,7 @@
                 _sfmts[idx].p = v; if ((+inp.value || 0) > 999999) inp.value = v;
                 var cell = inp.closest('.fmx-ft'), cc = cell ? cell.querySelector('.fmx-ftc') : null;
                 var av = (curChannel() || {}).avg_views || 0;
-                if (cc && _sfmts[idx].on) cc.textContent = (av && v) ? 'CPM ' + _num(Math.round(v / av * 1000)) + ' ₽' : '';
+                if (cc && _sfmts[idx].on && _fmtReco(_sfmts[idx].format) == null) cc.textContent = (av && v) ? 'CPM ' + _num(Math.round(v / av * 1000)) + ' ₽' : '';
                 _heroDebounced();
             });
         });
