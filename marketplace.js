@@ -5505,7 +5505,7 @@
             var st = r && r.ok ? r.state : null;
             if (st === 'pending') { toast('Сделка уже отмечена — ждём подтверждения владельца'); return; }
             if (st === 'confirmed' || st === 'reviewed') { toast('Сделка по этому офферу уже есть — статус в развороте карточки'); return; }
-            uiConfirm('Отмечай только реальную сделку. Сразу появится ссылка отслеживания для рекламного поста; владелец получит запрос на подтверждение — после него добавятся автозамеры охвата и возможность отзыва.', function () {
+            uiConfirm('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».', function () {
                 apiPost('/api/v1/marketplace/deals', { listing_id: lid }).then(function (rr) {
                     if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
                     _haptic('success'); toast('Отправлено владельцу на подтверждение');
@@ -5520,16 +5520,33 @@
             if (r.state === 'pending') {
                 box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>' + _dealTrackHtml();
                 _dealTrackBind(r.deal_id);
+            } else if (r.state === 'confirmed' && r.can_complete) {
+                box.innerHTML = _proofHtml(r) + '<button class="fmx-save" id="fmx-dealDone" style="margin-top:10px;background:linear-gradient(135deg,#34d399,#5DCAA5);color:#052012;"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:6px;line-height:1.5;">Автозамеры завершены, пост дожил до контрольного срока. Нажатие засчитает сделку в рейтинг оффера и откроет отзыв.</div>';
+                el('fmx-dealDone').addEventListener('click', function () {
+                    var b = this; b.disabled = true;
+                    apiPost('/api/v1/marketplace/deals/' + r.deal_id + '/complete', {}).then(function (rr) {
+                        b.disabled = false;
+                        if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
+                        _haptic('success'); toast('Сделка засчитана — рейтинг оффера обновлён');
+                        _feed = null; _feedState = 'idle';
+                        renderDealBox(l);
+                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                });
             } else if (r.state === 'confirmed') {
-                box.innerHTML = _proofHtml(r) + _dealTrackHtml() + '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                box.innerHTML = _proofHtml(r) + _dealTrackHtml() +
+                    '<div class="fmx-dealline"><i class="ti ti-radar-2"></i> Идёт отслеживание размещения. Зачёт сделки в рейтинг и отзыв откроются после автозамеров — 48 часов после выхода поста.</div>';
                 _dealTrackBind(r.deal_id);
+            } else if (r.state === 'completed') {
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка проведена — подтверждена автозамерами.</div>' +
+                    '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
-                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка подтверждена, отзыв оставлен.</div>';
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка проведена, отзыв оставлен.</div>';
             } else {
                 box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-heart-handshake"></i> Отметить сделку</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
-                    uiConfirm('Отмечай только реальную сделку. Сразу появится ссылка отслеживания для рекламного поста; владелец получит запрос на подтверждение — после него добавятся автозамеры охвата и возможность отзыва.', function () {
+                    uiConfirm('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».', function () {
                         apiPost('/api/v1/marketplace/deals', { listing_id: l.id }).then(function (rr) {
                             if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
                             _haptic('success'); toast('Отправлено владельцу на подтверждение');
