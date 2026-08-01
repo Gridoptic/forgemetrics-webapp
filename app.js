@@ -4716,7 +4716,11 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'profanity') _settingsState.data.use_profanity_default = !newValue;
             updateToggleVisual(target, !newValue);
         }
-        await alertDialog('Не удалось сохранить изменение.');
+        if (target === 'paused' && e && e.status === 400 && String(e.message || '').indexOf('channel_limit_reached') !== -1) {
+            await alertDialog('Лимит каналов по тарифу исчерпан — снять канал с паузы нельзя. Поставь на паузу другой канал или повысь тариф.');
+        } else {
+            await alertDialog('Не удалось сохранить изменение.');
+        }
     }
 }
 
