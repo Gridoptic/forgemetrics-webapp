@@ -389,6 +389,11 @@
             '.fmx-lprice{font-variant-numeric:tabular-nums;}',
             '.fmx-cwrap>.fmx-card{width:350px;transform-origin:top left;}',
             '.fmx-zw{width:100%;position:relative;}',
+            '.fmx-li{position:relative;}',
+            '.fmx-li.prem{z-index:2;}',
+            '.fmx-li.on{z-index:5;}',
+            '.fmx-zw:has(.fmx-li.on){z-index:5;}',
+            '.fmx-zw:has(.fmx-li.prem){z-index:2;}',
             '.fmx-zw>*{width:350px;max-width:none;transform-origin:top left;box-sizing:border-box;}',
             '.fmx-zw>.fmx-li{width:100%;max-width:350px;margin-left:auto;margin-right:auto;transform:none;}',
             '.fmx-card{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
@@ -8467,7 +8472,7 @@
     function listItem(l, fx, plain) {
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l), accent = _accent(l), t = _cleanTitle(l.title || l.username || '?');
-        var prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : (_isTop(l) && (l.effects_json || {}).glowCard !== false));
+        var prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : ((l.fx ? !!l.fx.gold : _isTop(l)) && (l.effects_json || {}).glowCard !== false));
         var rr = _reachRate(l), rrc = _rrColor(l), warn = (l.reach_status === 'аномальный') ? '⚠ ' : '';
         var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
         if (l.avg_views) {
