@@ -316,6 +316,12 @@
                 (limits.has_deep_package
                     ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
                     : '');
+        } else {
+            btnHtml += '<div class="da-offerbox">' +
+                '<div class="da-offerhead"><span class="da-badge">◆ Коммерческий аудит</span><b>1 490 ₽</b></div>' +
+                '<div class="da-offertext">Позиция среди каналов ниши, проверка трафика на накрутку, портрет аудитории, честные цены форматов и потенциал дохода.</div>' +
+                '<button class="audit-deep-btn" id="audit-intro-deepbuy" style="margin-top:10px"><i class="ti ti-diamond"></i><span>Приобрести</span></button>' +
+                '</div>';
         }
 
         host.innerHTML = headerHtml() +
@@ -342,6 +348,14 @@
         if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(); });
         var dp = host.querySelector('#audit-intro-deep');
         if (dp) dp.addEventListener('click', function () { _haptic('medium'); startAudit(true); });
+        var db = host.querySelector('#audit-intro-deepbuy');
+        if (db) db.addEventListener('click', function () {
+            _haptic('medium');
+            if (typeof openCheckout === 'function') {
+                openCheckout({ name: 'Коммерческий аудит', price: 1490, sub: false,
+                               icon: 'diamond', color: 'am', rowLabel: 'Коммерческий аудит' });
+            }
+        });
         var pr = host.querySelector('#audit-intro-pricing');
         if (pr) pr.addEventListener('click', function () {
             closeAudit();
@@ -1197,11 +1211,11 @@
             });
     }
 
-    window.__openAudit = function (channelId) {
+    window.__openAudit = function (channelId, mode) {
         if (channelId != null) {
             _channelId = channelId;
             showLoading('Загружаю аудит...');
-            loadEntry(_channelId);
+            loadEntry(_channelId, mode);
             return;
         }
         showLoading('Загружаю аудит...');
@@ -1214,20 +1228,26 @@
                     return;
                 }
                 _channelId = id;
-                loadEntry(id);
+                loadEntry(id, mode);
             })
             .catch(function () {
                 showFatalError('Не удалось определить канал. Попробуй из «Мои каналы».', { icon: 'ti-alert-triangle' });
             });
     };
 
-    function loadEntry(channelId) {
+    function loadEntry(channelId, mode) {
         var limitsP = apiRequest('/api/v1/audits/limits').catch(function () { return null; });
         var latestP = apiRequest('/api/v1/channels/' + channelId + '/audit/latest').catch(function () { return null; });
         Promise.all([limitsP, latestP]).then(function (res) {
             var limits = res[0];
             var latest = res[1];
-            if (latest && latest.found && latest.audit && latest.audit.report) {
+            var hasReport = latest && latest.found && latest.audit && latest.audit.report;
+            if (mode === 'deep') {
+                if (hasReport && latest.audit.report.deep) renderReport(latest.audit);
+                else renderIntro(limits);
+                return;
+            }
+            if (hasReport) {
                 renderReport(latest.audit);
             } else {
                 renderIntro(limits);

@@ -1643,6 +1643,14 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'commercial_audit') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openAudit === 'function') {
+            window.__openAudit(null, 'deep');
+        }
+        return;
+    }
+
     if (actionId === 'rewrite_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openRewrite === 'function') { window.__openRewrite(); }
