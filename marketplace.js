@@ -7912,7 +7912,8 @@
         var _fxG = l.fx || null;
         var _gold = _fxG ? !!_fxG.gold : top;
         var realTop = l._preview ? true : _gold;
-        var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_gold && (l.effects_json || {}).glowCard !== false);
+        var _glow = _fxG ? !!_fxG.glow : top;
+        var glowOn = l._preview ? ((l.effects_json || {}).glowCard === true) : (_glow && (l.effects_json || {}).glowCard !== false);
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
         var freeMap = null;
