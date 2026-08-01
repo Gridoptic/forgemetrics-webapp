@@ -1041,7 +1041,6 @@ window.__I18N_DICT = {
   "Что это значит": "What this means",
   "Генерация постов отключена": "Post generation disabled",
   "Можно генерировать посты": "Post generation enabled",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "When a channel is paused, the AI doesn't generate new posts for it. The bot stays connected, and settings and style are preserved. Useful if you go on vacation or temporarily suspend the channel's activity.",
   "Нецензурная лексика": "Profanity",
   "Разрешена по умолчанию": "Allowed by default",
   "Запрещена по умолчанию": "Blocked by default",
@@ -2773,7 +2772,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Post generations",
   "Разборы каналов": "Channel breakdowns",
   "Смены каналов": "Channel swaps",
-  "Обновления стиля канала": "Channel style updates"
+  "Обновления стиля канала": "Channel style updates",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "When a channel is paused, the AI does not generate new posts for it. The bot stays connected, settings and style are preserved."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -3811,7 +3811,6 @@ window.__I18N_DICT = {
   "Что это значит": "Qué significa",
   "Генерация постов отключена": "Generación de publicaciones desactivada",
   "Можно генерировать посты": "Se pueden generar publicaciones",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Cuando el canal está en pausa, la AI no genera nuevas publicaciones para él. El bot sigue conectado y la configuración y el estilo se conservan. Útil si te vas de vacaciones o suspendes temporalmente la actividad del canal.",
   "Нецензурная лексика": "Lenguaje soez",
   "Разрешена по умолчанию": "Permitido por defecto",
   "Запрещена по умолчанию": "Prohibido por defecto",
@@ -5542,7 +5541,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Generaciones de posts",
   "Разборы каналов": "Desgloses de canales",
   "Смены каналов": "Cambios de canal",
-  "Обновления стиля канала": "Actualizaciones del estilo del canal"
+  "Обновления стиля канала": "Actualizaciones del estilo del canal",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Cuando un canal está en pausa, la IA no genera nuevos posts para él. El bot sigue conectado, la configuración y el estilo se conservan."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -6580,7 +6580,6 @@ window.__I18N_DICT = {
   "Что это значит": "Was bedeutet das",
   "Генерация постов отключена": "Post-Generierung deaktiviert",
   "Можно генерировать посты": "Posts können generiert werden",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Wenn der Kanal pausiert ist, generiert die AI keine neuen Posts dafür. Der Bot bleibt verbunden, Einstellungen und Stil bleiben erhalten. Nützlich, wenn du in den Urlaub fährst oder die Aktivität des Kanals vorübergehend aussetzt.",
   "Нецензурная лексика": "Vulgärsprache",
   "Разрешена по умолчанию": "Standardmäßig erlaubt",
   "Запрещена по умолчанию": "Standardmäßig verboten",
@@ -8311,7 +8310,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Post-Generierungen",
   "Разборы каналов": "Kanal-Analysen",
   "Смены каналов": "Kanalwechsel",
-  "Обновления стиля канала": "Kanal-Stil-Updates"
+  "Обновления стиля канала": "Kanal-Stil-Updates",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Wenn ein Kanal pausiert ist, generiert die KI keine neuen Posts für ihn. Der Bot bleibt verbunden, Einstellungen und Stil bleiben erhalten."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -9345,7 +9345,6 @@ window.__I18N_DICT = {
   "Что это значит": "Бұл нені білдіреді",
   "Генерация постов отключена": "Постар генерациясы өшірілген",
   "Можно генерировать посты": "Постар генерациялауға болады",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Арна кідірісте тұрғанда, AI ол үшін жаңа пост генерацияламайды. Бот қосулы күйінде қалады, баптаулар мен стиль сақталады. Демалысқа кетсең немесе арнаның белсенділігін уақытша тоқтатсаң пайдалы.",
   "Нецензурная лексика": "Былапыт сөздер",
   "Разрешена по умолчанию": "Әдепкіде рұқсат етілген",
   "Запрещена по умолчанию": "Әдепкіде тыйым салынған",
@@ -11075,7 +11074,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Пост генерациялары",
   "Разборы каналов": "Арна талдаулары",
   "Смены каналов": "Арна ауыстырулары",
-  "Обновления стиля канала": "Арна стилін жаңартулар"
+  "Обновления стиля канала": "Арна стилін жаңартулар",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Арна кідіртілгенде AI ол үшін жаңа посттар жасамайды. Бот қосулы қалады, баптаулар мен стиль сақталады."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -12113,7 +12113,6 @@ window.__I18N_DICT = {
   "Что это значит": "Bu nimani anglatadi",
   "Генерация постов отключена": "Post generatsiyasi oʻchirilgan",
   "Можно генерировать посты": "Postlar generatsiya qilish mumkin",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Kanal pauzada boʻlganda, AI unga yangi postlar generatsiya qilmaydi. Bot ulangan holicha qoladi, sozlamalar va uslub saqlanadi. Taʼtilga chiqsang yoki kanal faolligini vaqtincha toʻxtatsang foydali.",
   "Нецензурная лексика": "Nomaqbul leksika",
   "Разрешена по умолчанию": "Standart holatda ruxsat etilgan",
   "Запрещена по умолчанию": "Standart holatda taqiqlangan",
@@ -13844,7 +13843,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Post generatsiyalari",
   "Разборы каналов": "Kanal tahlillari",
   "Смены каналов": "Kanal almashtirishlar",
-  "Обновления стиля канала": "Kanal uslubi yangilanishlari"
+  "Обновления стиля канала": "Kanal uslubi yangilanishlari",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Kanal pauzada bo'lsa, AI u uchun yangi postlar yaratmaydi. Bot ulangan qoladi, sozlamalar va uslub saqlanadi."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -14881,7 +14881,6 @@ window.__I18N_DICT = {
   "Что это значит": "Што гэта значыць",
   "Генерация постов отключена": "Генерацыя пастоў адключана",
   "Можно генерировать посты": "Можна генераваць пасты",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Калі канал на паўзе, AI не генеруе для яго новыя пасты. Бот застаецца падключаным, налады і стыль захоўваюцца. Карысна, калі з'язджаеш у адпачынак або часова прыпыняеш актыўнасць канала.",
   "Нецензурная лексика": "Ненарматыўная лексіка",
   "Разрешена по умолчанию": "Дазволена па змаўчанні",
   "Запрещена по умолчанию": "Забаронена па змаўчанні",
@@ -16612,7 +16611,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Генерацыі пастоў",
   "Разборы каналов": "Разборы каналаў",
   "Смены каналов": "Змены каналаў",
-  "Обновления стиля канала": "Абнаўленні стылю канала"
+  "Обновления стиля канала": "Абнаўленні стылю канала",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Калі канал на паўзе, AI не генеруе для яго новыя пасты. Бот застаецца падключаным, налады і стыль захоўваюцца."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -17650,7 +17650,6 @@ window.__I18N_DICT = {
   "Что это значит": "Bu nə deməkdir",
   "Генерация постов отключена": "Post generasiyası söndürülüb",
   "Можно генерировать посты": "Post generasiya etmək olar",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Kanal fasilədə olanda AI onun üçün yeni postlar generasiya etmir. Bot qoşulu qalır, parametrlər və üslub saxlanılır. Məzuniyyətə gedəndə və ya kanalın fəaliyyətini müvəqqəti dayandıranda faydalıdır.",
   "Нецензурная лексика": "Söyüş leksikası",
   "Разрешена по умолчанию": "Defolt olaraq icazə verilir",
   "Запрещена по умолчанию": "Defolt olaraq qadağandır",
@@ -19381,7 +19380,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Post generasiyaları",
   "Разборы каналов": "Kanal analizləri",
   "Смены каналов": "Kanal dəyişmələri",
-  "Обновления стиля канала": "Kanal üslubu yeniləmələri"
+  "Обновления стиля канала": "Kanal üslubu yeniləmələri",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Kanal pauzadadırsa, AI onun üçün yeni postlar yaratmır. Bot qoşulu qalır, tənzimləmələr və üslub saxlanılır."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -20200,7 +20200,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "بطاقة القناة على ForgeMetrics: مقاييس حقيقية وسعر النشر.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "كتالوج قنوات من كل Telegram: المشتركون والوصول وER ومؤشر الصحة لكل قناة، مع تقدير السعر والنيش. ابحث حسب النيش والفلاتر وراسل المالك مباشرة — حتى من لم يعرض بعد عرضًا في السوق.",
   "Кислота": "حمضي",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "عندما تكون القناة متوقفة مؤقتًا، لا يولّد AI منشورات جديدة لها. يبقى البوت متصلًا وتُحفظ الإعدادات والأسلوب. مفيد إذا سافرت في إجازة أو أوقفت نشاط القناة مؤقتًا.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "المجموعة فارغة. أرسل إلى البوت في رسالة خاصة أي ملصق أو إيموجي مميز — وسيظهر هنا.",
   "Кольцо": "حلقة",
   "Комета": "مذنّب",
@@ -22150,7 +22149,8 @@ window.__I18N_DICT = {
   "Генерации постов": "توليدات المنشورات",
   "Разборы каналов": "تحليلات القنوات",
   "Смены каналов": "تبديلات القنوات",
-  "Обновления стиля канала": "تحديثات أسلوب القناة"
+  "Обновления стиля канала": "تحديثات أسلوب القناة",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "عندما تكون القناة متوقفة مؤقتًا، لا يولّد الذكاء الاصطناعي منشورات جديدة لها. يبقى البوت متصلاً وتُحفظ الإعدادات والأسلوب."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -22970,7 +22970,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "کارت کانال در ForgeMetrics: متریک‌های واقعی و قیمت انتشار.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "کاتالوگ کانال‌ها از سراسر Telegram: دنبال‌کننده‌ها، ریچ، ER و شاخص سلامت برای هر کانال، به‌علاوه تخمین قیمت و نیچ. با نیچ و فیلترها جستجو کنید و مستقیم به مالک پیام دهید — حتی به کسانی که هنوز در مارکت‌پلیس آفر نگذاشته‌اند.",
   "Кислота": "اسید",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "وقتی کانال متوقف است، AI پست جدیدی برایش تولید نمی‌کند. بات متصل می‌ماند و تنظیمات و سبک حفظ می‌شود. برای زمانی که به مرخصی می‌روید یا فعالیت کانال را موقتاً متوقف می‌کنید مفید است.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "کالکشن خالی است. هر استیکر یا ایموجی پریمیوم را در پیام خصوصی برای بات بفرستید — همین‌جا ظاهر می‌شود.",
   "Кольцо": "حلقه",
   "Комета": "دنباله‌دار",
@@ -24919,7 +24918,8 @@ window.__I18N_DICT = {
   "Генерации постов": "تولید پست‌ها",
   "Разборы каналов": "تحلیل کانال‌ها",
   "Смены каналов": "تعویض کانال‌ها",
-  "Обновления стиля канала": "به‌روزرسانی سبک کانال"
+  "Обновления стиля канала": "به‌روزرسانی سبک کانال",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "وقتی کانال متوقف است، هوش مصنوعی برای آن پست جدیدی تولید نمی‌کند. ربات متصل می‌ماند و تنظیمات و سبک حفظ می‌شوند."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -25732,7 +25732,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics'te kanal kartı: gerçek metrikler ve yayın fiyatı.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Tüm Telegram'dan kanal kataloğu: her biri için aboneler, erişim, ER ve sağlık endeksi, ayrıca fiyat tahmini ve niş. Nişe ve filtrelere göre ara, sahibine doğrudan yaz — Pazar Yeri'nde henüz teklif yayınlamamış olanlara bile.",
   "Кислота": "Asit",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Kanal duraklatıldığında AI onun için yeni gönderi üretmez. Bot bağlı kalır, ayarlar ve stil korunur. Tatile çıkarsan veya kanalın etkinliğini geçici olarak durdurursan işine yarar.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "Koleksiyon boş. Bota özel mesajdan herhangi bir çıkartma veya premium emoji gönder — burada görünecek.",
   "Кольцо": "Halka",
   "Комментарий": "Yorum",
@@ -27688,7 +27687,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Gönderi üretimleri",
   "Разборы каналов": "Kanal analizleri",
   "Смены каналов": "Kanal değişimleri",
-  "Обновления стиля канала": "Kanal stili güncellemeleri"
+  "Обновления стиля канала": "Kanal stili güncellemeleri",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Kanal duraklatıldığında AI onun için yeni gönderi üretmez. Bot bağlı kalır, ayarlar ve stil korunur."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -28506,7 +28506,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics पर चैनल कार्ड: असली मेट्रिक्स और प्लेसमेंट की क़ीमत।",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "पूरे Telegram के चैनलों का कैटलॉग: हर चैनल के सब्सक्राइबर, रीच, ER और हेल्थ इंडेक्स, साथ में क़ीमत का अनुमान और niche। niche और फ़िल्टर से खोजें और मालिक को सीधे लिखें — उन्हें भी, जिन्होंने अभी मार्केटप्लेस पर ऑफ़र नहीं लगाया।",
   "Кислота": "एसिड",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "जब चैनल पॉज़ पर होता है, AI उसके लिए नई पोस्ट जनरेट नहीं करता। बॉट कनेक्ट रहता है, सेटिंग्स और स्टाइल सुरक्षित रहती हैं। छुट्टी पर जाने या चैनल की गतिविधि अस्थायी रूप से रोकने पर उपयोगी।",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "कलेक्शन खाली है। बॉट को प्राइवेट मैसेज में कोई भी स्टिकर या प्रीमियम इमोजी भेजें — वह यहाँ दिखेगा।",
   "Кольцо": "रिंग",
   "Комета": "धूमकेतु",
@@ -30457,7 +30456,8 @@ window.__I18N_DICT = {
   "Генерации постов": "पोस्ट जनरेशन",
   "Разборы каналов": "चैनल विश्लेषण",
   "Смены каналов": "चैनल बदलाव",
-  "Обновления стиля канала": "चैनल स्टाइल अपडेट"
+  "Обновления стиля канала": "चैनल स्टाइल अपडेट",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "जब चैनल रोका गया हो, AI उसके लिए नई पोस्ट नहीं बनाता। बॉट जुड़ा रहता है, सेटिंग्स और स्टाइल सुरक्षित रहते हैं।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -31273,7 +31273,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "ForgeMetrics-এ চ্যানেল কার্ড: আসল মেট্রিক্স ও প্লেসমেন্টের দাম।",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "সারা Telegram-এর চ্যানেল ক্যাটালগ: প্রতিটির সাবস্ক্রাইবার, রিচ, ER ও হেলথ ইনডেক্স, দামের অনুমান ও নিশ। নিশ ও ফিল্টারে খুঁজে মালিককে সরাসরি লিখুন — এমনকি যারা এখনও মার্কেটপ্লেসে অফার দেননি তাদেরও।",
   "Кислота": "অ্যাসিড",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "চ্যানেল বিরতিতে থাকলে AI এর জন্য নতুন পোস্ট তৈরি করে না। বট যুক্ত থাকে, সেটিংস ও স্টাইল সংরক্ষিত থাকে। ছুটিতে গেলে বা চ্যানেলের কার্যক্রম সাময়িকভাবে বন্ধ রাখলে কাজে লাগে।",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "সংগ্রহ খালি। বটকে ব্যক্তিগত মেসেজে যেকোনো স্টিকার বা প্রিমিয়াম ইমোজি পাঠান — সেটি এখানে দেখা যাবে।",
   "Кольцо": "বলয়",
   "Комета": "ধূমকেতু",
@@ -33226,7 +33225,8 @@ window.__I18N_DICT = {
   "Генерации постов": "পোস্ট জেনারেশন",
   "Разборы каналов": "চ্যানেল বিশ্লেষণ",
   "Смены каналов": "চ্যানেল বদল",
-  "Обновления стиля канала": "চ্যানেল স্টাইল আপডেট"
+  "Обновления стиля канала": "চ্যানেল স্টাইল আপডেট",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "চ্যানেল বিরতিতে থাকলে AI এর জন্য নতুন পোস্ট তৈরি করে না। বট সংযুক্ত থাকে, সেটিংস ও স্টাইল সংরক্ষিত থাকে।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -34042,7 +34042,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Kartu channel di ForgeMetrics: metrik asli dan harga penempatan.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Katalog channel dari seluruh Telegram: subscriber, reach, ER dan indeks kesehatan tiap channel, plus estimasi harga dan niche. Cari lewat niche dan filter, lalu hubungi pemiliknya langsung — bahkan yang belum memasang offer di Marketplace.",
   "Кислота": "Asam",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Saat channel dijeda, AI tidak membuat post baru untuknya. Bot tetap terhubung, pengaturan dan gaya tersimpan. Berguna kalau kamu liburan atau menghentikan sementara aktivitas channel.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "Koleksi kosong. Kirim stiker atau emoji premium apa pun ke bot lewat chat pribadi — nanti muncul di sini.",
   "Кольцо": "Cincin",
   "Комета": "Komet",
@@ -35995,7 +35994,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Generasi post",
   "Разборы каналов": "Analisis kanal",
   "Смены каналов": "Pergantian kanal",
-  "Обновления стиля канала": "Pembaruan gaya kanal"
+  "Обновления стиля канала": "Pembaruan gaya kanal",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Saat kanal dijeda, AI tidak membuat post baru untuknya. Bot tetap terhubung, pengaturan dan gaya tersimpan."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -36814,7 +36814,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Thẻ kênh trên ForgeMetrics: chỉ số thật và giá đặt quảng cáo.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Danh mục kênh từ khắp Telegram: sub, reach, ER và chỉ số sức khỏe từng kênh, kèm định giá và ngách. Tìm theo ngách và bộ lọc rồi nhắn thẳng cho chủ kênh — kể cả những người chưa đăng offer trên Chợ.",
   "Кислота": "Acid",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Khi kênh tạm dừng, AI không tạo bài mới cho kênh đó. Bot vẫn kết nối, cài đặt và phong cách được giữ nguyên. Hữu ích khi bạn đi nghỉ hoặc tạm ngưng hoạt động kênh.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "Bộ sưu tập trống. Gửi cho bot bất kỳ sticker hoặc emoji premium nào trong tin nhắn riêng — nó sẽ xuất hiện ở đây.",
   "Кольцо": "Vòng tròn",
   "Комета": "Sao chổi",
@@ -38764,7 +38763,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Lượt tạo bài",
   "Разборы каналов": "Phân tích kênh",
   "Смены каналов": "Đổi kênh",
-  "Обновления стиля канала": "Cập nhật phong cách kênh"
+  "Обновления стиля канала": "Cập nhật phong cách kênh",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Khi kênh tạm dừng, AI không tạo bài mới cho kênh. Bot vẫn kết nối, cài đặt và phong cách được giữ nguyên."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -39582,7 +39582,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Card do canal no ForgeMetrics: métricas reais e preço de publicação.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Catálogo de canais de todo o Telegram: inscritos, alcance, ER e índice de saúde de cada um, além de estimativa de preço e nicho. Busque por nichos e filtros e fale direto com o dono — mesmo com quem ainda não publicou oferta no Marketplace.",
   "Кислота": "Ácido",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Com o canal pausado, o AI não gera novos posts para ele. O bot continua conectado, e as configurações e o estilo são mantidos. Útil se você sai de férias ou suspende temporariamente a atividade do canal.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "A coleção está vazia. Envie ao bot, no privado, qualquer sticker ou emoji premium — ele aparecerá aqui.",
   "Кольцо": "Anel",
   "Комета": "Cometa",
@@ -41533,7 +41532,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Gerações de posts",
   "Разборы каналов": "Análises de canais",
   "Смены каналов": "Trocas de canal",
-  "Обновления стиля канала": "Atualizações do estilo do canal"
+  "Обновления стиля канала": "Atualizações do estilo do canal",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Quando um canal está em pausa, a IA não gera novos posts para ele. O bot permanece conectado, as configurações e o estilo são preservados."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -42349,7 +42349,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Fiche de chaîne sur ForgeMetrics : vraies métriques et prix de placement.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Un catalogue de chaînes de tout Telegram : abonnés, portée, ER et indice de santé pour chacune, plus estimation de prix et niche. Cherche par niche et filtres et écris directement au propriétaire — même à ceux qui n'ont pas encore d'offre sur la Place de marché.",
   "Кислота": "Acide",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Quand une chaîne est en pause, l'AI ne génère pas de nouveaux posts pour elle. Le bot reste connecté, les réglages et le style sont conservés. Utile si tu pars en vacances ou suspends temporairement l'activité de la chaîne.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "La collection est vide. Envoie au bot en message privé un sticker ou un emoji premium — il apparaîtra ici.",
   "Кольцо": "Anneau",
   "Комета": "Comète",
@@ -44302,7 +44301,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Générations de posts",
   "Разборы каналов": "Analyses de chaînes",
   "Смены каналов": "Changements de chaîne",
-  "Обновления стиля канала": "Mises à jour du style de la chaîne"
+  "Обновления стиля канала": "Mises à jour du style de la chaîne",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Quand une chaîne est en pause, l'IA ne génère pas de nouveaux posts pour elle. Le bot reste connecté, les réglages et le style sont conservés."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -45116,7 +45116,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Scheda del canale su ForgeMetrics: metriche reali e prezzo di pubblicazione.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Catalogo di canali da tutto Telegram: iscritti, reach, ER e indice di salute per ognuno, più stima del prezzo e nicchia. Cerchi per nicchie e filtri e scrivi direttamente al proprietario — anche a chi non ha ancora pubblicato un'offerta sul Marketplace.",
   "Кислота": "Acido",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Quando il canale è in pausa, l'AI non genera nuovi post per lui. Il bot resta collegato, impostazioni e stile vengono conservati. Utile se vai in vacanza o sospendi temporaneamente l'attività del canale.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "La collezione è vuota. Invia al bot in privato uno sticker o un'emoji premium — comparirà qui.",
   "Кольцо": "Anello",
   "Комета": "Cometa",
@@ -47071,7 +47070,8 @@ window.__I18N_DICT = {
   "Генерации постов": "Generazioni di post",
   "Разборы каналов": "Analisi dei canali",
   "Смены каналов": "Cambi di canale",
-  "Обновления стиля канала": "Aggiornamenti dello stile del canale"
+  "Обновления стиля канала": "Aggiornamenti dello stile del canale",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Quando un canale è in pausa, l'AI non genera nuovi post per esso. Il bot resta connesso, impostazioni e stile vengono conservati."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -47891,7 +47891,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "የቻናል ካርድ በForgeMetrics ላይ፦ እውነተኛ መለኪያዎችና የማስቀመጫ ዋጋ።",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "ከመላው Telegram የቻናሎች ካታሎግ፦ ተከታዮች፣ ተደራሽነት፣ ER እና የጤና ኢንዴክስ ለእያንዳንዱ፣ የዋጋ ግምትና ኒሽ። በኒሽና በማጣሪያዎች ትፈልጋለህ እና ለባለቤቱ በቀጥታ ትጽፋለህ — በገበያው ላይ ኦፈር ላላቀረቡትም ጭምር።",
   "Кислота": "አሲድ",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "ቻናሉ ሲቆም AI ለእሱ አዲስ ፖስቶችን አያመነጭም። ቦቱ ተገናኝቶ ይቆያል፣ ቅንብሮችና ስታይሉ ይጠበቃሉ። ወደ ዕረፍት ስትሄድ ወይም የቻናሉን እንቅስቃሴ ለጊዜው ስታቆም ጠቃሚ ነው።",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "ስብስቡ ባዶ ነው። ለቦቱ በግል መልዕክት ማንኛውንም ስቲከር ወይም ፕሪሚየም ኢሞጂ ላክ — እዚህ ይታያል።",
   "Кольцо": "ቀለበት",
   "Комета": "ኮሜት",
@@ -49840,7 +49839,8 @@ window.__I18N_DICT = {
   "Генерации постов": "የልጥፍ ማመንጨቶች",
   "Разборы каналов": "የቻናል ትንታኔዎች",
   "Смены каналов": "የቻናል ለውጦች",
-  "Обновления стиля канала": "የቻናል ስታይል ዝማኔዎች"
+  "Обновления стиля канала": "የቻናል ስታይል ዝማኔዎች",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "ቻናል በእረፍት ላይ ሲሆን AI ለእሱ አዲስ ልጥፎችን አያመነጭም። ቦቱ ተገናኝቶ ይቆያል፣ ቅንብሮች እና ስታይል ይጠበቃሉ።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -50654,7 +50654,6 @@ window.__I18N_DICT = {
   "Карточка канала на ForgeMetrics: реальные метрики и цена размещения.": "Kadi ya chaneli kwenye ForgeMetrics: vipimo halisi na bei ya kuchapisha.",
   "Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.": "Katalogi ya chaneli kutoka Telegram nzima: wafuasi, ufikiaji, ER na fahirisi ya afya kwa kila moja, pamoja na makadirio ya bei na niche. Tafuta kwa niche na vichujio kisha mwandikie mmiliki moja kwa moja — hata wale ambao bado hawajaweka ofa kwenye Soko.",
   "Кислота": "Asidi",
-  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.": "Chaneli ikiwa imesimamishwa, AI haitengenezi machapisho mapya kwa ajili yake. Boti inabaki imeunganishwa, mipangilio na mtindo vinabaki. Inafaa ukienda likizo au ukisitisha shughuli za chaneli kwa muda.",
   "Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.": "Mkusanyiko uko tupu. Mtumie boti stika yoyote au emoji ya premium kwenye ujumbe wa faragha — itaonekana hapa.",
   "Кольцо": "Pete",
   "Комета": "Kometi",
@@ -52609,6 +52608,7 @@ window.__I18N_DICT = {
   "Генерации постов": "Uzalishaji wa machapisho",
   "Разборы каналов": "Uchambuzi wa vituo",
   "Смены каналов": "Mabadiliko ya vituo",
-  "Обновления стиля канала": "Masasisho ya mtindo wa kituo"
+  "Обновления стиля канала": "Masasisho ya mtindo wa kituo",
+  "Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.": "Kituo kikiwa kimesitishwa, AI haitengenezi machapisho mapya kwa ajili yake. Boti hubaki imeunganishwa, mipangilio na mtindo huhifadhiwa."
  }
 };

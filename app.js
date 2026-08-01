@@ -4102,7 +4102,7 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                     <div class="cs-toggle-sub">${paused ? 'Генерация постов отключена' : 'Можно генерировать посты'}</div>
                     <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
-                        Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются. Полезно если уезжаешь в отпуск или временно приостанавливаешь активность канала.
+                        Когда канал на паузе, AI не генерирует для него новые посты. Бот остаётся подключённым, настройки и стиль сохраняются.
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${!paused ? 'on' : ''}" data-toggle-target="paused">
