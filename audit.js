@@ -111,6 +111,7 @@
         }
         host.style.display = 'flex';
         document.documentElement.classList.add('cs-modal-open');
+        document.documentElement.classList.add('audit-open');
         document.body.classList.add('cs-modal-open');
         bindBackButton();
         return host;
@@ -130,6 +131,7 @@
     function closeAudit() {
         stopPolling();
         stopThinking();
+        document.documentElement.classList.remove('audit-open');
         var host = document.getElementById('audit-screen');
         if (host) host.style.display = 'none';
 
