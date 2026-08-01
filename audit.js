@@ -312,9 +312,9 @@
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i><span>Запустить аудит</span></button>';
         }
         if (limits && (limits.has_deep_package || limits.is_tester)) {
-            btnHtml += '<button class="audit-deep-btn" id="audit-intro-deep"><i class="ti ti-diamond"></i><span>Запустить глубокий аудит</span></button>' +
+            btnHtml += '<button class="audit-deep-btn" id="audit-intro-deep"><i class="ti ti-diamond"></i><span>Запустить коммерческий аудит</span></button>' +
                 (limits.has_deep_package
-                    ? '<div class="audit-deep-note">Куплен глубокий аудит — доступен 1 запуск</div>'
+                    ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
                     : '');
         }
 
@@ -551,7 +551,7 @@
                 '<span><b>' + _esc(d[1]) + ':</b> ' + _esc(d[2]) + '</span></div>';
         });
         return '<div class="da-hero">' +
-            '<span class="da-badge">◆ Глубокий аудит</span>' +
+            '<span class="da-badge">◆ Коммерческий аудит</span>' +
             '<div class="da-herorow"><div class="da-herotxt">' +
             '<div class="da-heroname">Коммерческий разбор площадки</div>' +
             '<div class="da-herosub">позиция в нише · качество трафика · цены</div></div>' +
