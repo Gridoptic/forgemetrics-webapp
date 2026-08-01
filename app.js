@@ -1423,8 +1423,10 @@ function formatNumber(num) {
 }
 
 
+var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen';
+
 function fmAnyModalVisible() {
-    var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active');
+    var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active, ' + FM_FULLSCREENS);
     for (var i = 0; i < list.length; i++) {
         try { if (getComputedStyle(list[i]).display !== 'none') return true; } catch (e) {}
     }
@@ -1462,7 +1464,8 @@ function fmUnstick() {
 }
 
 function fmModalOpen() {
-    var sels = ['.pw-sheet-ov.show', '.lang-ov.show', '.bs-overlay.visible', '.modal-overlay', '.cs-modal-overlay', '.drawer.active', '.fmx-mbg.fmx-show', '.fmx-cfm.solid', '#fmx-listBg.fmx-show', '.fmx-psFull'];
+    var sels = ['.pw-sheet-ov.show', '.lang-ov.show', '.bs-overlay.visible', '.modal-overlay', '.cs-modal-overlay', '.drawer.active', '.fmx-mbg.fmx-show', '.fmx-cfm.solid', '#fmx-listBg.fmx-show', '.fmx-psFull',
+                '#audit-screen', '#channel-settings-screen', '#strategy-screen', '#content-plan-screen', '#rewrite-screen'];
     for (var s = 0; s < sels.length; s++) {
         var nodes = document.querySelectorAll(sels[s]);
         for (var i = 0; i < nodes.length; i++) {
