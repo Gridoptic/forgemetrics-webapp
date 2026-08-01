@@ -4111,7 +4111,7 @@ html.cs-modal-open {
 .cab-hero{position:relative;overflow:hidden;}
 .cab-hero::before{content:"";position:absolute;top:-40px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(99,102,241,0.22),transparent 68%);pointer-events:none;}
 .cab-hrow{display:flex;align-items:center;gap:14px;position:relative;}
-.cab-av{width:60px;height:60px;border-radius:50%;flex-shrink:0;position:relative;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 0 0 3.5px var(--bg-card),0 0 0 5px rgba(129,140,248,0.45),0 6px 20px -6px rgba(99,102,241,0.7);overflow:hidden;}
+.cab-av{width:60px;height:60px;border-radius:50%;flex-shrink:0;position:relative;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 6px 20px -6px rgba(99,102,241,0.7);overflow:hidden;}
 .cab-av img{width:100%;height:100%;object-fit:cover;}
 .cab-hi{flex:1;min-width:0;}
 .cab-nm{font-size:19px;font-weight:800;letter-spacing:-0.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
