@@ -61,8 +61,20 @@
     function _fmtMeta(k) { return _FMT_BY_K[_fmtKey(k)] || null; }
     function _isCode(n) { return /^\d+\/\d+$/.test(n || ''); }
     function onTap(node, fn) {
-        var t = 0;
-        node.addEventListener('touchend', function (e) { t = Date.now(); e.preventDefault(); fn(e); }, { passive: false });
+        var t = 0, sx = 0, sy = 0, moved = false;
+        node.addEventListener('touchstart', function (e) {
+            var p = e.touches && e.touches[0];
+            sx = p ? p.clientX : 0; sy = p ? p.clientY : 0; moved = false;
+        }, { passive: true });
+        node.addEventListener('touchmove', function (e) {
+            var p = e.touches && e.touches[0];
+            if (p && (Math.abs(p.clientX - sx) > 10 || Math.abs(p.clientY - sy) > 10)) moved = true;
+        }, { passive: true });
+        node.addEventListener('touchend', function (e) {
+            t = Date.now();
+            if (moved) return;
+            e.preventDefault(); fn(e);
+        }, { passive: false });
         node.addEventListener('click', function (e) { if (Date.now() - t < 600) return; fn(e); });
     }
 
@@ -74,11 +86,10 @@
     var COVER_NAMES = ['Фиолет', 'Изумруд', 'Закат', 'Океан', 'Огонь', 'Магента'];
     var COLORS = ['#818cf8', '#3b82f6', '#22d3ee', '#5DCAA5', '#a3e635', '#facc15', '#f59e0b', '#F0997B', '#ef4444', '#ec4899', '#a78bfa', '#f5bf4f'];
     var FONTS = [['normal', 'Обычный'], ['bold', 'Жирный'], ['wide', 'Широкий'], ['mono', 'Моно']];
-    var FX_GLOW = [['none', 'Без'], ['neon', 'Тонкое'], ['gold', 'Золото']];
     var FX_GLASS = [['none', 'Без'], ['frost', 'Матовое'], ['dark', 'Дымка'], ['tint', 'Цветное']];
-    var FX_KEEP = { move: ['none'], over: ['none'], part: ['none'], orbit: ['none'], glow: ['none', 'neon', 'gold'], glass: ['none', 'frost', 'dark'] };
+    var FX_KEEP = { move: ['none'], over: ['none'], part: ['none'], orbit: ['none'], glow: ['none'], glass: ['none', 'frost', 'dark'] };
     function fxAllow(group, v) { return (v && FX_KEEP[group] && FX_KEEP[group].indexOf(v) >= 0) ? v : 'none'; }
-    var FX_VIP = { glow: ['neon', 'gold'], glass: ['frost', 'dark'] };
+    var FX_VIP = { glass: ['frost', 'dark'] };
     var GR = '#5DCAA5';
 
     var TERMS = [
@@ -385,7 +396,7 @@
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
             '@keyframes fmxGoldGlow{0%,100%{opacity:.25;}50%{opacity:1;}}',
             '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
-            '.fmx-card.fmx-prem::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 20px -4px rgba(245,191,79,0.55),0 8px 28px -14px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
+            '.fmx-card.fmx-prem::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 18px -4px rgba(245,191,79,0.55),0 8px 24px -12px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
             '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '@media (prefers-reduced-motion:reduce){.fmx-card.fmx-prem::after{animation:none;}}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
@@ -752,9 +763,6 @@
             '.fmx-fx .ti-lock{font-size:10px;}',
             '.fmx-avw{position:relative;width:46px;height:46px;flex-shrink:0;}',
             '.fmx-avw .fmx-av{position:relative;z-index:2;}',
-            '.fmx-avhalo{position:absolute;inset:-5px;border-radius:17px;z-index:1;pointer-events:none;}',
-            '.fx-g-neon{box-shadow:0 0 10px var(--fxa),0 0 20px var(--fxa);opacity:.55;}',
-            '.fx-g-gold{box-shadow:0 0 10px rgba(245,191,79,.5),0 0 22px rgba(245,191,79,.28);}',
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}',
             '.fmx-chrow.dis{opacity:.55;}',
             '.fmx-lav{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}',
@@ -1896,7 +1904,21 @@
             '<div class="fmx-mcard"><span class="fmx-lbl">Telegram ID пользователя</span>' +
             '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например, 100000000" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div></div>' +
+            '<div class="fmx-mcard" style="margin-top:10px;"><span class="fmx-lbl">Мод-режим: Топ оффера на 30 дней</span>' +
+            '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
+            '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
+            '<div style="font-size:10px;color:#565b73;margin-top:6px;">Включает офферу тег «Продвигается» и золотые опции на 30 дней. ID оффера виден в заявках модерации.</div></div>' +
             '<div id="fmx-mures"></div>';
+        el('fmx-mboostgo').addEventListener('click', function () {
+            var v = el('fmx-mboostid').value.trim();
+            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой ID оффера'); return; }
+            var b = this; b.disabled = true;
+            apiPost('/api/v1/marketplace/mod/boost', { listing_id: +v }).then(function (r) {
+                b.disabled = false;
+                if (r && r.ok) { _haptic('success'); toast('Топ включён на 30 дней'); }
+                else { uiAlert((r && r.error) || 'Не удалось'); }
+            }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+        });
         var find = function () {
             var v = el('fmx-muid').value.trim();
             if (!/^\d+$/.test(v)) { uiAlert('Введи числовой Telegram ID'); return; }
@@ -5765,7 +5787,10 @@
                 var ms = existing.moderation_status || '';
                 if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">Оффер отклонён' + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>Исправь и нажми «Сохранить оффер» — он уйдёт на повторную проверку.</div>';
                 if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;"><span>Оффер на ручной проверке — это не блокировка</span>' + (existing.reject_reason ? '. <span>' + _esc(existing.reject_reason) + '</span>' : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
-                return '<div class="fmx-chnote">Редактируешь оффер · статус:' + _esc(existing.status_human || existing.status || '—') + '</div>';
+                if (existing.status === 'published') return '<div class="fmx-chnote">Оффер опубликован на Площадке. Правки после сохранения пройдут быструю проверку и обновят карточку.</div>';
+                if (existing.status === 'paused') return '<div class="fmx-chnote">Оффер заморожен и скрыт с Площадки. Правки сохранятся — вернуть его можно в «Мои офферы».</div>';
+                if (ms === 'pending' || existing.status === 'review') return '<div class="fmx-chnote">Оффер на проверке. Правки добавятся к текущей заявке.</div>';
+                return '<div class="fmx-chnote">Редактируешь существующий оффер этого канала.</div>';
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
             accSec('fx', 'ti-sparkles', 'Эффекты и анимация', paneFx()) +
@@ -5879,9 +5904,13 @@
     }
 
     function paneFx() {
-        return fxChips('glow', FX_GLOW, 'Свечение', 'Доступно при любом продвижении или на тарифе Pro+') +
+        return '<div class="fmx-fxg"><div class="fmx-fxl vipc">Свечение оффера <i class="ti ti-lock"></i></div>' +
+            '<div class="fmx-fxlock">Золотое свечение карточки в ленте. Доступно при любом продвижении или на тарифе Pro+ — с замком можно примерить в предпросмотре.</div>' +
+            '<div class="fmx-fxw" id="fmx-glowcard">' +
+            '<button class="fmx-fx' + (!_ss.glowCard ? ' on' : '') + '" data-gc="off">Выключено</button>' +
+            '<button class="fmx-fx vip' + (_ss.glowCard ? ' on' : '') + '" data-gc="on"><i class="ti ti-lock"></i>Золотое свечение</button>' +
+            '</div></div>' +
             fxChips('glass', FX_GLASS, 'Стеклянные кнопки', 'Доступно при продвижении от недели или на тарифе Agency') +
-            '<div class="fmx-tog' + (_ss.glowCard ? ' on' : '') + '" id="fmx-glowcard" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Золотое свечение оффера <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></span></div>' +
             '<div style="margin-top:10px;">' +
             '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Продвигается» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
             '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
@@ -5889,9 +5918,7 @@
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
-            '</div></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:6px;"><i class="ti ti-info-circle"></i> <span style="color:#f5bf4f;">Золотое свечение и тег «Продвигается» — только при продвижении «Месяц в ленте». Всё с замком можно примерить в предпросмотре.</span></div>' +
-            (_isMod() ? '<button class="fmx-btn" id="fmx-modboost" style="width:100%;margin-top:10px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i> Мод-режим: включить Топ на 30 дней</button>' : '');
+            '</div></div>';
     }
     function paneStyleMin() {
         return '<span class="fmx-lbl">Цвет кнопки</span>' + colorPick('fmx-colors', _ss.color) +
@@ -6177,21 +6204,15 @@
         qsa(el('fmx-btns'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.btns = b.getAttribute('data-b'); qsa(el('fmx-btns'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-font'), 'button').forEach(function (b) { b.addEventListener('click', function () { _ss.font = b.getAttribute('data-f'); qsa(el('fmx-font'), 'button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); renderHero(); }); });
         qsa(el('fmx-main'), '[data-fxg]').forEach(function (g) { var key = g.getAttribute('data-fxg'); qsa(g, '.fmx-fx').forEach(function (b) { b.addEventListener('click', function () { _ss[key] = b.getAttribute('data-v'); qsa(g, '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); if (key === 'orbit') { var ar = el('fmx-atomrow'); if (ar) ar.style.display = _ss.orbit !== 'none' ? 'block' : 'none'; } renderHero(); sizePanes(); }); }); });
-        el('fmx-glowcard').addEventListener('click', function () { _ss.glowCard = !_ss.glowCard; this.classList.toggle('on'); renderHero(); });
-        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () { _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero(); });
-        var mb = el('fmx-modboost');
-        if (mb) mb.addEventListener('click', function () {
-            var base = listingForChannel(_ss.channelId);
-            if (!base) { toast('Сначала сохрани оффер — топ включается для опубликованного'); return; }
-            mb.disabled = true;
-            apiPost('/api/v1/marketplace/mod/boost', { listing_id: base.id }).then(function (r) {
-                if (r && r.ok) {
-                    toast('Тег «Продвигается» включён на 30 дней');
-                    loadMyListings().then(function () { renderHero(); });
-                } else { toast((r && r.error) || 'Не удалось'); }
-                mb.disabled = false;
-            }).catch(function () { toast('Сервер не ответил: проверь, что бэкенд-файлы залиты и forgemetrics-api перезапущен'); mb.disabled = false; });
+        qsa(el('fmx-glowcard'), 'button').forEach(function (b) {
+            b.addEventListener('click', function () {
+                _ss.glowCard = b.getAttribute('data-gc') === 'on';
+                qsa(el('fmx-glowcard'), 'button').forEach(function (x) { x.classList.remove('on'); });
+                b.classList.add('on');
+                _haptic('light'); renderHero();
+            });
         });
+        var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () { _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); renderHero(); });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="style"]')[0]);
     }
 
@@ -6374,18 +6395,11 @@
     }
     function fontStyle(f) { var m = { normal: 'font-weight:600;', bold: 'font-weight:800;', wide: 'font-weight:700;letter-spacing:0.5px;', mono: 'font-family:monospace;font-weight:600;' }; return m[f] || m.normal; }
     function listingAvatar(l, accent) {
-        var fx = l.effects_json || {}, at = l.emoji_attachments_json || {}, top = _isTop(l);
-        var gl = fxAllow('glow', fx.glow);
-        if (!l._preview) {
-            var _fx = l.fx || null, _boost = _isBoost(l);
-            var _canGlow = _fx ? !!_fx.glow : (top || _boost);
-            if (!_canGlow && FX_VIP.glow.indexOf(gl) >= 0) gl = 'none';
-        }
-        var halo = gl !== 'none' ? '<i class="fmx-avhalo fx-g-' + gl + '" style="--fxa:' + accent + ';"></i>' : '';
+        var at = l.emoji_attachments_json || {};
         var t = l.title || l.username || '?', core;
         if (l.avatar_url) core = '<div class="fmx-av" style="background:' + accent + ';overflow:hidden;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(l.avatar_url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + (l.avatar_type === 'img' ? _posStyle(at.avatar) : 'object-position:center;') + '"></div>';
         else core = '<div class="fmx-av" style="background:' + accent + ';">' + _esc(t.charAt(0)) + '</div>';
-        return '<div class="fmx-avw">' + halo + core + '</div>';
+        return '<div class="fmx-avw">' + core + '</div>';
     }
     function avatarInner(accent, goto) {
         var c = curChannel();
@@ -6394,15 +6408,13 @@
         if (_ss.avatar === 'img' && av && ap) core = '<div class="fmx-av" style="background:' + accent + ';overflow:hidden;"><img src="' + av.url + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + ap.x + '% ' + ap.y + '%;transform:scale(' + ap.s + ');transform-origin:' + ap.x + '% ' + ap.y + '%;"></div>';
         else if (c.avatar_url) core = '<div class="fmx-av" style="background:' + accent + ';overflow:hidden;"><img src="' + mediaAbs(c.avatar_url) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></div>';
         else core = '<div class="fmx-av" style="background:' + accent + ';">' + _esc((c.title || c.username || '?').charAt(0)) + '</div>';
-        var halo = _ss.glow !== 'none' ? '<i class="fmx-avhalo fx-g-' + _ss.glow + '" style="--fxa:' + accent + ';"></i>' : '';
-        return '<div class="fmx-avw"' + (goto ? ' data-goto="fx" style="cursor:pointer;"' : '') + '>' + halo + core + '</div>';
+        return '<div class="fmx-avw"' + (goto ? ' data-goto="fx" style="cursor:pointer;"' : '') + '>' + core + '</div>';
     }
     var SEAM = 84;
     function stkSize(s, W) { return Math.max(32, Math.min(64 * (s.scale || 1), Math.min(220, W * 0.62))); }
     function stkPos(s, W) {
         var size = stkSize(s, W);
         var odx = _touchDev ? STK_PHONE_DX : 0, ody = _touchDev ? STK_PHONE_DY : 0;
-        if ((s.mode || 'slot') === 'slot') return { size: size, left: W - size - 12 + odx, top: SEAM - size * 0.55 + ody };
         var cx = Math.max(10, Math.min((s.x != null ? s.x : 0.82) * W, W - 10));
         var cy = Math.max(10, SEAM + (s.dy != null ? s.dy : 0));
         return { size: size, left: cx - size / 2 + odx, top: cy - size / 2 + ody };
@@ -6418,16 +6430,9 @@
         var dm = s.dmode || 'bg';
         if (dm === 'top') dm = 'blend';
         var mcls = dm === 'blend' ? ' m-blend' : '';
-        var boxSt;
-        if (draggable) {
-            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
-        } else if ((s.mode || 'slot') === 'slot') {
-            boxSt = 'right:' + (12 - (_touchDev ? STK_PHONE_DX : 0)) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
-        } else {
-            boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
-        }
+        var boxSt = 'left:' + p.left.toFixed(1) + 'px;top:' + p.top.toFixed(1) + 'px;width:' + p.size + 'px;height:' + p.size + 'px;transform:rotate(' + (Number(s.rot) || 0) + 'deg);';
         var core = '<div class="fmx-stk' + mcls + '" ' + (draggable ? 'id="fmx-stkPrev" ' : '') + 'style="' + boxSt + '">' + stkMedia(s, animate) + '</div>';
-        if (!draggable || (s.mode || 'slot') !== 'free') return core;
+        if (!draggable) return core;
         var selCls = (_ss && _ss.stickerSel !== false) ? ' sel' : '';
         var modeDots = '<div class="fmx-stkmodes">' + [['blend', 'Слияние'], ['bg', 'Задний фон']].map(function (m) {
             return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
@@ -6589,14 +6594,9 @@
             }).join('') + '</div>' +
                 '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личных сообщениях.<span> ' + _stickers.length + '/30</span></div>';
             if (s) {
-                var free = (s.mode || 'slot') === 'free';
                 html += '<div class="fmx-fxw" style="margin-top:12px;">' +
-                    '<button class="fmx-fx' + (!free ? ' on' : '') + '" data-smode="slot">В слоте</button>' +
-                    '<button class="fmx-fx' + (free ? ' on' : '') + '" data-smode="free">Свободно</button>' +
-                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать</button></div>';
-                if (free) {
-                    html += '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (слияние · задний фон).</div>';
-                }
+                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать стикер</button></div>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (слияние · задний фон).</div>';
                 if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
             }
         }
@@ -6608,8 +6608,8 @@
                 if (e.target.closest && e.target.closest('[data-sdel]')) return;
                 var st = _stickers.filter(function (x) { return x.id === +cell.getAttribute('data-sid'); })[0];
                 if (!st) return;
-                var prev = _ss.sticker || { mode: 'slot', x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0, dmode: 'bg' };
-                _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: prev.mode, x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot, dmode: prev.dmode || 'bg' };
+                var prev = _ss.sticker || { x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0, dmode: 'bg' };
+                _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: 'free', x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot, dmode: prev.dmode || 'bg' };
                 _ss.stickerSel = true;
                 _haptic('light'); renderStickerPane(); renderHero();
             });
@@ -6627,15 +6627,9 @@
                 });
             });
         });
-        qsa(box, '[data-smode]').forEach(function (b) {
-            onTap(b, function () {
-                _ss.sticker.mode = b.getAttribute('data-smode');
-                _haptic('light'); renderStickerPane(); renderHero();
-            });
-        });
         var cl = qsa(box, '[data-sclear]')[0];
         if (cl) onTap(cl, function () { _ss.sticker = null; _haptic('light'); renderStickerPane(); renderHero(); });
-        var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? ((s.mode || 'slot') === 'slot' ? 'В слоте' : 'Свободно') : 'Нет';
+        var av = el('fmx-accv-sticker'); if (av) av.textContent = s ? 'Есть' : 'Нет';
         hydrateTgs(box);
     }
     function bindBadgeDrag(cardEl) {
