@@ -2,6 +2,7 @@
     'use strict';
 
     var _channelId = null;
+    var _entryMode = null;
     var _currentAuditId = null;
     var _pollTimer = null;
     var _pollAttempts = 0;
@@ -163,11 +164,12 @@
         }
     }
 
-    function headerHtml() {
+    function headerHtml(title) {
+        var t = title || (_entryMode === 'deep' ? 'Коммерческий аудит' : 'AI-аудит канала');
         return '' +
             '<div class="audit-header">' +
                 '<button class="audit-back" id="audit-back-btn"><i class="ti ti-arrow-left"></i></button>' +
-                '<div class="audit-header-title">AI-аудит канала</div>' +
+                '<div class="audit-header-title">' + _esc(t) + '</div>' +
                 '<div class="audit-header-spacer"></div>' +
             '</div>';
     }
@@ -313,18 +315,6 @@
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i><span>Запустить аудит</span></button>';
         }
-        if (limits && (limits.has_deep_package || limits.is_tester)) {
-            btnHtml += '<button class="audit-deep-btn" id="audit-intro-deep"><i class="ti ti-diamond"></i><span>Запустить коммерческий аудит</span></button>' +
-                (limits.has_deep_package
-                    ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
-                    : '');
-        } else {
-            btnHtml += '<div class="da-offerbox">' +
-                '<div class="da-offerhead"><span class="da-badge">◆ Коммерческий аудит</span><b>1 490 ₽</b></div>' +
-                '<div class="da-offertext">Позиция среди каналов ниши, проверка трафика на накрутку, портрет аудитории, честные цены форматов и потенциал дохода.</div>' +
-                '<button class="audit-deep-btn" id="audit-intro-deepbuy" style="margin-top:10px"><i class="ti ti-diamond"></i><span>Приобрести</span></button>' +
-                '</div>';
-        }
 
         host.innerHTML = headerHtml() +
             '<div class="audit-body">' +
@@ -348,20 +338,56 @@
 
         var s = host.querySelector('#audit-intro-start');
         if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(); });
-        var dp = host.querySelector('#audit-intro-deep');
-        if (dp) dp.addEventListener('click', function () { _haptic('medium'); startAudit(true); });
-        var db = host.querySelector('#audit-intro-deepbuy');
-        if (db) db.addEventListener('click', function () {
-            _haptic('medium');
-            if (typeof openCheckout === 'function') {
-                openCheckout({ name: 'Коммерческий аудит', price: 1490, sub: false,
-                               icon: 'diamond', color: 'am', rowLabel: 'Коммерческий аудит' });
-            }
-        });
         var pr = host.querySelector('#audit-intro-pricing');
         if (pr) pr.addEventListener('click', function () {
             closeAudit();
             if (typeof handleAction === 'function') handleAction('profile');
+        });
+    }
+
+    function renderCommercialIntro(limits) {
+        var host = ensureScreen();
+        var canDeep = limits && (limits.has_deep_package || limits.is_tester);
+        var ctaHtml;
+        if (canDeep) {
+            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-report-money"></i><span>Запустить коммерческий аудит</span></button>' +
+                (limits && limits.has_deep_package
+                    ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
+                    : '');
+        } else {
+            ctaHtml = '<div class="da-offerhead" style="margin-top:2px"><span class="da-offerprice-l">Разовая услуга</span><b class="da-offerprice">1 490 ₽</b></div>' +
+                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-report-money"></i><span>Приобрести</span></button>';
+        }
+        host.innerHTML = headerHtml('Коммерческий аудит') +
+            '<div class="audit-body">' +
+                '<div class="da-hero" style="margin-bottom:16px">' +
+                    '<span class="da-badge">◆ Коммерческий аудит</span>' +
+                    '<div class="da-herorow"><div class="da-herotxt">' +
+                    '<div class="da-heroname">Сколько стоит твоя площадка</div>' +
+                    '<div class="da-herosub">Разбор строится на рыночных данных, а не только на постах канала</div>' +
+                    '</div></div>' +
+                '</div>' +
+                '<div class="audit-intro-feats">' +
+                    introFeat('chart-bar', 'Позиция в нише', 'Охват, ER и цена против каналов твоей ниши') +
+                    introFeat('shield-check', 'Проверка трафика', 'Кривая просмотров: живой или накрученный') +
+                    introFeat('users', 'Аудитория', 'Гео, пол и язык подписчиков') +
+                    introFeat('coin', 'Монетизация', 'Честные цены форматов и потенциал дохода') +
+                    introFeat('list-check', 'План на 30 дней', 'Приоритеты: что сделать в первую очередь') +
+                '</div>' +
+                ctaHtml +
+                '<div class="audit-intro-foot">Анализ занимает 20–40 секунд</div>' +
+            '</div>';
+        attachBack(host);
+
+        var s = host.querySelector('#ca-start');
+        if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(true); });
+        var b = host.querySelector('#ca-buy');
+        if (b) b.addEventListener('click', function () {
+            _haptic('medium');
+            if (typeof openCheckout === 'function') {
+                openCheckout({ name: 'Коммерческий аудит', price: 1490, sub: false,
+                               icon: 'report-money', color: 'am', rowLabel: 'Коммерческий аудит' });
+            }
         });
     }
 
@@ -742,7 +768,7 @@
         var host = ensureScreen();
         var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
         var dq = _g(r, 'data_quality', {}) || {};
-        var html = headerHtml() +
+        var html = headerHtml('Коммерческий аудит') +
             '<div class="audit-body" id="audit-report-body">' +
                 renderDeepHero(r, score) +
                 renderDeepPosition(r) +
@@ -1214,6 +1240,7 @@
     }
 
     window.__openAudit = function (channelId, mode) {
+        _entryMode = mode || null;
         if (channelId != null) {
             _channelId = channelId;
             showLoading('Загружаю аудит...');
@@ -1246,7 +1273,7 @@
             var hasReport = latest && latest.found && latest.audit && latest.audit.report;
             if (mode === 'deep') {
                 if (hasReport && latest.audit.report.deep) renderReport(latest.audit);
-                else renderIntro(limits);
+                else renderCommercialIntro(limits);
                 return;
             }
             if (hasReport) {
