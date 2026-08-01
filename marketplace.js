@@ -472,8 +472,7 @@
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;overflow-wrap:anywhere;word-break:break-word;}',
             '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
             '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:12px;}',
-            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;position:relative;overflow:hidden;}',
-            '.fmx-spark{position:absolute;left:0;right:0;bottom:0;height:16px;opacity:0.38;pointer-events:none;}',
+            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
             '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
@@ -7862,8 +7861,8 @@
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow) +
             (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
-    function _htile(label, val, valCol, sub, subCol, isPrice, extra) {
-        return '<div class="fmx-kmt">' + (extra || '') + '<div class="l">' + label + '</div>' +
+    function _htile(label, val, valCol, sub, subCol, isPrice) {
+        return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
             '<div class="v' + (isPrice ? ' pr' : '') + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
             (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
     }
@@ -7896,10 +7895,8 @@
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var dead = _deadT;
-        var _spU = (l.username || l.channel_username || '').replace('@', '');
-        var spark = _spU ? '<span class="fmx-spark" data-su="' + _esc(_spU) + '"></span>' : '';
         var tiles =
-            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol, false, spark) +
+            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
             _htile('Охват', dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed',
                 dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : '') +
             _htile('ERR', dead ? '—' : (rr != null ? rr + '%' : '—'), dead ? '#c2c6d2' : rrCol, dead ? 'нет свежих постов' : (rstat || 'уточняется'), dead ? '' : (rstat ? rrCol : '')) +
@@ -8290,7 +8287,7 @@
         if (!_sbIO && typeof IntersectionObserver !== 'undefined') {
             _sbIO = new IntersectionObserver(function (ents) {
                 ents.forEach(function (en) {
-                    if (en.isIntersecting) { _sbIO.unobserve(en.target); if (en.target.classList.contains('fmx-spark')) _drawOneSpark(en.target); else _drawOneSubs(en.target); }
+                    if (en.isIntersecting) { _sbIO.unobserve(en.target); _drawOneSubs(en.target); }
                 });
             }, { rootMargin: '300px 0px' });
         }
@@ -8309,46 +8306,6 @@
             if (_sbCache[b.getAttribute('data-u')] !== undefined || !_sbIO) { _drawOneSubs(b); return; }
             b.__sbObs = 1; _sbIO.observe(b);
         });
-        qsa(document, '.fmx-spark[data-su]').forEach(function (b) {
-            if (b.getAttribute('data-done') || b.__sbObs) return;
-            if (_sbCache[b.getAttribute('data-su')] !== undefined || !_sbIO) { _drawOneSpark(b); return; }
-            b.__sbObs = 1; _sbIO.observe(b);
-        });
-    }
-    function _drawOneSpark(box) {
-        try {
-            if (!box || box.getAttribute('data-done')) return;
-            box.setAttribute('data-done', '1');
-            var uname = box.getAttribute('data-su');
-            if (_sbCache[uname] !== undefined) { _sparkRender(box, _sbCache[uname]); return; }
-            apiGet('/api/v1/channels/' + encodeURIComponent(uname) + '/subs-trend').then(function (r) {
-                if (r && r.ok) _sbCache[uname] = r;
-                _sparkRender(box, r);
-            }).catch(function () {});
-        } catch (e) {}
-    }
-    function _sparkRender(box, r) {
-        try {
-            var pts = (r && r.ok && r.points) || [];
-            var vals = [], cum = 0, has = false;
-            pts.forEach(function (p) {
-                var d = (p.g != null) ? p.g : ((p.j != null || p.l != null) ? (p.j || 0) - (p.l || 0) : null);
-                if (d != null) has = true;
-                cum += (d || 0); vals.push(cum);
-            });
-            if (!has || vals.length < 3) return;
-            var sm = vals.map(function (v, i) {
-                var a = vals[Math.max(0, i - 1)], b = vals[Math.min(vals.length - 1, i + 1)];
-                return (a + v + b) / 3;
-            });
-            var W = box.clientWidth || 100, H = 16, mn = Math.min.apply(null, sm), mx = Math.max.apply(null, sm);
-            var rng = (mx - mn) || 1, step = W / (sm.length - 1);
-            var pl = sm.map(function (v, i) { return (i * step).toFixed(1) + ',' + (H - 1.5 - (v - mn) / rng * (H - 3)).toFixed(1); }).join(' ');
-            var last = vals[vals.length - 1], col = last > 0 ? '#5DCAA5' : (last < 0 ? '#ef4444' : '#8990a8');
-            box.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" style="display:block;width:100%;height:100%;">' +
-                '<path d="M0,' + H + ' L' + pl.split(' ').join(' L') + ' L' + W + ',' + H + ' Z" fill="' + col + '" opacity="0.25"/>' +
-                '<polyline points="' + pl + '" fill="none" stroke="' + col + '" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-        } catch (e) {}
     }
     if (document.body) { _sbEnsureObs(); } else { document.addEventListener('DOMContentLoaded', _sbEnsureObs); }
     function _drawOneSubs(box) {
