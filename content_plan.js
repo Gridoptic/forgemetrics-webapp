@@ -94,7 +94,7 @@
         _state = d;
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
-        if (d.status === 'error') { renderError(); return; }
+        if (d.status === 'error') { toast(T('Прошлая сборка не удалась — настрой план и собери заново')); }
         if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
                 _channels = (cd && cd.channels) ? cd.channels.filter(function (c) { return c.username; }) : [];
