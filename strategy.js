@@ -161,8 +161,8 @@
         if (_state && _state.access === 'expired') {
             setView(
                 '<div class="stg-flag"><div class="glow"></div>' +
-                '<span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
-                '<div class="inner"><div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
+                '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
+                '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
                 '<div class="stg-fprice"><b>990 ₽</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
@@ -188,8 +188,8 @@
               '<div class="stg-fnote">' + esc(T('≈ 5 минут интервью — и полный план у тебя на руках')) + '</div>';
         setView(
             '<div class="stg-flag"><div class="glow"></div>' +
-            '<span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
-            '<div class="inner"><div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
+            '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
+            '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
             '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка')) + '</div></div></div>' +
             '<div class="stg-fwhat">' + what + '</div>' +
