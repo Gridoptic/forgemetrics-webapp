@@ -2744,7 +2744,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "connected · bot is an admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "The admin list and permissions sync with Telegram automatically: if someone is removed from the channel's admins, their access in the app disappears too.",
   "Ссылки отслеживания и кампании": "Tracking links & campaigns",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus deletes the offer and assigns roles to admins. Can't change the owner, themselves or other trusted admins."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Like a Manager, plus deletes the offer and assigns roles to admins. Can't change the owner, themselves or other trusted admins.",
+  "Кабинет «Мои офферы»": "My offers cabinet"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5484,7 +5485,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "conectado · el bot es admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente: si quitan a alguien de los admins del canal, su acceso en la aplicación también desaparece.",
   "Ссылки отслеживания и кампании": "Enlaces de seguimiento y campañas",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además elimina la oferta y asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como un Gestor, y además elimina la oferta y asigna roles a los admins. No cambia al propietario, a sí mismo ni a otros de confianza.",
+  "Кабинет «Мои офферы»": "Panel «Mis ofertas»"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8224,7 +8226,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "verbunden · Bot ist Admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen: wird jemand aus den Kanal-Admins entfernt, verschwindet sein Zugriff auch in der App.",
   "Ссылки отслеживания и кампании": "Tracking-Links und Kampagnen",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, löscht zusätzlich das Offer und vergibt Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Wie ein Manager, löscht zusätzlich das Offer und vergibt Rollen an Admins. Ändert nicht den Inhaber, sich selbst oder andere Vertrauenspersonen.",
+  "Кабинет «Мои офферы»": "Bereich «Meine Offers»"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -10959,7 +10962,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "қосылған · бот — әкімші",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі: адам арна әкімшілерінен алынса, қосымшадағы қатынасы да жоғалады.",
   "Ссылки отслеживания и кампании": "Бақылау сілтемелері мен науқандар",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса офферді өшіреді және әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Басқарушы сияқты, оған қоса офферді өшіреді және әкімшілерге рөл береді. Иесін, өзін және басқа сенімділерді өзгертпейді.",
+  "Кабинет «Мои офферы»": "«Менің офферлерім» кабинеті"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -13699,7 +13703,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "ulangan · bot admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi: kimdir kanal adminlaridan olinsa, ilovadagi kirishi ham yo'qoladi.",
   "Ссылки отслеживания и кампании": "Kuzatuv havolalari va kampaniyalar",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha offerni o'chiradi va adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Boshqaruvchi kabi, qo'shimcha offerni o'chiradi va adminlarga rol beradi. Egani, o'zini va boshqa ishonchlilarni o'zgartirmaydi.",
+  "Кабинет «Мои офферы»": "«Mening offerlarim» kabineti"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -16438,7 +16443,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "падключаны · бот — адміністратар",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна: калі чалавека знялі з адміністратараў канала — доступ у прыкладанні знікне сам.",
   "Ссылки отслеживания и кампании": "Спасылкі адсочвання і кампаніі",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс выдаляе офер і раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Як Кіраўнік, плюс выдаляе офер і раздае ролі адмінам. Не мяняе ўладальніка, сябе і іншых давераных.",
+  "Кабинет «Мои офферы»": "Кабінет «Мае оферы»"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -19178,7 +19184,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "qoşulub · bot admindir",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır: kimsə kanal adminlərindən çıxarılsa, tətbiqdəki girişi də itir.",
   "Ссылки отслеживания и кампании": "İzləmə linkləri və kampaniyalar",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik offeri silir və adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdarəçi kimi, üstəlik offeri silir və adminlərə rol verir. Sahibi, özünü və digər etibarlıları dəyişmir.",
+  "Кабинет «Мои офферы»": "«Mənim offerlərim» kabineti"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -21918,7 +21925,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "مربوطة · البوت مشرف",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً: إذا أُزيل أحد من مشرفي القناة، يختفي وصوله في التطبيق أيضاً.",
   "Ссылки отслеживания и кампании": "روابط التتبع والحملات",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويحذف العرض أيضاً ويمنح الأدوار للمشرفين. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل المدير، ويحذف العرض أيضاً ويمنح الأدوار للمشرفين. لا يغيّر المالك ولا نفسه ولا الموثوقين الآخرين.",
+  "Кабинет «Мои офферы»": "لوحة «عروضي»"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -24658,7 +24666,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "وصل است · بات ادمین است",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود: اگر کسی از ادمین‌های کانال برداشته شود، دسترسی‌اش در اپلیکیشن هم می‌رود.",
   "Ссылки отслеживания и кампании": "لینک‌های ردیابی و کمپین‌ها",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه آفر را حذف می‌کند و به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "مثل مدیر، به‌علاوه آفر را حذف می‌کند و به ادمین‌ها نقش می‌دهد. مالک، خودش و معتمدهای دیگر را تغییر نمی‌دهد.",
+  "Кабинет «Мои офферы»": "بخش «آفرهای من»"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -27398,7 +27407,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "bağlı · bot admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir: biri kanal adminlerinden çıkarılırsa uygulamadaki erişimi de kaybolur.",
   "Ссылки отслеживания и кампании": "Takip bağlantıları ve kampanyalar",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca teklifi siler ve adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "İdareci gibi, ayrıca teklifi siler ve adminlere rol verir. Sahibi, kendisini ve diğer güvenilirleri değiştiremez.",
+  "Кабинет «Мои офферы»": "«Tekliflerim» paneli"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -30138,7 +30148,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "जुड़ा है · बॉट एडमिन है",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं: अगर किसी को चैनल के एडमिन से हटाया गया, तो ऐप में उसकी पहुँच भी चली जाती है।",
   "Ссылки отслеживания и кампании": "ट्रैकिंग लिंक और कैंपेन",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही ऑफ़र हटाता है और एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।"
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "प्रबंधक जैसा, साथ ही ऑफ़र हटाता है और एडमिन को भूमिकाएँ देता है। मालिक, खुद और दूसरे विश्वस्तों को नहीं बदलता।",
+  "Кабинет «Мои офферы»": "«मेरे ऑफ़र» कैबिनेट"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -32878,7 +32889,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "যুক্ত · বট অ্যাডমিন",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "অ্যাডমিন তালিকা ও অনুমতি Telegram-এর সাথে স্বয়ংক্রিয়ভাবে সিঙ্ক হয়: কাউকে চ্যানেলের অ্যাডমিন থেকে বাদ দিলে অ্যাপে তার অ্যাক্সেসও চলে যায়।",
   "Ссылки отслеживания и кампании": "ট্র্যাকিং লিংক ও ক্যাম্পেইন",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অফার মোছে ও অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।"
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "ম্যানেজারের মতো, সাথে অফার মোছে ও অ্যাডমিনদের ভূমিকা দেয়। মালিক, নিজেকে ও অন্য বিশ্বস্তদের বদলায় না।",
+  "Кабинет «Мои офферы»": "«আমার অফার» কেবিনেট"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -35618,7 +35630,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "terhubung · bot adalah admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Daftar admin dan izin tersinkron otomatis dengan Telegram: jika seseorang dicabut dari admin channel, aksesnya di aplikasi juga hilang.",
   "Ссылки отслеживания и кампании": "Tautan pelacakan dan kampanye",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus menghapus penawaran dan memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Seperti Pengelola, plus menghapus penawaran dan memberi peran ke admin. Tidak mengubah pemilik, dirinya sendiri, atau tepercaya lain.",
+  "Кабинет «Мои офферы»": "Kabinet «Penawaran saya»"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -38358,7 +38371,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "đã kết nối · bot là admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Danh sách admin và quyền tự động đồng bộ với Telegram: nếu ai đó bị gỡ khỏi admin của kênh, quyền trong ứng dụng cũng mất.",
   "Ссылки отслеживания и кампании": "Liên kết theo dõi và chiến dịch",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền xóa offer và cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Như Quản lý, thêm quyền xóa offer và cấp vai trò cho admin. Không đổi chủ kênh, chính mình hay người tin cậy khác.",
+  "Кабинет «Мои офферы»": "Khu «Offer của tôi»"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -41098,7 +41112,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "conectado · o bot é admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "A lista de admins e as permissões sincronizam automaticamente com o Telegram: se alguém for removido dos admins do canal, o acesso dele no aplicativo some também.",
   "Ссылки отслеживания и кампании": "Links de rastreamento e campanhas",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda apaga a oferta e atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Como um Gestor, e ainda apaga a oferta e atribui papéis aos admins. Não muda o dono, a si mesmo nem outros de confiança.",
+  "Кабинет «Мои офферы»": "Painel «Minhas ofertas»"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -43838,7 +43853,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "connectée · le bot est admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La liste des admins et les droits se synchronisent automatiquement avec Telegram : si quelqu'un est retiré des admins de la chaîne, son accès dans l'appli disparaît aussi.",
   "Ссылки отслеживания и кампании": "Liens de suivi et campagnes",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et en plus supprime l'offre et attribue les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Comme un Gestionnaire, et en plus supprime l'offre et attribue les rôles aux admins. Ne change ni le propriétaire, ni lui-même, ni les autres personnes de confiance.",
+  "Кабинет «Мои офферы»": "Espace « Mes offres »"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -46578,7 +46594,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "collegato · il bot è admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "L'elenco degli admin e i permessi si sincronizzano automaticamente con Telegram: se qualcuno viene rimosso dagli admin del canale, il suo accesso nell'app sparisce.",
   "Ссылки отслеживания и кампании": "Link di tracciamento e campagne",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più elimina l'offerta e assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Come un Gestore, e in più elimina l'offerta e assegna i ruoli agli admin. Non cambia il proprietario, sé stesso o altri fiduciari.",
+  "Кабинет «Мои офферы»": "Area «Le mie offerte»"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -49318,7 +49335,8 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "ተገናኝቷል · ቦቱ አስተዳዳሪ ነው",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ፦ አንድ ሰው ከቻናሉ አስተዳዳሪዎች ከተነሳ፣ በመተግበሪያው ያለው መዳረሻውም ይጠፋል።",
   "Ссылки отслеживания и кампании": "የመከታተያ ሊንኮች እና ዘመቻዎች",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ኦፈሩን ይሰርዛል እና ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።"
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "እንደ ሥራ አስኪያጅ፣ በተጨማሪ ኦፈሩን ይሰርዛል እና ለአስተዳዳሪዎች ሚና ይሰጣል። ባለቤቱን፣ ራሱን እና ሌሎች የታመኑትን አይለውጥም።",
+  "Кабинет «Мои офферы»": "«የእኔ ኦፈሮች» ክፍል"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -52058,6 +52076,7 @@ window.__I18N_DICT = {
   "подключён · бот — администратор": "imeunganishwa · boti ni admin",
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki: mtu akiondolewa kwenye maadmin wa channel, ufikiaji wake kwenye programu pia hupotea.",
   "Ссылки отслеживания и кампании": "Viungo vya ufuatiliaji na kampeni",
-  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hufuta ofa na kutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine."
+  "Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.": "Kama Msimamizi, na pia hufuta ofa na kutoa majukumu kwa maadmin. Habadilishi mmiliki, yeye mwenyewe wala wa kuaminika wengine.",
+  "Кабинет «Мои офферы»": "Kabati «Ofa zangu»"
  }
 };

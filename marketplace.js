@@ -383,9 +383,9 @@
             '.fmx-zw>.fmx-li{width:100%;max-width:350px;margin-left:auto;margin-right:auto;transform:none;}',
             '.fmx-card{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:border-color 200ms,transform 200ms;}',
             '.fmx-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}',
-            '@keyframes fmxGoldGlow{0%,100%{opacity:0;}50%{opacity:1;}}',
-            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 0 9px -3px rgba(245,191,79,0.34),0 8px 20px -16px rgba(245,191,79,0.36),0 4px 16px rgba(0,0,0,0.45);}',
-            '.fmx-card.fmx-prem::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 16px -3px rgba(245,191,79,0.48),0 9px 24px -15px rgba(245,191,79,0.42);opacity:0;animation:fmxGoldGlow 3.8s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
+            '@keyframes fmxGoldGlow{0%,100%{opacity:.25;}50%{opacity:1;}}',
+            '.fmx-card.fmx-prem{border-color:transparent;box-shadow:0 4px 16px rgba(0,0,0,0.45),0 0 12px -4px rgba(245,191,79,0.42),0 6px 20px -14px rgba(245,191,79,0.38);}',
+            '.fmx-card.fmx-prem::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 20px -4px rgba(245,191,79,0.55),0 8px 28px -14px rgba(245,191,79,0.45);opacity:.25;animation:fmxGoldGlow 4.6s ease-in-out infinite;pointer-events:none;will-change:opacity;z-index:0;}',
             '.fmx-card.fmx-prem::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.3px;background:linear-gradient(135deg,rgba(255,236,175,0.98),rgba(245,191,79,0.6) 26%,rgba(168,120,40,0.5) 50%,rgba(245,191,79,0.62) 74%,rgba(255,232,160,0.95));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:5;}',
             '@media (prefers-reduced-motion:reduce){.fmx-card.fmx-prem::after{animation:none;}}',
             '.fmx-cov{height:84px;position:relative;overflow:hidden;z-index:1;}',
@@ -787,12 +787,13 @@
             '@keyframes fmxFire{0%,100%{opacity:.7;transform:scaleY(1);}20%{opacity:.95;transform:scaleY(1.05);}40%{opacity:.72;}55%{opacity:1;transform:scaleY(1.04);}70%{opacity:.8;}85%{opacity:.95;}}',
             '.fx-g-ice{box-shadow:0 0 10px 1px rgba(150,232,255,.7),0 0 22px 3px rgba(80,180,255,.4);animation:fmxIce 3.2s ease-in-out infinite;}',
             '@keyframes fmxIce{0%,100%{opacity:.5;filter:hue-rotate(0deg);}50%{opacity:.9;filter:hue-rotate(-14deg);}}',
-            '.fx-g-pulsar{color:var(--fxa,#5DCAA5);border-radius:inherit;animation:fmxPulsar 2.2s ease-out infinite;}',
-            '@keyframes fmxPulsar{0%{box-shadow:0 0 0 1px currentColor,0 0 0 1px currentColor;opacity:.9;}100%{box-shadow:0 0 0 9px currentColor,0 0 0 18px currentColor;opacity:0;}}',
+            '.fx-g-pulsar{color:var(--fxa,#5DCAA5);border:1.5px solid currentColor;border-radius:inherit;animation:fmxPulsar 2.2s ease-out infinite;will-change:transform,opacity;}',
+            '@keyframes fmxPulsar{0%{transform:scale(1);opacity:.9;}100%{transform:scale(1.4);opacity:0;}}',
             '.fx-g-electric{box-shadow:0 0 10px rgba(124,77,255,.7),0 0 20px rgba(0,180,255,.5);animation:fmxElec 0.9s steps(1) infinite;}',
             '@keyframes fmxElec{0%,100%{opacity:.5;filter:hue-rotate(0deg);}15%{opacity:1;filter:hue-rotate(22deg);}30%{opacity:.4;}45%{opacity:.95;filter:hue-rotate(-22deg);}60%{opacity:.6;}75%{opacity:1;}}',
             '.fx-g-corona{background:repeating-conic-gradient(from 0deg,rgba(245,191,79,.55) 0deg 6deg,transparent 6deg 16deg);-webkit-mask:radial-gradient(farthest-side,transparent 52%,#000 62%,transparent 100%);mask:radial-gradient(farthest-side,transparent 52%,#000 62%,transparent 100%);animation:fmxSpin 9s linear infinite;opacity:.8;}',
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}',
+            '.fx-g-aurora,.fx-g-rainbow,.fx-g-corona,.fx-orb-comet,.fx-g-breath,.fx-o-holo::after,.fx-o-liquid::after,.fx-o-scan::before{will-change:transform;}',
             '.fx-o-holo::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-70%;width:45%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-18deg);animation:fmxSweep 2.8s ease-in-out infinite;}',
             '@keyframes fmxSweep{70%,100%{transform:translateX(340%) skewX(-18deg);}}',
             '.fx-o-liquid{background:linear-gradient(125deg,rgba(245,191,79,.12),rgba(255,224,130,.28),rgba(212,160,23,.12));}',
@@ -5902,7 +5903,7 @@
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
             '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке') + '</button>' +
             '<div class="fmx-tplink" data-terms="s"><i class="ti ti-clipboard-text"></i> <span>Условия размещения</span></div>' +
-            (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> Кабинет «Мои офферы»: статус, статистика, календарь</button>' : '') +
+            (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> Кабинет «Мои офферы»</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
             '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
