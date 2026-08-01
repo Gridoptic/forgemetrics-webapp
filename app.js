@@ -1749,8 +1749,19 @@ function renderCabinet(d) {
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
     const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
-    const streakChip = '';
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div><span class="cab-chip${isPaid ? ' gold' : ''}"><i class="ti ti-crown"></i> Тариф ${escapeHtml(u.tier_display || 'Free')}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) + ' дн.' : ''}</span>${streakChip}</div></div>${cabStatusHtml(d.subscription)}</div>`;
+    const _hstats = (u.channels_count != null) ? (function () {
+        const chN = u.channels_count || 0, liN = u.listings_count || 0, dN = u.member_days || 0;
+        return `<div class="cab-pstats num">` +
+            `<div class="cab-ps"><div class="v">${cabNum(chN)}</div><div class="l">${plural3(chN, 'канал', 'канала', 'каналов')}</div></div>` +
+            `<div class="cab-ps"><div class="v">${cabNum(liN)}</div><div class="l">${plural3(liN, 'оффер', 'оффера', 'офферов')}</div></div>` +
+            (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, 'день с нами', 'дня с нами', 'дней с нами')}</div></div>` : '') +
+            `</div>`;
+    })() : '';
+    const _sk = (d.subscription || {}).kind;
+    const _hbottom = (_sk === 'trial' || _sk === 'paid')
+        ? cabStatusHtml(d.subscription)
+        : `<div class="cab-hup"><div class="t"><b>Pro</b> — <span>больше постов в день, аудиты и приоритет на Площадке</span></div><button class="cab-hupbtn" id="cab-up-hero">Оформить</button></div>`;
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-avw"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><i class="cab-avr"></i></div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill${isPaid ? ' paid' : ''}">${escapeHtml((u.tier_display || 'Free').toUpperCase())}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) : ''}</span></div>${_hstats}${_hbottom}</div>`;
 
     if (d.upgrade) {
         const up = d.upgrade;
@@ -1776,7 +1787,7 @@ function renderCabinet(d) {
 
 function wireCabinet(d) {
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    on('cab-upgrade', () => {
+    const goUpgrade = () => {
         const up = d && d.upgrade;
         if (!up || !up.target) { openTariffs(); return; }
         hapticMed();
@@ -1785,7 +1796,9 @@ function wireCabinet(d) {
             icon: 'rocket', color: 'pu', rowLabel: `Тариф ${up.target_display}, месяц`,
             lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: up.target }) }).then((r) => r),
         });
-    });
+    };
+    on('cab-upgrade', goUpgrade);
+    on('cab-up-hero', goUpgrade);
     on('cab-compare', () => { openTariffs(); });
     on('cab-team', () => { openTeam(); });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
