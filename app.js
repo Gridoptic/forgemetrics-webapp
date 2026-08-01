@@ -1193,6 +1193,222 @@ function _tmMemberView(d) {
 }
 
 
+const AP_SRC_RU = {
+    smart_peak: 'час пик аудитории канала',
+    smart_niche: 'лучшее время для ниши',
+    smart_auto: 'ближайшее свободное время',
+};
+
+function apFmtWhen(iso) {
+    const d = new Date(iso);
+    const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+    const hm = d.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : lang, { hour: '2-digit', minute: '2-digit' });
+    const dd = d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang, { day: 'numeric', month: 'short' });
+    return `${dd}, ${hm}`;
+}
+
+function apConfirm(text, onYes) {
+    const ov = document.createElement('div');
+    ov.className = 'bs-overlay visible';
+    ov.style.zIndex = '9000';
+    const box = document.createElement('div');
+    box.className = 'ap-confirm';
+    box.innerHTML = `<div class="ap-cf-tx">${escapeHtml(text)}</div>
+        <div class="ap-cf-row"><button class="ap-cf-btn" id="ap-cf-no">Отмена</button>
+        <button class="ap-cf-btn yes" id="ap-cf-yes">Да, опубликовать</button></div>`;
+    document.body.appendChild(ov);
+    document.body.appendChild(box);
+    const close = () => { ov.remove(); box.remove(); };
+    ov.addEventListener('click', close);
+    box.querySelector('#ap-cf-no').addEventListener('click', close);
+    box.querySelector('#ap-cf-yes').addEventListener('click', () => { close(); onYes(); });
+    localizeTree(box);
+}
+
+function apErr(e) {
+    showToast((e && e.message) ? e.message : t('Не получилось — попробуй ещё раз'), 'alert-triangle');
+}
+
+function publishPostNow() {
+    const pid = state.post.currentPostId;
+    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
+    hapticLight();
+    apConfirm('Опубликовать пост в канал прямо сейчас?', async () => {
+        try {
+            await apiRequest('/api/v1/post/schedule', {
+                method: 'POST',
+                body: JSON.stringify({ post_id: pid, mode: 'now' }),
+            });
+            showToast(t('Пост уходит в канал — бот опубликует его в течение минуты'), 'check');
+        } catch (e) { apErr(e); }
+    });
+}
+
+let _apCtx = null;
+function apClose() {
+    if (_apCtx) { try { _apCtx.ov.remove(); _apCtx.sh.remove(); } catch (e) {} _apCtx = null; }
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+}
+
+function apSlotDate(dayOffset, hour) {
+    const d = new Date();
+    d.setDate(d.getDate() + dayOffset);
+    d.setHours(hour, 0, 0, 0);
+    return d;
+}
+
+async function openScheduleSheet(postId) {
+    const pid = postId || state.post.currentPostId;
+    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
+    hapticLight();
+    apClose();
+    const ov = document.createElement('div');
+    ov.className = 'bs-overlay';
+    const sh = document.createElement('div');
+    sh.className = 'bs-sheet ap-sheet';
+    const now = new Date();
+    const slots = [];
+    const evToday = apSlotDate(0, 19);
+    if (evToday.getTime() > now.getTime() + 15 * 60000) slots.push({ d: evToday, label: 'Сегодня 19:00' });
+    slots.push({ d: apSlotDate(1, 9), label: 'Завтра 09:00' });
+    slots.push({ d: apSlotDate(1, 19), label: 'Завтра 19:00' });
+    const tomorrow = apSlotDate(1, 19);
+    const dv = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+    sh.innerHTML = `<div class="bs-handle"></div>
+        <div class="ap-title">Когда опубликовать</div>
+        <div class="ap-sub">Пост выйдет автоматически — бот опубликует его сам</div>
+        <div class="ap-slot smart" id="ap-smart"><div class="t"><i class="ti ti-sparkles"></i> <span>Умное время</span></div><div class="d" id="ap-smart-d"><span>считаю лучшее время…</span></div></div>
+        <div class="ap-grid">${slots.map((s, i) => `<div class="ap-slot" data-aps="${i}"><div class="t">${s.label}</div></div>`).join('')}</div>
+        <div class="ap-custom"><input type="date" id="ap-date" value="${dv}"><input type="time" id="ap-time" value="19:00"></div>
+        <button class="ap-go" id="ap-go">Запланировать на своё время</button>`;
+    document.body.appendChild(ov);
+    document.body.appendChild(sh);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
+    ov.addEventListener('click', apClose);
+    _apCtx = { ov, sh };
+    localizeTree(sh);
+
+    const doSchedule = async (body) => {
+        try {
+            const r = await apiRequest('/api/v1/post/schedule', { method: 'POST', body: JSON.stringify(body) });
+            apClose();
+            hapticMed();
+            showToast(`${t('Пост поставлен в очередь')}: ${apFmtWhen(r.scheduled_at)}`, 'check');
+        } catch (e) { apErr(e); }
+    };
+
+    sh.querySelectorAll('[data-aps]').forEach(el => {
+        el.addEventListener('click', () => {
+            const s = slots[+el.dataset.aps];
+            doSchedule({ post_id: pid, mode: 'at', at: s.d.toISOString() });
+        });
+    });
+    sh.querySelector('#ap-smart').addEventListener('click', () => {
+        doSchedule({ post_id: pid, mode: 'smart' });
+    });
+    sh.querySelector('#ap-go').addEventListener('click', () => {
+        const dvv = sh.querySelector('#ap-date').value;
+        const tvv = sh.querySelector('#ap-time').value;
+        if (!dvv || !tvv) { showToast(t('Укажи дату и время'), 'alert-triangle'); return; }
+        const dt = new Date(`${dvv}T${tvv}:00`);
+        if (isNaN(dt.getTime())) { showToast(t('Укажи дату и время'), 'alert-triangle'); return; }
+        doSchedule({ post_id: pid, mode: 'at', at: dt.toISOString() });
+    });
+
+    try {
+        const p = await apiRequest(`/api/v1/post/smart-slot?post_id=${pid}`);
+        const dEl = sh.querySelector('#ap-smart-d');
+        if (dEl && p && p.at) {
+            const srcTx = AP_SRC_RU['smart_' + p.source] || AP_SRC_RU.smart_auto;
+            dEl.innerHTML = `<b class="num">${apFmtWhen(p.at)}</b> · <span>${srcTx}</span>`;
+            localizeTree(dEl);
+        }
+    } catch (e) {
+        const dEl = sh.querySelector('#ap-smart-d');
+        if (dEl) { dEl.innerHTML = `<span>${escapeHtml((e && e.message) || 'канал недоступен для публикации')}</span>`; localizeTree(dEl); }
+    }
+}
+
+async function openQueueSheet(channelId) {
+    hapticLight();
+    apClose();
+    const ov = document.createElement('div');
+    ov.className = 'bs-overlay';
+    const sh = document.createElement('div');
+    sh.className = 'bs-sheet ap-sheet';
+    sh.innerHTML = `<div class="bs-handle"></div>
+        <div class="ap-title">Очередь публикаций</div>
+        <div class="ap-sub">Контент-план и отдельные посты — одна очередь</div>
+        <div id="ap-qbody" style="padding:26px 0;text-align:center;color:#565b73;"><i class="ti ti-loader-2" style="font-size:20px;display:inline-block;animation:spin .9s linear infinite;"></i></div>`;
+    document.body.appendChild(ov);
+    document.body.appendChild(sh);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
+    ov.addEventListener('click', apClose);
+    _apCtx = { ov, sh };
+    localizeTree(sh);
+
+    const load = async () => {
+        let d = null;
+        try { d = await apiRequest(`/api/v1/post/queue?channel_id=${channelId}`); } catch (e) { }
+        const body = sh.querySelector('#ap-qbody');
+        if (!body) return;
+        if (!d || !d.ok) {
+            body.innerHTML = `<div style="padding:8px 0;color:#8990a8;font-size:12px;"><span>Не удалось загрузить очередь</span></div>`;
+            localizeTree(body); return;
+        }
+        const row = (p) => {
+            const src = p.from_plan ? '📋' : '✍️';
+            const when = p.status === 'published' ? (p.published_at || p.scheduled_at) : p.scheduled_at;
+            const st = p.status === 'queued' || p.status === 'publishing'
+                ? `<span class="ap-st q"><span>в очереди</span></span>`
+                : (p.status === 'published'
+                    ? `<span class="ap-st ok"><span>опубликован</span></span>`
+                    : `<span class="ap-st er"><span>ошибка</span></span>`);
+            const acts = p.status === 'queued'
+                ? `<button class="ap-qa" data-apmv="${p.id}" title="Перенести"><i class="ti ti-clock-edit"></i></button><button class="ap-qa" data-aprm="${p.id}" title="Убрать"><i class="ti ti-x"></i></button>`
+                : (p.status === 'failed'
+                    ? `<button class="ap-qa" data-aprt="${p.id}" title="Отправить сейчас"><i class="ti ti-refresh"></i></button>`
+                    : (p.published_url ? `<button class="ap-qa" data-apurl="${escapeHtml(p.published_url)}" title="Открыть"><i class="ti ti-external-link"></i></button>` : ''));
+            const err = p.status === 'failed' && p.last_error ? `<div class="ap-qerr">${escapeHtml(p.last_error)}</div>` : '';
+            return `<div class="ap-qrow num"><div class="ap-qw">${when ? apFmtWhen(when) : '—'}</div>
+                <div class="ap-qtx">${src} ${escapeHtml(p.preview || '')}</div>${st}${acts}</div>${err}`;
+        };
+        const up = (d.upcoming || []).map(row).join('');
+        const hi = (d.history || []).map(row).join('');
+        body.style.cssText = '';
+        body.innerHTML =
+            (d.paused ? `<div class="ap-qerr" style="margin-bottom:8px;"><span>Канал на паузе — очередь остановлена, посты не выходят</span></div>` : '') +
+            `<div class="ap-qsec"><span>В очереди</span></div>` +
+            (up || `<div class="ap-qempty"><span>Запланированных постов нет</span></div>`) +
+            `<div class="ap-qsec"><span>История</span></div>` +
+            (hi || `<div class="ap-qempty"><span>Публикаций ещё не было</span></div>`);
+        localizeTree(body);
+        body.querySelectorAll('[data-aprm]').forEach(b => b.addEventListener('click', async () => {
+            hapticLight();
+            try { await apiRequest('/api/v1/post/unschedule', { method: 'POST', body: JSON.stringify({ post_id: +b.dataset.aprm }) }); load(); }
+            catch (e) { apErr(e); }
+        }));
+        body.querySelectorAll('[data-aprt]').forEach(b => b.addEventListener('click', async () => {
+            hapticLight();
+            try { await apiRequest('/api/v1/post/schedule', { method: 'POST', body: JSON.stringify({ post_id: +b.dataset.aprt, mode: 'now' }) }); load(); }
+            catch (e) { apErr(e); }
+        }));
+        body.querySelectorAll('[data-apmv]').forEach(b => b.addEventListener('click', () => {
+            openScheduleSheet(+b.dataset.apmv);
+        }));
+        body.querySelectorAll('[data-apurl]').forEach(b => b.addEventListener('click', () => {
+            const u = b.dataset.apurl;
+            if (tg?.openTelegramLink) tg.openTelegramLink(u); else window.open(u, '_blank');
+        }));
+    };
+    load();
+}
+
 function formatNumber(num) {
     if (num === null || num === undefined) return '—';
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'М';
@@ -3526,7 +3742,7 @@ function renderChannelCard(ch) {
         const voice = renderVoiceStatus(ch);
         feats = `
             <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span>${pub}</div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok">${okIcon}</span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok ap-qlink" onclick="event.stopPropagation();window.__openQueue&&window.__openQueue(${ch.id})">Очередь публикаций <i class="ti ti-chevron-right"></i></span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
             <div class="channel-card-feat"><span class="channel-card-feat-label">Стиль письма</span>${voice}</div>
         `;
     } else {
@@ -3572,6 +3788,9 @@ function renderChannelCard(ch) {
         ${cta}
     `;
 }
+
+
+window.__openQueue = function (channelId) { openQueueSheet(channelId); };
 
 
 window.__openChannelSettings = async function (channelId) {
@@ -5376,7 +5595,7 @@ function setupPostEventListeners() {
         els.postSendChannelBtn.addEventListener('click', () => {
             const locked = els.postSendChannelBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('channel');
-            else showToast('Скоро будет публикация в канал', 'check');
+            else publishPostNow();
         });
     }
 
@@ -5384,7 +5603,7 @@ function setupPostEventListeners() {
         els.postScheduleBtn.addEventListener('click', () => {
             const locked = els.postScheduleBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('schedule');
-            else showToast('Скоро будет автопостинг', 'check');
+            else openScheduleSheet();
         });
     }
 
