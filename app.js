@@ -940,14 +940,21 @@ function _tmAv(av, name, cls) {
 }
 
 let _tmMulti = false;
-async function openTeam() {
-    hapticLight();
-    let r = null;
-    try { r = await apiRequest('/api/v1/team/overview'); } catch (e) {}
-    const chs = (r && r.channels) || [];
-    if (!chs.length) { cabToast('Сначала подключи канал — роли настраиваются для подключённых каналов'); return; }
-    _tmMulti = chs.length > 1;
-    if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
+let _tmChsCache = null;
+function _tmFill(html) {
+    if (_tmCtx && _tmCtx.sheet && document.body.contains(_tmCtx.sheet)) {
+        _tmCtx.sheet.innerHTML = `<div class="bs-handle"></div>` + html;
+        localizeTree(_tmCtx.sheet);
+        return _tmCtx.sheet;
+    }
+    return _tmSheet(html);
+}
+function _tmLoadingHtml() {
+    return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
+        <div><h3>Команда канала</h3><div class="tm-sub">Роли и права админов на оффер</div></div></div>
+        <div style="padding:36px 0 28px;text-align:center;color:#565b73;"><i class="ti ti-loader-2" style="font-size:22px;display:inline-block;animation:spin .9s linear infinite;"></i></div>`;
+}
+function _tmRenderList(chs) {
     const rows = chs.map(c => {
         const role = TM_ROLES[c.my_role] || TM_ROLES.viewer;
         return `<div class="tm-mem tm-pick" data-tmch="${c.id}">${_tmAv(c.avatar_url, c.title)}
@@ -956,18 +963,32 @@ async function openTeam() {
             <span class="tm-chip ${role.cls}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
             <i class="ti ti-chevron-right tm-chev"></i></div>`;
     }).join('');
-    const sheet = _tmSheet(`<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
+    const sheet = _tmFill(`<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
         <div><h3>Команда канала</h3><div class="tm-sub">Роли и права — отдельно для каждого канала</div></div></div>
         <div class="tm-list">${rows}</div>`);
     sheet.querySelectorAll('[data-tmch]').forEach(el => {
         el.addEventListener('click', () => { hapticLight(); openTeamChannel(+el.dataset.tmch); });
     });
 }
+async function openTeam(fromBack) {
+    hapticLight();
+    if (fromBack && _tmChsCache && _tmChsCache.length > 1) { _tmRenderList(_tmChsCache); return; }
+    _tmFill(_tmLoadingHtml());
+    let r = null;
+    try { r = await apiRequest('/api/v1/team/overview'); } catch (e) {}
+    const chs = (r && r.channels) || [];
+    if (!chs.length) { closeTeam(); cabToast('Сначала подключи канал — роли настраиваются для подключённых каналов'); return; }
+    _tmChsCache = chs;
+    _tmMulti = chs.length > 1;
+    if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
+    _tmRenderList(chs);
+}
 
 async function openTeamChannel(chId) {
+    _tmFill(_tmLoadingHtml());
     let d = null;
     try { d = await apiRequest('/api/v1/team/' + chId + '?sync=1'); } catch (e) {}
-    if (!d || !d.ok) { cabToast('Не удалось загрузить команду канала'); return; }
+    if (!d || !d.ok) { closeTeam(); cabToast('Не удалось загрузить команду канала'); return; }
     if (d.my_role === 'owner' || d.my_role === 'trustee') _tmOwnerView(d); else _tmMemberView(d);
 }
 
@@ -1001,7 +1022,7 @@ function _tmOwnerView(d) {
             <i class="ti ti-chevron-down tm-chev"></i></div>
             <div class="tm-rolepick" id="tm-pick-${m.user_id}" style="display:none;"></div>`;
     }).join('');
-    const sheet = _tmSheet(`${_tmHead(d)}
+    const sheet = _tmFill(`${_tmHead(d)}
         <div class="tm-info">
         <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.</p></div>
         <div class="row"><span class="ic"><i class="ti ti-key"></i></span><p>Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.</p></div></div>
@@ -1100,7 +1121,7 @@ function _tmOwnerView(d) {
     });
     sheet.querySelector('#tm-refresh').addEventListener('click', () => { hapticLight(); openTeamChannel(chId); });
     const bk = sheet.querySelector('#tm-back');
-    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(); });
+    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(true); });
     localizeTree(sheet);
 }
 
@@ -1158,7 +1179,7 @@ function _tmMemberView(d) {
         const ok = !!p[a[0]];
         return `<div class="tm-abtn${ok ? ' ok' : ''}"><i class="ti ti-${a[1]}"></i> ${a[2]}${ok ? '' : ' <span class="tm-lk"><i class="ti ti-lock"></i></span>'}</div>`;
     }).join('');
-    const sheet = _tmSheet(`${_tmHead(d)}
+    const sheet = _tmFill(`${_tmHead(d)}
         <div class="tm-sect">Твой доступ к офферу</div>
         <div class="tm-mem tm-head"><span class="tm-rt ${role.cls} tm-rt-big"><i class="ti ti-${role.ic}"></i></span>
         <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-desc">${role.d || ''}</div></div></div>
@@ -1168,7 +1189,7 @@ function _tmMemberView(d) {
         <div class="tm-actions">${btns}</div>
         <div class="tm-mhint" style="display:block;">Оффер этого канала доступен в «Площадка → Мои офферы» с учётом твоей роли.</div>`);
     const bk = sheet.querySelector('#tm-back');
-    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(); });
+    if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(true); });
 }
 
 
