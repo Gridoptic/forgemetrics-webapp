@@ -6426,11 +6426,19 @@
     }
     var SEAM = 84;
     function stkSize(s, W) { return Math.max(32, Math.min(64 * (s.scale || 1), Math.min(220, W * 0.62))); }
-    function stkPos(s, W) {
+    function stkPos(s, W, head) {
         var size = stkSize(s, W);
         var odx = _touchDev ? STK_PHONE_DX : 0, ody = _touchDev ? STK_PHONE_DY : 0;
-        var cx = Math.max(10, Math.min((s.x != null ? s.x : 0.82) * W, W - 10));
-        var cy = Math.max(10, SEAM + (s.dy != null ? s.dy : 0));
+        var cx, cy;
+        if (head) {
+            size = Math.min(size, SEAM);
+            var half = size / 2;
+            cx = Math.max(half, Math.min((s.x != null ? s.x : 0.82) * W, W - half));
+            cy = Math.max(half, Math.min(SEAM + (s.dy != null ? s.dy : -SEAM / 2), SEAM - half));
+        } else {
+            cx = Math.max(10, Math.min((s.x != null ? s.x : 0.82) * W, W - 10));
+            cy = Math.max(10, SEAM + (s.dy != null ? s.dy : 0));
+        }
         return { size: size, left: cx - size / 2 + odx, top: cy - size / 2 + ody };
     }
     function stkMedia(s, animate) {
@@ -6438,9 +6446,9 @@
         if (s.kind === 'tgs') return '<span class="fmx-stk-lot" data-tgs="' + _esc(s.url) + '" data-anim="' + (animate ? 1 : 0) + '"><i class="ti ti-sticker"></i></span>';
         return '<img src="' + _esc(mediaAbs(s.url)) + '" alt="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">';
     }
-    function stkOverlay(s, W, animate, draggable) {
+    function stkOverlay(s, W, animate, draggable, head) {
         if (!s || !s.url) return '';
-        var p = stkPos(s, W);
+        var p = stkPos(s, W, head);
         var dm = s.dmode || 'bg';
         if (dm === 'top') dm = 'blend';
         var mcls = dm === 'blend' ? ' m-blend' : '';
@@ -6622,7 +6630,7 @@
                 if (e.target.closest && e.target.closest('[data-sdel]')) return;
                 var st = _stickers.filter(function (x) { return x.id === +cell.getAttribute('data-sid'); })[0];
                 if (!st) return;
-                var prev = _ss.sticker || { x: 0.82, anchor: 'seam', dy: 0, scale: 1, rot: 0, dmode: 'bg' };
+                var prev = _ss.sticker || { x: 0.82, anchor: 'seam', dy: _ss.fullBg ? 0 : -SEAM / 2, scale: 1, rot: 0, dmode: 'bg' };
                 _ss.sticker = { sticker_id: st.id, url: st.url, kind: st.kind, mode: 'free', x: prev.x, anchor: 'seam', dy: prev.dy, scale: prev.scale, rot: prev.rot, dmode: prev.dmode || 'bg' };
                 _ss.stickerSel = true;
                 _haptic('light'); renderStickerPane(); renderHero();
@@ -6737,14 +6745,14 @@
         if (!grab || !vis || !cardEl) return;
         function dims() { var r = cardEl.getBoundingClientRect(); var k = r.width ? r.width / 350 : 1; return { W: 350, H: Math.max(cardEl.offsetHeight || 0, SEAM + 40), rect: r, k: k }; }
         function applyBox() {
-            var d = dims(), p = stkPos(_ss.sticker, d.W);
+            var d = dims(), p = stkPos(_ss.sticker, d.W, !_ss.fullBg);
             [vis, grab].forEach(function (e) {
                 e.style.left = p.left + 'px'; e.style.top = p.top + 'px';
                 e.style.width = p.size + 'px'; e.style.height = p.size + 'px';
                 e.style.transform = 'rotate(' + (_ss.sticker.rot || 0) + 'deg)';
             });
         }
-        function setScale(want) { _ss.sticker.scale = Math.max(0.5, Math.min(3.4, want)); applyBox(); }
+        function setScale(want) { _ss.sticker.scale = Math.max(0.5, Math.min(!_ss.fullBg ? SEAM / 64 : 3.4, want)); applyBox(); }
         function setRot(deg) {
             var r = Math.round(deg) % 360;
             if (r > 180) r -= 360; if (r < -180) r += 360;
@@ -6752,9 +6760,15 @@
         }
         function center() { var d = dims(); return { cx: (_ss.sticker.x || 0.82) * d.W, cy: SEAM + (_ss.sticker.dy || 0) }; }
         function move(clientX, clientY) {
-            var d = dims();
-            var cx = Math.max(10, Math.min((clientX - d.rect.left) / d.k, d.W - 10));
-            var cy = Math.max(10, Math.min((clientY - d.rect.top) / d.k, d.H - 10));
+            var d = dims(), cx, cy;
+            if (!_ss.fullBg) {
+                var half = Math.min(stkSize(_ss.sticker, d.W), SEAM) / 2;
+                cx = Math.max(half, Math.min((clientX - d.rect.left) / d.k, d.W - half));
+                cy = Math.max(half, Math.min((clientY - d.rect.top) / d.k, SEAM - half));
+            } else {
+                cx = Math.max(10, Math.min((clientX - d.rect.left) / d.k, d.W - 10));
+                cy = Math.max(10, Math.min((clientY - d.rect.top) / d.k, d.H - 10));
+            }
             _ss.sticker.x = cx / d.W; _ss.sticker.dy = Math.round(cy - SEAM); _ss.sticker.anchor = 'seam';
             applyBox();
         }
@@ -6922,7 +6936,7 @@
             });
         } catch (e) {}
         if (_ss.sticker) {
-            card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, 350, true, true));
+            card.insertAdjacentHTML('beforeend', stkOverlay(_ss.sticker, 350, true, true, !_ss.fullBg));
             bindStickerDrag(card);
         }
         var st = card.querySelector('.fmx-star');
@@ -7897,7 +7911,7 @@
         }
         var _fxL = l.fx || null;
         var _canStkAnim = _fxL ? !!_fxL.anim_sticker : top;
-        var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, (_canStkAnim || !!l._preview) && stk.kind !== 'webp', false) : '';
+        var stkHtml = (stk && stk.url) ? stkOverlay(stk, 350, (_canStkAnim || !!l._preview) && stk.kind !== 'webp', false, !((l.effects_json || {}).fullBg)) : '';
         var star = _bookmarks[l.username] ? ' on' : '';
         var t = l.title || l.username || '?';
         var at = l.emoji_attachments_json || {};
