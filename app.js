@@ -1751,8 +1751,9 @@ function renderCabinet(d) {
 
     const _hstats = (u.channels_count != null) ? (function () {
         const chN = u.channels_count || 0, liN = u.listings_count || 0, dN = u.member_days || 0;
+        const chOf = (u.channels_limit && u.channels_limit < 999999) ? ` <s><span>из</span> ${cabNum(u.channels_limit)}</s>` : '';
         return `<div class="cab-pstats num">` +
-            `<div class="cab-ps"><div class="v">${cabNum(chN)}</div><div class="l">${plural3(chN, 'канал', 'канала', 'каналов')}</div></div>` +
+            `<div class="cab-ps"><div class="v">${cabNum(chN)}${chOf}</div><div class="l">${plural3(chN, 'канал', 'канала', 'каналов')}</div></div>` +
             `<div class="cab-ps"><div class="v">${cabNum(liN)}</div><div class="l">${plural3(liN, 'оффер', 'оффера', 'офферов')}</div></div>` +
             (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, 'день с нами', 'дня с нами', 'дней с нами')}</div></div>` : '') +
             `</div>`;

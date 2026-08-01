@@ -4135,6 +4135,7 @@ html.cs-modal-open {
 .cab-ps{padding:11px 6px 12px;text-align:center;min-width:0;}
 .cab-ps+.cab-ps{border-left:1px solid rgba(255,255,255,0.07);}
 .cab-ps .v{font-size:16px;font-weight:800;letter-spacing:-0.2px;}
+.cab-ps .v s{font-size:10.5px;font-weight:600;color:var(--text-tertiary);text-decoration:none;}
 .cab-ps .l{font-size:9.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-tertiary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 3px;}
 .cab-pstats+.cab-status,.cab-hrow+.cab-status{margin-top:15px;}
 .cab-usec{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:9.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-tertiary);font-weight:800;margin:13px 0 4px;}
