@@ -328,8 +328,11 @@
             '.fmx-sellcta-t .n{font-size:13.5px;font-weight:800;color:#5DCAA5;overflow-wrap:anywhere;}',
             '.fmx-sellcta-t .s{font-size:11px;color:#8990a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-sellcta-go{color:#5DCAA5;font-size:20px;flex:0 0 auto;}',
-            '.fmx-mkhelper{font-size:11.5px;color:#8990a8;line-height:1.45;margin:0 2px 11px;}',
-            '.fmx-mkhelper b{color:#e8e8ed;font-weight:700;}',
+            '.fmx-slimnote{display:flex;gap:8px;align-items:flex-start;font-size:10.5px;color:#7d84a0;line-height:1.45;padding:2px 2px 10px;}',
+            '.fmx-slimnote .fmx-slimdot{width:5px;height:5px;border-radius:50%;background:#5DCAA5;flex:0 0 auto;margin-top:4px;}',
+            '.fmx-catsrow{display:flex;gap:7px;align-items:stretch;margin-bottom:14px;}',
+            '.fmx-catsrow .fmx-search{flex:1 1 0;min-width:0;margin-bottom:0;}',
+            '.fmx-catsrow .fmx-vtog{flex:0 0 auto;align-items:center;}',
             '.fmx-reqlink{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:transparent;border:none;color:#8990a8;font-size:11.5px;font-weight:600;padding:2px 0 13px;cursor:pointer;}',
             '.fmx-reqlink i{font-size:14px;}',
             '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;scrollbar-gutter:stable;}',
@@ -355,13 +358,13 @@
             '.fmx-nichebtn span{flex:1;text-align:left;}',
             '.fmx-nichebtn-chev{color:#818cf8;font-size:16px;}',
             '.fmx-picks{display:flex;gap:7px;align-items:stretch;margin-bottom:9px;}',
-            '.fmx-picks>.fmx-nichebtn{width:auto;flex:1 1 0;min-width:0;margin-bottom:0;padding:11px 12px;gap:7px;font-size:12.5px;}',
+            '.fmx-picks>.fmx-nichebtn{width:auto;flex:1 1 0;min-width:0;margin-bottom:0;height:42px;padding:0 12px;gap:7px;font-size:12.5px;}',
             '.fmx-picks>.fmx-nichebtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-picks .fmx-nichebtn-chev{display:none;}',
-            '.fmx-campbtn{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:650;color:#9fe3cc;background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.34);transition:all 160ms;}',
+            '.fmx-campbtn{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 12px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:650;color:#9fe3cc;background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.34);transition:all 160ms;}',
             '.fmx-campbtn>i{font-size:15px;flex:0 0 auto;color:#5DCAA5;}',
             '.fmx-campbtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-adpickbtn{flex:0 0 auto;width:46px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#f5bf4f;font-family:inherit;background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border:1px solid rgba(245,191,79,0.34);transition:all 160ms;}',
+            '.fmx-adpickbtn{flex:0 0 auto;width:42px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#f5bf4f;font-family:inherit;background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border:1px solid rgba(245,191,79,0.34);transition:all 160ms;}',
             '.fmx-adpickbtn:active{background:linear-gradient(135deg,rgba(245,191,79,0.28),rgba(245,191,79,0.1));}',
             '.fmx-apk-ov{position:fixed;inset:0;z-index:100006;background:#0a0d18;background-image:radial-gradient(120% 46% at 50% -4%,rgba(99,102,241,0.12),transparent 60%);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}',
             '.fmx-apk-in{max-width:460px;margin:0 auto;padding:14px 14px 40px;}',
@@ -391,10 +394,10 @@
             '.fmx-apk-abtn{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.13);background:rgba(255,255,255,0.04);color:#c2c6d2;font-size:11.5px;font-weight:650;font-family:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-apk-pill{border:0.5px solid rgba(255,255,255,0.12);border-radius:99px;padding:6px 12px;color:#aab0c4;font-size:11px;background:transparent;font-family:inherit;cursor:pointer;white-space:nowrap;}',
             '.fmx-apk-pill.on{border-color:rgba(129,140,248,0.5);color:#c7ccf7;background:rgba(129,140,248,0.1);}',
-            '.fmx-bellbtn{flex:0 0 auto;width:46px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#818cf8;font-family:inherit;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.06));border:1px solid rgba(129,140,248,0.4);transition:all 160ms;}',
+            '.fmx-bellbtn{flex:0 0 auto;width:42px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#818cf8;font-family:inherit;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.06));border:1px solid rgba(129,140,248,0.4);transition:all 160ms;}',
             '.fmx-bellbtn:active{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));}',
             '.fmx-nichebtn.on{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));border-color:rgba(129,140,248,0.6);color:#fff;}',
-            '.fmx-sortbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}',
+            '.fmx-sortbar{display:flex;gap:7px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;}',
             '.fmx-seg{flex-shrink:0;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;padding:8px 13px;font-size:11.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 160ms;}',
             '.fmx-seg.on{background:rgba(99,102,241,0.14);color:#818cf8;border-color:rgba(99,102,241,0.3);}',
             '.fmx-search{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:9px 11px;margin-bottom:14px;}',
@@ -2176,8 +2179,8 @@
     function renderCatalog() {
         var host = el('fmx-main');
         if (_catalog == null && _catState === 'idle') loadCatalog();
-        var bar = sortBarHtml() + searchHtml('Поиск канала по теме…') + '<div class="fmx-toprow" style="justify-content:flex-end;">' + vtogHtml() + '</div>';
-        host.innerHTML = '<div class="fmx-note fmx-gr"><i class="ti ti-world-search"></i> Каналы со всего Telegram. Находи площадки под свою нишу и договаривайся с владельцами напрямую — сделки проходят между вами.</div>' + bar + '<div id="fmx-catBody"></div>';
+        var bar = sortBarHtml() + '<div class="fmx-catsrow">' + searchHtml('Поиск канала по теме…') + vtogHtml() + '</div>';
+        host.innerHTML = '<div class="fmx-slimnote"><span class="fmx-slimdot"></span><span>Проверенные метрики, антифрод и контакты. Сделки — напрямую с владельцем канала.</span></div>' + bar + '<div id="fmx-catBody"></div>';
         bindSort(); bindView();
         var _rfb = el('fmx-rfbtn'); if (_rfb) _rfb.addEventListener('click', openRadarFilters);
         _bindRegionChip(host, paintCatalogBody);
@@ -2196,7 +2199,6 @@
         _subTab = 'buy';
         host.innerHTML =
             searchHtml('Поиск по каналу или нише…') +
-            '<div class="fmx-mkhelper"><b>Покупаешь рекламу</b> — выбирай канал в ленте ниже.<br><b>Продаёшь</b> — выстави свой оффер:</div>' +
             _sellCtaHtml() +
             '<div id="fmx-sub"></div>';
         (function () { var si = host.querySelector('.fmx-search input'); if (si) { si.value = _q; si.addEventListener('input', function () { var v = si.value; clearTimeout(_qTimer); _qTimer = setTimeout(function () { _q = v.trim(); loadFeed(false); }, 350); }); } })();
@@ -2448,7 +2450,7 @@
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
             '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>Кампания</span></button>' +
-            _nicheBtnHtml() + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
+            _nicheBtnHtml(true) + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
         var cc = el('fmx-campCta');
@@ -8819,11 +8821,13 @@
         qsa(el('fmx-main'), '[data-adpick]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); openAdPick(); }); });
     }
 
-    function _nicheBtnHtml() {
+    function _nicheBtnHtml(short) {
         var pickActive = (_sort === 'niche' && _nicheSel);
         var s = String(_nicheSel || '');
-        var pickLabel = pickActive ? ('Ниша: ' + _esc(s.length > 14 ? s.slice(0, 13) + '…' : s)) : 'Выбрать нишу';
-        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
+        var pickLabel = pickActive
+            ? ((short ? '' : 'Ниша: ') + _esc(s.length > 14 ? s.slice(0, 13) + '…' : s))
+            : (short ? 'Ниша' : 'Выбрать нишу');
+        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"' + (short ? ' title="Выбрать нишу"' : '') + '><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
     }
     function _bellBtnHtml() {
         return '<button class="fmx-bellbtn" data-alerts="1" title="Умные уведомления"><i class="ti ti-bell"></i></button>';
