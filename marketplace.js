@@ -682,9 +682,6 @@
             '.fmr-id{flex:1;min-width:0;}',
             '.fmr-name{font-size:15px;font-weight:700;color:#e8e8ed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25;}',
             '.fmr-user{font-size:11px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}',
-            '.fmr-nicherow{margin-bottom:2px;}',
-            '.fmr-niche{display:inline-flex;align-items:center;gap:6px;background:rgba(129,140,248,0.14);border:0.5px solid rgba(129,140,248,0.3);color:#c7ccf7;font-size:12px;font-weight:600;border-radius:8px;padding:5px 10px;}',
-            '.fmr-niche i{color:#818cf8;font-size:14px;}',
             '.fmr-score{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}',
             '.fmr-scorelbl{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#565b73;display:flex;align-items:center;gap:4px;}',
             '.fmr-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#565b73;margin:13px 1px 5px;display:flex;align-items:center;gap:6px;}',
@@ -8664,8 +8661,8 @@
             var _pb = _actBadge(l);
             headHtml = '<div class="fmr-head">' + _rAv +
                 '<div class="fmr-id"><div class="fmr-name" style="' + fontStyle(l.title_style) + '">' + _esc(t) + '</div>' +
-                (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' : '') +
-                ((_pb || tagAsBadge) ? '<div class="fmr-pulse">' + _pb + (tagAsBadge ? promoBdg : '') + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+                (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' : '') + '</div>' + scoreHtml + '</div>' +
+                ((_pb || tagAsBadge) ? '<div class="fmr-pulse">' + _pb + (tagAsBadge ? promoBdg : '') + '</div>' : '');
         } else {
             headHtml = '<div class="fmx-crow">' + avHtml +
                 '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
@@ -8869,10 +8866,10 @@
             if (sr.length) struct = sr.join('');
         })();
         var _promoB = (_rGold && _rTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
-        var bIt = badgeItems(l).filter(function (it) { return it.k !== 'niche' && it.k !== 'live'; }).map(function (it) { return it.h; });
+        var bIt = badgeItems(l).filter(function (it) { return it.k !== 'live'; }).map(function (it) { return it.h; });
         if ((!l.badges || !l.badges.length) && subs && subs >= 100000) bIt.push('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>');
         var _ac = _audChip(l);
-        var pillsHtml = (bIt.length || _ac) ? '<div class="fmx-badges" style="margin:13px 0 11px;">' + bIt.join('') + _ac + '</div>' : '<div style="height:11px;"></div>';
+        var pillsHtml = (bIt.length || _ac) ? '<div class="fmx-badges" style="margin-top:10px;">' + bIt.join('') + _ac + '</div>' : '';
         var fmtHtml = (l.formats && l.formats.length) ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '';
         var _t = l.title || l.username || 'Канал', _acc = _accent(l);
         var avHtml = l.avatar_url
@@ -8882,16 +8879,15 @@
         var _pb = _actBadge(l);
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
-            (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
-            ((_pb || _promoB) ? '<div class="fmr-pulse">' + _pb + _promoB + '</div>' : '') + '</div>' + scoreHtml + '</div>';
-        var nicheHtml = l.niche ? '<div class="fmr-nicherow"><span class="fmr-niche"><i class="ti ti-tag"></i>' + _esc(l.niche) + '</span></div>' : '';
+            (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') + '</div>' + scoreHtml + '</div>' +
+            ((_pb || _promoB) ? '<div class="fmr-pulse">' + _pb + _promoB + '</div>' : '');
         return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
-            nicheHtml +
+            pillsHtml + fmtHtml +
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
-            _blk(3, flow) + pillsHtml + fmtHtml +
+            _blk(3, flow) + '<div style="height:11px;"></div>' +
             _ctcLinesHtml(l) +
             _moreBlock(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
