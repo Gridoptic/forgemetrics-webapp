@@ -2079,9 +2079,9 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые офферы</span></div>' +
             '<div class="fmx-entd">Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.32);color:#fbbf24;"><i class="ti ti-chart-histogram"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">пульс рынка</span></div>' +
-            '<div class="fmx-entd">Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.</div></div>' +
+            '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05));border:1px solid rgba(56,189,248,0.32);color:#38bdf8;"><i class="ti ti-chart-histogram"></i></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(56,189,248,0.18);color:#38bdf8;">пульс рынка</span></div>' +
+            '<div class="fmx-entd">Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>';
         if (_isMod()) {
             host.insertAdjacentHTML('beforeend',
