@@ -995,6 +995,14 @@
             '.fmx-t2cell.hot{animation:fmxThot 2.6s ease-in-out infinite;}',
             '@keyframes fmxThot{0%,100%{box-shadow:0 0 0 0 rgba(93,202,165,0);}50%{box-shadow:0 0 18px -2px rgba(93,202,165,0.45);}}',
             '.fmx-t2hint{font-size:9px;color:#565b73;margin-top:5px;line-height:1.5;}',
+            '.fmx-t2fold{position:relative;overflow:hidden;max-height:var(--fh);}',
+            '.fmx-t2fold.open{max-height:none;}',
+            '.fmx-t2fold:not(.open):after{content:\'\';position:absolute;left:-2px;right:-2px;bottom:0;height:54px;background:linear-gradient(180deg,rgba(10,13,24,0),rgba(10,13,24,0.88) 62%,#0a0d18 96%);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);pointer-events:none;}',
+            '.fmx-t2foldrow{display:flex;justify-content:center;margin:-14px 0 6px;position:relative;z-index:2;}',
+            '.fmx-t2fold.open+.fmx-t2foldrow{margin-top:6px;}',
+            '.fmx-t2foldbtn{display:flex;align-items:center;gap:6px;height:30px;padding:0 16px;border-radius:99px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:650;color:#c7ccf7;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.07));border:0.5px solid rgba(129,140,248,0.4);box-shadow:0 6px 18px -6px rgba(0,0,0,0.6);}',
+            '.fmx-t2foldbtn i{font-size:13px;color:#818cf8;}',
+            '.fmx-t2foldbtn:active{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.14));}',
             '.fmx-t2mv{display:grid;grid-template-columns:1fr 1fr;gap:7px;}',
             '.fmx-t2mvc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:9px 10px;min-width:0;}',
             '.fmx-t2mvc .h{font-size:8.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}',
@@ -1620,6 +1628,32 @@
         }).catch(function () { if (cb) cb(); });
     }
     var _term = null, _termTs = 0, _termRange = 30, _termSrc = 'all', _termSort = 'cpm', _termRefTimer = null;
+    var _tFold = { map: false, mv: false, list: false };
+    function _tFoldOpen(html, key, fh) {
+        return '<div class="fmx-t2fold' + (_tFold[key] ? ' open' : '') + '" data-tfold="' + key + '" style="--fh:' + fh + 'px;">' + html + '</div>' +
+            '<div class="fmx-t2foldrow" data-tfoldrow="' + key + '"><button class="fmx-t2foldbtn" data-tfoldbtn="' + key + '">' +
+            '<i class="ti ti-chevron-' + (_tFold[key] ? 'up' : 'down') + '"></i><span>' + (_tFold[key] ? 'Свернуть' : 'Развернуть') + '</span></button></div>';
+    }
+    function _tBindFolds(host) {
+        qsa(host, '[data-tfoldbtn]').forEach(function (b) {
+            var key = b.getAttribute('data-tfoldbtn');
+            var fold = host.querySelector('[data-tfold="' + key + '"]');
+            var row = host.querySelector('[data-tfoldrow="' + key + '"]');
+            if (!fold) return;
+            if (!_tFold[key] && fold.scrollHeight <= fold.clientHeight + 12) {
+                fold.classList.add('open');
+                if (row) row.style.display = 'none';
+                return;
+            }
+            b.addEventListener('click', function () {
+                _haptic('light');
+                _tFold[key] = !_tFold[key];
+                fold.classList.toggle('open', _tFold[key]);
+                b.innerHTML = '<i class="ti ti-chevron-' + (_tFold[key] ? 'up' : 'down') + '"></i><span>' + (_tFold[key] ? 'Свернуть' : 'Развернуть') + '</span>';
+                if (!_tFold[key]) { try { fold.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
+            });
+        });
+    }
     function loadTerminal(cb, force) {
         if (!force && _term && Date.now() - _termTs < 300000) { if (cb) cb(); return; }
         apiGet('/api/v1/marketplace/terminal').then(function (r) {
@@ -1812,7 +1846,7 @@
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
             html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
-            html += '<div class="fmx-t2map">' + hm.map(function (n, i) {
+            var _mapHtml = '<div class="fmx-t2map">' + hm.map(function (n, i) {
                 var cls = _tHeatClass(n.delta7, n.cpm_own);
                 var span = i === 0 ? 'grid-column:span 3;grid-row:span 2;' : (i <= 2 ? 'grid-column:span 3;' : 'grid-column:span 2;');
                 var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
@@ -1821,6 +1855,7 @@
                     '<div class="b"><span class="m">' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</span>' +
                     '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div></div>';
             }).join('') + '</div>';
+            html += _tFoldOpen(_mapHtml, 'map', 200);
             html += '<div class="fmx-t2hint">Размер — каналов в нише · цвет — динамика медианы CPM · «оценка» — мало своих данных</div>';
         }
 
@@ -1829,13 +1864,15 @@
             var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; });
             var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; });
             if (up.length || dn.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div><div class="fmx-t2mv">';
-                html += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
+                html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div>';
+                var _mvHtml = '<div class="fmx-t2mv">';
+                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
                     return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
                 }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div>';
-                html += '<div class="fmx-t2mvc"><div class="h fmx-tdn">▼ Остывают</div>' + (dn.length ? dn.map(function (n) {
+                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tdn">▼ Остывают</div>' + (dn.length ? dn.map(function (n) {
                     return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
                 }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div></div>';
+                html += _tFoldOpen(_mvHtml, 'mv', 148);
             }
         }
 
@@ -1856,7 +1893,7 @@
             if (_termSort === 'count') return (b.count || 0) - (a.count || 0);
             return (b.median_cpm || 0) - (a.median_cpm || 0);
         });
-        html += '<div class="fmx-t2list">' + list.map(function (n) {
+        var _listHtml = '<div class="fmx-t2list">' + list.map(function (n) {
             var col = n.delta7 == null ? '#8d93a8' : (n.delta7 >= 0 ? '#5DCAA5' : '#f06978');
             var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
@@ -1865,6 +1902,7 @@
                 '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
                 (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
         }).join('') + '</div>';
+        html += _tFoldOpen(_listHtml, 'list', 560);
 
         var evs = _term.events || [];
         if (evs.length) {
@@ -1875,6 +1913,7 @@
         html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики. Обновление раз в 5 минут.</div>';
 
         host.innerHTML = html;
+        _tBindFolds(host);
         var pb = el('fmx-pbell'); if (pb) pb.addEventListener('click', openNicheSubs);
         qsa(host, '[data-trange]').forEach(function (b) {
             b.addEventListener('click', function () { _termRange = parseInt(b.getAttribute('data-trange'), 10) || 30; _paintTerminal(); });
