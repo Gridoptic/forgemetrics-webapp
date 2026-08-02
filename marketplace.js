@@ -953,26 +953,93 @@
             '.fmx-tdot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,0.6);animation:fmxTpulse 1.8s infinite;}',
             '@keyframes fmxTpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.5);}70%{box-shadow:0 0 0 6px rgba(34,197,94,0);}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}}',
             '.fmx-tstamp{font-size:10.5px;color:#565b73;margin-left:auto;display:inline-flex;align-items:center;gap:4px;}',
-            '.fmx-tstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px;}',
-            '.fmx-tcell{background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015));border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:10px 11px;min-width:0;}',
-            '.fmx-tcl{font-size:8.5px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.3px;line-height:1.25;min-height:22px;}',
-            '.fmx-tcv{font-size:18px;font-weight:800;color:#fff;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-tcv small{font-size:11px;font-weight:700;color:#8990a8;}',
-            '.fmx-tvol{font-size:10.5px;color:#8990a8;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px;}',
-            '.fmx-tvol b{color:#c9cbe0;font-weight:700;font-variant-numeric:tabular-nums;}',
-            '.fmx-tvol i{font-size:12px;}',
             '.fmx-psec{font-size:11px;font-weight:700;color:#8990a8;text-transform:uppercase;letter-spacing:0.4px;margin:18px 0 9px;display:flex;align-items:center;gap:6px;}',
-            '.fmx-pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}',
-            '.fmx-ptile{border:0.5px solid;border-radius:13px;padding:11px 12px;background:rgba(255,255,255,0.018);min-width:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}',
-            '.fmx-pthead{display:flex;align-items:center;gap:6px;min-width:0;}',
-            '.fmx-ptdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}',
-            '.fmx-ptn{font-size:11px;font-weight:700;color:#e8e8ed;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}',
-            '.fmx-ptv{font-size:16px;font-weight:800;color:#fff;margin:6px 0 4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-ptu{font-size:10px;font-weight:700;color:#8990a8;}',
-            '.fmx-pbar{height:3px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin:0 0 7px;}',
-            '.fmx-pbarf{height:100%;border-radius:3px;}',
-            '.fmx-ptmeta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:9.5px;color:#8990a8;font-variant-numeric:tabular-nums;}',
-            '.fmx-pts{font-size:9.5px;color:#8990a8;}',
+            '.fmx-tup{color:#5DCAA5;font-weight:700;}',
+            '.fmx-tdn{color:#f06978;font-weight:700;}',
+            '.fmx-tfl{color:#8d93a8;}',
+            '.fmx-t2tape{position:relative;overflow:hidden;border-radius:10px;background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);margin-bottom:11px;height:30px;}',
+            '.fmx-t2tapein{display:flex;gap:22px;align-items:center;height:30px;white-space:nowrap;width:max-content;animation:fmxTtick 28s linear infinite;padding:0 10px;}',
+            '@keyframes fmxTtick{to{transform:translateX(-50%);}}',
+            '.fmx-t2tk{font-size:11px;color:#aab0c4;display:flex;gap:6px;align-items:center;}',
+            '.fmx-t2tk b{color:#e8e8ed;font-weight:700;text-transform:capitalize;}',
+            '.fmx-t2hero{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:13px;margin-bottom:9px;}',
+            '.fmx-t2hl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
+            '.fmx-t2hv{display:flex;align-items:baseline;gap:9px;margin-top:4px;}',
+            '.fmx-t2hv b{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;}',
+            '.fmx-t2hd{font-size:11.5px;font-weight:800;}',
+            '.fmx-t2rng{display:flex;gap:4px;}',
+            '.fmx-t2rng span{font-size:9.5px;font-weight:700;color:#6b7088;padding:3px 8px;border-radius:7px;border:0.5px solid transparent;cursor:pointer;}',
+            '.fmx-t2rng .on{color:#c7ccf7;background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.45);}',
+            '.fmx-t2line{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:700;stroke-dashoffset:700;animation:fmxTdraw 1.4s ease-out forwards;}',
+            '@keyframes fmxTdraw{to{stroke-dashoffset:0;}}',
+            '.fmx-t2pt{animation:fmxTpulse 1.8s infinite;}',
+            '.fmx-t2ax{display:flex;justify-content:space-between;font-size:8px;color:#3f4358;margin-top:3px;}',
+            '.fmx-t2nochart{font-size:10.5px;color:#565b73;padding:22px 0;text-align:center;}',
+            '.fmx-t2trow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}',
+            '.fmx-t2tc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:8px 6px;text-align:center;min-width:0;}',
+            '.fmx-t2tc .v{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2tc .l{font-size:8px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2tc .d{font-size:8.5px;margin-top:1px;}',
+            '.fmx-t2map{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:46px;gap:3px;}',
+            '.fmx-t2cell{border-radius:9px;padding:6px 7px;min-width:0;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;}',
+            '.fmx-t2cell .n{font-size:9.5px;font-weight:700;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:capitalize;}',
+            '.fmx-t2cell .b{display:flex;justify-content:space-between;align-items:baseline;gap:4px;min-width:0;}',
+            '.fmx-t2cell .m{font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2cell .p{font-size:8.5px;flex:0 0 auto;}',
+            '.fmx-t2cell.g1{background:rgba(93,202,165,0.30);border:0.5px solid rgba(93,202,165,0.5);}',
+            '.fmx-t2cell.g2{background:rgba(93,202,165,0.18);border:0.5px solid rgba(93,202,165,0.35);}',
+            '.fmx-t2cell.g3{background:rgba(93,202,165,0.09);border:0.5px solid rgba(93,202,165,0.22);}',
+            '.fmx-t2cell.r1{background:rgba(240,105,120,0.26);border:0.5px solid rgba(240,105,120,0.5);}',
+            '.fmx-t2cell.r2{background:rgba(240,105,120,0.13);border:0.5px solid rgba(240,105,120,0.3);}',
+            '.fmx-t2cell.n0{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);}',
+            '.fmx-t2cell.hot{animation:fmxThot 2.6s ease-in-out infinite;}',
+            '@keyframes fmxThot{0%,100%{box-shadow:0 0 0 0 rgba(93,202,165,0);}50%{box-shadow:0 0 18px -2px rgba(93,202,165,0.45);}}',
+            '.fmx-t2hint{font-size:9px;color:#565b73;margin-top:5px;line-height:1.5;}',
+            '.fmx-t2mv{display:grid;grid-template-columns:1fr 1fr;gap:7px;}',
+            '.fmx-t2mvc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:9px 10px;min-width:0;}',
+            '.fmx-t2mvc .h{font-size:8.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}',
+            '.fmx-t2mvc .r{display:flex;align-items:center;gap:6px;font-size:10.5px;padding:3px 0;min-width:0;cursor:pointer;}',
+            '.fmx-t2mvc .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#c2c6d2;text-transform:capitalize;}',
+            '.fmx-t2chips{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none;}',
+            '.fmx-t2chips::-webkit-scrollbar{display:none;}',
+            '.fmx-t2chip{flex:0 0 auto;height:28px;display:flex;align-items:center;padding:0 11px;border-radius:99px;font-size:10.5px;font-weight:600;color:#aab0c4;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.11);cursor:pointer;}',
+            '.fmx-t2chip.on{color:#c7ccf7;background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.5);}',
+            '.fmx-t2list .lr{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:0.5px solid rgba(255,255,255,0.05);min-width:0;cursor:pointer;}',
+            '.fmx-t2list .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}',
+            '.fmx-t2list .nm{flex:1;min-width:0;}',
+            '.fmx-t2list .nm b{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:capitalize;}',
+            '.fmx-t2list .nm span{font-size:9px;color:#565b73;}',
+            '.fmx-t2list .cpm{flex:0 0 auto;text-align:right;min-width:64px;}',
+            '.fmx-t2list .cpm b{font-size:12px;font-variant-numeric:tabular-nums;display:block;}',
+            '.fmx-t2list .cpm span{font-size:9.5px;}',
+            '.fmx-t2spark{flex:0 0 auto;}',
+            '.fmx-t2nospark{flex:0 0 auto;width:52px;text-align:center;font-size:8.5px;color:#565b73;}',
+            '.fmx-t2ev{display:flex;gap:9px;padding:8px 2px;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11px;line-height:1.45;color:#a7aec6;}',
+            '.fmx-t2ev.fresh{animation:fmxTevin 0.7s ease-out;}',
+            '@keyframes fmxTevin{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}',
+            '.fmx-t2ev b{color:#e8e8ed;}',
+            '.fmx-t2ic{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto;}',
+            '.fmx-t2ic.g{background:rgba(93,202,165,0.12);color:#5DCAA5;}',
+            '.fmx-t2ic.i{background:rgba(129,140,248,0.12);color:#a5b4fc;}',
+            '.fmx-t2ic.a{background:rgba(245,191,79,0.12);color:#f5bf4f;}',
+            '.fmx-t2ic.r{background:rgba(240,105,120,0.12);color:#f06978;}',
+            '.fmx-t2tm{font-size:9px;color:#565b73;margin-top:2px;}',
+            '.fmx-t2kv{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;}',
+            '.fmx-t2kv .k{background:rgba(255,255,255,0.03);border-radius:10px;padding:7px 8px;min-width:0;}',
+            '.fmx-t2kv .a{font-size:8px;color:#565b73;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2kv .b{font-size:12px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2hm{display:grid;grid-template-columns:26px repeat(12,1fr);gap:2px;}',
+            '.fmx-t2hm .hl{font-size:8px;color:#565b73;display:flex;align-items:center;}',
+            '.fmx-t2hm .hm{height:13px;border-radius:3px;}',
+            '.fmx-t2hm .h0{background:rgba(129,140,248,0.05);}',
+            '.fmx-t2hm .h1{background:rgba(129,140,248,0.14);}',
+            '.fmx-t2hm .h2{background:rgba(129,140,248,0.30);}',
+            '.fmx-t2hm .h3{background:rgba(129,140,248,0.52);}',
+            '.fmx-t2hm .h4{background:rgba(129,140,248,0.8);}',
+            '.fmx-t2top{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11px;}',
+            '.fmx-t2top .av{width:24px;height:24px;border-radius:50%;background:#151a30;color:#a5b4fc;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}',
+            '.fmx-t2top .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-t2top .cp{flex:0 0 auto;font-weight:700;color:#c2c6d2;font-variant-numeric:tabular-nums;}',
             '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
             '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
             '.fmx-frzTag{position:absolute;top:8px;right:36px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
@@ -1528,7 +1595,7 @@
         if (ti && su) {
             if (t === 'catalog') { _mqText(ti, 'Радар каналов'); _mqText(su, 'Все каналы, собранные ботом'); su.style.display = ''; }
             else if (t === 'market') { _mqText(ti, 'Площадка'); _mqText(su, 'ForgeMetrics · живые офферы'); su.style.display = ''; }
-            else if (t === 'pulse') { _mqText(ti, 'Рыночный терминал'); _mqText(su, 'Медианы CPM по нишам'); su.style.display = ''; }
+            else if (t === 'pulse') { _mqText(ti, 'Рыночный терминал'); _mqText(su, 'Индекс CPM, теплокарта и события рынка'); su.style.display = ''; }
             else if (t === 'mod') { _mqText(ti, 'Модерация'); _mqText(su, 'Только для владельца'); su.style.display = ''; }
             else { _mqText(ti, 'Рынок рекламы'); _mqText(su, ''); su.style.display = 'none'; }
         }
@@ -1550,62 +1617,78 @@
             if (cb) cb();
         }).catch(function () { if (cb) cb(); });
     }
-    function _heatBorder(v, min, max) {
-        if (v == null || max <= min) return 'rgba(255,255,255,0.08)';
-        var t = (v - min) / (max - min);
-        return 'hsla(' + Math.round(145 - t * 145) + ',65%,55%,0.45)';
+    var _term = null, _termTs = 0, _termRange = 30, _termSrc = 'all', _termSort = 'cpm', _termRefTimer = null;
+    function loadTerminal(cb, force) {
+        if (!force && _term && Date.now() - _termTs < 300000) { if (cb) cb(); return; }
+        apiGet('/api/v1/marketplace/terminal').then(function (r) {
+            if (r && r.ok) { _term = r; _termTs = Date.now(); }
+            if (cb) cb();
+        }).catch(function () { if (cb) cb(); });
     }
-    function _pmedian(arr) {
-        var a = arr.filter(function (v) { return v != null; }).sort(function (x, y) { return x - y; });
-        if (!a.length) return null;
-        var m = Math.floor(a.length / 2);
-        return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+    function _tFmtDelta(d) {
+        if (d == null) return '';
+        var s = String(Math.abs(d)).replace('.', ',');
+        return d > 0 ? '<span class="fmx-tup">▲' + s + '%</span>' : (d < 0 ? '<span class="fmx-tdn">▼' + s + '%</span>' : '<span class="fmx-tfl">0%</span>');
     }
-    function pulseTiles(items, kindLabel) {
-        var cpms = items.map(function (x) { return x.median_cpm; }).filter(function (v) { return v != null; });
-        var mn = cpms.length ? Math.min.apply(null, cpms) : 0, mx = cpms.length ? Math.max.apply(null, cpms) : 1;
-        return '<div class="fmx-pgrid">' + items.map(function (x) {
-            var has = x.median_cpm != null;
-            var col = _heatBorder(x.median_cpm, mn, mx);
-            var gauge = has ? (mx > mn ? Math.round((mx - x.median_cpm) / (mx - mn) * 100) : 100) : 0;
-            var meta = [];
-            if (x.median_price) meta.push('<span>от ' + _num(x.median_price) + ' ₽</span>');
-            if (x.median_er != null && has) meta.push('<span>ER ' + x.median_er + '%</span>');
-            meta.push('<span>' + x.count + ' ' + kindLabel + '</span>');
-            return '<div class="fmx-ptile" style="border-color:' + col + ';">' +
-                '<div class="fmx-pthead"><span class="fmx-ptdot" style="background:' + (has ? col : 'rgba(255,255,255,0.15)') + ';"></span><span class="fmx-ptn">' + _esc(x.niche) + '</span></div>' +
-                '<div class="fmx-ptv">' + (has ? _num(x.median_cpm) + ' <span class="fmx-ptu">₽ · CPM' + (x.cpm_own === false ? ' · оценка' : '') + '</span>' : (x.median_er != null ? x.median_er + ' <span class="fmx-ptu">% · ER</span>' : '<span class="fmx-ptu">нет данных</span>')) + '</div>' +
-                (has ? '<div class="fmx-pbar"><div class="fmx-pbarf" style="width:' + gauge + '%;background:' + col + ';"></div></div>' : '') +
-                '<div class="fmx-ptmeta">' + meta.join('') + '</div>' +
-                '</div>';
-        }).join('') + '</div>';
+    function _tSpark(vals, color) {
+        if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
+        var w = 52, h = 18, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+        var span = (mx - mn) || 1;
+        var pts = vals.map(function (v, i) {
+            return (i / (vals.length - 1) * w).toFixed(1) + ',' + (h - 2 - (v - mn) / span * (h - 4)).toFixed(1);
+        }).join(' ');
+        return '<svg class="fmx-t2spark" width="52" height="18" viewBox="0 0 52 18"><polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.6"/></svg>';
     }
-    function _termHead() {
-        var ago = '';
-        if (_pulse.generated_at) {
-            var gm = Math.round((Date.now() - Date.parse(_pulse.generated_at)) / 60000);
-            if (isNaN(gm) || gm < 0) gm = 0;
-            ago = gm <= 0 ? 'обновлено только что' : 'обновлено ' + gm + ' мин назад';
-        }
-        var allC = [], niches = {};
-        (_pulse.market || []).concat(_pulse.base || []).forEach(function (x) {
-            if (x.median_cpm != null) allC.push(x.median_cpm);
-            if (x.niche) niches[String(x.niche).toLowerCase()] = 1;
+    function _tArea(series, color, gid) {
+        if (!series || series.length < 3) return '<div class="fmx-t2nochart">График появится с накоплением данных</div>';
+        var w = 340, h = 84, vals = series.map(function (p) { return p.v != null ? p.v : p.cpm; });
+        var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+        var span = (mx - mn) || 1;
+        var pts = vals.map(function (v, i) {
+            return [(i / (vals.length - 1) * w), (h - 6 - (v - mn) / span * (h - 18))];
         });
-        var medCpm = _pmedian(allC), nCount = Object.keys(niches).length;
-        var t = _pulse.today || {}, todayTotal = (t.listings || 0) + (t.requests || 0) + (t.contacts || 0);
-        var h = '<div class="fmx-thead"><span class="fmx-tlive"><span class="fmx-tdot"></span>live</span>' +
-            (ago ? '<span class="fmx-tstamp"><i class="ti ti-refresh"></i>' + ago + '</span>' : '') + '</div>';
-        h += '<div class="fmx-tstrip">' +
-            '<div class="fmx-tcell"><div class="fmx-tcl">Медиана CPM</div><div class="fmx-tcv">' + (medCpm != null ? _num(medCpm) + ' <small>₽</small>' : '—') + '</div></div>' +
-            '<div class="fmx-tcell"><div class="fmx-tcl">Ниш в анализе</div><div class="fmx-tcv">' + (nCount || '—') + '</div></div>' +
-            '<div class="fmx-tcell"><div class="fmx-tcl">Событий сегодня</div><div class="fmx-tcv">' + (todayTotal || '—') + '</div></div>' +
-            '</div>';
-        var vol = [];
-        if (_pulse.market_total) vol.push('<i class="ti ti-arrows-exchange" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'оффер', 'оффера', 'офферов'));
-        if (_pulse.base_total) vol.push('<i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
-        if (vol.length) h += '<div class="fmx-tvol">' + vol.join('<span style="color:#3a3f52;">|</span>') + '</div>';
-        return h;
+        var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+        var area = line + ' L' + w + ',' + h + ' L0,' + h + ' Z';
+        var last = pts[pts.length - 1];
+        var d0 = series[0].day, d1 = series[series.length - 1].day;
+        function _dl(iso) { try { var p = iso.split('-'); return parseInt(p[2], 10) + '.' + p[1]; } catch (e) { return ''; } }
+        return '<svg viewBox="0 0 340 84" preserveAspectRatio="none" style="display:block;width:100%;">' +
+            '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.30"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+            '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
+            '<path class="fmx-t2line" d="' + line + '" style="stroke:' + color + ';"/>' +
+            '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
+            '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span><span>сегодня</span></div>';
+    }
+    function _tHeatClass(d, own) {
+        if (own === false || d == null) return 'n0';
+        if (d >= 5) return 'g1'; if (d >= 1.5) return 'g2'; if (d > 0) return 'g3';
+        if (d <= -5) return 'r1'; if (d < 0) return 'r2';
+        return 'n0';
+    }
+    var _EV_META = {
+        spike: { ic: 'ti-trending-up', cls: 'g' }, offer: { ic: 'ti-sparkles', cls: 'i' },
+        hot: { ic: 'ti-flame', cls: 'a' }, suspect: { ic: 'ti-alert-triangle', cls: 'r' },
+        interest: { ic: 'ti-chart-arrows-vertical', cls: 'i' }
+    };
+    function _tEventHtml(e, isFirst) {
+        var m = _EV_META[e.type] || { ic: 'ti-point', cls: 'i' };
+        var niche = e.niche ? '«' + _esc(e.niche) + '»' : '';
+        var txt = '';
+        if (e.type === 'spike') {
+            txt = '<b>Всплеск подписчиков</b> в нише ' + niche + (e.pct ? ': +' + e.pct + '%' + (e.days ? ' за ' + e.days + ' дн' : '') : '') +
+                (e.verdict === 'ok' ? ' — охват растёт вместе с базой' : (e.verdict === 'bad' ? ' — охват не растёт, возможна накрутка' : ' — стоит проверить охват'));
+        } else if (e.type === 'offer') {
+            txt = '<b>Новый оффер</b> в нише ' + niche + (e.price ? ' — от ' + _num(e.price) + ' ₽' : '');
+        } else if (e.type === 'hot') {
+            txt = '<b>Горящая скидка −' + e.pct + '%</b> на размещение в нише ' + niche;
+        } else if (e.type === 'suspect') {
+            txt = '<b>Антифрод-метка</b>: канал в нише ' + niche + ' — подозрительная кривая просмотров';
+        } else if (e.type === 'interest') {
+            txt = '<b>Интерес к нише ' + niche + ' ×' + String(e.ratio).replace('.', ',') + '</b> за неделю — по просмотрам офферов';
+        }
+        return '<div class="fmx-t2ev' + (isFirst ? ' fresh' : '') + '"><span class="fmx-t2ic ' + m.cls + '"><i class="ti ' + m.ic + '"></i></span>' +
+            '<div>' + txt + '<div class="fmx-t2tm">' + _ago(e.at) + '</div></div></div>';
     }
     var _pulseHide = false;
     function todayLine() {
@@ -1620,25 +1703,224 @@
         if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
         return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-discount-2" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
     }
+    function _tBaseNiches() {
+        var seen = {}, out = [];
+        (_term.niches || []).forEach(function (n) {
+            if (n.source !== 'base') return;
+            var k = String(n.niche || '').toLowerCase();
+            if (!k || seen[k]) return; seen[k] = 1; out.push(n);
+        });
+        return out;
+    }
     function renderPulse() {
         var host = el('fmx-main');
         host.innerHTML = loadHtml();
-        loadPulse(function () {
+        loadTerminal(function () {
             if (_mainTab !== 'pulse') return;
-            if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не удалось загрузить данные — попробуй позже.'); return; }
-            var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
-            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-histogram', 'Рынок набирает обороты', 'Как только на Площадке и в Радаре появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
-            var html = _termHead();
-            html += '<button class="fmx-btn" id="fmx-pbell" style="width:100%;margin:2px 0 14px;"><i class="ti ti-bell"></i> Следить за нишей — сообщим о сдвиге CPM</button>';
-            if (_pulse.market && _pulse.market.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-arrows-exchange" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
+            _paintTerminal();
+            clearTimeout(_termRefTimer);
+            _termRefTimer = setTimeout(function _ref() {
+                if (_mainTab !== 'pulse' || !el('fmx-main')) return;
+                loadTerminal(function () {
+                    if (_mainTab !== 'pulse' || !el('fmx-main')) return;
+                    _paintTerminal();
+                    _termRefTimer = setTimeout(_ref, 305000);
+                }, true);
+            }, 305000);
+        });
+    }
+    function _paintTerminal() {
+        var host = el('fmx-main'); if (!host) return;
+        if (!_term) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не удалось загрузить данные — попробуй позже.'); return; }
+        var t = _term.totals || {}, idx = _term.index || {};
+        var baseN = _tBaseNiches();
+        if (!baseN.length && !(_term.niches || []).length) {
+            host.innerHTML = emptyHtml('ti-chart-histogram', 'Рынок набирает обороты', 'Как только в базе появятся каналы с нишами, здесь оживут цены, графики и события рынка.');
+            return;
+        }
+        var ago = '';
+        if (_term.generated_at) {
+            var gm = Math.round((Date.now() - Date.parse(_term.generated_at)) / 60000);
+            if (!isNaN(gm) && gm >= 0) ago = gm <= 0 ? 'обновлено только что' : 'обновлено ' + gm + ' мин назад';
+        }
+        var html = '<div class="fmx-thead"><span class="fmx-tlive"><span class="fmx-tdot"></span>live</span>' +
+            (ago ? '<span class="fmx-tstamp"><i class="ti ti-refresh"></i>' + ago + '</span>' : '') +
+            '<button class="fmx-bellbtn" id="fmx-pbell" title="Следить за нишей — сообщим о сдвиге CPM" style="margin-left:auto;width:34px;height:34px;font-size:14px;"><i class="ti ti-bell"></i></button></div>';
+
+        var tickerN = baseN.slice(0, 8).filter(function (n) { return n.median_cpm != null; });
+        if (tickerN.length >= 3) {
+            var tk = tickerN.map(function (n) {
+                return '<span class="fmx-t2tk"><b>' + _esc(n.niche) + '</b> ' + _num(n.median_cpm) + ' ₽ ' + (_tFmtDelta(n.delta7) || '<span class="fmx-tfl">·</span>') + '</span>';
+            }).join('');
+            html += '<div class="fmx-t2tape"><div class="fmx-t2tapein">' + tk + tk + '</div></div>';
+        }
+
+        var series = (idx.series || []);
+        if (series.length > _termRange) series = series.slice(-_termRange);
+        html += '<div class="fmx-t2hero">' +
+            '<div style="display:flex;align-items:flex-start;">' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">Индекс CPM рынка</div>' +
+            '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
+            (idx.delta7 != null ? '<span class="fmx-t2hd">' + _tFmtDelta(idx.delta7) + ' за 7 дн</span>' : '') + '</div></div>' +
+            '<div class="fmx-t2rng">' + [7, 30, 90].map(function (r) {
+                return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
+            }).join('') + '</div></div>' +
+            '<div style="margin-top:8px;">' + _tArea(series, '#818cf8', 'fmxTgIdx') + '</div></div>';
+
+        html += '<div class="fmx-t2trow">' +
+            '<div class="fmx-t2tc"><div class="v">' + _num(t.base_total || 0) + '</div><div class="l">каналов</div>' + (t.base_new_week ? '<div class="d fmx-tup">+' + t.base_new_week + ' нед</div>' : '') + '</div>' +
+            '<div class="fmx-t2tc"><div class="v">' + _num(t.market_total || 0) + '</div><div class="l">офферов</div>' + (t.offers_new_week ? '<div class="d fmx-tup">+' + t.offers_new_week + ' нед</div>' : '') + '</div>' +
+            '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">охват базы</div></div>' +
+            '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">событий 24ч</div></div></div>';
+
+        var hm = baseN.slice(0, 9);
+        if (hm.length >= 4) {
+            var hottest = null;
+            hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
+            html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
+            html += '<div class="fmx-t2map">' + hm.map(function (n, i) {
+                var cls = _tHeatClass(n.delta7, n.cpm_own);
+                var span = i === 0 ? 'grid-column:span 3;grid-row:span 2;' : (i <= 2 ? 'grid-column:span 3;' : 'grid-column:span 2;');
+                var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
+                return '<div class="fmx-t2cell ' + cls + hot + '" style="' + span + '" data-tniche="' + _esc(n.niche) + '">' +
+                    '<span class="n">' + _esc(n.niche) + '</span>' +
+                    '<div class="b"><span class="m">' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</span>' +
+                    '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div></div>';
+            }).join('') + '</div>';
+            html += '<div class="fmx-t2hint">Размер — каналов в нише · цвет — динамика медианы CPM · «оценка» — мало своих данных</div>';
+        }
+
+        var movers = baseN.filter(function (n) { return n.delta7 != null; });
+        if (movers.length >= 2) {
+            var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; }).slice(0, 3);
+            var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; }).slice(0, 3);
+            if (up.length || dn.length) {
+                html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div><div class="fmx-t2mv">';
+                html += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
+                    return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
+                }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div>';
+                html += '<div class="fmx-t2mvc"><div class="h fmx-tdn">▼ Остывают</div>' + (dn.length ? dn.map(function (n) {
+                    return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
+                }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div></div>';
             }
-            if (_pulse.base && _pulse.base.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар каналов · публичная статистика</div>' + pulseTiles(_pulse.base, 'кан.');
+        }
+
+        html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши</div>';
+        html += '<div class="fmx-t2chips">' + [
+            ['all', 'Все источники'], ['market', 'Площадка · точные'], ['base', 'Радар · публичные']
+        ].map(function (c) { return '<span class="fmx-t2chip' + (_termSrc === c[0] ? ' on' : '') + '" data-tsrc="' + c[0] + '">' + c[1] + '</span>'; }).join('') + '</div>';
+        html += '<div class="fmx-t2chips">' + [
+            ['cpm', 'По CPM'], ['delta', 'По росту'], ['count', 'По каналам']
+        ].map(function (c) { return '<span class="fmx-t2chip' + (_termSort === c[0] ? ' on' : '') + '" data-tsort="' + c[0] + '">' + c[1] + '</span>'; }).join('') + '</div>';
+
+        var list = (_term.niches || []).filter(function (n) { return _termSrc === 'all' ? n.source === 'base' : n.source === _termSrc; });
+        list.sort(function (a, b) {
+            if (_termSort === 'delta') return (b.delta7 == null ? -999 : b.delta7) - (a.delta7 == null ? -999 : a.delta7);
+            if (_termSort === 'count') return (b.count || 0) - (a.count || 0);
+            return (b.median_cpm || 0) - (a.median_cpm || 0);
+        });
+        html += '<div class="fmx-t2list">' + list.slice(0, 14).map(function (n) {
+            var col = n.delta7 == null ? '#8d93a8' : (n.delta7 >= 0 ? '#5DCAA5' : '#f06978');
+            var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
+            return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
+                '<span class="nm"><b>' + _esc(n.niche) + '</b><span>' + n.count + ' ' + kind + (n.median_er != null ? ' · ER ' + String(n.median_er).replace('.', ',') + '%' : '') + '</span></span>' +
+                _tSpark(n.spark, col) +
+                '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
+                (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
+        }).join('') + '</div>';
+
+        var evs = _term.events || [];
+        if (evs.length) {
+            html += '<div class="fmx-psec"><i class="ti ti-bolt" style="color:#f5bf4f;"></i> События рынка</div>';
+            html += evs.slice(0, 12).map(function (e, i) { return _tEventHtml(e, i === 0); }).join('');
+        }
+
+        html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики. Обновление раз в 5 минут.</div>';
+
+        host.innerHTML = html;
+        var pb = el('fmx-pbell'); if (pb) pb.addEventListener('click', openNicheSubs);
+        qsa(host, '[data-trange]').forEach(function (b) {
+            b.addEventListener('click', function () { _termRange = parseInt(b.getAttribute('data-trange'), 10) || 30; _paintTerminal(); });
+        });
+        qsa(host, '[data-tsrc]').forEach(function (b) {
+            b.addEventListener('click', function () { _termSrc = b.getAttribute('data-tsrc'); _paintTerminal(); });
+        });
+        qsa(host, '[data-tsort]').forEach(function (b) {
+            b.addEventListener('click', function () { _termSort = b.getAttribute('data-tsort'); _paintTerminal(); });
+        });
+        qsa(host, '[data-tniche]').forEach(function (b) {
+            b.addEventListener('click', function () { _haptic('light'); openTermNiche(b.getAttribute('data-tniche')); });
+        });
+    }
+    function openTermNiche(name) {
+        if (!name) return;
+        var old = el('fmx-tnBg'); if (old) old.remove();
+        var ov = document.createElement('div'); ov.id = 'fmx-tnBg'; ov.className = 'fmx-apk-ov';
+        ov.innerHTML = '<div class="fmx-apk-in">' +
+            '<div class="fmx-apk-hd"><div class="fmx-apk-tile" style="background:linear-gradient(135deg,rgba(129,140,248,0.16),rgba(129,140,248,0.05));border-color:rgba(129,140,248,0.32);color:#818cf8;"><i class="ti ti-chart-histogram"></i></div>' +
+            '<b>' + _esc(name) + '</b>' +
+            '<button class="fmx-apk-x" id="fmx-tnX"><i class="ti ti-x"></i></button></div>' +
+            '<div id="fmx-tnBody">' + loadHtml() + '</div></div>';
+        document.body.appendChild(ov);
+        el('fmx-tnX').addEventListener('click', function () { _haptic('light'); ov.remove(); });
+        apiGet('/api/v1/marketplace/terminal/niche?name=' + encodeURIComponent(name)).then(function (r) {
+            var b = el('fmx-tnBody'); if (!b) return;
+            if (!r || !r.ok) { b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Попробуй ещё раз позже.'); return; }
+            var ser = (r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || [];
+            var cur = ser.length ? ser[ser.length - 1].cpm : null;
+            var d7 = null;
+            if (ser.length >= 2) {
+                for (var i = ser.length - 2; i >= 0; i--) {
+                    var dd = Math.round((Date.parse(ser[ser.length - 1].day) - Date.parse(ser[i].day)) / 86400000);
+                    if (dd >= 5 && dd <= 10) { if (ser[i].cpm > 0) d7 = Math.round((cur - ser[i].cpm) / ser[i].cpm * 1000) / 10; break; }
+                }
             }
-            html += '<div style="font-size:10px;color:#565b73;line-height:1.65;margin-top:16px;">Показаны медианы по нишам. <b style="color:#8990a8;">Зелёные</b> — CPM ниже медианы (выгоднее покупателю), <b style="color:#8990a8;">красные</b> — выше. Площадка — реальные цены владельцев офферов. Радар — наш расчёт цены по нише и охвату канала, а не сделки: это ориентир, а не рыночная статистика. Обновление раз в 5 минут. Тренды и история цен появятся с накоплением данных.</div>';
-            host.innerHTML = html;
-            var pb = el('fmx-pbell'); if (pb) pb.addEventListener('click', openNicheSubs);
+            var html = '<div class="fmx-t2hero">' +
+                '<div style="display:flex;align-items:baseline;gap:9px;">' +
+                '<b style="font-size:23px;font-variant-numeric:tabular-nums;">' + (cur != null ? _num(cur) + ' ₽' : '—') + '</b>' +
+                (d7 != null ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(d7) + ' за 7 дн</span>' : '') + '</div>' +
+                '<div style="margin-top:8px;">' + _tArea(ser.slice(-_termRange), '#5DCAA5', 'fmxTgN') + '</div>' +
+                '<div class="fmx-t2kv">' +
+                '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
+                '<div class="k"><div class="a">Медиана ER</div><div class="b">' + (r.median_er != null ? String(r.median_er).replace('.', ',') + '%' : '—') + '</div></div>' +
+                '<div class="k"><div class="a">Каналов · офферов</div><div class="b">' + (r.channels || 0) + ' · ' + (r.offers || 0) + '</div></div></div></div>';
+            if (r.hours && r.hours.length) {
+                var byd = {};
+                r.hours.forEach(function (x) { byd[x.dow + '_' + x.h2] = x.v; });
+                var DW = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+                html += '<div class="fmx-psec"><i class="ti ti-clock" style="color:#818cf8;"></i> Когда читает аудитория ниши</div>';
+                html += '<div class="fmx-t2hm">';
+                for (var dw = 1; dw <= 7; dw++) {
+                    html += '<span class="hl">' + DW[dw - 1] + '</span>';
+                    for (var h2 = 0; h2 < 12; h2++) {
+                        var v = byd[dw + '_' + h2];
+                        var lvl = v == null ? 0 : (v >= 0.85 ? 4 : (v >= 0.6 ? 3 : (v >= 0.35 ? 2 : (v > 0.1 ? 1 : 0))));
+                        html += '<span class="hm h' + lvl + '"></span>';
+                    }
+                }
+                html += '</div><div class="fmx-t2hint">По просмотрам постов офферов ниши · часы 0–24</div>';
+            }
+            if (r.top_channels && r.top_channels.length) {
+                html += '<div class="fmx-psec"><i class="ti ti-trophy" style="color:#f5bf4f;"></i> Топ каналов ниши</div>';
+                html += r.top_channels.map(function (c) {
+                    return '<div class="fmx-t2top"><span class="av">' + _esc(_apkInitials(c.title)) + '</span>' +
+                        '<span class="nm">' + _esc(c.title) + '</span>' +
+                        '<span class="cp">' + (c.cpm ? 'CPM ' + _num(c.cpm) + ' ₽' : (c.subscribers ? _short(c.subscribers) : '')) + '</span></div>';
+                }).join('');
+            }
+            html += '<button class="fmx-apk-go" id="fmx-tnRadar" style="margin-top:14px;"><i class="ti ti-radar-2"></i> Каналы ниши в Радаре</button>' +
+                '<button class="fmx-apk-go" id="fmx-tnBell" style="margin-top:8px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.13);color:#c2c6d2;box-shadow:none;"><i class="ti ti-bell"></i> Следить за нишей</button>';
+            b.innerHTML = html;
+            var rb = el('fmx-tnRadar');
+            if (rb) rb.addEventListener('click', function () {
+                _haptic('medium'); ov.remove();
+                try { _nicheSel = name; _sort = 'niche'; setMainTab('catalog'); } catch (e) {}
+            });
+            var bb = el('fmx-tnBell');
+            if (bb) bb.addEventListener('click', function () { _haptic('light'); ov.remove(); try { openNicheSubs(); } catch (e) {} });
+        }).catch(function () {
+            var b = el('fmx-tnBody');
+            if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь.');
         });
     }
     function renderEnter() {
