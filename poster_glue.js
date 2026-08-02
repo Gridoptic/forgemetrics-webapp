@@ -833,23 +833,20 @@
       '.picker .crow input{font-size:' + px(12.5) + ' !important;padding:' + px(8) + ' ' + px(2) + ' !important;border-radius:' + px(9) + ' !important;}' +
       '.picker .preset{margin-top:' + px(10) + ' !important;gap:' + px(6) + ' !important;}' +
       '.picker .pd{width:' + px(22) + ' !important;height:' + px(22) + ' !important;border-radius:' + px(7) + ' !important;}' +
-      '.fmx-sec{position:relative;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);' +
-        'border-radius:' + px(16) + ';padding:' + px(13) + ' ' + px(14) + ';margin:' + px(11) + ' 0;overflow:hidden;' +
-        'box-shadow:0 1px 0 rgba(255,255,255,0.05) inset,0 20px 46px -28px rgba(0,0,0,0.85);}' +
-      '.fmx-sec::before{content:"";position:absolute;top:-1px;left:12%;right:12%;height:' + px(80) + ';' +
-        'pointer-events:none;background:radial-gradient(80% 100% at 50% 0%,rgba(129,140,248,0.13) 0%,transparent 70%);}' +
+      '.fmx-sec{position:relative;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);' +
+        'border-radius:' + px(14) + ';padding:' + px(12) + ' ' + px(13) + ';margin:' + px(9) + ' 0;overflow:hidden;}' +
       '.fmx-sec .lbl{margin-top:0 !important;}' +
-      '.lbl{position:relative;display:flex !important;align-items:center;gap:' + px(8) + ';' +
-        'color:#9aa0f5 !important;letter-spacing:1.2px !important;}' +
-      '.fmx-sec .lbl::before{content:attr(data-ico);width:' + px(26) + ';height:' + px(26) + ';' +
-        'border-radius:' + px(8) + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
-        'font-size:' + px(13) + ';letter-spacing:0;color:#8b8ff8;border:1px solid rgba(129,140,248,0.42);' +
-        'background:linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04));' +
-        'box-shadow:0 10px 24px -14px rgba(129,140,248,0.4);}' +
+      '.lbl{position:relative;display:flex !important;align-items:center;gap:' + px(11) + ';}' +
+      '.fmx-sec > .lbl:first-child{text-transform:none !important;font-size:' + px(13) + ' !important;' +
+        'font-weight:600 !important;letter-spacing:-0.2px !important;color:#e8e8ed !important;}' +
+      '.fmx-sec .lbl::before{content:attr(data-ico);width:' + px(30) + ';height:' + px(30) + ';' +
+        'border-radius:' + px(9) + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
+        'font-size:' + px(15) + ';letter-spacing:0;color:#818cf8;' +
+        'background:rgba(129,140,248,0.12);}' +
       '.fmx-sec .lbl:not([data-ico])::before{display:none;}' +
       '.fmx-sec .lbl[data-ico="card"]::before{content:"";' +
-        'background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238b8ff8%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Crect x=%272.5%27 y=%275%27 width=%2719%27 height=%2714%27 rx=%273%27/%3E%3Cpath d=%27M2.5 10h19%27/%3E%3C/svg%3E") center/' + px(15) + ' auto no-repeat,' +
-        'linear-gradient(160deg,rgba(129,140,248,0.18),rgba(129,140,248,0.04));}' +
+        'background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23818cf8%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Crect x=%272.5%27 y=%275%27 width=%2719%27 height=%2714%27 rx=%273%27/%3E%3Cpath d=%27M2.5 10h19%27/%3E%3C/svg%3E") center/' + px(16) + ' auto no-repeat,' +
+        'rgba(129,140,248,0.12);}' +
       '.chip{background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.10) !important;' +
         'color:#c6cdde !important;transition:border-color 0.15s,background 0.15s,color 0.15s;}' +
       '.chip.on{background:linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06)) !important;' +
@@ -860,7 +857,7 @@
         'gap:' + px(6) + ';padding:' + px(8) + ' ' + px(4) + ' !important;font-weight:700 !important;}' +
       '#fmxPsLang .chip .flsvg{width:' + px(19) + ';height:' + px(14) + ';border-radius:' + px(3) + ';' +
         'box-shadow:0 0 0 1px rgba(255,255,255,0.18);display:block;flex-shrink:0;}' +
-      'input[type=text],input[type=number]{background:rgba(0,0,0,0.30) !important;' +
+      'input[type=text],input[type=number]{background:rgba(255,255,255,0.045) !important;' +
         'border:1px solid rgba(255,255,255,0.09) !important;color:#e8eaf1 !important;}' +
       'input[type=text]:focus,input[type=number]:focus{border-color:rgba(129,140,248,0.42) !important;' +
         'box-shadow:0 0 0 2px rgba(129,140,248,0.13) !important;outline:none !important;}' +

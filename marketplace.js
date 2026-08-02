@@ -6999,7 +6999,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260802c';
+    var PS_GLUE_V = '20260802d';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7363,7 +7363,7 @@
                 var base = -675 * env.getK() * 0.8;
                 var d = fR.top - scR.top;
                 var vis = on ? d < base + 40 : d < base;
-                var W = Math.min(scR.width - 20, 560);
+                var W = Math.min(scR.width - 20, Math.round((fR.width || 560) * 540 / 560) || 560);
                 dock.style.top = scR.top.toFixed(1) + 'px';
                 dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
                 dock.style.width = W.toFixed(1) + 'px';
