@@ -973,7 +973,8 @@
             '.fmx-t2line{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:700;stroke-dashoffset:700;animation:fmxTdraw 1.4s ease-out forwards;}',
             '@keyframes fmxTdraw{to{stroke-dashoffset:0;}}',
             '.fmx-t2pt{animation:fmxTpulse 1.8s infinite;}',
-            '.fmx-t2ax{display:flex;justify-content:space-between;font-size:8px;color:#3f4358;margin-top:3px;}',
+            '.fmx-t2ax{position:relative;display:flex;justify-content:space-between;font-size:8px;color:#3f4358;margin-top:3px;min-height:10px;}',
+            '.fmx-t2ax .mid{position:absolute;transform:translateX(-50%);white-space:nowrap;}',
             '.fmx-t2nochart{font-size:10.5px;color:#565b73;padding:22px 0;text-align:center;}',
             '.fmx-t2trow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}',
             '.fmx-t2tc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:8px 6px;text-align:center;min-width:0;}',
@@ -1733,7 +1734,20 @@
             '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
             '<path class="fmx-t2line" d="' + line + '" style="stroke:' + color + ';"/>' +
             '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
-            '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span><span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
+            (function () {
+                var n = series.length;
+                function _at(f) { return _dl(isTime ? series[Math.round((n - 1) * f)].t : series[Math.round((n - 1) * f)].day); }
+                var mids = '';
+                if (n >= 8) {
+                    mids = '<span class="mid" style="left:25%;">' + _at(0.25) + '</span>' +
+                        '<span class="mid" style="left:50%;">' + _at(0.5) + '</span>' +
+                        '<span class="mid" style="left:75%;">' + _at(0.75) + '</span>';
+                } else if (n >= 4) {
+                    mids = '<span class="mid" style="left:50%;">' + _at(0.5) + '</span>';
+                }
+                return '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span>' + mids +
+                    '<span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
+            })();
     }
     function _tSeriesDelta(series) {
         if (!series || series.length < 2) return null;
