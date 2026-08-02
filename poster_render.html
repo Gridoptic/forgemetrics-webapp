@@ -324,15 +324,12 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
   </div>
 
   <div class="lbl">Стикеры · нажатие добавляет на постер</div>
-  <div class="chips" id="eChips">
-    <button class="chip emoji">⚡</button><button class="chip emoji">🔥</button><button class="chip emoji">🧬</button>
-    <button class="chip emoji">💊</button><button class="chip emoji">🚀</button><button class="chip emoji">😤</button>
-  </div>
+  <div class="chips" id="eChips" style="display:none;"></div>
   <div class="note">Редактирование — на постере: рамка, угол — размер, верхняя точка — поворот, крестик — удалить, три точки — режим (поверх · слияние · задний фон). В продукте — ваша коллекция из бота (до 30).</div>
 
   <div class="lbl">Текст</div>
   <input type="text" id="hookInp" maxlength="90" placeholder="Свой текст · до 90 символов">
-  <button class="genbtn" id="genBtn">Сгенерировать текст (ИИ)</button>
+  <button class="genbtn" id="genBtn">Сгенерировать текст</button>
   <div class="gentip" id="genTip">Генерация доступна подписчикам тарифа <b>PRO и PRO+</b> — либо при активном продвижении на <b>30 дней</b>. Готовый текст вставляется в постер автоматически, в пределах лимита символов.</div>
 </div>
 
@@ -3197,21 +3194,6 @@ function applySize(s) {
   s.style.width = px + 'px'; s.style.height = px + 'px';
   s.querySelector('.glyph').style.fontSize = Math.round(px * 0.86) + 'px';
 }
-on('eChips', 'click', function (e) {
-  var b = e.target.closest('.chip'); if (!b) return;
-  var s = document.createElement('div');
-  s.className = 'stk m-top';
-  s.dataset.rot = 0; s.dataset.size = 52; s.dataset.mode = 'm-top';
-  s.innerHTML = '<span class="glyph">' + b.textContent + '</span>' +
-    '<div class="frame"><div class="hnd h-rot">\u27F3</div><div class="hnd h-res">\u2921</div><div class="hnd h-del">\u2715</div>' +
-    '<div class="modes">' + MODES.map(function (m) { return '<div class="mdot' + (m[0] === 'm-top' ? ' on' : '') + '" data-mode="' + m[0] + '" title="' + m[1] + '"></div>'; }).join('') + '</div></div>';
-  s.style.left = (140 + Math.random() * 220) + 'px';
-  s.style.top = (170 + Math.random() * 180) + 'px';
-  poster.appendChild(s);
-  applySize(s);
-  bindStk(s);
-  selectStk(s);
-});
 function center(s) {
   return { x: s.offsetLeft + s.offsetWidth / 2, y: s.offsetTop + s.offsetHeight / 2 };
 }

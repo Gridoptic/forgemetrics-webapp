@@ -6999,7 +6999,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260802i';
+    var PS_GLUE_V = '20260802j';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7309,7 +7309,7 @@
         });
         var dkHint = document.createElement('div');
         dkHint.className = 'fmx-dkHint';
-        dkHint.textContent = env.tr('Зажми превью — развернётся на весь экран · быстрый тап — к постеру');
+        dkHint.textContent = env.tr('Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру');
         dock.querySelector('.fmx-dkCol').appendChild(dkHint);
         var prev = dock.querySelector('#fmx-dkPrev');
         var peek = { on: false, timer: null, held: false, bd: null, saved: '' };
