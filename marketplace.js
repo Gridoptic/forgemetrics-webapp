@@ -9217,7 +9217,7 @@
         if (_alx) out.push([_alx.icon, _alx.color, _alx.text]);
         if (l.antifraud === 'clean') out.push(['ti-shield-check', '#5DCAA5', 'Фрод-контроль пройден']);
         else if (l.antifraud === 'suspect') out.push(['ti-alert-triangle', '#ef4444', 'Требует проверки']);
-        if (l.owner_verified) out.push(['ti-user-check', '#5DCAA5', 'Владелец подтверждён']);
+        if (l.owner_verified) out.push(['ti-user-check', '#5ab0e6', 'Владелец подтверждён']);
         if (l.subscribers && l.subscribers >= 100000) out.push(['ti-crown', '#f5bf4f', 'Крупный канал']);
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) out.push(['ti-heart-handshake', '#f5bf4f', dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок')]);
