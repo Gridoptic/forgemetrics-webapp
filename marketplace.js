@@ -1627,7 +1627,7 @@
             if (cb) cb();
         }).catch(function () { if (cb) cb(); });
     }
-    var _term = null, _termTs = 0, _termRange = 30, _termSrc = 'all', _termSort = 'cpm', _termRefTimer = null;
+    var _term = null, _termTs = 0, _termRange = 30, _termSpark = 30, _termSrc = 'all', _termSort = 'cpm', _termRefTimer = null;
     var _tFold = { map: false, mv: false, list: false };
     function _tFoldOpen(html, key, fh) {
         return '<div class="fmx-t2fold' + (_tFold[key] ? ' open' : '') + '" data-tfold="' + key + '" style="--fh:' + fh + 'px;">' + html + '</div>' +
@@ -1667,6 +1667,7 @@
         return d > 0 ? '<span class="fmx-tup">▲' + s + '%</span>' : (d < 0 ? '<span class="fmx-tdn">▼' + s + '%</span>' : '<span class="fmx-tfl">0%</span>');
     }
     function _tSpark(vals, color) {
+        if (vals && vals.length > _termSpark) vals = vals.slice(-_termSpark);
         if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
@@ -1692,7 +1693,7 @@
             '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
             '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round"/>' +
             '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2" fill="' + color + '"/></svg>' +
-            '<span class="fmx-t2spd">30д</span></span>';
+            '<span class="fmx-t2spd">' + _termSpark + 'д</span></span>';
     }
     var _MON_S = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     function _tArea(series, color, gid) {
@@ -1876,7 +1877,10 @@
             }
         }
 
-        html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши</div>';
+        html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши' +
+            '<span class="fmx-t2rng" style="margin-left:auto;">' + [7, 30, 90].map(function (r) {
+                return '<span data-tsprange="' + r + '"' + (r === _termSpark ? ' class="on"' : '') + '>' + r + 'д</span>';
+            }).join('') + '</span></div>';
         html += '<div class="fmx-t2chips">' + [
             ['all', 'Все источники'], ['market', 'Площадка · точные'], ['base', 'Радар · публичные']
         ].map(function (c) { return '<span class="fmx-t2chip' + (_termSrc === c[0] ? ' on' : '') + '" data-tsrc="' + c[0] + '">' + c[1] + '</span>'; }).join('') + '</div>';
@@ -1923,6 +1927,9 @@
         });
         qsa(host, '[data-tsort]').forEach(function (b) {
             b.addEventListener('click', function () { _termSort = b.getAttribute('data-tsort'); _paintTerminal(); });
+        });
+        qsa(host, '[data-tsprange]').forEach(function (b) {
+            b.addEventListener('click', function () { _termSpark = parseInt(b.getAttribute('data-tsprange'), 10) || 30; _paintTerminal(); });
         });
         qsa(host, '[data-tniche]').forEach(function (b) {
             b.addEventListener('click', function () { _haptic('light'); openTermNiche(b.getAttribute('data-tniche')); });
