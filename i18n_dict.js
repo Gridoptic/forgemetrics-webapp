@@ -2865,7 +2865,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Targeted discounts",
   "свои даты, время и процент": "your dates, time and percentage",
   "вкл": "on",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Hold the preview to expand it full screen · a short press returns to the poster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Hold the preview to expand it full screen · a short press returns to the poster",
+  "Перечень РКН": "RKN registry",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "For channels with 10,000+ subscribers. Paste the link to the channel's record in the RKN registry (knd.gov.ru) — the offer will show a «Registered with RKN» badge with a verification link for buyers.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "The choice defines which side registers the creative with the ORD and receives the erid. A token is issued per placement and added when labeling the post; a channel has no permanent erid.",
+  "Зарегистрирован в РКН": "Registered with RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "The channel is registered in the RKN registry — the record link is in the badge on the card",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "The link must lead to knd.gov.ru — copy it from the channel's record in the RKN registry"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5726,7 +5732,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Descuentos puntuales",
   "свои даты, время и процент": "tus fechas, hora y porcentaje",
   "вкл": "act.",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Mantén pulsada la vista previa para expandirla a pantalla completa · una pulsación corta vuelve al póster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Mantén pulsada la vista previa para expandirla a pantalla completa · una pulsación corta vuelve al póster",
+  "Перечень РКН": "Registro RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Para canales con más de 10 000 suscriptores. Pega el enlace al registro del canal en el listado RKN (knd.gov.ru): la oferta mostrará la insignia «Registrado en RKN» con enlace de verificación para el comprador.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "La elección define qué parte registra el creativo en el ORD y recibe el erid. El token se emite por cada publicación y se añade al marcar el post; el canal no tiene erid permanente.",
+  "Зарегистрирован в РКН": "Registrado en RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "El canal está registrado en el listado RKN: el enlace al registro está en la insignia de la tarjeta",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "El enlace debe llevar a knd.gov.ru: cópialo del registro del canal en el listado RKN"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8587,7 +8599,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Gezielte Rabatte",
   "свои даты, время и процент": "eigene Daten, Uhrzeit und Prozentsatz",
   "вкл": "an",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Vorschau gedrückt halten — sie öffnet sich im Vollbild · kurzes Tippen führt zurück zum Poster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Vorschau gedrückt halten — sie öffnet sich im Vollbild · kurzes Tippen führt zurück zum Poster",
+  "Перечень РКН": "RKN-Register",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Für Kanäle ab 10 000 Abonnenten. Füge den Link zum Eintrag des Kanals im RKN-Register (knd.gov.ru) ein — das Angebot erhält das Abzeichen «Im RKN registriert» mit Prüf-Link für Einkäufer.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Die Wahl legt fest, welche Seite das Kreativ beim ORD registriert und die erid erhält. Der Token wird pro Platzierung vergeben und bei der Kennzeichnung des Posts eingetragen; einen dauerhaften erid des Kanals gibt es nicht.",
+  "Зарегистрирован в РКН": "Im RKN registriert",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Der Kanal ist im RKN-Register eingetragen — der Link zum Eintrag steckt im Abzeichen auf der Karte",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Der Link muss zu knd.gov.ru führen — kopiere ihn aus dem Eintrag des Kanals im RKN-Register"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -11443,7 +11461,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Нүктелік жеңілдіктер",
   "свои даты, время и процент": "өз күндерің, уақыты мен пайызы",
   "вкл": "қосулы",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Алдын ала қарауды басып тұр — толық экранға ашылады · қысқа басу постерге қайтарады"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Алдын ала қарауды басып тұр — толық экранға ашылады · қысқа басу постерге қайтарады",
+  "Перечень РКН": "РКН тізбесі",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "10 000+ жазылушысы бар арналар үшін. Арнаның РКН тізбесіндегі жазбасының сілтемесін қой (knd.gov.ru) — офферде сатып алушыға тексеру сілтемесі бар «РКН-де тіркелген» белгісі шығады.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Таңдау креативті ОРД-да қай тарап тіркеп, erid алатынын анықтайды. Токен әр орналастыруға бөлек беріледі және постты таңбалағанда енгізіледі; арнаның тұрақты erid-і болмайды.",
+  "Зарегистрирован в РКН": "РКН-де тіркелген",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Арна РКН тізбесінде тіркелген — жазба сілтемесі карточкадағы белгіде",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Сілтеме knd.gov.ru сайтына апаруы керек — оны арнаның РКН тізбесіндегі жазбасынан көшір"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -14304,7 +14328,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Nuqtaviy chegirmalar",
   "свои даты, время и процент": "o'z sanalaring, vaqt va foiz",
   "вкл": "yoniq",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Oldindan ko'rishni bosib tur — to'liq ekranga ochiladi · qisqa bosish posterga qaytaradi"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Oldindan ko'rishni bosib tur — to'liq ekranga ochiladi · qisqa bosish posterga qaytaradi",
+  "Перечень РКН": "RKN ro'yxati",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "10 000+ obunachili kanallar uchun. Kanalning RKN ro'yxatidagi yozuvi havolasini joylashtir (knd.gov.ru) — offerda xaridor uchun tekshirish havolasi bilan «RKNda ro'yxatdan o'tgan» belgisi chiqadi.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Tanlov kreativni ORDda qaysi tomon ro'yxatdan o'tkazib erid olishini belgilaydi. Token har bir joylashtirish uchun alohida beriladi va post belgilanayotganda kiritiladi; kanalning doimiy erid'i bo'lmaydi.",
+  "Зарегистрирован в РКН": "RKNda ro'yxatdan o'tgan",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Kanal RKN ro'yxatida — yozuv havolasi kartochkadagi belgida",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Havola knd.gov.ru saytiga olib borishi kerak — uni kanalning RKN ro'yxatidagi yozuvidan nusxala"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -17164,7 +17194,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Кропкавыя зніжкі",
   "свои даты, время и процент": "свае даты, час і працэнт",
   "вкл": "укл",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Утрымлівай прэв'ю — разгорнецца на ўвесь экран · кароткі націск верне да постара"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Утрымлівай прэв'ю — разгорнецца на ўвесь экран · кароткі націск верне да постара",
+  "Перечень РКН": "Пералік РКН",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Для каналаў ад 10 000 падпісчыкаў. Устаў спасылку на запіс канала ў пераліку РКН (knd.gov.ru) — на оферы з'явіцца значок «Зарэгістраваны ў РКН» са спасылкай для праверкі закупшчыкам.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Выбар — чый бок рэгіструе крэатыў у АРД і атрымлівае erid. Токен выдаецца на кожнае размяшчэнне асобна і ўносіцца пры маркіроўцы паста; пастаяннага erid у канала не існуе.",
+  "Зарегистрирован в РКН": "Зарэгістраваны ў РКН",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Канал зарэгістраваны ў пераліку РКН — спасылка на запіс у значку на картцы",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Спасылка павінна весці на knd.gov.ru — скапіруй яе з запісу канала ў пераліку РКН"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -20025,7 +20061,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Nöqtəvi endirimlər",
   "свои даты, время и процент": "öz tarixlərin, vaxt və faiz",
   "вкл": "aktiv",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Önizləməni basılı saxla — tam ekrana açılır · qısa toxunuş posterə qaytarır"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Önizləməni basılı saxla — tam ekrana açılır · qısa toxunuş posterə qaytarır",
+  "Перечень РКН": "RKN siyahısı",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "10 000+ abunəçisi olan kanallar üçün. Kanalın RKN siyahısındakı qeydinin linkini yapışdır (knd.gov.ru) — offerdə alıcı üçün yoxlama linki ilə «RKN-də qeydiyyatdadır» nişanı görünəcək.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Seçim kreativi ORD-də hansı tərəfin qeydiyyatdan keçirib erid alacağını müəyyən edir. Token hər yerləşdirmə üçün ayrıca verilir və post işarələnərkən daxil edilir; kanalın daimi erid-i yoxdur.",
+  "Зарегистрирован в РКН": "RKN-də qeydiyyatdadır",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Kanal RKN siyahısında qeydiyyatdadır — qeydin linki kartdakı nişandadır",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Link knd.gov.ru ünvanına aparmalıdır — onu kanalın RKN siyahısındakı qeydindən kopyala"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -22886,7 +22928,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "خصومات موجّهة",
   "свои даты, время и процент": "تواريخك ووقتك ونسبتك",
   "вкл": "مفعّل",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "اضغط مطوّلًا على المعاينة لعرضها بملء الشاشة · الضغطة القصيرة تعيدك إلى الملصق"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "اضغط مطوّلًا على المعاينة لعرضها بملء الشاشة · الضغطة القصيرة تعيدك إلى الملصق",
+  "Перечень РКН": "سجل RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "للقنوات التي لديها أكثر من 10 000 مشترك. ألصق رابط سجل القناة في قائمة RKN (knd.gov.ru) — سيظهر على العرض شارة «مسجّل في RKN» مع رابط تحقق للمشتري.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "الاختيار يحدد الطرف الذي يسجّل الإعلان لدى ORD ويحصل على erid. يصدر الرمز لكل نشر على حدة ويُدخل عند وسم المنشور؛ لا يوجد erid دائم للقناة.",
+  "Зарегистрирован в РКН": "مسجّل في RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "القناة مسجّلة في قائمة RKN — رابط السجل في الشارة على البطاقة",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "يجب أن يؤدي الرابط إلى knd.gov.ru — انسخه من سجل القناة في قائمة RKN"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -25747,7 +25795,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "تخفیف‌های هدفمند",
   "свои даты, время и процент": "تاریخ، زمان و درصد دلخواه",
   "вкл": "فعال",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "پیش‌نمایش را نگه دار تا تمام‌صفحه شود · فشار کوتاه به پوستر بازمی‌گرداند"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "پیش‌نمایش را نگه دار تا تمام‌صفحه شود · فشار کوتاه به پوستر بازمی‌گرداند",
+  "Перечень РКН": "فهرست RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "برای کانال‌های بالای ۱۰ هزار دنبال‌کننده. پیوند رکورد کانال در فهرست RKN (knd.gov.ru) را بچسبان — روی آفر نشان «ثبت‌شده در RKN» با پیوند بررسی برای خریدار نمایش داده می‌شود.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "انتخاب مشخص می‌کند کدام طرف خلاقیت را در ORD ثبت و erid دریافت می‌کند. توکن برای هر انتشار جداگانه صادر و هنگام برچسب‌گذاری پست وارد می‌شود؛ کانال erid دائمی ندارد.",
+  "Зарегистрирован в РКН": "ثبت‌شده در RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "کانال در فهرست RKN ثبت است — پیوند رکورد در نشانِ روی کارت",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "پیوند باید به knd.gov.ru برسد — آن را از رکورد کانال در فهرست RKN کپی کن"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -28608,7 +28662,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Noktasal indirimler",
   "свои даты, время и процент": "kendi tarihlerin, saatin ve yüzden",
   "вкл": "açık",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Önizlemeyi basılı tut — tam ekrana açılır · kısa basış postere döndürür"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Önizlemeyi basılı tut — tam ekrana açılır · kısa basış postere döndürür",
+  "Перечень РКН": "RKN sicili",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "10 000+ aboneli kanallar için. Kanalın RKN sicilindeki kaydının bağlantısını yapıştır (knd.gov.ru) — teklifte alıcı için doğrulama bağlantılı «RKN'de kayıtlı» rozeti görünür.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Seçim, kreatifi ORD'ye hangi tarafın kaydettirip erid alacağını belirler. Token her yerleşim için ayrı verilir ve post işaretlenirken girilir; kanalın kalıcı erid'i yoktur.",
+  "Зарегистрирован в РКН": "RKN'de kayıtlı",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Kanal RKN sicilinde kayıtlı — kayıt bağlantısı karttaki rozette",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Bağlantı knd.gov.ru adresine gitmeli — kanalın RKN sicilindeki kaydından kopyala"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -31469,7 +31529,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "लक्षित छूट",
   "свои даты, время и процент": "अपनी तिथियां, समय और प्रतिशत",
   "вкл": "चालू",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "प्रीव्यू को दबाकर रखें — पूरी स्क्रीन पर खुलेगा · छोटा दबाव पोस्टर पर लौटाएगा"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "प्रीव्यू को दबाकर रखें — पूरी स्क्रीन पर खुलेगा · छोटा दबाव पोस्टर पर लौटाएगा",
+  "Перечень РКН": "RKN रजिस्ट्री",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "10,000+ सब्सक्राइबर वाले चैनलों के लिए। RKN रजिस्ट्री (knd.gov.ru) में चैनल के रिकॉर्ड का लिंक चिपकाएं — ऑफ़र पर खरीदार के लिए सत्यापन लिंक के साथ «RKN में पंजीकृत» बैज दिखेगा।",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "चुनाव तय करता है कि कौन-सा पक्ष ORD में क्रिएटिव पंजीकृत कर erid प्राप्त करता है। टोकन हर प्लेसमेंट के लिए अलग जारी होता है और पोस्ट मार्किंग पर दर्ज होता है; चैनल का स्थायी erid नहीं होता।",
+  "Зарегистрирован в РКН": "RKN में पंजीकृत",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "चैनल RKN रजिस्ट्री में पंजीकृत है — रिकॉर्ड का लिंक कार्ड के बैज में",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "लिंक knd.gov.ru पर जाना चाहिए — इसे RKN रजिस्ट्री में चैनल के रिकॉर्ड से कॉपी करें"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -34330,7 +34396,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "লক্ষ্যভিত্তিক ছাড়",
   "свои даты, время и процент": "নিজের তারিখ, সময় ও শতাংশ",
   "вкл": "চালু",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "প্রিভিউ চেপে ধরুন — পূর্ণ স্ক্রিনে খুলবে · ছোট চাপ পোস্টারে ফিরিয়ে নেবে"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "প্রিভিউ চেপে ধরুন — পূর্ণ স্ক্রিনে খুলবে · ছোট চাপ পোস্টারে ফিরিয়ে নেবে",
+  "Перечень РКН": "RKN রেজিস্ট্রি",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "১০,০০০+ সাবস্ক্রাইবারের চ্যানেলের জন্য। RKN রেজিস্ট্রিতে (knd.gov.ru) চ্যানেলের রেকর্ডের লিঙ্ক পেস্ট করুন — অফারে ক্রেতার জন্য যাচাই লিঙ্কসহ «RKN-এ নিবন্ধিত» ব্যাজ দেখাবে।",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "পছন্দ নির্ধারণ করে কোন পক্ষ ORD-এ ক্রিয়েটিভ নিবন্ধন করে erid পায়। টোকেন প্রতিটি প্রকাশের জন্য আলাদা এবং পোস্ট মার্কিংয়ের সময় যোগ হয়; চ্যানেলের স্থায়ী erid নেই।",
+  "Зарегистрирован в РКН": "RKN-এ নিবন্ধিত",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "চ্যানেল RKN রেজিস্ট্রিতে নিবন্ধিত — রেকর্ডের লিঙ্ক কার্ডের ব্যাজে",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "লিঙ্কটি knd.gov.ru-তে যেতে হবে — RKN রেজিস্ট্রিতে চ্যানেলের রেকর্ড থেকে কপি করুন"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -37191,7 +37263,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Diskon terarah",
   "свои даты, время и процент": "tanggal, waktu, dan persentase sendiri",
   "вкл": "aktif",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Tahan pratinjau untuk membukanya layar penuh · tekan singkat kembali ke poster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Tahan pratinjau untuk membukanya layar penuh · tekan singkat kembali ke poster",
+  "Перечень РКН": "Registri RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Untuk channel 10.000+ subscriber. Tempel tautan catatan channel di registri RKN (knd.gov.ru) — penawaran akan menampilkan lencana «Terdaftar di RKN» dengan tautan verifikasi bagi pembeli.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Pilihan menentukan pihak mana yang mendaftarkan kreatif ke ORD dan menerima erid. Token diterbitkan per penayangan dan dimasukkan saat penandaan post; channel tidak punya erid permanen.",
+  "Зарегистрирован в РКН": "Terdaftar di RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Channel terdaftar di registri RKN — tautan catatan ada di lencana pada kartu",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Tautan harus menuju knd.gov.ru — salin dari catatan channel di registri RKN"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -40052,7 +40130,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Giảm giá theo ngày",
   "свои даты, время и процент": "ngày, giờ và tỷ lệ tùy chọn",
   "вкл": "bật",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Giữ bản xem trước để mở toàn màn hình · nhấn ngắn để quay lại áp phích"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Giữ bản xem trước để mở toàn màn hình · nhấn ngắn để quay lại áp phích",
+  "Перечень РКН": "Danh bạ RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Cho kênh từ 10.000 người theo dõi. Dán liên kết bản ghi của kênh trong danh bạ RKN (knd.gov.ru) — ưu đãi sẽ hiện huy hiệu «Đã đăng ký RKN» kèm liên kết kiểm chứng cho người mua.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Lựa chọn xác định bên nào đăng ký quảng cáo với ORD và nhận erid. Token cấp riêng cho từng lần đăng và nhập khi gắn nhãn bài; kênh không có erid cố định.",
+  "Зарегистрирован в РКН": "Đã đăng ký RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Kênh đã đăng ký trong danh bạ RKN — liên kết bản ghi nằm trong huy hiệu trên thẻ",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Liên kết phải dẫn đến knd.gov.ru — sao chép từ bản ghi của kênh trong danh bạ RKN"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -42913,7 +42997,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Descontos pontuais",
   "свои даты, время и процент": "suas datas, horário e percentual",
   "вкл": "on",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Segure a prévia para expandi-la em tela cheia · um toque curto volta ao pôster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Segure a prévia para expandi-la em tela cheia · um toque curto volta ao pôster",
+  "Перечень РКН": "Registro RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Para canais com mais de 10 000 inscritos. Cole o link do registro do canal na lista RKN (knd.gov.ru) — a oferta exibirá o selo «Registrado no RKN» com link de verificação para o comprador.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "A escolha define qual lado registra o criativo no ORD e recebe o erid. O token é emitido por veiculação e inserido na marcação do post; o canal não tem erid permanente.",
+  "Зарегистрирован в РКН": "Registrado no RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "O canal está registrado na lista RKN — o link do registro está no selo do cartão",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "O link deve levar a knd.gov.ru — copie-o do registro do canal na lista RKN"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -45774,7 +45864,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Remises ciblées",
   "свои даты, время и процент": "tes dates, heure et pourcentage",
   "вкл": "act.",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Maintiens l'aperçu pour l'agrandir en plein écran · un appui court ramène à l'affiche"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Maintiens l'aperçu pour l'agrandir en plein écran · un appui court ramène à l'affiche",
+  "Перечень РКН": "Registre RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Pour les chaînes de 10 000 abonnés et plus. Colle le lien vers la fiche de la chaîne dans le registre RKN (knd.gov.ru) — l'offre affichera le badge «Enregistré au RKN» avec un lien de vérification pour l'acheteur.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Le choix définit quelle partie enregistre la créa auprès de l'ORD et reçoit l'erid. Le jeton est émis pour chaque placement et ajouté au marquage du post ; la chaîne n'a pas d'erid permanent.",
+  "Зарегистрирован в РКН": "Enregistré au RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "La chaîne est inscrite au registre RKN — le lien de la fiche est dans le badge de la carte",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Le lien doit mener à knd.gov.ru — copie-le depuis la fiche de la chaîne dans le registre RKN"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -48635,7 +48731,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "Sconti mirati",
   "свои даты, время и процент": "le tue date, ora e percentuale",
   "вкл": "on",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Tieni premuta l'anteprima per espanderla a schermo intero · una pressione breve riporta al poster"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Tieni premuta l'anteprima per espanderla a schermo intero · una pressione breve riporta al poster",
+  "Перечень РКН": "Registro RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Per canali con oltre 10 000 iscritti. Incolla il link alla scheda del canale nel registro RKN (knd.gov.ru): l'offerta mostrerà il badge «Registrato al RKN» con link di verifica per l'acquirente.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "La scelta definisce quale parte registra la creatività presso l'ORD e riceve l'erid. Il token è emesso per ogni pubblicazione e inserito alla marcatura del post; il canale non ha un erid permanente.",
+  "Зарегистрирован в РКН": "Registrato al RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Il canale è iscritto al registro RKN — il link alla scheda è nel badge sulla card",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Il link deve portare a knd.gov.ru — copialo dalla scheda del canale nel registro RKN"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -51496,7 +51598,13 @@ window.__I18N_DICT = {
   "Точечные скидки": "ዒላማ ቅናሾች",
   "свои даты, время и процент": "የራስህ ቀናት፣ ሰዓት እና መቶኛ",
   "вкл": "በርቷል",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "ቅድመ-እይታውን ተጭነህ ያዝ — በሙሉ ማያ ይከፈታል · አጭር መጫን ወደ ፖስተሩ ይመልሳል"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "ቅድመ-እይታውን ተጭነህ ያዝ — በሙሉ ማያ ይከፈታል · አጭር መጫን ወደ ፖስተሩ ይመልሳል",
+  "Перечень РКН": "የRKN መዝገብ",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "ከ10,000 በላይ ተከታዮች ላሏቸው ቻናሎች። የቻናሉን መዝገብ አገናኝ ከRKN መዝገብ (knd.gov.ru) ለጥፍ — በአቅርቦቱ ላይ ለገዢው የማረጋገጫ አገናኝ ያለው «በRKN ተመዝግቧል» ባጅ ይታያል።",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "ምርጫው ክሪኤቲቩን በORD ማን እንደሚመዘግብና erid ማን እንደሚቀበል ይወስናል። ቶክኑ ለእያንዳንዱ ማስቀመጫ ተለይቶ ይሰጣል እና ፖስቱን በምልክት ጊዜ ይገባል፤ ቻናል ቋሚ erid የለውም።",
+  "Зарегистрирован в РКН": "በRKN ተመዝግቧል",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "ቻናሉ በRKN መዝገብ ተመዝግቧል — የመዝገቡ አገናኝ በካርዱ ባጅ ውስጥ ነው",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "አገናኙ ወደ knd.gov.ru መሄድ አለበት — ከቻናሉ የRKN መዝገብ ቅዳው"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -54357,6 +54465,12 @@ window.__I18N_DICT = {
   "Точечные скидки": "Punguzo maalum",
   "свои даты, время и процент": "tarehe zako, muda na asilimia",
   "вкл": "imewashwa",
-  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Shikilia onyesho la awali — litafunguka skrini nzima · mbonyezo mfupi hurudisha kwenye bango"
+  "Удерживай превью — развернётся на весь экран · короткое нажатие — вернёт к постеру": "Shikilia onyesho la awali — litafunguka skrini nzima · mbonyezo mfupi hurudisha kwenye bango",
+  "Перечень РКН": "Rejesta ya RKN",
+  "Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.": "Kwa vituo vyenye wasajili 10,000+. Bandika kiungo cha rekodi ya kituo kwenye rejesta ya RKN (knd.gov.ru) — ofa itaonyesha beji ya «Imesajiliwa RKN» yenye kiungo cha uthibitisho kwa mnunuzi.",
+  "Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.": "Chaguo huamua upande gani unasajili tangazo kwa ORD na kupokea erid. Tokeni hutolewa kwa kila uchapishaji na huwekwa wakati wa kuweka alama chapisho; kituo hakina erid ya kudumu.",
+  "Зарегистрирован в РКН": "Imesajiliwa RKN",
+  "Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке": "Kituo kimesajiliwa katika rejesta ya RKN — kiungo cha rekodi kiko kwenye beji ya kadi",
+  "Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН": "Kiungo lazima kielekee knd.gov.ru — kinakili kutoka rekodi ya kituo katika rejesta ya RKN"
  }
 };

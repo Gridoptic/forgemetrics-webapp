@@ -4195,6 +4195,7 @@
         var em = { advertiser: 'ставит рекламодатель', channel: 'ставит канал', discuss: 'обсуждается' };
         var lines = [];
         if (l.erid_who && em[l.erid_who]) lines.push('Маркировка (erid) — ' + em[l.erid_who]);
+        if (l.rkn_url) lines.push('Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке');
         lines.push('Оплата напрямую с владельцем канала');
         lines.push('Сделка и отзыв фиксируются в приложении после подтверждения сторонами');
         return '<div class="fmx-lssect">Условия размещения</div><div class="fmx-terms">' +
@@ -5775,6 +5776,7 @@
         });
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._erid = l.erid_who || null;
+        _ss._rkn = l.rkn_url || '';
         _ss._hideInsights = !!l.hide_insights;
     }
     function selectChannel(id) {
@@ -6282,10 +6284,13 @@
             '<div class="fmx-eridseg" id="fmx-erid">' + eridOpts.map(function (o) {
                 return '<button type="button" class="fmx-eridb' + (_ss._erid === o[0] ? ' on' : '') + '" data-erid="' + o[0] + '">' + o[1] + '</button>';
             }).join('') + '</div>' +
-            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i> Кто ставит токен ОРД — условие размещения, видно закупщику. Авто-маркировка подключится с оплатой через площадку.</div>';
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.</span></div>';
+        var rkn = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-shield-check"></i> Перечень РКН</span>' +
+            '<input type="url" class="fmx-inp" id="fmx-rkn" maxlength="200" placeholder="https://knd.gov.ru/license?id=…" value="' + _esc(_ss._rkn || '') + '">' +
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.</span></div>';
         var ins = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-chart-line"></i> Аналитика в витрине</span>' +
             '<div class="fmx-htog" id="fmx-hideIns"><div class="fmx-htl">Показывать час пик и рекл. охват<i>' + (_ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала') + '</i></div><div class="fmx-hsw' + (_ss._hideInsights ? '' : ' on') + '"></div></div>';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + erid + ins;
+        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + erid + rkn + ins;
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
@@ -6326,6 +6331,17 @@
             var sw = hi.querySelector('.fmx-hsw'); if (sw) sw.classList.toggle('on', !_ss._hideInsights);
             var sub = hi.querySelector('.fmx-htl i'); if (sub) sub.textContent = _ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала';
         });
+        var rk = el('fmx-rkn');
+        if (rk) {
+            rk.addEventListener('click', function (e) { e.stopPropagation(); });
+            rk.addEventListener('input', function () { _ss._rkn = rk.value; });
+            rk.addEventListener('blur', function () {
+                var v = (rk.value || '').trim();
+                if (v && v.indexOf('https://knd.gov.ru/') !== 0) {
+                    toast('Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН');
+                }
+            });
+        }
     }
 
     function paneText() {
@@ -7688,6 +7704,7 @@
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
             erid_who: _ss._erid || null,
+            rkn_url: (function () { var v = ((el('fmx-rkn') ? el('fmx-rkn').value : _ss._rkn) || '').trim(); return v.indexOf('https://knd.gov.ru/') === 0 ? v.slice(0, 200) : null; })(),
             hide_insights: !!_ss._hideInsights,
             custom_text: (de ? de.value : _ss._desc) || null,
             accent_color: _ss.color,
@@ -7786,6 +7803,7 @@
         if (l.niche) items.push({ k: 'niche', h: _bk('niche', '<span class="fmx-bdg" style="color:#c7ccf7;border-color:rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><i class="ti ti-tag" style="color:#818cf8;"></i>' + _esc(l.niche) + '</span>') });
         if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
         if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Фрод-контроль пройден</span>') });
+        if (l.rkn_url) items.push({ k: 'rkn', h: _bk('rkn', '<span class="fmx-bdg" style="color:#7ee7c2;border-color:rgba(93,202,165,0.4);background:rgba(93,202,165,0.1);cursor:pointer;" data-rknlink="' + _esc(l.rkn_url) + '"><i class="ti ti-shield-check"></i>Зарегистрирован в РКН</span>') });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
@@ -8677,6 +8695,16 @@
     }
     document.addEventListener('click', function (e) {
         var t = e.target; if (!t || !t.closest) return;
+        var rknB = t.closest('[data-rknlink]');
+        if (rknB) {
+            e.stopPropagation();
+            var ru = rknB.getAttribute('data-rknlink');
+            if (ru && ru.indexOf('https://knd.gov.ru/') === 0) {
+                try { if (typeof tg !== 'undefined' && tg && tg.openLink) { tg.openLink(ru); return; } } catch (err) {}
+                window.open(ru, '_blank');
+            }
+            return;
+        }
         var b = t.closest('[data-phide]');
         if (b) { _pulseHide = true; var d = b.closest('.fmx-pday'); if (d) d.remove(); return; }
         var del = t.closest('#fmx-bmBody [data-del]');
