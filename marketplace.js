@@ -192,14 +192,35 @@
             if (el2.__fmFade) return;
             el2.__fmFade = 1;
             function upd() {
-                var more = el2.scrollWidth - el2.clientWidth - el2.scrollLeft > 4;
-                var less = el2.scrollLeft > 4;
+                var canScroll = el2.scrollWidth - el2.clientWidth > 2;
+                var more = el2.scrollWidth - el2.clientWidth - el2.scrollLeft > 2;
+                var less = el2.scrollLeft > 2;
                 var m = more && less ? 'linear-gradient(90deg,transparent,#000 22px,#000 calc(100% - 26px),transparent)'
                     : (more ? 'linear-gradient(90deg,#000 calc(100% - 26px),transparent)'
                         : (less ? 'linear-gradient(90deg,transparent,#000 22px)' : ''));
                 el2.style.webkitMaskImage = m;
                 el2.style.maskImage = m;
+                el2.style.cursor = canScroll ? 'grab' : '';
             }
+            var _dx = 0, _dl = 0, _drag = false, _moved = false;
+            el2.addEventListener('pointerdown', function (e) {
+                if (e.pointerType !== 'mouse' || e.button !== 0) return;
+                if (el2.scrollWidth - el2.clientWidth <= 2) return;
+                _drag = true; _moved = false; _dx = e.clientX; _dl = el2.scrollLeft;
+                try { el2.setPointerCapture(e.pointerId); } catch (e2) {}
+            });
+            el2.addEventListener('pointermove', function (e) {
+                if (!_drag) return;
+                var dx = e.clientX - _dx;
+                if (Math.abs(dx) > 3) _moved = true;
+                if (_moved) { el2.scrollLeft = _dl - dx; el2.style.cursor = 'grabbing'; }
+            });
+            function _dragEnd() { if (_drag) { _drag = false; upd(); } }
+            el2.addEventListener('pointerup', _dragEnd);
+            el2.addEventListener('pointercancel', _dragEnd);
+            el2.addEventListener('click', function (e) {
+                if (_moved) { e.stopPropagation(); e.preventDefault(); _moved = false; }
+            }, true);
             el2.addEventListener('scroll', upd, { passive: true });
             upd();
         });
