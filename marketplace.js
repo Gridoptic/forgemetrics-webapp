@@ -1830,6 +1830,10 @@
     var _EV_META = {
         spike: { ic: 'ti-trending-up', cls: 'g' }, offer: { ic: 'ti-sparkles', cls: 'i' },
         hot: { ic: 'ti-flame', cls: 'a' }, suspect: { ic: 'ti-alert-triangle', cls: 'r' },
+        suspect_sum: { ic: 'ti-shield-search', cls: 'r' },
+        new_channel: { ic: 'ti-circle-plus', cls: 'g' },
+        price_change: { ic: 'ti-tag', cls: 'a' },
+        niche_move: { ic: 'ti-chart-line', cls: 'i' },
         interest: { ic: 'ti-chart-arrows-vertical', cls: 'i' }
     };
     function _tEventHtml(e, isFirst) {
@@ -1847,6 +1851,16 @@
             txt = '<b>Антифрод-метка</b>: канал в нише ' + niche + ' — подозрительная кривая просмотров';
         } else if (e.type === 'interest') {
             txt = '<b>Интерес к нише ' + niche + ' ×' + String(e.ratio).replace('.', ',') + '</b> за неделю — по просмотрам офферов';
+        } else if (e.type === 'suspect_sum') {
+            var nl = (e.niches || []).map(function (x) { return '«' + _esc(x) + '»'; }).join(', ');
+            txt = '<b>Антифрод за неделю</b>: помечено ' + e.count + ' ' + _plural(e.count, 'канал', 'канала', 'каналов') +
+                ' — ' + nl + (e.more ? ' и ещё ' + e.more : '');
+        } else if (e.type === 'new_channel') {
+            txt = '<b>Новый канал в Радаре</b> в нише ' + niche + ' — ' + _short(e.subs) + ' подписчиков';
+        } else if (e.type === 'price_change') {
+            txt = '<b>Оффер изменил цену</b> в нише ' + niche + ': ' + _num(e.old) + ' → ' + _num(e.new) + ' ₽';
+        } else if (e.type === 'niche_move') {
+            txt = '<b>CPM в нише ' + niche + '</b> ' + _tFmtDelta(e.delta) + ' за неделю';
         }
         return '<div class="fmx-t2ev' + (isFirst ? ' fresh' : '') + '"><span class="fmx-t2ic ' + m.cls + '"><i class="ti ' + m.ic + '"></i></span>' +
             '<div>' + txt + '<div class="fmx-t2tm">' + _ago(e.at) + '</div></div></div>';
