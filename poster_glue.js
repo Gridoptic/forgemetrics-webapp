@@ -69,12 +69,9 @@
     var d = el('fmxProof');
     if (!d) {
       d = document.createElement('div'); d.id = 'fmxProof';
-      d.style.cssText = 'position:absolute;left:50%;bottom:9px;transform:translateX(-50%);max-width:88%;' +
-        'padding:4px 13px;border-radius:99px;border:1px solid transparent;box-sizing:border-box;' +
-        'background:linear-gradient(rgba(10,13,24,0.78),rgba(10,13,24,0.78)) padding-box,' +
-        'linear-gradient(90deg,rgba(99,102,241,0.7),rgba(139,92,246,0.7)) border-box;' +
+      d.style.cssText = 'position:absolute;left:36px;right:36px;bottom:8px;height:12px;line-height:12px;' +
         'text-align:center;font:600 9.5px Inter,Arial,sans-serif;letter-spacing:.03em;' +
-        'color:rgba(255,255,255,0.72);' +
+        'color:rgba(255,255,255,0.45);text-shadow:0 1px 2px rgba(0,0,0,0.55);' +
         'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;z-index:60;';
       poster.appendChild(d);
     }
@@ -505,7 +502,7 @@
       var rb = document.createElement('button');
       rb.id = 'fmx-ed-reset'; rb.type = 'button';
       rb.innerHTML = '↺ Сбросить настройки';
-      rb.style.cssText = 'display:block;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:#141828;border:1px solid rgba(255,255,255,0.14);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
+      rb.style.cssText = 'display:block;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
       rb.addEventListener('click', function () { window.__fmxPosterReset(opts.defaultState); });
       if (poster && poster.parentNode) poster.parentNode.insertBefore(rb, poster.nextSibling);
     }
@@ -737,7 +734,7 @@
       if (anchor && anchor.parentNode) {
         var b = document.createElement('button'); b.id = 'fmx-ed-bgcrop'; b.type = 'button';
         b.innerHTML = '⤢ Кадрировать фон';
-        b.style.cssText = 'display:none;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:#141828;border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
+        b.style.cssText = 'display:none;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
         b.addEventListener('click', function () { _setBgCrop(!_bgCrop); });
         anchor.parentNode.insertBefore(b, anchor);
       }
