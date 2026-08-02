@@ -2109,13 +2109,37 @@ function renderCabinet(d) {
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
 
     body.innerHTML = html;
     wireCabinet(d);
     localizeTree(screens.cabinet);
+}
+
+function openUserTerms() {
+    hapticLight();
+    const old = document.getElementById('fm-termsBg'); if (old) old.remove();
+    const bg = document.createElement('div');
+    bg.id = 'fm-termsBg';
+    bg.style.cssText = 'position:fixed;inset:0;z-index:100060;background:rgba(5,7,14,0.6);display:flex;align-items:center;justify-content:center;padding:16px;';
+    bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;">' +
+        '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>Пользовательское соглашение</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
+        '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>Загружаю…</span></div></div>';
+    document.body.appendChild(bg);
+    bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
+    bg.querySelector('#fm-termsX').addEventListener('click', () => bg.remove());
+    const paint = () => {
+        const b = document.getElementById('fm-termsBody');
+        if (b) b.innerHTML = '<style>#fm-termsBody h3{font-size:13px;color:#e8e8ed;margin:15px 0 4px;}#fm-termsBody p{margin:6px 0;}#fm-termsBody .tm-upd{color:#565b73;font-size:11px;margin-top:10px;}</style>' + window.__FM_TERMS_HTML;
+    };
+    if (window.__FM_TERMS_HTML) { paint(); return; }
+    const s = document.createElement('script');
+    s.src = 'terms.js?v=20260803a';
+    s.onload = paint;
+    s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>Не удалось загрузить документ. Проверь связь и повтори попытку.</span>'; };
+    document.head.appendChild(s);
 }
 
 function wireCabinet(d) {
@@ -2134,6 +2158,7 @@ function wireCabinet(d) {
     on('cab-compare', () => { openTariffs(); });
     on('cab-team', () => { openTeam(); });
     on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
+    on('cab-terms', openUserTerms);
     on('cab-theme', () => cabToast('Темы оформления — скоро'));
     on('cab-lang', () => openLangPicker());
     on('cab-notif', () => {
