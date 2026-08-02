@@ -3711,7 +3711,7 @@ window.__refreshVoice = async function (channelId, title) {
 const TIER_NAMES = {
     free: 'Free',
     trial: 'Trial',
-    light: 'Старт',
+    light: 'Start',
     pro: 'Pro',
     pro_plus: 'Pro+',
     agency: 'Agency',

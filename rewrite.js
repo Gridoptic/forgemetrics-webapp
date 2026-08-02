@@ -97,7 +97,7 @@
     function chHead(c) {
         return '<div class="av"' + avAttr(c) + '>' + (c ? chAv(c) : '<i class="ti ti-broadcast"></i>') + '</div>' +
             '<div class="nm"><b>' + esc(c ? (c.title || ('@' + c.username)) : T('Без канала — нейтральный стиль')) + '</b>' +
-            '<span>' + esc(c ? ('@' + c.username) : T('подключи канал, чтобы писать в его голосе')) + '</span></div>';
+            '<span>' + esc(c ? ('@' + c.username) : T('подключи канал, чтобы писать в его стиле')) + '</span></div>';
     }
     function chOpt(ch) {
         var sel = ch.id === _chId;
@@ -128,7 +128,7 @@
               '<div class="rw-chlist" id="rw-chlist">' +
               _channels.map(function (ch) { return chOpt(ch); }).join('') +
               chOptNone() + '</div></div>'
-            : '<div class="rw-hint">' + esc(T('Канал не подключён — перепишу в чистом нейтральном стиле. Подключи канал в приложении, чтобы писать точно в его голосе.')) + '</div>';
+            : '<div class="rw-hint">' + esc(T('Канал не подключён — перепишу в чистом нейтральном стиле. Подключи канал в приложении, чтобы писать точно в его стиле.')) + '</div>';
 
         setView(
             '<div class="rw-sec"><div class="rw-eyebrow"><span class="tile"><i class="ti ti-clipboard-text"></i></span> ' + esc(T('Чужой пост')) + '</div>' +
@@ -175,7 +175,7 @@
         var res = document.getElementById('rw-result');
         var goBtn = document.querySelector('#rewrite-screen [data-act="go"]');
         if (goBtn) goBtn.disabled = true;
-        if (res) res.innerHTML = '<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div><div class="m">' + esc(T('Переписываю в голосе твоего канала...')) + '</div></div></div>';
+        if (res) res.innerHTML = '<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div><div class="m">' + esc(T('Переписываю в стиле твоего канала...')) + '</div></div></div>';
 
         apiRequest('/api/v1/post/rewrite', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {

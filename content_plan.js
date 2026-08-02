@@ -111,7 +111,7 @@
     function renderBrief() {
         var chanBlock;
         if (!_channels || !_channels.length) {
-            chanBlock = '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его голосе.')) + '</div>';
+            chanBlock = '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
         } else if (_channels.length === 1) {
             var c = _channels[0]; _chId = c.id;
             chanBlock = '<div class="cp-onechan"><div class="av">' + esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
