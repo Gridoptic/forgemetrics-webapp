@@ -213,11 +213,16 @@
     var poster = el('poster'); if (poster) poster.classList.toggle('fmx-bgsel', on);
     var c = el('fmx-bg-catch'); if (c) c.style.display = on ? 'block' : 'none';
     var h = el('fmx-bg-hint'); if (h) h.style.display = on ? 'block' : 'none';
-    var btn = el('fmx-ed-bgcrop'); if (btn) { btn.innerHTML = on ? '✓ Готово' : '⤢ Кадрировать фон'; btn.classList.toggle('on', on); }
+    var btn = el('fmx-ed-bgcrop'); if (btn) {
+      btn.innerHTML = on
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span>Готово</span>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>Кадрировать фон</span>';
+      btn.classList.toggle('on', on);
+    }
     if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }
   }
   function _updateBgCropBtn() {
-    var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'block' : 'none';
+    var btn = el('fmx-ed-bgcrop'); if (btn) btn.style.display = _isPhotoBg() ? 'flex' : 'none';
     if (!_isPhotoBg() && _bgCrop) _setBgCrop(false);
   }
   function _bgEls() { var a = [], i = el('bgImg'), v = el('bgVid'); if (i) a.push(i); if (v) a.push(v); return a; }
@@ -775,8 +780,8 @@
       var anchor = el('fmx-ed-reset') || el('drop');
       if (anchor && anchor.parentNode) {
         var b = document.createElement('button'); b.id = 'fmx-ed-bgcrop'; b.type = 'button';
-        b.innerHTML = '⤢ Кадрировать фон';
-        b.style.cssText = 'display:none;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>Кадрировать фон</span>';
+        b.style.cssText = 'display:none;align-items:center;justify-content:center;gap:8px;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
         b.addEventListener('click', function () { _setBgCrop(!_bgCrop); });
         anchor.parentNode.insertBefore(b, anchor);
       }
@@ -866,7 +871,8 @@
         'object-fit:contain !important;display:block;}' +
       '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;gap:' + px(8) + ' !important;}' +
       '#fmx-ed-reset svg{width:' + px(15) + ';height:' + px(15) + ';flex-shrink:0;}' +
-      '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
+      '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;gap:' + px(8) + ' !important;}' +
+      '#fmx-ed-bgcrop svg{width:' + px(15) + ';height:' + px(15) + ';flex-shrink:0;}' +
       '.picker{width:' + px(252) + ' !important;padding:' + px(14) + ' !important;border-radius:' + px(14) + ' !important;}' +
       '.pkhead{margin-bottom:' + px(10) + ' !important;}' +
       '.picker .pt{font-size:' + px(12) + ' !important;}' +
