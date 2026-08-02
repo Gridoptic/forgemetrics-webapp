@@ -1807,7 +1807,7 @@
             '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">охват базы</div></div>' +
             '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">событий 24ч</div></div></div>';
 
-        var hm = baseN.slice(0, 21);
+        var hm = baseN.slice(0, 27);
         if (hm.length >= 4) {
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
@@ -1849,11 +1849,14 @@
 
         var list = (_term.niches || []).filter(function (n) { return _termSrc === 'all' ? n.source === 'base' : n.source === _termSrc; });
         list.sort(function (a, b) {
+            var ra = (a.spark && a.spark.length >= 3) ? 0 : 1;
+            var rb = (b.spark && b.spark.length >= 3) ? 0 : 1;
+            if (ra !== rb) return ra - rb;
             if (_termSort === 'delta') return (b.delta7 == null ? -999 : b.delta7) - (a.delta7 == null ? -999 : a.delta7);
             if (_termSort === 'count') return (b.count || 0) - (a.count || 0);
             return (b.median_cpm || 0) - (a.median_cpm || 0);
         });
-        html += '<div class="fmx-t2list">' + list.slice(0, 24).map(function (n) {
+        html += '<div class="fmx-t2list">' + list.map(function (n) {
             var col = n.delta7 == null ? '#8d93a8' : (n.delta7 >= 0 ? '#5DCAA5' : '#f06978');
             var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
