@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://api.62-60-235-228.sslip.io';
+const API_BASE_URL = 'https://api.fmtr.click';
 
 const tg = window.Telegram?.WebApp;
 
