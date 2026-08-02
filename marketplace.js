@@ -543,7 +543,7 @@
             '.fmx-bp.p4{color:#f08a3c;border-color:rgba(240,138,60,0.34);}',
             '.fmx-bp.p5{color:#ef4444;border-color:rgba(239,68,68,0.36);}',
             '.fmx-bp svg{display:block;flex:0 0 auto;}',
-            '.fmr-pulse{margin-top:6px;display:flex;}',
+            '.fmr-pulse{margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}',
             '.fmx-b-safe{background:rgba(99,102,241,0.13);color:#818cf8;}',
             '.fmx-b-owner{background:rgba(56,150,220,0.15);color:#5ab0e6;}',
             '.fmx-b-nofraud{background:rgba(93,202,165,0.13);color:#5DCAA5;}',
@@ -8653,6 +8653,9 @@
                 '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
                 '<div class="fmr-scorelbl">индекс <i class="fmr-i ti ti-info-circle" data-fi="health"></i></div></div>';
         })();
+        var tagInBody = noHead || ((l.effects_json || {}).topTagPos === 'body');
+        var promoBdg = (realTop && topTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (topTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
+        var tagAsBadge = tagInBody && !!promoBdg;
         var headHtml;
         if (noHead) {
             var _rAv = l.avatar_url
@@ -8662,16 +8665,14 @@
             headHtml = '<div class="fmr-head">' + _rAv +
                 '<div class="fmr-id"><div class="fmr-name" style="' + fontStyle(l.title_style) + '">' + _esc(t) + '</div>' +
                 (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' : '') +
-                (_pb ? '<div class="fmr-pulse">' + _pb + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+                ((_pb || tagAsBadge) ? '<div class="fmr-pulse">' + _pb + (tagAsBadge ? promoBdg : '') + '</div>' : '') + '</div>' + scoreHtml + '</div>';
         } else {
             headHtml = '<div class="fmx-crow">' + avHtml +
                 '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
                 scoreHtml + '</div>';
         }
-        var tagInBody = noHead || ((l.effects_json || {}).topTagPos === 'body');
-        var tagAsBadge = tagInBody && realTop && topTag !== 'off';
         var _flow = flowItems.filter(function (it) { return !(noHead && it.k === 'live'); }).map(function (it) { return it.h; });
-        if (tagAsBadge) _flow.unshift('<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (topTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>');
+        if (tagAsBadge && !noHead) _flow.unshift(promoBdg);
         bodyBdg = (_flow.length || _ab) ? '<div class="fmx-badges">' + _flow.join('') + _ab + '</div>' : '';
         var _tagPos = tagInBody ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
         var tagHtml = realTop
@@ -8867,14 +8868,12 @@
             }
             if (sr.length) struct = sr.join('');
         })();
-        var pills = [];
-        if (_rGold && _rTag !== 'off') pills.push('<span class="fmr-pill" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.32);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i><span style="color:#e6cf9a;">Продвигается</span></span>');
-        if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Фрод-контроль пройден</span></span>');
-        if (l.rkn_url) pills.push(rknPill(l.rkn_url, 'radar'));
-        if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
-        var al = _audLabel(l);
-        if (al) pills.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
-        var pillsHtml = pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '<div style="height:11px;"></div>';
+        var _promoB = (_rGold && _rTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
+        var bIt = badgeItems(l).filter(function (it) { return it.k !== 'niche' && it.k !== 'live'; }).map(function (it) { return it.h; });
+        if ((!l.badges || !l.badges.length) && subs && subs >= 100000) bIt.push('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>');
+        var _ac = _audChip(l);
+        var pillsHtml = (bIt.length || _ac) ? '<div class="fmx-badges" style="margin:13px 0 11px;">' + bIt.join('') + _ac + '</div>' : '<div style="height:11px;"></div>';
+        var fmtHtml = (l.formats && l.formats.length) ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '';
         var _t = l.title || l.username || 'Канал', _acc = _accent(l);
         var avHtml = l.avatar_url
             ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
@@ -8884,7 +8883,7 @@
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
             (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
-            (_pb ? '<div class="fmr-pulse">' + _pb + '</div>' : '') + '</div>' + scoreHtml + '</div>';
+            ((_pb || _promoB) ? '<div class="fmr-pulse">' + _pb + _promoB + '</div>' : '') + '</div>' + scoreHtml + '</div>';
         var nicheHtml = l.niche ? '<div class="fmr-nicherow"><span class="fmr-niche"><i class="ti ti-tag"></i>' + _esc(l.niche) + '</span></div>' : '';
         return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
@@ -8892,7 +8891,7 @@
             nicheHtml +
             _heroTiles(l, 'radar') + _blk(1, ad) +
             _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
-            _blk(3, flow) + pillsHtml +
+            _blk(3, flow) + pillsHtml + fmtHtml +
             _ctcLinesHtml(l) +
             _moreBlock(l) +
             '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
