@@ -1012,8 +1012,10 @@
             '.fmx-t2list .cpm{flex:0 0 auto;text-align:right;min-width:64px;}',
             '.fmx-t2list .cpm b{font-size:12px;font-variant-numeric:tabular-nums;display:block;}',
             '.fmx-t2list .cpm span{font-size:9.5px;}',
-            '.fmx-t2spark{flex:0 0 auto;}',
-            '.fmx-t2nospark{flex:0 0 auto;width:52px;text-align:center;font-size:8.5px;color:#565b73;}',
+            '.fmx-t2sparkbox{flex:0 0 auto;position:relative;display:flex;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:7px;padding:3px 4px 2px;}',
+            '.fmx-t2sparkbox svg{display:block;}',
+            '.fmx-t2sparkdays{position:absolute;top:1px;right:4px;font-size:6.5px;font-weight:700;letter-spacing:0.03em;color:#565b73;line-height:1;}',
+            '.fmx-t2nospark{flex:0 0 auto;width:66px;text-align:center;font-size:8.5px;color:#565b73;background:rgba(255,255,255,0.02);border:0.5px dashed rgba(255,255,255,0.09);border-radius:7px;padding:8px 0;}',
             '.fmx-t2ev{display:flex;gap:9px;padding:8px 2px;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11px;line-height:1.45;color:#a7aec6;}',
             '.fmx-t2ev.fresh{animation:fmxTevin 0.7s ease-out;}',
             '@keyframes fmxTevin{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}',
@@ -1632,12 +1634,23 @@
     }
     function _tSpark(vals, color) {
         if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
-        var w = 52, h = 18, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+        var w = 58, h = 24, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
         var pts = vals.map(function (v, i) {
-            return (i / (vals.length - 1) * w).toFixed(1) + ',' + (h - 2 - (v - mn) / span * (h - 4)).toFixed(1);
-        }).join(' ');
-        return '<svg class="fmx-t2spark" width="52" height="18" viewBox="0 0 52 18"><polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.6"/></svg>';
+            return [(i / (vals.length - 1) * w), (h - 3 - (v - mn) / span * (h - 8))];
+        });
+        var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+        var area = line + ' L' + w + ',' + h + ' L0,' + h + ' Z';
+        var last = pts[pts.length - 1];
+        var gid = color === '#5DCAA5' ? 'fmxSpG' : (color === '#f06978' ? 'fmxSpR' : 'fmxSpN');
+        return '<span class="fmx-t2sparkbox"><span class="fmx-t2sparkdays">30д</span>' +
+            '<svg width="58" height="24" viewBox="0 0 58 24">' +
+            '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.28"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+            '<line x1="0" y1="' + (h - 0.5) + '" x2="' + w + '" y2="' + (h - 0.5) + '" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>' +
+            '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
+            '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round"/>' +
+            '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2" fill="' + color + '"/></svg></span>';
     }
     function _tArea(series, color, gid) {
         if (!series || series.length < 3) return '<div class="fmx-t2nochart">График появится с накоплением данных</div>';
