@@ -1708,8 +1708,14 @@
         var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
         var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + yBase + ' L' + x0 + ',' + yBase + ' Z';
         var last = pts[pts.length - 1];
-        var d0 = series[0].day;
-        function _dl(iso) { try { var p = iso.split('-'); return parseInt(p[2], 10) + ' ' + _MON_S[parseInt(p[1], 10) - 1]; } catch (e) { return ''; } }
+        var isTime = !!series[0].t;
+        var d0 = isTime ? series[0].t : series[0].day;
+        function _dl(iso) {
+            try {
+                if (isTime) { var dt = new Date(iso); return ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2); }
+                var p = iso.split('-'); return parseInt(p[2], 10) + ' ' + _MON_S[parseInt(p[1], 10) - 1];
+            } catch (e) { return ''; }
+        }
         var g1 = Math.round(yTop + (yBase - yTop) / 3), g2 = Math.round(yTop + (yBase - yTop) * 2 / 3);
         var t1 = Math.round(x0 + (x1 - x0) / 4), t2 = Math.round(x0 + (x1 - x0) / 2), t3 = Math.round(x0 + (x1 - x0) * 3 / 4);
         return '<svg viewBox="0 0 340 84" preserveAspectRatio="none" style="display:block;width:100%;">' +
@@ -1727,7 +1733,7 @@
             '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
             '<path class="fmx-t2line" d="' + line + '" style="stroke:' + color + ';"/>' +
             '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
-            '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span><span>сегодня</span></div>';
+            '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span><span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
     }
     function _tHeatClass(d, own) {
         if (own === false || d == null) return 'n0';
@@ -1824,14 +1830,19 @@
             html += '<div class="fmx-t2tape"><div class="fmx-t2tapein">' + tk + tk + '</div></div>';
         }
 
-        var series = (idx.series || []);
-        if (series.length > _termRange) series = series.slice(-_termRange);
+        var series;
+        if (_termRange === 1) {
+            series = idx.series1d || [];
+        } else {
+            series = (idx.series || []);
+            if (series.length > _termRange) series = series.slice(-_termRange);
+        }
         html += '<div class="fmx-t2hero">' +
             '<div style="display:flex;align-items:flex-start;">' +
             '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">Индекс CPM рынка</div>' +
             '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
             (idx.delta7 != null ? '<span class="fmx-t2hd">' + _tFmtDelta(idx.delta7) + ' за 7 дн</span>' : '') + '</div></div>' +
-            '<div class="fmx-t2rng">' + [7, 30, 90].map(function (r) {
+            '<div class="fmx-t2rng">' + [1, 7, 30, 90].map(function (r) {
                 return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
             }).join('') + '</div></div>' +
             '<div style="margin-top:8px;">' + _tArea(series, '#818cf8', 'fmxTgIdx') + '</div></div>';
@@ -1878,7 +1889,7 @@
         }
 
         html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши' +
-            '<span class="fmx-t2rng" style="margin-left:auto;">' + [7, 30, 90].map(function (r) {
+            '<span class="fmx-t2rng" style="margin-left:auto;">' + [1, 7, 30, 90].map(function (r) {
                 return '<span data-tsprange="' + r + '"' + (r === _termSpark ? ' class="on"' : '') + '>' + r + 'д</span>';
             }).join('') + '</span></div>';
         html += '<div class="fmx-t2chips">' + [
@@ -1902,7 +1913,7 @@
             var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
                 '<span class="nm"><b>' + _esc(n.niche) + '</b><span>' + n.count + ' ' + kind + (n.median_er != null ? ' · ER ' + String(n.median_er).replace('.', ',') + '%' : '') + '</span></span>' +
-                _tSpark(n.spark, col) +
+                _tSpark(_termSpark === 1 ? (n.spark1d || []) : n.spark, col) +
                 '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
                 (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
         }).join('') + '</div>';
@@ -1949,7 +1960,9 @@
         apiGet('/api/v1/marketplace/terminal/niche?name=' + encodeURIComponent(name)).then(function (r) {
             var b = el('fmx-tnBody'); if (!b) return;
             if (!r || !r.ok) { b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Попробуй ещё раз позже.'); return; }
-            var ser = (r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || [];
+            var ser = _termRange === 1
+                ? ((r.series && r.series.intraday) || [])
+                : ((r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || []);
             var cur = ser.length ? ser[ser.length - 1].cpm : null;
             var d7 = null;
             if (ser.length >= 2) {
@@ -1962,7 +1975,7 @@
                 '<div style="display:flex;align-items:baseline;gap:9px;">' +
                 '<b style="font-size:23px;font-variant-numeric:tabular-nums;">' + (cur != null ? _num(cur) + ' ₽' : '—') + '</b>' +
                 (d7 != null ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(d7) + ' за 7 дн</span>' : '') + '</div>' +
-                '<div style="margin-top:8px;">' + _tArea(ser.slice(-_termRange), '#5DCAA5', 'fmxTgN') + '</div>' +
+                '<div style="margin-top:8px;">' + _tArea(_termRange === 1 ? ser : ser.slice(-_termRange), '#5DCAA5', 'fmxTgN') + '</div>' +
                 '<div class="fmx-t2kv">' +
                 '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
                 '<div class="k"><div class="a">Медиана ER</div><div class="b">' + (r.median_er != null ? String(r.median_er).replace('.', ',') + '%' : '—') + '</div></div>' +
