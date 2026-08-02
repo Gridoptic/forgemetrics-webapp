@@ -2998,7 +2998,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN application filed",
   "Заявка в перечне РКН № %1": "RKN registry application No. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN registry application filed — number in the badge on the card",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Provide a link to the RKN registry record (knd.gov.ru) or the application number"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Provide a link to the RKN registry record (knd.gov.ru) or the application number",
+  "ERR · 24ч": "ERR · 24h"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5992,7 +5993,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Solicitud RKN presentada",
   "Заявка в перечне РКН № %1": "Solicitud al registro RKN n.º %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Solicitud al registro RKN presentada — número en la insignia de la tarjeta",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indica el enlace al registro RKN (knd.gov.ru) o el número de solicitud"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indica el enlace al registro RKN (knd.gov.ru) o el número de solicitud",
+  "ERR · 24ч": "ERR · 24h"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8986,7 +8988,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN-Antrag gestellt",
   "Заявка в перечне РКН № %1": "RKN-Registerantrag Nr. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN-Registerantrag gestellt — Nummer im Badge auf der Karte",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Gib den Link zum RKN-Registereintrag (knd.gov.ru) oder die Antragsnummer an"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Gib den Link zum RKN-Registereintrag (knd.gov.ru) oder die Antragsnummer an",
+  "ERR · 24ч": "ERR · 24h"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -11975,7 +11978,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "РКН өтінімі берілді",
   "Заявка в перечне РКН № %1": "РКН тізіліміне өтінім № %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "РКН тізіліміне өтінім берілді — нөмірі карточкадағы белгіде",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "РКН тізіліміндегі жазба сілтемесін (knd.gov.ru) немесе өтінім нөмірін көрсет"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "РКН тізіліміндегі жазба сілтемесін (knd.gov.ru) немесе өтінім нөмірін көрсет",
+  "ERR · 24ч": "ERR · 24сағ"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -14969,7 +14973,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN arizasi topshirildi",
   "Заявка в перечне РКН № %1": "RKN reestriga ariza № %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN reestriga ariza topshirildi — raqami kartadagi belgida",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN reestridagi yozuv havolasini (knd.gov.ru) yoki ariza raqamini kiriting"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN reestridagi yozuv havolasini (knd.gov.ru) yoki ariza raqamini kiriting",
+  "ERR · 24ч": "ERR · 24s"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -17962,7 +17967,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Заяўка ў пераліку РКН",
   "Заявка в перечне РКН № %1": "Заяўка ў пераліку РКН № %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Пададзена заяўка ў пералік РКН — нумар у значку на картцы",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Пакажы спасылку на запіс у пераліку РКН (knd.gov.ru) або нумар заяўкі"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Пакажы спасылку на запіс у пераліку РКН (knd.gov.ru) або нумар заяўкі",
+  "ERR · 24ч": "ERR · 24г"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -20956,7 +20962,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN müraciəti verilib",
   "Заявка в перечне РКН № %1": "RKN reyestrinə müraciət № %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN reyestrinə müraciət verilib — nömrə kartdakı nişandadır",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN reyestrindəki qeydin linkini (knd.gov.ru) və ya müraciət nömrəsini göstər"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN reyestrindəki qeydin linkini (knd.gov.ru) və ya müraciət nömrəsini göstər",
+  "ERR · 24ч": "ERR · 24s"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -23950,7 +23957,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "تم تقديم طلب RKN",
   "Заявка в перечне РКН № %1": "طلب سجل RKN رقم %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "تم تقديم طلب سجل RKN — الرقم في شارة البطاقة",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "أدخل رابط السجل في RKN (knd.gov.ru) أو رقم الطلب"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "أدخل رابط السجل في RKN (knd.gov.ru) أو رقم الطلب",
+  "ERR · 24ч": "ERR · 24h"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -26944,7 +26952,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "درخواست RKN ثبت شد",
   "Заявка в перечне РКН № %1": "درخواست فهرست RKN شماره %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "درخواست فهرست RKN ثبت شده — شماره در نشان روی کارت",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "پیوند رکورد فهرست RKN (knd.gov.ru) یا شماره درخواست را وارد کن"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "پیوند رکورد فهرست RKN (knd.gov.ru) یا شماره درخواست را وارد کن",
+  "ERR · 24ч": "ERR · 24h"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -29938,7 +29947,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN başvurusu yapıldı",
   "Заявка в перечне РКН № %1": "RKN kayıt başvurusu No. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN kaydına başvuru yapıldı — numara karttaki rozette",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN kaydındaki bağlantıyı (knd.gov.ru) veya başvuru numarasını gir"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN kaydındaki bağlantıyı (knd.gov.ru) veya başvuru numarasını gir",
+  "ERR · 24ч": "ERR · 24s"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -32932,7 +32942,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN आवेदन दायर",
   "Заявка в перечне РКН № %1": "RKN रजिस्ट्री आवेदन सं. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN रजिस्ट्री में आवेदन दायर — नंबर कार्ड के बैज में",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN रजिस्ट्री रिकॉर्ड का लिंक (knd.gov.ru) या आवेदन नंबर दो"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN रजिस्ट्री रिकॉर्ड का लिंक (knd.gov.ru) या आवेदन नंबर दो",
+  "ERR · 24ч": "ERR · 24h"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -35926,7 +35937,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "RKN আবেদন দাখিল",
   "Заявка в перечне РКН № %1": "RKN রেজিস্ট্রি আবেদন নং %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "RKN রেজিস্ট্রিতে আবেদন দাখিল — নম্বর কার্ডের ব্যাজে",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN রেজিস্ট্রি রেকর্ডের লিঙ্ক (knd.gov.ru) বা আবেদন নম্বর দাও"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "RKN রেজিস্ট্রি রেকর্ডের লিঙ্ক (knd.gov.ru) বা আবেদন নম্বর দাও",
+  "ERR · 24ч": "ERR · 24h"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -38920,7 +38932,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Permohonan RKN diajukan",
   "Заявка в перечне РКН № %1": "Permohonan registri RKN No. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Permohonan registri RKN diajukan — nomor di lencana kartu",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Masukkan tautan catatan registri RKN (knd.gov.ru) atau nomor permohonan"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Masukkan tautan catatan registri RKN (knd.gov.ru) atau nomor permohonan",
+  "ERR · 24ч": "ERR · 24j"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -41914,7 +41927,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Đã nộp đơn RKN",
   "Заявка в перечне РКН № %1": "Đơn đăng ký RKN số %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Đã nộp đơn vào danh mục RKN — số hiệu trong huy hiệu trên thẻ",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Nhập liên kết bản ghi RKN (knd.gov.ru) hoặc số đơn đăng ký"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Nhập liên kết bản ghi RKN (knd.gov.ru) hoặc số đơn đăng ký",
+  "ERR · 24ч": "ERR · 24h"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -44908,7 +44922,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Pedido RKN enviado",
   "Заявка в перечне РКН № %1": "Pedido ao registro RKN nº %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Pedido ao registro RKN enviado — número no selo do cartão",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Informe o link do registro RKN (knd.gov.ru) ou o número do pedido"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Informe o link do registro RKN (knd.gov.ru) ou o número do pedido",
+  "ERR · 24ч": "ERR · 24h"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -47902,7 +47917,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Demande RKN déposée",
   "Заявка в перечне РКН № %1": "Demande au registre RKN n° %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Demande au registre RKN déposée — numéro dans le badge de la carte",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indique le lien vers l'entrée du registre RKN (knd.gov.ru) ou le numéro de demande"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indique le lien vers l'entrée du registre RKN (knd.gov.ru) ou le numéro de demande",
+  "ERR · 24ч": "ERR · 24h"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -50896,7 +50912,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Domanda RKN presentata",
   "Заявка в перечне РКН № %1": "Domanda al registro RKN n. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Domanda al registro RKN presentata — numero nel badge della scheda",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indica il link alla voce del registro RKN (knd.gov.ru) o il numero della domanda"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Indica il link alla voce del registro RKN (knd.gov.ru) o il numero della domanda",
+  "ERR · 24ч": "ERR · 24h"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -53890,7 +53907,8 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "የRKN ማመልከቻ ቀርቧል",
   "Заявка в перечне РКН № %1": "የRKN መዝገብ ማመልከቻ ቁ. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "ወደ RKN መዝገብ ማመልከቻ ቀርቧል — ቁጥሩ በካርዱ ባጅ ላይ",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "የRKN መዝገብ ማስፈንጠሪያ (knd.gov.ru) ወይም የማመልከቻ ቁጥር አስገባ"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "የRKN መዝገብ ማስፈንጠሪያ (knd.gov.ru) ወይም የማመልከቻ ቁጥር አስገባ",
+  "ERR · 24ч": "ERR · 24h"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -56884,6 +56902,7 @@ window.__I18N_DICT = {
   "Заявка в перечне РКН": "Ombi la RKN limewasilishwa",
   "Заявка в перечне РКН № %1": "Ombi la rejista ya RKN Na. %1",
   "Подана заявка в перечень РКН — номер в значке на карточке": "Ombi la rejista ya RKN limewasilishwa — namba iko kwenye beji ya kadi",
-  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Weka kiungo cha rekodi ya rejista ya RKN (knd.gov.ru) au namba ya ombi"
+  "Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки": "Weka kiungo cha rekodi ya rejista ya RKN (knd.gov.ru) au namba ya ombi",
+  "ERR · 24ч": "ERR · 24h"
  }
 };

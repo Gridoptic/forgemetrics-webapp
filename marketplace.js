@@ -509,6 +509,7 @@
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
             '.fmx-kmt .v.sm{font-size:14px;line-height:1.2;}',
             '.fmx-kmt .v.xs{font-size:12px;letter-spacing:-0.03em;line-height:1.4;}',
+            '.fmx-kmt .v .v24{font-size:11.5px;font-weight:700;color:#8d93a8;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmr-sec.num{font-size:12.5px;letter-spacing:0.02em;text-transform:none;font-weight:700;color:#c7cdfb;margin:0 0 8px;}',
             '.fmr-gline{display:flex;align-items:center;gap:8px;margin-top:4px;}',
@@ -7951,7 +7952,7 @@
             (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
     function _htile(label, val, valCol, sub, subCol, isPrice) {
-        var vlen = String(val == null ? '' : val).length;
+        var vlen = String(val == null ? '' : val).replace(/<[^>]*>/g, '').length;
         var fit = vlen >= 11 ? ' xs' : (vlen >= 8 ? ' sm' : '');
         return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
             '<div class="v' + (isPrice ? ' pr' : '') + fit + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
@@ -7999,7 +8000,14 @@
             _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
             _htile('Охват', dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed',
                 dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : '') +
-            _htile('ERR', dead ? '—' : (rr != null ? rr + '%' : '—'), dead ? '#c2c6d2' : rrCol, dead ? 'нет свежих постов' : (rstat || 'уточняется'), dead ? '' : (rstat ? rrCol : '')) +
+            (function () {
+                var e24 = (!dead && rr != null && subs > 0 && typeof l.reach_24h_median === 'number' && l.reach_24h_median > 0)
+                    ? String(Math.round(l.reach_24h_median / subs * 1000) / 10).replace('.', ',') : null;
+                return _htile(e24 ? 'ERR · 24ч' : 'ERR',
+                    dead ? '—' : (rr != null ? rr + '%' + (e24 ? ' <span class="v24">· ' + e24 + '%</span>' : '') : '—'),
+                    dead ? '#c2c6d2' : rrCol,
+                    dead ? 'нет свежих постов' : (rstat || 'уточняется'), dead ? '' : (rstat ? rrCol : ''));
+            })() +
             _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
             _htile('CPM, ₽', (!dead && cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed',
                 dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), '') +
