@@ -1735,6 +1735,23 @@
             '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
             '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span><span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
     }
+    function _tSeriesDelta(series) {
+        if (!series || series.length < 2) return null;
+        var isTime = !!series[0].t;
+        var v0 = series[0].v != null ? series[0].v : series[0].cpm;
+        var v1 = series[series.length - 1].v != null ? series[series.length - 1].v : series[series.length - 1].cpm;
+        if (!v0 || v0 <= 0 || v1 == null) return null;
+        var pct = Math.round((v1 - v0) / v0 * 1000) / 10;
+        var label;
+        if (isTime) {
+            var hrs = Math.max(1, Math.round((Date.parse(series[series.length - 1].t) - Date.parse(series[0].t)) / 3600000));
+            label = 'за ' + hrs + ' ч';
+        } else {
+            var days = Math.max(1, Math.round((Date.parse(series[series.length - 1].day) - Date.parse(series[0].day)) / 86400000));
+            label = 'за ' + days + ' дн';
+        }
+        return { pct: pct, label: label };
+    }
     function _tHeatClass(d, own) {
         if (own === false || d == null) return 'n0';
         if (d >= 5) return 'g1'; if (d >= 1.5) return 'g2'; if (d > 0) return 'g3';
@@ -1841,7 +1858,10 @@
             '<div style="display:flex;align-items:flex-start;">' +
             '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">Индекс CPM рынка</div>' +
             '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
-            (idx.delta7 != null ? '<span class="fmx-t2hd">' + _tFmtDelta(idx.delta7) + ' за 7 дн</span>' : '') + '</div></div>' +
+            (function () {
+                var d = _tSeriesDelta(series);
+                return d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '';
+            })() + '</div></div>' +
             '<div class="fmx-t2rng">' + [1, 7, 30, 90].map(function (r) {
                 return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
             }).join('') + '</div></div>' +
@@ -1963,19 +1983,14 @@
             var ser = _termRange === 1
                 ? ((r.series && r.series.intraday) || [])
                 : ((r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || []);
+            var shown = _termRange === 1 ? ser : ser.slice(-_termRange);
             var cur = ser.length ? ser[ser.length - 1].cpm : null;
-            var d7 = null;
-            if (ser.length >= 2) {
-                for (var i = ser.length - 2; i >= 0; i--) {
-                    var dd = Math.round((Date.parse(ser[ser.length - 1].day) - Date.parse(ser[i].day)) / 86400000);
-                    if (dd >= 5 && dd <= 10) { if (ser[i].cpm > 0) d7 = Math.round((cur - ser[i].cpm) / ser[i].cpm * 1000) / 10; break; }
-                }
-            }
+            var nd = _tSeriesDelta(shown);
             var html = '<div class="fmx-t2hero">' +
                 '<div style="display:flex;align-items:baseline;gap:9px;">' +
                 '<b style="font-size:23px;font-variant-numeric:tabular-nums;">' + (cur != null ? _num(cur) + ' ₽' : '—') + '</b>' +
-                (d7 != null ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(d7) + ' за 7 дн</span>' : '') + '</div>' +
-                '<div style="margin-top:8px;">' + _tArea(_termRange === 1 ? ser : ser.slice(-_termRange), '#5DCAA5', 'fmxTgN') + '</div>' +
+                (nd ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') + '</div>' +
+                '<div style="margin-top:8px;">' + _tArea(shown, '#5DCAA5', 'fmxTgN') + '</div>' +
                 '<div class="fmx-t2kv">' +
                 '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
                 '<div class="k"><div class="a">Медиана ER</div><div class="b">' + (r.median_er != null ? String(r.median_er).replace('.', ',') + '%' : '—') + '</div></div>' +
