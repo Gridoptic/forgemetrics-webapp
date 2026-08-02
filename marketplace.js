@@ -5,7 +5,16 @@
     var _root = null, _opened = false;
     var _mainTab = 'market';
     var _subTab = 'buy';
-    var _view = 'cards';
+    var _views = (function () {
+        var d = { catalog: 'list', buy: 'cards' };
+        try {
+            var c = localStorage.getItem('fm_view_catalog'); if (c === 'cards' || c === 'list') d.catalog = c;
+            var b = localStorage.getItem('fm_view_buy'); if (b === 'cards' || b === 'list') d.buy = b;
+        } catch (e) {}
+        return d;
+    })();
+    function _viewKey() { return _mainTab === 'catalog' ? 'catalog' : 'buy'; }
+    function _curView() { return _views[_viewKey()]; }
     var _sort = 'match';
     var _feed = null, _catalog = null, _feedState = 'idle', _catState = 'idle';
     var _adultOk = false;
@@ -2569,14 +2578,14 @@
             box.innerHTML = emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или фильтр — подходящих каналов в каталоге пока нет.');
             return;
         }
-        var _renderOne = (_view === 'cards') ? simpleCard : function (x) { return zw(listItem(x, false, true)); };
+        var _renderOne = (_curView() === 'cards') ? simpleCard : function (x) { return zw(listItem(x, false, true)); };
         var FIRST = 120, CHUNK = 60;
         var head = list.slice(0, FIRST).map(_renderOne).join('');
-        box.innerHTML = (_regionNote ? _regionNoteHtml() : '') + (_view === 'cards'
+        box.innerHTML = (_regionNote ? _regionNoteHtml() : '') + (_curView() === 'cards'
             ? '<div class="fmx-grid" id="fmx-catGrid">' + head + '</div>'
             : '<div style="display:flex;flex-direction:column;gap:8px;" id="fmx-catGrid">' + head + '</div>') +
             '<div id="fmx-catTail"></div>';
-        bindCards(box); if (_view === 'list') bindList(box); _bindAgeGate(box);
+        bindCards(box); if (_curView() === 'list') bindList(box); _bindAgeGate(box);
         var grid = el('fmx-catGrid'), token = (box._paintToken = (box._paintToken || 0) + 1);
         (function drawTail(i) {
             if (!grid || box._paintToken !== token || !grid.isConnected) return;
@@ -2591,7 +2600,7 @@
             while (tmp.firstChild) { added.push(tmp.firstChild); grid.appendChild(tmp.firstChild); }
             added.forEach(function (n) {
                 if (!n || n.nodeType !== 1) return;
-                bindCards(n); if (_view === 'list') bindList(n); _bindAgeGate(n);
+                bindCards(n); if (_curView() === 'list') bindList(n); _bindAgeGate(n);
             });
             requestAnimationFrame(function () { drawTail(i + CHUNK); });
         })(FIRST);
@@ -2848,10 +2857,10 @@
             var feed = _applyBuyFilter(_feed);
             var rnote = (_regionFb && _regionFbBase != null && _feedTotal > _regionFbBase) ? _regionNoteHtml() : '';
             if (!feed.length) body = emptyHtml('ti-filter-off', 'По фильтру пусто', 'В выбранной нише пока нет карточек. Попробуй «Все каналы» — или догрузи ленту дальше.') + moreBtn;
-            else body = rnote + (_view === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return zw(listItem(x)); }).join('') + '</div>') + moreBtn;
+            else body = rnote + (_curView() === 'cards' ? '<div class="fmx-grid">' + feed.map(fullCard).join('') + '</div>' : '<div style="display:flex;flex-direction:column;gap:8px;">' + feed.map(function (x) { return zw(listItem(x)); }).join('') + '</div>') + moreBtn;
         }
         host.innerHTML = body;
-        bindCards(host); if (_view === 'list') bindList(host);
+        bindCards(host); if (_curView() === 'list') bindList(host);
         observeViews(host);
         bindPeek(host);
         var more = el('fmx-more');
@@ -9256,7 +9265,16 @@
             });
         });
     }
-    function bindView() { qsa(el('fmx-main'), '[data-view]').forEach(function (b) { b.addEventListener('click', function () { _view = b.getAttribute('data-view'); if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy(); }); }); }
+    function bindView() {
+        qsa(el('fmx-main'), '[data-view]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var k = _viewKey();
+                _views[k] = b.getAttribute('data-view');
+                try { localStorage.setItem('fm_view_' + k, _views[k]); } catch (e) {}
+                if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+            });
+        });
+    }
     function bindSort() {
         qsa(el('fmx-main'), '[data-sort]').forEach(function (b) {
             b.addEventListener('click', function () {
@@ -9296,8 +9314,8 @@
     }
     function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
     function vtogHtml() {
-        return '<div class="fmx-vtog"><button class="fmx-vt' + (_view === 'cards' ? ' on' : '') + '" data-view="cards"><i class="ti ti-layout-grid"></i></button>' +
-            '<button class="fmx-vt' + (_view === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
+        return '<div class="fmx-vtog"><button class="fmx-vt' + (_curView() === 'cards' ? ' on' : '') + '" data-view="cards"><i class="ti ti-layout-grid"></i></button>' +
+            '<button class="fmx-vt' + (_curView() === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
     }
     function topRowHtml() {
         return '<div class="fmx-divrow"><span class="fmx-divlbl">Каналы, где можно купить рекламу</span><span class="fmx-divline"></span>' + vtogHtml() + '</div>';
