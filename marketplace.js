@@ -1660,22 +1660,35 @@
             '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2" fill="' + color + '"/></svg>' +
             '<span class="fmx-t2spd">30д</span></span>';
     }
+    var _MON_S = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     function _tArea(series, color, gid) {
         if (!series || series.length < 3) return '<div class="fmx-t2nochart">График появится с накоплением данных</div>';
-        var w = 340, h = 84, vals = series.map(function (p) { return p.v != null ? p.v : p.cpm; });
+        var w = 340, h = 84, x0 = 3, x1 = 334, yTop = 8, yBase = 79;
+        var vals = series.map(function (p) { return p.v != null ? p.v : p.cpm; });
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
         var pts = vals.map(function (v, i) {
-            return [(i / (vals.length - 1) * w), (h - 6 - (v - mn) / span * (h - 18))];
+            return [x0 + (i / (vals.length - 1) * (x1 - x0)), (yBase - 3 - (v - mn) / span * (yBase - yTop - 6))];
         });
         var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
-        var area = line + ' L' + w + ',' + h + ' L0,' + h + ' Z';
+        var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + yBase + ' L' + x0 + ',' + yBase + ' Z';
         var last = pts[pts.length - 1];
-        var d0 = series[0].day, d1 = series[series.length - 1].day;
-        function _dl(iso) { try { var p = iso.split('-'); return parseInt(p[2], 10) + '.' + p[1]; } catch (e) { return ''; } }
+        var d0 = series[0].day;
+        function _dl(iso) { try { var p = iso.split('-'); return parseInt(p[2], 10) + ' ' + _MON_S[parseInt(p[1], 10) - 1]; } catch (e) { return ''; } }
+        var g1 = Math.round(yTop + (yBase - yTop) / 3), g2 = Math.round(yTop + (yBase - yTop) * 2 / 3);
+        var t1 = Math.round(x0 + (x1 - x0) / 4), t2 = Math.round(x0 + (x1 - x0) / 2), t3 = Math.round(x0 + (x1 - x0) * 3 / 4);
         return '<svg viewBox="0 0 340 84" preserveAspectRatio="none" style="display:block;width:100%;">' +
             '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
             '<stop offset="0" stop-color="' + color + '" stop-opacity="0.30"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+            '<line x1="' + x0 + '" y1="' + g1 + '" x2="' + w + '" y2="' + g1 + '" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 4"/>' +
+            '<line x1="' + x0 + '" y1="' + g2 + '" x2="' + w + '" y2="' + g2 + '" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 4"/>' +
+            '<line x1="1.5" y1="4" x2="1.5" y2="' + yBase + '" stroke="rgba(255,255,255,0.16)"/>' +
+            '<line x1="1.5" y1="' + yBase + '" x2="' + w + '" y2="' + yBase + '" stroke="rgba(255,255,255,0.16)"/>' +
+            '<line x1="0" y1="' + g1 + '" x2="4" y2="' + g1 + '" stroke="rgba(255,255,255,0.24)"/>' +
+            '<line x1="0" y1="' + g2 + '" x2="4" y2="' + g2 + '" stroke="rgba(255,255,255,0.24)"/>' +
+            '<line x1="' + t1 + '" y1="' + (yBase - 2) + '" x2="' + t1 + '" y2="' + (yBase + 3) + '" stroke="rgba(255,255,255,0.24)"/>' +
+            '<line x1="' + t2 + '" y1="' + (yBase - 2) + '" x2="' + t2 + '" y2="' + (yBase + 3) + '" stroke="rgba(255,255,255,0.24)"/>' +
+            '<line x1="' + t3 + '" y1="' + (yBase - 2) + '" x2="' + t3 + '" y2="' + (yBase + 3) + '" stroke="rgba(255,255,255,0.24)"/>' +
             '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
             '<path class="fmx-t2line" d="' + line + '" style="stroke:' + color + ';"/>' +
             '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
