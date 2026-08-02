@@ -361,6 +361,39 @@
             '.fmx-campbtn{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:650;color:#9fe3cc;background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.34);transition:all 160ms;}',
             '.fmx-campbtn>i{font-size:15px;flex:0 0 auto;color:#5DCAA5;}',
             '.fmx-campbtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-adpickbtn{display:flex;align-items:center;gap:9px;width:100%;margin-bottom:9px;padding:12px 14px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:650;color:#f8dfae;background:linear-gradient(135deg,rgba(245,191,79,0.15),rgba(245,191,79,0.04));border:1px solid rgba(245,191,79,0.34);transition:all 160ms;}',
+            '.fmx-adpickbtn i:first-child{font-size:17px;color:#f5bf4f;}',
+            '.fmx-adpickbtn>span{flex:1;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-adpickbtn .fmx-nichebtn-chev{display:block;color:#f5bf4f;}',
+            '.fmx-adpickbtn:active{background:linear-gradient(135deg,rgba(245,191,79,0.26),rgba(245,191,79,0.1));}',
+            '.fmx-apk-ov{position:fixed;inset:0;z-index:100006;background:#0a0d18;background-image:radial-gradient(120% 46% at 50% -4%,rgba(99,102,241,0.12),transparent 60%);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}',
+            '.fmx-apk-in{max-width:460px;margin:0 auto;padding:14px 14px 40px;}',
+            '.fmx-apk-hd{display:flex;align-items:center;gap:10px;padding:6px 0 12px;}',
+            '.fmx-apk-hd b{flex:1;font-size:16px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.fmx-apk-x{flex:0 0 auto;width:34px;height:34px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);color:#aab0c4;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}',
+            '.fmx-apk-hero{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.10);border-radius:15px;padding:14px;}',
+            '.fmx-apk-tile{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border:1px solid rgba(245,191,79,0.32);color:#f5bf4f;font-size:19px;}',
+            '.fmx-apk-chk{display:flex;gap:8px;font-size:12px;color:#a7aec6;line-height:1.45;}',
+            '.fmx-apk-chk i{color:#5DCAA5;font-style:normal;flex:0 0 auto;}',
+            '.fmx-apk-step{display:flex;gap:10px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:10px 12px;}',
+            '.fmx-apk-snum{width:22px;height:22px;border-radius:50%;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.35);color:#a5b4fc;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}',
+            '.fmx-apk-tag{font-size:9px;font-weight:800;letter-spacing:0.05em;border-radius:6px;padding:1px 6px;vertical-align:1px;}',
+            '.fmx-apk-tag.free{color:#5DCAA5;background:rgba(93,202,165,0.1);border:0.5px solid rgba(93,202,165,0.35);}',
+            '.fmx-apk-tag.paid{color:#a5b4fc;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.4);}',
+            '.fmx-apk-go{width:100%;margin-top:13px;min-height:48px;border:0;border-radius:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 8px 24px -8px rgba(99,102,241,0.55);}',
+            '.fmx-apk-go:disabled{opacity:0.45;cursor:default;box-shadow:none;}',
+            '.fmx-apk-spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(129,140,248,0.18);border-top-color:#818cf8;margin:0 auto 14px;animation:fmxSpin 0.9s linear infinite;}',
+            '.fmx-apk-empty{background:rgba(93,202,165,0.06);border:1px solid rgba(93,202,165,0.25);border-radius:13px;padding:13px;font-size:12px;color:#a7aec6;line-height:1.5;display:flex;gap:9px;}',
+            '.fmx-apk-err{background:rgba(240,105,120,0.07);border:1px solid rgba(240,105,120,0.28);border-radius:13px;padding:13px;font-size:12px;color:#a7aec6;line-height:1.5;display:flex;gap:9px;}',
+            '.fmx-apk-card{margin-top:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:12px;}',
+            '.fmx-apk-av{width:34px;height:34px;border-radius:50%;background:#151a30;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#a5b4fc;flex:0 0 auto;overflow:hidden;}',
+            '.fmx-apk-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}',
+            '.fmx-apk-line{margin-top:8px;font-size:10.5px;color:#8d93a8;line-height:1.6;}',
+            '.fmx-apk-line b{color:#c2c6d2;}',
+            '.fmx-apk-why{margin-top:7px;font-size:11px;color:#a7aec6;background:rgba(129,140,248,0.07);border-left:2px solid rgba(129,140,248,0.5);padding:7px 9px;border-radius:0 8px 8px 0;line-height:1.45;}',
+            '.fmx-apk-abtn{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.13);background:rgba(255,255,255,0.04);color:#c2c6d2;font-size:11.5px;font-weight:650;font-family:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-apk-pill{border:0.5px solid rgba(255,255,255,0.12);border-radius:99px;padding:6px 12px;color:#aab0c4;font-size:11px;background:transparent;font-family:inherit;cursor:pointer;white-space:nowrap;}',
+            '.fmx-apk-pill.on{border-color:rgba(129,140,248,0.5);color:#c7ccf7;background:rgba(129,140,248,0.1);}',
             '.fmx-bellbtn{flex:0 0 auto;width:46px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#818cf8;font-family:inherit;background:linear-gradient(135deg,rgba(129,140,248,0.18),rgba(129,140,248,0.06));border:1px solid rgba(129,140,248,0.4);transition:all 160ms;}',
             '.fmx-bellbtn:active{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));}',
             '.fmx-nichebtn.on{background:linear-gradient(135deg,rgba(129,140,248,0.3),rgba(129,140,248,0.12));border-color:rgba(129,140,248,0.6);color:#fff;}',
@@ -2417,6 +2450,7 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
+            _adpickBtnHtml() +
             '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>Кампания</span></button>' +
             _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
@@ -8786,6 +8820,7 @@
             });
         });
         qsa(el('fmx-main'), '[data-alerts]').forEach(function (b) { b.addEventListener('click', function () { openAlerts(); }); });
+        qsa(el('fmx-main'), '[data-adpick]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); openAdPick(); }); });
     }
 
     function _nicheBtnHtml() {
@@ -8797,8 +8832,11 @@
     function _bellBtnHtml() {
         return '<button class="fmx-bellbtn" data-alerts="1" title="Умные уведомления"><i class="ti ti-bell"></i></button>';
     }
+    function _adpickBtnHtml() {
+        return '<button class="fmx-adpickbtn" data-adpick="1"><i class="ti ti-target-arrow"></i><span>Подбор каналов для рекламы</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
+    }
     function sortBarHtml() {
-        return '<div class="fmx-picks">' + _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
+        return _adpickBtnHtml() + '<div class="fmx-picks">' + _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
             '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
@@ -9537,6 +9575,249 @@
     }
 
     var _open0 = open;
+    var _apkTimer = null, _apkChId = null, _apkState = null;
+    function _apkStop() { if (_apkTimer) { clearTimeout(_apkTimer); _apkTimer = null; } }
+    function _apkClose() { _apkStop(); var ov = el('fmx-apkBg'); if (ov) ov.remove(); }
+    function _apkDate(iso) {
+        try { var d = new Date(iso); return d.getDate() + ' ' + MON_RD[d.getMonth()]; } catch (e) { return ''; }
+    }
+    function _apkBody() { return el('fmx-apkBody'); }
+    function _apkChannelId() {
+        var id = null;
+        try { id = (window.__fmActiveChannelId != null) ? window.__fmActiveChannelId : null; } catch (e) {}
+        if (id == null && _channels && _channels.length) id = _channels[0].id;
+        return id;
+    }
+    function openAdPick() {
+        _apkClose();
+        var ov = document.createElement('div'); ov.id = 'fmx-apkBg'; ov.className = 'fmx-apk-ov';
+        ov.innerHTML = '<div class="fmx-apk-in">' +
+            '<div class="fmx-apk-hd"><div class="fmx-apk-tile"><i class="ti ti-target-arrow"></i></div>' +
+            '<b>Подбор каналов для рекламы</b>' +
+            '<button class="fmx-apk-x" id="fmx-apkX"><i class="ti ti-x"></i></button></div>' +
+            '<div id="fmx-apkBody">' + loadHtml() + '</div></div>';
+        document.body.appendChild(ov);
+        el('fmx-apkX').addEventListener('click', function () { _haptic('light'); _apkClose(); });
+        _apkChId = _apkChannelId();
+        if (_apkChId == null) {
+            _apkBody().innerHTML = '<div class="fmx-apk-err"><i class="ti ti-plug" style="color:#f5bf4f;"></i><span><b style="color:#e8e8ed;">Сначала подключи канал.</b> Подбор строится под аудиторию твоего канала — добавь его на главном экране.</span></div>';
+            return;
+        }
+        _apkLoadState();
+    }
+    function _apkLoadState(showRunId) {
+        apiGet('/api/v1/adpick/state?channel_id=' + _apkChId).then(function (st) {
+            _apkState = st || {};
+            var runs = _apkState.runs || [];
+            var active = null, i;
+            for (i = 0; i < runs.length; i++) if (runs[i].status === 'running' || runs[i].status === 'analyzing') { active = runs[i]; break; }
+            if (active) { _apkRenderProgress(active.status); _apkPoll(active.id); return; }
+            if (showRunId) {
+                for (i = 0; i < runs.length; i++) if (runs[i].id === showRunId && runs[i].status === 'done') { _apkRenderResult(runs[i]); return; }
+            }
+            _apkRenderIntro();
+        }).catch(function () {
+            var b = _apkBody(); if (b) b.innerHTML = '<div class="fmx-apk-err"><i class="ti ti-cloud-off" style="color:#f06978;"></i><span>Не удалось загрузить. Проверь связь и открой экран ещё раз.</span></div>';
+        });
+    }
+    function _apkLimitLine() {
+        var st = _apkState || {};
+        if (st.can_run && st.via_extra_package) return 'Доступен купленный разовый запуск';
+        if (st.can_run) return 'Осталось запусков: ' + Math.max(0, (st.limit || 0) - (st.used || 0)) + ' из ' + (st.limit || 0) + ' в месяц';
+        if (!st.limit) return 'Недоступно на твоём тарифе · разовый запуск ' + _num(st.extra_price_rub || 390) + ' ₽';
+        return 'Лимит исчерпан (' + (st.used || 0) + '/' + (st.limit || 0) + ') · обновится при наступлении нового периода';
+    }
+    function _apkHistoryHtml() {
+        var runs = (_apkState && _apkState.runs || []).filter(function (r) { return r.status === 'done'; }).slice(0, 5);
+        if (!runs.length) return '';
+        var pills = runs.map(function (r) {
+            var n = (r.report && r.report.picks) ? r.report.picks.length : 0;
+            return '<button class="fmx-apk-pill" data-apkrun="' + r.id + '">' + _apkDate(r.created_at) + ' · ' + n + ' ' + _plural(n, 'канал', 'канала', 'каналов') + '</button>';
+        }).join('');
+        return '<div style="margin-top:14px;"><div style="font-size:11px;color:#6b7088;margin-bottom:8px;">История подборов</div>' +
+            '<div style="display:flex;gap:7px;flex-wrap:wrap;">' + pills + '</div></div>';
+    }
+    function _apkBindHistory() {
+        var b = _apkBody(); if (!b) return;
+        qsa(b, '[data-apkrun]').forEach(function (p) {
+            p.addEventListener('click', function () {
+                var id = parseInt(p.getAttribute('data-apkrun'), 10);
+                var runs = (_apkState && _apkState.runs) || [];
+                for (var i = 0; i < runs.length; i++) if (runs[i].id === id) { _haptic('light'); _apkRenderResult(runs[i]); return; }
+            });
+        });
+    }
+    function _apkRenderIntro() {
+        var b = _apkBody(); if (!b) return;
+        var st = _apkState || {};
+        var chName = '';
+        try {
+            var cid = _apkChId;
+            for (var i = 0; i < (_channels || []).length; i++) if (String(_channels[i].id) === String(cid)) { chName = _channels[i].channel_title || _channels[i].channel_username || ''; break; }
+        } catch (e) {}
+        b.innerHTML =
+            '<div class="fmx-apk-hero">' +
+            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;">Куда закупать рекламу' + (chName ? ' каналу <b style="color:#c2c6d2;">' + _esc(chName) + '</b>' : ' твоему каналу') + '. Система отбирает площадки, где реклама может сработать:</div>' +
+            '<div style="margin-top:12px;display:flex;flex-direction:column;gap:7px;">' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>Аудитория совпадает с твоей — по нише и смежным нишам</span></div>' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>Лента не выгорела рекламой — доля рекламных постов низкая</span></div>' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>Честный охват — ERR в норме для размера, антифрод чистый</span></div></div>' +
+            '<div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;">' +
+            '<div class="fmx-apk-step"><div class="fmx-apk-snum">1</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">Поиск по базе</b> <span class="fmx-apk-tag free">не списывает запуск</span><br>Если подходящих каналов нет — лимит не сгорит.</div></div>' +
+            '<div class="fmx-apk-step"><div class="fmx-apk-snum">2</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">ИИ-анализ найденных</b> <span class="fmx-apk-tag paid">списывает 1 запуск</span><br>Ранжирует кандидатов и объясняет, почему реклама может сработать.</div></div></div>' +
+            '<button class="fmx-apk-go" id="fmx-apkGo"' + (st.can_run ? '' : ' disabled') + '><i class="ti ti-target-arrow"></i> Подобрать каналы</button>' +
+            '<div style="margin-top:8px;text-align:center;font-size:10.5px;color:rgba(255,255,255,0.42);line-height:1.45;">' + _apkLimitLine() + '</div>' +
+            '</div>' + _apkHistoryHtml();
+        var go = el('fmx-apkGo');
+        if (go) go.addEventListener('click', function () { _haptic('medium'); _apkStart(); });
+        _apkBindHistory();
+    }
+    function _apkStart() {
+        var go = el('fmx-apkGo'); if (go) go.disabled = true;
+        apiPost('/api/v1/adpick/start', { channel_id: _apkChId }).then(function (r) {
+            if (!r || !r.ok) { toast('Не удалось запустить подбор'); if (go) go.disabled = false; return; }
+            _apkRenderProgress('running');
+            _apkPoll(r.run_id);
+        }).catch(function (e) {
+            var msg = 'Не удалось запустить подбор';
+            try { var m = /"detail"\s*:\s*"([^"]+)"/.exec(String(e && e.message || '')); if (m) msg = m[1]; } catch (e2) {}
+            toast(msg, true);
+            if (go) go.disabled = false;
+        });
+    }
+    function _apkRenderProgress(phase) {
+        var b = _apkBody(); if (!b) return;
+        var m = phase === 'analyzing' ? 'ИИ анализирует найденные каналы…' : 'Ищу подходящие каналы в базе…';
+        var s = phase === 'analyzing' ? 'Кандидаты найдены — ранжирую и готовлю обоснования. Запуск списан.' : 'Ниша, выгорание ленты, охват, антифрод — без ИИ, запуск ещё не списан';
+        b.innerHTML = '<div style="padding:34px 10px;text-align:center;">' +
+            '<div class="fmx-apk-spin"></div>' +
+            '<div style="font-size:13px;font-weight:600;">' + m + '</div>' +
+            '<div style="font-size:11px;color:#8d93a8;margin-top:5px;line-height:1.5;">' + s + '</div></div>';
+    }
+    function _apkPoll(runId) {
+        _apkStop();
+        _apkTimer = setTimeout(function () {
+            apiGet('/api/v1/adpick/run/' + runId).then(function (r) {
+                if (!el('fmx-apkBg')) return;
+                if (!r) { _apkPoll(runId); return; }
+                if (r.status === 'running') { _apkPoll(runId); return; }
+                if (r.status === 'analyzing') { _apkRenderProgress('analyzing'); _apkPoll(runId); return; }
+                _apkStop();
+                if (r.status === 'done') { _apkState = null; _apkRefreshRuns(r); return; }
+                if (r.status === 'empty') { _apkRenderEmpty(); return; }
+                _apkRenderError(r.error_message);
+            }).catch(function () { if (el('fmx-apkBg')) _apkPoll(runId); });
+        }, 2500);
+    }
+    function _apkRefreshRuns(run) {
+        apiGet('/api/v1/adpick/state?channel_id=' + _apkChId).then(function (st) {
+            _apkState = st || _apkState;
+            _apkRenderResult(run);
+        }).catch(function () { _apkRenderResult(run); });
+    }
+    function _apkBackBtn() {
+        return '<button class="fmx-apk-pill" id="fmx-apkBack" style="margin-top:14px;"><i class="ti ti-arrow-left"></i> К запуску подбора</button>';
+    }
+    function _apkBindBack() {
+        var bb = el('fmx-apkBack');
+        if (bb) bb.addEventListener('click', function () { _haptic('light'); if (_apkState) _apkRenderIntro(); else _apkLoadState(); });
+    }
+    function _apkRenderEmpty() {
+        var b = _apkBody(); if (!b) return;
+        b.innerHTML = '<div class="fmx-apk-empty"><i>✓</i><span><b style="color:#e8e8ed;">Подходящих каналов в базе пока нет.</b> Запуск не списан. База пополняется — попробуй позже.</span></div>' + _apkBackBtn();
+        _apkBindBack();
+    }
+    function _apkRenderError(msg) {
+        var b = _apkBody(); if (!b) return;
+        b.innerHTML = '<div class="fmx-apk-err"><i class="ti ti-alert-triangle" style="color:#f06978;"></i><span>' + _esc(msg || 'Не удалось выполнить подбор. Попробуй ещё раз.') + '</span></div>' + _apkBackBtn();
+        _apkBindBack();
+    }
+    function _apkInitials(t) {
+        var w = String(t || '').trim().split(/\s+/), s = '';
+        for (var i = 0; i < w.length && s.length < 2; i++) if (w[i]) s += w[i][0].toUpperCase();
+        return s || '?';
+    }
+    function _apkMetricLine(p) {
+        var a = [];
+        if (p.subscribers != null) a.push('<b>' + _num(p.subscribers) + '</b> подписчиков');
+        if (p.avg_views != null) a.push('охват <b>' + _num(p.avg_views) + '</b>');
+        if (p.err != null) a.push('ERR <b>' + p.err + '%</b>');
+        if (p.er != null) a.push('ER <b>' + p.er + '%</b>');
+        var b2 = [];
+        if (p.ad_density_pct != null) b2.push('рекламных постов <b>' + p.ad_density_pct + '%</b>');
+        if (p.posts_per_week != null) b2.push('<b>' + p.posts_per_week + '</b> постов/нед');
+        if (p.subs_d30 != null) b2.push('за 30 дн <b>' + (p.subs_d30 > 0 ? '+' : '') + _num(p.subs_d30) + '</b>');
+        if (p.owner_price) {
+            b2.push('цена от <b>' + _num(p.owner_price) + ' ₽</b>');
+            if (p.cpm) b2.push('CPM ≈ <b>' + _num(p.cpm) + ' ₽</b>');
+        } else if (p.price_low && p.price_high) {
+            b2.push('рыночная цена <b>' + _num(p.price_low) + '–' + _num(p.price_high) + ' ₽</b>');
+        }
+        return '<div class="fmx-apk-line">' + a.join(' · ') + '</div>' +
+            (b2.length ? '<div class="fmx-apk-line" style="margin-top:2px;">' + b2.join(' · ') + '</div>' : '');
+    }
+    function _apkRenderResult(run) {
+        var b = _apkBody(); if (!b) return;
+        var picks = (run.report && run.report.picks) || [];
+        var cards = picks.map(function (p, idx) {
+            var mc = p.match >= 75 ? '#5DCAA5' : (p.match >= 50 ? '#f5bf4f' : '#8d93a8');
+            var av = p.avatar_url ? '<img src="' + _esc(p.avatar_url) + '" alt="">' : _esc(_apkInitials(p.title));
+            return '<div class="fmx-apk-card">' +
+                '<div style="display:flex;align-items:center;gap:9px;">' +
+                '<div class="fmx-apk-av">' + av + '</div>' +
+                '<div style="flex:1;min-width:0;"><b style="font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _esc(p.title) + '</b>' +
+                '<span style="font-size:10.5px;color:#6b7088;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@' + _esc(p.username) + (p.niche ? ' · ' + _esc(p.niche) : '') + '</span></div>' +
+                '<div style="font-size:12px;font-weight:800;color:' + mc + ';flex:0 0 auto;">' + p.match + '%</div></div>' +
+                _apkMetricLine(p) +
+                (p.rkn_url ? '<div style="margin-top:7px;">' + rknPill(p.rkn_url) + '</div>' : '') +
+                (p.why ? '<div class="fmx-apk-why">' + _esc(p.why) + '</div>' : '') +
+                '<div style="margin-top:9px;display:flex;gap:7px;">' +
+                '<button class="fmx-apk-abtn" data-apkopen="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i> Открыть канал</button>' +
+                (p.on_market ? '<button class="fmx-apk-abtn" data-apkoffer="' + _esc(p.username) + '" style="color:#9fe3cc;border-color:rgba(93,202,165,0.3);"><i class="ti ti-file-description"></i> Смотреть оффер</button>' : '') +
+                '</div></div>';
+        }).join('');
+        var n = picks.length;
+        b.innerHTML =
+            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;margin-bottom:4px;">Готово: <b style="color:#e8e8ed;">' + n + ' ' + _plural(n, 'канал', 'канала', 'каналов') + '</b> под твою аудиторию' + (run.created_at ? ' · ' + _apkDate(run.created_at) : '') + '. Отранжированы по шансу, что реклама сработает.</div>' +
+            cards +
+            '<div style="display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;">' +
+            '<button class="fmx-apk-pill on" id="fmx-apkRerun"><i class="ti ti-refresh"></i> Перезапустить подбор</button>' +
+            '<button class="fmx-apk-pill" id="fmx-apkBack"><i class="ti ti-arrow-left"></i> К запуску</button></div>';
+        _apkBindBack();
+        var rr = el('fmx-apkRerun');
+        if (rr) rr.addEventListener('click', function () {
+            _haptic('medium');
+            if (_apkState && !_apkState.can_run) { toast('Лимит подборов исчерпан'); return; }
+            _apkStart();
+        });
+        qsa(b, '[data-apkopen]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var u = btn.getAttribute('data-apkopen');
+                try { if (tg && tg.openTelegramLink) { tg.openTelegramLink('https://t.me/' + u); return; } } catch (e) {}
+                window.open('https://t.me/' + u, '_blank');
+            });
+        });
+        qsa(b, '[data-apkoffer]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var u = btn.getAttribute('data-apkoffer');
+                _apkClose();
+                try { openListing(u); } catch (e) {}
+            });
+        });
+        qsa(b, '[data-rknlink]').forEach(function (p2) {
+            p2.addEventListener('click', function () {
+                var u2 = p2.getAttribute('data-rknlink');
+                try { if (tg && tg.openLink) { tg.openLink(u2); return; } } catch (e) {}
+                window.open(u2, '_blank');
+            });
+        });
+    }
+    window.__openAdPick = function () {
+        if (el('fmx-main')) { openAdPick(); return; }
+        loadNicheMap(); _open0();
+        setTimeout(function () { openAdPick(); }, 300);
+    };
+
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
     window.__openRadar = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('catalog'); } catch (e) {} }, 220); };
     window.__openTerminal = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('pulse'); } catch (e) {} }, 220); };
