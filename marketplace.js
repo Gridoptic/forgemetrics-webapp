@@ -668,8 +668,8 @@
             '.fmx-scard.fmr-hasbg{position:relative;overflow:hidden;background:#0d1020;}',
             '.fmx-scard.fmr-hasbg>*:not(.fmx-cbg):not(.fmx-stk){position:relative;z-index:1;}',
             '#fmx-promoProof{position:fixed;inset:0;z-index:100050;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,7,14,0.45);}',
-            '.fmx-ppcard{background:#121524;border:1px solid rgba(245,191,79,0.35);border-radius:16px;padding:18px 18px 16px;max-width:330px;text-align:center;box-shadow:0 0 26px -8px rgba(245,191,79,0.5),0 18px 44px rgba(0,0,0,0.55);}',
-            '.fmx-ppic{width:44px;height:44px;border-radius:12px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;background:rgba(245,191,79,0.14);border:1px solid rgba(245,191,79,0.3);color:#f5bf4f;font-size:24px;}',
+            '.fmx-ppcard{background:#121524;border:1px solid rgba(245,191,79,0.35);border-radius:16px;padding:18px 18px 16px;max-width:330px;text-align:center;display:flex;flex-direction:column;align-items:center;box-shadow:0 0 26px -8px rgba(245,191,79,0.5),0 18px 44px rgba(0,0,0,0.55);}',
+            '.fmx-ppic{width:44px;height:44px;flex:0 0 auto;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(245,191,79,0.14);border:1px solid rgba(245,191,79,0.3);color:#f5bf4f;font-size:24px;}',
             '.fmx-ppt{font-size:14px;font-weight:800;color:#e8e8ed;margin-bottom:6px;}',
             '.fmx-pps{font-size:12px;color:#9aa0b8;line-height:1.45;}',
             '.fmx-scard:hover{border-color:rgba(255,255,255,0.14);}',
@@ -8604,12 +8604,12 @@
         var topTag = ((l.effects_json || {}).topTag) || 'on';
         var bItems = badgeItems(l);
         var freeMap = null;
-        var flowArr = [], covBdg = '';
+        var flowItems = [], covBdg = '';
         bItems.forEach(function (it) {
             if (freeMap && freeMap[it.k]) covBdg += _freeStyleInject(it.h, freeMap[it.k]);
-            else flowArr.push(it.h);
+            else flowItems.push(it);
         });
-        var _ab = _audChip(l); var bodyBdg = (flowArr.length || _ab) ? '<div class="fmx-badges">' + flowArr.join('') + _ab + '</div>' : '';
+        var _ab = _audChip(l); var bodyBdg = '';
         var bodyBdg2 = '';
         var stk = l.sticker_json || l.sticker;
         if (stk && l.effects_json) {
@@ -8669,6 +8669,10 @@
                 scoreHtml + '</div>';
         }
         var tagInBody = noHead || ((l.effects_json || {}).topTagPos === 'body');
+        var tagAsBadge = tagInBody && realTop && topTag !== 'off';
+        var _flow = flowItems.filter(function (it) { return !(noHead && it.k === 'live'); }).map(function (it) { return it.h; });
+        if (tagAsBadge) _flow.unshift('<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (topTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>');
+        bodyBdg = (_flow.length || _ab) ? '<div class="fmx-badges">' + _flow.join('') + _ab + '</div>' : '';
         var _tagPos = tagInBody ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
         var tagHtml = realTop
             ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" data-promoproof="1" style="cursor:pointer;' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
@@ -8679,7 +8683,7 @@
             (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
             '<div class="fmx-cb">' + headHtml +
             (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
-            (tagInBody ? tagHtml : '') +
+            ((tagInBody && !tagAsBadge) ? tagHtml : '') +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
