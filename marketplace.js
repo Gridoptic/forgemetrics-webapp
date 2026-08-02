@@ -6999,7 +6999,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260802f';
+    var PS_GLUE_V = '20260802g';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7009,14 +7009,14 @@
             '.fmx-psTop .t i{color:#5DCAA5;}' +
             '.fmx-psX{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);color:#c9cede;font-size:17px;cursor:pointer;flex-shrink:0;padding:0;line-height:1;}' +
             '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
-            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;padding:0 14px;box-sizing:border-box;}' +
+            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;padding:0 14px;box-sizing:border-box;scrollbar-gutter:stable both-edges;}' +
             '.fmx-psScroll::-webkit-scrollbar{width:5px;}' +
             '.fmx-psScroll::-webkit-scrollbar-track{background:transparent;}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.22);border-radius:99px;}' +
             '.fmx-psScroll:hover::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.55);}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(165,173,255,0.8);}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#0a0d18;}' +
-            '#fmx-psFrame{border:0;display:block;background:#0a0d18;will-change:transform;}' +
+            '#fmx-psFrame{border:0;display:block;background:#0a0d18;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
             '.fmx-fmtcard{width:100%;max-width:440px;margin:0 8px calc(8px + env(safe-area-inset-bottom));background:#0d1120;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:14px;box-shadow:0 -12px 44px rgba(0,0,0,0.55);animation:fmxUp .2s ease-out;}' +

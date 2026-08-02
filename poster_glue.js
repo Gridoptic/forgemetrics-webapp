@@ -867,7 +867,8 @@
         'border:1px solid rgba(255,255,255,0.12) !important;}' +
       '.genbtn{background:linear-gradient(135deg,rgba(129,140,248,0.22),rgba(129,140,248,0.08)) !important;' +
         'border:1px solid rgba(129,140,248,0.5) !important;color:#aab2f7 !important;font-weight:700 !important;}' +
-      '.drop{border:1px dashed rgba(129,140,248,0.42) !important;background:rgba(129,140,248,0.05) !important;}';
+      '.drop{border:1px dashed rgba(129,140,248,0.42) !important;background:rgba(129,140,248,0.05) !important;}' +
+      '.bgWrap,.bgWrap img,.bgWrap video,.shade{border-radius:28px;}';
   };
 
   window.__fmxPosterRenderMode = function () {
