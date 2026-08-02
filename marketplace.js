@@ -1283,11 +1283,11 @@
             '.fmx-dd.bs .c{background:rgba(239,128,128,0.14);color:#ef8080;border-color:rgba(239,128,128,0.35);}',
             '.fmx-dd .w{font-size:8.5px;color:#565b73;margin-top:3px;}',
             '.fmx-dd .dm{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#818cf8;}',
-            '.fmx-tgl{display:flex;align-items:center;gap:9px;font-size:11.5px;padding:10px 0 2px;cursor:pointer;color:#c9cbe0;}',
-            '.fmx-tgl .sw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.1);position:relative;flex:0 0 auto;transition:background 160ms;}',
-            '.fmx-tgl .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left 160ms;}',
-            '.fmx-tgl.on .sw{background:#5DCAA5;}',
-            '.fmx-tgl.on .sw::after{left:19px;}',
+            '.fmx-tglrow{display:flex;align-items:center;gap:9px;font-size:11.5px;padding:10px 0 2px;cursor:pointer;color:#c9cbe0;}',
+            '.fmx-tglrow .sw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.1);position:relative;flex:0 0 auto;transition:background 160ms;}',
+            '.fmx-tglrow .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left 160ms;}',
+            '.fmx-tglrow.on .sw{background:#5DCAA5;}',
+            '.fmx-tglrow.on .sw::after{left:19px;}',
             'input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}',
             '.fmx-tabed .el{outline:1.5px dashed transparent;outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2;will-change:left,top,width,height,transform;}',
             '.fmx-tabed .el.sel{outline-color:rgba(129,140,248,0.85);z-index:6;}',
@@ -4033,7 +4033,7 @@
             '<button class="fmx-calnav" data-nav="-1"' + (navPrevOff ? ' disabled' : '') + '>‹</button>' +
             '<b>' + MON_IM[m] + ' ' + y + '</b>' +
             '<button class="fmx-calnav" data-nav="1"' + (navNextOff ? ' disabled' : '') + '>›</button></div>' +
-            (mode === 'edit' && inHorizon ? '<div class="fmx-tgl' + (monthOpen ? ' on' : '') + '" id="fmx-mopen" style="margin:2px 0 8px;"><span class="sw"></span><span style="flex:1;">Месяц открыт для рекламы</span></div>' : '') +
+            (mode === 'edit' && inHorizon ? '<div class="fmx-tglrow' + (monthOpen ? ' on' : '') + '" id="fmx-mopen" style="margin:2px 0 8px;"><span class="sw"></span><span style="flex:1;">Месяц открыт для рекламы</span></div>' : '') +
             '<div class="fmx-slgrid">' + ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(function (w) { return '<span class="fmx-slw">' + w + '</span>'; }).join('');
         for (var i = 0; i < off; i++) h += '<span></span>';
         var freeCount = 0;
