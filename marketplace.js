@@ -361,11 +361,8 @@
             '.fmx-campbtn{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:650;color:#9fe3cc;background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.34);transition:all 160ms;}',
             '.fmx-campbtn>i{font-size:15px;flex:0 0 auto;color:#5DCAA5;}',
             '.fmx-campbtn>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-adpickbtn{display:flex;align-items:center;gap:9px;width:100%;margin-bottom:9px;padding:12px 14px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:650;color:#f8dfae;background:linear-gradient(135deg,rgba(245,191,79,0.15),rgba(245,191,79,0.04));border:1px solid rgba(245,191,79,0.34);transition:all 160ms;}',
-            '.fmx-adpickbtn i:first-child{font-size:17px;color:#f5bf4f;}',
-            '.fmx-adpickbtn>span{flex:1;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-adpickbtn .fmx-nichebtn-chev{display:block;color:#f5bf4f;}',
-            '.fmx-adpickbtn:active{background:linear-gradient(135deg,rgba(245,191,79,0.26),rgba(245,191,79,0.1));}',
+            '.fmx-adpickbtn{flex:0 0 auto;width:46px;padding:0;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:#f5bf4f;font-family:inherit;background:linear-gradient(135deg,rgba(245,191,79,0.16),rgba(245,191,79,0.05));border:1px solid rgba(245,191,79,0.34);transition:all 160ms;}',
+            '.fmx-adpickbtn:active{background:linear-gradient(135deg,rgba(245,191,79,0.28),rgba(245,191,79,0.1));}',
             '.fmx-apk-ov{position:fixed;inset:0;z-index:100006;background:#0a0d18;background-image:radial-gradient(120% 46% at 50% -4%,rgba(99,102,241,0.12),transparent 60%);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}',
             '.fmx-apk-in{max-width:460px;margin:0 auto;padding:14px 14px 40px;}',
             '.fmx-apk-hd{display:flex;align-items:center;gap:10px;padding:6px 0 12px;}',
@@ -2450,9 +2447,8 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
-            _adpickBtnHtml() +
             '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>Кампания</span></button>' +
-            _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
+            _nicheBtnHtml() + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
         var cc = el('fmx-campCta');
@@ -8833,10 +8829,10 @@
         return '<button class="fmx-bellbtn" data-alerts="1" title="Умные уведомления"><i class="ti ti-bell"></i></button>';
     }
     function _adpickBtnHtml() {
-        return '<button class="fmx-adpickbtn" data-adpick="1"><i class="ti ti-target-arrow"></i><span>Подбор каналов для рекламы</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
+        return '<button class="fmx-adpickbtn" data-adpick="1" title="Подбор каналов для рекламы"><i class="ti ti-target-arrow"></i></button>';
     }
     function sortBarHtml() {
-        return _adpickBtnHtml() + '<div class="fmx-picks">' + _nicheBtnHtml() + _bellBtnHtml() + '</div>' +
+        return '<div class="fmx-picks">' + _nicheBtnHtml() + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             '<div class="fmx-sortbar">' +
             '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
             '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
