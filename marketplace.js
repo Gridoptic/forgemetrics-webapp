@@ -7851,10 +7851,12 @@
                 var on = dock.classList.contains('dk-on');
                 var d = wR.bottom - scR.top;
                 var vis = wR.height > 0 && (on ? d < 25 : d < -15);
-                var W = Math.min(scR.width - 20, Math.max(wR.width, 320), 560);
                 dock.style.top = scR.top.toFixed(1) + 'px';
-                dock.style.left = (scR.left + (scR.width - W) / 2).toFixed(1) + 'px';
-                dock.style.width = W.toFixed(1) + 'px';
+                if (wR.width >= 50) {
+                    var W = Math.min(scR.width - 20, Math.max(wR.width, 320), 560);
+                    dock.style.left = (wR.left + (wR.width - W) / 2).toFixed(1) + 'px';
+                    dock.style.width = W.toFixed(1) + 'px';
+                }
                 dock.classList.toggle('dk-on', vis);
                 if (vis && !on) { lastKey = env.stateKey(); renderMini(); }
             } catch (e) {}
