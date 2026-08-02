@@ -6999,23 +6999,24 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260729b';
+    var PS_GLUE_V = '20260802a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
-        s.textContent = '.fmx-psFull{position:fixed;inset:0;z-index:100005;background:#05070e;display:flex;flex-direction:column;}' +
+        s.textContent = '.fmx-psFull{position:fixed;inset:0;z-index:100005;background:#0a0d18;display:flex;flex-direction:column;}' +
             '.fmx-psTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;}' +
             '.fmx-psTop .t{font-size:15px;font-weight:800;color:#e8e8ed;display:flex;align-items:center;gap:7px;}' +
             '.fmx-psTop .t i{color:#5DCAA5;}' +
             '.fmx-psX{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);color:#c9cede;font-size:17px;cursor:pointer;flex-shrink:0;padding:0;line-height:1;}' +
             '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
-            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;scrollbar-gutter:stable;}' +
-            '.fmx-psScroll::-webkit-scrollbar{width:9px;}' +
+            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;}' +
+            '.fmx-psScroll::-webkit-scrollbar{width:5px;}' +
             '.fmx-psScroll::-webkit-scrollbar-track{background:transparent;}' +
-            '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.28);border-radius:6px;border:2px solid transparent;background-clip:padding-box;}' +
-            '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.42);background-clip:padding-box;}' +
-            '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#05070e;}' +
-            '#fmx-psFrame{border:0;display:block;background:#05070e;}' +
+            '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.22);border-radius:99px;}' +
+            '.fmx-psScroll:hover::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.55);}' +
+            '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(165,173,255,0.8);}' +
+            '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#0a0d18;}' +
+            '#fmx-psFrame{border:0;display:block;background:#0a0d18;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
             '.fmx-fmtcard{width:100%;max-width:440px;margin:0 8px calc(8px + env(safe-area-inset-bottom));background:#0d1120;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:14px;box-shadow:0 -12px 44px rgba(0,0,0,0.55);animation:fmxUp .2s ease-out;}' +
@@ -7078,7 +7079,15 @@
             '.fmx-dkNav{display:flex;flex-wrap:wrap;gap:5px;min-width:0;}' +
             '.fmx-dkChip{font-size:10.5px;font-weight:600;color:#a7aec6;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.09);cursor:pointer;font-family:inherit;line-height:1.3;}' +
             '.fmx-dkChip.on{color:#8b8ff8;background:rgba(129,140,248,0.13);border-color:rgba(129,140,248,0.42);}' +
-            '.fmx-dkHint{font-size:9.5px;color:#7c86a3;letter-spacing:0.2px;line-height:1.35;}';
+            '.fmx-dkHint{font-size:9.5px;color:#7c86a3;letter-spacing:0.2px;line-height:1.35;}' +
+            '@media (max-width:399px){' +
+            '#fmx-dkPrev{width:68px;height:85px;}' +
+            '#fmx-dkFrame{transform:scale(0.126);}' +
+            '.fmx-dkIn{gap:8px;}' +
+            '.fmx-dkCol{max-height:85px;gap:4px;}' +
+            '.fmx-dkChip{font-size:10px;padding:3px 8px;}' +
+            '.fmx-dkHint{font-size:9px;}' +
+            '}';
         document.head.appendChild(st);
     }
 
