@@ -7046,38 +7046,28 @@
             '.fmx-fmtrow .tx b{font-size:13.5px;color:#e8e8ed;font-weight:600;}' +
             '.fmx-fmtrow .tx i{font-size:11.5px;color:#8990a8;font-style:normal;line-height:1.35;}' +
             '.fmx-fmtcancel{width:100%;background:transparent;border:0;color:#8990a8;font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:inherit;margin-top:2px;-webkit-tap-highlight-color:transparent;}' +
-            '.fmx-fmtpro{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:800;letter-spacing:0.5px;color:#f5bf4f;background:rgba(245,191,79,0.16);border:1px solid rgba(245,191,79,0.4);border-radius:6px;padding:1px 5px;vertical-align:middle;}' +
-            '.fmx-fmtrow.locked{opacity:0.6;}' +
             '.fmx-ring{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-right:8px;}' +
             '.fmx-ring svg{width:100%;height:100%;display:block;}' +
             '.fmx-ring .fg{transition:stroke-dashoffset .45s linear;}' +
             '@keyframes fmxUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
         document.head.appendChild(s);
     }
-    function _posterPickFormat(liveOk) {
+    function _posterPickFormat() {
         return new Promise(function (resolve) {
             var prev = el('fmx-fmtpick'); if (prev) prev.remove();
-            var pro = liveOk ? '' : '<span class="fmx-fmtpro">PRO</span>';
-            var lk = liveOk ? '' : ' locked';
             var m = document.createElement('div'); m.id = 'fmx-fmtpick';
             m.innerHTML = '<div class="fmx-fmtcard">' +
                 '<div class="fmx-fmttitle">Как прислать постер?</div>' +
-                '<button class="fmx-fmtrow' + lk + '" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)' + pro + '</b><i>Анимация играет прямо в чате · пришлю через минуту</i></span></button>' +
-                '<button class="fmx-fmtrow' + lk + '" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>Живой постер (GIF)' + pro + '</b><i>Анимация без звука · для площадок, где MP4 неудобен</i></span></button>' +
-                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно · на всех тарифах</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)</b><i>Анимация играет прямо в чате · пришлю через минуту</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>Живой постер (GIF)</b><i>Анимация без звука · для площадок, где MP4 неудобен</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно</i></span></button>' +
                 '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
             document.body.appendChild(m);
             function done(f) { m.remove(); resolve(f || null); }
             m.addEventListener('click', function (e) {
                 if (e.target === m) return done(null);
                 var b = e.target.closest('[data-f]'); if (!b) return;
-                var f = b.getAttribute('data-f');
-                if ((f === 'mp4' || f === 'gif') && !liveOk) {
-                    try { _haptic('warning'); } catch (e2) {}
-                    toast('Живой постер (MP4/GIF) — на тарифах Pro+, Agency и Network. Картинка (PNG) доступна всем');
-                    return;
-                }
-                done(f);
+                done(b.getAttribute('data-f'));
             });
         });
     }
@@ -7654,7 +7644,7 @@
                     || (state.stickers || []).some(function (s) { return s && (s.kind === 'tgs' || s.kind === 'webm'); });
                 if (!hasMotion) { send('png'); return; }
                 btn.disabled = true;
-                _posterPickFormat(extra && extra.live_ok).then(function (fmt) { if (fmt) send(fmt); else restoreSend(); });
+                _posterPickFormat().then(function (fmt) { if (fmt) send(fmt); else restoreSend(); });
             }
             var pend = null;
             try { pend = (win && win.__fmxPosterBgPending) ? win.__fmxPosterBgPending() : null; } catch (e) {}
