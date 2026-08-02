@@ -187,6 +187,23 @@
         bg.querySelector('[data-yes]').addEventListener('click', function () { done(); cb(); });
     }
     function _haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) { if (k === 'success' || k === 'error' || k === 'warning') tg.HapticFeedback.notificationOccurred(k); else tg.HapticFeedback.impactOccurred(k || 'light'); } } catch (e) {} }
+    function _fadeHScroll(scope) {
+        qsa(scope, '.fmx-sortbar,.fmx-t2chips,.fmx-picks').forEach(function (el2) {
+            if (el2.__fmFade) return;
+            el2.__fmFade = 1;
+            function upd() {
+                var more = el2.scrollWidth - el2.clientWidth - el2.scrollLeft > 4;
+                var less = el2.scrollLeft > 4;
+                var m = more && less ? 'linear-gradient(90deg,transparent,#000 22px,#000 calc(100% - 26px),transparent)'
+                    : (more ? 'linear-gradient(90deg,#000 calc(100% - 26px),transparent)'
+                        : (less ? 'linear-gradient(90deg,transparent,#000 22px)' : ''));
+                el2.style.webkitMaskImage = m;
+                el2.style.maskImage = m;
+            }
+            el2.addEventListener('scroll', upd, { passive: true });
+            upd();
+        });
+    }
     function apiGet(p) { return apiRequest(p); }
     function apiPost(p, b) { var o = { method: 'POST' }; if (b !== undefined) { o.body = JSON.stringify(b); o.headers = { 'Content-Type': 'application/json' }; } return apiRequest(p, o); }
     function apiPatch(p, b) { var o = { method: 'PATCH' }; if (b !== undefined) { o.body = JSON.stringify(b); o.headers = { 'Content-Type': 'application/json' }; } return apiRequest(p, o); }
@@ -1981,6 +1998,7 @@
 
         host.innerHTML = html;
         _tBindFolds(host);
+        _fadeHScroll(host);
         var pb = el('fmx-pbell'); if (pb) pb.addEventListener('click', openNicheSubs);
         qsa(host, '[data-trange]').forEach(function (b) {
             b.addEventListener('click', function () { _termRange = parseInt(b.getAttribute('data-trange'), 10) || 30; _paintTerminal(); });
@@ -9287,6 +9305,7 @@
         });
         qsa(el('fmx-main'), '[data-alerts]').forEach(function (b) { b.addEventListener('click', function () { openAlerts(); }); });
         qsa(el('fmx-main'), '[data-adpick]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); openAdPick(); }); });
+        _fadeHScroll(el('fmx-main'));
     }
 
     function _nicheBtnHtml(short) {
