@@ -1781,7 +1781,7 @@
             (ago ? '<span class="fmx-tstamp"><i class="ti ti-refresh"></i>' + ago + '</span>' : '') +
             '<button class="fmx-bellbtn" id="fmx-pbell" title="Следить за нишей — сообщим о сдвиге CPM" style="margin-left:auto;width:34px;height:34px;font-size:14px;"><i class="ti ti-bell"></i></button></div>';
 
-        var tickerN = baseN.slice(0, 8).filter(function (n) { return n.median_cpm != null; });
+        var tickerN = baseN.slice(0, 12).filter(function (n) { return n.median_cpm != null; });
         if (tickerN.length >= 3) {
             var tk = tickerN.map(function (n) {
                 return '<span class="fmx-t2tk"><b>' + _esc(n.niche) + '</b> ' + _num(n.median_cpm) + ' ₽ ' + (_tFmtDelta(n.delta7) || '<span class="fmx-tfl">·</span>') + '</span>';
@@ -1807,7 +1807,7 @@
             '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">охват базы</div></div>' +
             '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">событий 24ч</div></div></div>';
 
-        var hm = baseN.slice(0, 9);
+        var hm = baseN.slice(0, 21);
         if (hm.length >= 4) {
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
@@ -1826,8 +1826,8 @@
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
         if (movers.length >= 2) {
-            var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; }).slice(0, 3);
-            var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; }).slice(0, 3);
+            var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; }).slice(0, 5);
+            var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; }).slice(0, 5);
             if (up.length || dn.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div><div class="fmx-t2mv">';
                 html += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
@@ -1853,7 +1853,7 @@
             if (_termSort === 'count') return (b.count || 0) - (a.count || 0);
             return (b.median_cpm || 0) - (a.median_cpm || 0);
         });
-        html += '<div class="fmx-t2list">' + list.slice(0, 14).map(function (n) {
+        html += '<div class="fmx-t2list">' + list.slice(0, 24).map(function (n) {
             var col = n.delta7 == null ? '#8d93a8' : (n.delta7 >= 0 ? '#5DCAA5' : '#f06978');
             var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
