@@ -1100,6 +1100,9 @@
             '.fmx-t2top .av{width:24px;height:24px;border-radius:50%;background:#151a30;color:#a5b4fc;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}',
             '.fmx-t2top .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-t2top .cp{flex:0 0 auto;font-weight:700;color:#c2c6d2;font-variant-numeric:tabular-nums;}',
+            '.fmx-tnbtn{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:13px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:700;color:#e8e8ed;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.13);transition:all 160ms;}',
+            '.fmx-tnbtn:active{background:rgba(255,255,255,0.07);}',
+            '.fmx-tnbtn .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;}',
             '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
             '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
             '.fmx-frzTag{position:absolute;top:8px;right:36px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
@@ -2151,8 +2154,8 @@
                         '<span class="cp">' + (c.cpm ? 'CPM ' + _num(c.cpm) + ' ₽' : (c.subscribers ? _short(c.subscribers) : '')) + '</span></div>';
                 }).join('');
             }
-            html += '<button class="fmx-apk-go" id="fmx-tnRadar" style="margin-top:14px;"><i class="ti ti-radar-2"></i> Каналы ниши в Радаре</button>' +
-                '<button class="fmx-apk-go" id="fmx-tnBell" style="margin-top:8px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.13);color:#c2c6d2;box-shadow:none;"><i class="ti ti-bell"></i> Следить за нишей</button>';
+            html += '<button class="fmx-tnbtn" id="fmx-tnRadar" style="margin-top:14px;"><span class="ic" style="background:rgba(129,140,248,0.12);color:#818cf8;"><i class="ti ti-radar-2"></i></span>Каналы ниши в Радаре</button>' +
+                '<button class="fmx-tnbtn" id="fmx-tnBell" style="margin-top:8px;"><span class="ic" style="background:rgba(56,189,248,0.12);color:#38bdf8;"><i class="ti ti-bell"></i></span>Следить за нишей</button>';
             b.innerHTML = html;
             var rb = el('fmx-tnRadar');
             if (rb) rb.addEventListener('click', function () {
@@ -2160,7 +2163,7 @@
                 try { _nicheSel = name; _sort = 'niche'; setMainTab('catalog'); } catch (e) {}
             });
             var bb = el('fmx-tnBell');
-            if (bb) bb.addEventListener('click', function () { _haptic('light'); ov.remove(); try { openNicheSubs(); } catch (e) {} });
+            if (bb) bb.addEventListener('click', function () { _haptic('light'); try { openNicheSubs(name); } catch (e) {} });
         }).catch(function () {
             var b = el('fmx-tnBody');
             if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь.');
@@ -4307,13 +4310,25 @@
             });
         });
     }
-    function openNicheSubs() {
+    function openNicheSubs(prefill) {
         el('fmx-nsBody').innerHTML = loadHtml();
         showModal('fmx-nsBg');
+        var _nsEl = el('fmx-nsBg'); if (_nsEl) _nsEl.style.zIndex = '100010';
         apiGet('/api/v1/marketplace/niche_subs').then(function (r) {
             _nsubs = (r && r.niches) ? r.niches : [];
             _nsMetrics = (r && r.metrics) ? r.metrics : {};
             if (r && r.threshold) _nsThr = r.threshold;
+            var pf = typeof prefill === 'string' ? prefill.trim().toLowerCase() : '';
+            if (pf && _nsubs.indexOf(pf) < 0) {
+                apiPost('/api/v1/marketplace/niche_subs', { niche: pf, on: true }).then(function (r2) {
+                    if (r2 && r2.ok) { _nsubs.push(pf); _nsubs.sort(); _haptic('success'); }
+                    renderNsBody();
+                    apiGet('/api/v1/marketplace/niche_subs').then(function (rr) {
+                        if (rr && rr.metrics) { _nsMetrics = rr.metrics; renderNsBody(); }
+                    }).catch(function () {});
+                }).catch(function () { renderNsBody(); });
+                return;
+            }
             renderNsBody();
         }).catch(function () { _nsubs = []; _nsMetrics = {}; renderNsBody(); });
     }
