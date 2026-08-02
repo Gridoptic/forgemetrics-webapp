@@ -975,6 +975,7 @@
             '.fmx-t2pt{animation:fmxTpulse 1.8s infinite;}',
             '.fmx-t2ax{position:relative;display:flex;justify-content:space-between;font-size:8px;color:#3f4358;margin-top:3px;min-height:10px;}',
             '.fmx-t2ax .mid{position:absolute;transform:translateX(-50%);white-space:nowrap;}',
+            '.fmx-t2note{font-size:9px;font-weight:600;color:#565b73;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.09);border-radius:6px;padding:2px 6px;white-space:nowrap;}',
             '.fmx-t2nochart{font-size:10.5px;color:#565b73;padding:22px 0;text-align:center;}',
             '.fmx-t2trow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}',
             '.fmx-t2tc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:8px 6px;text-align:center;min-width:0;}',
@@ -1702,9 +1703,10 @@
         var w = 340, h = 84, x0 = 3, x1 = 334, yTop = 8, yBase = 79;
         var vals = series.map(function (p) { return p.v != null ? p.v : p.cpm; });
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
-        var span = (mx - mn) || 1;
+        var span = Math.max(mx - mn, (mx + mn) / 2 * 0.06) || 1;
+        var mid = (mx + mn) / 2;
         var pts = vals.map(function (v, i) {
-            return [x0 + (i / (vals.length - 1) * (x1 - x0)), (yBase - 3 - (v - mn) / span * (yBase - yTop - 6))];
+            return [x0 + (i / (vals.length - 1) * (x1 - x0)), (yBase - 3 - ((v - mid) / span + 0.5) * (yBase - yTop - 6))];
         });
         var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
         var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + yBase + ' L' + x0 + ',' + yBase + ' Z';
@@ -1748,6 +1750,12 @@
                 return '<div class="fmx-t2ax"><span>' + _dl(d0) + '</span>' + mids +
                     '<span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
             })();
+    }
+    function _tSpanNote(series, range) {
+        if (range === 1 || !series || series.length < 2 || series[0].t) return '';
+        var days = Math.round((Date.parse(series[series.length - 1].day) - Date.parse(series[0].day)) / 86400000);
+        if (days >= range - 1) return '';
+        return '<span class="fmx-t2note">данных ' + days + ' дн из ' + range + '</span>';
     }
     function _tSeriesDelta(series) {
         if (!series || series.length < 2) return null;
@@ -1874,7 +1882,8 @@
             '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
             (function () {
                 var d = _tSeriesDelta(series);
-                return d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '';
+                return (d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '') +
+                    _tSpanNote(series, _termRange);
             })() + '</div></div>' +
             '<div class="fmx-t2rng">' + [1, 7, 30, 90].map(function (r) {
                 return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
@@ -2003,7 +2012,8 @@
             var html = '<div class="fmx-t2hero">' +
                 '<div style="display:flex;align-items:baseline;gap:9px;">' +
                 '<b style="font-size:23px;font-variant-numeric:tabular-nums;">' + (cur != null ? _num(cur) + ' ₽' : '—') + '</b>' +
-                (nd ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') + '</div>' +
+                (nd ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') +
+                _tSpanNote(shown, _termRange) + '</div>' +
                 '<div style="margin-top:8px;">' + _tArea(shown, '#5DCAA5', 'fmxTgN') + '</div>' +
                 '<div class="fmx-t2kv">' +
                 '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
