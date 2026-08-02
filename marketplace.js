@@ -664,6 +664,14 @@
             '.fmx-btn{flex:1;border-radius:10px;padding:10px 6px;font-size:11.5px;font-weight:600;cursor:pointer;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 150ms;white-space:nowrap;}',
             '.fmx-btn-p{border:none;color:#fff;}',
             '.fmx-scard{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:13px;transition:border-color 200ms;}',
+            '.fmx-scard.fmx-prem{border-color:transparent;box-shadow:inset 0 1px 12px -6px rgba(245,191,79,0.5),0 0 22px -6px rgba(245,191,79,0.55),0 10px 30px -14px rgba(245,191,79,0.5),0 4px 16px rgba(0,0,0,0.45);}',
+            '.fmx-scard.fmr-hasbg{position:relative;overflow:hidden;background:#0d1020;}',
+            '.fmx-scard.fmr-hasbg>*:not(.fmx-cbg):not(.fmx-stk){position:relative;z-index:1;}',
+            '#fmx-promoProof{position:fixed;inset:0;z-index:100050;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,7,14,0.45);}',
+            '.fmx-ppcard{background:#121524;border:1px solid rgba(245,191,79,0.35);border-radius:16px;padding:18px 18px 16px;max-width:330px;text-align:center;box-shadow:0 0 26px -8px rgba(245,191,79,0.5),0 18px 44px rgba(0,0,0,0.55);}',
+            '.fmx-ppic{width:44px;height:44px;border-radius:12px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;background:rgba(245,191,79,0.14);border:1px solid rgba(245,191,79,0.3);color:#f5bf4f;font-size:24px;}',
+            '.fmx-ppt{font-size:14px;font-weight:800;color:#e8e8ed;margin-bottom:6px;}',
+            '.fmx-pps{font-size:12px;color:#9aa0b8;line-height:1.45;}',
             '.fmx-scard:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-srow{display:flex;align-items:center;gap:11px;}',
             '.fmx-sav{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0;}',
@@ -6348,6 +6356,7 @@
         if (fx.atomColor) _ss.atomColor = fx.atomColor;
 
         _ss.topTag = fx.topTag || 'on';
+        _ss.topTagPos = fx.topTagPos || 'cover';
         _ss.badgeFree = fx.badgeFree || null;
         if (l.title_style) _ss.font = l.title_style;
         _ss.avatar = 'tg';
@@ -6559,12 +6568,17 @@
             })() +
             '</div></div>' +
             '<div style="margin-top:10px;">' +
-            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Тег «Продвигается» в шапке <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Бейдж «Продвигается» <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
             '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
+            '</div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin:8px 0 2px;">Расположение бейджа</div>' +
+            '<div style="display:flex;gap:6px;" data-fxg="topTagPos">' +
+            '<button class="fmx-fx' + (_ss.topTagPos !== 'body' ? ' on' : '') + '" data-v="cover">В шапке</button>' +
+            '<button class="fmx-fx' + (_ss.topTagPos === 'body' ? ' on' : '') + '" data-v="body">В карточке</button>' +
             '</div></div>';
     }
     function paneStyleMin() {
@@ -7550,7 +7564,7 @@
         pl.avatar_type = 'tg';
         pl.avatar_url = c.avatar_url || null;
         pl.avatar_emoji = null;
-        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, btns: _ss.btns || 'std', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null };
+        pl.effects_json = { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, btns: _ss.btns || 'std', topTag: _ss.topTag || 'on', topTagPos: _ss.topTagPos || 'cover', badgeFree: _ss.badgeFree || null };
         var _att = {}; for (var _ak in (_ss.att || {})) _att[_ak] = _ss.att[_ak];
         var _cbg = _ss._media && _ss._media.cardbg;
         if (_cbg && _cbg.url) {
@@ -8317,7 +8331,7 @@
             show_deals: _ss.showDeals !== false,
             title_style: _ss.font,
             tags_json: ((ta ? ta.value : _ss._tags) || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
-            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, btns: _ss.btns || 'std', topTag: _ss.topTag || 'on', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? ((_ss.sticker.dmode === 'top' ? 'blend' : _ss.sticker.dmode) || 'bg') : null },
+            effects_json: { move: _ss.move, over: _ss.over, glow: _ss.glow, orbit: _ss.orbit, part: _ss.part, atomColor: _ss.atomColor, glowCard: _ss.glowCard, fullBg: _ss.fullBg, glass: _ss.glass, btns: _ss.btns || 'std', topTag: _ss.topTag || 'on', topTagPos: _ss.topTagPos || 'cover', badgeFree: _ss.badgeFree || null, stickerRot: _ss.sticker ? (_ss.sticker.rot || 0) : null, stickerMode: _ss.sticker ? ((_ss.sticker.dmode === 'top' ? 'blend' : _ss.sticker.dmode) || 'bg') : null },
             emoji_attachments_json: _ss.att
         };
         var wasCreate = !_ss.listingId, p;
@@ -8654,17 +8668,18 @@
                 '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div></div>' +
                 scoreHtml + '</div>';
         }
-        var _tagPos = noHead ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
+        var tagInBody = noHead || ((l.effects_json || {}).topTagPos === 'body');
+        var _tagPos = tagInBody ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
         var tagHtml = realTop
-            ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" style="' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
+            ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" data-promoproof="1" style="cursor:pointer;' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
             : '<span class="fmx-tag" style="' + _tagPos + '"><i class="ti ti-circle-check-filled"></i> на продаже</span>';
         return '<div class="fmx-cwrap' + (glowOn ? ' fmx-goldw' : '') + '"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml + covBdg +
             ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
-            (noHead ? '' : tagHtml) +
+            (tagInBody ? '' : tagHtml) +
             (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
             '<div class="fmx-cb">' + headHtml +
             (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
-            (noHead ? tagHtml : '') +
+            (tagInBody ? tagHtml : '') +
             bodyBdg +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
             (l.formats && l.formats.length ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') + bodyBdg2 +
@@ -8743,6 +8758,28 @@
     function simpleCard(l) {
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l);
+        var _fxR = l.fx || null;
+        var _rGold = _fxR ? !!_fxR.gold : false;
+        var _rGlow = _fxR ? (!!_fxR.glow && (l.effects_json || {}).glowCard !== false) : false;
+        var _rTag = ((l.effects_json || {}).topTag) || 'on';
+        var _rAt = l.emoji_attachments_json || {};
+        var _rCbRaw = (_rAt.cardbg && typeof _rAt.cardbg === 'object' && _rAt.cardbg.url && (_rAt.cardbg.kind === 'img' || _rAt.cardbg.kind === 'gif' || _rAt.cardbg.kind === 'video')) ? _rAt.cardbg : null;
+        var _rCb = (_rCbRaw && (_rCbRaw.kind === 'img' || (_fxR && _fxR.anim_bg))) ? _rCbRaw : null;
+        var _rCbg = _rCb ? '<div class="fmx-cbg">' + (_rCb.kind === 'video'
+            ? '<video src="' + _esc(mediaAbs(_rCb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(_rCb) + '" muted loop playsinline autoplay preload="metadata"></video>'
+            : '<img loading="lazy" decoding="async" src="' + _esc(mediaAbs(_rCb.url)) + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' + _posStyle(_rCb) + '">') + '<i class="fmx-cbg-s"></i></div>' : '';
+        var _rStk = l.sticker_json || null;
+        var _rStkHtml = '';
+        if (_rStk && _rStk.url) {
+            if (_rStk.dmode == null && (l.effects_json || {}).stickerMode) _rStk.dmode = l.effects_json.stickerMode;
+            if (_rStk.rot == null && (l.effects_json || {}).stickerRot != null) _rStk.rot = l.effects_json.stickerRot;
+            var _rAnim = !!(_fxR && _fxR.anim_sticker) && _rStk.kind !== 'webp';
+            var _rsz = stkSize(_rStk, 340);
+            var _rcx = Math.max(0.1, Math.min((_rStk.x != null ? _rStk.x : 0.82), 0.9)) * 100;
+            var _rcy = Math.max(14, SEAM + (Number(_rStk.dy) || 0));
+            var _rdm = _rStk.dmode || 'bg'; if (_rdm === 'top') _rdm = 'blend';
+            _rStkHtml = '<div class="fmx-stk' + (_rdm === 'blend' ? ' m-blend' : '') + '" style="left:' + _rcx.toFixed(1) + '%;top:' + _rcy.toFixed(0) + 'px;width:' + _rsz + 'px;height:' + _rsz + 'px;margin:' + (-_rsz / 2) + 'px 0 0 ' + (-_rsz / 2) + 'px;transform:rotate(' + (Number(_rStk.rot) || 0) + 'deg);">' + stkMedia(_rStk, _rAnim) + '</div>';
+        }
         var subs = l.subscribers, av = l.avg_views;
         var score = (l.health_score != null) ? l.health_score : null;
         var rr = (l.reach_rate != null) ? l.reach_rate : (l.er != null ? l.er : null);
@@ -8827,6 +8864,7 @@
             if (sr.length) struct = sr.join('');
         })();
         var pills = [];
+        if (_rGold && _rTag !== 'off') pills.push('<span class="fmr-pill" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.32);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i><span style="color:#e6cf9a;">Продвигается</span></span>');
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Фрод-контроль пройден</span></span>');
         if (l.rkn_url) pills.push(rknPill(l.rkn_url, 'radar'));
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
@@ -8844,7 +8882,7 @@
             (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
             (_pb ? '<div class="fmr-pulse">' + _pb + '</div>' : '') + '</div>' + scoreHtml + '</div>';
         var nicheHtml = l.niche ? '<div class="fmr-nicherow"><span class="fmr-niche"><i class="ti ti-tag"></i>' + _esc(l.niche) + '</span></div>' : '';
-        return '<div class="fmx-scard" data-u="' + _esc(l.username) + '">' +
+        return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
             (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             nicheHtml +
@@ -9204,7 +9242,7 @@
     function listItem(l, fx, plain) {
         if (l.is_adult && !_adultOk) return _ageTile();
         var hc = _healthColor(l), accent = _accent(l), t = _cleanTitle(l.title || l.username || '?');
-        var prem = !plain && (l._preview ? ((l.effects_json || {}).glowCard === true) : ((l.fx ? !!l.fx.gold : _isTop(l)) && (l.effects_json || {}).glowCard !== false));
+        var prem = l._preview ? (!plain && (l.effects_json || {}).glowCard === true) : ((l.fx ? !!l.fx.gold : (!plain && _isTop(l))) && (l.effects_json || {}).glowCard !== false);
         var dead = l.activity === 'none';
         var rr = _reachRate(l), rrc = _rrColor(l), warn = (l.reach_status === 'аномальный') ? '⚠ ' : '';
         var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
@@ -9252,6 +9290,24 @@
         var t = e.target && e.target.closest ? e.target.closest('[data-terms]') : null;
         if (t) { _haptic('light'); openTermsPassport(t.getAttribute('data-terms')); }
     });
+    var _ppT = null;
+    function _promoProof() {
+        _haptic('light');
+        var old = el('fmx-promoProof'); if (old) old.remove();
+        if (_ppT) { clearTimeout(_ppT); _ppT = null; }
+        var d = document.createElement('div');
+        d.id = 'fmx-promoProof';
+        d.innerHTML = '<div class="fmx-ppcard"><div class="fmx-ppic"><i class="ti ti-shield-check"></i></div><div class="fmx-ppt">Продвижение подтверждено платформой</div><div class="fmx-pps">Настоящий бейдж открывает эту проверку по нажатию — имитация в оформлении не открывает.</div></div>';
+        d.addEventListener('click', function () { d.remove(); });
+        document.body.appendChild(d);
+        _ppT = setTimeout(function () { try { d.remove(); } catch (e2) {} _ppT = null; }, 4200);
+    }
+    document.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('[data-promoproof]') : null;
+        if (!b) return;
+        e.stopPropagation();
+        _promoProof();
+    }, true);
     var _rowRO = null;
     function _ensureRowRO() {
         if (_rowRO || typeof ResizeObserver === 'undefined') return _rowRO;
