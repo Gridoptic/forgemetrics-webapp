@@ -2196,7 +2196,7 @@ function openUserTerms() {
     };
     if (window.__FM_TERMS_HTML) { paint(); return; }
     const s = document.createElement('script');
-    s.src = 'terms.js?v=20260803b';
+    s.src = 'terms.js?v=20260803c';
     s.onload = paint;
     s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>Не удалось загрузить документ. Проверь связь и повтори попытку.</span>'; };
     document.head.appendChild(s);
