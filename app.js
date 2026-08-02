@@ -2127,20 +2127,43 @@ function maybeShowTermsGate(data) {
     if (document.getElementById('fm-termsGate')) return;
     const bg = document.createElement('div');
     bg.id = 'fm-termsGate';
-    bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.72);display:flex;align-items:flex-end;justify-content:center;';
-    bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:18px 18px 0 0;max-width:560px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
+    bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;padding:0 12px;';
+    bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:18px 18px 0 0;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
         '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
         '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>Пользовательское соглашение</span></div>' +
         '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтверди согласие с условиями использования сервиса.</span></div>' +
-        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:8px;"><span>Читать пользовательское соглашение</span></button>' +
-        '<button id="fm-tgOk" style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;"><span>Принимаю условия</span></button></div>';
+        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>Читать пользовательское соглашение</span></button>' +
+        '<div id="fm-tgChk" style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;margin-bottom:12px;">' +
+        '<span id="fm-tgBox" style="flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;color:transparent;font-size:13px;margin-top:1px;transition:all 140ms;"><i class="ti ti-check"></i></span>' +
+        '<span style="font-size:12px;line-height:1.45;color:#c2c6d2;"><span>Я ознакомился с условиями и принимаю их</span></span></div>' +
+        '<button id="fm-tgOk" disabled style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;opacity:0.38;pointer-events:none;transition:opacity 160ms;"><span>Принимаю условия</span></button></div>';
     document.body.appendChild(bg);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    bg.addEventListener('touchmove', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
+    bg.addEventListener('wheel', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
+    const unlock = () => { document.body.style.overflow = ''; document.documentElement.style.overflow = ''; };
     document.getElementById('fm-tgRead').addEventListener('click', () => { hapticLight(); openUserTerms(); });
+    let agreed = false;
+    document.getElementById('fm-tgChk').addEventListener('click', () => {
+        hapticLight();
+        agreed = !agreed;
+        const box = document.getElementById('fm-tgBox');
+        box.style.background = agreed ? 'linear-gradient(145deg,#818cf8,#6366f1)' : 'transparent';
+        box.style.borderColor = agreed ? 'transparent' : 'rgba(255,255,255,0.25)';
+        box.style.color = agreed ? '#0b0c16' : 'transparent';
+        const ok = document.getElementById('fm-tgOk');
+        ok.disabled = !agreed;
+        ok.style.opacity = agreed ? '1' : '0.38';
+        ok.style.pointerEvents = agreed ? 'auto' : 'none';
+    });
     document.getElementById('fm-tgOk').addEventListener('click', async () => {
+        if (!agreed) return;
         hapticMed();
         try {
             await apiRequest('/api/v1/user/accept-terms', { method: 'POST', body: JSON.stringify({ version: TERMS_VERSION }) });
         } catch (e) {}
+        unlock();
         bg.remove();
     });
 }
@@ -2148,15 +2171,25 @@ function maybeShowTermsGate(data) {
 function openUserTerms() {
     hapticLight();
     const old = document.getElementById('fm-termsBg'); if (old) old.remove();
+    const prevBodyOv = document.body.style.overflow, prevDocOv = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     const bg = document.createElement('div');
     bg.id = 'fm-termsBg';
-    bg.style.cssText = 'position:fixed;inset:0;z-index:100060;background:rgba(5,7,14,0.6);display:flex;align-items:center;justify-content:center;padding:16px;';
+    bg.style.cssText = 'position:fixed;inset:0;z-index:100060;background:rgba(5,7,14,0.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px;';
+    bg.addEventListener('touchmove', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
+    bg.addEventListener('wheel', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
     bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;">' +
         '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>Пользовательское соглашение</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
         '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>Загружаю…</span></div></div>';
     document.body.appendChild(bg);
-    bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
-    bg.querySelector('#fm-termsX').addEventListener('click', () => bg.remove());
+    const closeTerms = () => {
+        document.body.style.overflow = prevBodyOv;
+        document.documentElement.style.overflow = prevDocOv;
+        bg.remove();
+    };
+    bg.addEventListener('click', e => { if (e.target === bg) closeTerms(); });
+    bg.querySelector('#fm-termsX').addEventListener('click', closeTerms);
     const paint = () => {
         const b = document.getElementById('fm-termsBody');
         if (b) b.innerHTML = '<style>#fm-termsBody h3{font-size:13px;color:#e8e8ed;margin:15px 0 4px;}#fm-termsBody p{margin:6px 0;}#fm-termsBody .tm-upd{color:#565b73;font-size:11px;margin-top:10px;}</style>' + window.__FM_TERMS_HTML;
