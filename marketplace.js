@@ -8867,7 +8867,6 @@
         })();
         var _promoB = (_rGold && _rTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
         var bIt = badgeItems(l).filter(function (it) { return it.k !== 'live'; }).map(function (it) { return it.h; });
-        if ((!l.badges || !l.badges.length) && subs && subs >= 100000) bIt.push('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>');
         var _ac = _audChip(l);
         var pillsHtml = (bIt.length || _ac) ? '<div class="fmx-badges" style="margin-top:10px;">' + bIt.join('') + _ac + '</div>' : '';
         var fmtHtml = (l.formats && l.formats.length) ? '<div class="fmx-fchips">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '';
