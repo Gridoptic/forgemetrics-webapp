@@ -223,6 +223,7 @@ async function loadDashboard() {
         state.dashboard = data;
         renderDashboard(data);
         showScreen('dashboard');
+        maybeShowTermsGate(data);
     } catch (err) {
         const message = err.message || '';
 
@@ -2112,10 +2113,36 @@ function renderCabinet(d) {
     html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
+    html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>На информационном ресурсе применяются рекомендательные технологии</span></div>`;
 
     body.innerHTML = html;
     wireCabinet(d);
     localizeTree(screens.cabinet);
+}
+
+const TERMS_VERSION = '2026-08-03';
+
+function maybeShowTermsGate(data) {
+    if (!data || data.terms_accepted === TERMS_VERSION) return;
+    if (document.getElementById('fm-termsGate')) return;
+    const bg = document.createElement('div');
+    bg.id = 'fm-termsGate';
+    bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.72);display:flex;align-items:flex-end;justify-content:center;';
+    bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:18px 18px 0 0;max-width:560px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
+        '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
+        '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>Пользовательское соглашение</span></div>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтверди согласие с условиями использования сервиса.</span></div>' +
+        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:8px;"><span>Читать пользовательское соглашение</span></button>' +
+        '<button id="fm-tgOk" style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;"><span>Принимаю условия</span></button></div>';
+    document.body.appendChild(bg);
+    document.getElementById('fm-tgRead').addEventListener('click', () => { hapticLight(); openUserTerms(); });
+    document.getElementById('fm-tgOk').addEventListener('click', async () => {
+        hapticMed();
+        try {
+            await apiRequest('/api/v1/user/accept-terms', { method: 'POST', body: JSON.stringify({ version: TERMS_VERSION }) });
+        } catch (e) {}
+        bg.remove();
+    });
 }
 
 function openUserTerms() {
