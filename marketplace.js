@@ -1073,7 +1073,8 @@
             '.fmx-t2spw svg{display:block;}',
             '.fmx-t2spd{font-size:6.5px;font-weight:700;letter-spacing:0.04em;color:#565b73;line-height:1;margin-top:1.5px;}',
             '.fmx-t2nospark{flex:0 0 auto;width:66px;text-align:center;font-size:8.5px;color:#565b73;background:rgba(255,255,255,0.02);border:0.5px dashed rgba(255,255,255,0.09);border-radius:7px;padding:8px 0;}',
-            '.fmx-t2ev{display:flex;gap:9px;padding:8px 2px;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11px;line-height:1.45;color:#a7aec6;}',
+            '.fmx-t2ev{display:flex;gap:9px;padding:8px 2px;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11px;line-height:1.45;color:#a7aec6;cursor:pointer;}',
+            '.fmx-t2ev:active{background:rgba(255,255,255,0.02);}',
             '.fmx-t2ev.fresh{animation:fmxTevin 0.7s ease-out;}',
             '@keyframes fmxTevin{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}',
             '.fmx-t2ev b{color:#e8e8ed;}',
@@ -1862,8 +1863,46 @@
         } else if (e.type === 'niche_move') {
             txt = '<b>CPM в нише ' + niche + '</b> ' + _tFmtDelta(e.delta) + ' за неделю';
         }
-        return '<div class="fmx-t2ev' + (isFirst ? ' fresh' : '') + '"><span class="fmx-t2ic ' + m.cls + '"><i class="ti ' + m.ic + '"></i></span>' +
-            '<div>' + txt + '<div class="fmx-t2tm">' + _ago(e.at) + '</div></div></div>';
+        return '<div class="fmx-t2ev' + (isFirst ? ' fresh' : '') + '" data-evi="' + e.__i + '"><span class="fmx-t2ic ' + m.cls + '"><i class="ti ' + m.ic + '"></i></span>' +
+            '<div style="flex:1;min-width:0;">' + txt + '<div class="fmx-t2tm">' + _ago(e.at) + '</div></div>' +
+            '<i class="ti ti-chevron-right" style="color:#3f4358;font-size:14px;flex:0 0 auto;align-self:center;"></i></div>';
+    }
+    var _CURVE_SHORT = { step: 'ступенчатый рост просмотров', night: 'ночной набор просмотров', late: 'поздние докрутки просмотров' };
+    function _termGoRadar(q) {
+        var d = el('fmx-evBg'); if (d) d.remove();
+        _catQ = q || ''; _sort = 'all'; _nicheSel = null;
+        try { setMainTab('catalog'); } catch (e) {}
+    }
+    function openEventDetail(e) {
+        if (!e) return;
+        if (e.type === 'niche_move' || e.type === 'interest') { if (e.niche) openTermNiche(e.niche); return; }
+        if ((e.type === 'offer' || e.type === 'hot' || e.type === 'price_change') && e.username) {
+            try { openListing(e.username); } catch (er) {}
+            return;
+        }
+        if ((e.type === 'spike' || e.type === 'new_channel') && e.username) { _termGoRadar('@' + e.username); return; }
+        if (e.type === 'suspect_sum' && e.items && e.items.length) {
+            var old = el('fmx-evBg'); if (old) old.remove();
+            var ov = document.createElement('div'); ov.id = 'fmx-evBg'; ov.className = 'fmx-apk-ov';
+            ov.innerHTML = '<div class="fmx-apk-in">' +
+                '<div class="fmx-apk-hd"><div class="fmx-apk-tile" style="background:rgba(240,105,120,0.12);border-color:rgba(240,105,120,0.3);color:#f06978;"><i class="ti ti-shield-search"></i></div>' +
+                '<b>Антифрод за неделю</b>' +
+                '<button class="fmx-apk-x" id="fmx-evX"><i class="ti ti-x"></i></button></div>' +
+                '<div style="font-size:11px;color:#8d93a8;line-height:1.5;margin-bottom:10px;">Каналы с подозрительной кривой просмотров. Нажми на канал — откроется его карточка в Радаре с графиком и разбором.</div>' +
+                e.items.map(function (it) {
+                    return '<div class="fmx-t2top" data-evgo="' + _esc(it.username) + '" style="cursor:pointer;">' +
+                        '<span class="av">' + _esc(_apkInitials(it.title)) + '</span>' +
+                        '<span class="nm"><b style="display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _esc(it.title) + '</b>' +
+                        '<span style="font-size:9.5px;color:#565b73;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+                        (it.niche ? _esc(it.niche) + ' · ' : '') + '<span style="color:#f06978;">' + (_CURVE_SHORT[it.flag] || 'подозрительная кривая просмотров') + '</span></span></span>' +
+                        '<span class="cp">' + (it.subs ? _short(it.subs) : '') + '</span></div>';
+                }).join('') + '</div>';
+            document.body.appendChild(ov);
+            el('fmx-evX').addEventListener('click', function () { _haptic('light'); ov.remove(); });
+            qsa(ov, '[data-evgo]').forEach(function (r) {
+                r.addEventListener('click', function () { _haptic('light'); _termGoRadar('@' + r.getAttribute('data-evgo')); });
+            });
+        }
     }
     var _pulseHide = false;
     function todayLine() {
@@ -2026,7 +2065,7 @@
         var evs = _term.events || [];
         if (evs.length) {
             html += '<div class="fmx-psec"><i class="ti ti-bolt" style="color:#f5bf4f;"></i> События рынка</div>';
-            html += evs.slice(0, 12).map(function (e, i) { return _tEventHtml(e, i === 0); }).join('');
+            html += evs.slice(0, 12).map(function (e, i) { e.__i = i; return _tEventHtml(e, i === 0); }).join('');
         }
 
         html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.</div>';
@@ -2049,6 +2088,13 @@
         });
         qsa(host, '[data-tniche]').forEach(function (b) {
             b.addEventListener('click', function () { _haptic('light'); openTermNiche(b.getAttribute('data-tniche')); });
+        });
+        qsa(host, '[data-evi]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var i = parseInt(b.getAttribute('data-evi'), 10);
+                var e2 = (_term.events || [])[i];
+                _haptic('light'); openEventDetail(e2);
+            });
         });
     }
     function openTermNiche(name) {
