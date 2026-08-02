@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="rewrite.css?v=20260724a">
     <link rel="stylesheet" href="content_plan.css?v=20260724a">
     <link rel="stylesheet" href="competitors.css?v=20260724a">
-    <link rel="stylesheet" href="ad_exchange.css?v=20260726c">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -172,13 +171,6 @@
                     <i class="ti ti-arrows-exchange"></i>
                 </div>
                 <div class="drawer-item-text">Рынок рекламы</div>
-                <i class="ti ti-chevron-right drawer-item-chevron"></i>
-            </button>
-            <button class="drawer-item" data-action="find_advertisers">
-                <div class="drawer-item-icon icon-blue">
-                    <i class="ti ti-zoom-money"></i>
-                </div>
-                <div class="drawer-item-text">Биржа рекламы</div>
                 <i class="ti ti-chevron-right drawer-item-chevron"></i>
             </button>
         </div>
@@ -631,19 +623,18 @@
     try {
         var l = window.getLang ? window.getLang() : 'ru';
         if (l && l !== 'ru') {
-            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=180"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=181"></scr' + 'ipt>');
         }
     } catch (e) {}
 })();
 </script>
-<script src="app.js?v=20260802e"></script>
+<script src="app.js?v=20260802f"></script>
 <script src="audit.js?v=20260801f"></script>
 <script src="strategy.js?v=20260801b"></script>
 <script src="rewrite.js?v=20260802a"></script>
 <script src="content_plan.js?v=20260802a"></script>
 <script src="placements.js?v=20260801a"></script>
 <script src="competitors.js?v=20260724d"></script>
-<script src="ad_exchange.js?v=20260726g"></script>
 <script src="marketplace.js?v=20260802za"></script>
 
 </body>
