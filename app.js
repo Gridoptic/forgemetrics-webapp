@@ -2131,7 +2131,7 @@ function maybeShowTermsGate(data) {
     bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:18px 18px 0 0;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
         '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
         '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>Пользовательское соглашение</span></div>' +
-        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтверди согласие с условиями использования сервиса.</span></div>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтвердите согласие с условиями использования сервиса.</span></div>' +
         '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>Читать пользовательское соглашение</span></button>' +
         '<div id="fm-tgChk" style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;margin-bottom:12px;">' +
         '<span id="fm-tgBox" style="flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;color:transparent;font-size:13px;margin-top:1px;transition:all 140ms;"><i class="ti ti-check"></i></span>' +
