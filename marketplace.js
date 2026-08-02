@@ -1873,6 +1873,7 @@
     var _CURVE_SHORT = { step: 'ступенчатый рост просмотров', night: 'ночной набор просмотров', late: 'поздние докрутки просмотров' };
     function _termGoRadar(q) {
         var d = el('fmx-evBg'); if (d) d.remove();
+        var tn = el('fmx-tnBg'); if (tn) tn.remove();
         _catQ = q || ''; _sort = 'all'; _nicheSel = null;
         try { setMainTab('catalog'); } catch (e) {}
     }
@@ -2149,9 +2150,10 @@
             if (r.top_channels && r.top_channels.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-trophy" style="color:#f5bf4f;"></i> Топ каналов ниши</div>';
                 html += r.top_channels.map(function (c) {
-                    return '<div class="fmx-t2top"><span class="av">' + _esc(_apkInitials(c.title)) + '</span>' +
+                    return '<div class="fmx-t2top" data-tngo="' + _esc(c.username) + '" data-tnmk="' + (c.on_market ? '1' : '0') + '" style="cursor:pointer;"><span class="av">' + _esc(_apkInitials(c.title)) + '</span>' +
                         '<span class="nm">' + _esc(c.title) + '</span>' +
-                        '<span class="cp">' + (c.cpm ? 'CPM ' + _num(c.cpm) + ' ₽' : (c.subscribers ? _short(c.subscribers) : '')) + '</span></div>';
+                        '<span class="cp">' + (c.cpm ? 'CPM ' + _num(c.cpm) + ' ₽' : (c.subscribers ? _short(c.subscribers) : '')) + '</span>' +
+                        '<i class="ti ti-chevron-right" style="color:#3f4358;font-size:13px;flex:0 0 auto;"></i></div>';
                 }).join('');
             }
             html += '<button class="fmx-tnbtn" id="fmx-tnRadar" style="margin-top:14px;"><span class="ic" style="background:rgba(129,140,248,0.12);color:#818cf8;"><i class="ti ti-radar-2"></i></span>Каналы ниши в Радаре</button>' +
@@ -2164,6 +2166,27 @@
             });
             var bb = el('fmx-tnBell');
             if (bb) bb.addEventListener('click', function () { _haptic('light'); try { openNicheSubs(name); } catch (e) {} });
+            qsa(b, '[data-tngo]').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    _haptic('light');
+                    var u = row.getAttribute('data-tngo');
+                    if (row.getAttribute('data-tnmk') !== '1') { _termGoRadar('@' + u); return; }
+                    function _show(known) {
+                        try {
+                            openListing(u, known || null);
+                            var lb = el('fmx-listBg'); if (lb) lb.style.zIndex = '100010';
+                        } catch (e) {}
+                    }
+                    if (findListing(u)) { _show(); return; }
+                    apiGet('/api/v1/marketplace/listings?q=' + encodeURIComponent(u) + '&limit=5').then(function (r2) {
+                        var found = null;
+                        ((r2 && r2.listings) || []).forEach(function (x) {
+                            if (String(x.username || '').toLowerCase() === String(u).toLowerCase()) found = x;
+                        });
+                        if (found) _show(found); else _termGoRadar('@' + u);
+                    }).catch(function () { _termGoRadar('@' + u); });
+                });
+            });
         }).catch(function () {
             var b = el('fmx-tnBody');
             if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь.');
