@@ -1610,16 +1610,16 @@
         host.innerHTML =
             '<div class="fmx-entq">Выбери, где искать:</div>' +
             '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.32);color:#818cf8;"><i class="ti ti-radar-2"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Радар каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">весь Telegram</span></div>' +
-            '<div class="fmx-entd">Каталог каналов со всего Telegram: подписчики, охват, ER и индекс здоровья по каждому, оценка цены и ниша. Ищешь по нишам и фильтрам и пишешь владельцу напрямую — даже тем, кто ещё не выставил оффер на Площадке.</div></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Радар каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">внешние каналы</span></div>' +
+            '<div class="fmx-entd">Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
-            '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;"><i class="ti ti-building-store"></i></div>' +
+            '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;"><i class="ti ti-arrows-exchange"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые офферы</span></div>' +
-            '<div class="fmx-entd">Каналы сами выставили рекламу: цена, форматы, реальные метрики и прямая связь с владельцем — всё собрано в готовом оффере. Рейтинг и подтверждённые сделки сразу показывают, кому можно доверять, а свой канал ты оформляешь оффером здесь же.</div></div>' +
+            '<div class="fmx-entd">Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.32);color:#fbbf24;"><i class="ti ti-chart-candle"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">live</span></div>' +
-            '<div class="fmx-entd">Медианный CPM, цены, объёмы и активность по каждой нише в реальном времени — теплокарта всего рынка Telegram-рекламы. Видно, где трафик дешевеет, а где перегрет: оцениваешь ситуацию до закупа.</div></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(245,158,11,0.18);color:#f59e0b;">пульс рынка</span></div>' +
+            '<div class="fmx-entd">Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>';
         if (_isMod()) {
             host.insertAdjacentHTML('beforeend',
