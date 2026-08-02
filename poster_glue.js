@@ -477,8 +477,8 @@
     if (!el('fmx-ed-style')) {
       var st = document.createElement('style'); st.id = 'fmx-ed-style';
       st.textContent = '*{-webkit-tap-highlight-color:transparent !important;}button:focus,.chip:focus{outline:none !important;}' +
-        'body{padding:6px 8px 26px !important;gap:10px !important;min-height:0 !important;' +
-        'align-items:center !important;align-content:flex-start !important;justify-content:flex-start !important;}' +
+        'body{padding:6px 0 26px !important;gap:10px !important;min-height:0 !important;' +
+        'flex-direction:column !important;align-items:center !important;justify-content:flex-start !important;}' +
         '.poster{box-shadow:0 12px 40px rgba(0,0,0,0.5) !important;}' +
         '.panel{width:540px !important;max-width:540px;margin-top:0 !important;}' +
         '.poster.fmx-bgsel::after{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;z-index:8;' +

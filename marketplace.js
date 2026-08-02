@@ -6999,7 +6999,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260802g';
+    var PS_GLUE_V = '20260802h';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7009,7 +7009,7 @@
             '.fmx-psTop .t i{color:#5DCAA5;}' +
             '.fmx-psX{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);color:#c9cede;font-size:17px;cursor:pointer;flex-shrink:0;padding:0;line-height:1;}' +
             '.fmx-psX:active{background:rgba(255,255,255,0.14);}' +
-            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;padding:0 14px;box-sizing:border-box;scrollbar-gutter:stable both-edges;}' +
+            '.fmx-psScroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px;box-sizing:border-box;}' +
             '.fmx-psScroll::-webkit-scrollbar{width:5px;}' +
             '.fmx-psScroll::-webkit-scrollbar-track{background:transparent;}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.22);border-radius:99px;}' +
@@ -7418,7 +7418,7 @@
             '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
             '<div id="fmx-psWrap" style="width:100%;max-width:540px;margin:0 auto;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" scrolling="no" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;overflow:hidden;"></iframe></div></div>' +
-            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0;"><i class="ti ti-send"></i> Прислать постер в чат с ботом</button></div>';
+            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0 auto;max-width:540px;"><i class="ti ti-send"></i> Прислать постер в чат с ботом</button></div>';
         document.body.appendChild(bg);
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
         var LW = 540, glueReady = false, chartDone = false, extra = {};
@@ -7426,7 +7426,8 @@
         function fitFrame() {
             try {
                 var idoc = frame.contentDocument; if (!idoc || !idoc.body) return;
-                var k = Math.min(1, (Math.max((wrap.clientWidth || 360) - 1, 100)) / LW);
+                var cw = wrap.clientWidth || 360;
+                var k = cw >= LW ? 1 : Math.max(cw - 1, 100) / LW;
                 try { if (frame.contentWindow.__fmxPosterPanelScale) frame.contentWindow.__fmxPosterPanelScale(k); } catch (e) {}
                 var lh = Math.max(idoc.body.scrollHeight, 700);
                 frame.style.width = LW + 'px'; frame.style.height = lh + 'px';
@@ -7478,7 +7479,7 @@
                         getData: posterData,
                         getState: function () { try { return frame.contentWindow.__fmxPosterState(); } catch (e) { return null; } },
                         tr: function (s2) { try { return (typeof _t === 'function') ? _t(s2) : s2; } catch (e) { return s2; } },
-                        getK: function () { return Math.min(1, (Math.max((wrap.clientWidth || 360) - 1, 100)) / LW); }
+                        getK: function () { var cw = wrap.clientWidth || 360; return cw >= LW ? 1 : Math.max(cw - 1, 100) / LW; }
                     });
                 }
             } catch (e) {}
