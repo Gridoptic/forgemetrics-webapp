@@ -6276,7 +6276,7 @@
         return h;
     }
     function panePrice() {
-        var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i> Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</div>';
+        var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i><span>Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</span></div>';
         var eridOpts = [['advertiser', 'Ставит рекламодатель'], ['channel', 'Ставит канал'], ['discuss', 'Обсуждается']];
         var erid = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-tag"></i> Маркировка рекламы (erid)</span>' +
             '<div class="fmx-eridseg" id="fmx-erid">' + eridOpts.map(function (o) {
