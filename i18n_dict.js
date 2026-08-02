@@ -2928,7 +2928,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Rewriting in your channel's style...",
   "+10 обновлений стиля канала": "+10 channel style updates",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 extra channel style updates beyond the monthly limit — keep generation style fresh on active channels.",
-  "Всё из Start, плюс:": "Everything in Start, plus:"
+  "Всё из Start, плюс:": "Everything in Start, plus:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Placement picks for media buying: health and fraud flags"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5852,7 +5853,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Reescribiendo en el estilo de tu canal...",
   "+10 обновлений стиля канала": "+10 actualizaciones del estilo del canal",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 actualizaciones extra del estilo del canal sobre el límite mensual: mantén fresco el estilo de generación en canales activos.",
-  "Всё из Start, плюс:": "Todo de Start, más:"
+  "Всё из Start, плюс:": "Todo de Start, más:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Selección de espacios para comprar: salud y señales de fraude"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8776,7 +8778,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Schreibe im Stil deines Kanals um...",
   "+10 обновлений стиля канала": "+10 Kanalstil-Updates",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 zusätzliche Kanalstil-Updates über das Monatslimit hinaus — hält den Generierungsstil aktiver Kanäle frisch.",
-  "Всё из Start, плюс:": "Alles aus Start, plus:"
+  "Всё из Start, плюс:": "Alles aus Start, plus:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Flächenauswahl für den Einkauf: Gesundheit und Betrugsflags"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -11695,7 +11698,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Арнаңның стилінде қайта жазып жатырмын...",
   "+10 обновлений стиля канала": "+10 арна стилін жаңарту",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Ай лимитінен тыс қосымша 10 арна стилін жаңарту — белсенді арналарда генерация стилін жаңа ұстайды.",
-  "Всё из Start, плюс:": "Старттағы барлығы, қосымша:"
+  "Всё из Start, плюс:": "Старттағы барлығы, қосымша:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Сатып алуға алаң іріктеу: денсаулық және алдау белгілері"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -14619,7 +14623,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Kanalning uslubida qayta yozyapman...",
   "+10 обновлений стиля канала": "+10 kanal uslubi yangilanishi",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Oylik limitdan tashqari qo'shimcha 10 ta kanal uslubi yangilanishi — faol kanallarda generatsiya uslubini yangi saqlaydi.",
-  "Всё из Start, плюс:": "Startdagi hammasi, qoʻshimcha:"
+  "Всё из Start, плюс:": "Startdagi hammasi, qoʻshimcha:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Xarid uchun maydon tanlash: salomatlik va firibgarlik belgilari"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -17542,7 +17547,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Перапісваю ў стылі твайго канала...",
   "+10 обновлений стиля канала": "+10 абнаўленняў стылю канала",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Дадатковыя 10 абнаўленняў стылю канала звыш месячнага ліміту — трымаць стыль генерацыі свежым на актыўных каналах.",
-  "Всё из Start, плюс:": "Усё са Старту, плюс:"
+  "Всё из Start, плюс:": "Усё са Старту, плюс:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Падбор пляцовак пад закуп: здароўе і флагі накруткі"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -20466,7 +20472,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Kanalının üslubunda yenidən yazıram...",
   "+10 обновлений стиля канала": "+10 kanal üslubu yenilənməsi",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Aylıq limitdən əlavə 10 kanal üslubu yenilənməsi — aktiv kanallarda generasiya üslubunu təzə saxlayır.",
-  "Всё из Start, плюс:": "Startdakı hər şey, üstəgəl:"
+  "Всё из Start, плюс:": "Startdakı hər şey, üstəgəl:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Alış üçün meydança seçimi: sağlamlıq və fırıldaq işarələri"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -23390,7 +23397,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "أعيد الكتابة بأسلوب قناتك...",
   "+10 обновлений стиля канала": "+10 تحديثات لأسلوب القناة",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 تحديثات إضافية لأسلوب القناة فوق الحد الشهري — للحفاظ على أسلوب توليد حديث في القنوات النشطة.",
-  "Всё из Start, плюс:": "كل ما في Start، بالإضافة إلى:"
+  "Всё из Start, плюс:": "كل ما في Start، بالإضافة إلى:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "اختيار مساحات للشراء: الصحة وإشارات الاحتيال"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -26314,7 +26322,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "در حال بازنویسی به سبک کانال تو...",
   "+10 обновлений стиля канала": "+۱۰ به‌روزرسانی سبک کانال",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "۱۰ به‌روزرسانی اضافه سبک کانال فراتر از سقف ماهانه — سبک تولید کانال‌های فعال را تازه نگه می‌دارد.",
-  "Всё из Start, плюс:": "همه امکانات Start، به‌علاوه:"
+  "Всё из Start, плюс:": "همه امکانات Start، به‌علاوه:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "گزینش فضاها برای خرید: سلامت و نشانه‌های تقلب"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -29238,7 +29247,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Kanalının stilinde yeniden yazıyorum...",
   "+10 обновлений стиля канала": "+10 kanal stili güncellemesi",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Aylık limitin üzerine 10 ek kanal stili güncellemesi — aktif kanallarda üretim stilini taze tutar.",
-  "Всё из Start, плюс:": "Start'taki her şey, artı:"
+  "Всё из Start, плюс:": "Start'taki her şey, artı:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Satın alım için alan seçimi: sağlık ve sahtecilik işaretleri"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -32162,7 +32172,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "आपके चैनल की स्टाइल में फिर से लिख रहा हूं...",
   "+10 обновлений стиля канала": "+10 चैनल स्टाइल अपडेट",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "मासिक सीमा से ऊपर 10 अतिरिक्त चैनल स्टाइल अपडेट — सक्रिय चैनलों पर जनरेशन स्टाइल ताज़ा रखें।",
-  "Всё из Start, плюс:": "Start की सभी सुविधाएँ, साथ ही:"
+  "Всё из Start, плюс:": "Start की सभी सुविधाएँ, साथ ही:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "खरीद के लिए प्लेसमेंट चयन: हेल्थ और फ्रॉड फ़्लैग"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -35086,7 +35097,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "আপনার চ্যানেলের স্টাইলে পুনর্লিখন চলছে...",
   "+10 обновлений стиля канала": "+১০ চ্যানেল স্টাইল আপডেট",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "মাসিক সীমার বাইরে অতিরিক্ত ১০টি চ্যানেল স্টাইল আপডেট — সক্রিয় চ্যানেলে জেনারেশন স্টাইল তাজা রাখুন।",
-  "Всё из Start, плюс:": "Start-এর সবকিছু, সাথে:"
+  "Всё из Start, плюс:": "Start-এর সবকিছু, সাথে:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "কেনার জন্য প্লেসমেন্ট বাছাই: হেলথ ও প্রতারণার চিহ্ন"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -38010,7 +38022,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Menulis ulang dengan gaya channel-mu...",
   "+10 обновлений стиля канала": "+10 pembaruan gaya channel",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 pembaruan gaya channel ekstra di atas batas bulanan — menjaga gaya generasi tetap segar di channel aktif.",
-  "Всё из Start, плюс:": "Semua dari Start, plus:"
+  "Всё из Start, плюс:": "Semua dari Start, plus:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Seleksi slot untuk pembelian: kesehatan dan penanda kecurangan"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -40934,7 +40947,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Đang viết lại theo phong cách kênh của bạn...",
   "+10 обновлений стиля канала": "+10 lần cập nhật phong cách kênh",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 lần cập nhật phong cách kênh vượt hạn mức tháng — giữ phong cách tạo bài luôn mới trên các kênh hoạt động.",
-  "Всё из Start, плюс:": "Mọi tính năng của Start, cộng thêm:"
+  "Всё из Start, плюс:": "Mọi tính năng của Start, cộng thêm:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Chọn vị trí để mua quảng cáo: sức khỏe và cờ gian lận"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -43858,7 +43872,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Reescrevendo no estilo do seu canal...",
   "+10 обновлений стиля канала": "+10 atualizações do estilo do canal",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 atualizações extras do estilo do canal além do limite mensal — mantém o estilo de geração atualizado em canais ativos.",
-  "Всё из Start, плюс:": "Tudo do Start, mais:"
+  "Всё из Start, плюс:": "Tudo do Start, mais:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Seleção de espaços para compra: saúde e sinais de fraude"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -46782,7 +46797,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Réécriture dans le style de ta chaîne...",
   "+10 обновлений стиля канала": "+10 mises à jour du style de la chaîne",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 mises à jour supplémentaires du style au-delà de la limite mensuelle — garde le style de génération à jour sur les chaînes actives.",
-  "Всё из Start, плюс:": "Tout de Start, plus :"
+  "Всё из Start, плюс:": "Tout de Start, plus :",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Sélection d'emplacements pour l'achat : santé et signaux de fraude"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -49706,7 +49722,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Riscrivo nello stile del tuo canale...",
   "+10 обновлений стиля канала": "+10 aggiornamenti dello stile del canale",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "10 aggiornamenti extra dello stile oltre il limite mensile — mantiene fresco lo stile di generazione sui canali attivi.",
-  "Всё из Start, плюс:": "Tutto di Start, più:"
+  "Всё из Start, плюс:": "Tutto di Start, più:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Selezione di spazi per l'acquisto: salute e segnali di frode"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -52630,7 +52647,8 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "በቻናልህ ስታይል እየደገምኩ ነው...",
   "+10 обновлений стиля канала": "+10 የቻናል ስታይል ዝማኔዎች",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "ከወርሃዊ ገደብ በላይ ተጨማሪ 10 የቻናል ስታይል ዝማኔዎች — በንቁ ቻናሎች ላይ የማመንጨት ስታይል ትኩስ ያቆያል።",
-  "Всё из Start, плюс:": "የStart ሁሉም ነገር፣ በተጨማሪ:"
+  "Всё из Start, плюс:": "የStart ሁሉም ነገር፣ በተጨማሪ:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "ለግዢ የቦታ ምርጫ፦ ጤና እና የማጭበርበር ምልክቶች"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -55554,6 +55572,7 @@ window.__I18N_DICT = {
   "Переписываю в стиле твоего канала...": "Ninaandika upya kwa mtindo wa kituo chako...",
   "+10 обновлений стиля канала": "+masasisho 10 ya mtindo wa kituo",
   "Добор 10 обновлений стиля канала сверх месячного лимита — держать стиль генерации свежим на активных каналах.": "Masasisho 10 ya ziada ya mtindo wa kituo zaidi ya kikomo cha mwezi — huweka mtindo wa uundaji mpya kwenye vituo amilifu.",
-  "Всё из Start, плюс:": "Yote ya Start, pamoja na:"
+  "Всё из Start, плюс:": "Yote ya Start, pamoja na:",
+  "Подбор площадок под закуп: здоровье и флаги накрутки": "Uteuzi wa nafasi kwa ununuzi: afya na alama za udanganyifu"
  }
 };
