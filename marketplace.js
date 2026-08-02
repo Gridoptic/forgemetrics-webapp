@@ -636,6 +636,9 @@
             '.fmr-pills{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0 11px;}',
             '.fmr-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#c2c6d2;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:5px 9px;}',
             '.fmr-pill i{font-size:13px;}',
+            '.fmx-rknpill{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:#fff;background:#00008B;border:0.5px solid rgba(255,255,255,0.25);border-radius:99px;padding:3px 10px 3px 4px;cursor:pointer;line-height:1.3;white-space:nowrap;}',
+            '.fmx-rknpill .rknic{width:17px;height:17px;border-radius:5px;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}',
+            '.fmx-rknpill .rknic svg{width:12px;height:12px;display:block;}',
             '.fmx-lrow{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color 160ms,background 160ms,box-shadow 160ms;}',
             '.fmx-lrow:hover{border-color:rgba(255,255,255,0.14);}',
             '.fmx-ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}',
@@ -7797,13 +7800,17 @@
         catch (e) { return iso; }
     }
 
+    var RKN_SVG = '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#1e8ece" fill-rule="evenodd" d="M765.748,167.568L598.331,0.151,425.5-.016-0.016,425.5v173L167.4,765.915,295.753,637.563,170.191,512,512,170.191,637.563,295.753Z"/><path fill="#0b4680" fill-rule="evenodd" d="M512.9,339.5l173,173L512.5,685.9l-173-173Z"/><path fill="#0b4680" fill-rule="evenodd" d="M258.252,856.432L425.669,1023.85l172.83,0.17L1024.02,598.5v-173L856.6,258.085,728.247,386.437,853.809,512,512,853.809,386.437,728.247Z"/></svg>';
+    function rknPill(url) {
+        return '<span class="fmx-rknpill" data-rknlink="' + _esc(url) + '"><span class="rknic">' + RKN_SVG + '</span>Зарегистрирован в РКН</span>';
+    }
     function badgeItems(l) {
         var items = [];
         items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
         if (l.niche) items.push({ k: 'niche', h: _bk('niche', '<span class="fmx-bdg" style="color:#c7ccf7;border-color:rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><i class="ti ti-tag" style="color:#818cf8;"></i>' + _esc(l.niche) + '</span>') });
         if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
         if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Фрод-контроль пройден</span>') });
-        if (l.rkn_url) items.push({ k: 'rkn', h: _bk('rkn', '<span class="fmx-bdg" style="color:#7ee7c2;border-color:rgba(93,202,165,0.4);background:rgba(93,202,165,0.1);cursor:pointer;" data-rknlink="' + _esc(l.rkn_url) + '"><i class="ti ti-shield-check"></i>Зарегистрирован в РКН</span>') });
+        if (l.rkn_url) items.push({ k: 'rkn', h: _bk('rkn', rknPill(l.rkn_url)) });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
         if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
@@ -7902,7 +7909,7 @@
         })();
         var pills = [];
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Фрод-контроль пройден</span></span>');
-        if (l.rkn_url) pills.push('<span class="fmr-pill" style="color:#7ee7c2;cursor:pointer;" data-rknlink="' + _esc(l.rkn_url) + '"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Зарегистрирован в РКН</span></span>');
+        if (l.rkn_url) pills.push(rknPill(l.rkn_url));
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow) +
@@ -8202,7 +8209,7 @@
         })();
         var pills = [];
         if (l.antifraud === 'clean') pills.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Фрод-контроль пройден</span></span>');
-        if (l.rkn_url) pills.push('<span class="fmr-pill" style="color:#7ee7c2;cursor:pointer;" data-rknlink="' + _esc(l.rkn_url) + '"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Зарегистрирован в РКН</span></span>');
+        if (l.rkn_url) pills.push(rknPill(l.rkn_url));
         if (subs && subs >= 100000) pills.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
         var al = _audLabel(l);
         if (al) pills.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
