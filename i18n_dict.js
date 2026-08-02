@@ -3055,7 +3055,9 @@ window.__I18N_DICT = {
   "за %1 ч": "over %1 h",
   "данных %1 дн из %2": "%1 of %2 days of data",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Exchange-style market dashboard: CPM index, heatmap and price dynamics by niche, event feed — audience spikes, new offers, flash discounts. Updates every 5 minutes.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM index, niche heatmap and market events"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM index, niche heatmap and market events",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Exchange-style market dashboard: CPM index, heatmap and price dynamics by niche, event feed — audience spikes, new offers, flash discounts.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Marketplace — real prices from offer owners. Radar — price computed from niche and reach, a benchmark, not deals. Arrows and charts are based on actual medians only; \"estimate\" is a market benchmark without dynamics."
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -6106,7 +6108,9 @@ window.__I18N_DICT = {
   "за %1 ч": "en %1 h",
   "данных %1 дн из %2": "datos de %1 de %2 días",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Panel bursátil del mercado: índice CPM, mapa de calor y dinámica de precios por nicho, feed de eventos — picos de audiencia, nuevas ofertas, descuentos relámpago. Se actualiza cada 5 minutos.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Índice CPM, mapa de calor de nichos y eventos del mercado"
+  "Индекс CPM, теплокарта ниш и события рынка": "Índice CPM, mapa de calor de nichos y eventos del mercado",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Panel bursátil del mercado: índice CPM, mapa de calor y dinámica de precios por nicho, feed de eventos — picos de audiencia, nuevas ofertas, descuentos relámpago.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Plataforma — precios reales de los dueños. Radar — precio calculado por nicho y alcance, una referencia, no transacciones. Flechas y gráficos solo con medianas reales; «estimación» — referencia de mercado sin dinámica."
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -9157,7 +9161,9 @@ window.__I18N_DICT = {
   "за %1 ч": "in %1 Std",
   "данных %1 дн из %2": "Daten für %1 von %2 Tagen",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Börsenartiges Markt-Dashboard: CPM-Index, Heatmap und Preisdynamik je Nische, Ereignis-Feed — Publikums-Spikes, neue Angebote, Blitzrabatte. Aktualisierung alle 5 Minuten.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM-Index, Nischen-Heatmap und Marktereignisse"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM-Index, Nischen-Heatmap und Marktereignisse",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Börsenartiges Markt-Dashboard: CPM-Index, Heatmap und Preisdynamik je Nische, Ereignis-Feed — Publikums-Spikes, neue Angebote, Blitzrabatte.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Marktplatz — echte Preise der Anbieter. Radar — nach Nische und Reichweite berechneter Preis, ein Richtwert, keine Deals. Pfeile und Diagramme nur nach echten Medianen; „Schätzung“ — Marktrichtwert ohne Dynamik."
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -12203,7 +12209,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 сағатта",
   "данных %1 дн из %2": "%2 күннен %1 күн деректері",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Биржа үлгісіндегі нарық дашборды: CPM индексі, ниша бойынша жылу картасы мен баға динамикасы, оқиғалар таспасы — аудитория секірулері, жаңа офферлер, жедел жеңілдіктер. Жаңарту 5 минут сайын.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM индексі, нишалар жылу картасы және нарық оқиғалары"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM индексі, нишалар жылу картасы және нарық оқиғалары",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Биржа үлгісіндегі нарық дашборды: CPM индексі, ниша бойынша жылу картасы мен баға динамикасы, оқиғалар таспасы — аудитория секірулері, жаңа офферлер, жедел жеңілдіктер.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Алаң — иелердің нақты бағалары. Радар — ниша мен қамту бойынша есептелген баға, бағдар, мәміле емес. Көрсеткілер мен графиктер тек нақты медианалар бойынша; «бағалау» — динамикасыз бағдар."
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -15254,7 +15262,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 soatda",
   "данных %1 дн из %2": "%2 kundan %1 kun malumot",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Birja uslubidagi bozor dashbordi: CPM indeksi, nisha bo'yicha issiqlik xaritasi va narx dinamikasi, voqealar lentasi — auditoriya sakrashlari, yangi offerlar, tezkor chegirmalar. Har 5 daqiqada yangilanadi.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM indeksi, nishalar issiqlik xaritasi va bozor voqealari"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM indeksi, nishalar issiqlik xaritasi va bozor voqealari",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Birja uslubidagi bozor dashbordi: CPM indeksi, nisha bo'yicha issiqlik xaritasi va narx dinamikasi, voqealar lentasi — auditoriya sakrashlari, yangi offerlar, tezkor chegirmalar.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Maydon — egalarining haqiqiy narxlari. Radar — nisha va qamrov bo'yicha hisoblangan narx, mo'ljal, bitim emas. Strelkalar va grafiklar faqat haqiqiy medianalar bo'yicha; «baholash» — dinamikasiz mo'ljal."
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -18304,7 +18314,9 @@ window.__I18N_DICT = {
   "за %1 ч": "за %1 г",
   "данных %1 дн из %2": "даных %1 дз з %2",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Біржавы дашборд рынку: індэкс CPM, цеплавая карта і дынаміка цэн па нішах, стужка падзей — усплёскі аўдыторыі, новыя оферы, гарачыя зніжкі. Абнаўленне кожныя 5 хвілін.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Індэкс CPM, цеплавая карта ніш і падзеі рынку"
+  "Индекс CPM, теплокарта ниш и события рынка": "Індэкс CPM, цеплавая карта ніш і падзеі рынку",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Біржавы дашборд рынку: індэкс CPM, цеплавая карта і дынаміка цэн па нішах, стужка падзей — усплёскі аўдыторыі, новыя оферы, гарачыя зніжкі.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Пляцоўка — рэальныя цэны ўладальнікаў офераў. Радар — разлік цаны па нішы і ахопе, арыенцір, а не здзелкі. Стрэлкі і графікі — толькі па фактычных медыянах; «ацэнка» — рыначны арыенцір без дынамікі."
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -21355,7 +21367,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 saatda",
   "данных %1 дн из %2": "%2 gündən %1 gün məlumat",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Birja üslubunda bazar paneli: CPM indeksi, niş üzrə istilik xəritəsi və qiymət dinamikası, hadisə lenti — auditoriya sıçrayışları, yeni offerlər, sürətli endirimlər. Hər 5 dəqiqədə yenilənir.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM indeksi, nişlərin istilik xəritəsi və bazar hadisələri"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM indeksi, nişlərin istilik xəritəsi və bazar hadisələri",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Birja üslubunda bazar paneli: CPM indeksi, niş üzrə istilik xəritəsi və qiymət dinamikası, hadisə lenti — auditoriya sıçrayışları, yeni offerlər, sürətli endirimlər.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Meydança — sahiblərin real qiymətləri. Radar — niş və əhatəyə görə hesablanmış qiymət, oriyentir, sövdələşmə deyil. Oxlar və qrafiklər yalnız faktiki medianlara görə; «qiymətləndirmə» — dinamikasız oriyentir."
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -24406,7 +24420,9 @@ window.__I18N_DICT = {
   "за %1 ч": "خلال %1 ساعة",
   "данных %1 дн из %2": "بيانات %1 من %2 يومًا",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "لوحة سوق بأسلوب البورصة: مؤشر CPM وخريطة حرارية وديناميكية الأسعار حسب المجال، وموجز أحداث — قفزات الجمهور وعروض جديدة وخصومات سريعة. تحديث كل 5 دقائق.",
-  "Индекс CPM, теплокарта ниш и события рынка": "مؤشر CPM وخريطة حرارية للمجالات وأحداث السوق"
+  "Индекс CPM, теплокарта ниш и события рынка": "مؤشر CPM وخريطة حرارية للمجالات وأحداث السوق",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "لوحة سوق بأسلوب البورصة: مؤشر CPM وخريطة حرارية وديناميكية الأسعار حسب المجال، وموجز أحداث — قفزات الجمهور وعروض جديدة وخصومات سريعة.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "المنصة — أسعار حقيقية من أصحاب العروض. الرادار — سعر محسوب حسب المجال والوصول، مرجع لا صفقات. الأسهم والرسوم فقط على الوسائط الفعلية؛ «تقدير» — مرجع بلا ديناميكية."
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -27457,7 +27473,9 @@ window.__I18N_DICT = {
   "за %1 ч": "در %1 ساعت",
   "данных %1 дн из %2": "داده %1 از %2 روز",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "داشبورد بازار به سبک بورس: شاخص CPM، نقشه حرارتی و دینامیک قیمت هر حوزه، فید رویدادها — جهش مخاطبان، آفرهای جدید، تخفیف‌های فوری. به‌روزرسانی هر ۵ دقیقه.",
-  "Индекс CPM, теплокарта ниш и события рынка": "شاخص CPM، نقشه حرارتی حوزه‌ها و رویدادهای بازار"
+  "Индекс CPM, теплокарта ниш и события рынка": "شاخص CPM، نقشه حرارتی حوزه‌ها و رویدادهای بازار",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "داشبورد بازار به سبک بورس: شاخص CPM، نقشه حرارتی و دینامیک قیمت هر حوزه، فید رویدادها — جهش مخاطبان، آفرهای جدید، تخفیف‌های فوری.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "پلتفرم — قیمت‌های واقعی مالکان. رادار — قیمت محاسبه‌شده بر اساس حوزه و دسترسی، یک مرجع، نه معامله. فلش‌ها و نمودارها فقط با میانه‌های واقعی؛ «برآورد» — مرجع بدون دینامیک."
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -30508,7 +30526,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 saatte",
   "данных %1 дн из %2": "%2 günün %1 günü veri",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Borsa tarzı piyasa paneli: CPM endeksi, niş bazında ısı haritası ve fiyat dinamiği, olay akışı — kitle sıçramaları, yeni teklifler, yıldırım indirimler. 5 dakikada bir güncellenir.",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM endeksi, niş ısı haritası ve piyasa olayları"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM endeksi, niş ısı haritası ve piyasa olayları",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Borsa tarzı piyasa paneli: CPM endeksi, niş bazında ısı haritası ve fiyat dinamiği, olay akışı — kitle sıçramaları, yeni teklifler, yıldırım indirimler.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Pazar yeri — sahiplerin gerçek fiyatları. Radar — niş ve erişime göre hesaplanan fiyat, bir referans, işlem değil. Oklar ve grafikler yalnızca gerçek medyanlara göre; «tahmin» — dinamiksiz referans."
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -33559,7 +33579,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 घंटे में",
   "данных %1 дн из %2": "%2 में से %1 दिन का डेटा",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "एक्सचेंज-शैली का बाज़ार डैशबोर्ड: CPM सूचकांक, निश के अनुसार हीटमैप और मूल्य गतिकी, इवेंट फ़ीड — ऑडियंस उछाल, नए ऑफ़र, फ्लैश छूट। हर 5 मिनट में अपडेट।",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM सूचकांक, निश हीटमैप और बाज़ार की घटनाएँ"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM सूचकांक, निश हीटमैप और बाज़ार की घटनाएँ",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "एक्सचेंज-शैली का बाज़ार डैशबोर्ड: CPM सूचकांक, निश के अनुसार हीटमैप और मूल्य गतिकी, इवेंट फ़ीड — ऑडियंस उछाल, नए ऑफ़र, फ्लैश छूट।",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "मार्केटप्लेस — मालिकों की असली क़ीमतें। रडार — निश और पहुँच से गणित क़ीमत, एक संदर्भ, सौदे नहीं। तीर और ग्राफ़ केवल वास्तविक माध्यिकाओं पर; «अनुमान» — गतिकी रहित संदर्भ।"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -36610,7 +36632,9 @@ window.__I18N_DICT = {
   "за %1 ч": "%1 ঘণ্টায়",
   "данных %1 дн из %2": "%2 দিনের মধ্যে %1 দিনের ডেটা",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "এক্সচেঞ্জ-স্টাইল বাজার ড্যাশবোর্ড: CPM সূচক, নিশ অনুযায়ী হিটম্যাপ ও দামের গতিবিধি, ইভেন্ট ফিড — দর্শক স্পাইক, নতুন অফার, ফ্ল্যাশ ছাড়। প্রতি ৫ মিনিটে আপডেট।",
-  "Индекс CPM, теплокарта ниш и события рынка": "CPM সূচক, নিশ হিটম্যাপ ও বাজারের ঘটনা"
+  "Индекс CPM, теплокарта ниш и события рынка": "CPM সূচক, নিশ হিটম্যাপ ও বাজারের ঘটনা",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "এক্সচেঞ্জ-স্টাইল বাজার ড্যাশবোর্ড: CPM সূচক, নিশ অনুযায়ী হিটম্যাপ ও দামের গতিবিধি, ইভেন্ট ফিড — দর্শক স্পাইক, নতুন অফার, ফ্ল্যাশ ছাড়।",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "মার্কেটপ্লেস — মালিকদের আসল দাম। রাডার — নিশ ও রিচ থেকে হিসাব করা দাম, রেফারেন্স, লেনদেন নয়। তীর ও গ্রাফ শুধু আসল মিডিয়ানে; «অনুমান» — গতিহীন রেফারেন্স।"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -39661,7 +39685,9 @@ window.__I18N_DICT = {
   "за %1 ч": "dalam %1 jam",
   "данных %1 дн из %2": "data %1 dari %2 hari",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Dasbor pasar gaya bursa: indeks CPM, heatmap dan dinamika harga per niche, feed peristiwa — lonjakan audiens, penawaran baru, diskon kilat. Diperbarui tiap 5 menit.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Indeks CPM, heatmap niche, dan peristiwa pasar"
+  "Индекс CPM, теплокарта ниш и события рынка": "Indeks CPM, heatmap niche, dan peristiwa pasar",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Dasbor pasar gaya bursa: indeks CPM, heatmap dan dinamika harga per niche, feed peristiwa — lonjakan audiens, penawaran baru, diskon kilat.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Marketplace — harga asli pemilik. Radar — harga hasil hitungan niche dan jangkauan, acuan, bukan transaksi. Panah dan grafik hanya dari median nyata; «perkiraan» — acuan tanpa dinamika."
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -42712,7 +42738,9 @@ window.__I18N_DICT = {
   "за %1 ч": "trong %1 giờ",
   "данных %1 дн из %2": "dữ liệu %1 trên %2 ngày",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Bảng điều khiển thị trường kiểu sàn giao dịch: chỉ số CPM, bản đồ nhiệt và biến động giá theo ngách, dòng sự kiện — đột biến khán giả, offer mới, giảm giá chớp nhoáng. Cập nhật mỗi 5 phút.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Chỉ số CPM, bản đồ nhiệt ngách và sự kiện thị trường"
+  "Индекс CPM, теплокарта ниш и события рынка": "Chỉ số CPM, bản đồ nhiệt ngách và sự kiện thị trường",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Bảng điều khiển thị trường kiểu sàn giao dịch: chỉ số CPM, bản đồ nhiệt và biến động giá theo ngách, dòng sự kiện — đột biến khán giả, offer mới, giảm giá chớp nhoáng.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Sàn — giá thật từ chủ offer. Radar — giá tính theo ngách và phạm vi, chỉ là tham chiếu, không phải giao dịch. Mũi tên và biểu đồ chỉ theo trung vị thực; «ước tính» — tham chiếu không có biến động."
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -45763,7 +45791,9 @@ window.__I18N_DICT = {
   "за %1 ч": "em %1 h",
   "данных %1 дн из %2": "dados de %1 de %2 dias",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Painel de mercado estilo bolsa: índice CPM, mapa de calor e dinâmica de preços por nicho, feed de eventos — picos de audiência, novas ofertas, descontos relâmpago. Atualização a cada 5 minutos.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Índice CPM, mapa de calor de nichos e eventos do mercado"
+  "Индекс CPM, теплокарта ниш и события рынка": "Índice CPM, mapa de calor de nichos e eventos do mercado",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Painel de mercado estilo bolsa: índice CPM, mapa de calor e dinâmica de preços por nicho, feed de eventos — picos de audiência, novas ofertas, descontos relâmpago.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Marketplace — preços reais dos donos. Radar — preço calculado por nicho e alcance, uma referência, não negócios. Setas e gráficos só com medianas reais; «estimativa» — referência sem dinâmica."
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -48814,7 +48844,9 @@ window.__I18N_DICT = {
   "за %1 ч": "en %1 h",
   "данных %1 дн из %2": "données sur %1 de %2 jours",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Tableau de bord boursier du marché : indice CPM, carte thermique et dynamique des prix par niche, fil d'événements — pics d'audience, nouvelles offres, remises éclair. Mise à jour toutes les 5 minutes.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Indice CPM, carte thermique des niches et événements du marché"
+  "Индекс CPM, теплокарта ниш и события рынка": "Indice CPM, carte thermique des niches et événements du marché",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Tableau de bord boursier du marché : indice CPM, carte thermique et dynamique des prix par niche, fil d'événements — pics d'audience, nouvelles offres, remises éclair.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Place de marché — prix réels des propriétaires. Radar — prix calculé par niche et portée, un repère, pas des transactions. Flèches et graphiques uniquement sur médianes réelles ; « estimation » — repère sans dynamique."
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -51865,7 +51897,9 @@ window.__I18N_DICT = {
   "за %1 ч": "in %1 h",
   "данных %1 дн из %2": "dati per %1 di %2 giorni",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Dashboard di mercato in stile borsa: indice CPM, heatmap e dinamica dei prezzi per nicchia, feed di eventi — picchi di pubblico, nuove offerte, sconti lampo. Aggiornamento ogni 5 minuti.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Indice CPM, heatmap delle nicchie ed eventi di mercato"
+  "Индекс CPM, теплокарта ниш и события рынка": "Indice CPM, heatmap delle nicchie ed eventi di mercato",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Dashboard di mercato in stile borsa: indice CPM, heatmap e dinamica dei prezzi per nicchia, feed di eventi — picchi di pubblico, nuove offerte, sconti lampo.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Marketplace — prezzi reali dei proprietari. Radar — prezzo calcolato per nicchia e copertura, un riferimento, non transazioni. Frecce e grafici solo su mediane reali; «stima» — riferimento senza dinamica."
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -54916,7 +54950,9 @@ window.__I18N_DICT = {
   "за %1 ч": "በ%1 ሰዓት",
   "данных %1 дн из %2": "ከ%2 ቀናት %1 ቀን ውሂብ",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "የቦርስ አይነት የገበያ ዳሽቦርድ: የCPM መረጃ ጠቋሚ፣ በኒሽ የሙቀት ካርታና የዋጋ እንቅስቃሴ፣ የክስተት ዥረት — የታዳሚ ዝላዮች፣ አዲስ አቅርቦቶች፣ ፈጣን ቅናሾች። በየ5 ደቂቃ ይታደሳል።",
-  "Индекс CPM, теплокарта ниш и события рынка": "የCPM መረጃ ጠቋሚ፣ የኒሽ ሙቀት ካርታና የገበያ ክስተቶች"
+  "Индекс CPM, теплокарта ниш и события рынка": "የCPM መረጃ ጠቋሚ፣ የኒሽ ሙቀት ካርታና የገበያ ክስተቶች",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "የቦርስ አይነት የገበያ ዳሽቦርድ: የCPM መረጃ ጠቋሚ፣ በኒሽ የሙቀት ካርታና የዋጋ እንቅስቃሴ፣ የክስተት ዥረት — የታዳሚ ዝላዮች፣ አዲስ አቅርቦቶች፣ ፈጣን ቅናሾች። በየ5 ደቂቃ ይታደሳል።",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "መድረክ — የባለቤቶች እውነተኛ ዋጋዎች። ራዳር — በኒሽና በተደራሽነት የተሰላ ዋጋ፣ አመላካች እንጂ ግብይት አይደለም። ቀስቶችና ግራፎች በእውነተኛ መካከለኞች ብቻ፤ «ግምት» — ያለ እንቅስቃሴ አመላካች። በየ5 ደቂቃ ይታደሳል።"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -57967,6 +58003,8 @@ window.__I18N_DICT = {
   "за %1 ч": "kwa saa %1",
   "данных %1 дн из %2": "data ya siku %1 kati ya %2",
   "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.": "Dashibodi ya soko ya mtindo wa soko la hisa: kielezo cha CPM, ramani ya joto na mwenendo wa bei kwa niche, mkondo wa matukio — kupanda kwa hadhira, ofa mpya, punguzo za haraka. Husasishwa kila dakika 5.",
-  "Индекс CPM, теплокарта ниш и события рынка": "Kielezo cha CPM, ramani ya joto ya niche na matukio ya soko"
+  "Индекс CPM, теплокарта ниш и события рынка": "Kielezo cha CPM, ramani ya joto ya niche na matukio ya soko",
+  "Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.": "Dashibodi ya soko ya mtindo wa soko la hisa: kielezo cha CPM, ramani ya joto na mwenendo wa bei kwa niche, mkondo wa matukio — kupanda kwa hadhira, ofa mpya, punguzo za haraka.",
+  "Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.": "Soko — bei halisi za wamiliki. Rada — bei iliyohesabiwa kwa niche na ufikaji, rejea, si miamala. Mishale na grafu kwa wastani halisi tu; «makadirio» — rejea bila mwenendo."
  }
 };

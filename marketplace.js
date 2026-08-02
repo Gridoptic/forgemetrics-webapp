@@ -1977,7 +1977,7 @@
             html += evs.slice(0, 12).map(function (e, i) { return _tEventHtml(e, i === 0); }).join('');
         }
 
-        html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики. Обновление раз в 5 минут.</div>';
+        html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.</div>';
 
         host.innerHTML = html;
         _tBindFolds(host);
@@ -2081,7 +2081,7 @@
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05));border:1px solid rgba(56,189,248,0.32);color:#38bdf8;"><i class="ti ti-chart-histogram"></i></div>' +
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(56,189,248,0.18);color:#38bdf8;">пульс рынка</span></div>' +
-            '<div class="fmx-entd">Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки. Обновление каждые 5 минут.</div></div>' +
+            '<div class="fmx-entd">Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>';
         if (_isMod()) {
             host.insertAdjacentHTML('beforeend',
