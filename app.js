@@ -834,31 +834,103 @@ function openHomeConfig() {
 }
 
 function bindHcDrag(list) {
-    let dragEl = null;
-    list.addEventListener('pointerdown', (e) => {
-        const grip = e.target.closest('.hc-grip');
-        if (!grip) return;
-        dragEl = grip.closest('.hc-row');
-        if (!dragEl) return;
-        _hcDragMoved = false;
-        e.preventDefault();
-        dragEl.classList.add('dragging');
-        try { list.setPointerCapture(e.pointerId); } catch (er) {}
-    });
-    list.addEventListener('pointermove', (e) => {
-        if (!dragEl) return;
-        e.preventDefault();
+    let drag = null;
+    let pressTimer = null;
+    let startX = 0, startY = 0;
+    let pendingRow = null, pendingPt = null;
+
+    function snapshot() {
+        const m = new Map();
+        list.querySelectorAll('.hc-row').forEach(r => m.set(r, r.getBoundingClientRect().top));
+        return m;
+    }
+    function flip(prev) {
+        list.querySelectorAll('.hc-row').forEach(r => {
+            const was = prev.get(r);
+            if (was == null) return;
+            const dy = was - r.getBoundingClientRect().top;
+            if (!dy) return;
+            r.style.transition = 'none';
+            r.style.transform = `translateY(${dy}px)`;
+            requestAnimationFrame(() => {
+                r.style.transition = 'transform 180ms ease';
+                r.style.transform = '';
+            });
+        });
+    }
+    function activate(row, pt) {
         _hcDragMoved = true;
-        const rows = Array.from(list.querySelectorAll('.hc-row:not(.dragging)'));
-        const after = rows.find(r => e.clientY < r.getBoundingClientRect().top + r.offsetHeight / 2);
-        if (after) {
-            if (after !== dragEl.nextElementSibling) list.insertBefore(dragEl, after);
-        } else {
-            list.appendChild(dragEl);
+        const rect = row.getBoundingClientRect();
+        const ghost = row.cloneNode(true);
+        ghost.classList.add('hc-ghost');
+        ghost.style.width = rect.width + 'px';
+        ghost.style.left = rect.left + 'px';
+        ghost.style.top = rect.top + 'px';
+        document.body.appendChild(ghost);
+        row.classList.add('hc-hole');
+        drag = { row, ghost, dy: pt.clientY - rect.top };
+        try { list.setPointerCapture(pt.pointerId); } catch (er) {}
+        hapticLight();
+    }
+    list.addEventListener('pointerdown', (e) => {
+        const row = e.target.closest('.hc-row');
+        if (!row) return;
+        startX = e.clientX; startY = e.clientY;
+        _hcDragMoved = false;
+        if (e.target.closest('.hc-grip')) {
+            e.preventDefault();
+            activate(row, e);
+            return;
+        }
+        pendingRow = row;
+        pendingPt = { clientY: e.clientY, pointerId: e.pointerId };
+        pressTimer = setTimeout(() => {
+            pressTimer = null;
+            if (pendingRow) activate(pendingRow, pendingPt);
+            pendingRow = null;
+        }, 240);
+    });
+    list.addEventListener('touchmove', (e) => { if (drag) e.preventDefault(); }, { passive: false });
+    list.addEventListener('pointermove', (e) => {
+        if (!drag) {
+            if (pressTimer && (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8)) {
+                clearTimeout(pressTimer); pressTimer = null; pendingRow = null;
+            }
+            return;
+        }
+        e.preventDefault();
+        drag.ghost.style.top = (e.clientY - drag.dy) + 'px';
+        const midY = e.clientY - drag.dy + drag.ghost.offsetHeight / 2;
+        const others = Array.from(list.querySelectorAll('.hc-row:not(.hc-hole)'));
+        const before = others.find(r => { const rr = r.getBoundingClientRect(); return midY < rr.top + rr.height / 2; });
+        const needMove = before ? (before !== drag.row.nextElementSibling && before !== drag.row) : (list.lastElementChild !== drag.row);
+        if (needMove) {
+            const prev = snapshot();
+            if (before) list.insertBefore(drag.row, before); else list.appendChild(drag.row);
+            flip(prev);
+        }
+        const sheet = list.closest('.hc-sheet');
+        if (sheet) {
+            const sr = sheet.getBoundingClientRect();
+            if (e.clientY < sr.top + 56) sheet.scrollTop -= 9;
+            else if (e.clientY > sr.bottom - 56) sheet.scrollTop += 9;
         }
     });
     const end = () => {
-        if (dragEl) { dragEl.classList.remove('dragging'); dragEl = null; hapticLight(); }
+        if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+        pendingRow = null;
+        if (!drag) { setTimeout(() => { _hcDragMoved = false; }, 0); return; }
+        const d = drag; drag = null;
+        const rect = d.row.getBoundingClientRect();
+        d.ghost.style.transition = 'top 160ms ease, left 160ms ease, transform 160ms ease';
+        d.ghost.style.top = rect.top + 'px';
+        d.ghost.style.left = rect.left + 'px';
+        d.ghost.style.transform = 'scale(1)';
+        setTimeout(() => {
+            try { d.ghost.remove(); } catch (er) {}
+            d.row.classList.remove('hc-hole');
+        }, 170);
+        hapticLight();
         setTimeout(() => { _hcDragMoved = false; }, 0);
     };
     list.addEventListener('pointerup', end);
