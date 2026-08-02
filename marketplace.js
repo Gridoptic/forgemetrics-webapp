@@ -1091,8 +1091,16 @@
             '.fmx-minerej{margin-top:9px;font-size:11px;color:#ef8080;line-height:1.45;background:rgba(239,68,68,0.07);border:0.5px solid rgba(239,68,68,0.2);border-radius:10px;padding:8px 10px;}',
             '.fmx-minemet{margin-top:9px;font-size:11px;color:#8990a8;font-variant-numeric:tabular-nums;}',
             '.fmx-minemet b{color:#c9cbe0;}',
-            '.fmx-mineacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px;}',
-            '.fmx-mineacts .fmx-btn{min-height:40px;font-size:11px;}',
+            '.fmx-mineacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);}',
+            '.fmx-mineacts .fmx-btn{min-height:44px;font-size:11.5px;background:rgba(255,255,255,0.035);border-color:rgba(255,255,255,0.09);border-radius:11px;color:#d9dbe6;gap:7px;}',
+            '.fmx-mineacts .fmx-btn:active{background:rgba(255,255,255,0.07);}',
+            '.fmx-hotbtn{width:100%;margin-top:9px;display:flex;align-items:center;gap:10px;padding:8px 10px;min-height:46px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.035);cursor:pointer;text-align:left;color:#e8e8ed;font-family:inherit;transition:background .15s;}',
+            '.fmx-hotbtn:active{background:rgba(255,255,255,0.07);}',
+            '.fmx-hott{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.3);color:#fbbf24;font-size:16px;}',
+            '.fmx-hotx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;}',
+            '.fmx-hotx .t1{font-size:12px;font-weight:600;}',
+            '.fmx-hotx .t2{font-size:10px;color:#8990a8;}',
+            '.fmx-hoton{flex:0 0 auto;font-size:9px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;color:#5DCAA5;background:rgba(93,202,165,0.1);border:0.5px solid rgba(93,202,165,0.35);border-radius:7px;padding:2px 7px;}',
             '.fmx-avail{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);font-size:11px;}',
             '.fmx-avail .fr{color:#5DCAA5;font-weight:600;}.fmx-avail .bs{color:#ef8080;font-weight:600;}.fmx-avail .nd{color:#565b73;}',
             '.fmx-avail .new{margin-left:auto;color:#565b73;white-space:nowrap;}',
@@ -2542,15 +2550,19 @@
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
             '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">Тап по дню — занято/свободно. Точка — спрос на дату</span>' +
             '<button class="fmx-seg" data-mcal="' + l.id + '" style="flex:0 0 auto;min-height:30px;padding:5px 12px;">Весь календарь</button></div>' +
-            '<button class="fmx-seg" data-mhotadv="' + l.id + '" style="width:100%;margin-top:6px;min-height:34px;padding:6px 12px;color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-discount-2"></i> Точечные скидки — свои даты, время и процент' + (l.hot_manual ? ' · вкл' : '') + '</button></div>' : '') +
+            '<button class="fmx-hotbtn" data-mhotadv="' + l.id + '">' +
+            '<span class="fmx-hott"><i class="ti ti-discount-2"></i></span>' +
+            '<span class="fmx-hotx"><span class="t1">Точечные скидки</span><span class="t2">свои даты, время и процент</span></span>' +
+            (l.hot_manual ? '<span class="fmx-hoton">вкл</span>' : '') +
+            '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            (own && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil"></i>Редактировать</button>' : '') +
-            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar"></i>Статистика</button>' +
-            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '" style="color:#f5bf4f;border-color:rgba(245,191,79,0.35);"><i class="ti ti-layout-collage"></i>Витрина</button>' : '') +
-            (own ? '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2"></i>Поделиться</button>' +
-                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star"></i>Постер</button>' : '') +
-            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play"></i>Возобновить' : '<i class="ti ti-snowflake"></i>Заморозить') + '</button>' : '') +
-            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef4444;border-color:rgba(239,68,68,0.3);"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
+            (own && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>Редактировать</button>' : '') +
+            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>Статистика</button>' +
+            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>Витрина</button>' : '') +
+            (own ? '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2" style="color:#5DCAA5;"></i>Поделиться</button>' +
+                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
+            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>Возобновить' : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>Заморозить') + '</button>' : '') +
+            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
             '</div></div>';
     }
 
