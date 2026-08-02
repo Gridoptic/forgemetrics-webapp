@@ -8604,6 +8604,18 @@
     }
 
     function zw(html) { return '<div class="fmx-zw">' + html + '</div>'; }
+    function _fmxSyncWrap(w) {
+        var card = w.firstElementChild; if (!card) return;
+        if (w.classList.contains('fmx-zw') && card.classList && card.classList.contains('fmx-li')) return;
+        var ww = w.clientWidth; if (!ww) return;
+        var k = Math.min(1, ww / 350);
+        var off = Math.max(0, (ww - 350 * k) / 2);
+        card.style.transform = k < 0.9995 ? 'scale(' + k + ')' : '';
+        card.style.marginLeft = off > 0.05 ? off.toFixed(2) + 'px' : '';
+        w.style.setProperty('--fmx-gw', Math.round(350 * k) + 'px');
+        w.style.setProperty('--fmx-go', off > 0.05 ? off.toFixed(2) + 'px' : '0px');
+        w.style.height = Math.round(card.offsetHeight * k) + 'px';
+    }
     function scaleCards(scope) {
         var list = [];
         qsa(scope || document, '.fmx-cwrap,.fmx-zw').forEach(function (w) {
@@ -8613,6 +8625,14 @@
                     card.style.transform = ''; card.style.marginLeft = ''; w.style.height = '';
                     return;
                 }
+            }
+            if (window.ResizeObserver && !card.__fmxRO) {
+                try {
+                    card.__fmxRO = new ResizeObserver(function () {
+                        window.requestAnimationFrame(function () { try { _fmxSyncWrap(w); } catch (err) {} });
+                    });
+                    card.__fmxRO.observe(card);
+                } catch (err) { card.__fmxRO = null; }
             }
             var ww = w.clientWidth; if (!ww) return;
             var k = Math.min(1, ww / 350);
