@@ -501,8 +501,8 @@
       var poster = el('poster');
       var rb = document.createElement('button');
       rb.id = 'fmx-ed-reset'; rb.type = 'button';
-      rb.innerHTML = '↺ Сбросить настройки';
-      rb.style.cssText = 'display:block;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
+      rb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg><span>Сбросить настройки</span>';
+      rb.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
       rb.addEventListener('click', function () { window.__fmxPosterReset(opts.defaultState); });
       if (poster && poster.parentNode) poster.parentNode.insertBefore(rb, poster.nextSibling);
     }
@@ -864,7 +864,8 @@
       '#fmx-ed-pack .chip span{overflow:hidden;border-radius:' + px(10) + ';}' +
       '#fmx-ed-pack .chip img,#fmx-ed-pack .chip video{width:100% !important;height:100% !important;' +
         'object-fit:contain !important;display:block;}' +
-      '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
+      '#fmx-ed-reset{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;gap:' + px(8) + ' !important;}' +
+      '#fmx-ed-reset svg{width:' + px(15) + ';height:' + px(15) + ';flex-shrink:0;}' +
       '#fmx-ed-bgcrop{font-size:' + px(13.5) + ' !important;padding:' + px(12) + ' !important;border-radius:' + px(12) + ' !important;margin:' + px(2) + ' auto ' + px(2) + ' !important;}' +
       '.picker{width:' + px(252) + ' !important;padding:' + px(14) + ' !important;border-radius:' + px(14) + ' !important;}' +
       '.pkhead{margin-bottom:' + px(10) + ' !important;}' +
