@@ -7016,7 +7016,7 @@
             '.fmx-psScroll:hover::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.55);}' +
             '.fmx-psScroll::-webkit-scrollbar-thumb:hover{background:rgba(165,173,255,0.8);}' +
             '.fmx-psBottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;background:#0a0d18;}' +
-            '#fmx-psFrame{border:0;display:block;background:#0a0d18;}' +
+            '#fmx-psFrame{border:0;display:block;background:#0a0d18;will-change:transform;}' +
             '@keyframes fmxSpin{to{transform:rotate(360deg);}}' +
             '#fmx-fmtpick{position:fixed;inset:0;z-index:100020;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);}' +
             '.fmx-fmtcard{width:100%;max-width:440px;margin:0 8px calc(8px + env(safe-area-inset-bottom));background:#0d1120;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:14px;box-shadow:0 -12px 44px rgba(0,0,0,0.55);animation:fmxUp .2s ease-out;}' +
@@ -7426,7 +7426,7 @@
         function fitFrame() {
             try {
                 var idoc = frame.contentDocument; if (!idoc || !idoc.body) return;
-                var k = Math.min(1, (wrap.clientWidth || 360) / LW);
+                var k = Math.min(1, (Math.max((wrap.clientWidth || 360) - 1, 100)) / LW);
                 try { if (frame.contentWindow.__fmxPosterPanelScale) frame.contentWindow.__fmxPosterPanelScale(k); } catch (e) {}
                 var lh = Math.max(idoc.body.scrollHeight, 700);
                 frame.style.width = LW + 'px'; frame.style.height = lh + 'px';
@@ -7478,7 +7478,7 @@
                         getData: posterData,
                         getState: function () { try { return frame.contentWindow.__fmxPosterState(); } catch (e) { return null; } },
                         tr: function (s2) { try { return (typeof _t === 'function') ? _t(s2) : s2; } catch (e) { return s2; } },
-                        getK: function () { return Math.min(1, (wrap.clientWidth || 360) / LW); }
+                        getK: function () { return Math.min(1, (Math.max((wrap.clientWidth || 360) - 1, 100)) / LW); }
                     });
                 }
             } catch (e) {}
