@@ -526,6 +526,48 @@
         box.parentNode.insertBefore(pack, box.nextSibling);
       }
     }
+    var gb = el('genBtn');
+    if (gb && !gb.__fmxBound) {
+      gb.__fmxBound = true;
+      var gen = window.__fmxPosterGen || { ok: false };
+      var gtip = el('genTip');
+      if (!gen.ok) {
+        gb.style.opacity = '0.45';
+        gb.style.cursor = 'default';
+        gb.addEventListener('click', function () { if (gtip) gtip.classList.add('show'); });
+      } else {
+        var genPool = [], genBusy = false;
+        var genPut = function (txt) {
+          var inp = el('hookInp');
+          if (!inp) return;
+          inp.value = txt;
+          try { inp.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
+        };
+        gb.addEventListener('click', function () {
+          if (genBusy) return;
+          if (genPool.length) { genPut(genPool.shift()); return; }
+          genBusy = true;
+          var old = gb.textContent;
+          gb.textContent = 'Генерирую…';
+          Promise.resolve(gen.fetch(_psLang)).then(function (r) {
+            genBusy = false; gb.textContent = old;
+            var hooks = (r && r.hooks) || [];
+            if (!r || r.ok === false || !hooks.length) {
+              var msg = (r && r.error === 'limit')
+                ? 'Дневной лимит генераций исчерпан — попробуй завтра'
+                : 'Не удалось сгенерировать текст. Повтори попытку';
+              if (window.__fmxPosterNotify) window.__fmxPosterNotify(msg);
+              return;
+            }
+            genPool = hooks.slice();
+            genPut(genPool.shift());
+          }).catch(function () {
+            genBusy = false; gb.textContent = old;
+            if (window.__fmxPosterNotify) window.__fmxPosterNotify('Не удалось сгенерировать текст. Повтори попытку');
+          });
+        });
+      }
+    }
     _setupCustomBg();
     var panelEl = document.querySelector('.panel');
     if (panelEl && !panelEl.querySelector('.fmx-sec')) {

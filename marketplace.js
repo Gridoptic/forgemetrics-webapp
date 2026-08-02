@@ -6999,7 +6999,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260802j';
+    var PS_GLUE_V = '20260802k';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -7467,6 +7467,12 @@
             try { win.__fmxPosterInit(posterData(), apiBase); } catch (e) {}
             try { win.__fmxPosterUploader = uploadPosterBg; } catch (e) {}
             try { win.__fmxPosterNotify = function (m) { toast(m, true); }; } catch (e) {}
+            try {
+                win.__fmxPosterGen = {
+                    ok: !!extra.gen_ok,
+                    fetch: function (lang) { return apiPost('/api/v1/marketplace/poster/hooks', { listing_id: base.id, lang: lang || 'ru' }); }
+                };
+            } catch (e) {}
             try { if (win.__fmxPosterApply) win.__fmxPosterApply(hasSaved ? saved : defaultState); } catch (e) {}
             try { if (win.__fmxPosterSetLang) win.__fmxPosterSetLang((hasSaved && saved && saved.lang) ? saved.lang : ((typeof getLang === 'function') ? getLang() : 'ru')); } catch (e) {}
             try { if (win.__fmxPosterEditorMode) win.__fmxPosterEditorMode({ stickers: _stickers || [], defaultState: defaultState }); } catch (e) {}
@@ -7498,7 +7504,7 @@
             } catch (e) { toast('Редактор недоступен'); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, ref_code: r.ref_code || null };
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, gen_ok: r.gen_ok, ref_code: r.ref_code || null };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
         if (_stickers) { stickersDone = true; }

@@ -329,8 +329,8 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
 
   <div class="lbl">Текст</div>
   <input type="text" id="hookInp" maxlength="90" placeholder="Свой текст · до 90 символов">
-  <button class="genbtn" id="genBtn">Сгенерировать текст</button>
-  <div class="gentip" id="genTip">Генерация доступна подписчикам тарифа <b>PRO и PRO+</b> — либо при активном продвижении на <b>30 дней</b>. Готовый текст вставляется в постер автоматически, в пределах лимита символов.</div>
+  <button class="genbtn" id="genBtn">Сгенерировать текст (AI)</button>
+  <div class="gentip" id="genTip">Генерация текста доступна на тарифах <b>Pro и выше</b>. Готовый вариант вставляется в постер автоматически.</div>
 </div>
 
 <script>
@@ -3291,11 +3291,6 @@ function posterDown(e) {
   if (hit) { e.preventDefault(); selectStk(hit); }
   else selectStk(null);
 }
-
-on('genBtn', 'click', function () {
-  var tip = document.getElementById('genTip');
-  if (tip) tip.classList.toggle('show');
-});
 
 /* QR: одинаковый размер плиток, целочисленная сетка */
 function qrTile(url, label) {
