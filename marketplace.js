@@ -1807,7 +1807,7 @@
             '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">охват базы</div></div>' +
             '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">событий 24ч</div></div></div>';
 
-        var hm = baseN.slice(0, 27);
+        var hm = baseN;
         if (hm.length >= 4) {
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
@@ -1826,8 +1826,8 @@
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
         if (movers.length >= 2) {
-            var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; }).slice(0, 5);
-            var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; }).slice(0, 5);
+            var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; });
+            var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; });
             if (up.length || dn.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div><div class="fmx-t2mv">';
                 html += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
