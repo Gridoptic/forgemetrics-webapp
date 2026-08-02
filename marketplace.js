@@ -507,6 +507,8 @@
             '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
             '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.fmx-kmt .v.sm{font-size:14px;line-height:1.2;}',
+            '.fmx-kmt .v.xs{font-size:12px;letter-spacing:-0.03em;line-height:1.4;}',
             '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.fmr-sec.num{font-size:12.5px;letter-spacing:0.02em;text-transform:none;font-weight:700;color:#c7cdfb;margin:0 0 8px;}',
             '.fmr-gline{display:flex;align-items:center;gap:8px;margin-top:4px;}',
@@ -4229,7 +4231,9 @@
         var em = { advertiser: 'ставит рекламодатель', channel: 'ставит канал', discuss: 'обсуждается' };
         var lines = [];
         if (l.erid_who && em[l.erid_who]) lines.push('Маркировка (erid) — ' + em[l.erid_who]);
-        if (l.rkn_url) lines.push('Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке');
+        if (l.rkn_url) lines.push(String(l.rkn_url).indexOf('app:') === 0
+            ? 'Подана заявка в перечень РКН — номер в значке на карточке'
+            : 'Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке');
         lines.push('Оплата напрямую с владельцем канала');
         lines.push('Сделка и отзыв фиксируются в приложении после подтверждения сторонами');
         return '<div class="fmx-lssect">Условия размещения</div><div class="fmx-terms">' +
@@ -5810,7 +5814,7 @@
         });
         _ss._tags = (l.tags_json || []).join(', ');
         _ss._erid = l.erid_who || null;
-        _ss._rkn = l.rkn_url || '';
+        _ss._rkn = /^app:\d+$/.test(l.rkn_url || '') ? ('№ ' + String(l.rkn_url).slice(4)) : (l.rkn_url || '');
         _ss._hideInsights = !!l.hide_insights;
     }
     function selectChannel(id) {
@@ -6371,8 +6375,8 @@
             rk.addEventListener('input', function () { _ss._rkn = rk.value; });
             rk.addEventListener('blur', function () {
                 var v = (rk.value || '').trim();
-                if (v && v.indexOf('https://knd.gov.ru/') !== 0) {
-                    toast('Ссылка должна вести на knd.gov.ru — скопируй её из записи канала в перечне РКН');
+                if (v && v.indexOf('https://knd.gov.ru/') !== 0 && !/^(?:app:|№)?\s*\d{8,12}$/.test(v)) {
+                    toast('Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки');
                 }
             });
         }
@@ -7728,7 +7732,12 @@
         var body = {
             formats: _sfmts.filter(function (f) { return f.on; }).map(function (f) { return { format: f.format, price: f.p, unit: 'RUB' }; }),
             erid_who: _ss._erid || null,
-            rkn_url: (function () { var v = ((el('fmx-rkn') ? el('fmx-rkn').value : _ss._rkn) || '').trim(); return v.indexOf('https://knd.gov.ru/') === 0 ? v.slice(0, 200) : null; })(),
+            rkn_url: (function () {
+                var v = ((el('fmx-rkn') ? el('fmx-rkn').value : _ss._rkn) || '').trim();
+                if (v.indexOf('https://knd.gov.ru/') === 0) return v.slice(0, 200);
+                var mNo = /^(?:app:|№)?\s*(\d{8,12})$/.exec(v);
+                return mNo ? ('app:' + mNo[1]) : null;
+            })(),
             hide_insights: !!_ss._hideInsights,
             custom_text: (de ? de.value : _ss._desc) || null,
             accent_color: _ss.color,
@@ -7824,10 +7833,11 @@
     var RKN_SVG = '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#1e8ece" fill-rule="evenodd" d="M765.748,167.568L598.331,0.151,425.5-.016-0.016,425.5v173L167.4,765.915,295.753,637.563,170.191,512,512,170.191,637.563,295.753Z"/><path fill="#0b4680" fill-rule="evenodd" d="M512.9,339.5l173,173L512.5,685.9l-173-173Z"/><path fill="#0b4680" fill-rule="evenodd" d="M258.252,856.432L425.669,1023.85l172.83,0.17L1024.02,598.5v-173L856.6,258.085,728.247,386.437,853.809,512,512,853.809,386.437,728.247Z"/></svg>';
     function rknPill(url, kind) {
         var ic = '<span class="fmx-rknic">' + RKN_SVG + '</span>';
+        var lbl = String(url || '').indexOf('app:') === 0 ? 'Заявка в перечне РКН' : 'Зарегистрирован в РКН';
         if (kind === 'radar') {
-            return '<span class="fmr-pill" style="cursor:pointer;" data-rknlink="' + _esc(url) + '">' + ic + '<span style="color:#c2c6d2;">Зарегистрирован в РКН</span></span>';
+            return '<span class="fmr-pill" style="cursor:pointer;" data-rknlink="' + _esc(url) + '">' + ic + '<span style="color:#c2c6d2;">' + lbl + '</span></span>';
         }
-        return '<span class="fmx-bdg" style="color:#c7ccf7;border:0.5px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);cursor:pointer;" data-rknlink="' + _esc(url) + '">' + ic + 'Зарегистрирован в РКН</span>';
+        return '<span class="fmx-bdg" style="color:#c7ccf7;border:0.5px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);cursor:pointer;" data-rknlink="' + _esc(url) + '">' + ic + lbl + '</span>';
     }
     function badgeItems(l) {
         var items = [];
@@ -7941,9 +7951,20 @@
             (pills.length ? '<div class="fmr-pills">' + pills.join('') + '</div>' : '');
     }
     function _htile(label, val, valCol, sub, subCol, isPrice) {
+        var vlen = String(val == null ? '' : val).length;
+        var fit = vlen >= 11 ? ' xs' : (vlen >= 8 ? ' sm' : '');
         return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
-            '<div class="v' + (isPrice ? ' pr' : '') + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
+            '<div class="v' + (isPrice ? ' pr' : '') + fit + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
             (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
+    }
+    function _shortRange(lo, hi) {
+        if (hi >= 1000000) {
+            return (Math.round(lo / 100000) / 10 + '').replace('.', ',') + '–' + (Math.round(hi / 100000) / 10 + '').replace('.', ',') + 'М';
+        }
+        if (lo >= 1000 && hi >= 1000) {
+            return Math.round(lo / 1000) + '–' + Math.round(hi / 1000) + 'К';
+        }
+        return _short(lo) + '–' + _short(hi);
     }
     function _heroTiles(l, mode) {
         var subs = l.subscribers, av = _reach(l), cpm = _cpm(l), pp = _basePrice(l);
@@ -7970,7 +7991,7 @@
         } else {
             var plo = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
             var phi = (l.price_low != null && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
-            priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? '≈' + _short(plo) + '–' + _short(phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
+            priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? _shortRange(plo, phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var dead = _deadT;
@@ -8733,6 +8754,10 @@
         if (rknB) {
             e.stopPropagation();
             var ru = rknB.getAttribute('data-rknlink');
+            if (ru && ru.indexOf('app:') === 0) {
+                toast('Заявка в перечне РКН № ' + ru.slice(4));
+                return;
+            }
             if (ru && ru.indexOf('https://knd.gov.ru/') === 0) {
                 try { if (typeof tg !== 'undefined' && tg && tg.openLink) { tg.openLink(ru); return; } } catch (err) {}
                 window.open(ru, '_blank');
@@ -9802,13 +9827,6 @@
                 var u = btn.getAttribute('data-apkoffer');
                 _apkClose();
                 try { openListing(u); } catch (e) {}
-            });
-        });
-        qsa(b, '[data-rknlink]').forEach(function (p2) {
-            p2.addEventListener('click', function () {
-                var u2 = p2.getAttribute('data-rknlink');
-                try { if (tg && tg.openLink) { tg.openLink(u2); return; } } catch (e) {}
-                window.open(u2, '_blank');
             });
         });
     }
