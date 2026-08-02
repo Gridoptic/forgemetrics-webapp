@@ -1566,7 +1566,7 @@
             '<div class="fmx-tcell"><div class="fmx-tcl">Событий сегодня</div><div class="fmx-tcv">' + (todayTotal || '—') + '</div></div>' +
             '</div>';
         var vol = [];
-        if (_pulse.market_total) vol.push('<i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'оффер', 'оффера', 'офферов'));
+        if (_pulse.market_total) vol.push('<i class="ti ti-arrows-exchange" style="color:#5DCAA5;"></i> Площадка · <b>' + _num(_pulse.market_total) + '</b> ' + _plural(_pulse.market_total, 'оффер', 'оффера', 'офферов'));
         if (_pulse.base_total) vol.push('<i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар · <b>' + _num(_pulse.base_total) + '</b> ' + _plural(_pulse.base_total, 'канал', 'канала', 'каналов'));
         if (vol.length) h += '<div class="fmx-tvol">' + vol.join('<span style="color:#3a3f52;">|</span>') + '</div>';
         return h;
@@ -1591,11 +1591,11 @@
             if (_mainTab !== 'pulse') return;
             if (!_pulse) { host.innerHTML = emptyHtml('ti-cloud-off', 'Терминал недоступен', 'Не удалось загрузить данные — попробуй позже.'); return; }
             var hasData = (_pulse.market && _pulse.market.length) || (_pulse.base && _pulse.base.length);
-            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-candle', 'Рынок набирает обороты', 'Как только на Площадке и в Радаре появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
+            if (!hasData) { host.innerHTML = _termHead() + emptyHtml('ti-chart-histogram', 'Рынок набирает обороты', 'Как только на Площадке и в Радаре появятся каналы с нишами, здесь отобразятся цены, CPM и ликвидность по нишам.'); return; }
             var html = _termHead();
             html += '<button class="fmx-btn" id="fmx-pbell" style="width:100%;margin:2px 0 14px;"><i class="ti ti-bell"></i> Следить за нишей — сообщим о сдвиге CPM</button>';
             if (_pulse.market && _pulse.market.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-building-store" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
+                html += '<div class="fmx-psec"><i class="ti ti-arrows-exchange" style="color:#5DCAA5;"></i> Площадка · точные данные</div>' + pulseTiles(_pulse.market, 'карт.');
             }
             if (_pulse.base && _pulse.base.length) {
                 html += '<div class="fmx-psec"><i class="ti ti-radar-2" style="color:#818cf8;"></i> Радар каналов · публичная статистика</div>' + pulseTiles(_pulse.base, 'кан.');
@@ -2391,7 +2391,7 @@
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
         else if (!_feed || !_feed.length) body = hasFilters
             ? emptyHtml('ti-search-off', 'Ничего не найдено', 'Измени запрос или сбрось фильтры.')
-            : emptyHtml('ti-building-store', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер кнопкой «Выставить свой канал».');
+            : emptyHtml('ti-arrows-exchange', 'Пока пусто', 'Здесь появятся оформленные офферы каналов от наших пользователей. Размести первый оффер кнопкой «Выставить свой канал».');
         else {
             var feed = _applyBuyFilter(_feed);
             var rnote = (_regionFb && _regionFbBase != null && _feedTotal > _regionFbBase) ? _regionNoteHtml() : '';
@@ -9550,4 +9550,5 @@
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
     window.__openRadar = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('catalog'); } catch (e) {} }, 220); };
     window.__openTerminal = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('pulse'); } catch (e) {} }, 220); };
+    window.__openMarket = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('market'); } catch (e) {} }, 220); };
 })();

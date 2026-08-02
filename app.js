@@ -1714,6 +1714,12 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'market_offers') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        if (typeof window.__openMarket === 'function') { window.__openMarket(); }
+        return;
+    }
+
     if (actionId === 'radar') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openRadar === 'function') { window.__openRadar(); }

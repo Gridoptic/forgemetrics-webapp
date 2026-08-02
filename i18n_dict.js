@@ -2876,7 +2876,8 @@ window.__I18N_DICT = {
   "пульс рынка": "market pulse",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "A catalog of placements for media buying — including channels without an offer on the Marketplace. For each: subscribers, reach, ER, health index, market price estimate. Niche filters, direct contact with the owner.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Buying via ready offers: channel owners have set prices and formats themselves, metrics are verified by the platform, ratings and confirmed deals are public. Your own offer is published in this same section.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Market assessment before a deal: median CPM, prices, volumes and activity for every niche over time. See where traffic is getting cheaper and which niches are overheated."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Market assessment before a deal: median CPM, prices, volumes and activity for every niche over time. See where traffic is getting cheaper and which niches are overheated.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Ready channel offers: prices, formats, deals"
  },
  "es": {
   "Каналы и рынок": "Canales y mercado",
@@ -5748,7 +5749,8 @@ window.__I18N_DICT = {
   "пульс рынка": "pulso del mercado",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Catálogo de espacios para compra de tráfico, incluidos canales sin oferta en la Plataforma. De cada uno: suscriptores, alcance, ER, índice de salud, precio de mercado estimado. Filtros por nicho, contacto directo con el propietario.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Compra mediante ofertas listas: los propietarios fijaron precios y formatos, las métricas están verificadas por la plataforma, el rating y las operaciones confirmadas son públicos. Tu propia oferta se publica en esta misma sección.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Evaluación del mercado antes de la operación: CPM mediano, precios, volúmenes y actividad por nicho en dinámica. Se ve dónde baja el costo del tráfico y qué nichos están sobrecalentados."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Evaluación del mercado antes de la operación: CPM mediano, precios, volúmenes y actividad por nicho en dinámica. Se ve dónde baja el costo del tráfico y qué nichos están sobrecalentados.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Ofertas de canales listas: precios, formatos, transacciones"
  },
  "de": {
   "Каналы и рынок": "Kanäle & Markt",
@@ -8620,7 +8622,8 @@ window.__I18N_DICT = {
   "пульс рынка": "Marktpuls",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Katalog von Werbeflächen für den Einkauf — einschließlich Kanälen ohne Angebot auf dem Marktplatz. Zu jedem: Abonnenten, Reichweite, ER, Gesundheitsindex, Marktpreisschätzung. Nischenfilter, direkter Kontakt zum Inhaber.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Einkauf über fertige Angebote: Kanalinhaber haben Preise und Formate selbst festgelegt, Metriken sind plattformgeprüft, Rating und bestätigte Deals sind offen. Das eigene Angebot wird im selben Bereich veröffentlicht.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Marktbewertung vor dem Deal: Median-CPM, Preise, Volumen und Aktivität je Nische im Zeitverlauf. Sichtbar, wo Traffic günstiger wird und welche Nischen überhitzt sind."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Marktbewertung vor dem Deal: Median-CPM, Preise, Volumen und Aktivität je Nische im Zeitverlauf. Sichtbar, wo Traffic günstiger wird und welche Nischen überhitzt sind.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Fertige Kanalangebote: Preise, Formate, Deals"
  },
  "kk": {
   "Каналы и рынок": "Арналар және нарық",
@@ -11487,7 +11490,8 @@ window.__I18N_DICT = {
   "пульс рынка": "нарық тамыры",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Сатып алуға арналған алаңдар каталогы — Алаңға оффер жарияламаған арналарды қоса. Әрқайсысы бойынша: жазылушылар, қамту, ER, денсаулық индексі, нарықтық баға бағасы. Ниша бойынша сүзгілер, иесімен тікелей байланыс.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Дайын офферлер арқылы сатып алу: арна иелері баға мен форматтарды өздері көрсеткен, метрикалар алаңмен тексерілген, рейтинг пен расталған мәмілелер ашық. Өз офферің де осы бөлімде жарияланады.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Мәміле алдында нарықты бағалау: әр ниша бойынша медианалық CPM, бағалар, көлемдер және белсенділік динамикада. Трафик қайда арзандап, қай ниша қызып тұрғаны көрініп тұрады."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Мәміле алдында нарықты бағалау: әр ниша бойынша медианалық CPM, бағалар, көлемдер және белсенділік динамикада. Трафик қайда арзандап, қай ниша қызып тұрғаны көрініп тұрады.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Дайын арна офферлері: бағалар, форматтар, мәмілелер"
  },
  "uz": {
   "Каналы и рынок": "Kanallar va bozor",
@@ -14359,7 +14363,8 @@ window.__I18N_DICT = {
   "пульс рынка": "bozor pulsi",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Xarid uchun maydonlar katalogi — Maydonchada offer joylamagan kanallar ham kiradi. Har biri bo'yicha: obunachilar, qamrov, ER, salomatlik indeksi, bozor narxi bahosi. Nisha filtrlari, egasi bilan to'g'ridan-to'g'ri aloqa.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Tayyor offerlar orqali xarid: kanal egalari narx va formatlarni o'zlari belgilagan, metrikalar platforma tomonidan tekshirilgan, reyting va tasdiqlangan bitimlar ochiq. O'z offering ham shu bo'limda joylanadi.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Bitimdan oldin bozorni baholash: har bir nisha bo'yicha median CPM, narxlar, hajmlar va faollik dinamikada. Trafik qayerda arzonlashayotgani va qaysi nisha qizib ketgani ko'rinadi."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Bitimdan oldin bozorni baholash: har bir nisha bo'yicha median CPM, narxlar, hajmlar va faollik dinamikada. Trafik qayerda arzonlashayotgani va qaysi nisha qizib ketgani ko'rinadi.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Tayyor kanal offerlari: narxlar, formatlar, bitimlar"
  },
  "be": {
   "Каналы и рынок": "Каналы і рынак",
@@ -17230,7 +17235,8 @@ window.__I18N_DICT = {
   "пульс рынка": "пульс рынку",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Каталог пляцовак пад закуп — уключна з каналамі, якія не размясцілі офер на Пляцоўцы. Па кожным: падпісчыкі, ахоп, ER, індэкс здароўя, рынкавая ацэнка цаны. Фільтры па нішах, кантакт з уладальнікам — напрамую.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Закуп па гатовых оферах: уладальнікі каналаў самі пазначылі цэны і фарматы, метрыкі правераны пляцоўкай, рэйтынг і пацверджаныя здзелкі адкрытыя. Уласны офер размяшчаецца ў гэтым жа раздзеле.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Ацэнка рынку перад здзелкай: медыянны CPM, цэны, аб'ёмы і актыўнасць па кожнай нішы ў дынаміцы. Бачна, дзе кошт трафіку зніжаецца, а дзе ніша перагрэтая."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Ацэнка рынку перад здзелкай: медыянны CPM, цэны, аб'ёмы і актыўнасць па кожнай нішы ў дынаміцы. Бачна, дзе кошт трафіку зніжаецца, а дзе ніша перагрэтая.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Гатовыя оферы каналаў: цэны, фарматы, здзелкі"
  },
  "az": {
   "Каналы и рынок": "Kanallar və bazar",
@@ -20102,7 +20108,8 @@ window.__I18N_DICT = {
   "пульс рынка": "bazarın nəbzi",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Alış üçün meydança kataloqu — Meydançada offer yerləşdirməyən kanallar da daxil. Hər biri üzrə: abunəçilər, əhatə, ER, sağlamlıq indeksi, bazar qiyməti təxmini. Nişa filtrləri, sahiblə birbaşa əlaqə.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Hazır offerlərlə alış: kanal sahibləri qiymət və formatları özləri göstərib, metrikalar platforma tərəfindən yoxlanılıb, reytinq və təsdiqlənmiş sövdələşmələr açıqdır. Öz offerin də elə bu bölmədə yerləşdirilir.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Sövdələşmədən əvvəl bazarın qiymətləndirilməsi: hər nişa üzrə median CPM, qiymətlər, həcmlər və aktivlik dinamikada. Trafikin harada ucuzlaşdığı və hansı nişanın qızdığı görünür."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Sövdələşmədən əvvəl bazarın qiymətləndirilməsi: hər nişa üzrə median CPM, qiymətlər, həcmlər və aktivlik dinamikada. Trafikin harada ucuzlaşdığı və hansı nişanın qızdığı görünür.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Hazır kanal offerləri: qiymətlər, formatlar, sövdələşmələr"
  },
  "ar": {
   "Каналы и рынок": "القنوات والسوق",
@@ -22974,7 +22981,8 @@ window.__I18N_DICT = {
   "пульс рынка": "نبض السوق",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "كتالوج مساحات للشراء الإعلاني — بما في ذلك القنوات التي لم تنشر عرضًا في السوق. لكل قناة: المشتركون، الوصول، ER، مؤشر الصحة، تقدير السعر السوقي. فلاتر حسب المجال وتواصل مباشر مع المالك.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "شراء عبر عروض جاهزة: حدد أصحاب القنوات الأسعار والصيغ بأنفسهم، والمقاييس موثّقة من المنصة، والتقييم والصفقات المؤكدة معلنة. عرضك الخاص يُنشر في هذا القسم نفسه.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "تقييم السوق قبل الصفقة: وسيط CPM والأسعار والأحجام والنشاط لكل مجال عبر الزمن. يظهر أين يرخص الترافيك وأي المجالات محمومة."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "تقييم السوق قبل الصفقة: وسيط CPM والأسعار والأحجام والنشاط لكل مجال عبر الزمن. يظهر أين يرخص الترافيك وأي المجالات محمومة.",
+  "Готовые офферы каналов: цены, форматы, сделки": "عروض قنوات جاهزة: الأسعار والصيغ والصفقات"
  },
  "fa": {
   "Каналы и рынок": "کانال‌ها و بازار",
@@ -25846,7 +25854,8 @@ window.__I18N_DICT = {
   "пульс рынка": "نبض بازار",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "کاتالوگ فضاهای تبلیغاتی برای خرید — شامل کانال‌هایی که در بازار آفری ندارند. برای هر کدام: دنبال‌کنندگان، بازدید، ER، شاخص سلامت، برآورد قیمت بازار. فیلتر بر اساس حوزه و ارتباط مستقیم با مالک.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "خرید از طریق آفرهای آماده: مالکان کانال‌ها خودشان قیمت و فرمت‌ها را تعیین کرده‌اند، متریک‌ها توسط پلتفرم تأیید شده و امتیاز و معاملات تأییدشده علنی است. آفر خودت هم در همین بخش منتشر می‌شود.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "ارزیابی بازار پیش از معامله: میانه CPM، قیمت‌ها، حجم‌ها و فعالیت هر حوزه در طول زمان. مشخص است کجا ترافیک ارزان‌تر می‌شود و کدام حوزه‌ها داغ‌کرده‌اند."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "ارزیابی بازار پیش از معامله: میانه CPM، قیمت‌ها، حجم‌ها و فعالیت هر حوزه در طول زمان. مشخص است کجا ترافیک ارزان‌تر می‌شود و کدام حوزه‌ها داغ‌کرده‌اند.",
+  "Готовые офферы каналов: цены, форматы, сделки": "آفرهای آماده کانال‌ها: قیمت‌ها، فرمت‌ها، معاملات"
  },
  "tr": {
   "Каналы и рынок": "Kanallar ve pazar",
@@ -28718,7 +28727,8 @@ window.__I18N_DICT = {
   "пульс рынка": "pazar nabzı",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Satın alım için alan kataloğu — Pazar yerinde teklifi olmayan kanallar dahil. Her biri için: aboneler, erişim, ER, sağlık endeksi, piyasa fiyat tahmini. Niş filtreleri, sahiple doğrudan iletişim.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Hazır tekliflerle satın alım: kanal sahipleri fiyat ve formatları kendileri belirledi, metrikler platformca doğrulandı, puan ve onaylı anlaşmalar açık. Kendi teklifin de aynı bölümde yayınlanır.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Anlaşma öncesi pazar değerlendirmesi: her niş için medyan CPM, fiyatlar, hacimler ve aktivite. Trafiğin nerede ucuzladığı, hangi nişlerin aşırı ısındığı görülür."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Anlaşma öncesi pazar değerlendirmesi: her niş için medyan CPM, fiyatlar, hacimler ve aktivite. Trafiğin nerede ucuzladığı, hangi nişlerin aşırı ısındığı görülür.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Hazır kanal teklifleri: fiyatlar, formatlar, anlaşmalar"
  },
  "hi": {
   "Каналы и рынок": "चैनल और बाज़ार",
@@ -31590,7 +31600,8 @@ window.__I18N_DICT = {
   "пульс рынка": "बाज़ार की नब्ज़",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "खरीद के लिए प्लेसमेंट कैटलॉग — मार्केटप्लेस पर ऑफ़र न रखने वाले चैनल भी शामिल। हर चैनल के लिए: सब्सक्राइबर, रीच, ER, हेल्थ इंडेक्स, बाज़ार मूल्य अनुमान। निश फ़िल्टर, मालिक से सीधा संपर्क।",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "तैयार ऑफ़रों से खरीद: चैनल मालिकों ने खुद कीमतें और फ़ॉर्मेट तय किए हैं, मेट्रिक्स प्लेटफ़ॉर्म द्वारा सत्यापित हैं, रेटिंग और पुष्ट सौदे सार्वजनिक हैं। आपका अपना ऑफ़र भी इसी सेक्शन में प्रकाशित होता है।",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "सौदे से पहले बाज़ार का आकलन: हर निश के लिए माध्यिका CPM, कीमतें, वॉल्यूम और गतिविधि समय के साथ। दिखता है कहाँ ट्रैफ़िक सस्ता हो रहा है और कौन से निश ज़्यादा गर्म हैं।"
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "सौदे से पहले बाज़ार का आकलन: हर निश के लिए माध्यिका CPM, कीमतें, वॉल्यूम और गतिविधि समय के साथ। दिखता है कहाँ ट्रैफ़िक सस्ता हो रहा है और कौन से निश ज़्यादा गर्म हैं।",
+  "Готовые офферы каналов: цены, форматы, сделки": "तैयार चैनल ऑफ़र: कीमतें, फ़ॉर्मेट, सौदे"
  },
  "bn": {
   "Каналы и рынок": "চ্যানেল ও বাজার",
@@ -34462,7 +34473,8 @@ window.__I18N_DICT = {
   "пульс рынка": "বাজারের নাড়ি",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "কেনার জন্য প্লেসমেন্ট ক্যাটালগ — মার্কেটপ্লেসে অফার না দেওয়া চ্যানেলসহ। প্রতিটির জন্য: সাবস্ক্রাইবার, রিচ, ER, হেলথ ইনডেক্স, বাজারমূল্যের অনুমান। নিশ ফিল্টার, মালিকের সাথে সরাসরি যোগাযোগ।",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "তৈরি অফার থেকে কেনা: চ্যানেল মালিকরা নিজেরাই দাম ও ফরম্যাট দিয়েছেন, মেট্রিক্স প্ল্যাটফর্ম যাচাই করেছে, রেটিং ও নিশ্চিত লেনদেন প্রকাশ্য। নিজের অফারও এই বিভাগেই প্রকাশ হয়।",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "লেনদেনের আগে বাজার মূল্যায়ন: প্রতিটি নিশের মধ্যমা CPM, দাম, ভলিউম ও কার্যকলাপ সময়ের সাথে। দেখা যায় কোথায় ট্রাফিক সস্তা হচ্ছে আর কোন নিশ অতিরিক্ত গরম।"
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "লেনদেনের আগে বাজার মূল্যায়ন: প্রতিটি নিশের মধ্যমা CPM, দাম, ভলিউম ও কার্যকলাপ সময়ের সাথে। দেখা যায় কোথায় ট্রাফিক সস্তা হচ্ছে আর কোন নিশ অতিরিক্ত গরম।",
+  "Готовые офферы каналов: цены, форматы, сделки": "তৈরি চ্যানেল অফার: দাম, ফরম্যাট, লেনদেন"
  },
  "id": {
   "Каналы и рынок": "Kanal & pasar",
@@ -37334,7 +37346,8 @@ window.__I18N_DICT = {
   "пульс рынка": "denyut pasar",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Katalog slot untuk pembelian iklan — termasuk channel tanpa penawaran di Marketplace. Untuk masing-masing: subscriber, jangkauan, ER, indeks kesehatan, estimasi harga pasar. Filter niche, kontak langsung dengan pemilik.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Pembelian lewat penawaran siap: pemilik channel menetapkan sendiri harga dan format, metrik diverifikasi platform, rating dan transaksi terkonfirmasi terbuka. Penawaranmu sendiri dipublikasikan di bagian yang sama.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Penilaian pasar sebelum transaksi: median CPM, harga, volume, dan aktivitas tiap niche dari waktu ke waktu. Terlihat di mana trafik makin murah dan niche mana yang terlalu panas."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Penilaian pasar sebelum transaksi: median CPM, harga, volume, dan aktivitas tiap niche dari waktu ke waktu. Terlihat di mana trafik makin murah dan niche mana yang terlalu panas.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Penawaran channel siap: harga, format, transaksi"
  },
  "vi": {
   "Каналы и рынок": "Kênh & thị trường",
@@ -40206,7 +40219,8 @@ window.__I18N_DICT = {
   "пульс рынка": "nhịp thị trường",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Danh mục vị trí để mua quảng cáo — bao gồm cả các kênh chưa đăng ưu đãi trên Sàn. Với mỗi kênh: người theo dõi, reach, ER, chỉ số sức khỏe, ước tính giá thị trường. Bộ lọc theo ngách, liên hệ trực tiếp chủ kênh.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Mua qua ưu đãi có sẵn: chủ kênh tự đặt giá và định dạng, số liệu được nền tảng kiểm chứng, xếp hạng và giao dịch đã xác nhận công khai. Ưu đãi của bạn cũng đăng ngay tại mục này.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Đánh giá thị trường trước giao dịch: CPM trung vị, giá, khối lượng và hoạt động theo từng ngách theo thời gian. Thấy rõ nơi giá trafic giảm và ngách nào đang quá nóng."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Đánh giá thị trường trước giao dịch: CPM trung vị, giá, khối lượng và hoạt động theo từng ngách theo thời gian. Thấy rõ nơi giá trafic giảm và ngách nào đang quá nóng.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Ưu đãi kênh có sẵn: giá, định dạng, giao dịch"
  },
  "pt": {
   "Каналы и рынок": "Canais e mercado",
@@ -43078,7 +43092,8 @@ window.__I18N_DICT = {
   "пульс рынка": "pulso do mercado",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Catálogo de espaços para compra de tráfego — incluindo canais sem oferta no Marketplace. De cada um: inscritos, alcance, ER, índice de saúde, preço de mercado estimado. Filtros por nicho, contato direto com o dono.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Compra via ofertas prontas: os donos definiram preços e formatos, as métricas são verificadas pela plataforma, o rating e os negócios confirmados são públicos. Sua própria oferta é publicada nesta mesma seção.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Avaliação do mercado antes do negócio: CPM mediano, preços, volumes e atividade por nicho ao longo do tempo. Dá para ver onde o tráfego barateia e quais nichos estão superaquecidos."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Avaliação do mercado antes do negócio: CPM mediano, preços, volumes e atividade por nicho ao longo do tempo. Dá para ver onde o tráfego barateia e quais nichos estão superaquecidos.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Ofertas de canais prontas: preços, formatos, negócios"
  },
  "fr": {
   "Каналы и рынок": "Chaînes et marché",
@@ -45950,7 +45965,8 @@ window.__I18N_DICT = {
   "пульс рынка": "pouls du marché",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Catalogue d'emplacements pour l'achat de trafic — y compris les chaînes sans offre sur la Place de marché. Pour chacune : abonnés, portée, ER, indice de santé, estimation du prix marché. Filtres par niche, contact direct avec le propriétaire.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Achat via des offres prêtes : les propriétaires ont fixé prix et formats, les métriques sont vérifiées par la plateforme, la note et les transactions confirmées sont publiques. Votre propre offre se publie dans cette même section.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Évaluation du marché avant la transaction : CPM médian, prix, volumes et activité par niche en dynamique. On voit où le trafic devient moins cher et quelles niches sont en surchauffe."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Évaluation du marché avant la transaction : CPM médian, prix, volumes et activité par niche en dynamique. On voit où le trafic devient moins cher et quelles niches sont en surchauffe.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Offres de chaînes prêtes : prix, formats, transactions"
  },
  "it": {
   "Каналы и рынок": "Canali e mercato",
@@ -48822,7 +48838,8 @@ window.__I18N_DICT = {
   "пульс рынка": "polso del mercato",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Catalogo di spazi per il media buying — inclusi i canali senza offerta sul Marketplace. Per ciascuno: iscritti, copertura, ER, indice di salute, stima del prezzo di mercato. Filtri per nicchia, contatto diretto con il proprietario.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Acquisto tramite offerte pronte: i proprietari hanno impostato prezzi e formati, le metriche sono verificate dalla piattaforma, rating e accordi confermati sono pubblici. La propria offerta si pubblica in questa stessa sezione.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Valutazione del mercato prima dell'accordo: CPM mediano, prezzi, volumi e attività per ogni nicchia nel tempo. Si vede dove il traffico costa meno e quali nicchie sono surriscaldate."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Valutazione del mercato prima dell'accordo: CPM mediano, prezzi, volumi e attività per ogni nicchia nel tempo. Si vede dove il traffico costa meno e quali nicchie sono surriscaldate.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Offerte dei canali pronte: prezzi, formati, accordi"
  },
  "am": {
   "Каналы и рынок": "ቻናሎች እና ገበያ",
@@ -51694,7 +51711,8 @@ window.__I18N_DICT = {
   "пульс рынка": "የገበያ ምት",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "ለግዢ የማስቀመጫ ካታሎግ — በገበያው ላይ ኦፈር ያላወጡ ቻናሎችንም ጨምሮ። ለእያንዳንዱ፦ ተከታዮች፣ ተደራሽነት፣ ER፣ የጤና መረጃ ጠቋሚ፣ የገበያ ዋጋ ግምት። የኒሽ ማጣሪያዎች፣ ከባለቤቱ ጋር ቀጥታ ግንኙነት።",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "በዝግጁ ኦፈሮች መግዛት፦ የቻናል ባለቤቶች ዋጋና ቅርጸቶችን ራሳቸው አስቀምጠዋል፣ መለኪያዎች በመድረኩ ተረጋግጠዋል፣ ደረጃና የተረጋገጡ ስምምነቶች ክፍት ናቸው። የራስህ ኦፈርም በዚሁ ክፍል ይታተማል።",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "ከስምምነት በፊት የገበያ ግምገማ፦ ለእያንዳንዱ ኒሽ ሚዲያን CPM፣ ዋጋዎች፣ መጠኖችና እንቅስቃሴ በጊዜ ሂደት። ትራፊክ የት እየረከሰ እንደሆነና የትኞቹ ኒሾች እንደሞቁ ይታያል።"
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "ከስምምነት በፊት የገበያ ግምገማ፦ ለእያንዳንዱ ኒሽ ሚዲያን CPM፣ ዋጋዎች፣ መጠኖችና እንቅስቃሴ በጊዜ ሂደት። ትራፊክ የት እየረከሰ እንደሆነና የትኞቹ ኒሾች እንደሞቁ ይታያል።",
+  "Готовые офферы каналов: цены, форматы, сделки": "ዝግጁ የቻናል ኦፈሮች፦ ዋጋዎች፣ ቅርጸቶች፣ ስምምነቶች"
  },
  "sw": {
   "Каналы и рынок": "Chaneli na soko",
@@ -54566,6 +54584,7 @@ window.__I18N_DICT = {
   "пульс рынка": "mapigo ya soko",
   "Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.": "Katalogi ya nafasi za ununuzi — ikijumuisha vituo visivyoweka ofa kwenye Soko. Kwa kila kimoja: wasajili, ufikiaji, ER, kiashiria cha afya, makadirio ya bei ya soko. Vichujio vya niche, mawasiliano ya moja kwa moja na mmiliki.",
   "Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.": "Ununuzi kupitia ofa tayari: wamiliki wa vituo wameweka bei na miundo wenyewe, vipimo vimethibitishwa na jukwaa, ukadiriaji na mikataba iliyothibitishwa iko wazi. Ofa yako pia huchapishwa katika sehemu hii hii.",
-  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Tathmini ya soko kabla ya mkataba: CPM ya kati, bei, ujazo na shughuli kwa kila niche kwa muda. Inaonekana wapi trafiki inashuka bei na niche zipi zimepamba moto."
+  "Оценка рынка перед сделкой: медианный CPM, цены, объёмы и активность по каждой нише в динамике. Видно, где стоимость трафика снижается, а где ниша перегрета.": "Tathmini ya soko kabla ya mkataba: CPM ya kati, bei, ujazo na shughuli kwa kila niche kwa muda. Inaonekana wapi trafiki inashuka bei na niche zipi zimepamba moto.",
+  "Готовые офферы каналов: цены, форматы, сделки": "Ofa tayari za vituo: bei, miundo, mikataba"
  }
 };
