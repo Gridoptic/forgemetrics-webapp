@@ -2666,6 +2666,33 @@ async function coPay(opts) {
     if (opts.pay) {
         const btn = sheet.querySelector('[data-copay]');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Готовим оплату…'; }
+
+        if (tg?.openInvoice) {
+            let inv = null;
+            try {
+                inv = await apiRequest('/api/v1/payment/invoice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(opts.pay),
+                });
+            } catch (e) { inv = null; }
+            if (inv && inv.ok && inv.invoice_link) {
+                const paid = [];
+                if (inv.discount_rub) paid.push(`скидка −${cabNum(inv.discount_rub)} ₽`);
+                if (inv.credits_used_rub) paid.push(`кредиты −${cabNum(inv.credits_used_rub)} ₽`);
+                const note = paid.length ? ` Учтено: ${paid.join(', ')}.` : '';
+                coPayPending(sheet, 'Ожидаем оплату', `Счёт на ${cabNum(inv.amount_rub)} ₽ открыт.${note}`);
+                tg.openInvoice(inv.invoice_link, (status) => {
+                    if (!_coCtx || _coCtx.sheet !== sheet) return;
+                    if (status === 'paid') { hapticMed(); coWaitPayment(sheet, inv.payment_id, opts.name); }
+                    else if (status === 'cancelled') closeCheckout();
+                    else if (status === 'failed') coPayPending(sheet, 'Платёж не прошёл', 'Оплата не завершена. Кредиты, если списывались, вернутся на баланс.');
+                });
+                coWaitPayment(sheet, inv.payment_id, opts.name);
+                return;
+            }
+        }
+
         let res = null;
         try {
             res = await apiRequest('/api/v1/payment/create', {
