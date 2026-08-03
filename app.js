@@ -3488,17 +3488,7 @@ function renderLimitBanner(limits) {
             ? `<span class="limit-row-count">${used}<span class="limit-row-count-total"></span></span>`
             : `<span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>`;
 
-        let segsTxt = '';
-        let barTxt = '';
-        if (limit != null && limit <= 5) {
-            let segs = '';
-            for (let i = 0; i < limit; i++) {
-                segs += `<u${(remaining != null && i < remaining) ? '' : ' class="off"'}></u>`;
-            }
-            segsTxt = `<span class="limit-segs">${segs}</span>`;
-        } else {
-            barTxt = `<div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>`;
-        }
+        const barTxt = `<div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>`;
 
         const rowClass = exhausted
             ? `limit-row limit-row-${b.color} limit-row-exhausted`
@@ -3512,7 +3502,6 @@ function renderLimitBanner(limits) {
                     <span class="limit-row-label">${b.label}</span>
                     ${testerNote}
                     ${countTxt}
-                    ${segsTxt}
                 </div>
                 ${barTxt}
                 ${timerTxt}

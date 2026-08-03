@@ -2982,29 +2982,6 @@ html {
     white-space: nowrap;
 }
 
-.limit-segs {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    margin-left: 2px;
-}
-
-.limit-segs u {
-    width: 14px;
-    height: 4px;
-    border-radius: 2px;
-    text-decoration: none;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
-}
-
-.limit-segs u.off {
-    background: rgba(255, 255, 255, 0.10);
-}
-
-.limit-row-exhausted .limit-segs u.off {
-    background: rgba(240, 153, 123, 0.25);
-}
-
 .post-limit-banner .limit-row-bar {
     margin-top: 7px;
 }
