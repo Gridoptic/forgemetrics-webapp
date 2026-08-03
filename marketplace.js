@@ -1182,6 +1182,30 @@
             '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
             '.fmx-mtab{flex:1;padding:9px 4px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05);color:#8990a8;font-size:12px;font-weight:600;cursor:pointer;}',
             '.fmx-mtab.on{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent;}',
+            '.fmx-ctrl{display:flex;flex-direction:column;gap:12px;}',
+            '.fmx-ctrlcard{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:14px;}',
+            '.fmx-ctrltop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}',
+            '.fmx-ctrlt{font-size:13.5px;font-weight:700;color:#e8e8ed;margin-bottom:4px;}',
+            '.fmx-ctrls{font-size:11.5px;color:#8990a8;line-height:1.45;}',
+            '.fmx-sw{width:48px;height:28px;flex:0 0 auto;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);position:relative;cursor:pointer;transition:.2s;padding:0;}',
+            '.fmx-sw span{position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#8990a8;transition:.2s;}',
+            '.fmx-sw.on{background:linear-gradient(135deg,#34d39e,#10b981);border-color:transparent;}',
+            '.fmx-sw.on span{left:24px;background:#fff;}',
+            '.fmx-ctrlwarn{margin-top:12px;display:flex;gap:8px;align-items:flex-start;font-size:11.5px;line-height:1.45;color:#fbbf5f;background:rgba(245,191,79,0.09);border:0.5px solid rgba(245,191,79,0.32);border-radius:11px;padding:10px 11px;}',
+            '.fmx-ctrlwarn i{font-size:14px;flex:0 0 auto;margin-top:1px;}',
+            '.fmx-mdlist{display:flex;flex-direction:column;gap:7px;margin-bottom:11px;}',
+            '.fmx-mdrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:11px;padding:9px 11px;}',
+            '.fmx-mdinfo{flex:1;min-width:0;}',
+            '.fmx-mdname{font-size:12.5px;font-weight:600;color:#e8e8ed;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}',
+            '.fmx-mdsub{font-size:11px;color:#6b7088;margin-top:2px;}',
+            '.fmx-mdtag{font-size:9.5px;font-weight:700;color:#8990a8;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.1);border-radius:6px;padding:2px 6px;}',
+            '.fmx-mdtag.own{color:#c4b5fd;background:rgba(139,92,246,0.14);border-color:rgba(139,92,246,0.35);}',
+            '.fmx-mdel{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(239,128,128,0.1);border:0.5px solid rgba(239,128,128,0.3);color:#ef8080;cursor:pointer;padding:0;}',
+            '.fmx-mdadd{display:flex;gap:8px;}',
+            '.fmx-mdinp{flex:1;min-width:0;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;color:#e8e8ed;font-size:12.5px;font-family:inherit;}',
+            '.fmx-mdinp:focus{outline:none;border-color:rgba(139,92,246,0.5);}',
+            '.fmx-mdbtn{flex:0 0 auto;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:650;cursor:pointer;color:#fff;border:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-family:inherit;}',
+            '.fmx-mdbtn:disabled{opacity:.5;}',
             '.fmx-mcard{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;padding:13px 14px;margin-bottom:11px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}',
             '.fmx-mtitle{font-size:13.5px;font-weight:700;color:#e8e8ed;overflow-wrap:anywhere;}',
             '.fmx-msub{font-size:12px;color:#c5c8d6;margin-top:3px;overflow-wrap:anywhere;line-height:1.4;}',
@@ -2235,11 +2259,98 @@
             '<button class="fmx-mtab' + (_modTab === 'queue' ? ' on' : '') + '" data-mt="queue">Очередь</button>' +
             '<button class="fmx-mtab' + (_modTab === 'stats' ? ' on' : '') + '" data-mt="stats">Сводка</button>' +
             '<button class="fmx-mtab' + (_modTab === 'user' ? ' on' : '') + '" data-mt="user">Пользователь</button>' +
+            (_isOwner() ? '<button class="fmx-mtab' + (_modTab === 'ctrl' ? ' on' : '') + '" data-mt="ctrl">Управление</button>' : '') +
             '</div><div id="fmx-modbody"></div>';
         qsa(host, '[data-mt]').forEach(function (b) { b.addEventListener('click', function () { _modTab = b.getAttribute('data-mt'); _haptic('light'); renderMod(); }); });
         if (_modTab === 'queue') renderModQueue();
         else if (_modTab === 'stats') renderModStats();
+        else if (_modTab === 'ctrl') renderModControls();
         else renderModUser();
+    }
+
+    function _isOwner() { try { return !!window.__fmIsOwner; } catch (e) { return false; } }
+
+    function renderModControls() {
+        var box = el('fmx-modbody'); if (!box) return;
+        box.innerHTML = loadHtml();
+        apiGet('/api/v1/admin/controls').then(function (r) {
+            if (_mainTab !== 'mod' || _modTab !== 'ctrl') return;
+            if (!r || r.ok === false) { _modFail(box); return; }
+            var on = !!r.moderation_enabled;
+            var mods = r.moderators || [];
+            var rows = mods.map(function (m) {
+                var who = _esc(m.name || ('ID ' + m.user_id));
+                var un = m.username ? '@' + _esc(m.username) : 'ID ' + m.user_id;
+                var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">владелец</span>'
+                    : (m.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '');
+                var del = (m.source === 'db')
+                    ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="Снять права"><i class="ti ti-x"></i></button>' : '';
+                return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
+                    '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
+            }).join('');
+
+            box.innerHTML =
+                '<div class="fmx-ctrl">' +
+                '<div class="fmx-ctrlcard">' +
+                '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Модерация офферов</div>' +
+                '<div class="fmx-ctrls">' + (on
+                    ? 'Каждый новый оффер проходит проверку перед публикацией.'
+                    : 'ВЫКЛЮЧЕНА: офферы публикуются сразу, без проверки.') + '</div></div>' +
+                '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-modsw" role="switch" aria-checked="' + on + '"><span></span></button>' +
+                '</div>' +
+                (on ? '' : '<div class="fmx-ctrlwarn"><i class="ti ti-alert-triangle"></i>' +
+                    'Пока выключено, на витрину может попасть запрещённый контент — ответственность за площадку на тебе. ' +
+                    'Включай обратно после разбора очереди.</div>') +
+                '</div>' +
+                '<div class="fmx-ctrlcard">' +
+                '<div class="fmx-ctrlt">Модераторы</div>' +
+                '<div class="fmx-ctrls" style="margin-bottom:10px;">Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.</div>' +
+                '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
+                '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
+                '<button class="fmx-mdbtn" id="fmx-mdadd">Выдать права</button></div>' +
+                '<div class="fmx-mdsub" style="margin-top:8px;">Человек должен хотя бы раз открыть приложение — иначе его не найти.</div>' +
+                '</div></div>';
+
+            var sw = el('fmx-modsw');
+            if (sw) sw.addEventListener('click', function () {
+                var next = !sw.classList.contains('on');
+                var act = next ? 'Включить модерацию офферов?' : 'Выключить модерацию? Офферы будут публиковаться без проверки.';
+                uiConfirm(act, function () {
+                    apiPost('/api/v1/admin/controls/moderation', { enabled: next }).then(function (res) {
+                        if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
+                        _haptic('success');
+                        toast(next ? 'Модерация включена' : 'Модерация выключена');
+                        renderModControls();
+                    }).catch(function () { uiAlert('Не удалось изменить'); });
+                });
+            });
+            var addBtn = el('fmx-mdadd');
+            if (addBtn) addBtn.addEventListener('click', function () {
+                var inp = el('fmx-mdq'); if (!inp) return;
+                var q = (inp.value || '').trim();
+                if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
+                addBtn.disabled = true;
+                apiPost('/api/v1/admin/moderators', { query: q }).then(function (res) {
+                    addBtn.disabled = false;
+                    if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || 'Не удалось'); return; }
+                    _haptic('success'); toast(res.message || 'Права выданы');
+                    inp.value = '';
+                    renderModControls();
+                }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
+            });
+            qsa(box, '[data-modrm]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var uid = b.getAttribute('data-modrm');
+                    uiConfirm('Снять права модератора?', function () {
+                        apiRequest('/api/v1/admin/moderators/' + uid, { method: 'DELETE' }).then(function (res) {
+                            if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
+                            _haptic('success'); toast(res.message || 'Права сняты');
+                            renderModControls();
+                        }).catch(function () { uiAlert('Не удалось'); });
+                    });
+                });
+            });
+        }).catch(function () { _modFail(box); });
     }
     function _modFail(box) { box.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори попытку.'); }
     function _modAfter(r) {

@@ -365,7 +365,7 @@ function renderDashboard(data) {
     }
     els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
 
-    try { window.__fmIsMod = !!data.is_moderator; } catch (e) {}
+    try { window.__fmIsMod = !!data.is_moderator; window.__fmIsOwner = !!data.is_owner; } catch (e) {}
 
     renderChannelSelector(data);
     renderPulse(data.pulse);
