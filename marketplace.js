@@ -9934,6 +9934,31 @@
         btn.disabled = true;
         btn.textContent = 'Готовим оплату…';
         var body = { product_type: 'promo', product_key: product, months: 1, listing_id: _promoListingId };
+        if (window.loadYooKassaWidget && window.coPromoWidget) {
+            window.loadYooKassaWidget().then(function (has) {
+                if (!has) return _buyPromoNative(btn, product, old, body);
+                var eb = {}; for (var k in body) eb[k] = body[k]; eb.embedded = true;
+                apiPost('/api/v1/payment/create', eb).then(function (emb) {
+                    if (emb && emb.ok && emb.confirmation_token) {
+                        hideModal('fmx-promoBg');
+                        window.coPromoWidget(emb.confirmation_token, emb.payment_id, function (okPaid) {
+                            if (okPaid) {
+                                toast('Продвижение оплачено и запущено');
+                                loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
+                            }
+                            btn.disabled = false; btn.innerHTML = old;
+                        });
+                        return;
+                    }
+                    _buyPromoNative(btn, product, old, body);
+                }).catch(function () { _buyPromoNative(btn, product, old, body); });
+            });
+            return;
+        }
+        _buyPromoNative(btn, product, old, body);
+    }
+
+    function _buyPromoNative(btn, product, old, body) {
         var native = !!(window.Telegram && Telegram.WebApp && Telegram.WebApp.openInvoice);
         if (native) {
             apiPost('/api/v1/payment/invoice', body).then(function (inv) {
