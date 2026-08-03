@@ -283,7 +283,12 @@
     if (el('line')) el('line').setAttribute('d', d);
     if (el('area')) el('area').setAttribute('d', d + ' L' + W + ',96 L0,96 Z');
     var last = pts[pts.length - 1];
-    ['dot', 'dotHalo'].forEach(function (id) { var e = el(id); if (e) { e.setAttribute('cx', last[0]); e.setAttribute('cy', last[1]); } });
+    ['dot', 'dotHalo'].forEach(function (id) {
+      var e = el(id); if (!e) return;
+      e.style.display = flat ? 'none' : '';
+      e.setAttribute('cx', String(Math.min(last[0], W - 7)));
+      e.setAttribute('cy', String(last[1]));
+    });
     var pctEl = el('chartPct');
     if (pctEl) {
       if (flat || !data[0]) pctEl.textContent = '';
