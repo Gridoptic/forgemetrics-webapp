@@ -2713,8 +2713,12 @@ function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
     if (info.credits_used_rub) rows.push(`<div class="co-row acc"><span>Бонусные кредиты</span><span>−${cabNum(info.credits_used_rub)} ₽</span></div>`);
 
     sheet.classList.add('co-pay-sheet');
+    try { if (tg?.expand) tg.expand(); } catch (e) {}
     sheet.innerHTML = `
-        <div class="bs-handle"></div>
+        <div class="co-paytop">
+          <button class="co-payback" aria-label="Закрыть"><i class="ti ti-arrow-left"></i></button>
+          <div class="co-paytitle">Оплата</div>
+        </div>
         <div class="co-payhead">
           <div class="co-payname">${escapeHtml(name || 'Оплата')}</div>
           <div class="co-paysum">${cabNum(info.amount_rub || 0)} ₽</div>
@@ -2725,9 +2729,8 @@ function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
           <span>Заказ №${paymentId} · ForgeMetrics</span>
           <span class="co-paysec"><i class="ti ti-lock"></i> Платёж защищён ЮKassa</span>
         </div>
-        <button class="co-close">Отмена</button>
     `;
-    sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
+    sheet.querySelector('.co-payback').addEventListener('click', closeCheckout);
     let widget = null;
     try {
         widget = new window.YooMoneyCheckoutWidget({
