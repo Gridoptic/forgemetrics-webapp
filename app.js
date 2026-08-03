@@ -3214,6 +3214,8 @@ function setProfanity(on) {
         els.postProfanityToggle.classList.toggle('on', !!on);
         els.postProfanityToggle.dataset.active = String(!!on);
     }
+    const row = document.getElementById('post-profanity-row');
+    if (row) row.classList.toggle('on', !!on);
 }
 
 

@@ -4282,6 +4282,13 @@ html.cs-modal-open {
     background: rgba(255, 255, 255, 0.05);
     border-color: var(--border-subtle);
     color: rgba(255, 255, 255, 0.5);
+    transition: background .18s, border-color .18s, color .18s;
+}
+
+#post-profanity-row.on .post-setting-label i {
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.38);
+    color: #f59e0b;
 }
 
 .pg-seg {
