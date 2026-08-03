@@ -2270,6 +2270,71 @@
 
     function _isOwner() { try { return !!window.__fmIsOwner; } catch (e) { return false; } }
 
+    function _ctrlTestersHtml(r) {
+        var on = !!r.tester_mode_enabled;
+        var rows = (r.testers || []).map(function (t) {
+            var who = _esc(t.name || ('ID ' + t.user_id));
+            var un = t.username ? '@' + _esc(t.username) : 'ID ' + t.user_id;
+            var tag = t.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '';
+            var del = t.source === 'db'
+                ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="Снять доступ"><i class="ti ti-x"></i></button>' : '';
+            return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
+                '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
+        }).join('');
+        return '<div class="fmx-ctrlcard">' +
+            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Тестовый доступ</div>' +
+            '<div class="fmx-ctrls">' + (on
+                ? 'Для перечисленных лимиты тарифа не применяются — функции работают без ограничений.'
+                : 'ВЫКЛЮЧЕН: все, включая тестеров, работают по лимитам своего тарифа.') + '</div></div>' +
+            '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-tssw" role="switch" aria-checked="' + on + '"><span></span></button>' +
+            '</div>' +
+            '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
+            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
+            '<button class="fmx-mdbtn" id="fmx-tsadd">Выдать доступ</button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">Расход на ИИ у тестеров не ограничен потолком тарифа — держи список коротким.</div>' +
+            '</div>';
+    }
+
+    function _bindTesterControls(box) {
+        var sw = el('fmx-tssw');
+        if (sw) sw.addEventListener('click', function () {
+            var next = !sw.classList.contains('on');
+            uiConfirm(next ? 'Включить тестовый доступ?' : 'Выключить тестовый доступ? Тестеры вернутся на лимиты своих тарифов.', function () {
+                apiPost('/api/v1/admin/controls/tester-mode', { enabled: next }).then(function (res) {
+                    if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
+                    _haptic('success'); toast(next ? 'Тестовый доступ включён' : 'Тестовый доступ выключен');
+                    renderModControls();
+                }).catch(function () { uiAlert('Не удалось изменить'); });
+            });
+        });
+        var addBtn = el('fmx-tsadd');
+        if (addBtn) addBtn.addEventListener('click', function () {
+            var inp = el('fmx-tsq'); if (!inp) return;
+            var q = (inp.value || '').trim();
+            if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
+            addBtn.disabled = true;
+            apiPost('/api/v1/admin/testers', { query: q }).then(function (res) {
+                addBtn.disabled = false;
+                if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || 'Не удалось'); return; }
+                _haptic('success'); toast(res.message || 'Доступ выдан');
+                inp.value = '';
+                renderModControls();
+            }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
+        });
+        qsa(box, '[data-tsrm]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var uid = b.getAttribute('data-tsrm');
+                uiConfirm('Снять тестовый доступ?', function () {
+                    apiRequest('/api/v1/admin/testers/' + uid, { method: 'DELETE' }).then(function (res) {
+                        if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
+                        _haptic('success'); toast(res.message || 'Доступ снят');
+                        renderModControls();
+                    }).catch(function () { uiAlert('Не удалось'); });
+                });
+            });
+        });
+    }
+
     function renderModControls() {
         var box = el('fmx-modbody'); if (!box) return;
         box.innerHTML = loadHtml();
@@ -2309,7 +2374,9 @@
                 '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
                 '<button class="fmx-mdbtn" id="fmx-mdadd">Выдать права</button></div>' +
                 '<div class="fmx-mdsub" style="margin-top:8px;">Человек должен хотя бы раз открыть приложение — иначе его не найти.</div>' +
-                '</div></div>';
+                '</div>' +
+                _ctrlTestersHtml(r) +
+                '</div>';
 
             var sw = el('fmx-modsw');
             if (sw) sw.addEventListener('click', function () {
@@ -2350,6 +2417,7 @@
                     });
                 });
             });
+            _bindTesterControls(box);
         }).catch(function () { _modFail(box); });
     }
     function _modFail(box) { box.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори попытку.'); }
