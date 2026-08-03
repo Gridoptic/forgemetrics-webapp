@@ -1191,6 +1191,12 @@
             '.fmx-sw span{position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#8990a8;transition:.2s;}',
             '.fmx-sw.on{background:linear-gradient(135deg,#34d39e,#10b981);border-color:transparent;}',
             '.fmx-sw.on span{left:24px;background:#fff;}',
+            '.fmx-sw.sm{width:38px;height:22px;border-radius:11px;flex:0 0 auto;}',
+            '.fmx-sw.sm span{width:16px;height:16px;top:2px;left:2px;}',
+            '.fmx-sw.sm.on span{left:18px;}',
+            '.fmx-sw:disabled{opacity:.5;}',
+            '.fmx-mdrow.dim .fmx-mdname,.fmx-mdrow.dim .fmx-mdsub{opacity:.5;}',
+            '.fmx-mdtag.off{color:#fbbf5f;background:rgba(245,191,79,0.12);border-color:rgba(245,191,79,0.32);}',
             '.fmx-ctrlwarn{margin-top:12px;display:flex;gap:8px;align-items:flex-start;font-size:11.5px;line-height:1.45;color:#fbbf5f;background:rgba(245,191,79,0.09);border:0.5px solid rgba(245,191,79,0.32);border-radius:11px;padding:10px 11px;}',
             '.fmx-ctrlwarn i{font-size:14px;flex:0 0 auto;margin-top:1px;}',
             '.fmx-mdlist{display:flex;flex-direction:column;gap:7px;margin-bottom:11px;}',
@@ -2300,11 +2306,14 @@
         var rows = (r.testers || []).map(function (t) {
             var who = _esc(t.name || ('ID ' + t.user_id));
             var un = t.username ? '@' + _esc(t.username) : 'ID ' + t.user_id;
+            var act = t.enabled !== false;
             var tag = t.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '';
+            if (!act) tag += '<span class="fmx-mdtag off">на паузе</span>';
+            var sw = '<button class="fmx-sw sm' + (act ? ' on' : '') + '" data-tstg="' + t.user_id + '" data-on="' + act + '" role="switch" aria-checked="' + act + '" aria-label="Тестовый доступ"><span></span></button>';
             var del = t.source === 'db'
-                ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="Снять доступ"><i class="ti ti-x"></i></button>' : '';
-            return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
-                '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
+                ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="Удалить из списка"><i class="ti ti-x"></i></button>' : '';
+            return '<div class="fmx-mdrow' + (act ? '' : ' dim') + '"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
+                '<div class="fmx-mdsub">' + un + '</div></div>' + sw + del + '</div>';
         }).join('');
         return '<div class="fmx-ctrlcard">' +
             '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Тестовый доступ</div>' +
@@ -2316,7 +2325,7 @@
             '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
             '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
             '<button class="fmx-mdbtn" id="fmx-tsadd">Выдать доступ</button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:8px;">Расход на ИИ у тестеров не ограничен потолком тарифа — держи список коротким.</div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен потолком тарифа — держи список коротким.</div>' +
             '</div>';
     }
 
@@ -2346,10 +2355,22 @@
                 renderModControls();
             }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
         });
+        qsa(box, '[data-tstg]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var uid = b.getAttribute('data-tstg');
+                var next = !b.classList.contains('on');
+                b.disabled = true;
+                apiPost('/api/v1/admin/testers/' + uid + '/toggle', { enabled: next }).then(function (res) {
+                    if (!res || res.ok === false) { b.disabled = false; uiAlert('Не удалось изменить'); return; }
+                    _haptic('light'); toast(res.message || (next ? 'Доступ включён' : 'Доступ на паузе'));
+                    renderModControls();
+                }).catch(function () { b.disabled = false; uiAlert('Не удалось изменить'); });
+            });
+        });
         qsa(box, '[data-tsrm]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var uid = b.getAttribute('data-tsrm');
-                uiConfirm('Снять тестовый доступ?', function () {
+                uiConfirm('Удалить из списка тестеров? Чтобы временно отключить, используй тумблер.', function () {
                     apiRequest('/api/v1/admin/testers/' + uid, { method: 'DELETE' }).then(function (res) {
                         if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
                         _haptic('success'); toast(res.message || 'Доступ снят');
