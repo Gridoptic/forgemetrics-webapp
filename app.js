@@ -3340,7 +3340,7 @@ function renderPostChannelSelector(channel) {
                     <div class="post-channel-selector-eyebrow">Пишу в стиле</div>
                     <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
                 </div>
-                <i class="ti ti-chevrons-up-down post-channel-selector-chev"></i>
+                <i class="ti ti-chevron-down post-channel-selector-chev"></i>
             </div>
         `;
     } else {
@@ -3354,7 +3354,7 @@ function renderPostChannelSelector(channel) {
                         Стиль не настроен — пишу нейтрально. <a href="#" data-pcs-upload="${channel.id}">Загрузить примеры →</a>
                     </div>
                 </div>
-                <i class="ti ti-chevrons-up-down post-channel-selector-chev"></i>
+                <i class="ti ti-chevron-down post-channel-selector-chev"></i>
             </div>
         `;
     }
