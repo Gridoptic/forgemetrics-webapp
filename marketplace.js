@@ -2729,9 +2729,26 @@
                     '<div class="fmx-mstatrow"><span>Кредиты</span><b>' + _num(u.credits_rub) + ' ₽</b></div>' +
                     '<div class="fmx-mstatrow"><span>Расход за месяц</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' выз.</b></div>' +
                     '<div class="fmx-mstatrow"><span>Регистрация</span><b>' + _esc(u.created_at) + '</b></div>' +
-                    '<a class="fmx-btn" href="tg://user?id=' + u.id + '" style="display:block;text-align:center;margin-top:10px;text-decoration:none;"><i class="ti ti-brand-telegram"></i> Открыть профиль в Telegram</a>' +
-                    (u.username && u.username !== '—' ? '<a class="fmx-btn" href="https://t.me/' + _esc(u.username) + '" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:6px;text-decoration:none;"><i class="ti ti-external-link"></i> t.me/' + _esc(u.username) + '</a>' : '') +
+                    (u.username && u.username !== '—'
+                        ? '<button class="fmx-btn" data-muopen="' + _esc(u.username) + '" style="width:100%;margin-top:10px;"><i class="ti ti-brand-telegram"></i> Написать @' + _esc(u.username) + '</button>'
+                        : '<button class="fmx-btn" data-mucopy="' + u.id + '" style="width:100%;margin-top:10px;"><i class="ti ti-copy"></i> Скопировать ID</button>' +
+                          '<div class="fmx-mdsub" style="margin-top:7px;text-align:center;">У пользователя нет @username — открыть профиль напрямую нельзя. Найди его по ID в поиске Telegram или через его оффер.</div>') +
                     '</div>';
+                qsa(res, '[data-muopen]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        _openChannel('https://t.me/' + b.getAttribute('data-muopen'));
+                    });
+                });
+                qsa(res, '[data-mucopy]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        var id = b.getAttribute('data-mucopy');
+                        try {
+                            if (navigator.clipboard) navigator.clipboard.writeText(id);
+                            else { var t = document.createElement('textarea'); t.value = id; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+                            _haptic('success'); toast('ID скопирован');
+                        } catch (e) { uiAlert('Не удалось скопировать. ID: ' + id); }
+                    });
+                });
             }).catch(function () { _modFail(res); });
         };
         el('fmx-mufind').addEventListener('click', find);
