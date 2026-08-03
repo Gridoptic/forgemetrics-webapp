@@ -97,6 +97,19 @@ body {
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-overflow-scrolling: touch;
+    -webkit-touch-callout: none;
+}
+
+* {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    user-drag: none;
+}
+
+img, svg, canvas, video {
+    pointer-events: auto;
+    -webkit-touch-callout: none;
 }
 
 body::before {

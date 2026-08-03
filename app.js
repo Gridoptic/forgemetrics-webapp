@@ -2941,6 +2941,8 @@ function closeCheckout() {
 
 
 function setupEventListeners() {
+    document.addEventListener('dragstart', function (e) { e.preventDefault(); }, { capture: true });
+    document.addEventListener('drop', function (e) { e.preventDefault(); }, { capture: true });
     els.menuBtn.addEventListener('click', openDrawer);
     const hcBtn = document.getElementById('home-config-btn');
     if (hcBtn) hcBtn.addEventListener('click', openHomeConfig);
