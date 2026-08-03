@@ -2651,7 +2651,12 @@ async function coWaitPayment(sheet, paymentId, name) {
         try {
             res = await apiRequest(`/api/v1/payment/check/${paymentId}`);
         } catch (e) { continue; }
-        if (res && res.status === 'succeeded') { hapticMed(); coPayDone(sheet, name); return; }
+        if (res && res.status === 'succeeded') {
+            hapticMed();
+            if (_coCtx) _coCtx.pendingId = null;
+            coPayDone(sheet, name);
+            return;
+        }
         if (res && (res.status === 'canceled' || res.status === 'refunded')) {
             coPayPending(sheet, 'Платёж не прошёл', 'Оплата отменена. Кредиты, если списывались, вернулись на баланс.');
             return;
@@ -2715,9 +2720,9 @@ function coRenderWidget(sheet, token, paymentId, name, onDone) {
                 colors: {
                     control_primary: '#ec4899',
                     control_primary_content: '#ffffff',
-                    background: '#12162a',
-                    text: '#e8e8ed',
-                    border: 'rgba(255,255,255,0.10)',
+                    background: '#ffffff',
+                    text: '#12162a',
+                    border: '#e6e8f0',
                 },
             },
         });
@@ -2737,9 +2742,43 @@ function coRenderWidget(sheet, token, paymentId, name, onDone) {
         try { widget.destroy(); } catch (e) {}
         coPayPending(sheet, 'Платёж не прошёл', 'Оплата не завершена. Кредиты, если списывались, вернутся на баланс.');
     });
-    widget.render('#co-ykform').catch(() => { cabToast('Не удалось открыть форму оплаты'); });
+    widget.render('co-ykform').catch(() => { coWidgetFallback(sheet, paymentId, name, onDone); });
     _coCtx.widget = widget;
+    _coCtx.pendingId = paymentId;
+    setTimeout(() => {
+        if (!_coCtx || _coCtx.sheet !== sheet) return;
+        const box = document.getElementById('co-ykform');
+        if (box && !box.querySelector('iframe')) coWidgetFallback(sheet, paymentId, name, onDone);
+    }, 7000);
     return true;
+}
+
+function coCancelPending(paymentId) {
+    if (!paymentId) return Promise.resolve();
+    return apiRequest(`/api/v1/payment/cancel/${paymentId}`, { method: 'POST' }).catch(() => {});
+}
+
+async function coWidgetFallback(sheet, paymentId, name, onDone) {
+    if (_coCtx && _coCtx.widget) { try { _coCtx.widget.destroy(); } catch (e) {} _coCtx.widget = null; }
+    if (onDone) { closeCheckout(); onDone(false); return; }
+    const pay = _coCtx && _coCtx.opts ? _coCtx.opts.pay : null;
+    coPayPending(sheet, 'Открываем оплату', 'Форма не загрузилась — продолжим на защищённой странице ЮKassa.');
+    await coCancelPending(paymentId);
+    if (!pay) { coPayPending(sheet, 'Не удалось открыть оплату', 'Попробуй ещё раз через минуту.'); return; }
+    let res = null;
+    try {
+        res = await apiRequest('/api/v1/payment/create', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pay),
+        });
+    } catch (e) { res = null; }
+    if (res && res.ok && res.confirmation_url) {
+        coWaitPayment(sheet, res.payment_id, name);
+        try {
+            if (tg?.openLink) tg.openLink(res.confirmation_url); else window.open(res.confirmation_url, '_blank');
+        } catch (e) { window.open(res.confirmation_url, '_blank'); }
+    } else {
+        coPayPending(sheet, 'Не удалось открыть оплату', 'Попробуй ещё раз через минуту.');
+    }
 }
 
 async function coPay(opts) {
@@ -2870,6 +2909,7 @@ async function coPay(opts) {
 function closeCheckout() {
     if (!_coCtx) return;
     if (_coCtx.widget) { try { _coCtx.widget.destroy(); } catch (e) {} }
+    if (_coCtx.pendingId) { coCancelPending(_coCtx.pendingId); _coCtx.pendingId = null; }
     const { overlay, sheet } = _coCtx;
     overlay.classList.remove('visible');
     sheet.classList.remove('visible');
