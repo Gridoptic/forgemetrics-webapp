@@ -2322,7 +2322,12 @@ function wireReferral(d) {
 }
 
 
-function closeLang(ov) { ov.classList.remove('show'); setTimeout(() => { if (ov && ov.parentNode) ov.remove(); }, 260); }
+function closeLang(ov) {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    ov.classList.remove('show');
+    setTimeout(() => { if (ov && ov.parentNode) ov.remove(); }, 260);
+}
 function openLangPicker() {
     hapticLight();
     if (!window.I18N) return;
@@ -2334,6 +2339,10 @@ function openLangPicker() {
     ov.className = 'lang-ov';
     ov.innerHTML = `<div class="lang-sheet"><div class="lang-h">${t('Язык интерфейса')}</div><div class="lang-list">${rows}</div></div>`;
     document.body.appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    ov.addEventListener('touchmove', (e) => { if (!e.target.closest('.lang-list')) e.preventDefault(); }, { passive: false });
+    ov.addEventListener('wheel', (e) => { if (!e.target.closest('.lang-list')) e.preventDefault(); }, { passive: false });
     localizeTree(ov);
     requestAnimationFrame(() => ov.classList.add('show'));
     ov.addEventListener('click', (e) => { if (e.target === ov) closeLang(ov); });
