@@ -7634,7 +7634,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260803b';
+    var PS_GLUE_V = '20260803c';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -8027,9 +8027,13 @@
         var realNiche = base.niche || chan.niche || '';
         var minPrice = base.min_price || (function () { var ps = (base.formats || []).map(function (f) { return f.price; }).filter(Boolean); return ps.length ? Math.min.apply(null, ps) : 0; })();
         var saved = base.poster_json || {};
+        if (saved && saved.metrics && ('mv' in saved.metrics)) {
+            saved.metrics.age = saved.metrics.mv;
+            delete saved.metrics.mv;
+        }
         var defaultState = {
             bg: 'blur', niche: true, chart: true,
-            metrics: { subs: true, reach: true, er: true, cpm: true, err: true, grow: true, freq: true, mv: true },
+            metrics: { subs: true, reach: true, er: true, cpm: true, err: true, grow: true, freq: true, age: true },
             price: { on: true, val: minPrice || 0 }, qr: 'both', hook: '',
             order: ['hook', 'chart', 'mgrid'], colors: { cells: {} }, stickers: []
         };
@@ -8063,13 +8067,20 @@
             } catch (e) {}
         }
         function posterData() {
-            var _pd = base.activity === 'none';
+            var fr = extra.fresh || {};
+            var _act = (fr.activity != null) ? fr.activity : base.activity;
+            var _pd = _act === 'none';
+            var _subs = (fr.subscribers != null) ? fr.subscribers : base.subscribers;
+            var _av = (fr.avg_views != null) ? fr.avg_views : base.avg_views;
+            var _er = (fr.er != null) ? fr.er : base.engagement_percent;
+            var _rr = (fr.reach_rate != null) ? fr.reach_rate : base.er;
+            var _price = (fr.min_price != null) ? fr.min_price : minPrice;
             return {
                 id: base.id, username: base.username, title: base.title, niche: realNiche || extra.niche || '',
                 niche_tr: extra.niche_tr || null, ref_code: extra.ref_code || null,
-                avatar_url: realAvatar, subscribers: base.subscribers, avg_views: _pd ? null : base.avg_views,
-                er: (_pd || base.engagement_percent == null) ? null : base.engagement_percent, reach_rate: _pd ? null : base.er, min_price: minPrice,
-                grow: extra.grow, freq: extra.freq, mv: _pd ? null : extra.mv, chart: _pd ? null : extra.chart
+                avatar_url: realAvatar, subscribers: _subs, avg_views: _pd ? null : _av,
+                er: (_pd || _er == null) ? null : _er, reach_rate: _pd ? null : _rr, min_price: _price,
+                grow: extra.grow, freq: extra.freq, age_year: extra.age_year, chart: extra.chart
             };
         }
         function uploadPosterBg(file) {
@@ -8131,7 +8142,7 @@
             } catch (e) { toast('Редактор недоступен'); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
-            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, mv: r.mv, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, gen_ok: r.gen_ok, ref_code: r.ref_code || null };
+            if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, age_year: r.age_year, fresh: r.fresh || {}, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, gen_ok: r.gen_ok, ref_code: r.ref_code || null };
             chartDone = true; maybeInit();
         }).catch(function () { chartDone = true; maybeInit(); });
         if (_stickers) { stickersDone = true; }
