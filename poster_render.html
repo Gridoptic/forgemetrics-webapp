@@ -73,7 +73,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 /* призыв к действию: глагол + стрелка вниз к QR карточки (в картинке кнопка не кликается).
    Стоит НАД QR, а не в строке цены — иначе отжимал зелёный блок и цена вылезала. */
 .qrwrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin-left:auto;min-width:0;}
-.cta{font-size:12px;font-weight:700;color:#7ee7c2;letter-spacing:0.2px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;background:rgba(93,202,165,0.14);border:1px solid rgba(93,202,165,0.5);border-radius:99px;padding:7px 13px;}
+.cta{font-size:12px;font-weight:700;color:#7ee7c2;letter-spacing:0.2px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:5px;background:rgba(93,202,165,0.14);border:1px solid rgba(93,202,165,0.5);border-radius:99px;padding:7px 4px;width:108px;box-sizing:border-box;overflow:hidden;}
 .cta .arw{color:#5DCAA5;font-size:15px;line-height:1;}
 .cta.hide{display:none;}
 .poster.d2 .cta{font-size:11px;}
@@ -86,6 +86,11 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .qrt canvas{display:block;}
 .qrt span{font-size:8.5px;font-weight:700;letter-spacing:0.4px;color:#0a0d18;display:block;padding:2px 0;max-width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 auto;}
 
+.poster.d0 .chart svg{height:66px;}
+.poster.d0 .chart{padding:10px 14px 7px;margin-top:10px;}
+.poster.d0 .hook{margin-top:11px;font-size:17.5px;}
+.poster.d0 .mgrid{gap:8px;margin-top:10px;}
+.poster.d0 .mcell{padding:10px 14px 8px;}
 .poster.d1 .hook{font-size:16.5px;}
 .poster.d1 .chart svg{height:64px;}
 .poster.d1 .mcell .v{font-size:25px;}
@@ -2711,8 +2716,8 @@ function applyHero() {
 
 function relayout() {
   applyHero();
-  poster.classList.remove('d1', 'd2', 'd3', 'd4');
-  var steps = ['d1', 'd2', 'd3', 'd4'];
+  poster.classList.remove('d0', 'd1', 'd2', 'd3', 'd4');
+  var steps = ['d0', 'd1', 'd2', 'd3', 'd4'];
   for (var i = 0; i < steps.length; i++) {
     if (inbox.scrollHeight <= inbox.clientHeight + 2) break;
     poster.classList.add(steps[i]);

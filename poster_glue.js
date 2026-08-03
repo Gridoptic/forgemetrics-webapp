@@ -99,7 +99,13 @@
     _psLbl('freq', P.freq);
     _psLbl('age', P.age);
     var ct = document.querySelector('.chart .ct span'); if (ct) ct.textContent = P.chart;
-    var cta = el('ctaEl'); if (cta) cta.innerHTML = _psEsc(P.cta) + ' <span class="arw">↓</span>';
+    var cta = el('ctaEl');
+    if (cta) {
+      cta.innerHTML = _psEsc(P.cta) + ' <span class="arw">↓</span>';
+      cta.style.fontSize = '';
+      if (cta.scrollWidth > cta.clientWidth + 1) cta.style.fontSize = '10.5px';
+      if (cta.scrollWidth > cta.clientWidth + 1) cta.style.fontSize = '9.5px';
+    }
     var hk = el('hookText'), hin = el('hookInp');
     var _hookDef = (window.__psAvVal && P.hook_n) ? P.hook_n.replace('%N', fmt(window.__psAvVal)) : P.hook;
     if (hk && _hookDef && (!hin || !String(hin.value || '').trim())) hk.textContent = _hookDef;
