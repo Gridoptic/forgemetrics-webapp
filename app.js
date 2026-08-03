@@ -2712,7 +2712,7 @@ function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
     if (info.discount_rub) rows.push(`<div class="co-row acc"><span>Скидка по приглашению</span><span>−${cabNum(info.discount_rub)} ₽</span></div>`);
     if (info.credits_used_rub) rows.push(`<div class="co-row acc"><span>Бонусные кредиты</span><span>−${cabNum(info.credits_used_rub)} ₽</span></div>`);
 
-    sheet.className = 'bs-sheet co-sheet co-pay-sheet';
+    sheet.classList.add('co-pay-sheet');
     sheet.innerHTML = `
         <div class="bs-handle"></div>
         <div class="co-payhead">
