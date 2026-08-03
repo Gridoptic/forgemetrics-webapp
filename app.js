@@ -2554,6 +2554,7 @@ function coBuyPlan(planKey) {
         name: plan.name, price, sub: true, periodWord: pw, per: isYear ? '/год' : '/мес',
         icon: tfIcon(plan.key), color: TP_COLOR[plan.key] || 'pu',
         rowLabel: `Тариф ${plan.name}, ${pw.toLowerCase()}`,
+        pay: { product_type: 'tier', product_key: plan.key, months: isYear ? 12 : 1 },
         lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: plan.key }) })
             .then((r) => { if (r && r.ok && tariffsData) { tariffsData.booked_plan = plan.key; renderTariffs(tariffsData); } return r; }),
     });
@@ -2564,7 +2565,12 @@ function coBuyExtra(key) {
     if (!d) return;
     const e = [].concat(d.extras || [], d.promotions || []).find((x) => x.key === key);
     if (!e) return;
-    openCheckout({ name: e.label, price: e.price, sub: false, icon: 'shopping-cart', color: 'pu', rowLabel: e.label });
+    const isPromo = key.indexOf('promo_') === 0;
+    openCheckout({
+        name: e.label, price: e.price, sub: false, icon: 'shopping-cart', color: 'pu', rowLabel: e.label,
+        pay: isPromo ? null : { product_type: 'package', product_key: key, months: 1 },
+        promoHint: isPromo,
+    });
 }
 
 function openCheckout(opts) {
@@ -2607,9 +2613,96 @@ function openCheckout(opts) {
     if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(opts); });
 }
 
-function coPay(opts) {
+function coPayPending(sheet, title, sub) {
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="co-pend">
+          <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
+          <div class="co-pend-t">${escapeHtml(title)}</div>
+          <div class="co-pend-s">${escapeHtml(sub)}</div>
+          <button class="co-close">Закрыть</button>
+        </div>
+    `;
+    sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
+}
+
+function coPayDone(sheet, name) {
+    sheet.innerHTML = `
+        <div class="bs-handle"></div>
+        <div class="co-pend">
+          <div class="co-pend-ic ok"><i class="ti ti-circle-check"></i></div>
+          <div class="co-pend-t">Оплачено</div>
+          <div class="co-pend-s">${escapeHtml(name)} — доступ уже открыт.</div>
+          <button class="co-close">Отлично</button>
+        </div>
+    `;
+    sheet.querySelector('.co-close').addEventListener('click', () => {
+        closeCheckout();
+        loadDashboard();
+        if (screens.tariffs && screens.tariffs.style.display !== 'none') loadTariffs();
+    });
+}
+
+async function coWaitPayment(sheet, paymentId, name) {
+    for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, i < 10 ? 2500 : 5000));
+        if (!_coCtx || _coCtx.sheet !== sheet) return;
+        let res = null;
+        try {
+            res = await apiRequest(`/api/v1/payment/check/${paymentId}`);
+        } catch (e) { continue; }
+        if (res && res.status === 'succeeded') { hapticMed(); coPayDone(sheet, name); return; }
+        if (res && (res.status === 'canceled' || res.status === 'refunded')) {
+            coPayPending(sheet, 'Платёж не прошёл', 'Оплата отменена. Кредиты, если списывались, вернулись на баланс.');
+            return;
+        }
+    }
+}
+
+async function coPay(opts) {
     if (!_coCtx || !_coCtx.sheet) return;
     const sheet = _coCtx.sheet;
+
+    if (opts.pay) {
+        const btn = sheet.querySelector('[data-copay]');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Готовим оплату…'; }
+        let res = null;
+        try {
+            res = await apiRequest('/api/v1/payment/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(opts.pay),
+            });
+        } catch (e) { res = null; }
+        if (res && res.ok && res.confirmation_url) {
+            const paid = [];
+            if (res.discount_rub) paid.push(`скидка −${cabNum(res.discount_rub)} ₽`);
+            if (res.credits_used_rub) paid.push(`кредиты −${cabNum(res.credits_used_rub)} ₽`);
+            const note = paid.length ? ` Учтено: ${paid.join(', ')}.` : '';
+            coPayPending(sheet, 'Ожидаем оплату',
+                `Открыли страницу оплаты на ${cabNum(res.amount_rub)} ₽.${note} Доступ откроется сразу после платежа.`);
+            coWaitPayment(sheet, res.payment_id, opts.name);
+            try {
+                if (tg?.openLink) tg.openLink(res.confirmation_url); else window.open(res.confirmation_url, '_blank');
+            } catch (e) { window.open(res.confirmation_url, '_blank'); }
+            return;
+        }
+        const err = (res && res.error) || '';
+        if (err === 'billing_not_ready') {
+            coPayPending(sheet, 'Приём платежей подключается', 'Оплата станет доступна в ближайшее время.');
+        } else {
+            if (btn) { btn.disabled = false; btn.innerHTML = `<i class="ti ti-credit-card"></i> Оплатить ${cabNum(opts.price)} ₽`; }
+            cabToast(err === 'amount_too_small' ? 'Сумма слишком мала для оплаты' : 'Не удалось открыть оплату');
+        }
+        return;
+    }
+
+    if (opts.promoHint) {
+        coPayPending(sheet, 'Выбери оффер для продвижения',
+            'Продвижение покупается для конкретного оффера: Площадка → твой оффер → «Продвинуть».');
+        return;
+    }
+
     const lockHtml = opts.lock
         ? `<button class="co-pay" data-colock="1"><i class="ti ti-lock-check"></i> Закрепить цену — ${cabNum(opts.price)} ₽</button>`
         : '';

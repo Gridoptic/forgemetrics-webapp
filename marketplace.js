@@ -3158,6 +3158,7 @@
             (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>Витрина</button>' : '') +
             (own ? '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2" style="color:#5DCAA5;"></i>Поделиться</button>' +
                 '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
+            (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>Продвинуть</button>' : '') +
             (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>Возобновить' : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>Заморозить') + '</button>' : '') +
             (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
             '</div></div>';
@@ -3271,6 +3272,14 @@
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-mshare')); if (!l) return;
                 shareCard(l.id, l.username);
+            });
+        });
+        qsa(sub, '[data-mpromo]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var id = +b.getAttribute('data-mpromo');
+                if (!_mineById(id)) return;
+                _haptic('light');
+                openPromo(id);
             });
         });
         qsa(sub, '[data-mposter]').forEach(function (b) {
@@ -9918,7 +9927,53 @@
         pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
         pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
     };
-    function openPromo() {
+    var _promoListingId = null;
+
+    function _buyPromo(btn, product) {
+        var old = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = 'Готовим оплату…';
+        apiPost('/api/v1/payment/create', {
+            product_type: 'promo', product_key: product, months: 1, listing_id: _promoListingId,
+        }).then(function (res) {
+            if (res && res.ok && res.confirmation_url) {
+                btn.textContent = 'Ожидаем оплату…';
+                try {
+                    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) Telegram.WebApp.openLink(res.confirmation_url);
+                    else window.open(res.confirmation_url, '_blank');
+                } catch (e) { window.open(res.confirmation_url, '_blank'); }
+                _waitPromoPayment(btn, res.payment_id, old);
+                return;
+            }
+            btn.disabled = false; btn.innerHTML = old;
+            toast(res && res.error === 'amount_too_small' ? 'Сумма слишком мала для оплаты' : 'Не удалось открыть оплату');
+        }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast('Не удалось открыть оплату'); });
+    }
+
+    function _waitPromoPayment(btn, paymentId, oldHtml) {
+        var tries = 0;
+        var timer = setInterval(function () {
+            tries++;
+            if (tries > 40) { clearInterval(timer); btn.disabled = false; btn.innerHTML = oldHtml; return; }
+            apiGet('/api/v1/payment/check/' + paymentId).then(function (r) {
+                if (!r) return;
+                if (r.status === 'succeeded') {
+                    clearInterval(timer);
+                    _haptic('medium');
+                    hideModal('fmx-promoBg');
+                    toast('Продвижение оплачено и запущено');
+                    loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
+                } else if (r.status === 'canceled' || r.status === 'refunded') {
+                    clearInterval(timer);
+                    btn.disabled = false; btn.innerHTML = oldHtml;
+                    toast('Оплата отменена');
+                }
+            }).catch(function () {});
+        }, 3000);
+    }
+
+    function openPromo(listingId) {
+        _promoListingId = listingId || null;
         var body = el('fmx-promoBody');
         body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Загрузка…</div>';
         showModal('fmx-promoBg');
@@ -9936,7 +9991,14 @@
             });
             html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Всплески 24 и 48 ч вместе — не больше ' + (r.burst_cap || 3) + ' раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.</div>';
             body.innerHTML = html;
-            qsa(body, '[data-buy]').forEach(function (b) { b.addEventListener('click', function () { _haptic('light'); uiAlert('Оплата продвижения — подключим при запуске (ЮKassa).'); }); });
+            qsa(body, '[data-buy]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    _haptic('light');
+                    if (!r.billing_ready) { uiAlert('Приём платежей подключается. Оплата станет доступна в ближайшее время.'); return; }
+                    if (!_promoListingId) { uiAlert('Открой продвижение из своего оффера: «Мои офферы» → «Продвинуть».'); return; }
+                    _buyPromo(b, b.getAttribute('data-buy'));
+                });
+            });
         }).catch(function () { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; });
     }
     function openAnalyze(u) {

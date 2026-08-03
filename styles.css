@@ -3704,6 +3704,7 @@ html.cs-modal-open {
 .co-close { width: 100%; background: none; border: none; color: rgba(255, 255, 255, 0.55); font-size: 13px; padding: 12px; cursor: pointer; margin-top: 4px; }
 .co-pend { text-align: center; padding: 8px 4px 4px; }
 .co-pend-ic { width: 52px; height: 52px; border-radius: 50%; margin: 6px auto 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fcd669; background: linear-gradient(135deg, rgba(245, 196, 81, 0.18), rgba(245, 196, 81, 0.05)); border: 1px solid rgba(245, 196, 81, 0.3); }
+.co-pend-ic.ok { color: #34d39e; background: linear-gradient(135deg, rgba(52, 211, 158, 0.18), rgba(52, 211, 158, 0.05)); border-color: rgba(52, 211, 158, 0.35); }
 .co-pend-t { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
 .co-pend-s { font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.6); margin-bottom: 18px; }
 
