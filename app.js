@@ -1687,11 +1687,9 @@ const PLACEHOLDER_CONFIG = {
     competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них набирает охват и почему. Функция готовится к запуску.', icon: 'search' },
     post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
     negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
-    referral: { title: 'Друзья и промокод', text: 'Реферальная программа, твой промокод, бонусы. Скоро будет готово.', icon: 'heart-handshake' },
     profile: { title: 'Тариф и подписка', text: 'Твой текущий тариф, лимиты, история. Скоро запустим.', icon: 'user-circle' },
     voice_settings: { title: 'Стиль канала', text: 'Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.', icon: 'microphone' },
     add_channel: { title: 'Подключение канала', text: 'Подключи свой Telegram-канал чтобы я видел метрики и подстраивался под твой стиль. Скоро.', icon: 'plus' },
-    invite_friend: { title: 'Друзья и промокод', text: 'Реферальная программа, твой промокод, бонусы. Скоро будет готово.', icon: 'heart-handshake' },
 };
 
 
@@ -1924,8 +1922,14 @@ function cabUsageRow(u) {
 
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle' };
 const RF_PERK_TEXT = {
+    burst_per_friend: 'всплеск 24 ч за каждого друга',
+    adpick_monthly: '+1 подбор каналов/мес',
+    audit_monthly: '+1 ИИ-аудит/мес',
+    audit_monthly_2: '+2 ИИ-аудита/мес',
+    promo_week_monthly: 'неделя продвижения/мес',
+    promo_month_monthly: 'месяц продвижения/мес',
+    anim_sticker: 'анимированные стикеры',
     burst24_monthly: '+1 всплеск 24 ч/мес',
-    promo_week_monthly: '+1 неделя промо/мес',
     fx_glow: 'стиль «Свечение»',
     extra_audit_1: '+1 аудит/мес',
     leaderboard: 'лидерборд',
@@ -1950,9 +1954,9 @@ function cabRefLadder(r) {
         const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
-        const rate = i === 0
-            ? `${x.rate_pct}% от первых ${firstN} платежей — кредитами`
-            : `${x.rate_pct}% от платежей`;
+        const rate = firstN === 1
+            ? `${x.rate_pct}% с первого платежа друга — кредитами`
+            : `${x.rate_pct}% с первых ${firstN} платежей — кредитами`;
         const perkLine = `${rate}${perks ? ' · ' + perks : ''}`;
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}${seats}</span></div><div class="perk">${escapeHtml(perkLine)}</div></div>${here}</div>`;
     }).join('');
@@ -1986,8 +1990,8 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>от первых ${firstN} платежей каждого приглашённого — кредитами на баланс</span></div>
-        <p>Другу −${fDisc}% на первый месяц и расширенный триал: ${fDays} дней вместо ${bDays}. Кредиты тратишь на свой тариф и на продвижение офферов в ленте.</p>
+        <div class="rf-rate"><b>${rate}%</b><span>${firstN === 1 ? 'с первого платежа каждого приглашённого — кредитами на баланс' : `с первых ${firstN} платежей каждого приглашённого — кредитами на баланс`}</span></div>
+        <p>Другу −${fDisc}% на первый месяц и расширенный триал: ${fDays} дней вместо ${bDays}. Кредитами оплачивается до половины счёта за тариф или продвижение.</p>
         <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
       </div>
     </div>
@@ -2008,7 +2012,21 @@ function refCardHtml(r) {
   </div>
 
   <div class="rf-card rf-glow">
-    <div class="rf-lbl" style="margin-top:0">Твоя ссылка</div>
+    <div class="rf-lbl" style="margin-top:0">Твой промокод</div>
+    <div class="rf-field" id="cab-promo-view">
+      <span class="link">${escapeHtml(r.promo_code || '—')}</span>
+      <button class="rf-fbtn" id="cab-copy" aria-label="Копировать промокод"><i class="ti ti-copy"></i></button>
+      <button class="rf-fbtn" id="cab-edit" aria-label="Изменить промокод"><i class="ti ti-pencil"></i></button>
+    </div>
+    <div class="rf-promoed" id="cab-promo-edit">
+      <input class="rf-pinp" id="cab-pinp" maxlength="12" autocomplete="off" spellcheck="false" placeholder="ПРОМОКОД">
+      <div class="cab-pmsg" id="cab-pmsg"></div>
+      <div class="rf-prow">
+        <button class="rf-pbtn" id="cab-pcancel">Отмена</button>
+        <button class="rf-pbtn acc" id="cab-psave" disabled>Сохранить</button>
+      </div>
+    </div>
+    <div class="rf-lbl">Твоя ссылка</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
@@ -2022,7 +2040,7 @@ function refCardHtml(r) {
     <span class="rf-eyebrow">Как это работает</span>
     <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой с админами каналов.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первый месяц и ${fDays} дней триала вместо ${bDays}.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого из его первых ${firstN} платежей тебе идут кредиты — тем больше, чем выше уровень.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>${firstN === 1 ? 'С его первого платежа тебе идут кредиты, а за каждого активного друга — всплеск продвижения.' : `С каждого из его первых ${firstN} платежей тебе идут кредиты — тем больше, чем выше уровень.`}</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
