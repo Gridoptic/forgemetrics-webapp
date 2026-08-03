@@ -10437,8 +10437,15 @@
     }
     function _apkLimitLine() {
         var st = _apkState || {};
+        var packs = st.extra_packages_left || 0;
+        var byTier = Math.max(0, (st.limit || 0) - (st.used || 0));
+        if (packs > 0) {
+            var pTxt = packs > 1 ? 'Куплено запусков: ' + packs : 'Доступен купленный разовый запуск';
+            return byTier > 0 ? pTxt + ' · по тарифу ещё ' + byTier : pTxt;
+        }
+        if (st.tester && !st.limit) return 'Тестовый режим · лимиты не применяются';
         if (st.can_run && st.via_extra_package) return 'Доступен купленный разовый запуск';
-        if (st.can_run) return 'Осталось запусков: ' + Math.max(0, (st.limit || 0) - (st.used || 0)) + ' из ' + (st.limit || 0) + ' в месяц';
+        if (st.can_run) return 'Осталось запусков: ' + byTier + ' из ' + (st.limit || 0) + ' в месяц';
         if (!st.limit) return 'Недоступно на твоём тарифе · разовый запуск ' + _num(st.extra_price_rub || 390) + ' ₽';
         return 'Лимит исчерпан (' + (st.used || 0) + '/' + (st.limit || 0) + ') · обновится при наступлении нового периода';
     }
