@@ -2684,7 +2684,7 @@ function loadYooKassaWidget() {
 
 window.loadYooKassaWidget = loadYooKassaWidget;
 
-window.coPromoWidget = function (token, paymentId, done) {
+window.coPromoWidget = function (token, paymentId, done, info) {
     closeCheckout();
     const overlay = document.createElement('div');
     overlay.className = 'bs-overlay';
@@ -2697,17 +2697,34 @@ window.coPromoWidget = function (token, paymentId, done) {
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
     _coCtx = { overlay, sheet, opts: {} };
     overlay.addEventListener('click', () => { closeCheckout(); if (done) done(false); });
-    if (!coRenderWidget(sheet, token, paymentId, 'Продвижение', done)) {
+    if (!coRenderWidget(sheet, token, paymentId, (info && info.title) || 'Продвижение оффера', done, info)) {
         closeCheckout();
         if (done) done(false);
     }
 };
 
-function coRenderWidget(sheet, token, paymentId, name, onDone) {
+function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
+    info = info || {};
+    const rows = [];
+    if (info.base_amount_rub && (info.discount_rub || info.credits_used_rub)) {
+        rows.push(`<div class="co-row"><span>${escapeHtml(name || 'Заказ')}</span><span>${cabNum(info.base_amount_rub)} ₽</span></div>`);
+    }
+    if (info.discount_rub) rows.push(`<div class="co-row acc"><span>Скидка по приглашению</span><span>−${cabNum(info.discount_rub)} ₽</span></div>`);
+    if (info.credits_used_rub) rows.push(`<div class="co-row acc"><span>Бонусные кредиты</span><span>−${cabNum(info.credits_used_rub)} ₽</span></div>`);
+
+    sheet.className = 'bs-sheet co-sheet co-pay-sheet';
     sheet.innerHTML = `
         <div class="bs-handle"></div>
-        <div class="co-title">Оплата</div>
+        <div class="co-payhead">
+          <div class="co-payname">${escapeHtml(name || 'Оплата')}</div>
+          <div class="co-paysum">${cabNum(info.amount_rub || 0)} ₽</div>
+        </div>
+        ${rows.length ? `<div class="co-rows co-paylines">${rows.join('')}</div>` : ''}
         <div class="co-ykbox" id="co-ykform"></div>
+        <div class="co-payfoot">
+          <span>Заказ №${paymentId} · ForgeMetrics</span>
+          <span class="co-paysec"><i class="ti ti-lock"></i> Платёж защищён ЮKassa</span>
+        </div>
         <button class="co-close">Отмена</button>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
@@ -2800,7 +2817,7 @@ async function coPay(opts) {
                 });
             } catch (e) { emb = null; }
             if (emb && emb.ok && emb.confirmation_token) {
-                if (coRenderWidget(sheet, emb.confirmation_token, emb.payment_id, opts.name)) return;
+                if (coRenderWidget(sheet, emb.confirmation_token, emb.payment_id, opts.name, null, emb)) return;
             }
         }
 

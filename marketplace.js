@@ -9947,7 +9947,7 @@
                                 loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
                             }
                             btn.disabled = false; btn.innerHTML = old;
-                        });
+                        }, emb);
                         return;
                     }
                     _buyPromoNative(btn, product, old, body);
