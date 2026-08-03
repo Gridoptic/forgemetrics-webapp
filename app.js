@@ -3640,33 +3640,36 @@ function _trDialog(message) {
     return message;
 }
 
+function _splitDialogText(message) {
+    const parts = String(message || '').split('\n\n');
+    return { title: (parts[0] || '').trim(), body: parts.slice(1).join('\n\n').trim() };
+}
+
+
 function confirmDialog(message, okText) {
     message = _trDialog(message);
-    return new Promise((resolve) => {
-        if (tg && typeof tg.showConfirm === 'function') {
-            try {
-                tg.showConfirm(message, (ok) => resolve(!!ok));
-                return;
-            } catch (e) {}
-        }
-        const result = window.confirm(message);
-        resolve(!!result);
-    });
+    const t = _splitDialogText(message);
+    const danger = /удал|снят|отмен|прекрат|отключ|очист/i.test(t.title);
+    return actionSheet({
+        title: t.title,
+        message: t.body,
+        actions: [
+            { id: 'ok', text: _trDialog(okText || 'Подтвердить'), icon: danger ? 'trash' : 'check',
+              style: danger ? 'danger' : 'default' },
+            { id: 'cancel', text: _trDialog('Отмена'), style: 'cancel' },
+        ],
+    }).then((r) => r === 'ok');
 }
 
 
 function alertDialog(message) {
     message = _trDialog(message);
-    return new Promise((resolve) => {
-        if (tg && typeof tg.showAlert === 'function') {
-            try {
-                tg.showAlert(message, () => resolve());
-                return;
-            } catch (e) {}
-        }
-        window.alert(message);
-        resolve();
-    });
+    const t = _splitDialogText(message);
+    return actionSheet({
+        title: t.title,
+        message: t.body,
+        actions: [{ id: 'ok', text: _trDialog('Понятно'), style: 'cancel' }],
+    }).then(() => undefined);
 }
 
 
@@ -4006,29 +4009,59 @@ window.__channelMenu = async function (channelId, title) {
 };
 
 
-function showChannelMenuPopup(title) {
+function actionSheet(opts) {
+    opts = opts || {};
     return new Promise((resolve) => {
-        if (tg && typeof tg.showPopup === 'function') {
-            try {
-                tg.showPopup({
-                    title: title,
-                    message: 'Что сделать с каналом?',
-                    buttons: [
-                        { id: 'refresh_voice', type: 'default', text: 'Обновить стиль' },
-                        { id: 'delete', type: 'destructive', text: 'Удалить' },
-                        { id: 'cancel', type: 'cancel' },
-                    ],
-                }, (id) => resolve(id || 'cancel'));
-                return;
-            } catch (e) {}
-        }
-        const answer = window.prompt(
-            `Канал «${title}»\n\nВведи:\n  1 — Обновить стиль\n  2 — Удалить`,
-            ''
-        );
-        if (answer === '1') resolve('refresh_voice');
-        else if (answer === '2') resolve('delete');
-        else resolve('cancel');
+        const prevOv = document.body.style.overflow;
+        const overlay = document.createElement('div');
+        overlay.className = 'bs-overlay';
+        const sheet = document.createElement('div');
+        sheet.className = 'bs-sheet as-sheet';
+        const rows = (opts.actions || []).map((a) => {
+            const cls = 'as-item' + (a.style === 'danger' ? ' danger' : '') + (a.style === 'cancel' ? ' cancel' : '');
+            const ic = a.icon ? `<i class="ti ti-${a.icon}"></i>` : '';
+            const sub = a.sub ? `<span class="as-sub">${escapeHtml(a.sub)}</span>` : '';
+            return `<button class="${cls}" data-as="${a.id}">${ic}<span class="as-txt">${escapeHtml(a.text)}${sub}</span></button>`;
+        }).join('');
+        sheet.innerHTML = `
+            <div class="bs-handle"></div>
+            ${opts.title ? `<div class="as-title">${escapeHtml(opts.title)}</div>` : ''}
+            ${opts.message ? `<div class="as-msg">${escapeHtml(opts.message)}</div>` : ''}
+            <div class="as-list">${rows}</div>
+        `;
+        document.body.appendChild(overlay);
+        document.body.appendChild(sheet);
+        document.documentElement.classList.add('cs-modal-open');
+        document.body.classList.add('cs-modal-open');
+        requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+
+        const close = (val) => {
+            overlay.classList.remove('visible');
+            sheet.classList.remove('visible');
+            document.documentElement.classList.remove('cs-modal-open');
+            document.body.classList.remove('cs-modal-open');
+            document.body.style.overflow = prevOv;
+            setTimeout(() => { if (overlay.parentNode) overlay.remove(); if (sheet.parentNode) sheet.remove(); }, 280);
+            resolve(val);
+        };
+        overlay.addEventListener('click', () => close('cancel'));
+        sheet.querySelectorAll('[data-as]').forEach((b) => {
+            b.addEventListener('click', () => { hapticLight(); close(b.getAttribute('data-as')); });
+        });
+    });
+}
+
+function showChannelMenuPopup(title) {
+    return actionSheet({
+        title: title,
+        message: 'Что сделать с каналом?',
+        actions: [
+            { id: 'refresh_voice', text: 'Обновить стиль письма', icon: 'refresh',
+              sub: 'Перечитать последние посты и обновить манеру' },
+            { id: 'delete', text: 'Удалить канал', icon: 'trash', style: 'danger',
+              sub: 'Переедет в «Недавно удалённые» на 7 дней' },
+            { id: 'cancel', text: 'Отмена', style: 'cancel' },
+        ],
     });
 }
 
@@ -4120,7 +4153,7 @@ function renderAddMoreOrLimit(data) {
 
     let limitBox = document.getElementById('channels-limit-box');
 
-    if (canAdd) {
+    if (canAdd || data.limit_bypass) {
         btn.style.display = '';
         if (limitBox) limitBox.style.display = 'none';
         return;
@@ -4138,11 +4171,18 @@ function renderAddMoreOrLimit(data) {
     const nextTierHint = (data.tier === 'free' || data.tier === 'trial' || data.tier === 'light')
         ? 'Больше каналов — на тарифе Pro'
         : 'Это максимум для твоего тарифа';
+    const over = used > limit;
+    const title = over
+        ? `Каналов подключено: ${used} · по тарифу: ${limit}`
+        : `Лимит каналов: ${used} из ${limit}`;
+    const sub = over
+        ? `Каналы сверх лимита на паузе — данные сохранены. ${nextTierHint}`
+        : `Тариф ${escapeHtml(tierName)}. ${nextTierHint}`;
 
     limitBox.innerHTML = `
-        <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
-        <div class="channels-limit-title">Лимит каналов: ${used} из ${limit}</div>
-        <div class="channels-limit-sub">Тариф ${escapeHtml(tierName)}. ${nextTierHint}</div>
+        <div class="channels-limit-icon"><i class="ti ti-${over ? 'alert-triangle' : 'lock'}"></i></div>
+        <div class="channels-limit-title">${title}</div>
+        <div class="channels-limit-sub">${sub}</div>
         <button class="channels-limit-btn" id="channels-limit-btn">Подробнее о Pro</button>
     `;
     limitBox.style.display = '';
