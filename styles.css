@@ -836,7 +836,7 @@ button:active {
     }
 }
 
-html {
+html, body, * {
     scrollbar-width: thin;
     scrollbar-color: rgba(129,140,248,0.35) transparent;
 }
