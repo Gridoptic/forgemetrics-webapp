@@ -2716,11 +2716,34 @@ function applyHero() {
 
 function relayout() {
   applyHero();
+  var chartEl = document.getElementById('chart');
+  var chartSvg = chartEl ? chartEl.querySelector('svg') : null;
+  if (chartSvg) chartSvg.style.height = '';
   poster.classList.remove('d0', 'd1', 'd2', 'd3', 'd4');
   var steps = ['d0', 'd1', 'd2', 'd3', 'd4'];
+  var applied = -1;
   for (var i = 0; i < steps.length; i++) {
     if (inbox.scrollHeight <= inbox.clientHeight + 2) break;
     poster.classList.add(steps[i]);
+    applied = i;
+  }
+  /* доводчик: последнюю грубую ступень заменяем точным поджимом графика —
+     без него ступень пережимает плитки и оставляет пустоту над блоком цены */
+  if (applied >= 0 && chartSvg && chartEl && !chartEl.classList.contains('hide') && !poster.classList.contains('d4')) {
+    poster.classList.remove(steps[applied]);
+    void poster.offsetHeight;
+    var over = inbox.scrollHeight - inbox.clientHeight;
+    var h0 = chartSvg.getBoundingClientRect().height;
+    if (over > 0 && h0 - over >= 28) {
+      chartSvg.style.height = (h0 - over - 2) + 'px';
+      void poster.offsetHeight;
+      if (inbox.scrollHeight > inbox.clientHeight + 2) {
+        chartSvg.style.height = '';
+        poster.classList.add(steps[applied]);
+      }
+    } else {
+      poster.classList.add(steps[applied]);
+    }
   }
   /* плотность d4 скрывает график — отражаем это на чипе пульта */
   var chartChip = document.getElementById('chartChip');
