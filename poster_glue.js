@@ -273,7 +273,7 @@
     var min = flat ? 0 : Math.min.apply(null, data), max = flat ? 1 : Math.max.apply(null, data);
     var range = max - min, denom = flat ? 1 : ((data.length - 1) || 1);
     var pts = flat
-      ? [[0, H - 6], [W, H - 6]]
+      ? [[0, H - 22], [W, H - 22]]
       : data.map(function (v, i) { return [i * W / denom, range ? 6 + (H - 12) * (1 - (v - min) / range) : 48]; });
     var d = 'M' + pts[0][0] + ',' + pts[0][1];
     for (var i = 1; i < pts.length; i++) {
