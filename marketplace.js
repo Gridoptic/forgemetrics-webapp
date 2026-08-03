@@ -1222,8 +1222,33 @@
             '.fmx-macat{font-size:11px;color:#8990a8;margin-top:5px;}',
             '.fmx-macat b{color:#c5c8d6;font-weight:600;}',
             '.fmx-mstatrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#8990a8;padding:6px 0;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:6px;}',
-            '.fmx-mstatrow b{color:#e8e8ed;font-weight:700;text-align:right;overflow-wrap:anywhere;}',
+            '.fmx-mstatrow b{color:#e8e8ed;font-weight:700;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;}',
             '.fmx-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px;}',
+            '.fmx-meyebrow{font-size:9.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6b7088;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}',
+            '.fmx-meyebrow em{font-style:normal;color:#8990a8;font-weight:600;letter-spacing:0;text-transform:none;font-size:10.5px;}',
+            '.fmx-plist{display:flex;flex-direction:column;}',
+            '.fmx-prow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:0.5px solid rgba(255,255,255,0.055);cursor:pointer;}',
+            '.fmx-plist .fmx-prow:first-child{border-top:0;padding-top:2px;}',
+            '.fmx-prow:active{opacity:.65;}',
+            '.fmx-pav{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#c4b5fd;background:rgba(139,92,246,0.16);border:0.5px solid rgba(139,92,246,0.28);}',
+            '.fmx-pmain{flex:1;min-width:0;}',
+            '.fmx-pname{font-size:12.5px;font-weight:600;color:#e8e8ed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-pmeta{font-size:10.5px;color:#6b7088;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}',
+            '.fmx-pright{flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;}',
+            '.fmx-pval{font-size:11.5px;font-weight:700;color:#c5c8d6;font-variant-numeric:tabular-nums;}',
+            '.fmx-pdate{font-size:10px;color:#565b73;font-variant-numeric:tabular-nums;}',
+            '.fmx-tchip{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px;color:#8990a8;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.1);}',
+            '.fmx-tchip.paid{color:#5DCAA5;background:rgba(93,202,165,0.12);border-color:rgba(93,202,165,0.3);}',
+            '.fmx-tchip.trial{color:#7dd3fc;background:rgba(125,211,252,0.12);border-color:rgba(125,211,252,0.3);}',
+            '.fmx-pmore{width:100%;margin-top:10px;padding:9px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#8990a8;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;}',
+            '.fmx-bar{height:5px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin-top:8px;}',
+            '.fmx-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#6366f1,#8b5cf6);}',
+            '.fmx-bar.warn i{background:linear-gradient(90deg,#f59e0b,#ef4444);}',
+            '.fmx-frow{display:flex;align-items:center;gap:10px;padding:6px 0;}',
+            '.fmx-fname{flex:0 0 44%;font-size:11.5px;color:#c5c8d6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-fbar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;}',
+            '.fmx-fbar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#a78bfa);border-radius:3px;}',
+            '.fmx-fval{flex:0 0 auto;font-size:11px;font-weight:700;color:#8990a8;font-variant-numeric:tabular-nums;min-width:34px;text-align:right;}',
             '.fmx-stile{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;padding:13px;}',
             '.fmx-stv{font-size:19px;font-weight:800;color:#e8e8ed;overflow-wrap:anywhere;}',
             '.fmx-stl{font-size:11px;color:#8990a8;margin-top:3px;}',
@@ -2597,31 +2622,79 @@
             if (_mainTab !== 'mod' || _modTab !== 'stats') return;
             if (!r || r.ok === false) { _modFail(box); return; }
             var u = r.users || {}, s = r.spend || {}, rf = r.referrals || {};
+            var budget = s.month_budget_usd || 0;
+            var spent = s.month_usd || 0;
+            var pct = budget > 0 ? Math.min(100, Math.round(spent / budget * 100)) : 0;
             var h = '<div class="fmx-mgrid">' +
                 _modStatTile('Пользователей', _num(u.total), 'всего') +
-                _modStatTile('Платных', _num(u.paid), 'light/pro/pro+') +
+                _modStatTile('Платных', _num(u.paid), 'на подписке') +
                 _modStatTile('На Trial', _num(u.trial), 'пробный период') +
                 _modStatTile('Выручка / мес', _num(r.revenue_month_rub) + ' ₽', 'оплачено') +
                 '</div>';
-            h += '<div class="fmx-mcard"><div class="fmx-mtitle">Расходы на ИИ</div>' +
-                '<div class="fmx-mstatrow"><span>За день</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>За месяц</span><b>$' + (s.month_usd || 0).toFixed(2) + ' / $' + (s.month_budget_usd || 0) + '</b></div></div>';
-            h += '<div class="fmx-mcard"><div class="fmx-mtitle">Рефералы</div>' +
-                '<div class="fmx-mstatrow"><span>Всего</span><b>' + _num(rf.total) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Оплаченных</span><b>' + _num(rf.paid) + '</b></div></div>';
+            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Расходы на ИИ<em>' + pct + '% бюджета</em></div>' +
+                '<div class="fmx-mstatrow" style="border-top:0;margin-top:0;padding-top:0;"><span>За месяц</span><b>$' + spent.toFixed(2) + ' из $' + budget + '</b></div>' +
+                '<div class="fmx-bar' + (pct >= 80 ? ' warn' : '') + '"><i style="width:' + Math.max(2, pct) + '%"></i></div>' +
+                '<div class="fmx-mstatrow"><span>За сегодня</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div></div>';
             if (r.top_spenders && r.top_spenders.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Топ по расходу за месяц</div>';
-                r.top_spenders.forEach(function (t, i) {
-                    h += '<div class="fmx-mstatrow" data-uid="' + t.user_id + '" style="cursor:pointer;"><span>' + (i + 1) + '. ID <u>' + t.user_id + '</u></span><b>$' + t.spent_usd.toFixed(2) + ' · ' + t.calls + ' выз.</b></div>';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Кто тратит больше всех<em>за месяц</em></div><div class="fmx-plist">';
+                r.top_spenders.forEach(function (t) {
+                    h += _pRow({ id: t.user_id, name: 'ID ' + t.user_id, meta: t.calls + ' обращений к ИИ',
+                        val: '$' + t.spent_usd.toFixed(2) });
                 });
-                h += '</div>';
+                h += '</div></div>';
             }
+            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Рефералы</div>' +
+                '<div class="fmx-mstatrow" style="border-top:0;margin-top:0;padding-top:0;"><span>Приглашено всего</span><b>' + _num(rf.total) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div></div>';
             box.innerHTML = h;
             _modWireUids(box);
             _modRenderActivity(box);
         }).catch(function () { _modFail(box); });
     }
     var _muPending = null;
+
+    function _pInit(name, id) {
+        var s = (name || '').trim();
+        if (s && s !== '—') return _esc(s.charAt(0).toUpperCase());
+        return '#';
+    }
+
+    function _tierChip(tier) {
+        var cls = (tier === 'trial') ? ' trial' : ((tier && tier !== 'free') ? ' paid' : '');
+        return '<span class="fmx-tchip' + cls + '">' + _esc(_TIERN[tier] || tier || '—') + '</span>';
+    }
+
+    function _pRow(o) {
+        return '<div class="fmx-prow" data-uid="' + o.id + '">' +
+            '<div class="fmx-pav">' + _pInit(o.name, o.id) + '</div>' +
+            '<div class="fmx-pmain"><div class="fmx-pname">' + _esc(o.name || ('ID ' + o.id)) + '</div>' +
+            '<div class="fmx-pmeta">' + _esc(o.meta || ('ID ' + o.id)) + '</div></div>' +
+            '<div class="fmx-pright">' + (o.chip || '') +
+            (o.val ? '<span class="fmx-pval">' + o.val + '</span>' : '') +
+            (o.date ? '<span class="fmx-pdate">' + _esc(o.date) + '</span>' : '') +
+            '</div></div>';
+    }
+
+    function _userRow(v, extraVal) {
+        var nm = (v.name && v.name !== '—') ? v.name : ('ID ' + v.user_id);
+        var meta = (v.username ? '@' + v.username + ' · ' : '') + 'ID ' + v.user_id;
+        return _pRow({ id: v.user_id, name: nm, meta: meta, chip: _tierChip(v.tier),
+            val: extraVal || '', date: v.at || v.last_at || '' });
+    }
+
+    function _collapsible(box, key, total) {
+        qsa(box, '[data-more="' + key + '"]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var host = box.querySelector('[data-list="' + key + '"]');
+                if (!host) return;
+                host.classList.toggle('open');
+                var hidden = qsa(host, '.fmx-prow.hid');
+                hidden.forEach(function (n) { n.style.display = host.classList.contains('open') ? '' : 'none'; });
+                b.textContent = host.classList.contains('open') ? 'Свернуть' : ('Показать всех · ' + total);
+            });
+        });
+    }
+
     function _modOpenUser(id) { _muPending = String(id); _modTab = 'user'; _haptic('light'); renderMod(); }
     function _modWireUids(scope) {
         qsa(scope, '[data-uid]').forEach(function (n) {
@@ -2637,71 +2710,104 @@
         apiGet('/api/v1/admin/activity').then(function (a) {
             if (_mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
             var h = '';
-            if (a.all_users && a.all_users.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Все пользователи · ' + _num(a.all_users.length) + '</div>';
-                a.all_users.forEach(function (v) {
-                    var nm = (v.name ? _esc(v.name) + ' · ' : '') + (v.username ? '@' + _esc(v.username) + ' · ' : '');
-                    h += '<div class="fmx-mstatrow" data-uid="' + v.user_id + '" style="cursor:pointer;"><span>' + nm + 'ID <u>' + v.user_id + '</u></span><b>' + _esc(_TIERN[v.tier] || v.tier) + ' · ' + _esc(v.at) + '</b></div>';
-                });
-                h += '</div>';
-            }
             if (a.visitors_7d && a.visitors_7d.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Кто заходил · 7 дней</div>';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Активные<em>за 7 дней</em></div><div class="fmx-plist">';
                 a.visitors_7d.forEach(function (v) {
-                    var nm = (v.name ? _esc(v.name) + ' · ' : '') + (v.username ? '@' + _esc(v.username) + ' · ' : '');
-                    h += '<div class="fmx-mstatrow" data-uid="' + v.user_id + '" style="cursor:pointer;"><span>' + nm + 'ID <u>' + v.user_id + '</u> · ' + _esc(_TIERN[v.tier] || v.tier) + '</span><b>' + _num(v.events) + ' действ. · ' + _esc(v.last_at) + '</b></div>';
+                    h += _userRow(v, _num(v.events) + ' действ.');
+                });
+                h += '</div></div>';
+            }
+            if (a.all_users && a.all_users.length) {
+                var total = a.all_users.length;
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Все пользователи<em>' + _num(total) + '</em></div>' +
+                    '<div class="fmx-plist" data-list="users">';
+                a.all_users.forEach(function (v, i) {
+                    var row = _userRow(v);
+                    if (i >= 6) row = row.replace('class="fmx-prow"', 'class="fmx-prow hid" style="display:none;"');
+                    h += row;
                 });
                 h += '</div>';
-            }
-            var evs = (a.client_events_7d || []).map(function (x) { return { l: _EVN[x.event] || x.event, c: x.count }; });
-            var ops = (a.ai_ops_7d || []).map(function (x) { return { l: _OPN[x.op] || x.op, c: x.count }; });
-            if (evs.length || ops.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Популярность функций · 7 дней</div>';
-                evs.forEach(function (x) { h += '<div class="fmx-mstatrow"><span>' + _esc(x.l) + '</span><b>' + _num(x.c) + '</b></div>'; });
-                if (ops.length) {
-                    h += '<div class="fmx-mmeta" style="margin:8px 0 4px;">ИИ-операции (факт по серверу):</div>';
-                    ops.forEach(function (x) { h += '<div class="fmx-mstatrow"><span>' + _esc(x.l) + '</span><b>' + _num(x.c) + '</b></div>'; });
-                }
+                if (total > 6) h += '<button class="fmx-pmore" data-more="users">Показать всех · ' + _num(total) + '</button>';
                 h += '</div>';
             }
             var tiers = a.tiers || {};
-            h += '<div class="fmx-mcard"><div class="fmx-mtitle">Тарифы сейчас</div>';
-            ['network', 'agency', 'pro_plus', 'pro', 'light', 'trial', 'free'].forEach(function (k) {
-                if (tiers[k]) h += '<div class="fmx-mstatrow"><span>' + _esc(_TIERN[k] || k) + '</span><b>' + _num(tiers[k]) + '</b></div>';
-            });
-            (a.paid_users || []).forEach(function (p) {
-                h += '<div class="fmx-mstatrow" data-uid="' + p.user_id + '" style="cursor:pointer;"><span>ID <u>' + p.user_id + '</u> · ' + _esc(_TIERN[p.tier] || p.tier) + '</span><b>' + (p.until ? 'до ' + _esc(p.until) : 'без срока') + '</b></div>';
+            var tierOrder = ['network', 'agency', 'pro_plus', 'pro', 'light', 'trial', 'free'];
+            var tierMax = 0;
+            tierOrder.forEach(function (k) { if (tiers[k] > tierMax) tierMax = tiers[k]; });
+            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Распределение по тарифам</div>';
+            tierOrder.forEach(function (k) {
+                if (!tiers[k]) return;
+                var w = tierMax ? Math.max(4, Math.round(tiers[k] / tierMax * 100)) : 0;
+                h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(_TIERN[k] || k) + '</span>' +
+                    '<span class="fmx-fbar"><i style="width:' + w + '%"></i></span>' +
+                    '<span class="fmx-fval">' + _num(tiers[k]) + '</span></div>';
             });
             h += '</div>';
-            if (a.bookings && a.bookings.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Брони тарифов (лист ожидания)</div>';
-                a.bookings.forEach(function (b) {
-                    h += '<div class="fmx-mstatrow" data-uid="' + b.user_id + '" style="cursor:pointer;"><span>ID <u>' + b.user_id + '</u> · ' + _esc(_TIERN[b.plan] || b.plan) + '</span><b>' + _num(b.price) + ' ₽/мес · ' + _esc(b.at) + '</b></div>';
+            if (a.paid_users && a.paid_users.length) {
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Платящие<em>' + _num(a.paid_users.length) + '</em></div><div class="fmx-plist">';
+                a.paid_users.forEach(function (p) {
+                    h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: p.until ? 'подписка до ' + p.until : 'без срока',
+                        chip: _tierChip(p.tier) });
+                });
+                h += '</div></div>';
+            }
+            var evs = (a.client_events_7d || []).map(function (x) { return { l: _EVN[x.event] || x.event, c: x.count }; });
+            var ops = (a.ai_ops_7d || []).map(function (x) { return { l: _OPN[x.op] || x.op, c: x.count }; });
+            if (evs.length) {
+                var emax = evs.reduce(function (m, x) { return Math.max(m, x.c); }, 0);
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Что открывают<em>за 7 дней</em></div>';
+                evs.slice(0, 12).forEach(function (x) {
+                    var w = emax ? Math.max(3, Math.round(x.c / emax * 100)) : 0;
+                    h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(x.l) + '</span>' +
+                        '<span class="fmx-fbar"><i style="width:' + w + '%"></i></span>' +
+                        '<span class="fmx-fval">' + _num(x.c) + '</span></div>';
                 });
                 h += '</div>';
             }
-            if (a.purchases && a.purchases.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-mtitle">Покупки (оплачено)</div>';
-                a.purchases.forEach(function (p) {
-                    h += '<div class="fmx-mstatrow" data-uid="' + p.user_id + '" style="cursor:pointer;"><span>ID <u>' + p.user_id + '</u> · ' + _esc(p.product || '') + (p.product_id ? ' (' + _esc(p.product_id) + ')' : '') + '</span><b>' + _num(p.amount) + ' ₽ · ' + _esc(p.at) + '</b></div>';
+            if (ops.length) {
+                var omax = ops.reduce(function (m, x) { return Math.max(m, x.c); }, 0);
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Обращения к ИИ<em>за 7 дней</em></div>';
+                ops.slice(0, 12).forEach(function (x) {
+                    var w = omax ? Math.max(3, Math.round(x.c / omax * 100)) : 0;
+                    h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(x.l) + '</span>' +
+                        '<span class="fmx-fbar"><i style="width:' + w + '%"></i></span>' +
+                        '<span class="fmx-fval">' + _num(x.c) + '</span></div>';
                 });
                 h += '</div>';
+            }
+            if (a.bookings && a.bookings.length) {
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Забронировали тариф<em>ждут запуска</em></div><div class="fmx-plist">';
+                a.bookings.forEach(function (b) {
+                    h += _pRow({ id: b.user_id, name: 'ID ' + b.user_id, meta: _num(b.price) + ' ₽/мес',
+                        chip: _tierChip(b.plan), date: b.at });
+                });
+                h += '</div></div>';
+            }
+            if (a.purchases && a.purchases.length) {
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Покупки<em>оплачено</em></div><div class="fmx-plist">';
+                a.purchases.forEach(function (p) {
+                    h += _pRow({ id: p.user_id, name: _esc(p.product || 'Покупка'), meta: 'ID ' + p.user_id,
+                        val: _num(p.amount) + ' ₽', date: p.at });
+                });
+                h += '</div></div>';
             }
             box.innerHTML = h;
             _modWireUids(box);
+            _collapsible(box, 'users', (a.all_users || []).length);
         }).catch(function () {});
     }
     function renderModUser() {
         var box = el('fmx-modbody'); if (!box) return;
         box.innerHTML =
-            '<div class="fmx-mcard"><span class="fmx-lbl">Telegram ID пользователя</span>' +
-            '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например, 100000000" style="flex:1;">' +
-            '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div></div>' +
-            '<div class="fmx-mcard" style="margin-top:10px;"><span class="fmx-lbl">Мод-режим: Топ оффера на 30 дней</span>' +
-            '<div style="display:flex;gap:8px;margin-top:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
+            '<div class="fmx-mcard"><div class="fmx-meyebrow">Найти пользователя</div>' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="Telegram ID, например 100000000" style="flex:1;">' +
+            '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:7px;">ID можно нажать в любом списке на вкладке «Сводка» — карточка откроется сама.</div></div>' +
+            '<div id="fmx-mures"></div>' +
+            '<div class="fmx-mcard" style="margin-top:11px;"><div class="fmx-meyebrow">Ручное продвижение оффера<em>30 дней</em></div>' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
-            '<div style="font-size:10px;color:#565b73;margin-top:6px;">Включает офферу тег «Продвигается» и золотые опции на 30 дней. ID оффера виден в заявках модерации.</div></div>' +
-            '<div id="fmx-mures"></div>';
+            '<div class="fmx-mdsub" style="margin-top:7px;">Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней бесплатно. ID оффера виден в очереди модерации.</div></div>';
         el('fmx-mboostgo').addEventListener('click', function () {
             var v = el('fmx-mboostid').value.trim();
             if (!/^\d+$/.test(v)) { uiAlert('Введи числовой ID оффера'); return; }
@@ -2719,10 +2825,13 @@
             apiGet('/api/v1/admin/user/' + v).then(function (r) {
                 if (!r || r.ok === false) { res.innerHTML = emptyHtml('ti-user-off', (r && r.error) || 'Пользователь не найден', 'Проверь ID и повтори.'); return; }
                 var u = r.user;
-                res.innerHTML = '<div class="fmx-mcard">' +
-                    '<div class="fmx-mtitle">' + _esc(u.first_name || '') + ' @' + _esc(u.username) + '</div>' +
+                res.innerHTML = '<div class="fmx-mcard" style="margin-top:11px;">' +
+                    '<div style="display:flex;align-items:center;gap:11px;margin-bottom:4px;">' +
+                    '<div class="fmx-pav" style="width:38px;height:38px;border-radius:11px;font-size:15px;">' + _pInit(u.first_name, u.id) + '</div>' +
+                    '<div style="flex:1;min-width:0;"><div class="fmx-mtitle">' + _esc(u.first_name || ('ID ' + u.id)) + '</div>' +
+                    '<div class="fmx-pmeta">' + (u.username && u.username !== '—' ? '@' + _esc(u.username) : 'без @username') + '</div></div>' +
+                    _tierChip(u.tier) + '</div>' +
                     '<div class="fmx-mstatrow"><span>ID</span><b>' + u.id + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Тариф</span><b>' + _esc(u.tier) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Уровень</span><b>' + _esc(u.referral_level) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Платных рефералов</span><b>' + _num(u.paid_referrals) + '</b></div>' +
