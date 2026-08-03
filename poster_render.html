@@ -73,7 +73,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 /* призыв к действию: глагол + стрелка вниз к QR карточки (в картинке кнопка не кликается).
    Стоит НАД QR, а не в строке цены — иначе отжимал зелёный блок и цена вылезала. */
 .qrwrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin-left:auto;min-width:0;}
-.cta{font-size:12.5px;font-weight:700;color:#e8e8ed;letter-spacing:0.2px;white-space:nowrap;display:flex;align-items:center;gap:6px;text-shadow:0 2px 10px rgba(0,0,0,0.8);}
+.cta{font-size:12px;font-weight:700;color:#7ee7c2;letter-spacing:0.2px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;background:rgba(93,202,165,0.14);border:1px solid rgba(93,202,165,0.5);border-radius:99px;padding:7px 13px;}
 .cta .arw{color:#5DCAA5;font-size:15px;line-height:1;}
 .cta.hide{display:none;}
 .poster.d2 .cta{font-size:11px;}
@@ -228,11 +228,11 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
     </div>
 
     <div class="mgrid" id="mgrid">
-      <div class="mcell c-w" data-m="subs" data-c="cell"><div class="v">1 914</div><div class="l">Подписчики</div></div>
       <div class="mcell c-a" data-m="reach" data-c="cell"><div class="v">~3 826</div><div class="l">Средний охват <i>· пост</i></div></div>
-      <div class="mcell c-g" data-m="er" data-c="cell"><div class="v">149%</div><div class="l">Вовлечённость <i>· ER</i></div></div>
       <div class="mcell c-p" data-m="cpm" data-c="cell"><div class="v">1 438 ₽</div><div class="l">Цена 1000 показов <i>· CPM</i></div></div>
+      <div class="mcell c-g" data-m="er" data-c="cell"><div class="v">149%</div><div class="l">Вовлечённость <i>· ER</i></div></div>
       <div class="mcell c-b hide" data-m="err" data-c="cell"><div class="v">200%</div><div class="l">Охват к подписчикам <i>· ERR</i></div></div>
+      <div class="mcell c-w" data-m="subs" data-c="cell"><div class="v">1 914</div><div class="l">Подписчики</div></div>
       <div class="mcell c-g hide" data-m="grow" data-c="cell"><div class="v">+127</div><div class="l">Прирост · 30 дней</div></div>
       <div class="mcell c-r hide" data-m="freq" data-c="cell"><div class="v">5/нед</div><div class="l">Частота постов</div></div>
       <div class="mcell c-w hide" data-m="age" data-c="cell"><div class="v">2023</div><div class="l">Канал создан</div></div>
@@ -300,11 +300,11 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
 
   <div class="lbl">Метрики · минимум 2, можно все</div>
   <div class="chips" id="mChips">
-    <button class="chip on" data-m="subs">Подписчики</button>
     <button class="chip on" data-m="reach">Охват</button>
-    <button class="chip on" data-m="er">ER</button>
     <button class="chip on" data-m="cpm">CPM</button>
+    <button class="chip on" data-m="er">ER</button>
     <button class="chip" data-m="err">ERR</button>
+    <button class="chip on" data-m="subs">Подписчики</button>
     <button class="chip" data-m="grow">Прирост</button>
     <button class="chip" data-m="freq">Частота</button>
     <button class="chip" data-m="age">Возраст</button>

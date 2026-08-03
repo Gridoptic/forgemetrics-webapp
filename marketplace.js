@@ -7634,7 +7634,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260803e';
+    var PS_GLUE_V = '20260803f';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
