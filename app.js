@@ -4539,11 +4539,15 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 ? `<i class="ti ti-circle-check bs-item-icon-right check"></i>`
                 : `<i class="ti ti-chevron-right bs-item-icon-right"></i>`;
 
+            const pausedChip = it.paused
+                ? `<span class="bs-item-chip"><i class="ti ti-player-pause"></i>Пауза</span>`
+                : '';
+
             return `
-                <div class="bs-item ${isActive ? 'active' : ''}" data-bs-item-id="${it.id}">
+                <div class="bs-item ${isActive ? 'active' : ''}${it.paused ? ' paused' : ''}" data-bs-item-id="${it.id}">
                     ${avatarHtml}
                     <div class="bs-item-info">
-                        <div class="bs-item-title">${escapeHtml(it.title || 'Канал')}</div>
+                        <div class="bs-item-title">${escapeHtml(it.title || 'Канал')}${pausedChip}</div>
                         ${sub}
                     </div>
                     ${rightIcon}
@@ -4678,7 +4682,10 @@ async function openActiveChannelSelector(opts) {
         const items = data.channels.map(ch => {
             let subtitle = '';
             let warn = false;
-            if (ch.voice_status === 'done' && ch.voice_preview) {
+            if (ch.is_paused) {
+                subtitle = 'На паузе · сверх лимита тарифа';
+                warn = true;
+            } else if (ch.voice_status === 'done' && ch.voice_preview) {
                 subtitle = ch.voice_preview;
             } else if (ch.voice_status === 'done') {
                 subtitle = 'Стиль настроен';
@@ -4699,6 +4706,7 @@ async function openActiveChannelSelector(opts) {
                 subtitle_warn: warn,
                 has_avatar: ch.has_avatar,
                 is_private: ch.is_private,
+                paused: !!ch.is_paused,
             };
         });
 

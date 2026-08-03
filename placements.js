@@ -279,10 +279,13 @@
             '<div style="margin-top:8px;">' + _channels.map(function (c) {
                 var un = c.username || c.channel_username || '';
                 var nm = c.title || ('@' + un);
-                return '<div class="pl-whorow" data-act="chpick-go" data-ch="' + c.id + '">' +
+                var paused = !!c.is_paused;
+                return '<div class="pl-whorow" data-act="chpick-go" data-ch="' + c.id + '"' + (paused ? ' style="opacity:.62;"' : '') + '>' +
                     '<div class="pl-whoav" style="position:relative;overflow:hidden;">' + avInner(nm, c.avatar_url) + '</div>' +
                     '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
-                    (un ? '<div class="pl-whosub">@' + esc(un) + '</div>' : '') + '</div>' +
+                    (paused
+                        ? '<div class="pl-whosub" style="color:#fbbf5f;">' + esc(T('На паузе · новые ссылки недоступны')) + '</div>'
+                        : (un ? '<div class="pl-whosub">@' + esc(un) + '</div>' : '')) + '</div>' +
                     (c.team_role ? '<span class="pl-whotag" style="background:rgba(90,176,230,0.14);color:#5ab0e6;">' + esc(T('Команда')) + '</span>' : '') +
                     (c.id === _chId ? '<span class="pl-whotag" style="background:rgba(93,202,165,0.14);color:#5DCAA5;">✓</span>' : '') + '</div>';
             }).join('') + '</div>';

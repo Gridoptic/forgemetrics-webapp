@@ -3883,7 +3883,30 @@ html.cs-modal-open {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
 }
+
+.bs-item-chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: #fbbf5f;
+    background: rgba(245, 191, 79, 0.12);
+    border: 0.5px solid rgba(245, 191, 79, 0.32);
+}
+
+.bs-item-chip i { font-size: 10px; }
+
+.bs-item.paused .bs-item-avatar { opacity: .55; }
 
 .bs-item-subtitle {
     font-size: 10px;
