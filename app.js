@@ -2714,6 +2714,13 @@ function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
 
     sheet.classList.add('co-pay-sheet');
     try { if (tg?.expand) tg.expand(); } catch (e) {}
+    const fitSheet = () => {
+        const h = (tg && (tg.viewportStableHeight || tg.viewportHeight)) || window.innerHeight;
+        if (h > 200) sheet.style.height = h + 'px';
+    };
+    fitSheet();
+    setTimeout(fitSheet, 350);
+    try { if (tg?.onEvent) { tg.onEvent('viewportChanged', fitSheet); _coCtx.fitSheet = fitSheet; } } catch (e) {}
     sheet.innerHTML = `
         <div class="co-paytop">
           <button class="co-payback" aria-label="Закрыть"><i class="ti ti-arrow-left"></i></button>
@@ -2929,6 +2936,7 @@ async function coPay(opts) {
 function closeCheckout() {
     if (!_coCtx) return;
     if (_coCtx.widget) { try { _coCtx.widget.destroy(); } catch (e) {} }
+    if (_coCtx.fitSheet) { try { tg.offEvent('viewportChanged', _coCtx.fitSheet); } catch (e) {} _coCtx.fitSheet = null; }
     if (_coCtx.pendingId) { coCancelPending(_coCtx.pendingId); _coCtx.pendingId = null; }
     const { overlay, sheet } = _coCtx;
     overlay.classList.remove('visible');
