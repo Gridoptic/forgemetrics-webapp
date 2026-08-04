@@ -3754,17 +3754,23 @@
     function netPaint() {
         var body = el('fmx-netBody'); if (!body) return;
         var rows = _net.ch.map(function (ch) { return { ch: ch, l: netListingOf(ch) }; });
-        var pub = 0, paus = 0, none = 0, attn = 0, reach = 0, erSum = 0, erN = 0, pend = 0;
+        var pub = 0, paus = 0, none = 0, attn = 0, reach = 0, pend = 0;
+        var chPaused = 0, subsSum = 0, reachForErr = 0;
         rows.forEach(function (r) {
+            if (r.ch.is_paused) chPaused++;
             if (r.ch.avg_views) reach += r.ch.avg_views;
-            if (r.ch.er_percent != null) { erSum += Number(r.ch.er_percent) || 0; erN++; }
+            if (r.ch.avg_views && r.ch.subscribers_count) {
+                reachForErr += Number(r.ch.avg_views) || 0;
+                subsSum += Number(r.ch.subscribers_count) || 0;
+            }
             if (netAttn(r.ch, r.l)) attn++;
             if (!r.l) { if (r.ch.username) none++; return; }
             if (r.l.status === 'published') pub++;
             else if (r.l.status === 'paused') paus++;
             else if (r.l.status === 'pending') pend++;
         });
-        var er = erN ? Math.round(erSum / erN * 10) / 10 : null;
+        var err = subsSum > 0 ? Math.round(reachForErr / subsSum * 1000) / 10 : null;
+        var chActive = _net.ch.length - chPaused;
         function tile(icon, color, bgc, label, val, hint) {
             return '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px 12px;min-width:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">' +
                 '<div style="display:flex;align-items:center;gap:7px;min-width:0;">' +
@@ -3775,9 +3781,9 @@
                 '</div>';
         }
         var tiles = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
-            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', 'Каналы', _num(_net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), '') +
+            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', 'Каналы', _num(chPaused > 0 ? chActive : _net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), chPaused > 0 ? (chPaused + ' на паузе · сверх лимита') : '') +
             tile('ti-eye', '#60a5fa', 'rgba(59,130,246,0.15)', 'Суммарный охват', netShort(reach), '') +
-            tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', 'Средний ER', er != null ? String(er).replace('.', ',') + '%' : '—', '') +
+            tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', 'Средний ERR', err != null ? String(err).replace('.', ',') + '%' : '—', '') +
             tile('ti-briefcase', '#f5bf4f', 'rgba(245,191,79,0.15)', 'Офферы', _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.lim) + '</span>' : ''),
                 pend ? '<span>На модерации:</span> <b class="num">' + pend + '</b>' : '') +
             '</div>';
@@ -3788,7 +3794,7 @@
             { k: 'none', t: 'Без оффера', n: none },
             { k: 'attn', t: 'Внимание', n: attn }
         ];
-        var chips = '<div id="fmx-netChips" class="fmx-hscroll" style="display:flex;gap:6px;padding-bottom:7px;margin:0 -2px 3px;cursor:grab;">' + chipDefs.map(function (c) {
+        var chips = '<div id="fmx-netChips" class="fmx-hscroll fmx-noscrollbar" style="display:flex;gap:6px;padding-bottom:4px;margin:0 -2px 3px;cursor:grab;">' + chipDefs.map(function (c) {
             var on = _net.filter === c.k;
             var warn = c.k === 'attn' && c.n > 0;
             return '<button data-netchip="' + c.k + '" style="flex:0 0 auto;font-size:11.5px;font-family:inherit;cursor:pointer;border-radius:999px;padding:6px 11px;' +
