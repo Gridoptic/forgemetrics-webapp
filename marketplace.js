@@ -10260,27 +10260,6 @@
         btn.disabled = true;
         btn.textContent = 'Готовим оплату…';
         var body = { product_type: 'promo', product_key: product, months: 1, listing_id: _promoListingId };
-        _buyPromoNative(btn, product, old, body);
-    }
-
-    function _buyPromoNative(btn, product, old, body) {
-        var native = !!(window.Telegram && Telegram.WebApp && Telegram.WebApp.openInvoice);
-        if (native) {
-            apiPost('/api/v1/payment/invoice', body).then(function (inv) {
-                if (inv && inv.ok && inv.invoice_link) {
-                    btn.textContent = 'Ожидаем оплату…';
-                    Telegram.WebApp.openInvoice(inv.invoice_link, function (status) {
-                        if (status === 'paid') { _haptic('medium'); _waitPromoPayment(btn, inv.payment_id, old); }
-                        else if (status === 'cancelled') { btn.disabled = false; btn.innerHTML = old; }
-                        else if (status === 'failed') { btn.disabled = false; btn.innerHTML = old; toast('Оплата не прошла'); }
-                    });
-                    _waitPromoPayment(btn, inv.payment_id, old);
-                    return;
-                }
-                _buyPromoWeb(btn, product, old);
-            }).catch(function () { _buyPromoWeb(btn, product, old); });
-            return;
-        }
         _buyPromoWeb(btn, product, old);
     }
 
