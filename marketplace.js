@@ -384,6 +384,8 @@
             '.fmx-reqlink i{font-size:14px;}',
             '.fmx-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(129,140,248,0.35) transparent;scrollbar-gutter:stable;}',
             '.fmx-scroll::-webkit-scrollbar{width:5px;}',
+            '.fmx-noscrollbar{scrollbar-width:none;-ms-overflow-style:none;}',
+            '.fmx-noscrollbar::-webkit-scrollbar{width:0;height:0;}',
             '.fmx-scroll::-webkit-scrollbar-track{background:transparent;}',
             '.fmx-scroll::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.22);border-radius:99px;}',
             '.fmx-scroll:hover::-webkit-scrollbar-thumb{background:rgba(129,140,248,0.55);}',
@@ -1730,6 +1732,7 @@
             else { _mqText(ti, 'Рынок рекламы'); _mqText(su, ''); su.style.display = 'none'; }
         }
         var host = el('fmx-main');
+        var _sc = el('fmx-scrollEl'); if (_sc) _sc.classList.remove('fmx-noscrollbar');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
         if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }
         else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
@@ -2261,6 +2264,7 @@
     }
     function renderEnter() {
         var host = el('fmx-main');
+        var sc = el('fmx-scrollEl'); if (sc) sc.classList.add('fmx-noscrollbar');
         host.innerHTML =
             '<div class="fmx-entq">Выбери, где искать:</div>' +
             '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.32);color:#818cf8;"><i class="ti ti-radar-2"></i></div>' +
