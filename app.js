@@ -50,6 +50,104 @@ function forgeAmount(n, size) {
     return `<span class="forge-price">${forgeIco(size)}${val}</span>`;
 }
 
+const FORGE_SHEET_ITEMS = [
+    { key: 'generate', label: 'постов', one: 'пост', few: 'поста', icon: 'sparkles' },
+    { key: 'generate_std', label: 'постов подешевле', one: 'пост подешевле', few: 'поста подешевле', icon: 'edit' },
+    { key: 'voice', label: 'настроек стиля', one: 'настройка стиля', few: 'настройки стиля', icon: 'wand' },
+    { key: 'content_plan', label: 'контент-планов', one: 'контент-план', few: 'контент-плана', icon: 'calendar-week' },
+    { key: 'adpick', label: 'подборов каналов', one: 'подбор каналов', few: 'подбора каналов', icon: 'target-arrow' },
+    { key: 'audit', label: 'ИИ-аудитов канала', one: 'ИИ-аудит канала', few: 'ИИ-аудита канала', icon: 'chart-dots' },
+    { key: 'competitors', label: 'анализов конкурентов', one: 'анализ конкурентов', few: 'анализа конкурентов', icon: 'binoculars' },
+];
+
+let _fsCtx = null;
+
+function closeForgeSheet() {
+    if (!_fsCtx) return;
+    const { overlay, sheet } = _fsCtx;
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+    setTimeout(() => { if (overlay.parentNode) overlay.remove(); if (sheet.parentNode) sheet.remove(); }, 260);
+    _fsCtx = null;
+}
+
+function openForgeSheet() {
+    const f = window.__fmForgeData;
+    if (!f) return;
+    closeForgeSheet();
+    hapticLight();
+
+    const balance = Number(f.balance || 0);
+    const priceOf = (k) => {
+        const row = (f.prices || []).find((x) => x.key === k);
+        return row ? Number(row.price || 0) : 0;
+    };
+
+    const rows = FORGE_SHEET_ITEMS.map((it) => {
+        const price = priceOf(it.key);
+        if (!price) return '';
+        const count = Math.floor(balance / price);
+        const word = count === 1 ? it.one : (count >= 2 && count <= 4 ? it.few : it.label);
+        const body = count > 0
+            ? `<b>${cabNum(count)}</b> <span>${escapeHtml(word)}</span>`
+            : `<span class="fs-off">${escapeHtml(it.label)} — не хватает, нужно ${cabNum(price)}</span>`;
+        return `<div class="fs-row${count > 0 ? '' : ' off'}">` +
+            `<span class="fs-ico"><i class="ti ti-${it.icon}"></i></span>${body}</div>`;
+    }).join('');
+
+    const packs = (f.packs || []).map((p) => {
+        const disc = Math.round((1 - p.price_rub / p.amount) * 100);
+        return `<button class="fw-pack" data-fspack="${p.amount}">` +
+            `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
+            `<span class="fw-pack-p">${cabNum(p.price_rub)} ₽</span>` +
+            (disc > 0 ? `<span class="fw-pack-d">−${disc}%</span>` : '') + `</button>`;
+    }).join('');
+
+    const grant = Number(f.grant || 0);
+    const sub = grant > 0 ? `Тариф начисляет ${cabNum(grant)} каждый месяц` : '';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet fs-sheet';
+    sheet.innerHTML = `<div class="bs-handle"></div>
+        <div class="fs-head">
+          <div class="fs-bal">${forgeAmount(balance, 26)}</div>
+          ${sub ? `<div class="fs-sub">${sub}</div>` : ''}
+        </div>
+        <div class="fs-sec">Хватит на</div>
+        <div class="fs-rows">${rows}</div>
+        ${packs ? `<div class="fs-sec">Пополнить</div><div class="fw-packs">${packs}</div>` : ''}
+        <button class="fs-more" id="fs-more">История операций и все цены <i class="ti ti-chevron-right"></i></button>`;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+    overlay.addEventListener('click', closeForgeSheet);
+    _fsCtx = { overlay, sheet };
+
+    sheet.querySelectorAll('[data-fspack]').forEach((btn) => btn.addEventListener('click', () => {
+        const amount = parseInt(btn.getAttribute('data-fspack'), 10);
+        const pack = (f.packs || []).find((x) => x.amount === amount);
+        if (!pack) return;
+        hapticMed();
+        closeForgeSheet();
+        openCheckout({
+            name: `${amount.toLocaleString('ru-RU')} Forge`,
+            price: pack.price_rub, sub: false, icon: 'bolt', color: 'am',
+            rowLabel: `Пополнение баланса · ${amount.toLocaleString('ru-RU')} Forge`,
+            pay: { product_type: 'package', product_key: `forge_${amount}`, months: 1 },
+        });
+    }));
+    const more = sheet.querySelector('#fs-more');
+    if (more) more.addEventListener('click', () => { closeForgeSheet(); openCabinet('forge'); });
+    localizeTree(sheet);
+}
+
 function setForgeBalance(n) {
     window.__fmForge = Number(n || 0);
     const val = document.getElementById('forge-chip-val');
@@ -381,6 +479,7 @@ function renderDashboard(data) {
     }
     els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
     setForgeBalance(data.forge_balance);
+    if (data.forge) window.__fmForgeData = data.forge;
 
     try { window.__fmIsMod = !!data.is_moderator; window.__fmIsOwner = !!data.is_owner; } catch (e) {}
 
@@ -2968,6 +3067,9 @@ function setupEventListeners() {
     });
 
     els.profileBtn.addEventListener('click', () => handleAction('profile'));
+
+    const forgeChip = document.getElementById('forge-chip');
+    if (forgeChip) forgeChip.addEventListener('click', openForgeSheet);
 
     els.placeholderBack.addEventListener('click', () => {
         showScreen('dashboard');
