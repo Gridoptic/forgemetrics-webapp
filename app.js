@@ -151,23 +151,6 @@ function openForgeSheet() {
     localizeTree(sheet);
 }
 
-(function initTopFade() {
-    let ticking = false;
-    const apply = () => {
-        ticking = false;
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        document.body.classList.toggle('is-scrolled', y > 6);
-    };
-    const onScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(apply);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('DOMContentLoaded', apply);
-    apply();
-})();
-
 function setForgeBalance(n) {
     window.__fmForge = Number(n || 0);
     const val = document.getElementById('forge-chip-val');
