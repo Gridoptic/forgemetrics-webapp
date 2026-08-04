@@ -2,6 +2,7 @@
     'use strict';
 
     var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
+    var _chPaused = false, _pausedNote = '';
     var _campaigns = [], _cands = [], _campId = null, _pendingItem = null, _campManual = null;
     var CLICK_BASE = 'https://fmtr.click';
 
@@ -67,6 +68,11 @@
             '.pl-tag{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap;flex:0 0 auto;}',
             '.pl-tag.on{background:rgba(93,202,165,0.14);color:#5DCAA5;}',
             '.pl-tag.off{background:rgba(255,255,255,0.06);color:#8990a8;}',
+            '.pl-tag.pause{background:rgba(245,191,79,0.14);color:#fbbf5f;}',
+            '.pl-pausebox{display:flex;gap:11px;align-items:flex-start;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.30);border-radius:14px;padding:13px 14px;margin:10px 0 14px;}',
+            '.pl-pausebox i{font-size:18px;color:#fbbf5f;flex:0 0 auto;margin-top:1px;}',
+            '.pl-pausebox b{display:block;font-size:13px;color:#fbbf5f;margin-bottom:3px;}',
+            '.pl-pausebox span{font-size:11.5px;color:#8990a8;line-height:1.45;}',
             '.pl-meta{font-size:10.5px;color:#565b73;margin-top:2px;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
             '.pl-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch;}',
@@ -490,7 +496,9 @@
     function linkCard(l) {
         var active = l.status === 'active';
         var st = active
-            ? '<span class="pl-tag on">' + esc(T('работает')) + '</span>'
+            ? (_chPaused
+                ? '<span class="pl-tag pause">' + esc(T('канал на паузе')) + '</span>'
+                : '<span class="pl-tag on">' + esc(T('работает')) + '</span>')
             : '<span class="pl-tag off">' + esc(T('отключена')) + '</span>';
         var meta = [];
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
@@ -653,7 +661,10 @@
                  [T('Смотри воронку'), T('Показы, клики, подписки, отписки и цена подписчика считаются сами.')]].map(function (st, i) {
                     return '<div class="pl-step"><span class="n">' + (i + 1) + '</span><div><b>' + esc(st[0]) + '</b><span>' + esc(st[1]) + '</span></div></div>';
                 }).join('') + '</div></div>';
-            body += '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
+            body += _chPaused
+                ? '<div class="pl-pausebox"><i class="ti ti-player-pause"></i><div><b>' + esc(T('Канал на паузе')) + '</b><span>' +
+                  esc(_pausedNote || T('Новые ссылки недоступны. Уже созданные продолжают считать переходы.')) + '</span></div></div>'
+                : '<button class="pl-new" data-act="new"><i class="ti ti-plus"></i> ' + esc(T('Новая ссылка под размещение')) + '</button>';
             }
             if (view.length >= 2) {
                 var sumSpend = 0, sumJoin = 0, sumRet = 0, sumJoinPriced = 0;
@@ -729,9 +740,10 @@
             if (r && r.ok) {
                 _items = r.items || []; _right = r.right;
                 _campaigns = r.campaigns || []; _cands = r.candidates || [];
+                _chPaused = !!r.channel_paused; _pausedNote = r.paused_note || '';
                 _syncCamp();
             }
-            else { _items = []; _right = null; _campaigns = []; _cands = []; _campId = null; if (r && r.message) toast(r.message); }
+            else { _items = []; _right = null; _campaigns = []; _cands = []; _campId = null; _chPaused = false; _pausedNote = ''; if (r && r.message) toast(r.message); }
             render();
             if (_prefillChan && _right !== false) {
                 var pu = _prefillChan;
