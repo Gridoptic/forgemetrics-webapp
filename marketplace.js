@@ -21,10 +21,11 @@
     var _q = '', _sortBuy = 'smart', _fPriceMin = null, _fPriceMax = null, _fSubsMin = null, _fAud = null;
     function _audLabel(l) {
         if (l.audience_source === 'commenters' && l.female_pct != null && (l.gender_sample || 0) >= 15) {
-            var fp = l.female_pct, fem = fp >= 50;
+            var fp = l.female_pct, fem = fp >= 50, main = fem ? fp : 100 - fp;
             return { icon: fem ? 'ti-gender-female' : 'ti-gender-male', color: fem ? '#ff6fae' : '#5b9dff',
-                short: (fem ? 'жен' : 'муж') + ' ≈' + (fem ? fp : 100 - fp) + '%',
-                text: '≈' + fp + '% комментаторов — женщины', note: 'оценка по ' + l.gender_sample + ' именам' };
+                short: (fem ? 'жен' : 'муж') + ' ≈' + main + '%',
+                text: '≈' + main + '% комментаторов — ' + (fem ? 'женщины' : 'мужчины'),
+                note: 'оценка по ' + l.gender_sample + ' именам' };
         }
         return null;
     }
