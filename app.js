@@ -38,8 +38,8 @@ const screens = {
 };
 
 const FORGE_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">'
-    + '<circle cx="12" cy="12" r="9.1" stroke="currentColor" stroke-width="1.4" opacity="0.42"/>'
-    + '<path d="M13.1 6.2 8.6 13.1h3.1l-0.8 4.7 4.5-6.9h-3.1l0.8-4.7z" fill="currentColor"/></svg>';
+    + '<circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.25" opacity="0.4"/>'
+    + '<path d="M13.7 4.6 7.9 13.5h3.7l-1 5.9 5.7-8.6h-3.7l1.1-6.2z" fill="currentColor"/></svg>';
 
 function forgeIco(size) {
     return `<span class="forge-ico" style="width:${size || 14}px;height:${size || 14}px;">${FORGE_SVG}</span>`;
