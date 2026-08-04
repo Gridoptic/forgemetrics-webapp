@@ -165,7 +165,7 @@
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
-                '<div class="stg-fprice"><b>990 ₽</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
+                '<div class="stg-fprice"><b>1 990 ₽</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
                 '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + '</button>' +
                 '</div></div>');
             return;
@@ -183,7 +183,7 @@
         }).join('');
         var cta = locked
             ? '<button class="stg-fcta" data-act="book"><i class="ti ti-bookmark"></i> ' + esc(T('Забронировать место')) + '</button>' +
-              '<div class="stg-fnote">' + esc(T('Бронь бесплатная. Забронировавшие получают доступ первыми и фиксируют цену 2 490 ₽ на запуске')) + '</div>'
+              '<div class="stg-fnote">' + esc(T('Бронь бесплатная. Забронировавшие получают доступ первыми и фиксируют цену 3 990 ₽ на запуске')) + '</div>'
             : '<button class="stg-fcta" data-act="start">' + esc(T('Построить мою стратегию')) + '</button>' +
               '<div class="stg-fnote">' + esc(T('≈ 5 минут интервью — и полный план у тебя на руках')) + '</div>';
         setView(
@@ -193,7 +193,7 @@
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
             '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка')) + '</div></div></div>' +
             '<div class="stg-fwhat">' + what + '</div>' +
-            '<div class="stg-fprice"><b>2 490 ₽</b><span>' + esc(T('разово · продление ведения — 990 ₽/мес')) + '</span></div>' +
+            '<div class="stg-fprice"><b>3 990 ₽</b><span>' + esc(T('разово · продление ведения — 1 990 ₽/мес')) + '</span></div>' +
             cta + '</div></div>');
         if (locked) markBooked();
     }
