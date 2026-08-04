@@ -813,10 +813,13 @@
             '.fmx-mbg{position:fixed;inset:0;z-index:9100;background:rgba(5,7,14,0.72);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;}',
             '.fmx-mbg.fmx-show{display:flex;}',
             '@media(min-width:640px){.fmx-mbg{align-items:center;}}',
-            '.fmx-modal{width:100%;max-width:480px;max-height:88vh;background:rgba(17,20,31,0.86);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:fmxUp 320ms cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);}',
-            '@media(min-width:640px){.fmx-modal{border-radius:20px;}}',
+            '.fmx-modal{width:100%;max-width:480px;max-height:88vh;background:rgba(17,20,31,0.9);border:0;border-top:1px solid rgba(255,255,255,0.16);border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:fmxUp 320ms cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 -20px 50px rgba(0,0,0,0.55),0 -1px 0 rgba(255,255,255,0.05) inset;}',
+            '.fmx-modal::before{content:"";display:block;flex-shrink:0;width:36px;height:4px;margin:6px auto 0;border-radius:99px;background:rgba(255,255,255,0.18);}',
+            '@media(min-width:640px){.fmx-modal{border-radius:22px;border:1px solid rgba(255,255,255,0.16);}.fmx-modal::before{display:none;}}',
+            '.fmx-mfoot{flex-shrink:0;padding:12px 18px calc(16px + env(safe-area-inset-bottom));border-top:0.5px solid rgba(255,255,255,0.07);display:flex;gap:8px;}',
+            '.fmx-mfoot .fmx-btn{flex:1;}',
             '@keyframes fmxUp{from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;}}',
-            '.fmx-mhead{display:flex;align-items:flex-start;gap:10px;padding:18px 18px 12px;flex-shrink:0;border-bottom:0.5px solid rgba(255,255,255,0.06);}',
+            '.fmx-mhead{display:flex;align-items:flex-start;gap:10px;padding:14px 18px 12px;flex-shrink:0;border-bottom:0.5px solid rgba(255,255,255,0.06);}',
             '.fmx-mhead h2{margin:0;font-size:16px;font-weight:700;flex:1;display:flex;align-items:center;gap:8px;}',
             '.fmx-mhead h2>i:first-child,.fmx-po-nm>i:first-child,.fmx-note>i:first-child{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;font-size:15px;background:rgba(255,255,255,0.09);background:color-mix(in srgb,currentColor 20%,transparent);border:1px solid rgba(255,255,255,0.14);border:1px solid color-mix(in srgb,currentColor 38%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,0.10);}',
             '.fmx-mhead p{margin:3px 0 0;font-size:11.5px;color:#8990a8;line-height:1.5;}',
@@ -4403,12 +4406,15 @@
         var _extraNiches = Object.keys(_extra).sort(function (a, b) { return _extra[b] - _extra[a]; });
         var old = el('fmx-npBg'); if (old) old.remove();
         var bg = document.createElement('div');
-        bg.id = 'fmx-npBg'; bg.className = 'fmx-cfm solid';
-        bg.innerHTML = '<div class="fmx-cfm-box" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:520px;">' +
-            '<div class="fmx-cfm-t" style="margin-bottom:10px;"><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</div>' +
-            '<div class="fmx-search" style="margin-bottom:10px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
-            '<div id="fmx-nlist" style="max-height:56vh;overflow-y:auto;margin:0 -4px;padding:0 4px;"></div>' +
-            '<div class="fmx-cfm-r" style="margin-top:12px;gap:8px;">' + ((_nicheSel && !onPick) ? '<button class="fmx-btn" data-clear>Сбросить фильтр</button>' : '') + '<button class="fmx-btn" data-no>Закрыть</button></div></div>';
+        bg.id = 'fmx-npBg'; bg.className = 'fmx-mbg fmx-show';
+        bg.innerHTML = '<div class="fmx-modal">' +
+            '<div class="fmx-mhead"><h2><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</h2>' +
+            '<button class="fmx-mclose" data-no><i class="ti ti-x"></i></button></div>' +
+            '<div class="fmx-mbody">' +
+            '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
+            '<div id="fmx-nlist"></div></div>' +
+            ((_nicheSel && !onPick) ? '<div class="fmx-mfoot"><button class="fmx-btn" data-clear>Сбросить фильтр</button></div>' : '') +
+            '</div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
         function pick(m) {
