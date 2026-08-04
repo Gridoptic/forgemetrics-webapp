@@ -2348,7 +2348,7 @@ function maybeShowTermsGate(data) {
     const bg = document.createElement('div');
     bg.id = 'fm-termsGate';
     bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;padding:0 12px;';
-    bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:18px 18px 0 0;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
+    bg.innerHTML = '<div style="background:#11141f;border:0;border-top:1.5px solid rgba(255,255,255,0.38);border-radius:22px 22px 0 0;box-shadow:0 -26px 64px rgba(0,0,0,0.75),0 1px 0 rgba(255,255,255,0.08) inset;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
         '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
         '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>Пользовательское соглашение</span></div>' +
         '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтвердите согласие с условиями использования сервиса.</span></div>' +
