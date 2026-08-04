@@ -938,6 +938,24 @@ html, body, * {
     background: rgba(165,173,255,0.8);
 }
 
+.bs-sheet::-webkit-scrollbar-track,
+.drawer::-webkit-scrollbar-track,
+.pw-sheet-list::-webkit-scrollbar-track,
+.lang-list::-webkit-scrollbar-track {
+    margin-top: 24px;
+    margin-bottom: 18px;
+}
+
+.bs-sheet::-webkit-scrollbar,
+.drawer::-webkit-scrollbar {
+    width: 4px;
+}
+
+.bs-sheet::-webkit-scrollbar-thumb,
+.drawer::-webkit-scrollbar-thumb {
+    background: rgba(129, 140, 248, 0.18);
+}
+
 
 .post-header {
     display: flex;
