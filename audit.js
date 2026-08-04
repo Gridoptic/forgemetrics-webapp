@@ -253,67 +253,48 @@
     function limitBarHtml(limits) {
         if (!limits) return '';
         var isTester = !!limits.is_tester;
-        var limit = limits.limit;
-        var used = limits.used || 0;
-        if (limit === 0 && !isTester) {
-            return '' +
-                '<div class="limit-row limit-row-locked">' +
-                    '<div class="limit-row-head">' +
-                        '<span class="limit-row-icon"><i class="ti ti-lock"></i></span>' +
-                        '<span class="limit-row-label">AI-аудит</span>' +
-                        '<span class="limit-row-hint">Доступно на платных тарифах</span>' +
-                    '</div>' +
-                '</div>';
-        }
-        var safeLimit = (limit == null || limit === 0) ? 1 : limit;
-        var remaining = (limit == null) ? null : Math.max(0, limit - used);
-        var exhausted = (limit != null) && (used >= limit) && !isTester;
-        var percent = exhausted ? 0 : (limit == null ? 100 : Math.max(0, Math.min(100, Math.round((remaining / safeLimit) * 100))));
-        var testerNote = isTester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
-        var countTxt = (limit == null)
-            ? '<span class="limit-row-count">' + used + '</span>'
-            : '<span class="limit-row-count">' + remaining + '<span class="limit-row-count-total"> / ' + limit + ' в мес</span></span>';
-        var timerTxt = '';
-        if (exhausted && limits.seconds_until_reset && typeof formatRemainingTime === 'function') {
-            timerTxt = '<span class="limit-row-timer">' + _esc(formatRemainingTime(limits.seconds_until_reset)) + '</span>';
-        }
-        var rowClass = exhausted ? 'limit-row limit-row-purple limit-row-exhausted' : 'limit-row limit-row-purple';
+        var balance = Number(limits.balance || 0);
+        var price = Number(limits.price || 0);
+        var enough = isTester || balance >= price;
+        var fa = (window.forgeAmount || function (n) { return String(n); });
+
+        var right = isTester
+            ? '<span class="limit-row-tester">тестер · без списаний</span>'
+            : '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
+        var note = enough
+            ? '<div class="fwb-note">Запуск спишет ' + price + ' Forge</div>'
+            : '<div class="fwb-note fwb-low">Не хватает Forge: нужно ' + price + ', на балансе ' + balance + '</div>';
+
         return '' +
-            '<div class="' + rowClass + '">' +
+            '<div class="limit-row limit-row-purple' + (enough ? '' : ' limit-row-exhausted') + '">' +
                 '<div class="limit-row-head">' +
                     '<span class="limit-row-icon"><i class="ti ti-target"></i></span>' +
                     '<span class="limit-row-label">AI-аудит</span>' +
-                    testerNote +
-                    countTxt +
-                '</div>' +
-                '<div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ' + percent + '%"></div></div>' +
-                timerTxt +
+                    right +
+                '</div>' + note +
             '</div>';
     }
 
     function canRun(limits) {
         if (!limits) return true;
         if (limits.is_tester) return true;
-        if (limits.limit === 0) return false;
         if (typeof limits.can_run === 'boolean') return limits.can_run;
-        if (limits.limit != null) return (limits.used || 0) < limits.limit;
         return true;
     }
 
     function renderIntro(limits) {
         var host = ensureScreen();
         var runnable = canRun(limits);
-        var locked = limits && limits.limit === 0 && !limits.is_tester;
+        var fa = (window.forgeAmount || function (n) { return String(n); });
+        var price = limits ? Number(limits.price || 0) : 0;
 
         var btnHtml;
-        if (locked && !(limits && limits.has_basic_package)) {
-            btnHtml = '<button class="audit-primary-btn" id="audit-intro-pricing"><i class="ti ti-crown"></i><span>Посмотреть тарифы</span></button>';
-        } else if (!runnable) {
-            var t = (limits && limits.seconds_until_reset && typeof formatRemainingTime === 'function')
-                ? formatRemainingTime(limits.seconds_until_reset) : '';
-            btnHtml = '<button class="audit-primary-btn" disabled><i class="ti ti-clock"></i><span>Лимит исчерпан' + (t ? ' · ' + _esc(t) : '') + '</span></button>';
+        if (!runnable) {
+            btnHtml = '<button class="audit-primary-btn" id="audit-intro-topup"><i class="ti ti-bolt"></i>' +
+                '<span>Пополнить баланс</span></button>';
         } else {
-            btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i><span>Запустить аудит</span></button>';
+            btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i>' +
+                '<span>Запустить аудит' + (limits && limits.is_tester ? '' : ' · ' + price + ' Forge') + '</span></button>';
         }
 
         host.innerHTML = headerHtml() +
@@ -338,10 +319,11 @@
 
         var s = host.querySelector('#audit-intro-start');
         if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(); });
-        var pr = host.querySelector('#audit-intro-pricing');
+        var pr = host.querySelector('#audit-intro-topup');
         if (pr) pr.addEventListener('click', function () {
             closeAudit();
-            if (typeof handleAction === 'function') handleAction('profile');
+            if (typeof openCabinet === 'function') openCabinet('forge');
+            else if (typeof handleAction === 'function') handleAction('profile');
         });
     }
 
@@ -352,16 +334,15 @@
 
     function renderCommercialIntro(limits) {
         var host = ensureScreen();
-        var canDeep = limits && (limits.has_deep_package || limits.is_tester);
+        var canDeep = limits && (limits.can_run_deep || limits.is_tester);
+        var priceDeep = limits ? Number(limits.price_deep || 0) : 0;
         var ctaHtml;
         if (canDeep) {
-            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i><span>Запустить коммерческий аудит</span></button>' +
-                (limits && limits.has_deep_package
-                    ? '<div class="audit-deep-note">Куплен коммерческий аудит — доступен 1 запуск</div>'
-                    : '');
+            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i>' +
+                '<span>Запустить коммерческий аудит' + (limits && limits.is_tester ? '' : ' · ' + priceDeep + ' Forge') + '</span></button>';
         } else {
-            ctaHtml = '<div class="ca-ctarow"><span class="l">Разовая услуга · отчёт сохраняется</span><b>1 490 ₽</b></div>' +
-                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-briefcase"></i><span>Приобрести</span></button>';
+            ctaHtml = '<div class="ca-ctarow"><span class="l">Списывается с баланса · отчёт сохраняется</span><b>' + priceDeep + ' Forge</b></div>' +
+                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
         }
         host.innerHTML = headerHtml('Коммерческий аудит') +
             '<div class="audit-body">' +
@@ -405,10 +386,8 @@
         var b = host.querySelector('#ca-buy');
         if (b) b.addEventListener('click', function () {
             _haptic('medium');
-            if (typeof openCheckout === 'function') {
-                openCheckout({ name: 'Коммерческий аудит', price: 1490, sub: false,
-                               icon: 'briefcase', color: 'am', rowLabel: 'Коммерческий аудит' });
-            }
+            closeAudit();
+            if (typeof openCabinet === 'function') openCabinet('forge');
         });
     }
 
@@ -456,7 +435,7 @@
             return;
         }
         if (m.indexOf('429') !== -1) {
-            showFatalError(detailFrom(m) || 'Лимит аудитов на этот период исчерпан.', { icon: 'ti-clock' });
+            showFatalError(detailFrom(m) || 'Не хватает Forge на запуск аудита.', { icon: 'ti-clock' });
             return;
         }
         if (m.indexOf('403') !== -1) {
@@ -820,10 +799,9 @@
             .then(function (limits) {
                 var note = document.getElementById('audit-rerun-note');
                 if (!note || !limits) return;
-                if (limits.is_tester) { note.textContent = 'Тестер · без лимита'; return; }
-                if (limits.limit == null) return;
-                var remaining = Math.max(0, limits.limit - (limits.used || 0));
-                note.textContent = 'Осталось аудитов: ' + remaining + ' из ' + limits.limit;
+                if (limits.is_tester) { note.textContent = 'Тестер · без списаний'; return; }
+                note.textContent = 'На балансе ' + Number(limits.balance || 0).toLocaleString('ru-RU')
+                    + ' Forge · аудит стоит ' + Number(limits.price || 0);
             })
             .catch(function () {});
     }

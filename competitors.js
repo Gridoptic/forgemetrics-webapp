@@ -335,32 +335,23 @@
     function limitBarHtml() {
         if (!_limits) return '';
         if (_limits.is_tester) {
-            return '<div class="comp-limit-bar"><span class="comp-limit-tester">тестер · без лимита</span></div>';
+            return '<div class="comp-limit-bar"><span class="comp-limit-tester">тестер · без списаний</span></div>';
         }
-        var used = _limits.used || 0;
-        var limit = _limits.limit || 0;
-        if (limit <= 0) {
-            return '' +
-                '<div class="comp-limit-bar comp-limit-locked">' +
-                    '<i class="ti ti-lock"></i>' +
-                    '<span>На твоём тарифе анализ не входит. Можно купить разовый за ' + _num(_g(_limits, 'extra_price_rub', 490)) + ' \u20bd.</span>' +
-                '</div>';
-        }
-        var remaining = Math.max(0, limit - used);
-        var exhausted = used >= limit;
-        var pct = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / limit) * 100)));
-        var timer = (exhausted && _limits.seconds_until_reset && typeof formatRemainingTime === 'function')
-            ? '<span class="comp-limit-timer">' + _esc(formatRemainingTime(_limits.seconds_until_reset)) + '</span>'
-            : '';
+        var balance = Number(_limits.balance || 0);
+        var price = Number(_limits.price || 0);
+        var enough = balance >= price;
+        var fa = (window.forgeAmount || function (x) { return String(x); });
         return '' +
-            '<div class="comp-limit-bar ' + (exhausted ? 'comp-limit-exhausted' : '') + '">' +
+            '<div class="comp-limit-bar ' + (enough ? '' : 'comp-limit-exhausted') + '">' +
                 '<div class="comp-limit-head">' +
                     '<span class="comp-limit-icon"><i class="ti ti-binoculars"></i></span>' +
-                    '<span class="comp-limit-label">Анализов в этом периоде</span>' +
-                    '<span class="comp-limit-count">' + remaining + '<span class="comp-limit-total"> / ' + limit + '</span></span>' +
+                    '<span class="comp-limit-label">Анализ конкурентов</span>' +
+                    '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>' +
                 '</div>' +
-                '<div class="comp-limit-track"><div class="comp-limit-fill" style="width: ' + pct + '%"></div></div>' +
-                timer +
+                '<div class="fwb-note' + (enough ? '' : ' fwb-low') + '">' +
+                    (enough ? 'Запуск спишет ' + price + ' Forge'
+                            : 'Не хватает Forge: нужно ' + price + ', на балансе ' + balance) +
+                '</div>' +
             '</div>';
     }
 
@@ -386,13 +377,10 @@
         var runnable = canRun();
         var btnHtml;
         if (runnable) {
-            btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>Найти конкурентов</span></button>';
-        } else if (_limits && _limits.limit <= 0) {
-            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-coin"></i><span>Купить разовый анализ</span></button>';
+            var pr = (_limits && !_limits.is_tester) ? ' · ' + Number(_limits.price || 0) + ' Forge' : '';
+            btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>Найти конкурентов' + pr + '</span></button>';
         } else {
-            var t = (_limits && _limits.seconds_until_reset && typeof formatRemainingTime === 'function')
-                ? formatRemainingTime(_limits.seconds_until_reset) : '';
-            btnHtml = '<button class="comp-primary-btn" disabled><i class="ti ti-clock"></i><span>Лимит исчерпан' + (t ? ' \u00b7 ' + _esc(t) : '') + '</span></button>';
+            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
         }
 
         setBody(
@@ -420,7 +408,8 @@
         var bb = document.getElementById('comp-buy-btn');
         if (bb) bb.addEventListener('click', function () {
             closeCompetitors();
-            if (typeof handleAction === 'function') handleAction('profile');
+            if (typeof openCabinet === 'function') openCabinet('forge');
+            else if (typeof handleAction === 'function') handleAction('profile');
         });
     }
 
