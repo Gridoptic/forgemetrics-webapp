@@ -51,13 +51,13 @@ function forgeAmount(n, size) {
 }
 
 const FORGE_SHEET_ITEMS = [
-    { key: 'generate', label: 'постов', one: 'пост', few: 'поста', icon: 'sparkles' },
-    { key: 'generate_std', label: 'постов подешевле', one: 'пост подешевле', few: 'поста подешевле', icon: 'edit' },
-    { key: 'voice', label: 'настроек стиля', one: 'настройка стиля', few: 'настройки стиля', icon: 'wand' },
-    { key: 'content_plan', label: 'контент-планов', one: 'контент-план', few: 'контент-плана', icon: 'calendar-week' },
-    { key: 'adpick', label: 'подборов каналов', one: 'подбор каналов', few: 'подбора каналов', icon: 'target-arrow' },
-    { key: 'audit', label: 'ИИ-аудитов канала', one: 'ИИ-аудит канала', few: 'ИИ-аудита канала', icon: 'chart-dots' },
-    { key: 'competitors', label: 'анализов конкурентов', one: 'анализ конкурентов', few: 'анализа конкурентов', icon: 'binoculars' },
+    { key: 'generate', many: 'постов', one: 'пост', few: 'поста', short: 'Пост', icon: 'sparkles' },
+    { key: 'generate_std', many: 'постов подешевле', one: 'пост подешевле', few: 'поста подешевле', short: 'Пост подешевле', icon: 'edit' },
+    { key: 'voice', many: 'настроек стиля', one: 'настройка стиля', few: 'настройки стиля', short: 'Настройка стиля', icon: 'wand' },
+    { key: 'content_plan', many: 'контент-планов', one: 'контент-план', few: 'контент-плана', short: 'Контент-план', icon: 'calendar-week' },
+    { key: 'adpick', many: 'подборов каналов', one: 'подбор каналов', few: 'подбора каналов', short: 'Подбор каналов', icon: 'target-arrow' },
+    { key: 'audit', many: 'ИИ-аудитов', one: 'ИИ-аудит канала', few: 'ИИ-аудита', short: 'ИИ-аудит', icon: 'chart-dots' },
+    { key: 'competitors', many: 'анализов конкурентов', one: 'анализ конкурентов', few: 'анализа конкурентов', short: 'Анализ конкурентов', icon: 'binoculars' },
 ];
 
 let _fsCtx = null;
@@ -89,10 +89,13 @@ function openForgeSheet() {
         const price = priceOf(it.key);
         if (!price) return '';
         const count = Math.floor(balance / price);
-        const word = count === 1 ? it.one : (count >= 2 && count <= 4 ? it.few : it.label);
+        const n10 = count % 10, n100 = count % 100;
+        const word = (n10 === 1 && n100 !== 11) ? it.one
+            : ((n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) ? it.few : it.many);
         const body = count > 0
-            ? `<b>${cabNum(count)}</b> <span>${escapeHtml(word)}</span>`
-            : `<span class="fs-off">${escapeHtml(it.label)} — не хватает, нужно ${cabNum(price)}</span>`;
+            ? `<b>${cabNum(count)}</b><span class="fs-nm">${escapeHtml(word)}</span>`
+            : `<span class="fs-nm">${escapeHtml(it.short)}</span>` +
+              `<span class="fs-pr">${forgeAmount(price, 12)}</span>`;
         return `<div class="fs-row${count > 0 ? '' : ' off'}">` +
             `<span class="fs-ico"><i class="ti ti-${it.icon}"></i></span>${body}</div>`;
     }).join('');

@@ -5431,12 +5431,21 @@ html.cs-modal-open {
     font-variant-numeric: tabular-nums;
 }
 
-.fs-row span {
+.fs-nm {
     color: var(--text-secondary);
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.fs-pr {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fbbf24;
+    opacity: 0.75;
 }
 
 .fs-ico {
@@ -5458,11 +5467,6 @@ html.cs-modal-open {
     border-color: rgba(255, 255, 255, 0.08);
     color: var(--text-secondary);
     opacity: 0.65;
-}
-
-.fs-off {
-    font-size: 13px;
-    opacity: 0.75;
 }
 
 .fs-more {
