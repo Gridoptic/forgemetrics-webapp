@@ -2666,142 +2666,11 @@ async function coWaitPayment(sheet, paymentId, name) {
     }
 }
 
-const YK_WIDGET_SRC = 'https://yookassa.ru/checkout-widget/v1/checkout-widget.js';
-let _ykScriptPromise = null;
-
-function loadYooKassaWidget() {
-    if (window.YooMoneyCheckoutWidget) return Promise.resolve(true);
-    if (_ykScriptPromise) return _ykScriptPromise;
-    _ykScriptPromise = new Promise((resolve) => {
-        const s = document.createElement('script');
-        s.src = YK_WIDGET_SRC;
-        s.async = true;
-        s.onload = () => resolve(!!window.YooMoneyCheckoutWidget);
-        s.onerror = () => { _ykScriptPromise = null; resolve(false); };
-        document.head.appendChild(s);
-        setTimeout(() => resolve(!!window.YooMoneyCheckoutWidget), 8000);
-    });
-    return _ykScriptPromise;
-}
-
-window.loadYooKassaWidget = loadYooKassaWidget;
-
-window.coPromoWidget = function (token, paymentId, done, info) {
-    closeCheckout();
-    const overlay = document.createElement('div');
-    overlay.className = 'bs-overlay';
-    const sheet = document.createElement('div');
-    sheet.className = 'bs-sheet co-sheet';
-    document.body.appendChild(overlay);
-    document.body.appendChild(sheet);
-    document.documentElement.classList.add('cs-modal-open');
-    document.body.classList.add('cs-modal-open');
-    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
-    _coCtx = { overlay, sheet, opts: {} };
-    overlay.addEventListener('click', () => { closeCheckout(); if (done) done(false); });
-    if (!coRenderWidget(sheet, token, paymentId, (info && info.title) || 'Продвижение оффера', done, info)) {
-        closeCheckout();
-        if (done) done(false);
-    }
-};
-
-function coRenderWidget(sheet, token, paymentId, name, onDone, info) {
-    info = info || {};
-    const rows = [];
-    if (info.base_amount_rub && (info.discount_rub || info.credits_used_rub)) {
-        rows.push(`<div class="co-row"><span>${escapeHtml(name || 'Заказ')}</span><span>${cabNum(info.base_amount_rub)} ₽</span></div>`);
-    }
-    if (info.discount_rub) rows.push(`<div class="co-row acc"><span>Скидка по приглашению</span><span>−${cabNum(info.discount_rub)} ₽</span></div>`);
-    if (info.credits_used_rub) rows.push(`<div class="co-row acc"><span>Бонусные кредиты</span><span>−${cabNum(info.credits_used_rub)} ₽</span></div>`);
-
-    sheet.classList.add('co-pay-sheet');
-    try { if (tg?.expand) tg.expand(); } catch (e) {}
-    sheet.innerHTML = `
-        <div class="co-paytop">
-          <button class="co-payback" aria-label="Закрыть"><i class="ti ti-arrow-left"></i></button>
-          <div class="co-paytitle">Оплата</div>
-        </div>
-        <div class="co-payhead">
-          <div class="co-payname">${escapeHtml(name || 'Оплата')}</div>
-          <div class="co-paysum">${cabNum(info.amount_rub || 0)} ₽</div>
-        </div>
-        ${rows.length ? `<div class="co-rows co-paylines">${rows.join('')}</div>` : ''}
-        <div class="co-ykbox" id="co-ykform"></div>
-        <div class="co-payfoot">
-          <span>Заказ №${paymentId} · ForgeMetrics</span>
-          <span class="co-paysec"><i class="ti ti-lock"></i> Платёж защищён ЮKassa</span>
-        </div>
-    `;
-    sheet.querySelector('.co-payback').addEventListener('click', closeCheckout);
-    let widget = null;
-    try {
-        widget = new window.YooMoneyCheckoutWidget({
-            confirmation_token: token,
-            error_callback: () => { cabToast('Не удалось загрузить форму оплаты'); },
-            customization: {
-                colors: {
-                    control_primary: '#ec4899',
-                    control_primary_content: '#ffffff',
-                    background: '#ffffff',
-                    text: '#12162a',
-                    border: '#e6e8f0',
-                },
-            },
-        });
-    } catch (e) { return false; }
-    widget.on('success', () => {
-        hapticMed();
-        try { widget.destroy(); } catch (e) {}
-        if (onDone) {
-            closeCheckout();
-            onDone(true);
-            return;
-        }
-        coPayPending(sheet, 'Подтверждаем оплату', 'Открываем доступ — это займёт пару секунд.');
-        coWaitPayment(sheet, paymentId, name);
-    });
-    widget.on('fail', () => {
-        try { widget.destroy(); } catch (e) {}
-        coPayPending(sheet, 'Платёж не прошёл', 'Оплата не завершена. Кредиты, если списывались, вернутся на баланс.');
-    });
-    widget.render('co-ykform').catch(() => { coWidgetFallback(sheet, paymentId, name, onDone); });
-    _coCtx.widget = widget;
-    _coCtx.pendingId = paymentId;
-    setTimeout(() => {
-        if (!_coCtx || _coCtx.sheet !== sheet) return;
-        const box = document.getElementById('co-ykform');
-        if (box && !box.querySelector('iframe')) coWidgetFallback(sheet, paymentId, name, onDone);
-    }, 7000);
-    return true;
-}
-
 function coCancelPending(paymentId) {
     if (!paymentId) return Promise.resolve();
     return apiRequest(`/api/v1/payment/cancel/${paymentId}`, { method: 'POST' }).catch(() => {});
 }
 
-async function coWidgetFallback(sheet, paymentId, name, onDone) {
-    if (_coCtx && _coCtx.widget) { try { _coCtx.widget.destroy(); } catch (e) {} _coCtx.widget = null; }
-    if (onDone) { closeCheckout(); onDone(false); return; }
-    const pay = _coCtx && _coCtx.opts ? _coCtx.opts.pay : null;
-    coPayPending(sheet, 'Открываем оплату', 'Форма не загрузилась — продолжим на защищённой странице ЮKassa.');
-    await coCancelPending(paymentId);
-    if (!pay) { coPayPending(sheet, 'Не удалось открыть оплату', 'Попробуй ещё раз через минуту.'); return; }
-    let res = null;
-    try {
-        res = await apiRequest('/api/v1/payment/create', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pay),
-        });
-    } catch (e) { res = null; }
-    if (res && res.ok && res.confirmation_url) {
-        coWaitPayment(sheet, res.payment_id, name);
-        try {
-            if (tg?.openLink) tg.openLink(res.confirmation_url); else window.open(res.confirmation_url, '_blank');
-        } catch (e) { window.open(res.confirmation_url, '_blank'); }
-    } else {
-        coPayPending(sheet, 'Не удалось открыть оплату', 'Попробуй ещё раз через минуту.');
-    }
-}
 
 async function coPay(opts) {
     if (!_coCtx || !_coCtx.sheet) return;
@@ -2810,21 +2679,6 @@ async function coPay(opts) {
     if (opts.pay) {
         const btn = sheet.querySelector('[data-copay]');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Готовим оплату…'; }
-
-        const hasWidget = await loadYooKassaWidget();
-        if (hasWidget) {
-            let emb = null;
-            try {
-                emb = await apiRequest('/api/v1/payment/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(Object.assign({}, opts.pay, { embedded: true })),
-                });
-            } catch (e) { emb = null; }
-            if (emb && emb.ok && emb.confirmation_token) {
-                if (coRenderWidget(sheet, emb.confirmation_token, emb.payment_id, opts.name, null, emb)) return;
-            }
-        }
 
         if (tg?.openInvoice) {
             let inv = null;
