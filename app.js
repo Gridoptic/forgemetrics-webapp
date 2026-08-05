@@ -2741,6 +2741,227 @@ function tfErow(e) {
     return `<div class="tf-erow${hasEx ? ' tap' : ''}"><div class="tf-erow-h"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
 }
 
+
+const TFC_MAIN = ['generate', 'generate_std', 'audit', 'adpick'];
+const TFC_MAX = { generate: 300, generate_std: 400, rewrite: 100, modify: 200, voice: 20,
+    content_plan: 12, adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
+const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
+const TFC_PRESETS = [
+    { t: 'Один канал', v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
+    { t: 'Продаю рекламу', v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
+    { t: 'Сетка', v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
+        content_plan: 4, audit: 3, adpick: 4, competitors: 2 } },
+];
+
+let tfCalc = null;
+
+function tfcOps(d) {
+    return (d.forge_prices || []).filter((p) => TFC_MAX[p.key]);
+}
+
+function tfcTier(d) {
+    return (d.plans || []).find((p) => p.key === tfCalc.tier) || (d.plans || [])[1] || null;
+}
+
+function tfcSpent(d) {
+    return tfcOps(d).reduce((s, o) => s + (tfCalc.v[o.key] || 0) * o.price, 0);
+}
+
+function tfcLeft(d) {
+    const t = tfcTier(d);
+    return Math.max(0, (t ? t.forge : 0) - tfcSpent(d));
+}
+
+function tfcClamp(d) {
+    const t = tfcTier(d);
+    let over = tfcSpent(d) - (t ? t.forge : 0);
+    if (over <= 0) return;
+    [...tfcOps(d)].sort((a, b) => b.price - a.price).forEach((o) => {
+        while (over > 0 && tfCalc.v[o.key] > 0) { tfCalc.v[o.key]--; over -= o.price; }
+    });
+}
+
+function tfcHint(d, o) {
+    const val = tfCalc.v[o.key] || 0;
+    const add = Math.floor(tfcLeft(d) / o.price);
+    if (add > 0) return 'можно добрать ещё ' + cabNum(add);
+    if (val > 0) return 'предел запаса · освободи ' + cabNum(o.price - tfcLeft(d)) + ', чтобы добавить ещё';
+    return 'нужно ещё ' + cabNum(o.price - tfcLeft(d)) + ' Forge, чтобы взять одну';
+}
+
+function tfcRow(d, o) {
+    const val = tfCalc.v[o.key] || 0;
+    const add = Math.floor(tfcLeft(d) / o.price);
+    const cap = Math.min(TFC_MAX[o.key], val + add);
+    const cls = add > 0 ? 'ok' : (val > 0 ? 'stop' : 'off');
+    const pct = cap > 0 ? Math.round(val / cap * 100) : 0;
+    return '<div class="tfc-op ' + cls + '" data-tfcrow="' + o.key + '" style="--p:' + pct + '%">'
+        + '<div class="tfc-top"><span class="tfc-nm">' + escapeHtml(o.label)
+        + ' <i>· ' + forgeAmount(o.price, 11) + '/шт</i></span>'
+        + '<span class="tfc-v' + (val ? '' : ' zero') + '">' + cabNum(val) + '</span></div>'
+        + '<div class="tfc-ctl">'
+        + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="-1"' + (val <= 0 ? ' disabled' : '') + '>−</button>'
+        + '<input type="range" min="0" max="' + Math.max(cap, 1) + '" step="' + (TFC_STEP[o.key] || 1) + '"'
+        + ' value="' + val + '" data-tfcsl="' + o.key + '">'
+        + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="1"' + (add <= 0 ? ' disabled' : '') + '>+</button>'
+        + '</div><div class="tfc-can">' + tfcHint(d, o) + '</div></div>';
+}
+
+function tfCalculatorHtml(d) {
+    const ops = tfcOps(d);
+    if (!ops.length) return '';
+    if (!tfCalc) {
+        const cur = (d.plans || []).find((p) => p.key === d.current_tier && p.forge);
+        tfCalc = { tier: cur ? cur.key : 'pro', preset: 1, open: false, v: { ...TFC_PRESETS[1].v } };
+    }
+    ops.forEach((o) => { if (tfCalc.v[o.key] == null) tfCalc.v[o.key] = 0; });
+    tfcClamp(d);
+
+    const t = tfcTier(d);
+    if (!t || !t.forge) return '';
+    const rest = tfcLeft(d);
+    const idx = (d.plans || []).findIndex((p) => p.key === t.key);
+    const next = (d.plans || [])[idx + 1];
+    const main = ops.filter((o) => TFC_MAIN.includes(o.key));
+    const more = ops.filter((o) => !TFC_MAIN.includes(o.key));
+
+    return '<div class="tf-extras tfc">'
+        + '<div class="tf-eh"><span class="et">' + forgeIco(13) + '</span> Подбери тариф под свой месяц</div>'
+        + '<div class="tfc-sub">Ползунок остановится, когда Forge закончатся</div>'
+        + '<div class="tfc-presets">' + TFC_PRESETS.map((p, i) =>
+            '<button class="tfc-chip' + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
+            + escapeHtml(p.t) + '</button>').join('') + '</div>'
+        + '<div class="tfc-tiers">' + (d.plans || []).filter((p) => p.forge).map((p) =>
+            '<button class="tfc-tier' + (p.key === tfCalc.tier ? ' on' : '') + '" data-tfctier="'
+            + escapeHtml(p.key) + '">' + escapeHtml(p.name) + '</button>').join('') + '</div>'
+        + '<div class="tfc-budget' + (rest === 0 ? ' full' : '') + '">'
+        + '<span class="tfc-bic"><i class="ti ti-circle-check"></i></span>'
+        + '<span class="tfc-bt"><small>'
+        + (rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить') + '</small>'
+        + '<b>' + forgeAmount(rest, 15) + '</b>'
+        + '<i>из ' + cabNum(t.forge) + ' на тарифе ' + escapeHtml(t.name)
+        + (next && next.forge ? ' · ' + escapeHtml(next.name) + ' даст ' + cabNum(next.forge) : '')
+        + '</i></span></div>'
+        + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
+        + '<button class="tfc-more" id="tfc-more"><i class="ti ti-'
+        + (tfCalc.open ? 'chevron-up' : 'adjustments-alt') + '"></i>'
+        + (tfCalc.open ? 'Свернуть остальное'
+            : 'Ещё ' + more.length + ' ' + plural(more.length, 'операция', 'операции', 'операций'))
+        + '</button>'
+        + '<div id="tfc-more-rows">' + (tfCalc.open ? more.map((o) => tfcRow(d, o)).join('') : '') + '</div>'
+        + '<button class="tfc-cta" data-tfcbuy="' + escapeHtml(t.key) + '">'
+        + '<i class="ti ti-rocket"></i> Оформить ' + escapeHtml(t.name) + ' — ' + cabNum(t.price) + ' ₽</button>'
+        + '</div>';
+}
+
+function tfcRefresh(d) {
+    document.querySelectorAll('[data-tfcrow]').forEach((row) => {
+        const o = tfcOps(d).find((x) => x.key === row.dataset.tfcrow);
+        if (!o) return;
+        const val = tfCalc.v[o.key] || 0;
+        const add = Math.floor(tfcLeft(d) / o.price);
+        const cap = Math.min(TFC_MAX[o.key], val + add);
+        row.classList.toggle('ok', add > 0);
+        row.classList.toggle('stop', add <= 0 && val > 0);
+        row.classList.toggle('off', add <= 0 && val === 0);
+        row.style.setProperty('--p', (cap > 0 ? Math.round(val / cap * 100) : 0) + '%');
+        const v = row.querySelector('.tfc-v');
+        if (v) { v.textContent = cabNum(val); v.classList.toggle('zero', val === 0); }
+        const sl = row.querySelector('input[type=range]');
+        if (sl) {
+            const nm = Math.max(cap, 1);
+            if (+sl.max !== nm) sl.max = nm;
+            if (+sl.value !== val) sl.value = val;
+        }
+        const minus = row.querySelector('[data-d="-1"]');
+        const plus = row.querySelector('[data-d="1"]');
+        if (minus) minus.disabled = val <= 0;
+        if (plus) plus.disabled = add <= 0;
+        const can = row.querySelector('.tfc-can');
+        if (can) can.textContent = tfcHint(d, o);
+    });
+
+    const box = document.querySelector('.tfc-budget');
+    if (!box) return;
+    const rest = tfcLeft(d);
+    const t = tfcTier(d);
+    const idx = (d.plans || []).findIndex((p) => p.key === t.key);
+    const next = (d.plans || [])[idx + 1];
+    box.classList.toggle('full', rest === 0);
+    const sm = box.querySelector('small');
+    if (sm) sm.textContent = rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить';
+    const b = box.querySelector('b');
+    if (b) b.innerHTML = forgeAmount(rest, 15);
+    const i = box.querySelector('i');
+    if (i) {
+        i.textContent = 'из ' + cabNum(t.forge) + ' на тарифе ' + t.name
+            + (next && next.forge ? ' · ' + next.name + ' даст ' + cabNum(next.forge) : '');
+    }
+}
+
+
+function wireTfCalc(d) {
+    const host = document.getElementById('tariffs-body');
+    if (!host || host.dataset.tfcWired === '1') return;
+    host.dataset.tfcWired = '1';
+
+    const clampOne = (o, want) => {
+        const other = tfcSpent(d) - (tfCalc.v[o.key] || 0) * o.price;
+        const room = Math.floor(((tfcTier(d) || { forge: 0 }).forge - other) / o.price);
+        return Math.max(0, Math.min(want, Math.min(TFC_MAX[o.key], room)));
+    };
+
+    host.addEventListener('input', (e) => {
+        const sl = e.target.closest('[data-tfcsl]');
+        if (!sl) return;
+        const o = tfcOps(d).find((x) => x.key === sl.dataset.tfcsl);
+        if (!o) return;
+        const val = clampOne(o, +sl.value);
+        if (val !== +sl.value) sl.value = val;
+        tfCalc.v[o.key] = val;
+        tfcRefresh(d);
+    });
+
+    host.addEventListener('click', (e) => {
+        const op = e.target.closest('[data-tfcop]');
+        if (op) {
+            const o = tfcOps(d).find((x) => x.key === op.dataset.tfcop);
+            if (!o) return;
+            hapticLight();
+            tfCalc.v[o.key] = clampOne(o, (tfCalc.v[o.key] || 0) + (+op.dataset.d));
+            tfcRefresh(d);
+            return;
+        }
+        const pre = e.target.closest('[data-tfcpre]');
+        if (pre) {
+            hapticLight();
+            tfCalc.preset = +pre.dataset.tfcpre;
+            const base = tfcOps(d).reduce((a, o) => { a[o.key] = 0; return a; }, {});
+            tfCalc.v = { ...base, ...TFC_PRESETS[tfCalc.preset].v };
+            renderTariffs(d);
+            return;
+        }
+        const tier = e.target.closest('[data-tfctier]');
+        if (tier) {
+            hapticLight();
+            tfCalc.tier = tier.dataset.tfctier;
+            renderTariffs(d);
+            return;
+        }
+        if (e.target.closest('#tfc-more')) {
+            hapticLight();
+            tfCalc.open = !tfCalc.open;
+            renderTariffs(d);
+            return;
+        }
+        const buy = e.target.closest('[data-tfcbuy]');
+        if (buy) {
+            hapticMed();
+            coBuyPlan(buy.dataset.tfcbuy);
+        }
+    });
+}
+
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
@@ -2751,6 +2972,7 @@ function renderTariffs(d) {
     if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
     if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
     html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
+    html += tfCalculatorHtml(d);
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -2822,6 +3044,7 @@ function renderTariffs(d) {
     body.querySelectorAll('[data-buy]').forEach((btn) => {
         btn.addEventListener('click', () => { hapticMed(); coBuyPlan(btn.getAttribute('data-buy')); });
     });
+    wireTfCalc(d);
 }
 
 
