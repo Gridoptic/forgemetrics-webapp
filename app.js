@@ -51,13 +51,24 @@ function forgeAmount(n, size) {
 }
 
 const FORGE_SHEET_ITEMS = [
-    { key: 'generate', many: 'постов', one: 'пост', few: 'поста', short: 'Пост', icon: 'sparkles' },
-    { key: 'generate_std', many: 'постов подешевле', one: 'пост подешевле', few: 'поста подешевле', short: 'Пост подешевле', icon: 'edit' },
-    { key: 'voice', many: 'настроек стиля', one: 'настройка стиля', few: 'настройки стиля', short: 'Настройка стиля', icon: 'wand' },
-    { key: 'content_plan', many: 'контент-планов', one: 'контент-план', few: 'контент-плана', short: 'Контент-план', icon: 'calendar-week' },
-    { key: 'adpick', many: 'подборов каналов', one: 'подбор каналов', few: 'подбора каналов', short: 'Подбор каналов', icon: 'target-arrow' },
-    { key: 'audit', many: 'ИИ-аудитов', one: 'ИИ-аудит канала', few: 'ИИ-аудита', short: 'ИИ-аудит', icon: 'chart-dots' },
-    { key: 'competitors', many: 'анализов конкурентов', one: 'анализ конкурентов', few: 'анализа конкурентов', short: 'Анализ конкурентов', icon: 'binoculars' },
+    { key: 'generate', one: 'премиум-пост', few: 'премиум-поста', many: 'премиум-постов',
+      short: 'Премиум-пост', icon: 'sparkles' },
+    { key: 'generate_std', one: 'стандартный пост', few: 'стандартных поста', many: 'стандартных постов',
+      short: 'Стандартный пост', icon: 'file-text' },
+    { key: 'rewrite', one: 'рерайт чужого поста', few: 'рерайта чужого поста', many: 'рерайтов чужого поста',
+      short: 'Рерайт чужого поста', icon: 'pencil' },
+    { key: 'voice', one: 'настройка стиля канала', few: 'настройки стиля канала', many: 'настроек стиля канала',
+      short: 'Настройка стиля канала', icon: 'wand' },
+    { key: 'content_plan', one: 'контент-план на неделю', few: 'контент-плана на неделю', many: 'контент-планов на неделю',
+      short: 'Контент-план на неделю', icon: 'calendar-week' },
+    { key: 'adpick', one: 'подбор каналов для рекламы', few: 'подбора каналов для рекламы', many: 'подборов каналов для рекламы',
+      short: 'Подбор каналов для рекламы', icon: 'target-arrow' },
+    { key: 'audit', one: 'ИИ-аудит канала', few: 'ИИ-аудита канала', many: 'ИИ-аудитов канала',
+      short: 'ИИ-аудит канала', icon: 'chart-dots' },
+    { key: 'deep_audit', one: 'коммерческий аудит', few: 'коммерческих аудита', many: 'коммерческих аудитов',
+      short: 'Коммерческий аудит', icon: 'briefcase' },
+    { key: 'competitors', one: 'анализ конкурентов', few: 'анализа конкурентов', many: 'анализов конкурентов',
+      short: 'Анализ конкурентов', icon: 'binoculars' },
 ];
 
 let _fsCtx = null;
