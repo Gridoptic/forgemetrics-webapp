@@ -2155,6 +2155,7 @@ function refCardHtml(r) {
     <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой с админами каналов.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первый месяц и ${fDays} дней триала вместо ${bDays}.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">3</span><p>${firstN === 1 ? 'С его первого платежа тебе идут Forge, а за каждого активного друга — всплеск продвижения.' : `С каждого из его первых ${firstN} платежей тебе идут Forge — тем больше, чем выше уровень.`}</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">4</span><p>Достигнутый уровень остаётся за тобой навсегда — ставка не снижается, даже если сделаешь паузу.</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
