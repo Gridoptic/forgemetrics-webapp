@@ -2773,11 +2773,18 @@ function tfcLeft(d) {
 }
 
 function tfcClamp(d) {
+    // из намерения набираем столько, сколько влезает в запас тарифа:
+    // сначала дешёвые позиции, потом дорогие — так помещается больше задуманного
     const t = tfcTier(d);
-    let over = tfcSpent(d) - (t ? t.forge : 0);
-    if (over <= 0) return;
-    [...tfcOps(d)].sort((a, b) => b.price - a.price).forEach((o) => {
-        while (over > 0 && tfCalc.v[o.key] > 0) { tfCalc.v[o.key]--; over -= o.price; }
+    const budget = t ? t.forge : 0;
+    const want = tfCalc.want || {};
+    let free = budget;
+    tfcOps(d).forEach((o) => { tfCalc.v[o.key] = 0; });
+    [...tfcOps(d)].sort((a, b) => a.price - b.price).forEach((o) => {
+        const wish = Math.max(0, want[o.key] || 0);
+        const fit = Math.min(wish, Math.floor(free / o.price));
+        tfCalc.v[o.key] = fit;
+        free -= fit * o.price;
     });
 }
 
@@ -2812,9 +2819,13 @@ function tfCalculatorHtml(d) {
     if (!ops.length) return '';
     if (!tfCalc) {
         const cur = (d.plans || []).find((p) => p.key === d.current_tier && p.forge);
-        tfCalc = { tier: cur ? cur.key : 'pro', preset: 1, open: false, v: { ...TFC_PRESETS[1].v } };
+        tfCalc = { tier: cur ? cur.key : 'pro', preset: 1, open: false,
+                   v: {}, want: { ...TFC_PRESETS[1].v } };
     }
-    ops.forEach((o) => { if (tfCalc.v[o.key] == null) tfCalc.v[o.key] = 0; });
+    ops.forEach((o) => {
+        if (tfCalc.want[o.key] == null) tfCalc.want[o.key] = 0;
+        if (tfCalc.v[o.key] == null) tfCalc.v[o.key] = 0;
+    });
     tfcClamp(d);
 
     const t = tfcTier(d);
@@ -2919,6 +2930,7 @@ function wireTfCalc(d) {
         const val = clampOne(o, +sl.value);
         if (val !== +sl.value) sl.value = val;
         tfCalc.v[o.key] = val;
+        tfCalc.want[o.key] = val;
         tfcRefresh(d);
     });
 
@@ -2929,6 +2941,7 @@ function wireTfCalc(d) {
             if (!o) return;
             hapticLight();
             tfCalc.v[o.key] = clampOne(o, (tfCalc.v[o.key] || 0) + (+op.dataset.d));
+            tfCalc.want[o.key] = tfCalc.v[o.key];
             tfcRefresh(d);
             return;
         }
@@ -2937,7 +2950,7 @@ function wireTfCalc(d) {
             hapticLight();
             tfCalc.preset = +pre.dataset.tfcpre;
             const base = tfcOps(d).reduce((a, o) => { a[o.key] = 0; return a; }, {});
-            tfCalc.v = { ...base, ...TFC_PRESETS[tfCalc.preset].v };
+            tfCalc.want = { ...base, ...TFC_PRESETS[tfCalc.preset].v };
             renderTariffs(d);
             return;
         }
