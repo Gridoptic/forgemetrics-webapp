@@ -5621,11 +5621,6 @@ html.cs-modal-open {
     color: var(--tp-a);
 }
 
-.tfc-tier.on {
-    background: rgba(129, 140, 248, 0.16);
-    border-color: rgba(129, 140, 248, 0.5);
-    color: #a5adff;
-}
 
 .tfc-budget {
     display: flex;
