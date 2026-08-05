@@ -2306,11 +2306,11 @@ function renderCabinet(d) {
     if (d.upgrade) {
         const up = d.upgrade;
         const nowParts = [];
-        if (up.now_forge) nowParts.push(`${forgeAmount(up.now_forge, 12)} Forge на месяц`);
+        if (up.now_forge) nowParts.push(`${forgeAmount(up.now_forge, 12)} Forge на месяц`);
         if (up.now_channels) nowParts.push(escapeHtml(`${up.now_channels} ${plural(up.now_channels, 'канал', 'канала', 'каналов')}`));
         const nowLine = nowParts.length ? `<div class="cab-now">${nowParts.join(' · ')}</div>` : '';
         const benRows = [];
-        if (up.forge) benRows.push({ html: `${forgeAmount(up.forge, 13)} Forge на месяц` });
+        if (up.forge) benRows.push({ html: `${forgeAmount(up.forge, 13)} Forge на месяц` });
         if (up.channels) benRows.push(`${up.channels} ${plural(up.channels, 'канал', 'канала', 'каналов')}`);
         const bens = benRows.concat(up.features || [])
             .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${b && b.html ? b.html : escapeHtml(b)}</div>`).join('');
@@ -2663,7 +2663,7 @@ function tfPlanCard(plan, d) {
     const ribbon = plan.popular ? '<span class="tp-rib">★ Оптимальный</span>' : '';
     const rows = [];
     if (plan.forge) {
-        rows.push({ html: `${forgeAmount(plan.forge, 13)} Forge ${isYear ? 'каждый месяц, 12 месяцев' : 'на месяц'}` });
+        rows.push({ html: `${forgeAmount(plan.forge, 13)} Forge ${isYear ? 'каждый месяц, 12 месяцев' : 'на месяц'}` });
     }
     if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
     const feats = rows.concat(plan.features || [])
