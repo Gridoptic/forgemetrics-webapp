@@ -5863,7 +5863,7 @@ html.cs-modal-open {
 
 
 .tfc.collapsed {
-    padding-bottom: 4px;
+    padding: 10px 14px;
 }
 
 .tfc-head {
@@ -5881,7 +5881,7 @@ html.cs-modal-open {
 }
 
 .tfc.collapsed .tfc-head {
-    padding: 4px 0;
+    padding: 0;
 }
 
 .tfc-head .et {
