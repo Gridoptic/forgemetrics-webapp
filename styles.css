@@ -5884,6 +5884,23 @@ html.cs-modal-open {
     padding: 4px 0;
 }
 
+.tfc-head .et {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 158, 11, 0.14);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.tfc-head .et .forge-ico {
+    width: 17px;
+    height: 17px;
+}
+
 .tfc-htxt {
     flex: 1 1 auto;
     min-width: 0;

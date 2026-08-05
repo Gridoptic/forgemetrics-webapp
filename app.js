@@ -2849,7 +2849,7 @@ function tfCalculatorHtml(d) {
     const more = ops.filter((o) => !TFC_MAIN.includes(o.key));
 
     const head = '<button class="tfc-head" id="tfc-toggle">'
-        + '<span class="et">' + forgeIco(13) + '</span>'
+        + '<span class="et">' + forgeIco(17) + '</span>'
         + '<span class="tfc-htxt"><b>Калькулятор Forge</b>'
         + '<i>Посчитай, на что хватит запаса тарифа</i></span>'
         + '<i class="ti ti-chevron-' + (tfCalc.shown ? 'up' : 'down') + ' tfc-chev"></i></button>';
