@@ -1997,28 +1997,6 @@ function cabStatusHtml(sub) {
     return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-sparkles" style="color:#818cf8"></i> Тариф Free</span><span class="cab-stval">30 Forge в месяц</span></div><div class="cab-stsub">Оформи Pro — 1 500 Forge в месяц, аудиты и приоритет на Площадке</div></div>`;
 }
 
-const CAB_BENEFITS = {
-    pro: [
-        '1 500 Forge в месяц — 150 постов, 4 аудита или 3 анализа конкурентов',
-        'До 5 каналов · анализ конкурентов и подбор каналов для рекламы',
-        'Генерация текста постера и скидка 10% на продвижение',
-    ],
-    pro_plus: [
-        '3 000 Forge в месяц — вдвое больше работы, чем на Pro',
-        'До 10 каналов',
-        'Скидка 20% на продвижение в ленте',
-    ],
-    agency: [
-        '5 200 Forge в месяц · до 25 каналов',
-        '25 публикаций и правок офферов в день',
-        'Скидка 30% на продвижение',
-    ],
-    network: [
-        '9 700 Forge в месяц · до 50 каналов',
-        '50 публикаций и правок офферов в день',
-        'Скидка 40% на продвижение',
-    ],
-};
 
 async function openCabinet(scrollTo) {
     hapticLight();
@@ -2326,7 +2304,11 @@ function renderCabinet(d) {
 
     if (d.upgrade) {
         const up = d.upgrade;
-        const bens = (CAB_BENEFITS[up.target] || []).map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${escapeHtml(b)}</div>`).join('');
+        const benRows = [];
+        if (up.forge) benRows.push(`${cabNum(up.forge)} Forge на месяц`);
+        if (up.channels) benRows.push(`${up.channels} ${plural(up.channels, 'канал', 'канала', 'каналов')}`);
+        const bens = benRows.concat(up.features || [])
+            .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${escapeHtml(b)}</div>`).join('');
         html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('pu', 'rocket')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · базовый доступ</div></div></div><div class="cab-bens">${bens}</div><button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button><div class="cab-cta-note">Помесячная подписка · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
     } else {
         html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
