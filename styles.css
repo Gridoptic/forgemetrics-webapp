@@ -5825,25 +5825,52 @@ html.cs-modal-open {
     cursor: pointer;
 }
 
-.tfc-cta {
+
+
+.tfc.collapsed {
+    padding-bottom: 4px;
+}
+
+.tfc-head {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    min-height: 46px;
-    margin-top: 12px;
-    border-radius: 12px;
+    padding: 2px 0 10px;
+    background: none;
     border: none;
+    color: inherit;
     font-family: inherit;
-    font-size: 13.5px;
-    font-weight: 700;
-    color: #fff;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    box-shadow: 0 10px 26px -10px rgba(99, 102, 241, .8);
+    text-align: left;
     cursor: pointer;
 }
 
-.tfc-cta:active {
-    transform: translateY(1px);
+.tfc.collapsed .tfc-head {
+    padding-bottom: 2px;
+}
+
+.tfc-htxt {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.tfc-htxt b {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tfc-htxt i {
+    display: block;
+    font-style: normal;
+    font-size: 11.5px;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+
+.tfc-chev {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--text-tertiary);
 }

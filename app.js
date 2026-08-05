@@ -2829,7 +2829,7 @@ function tfCalculatorHtml(d) {
     if (!tfCalc) {
         const cur = (d.plans || []).find((p) => p.key === d.current_tier && p.forge);
         tfCalc = { tier: cur ? cur.key : 'pro', preset: 1, open: false,
-                   v: {}, want: { ...TFC_PRESETS[1].v } };
+                   shown: false, v: {}, want: { ...TFC_PRESETS[1].v } };
     }
     ops.forEach((o) => {
         if (tfCalc.want[o.key] == null) tfCalc.want[o.key] = 0;
@@ -2845,8 +2845,16 @@ function tfCalculatorHtml(d) {
     const main = ops.filter((o) => TFC_MAIN.includes(o.key));
     const more = ops.filter((o) => !TFC_MAIN.includes(o.key));
 
+    const head = '<button class="tfc-head" id="tfc-toggle">'
+        + '<span class="et">' + forgeIco(13) + '</span>'
+        + '<span class="tfc-htxt"><b>Калькулятор Forge</b>'
+        + '<i>Посчитай, на что хватит запаса тарифа</i></span>'
+        + '<i class="ti ti-chevron-' + (tfCalc.shown ? 'up' : 'down') + ' tfc-chev"></i></button>';
+
+    if (!tfCalc.shown) return '<div class="tf-extras tfc collapsed">' + head + '</div>';
+
     return '<div class="tf-extras tfc">'
-        + '<div class="tf-eh"><span class="et">' + forgeIco(13) + '</span> Подбери тариф под свой месяц</div>'
+        + head
         + '<div class="tfc-sub">Ползунок остановится, когда Forge закончатся</div>'
         + '<div class="tfc-presets">' + TFC_PRESETS.map((p, i) =>
             '<button class="tfc-chip' + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
@@ -2869,8 +2877,6 @@ function tfCalculatorHtml(d) {
             : 'Ещё ' + more.length + ' ' + plural(more.length, 'операция', 'операции', 'операций'))
         + '</button>'
         + '<div id="tfc-more-rows">' + (tfCalc.open ? more.map((o) => tfcRow(d, o)).join('') : '') + '</div>'
-        + '<button class="tfc-cta" data-tfcbuy="' + escapeHtml(t.key) + '">'
-        + '<i class="ti ti-rocket"></i> Оформить ' + escapeHtml(t.name) + ' — ' + cabNum(t.price) + ' ₽</button>'
         + '</div>';
 }
 
@@ -2977,10 +2983,10 @@ function wireTfCalc(d) {
             renderTariffs(d);
             return;
         }
-        const buy = e.target.closest('[data-tfcbuy]');
-        if (buy) {
-            hapticMed();
-            coBuyPlan(buy.dataset.tfcbuy);
+        if (e.target.closest('#tfc-toggle')) {
+            hapticLight();
+            tfCalc.shown = !tfCalc.shown;
+            renderTariffs(d);
         }
     });
 }
