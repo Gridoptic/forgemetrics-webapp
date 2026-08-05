@@ -59,8 +59,6 @@ const FORGE_SHEET_ITEMS = [
       short: 'Рерайт чужого поста', icon: 'pencil' },
     { key: 'voice', one: 'настройка стиля канала', few: 'настройки стиля канала', many: 'настроек стиля канала',
       short: 'Настройка стиля канала', icon: 'wand' },
-    { key: 'content_plan', one: 'контент-план на неделю', few: 'контент-плана на неделю', many: 'контент-планов на неделю',
-      short: 'Контент-план на неделю', icon: 'calendar-week' },
     { key: 'adpick', one: 'подбор каналов для рекламы', few: 'подбора каналов для рекламы', many: 'подборов каналов для рекламы',
       short: 'Подбор каналов для рекламы', icon: 'target-arrow' },
     { key: 'audit', one: 'AI-аудит канала', few: 'AI-аудита канала', many: 'AI-аудитов канала',
@@ -2744,13 +2742,13 @@ function tfErow(e) {
 
 const TFC_MAIN = ['generate', 'generate_std', 'audit', 'adpick'];
 const TFC_MAX = { generate: 300, generate_std: 400, rewrite: 100, modify: 200, voice: 20,
-    content_plan: 12, adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
+    adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
 const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
 const TFC_PRESETS = [
     { t: 'Один канал', v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
     { t: 'Продаю рекламу', v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
     { t: 'Сетка', v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
-        content_plan: 4, audit: 3, adpick: 4, competitors: 2 } },
+        audit: 3, adpick: 4, competitors: 2 } },
 ];
 
 let tfCalc = null;
