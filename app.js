@@ -63,8 +63,8 @@ const FORGE_SHEET_ITEMS = [
       short: 'Контент-план на неделю', icon: 'calendar-week' },
     { key: 'adpick', one: 'подбор каналов для рекламы', few: 'подбора каналов для рекламы', many: 'подборов каналов для рекламы',
       short: 'Подбор каналов для рекламы', icon: 'target-arrow' },
-    { key: 'audit', one: 'ИИ-аудит канала', few: 'ИИ-аудита канала', many: 'ИИ-аудитов канала',
-      short: 'ИИ-аудит канала', icon: 'chart-dots' },
+    { key: 'audit', one: 'AI-аудит канала', few: 'AI-аудита канала', many: 'AI-аудитов канала',
+      short: 'AI-аудит канала', icon: 'chart-dots' },
     { key: 'deep_audit', one: 'коммерческий аудит', few: 'коммерческих аудита', many: 'коммерческих аудитов',
       short: 'Коммерческий аудит', icon: 'briefcase' },
     { key: 'competitors', one: 'анализ конкурентов', few: 'анализа конкурентов', many: 'анализов конкурентов',
@@ -1813,7 +1813,7 @@ const PLACEHOLDER_CONFIG = {
     create_post: { title: 'Создание поста', text: 'AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.', icon: 'sparkles' },
     rewrite_post: { title: 'Рерайт поста', text: 'Перепишем чужой пост в твоём стиле. Скоро будет готово.', icon: 'pencil' },
     content_plan: { title: 'Контент-план', text: 'AI составит план постов на неделю. Скоро запустим.', icon: 'calendar' },
-    ai_audit: { title: 'ИИ-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
+    ai_audit: { title: 'AI-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
     competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них набирает охват и почему. Функция готовится к запуску.', icon: 'search' },
     post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
     negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
@@ -2228,7 +2228,7 @@ const FORGE_OP_LABEL = {
     rewrite: 'Рерайт', rewrite_std: 'Рерайт · стандарт',
     voice: 'Настройка стиля', content_plan: 'Контент-план недели',
     content_plan_day: 'День контент-плана', adpick: 'Подбор каналов',
-    audit: 'ИИ-аудит канала', deep_audit: 'Коммерческий аудит',
+    audit: 'AI-аудит канала', deep_audit: 'Коммерческий аудит',
     competitors: 'Анализ конкурентов', intent: 'Анализ темы',
     suggest: 'Подсказки правок', ideas: 'Идеи постов', niche: 'Определение ниши',
 };
@@ -5100,9 +5100,9 @@ function renderSettingsAuditSection(data) {
     return `
         <div class="cs-section">
             <button class="cs-btn-audit" data-audit-channel="${data.id}">
-                <span class="cs-btn-audit-icon"><i class="ti ti-target"></i></span>
+                <span class="cs-btn-audit-icon"><i class="ti ti-chart-dots"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">ИИ-аудит канала</span>
+                    <span class="cs-btn-audit-title">AI-аудит канала</span>
                     <span class="cs-btn-audit-sub">Разбор, прогноз и план роста</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>

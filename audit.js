@@ -268,7 +268,7 @@
         return '' +
             '<div class="limit-row limit-row-purple' + (enough ? '' : ' limit-row-exhausted') + '">' +
                 '<div class="limit-row-head">' +
-                    '<span class="limit-row-icon"><i class="ti ti-target"></i></span>' +
+                    '<span class="limit-row-icon"><i class="ti ti-chart-dots"></i></span>' +
                     '<span class="limit-row-label">AI-аудит</span>' +
                     right +
                 '</div>' + note +
@@ -300,7 +300,7 @@
         host.innerHTML = headerHtml() +
             '<div class="audit-body">' +
                 '<div class="audit-intro-hero">' +
-                    '<div class="audit-intro-icon"><i class="ti ti-target"></i></div>' +
+                    '<div class="audit-intro-icon"><i class="ti ti-chart-dots"></i></div>' +
                     '<div class="audit-intro-title">Полный разбор канала</div>' +
                     '<div class="audit-intro-sub">AI проанализирует последние посты, охваты и динамику — и выдаст честную оценку, главный инсайт, прогноз роста и план действий.</div>' +
                 '</div>' +
