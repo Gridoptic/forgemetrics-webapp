@@ -2743,6 +2743,14 @@ function tfErow(e) {
 
 
 const TFC_MAIN = ['generate', 'generate_std', 'audit', 'adpick'];
+// короткие подписи: полные названия из прайса рвутся на две строки и отрывают цену
+const TFC_SHORT = {
+    generate: 'Премиум-пост', generate_std: 'Стандартный пост',
+    modify: 'Правка поста', rewrite: 'Рерайт поста',
+    voice: 'Настройка стиля', adpick: 'Подбор каналов',
+    audit: 'AI-аудит', deep_audit: 'Коммерческий аудит',
+    competitors: 'Анализ конкурентов',
+};
 const TFC_MAX = { generate: 300, generate_std: 400, rewrite: 100, modify: 200, voice: 20,
     adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
 const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
@@ -2803,7 +2811,8 @@ function tfcRow(d, o) {
     const cls = add > 0 ? 'ok' : (val > 0 ? 'stop' : 'off');
     const pct = cap > 0 ? Math.round(val / cap * 100) : 0;
     return '<div class="tfc-op ' + cls + '" data-tfcrow="' + o.key + '" style="--p:' + pct + '%">'
-        + '<div class="tfc-top"><span class="tfc-nm">' + escapeHtml(o.label)
+        + '<div class="tfc-top"><span class="tfc-nm">'
+        + escapeHtml(TFC_SHORT[o.key] || o.label)
         + ' <i>· ' + forgeAmount(o.price, 11) + '/шт</i></span>'
         + '<span class="tfc-v' + (val ? '' : ' zero') + '">' + cabNum(val) + '</span></div>'
         + '<div class="tfc-ctl">'
