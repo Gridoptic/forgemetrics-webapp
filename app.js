@@ -2664,9 +2664,11 @@ function tfPlanCard(plan, d) {
         rows.push({ html: `${forgeAmount(plan.forge, 13)} Forge ${isYear ? 'каждый месяц, 12 месяцев' : 'на месяц'}` });
     }
     if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
-    const feats = rows.concat(plan.features || [])
-        .map((f) => `<div class="tp-feat"><i class="ti ti-check"></i><span>${f && f.html ? f.html : escapeHtml(f)}</span></div>`).join('');
-    const lead = plan.lead ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
+    const row = (f) => `<div class="tp-feat"><i class="ti ti-check"></i><span>${f && f.html ? f.html : escapeHtml(f)}</span></div>`;
+    const volumes = rows.map(row).join('');
+    const extras = (plan.features || []).map(row).join('');
+    const lead = (plan.lead && extras) ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
+    const feats = volumes + lead + extras;
     const save = isYear ? '<div class="tp-save">2 месяца в подарок · неизрасходованное переносится</div>' : '';
     let cta;
     if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
@@ -2682,7 +2684,7 @@ function tfPlanCard(plan, d) {
         </div>
         <i class="ti ti-chevron-down tp-chev"></i>
       </button>
-      <div class="tp-body"><div class="tp-in">${lead}<div class="tp-feats">${feats}</div>${save}${cta}</div></div>
+      <div class="tp-body"><div class="tp-in"><div class="tp-feats">${feats}</div>${save}${cta}</div></div>
     </div>`;
 }
 
