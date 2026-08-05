@@ -2666,9 +2666,7 @@ function tfPlanCard(plan, d) {
     if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
     const row = (f) => `<div class="tp-feat"><i class="ti ti-check"></i><span>${f && f.html ? f.html : escapeHtml(f)}</span></div>`;
     const volumes = rows.map(row).join('');
-    const extras = (plan.features || []).map(row).join('');
-    const lead = (plan.lead && extras) ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
-    const feats = volumes + lead + extras;
+    const feats = volumes + (plan.features || []).map(row).join('');
     const save = isYear ? '<div class="tp-save">2 месяца в подарок · неизрасходованное переносится</div>' : '';
     let cta;
     if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';

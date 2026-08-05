@@ -4869,7 +4869,6 @@ html.cs-modal-open {
 .tp-card.open>.tp-body{height:auto;}
 .tp-in{padding:0 15px 15px;opacity:0;transform:translateY(-5px);transition:opacity .24s ease,transform .24s ease;}
 .tp-card.open>.tp-body>.tp-in{opacity:1;transform:none;}
-.tp-lead{font-size:11.5px;font-weight:650;color:var(--tp-a);margin:0 0 10px;padding-top:2px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;}
 .tp-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
 .tp-feat{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--text-primary,#e8e8ed);line-height:1.4;}
 .tp-feat i{width:18px;height:18px;border-radius:6px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:rgba(var(--tp-rgb),0.14);color:var(--tp-a);font-size:12px;margin-top:1px;}
