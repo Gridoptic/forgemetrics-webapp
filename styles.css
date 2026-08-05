@@ -5537,20 +5537,32 @@ html.cs-modal-open {
 
 .tfc-chip {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 42px;
-    padding: 4px 8px;
-    border-radius: 12px;
+    gap: 5px;
+    min-height: 60px;
+    padding: 8px 6px;
+    border-radius: 13px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.04);
     color: var(--text-secondary);
     font-family: inherit;
-    font-size: 11.5px;
-    line-height: 1.25;
+    font-size: 11px;
+    line-height: 1.2;
     text-align: center;
     cursor: pointer;
     transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.tfc-chip i {
+    font-size: 17px;
+    color: var(--text-tertiary);
+    transition: color .18s ease;
+}
+
+.tfc-chip.on i {
+    color: #a5adff;
 }
 
 .tfc-chip.on {
@@ -5570,8 +5582,9 @@ html.cs-modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 38px;
-    padding: 0 4px;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 6px;
     border-radius: 11px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.04);
@@ -5582,6 +5595,22 @@ html.cs-modal-open {
     cursor: pointer;
     white-space: nowrap;
     transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.tfc-tier i {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    transition: color .18s ease;
+}
+
+.tfc-tier.on {
+    background: rgba(var(--tp-rgb), 0.16);
+    border-color: rgba(var(--tp-rgb), 0.5);
+    color: var(--tp-a);
+}
+
+.tfc-tier.on i {
+    color: var(--tp-a);
 }
 
 .tfc-tier.on {
@@ -5834,9 +5863,9 @@ html.cs-modal-open {
 .tfc-head {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 11px;
     width: 100%;
-    padding: 2px 0 10px;
+    padding: 6px 0 12px;
     background: none;
     border: none;
     color: inherit;
@@ -5846,7 +5875,7 @@ html.cs-modal-open {
 }
 
 .tfc.collapsed .tfc-head {
-    padding-bottom: 2px;
+    padding: 4px 0;
 }
 
 .tfc-htxt {
