@@ -2308,12 +2308,12 @@ function renderCabinet(d) {
         const nowParts = [];
         if (up.now_forge) nowParts.push(`${forgeAmount(up.now_forge, 12)} Forge на месяц`);
         if (up.now_channels) nowParts.push(escapeHtml(`${up.now_channels} ${plural(up.now_channels, 'канал', 'канала', 'каналов')}`));
-        const nowLine = nowParts.length ? `<div class="cab-now">${nowParts.join(' · ')}</div>` : '';
+        const nowLine = nowParts.length ? `<div class="cab-now"><span>${nowParts.join(' · ')}</span></div>` : '';
         const benRows = [];
         if (up.forge) benRows.push({ html: `${forgeAmount(up.forge, 13)} Forge на месяц` });
         if (up.channels) benRows.push(`${up.channels} ${plural(up.channels, 'канал', 'канала', 'каналов')}`);
         const bens = benRows.concat(up.features || [])
-            .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${b && b.html ? b.html : escapeHtml(b)}</div>`).join('');
+            .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i><span>${b && b.html ? b.html : escapeHtml(b)}</span></div>`).join('');
         html += `<div class="cab-card">`
             + `<div class="cab-plan-hd">${cabTile('bl', 'user')}<div class="txt">`
             + `<div class="k">Текущий тариф</div>`
@@ -2667,7 +2667,7 @@ function tfPlanCard(plan, d) {
     }
     if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
     const feats = rows.concat(plan.features || [])
-        .map((f) => `<div class="tp-feat"><i class="ti ti-check"></i> ${f && f.html ? f.html : escapeHtml(f)}</div>`).join('');
+        .map((f) => `<div class="tp-feat"><i class="ti ti-check"></i><span>${f && f.html ? f.html : escapeHtml(f)}</span></div>`).join('');
     const lead = plan.lead ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
     const save = isYear ? '<div class="tp-save">2 месяца в подарок · неизрасходованное переносится</div>' : '';
     let cta;
