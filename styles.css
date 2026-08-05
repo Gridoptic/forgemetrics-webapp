@@ -5557,12 +5557,18 @@ html.cs-modal-open {
 
 .tfc-chip i {
     font-size: 17px;
-    color: var(--text-tertiary);
+    color: rgba(var(--tp-rgb), 0.55);
     transition: color .18s ease;
 }
 
+.tfc-chip.on {
+    background: rgba(var(--tp-rgb), 0.16);
+    border-color: rgba(var(--tp-rgb), 0.5);
+    color: var(--tp-a);
+}
+
 .tfc-chip.on i {
-    color: #a5adff;
+    color: var(--tp-a);
 }
 
 .tfc-chip.on {

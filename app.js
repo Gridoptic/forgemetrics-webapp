@@ -2755,9 +2755,12 @@ const TFC_MAX = { generate: 300, generate_std: 400, rewrite: 100, modify: 200, v
     adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
 const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
 const TFC_PRESETS = [
-    { t: 'Один канал', ic: 'user', v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
-    { t: 'Продаю рекламу', ic: 'coin', v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
-    { t: 'Сетка', ic: 'broadcast', v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
+    { t: 'Один канал', ic: 'user', color: 'bl',
+      v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
+    { t: 'Продаю рекламу', ic: 'coin', color: 'pu',
+      v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
+    { t: 'Сетка', ic: 'sitemap', color: 'gr',
+      v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
         audit: 3, adpick: 4, competitors: 2 } },
 ];
 
@@ -2857,7 +2860,8 @@ function tfCalculatorHtml(d) {
         + head
         + '<div class="tfc-sub">Ползунок остановится, когда Forge закончатся</div>'
         + '<div class="tfc-presets">' + TFC_PRESETS.map((p, i) =>
-            '<button class="tfc-chip' + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
+            '<button class="tfc-chip tp-' + (p.color || 'pu')
+            + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
             + '<i class="ti ti-' + p.ic + '"></i>'
             + '<span>' + escapeHtml(p.t) + '</span></button>').join('') + '</div>'
         + '<div class="tfc-tiers">' + (d.plans || []).filter((p) => p.forge).map((p) =>
