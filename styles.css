@@ -5592,15 +5592,16 @@ html.cs-modal-open {
     min-height: 40px;
     padding: 0 6px;
     border-radius: 11px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(var(--tp-rgb), 0.22);
+    background: linear-gradient(160deg, rgba(var(--tp-rgb), 0.10), rgba(var(--tp-rgb), 0.03));
     color: var(--text-secondary);
     font-family: inherit;
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: background .18s ease, border-color .18s ease, color .18s ease;
+    transition: background .18s ease, border-color .18s ease,
+                color .18s ease, box-shadow .18s ease;
 }
 
 .tfc-tier i {
@@ -5610,9 +5611,10 @@ html.cs-modal-open {
 }
 
 .tfc-tier.on {
-    background: rgba(var(--tp-rgb), 0.16);
-    border-color: rgba(var(--tp-rgb), 0.5);
+    background: linear-gradient(160deg, rgba(var(--tp-rgb), 0.26), rgba(var(--tp-rgb), 0.10));
+    border-color: rgba(var(--tp-rgb), 0.6);
     color: var(--tp-a);
+    box-shadow: 0 6px 18px -8px rgba(var(--tp-rgb), 0.6);
 }
 
 .tfc-tier.on i {
