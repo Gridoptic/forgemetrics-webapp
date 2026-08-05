@@ -373,15 +373,12 @@ button:active {
 }
 
 .forge-price {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 4px;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
 
 .forge-price .forge-ico {
-    align-self: center;
+    margin-right: 4px;
 }
 
 .greeting-name {
