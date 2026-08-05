@@ -3556,8 +3556,8 @@
                 '<span class="num" style="margin-left:auto;font-size:11px;color:#8990a8;">размещено: ' + used + ' из ' + lim + '</span></div>' +
                 '<div class="fmx-limbar"><i style="width:' + Math.min(100, Math.round(used / lim * 100)) + '%;"></i></div></div>' : '') +
             (_channels.length >= 2 ?
-                '<button id="fmx-netOpen" style="width:100%;display:flex;align-items:center;gap:10px;background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.25);border-radius:14px;padding:12px 13px;margin-bottom:10px;cursor:pointer;color:#e8e8ed;font-family:inherit;text-align:left;">' +
-                '<i class="ti ti-sitemap" style="font-size:18px;color:#818cf8;flex:0 0 auto;"></i>' +
+                '<button id="fmx-netOpen" style="width:100%;display:flex;align-items:center;gap:10px;background:rgba(16,185,129,0.08);border:0.5px solid rgba(52,211,153,0.25);border-radius:14px;padding:12px 13px;margin-bottom:10px;cursor:pointer;color:#e8e8ed;font-family:inherit;text-align:left;">' +
+                '<i class="ti ti-sitemap" style="font-size:18px;color:#34d399;flex:0 0 auto;"></i>' +
                 '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">Сетка</span><span style="display:block;font-size:10.5px;color:#8990a8;">Все каналы: сводка, пакетные цены и пауза</span></span>' +
                 '<span class="num" style="font-size:11px;color:#8990a8;flex:0 0 auto;">' + _channels.length + '</span><i class="ti ti-chevron-right" style="color:#565b73;flex:0 0 auto;"></i></button>' : '') +
             '<div id="fmx-dealsPend"></div>' +
@@ -3706,7 +3706,7 @@
         _net.mode = false; _net.sel = {}; _net.filter = 'all'; _net.busy = false;
         var bg = document.createElement('div'); bg.id = 'fmx-netBg'; bg.className = 'fmx-mbg fmx-show';
         bg.innerHTML = '<div class="fmx-modal">' +
-            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-sitemap" style="color:#818cf8;"></i> <span>Сетка</span></h2><p id="fmx-netSub"><span>Каналы, офферы и пакетные операции</span></p></div>' +
+            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-sitemap" style="color:#34d399;"></i> <span>Сетка</span></h2><p id="fmx-netSub"><span>Каналы, офферы и пакетные операции</span></p></div>' +
             '<button id="fmx-netAll" style="display:none;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#a9aec0;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;"></button>' +
             '<button id="fmx-netSel" style="background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);color:#818cf8;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;"><span>Выбрать</span></button>' +
             '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +

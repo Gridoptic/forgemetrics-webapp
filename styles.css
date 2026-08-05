@@ -5605,7 +5605,7 @@ html.cs-modal-open {
 
 .tfc-tier i {
     font-size: 15px;
-    color: var(--text-tertiary);
+    color: var(--tp-a);
     transition: color .18s ease;
 }
 
