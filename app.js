@@ -2908,13 +2908,14 @@ function tfcRefresh(d) {
     const idx = (d.plans || []).findIndex((p) => p.key === t.key);
     const next = (d.plans || [])[idx + 1];
     box.classList.toggle('full', rest === 0);
-    const sm = box.querySelector('small');
+    // строго внутри текстовой части: тег i снаружи — это иконка галочки
+    const sm = box.querySelector('.tfc-bt small');
     if (sm) sm.textContent = rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить';
-    const b = box.querySelector('b');
+    const b = box.querySelector('.tfc-bt b');
     if (b) b.innerHTML = forgeAmount(rest, 15);
-    const i = box.querySelector('i');
-    if (i) {
-        i.textContent = 'из ' + cabNum(t.forge) + ' на тарифе ' + t.name
+    const note = box.querySelector('.tfc-bt i');
+    if (note) {
+        note.textContent = 'из ' + cabNum(t.forge) + ' на тарифе ' + t.name
             + (next && next.forge ? ' · ' + next.name + ' даст ' + cabNum(next.forge) : '');
     }
 }
