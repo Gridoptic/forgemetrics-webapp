@@ -111,8 +111,11 @@ function openForgeSheet() {
             `<span class="fs-ico"><i class="ti ti-${it.icon}"></i></span>${body}</div>`;
     }).join('');
 
+    const baseRate = (f.packs && f.packs.length)
+        ? f.packs[0].price_rub / f.packs[0].amount : 0;
     const packs = (f.packs || []).map((p) => {
-        const disc = Math.round((1 - p.price_rub / p.amount) * 100);
+        const disc = baseRate
+            ? Math.round((1 - (p.price_rub / p.amount) / baseRate) * 100) : 0;
         return `<button class="fw-pack" data-fspack="${p.amount}">` +
             `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
             `<span class="fw-pack-p">${cabNum(p.price_rub)} ₽</span>` +
@@ -2651,15 +2654,30 @@ function tfCurBanner(d) {
 }
 
 
+function plural(n, one, few, many) {
+    const n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return one;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
+    return many;
+}
+
 function tfPlanCard(plan, d) {
     const isYear = tfPeriod === 'year';
     const price = isYear ? plan.price_year : plan.price;
     const per = isYear ? '/год' : '/мес';
     const color = TP_COLOR[plan.key] || 'pu';
     const ribbon = plan.popular ? '<span class="tp-rib">★ Оптимальный</span>' : '';
-    const feats = (plan.features || []).map((f) => `<div class="tp-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
+    const rows = [];
+    if (plan.forge) {
+        rows.push(isYear
+            ? `${cabNum(plan.forge)} Forge каждый месяц, 12 месяцев`
+            : `${cabNum(plan.forge)} Forge на месяц`);
+    }
+    if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
+    const feats = rows.concat(plan.features || [])
+        .map((f) => `<div class="tp-feat"><i class="ti ti-check"></i> ${escapeHtml(f)}</div>`).join('');
     const lead = plan.lead ? `<div class="tp-lead">${escapeHtml(plan.lead)}</div>` : '';
-    const save = isYear ? '<div class="tp-save">2 месяца в подарок</div>' : '';
+    const save = isYear ? '<div class="tp-save">2 месяца в подарок · неизрасходованное переносится</div>' : '';
     let cta;
     if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
     else cta = `<button class="tp-cta" data-buy="${plan.key}">Оформить · ${cabNum(price)} ₽</button>`;
