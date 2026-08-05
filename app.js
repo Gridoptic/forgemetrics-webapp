@@ -2305,12 +2305,23 @@ function renderCabinet(d) {
 
     if (d.upgrade) {
         const up = d.upgrade;
+        const nowRows = [];
+        if (up.now_forge) nowRows.push(`${cabNum(up.now_forge)} Forge на месяц`);
+        if (up.now_channels) nowRows.push(`${up.now_channels} ${plural(up.now_channels, 'канал', 'канала', 'каналов')}`);
+        const nowLine = nowRows.length ? `<div class="cab-now">${escapeHtml(nowRows.join(' · '))}</div>` : '';
         const benRows = [];
         if (up.forge) benRows.push(`${cabNum(up.forge)} Forge на месяц`);
         if (up.channels) benRows.push(`${up.channels} ${plural(up.channels, 'канал', 'канала', 'каналов')}`);
         const bens = benRows.concat(up.features || [])
             .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i> ${escapeHtml(b)}</div>`).join('');
-        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('pu', 'rocket')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · базовый доступ</div></div></div><div class="cab-bens">${bens}</div><button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button><div class="cab-cta-note">Помесячная подписка · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
+        html += `<div class="cab-card">`
+            + `<div class="cab-plan-hd">${cabTile('bl', 'user')}<div class="txt">`
+            + `<div class="k">Текущий тариф</div>`
+            + `<div class="v">${escapeHtml(u.tier_display)}</div>${nowLine}</div></div>`
+            + `<div class="cab-upsep"><span>На ${escapeHtml(up.target_display)} будет</span></div>`
+            + `<div class="cab-bens">${bens}</div>`
+            + `<button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button>`
+            + `<div class="cab-cta-note">Помесячная подписка · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
     } else {
         html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
     }
