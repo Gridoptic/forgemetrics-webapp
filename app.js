@@ -3871,9 +3871,7 @@ function renderLimitBanner(limits) {
         els.postGenerateBtn.disabled = false;
     }
 
-    const right = isTester
-        ? '<span class="limit-row-tester">тестер · без списаний</span>'
-        : `<span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>`;
+    const right = `<span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>`;
 
     let head;
     if (canChoose) {
@@ -3893,9 +3891,7 @@ function renderLimitBanner(limits) {
     }
 
     let note;
-    if (isTester) {
-        note = '<div class="fwb-note">Тестовый режим — списаний нет</div>';
-    } else if (!enough) {
+    if (!enough) {
         note = `<div class="fwb-note fwb-low">Не хватает Forge: нужно ${price}, `
             + `на балансе ${balance}. Пополни в кабинете.</div>`;
     } else {
@@ -3909,7 +3905,7 @@ function renderLimitBanner(limits) {
     els.postLimitBanner.innerHTML = `
         <div class="limit-row limit-row-${premium ? 'purple' : 'green'}${enough ? '' : ' limit-row-exhausted'}">
             ${head}
-            <div class="pm-foot">${note}${canChoose && !isTester ? right : ''}</div>
+            <div class="pm-foot">${note}${canChoose ? right : ''}</div>
         </div>`;
     updateGenerateBtnPrice();
     updateCtaHint();
@@ -4295,7 +4291,6 @@ function renderLimitRow({ icon, label, used, limit, seconds_until_reset, color, 
     const exhausted = used >= limit && !isTester;
     const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / safeLimit) * 100)));
 
-    const testerNote = isTester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
     const timerTxt = (exhausted && seconds_until_reset)
         ? `<span class="limit-row-timer">${formatRemainingTime(seconds_until_reset)}</span>`
         : '';
@@ -4307,7 +4302,6 @@ function renderLimitRow({ icon, label, used, limit, seconds_until_reset, color, 
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-${icon}"></i></span>
                 <span class="limit-row-label">${label}</span>
-                ${testerNote}
                 <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>
             </div>
             <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
@@ -5206,7 +5200,6 @@ function renderSettingsLimitsBar(limits) {
     const remaining = Math.max(0, limits.limit - used);
     const exhausted = (limits.limit > 0) && (used >= limits.limit) && !limits.is_tester;
     const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / limit) * 100)));
-    const testerNote = limits.is_tester ? '<span class="limit-row-tester">тестер · без лимита</span>' : '';
     const timerTxt = (exhausted && limits.seconds_until_reset)
         ? `<span class="limit-row-timer">${formatRemainingTime(limits.seconds_until_reset)}</span>`
         : '';
@@ -6317,14 +6310,12 @@ function showModelPicker() {
     const limits = state.post.limits || {};
 
     if (els.modelPickPremiumMeta) {
-        els.modelPickPremiumMeta.innerHTML = limits.is_tester
-            ? 'Точнее, глубже'
-            : `Точнее, глубже · ${forgeAmount(limits.price_premium || 0, 12)}`;
+        els.modelPickPremiumMeta.innerHTML =
+            `Точнее, глубже · ${forgeAmount(limits.price_premium || 0, 12)}`;
     }
     if (els.modelPickStandardMeta) {
-        els.modelPickStandardMeta.innerHTML = limits.is_tester
-            ? 'Быстрее, легче'
-            : `Быстрее, легче · ${forgeAmount(limits.price_standard || 0, 12)}`;
+        els.modelPickStandardMeta.innerHTML =
+            `Быстрее, легче · ${forgeAmount(limits.price_standard || 0, 12)}`;
     }
 
     els.modelPickerModal.style.display = '';

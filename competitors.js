@@ -334,9 +334,6 @@
 
     function limitBarHtml() {
         if (!_limits) return '';
-        if (_limits.is_tester) {
-            return '<div class="comp-limit-bar"><span class="comp-limit-tester">тестер · без списаний</span></div>';
-        }
         var balance = Number(_limits.balance || 0);
         var price = Number(_limits.price || 0);
         var enough = balance >= price;
@@ -377,7 +374,7 @@
         var runnable = canRun();
         var btnHtml;
         if (runnable) {
-            var pr = (_limits && !_limits.is_tester) ? ' · ' + Number(_limits.price || 0) + ' Forge' : '';
+            var pr = ' · ' + Number((_limits && _limits.price) || 0) + ' Forge';
             btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>Найти конкурентов' + pr + '</span></button>';
         } else {
             btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';

@@ -258,9 +258,7 @@
         var enough = isTester || balance >= price;
         var fa = (window.forgeAmount || function (n) { return String(n); });
 
-        var right = isTester
-            ? '<span class="limit-row-tester">тестер · без списаний</span>'
-            : '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
+        var right = '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
         var note = enough
             ? '<div class="fwb-note">Запуск спишет ' + price + ' Forge</div>'
             : '<div class="fwb-note fwb-low">Не хватает Forge: нужно ' + price + ', на балансе ' + balance + '</div>';
@@ -294,7 +292,7 @@
                 '<span>Пополнить баланс</span></button>';
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i>' +
-                '<span>Запустить аудит' + (limits && limits.is_tester ? '' : ' · ' + price + ' Forge') + '</span></button>';
+                '<span>Запустить аудит · ' + price + ' Forge</span></button>';
         }
 
         host.innerHTML = headerHtml() +
@@ -339,7 +337,7 @@
         var ctaHtml;
         if (canDeep) {
             ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i>' +
-                '<span>Запустить коммерческий аудит' + (limits && limits.is_tester ? '' : ' · ' + priceDeep + ' Forge') + '</span></button>';
+                '<span>Запустить коммерческий аудит · ' + priceDeep + ' Forge' + '</span></button>';
         } else {
             ctaHtml = '<div class="ca-ctarow"><span class="l">Списывается с баланса · отчёт сохраняется</span><b>' + priceDeep + ' Forge</b></div>' +
                 '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
@@ -799,7 +797,6 @@
             .then(function (limits) {
                 var note = document.getElementById('audit-rerun-note');
                 if (!note || !limits) return;
-                if (limits.is_tester) { note.textContent = 'Тестер · без списаний'; return; }
                 note.textContent = 'На балансе ' + Number(limits.balance || 0).toLocaleString('ru-RU')
                     + ' Forge · аудит стоит ' + Number(limits.price || 0);
             })
