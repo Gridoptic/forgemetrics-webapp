@@ -46,6 +46,16 @@
         listicle: ['Подборка', 'ti-list-check'], offer: ['Прогрев к покупке', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вовлечение', 'ti-message-circle'],
     };
+    var FMT_ABOUT = {
+        news: 'Что произошло в нише и почему это важно',
+        analysis: 'Почему что-то работает или перестало',
+        case: 'Результат по шагам, с цифрами',
+        listicle: 'Несколько приёмов или ошибок списком',
+        offer: 'Подводит читателя к твоему товару',
+        poll: 'Вопрос с вариантами — собирает мнения',
+        story: 'Личный опыт от первого лица',
+        engagement: 'Открытый вопрос — вызывает обсуждение',
+    };
     var AP_LEVELS = [
         ['manual', 'Ручной', 'пост за постом'],
         ['batch', 'Пакетом', 'собирает сам'],
@@ -469,7 +479,9 @@
             var offMan = man.indexOf(k) >= 0, offAuto = auto.indexOf(k) >= 0;
             var c = offMan ? ' off' : (offAuto ? ' auto' : '');
             return '<button class="cp-fm' + c + '" data-act="apfmt" data-v="' + k + '">' +
-                '<i class="ti ' + fi[1] + '"></i><span>' + esc(T(fi[0])) + '</span>' +
+                '<i class="ti ' + fi[1] + '"></i>' +
+                '<span class="tx"><b>' + esc(T(fi[0])) + '</b>' +
+                '<em>' + esc(T(FMT_ABOUT[k] || '')) + '</em></span>' +
                 ((offMan || offAuto) ? '<i class="ti ti-x x"></i>' : '') + '</button>';
         }).join('');
         var note = '';
