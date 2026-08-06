@@ -4292,6 +4292,19 @@ html.cs-modal-open {
     flex: 1;
 }
 
+#post-emoji-row .post-setting-label i {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-subtle);
+    color: rgba(255, 255, 255, 0.5);
+    transition: background .18s, border-color .18s, color .18s;
+}
+
+#post-emoji-row.on .post-setting-label i {
+    background: rgba(129, 140, 248, 0.10);
+    border-color: rgba(129, 140, 248, 0.16);
+    color: #a5b4fc;
+}
+
 .post-setting-label {
     display: inline-flex;
     align-items: center;

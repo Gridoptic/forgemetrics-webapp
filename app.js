@@ -3574,6 +3574,8 @@ function setEmojiSwitch(on) {
         sw.dataset.active = String(!!on);
     }
     if (wrap) wrap.classList.toggle('closed', !on);
+    const row = document.getElementById('post-emoji-row');
+    if (row) row.classList.toggle('on', !!on);
     state.post.emoji = on ? (state.post.emojiMode || 'auto') : 'none';
     if (on) setTimeout(() => pgSegSync('post-emoji-chips'), 280);
 }
