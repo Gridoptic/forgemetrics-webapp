@@ -288,8 +288,8 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(header + apPanel() + allBtn + schedBtn + ribbon + detailPanel() + insightsBlock() +
-            '<div class="cp-foot">' + foot + '</div>');
+        setView(header + apPanel() + allBtn + schedBtn + ribbon + detailPanel() +
+            insightsBlock() + strategyBlock() + '<div class="cp-foot">' + foot + '</div>');
     }
 
     function loadAutopilot() {
@@ -454,6 +454,41 @@
         }
         return '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Разрешённые форматы')) + '</div>' +
             '<div class="cp-fmts">' + cells + '</div>' + note + '</div>';
+    }
+
+    function strategyBlock() {
+        var st = (_state && _state.strategy) || {};
+
+        if (st.following) {
+            var f = st.following;
+            var parts = [];
+            if (f.niche) parts.push(T('ниша') + ': ' + f.niche);
+            if (f.rubrics) parts.push(f.rubrics + ' ' + T(plural3(f.rubrics, 'рубрика', 'рубрики', 'рубрик')));
+            return '<div class="cp-str follow"><div class="cp-str-h">' +
+                '<span class="cp-str-ic"><i class="ti ti-target-arrow"></i></span>' +
+                '<span><b>' + esc(T('Неделя собирается по стратегии')) + '</b>' +
+                '<span>' + esc(parts.join(' · ')) + '</span></span></div></div>';
+        }
+
+        if (st.offer) {
+            var o = st.offer;
+            return '<div class="cp-str offer">' +
+                '<div class="cp-str-h"><span class="cp-str-ic pk"><i class="ti ti-target-arrow"></i></span>' +
+                '<span><b>' + esc(T('Посты выходят, аудитория стоит')) + '</b>' +
+                '<span>' + esc(T('AI-стратегия')) + ' · ' + o.price + ' ₽</span></span></div>' +
+                '<div class="cp-str-w">' +
+                esc(T('За ' + o.weeks + ' ' + plural3(o.weeks, 'неделю', 'недели', 'недель') +
+                      ' опубликовано ' + o.published + ' ' + plural3(o.published, 'пост', 'поста', 'постов') +
+                      ', пришло ' + o.joined + ', ушло ' + o.left + '. Контент выходит регулярно — ' +
+                      'значит дело не в нём, а в том, что канал никто не находит.')) +
+                '</div><div class="cp-str-w dim">' +
+                esc(T('Стратегия разбирает, откуда брать аудиторию: бесплатный и платный трафик, ' +
+                      'ниша, монетизация. Контент-план дальше исполняет её план.')) +
+                '</div>' +
+                '<button class="cp-str-b" data-act="openstrategy">' +
+                '<i class="ti ti-sparkles"></i> ' + esc(T('Открыть AI-стратегию')) + '</button></div>';
+        }
+        return '';
     }
 
     function insightsBlock() {
@@ -694,6 +729,15 @@
             return;
         }
         if (act === 'apstop') { apStop(); return; }
+        if (act === 'openstrategy') {
+            haptic('medium');
+            close();
+            try {
+                if (typeof window.__openStrategy === 'function') window.__openStrategy();
+                else if (typeof openStrategy === 'function') openStrategy();
+            } catch (e) {}
+            return;
+        }
         if (act === 'apcap') { askCap(); return; }
         if (act === 'apfmt') {
             haptic('light');

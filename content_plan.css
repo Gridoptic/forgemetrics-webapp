@@ -414,3 +414,39 @@
     font-weight: 600; background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08); color: #8d93a8; cursor: pointer;
 }
+
+.cp-str { margin-top: 14px; padding: 14px; border-radius: 16px; }
+
+.cp-str.follow {
+    background: linear-gradient(150deg, rgba(16, 185, 129, 0.1), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.cp-str.offer {
+    background: linear-gradient(155deg, rgba(236, 72, 153, 0.12), rgba(99, 102, 241, 0.05));
+    border: 1px solid rgba(236, 72, 153, 0.28);
+}
+
+.cp-str-h { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cp-str-h b { display: block; font-size: 13.5px; font-weight: 700; color: #e8eaf1; }
+.cp-str-h span span { font-size: 10.5px; color: #8d93a8; }
+
+.cp-str-ic {
+    width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    background: rgba(16, 185, 129, 0.18); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399;
+}
+.cp-str-ic.pk {
+    background: rgba(236, 72, 153, 0.18); border-color: rgba(236, 72, 153, 0.35); color: #f472b6;
+}
+
+.cp-str-w { font-size: 11.5px; line-height: 1.5; color: #c6b9c4; margin-bottom: 10px; }
+.cp-str-w.dim { color: #8d93a8; }
+
+.cp-str-b {
+    width: 100%; min-height: 44px; border-radius: 12px; border: 0; font-family: inherit;
+    font-size: 12.5px; font-weight: 700; color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(135deg, #db2777, #9333ea);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 22px -10px rgba(219, 39, 119, 0.7);
+}
