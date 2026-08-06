@@ -6,7 +6,7 @@
     var _channels = null;
     var _chId = null;
     var _goal = 'engagement';
-    var _freq = 7;
+    var _days = null;
     var _selDay = 0;
     var _dayBusy = {};
     var _batchTimer = null;
@@ -33,6 +33,8 @@
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} try { if (typeof alertDialog === 'function') alertDialog(m); } catch (e) {} }
 
     var WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    var WD_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+    var MIN_DAYS = 3;
     var GOALS = [
         ['growth', 'Рост подписчиков'], ['engagement', 'Вовлечённость'],
         ['sales', 'Продажи'], ['warmup', 'Прогрев к запуску'], ['retention', 'Удержание'],
@@ -48,11 +50,14 @@
     var GOAL_MAP = { growth: 'Рост подписчиков', engagement: 'Вовлечённость', sales: 'Продажи', warmup: 'Прогрев к запуску', retention: 'Удержание' };
     var GOAL_ICON = { growth: 'ti-users-plus', engagement: 'ti-heart-handshake', sales: 'ti-building-store',
         warmup: 'ti-flame', retention: 'ti-anchor' };
-    var FREQ_NOTE = { 3: 'через день', 5: 'будни', 7: 'каждый день' };
     var FMT = {
         news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
         listicle: ['Подборка', 'ti-list-check'], offer: ['Продающий', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вопрос читателям', 'ti-message-circle'],
+    };
+    var FMT_SHORT = {
+        news: 'Новость', analysis: 'Разбор', case: 'Кейс', listicle: 'Подборка',
+        offer: 'Продажи', poll: 'Опрос', story: 'История', engagement: 'Вопрос',
     };
     var FMT_ABOUT = {
         news: 'Что произошло в нише и почему это важно',
@@ -177,9 +182,12 @@
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
         _state = st;
+        _days = null;
+        syncDays(st);
         if (chans) _channels = chans;
         if (st && st.posts) renderWeek(); else renderBrief();
     };
+    window.__cpDays = function () { return days().slice(); };
 
     window.__openContentPlan = function () {
         ensureScreen();
@@ -190,12 +198,22 @@
         });
     };
 
+    function rerender() {
+        if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+    }
+
+    function syncDays(d) {
+        if (_days || !d || !d.days || d.days.length !== 7) return;
+        _days = d.days.slice();
+    }
+
     function route(d) {
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
+        syncDays(d);
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
-                if (_channels === null) {
+        if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
                 _channels = (cd && cd.channels) ? cd.channels.filter(function (c) { return c.username; }) : [];
                 if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
@@ -207,6 +225,7 @@
                         .then(function (d2) {
                             if (!d2 || !d2.ok) return;
                             _state = d2;
+                            syncDays(d2);
                             if (d2.posts && d2.posts.length) renderWeek(); else renderBrief();
                         })
                         .catch(function () {});
@@ -224,55 +243,153 @@
     function chip(name, val, cur, label) {
         return '<button class="cp-chip' + (val === cur ? ' on' : '') + '" data-chip="' + name + '" data-v="' + esc(val) + '">' + esc(T(label)) + '</button>';
     }
-    // из каких форматов система обычно собирает неделю под выбранную цель
-    function weekPreview(goal, freq) {
-        var key = (GOAL_KEY_FMT[goal] || []).slice();
-        var rest = Object.keys(FMT).filter(function (k) { return key.indexOf(k) < 0; });
-        var blocked = (_ap && _ap.blocked_manual ? _ap.blocked_manual : [])
+    function blockedFmts() {
+        return (_ap && _ap.blocked_manual ? _ap.blocked_manual : [])
             .concat(_ap && _ap.blocked_auto ? _ap.blocked_auto : []);
-        var pool = key.concat(rest).filter(function (k) { return blocked.indexOf(k) < 0; });
-        if (!pool.length) pool = Object.keys(FMT);
+    }
 
-        var days = [];
-        var used = {};
-        for (var i = 0; i < 7; i++) {
-            days.push(null);
+    function days() {
+        if (!_days || _days.length !== 7) _days = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
+        return _days;
+    }
+    function activeDays() {
+        return days().reduce(function (a, v, i) { if (v !== 'off') a.push(i); return a; }, []);
+    }
+    function pinnedDays() {
+        return days().reduce(function (a, v, i) { if (FMT[v]) a.push(i); return a; }, []);
+    }
+    function setDay(i, val) {
+        var d = days().slice();
+        if (val === 'off' && activeDays().length <= MIN_DAYS && d[i] !== 'off') {
+            toast(T('В неделе не может быть меньше трёх постов'));
+            return false;
         }
-        // раскладываем по неделе равномерно: 3 — через день, 5 — будни, 7 — подряд
-        var slots = freq >= 7 ? [0, 1, 2, 3, 4, 5, 6]
-            : (freq === 5 ? [0, 1, 2, 3, 4] : [0, 2, 4]);
-        slots.forEach(function (d, i) {
-            var k = pool[i % pool.length];
-            if (used[k] && pool.length > slots.length) k = pool[(i + 1) % pool.length];
-            used[k] = true;
-            days[d] = k;
-        });
-        return days;
+        d[i] = val;
+        _days = d;
+        return true;
+    }
+
+    function weekCells(frozen) {
+        return days().map(function (v, i) {
+            var day = '<span class="d">' + esc(T(WD[i])) + '</span>';
+            if (v === 'off') {
+                return '<div class="cp-hd off"' + (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
+                    '><span class="dash">—</span>' + day +
+                    '<span class="f">' + esc(T('выкл')) + '</span></div>';
+            }
+            var fi = FMT[v];
+            var cls = fi ? 'fix' : 'auto';
+            var ic = fi ? fi[1] : 'ti-sparkles';
+            var label = fi ? T(FMT_SHORT[v] || fi[0]) : T('система');
+            return '<div class="cp-hd ' + cls + '"' + (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
+                '><i class="ti ' + ic + '"></i>' + day +
+                '<span class="f">' + esc(label) + '</span></div>';
+        }).join('');
+    }
+
+    function weekLegend() {
+        return '<div class="cp-lgd">' +
+            '<span class="cp-lg"><i class="a"></i>' + esc(T('задано вручную')) + '</span>' +
+            '<span class="cp-lg"><i class="b"></i>' + esc(T('решает система')) + '</span>' +
+            '<span class="cp-lg"><i class="c"></i>' + esc(T('без публикации')) + '</span></div>';
+    }
+
+    function weekBar() {
+        var act = activeDays().length, pin = pinnedDays().length, free = act - pin;
+        var w = wallet();
+        var price = (w.price_day || 10) * act;
+        var postsWord = plural3(act, 'пост', 'поста', 'постов');
+        if (free === 0) {
+            return '<div class="cp-hbar warn"><i class="ti ti-rotate"></i><span>' +
+                esc(T('Задано вручную') + ' ' + act + ' ' +
+                    T(plural3(act, 'день', 'дня', 'дней')) + ' ' + T('из') + ' ' + act + '. ' +
+                    T('Неделя выйдет набором отдельных постов —') + ' ') +
+                '<b>' + esc(T('оставь два-три дня системе')) + '</b>' +
+                esc(', ' + T('чтобы она связала их одним сюжетом.')) + '</span></div>';
+        }
+        var head = pin
+            ? T('Закреплено') + ' ' + pin + ' ' + T(plural3(pin, 'день', 'дня', 'дней')) + ', ' +
+              free + ' ' + T('система расставит сама под сюжет недели.')
+            : T('Все дни на усмотрение системы — она разложит форматы под сюжет недели.');
+        var tail = w.is_tester ? ''
+            : ' <b>' + esc(act + ' ' + T(postsWord) + ' — ' + price + ' Forge.') + '</b>';
+        return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
+            esc(head) + tail + '</span></div>';
     }
 
     function heroWeek() {
-        var goal = _goal;
-        var days = weekPreview(goal, _freq);
-        var cells = days.map(function (k, i) {
-            if (!k) {
-                return '<div class="cp-hd off"><span class="d">' + esc(T(WD[i])) + '</span>' +
-                    '<span class="f">' + esc(T('пауза')) + '</span></div>';
-            }
-            var fi = FMT[k];
-            return '<div class="cp-hd"><i class="ti ' + fi[1] + '"></i>' +
-                '<span class="d">' + esc(T(WD[i])) + '</span>' +
-                '<span class="f">' + esc(T(fi[0])) + '</span></div>';
-        }).join('');
-
-        var title = T('Неделя, собранная под') + ' ' +
-            (GOAL_MAP[goal] || goal).toLowerCase();
+        var rdy = (_state && _state.readiness) || {};
+        if (rdy.reason === 'paused') {
+            return '<div class="cp-hero frozen">' +
+                '<div class="cp-hero-eye">' + esc(T('План недоступен')) + '</div>' +
+                '<h2>' + esc(T('Канал приостановлен')) + '</h2>' +
+                '<p>' + esc(T('Подключено больше каналов, чем допускает тариф. ' +
+                    'Публикация не проходит.')) + '</p>' +
+                '<div class="cp-hero-week">' + weekCells(true) + '</div>' +
+                '<div class="cp-frznote"><i class="ti ti-player-pause"></i><span>' +
+                esc(T('Сними паузу в настройках канала или выбери другой — ' +
+                    'тогда неделя соберётся.')) +
+                '</span></div>' +
+                '<button class="cp-ready-b" data-act="openstyle">' +
+                '<i class="ti ti-settings"></i> ' + esc(T('Открыть настройки канала')) +
+                '</button></div>';
+        }
+        var act = activeDays().length;
         return '<div class="cp-hero">' +
-            '<div class="cp-hero-eye">' + esc(T('План на неделю')) + '</div>' +
-            '<h2>' + esc(title) + '</h2>' +
-            '<p>' + esc(T('Сюжет недели, тексты и время выхода. Останется утвердить.')) + '</p>' +
-            '<div class="cp-hero-week">' + cells + '</div>' +
-            '<div class="cp-hero-note">' + esc(T('Точные темы и часы подберутся при сборке')) +
-            '</div></div>';
+            '<div class="cp-hero-eye">' + esc(T('План на неделю') + ' · ' + act + ' ' +
+                T(plural3(act, 'пост', 'поста', 'постов'))) + '</div>' +
+            '<h2>' + esc(T('Неделя под') + ' ' + T(GOAL_MAP[_goal] || _goal).toLowerCase()) + '</h2>' +
+            '<p>' + esc(T('Нажми на день, чтобы задать формат или убрать публикацию.')) + '</p>' +
+            '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
+            weekLegend() + weekBar() + '</div>';
+    }
+
+    function pickDay(i) {
+        haptic('light');
+        var cur = days()[i];
+        var blocked = blockedFmts();
+        var rows = Object.keys(FMT).filter(function (k) { return blocked.indexOf(k) < 0; })
+            .map(function (k) {
+                var fi = FMT[k];
+                return '<button class="cp-dsr' + (cur === k ? ' on' : '') + '" data-dayv="' + k + '">' +
+                    '<i class="ti ' + fi[1] + '"></i><span class="tx"><b>' + esc(T(fi[0])) + '</b></span>' +
+                    (cur === k ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+            }).join('');
+
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        host.innerHTML = '<div class="cp-dsheet">' +
+            '<div class="cp-dsgrab"></div>' +
+            '<div class="cp-dsh">' + esc(T(WD_FULL[i])) + '</div>' +
+            '<div class="cp-dss">' + esc(T('Что выходит в этот день')) + '</div>' +
+            '<button class="cp-dsr wide' + (cur === 'auto' ? ' on' : '') + '" data-dayv="auto">' +
+            '<i class="ti ti-sparkles"></i><span class="tx"><b>' + esc(T('Решает система')) + '</b>' +
+            '<em>' + esc(T('подберёт формат под сюжет недели')) + '</em></span>' +
+            (cur === 'auto' ? '<i class="ti ti-check ck"></i>' : '') + '</button>' +
+            '<button class="cp-dsr wide mut' + (cur === 'off' ? ' on' : '') + '" data-dayv="off">' +
+            '<i class="ti ti-ban"></i><span class="tx"><b>' + esc(T('Не публиковать')) + '</b>' +
+            '<em>' + esc(T('день останется пустым')) + '</em></span>' +
+            (cur === 'off' ? '<i class="ti ti-check ck"></i>' : '') + '</button>' +
+            '<div class="cp-dssep"></div>' +
+            '<div class="cp-dsgrid">' + rows + '</div></div>';
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+
+        host.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-dayv]') : null;
+            if (b) {
+                if (setDay(i, b.getAttribute('data-dayv'))) {
+                    haptic('light');
+                    host.remove();
+                    renderBrief();
+                }
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
     }
 
     function renderBrief() {
@@ -303,14 +420,10 @@
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
                 '<span>' + esc(T(g[1])) + '</span></button>';
         }).join('');
-        var freqs = [3, 5, 7].map(function (v) {
-            return '<button class="cp-freq' + (v === _freq ? ' on' : '') + '" data-chip="freq" data-v="' + v + '">' +
-                '<b>' + v + '</b><span>' + esc(T(FREQ_NOTE[v])) + '</span></button>';
-        }).join('');
         var rdy = (_state && _state.readiness) || {};
         var blocked = rdy.blocked === true;
         var w = wallet();
-        var weekPrice = (w.price_day || 10) * _freq;
+        var weekPrice = (w.price_day || 10) * activeDays().length;
         var priceTag = w.is_tester ? '' :
             '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
         var lowNote = (!w.is_tester && w.balance != null && w.balance < weekPrice)
@@ -327,9 +440,6 @@
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
             '<div class="cp-goals">' + goals + '</div></div>' +
             apFormats() +
-            '<div class="cp-sec">' + secHead('Постов в неделю',
-                'Сколько дней займут посты. Не чаще привычного ритма канала — чтобы не спамить аудиторию.') +
-            '<div class="cp-freqs">' + freqs + '</div></div>' +
 
             '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
@@ -344,7 +454,7 @@
         if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
         var tz = 0;
         try { tz = -(new Date().getTimezoneOffset()); } catch (e) {}
-        var body = { channel_id: _chId, goal: _goal, frequency: _freq, tz_offset_minutes: tz };
+        var body = { channel_id: _chId, goal: _goal, days: days(), tz_offset_minutes: tz };
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 if (r && r.ok) { renderGenerating(); startPoll(); }
@@ -534,12 +644,14 @@
             onSelect: function (id) {
                 _chId = +id;
                 _ap = null;
+                _days = null;
                 renderBrief();
                 loadAutopilot();
                 apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                     .then(function (d) {
                         if (!d || !d.ok) return;
                         _state = d;
+                        syncDays(d);
                         if (d.posts && d.posts.length) renderWeek(); else renderBrief();
                     })
                     .catch(function () {});
@@ -991,7 +1103,7 @@
         var chip = t.closest ? t.closest('[data-chip]') : null;
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');
-            if (name === 'goal') _goal = v; else if (name === 'freq') _freq = +v;
+            if (name === 'goal') _goal = v;
             var wrap = chip.parentElement;
             wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
             haptic('light');
@@ -1032,6 +1144,7 @@
         }
         if (act === 'apstop') { apStop(); return; }
         if (act === 'pickchan') { pickChannel(); return; }
+        if (act === 'pickday') { pickDay(+actEl.getAttribute('data-day')); return; }
         if (act === 'fmtback') {
             haptic('light');
             var back = (actEl.getAttribute('data-v') || '').split(',');
@@ -1067,7 +1180,12 @@
             var k = actEl.getAttribute('data-v');
             var man = (_ap && _ap.blocked_manual ? _ap.blocked_manual.slice() : []);
             var i = man.indexOf(k);
-            if (i >= 0) man.splice(i, 1); else man.push(k);
+            if (i >= 0) man.splice(i, 1);
+            else {
+                man.push(k);
+                _days = days().map(function (v) { return v === k ? 'auto' : v; });
+                rerender();
+            }
             apSave({ blocked_formats: man });
             return;
         }
