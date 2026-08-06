@@ -6490,9 +6490,11 @@ function showToast(text, icon) {
     els.toast.style.display = '';
 
     if (state._toastTimer) clearTimeout(state._toastTimer);
+    // длинную фразу нужно успеть прочитать: держим дольше, но не бесконечно
+    const hold = Math.max(2400, Math.min(6500, 1300 + String(text || '').length * 55));
     state._toastTimer = setTimeout(() => {
         if (els.toast) els.toast.style.display = 'none';
-    }, 2400);
+    }, hold);
 }
 
 

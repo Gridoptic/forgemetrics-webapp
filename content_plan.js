@@ -43,7 +43,7 @@
     var FREQ_NOTE = { 3: 'через день', 5: 'будни', 7: 'каждый день' };
     var FMT = {
         news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
-        listicle: ['Подборка', 'ti-list-check'], offer: ['Оффер', 'ti-building-store'],
+        listicle: ['Подборка', 'ti-list-check'], offer: ['Прогрев к покупке', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вовлечение', 'ti-message-circle'],
     };
     var AP_LEVELS = [
@@ -125,8 +125,7 @@
         _state = d;
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
-        if (d.status === 'error') { toast(T('Прошлая сборка не удалась — настрой план и собери заново')); }
-        if (_channels === null) {
+                if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
                 _channels = (cd && cd.channels) ? cd.channels.filter(function (c) { return c.username; }) : [];
                 if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
@@ -134,6 +133,11 @@
                 renderBrief();
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
+    }
+
+    function secHead(title, note) {
+        return '<div class="cp-lbl">' + esc(T(title)) + '</div>' +
+            (note ? '<div class="cp-note">' + esc(T(note)) + '</div>' : '');
     }
 
     function chip(name, val, cur, label) {
@@ -177,10 +181,15 @@
             '<div class="cp-introt">' + esc(T('Редакция канала под ключ')) + '</div>' +
             '<div class="cp-intros">' + esc(T('ИИ придумает сюжет недели и напишет посты в стиле твоего канала. Дальше — только утвердить.')) + '</div></div>' +
 
-            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Канал')) + '</div>' + chanBlock + '</div>' +
-            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Цель недели')) + '</div><div class="cp-goals">' + goals + '</div></div>' +
-            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Постов в неделю')) + '</div><div class="cp-freqs">' + freqs + '</div>' +
-            '<div class="cp-hint">' + esc(T('Не чаще привычного ритма канала — чтобы не спамить аудиторию.')) + '</div></div>' +
+            '<div class="cp-sec">' + secHead('Канал',
+                'Для какого канала собираем неделю. Посты будут написаны в его манере.') +
+            chanBlock + '</div>' +
+            '<div class="cp-sec">' + secHead('Цель недели',
+                'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
+            '<div class="cp-goals">' + goals + '</div></div>' +
+            '<div class="cp-sec">' + secHead('Постов в неделю',
+                'Сколько дней займут посты. Не чаще привычного ритма канала — чтобы не спамить аудиторию.') +
+            '<div class="cp-freqs">' + freqs + '</div></div>' +
 
             '<button class="cp-go" data-act="generate"><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote +
@@ -385,6 +394,12 @@
             esc(T(apSubtitle())) + '</span></span>' +
             '<button class="cp-tgl' + (on ? '' : ' off') + '" data-act="aptoggle"></button></div>';
 
+        var stepsNote = '<div class="cp-note ap">' + esc(T(
+            'Ступени открываются по очереди: сначала неделя собирается по кнопке, ' +
+            'потом сама, и только затем публикуется без подтверждения. ' +
+            'Каждая следующая — после двух недель, где тексты не пришлось переписывать.'
+        )) + '</div>';
+
         var steps = '<div class="cp-ap-steps">' + AP_LEVELS.map(function (L) {
             var idx = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(L[0]);
             var cur = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(lvl);
@@ -428,7 +443,7 @@
         }
 
         return '<div class="cp-ap' + cls + '">' + head +
-            '<div class="cp-ap-body">' + steps + body + '</div></div>' + apFormats();
+            '<div class="cp-ap-body">' + steps + stepsNote + body + '</div></div>' + apFormats();
     }
 
     function doLine(txt) {
@@ -462,7 +477,9 @@
             note = '<div class="cp-fm-note">' + esc(T('Отклик втрое ниже лучшего формата, поэтому исключены системой: ')) +
                 auto.map(function (k) { return T((FMT[k] || [k])[0]); }).join(', ') + '</div>';
         }
-        return '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Разрешённые форматы')) + '</div>' +
+        return '<div class="cp-sec">' + secHead('Разрешённые форматы',
+                'Виды постов, из которых собирается неделя. Отключённые ставиться не будут — ' +
+                'нажми на любой, чтобы запретить или вернуть.') +
             '<div class="cp-fmts">' + cells + '</div>' + note + '</div>';
     }
 
@@ -542,6 +559,8 @@
         return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
             esc(T('Накопленные данные')) + '<em>' + (ins.published_total || 0) + ' ' +
             esc(T(plural3(ins.published_total || 0, 'пост', 'поста', 'постов'))) + since + '</em></div>' +
+            '<div class="cp-note in">' + esc(T('Замеры вышедших постов: на что аудитория ' +
+            'откликается и когда читает. По ним подбираются форматы и время.')) + '</div>' +
             body + '</div>';
     }
 
