@@ -5218,7 +5218,7 @@ function renderSettingsLimitsBar(limits) {
         <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">Обновление стиля · ${price} Forge</span>
+                <span class="limit-row-label">Обновление стиля</span><span class="cs-limit-price">${forgeAmount(price, 13)}</span>
                 <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
             <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
@@ -5318,7 +5318,7 @@ function renderSettingsExamplesSection(data) {
     const accent = !hasVoice;
     const headerIcon = accent ? '<i class="ti ti-sparkles"></i> ' : '';
     const price = Number((data.voice_refresh_limits || {}).price || 0);
-    const priceHint = price ? `<span class="cs-section-hint">${price} Forge</span>` : '';
+    const priceHint = price ? `<span class="cs-section-hint">${forgeAmount(price, 12)}</span>` : '';
 
     return `
         <div class="cs-section">
