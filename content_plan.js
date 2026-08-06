@@ -572,7 +572,9 @@
     function apFormats() {
         if (!_ap) return '';
         var man = _ap.blocked_manual || [], auto = _ap.blocked_auto || [];
-        var goal = (_state && _state.goal) || _goal;
+        // пока неделя не собрана, опорной считается цель, выбранная прямо сейчас
+        var built = !!(_state && _state.posts && _state.posts.length);
+        var goal = built ? ((_state && _state.goal) || _goal) : _goal;
         var keyFmts = GOAL_KEY_FMT[goal] || [];
         var keys = Object.keys(FMT);
         var cells = keys.map(function (k) {
