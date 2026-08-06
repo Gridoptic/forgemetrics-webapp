@@ -140,6 +140,7 @@
         return '<button class="cp-chip' + (val === cur ? ' on' : '') + '" data-chip="' + name + '" data-v="' + esc(val) + '">' + esc(T(label)) + '</button>';
     }
     function renderBrief() {
+        if (!_ap && _chId) setTimeout(loadAutopilot, 0);
         var chanBlock;
         if (!_channels || !_channels.length) {
             chanBlock = '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
@@ -182,7 +183,8 @@
             '<div class="cp-hint">' + esc(T('Не чаще привычного ритма канала — чтобы не спамить аудиторию.')) + '</div></div>' +
 
             '<button class="cp-go" data-act="generate"><i class="ti ti-sparkles"></i> ' +
-            esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote);
+            esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote +
+            apPanel() + strategyBlock());
     }
 
     function doGenerate(btn) {
@@ -297,7 +299,11 @@
         if (!cid) return;
         apiRequest('/api/v1/content-plan/autopilot?channel_id=' + cid)
             .then(function (r) {
-                if (r && r.ok) { _ap = r.autopilot; if (_state && _state.posts) renderWeek(); }
+                if (r && r.ok) {
+                    _ap = r.autopilot;
+                    if (_state && _state.posts && _state.posts.length) renderWeek();
+                    else renderBrief();
+                }
             })
             .catch(function () {});
     }
@@ -310,7 +316,11 @@
         apiRequest('/api/v1/content-plan/autopilot', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 _apBusy = false;
-                if (r && r.ok) { _ap = r.autopilot; renderWeek(); if (done) done(true); }
+                if (r && r.ok) {
+                    _ap = r.autopilot;
+                    if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+                    if (done) done(true);
+                }
                 else if (r && r.error === 'not_earned') {
                     toast(T('Ступень откроется после ' + r.need + ' недель без правок. Сейчас: ' + r.weeks_clean));
                     if (done) done(false);
@@ -703,7 +713,9 @@
             _chId = +chan.getAttribute('data-chan');
             var box = chan.parentElement;
             box.querySelectorAll('[data-chan]').forEach(function (b) { b.classList.toggle('on', b === chan); });
-            haptic('light'); return;
+            haptic('light');
+            loadAutopilot();
+            return;
         }
         var actEl = t.closest ? t.closest('[data-act]') : null;
         if (!actEl) return;
