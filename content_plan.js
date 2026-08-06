@@ -10,6 +10,8 @@
     var _selDay = 0;
     var _dayBusy = {};
     var _batchTimer = null;
+    var _ap = null;
+    var _apBusy = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function wallet() { return (_state && _state.wallet) || {}; }
@@ -44,6 +46,11 @@
         listicle: ['Подборка', 'ti-list-check'], offer: ['Оффер', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вовлечение', 'ti-message-circle'],
     };
+    var AP_LEVELS = [
+        ['manual', 'Ручной', 'пост за постом'],
+        ['batch', 'Пакетом', 'собирает сам'],
+        ['auto', 'Автономно', 'сам публикует'],
+    ];
     var GEN_TEXTS = [
         'Смотрю ритм и тему канала...',
         'Подбираю форматы под цель недели...',
@@ -105,6 +112,7 @@
     window.__openContentPlan = function () {
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
+        loadAutopilot();
         apiRequest('/api/v1/content-plan').then(route).catch(function () {
             renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.'));
         });
@@ -278,8 +286,172 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(header + allBtn + schedBtn + ribbon + detailPanel() + insightsBlock() +
+        setView(header + apPanel() + allBtn + schedBtn + ribbon + detailPanel() + insightsBlock() +
             '<div class="cp-foot">' + foot + '</div>');
+    }
+
+    function loadAutopilot() {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return;
+        apiRequest('/api/v1/content-plan/autopilot?channel_id=' + cid)
+            .then(function (r) {
+                if (r && r.ok) { _ap = r.autopilot; if (_state && _state.posts) renderWeek(); }
+            })
+            .catch(function () {});
+    }
+
+    function apSave(body, done) {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid || _apBusy) return;
+        _apBusy = true;
+        body.channel_id = cid;
+        apiRequest('/api/v1/content-plan/autopilot', { method: 'POST', body: JSON.stringify(body) })
+            .then(function (r) {
+                _apBusy = false;
+                if (r && r.ok) { _ap = r.autopilot; renderWeek(); if (done) done(true); }
+                else if (r && r.error === 'not_earned') {
+                    toast(T('Ступень откроется после ' + r.need + ' недель без правок. Сейчас: ' + r.weeks_clean));
+                    if (done) done(false);
+                } else { toast(T('Не удалось изменить настройки')); if (done) done(false); }
+            })
+            .catch(function () { _apBusy = false; toast(T('Не удалось изменить настройки')); });
+    }
+
+    function askCap() {
+        var cur = (_ap && _ap.weekly_forge_cap) || 100;
+        var opts = [70, 100, 150, 300];
+        var html = opts.map(function (v) {
+            return '<button class="cp-capopt' + (v === cur ? ' on' : '') + '" data-capv="' + v + '">' +
+                v + ' Forge</button>';
+        }).join('');
+        var host = document.getElementById('cp-capbox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-capbox';
+        host.className = 'cp-capbox';
+        host.innerHTML = '<div class="cp-capin"><div class="cp-caph">' +
+            esc(T('Потолок расхода в неделю')) + '</div>' +
+            '<div class="cp-caps">' + esc(T('Автопилот остановится, когда достигнет этой суммы.')) +
+            '</div><div class="cp-capopts">' + html + '</div>' +
+            '<button class="cp-capclose">' + esc(T('Закрыть')) + '</button></div>';
+        (document.getElementById('content-plan-screen') || document.body).appendChild(host);
+        host.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-capv]') : null;
+            if (b) {
+                haptic('light');
+                apSave({ weekly_forge_cap: +b.getAttribute('data-capv') });
+                host.remove();
+                return;
+            }
+            if (e.target === host || (e.target.closest && e.target.closest('.cp-capclose'))) host.remove();
+        });
+    }
+
+    function apStop() {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid || _apBusy) return;
+        _apBusy = true;
+        haptic('medium');
+        apiRequest('/api/v1/content-plan/autopilot/stop', {
+            method: 'POST', body: JSON.stringify({ channel_id: cid })
+        }).then(function (r) {
+            _apBusy = false;
+            if (r && r.ok) { toast(T('Автопилот остановлен')); loadAutopilot(); }
+            else toast(T('Не удалось остановить'));
+        }).catch(function () { _apBusy = false; toast(T('Не удалось остановить')); });
+    }
+
+    function apPanel() {
+        if (!_ap) return '';
+        var lvl = _ap.level || 'manual';
+        var on = lvl !== 'manual';
+        var cls = on ? ' on' : '';
+
+        var head = '<div class="cp-ap-top">' +
+            '<span class="cp-ap-ic"><i class="ti ti-robot"></i></span>' +
+            '<span class="cp-ap-tx"><b>' + esc(T('Автопилот')) + '</b><span>' +
+            esc(T(apSubtitle())) + '</span></span>' +
+            '<button class="cp-tgl' + (on ? '' : ' off') + '" data-act="aptoggle"></button></div>';
+
+        var steps = '<div class="cp-ap-steps">' + AP_LEVELS.map(function (L) {
+            var idx = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(L[0]);
+            var cur = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(lvl);
+            var k = idx < cur ? ' done' : (idx === cur ? ' now' : '');
+            var sub = L[2];
+            if (idx === cur + 1) {
+                sub = (_ap.weeks_clean || 0) + ' ' + T('из') + ' ' + (_ap.weeks_to_promote || 2) + ' ' + T('недель');
+            }
+            return '<button class="cp-ap-step' + k + '" data-act="aplevel" data-v="' + L[0] + '">' +
+                '<b>' + esc(T(L[1])) + '</b>' + esc(T(sub)) + '</button>';
+        }).join('') + '</div>';
+
+        var body = '';
+        if (on) {
+            body += '<div class="cp-ap-does">' +
+                doLine('Формирует неделю по воскресеньям') +
+                doLine(lvl === 'auto' ? 'Ставит посты в очередь без подтверждения'
+                                      : 'Оставляет посты на твоё утверждение') +
+                doLine('Учитывает отклик и перестраивает форматы') + '</div>';
+        }
+
+        var cap = _ap.weekly_forge_cap || 100;
+        var spent = _ap.spent_this_week || 0;
+        body += '<div class="cp-ap-row"><span>' + esc(T('Потолок расхода в неделю')) + '</span>' +
+            '<b>' + (typeof window.forgeAmount === 'function' ? window.forgeAmount(spent, 12) : spent) +
+            ' ' + esc(T('из')) + ' ' + cap + '</b>' +
+            '<button class="cp-ap-mini" data-act="apcap">' + esc(T('изменить')) + '</button></div>';
+
+        if (lvl === 'auto') {
+            body += '<div class="cp-ap-row"><span>' + esc(T('Окно отмены после сборки')) + '</span>' +
+                '<b>' + (_ap.veto_hours || 6) + ' ' + esc(T(hoursWord(_ap.veto_hours || 6))) + '</b></div>';
+        }
+
+        if (_ap.stopped_reason) {
+            body += '<div class="cp-ap-stopped"><i class="ti ti-alert-triangle"></i>' +
+                esc(T('Остановлен: ') + _ap.stopped_reason) + '</div>';
+        }
+        if (on) {
+            body += '<button class="cp-ap-stop" data-act="apstop">' +
+                '<i class="ti ti-player-stop"></i> ' + esc(T('Остановить автопилот')) + '</button>';
+        }
+
+        return '<div class="cp-ap' + cls + '">' + head +
+            '<div class="cp-ap-body">' + steps + body + '</div></div>' + apFormats();
+    }
+
+    function doLine(txt) {
+        return '<div class="cp-ap-do"><i class="ti ti-check"></i><span>' + esc(T(txt)) + '</span></div>';
+    }
+
+    function apSubtitle() {
+        if (!_ap) return '';
+        if (_ap.stopped_reason) return 'Остановлен';
+        if (_ap.level === 'auto') return 'Ведёт канал сам';
+        if (_ap.level === 'batch') return 'Собирает неделю, ждёт утверждения';
+        var need = (_ap.weeks_to_promote || 2) - (_ap.weeks_clean || 0);
+        return need > 0 ? ('Откроется после ' + need + ' ' + plural3(need, 'недели', 'недель', 'недель') + ' без правок')
+                        : 'Можно включить';
+    }
+
+    function apFormats() {
+        if (!_ap) return '';
+        var man = _ap.blocked_manual || [], auto = _ap.blocked_auto || [];
+        var keys = Object.keys(FMT);
+        var cells = keys.map(function (k) {
+            var fi = FMT[k];
+            var offMan = man.indexOf(k) >= 0, offAuto = auto.indexOf(k) >= 0;
+            var c = offMan ? ' off' : (offAuto ? ' auto' : '');
+            return '<button class="cp-fm' + c + '" data-act="apfmt" data-v="' + k + '">' +
+                '<i class="ti ' + fi[1] + '"></i><span>' + esc(T(fi[0])) + '</span>' +
+                ((offMan || offAuto) ? '<i class="ti ti-x x"></i>' : '') + '</button>';
+        }).join('');
+        var note = '';
+        if (auto.length) {
+            note = '<div class="cp-fm-note">' + esc(T('Отклик втрое ниже лучшего формата, поэтому исключены системой: ')) +
+                auto.map(function (k) { return T((FMT[k] || [k])[0]); }).join(', ') + '</div>';
+        }
+        return '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Разрешённые форматы')) + '</div>' +
+            '<div class="cp-fmts">' + cells + '</div>' + note + '</div>';
     }
 
     function insightsBlock() {
@@ -501,6 +673,35 @@
         var act = actEl.getAttribute('data-act');
         var id = actEl.getAttribute('data-id');
         if (act === 'close') { haptic('light'); close(); return; }
+        if (act === 'aptoggle') {
+            haptic('medium');
+            if (!_ap) return;
+            if (_ap.level !== 'manual') { apStop(); return; }
+            if (!_ap.can_promote) {
+                var need = (_ap.weeks_to_promote || 2) - (_ap.weeks_clean || 0);
+                toast(T('Автопилот откроется после ' + need + ' ' +
+                        plural3(need, 'недели', 'недель', 'недель') + ' без правок'));
+                return;
+            }
+            apSave({ level: 'batch' });
+            return;
+        }
+        if (act === 'aplevel') {
+            haptic('light');
+            apSave({ level: actEl.getAttribute('data-v') });
+            return;
+        }
+        if (act === 'apstop') { apStop(); return; }
+        if (act === 'apcap') { askCap(); return; }
+        if (act === 'apfmt') {
+            haptic('light');
+            var k = actEl.getAttribute('data-v');
+            var man = (_ap && _ap.blocked_manual ? _ap.blocked_manual.slice() : []);
+            var i = man.indexOf(k);
+            if (i >= 0) man.splice(i, 1); else man.push(k);
+            apSave({ blocked_formats: man });
+            return;
+        }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') { renderBrief(); return; }
         if (act === 'selday') {

@@ -289,3 +289,128 @@
 .cp-goals { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 .cp-goals .cp-goal:nth-child(5) { grid-column: 1 / -1; }
 .cp-freqs { display: flex; gap: 7px; }
+
+.cp-ap {
+    border-radius: 18px;
+    margin-bottom: 13px;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(99, 102, 241, 0.13), rgba(99, 102, 241, 0.02));
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.cp-ap.on {
+    background: linear-gradient(160deg, rgba(16, 185, 129, 0.13), rgba(16, 185, 129, 0.02));
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.cp-ap-top { display: flex; align-items: center; gap: 11px; padding: 14px 14px 12px; }
+
+.cp-ap-ic {
+    width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.36); color: #818cf8;
+}
+
+.cp-ap.on .cp-ap-ic {
+    background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.36); color: #34d399;
+}
+
+.cp-ap-tx { flex: 1; min-width: 0; }
+.cp-ap-tx b { display: block; font-size: 14.5px; font-weight: 700; color: #e8eaf1; }
+.cp-ap-tx span { font-size: 11px; color: #8d93a8; }
+
+.cp-tgl {
+    width: 46px; height: 27px; border-radius: 99px; flex-shrink: 0; position: relative;
+    border: 0; cursor: pointer; background: rgba(16, 185, 129, 0.85);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.cp-tgl::after {
+    content: ''; position: absolute; top: 3px; right: 3px; width: 21px; height: 21px;
+    border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+    transition: right .18s ease, left .18s ease;
+}
+.cp-tgl.off { background: rgba(255, 255, 255, 0.12); }
+.cp-tgl.off::after { right: auto; left: 3px; }
+
+.cp-ap-body { padding: 0 14px 13px; }
+
+.cp-ap-steps { display: flex; gap: 5px; margin-bottom: 11px; }
+.cp-ap-step {
+    flex: 1; padding: 8px 6px; border-radius: 10px; text-align: center;
+    font-size: 9.5px; line-height: 1.25; font-family: inherit; cursor: pointer;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); color: #4a4d61;
+}
+.cp-ap-step b { display: block; font-size: 10.5px; font-weight: 700; margin-bottom: 2px; color: #8d93a8; }
+.cp-ap-step.done { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #7f9c93; }
+.cp-ap-step.done b { color: #34d399; }
+.cp-ap-step.now { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.55); color: #a8e6cf; }
+.cp-ap-step.now b { color: #d3f5e6; }
+
+.cp-ap-does { display: flex; flex-direction: column; gap: 7px; margin-bottom: 11px; }
+.cp-ap-do { display: flex; align-items: flex-start; gap: 8px; font-size: 11.5px; line-height: 1.4; color: #b6c4c0; }
+.cp-ap-do i { font-size: 13px; color: #34d399; margin-top: 1px; flex-shrink: 0; }
+
+.cp-ap-row {
+    display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 11px;
+    background: rgba(0, 0, 0, 0.24); border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 11px; color: #8d93a8; margin-bottom: 7px;
+}
+.cp-ap-row span { flex: 1; min-width: 0; }
+.cp-ap-row b { color: #e8eaf1; font-weight: 650; display: inline-flex; align-items: center; gap: 3px; }
+.cp-ap-mini {
+    padding: 4px 9px; border-radius: 8px; font-family: inherit; font-size: 10px; font-weight: 600;
+    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #8d93a8; cursor: pointer; flex-shrink: 0;
+}
+
+.cp-ap-stopped {
+    display: flex; align-items: center; gap: 7px; padding: 9px 11px; border-radius: 11px;
+    background: rgba(239, 68, 68, 0.09); border: 1px solid rgba(239, 68, 68, 0.25);
+    font-size: 11px; line-height: 1.35; color: #e8b0b0; margin-bottom: 7px;
+}
+.cp-ap-stopped i { font-size: 14px; color: #ef8080; flex-shrink: 0; }
+
+.cp-ap-stop {
+    width: 100%; min-height: 40px; border-radius: 11px; font-family: inherit;
+    font-size: 12px; font-weight: 650; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.32); color: #f0a0a0;
+}
+
+.cp-fmts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cp-fm {
+    display: flex; align-items: center; gap: 7px; padding: 9px; border-radius: 11px; min-height: 40px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: inherit; cursor: pointer;
+}
+.cp-fm i { font-size: 14px; color: #34d399; flex-shrink: 0; }
+.cp-fm span { flex: 1; min-width: 0; font-size: 11px; font-weight: 600; color: #8d93a8; text-align: left; }
+.cp-fm .x { font-size: 13px; color: #4a4d61; }
+.cp-fm.off { opacity: 0.5; background: rgba(255, 255, 255, 0.02); }
+.cp-fm.off i { color: #4a4d61; }
+.cp-fm.auto { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.06); }
+.cp-fm.auto i { color: #fbbf24; }
+.cp-fm-note { margin-top: 7px; font-size: 10.5px; line-height: 1.4; color: #4a4d61; padding: 0 2px; }
+
+.cp-capbox {
+    position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end;
+    background: rgba(0, 0, 0, 0.55);
+}
+.cp-capin {
+    width: 100%; padding: 18px 16px 22px; border-radius: 20px 20px 0 0;
+    background: #161a2c; border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cp-caph { font-size: 15px; font-weight: 700; color: #e8eaf1; margin-bottom: 5px; }
+.cp-caps { font-size: 11.5px; color: #8d93a8; margin-bottom: 14px; line-height: 1.4; }
+.cp-capopts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.cp-capopt {
+    min-height: 46px; border-radius: 12px; font-family: inherit; font-size: 13px; font-weight: 650;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #8d93a8; cursor: pointer;
+}
+.cp-capopt.on { background: rgba(99, 102, 241, 0.16); border-color: rgba(99, 102, 241, 0.5); color: #c7cbff; }
+.cp-capclose {
+    width: 100%; min-height: 44px; border-radius: 12px; font-family: inherit; font-size: 12.5px;
+    font-weight: 600; background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08); color: #8d93a8; cursor: pointer;
+}
