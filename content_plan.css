@@ -700,3 +700,24 @@
     flex-shrink: 0;
     color: #f472b6;
 }
+
+.cp-go.off {
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .08);
+    color: #4a4d61;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.cp-ready.stop {
+    background: rgba(239, 68, 68, .07);
+    border-color: rgba(239, 68, 68, .26);
+}
+
+.cp-ready-ic.st {
+    background: rgba(239, 68, 68, .16);
+    border-color: rgba(239, 68, 68, .32);
+    color: #ef8080;
+}
+
+.cp-ready-w.st { color: #e8b0b0; }

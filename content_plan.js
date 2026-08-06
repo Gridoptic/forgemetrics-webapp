@@ -191,6 +191,17 @@
                 if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
                 if (_chId == null && _channels.length) _chId = _channels[0].id;
                 renderBrief();
+                // первый запрос ушёл без канала — состояние надо уточнить по выбранному
+                if (_chId) {
+                    apiRequest('/api/v1/content-plan?channel_id=' + _chId)
+                        .then(function (d2) {
+                            if (!d2 || !d2.ok) return;
+                            _state = d2;
+                            if (d2.posts && d2.posts.length) renderWeek(); else renderBrief();
+                        })
+                        .catch(function () {});
+                    loadAutopilot();
+                }
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
     }
@@ -284,6 +295,8 @@
             return '<button class="cp-freq' + (v === _freq ? ' on' : '') + '" data-chip="freq" data-v="' + v + '">' +
                 '<b>' + v + '</b><span>' + esc(T(FREQ_NOTE[v])) + '</span></button>';
         }).join('');
+        var rdy = (_state && _state.readiness) || {};
+        var blocked = rdy.blocked === true;
         var w = wallet();
         var weekPrice = (w.price_day || 10) * _freq;
         var priceTag = w.is_tester ? '' :
@@ -306,8 +319,10 @@
                 'Сколько дней займут посты. Не чаще привычного ритма канала — чтобы не спамить аудиторию.') +
             '<div class="cp-freqs">' + freqs + '</div></div>' +
 
-            '<button class="cp-go" data-act="generate"><i class="ti ti-sparkles"></i> ' +
-            esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote +
+            '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
+            (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
+            esc(T('Собрать план недели')) + (blocked ? '' : priceTag) + '</button>' +
+            (blocked ? '' : lowNote) +
             apPanel() + strategyBlock(), 'brief');
     }
 
@@ -658,6 +673,22 @@
     function readinessBlock() {
         var r = (_state && _state.readiness) || {};
         if (r.ready !== false || r.reason === 'no_channel') return '';
+
+        if (r.reason === 'paused') {
+            return '<div class="cp-ready stop"><div class="cp-ready-h">' +
+                '<span class="cp-ready-ic st"><i class="ti ti-player-pause"></i></span>' +
+                '<span><b>' + esc(T('Канал приостановлен')) + '</b>' +
+                '<span>' + esc(r.title || '') + '</span></span></div>' +
+                '<div class="cp-ready-w st">' + esc(T('Каналов подключено больше, чем допускает ' +
+                'тариф, поэтому этот стоит на паузе. Посты в него не выйдут, а Forge за сборку ' +
+                'спишутся — собирать неделю нет смысла.')) + '</div>' +
+                '<div class="cp-ready-way">' +
+                '<div class="cp-ready-wt">' + esc(T('Сними паузу в настройках канала, ' +
+                'выбери другой канал выше или подключи тариф с бо́льшим числом каналов.')) + '</div>' +
+                '<button class="cp-ready-b" data-act="openstyle">' +
+                '<i class="ti ti-settings"></i> ' + esc(T('Открыть настройки канала')) +
+                '</button></div></div>';
+        }
 
         var why = {
             no_text: 'В канале нет постов с текстом — по ним определяется манера письма.',
