@@ -6188,6 +6188,11 @@ async function runGenerate() {
         stopThinkingAnimation();
         renderResult(result);
 
+        apiRequest('/api/v1/post/limits').then((fresh) => {
+            state.post.limits = fresh;
+            renderLimitBanner(fresh);
+        }).catch(() => {});
+
         loadSuggestions(result.post_id);
     } catch (err) {
         stopThinkingAnimation();
@@ -6534,8 +6539,8 @@ function setupPostEventListeners() {
             const val = els.postTopicInput.value;
             els.postTopicCounter.textContent = String(val.length);
             const lim = state.post.limits || {};
-            const enough = lim.is_tester || Number(lim.balance || 0) >= Number(
-                lim.premium_active ? lim.price_premium : lim.price_standard || 0);
+            const enough = lim.is_tester
+                || Number(lim.balance || 0) >= postModelPrice(lim, postActiveModel(lim));
             const canSubmit = val.trim().length > 0 && enough;
             els.postGenerateBtn.disabled = !canSubmit;
             updateCtaHint();
