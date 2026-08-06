@@ -115,11 +115,16 @@
         return '<div class="cp-head"><button class="cp-back" data-act="close"><i class="ti ti-arrow-left"></i></button>' +
             '<div class="t">' + esc(T('Контент-план на неделю')) + '</div></div>';
     }
-    function setView(html) {
+    var _lastView = null;
+
+    function setView(html, view) {
         var host = ensureScreen();
         stopTimers();
+        var keep = view && view === _lastView;
+        var pos = keep ? host.scrollTop : 0;
         host.innerHTML = headHtml() + html;
-        host.scrollTop = 0;
+        host.scrollTop = pos;
+        _lastView = view || null;
         return host;
     }
     function renderCenter(icon, msg, sub) {
@@ -272,7 +277,7 @@
 
             '<button class="cp-go" data-act="generate"><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote +
-            apPanel() + strategyBlock());
+            apPanel() + strategyBlock(), 'brief');
     }
 
     function doGenerate(btn) {
@@ -379,7 +384,7 @@
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
         setView(header + apPanel() + allBtn + schedBtn + ribbon + detailPanel() +
-            insightsBlock() + strategyBlock() + '<div class="cp-foot">' + foot + '</div>');
+            insightsBlock() + strategyBlock() + '<div class="cp-foot">' + foot + '</div>', 'week');
     }
 
     function loadAutopilot() {
