@@ -4912,6 +4912,8 @@ async function refreshChannelsListSilent() {
 let _bsActiveContext = null;
 
 
+window.showBottomSheet = showBottomSheet;
+
 function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
     closeBottomSheet();
 
@@ -4963,10 +4965,19 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
         }).join('') + '</div>';
     }
 
+    const needSearch = !!(items && items.length > 6);
+    const searchHtml = needSearch
+        ? `<div class="bs-search"><i class="ti ti-search"></i>
+             <input type="text" id="bs-search-input" placeholder="${escapeHtml('Найти канал')}"
+                    autocomplete="off" spellcheck="false">
+             <span class="bs-search-count" id="bs-search-count">${items.length}</span></div>`
+        : '';
+
     sheet.innerHTML = `
         <div class="bs-handle"></div>
         <div class="bs-title">${escapeHtml(title || 'Выбери канал')}</div>
         ${subtitle ? `<div class="bs-subtitle">${escapeHtml(subtitle)}</div>` : ''}
+        ${searchHtml}
         ${itemsHtml}
     `;
 
@@ -4982,6 +4993,37 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
     });
 
     _bsActiveContext = { overlay, sheet, onSelect };
+
+    if (needSearch) {
+        const input = sheet.querySelector('#bs-search-input');
+        const counter = sheet.querySelector('#bs-search-count');
+        const rows = Array.from(sheet.querySelectorAll('.bs-item'));
+        const titles = rows.map((r) => {
+            const it = items.find((x) => String(x.id) === r.dataset.bsItemId) || {};
+            return ((it.title || '') + ' ' + (it.subtitle || '')).toLowerCase();
+        });
+        if (input) {
+            input.addEventListener('input', () => {
+                const q = input.value.trim().toLowerCase();
+                let shown = 0;
+                rows.forEach((r, i) => {
+                    const hit = !q || titles[i].indexOf(q) >= 0;
+                    r.style.display = hit ? '' : 'none';
+                    if (hit) shown++;
+                });
+                if (counter) counter.textContent = String(shown);
+                const empty = sheet.querySelector('.bs-noresult');
+                if (!shown && !empty) {
+                    const d = document.createElement('div');
+                    d.className = 'bs-noresult';
+                    d.textContent = 'Ничего не нашлось';
+                    sheet.querySelector('.bs-list').appendChild(d);
+                } else if (shown && empty) {
+                    empty.remove();
+                }
+            });
+        }
+    }
 
     overlay.addEventListener('click', closeBottomSheet);
 
