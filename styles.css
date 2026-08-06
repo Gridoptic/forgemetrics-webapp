@@ -6036,3 +6036,11 @@ html.cs-modal-open {
 }
 
 .pw-badge.paused i { font-size: 10px; }
+
+.post-style-why {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: #fbbf24;
+    margin-top: 2px;
+}

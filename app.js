@@ -3788,7 +3788,8 @@ function renderPostChannelSelector(channel) {
         if (avatarNode) loadBottomSheetAvatar(channel.id, avatarNode);
     }
 
-    renderStyleToggle(hasVoice, hasVoice);
+    const styleUsable = hasVoice && !(state.post.limits && state.post.limits.channel_paused);
+    renderStyleToggle(styleUsable, styleUsable);
 }
 
 
@@ -3811,10 +3812,14 @@ function renderStyleToggle(canEnable, defaultOn) {
         state.post.useChannelStyle = enabled;
     }
 
+    const lim = (state.post && state.post.limits) || {};
+    const pausedNote = (!canEnable && lim.channel_paused)
+        ? '<span class="post-style-why">канал на паузе — стиль недоступен</span>' : '';
+
     toggle.innerHTML = `
         <div class="post-style-toggle ${canEnable ? '' : 'disabled'}">
             <i class="ti ti-wand post-style-toggle-icon"></i>
-            <span class="post-style-toggle-label">Использовать стиль канала</span>
+            <span class="post-style-toggle-label">Использовать стиль канала${pausedNote}</span>
             <button class="cs-toggle-switch ${enabled ? 'on' : ''}" id="post-style-toggle-btn" ${canEnable ? '' : 'disabled'}>
                 <span class="cs-toggle-knob"></span>
             </button>
