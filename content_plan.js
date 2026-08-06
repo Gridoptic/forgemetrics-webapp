@@ -147,6 +147,15 @@
     }
     var _lastView = null;
 
+    function fillAvatars(host) {
+        if (typeof window.loadChannelAvatar !== 'function') return;
+        host.querySelectorAll('[data-chav]').forEach(function (el) {
+            var id = parseInt(el.getAttribute('data-chav'), 10);
+            var ch = (_channels || []).filter(function (c) { return c.id === id; })[0];
+            if (id && (!ch || ch.has_avatar !== false)) window.loadChannelAvatar(id, el);
+        });
+    }
+
     function setView(html, view) {
         var host = ensureScreen();
         stopTimers();
@@ -155,6 +164,7 @@
         host.innerHTML = headHtml() + html;
         host.scrollTop = pos;
         _lastView = view || null;
+        fillAvatars(host);
         return host;
     }
     function renderCenter(icon, msg, sub) {
@@ -272,7 +282,8 @@
             chanBlock = '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
         } else if (_channels.length === 1) {
             var c = _channels[0]; _chId = c.id;
-            chanBlock = '<div class="cp-onechan"><div class="av">' + esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
+            chanBlock = '<div class="cp-onechan"><div class="av" data-chav="' + c.id + '">' +
+                esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
                 '<div class="nm"><b>' + esc(c.title || ('@' + c.username)) + '</b><span>@' + esc(c.username) + '</span></div></div>';
         } else {
             // список кнопок нежизнеспособен на сетке: до пятидесяти каналов на тарифе
@@ -280,7 +291,8 @@
             _chId = cur.id;
             var styleNote = cur.voice_status === 'done' ? 'стиль настроен' : 'стиль не настроен';
             chanBlock = '<button class="cp-chanpick" data-act="pickchan">' +
-                '<span class="av">' + esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
+                '<span class="av" data-chav="' + cur.id + '">' +
+                esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
                 '<span class="nm"><b>' + esc(cur.title || ('@' + cur.username)) + '</b>' +
                 '<span>@' + esc(cur.username || '') + ' · ' + esc(T(styleNote)) + '</span></span>' +
                 '<span class="sw">' + esc(T('сменить')) + '</span>' +

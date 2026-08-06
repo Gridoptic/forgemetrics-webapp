@@ -5115,6 +5115,10 @@ function setupBottomSheetSwipeToClose(sheet) {
 }
 
 
+window.loadChannelAvatar = function (channelId, node) {
+    return loadBottomSheetAvatar(channelId, node);
+};
+
 async function loadBottomSheetAvatar(channelId, node) {
     try {
         const resp = await fetch(`${API_BASE_URL}/api/v1/channels/${channelId}/avatar`, {

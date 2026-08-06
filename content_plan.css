@@ -723,3 +723,15 @@
 }
 
 .cp-ready-w.st { color: #e8b0b0; }
+
+.cp-chanpick .av img,
+.cp-onechan .av img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
+
+.cp-chanpick .av,
+.cp-onechan .av { overflow: hidden; }
