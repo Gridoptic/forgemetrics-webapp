@@ -12,6 +12,17 @@
     var _batchTimer = null;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
+    function wallet() { return (_state && _state.wallet) || {}; }
+    function forgeTag(n) {
+        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
+        return esc(String(n)) + ' Forge';
+    }
+    function plural3(n, one, few, many) {
+        var a = n % 10, b = n % 100;
+        if (a === 1 && b !== 11) return one;
+        if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+        return many;
+    }
     function esc(s) {
         if (s == null) return '';
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -25,6 +36,9 @@
         ['sales', 'Продажи / офферы'], ['warmup', 'Прогрев к запуску'], ['retention', 'Удержание'],
     ];
     var GOAL_MAP = { growth: 'Рост подписчиков', engagement: 'Вовлечённость', sales: 'Продажи / офферы', warmup: 'Прогрев к запуску', retention: 'Удержание' };
+    var GOAL_ICON = { growth: 'ti-users-plus', engagement: 'ti-heart-handshake', sales: 'ti-building-store',
+        warmup: 'ti-flame', retention: 'ti-anchor' };
+    var FREQ_NOTE = { 3: 'через день', 5: 'будни', 7: 'каждый день' };
     var FMT = {
         news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
         listicle: ['Подборка', 'ti-list-check'], offer: ['Оффер', 'ti-building-store'],
@@ -123,21 +137,35 @@
                     '<span class="nm">' + esc(c.title || ('@' + c.username)) + '</span></button>';
             }).join('') + '</div>';
         }
-        var goals = GOALS.map(function (g) { return chip('goal', g[0], _goal, g[1]); }).join('');
-        var freqs = [3, 5, 7].map(function (n) {
-            return '<button class="cp-chip' + (n === _freq ? ' on' : '') + '" data-chip="freq" data-v="' + n + '">' + n + '</button>';
+        var goals = GOALS.map(function (g) {
+            return '<button class="cp-goal' + (g[0] === _goal ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
+                '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
+                '<span>' + esc(T(g[1])) + '</span></button>';
         }).join('');
+        var freqs = [3, 5, 7].map(function (v) {
+            return '<button class="cp-freq' + (v === _freq ? ' on' : '') + '" data-chip="freq" data-v="' + v + '">' +
+                '<b>' + v + '</b><span>' + esc(T(FREQ_NOTE[v])) + '</span></button>';
+        }).join('');
+        var w = wallet();
+        var weekPrice = (w.price_day || 10) * _freq;
+        var priceTag = w.is_tester ? '' :
+            '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
+        var lowNote = (!w.is_tester && w.balance != null && w.balance < weekPrice)
+            ? '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
+                ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>'
+            : '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         setView(
             '<div class="cp-intro"><div class="cp-introic"><i class="ti ti-calendar-week"></i></div>' +
             '<div class="cp-introt">' + esc(T('Редакция канала под ключ')) + '</div>' +
             '<div class="cp-intros">' + esc(T('ИИ придумает сюжет недели и напишет посты в стиле твоего канала. Дальше — только утвердить.')) + '</div></div>' +
 
             '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Канал')) + '</div>' + chanBlock + '</div>' +
-            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Цель недели')) + '</div><div class="cp-chipwrap">' + goals + '</div></div>' +
-            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Постов в неделю')) + '</div><div class="cp-chipwrap">' + freqs + '</div>' +
+            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Цель недели')) + '</div><div class="cp-goals">' + goals + '</div></div>' +
+            '<div class="cp-sec"><div class="cp-lbl">' + esc(T('Постов в неделю')) + '</div><div class="cp-freqs">' + freqs + '</div>' +
             '<div class="cp-hint">' + esc(T('Не чаще привычного ритма канала — чтобы не спамить аудиторию.')) + '</div></div>' +
 
-            '<button class="cp-go" data-act="generate">' + esc(T('Собрать план недели')) + '</button>');
+            '<button class="cp-go" data-act="generate"><i class="ti ti-sparkles"></i> ' +
+            esc(T('Собрать план недели')) + priceTag + '</button>' + lowNote);
     }
 
     function doGenerate(btn) {
@@ -243,7 +271,52 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(header + allBtn + schedBtn + ribbon + detailPanel() + '<div class="cp-foot">' + foot + '</div>');
+        setView(header + allBtn + schedBtn + ribbon + detailPanel() + insightsBlock() +
+            '<div class="cp-foot">' + foot + '</div>');
+    }
+
+    function insightsBlock() {
+        var ins = (_state && _state.insights) || {};
+        var fm = ins.formats || [], hs = ins.hours || [];
+        if (!fm.length && !hs.length) {
+            if (!ins.published_total) return '';
+            return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
+                esc(T('Накопленные данные')) + '</div><div class="cp-ins-empty">' +
+                esc(T('Опубликовано постов: ' + ins.published_total +
+                      '. Отклик собирается двое суток после выхода — выводы появятся, ' +
+                      'когда наберётся хотя бы по два поста одного формата.')) + '</div></div>';
+        }
+
+        var body = '';
+        if (fm.length) {
+            var max = Math.max.apply(null, fm.map(function (f) { return f.reactions_avg || 0; })) || 1;
+            body += '<div class="cp-ins-t">' + esc(T('Отклик по форматам')) +
+                '<span>' + esc(T('реакций на пост')) + '</span></div>' +
+                '<div class="cp-bars">' + fm.map(function (f) {
+                    var fi = fmtInfo(f.fmt);
+                    var pct = Math.max(4, Math.round((f.reactions_avg || 0) / max * 100));
+                    var weak = (f.reactions_avg || 0) * 3 < max;
+                    return '<div class="cp-bar"><span class="n">' + esc(T(fi[0])) + '</span>' +
+                        '<span class="t"><span class="f' + (weak ? ' weak' : '') + '" style="width:' + pct + '%"></span></span>' +
+                        '<span class="v">' + (f.reactions_avg || 0) + '</span></div>';
+                }).join('') + '</div>';
+        }
+        if (hs.length) {
+            var top = hs.slice(0, 2).map(function (h) {
+                return '<div class="cp-hcell"><div class="k">' + esc(T('окно')) + '</div>' +
+                    '<div class="v">' + (h.hour < 10 ? '0' : '') + h.hour + ':00</div>' +
+                    '<div class="d">' + h.posts + ' ' + esc(T(plural3(h.posts, 'пост', 'поста', 'постов'))) +
+                    ' · ' + esc(T('в среднем')) + ' ' + h.views_avg + '</div></div>';
+            }).join('');
+            body += '<div class="cp-ins-t">' + esc(T('Когда читают')) +
+                '<span>' + esc(T('просмотров за сутки')) + '</span></div>' +
+                '<div class="cp-hgrid">' + top + '</div>';
+        }
+        var since = ins.since ? ' · ' + esc(T('с')) + ' ' + esc(dateLabel(ins.since)) : '';
+        return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
+            esc(T('Накопленные данные')) + '<em>' + (ins.published_total || 0) + ' ' +
+            esc(T(plural3(ins.published_total || 0, 'пост', 'поста', 'постов'))) + since + '</em></div>' +
+            body + '</div>';
     }
 
     function hoursWord(n) {

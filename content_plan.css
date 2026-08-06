@@ -132,3 +132,159 @@
 @media (min-width: 600px) {
     .cp-screen { padding-left: max(14px, calc(50vw - 300px)); padding-right: max(14px, calc(50vw - 300px)); }
 }
+
+.cp-goal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.03);
+    color: #8d93a8;
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    transition: background .18s, border-color .18s, color .18s;
+}
+
+.cp-goal i {
+    font-size: 15px;
+    color: #4a4d61;
+    flex-shrink: 0;
+    transition: color .18s;
+}
+
+.cp-goal.on {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #c7cbff;
+}
+
+.cp-goal.on i { color: #818cf8; }
+
+.cp-freq {
+    flex: 1;
+    min-height: 52px;
+    padding: 9px 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.03);
+    font-family: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition: background .18s, border-color .18s;
+}
+
+.cp-freq b {
+    display: block;
+    font-size: 17px;
+    font-weight: 750;
+    color: #8d93a8;
+}
+
+.cp-freq span {
+    font-size: 9.5px;
+    color: #4a4d61;
+}
+
+.cp-freq.on { background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.5); }
+.cp-freq.on b { color: #c7cbff; }
+.cp-freq.on span { color: #818cf8; }
+
+.cp-gopx {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-left: 2px;
+    border-left: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.cp-gonote {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 10.5px;
+    color: #4a4d61;
+}
+
+.cp-hint.low { color: #ef8080; }
+
+.cp-ins {
+    margin-top: 14px;
+    padding: 13px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.cp-ins-h {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #e8eaf1;
+    margin-bottom: 11px;
+}
+
+.cp-ins-h i { font-size: 15px; color: #60a5fa; }
+
+.cp-ins-h em {
+    margin-left: auto;
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 600;
+    color: #4a4d61;
+}
+
+.cp-ins-empty {
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #8d93a8;
+}
+
+.cp-ins-t {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #8d93a8;
+    margin: 12px 0 8px;
+}
+
+.cp-ins-t:first-child { margin-top: 0; }
+.cp-ins-t span { font-size: 9.5px; font-weight: 500; letter-spacing: 0; text-transform: none; color: #4a4d61; }
+
+.cp-bars { display: flex; flex-direction: column; gap: 7px; }
+
+.cp-bar { display: flex; align-items: center; gap: 8px; }
+.cp-bar .n { width: 76px; flex-shrink: 0; font-size: 10.5px; color: #8d93a8; }
+.cp-bar .t { flex: 1; height: 7px; border-radius: 99px; background: rgba(255, 255, 255, 0.05); overflow: hidden; }
+.cp-bar .f { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #10b981, #34d399); }
+.cp-bar .f.weak { background: linear-gradient(90deg, #6b7088, #4a4d61); }
+.cp-bar .v { width: 38px; flex-shrink: 0; text-align: right; font-size: 10.5px; font-weight: 650; color: #8d93a8; }
+
+.cp-hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+
+.cp-hcell {
+    padding: 9px 10px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cp-hcell .k { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #4a4d61; }
+.cp-hcell .v { font-size: 15px; font-weight: 750; color: #e8eaf1; margin: 2px 0; }
+.cp-hcell .d { font-size: 9.5px; color: #4a4d61; line-height: 1.3; }
+
+.cp-goals { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cp-goals .cp-goal:nth-child(5) { grid-column: 1 / -1; }
+.cp-freqs { display: flex; gap: 7px; }
