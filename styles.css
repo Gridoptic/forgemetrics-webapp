@@ -5996,3 +5996,22 @@ html.cs-modal-open {
     border-left: 1px solid rgba(255, 255, 255, 0.28);
     opacity: 0.95;
 }
+
+.post-channel-selector.loading {
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+.post-channel-selector.loading .post-channel-selector-chev {
+    animation: pcs-chev-spin .7s linear infinite;
+}
+
+@keyframes pcs-chev-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-channel-selector.loading .post-channel-selector-chev {
+        animation: none;
+    }
+}

@@ -5076,8 +5076,14 @@ async function loadBottomSheetAvatar(channelId, node) {
 }
 
 
+let _chSelectorBusy = false;
+
 async function openActiveChannelSelector(opts) {
     opts = opts || {};
+    if (_chSelectorBusy) return;
+    _chSelectorBusy = true;
+    const selector = document.querySelector('.post-channel-selector');
+    if (selector) selector.classList.add('loading');
     try {
         const data = await apiRequest('/api/v1/channels/active');
 
@@ -5148,6 +5154,9 @@ async function openActiveChannelSelector(opts) {
         });
     } catch (e) {
         showToast('Не удалось загрузить каналы', 'alert-triangle');
+    } finally {
+        _chSelectorBusy = false;
+        if (selector) selector.classList.remove('loading');
     }
 }
 
