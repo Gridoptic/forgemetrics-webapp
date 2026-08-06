@@ -263,7 +263,7 @@
                 ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>'
             : '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         setView(
-            heroWeek() +
+            heroWeek() + readinessBlock() +
 
             '<div class="cp-sec">' + secHead('Канал',
                 'Для какого канала собираем неделю. Посты будут написаны в его манере.') +
@@ -618,6 +618,59 @@
             '<div class="cp-fmts">' + cells + '</div>' + note + '</div>';
     }
 
+    function readinessBlock() {
+        var r = (_state && _state.readiness) || {};
+        if (r.ready !== false || r.reason === 'no_channel') return '';
+
+        var why = {
+            no_text: 'В канале нет постов с текстом — по ним определяется манера письма.',
+            no_posts: 'В канале пока нет публикаций, а по ним определяется манера письма.',
+            collecting: 'Стиль ещё собирается — это занимает несколько минут.',
+            no_style: 'Манера письма канала не определена.',
+        }[r.reason] || 'Манера письма канала не определена.';
+
+        if (r.reason === 'collecting') {
+            return '<div class="cp-ready wait"><div class="cp-ready-h">' +
+                '<span class="cp-ready-ic"><i class="ti ti-hourglass"></i></span>' +
+                '<span><b>' + esc(T('Стиль собирается')) + '</b>' +
+                '<span>' + esc(r.title || '') + '</span></span></div>' +
+                '<div class="cp-ready-w">' + esc(T(why)) + '</div></div>';
+        }
+
+        var sub = (r.subscribers ? (r.subscribers + ' ' +
+            T(plural3(r.subscribers, 'подписчик', 'подписчика', 'подписчиков'))) : T('подписчиков пока нет'));
+
+        var strat = (_state && _state.strategy) || {};
+        var stratBtn = strat.has ? '' :
+            '<div class="cp-ready-way pk">' +
+            '<div class="cp-ready-wh"><span class="ic pk"><i class="ti ti-target-arrow"></i></span>' +
+            '<span><b>' + esc(T('Определить нишу и план ведения')) + '</b>' +
+            '<span>' + esc(T('AI-стратегия')) + '</span></span></div>' +
+            '<div class="cp-ready-wt">' + esc(T('Если тематика ещё не определена: стратегия подберёт ' +
+                'нишу с оценкой спроса и конкуренции, опишет аудиторию и разложит рубрики по дням. ' +
+                'Контент-план дальше исполняет этот план.')) + '</div>' +
+            '<button class="cp-ready-b pk" data-act="openstrategy">' +
+            '<i class="ti ti-sparkles"></i> ' + esc(T('Открыть AI-стратегию')) + '</button></div>';
+
+        return '<div class="cp-ready"><div class="cp-ready-h">' +
+            '<span class="cp-ready-ic"><i class="ti ti-eye-off"></i></span>' +
+            '<span><b>' + esc(T('Недостаточно данных для анализа')) + '</b>' +
+            '<span>' + esc((r.title || '') + ' · ' + sub) + '</span></span></div>' +
+            '<div class="cp-ready-w">' + esc(T(why)) +
+            ' ' + esc(T('Материал без такой опоры выйдет обобщённым.')) + '</div>' +
+
+            '<div class="cp-ready-way">' +
+            '<div class="cp-ready-wh"><span class="ic"><i class="ti ti-edit"></i></span>' +
+            '<span><b>' + esc(T('Задать манеру письма')) + '</b>' +
+            '<span>' + esc(T('около минуты')) + '</span></span></div>' +
+            '<div class="cp-ready-wt">' + esc(T('Вставь 3–5 постов, на которые хочешь ориентироваться — ' +
+                'свои или чужие. Этого достаточно, чтобы определить манеру и придерживаться её.')) + '</div>' +
+            '<button class="cp-ready-b" data-act="openstyle">' +
+            '<i class="ti ti-edit"></i> ' + esc(T('Загрузить образцы')) + '</button></div>' +
+
+            stratBtn + '</div>';
+    }
+
     function strategyBlock() {
         var st = (_state && _state.strategy) || {};
 
@@ -905,6 +958,17 @@
                 return back.indexOf(k) < 0;
             });
             apSave({ blocked_formats: keep });
+            return;
+        }
+        if (act === 'openstyle') {
+            haptic('medium');
+            var cid = _chId;
+            close();
+            try {
+                if (cid && typeof window.__openChannelSettings === 'function') {
+                    window.__openChannelSettings(cid);
+                }
+            } catch (e) {}
             return;
         }
         if (act === 'openstrategy') {
