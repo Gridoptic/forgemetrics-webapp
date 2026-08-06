@@ -636,6 +636,8 @@
 }
 .cp-frznote i { font-size: 15px; flex-shrink: 0; margin-top: 1px; color: #ef8080; }
 
+.cp-hero.frozen .cp-ready-b { margin-top: 10px; }
+
 .cp-dsov {
     position: fixed; inset: 0; z-index: 10050; display: flex; align-items: flex-end;
     background: rgba(0, 0, 0, .55); backdrop-filter: blur(7px);
