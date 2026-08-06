@@ -5205,25 +5205,23 @@ function renderChannelSettingsScreen(data) {
 
 
 function renderSettingsLimitsBar(limits) {
-    if (!limits) return '';
-    const used = limits.used || 0;
-    const limit = Math.max(1, limits.limit || 0);
-    const remaining = Math.max(0, limits.limit - used);
-    const exhausted = (limits.limit > 0) && (used >= limits.limit) && !limits.is_tester;
-    const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / limit) * 100)));
-    const timerTxt = (exhausted && limits.seconds_until_reset)
-        ? `<span class="limit-row-timer">${formatRemainingTime(limits.seconds_until_reset)}</span>`
-        : '';
+    const price = Number((limits && limits.price) || 0);
+    if (!price) return '';
+    const balance = Number(limits.balance || 0);
+    const enough = balance >= price;
+    const left = Math.floor(balance / price);
+    const note = enough
+        ? `Баланса хватит на ${left} ${plural3(left, 'обновление', 'обновления', 'обновлений')}`
+        : `Не хватает Forge: нужно ${price}, на балансе ${balance}`;
 
     return `
-        <div class="cs-limits-bar limit-row limit-row-green ${exhausted ? 'limit-row-exhausted' : ''}">
+        <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">Обновлений стиля</span>
-                <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limits.limit} в мес</span></span>
+                <span class="limit-row-label">Обновление стиля · ${price} Forge</span>
+                <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
-            <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
-            ${timerTxt}
+            <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
         </div>
     `;
 }
