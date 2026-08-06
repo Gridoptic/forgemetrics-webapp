@@ -287,6 +287,12 @@
         }).join('');
     }
 
+    function goalWord() {
+        var g = T(GOAL_MAP[_goal] || _goal);
+        var lang = (typeof window.getLang === 'function') ? window.getLang() : 'ru';
+        return lang === 'ru' ? g.toLowerCase() : g;
+    }
+
     function weekLegend() {
         return '<div class="cp-lgd">' +
             '<span class="cp-lg"><i class="a"></i>' + esc(T('задано вручную')) + '</span>' +
@@ -308,8 +314,8 @@
                 esc(', ' + T('чтобы она связала их одним сюжетом.')) + '</span></div>';
         }
         var head = pin
-            ? T('Закреплено') + ' ' + pin + ' ' + T(plural3(pin, 'день', 'дня', 'дней')) + ', ' +
-              free + ' ' + T('система расставит сама под сюжет недели.')
+            ? T('Закреплено') + ' ' + pin + ' ' + T(plural3(pin, 'день', 'дня', 'дней')) + ' ' +
+              T('из') + ' ' + act + ' — ' + T('остальные разложит система под сюжет недели.')
             : T('Все дни на усмотрение системы — она разложит форматы под сюжет недели.');
         var tail = w.is_tester ? ''
             : ' <b>' + esc(act + ' ' + T(postsWord) + ' — ' + price + ' Forge.') + '</b>';
@@ -338,7 +344,7 @@
         return '<div class="cp-hero">' +
             '<div class="cp-hero-eye">' + esc(T('План на неделю') + ' · ' + act + ' ' +
                 T(plural3(act, 'пост', 'поста', 'постов'))) + '</div>' +
-            '<h2>' + esc(T('Неделя под') + ' ' + T(GOAL_MAP[_goal] || _goal).toLowerCase()) + '</h2>' +
+            '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы задать формат или убрать публикацию.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
             weekLegend() + weekBar() + '</div>';

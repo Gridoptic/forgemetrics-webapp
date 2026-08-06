@@ -3140,16 +3140,15 @@ window.__I18N_DICT = {
   "решает система": "system decides",
   "без публикации": "no post",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "All days are left to the system — it will lay out the formats around the week's storyline.",
-  "Закреплено": "Fixed",
-  "система расставит сама под сюжет недели.": "the system will arrange them itself to match the week's storyline.",
+  "Закреплено": "Pinned",
   "Задано вручную": "Set manually",
   "Неделя выйдет набором отдельных постов —": "The week will come out as a set of separate posts —",
   "оставь два-три дня системе": "leave two or three days to the system",
   "чтобы она связала их одним сюжетом.": "so it ties them together with a single storyline.",
-  "План недоступен": "Plan unavailable",
+  "План недоступен": "Weekly plan unavailable",
   "Канал приостановлен": "Channel paused",
-  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "More channels are connected than the plan allows. Publishing does not go through.",
-  "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Unpause the channel in its settings or pick another one — then the week will come together.",
+  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "More channels are connected than your plan allows. Publishing is blocked.",
+  "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Unpause the channel in its settings or pick another one — then the weekly plan can be built.",
   "Открыть настройки канала": "Open channel settings",
   "Что выходит в этот день": "What goes out on this day",
   "Решает система": "System decides",
@@ -3157,7 +3156,8 @@ window.__I18N_DICT = {
   "Не публиковать": "Do not publish",
   "день останется пустым": "the day stays empty",
   "В неделе не может быть меньше трёх постов": "A week cannot have fewer than three posts",
-  "Вопрос": "Question"
+  "Вопрос": "Question",
+  "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
   "пауза": "en pausa",
@@ -6294,15 +6294,14 @@ window.__I18N_DICT = {
   "без публикации": "sin publicación",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Todos los días quedan a criterio del sistema — repartirá los formatos según el hilo de la semana.",
   "Закреплено": "Fijado",
-  "система расставит сама под сюжет недели.": "el sistema los distribuirá por su cuenta según el hilo de la semana.",
   "Задано вручную": "Definido manualmente",
   "Неделя выйдет набором отдельных постов —": "La semana saldrá como un conjunto de posts sueltos —",
   "оставь два-три дня системе": "deja dos o tres días al sistema",
   "чтобы она связала их одним сюжетом.": "para que los una con un solo hilo.",
-  "План недоступен": "Plan no disponible",
+  "План недоступен": "Plan semanal no disponible",
   "Канал приостановлен": "Canal en pausa",
   "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Hay más canales conectados de los que permite el plan. La publicación no se realiza.",
-  "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Quita la pausa en los ajustes del canal o elige otro — así se armará la semana.",
+  "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Quita la pausa en los ajustes del canal o elige otro — así se podrá componer la semana.",
   "Открыть настройки канала": "Abrir ajustes del canal",
   "Что выходит в этот день": "Qué se publica ese día",
   "Решает система": "Decide el sistema",
@@ -6317,7 +6316,8 @@ window.__I18N_DICT = {
   "Четверг": "Jueves",
   "Пятница": "Viernes",
   "Суббота": "Sábado",
-  "Воскресенье": "Domingo"
+  "Воскресенье": "Domingo",
+  "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
   "пауза": "pausiert",
@@ -9446,15 +9446,14 @@ window.__I18N_DICT = {
   "План на неделю": "Wochenplan",
   "поста": "Posts",
   "постов": "Posts",
-  "Неделя под": "Woche für",
+  "Неделя под": "Wochenziel:",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "Tippe auf einen Tag, um ein Format festzulegen oder die Veröffentlichung zu entfernen.",
   "система": "System",
   "задано вручную": "manuell festgelegt",
   "решает система": "System entscheidet",
   "без публикации": "ohne Veröffentlichung",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Alle Tage liegen im Ermessen des Systems — es verteilt die Formate passend zum Wochenthema.",
-  "Закреплено": "Festgelegt",
-  "система расставит сама под сюжет недели.": "das System verteilt sie selbst passend zum Wochenthema.",
+  "Закреплено": "Fixiert",
   "Задано вручную": "Manuell festgelegt",
   "Неделя выйдет набором отдельных постов —": "Die Woche erscheint als Reihe einzelner Posts —",
   "оставь два-три дня системе": "überlasse dem System zwei bis drei Tage",
@@ -9477,7 +9476,8 @@ window.__I18N_DICT = {
   "Четверг": "Donnerstag",
   "Пятница": "Freitag",
   "Суббота": "Samstag",
-  "Воскресенье": "Sonntag"
+  "Воскресенье": "Sonntag",
+  "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
   "пауза": "кідіртілген",
@@ -12609,7 +12609,6 @@ window.__I18N_DICT = {
   "без публикации": "жарияланымсыз",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Барлық күндер жүйенің қарауында — ол форматтарды апта сюжетіне қарай орналастырады.",
   "Закреплено": "Бекітілген",
-  "система расставит сама под сюжет недели.": "жүйе апта сюжетіне қарай өзі орналастырады.",
   "Задано вручную": "Қолмен белгіленген",
   "Неделя выйдет набором отдельных постов —": "Апта жеке посттардың жинағы болып шығады —",
   "оставь два-три дня системе": "екі-үш күнді жүйеге қалдыр",
@@ -12632,7 +12631,8 @@ window.__I18N_DICT = {
   "Четверг": "Бейсенбі",
   "Пятница": "Жұма",
   "Суббота": "Сенбі",
-  "Воскресенье": "Жексенбі"
+  "Воскресенье": "Жексенбі",
+  "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
   "пауза": "pauza",
@@ -15769,7 +15769,6 @@ window.__I18N_DICT = {
   "без публикации": "nashrsiz",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Barcha kunlar tizim ixtiyorida — u formatlarni hafta syujetiga moslab taqsimlaydi.",
   "Закреплено": "Belgilangan",
-  "система расставит сама под сюжет недели.": "tizim hafta syujetiga moslab o'zi joylashtiradi.",
   "Задано вручную": "Qo'lda belgilangan",
   "Неделя выйдет набором отдельных постов —": "Hafta alohida postlar to'plami bo'lib chiqadi —",
   "оставь два-три дня системе": "ikki-uch kunni tizimga qoldir",
@@ -15792,7 +15791,8 @@ window.__I18N_DICT = {
   "Четверг": "Payshanba",
   "Пятница": "Juma",
   "Суббота": "Shanba",
-  "Воскресенье": "Yakshanba"
+  "Воскресенье": "Yakshanba",
+  "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
   "пауза": "паўза",
@@ -18928,7 +18928,6 @@ window.__I18N_DICT = {
   "без публикации": "без публікацыі",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Усе дні на меркаванне сістэмы — яна размяркуе фарматы пад сюжэт тыдня.",
   "Закреплено": "Замацавана",
-  "система расставит сама под сюжет недели.": "сістэма расставіць сама пад сюжэт тыдня.",
   "Задано вручную": "Зададзена ўручную",
   "Неделя выйдет набором отдельных постов —": "Тыдзень выйдзе наборам асобных пастоў —",
   "оставь два-три дня системе": "пакінь два-тры дні сістэме",
@@ -18951,7 +18950,8 @@ window.__I18N_DICT = {
   "Четверг": "Чацвер",
   "Пятница": "Пятніца",
   "Суббота": "Субота",
-  "Воскресенье": "Нядзеля"
+  "Воскресенье": "Нядзеля",
+  "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
   "пауза": "fasilədə",
@@ -22088,7 +22088,6 @@ window.__I18N_DICT = {
   "без публикации": "paylaşımsız",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Bütün günlər sistemin ixtiyarındadır — formatları həftənin süjetinə uyğun paylayacaq.",
   "Закреплено": "Sabitlənib",
-  "система расставит сама под сюжет недели.": "sistem həftənin süjetinə uyğun özü düzəcək.",
   "Задано вручную": "Əl ilə təyin edilib",
   "Неделя выйдет набором отдельных постов —": "Həftə ayrı-ayrı postların yığımı kimi çıxacaq —",
   "оставь два-три дня системе": "iki-üç günü sistemə burax",
@@ -22111,7 +22110,8 @@ window.__I18N_DICT = {
   "Четверг": "Cümə axşamı",
   "Пятница": "Cümə",
   "Суббота": "Şənbə",
-  "Воскресенье": "Bazar"
+  "Воскресенье": "Bazar",
+  "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
   "пауза": "موقوف",
@@ -25248,7 +25248,6 @@ window.__I18N_DICT = {
   "без публикации": "بدون نشر",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "جميع الأيام متروكة للنظام — سيوزّع الأنواع بما يناسب موضوع الأسبوع.",
   "Закреплено": "مثبَّت",
-  "система расставит сама под сюжет недели.": "أيام يوزّعها النظام بنفسه بما يناسب موضوع الأسبوع.",
   "Задано вручную": "محدد يدويًا",
   "Неделя выйдет набором отдельных постов —": "سيصدر الأسبوع كمجموعة منشورات منفصلة —",
   "оставь два-три дня системе": "اترك يومين أو ثلاثة للنظام",
@@ -25271,7 +25270,8 @@ window.__I18N_DICT = {
   "Четверг": "الخميس",
   "Пятница": "الجمعة",
   "Суббота": "السبت",
-  "Воскресенье": "الأحد"
+  "Воскресенье": "الأحد",
+  "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
   "пауза": "متوقف",
@@ -28408,7 +28408,6 @@ window.__I18N_DICT = {
   "без публикации": "بدون انتشار",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "همهٔ روزها به عهدهٔ سیستم است — قالب‌ها را متناسب با موضوع هفته می‌چیند.",
   "Закреплено": "تثبیت‌شده",
-  "система расставит сама под сюжет недели.": "روز را سیستم خودش متناسب با موضوع هفته می‌چیند.",
   "Задано вручную": "دستی تعیین‌شده",
   "Неделя выйдет набором отдельных постов —": "هفته به‌صورت مجموعه‌ای از پست‌های جدا منتشر می‌شود —",
   "оставь два-три дня системе": "دو سه روز را به سیستم بسپار",
@@ -28431,7 +28430,8 @@ window.__I18N_DICT = {
   "Четверг": "پنجشنبه",
   "Пятница": "جمعه",
   "Суббота": "شنبه",
-  "Воскресенье": "یکشنبه"
+  "Воскресенье": "یکشنبه",
+  "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
   "пауза": "duraklatıldı",
@@ -31560,7 +31560,7 @@ window.__I18N_DICT = {
   "План на неделю": "Haftalık plan",
   "поста": "gönderi",
   "постов": "gönderi",
-  "Неделя под": "Haftalık",
+  "Неделя под": "Haftanın hedefi:",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "Formatı belirlemek veya yayını kaldırmak için güne dokun.",
   "система": "sistem",
   "задано вручную": "elle belirlendi",
@@ -31568,7 +31568,6 @@ window.__I18N_DICT = {
   "без публикации": "yayın yok",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Tüm günler sistemin kararına bırakıldı — formatları haftanın temasına göre dağıtır.",
   "Закреплено": "Sabitlenen",
-  "система расставит сама под сюжет недели.": "kalanını sistem haftanın temasına göre yerleştirir.",
   "Задано вручную": "Elle belirlendi",
   "Неделя выйдет набором отдельных постов —": "Hafta birbirinden bağımsız gönderilerden oluşur —",
   "оставь два-три дня системе": "iki üç günü sisteme bırak",
@@ -31591,7 +31590,8 @@ window.__I18N_DICT = {
   "Четверг": "Perşembe",
   "Пятница": "Cuma",
   "Суббота": "Cumartesi",
-  "Воскресенье": "Pazar"
+  "Воскресенье": "Pazar",
+  "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
   "пауза": "रुका हुआ",
@@ -34728,7 +34728,6 @@ window.__I18N_DICT = {
   "без публикации": "प्रकाशन नहीं",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "सभी दिन सिस्टम के भरोसे हैं — वह हफ़्ते के विषय के अनुसार फ़ॉर्मैट तय करेगा।",
   "Закреплено": "निर्धारित",
-  "система расставит сама под сюжет недели.": "दिन सिस्टम खुद हफ़्ते के विषय के अनुसार तय करेगा।",
   "Задано вручную": "मैन्युअल रूप से तय",
   "Неделя выйдет набором отдельных постов —": "हफ़्ता अलग-अलग पोस्ट के समूह के रूप में निकलेगा —",
   "оставь два-три дня системе": "दो-तीन दिन सिस्टम के लिए छोड़ दो",
@@ -34751,7 +34750,8 @@ window.__I18N_DICT = {
   "Четверг": "गुरुवार",
   "Пятница": "शुक्रवार",
   "Суббота": "शनिवार",
-  "Воскресенье": "रविवार"
+  "Воскресенье": "रविवार",
+  "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
   "пауза": "বিরতি",
@@ -37882,13 +37882,12 @@ window.__I18N_DICT = {
   "постов": "পোস্ট",
   "Неделя под": "সপ্তাহের লক্ষ্য",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "ফরম্যাট ঠিক করতে বা প্রকাশ বাদ দিতে যেকোনো দিনে চাপ দাও।",
-  "система": "স্বয়ং",
+  "система": "স্বয়ংক্রিয়",
   "задано вручную": "ম্যানুয়ালি নির্ধারিত",
   "решает система": "সিস্টেম ঠিক করবে",
   "без публикации": "প্রকাশ নেই",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "সব দিন সিস্টেমের উপর ছেড়ে দেওয়া হয়েছে — সপ্তাহের বিষয় অনুযায়ী ফরম্যাট সাজাবে।",
   "Закреплено": "নির্ধারিত",
-  "система расставит сама под сюжет недели.": "দিন সিস্টেম নিজেই সপ্তাহের বিষয় অনুযায়ী সাজাবে।",
   "Задано вручную": "ম্যানুয়ালি নির্ধারিত",
   "Неделя выйдет набором отдельных постов —": "সপ্তাহটি আলাদা আলাদা পোস্টের সমষ্টি হয়ে বেরোবে —",
   "оставь два-три дня системе": "দুই-তিন দিন সিস্টেমের জন্য ছেড়ে দাও",
@@ -37911,7 +37910,8 @@ window.__I18N_DICT = {
   "Четверг": "বৃহস্পতিবার",
   "Пятница": "শুক্রবার",
   "Суббота": "শনিবার",
-  "Воскресенье": "রবিবার"
+  "Воскресенье": "রবিবার",
+  "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
   "пауза": "dijeda",
@@ -41048,7 +41048,6 @@ window.__I18N_DICT = {
   "без публикации": "tanpa publikasi",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Semua hari diserahkan ke sistem — format akan disusun sesuai tema minggu ini.",
   "Закреплено": "Ditetapkan",
-  "система расставит сама под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini.",
   "Задано вручную": "Diatur manual",
   "Неделя выйдет набором отдельных постов —": "Minggu ini akan menjadi kumpulan post yang terpisah —",
   "оставь два-три дня системе": "sisakan dua atau tiga hari untuk sistem",
@@ -41064,14 +41063,15 @@ window.__I18N_DICT = {
   "Не публиковать": "Jangan publikasikan",
   "день останется пустым": "hari akan tetap kosong",
   "В неделе не может быть меньше трёх постов": "Dalam seminggu tidak boleh kurang dari tiga post",
-  "Вопрос": "Tanya",
+  "Вопрос": "Pertanyaan",
   "Понедельник": "Senin",
   "Вторник": "Selasa",
   "Среда": "Rabu",
   "Четверг": "Kamis",
   "Пятница": "Jumat",
   "Суббота": "Sabtu",
-  "Воскресенье": "Minggu"
+  "Воскресенье": "Minggu",
+  "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
   "пауза": "tạm dừng",
@@ -44208,12 +44208,11 @@ window.__I18N_DICT = {
   "без публикации": "không đăng bài",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Tất cả các ngày do hệ thống quyết định — hệ thống sẽ sắp xếp định dạng theo mạch nội dung tuần.",
   "Закреплено": "Đã cố định",
-  "система расставит сама под сюжет недели.": "hệ thống sẽ tự sắp xếp theo mạch nội dung tuần.",
   "Задано вручную": "Đặt thủ công",
   "Неделя выйдет набором отдельных постов —": "Tuần sẽ thành một tập hợp bài rời rạc —",
   "оставь два-три дня системе": "hãy để hai đến ba ngày cho hệ thống",
   "чтобы она связала их одним сюжетом.": "để hệ thống liên kết chúng thành một mạch nội dung.",
-  "План недоступен": "Không thể lập kế hoạch",
+  "План недоступен": "Kế hoạch tuần không khả dụng",
   "Канал приостановлен": "Kênh đã tạm dừng",
   "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Số kênh đã kết nối vượt quá hạn mức gói cước. Bài đăng không được gửi đi.",
   "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Bỏ tạm dừng trong cài đặt kênh hoặc chọn kênh khác — khi đó tuần sẽ được lập.",
@@ -44231,7 +44230,8 @@ window.__I18N_DICT = {
   "Четверг": "Thứ Năm",
   "Пятница": "Thứ Sáu",
   "Суббота": "Thứ Bảy",
-  "Воскресенье": "Chủ Nhật"
+  "Воскресенье": "Chủ Nhật",
+  "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
   "пауза": "em pausa",
@@ -47358,9 +47358,9 @@ window.__I18N_DICT = {
   "Понятно": "Entendi",
   "Новые ссылки недоступны. Уже созданные продолжают считать переходы.": "Não é possível criar novos links. Os existentes continuam contando.",
   "План на неделю": "Plano da semana",
-  "поста": "post",
+  "поста": "posts",
   "постов": "posts",
-  "Неделя под": "Semana com",
+  "Неделя под": "Objetivo da semana:",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "Toque em um dia para definir o formato ou remover a publicação.",
   "система": "sistema",
   "задано вручную": "definido manualmente",
@@ -47368,12 +47368,11 @@ window.__I18N_DICT = {
   "без публикации": "sem publicação",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Todos os dias ficam a critério do sistema — ele vai distribuir os formatos conforme o tema da semana.",
   "Закреплено": "Fixados",
-  "система расставит сама под сюжет недели.": "o sistema distribui o restante conforme o tema da semana.",
   "Задано вручную": "Definido manualmente",
   "Неделя выйдет набором отдельных постов —": "A semana vai sair como um conjunto de posts separados —",
   "оставь два-три дня системе": "deixe dois ou três dias para o sistema",
   "чтобы она связала их одним сюжетом.": "para que ele conecte tudo em um tema único.",
-  "План недоступен": "Plano indisponível",
+  "План недоступен": "Plano da semana indisponível",
   "Канал приостановлен": "Canal pausado",
   "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Há mais canais conectados do que o plano permite. A publicação não é realizada.",
   "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Retire a pausa nas configurações do canal ou escolha outro — assim a semana será montada.",
@@ -47391,7 +47390,8 @@ window.__I18N_DICT = {
   "Четверг": "Quinta-feira",
   "Пятница": "Sexta-feira",
   "Суббота": "Sábado",
-  "Воскресенье": "Domingo"
+  "Воскресенье": "Domingo",
+  "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
   "пауза": "en pause",
@@ -50520,7 +50520,7 @@ window.__I18N_DICT = {
   "План на неделю": "Plan de la semaine",
   "поста": "posts",
   "постов": "posts",
-  "Неделя под": "Semaine pour",
+  "Неделя под": "Objectif de la semaine :",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "Appuie sur un jour pour définir un format ou supprimer la publication.",
   "система": "système",
   "задано вручную": "défini manuellement",
@@ -50528,14 +50528,13 @@ window.__I18N_DICT = {
   "без публикации": "sans publication",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Tous les jours sont laissés au système — il répartira les formats selon le fil de la semaine.",
   "Закреплено": "Fixé",
-  "система расставит сама под сюжет недели.": "le système les répartira lui-même selon le fil de la semaine.",
   "Задано вручную": "Défini manuellement",
   "Неделя выйдет набором отдельных постов —": "La semaine sortira comme une série de posts séparés —",
   "оставь два-три дня системе": "laisse deux ou trois jours au système",
   "чтобы она связала их одним сюжетом.": "pour qu'il les relie par un même fil.",
   "План недоступен": "Plan indisponible",
   "Канал приостановлен": "Canal en pause",
-  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Plus de canaux sont connectés que ne l'autorise le forfait. La publication ne passe pas.",
+  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Plus de canaux sont connectés que ne l'autorise le forfait. La publication est bloquée.",
   "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Retire la pause dans les paramètres du canal ou choisis-en un autre — la semaine se constituera alors.",
   "Открыть настройки канала": "Ouvrir les paramètres du canal",
   "Что выходит в этот день": "Ce qui sort ce jour-là",
@@ -50551,7 +50550,8 @@ window.__I18N_DICT = {
   "Четверг": "Jeudi",
   "Пятница": "Vendredi",
   "Суббота": "Samedi",
-  "Воскресенье": "Dimanche"
+  "Воскресенье": "Dimanche",
+  "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
   "пауза": "in pausa",
@@ -53680,7 +53680,7 @@ window.__I18N_DICT = {
   "План на неделю": "Piano settimanale",
   "поста": "post",
   "постов": "post",
-  "Неделя под": "Settimana da",
+  "Неделя под": "Obiettivo della settimana:",
   "Нажми на день, чтобы задать формат или убрать публикацию.": "Tocca un giorno per impostare il formato o togliere la pubblicazione.",
   "система": "sistema",
   "задано вручную": "impostato manualmente",
@@ -53688,12 +53688,11 @@ window.__I18N_DICT = {
   "без публикации": "senza pubblicazione",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Tutti i giorni sono affidati al sistema — distribuirà i formati in base al tema della settimana.",
   "Закреплено": "Fissati",
-  "система расставит сама под сюжет недели.": "il sistema disporrà il resto in base al tema della settimana.",
   "Задано вручную": "Impostato manualmente",
   "Неделя выйдет набором отдельных постов —": "La settimana uscirà come una serie di post separati —",
   "оставь два-три дня системе": "lascia due o tre giorni al sistema",
   "чтобы она связала их одним сюжетом.": "così da collegarli con un tema unico.",
-  "План недоступен": "Piano non disponibile",
+  "План недоступен": "Piano settimanale non disponibile",
   "Канал приостановлен": "Canale in pausa",
   "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "Sono collegati più canali di quanti ne consenta il piano. La pubblicazione non viene eseguita.",
   "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "Togli la pausa nelle impostazioni del canale o scegline un altro — così la settimana si comporrà.",
@@ -53711,7 +53710,8 @@ window.__I18N_DICT = {
   "Четверг": "Giovedì",
   "Пятница": "Venerdì",
   "Суббота": "Sabato",
-  "Воскресенье": "Domenica"
+  "Воскресенье": "Domenica",
+  "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
   "пауза": "ቆሟል",
@@ -56848,20 +56848,19 @@ window.__I18N_DICT = {
   "без публикации": "ልጥፍ የለም",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "ሁሉም ቀናት በስርዓቱ ውሳኔ ላይ ናቸው — ቅርጸቶቹን በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።",
   "Закреплено": "ተወስኗል",
-  "система расставит сама под сюжет недели.": "ስርዓቱ በሳምንቱ ጭብጥ መሠረት ራሱ ያዘጋጃል።",
   "Задано вручную": "በእጅ ተቀምጧል",
   "Неделя выйдет набором отдельных постов —": "ሳምንቱ የተነጣጠሉ ልጥፎች ስብስብ ይሆናል —",
   "оставь два-три дня системе": "ሁለት ወይም ሶስት ቀናትን ለስርዓቱ ተው",
   "чтобы она связала их одним сюжетом.": "በአንድ ጭብጥ እንዲያገናኛቸው።",
   "План недоступен": "ዕቅድ አይገኝም",
   "Канал приостановлен": "ቻናሉ ቆሟል",
-  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "ከታሪፍህ ከሚፈቅደው በላይ ቻናሎች ተያይዘዋል። ልጥፍ አይላክም።",
+  "Подключено больше каналов, чем допускает тариф. Публикация не проходит.": "ታሪፉ ከሚፈቅደው በላይ ቻናሎች ተያይዘዋል። ልጥፍ አይላክም።",
   "Сними паузу в настройках канала или выбери другой — тогда неделя соберётся.": "በቻናል ቅንብሮች ውስጥ ማቆሚያውን አንሳ ወይም ሌላ ቻናል ምረጥ — ከዚያ ሳምንቱ ይዘጋጃል።",
   "Открыть настройки канала": "የቻናል ቅንብሮችን ክፈት",
   "Что выходит в этот день": "በዚህ ቀን ምን ይወጣል",
   "Решает система": "ስርዓቱ ይወስናል",
   "подберёт формат под сюжет недели": "ቅርጸቱን በሳምንቱ ጭብጥ መሠረት ይመርጣል",
-  "Не публиковать": "አታትም",
+  "Не публиковать": "አይለጠፍም",
   "день останется пустым": "ቀኑ ባዶ ይሆናል",
   "В неделе не может быть меньше трёх постов": "በሳምንት ውስጥ ከሶስት ልጥፎች ያነሰ ሊሆን አይችልም",
   "Вопрос": "ጥያቄ",
@@ -56871,7 +56870,8 @@ window.__I18N_DICT = {
   "Четверг": "ሐሙስ",
   "Пятница": "ዓርብ",
   "Суббота": "ቅዳሜ",
-  "Воскресенье": "እሁድ"
+  "Воскресенье": "እሁድ",
+  "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
   "пауза": "imesitishwa",
@@ -60008,7 +60008,6 @@ window.__I18N_DICT = {
   "без публикации": "bila chapisho",
   "Все дни на усмотрение системы — она разложит форматы под сюжет недели.": "Siku zote zimeachiwa mfumo — utapanga miundo kulingana na mtiririko wa wiki.",
   "Закреплено": "Zimewekwa",
-  "система расставит сама под сюжет недели.": "mfumo utapanga wenyewe kulingana na mtiririko wa wiki.",
   "Задано вручную": "Imewekwa mwenyewe",
   "Неделя выйдет набором отдельных постов —": "Wiki itakuwa mkusanyiko wa machapisho yaliyotengana —",
   "оставь два-три дня системе": "acha siku mbili au tatu kwa mfumo",
@@ -60031,6 +60030,7 @@ window.__I18N_DICT = {
   "Четверг": "Alhamisi",
   "Пятница": "Ijumaa",
   "Суббота": "Jumamosi",
-  "Воскресенье": "Jumapili"
+  "Воскресенье": "Jumapili",
+  "остальные разложит система под сюжет недели.": "zilizobaki hupangwa na mfumo kulingana na mtiririko wa wiki."
  }
 };
