@@ -3588,6 +3588,12 @@ function updateCtaHint() {
 }
 
 
+document.addEventListener('click', function (e) {
+    const seg = e.target.closest('[data-pmodel]');
+    if (seg) setPostModel(seg.dataset.pmodel);
+});
+
+
 function setProfanity(on) {
     state.post.useProfanity = !!on;
     if (els.postProfanityToggle) {
@@ -3823,6 +3829,27 @@ function renderStyleToggle(canEnable, defaultOn) {
 }
 
 
+function postModelPrice(limits, model) {
+    const l = limits || (state.post && state.post.limits) || {};
+    return Number((model === 'standard' ? l.price_standard : l.price_premium) || 0);
+}
+
+function postActiveModel(limits) {
+    const l = limits || (state.post && state.post.limits) || {};
+    if (!l.can_choose_model) return l.premium_active ? 'premium' : 'standard';
+    return state.post.model === 'standard' ? 'standard' : 'premium';
+}
+
+function setPostModel(model) {
+    const l = (state.post && state.post.limits) || {};
+    if (!l.can_choose_model) return;
+    const next = model === 'standard' ? 'standard' : 'premium';
+    if (state.post.model === next) return;
+    state.post.model = next;
+    hapticLight();
+    renderLimitBanner(l);
+}
+
 function renderLimitBanner(limits) {
     if (!els.postLimitBanner) return;
 
@@ -3830,8 +3857,10 @@ function renderLimitBanner(limits) {
 
     const balance = Number(limits.balance || 0);
     const isTester = !!limits.is_tester;
-    const premium = !!limits.premium_active;
-    const price = premium ? Number(limits.price_premium || 0) : Number(limits.price_standard || 0);
+    const canChoose = !!limits.can_choose_model;
+    const model = postActiveModel(limits);
+    const premium = model === 'premium';
+    const price = postModelPrice(limits, model);
     setForgeBalance(balance);
 
     const enough = isTester || balance >= price;
@@ -3842,25 +3871,67 @@ function renderLimitBanner(limits) {
         els.postGenerateBtn.disabled = false;
     }
 
-    const modelLabel = premium ? 'Премиум-модель' : 'Стандартная модель';
     const right = isTester
         ? '<span class="limit-row-tester">тестер · без списаний</span>'
         : `<span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>`;
 
-    const note = enough
-        ? `<div class="fwb-note">Генерация спишет ${price} Forge${premium ? '' : ' — стандартная модель дешевле'}</div>`
-        : `<div class="fwb-note fwb-low">Не хватает Forge: нужно ${price}, на балансе ${balance}. Пополни в кабинете.</div>`;
+    let head;
+    if (canChoose) {
+        const seg = (key, ico, label) => {
+            const p = postModelPrice(limits, key);
+            return `<button class="pm-seg${model === key ? ' on' : ''}" data-pmodel="${key}">`
+                + `<i class="ti ti-${ico}"></i><span>${label}</span>`
+                + `<em>${forgeAmount(p, 11)}</em></button>`;
+        };
+        head = `<div class="pm-segs">${seg('premium', 'diamond', 'Премиум')}`
+            + `${seg('standard', 'edit', 'Стандарт')}</div>`;
+    } else {
+        head = `<div class="limit-row-head">`
+            + `<span class="limit-row-icon"><i class="ti ti-${premium ? 'diamond' : 'edit'}"></i></span>`
+            + `<span class="limit-row-label">${premium ? 'Премиум-модель' : 'Стандартная модель'}</span>`
+            + `${right}</div>`;
+    }
+
+    let note;
+    if (isTester) {
+        note = '<div class="fwb-note">Тестовый режим — списаний нет</div>';
+    } else if (!enough) {
+        note = `<div class="fwb-note fwb-low">Не хватает Forge: нужно ${price}, `
+            + `на балансе ${balance}. Пополни в кабинете.</div>`;
+    } else {
+        const left = price > 0 ? Math.floor(balance / price) : 0;
+        const word = premium
+            ? plural3(left, 'премиум-пост', 'премиум-поста', 'премиум-постов')
+            : plural3(left, 'стандартный пост', 'стандартных поста', 'стандартных постов');
+        note = `<div class="fwb-note">Баланса хватит на ${left} ${word}</div>`;
+    }
 
     els.postLimitBanner.innerHTML = `
         <div class="limit-row limit-row-${premium ? 'purple' : 'green'}${enough ? '' : ' limit-row-exhausted'}">
-            <div class="limit-row-head">
-                <span class="limit-row-icon"><i class="ti ti-${premium ? 'diamond' : 'edit'}"></i></span>
-                <span class="limit-row-label">${modelLabel}</span>
-                ${right}
-            </div>
-            ${note}
+            ${head}
+            <div class="pm-foot">${note}${canChoose && !isTester ? right : ''}</div>
         </div>`;
+    updateGenerateBtnPrice();
     updateCtaHint();
+}
+
+function updateGenerateBtnPrice() {
+    if (!els.postGenerateBtn) return;
+    const l = (state.post && state.post.limits) || {};
+    const tag = els.postGenerateBtn.querySelector('.pm-btn-price');
+    if (l.is_tester || !l.price_premium) {
+        if (tag) tag.remove();
+        return;
+    }
+    const html = forgeAmount(postModelPrice(l, postActiveModel(l)), 12);
+    if (tag) {
+        tag.innerHTML = html;
+    } else {
+        const el = document.createElement('span');
+        el.className = 'pm-btn-price';
+        el.innerHTML = html;
+        els.postGenerateBtn.appendChild(el);
+    }
 }
 
 function updateStyleHint(limits) {
@@ -6106,6 +6177,7 @@ async function runGenerate() {
                 style_reference_text: state.post.styleReferenceText || null,
                 length: state.post.length || 'auto',
                 emoji: state.post.emoji || 'auto',
+                model: postActiveModel(),
             }),
         });
 

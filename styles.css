@@ -5922,3 +5922,86 @@ html.cs-modal-open {
     font-size: 18px;
     color: var(--text-tertiary);
 }
+
+.pm-segs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 9px;
+}
+
+.pm-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.035);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.pm-seg i {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    transition: color .18s ease;
+}
+
+.pm-seg em {
+    display: inline-flex;
+    align-items: center;
+    font-style: normal;
+    font-size: 11.5px;
+    opacity: 0.75;
+}
+
+.pm-seg.on {
+    background: rgba(129, 140, 248, 0.16);
+    border-color: rgba(129, 140, 248, 0.55);
+    color: #c7cbff;
+}
+
+.pm-seg.on i {
+    color: #a5adff;
+}
+
+.pm-seg.on em {
+    opacity: 1;
+}
+
+.limit-row-green .pm-seg.on {
+    background: rgba(93, 202, 165, 0.16);
+    border-color: rgba(93, 202, 165, 0.5);
+    color: #9fe3cd;
+}
+
+.limit-row-green .pm-seg.on i {
+    color: #5DCAA5;
+}
+
+.pm-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.pm-foot .fwb-note {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.pm-btn-price {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 9px;
+    border-left: 1px solid rgba(255, 255, 255, 0.28);
+    opacity: 0.95;
+}
