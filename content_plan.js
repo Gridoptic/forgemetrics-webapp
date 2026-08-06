@@ -71,6 +71,36 @@
         warmup: 'они готовят к дате',
         retention: 'ради них остаются',
     };
+    var SG = {
+        niche: '<path d="M10.2 3.5H5.4a1.9 1.9 0 0 0-1.9 1.9v4.4h.9a2.1 2.1 0 0 1 0 4.2h-.9v4.6a1.9 1.9 0 0 0 1.9 1.9h4.4v-1.1a2.1 2.1 0 0 1 4.2 0v1.1h4.6a1.9 1.9 0 0 0 1.9-1.9v-4.4h-1.1a2.1 2.1 0 0 1 0-4.2h1.1V5.4a1.9 1.9 0 0 0-1.9-1.9h-4.4v.9a2.1 2.1 0 0 1-4.2 0z"/>',
+        audience: '<circle cx="12" cy="9" r="3.2"/><path d="M6.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="4" cy="8.5" r="1.6"/><path d="M1.6 15a3.4 3.4 0 0 1 3.2-3"/><circle cx="20" cy="8.5" r="1.6"/><path d="M22.4 15a3.4 3.4 0 0 0-3.2-3"/>',
+        rubrics: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/><rect x="6" y="12" width="3.4" height="2.6" rx=".8" fill="currentColor" stroke="none"/><rect x="10.3" y="12" width="3.4" height="2.6" rx=".8" fill="currentColor" stroke="none" opacity=".45"/><rect x="14.6" y="12" width="3.4" height="2.6" rx=".8" fill="currentColor" stroke="none"/><rect x="6" y="16" width="3.4" height="2.6" rx=".8" fill="currentColor" stroke="none" opacity=".45"/><rect x="10.3" y="16" width="3.4" height="2.6" rx=".8" fill="currentColor" stroke="none"/>',
+        freq: '<path d="M4 20V11M9.33 20V7M14.67 20V13M20 20V9"/><path d="M2.5 20h19"/><circle cx="9.33" cy="4.2" r="1.4" fill="currentColor" stroke="none"/>',
+        organic: '<circle cx="5" cy="12" r="2.6"/><circle cx="18" cy="5.5" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><path d="M7.4 10.8 15.6 6.7M7.4 13.2l8.2 4.1"/>',
+        paid: '<path d="M3 10.5v3.2a1.5 1.5 0 0 0 1.5 1.5H6l5.5 3.8V5.5L6 9.3H4.5A1.5 1.5 0 0 0 3 10.8z"/><path d="M6 15.4v3.1a1.4 1.4 0 0 0 2.8 0v-1.2"/><path d="M15.5 9.6a4 4 0 0 1 0 4.9M18.4 7.2a7.6 7.6 0 0 1 0 9.7"/>',
+        money: '<circle cx="8.6" cy="9" r="5.6"/><path d="M8.6 6.2v5.6M10.3 7.3a2.6 2.6 0 0 0-3.4.5c-.5.8-.1 1.6 1.1 1.9 1.4.3 1.9 1 1.5 1.9a2.6 2.6 0 0 1-3.4.4"/><path d="M3.6 15.4a5.6 5.6 0 0 0 8.6 2.4"/><path d="M14.6 21 21 14.6M21 14.6h-4.3M21 14.6v4.3"/>',
+        tasks: '<rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M7.6 8.4l1.5 1.5 2.6-2.8"/><path d="M13.6 8.6h3.4"/><path d="M7.6 13.7l1.5 1.5 2.6-2.8"/><path d="M13.6 13.9h3.4"/><path d="M7.4 18.4h4.2" opacity=".5"/>',
+    };
+    var SG_LIST = [
+        ['niche', 'Ниша и точка входа'], ['audience', 'Портрет аудитории'],
+        ['rubrics', 'Рубрики по дням'], ['freq', 'Частота публикаций'],
+        ['organic', 'Бесплатный трафик'], ['paid', 'Платный трафик'],
+        ['money', 'Монетизация'], ['tasks', 'Задачи первой недели'],
+    ];
+
+    function sgIcon(key) {
+        return '<svg class="sg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+            'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+            (SG[key] || '') + '</svg>';
+    }
+
+    function strategyParts() {
+        return '<div class="cp-sg">' + SG_LIST.map(function (it) {
+            return '<span class="cp-sg-i">' + sgIcon(it[0]) +
+                '<span>' + esc(T(it[1])) + '</span></span>';
+        }).join('') + '</div>';
+    }
+
     var AP_LEVELS = [
         ['manual', 'Ручной', 'пост за постом'],
         ['batch', 'Пакетом', 'собирает сам'],
@@ -656,6 +686,7 @@
             '<div class="cp-ready-wt">' + esc(T('Если тематика ещё не определена: стратегия подберёт ' +
                 'нишу с оценкой спроса и конкуренции, опишет аудиторию и разложит рубрики по дням. ' +
                 'Контент-план дальше исполняет этот план.')) + '</div>' +
+            strategyParts() +
             '<button class="cp-ready-b pk" data-act="openstrategy">' +
             '<i class="ti ti-sparkles"></i> ' + esc(T('Открыть AI-стратегию')) + '</button></div>';
 
@@ -704,9 +735,9 @@
                       ', пришло ' + o.joined + ', ушло ' + o.left + '. Контент выходит регулярно — ' +
                       'значит дело не в нём, а в том, что канал никто не находит.')) +
                 '</div><div class="cp-str-w dim">' +
-                esc(T('Стратегия разбирает, откуда брать аудиторию: бесплатный и платный трафик, ' +
-                      'ниша, монетизация. Контент-план дальше исполняет её план.')) +
-                '</div>' +
+                esc(T('Стратегия разбирает, откуда брать аудиторию. Контент-план дальше ' +
+                      'исполняет её план.')) +
+                '</div>' + strategyParts() +
                 '<button class="cp-str-b" data-act="openstrategy">' +
                 '<i class="ti ti-sparkles"></i> ' + esc(T('Открыть AI-стратегию')) + '</button></div>';
         }
