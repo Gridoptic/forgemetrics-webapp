@@ -5220,7 +5220,6 @@ function renderSettingsLimitsBar(limits) {
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
                 <span class="limit-row-label">Обновлений стиля</span>
-                ${testerNote}
                 <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limits.limit} в мес</span></span>
             </div>
             <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
