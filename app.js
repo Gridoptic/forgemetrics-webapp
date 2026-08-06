@@ -5218,7 +5218,7 @@ function renderSettingsLimitsBar(limits) {
         <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">Обновление стиля</span><span class="cs-limit-price">${forgeAmount(price, 13)}</span>
+                <span class="limit-row-label">Обновление стиля<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
                 <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
             <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
