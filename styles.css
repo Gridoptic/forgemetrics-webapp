@@ -3778,16 +3778,16 @@ html.cs-modal-open {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0);
-    z-index: 9998;
-    transition: background 0.25s ease;
+    z-index: 10050;
+    transition: background 0.25s ease, backdrop-filter 0.25s ease;
     pointer-events: none;
 }
 
 .bs-overlay.visible {
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.62);
     pointer-events: auto;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
 
 .bs-sheet {
@@ -3801,7 +3801,7 @@ html.cs-modal-open {
     border-top: 1.5px solid rgba(255, 255, 255, 0.38);
     box-shadow: 0 -26px 64px rgba(0, 0, 0, 0.75), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
     padding: 8px 16px 24px;
-    z-index: 9999;
+    z-index: 10051;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
     max-height: 85vh;
