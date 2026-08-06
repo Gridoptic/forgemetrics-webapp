@@ -35,16 +35,24 @@
     var WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     var GOALS = [
         ['growth', 'Рост подписчиков'], ['engagement', 'Вовлечённость'],
-        ['sales', 'Продажи / офферы'], ['warmup', 'Прогрев к запуску'], ['retention', 'Удержание'],
+        ['sales', 'Продажи'], ['warmup', 'Прогрев к запуску'], ['retention', 'Удержание'],
     ];
-    var GOAL_MAP = { growth: 'Рост подписчиков', engagement: 'Вовлечённость', sales: 'Продажи / офферы', warmup: 'Прогрев к запуску', retention: 'Удержание' };
+    // на каких форматах держится каждая цель — по ним ставится полоса и считается конфликт
+    var GOAL_KEY_FMT = {
+        growth: ['analysis', 'listicle', 'case'],
+        engagement: ['poll', 'engagement', 'story'],
+        sales: ['offer', 'case'],
+        warmup: ['story', 'analysis', 'offer'],
+        retention: ['analysis', 'story', 'engagement'],
+    };
+    var GOAL_MAP = { growth: 'Рост подписчиков', engagement: 'Вовлечённость', sales: 'Продажи', warmup: 'Прогрев к запуску', retention: 'Удержание' };
     var GOAL_ICON = { growth: 'ti-users-plus', engagement: 'ti-heart-handshake', sales: 'ti-building-store',
         warmup: 'ti-flame', retention: 'ti-anchor' };
     var FREQ_NOTE = { 3: 'через день', 5: 'будни', 7: 'каждый день' };
     var FMT = {
         news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
-        listicle: ['Подборка', 'ti-list-check'], offer: ['Прогрев к покупке', 'ti-building-store'],
-        poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вовлечение', 'ti-message-circle'],
+        listicle: ['Подборка', 'ti-list-check'], offer: ['Продающий', 'ti-building-store'],
+        poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вопрос читателям', 'ti-message-circle'],
     };
     var FMT_ABOUT = {
         news: 'Что произошло в нише и почему это важно',
@@ -55,6 +63,13 @@
         poll: 'Вопрос с вариантами — собирает мнения',
         story: 'Личный опыт от первого лица',
         engagement: 'Открытый вопрос — вызывает обсуждение',
+    };
+    var GOAL_WHY = {
+        growth: 'ими делятся с другими',
+        engagement: 'на них отвечают',
+        sales: 'они доводят до покупки',
+        warmup: 'они готовят к дате',
+        retention: 'ради них остаются',
     };
     var AP_LEVELS = [
         ['manual', 'Ручной', 'пост за постом'],
@@ -473,25 +488,41 @@
     function apFormats() {
         if (!_ap) return '';
         var man = _ap.blocked_manual || [], auto = _ap.blocked_auto || [];
+        var goal = (_state && _state.goal) || _goal;
+        var keyFmts = GOAL_KEY_FMT[goal] || [];
         var keys = Object.keys(FMT);
         var cells = keys.map(function (k) {
             var fi = FMT[k];
             var offMan = man.indexOf(k) >= 0, offAuto = auto.indexOf(k) >= 0;
             var c = offMan ? ' off' : (offAuto ? ' auto' : '');
+            if (keyFmts.indexOf(k) >= 0 && !offMan && !offAuto) c += ' rail';
             return '<button class="cp-fm' + c + '" data-act="apfmt" data-v="' + k + '">' +
                 '<i class="ti ' + fi[1] + '"></i>' +
                 '<span class="tx"><b>' + esc(T(fi[0])) + '</b>' +
                 '<em>' + esc(T(FMT_ABOUT[k] || '')) + '</em></span>' +
                 ((offMan || offAuto) ? '<i class="ti ti-x x"></i>' : '') + '</button>';
         }).join('');
+
         var note = '';
+        var lost = keyFmts.filter(function (k) {
+            return man.indexOf(k) >= 0 || auto.indexOf(k) >= 0;
+        });
+        if (lost.length) {
+            var names = lost.map(function (k) { return T((FMT[k] || [k])[0]).toLowerCase(); });
+            note += '<div class="cp-warn"><i class="ti ti-alert-triangle"></i><span>' +
+                esc(T('Для цели «' + (GOAL_MAP[goal] || goal) + '» отключено: ') + names.join(', ') +
+                    T('. Именно эти посты работают на неё — ' + (GOAL_WHY[goal] || '') +
+                      '. Неделя выйдет слабее задуманного.')) +
+                ' <b data-act="fmtback" data-v="' + lost.join(',') + '">' +
+                esc(T(lost.length > 1 ? 'Вернуть все' : 'Вернуть')) + '</b></span></div>';
+        }
         if (auto.length) {
-            note = '<div class="cp-fm-note">' + esc(T('Отклик втрое ниже лучшего формата, поэтому исключены системой: ')) +
+            note += '<div class="cp-fm-note">' + esc(T('Отклик втрое ниже лучшего формата, поэтому исключены системой: ')) +
                 auto.map(function (k) { return T((FMT[k] || [k])[0]); }).join(', ') + '</div>';
         }
         return '<div class="cp-sec">' + secHead('Разрешённые форматы',
-                'Виды постов, из которых собирается неделя. Отключённые ставиться не будут — ' +
-                'нажми на любой, чтобы запретить или вернуть.') +
+                'Виды постов, из которых собирается неделя. Отмеченные полосой держат выбранную ' +
+                'цель. Нажми на любой, чтобы запретить или вернуть.') +
             '<div class="cp-fmts">' + cells + '</div>' + note + '</div>';
     }
 
@@ -737,7 +768,9 @@
             if (name === 'goal') _goal = v; else if (name === 'freq') _freq = +v;
             var wrap = chip.parentElement;
             wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
-            haptic('light'); return;
+            haptic('light');
+            if (name === 'goal' && _ap) renderBrief();
+            return;
         }
         var chan = t.closest ? t.closest('[data-chan]') : null;
         if (chan) {
@@ -772,6 +805,15 @@
             return;
         }
         if (act === 'apstop') { apStop(); return; }
+        if (act === 'fmtback') {
+            haptic('light');
+            var back = (actEl.getAttribute('data-v') || '').split(',');
+            var keep = (_ap && _ap.blocked_manual ? _ap.blocked_manual : []).filter(function (k) {
+                return back.indexOf(k) < 0;
+            });
+            apSave({ blocked_formats: keep });
+            return;
+        }
         if (act === 'openstrategy') {
             haptic('medium');
             close();

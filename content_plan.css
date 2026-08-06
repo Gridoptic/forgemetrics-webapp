@@ -471,3 +471,38 @@
 .cp-note.in { margin: -4px 0 11px; }
 
 .cp-note.ap { margin: -4px 0 11px; color: #7b8296; }
+
+
+.cp-fm.rail {
+    border-left: 3px solid #6366f1;
+    padding-left: 8px;
+}
+
+.cp-warn {
+    display: flex;
+    gap: 8px;
+    margin-top: 9px;
+    padding: 10px 11px;
+    border-radius: 11px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    font-size: 11px;
+    line-height: 1.4;
+    color: #e8cfa0;
+}
+
+.cp-warn i {
+    font-size: 15px;
+    color: #fbbf24;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.cp-warn b {
+    color: #fbbf24;
+    font-weight: 650;
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
