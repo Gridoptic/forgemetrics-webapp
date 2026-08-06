@@ -3919,7 +3919,7 @@ function updateGenerateBtnPrice() {
     if (!els.postGenerateBtn) return;
     const l = (state.post && state.post.limits) || {};
     const tag = els.postGenerateBtn.querySelector('.pm-btn-price');
-    if (l.is_tester || !l.price_premium) {
+    if (!l.price_premium) {
         if (tag) tag.remove();
         return;
     }
