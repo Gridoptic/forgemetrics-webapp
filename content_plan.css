@@ -52,7 +52,7 @@
     cursor: pointer; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); min-height: 40px; }
 .cp-chip.on { color: #818cf8; background: linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06));
     border-color: rgba(129,140,248,0.55); box-shadow: 0 0 12px rgba(129,140,248,0.14); }
-.cp-go { width: 100%; margin-top: 16px; padding: 14px; border: 0; border-radius: 13px; font-weight: 700; font-size: 14px;
+.cp-go { width: 100%; margin-top: 16px; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border: 0; border-radius: 13px; font-weight: 700; font-size: 14px;
     font-family: inherit; color: #fff; cursor: pointer; background: linear-gradient(135deg,#6366f1,#8b5cf6);
     box-shadow: 0 14px 30px -12px rgba(99,102,241,0.8); }
 .cp-go:disabled { opacity: 0.55; }
@@ -199,8 +199,9 @@
 .cp-gopx {
     display: inline-flex;
     align-items: center;
-    padding-left: 10px;
-    margin-left: 2px;
+    gap: 4px;
+    padding-left: 11px;
+    margin-left: 11px;
     border-left: 1px solid rgba(255, 255, 255, 0.28);
 }
 
