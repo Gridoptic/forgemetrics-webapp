@@ -6025,3 +6025,14 @@ html.cs-modal-open {
     color: var(--text-secondary);
     opacity: 0.9;
 }
+
+.pw-badge.paused {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+}
+
+.pw-badge.paused i { font-size: 10px; }

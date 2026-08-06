@@ -523,7 +523,11 @@ function renderChannelSelector(data) {
         const multi = (data.total_channels || 1) > 1;
         const idn = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? (ch.username ? ' · ' : '') + escapeHtml(niche) : ''}`;
         const sub = idn || (multi ? 'нажми, чтобы сменить канал' : 'нажми для управления');
-        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">${escapeHtml(title)}</span><span class="pw-badge">активный</span></div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
+        const _tt = (typeof window.t === 'function') ? window.t : function (x) { return x; };
+        const chBadge = ch.is_paused
+            ? '<span class="pw-badge paused"><i class="ti ti-player-pause"></i>' + _tt('пауза') + '</span>'
+            : '<span class="pw-badge">' + _tt('активный') + '</span>';
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">${escapeHtml(title)}</span>${chBadge}</div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
         const avEl = document.getElementById('pw-chav-el');
