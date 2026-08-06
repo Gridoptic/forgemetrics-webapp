@@ -5317,12 +5317,14 @@ function renderSettingsExamplesSection(data) {
     const headerLabel = hasVoice ? 'Загрузить примеры вручную' : 'Настроить стиль';
     const accent = !hasVoice;
     const headerIcon = accent ? '<i class="ti ti-sparkles"></i> ' : '';
+    const price = Number((data.voice_refresh_limits || {}).price || 0);
+    const priceHint = price ? `<span class="cs-section-hint">${price} Forge</span>` : '';
 
     return `
         <div class="cs-section">
             <div class="cs-section-title-row">
                 <span class="cs-section-title ${accent ? 'cs-section-title-accent' : ''}">${headerIcon}${headerLabel}</span>
-                <span class="cs-section-hint">— 1 обновление</span>
+                ${priceHint}
             </div>
             <div class="cs-examples-card ${accent ? 'cs-examples-card-accent' : ''}">
                 <textarea
