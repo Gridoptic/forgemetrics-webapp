@@ -102,6 +102,8 @@
             (sub ? '<div class="s">' + esc(sub) + '</div>' : '') + '</div>');
     }
 
+    window.__cpSetAp = function (ap) { _ap = ap; };
+
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
         _state = st;
