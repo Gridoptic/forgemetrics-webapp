@@ -145,7 +145,7 @@
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
         loadAutopilot();
-        apiRequest('/api/v1/content-plan').then(route).catch(function () {
+        apiRequest('/api/v1/content-plan' + (_chId ? ('?channel_id=' + _chId) : '')).then(route).catch(function () {
             renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.'));
         });
     };
@@ -479,6 +479,13 @@
                 _ap = null;
                 renderBrief();
                 loadAutopilot();
+                apiRequest('/api/v1/content-plan?channel_id=' + _chId)
+                    .then(function (d) {
+                        if (!d || !d.ok) return;
+                        _state = d;
+                        if (d.posts && d.posts.length) renderWeek(); else renderBrief();
+                    })
+                    .catch(function () {});
             },
         });
     }
