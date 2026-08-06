@@ -1992,7 +1992,7 @@ function cabStatusHtml(sub) {
         const tail = sub.days_left != null ? `осталось ${sub.days_left} ${plural3(sub.days_left, 'день', 'дня', 'дней')}` : (sub.ends_at ? 'до ' + escapeHtml(sub.ends_at) : 'активна');
         return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-rosette-discount-check" style="color:#5DCAA5"></i> Подписка активна</span><span class="cab-stval">${tail}</span></div><div class="cab-stsub">Все возможности тарифа открыты</div></div>`;
     }
-    return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-sparkles" style="color:#818cf8"></i> Тариф Free</span><span class="cab-stval">30 Forge в месяц</span></div><div class="cab-stsub">Оформи Pro — 1 500 Forge в месяц, аудиты и приоритет на Площадке</div></div>`;
+    return '';
 }
 
 
@@ -2639,7 +2639,7 @@ function tfCurBanner(d) {
     if (d.current_tier === 'trial') {
         const n = d.trial_days_left;
         const dw = (n != null) ? `осталось ${n} ${plural3(n, 'день', 'дня', 'дней')}` : 'активен';
-        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Trial активен — премиум-генерация, аудит и биржа</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы сохранить премиум-модель, аудиты и каналы после триала.</div></div></div>`;
+        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Trial активен — премиум-модель генерации</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы сохранить премиум-модель и каналы после триала.</div></div></div>`;
     }
     if (['light', 'pro', 'pro_plus', 'agency', 'network'].includes(d.current_tier)) return '';
     return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">30 Forge в месяц, 1 канал. Выбери план для полного доступа.</div></div></div>`;
