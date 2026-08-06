@@ -95,6 +95,12 @@
             (sub ? '<div class="s">' + esc(sub) + '</div>' : '') + '</div>');
     }
 
+    window.__cpRenderForCheck = function (st) {
+        _state = st;
+        _channels = _channels || [];
+        renderWeek();
+    };
+
     window.__openContentPlan = function () {
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
