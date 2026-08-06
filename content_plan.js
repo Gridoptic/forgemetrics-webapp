@@ -95,10 +95,11 @@
             (sub ? '<div class="s">' + esc(sub) + '</div>' : '') + '</div>');
     }
 
-    window.__cpRenderForCheck = function (st) {
+    window.__cpRenderForCheck = function (st, chans) {
+        ensureScreen();
         _state = st;
-        _channels = _channels || [];
-        renderWeek();
+        if (chans) _channels = chans;
+        if (st && st.posts) renderWeek(); else renderBrief();
     };
 
     window.__openContentPlan = function () {
