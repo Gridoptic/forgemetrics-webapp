@@ -271,6 +271,7 @@
             '<div class="cp-sec">' + secHead('Цель недели',
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
             '<div class="cp-goals">' + goals + '</div></div>' +
+            apFormats() +
             '<div class="cp-sec">' + secHead('Постов в неделю',
                 'Сколько дней займут посты. Не чаще привычного ритма канала — чтобы не спамить аудиторию.') +
             '<div class="cp-freqs">' + freqs + '</div></div>' +
@@ -383,7 +384,7 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(header + apPanel() + allBtn + schedBtn + ribbon + detailPanel() +
+        setView(header + apPanel() + apFormats() + allBtn + schedBtn + ribbon + detailPanel() +
             insightsBlock() + strategyBlock() + '<div class="cp-foot">' + foot + '</div>', 'week');
     }
 
@@ -557,7 +558,7 @@
         }
 
         return '<div class="cp-ap' + cls + '">' + head +
-            '<div class="cp-ap-body">' + steps + stepsNote + body + '</div></div>' + apFormats();
+            '<div class="cp-ap-body">' + steps + stepsNote + body + '</div></div>';
     }
 
     function doLine(txt) {
