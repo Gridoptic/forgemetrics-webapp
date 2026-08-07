@@ -807,9 +807,11 @@
                 '<span class="tx"><b>' + esc(r.title) + '</b>' +
                 '<em>' + esc(r.needs_fact ? T('спрошу пару строк за день до выхода')
                                           : (r.about || '')) + '</em></span>' +
-                (r.avg_views ? '<span class="pw">' + esc(numExact(r.avg_views)) + '</span>' : '') +
+                (r.avg_views ? '<span class="pw"><i class="ti ti-eye"></i>' +
+                    esc(numExact(r.avg_views)) + '</span>' : '') +
                 (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
+        var off = _rubrics.filter(function (r) { return r.disabled; }).length;
         return '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
             '<i class="ti ti-wand"></i><span class="tx"><b>' +
             esc(T('Рубрику подберёт система')) + '</b>' +
@@ -817,7 +819,12 @@
             (cur ? '' : '<i class="ti ti-check ck"></i>') + '</button>' +
             '<div class="cp-dssep"></div>' +
             (live.length ? rows
-                : '<div class="cp-dsnote">' + esc(T('Рубрики ещё не определены.')) + '</div>');
+                : '<div class="cp-dsnote">' + esc(T('Рубрики ещё не определены.')) + '</div>') +
+            (off ? '<div class="cp-dshint">' +
+                esc(T('Ещё') + ' ' + off + ' ' +
+                    T(plural3(off, 'рубрика выключена', 'рубрики выключены', 'рубрик выключено')) +
+                    '. ' + T('Включить их можно в блоке «Рубрики канала» под календарём.')) +
+                '</div>' : '');
     }
 
     function pickDay(i) {
@@ -848,7 +855,9 @@
             } else {
                 head = '<div class="cp-dsh2"><b>' + esc(T('Рубрика поста')) + '</b></div>';
                 sub = '<div class="cp-dss">' + esc(T(WD_FULL[i]) + ' · ' + T('пост') + ' ' +
-                    (slot + 1)) + '</div>';
+                    (slot + 1) + '. ' + T('Рубрика задаёт тип поста, а тему система подберёт ' +
+                        'под сюжет недели. Цифра — сколько такие посты обычно набирают.')) +
+                    '</div>';
                 body = slotSheetBody(i, slot);
             }
             host.innerHTML = '<div class="cp-dsheet">' +
