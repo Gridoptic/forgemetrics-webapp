@@ -1378,3 +1378,6 @@
 .cp-mrow .cp-mrepl { margin-top: 0; }
 .cp-mrepl i { font-size: 13px; margin-right: 5px; vertical-align: -2px; }
 .cp-mrepl .forge-price { vertical-align: -2px; margin-left: 4px; }
+
+.cp-dsr.mut { opacity: .45; cursor: default; }
+.cp-dsr.mut em { color: #6f748c; }

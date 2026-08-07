@@ -1736,6 +1736,100 @@
         return (w.prices && w.prices[op]) || COVER_PRICE[op] || 1;
     }
 
+    var LAY_INFO = [
+        ['auto', 'ti-sparkles', 'На выбор системы', 'по признакам в тексте поста'],
+        ['thesis', 'ti-quote', 'Тезис', 'главная мысль крупно'],
+        ['num', 'ti-number-123', 'Число', 'цифра, ради которой читают'],
+        ['vs', 'ti-arrows-left-right', 'Сравнение', 'два средства бок о бок'],
+        ['list', 'ti-list-numbers', 'Список', 'три пункта из подборки'],
+        ['ask', 'ti-help-circle', 'Вопрос', 'заход на обсуждение'],
+    ];
+    var LAY_WHY = {
+        num: 'в тексте нет числа с единицей измерения',
+        vs: 'в заголовке нет двух коротких названий через «против»',
+        list: 'в тексте нет трёх пунктов списком',
+        ask: 'нет заголовка',
+    };
+
+    function askLayout(id) {
+        haptic('light');
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
+            '<div class="cp-dsh2"><b>' + esc(T('Композиция обложки')) + '</b></div>' +
+            '<div class="cp-dss"><div class="cp-spin sm"></div></div></div>';
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+
+        apiRequest('/api/v1/content-plan/cover/options?post_id=' + id)
+            .then(function (r) {
+                if (!r || !r.ok) { host.remove(); toast(T('Не удалось открыть выбор')); return; }
+                var rows = LAY_INFO.map(function (l) {
+                    var can = l[0] === 'auto' || r.available[l[0]];
+                    var on = (r.current || 'auto') === l[0];
+                    return '<button class="cp-dsr wide' + (on ? ' on' : '') +
+                        (can ? '' : ' mut') + '"' + (can ? ' data-clay="' + l[0] + '"' : '') +
+                        '><i class="ti ' + l[1] + '"></i><span class="tx"><b>' +
+                        esc(T(l[2])) + '</b><em>' +
+                        esc(can ? T(l[3]) : T(LAY_WHY[l[0]] || '')) + '</em></span>' +
+                        (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+                }).join('');
+                host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
+                    '<div class="cp-dsh2"><b>' + esc(T('Композиция обложки')) + '</b></div>' +
+                    '<div class="cp-dss">' +
+                    esc(T('Недоступные не подходят этому тексту — под ними написано почему.')) +
+                    '</div>' + rows +
+                    '<div class="cp-dshint">' +
+                    esc(r.has_cover
+                        ? T('Смена композиции перерисует обложку — 1 Forge.')
+                        : T('Первая обложка поста рисуется бесплатно.')) +
+                    '</div></div>';
+            })
+            .catch(function () { host.remove(); toast(T('Не удалось открыть выбор')); });
+
+        host.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-clay]') : null;
+            if (b) {
+                var lay = b.getAttribute('data-clay');
+                host.remove();
+                applyLayout(id, lay);
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
+    }
+
+    function applyLayout(id, layout) {
+        if (_mediaBusy[id]) return;
+        _mediaBusy[id] = T('Рисую вариант...');
+        rerender();
+        apiRequest('/api/v1/content-plan/cover/layout',
+                   { method: 'POST', body: JSON.stringify({ post_id: id, layout: layout }) })
+            .then(function (r) {
+                delete _mediaBusy[id];
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.media_kind = 'photo'; p.media_url = r.url; p.cover_layout = r.layout; }
+                    haptic('light');
+                } else if (r && r.error === 'not_available') {
+                    toast(T('Эта композиция не подходит тексту поста'));
+                } else if (r && r.error === 'not_cover_mode') {
+                    toast(T('У поста своя картинка — обложка не рисуется'));
+                } else {
+                    toast(T('Обложка не обновилась'));
+                }
+                rerender();
+            })
+            .catch(function () {
+                delete _mediaBusy[id];
+                toast(T('Обложка не обновилась'));
+                rerender();
+            });
+    }
+
     function regenCover(id, what) {
         if (_mediaBusy[id]) return;
         _mediaBusy[id] = what === 'phrase' ? T('Подбираю фразу...') : T('Рисую вариант...');
@@ -1919,8 +2013,11 @@
                   '" data-what="phrase"><i class="ti ti-quote"></i>' +
                   esc(T('Другая фраза')) + ' ' + forgeTag(coverPrice('cover_phrase')) + '</button>' +
                   '</div>' +
+                  '<div class="cp-mrow">' +
+                  '<button class="cp-mrepl" data-act="coverlay" data-id="' + p.id +
+                  '"><i class="ti ti-layout-grid"></i>' + esc(T('Композиция')) + '</button>' +
                   '<button class="cp-mrepl" data-act="coverstyle"><i class="ti ti-palette"></i>' +
-                  esc(T('Стиль обложек')) + '</button>'
+                  esc(T('Стиль')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
             return '<div class="cp-media"><div class="cp-mthumb">' + body +
@@ -2314,6 +2411,7 @@
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverstyle') { askCoverStyle(); return; }
+        if (act === 'coverlay') { askLayout(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverregen') {
             haptic('medium');
             regenCover(+actEl.getAttribute('data-id'), actEl.getAttribute('data-what'));
