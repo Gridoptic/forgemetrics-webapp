@@ -193,6 +193,7 @@
     }
 
     function syncDays(d) {
+        if (d && d.goal && GOAL_MAP[d.goal]) _goal = d.goal;
         if (_days || !d || !d.days || d.days.length !== 7) return;
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
@@ -905,14 +906,16 @@
             var cnt = t.closest ? t.closest('[data-dayn]') : null;
             if (cnt) {
                 if (setDayN(i, +cnt.getAttribute('data-dayn'))) {
-                    haptic('light'); slot = null; draw(); renderBrief(); loadCalendarSoon();
+                    haptic('light'); slot = null; draw(); renderBrief();
+                    loadCalendarSoon(); saveDaysSoon();
                 }
                 return;
             }
             var rm = t.closest ? t.closest('[data-drop]') : null;
             if (rm) {
                 if (dropSlot(i, +rm.getAttribute('data-drop'))) {
-                    haptic('medium'); slot = null; draw(); renderBrief(); loadCalendarSoon();
+                    haptic('medium'); slot = null; draw(); renderBrief();
+                    loadCalendarSoon(); saveDaysSoon();
                 }
                 return;
             }
@@ -923,7 +926,7 @@
                 var hv = hb.getAttribute('data-hour');
                 if (!hv) setTime(i, slot, '');
                 else setTime(i, slot, hv + ':' + ((dayTimes(i)[slot] || '').slice(3) || '00'));
-                haptic('light'); draw(); renderBrief(); loadCalendarSoon();
+                haptic('light'); draw(); renderBrief(); loadCalendarSoon(); saveDaysSoon();
                 return;
             }
             var mb = t.closest ? t.closest('[data-min]') : null;
@@ -931,13 +934,13 @@
                 var base = (dayTimes(i)[slot] || '').slice(0, 2) ||
                     ((daySlots(i)[slot] || {}).at || '12:00').slice(0, 2);
                 setTime(i, slot, base + ':' + mb.getAttribute('data-min'));
-                haptic('light'); draw(); renderBrief(); loadCalendarSoon();
+                haptic('light'); draw(); renderBrief(); loadCalendarSoon(); saveDaysSoon();
                 return;
             }
             var sp = t.closest ? t.closest('[data-setpin]') : null;
             if (sp && slot !== null) {
                 setPin(i, slot, sp.getAttribute('data-setpin'));
-                haptic('light'); slot = null; draw(); renderBrief();
+                haptic('light'); slot = null; draw(); renderBrief(); saveDaysSoon();
                 return;
             }
             if (e.target === host) { _dayDraw = null; host.remove(); }
@@ -1071,6 +1074,20 @@
     }
 
     var _calTimer = null;
+    var _daysTimer = null;
+
+    function saveDaysSoon() {
+        if (_daysTimer) clearTimeout(_daysTimer);
+        _daysTimer = setTimeout(function () {
+            _daysTimer = null;
+            var cid = _chId || (_state && _state.channel_id);
+            apiRequest('/api/v1/content-plan/days', {
+                method: 'POST',
+                body: JSON.stringify({ channel_id: cid, days: days(), goal: _goal })
+            }).catch(function () {});
+        }, 600);
+    }
+
     var _dayDraw = null;
     var _tipsOpen = false;
     var _cover = null;
@@ -2302,7 +2319,7 @@
         var chip = t.closest ? t.closest('[data-chip]') : null;
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');
-            if (name === 'goal') _goal = v;
+            if (name === 'goal') { _goal = v; saveDaysSoon(); }
             var wrap = chip.parentElement;
             wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
             haptic('light');
@@ -2359,6 +2376,7 @@
             _cal.tip = null;
             renderBrief();
             loadCalendarSoon();
+            saveDaysSoon();
             return;
         }
         if (act === 'rubtoggle') {
