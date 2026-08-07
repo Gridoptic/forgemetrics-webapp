@@ -738,32 +738,7 @@
 }
 .cp-inp::placeholder { color: #4a4d61; }
 
-.cp-slider { margin-top: 4px; }
-.cp-srow { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
-.cp-srow span { font-size: 11.5px; color: #8d93a8; }
-.cp-srow b { font-size: 15px; font-weight: 750; color: #e8eaf1; }
-.cp-range {
-    -webkit-appearance: none; appearance: none; width: 100%; height: 24px;
-    background: transparent; cursor: pointer; display: block;
-}
-.cp-range::-webkit-slider-runnable-track {
-    height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .09);
-}
-.cp-range::-moz-range-track { height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .09); }
-.cp-range::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; margin-top: -7.5px;
-    background: #fff; border: 0; box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
-}
-.cp-range::-moz-range-thumb {
-    width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
-}
-.cp-ticks {
-    display: flex; justify-content: space-between; margin-top: 2px; font-size: 9.5px; color: #4a4d61;
-}
-.cp-ticks .on { color: #818cf8; font-weight: 700; }
 
-.cp-seg { display: flex; gap: 5px; }
 .cp-sg {
     flex: 1; min-width: 0; padding: 9px 4px; border-radius: 11px; text-align: center;
     min-height: 46px; font-family: inherit; cursor: pointer;
@@ -1322,3 +1297,5 @@
 .cp-th.on, .cp-tm.on {
     background: rgba(99, 102, 241, .2); border-color: rgba(99, 102, 241, .55); color: #c7cbff;
 }
+
+.cp-allbtn.back { margin-top: 14px; }

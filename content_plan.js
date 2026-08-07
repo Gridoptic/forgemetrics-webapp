@@ -15,8 +15,6 @@
     var _review = null;
     var _cal = null;
     var _rubBusy = false;
-    var _avg = 1;
-    var _spread = 'live';
     var _apBusy = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -110,8 +108,6 @@
             host.className = 'cp-screen';
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
-            host.addEventListener('input', onInput);
-            host.addEventListener('change', onChange);
         }
         host.style.display = 'flex';
         document.documentElement.classList.add('cs-modal-open');
@@ -204,10 +200,6 @@
             return { n: x === 'off' ? 0 : 1,
                      pins: (x && x !== 'auto' && x !== 'off') ? [x] : [], times: [] };
         });
-        var live = _days.filter(function (x) { return x.n > 0; });
-        _avg = live.length
-            ? Math.max(1, Math.min(MAX_PER_DAY, Math.round(totalPosts() / live.length)))
-            : 1;
     }
 
     function route(d) {
@@ -287,21 +279,9 @@
         _days = d;
         return true;
     }
-    function spreadPosts(avg, mode) {
-        var pattern = mode === 'even' ? [0, 0, 0, 0, 0, 0, 0]
-            : (mode === 'waves' ? [-1, 1, -1, 2, -1, 0, 0] : [1, -1, 0, 1, -1, 0, 0]);
-        var d = [];
-        for (var i = 0; i < 7; i++) {
-            var n = Math.max(0, Math.min(MAX_PER_DAY, avg + (avg > 1 ? pattern[i] : 0)));
-            d.push({ n: n, pins: dayPins(i).slice(0, n), times: dayTimes(i).slice(0, n) });
-        }
-        _days = d;
-        if (totalPosts() < MIN_POSTS) { _days[0].n = MIN_POSTS; }
-    }
-
     function numExact(n) {
         n = Math.round(+n || 0);
-        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009');
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
     function periodNote() {
@@ -433,29 +413,6 @@
             esc(head) + tail + adNote() + '</span></div>';
     }
 
-    function rhythmBlock() {
-        var marks = [1, 3, 5, 7, 10];
-        var pct = Math.round((_avg - 1) / 9 * 100);
-        var seg = [['even', 'Ровно', '3 · 3 · 3'], ['live', 'Живой', '2 · 4 · 3'],
-                   ['waves', 'Волнами', '1 · 5 · 2']].map(function (s) {
-            return '<button class="cp-sg' + (_spread === s[0] ? ' on' : '') +
-                '" data-spread="' + s[0] + '"><b>' + esc(T(s[1])) + '</b>' +
-                '<span>' + esc(s[2]) + '</span></button>';
-        }).join('');
-        return '<div class="cp-sec">' + secHead('Постов в день',
-                'Сколько выходит в среднем. Точное число по дням система разложит сама — ' +
-                'любой день можно поправить вручную.') +
-            '<div class="cp-slider">' +
-            '<div class="cp-srow"><span>' + esc(T('в среднем в день')) + '</span><b>' + _avg + '</b></div>' +
-            '<input class="cp-range" type="range" min="1" max="10" step="1" value="' + _avg +
-            '" data-act="avg" aria-label="' + esc(T('Постов в день')) + '">' +
-            '<div class="cp-ticks">' + marks.map(function (m) {
-                return '<span' + (m === _avg ? ' class="on"' : '') + '>' + m + '</span>';
-            }).join('') + '</div></div>' +
-            '<div class="cp-lbl" style="margin-top:14px">' + esc(T('Разброс')) + '</div>' +
-            '<div class="cp-seg">' + seg + '</div></div>';
-    }
-
     function reviewEntry() {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid || !_review) return '';
@@ -465,8 +422,8 @@
             return '<button class="cp-rev" data-act="review">' +
                 '<div class="cp-rev-h"><i class="ti ti-chart-dots"></i>' +
                 '<span><b>' + esc(T('Разбор канала')) + '</b>' +
-                '<em>' + esc(T('готовим') + ': ' + (r.posts || 0) + ' ' + T('из') + ' ' +
-                    (r.need || 20) + ' ' + T('постов с замерами')) + '</em></span>' +
+                '<em>' + esc(T('сравню сильные посты со слабыми') + ' · ' +
+                    (r.posts || 0) + ' ' + T('из') + ' ' + (r.need || 20)) + '</em></span>' +
                 '<i class="ti ti-chevron-right"></i></div>' +
                 '<div class="cp-rev-bar"><span style="width:' + pct + '%"></span></div></button>';
         }
@@ -521,7 +478,7 @@
     function renderReview() {
         var r = _review;
         if (!r) { renderCenter('<div class="cp-spin"></div>', T('Считаю...')); return; }
-        var back = '<button class="cp-allbtn" data-act="revback">' +
+        var back = '<button class="cp-allbtn back" data-act="revback">' +
             '<i class="ti ti-arrow-left"></i> ' + esc(T('К плану недели')) + '</button>';
 
         if (!r.ready) {
@@ -1197,7 +1154,7 @@
             '<div class="cp-sec">' + secHead('Цель недели',
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
             '<div class="cp-goals">' + goals + '</div></div>' +
-            rubricsBlock() + rhythmBlock() +
+            rubricsBlock() +
 
             '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
@@ -1901,23 +1858,6 @@
         apiRequest('/api/v1/content-plan').then(function (d) { if (d && d.ok) { _state = d; renderWeek(); } }).catch(function () {});
     }
 
-    function onInput(ev) {
-        var r = ev.target;
-        if (!r || r.getAttribute('data-act') !== 'avg') return;
-        _avg = Math.max(1, Math.min(MAX_PER_DAY, +r.value || 1));
-        var row = r.parentElement && r.parentElement.querySelector('.cp-srow b');
-        if (row) row.textContent = _avg;
-    }
-
-    function onChange(ev) {
-        var r = ev.target;
-        if (!r || r.getAttribute('data-act') !== 'avg') return;
-        _avg = Math.max(1, Math.min(MAX_PER_DAY, +r.value || 1));
-        spreadPosts(_avg, _spread);
-        haptic('light');
-        renderBrief();
-    }
-
     function onClick(ev) {
         var t = ev.target;
         var chip = t.closest ? t.closest('[data-chip]') : null;
@@ -1926,14 +1866,6 @@
             if (name === 'goal') _goal = v;
             var wrap = chip.parentElement;
             wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
-            haptic('light');
-            renderBrief();
-            return;
-        }
-        var spread = t.closest ? t.closest('[data-spread]') : null;
-        if (spread) {
-            _spread = spread.getAttribute('data-spread');
-            spreadPosts(_avg, _spread);
             haptic('light');
             renderBrief();
             return;
