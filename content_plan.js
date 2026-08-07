@@ -992,10 +992,16 @@
             .catch(function () { _rubBusy = false; toast(T('Не удалось изменить рубрики')); });
     }
 
+    function deviceTz() {
+        try { return -(new Date().getTimezoneOffset()); } catch (e) { return null; }
+    }
+
     function loadCalendar() {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid) return;
-        apiRequest('/api/v1/content-plan/calendar?channel_id=' + cid)
+        var tz = deviceTz();
+        apiRequest('/api/v1/content-plan/calendar?channel_id=' + cid +
+                   (tz == null ? '' : '&tz=' + tz))
             .then(function (r) {
                 if (!r || !r.ok) return;
                 if ((_chId || (_state && _state.channel_id)) !== r.channel_id) return;
@@ -1079,8 +1085,7 @@
         if (btn) btn.disabled = true;
         haptic('medium');
         if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
-        var tz = 0;
-        try { tz = -(new Date().getTimezoneOffset()); } catch (e) {}
+        var tz = deviceTz();
         var body = { channel_id: _chId, goal: _goal, days: days(), tz_offset_minutes: tz };
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
