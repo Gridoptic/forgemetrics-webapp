@@ -285,8 +285,9 @@ function initTelegram() {
 
 
 async function apiRequest(path, options = {}) {
+    const isForm = (typeof FormData !== 'undefined') && (options.body instanceof FormData);
     const headers = {
-        'Content-Type': 'application/json',
+        ...(isForm ? {} : { 'Content-Type': 'application/json' }),
         ...(options.headers || {}),
     };
 

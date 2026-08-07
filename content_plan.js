@@ -162,6 +162,8 @@
     window.__cpSetAp = function (ap) { _ap = ap; };
     window.__cpSetRubrics = function (r) { _rubrics = r || []; };
     window.__cpSetReview = function (r) { _review = r || null; };
+    window.__cpSetCover = function (c) { _cover = c || null; };
+    window.__cpAskCoverStyle = function () { askCoverStyle(); };
     window.__cpSetCal = function (c) {
         _cal = c || null;
         if (_dayDraw && document.getElementById('cp-daybox')) _dayDraw();
@@ -228,6 +230,7 @@
                     loadRubrics();
                     loadReview(false);
                     loadCalendar();
+                    loadCover();
                 }
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
@@ -1070,6 +1073,7 @@
     var _calTimer = null;
     var _dayDraw = null;
     var _tipsOpen = false;
+    var _cover = null;
 
     function loadCalendarSoon() {
         if (_calTimer) clearTimeout(_calTimer);
@@ -1420,12 +1424,14 @@
                 _rubrics = [];
                 _review = null;
                 _cal = null;
+                _cover = null;
                 _days = null;
                 renderBrief();
                 loadAutopilot();
                 loadRubrics();
                 loadReview(false);
                 loadCalendar();
+                loadCover();
                 apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                     .then(function (d) {
                         if (!d || !d.ok) return;
@@ -1720,6 +1726,292 @@
             '<div class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + views + '</div></div>';
     }
 
+    var _mediaBusy = {};
+
+    var COVER_PAL = [
+        ['indigo', '#0a0d18', '#818cf8', '#c084fc', 'Индиго'],
+        ['cobalt', '#070c1a', '#6366f1', '#38bdf8', 'Кобальт'],
+        ['steel', '#0b1016', '#60a5fa', '#5eead4', 'Сталь'],
+        ['ice', '#06121c', '#38bdf8', '#67e8f9', 'Лёд'],
+        ['ocean', '#05131a', '#22d3ee', '#818cf8', 'Океан'],
+        ['turquo', '#06141a', '#2dd4bf', '#7dd3fc', 'Бирюза'],
+        ['emerald', '#06120f', '#34d399', '#a3e635', 'Изумруд'],
+        ['pine', '#08150f', '#4ade80', '#22d3ee', 'Хвоя'],
+        ['lime', '#0d1206', '#a3e635', '#fde047', 'Лайм'],
+        ['khaki', '#0f1109', '#bef264', '#a8a29e', 'Хаки'],
+        ['sand', '#14110a', '#eab308', '#d6d3d1', 'Песок'],
+        ['amber', '#140f06', '#fbbf24', '#fb923c', 'Янтарь'],
+        ['copper', '#150e09', '#f59e0b', '#fcd34d', 'Медь'],
+        ['terra', '#160d09', '#f97316', '#facc15', 'Терракота'],
+        ['sunset', '#1a0c08', '#fb7185', '#fbbf24', 'Закат'],
+        ['blood', '#150707', '#ef4444', '#f97316', 'Кармин'],
+        ['cherry', '#16090c', '#f43f5e', '#fb923c', 'Вишня'],
+        ['rose', '#170a12', '#fb7185', '#f0abfc', 'Малина'],
+        ['fuchsia', '#150a14', '#e879f9', '#f0abfc', 'Фуксия'],
+        ['plum', '#140a16', '#c084fc', '#f472b6', 'Слива'],
+        ['violet', '#100a1a', '#a78bfa', '#f472b6', 'Пурпур'],
+        ['night', '#080a12', '#a5b4fc', '#7dd3fc', 'Ночь'],
+        ['graphite', '#101114', '#cbd5e1', '#94a3b8', 'Графит'],
+        ['ink', '#0c0c0d', '#e5e5e7', '#a1a1aa', 'Тушь'],
+        ['mint', '#071614', '#2dd4bf', '#86efac', 'Мята'],
+        ['olive', '#111206', '#d9f99d', '#fde047', 'Олива'],
+        ['coral', '#180b09', '#fb923c', '#fda4af', 'Коралл'],
+        ['azure', '#050f1c', '#3b82f6', '#a5b4fc', 'Лазурь'],
+        ['jade', '#04130f', '#10b981', '#5eead4', 'Нефрит'],
+        ['wine', '#12070c', '#e11d48', '#c084fc', 'Бордо']
+    ];
+    var COVER_SHAPE = [
+        ['auto', 'На выбор системы'], ['arc', 'Дуга'], ['rings', 'Кольца'], ['diag', 'Скос'],
+        ['grid', 'Сетка'], ['bars', 'Столбцы'], ['blob', 'Пятно'], ['dots', 'Россыпь'],
+        ['wave', 'Волна'], ['rays', 'Лучи'], ['hex', 'Соты'], ['topo', 'Горизонтали'],
+        ['cross', 'Кресты'], ['stairs', 'Ступени'], ['orbit', 'Орбиты'], ['prism', 'Призма'],
+        ['ripple', 'Круги на воде'], ['mesh', 'Плетение'], ['chart', 'График'],
+        ['spiral', 'Спираль'], ['scatter', 'Рой'], ['none', 'Без орнамента']
+    ];
+    var COVER_SIGN = [['full', 'Аватар и имя'], ['name', 'Только имя'], ['none', 'Без подписи']];
+
+    function loadCover() {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return;
+        apiRequest('/api/v1/content-plan/cover-style?channel_id=' + cid)
+            .then(function (r) { if (r && r.ok) { _cover = r; rerender(); } })
+            .catch(function () {});
+    }
+
+    function saveCover(patch) {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return;
+        var body = { channel_id: cid };
+        Object.keys(patch).forEach(function (k) { body[k] = patch[k]; });
+        apiRequest('/api/v1/content-plan/cover-style',
+                   { method: 'POST', body: JSON.stringify(body) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    _cover = _cover || {};
+                    _cover.mode = r.mode; _cover.palette = r.palette;
+                    _cover.shape = r.shape; _cover.sign = r.sign;
+                    rerender();
+                } else toast(T('Не удалось сохранить стиль'));
+            })
+            .catch(function () { toast(T('Не удалось сохранить стиль')); });
+    }
+
+    function askCoverStyle() {
+        haptic('light');
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        var c = _cover || {};
+        var draw = function () {
+            var pal = COVER_PAL.map(function (p) {
+                return '<button class="cp-pal' + (c.palette === p[0] ? ' on' : '') +
+                    '" data-cpal="' + p[0] + '" style="background:' + p[1] + '" title="' +
+                    esc(T(p[4])) + '"><i style="background:' + p[2] + '"></i>' +
+                    '<i style="background:' + p[3] + '"></i></button>';
+            }).join('');
+            var shp = COVER_SHAPE.map(function (x) {
+                return '<button class="cp-chip' + (c.shape === x[0] ? ' on' : '') +
+                    '" data-cshape="' + x[0] + '">' + esc(T(x[1])) + '</button>';
+            }).join('');
+            var sgn = COVER_SIGN.map(function (x) {
+                return '<button class="cp-chip' + (c.sign === x[0] ? ' on' : '') +
+                    '" data-csign="' + x[0] + '">' + esc(T(x[1])) + '</button>';
+            }).join('');
+            host.innerHTML = '<div class="cp-dsheet">' +
+                '<div class="cp-dsgrab"></div>' +
+                '<div class="cp-dsh2"><b>' + esc(T('Стиль обложек')) + '</b></div>' +
+                '<div class="cp-dss">' +
+                esc(T('Применится ко всем новым постам канала')) + '</div>' +
+                '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
+                '<div class="cp-pals">' + pal + '</div>' +
+                '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
+                '<div class="cp-chips">' + shp + '</div>' +
+                '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
+                '<div class="cp-chips">' + sgn + '</div>' +
+                '<div class="cp-dshint">' +
+                esc(T('Выбор ничего не стоит: списание только за перегенерацию готовой обложки.')) +
+                '</div></div>';
+        };
+        draw();
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+        host.addEventListener('click', function (e) {
+            var t = e.target;
+            var p = t.closest ? t.closest('[data-cpal]') : null;
+            if (p) { c.palette = p.getAttribute('data-cpal'); draw(); haptic('light');
+                     saveCover({ palette: c.palette }); return; }
+            var sh = t.closest ? t.closest('[data-cshape]') : null;
+            if (sh) { c.shape = sh.getAttribute('data-cshape'); draw(); haptic('light');
+                      saveCover({ shape: c.shape }); return; }
+            var sg = t.closest ? t.closest('[data-csign]') : null;
+            if (sg) { c.sign = sg.getAttribute('data-csign'); draw(); haptic('light');
+                      saveCover({ sign: c.sign }); return; }
+            if (e.target === host) host.remove();
+        });
+    }
+
+
+    function mediaBlock(p) {
+        if (p.publish_status === 'published') return '';
+        if (_mediaBusy[p.id]) {
+            return '<div class="cp-media load"><div class="cp-mfile">' +
+                esc(_mediaBusy[p.id]) + '</div><div class="cp-mbar"><i></i></div>' +
+                '<div class="cp-mhint">' + esc(T('Загружаю...')) + '</div></div>';
+        }
+        if (p.media_url) {
+            var isVideo = p.media_kind === 'video';
+            var label = p.media_kind === 'animation' ? T('гифка')
+                : (isVideo ? T('видео') : T('картинка'));
+            var body = isVideo
+                ? '<div class="cp-mfilebg"><i class="ti ti-player-play"></i></div>'
+                : '<img src="' + esc(p.media_url) + '" alt="">';
+            var warn = (p.text && p.text.length > 1024)
+                ? '<div class="cp-mwarn"><i class="ti ti-alert-triangle"></i><span>' +
+                  esc(T('Текст длиннее 1024 знаков — файл уйдёт отдельным сообщением перед постом.')) +
+                  '</span></div>'
+                : '';
+            return '<div class="cp-media"><div class="cp-mthumb">' + body +
+                '<span class="cp-mbadge">' + esc(label) + '</span>' +
+                '<button class="cp-mx" data-act="mediaclear" data-id="' + p.id + '">' +
+                '<i class="ti ti-x"></i></button></div>' + warn +
+                '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
+                esc(T('Заменить файл')) + '</button></div>';
+        }
+        return '<button class="cp-madd" data-act="mediamode" data-id="' + p.id + '">' +
+            '<i class="ti ti-photo-plus"></i>' + esc(T('Добавить картинку')) + '</button>';
+    }
+
+    function pickFile(id) {
+        var inp = document.getElementById('cp-file');
+        if (!inp) {
+            inp = document.createElement('input');
+            inp.type = 'file';
+            inp.id = 'cp-file';
+            inp.accept = 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime';
+            inp.style.display = 'none';
+            document.body.appendChild(inp);
+        }
+        inp.onchange = function () {
+            var f = inp.files && inp.files[0];
+            inp.value = '';
+            if (f) sendFile(id, f);
+        };
+        inp.click();
+    }
+
+    function sendFile(id, file) {
+        var mb = (file.size / 1048576);
+        var limits = { 'image/gif': 12, 'video/mp4': 40, 'video/quicktime': 40 };
+        var lim = limits[file.type] || 8;
+        if (mb > lim) {
+            toast(T('Файл') + ' ' + mb.toFixed(1) + ' ' + T('МБ — это больше предела в') +
+                ' ' + lim + ' ' + T('МБ'));
+            return;
+        }
+        _mediaBusy[id] = file.name + ' · ' + mb.toFixed(1) + ' ' + T('МБ');
+        rerender();
+        var fd = new FormData();
+        fd.append('post_id', id);
+        fd.append('file', file);
+        apiRequest('/api/v1/content-plan/media', { method: 'POST', body: fd })
+            .then(function (r) {
+                delete _mediaBusy[id];
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.media_kind = r.kind; p.media_url = r.url; }
+                    haptic('light');
+                    rerender();
+                } else if (r && r.error === 'too_big') {
+                    toast(T('Файл больше предела в') + ' ' + r.limit_mb + ' ' + T('МБ'));
+                    rerender();
+                } else if (r && r.error === 'bad_type') {
+                    toast(T('Такой формат не подойдёт: нужна картинка, GIF или видео'));
+                    rerender();
+                } else {
+                    toast(T('Файл не загрузился'));
+                    rerender();
+                }
+            })
+            .catch(function () {
+                delete _mediaBusy[id];
+                toast(T('Файл не загрузился'));
+                rerender();
+            });
+    }
+
+    function clearMedia(id) {
+        apiRequest('/api/v1/content-plan/media/clear',
+                   { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.media_kind = null; p.media_url = null; }
+                    haptic('medium');
+                    rerender();
+                } else toast(T('Не удалось снять файл'));
+            })
+            .catch(function () { toast(T('Не удалось снять файл')); });
+    }
+
+    function askMedia(id) {
+        haptic('light');
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        var p = post(id) || {};
+        var mode = (_cover && _cover.mode) || 'none';
+        var opts = [
+            ['none', 'ti-minus', 'Без картинки', 'уйдёт только текст'],
+            ['own', 'ti-upload', 'Своя картинка, GIF или видео', 'загрузить файл с телефона'],
+            ['cover', 'ti-photo', 'Обложка — композицию выберу сам', 'тезис, число, сравнение...'],
+            ['cover_auto', 'ti-sparkles', 'Обложка — композицию выберет система',
+             'по признакам в тексте поста'],
+        ];
+        host.innerHTML = '<div class="cp-dsheet">' +
+            '<div class="cp-dsgrab"></div>' +
+            '<div class="cp-dsh2"><b>' + esc(T('Картинка поста')) + '</b></div>' +
+            '<div class="cp-dss">' + esc((p.slot_hm || '') + ' · ' +
+                (p.title || '').slice(0, 46)) + '</div>' +
+            opts.map(function (o) {
+                return '<button class="cp-dsr wide' + (mode === o[0] ? ' on' : '') +
+                    '" data-mmode="' + o[0] + '"><i class="ti ' + o[1] + '"></i>' +
+                    '<span class="tx"><b>' + esc(T(o[2])) + '</b>' +
+                    '<em>' + esc(T(o[3])) + '</em></span>' +
+                    (mode === o[0] ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+            }).join('') +
+            ((mode === 'cover' || mode === 'cover_auto')
+                ? '<button class="cp-dsr wide" data-mstyle="1"><i class="ti ti-palette"></i>' +
+                  '<span class="tx"><b>' + esc(T('Настроить стиль обложек')) + '</b>' +
+                  '<em>' + esc(T('палитра, орнамент, подпись канала')) + '</em></span>' +
+                  '<i class="ti ti-chevron-right ck"></i></button>'
+                : '') +
+            '<div class="cp-dshint">' +
+            esc(T('Режим запоминается для канала. У отдельного поста его всегда можно поменять здесь же.')) +
+            '</div></div>';
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+        host.addEventListener('click', function (e) {
+            if (e.target.closest && e.target.closest('[data-mstyle]')) {
+                host.remove();
+                askCoverStyle();
+                return;
+            }
+            var b = e.target.closest ? e.target.closest('[data-mmode]') : null;
+            if (b) {
+                var m = b.getAttribute('data-mmode');
+                host.remove();
+                saveCover({ mode: m });
+                if (m === 'own') pickFile(id);
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
+    }
+
     function detailPanel() {
         var ps = posts();
         var p = ps.filter(function (x) { return x.day_index === _selDay; })[0];
@@ -1769,7 +2061,8 @@
         return '<div class="cp-detail">' +
             '<div class="cp-dtop2"><span class="d2">' + esc(T(wd)) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
-            slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + adRow + body + '</div>';
+            slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' +
+            mediaBlock(p) + adRow + body + '</div>';
     }
 
     function post(id) { return (_state && _state.posts || []).filter(function (p) { return p.id === id; })[0]; }
@@ -1968,6 +2261,10 @@
         }
         if (act === 'revback') { haptic('light'); rerender(); return; }
         if (act === 'admark') { askAd(+actEl.getAttribute('data-id')); return; }
+        if (act === 'mediamode') { askMedia(+actEl.getAttribute('data-id')); return; }
+        if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
+        if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
+        if (act === 'coverstyle') { askCoverStyle(); return; }
         if (act === 'openstyle') {
             haptic('medium');
             var cid = _chId;
