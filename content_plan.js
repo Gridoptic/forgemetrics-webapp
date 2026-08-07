@@ -730,11 +730,14 @@
 
     function daySlots(i) {
         var got = ((_cal && _cal.slots) || {})[String(i)] || [];
+        var soon = ((_cal && _cal.preview) || {})[String(i)] || [];
         var n = dayN(i), pins = dayPins(i), out = [];
+        var byPlan = got.length === n;
         for (var k = 0; k < n; k++) {
             var g = got[k] || {};
+            var at = byPlan ? g.at : ((soon[k] || {}).at || g.at || null);
             out.push({
-                seq: k, at: g.at || null, views: g.views,
+                seq: k, at: at || null, views: g.views,
                 key: (pins[k] || null) || (g.rubric || null),
                 pinned: !!pins[k]
             });
@@ -857,7 +860,7 @@
             var cnt = t.closest ? t.closest('[data-dayn]') : null;
             if (cnt) {
                 if (setDayN(i, +cnt.getAttribute('data-dayn'))) {
-                    haptic('light'); slot = null; draw(); renderBrief(); loadCalendar();
+                    haptic('light'); slot = null; draw(); renderBrief(); loadCalendarSoon();
                 }
                 return;
             }
@@ -999,11 +1002,19 @@
         try { return -(new Date().getTimezoneOffset()); } catch (e) { return null; }
     }
 
+    var _calTimer = null;
+
+    function loadCalendarSoon() {
+        if (_calTimer) clearTimeout(_calTimer);
+        _calTimer = setTimeout(function () { _calTimer = null; loadCalendar(); }, 450);
+    }
+
     function loadCalendar() {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid) return;
         var tz = deviceTz();
-        apiRequest('/api/v1/content-plan/calendar?channel_id=' + cid +
+        var shape = days().map(function (d) { return Math.max(0, +d.n || 0); }).join(',');
+        apiRequest('/api/v1/content-plan/calendar?channel_id=' + cid + '&n=' + shape +
                    (tz == null ? '' : '&tz=' + tz))
             .then(function (r) {
                 if (!r || !r.ok) return;
@@ -1865,7 +1876,7 @@
             _days = dd;
             _cal.tip = null;
             renderBrief();
-            loadCalendar();
+            loadCalendarSoon();
             return;
         }
         if (act === 'rubtoggle') {
