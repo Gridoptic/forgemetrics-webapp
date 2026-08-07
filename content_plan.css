@@ -1286,3 +1286,14 @@
     margin-top: 7px; font-size: 9.5px; color: #4a4d61; text-align: right;
     font-variant-numeric: tabular-nums;
 }
+
+.cp-rbtns { display: flex; gap: 7px; margin-top: 12px; }
+.cp-rbtns .cp-radd { flex: 1; margin-top: 0; }
+
+.cp-rmore {
+    width: 100%; margin-top: 7px; padding: 9px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px;
+    background: transparent; border: 1px dashed rgba(129, 140, 248, .3);
+    font-family: inherit; font-size: 11.5px; font-weight: 600; color: #818cf8; cursor: pointer;
+}
+.cp-rmore i { font-size: 13px; }

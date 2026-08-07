@@ -642,9 +642,15 @@
              function (r) { return r.source === 'suggest'; }],
         ];
         var body = '';
+        var TIPS_SHOWN = 4;
         groups.forEach(function (g) {
             var items = _rubrics.filter(g[3]);
             if (!items.length) return;
+            var hidden = 0;
+            if (g[0] === 'n' && !_tipsOpen && items.length > TIPS_SHOWN) {
+                hidden = items.length - TIPS_SHOWN;
+                items = items.slice(0, TIPS_SHOWN);
+            }
             body += '<div class="cp-rgh ' + g[0] + '"><i class="ti ' + g[1] + '"></i>' +
                 '<span>' + esc(T(g[2])) + '</span><i class="ln"></i></div>' +
                 '<div class="cp-rubs">' + items.map(function (r) {
@@ -668,6 +674,11 @@
                         (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
                             esc(r.key) + '"></i>' : '') + '</button>';
                 }).join('') + '</div>';
+            if (hidden) {
+                body += '<button class="cp-rmore" data-act="tipsmore">' +
+                    esc(T('Показать ещё') + ' ' + hidden) + '<i class="ti ti-chevron-down"></i>' +
+                    '</button>';
+            }
         });
         var hasTips = _rubrics.some(function (r) { return r.source === 'suggest'; });
         return '<div class="cp-sec">' + secHead('Рубрики канала',
@@ -676,8 +687,11 @@
             (hasTips ? '<div class="cp-dshint">' +
                 esc(T('Предложены под нишу канала. Пока не включишь — в неделю не попадут.')) +
                 '</div>' : '') +
+            '<div class="cp-rbtns">' +
             '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
-            esc(T('Своя рубрика')) + '</button></div>';
+            esc(T('Своя рубрика')) + '</button>' +
+            '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
+            esc(T('Обновить набор')) + '</button></div></div>';
     }
 
     function readiness() {
@@ -1017,6 +1031,7 @@
 
     var _calTimer = null;
     var _dayDraw = null;
+    var _tipsOpen = false;
 
     function loadCalendarSoon() {
         if (_calTimer) clearTimeout(_calTimer);
@@ -1907,7 +1922,31 @@
             rubApi('remove', { key: actEl.getAttribute('data-v') });
             return;
         }
+        if (act === 'tipsmore') { haptic('light'); _tipsOpen = true; rerender(); return; }
         if (act === 'rubadd') { askRubric(); return; }
+        if (act === 'rubrebuild') {
+            haptic('medium');
+            var cid = _chId || (_state && _state.channel_id);
+            if (!cid || _rubBusy) return;
+            _rubBusy = true;
+            toast(T('Разбираю посты канала...'));
+            apiRequest('/api/v1/content-plan/rubrics/build',
+                       { method: 'POST', body: JSON.stringify({ channel_id: cid, force: true }) })
+                .then(function (r) {
+                    _rubBusy = false;
+                    if (r && r.ok && r.rubrics) {
+                        _rubrics = r.rubrics;
+                        rerender();
+                        toast(T('Набор рубрик обновлён'));
+                    } else if (r && r.error === 'too_soon') {
+                        toast(T('Набор обновлялся сегодня — следующий раз завтра'));
+                    } else {
+                        toast(T('Не удалось обновить набор'));
+                    }
+                })
+                .catch(function () { _rubBusy = false; toast(T('Не удалось обновить набор')); });
+            return;
+        }
         if (act === 'review') {
             haptic('light');
             if (_review) renderReview();
