@@ -625,8 +625,10 @@
             : '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
               esc(T('определены по постам канала')) + '</div>';
 
-        var max = 0;
-        own.forEach(function (r) { if ((r.avg_views || 0) > max) max = r.avg_views || 0; });
+            var max = 0;
+        own.forEach(function (r) {
+            if ((r.post_count || 0) >= 2 && (r.avg_views || 0) > max) max = r.avg_views || 0;
+        });
 
         var groups = [
             ['a', 'ti-file-text', 'пишется само',
@@ -646,8 +648,9 @@
                     var tip = g[0] === 'n';
                     var cnt = r.post_count ? (' · ' + r.post_count + ' ' +
                         T(plural3(r.post_count, 'пост', 'поста', 'постов'))) : '';
-                    var pct = (max && r.avg_views) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
-                    var strong = (max && r.avg_views === max) ? ' top' : '';
+                    var solid = (r.post_count || 0) >= 2 && r.avg_views;
+                    var pct = (max && solid) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
+                    var strong = (max && solid && r.avg_views === max) ? ' top' : '';
                     return '<button class="cp-rub ' + g[0] + strong +
                         (r.disabled && !tip ? ' off' : '') +
                         '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
@@ -657,7 +660,7 @@
                         (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
                         '</span>' +
                         (tip ? '<span class="cp-plus"><i class="ti ti-plus"></i></span>'
-                             : (r.avg_views ? '<span class="pw"><i class="ti ti-eye"></i>' +
+                             : (solid ? '<span class="pw"><i class="ti ti-eye"></i>' +
                                     esc(numExact(r.avg_views)) + '</span>' : '')) +
                         (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
                             esc(r.key) + '"></i>' : '') + '</button>';
