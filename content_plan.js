@@ -12,6 +12,7 @@
     var _batchTimer = null;
     var _ap = null;
     var _rubrics = [];
+    var _review = null;
     var _rubBusy = false;
     var _avg = 1;
     var _spread = 'live';
@@ -163,6 +164,7 @@
 
     window.__cpSetAp = function (ap) { _ap = ap; };
     window.__cpSetRubrics = function (r) { _rubrics = r || []; };
+    window.__cpSetReview = function (r) { _review = r || null; };
 
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
@@ -223,6 +225,7 @@
                         .catch(function () {});
                     loadAutopilot();
                     loadRubrics();
+                    loadReview(false);
                 }
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
@@ -381,6 +384,165 @@
             }).join('') + '</div></div>' +
             '<div class="cp-lbl" style="margin-top:14px">' + esc(T('Разброс')) + '</div>' +
             '<div class="cp-seg">' + seg + '</div></div>';
+    }
+
+    function reviewEntry() {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid || !_review) return '';
+        var r = _review;
+        if (!r.ready) {
+            var pct = Math.min(100, Math.round((r.posts || 0) / (r.need || 20) * 100));
+            return '<button class="cp-rev" data-act="review">' +
+                '<div class="cp-rev-h"><i class="ti ti-chart-dots"></i>' +
+                '<span><b>' + esc(T('Разбор канала')) + '</b>' +
+                '<em>' + esc(T('готовим') + ': ' + (r.posts || 0) + ' ' + T('из') + ' ' +
+                    (r.need || 20) + ' ' + T('постов с замерами')) + '</em></span>' +
+                '<i class="ti ti-chevron-right"></i></div>' +
+                '<div class="cp-rev-bar"><span style="width:' + pct + '%"></span></div></button>';
+        }
+        var v = r.views || {};
+        var tone = r.mood === 'drop' ? ' drop' : (r.mood === 'rise' ? ' rise' : '');
+        var num = (v.change_pct != null)
+            ? ((v.change_pct > 0 ? '+' : '') + v.change_pct + '%')
+            : (r.median_views ? numShort(r.median_views) : '—');
+        return '<button class="cp-rev' + tone + '" data-act="review">' +
+            '<div class="cp-rev-h"><i class="ti ti-chart-dots"></i>' +
+            '<span><b>' + esc(T(r.head || 'Разбор канала')) + '</b>' +
+            '<em>' + esc(T('по') + ' ' + (r.posts || 0) + ' ' +
+                T(plural3(r.posts || 0, 'посту', 'постам', 'постам')) + ' · ' +
+                T('что менять')) + '</em></span>' +
+            '<span class="cp-rev-n">' + esc(num) + '</span>' +
+            '<i class="ti ti-chevron-right"></i></div></button>';
+    }
+
+    function reviewSpark(series) {
+        if (!series || series.length < 3) return '';
+        var vals = series.map(function (x) { return x.views; });
+        var max = Math.max.apply(null, vals) || 1;
+        var min = Math.min.apply(null, vals);
+        var span = Math.max(1, max - min);
+        var w = 300, h = 54;
+        var pts = vals.map(function (val, i) {
+            var x = Math.round(i / Math.max(1, vals.length - 1) * w);
+            var y = Math.round(h - 6 - (val - min) / span * (h - 14));
+            return x + ',' + y;
+        });
+        var last = pts[pts.length - 1].split(',');
+        return '<svg class="cp-spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+            '<polyline points="' + pts.join(' ') + '" fill="none" stroke="currentColor" ' +
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="3.2" fill="currentColor"/></svg>';
+    }
+
+    function revSide(d, cls, name) {
+        return '<div class="cp-cbox ' + cls + '"><div class="cp-cbh">' + esc(T(name)) + '</div>' +
+            '<div class="cp-cbv">' + esc(numShort(d.views || 0)) + '</div>' +
+            '<div class="cp-cbs">' + esc(T('просмотров к посту')) + '</div>' +
+            '<div class="cp-cbl">' +
+            '<div>' + esc(T('длина')) + ' <b>' + (d.chars || 0) + '</b></div>' +
+            '<div>' + esc(T('абзацев')) + ' <b>' + (d.paragraphs || 0) + '</b></div>' +
+            '<div>' + esc(T('эмодзи')) + ' <b>' + (d.emoji != null ? d.emoji : 0) + '</b></div>' +
+            (d.hour_from != null ? '<div>' + esc(T('выход')) + ' <b>' +
+                (d.hour_from < 10 ? '0' : '') + d.hour_from + ':00–' +
+                (d.hour_to < 10 ? '0' : '') + d.hour_to + ':00</b></div>' : '') +
+            '</div></div>';
+    }
+
+    function renderReview() {
+        var r = _review;
+        if (!r) { renderCenter('<div class="cp-spin"></div>', T('Считаю...')); return; }
+        var back = '<button class="cp-allbtn" data-act="revback">' +
+            '<i class="ti ti-arrow-left"></i> ' + esc(T('К плану недели')) + '</button>';
+
+        if (!r.ready) {
+            var pct = Math.min(100, Math.round((r.posts || 0) / (r.need || 20) * 100));
+            setView('<div class="cp-sec">' + secHead('Разбор готовится',
+                    'Считать «что работает» на нескольких постах бессмысленно — ' +
+                    'любое совпадение выглядит закономерностью. Ниже видно, чего ждём.') +
+                '<div class="cp-steps">' +
+                '<div class="cp-step done"><span class="n">✓</span><span>' +
+                esc(T('Архив канала разобран') + ' — ' + (r.analyzed || 0) + ' ' +
+                    T(plural3(r.analyzed || 0, 'пост', 'поста', 'постов'))) + '</span></div>' +
+                '<div class="cp-step done"><span class="n">✓</span><span>' +
+                esc(T('Замеры просмотров включены') + ' — ' + (r.measured || 0) + ' ' +
+                    T(plural3(r.measured || 0, 'пост', 'поста', 'постов'))) + '</span></div>' +
+                '<div class="cp-step"><span class="n">3</span><span>' +
+                esc(T('Нужно') + ' ' + (r.need || 20) + ' ' +
+                    T('постов с текстом и просмотрами — тогда есть что сравнивать')) +
+                '</span></div></div>' +
+                '<div class="cp-prog"><div class="cp-ptrack"><span style="width:' + pct + '%"></span></div>' +
+                '<div class="cp-plab"><span>' + esc((r.posts || 0) + ' ' + T('из') + ' ' +
+                    (r.need || 20)) + '</span></div></div></div>' + back, 'review');
+            return;
+        }
+
+        var v = r.views || {}, m = r.members || {};
+        var tone = r.mood === 'drop' ? ' drop' : (r.mood === 'rise' ? ' rise' : '');
+        var chg = (v.change_pct != null) ? ((v.change_pct > 0 ? '+' : '') + v.change_pct + '%') : '—';
+        var kpi = '<div class="cp-kpis">' +
+            '<div class="cp-kpi"><div class="v' +
+            (v.change_pct != null && v.change_pct < 0 ? ' bad' : (v.change_pct > 0 ? ' good' : '')) +
+            '">' + esc(chg) + '</div><div class="k">' + esc(T('просмотров к посту')) + '</div></div>' +
+            '<div class="cp-kpi"><div class="v' + ((m.left || 0) > (m.joined || 0) ? ' bad' : '') +
+            '">' + (m.left || 0) + '</div><div class="k">' +
+            esc(T('отписались за') + ' ' + (r.window_days || 21) + ' ' + T('дней')) + '</div></div>' +
+            '<div class="cp-kpi"><div class="v">' + (m.joined || 0) + '</div><div class="k">' +
+            esc(T('новых подписчиков')) + '</div></div></div>';
+
+        var spark = (v.series && v.series.length > 2)
+            ? '<div class="cp-sparkbox"><div class="cp-sph"><b>' + esc(T('Просмотры к посту')) +
+              '</b><span>' + esc((v.before ? numShort(v.before) + ' → ' : '') +
+                (v.recent ? numShort(v.recent) : '')) + '</span></div>' + reviewSpark(v.series) + '</div>'
+            : '';
+
+        var shifts = (r.shifts || []).length
+            ? '<div class="cp-cause"><div class="cp-cause-h"><i class="ti ti-alert-triangle"></i>' +
+              esc(T('Что изменилось за это время')) + '</div>' +
+              r.shifts.map(function (x) {
+                  return '<div class="cp-crow"><span class="lb">' + esc(T(x.what)) + '</span>' +
+                      '<span class="was">' + esc(T('было') + ' ' + x.was) + '</span>' +
+                      '<span class="now">' + esc(T('стало') + ' ' + x.now) + '</span></div>';
+              }).join('') + '</div>'
+            : '';
+
+        var acts = (r.actions || []).length
+            ? '<div class="cp-lbl" style="margin-top:15px">' + esc(T('Что предлагаю сделать')) + '</div>' +
+              '<div class="cp-acts">' + r.actions.map(function (a) {
+                  var ic = { ruler: 'ti-ruler-2', clock: 'ti-clock', hook: 'ti-hook',
+                             layers: 'ti-stack-2' }[a.icon] || 'ti-bulb';
+                  return '<div class="cp-actc"><i class="ti ' + ic + '"></i>' +
+                      '<span class="tx"><b>' + esc(a.title) + '</b>' +
+                      '<em>' + esc(a.why) + '</em></span></div>';
+              }).join('') + '</div>'
+            : '';
+
+        var base = '<div class="cp-revbase"><i class="ti ti-info-circle"></i><span>' +
+            esc(T('Основано на') + ' ' + (r.posts || 0) + ' ' +
+                T(plural3(r.posts || 0, 'посте', 'постах', 'постах')) + '. ' +
+                T('Сравниваются твои сильные посты со слабыми — не с чужими каналами.')) +
+            '</span></div>';
+
+        setView('<div class="cp-verdict' + tone + '">' +
+            '<div class="cp-veye">' + esc(T('Разбор за') + ' ' + (r.window_days || 21) + ' ' +
+                T('дней')) + '</div>' +
+            '<h2>' + esc(T(r.head || '')) + '</h2>' + kpi + spark + shifts + '</div>' +
+            '<div class="cp-sec">' + secHead('Твои сильные против слабых',
+                'Сравниваются верхние и нижние двадцать процентов постов канала.') +
+            '<div class="cp-cmp">' + revSide(r.top || {}, 'top', 'верхние 20%') +
+            revSide(r.low || {}, 'low', 'нижние 20%') + '</div>' + acts + base + '</div>' + back,
+            'review');
+    }
+
+    function loadReview(open) {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return;
+        apiRequest('/api/v1/content-plan/review?channel_id=' + cid)
+            .then(function (r) {
+                if (!r || !r.ok) return;
+                _review = r.review;
+                if (open) renderReview(); else rerender();
+            })
+            .catch(function () { if (open) toast(T('Не удалось собрать разбор')); });
     }
 
     function rubricsBlock() {
@@ -719,7 +881,7 @@
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать план недели')) + (blocked ? '' : priceTag) + '</button>' +
             (blocked ? '' : lowNote) +
-            apPanel() + strategyBlock(), 'brief');
+            apPanel() + reviewEntry() + strategyBlock(), 'brief');
     }
 
     function doGenerate(btn) {
@@ -843,7 +1005,8 @@
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
         setView(header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
-            insightsBlock() + strategyBlock() + '<div class="cp-foot">' + foot + '</div>', 'week');
+            reviewEntry() + insightsBlock() + strategyBlock() +
+            '<div class="cp-foot">' + foot + '</div>', 'week');
     }
 
     function loadAutopilot() {
@@ -977,10 +1140,12 @@
                 _chId = +id;
                 _ap = null;
                 _rubrics = [];
+                _review = null;
                 _days = null;
                 renderBrief();
                 loadAutopilot();
                 loadRubrics();
+                loadReview(false);
                 apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                     .then(function (d) {
                         if (!d || !d.ok) return;
@@ -1499,6 +1664,13 @@
             return;
         }
         if (act === 'rubadd') { askRubric(); return; }
+        if (act === 'review') {
+            haptic('light');
+            if (_review) renderReview();
+            else { renderCenter('<div class="cp-spin"></div>', T('Считаю...')); loadReview(true); }
+            return;
+        }
+        if (act === 'revback') { haptic('light'); rerender(); return; }
         if (act === 'admark') { askAd(+actEl.getAttribute('data-id')); return; }
         if (act === 'openstyle') {
             haptic('medium');
