@@ -384,7 +384,8 @@
     }
 
     function rubricsBlock() {
-        if (!_chId) return '';
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return '';
         if (!_rubrics.length) {
             return '<div class="cp-sec">' + secHead('Рубрики канала',
                     'Из чего собирается неделя.') +
@@ -708,6 +709,8 @@
             '<button class="cp-go" style="max-width:280px;" data-act="regen">' + esc(T('Собрать заново')) + '</button></div>');
     }
 
+    function hoursWord(n) { return plural3(n, 'час', 'часа', 'часов'); }
+
     function fmtInfo(f) {
         for (var i = 0; i < _rubrics.length; i++) {
             if (_rubrics[i].key === f) {
@@ -732,7 +735,6 @@
             return new Date(iso + 'T00:00:00').toLocaleDateString(lang, { day: 'numeric', month: 'long' });
         } catch (e) { return ''; }
     }
-    function savedHours(n) { return Math.max(1, Math.round(n * 0.5)); }
 
     function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
 
@@ -747,7 +749,9 @@
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
             '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
-            '<div class="cp-saved"><i class="ti ti-clock-hour-4"></i> ' + esc(T('сэкономлено')) + ' ~' + savedHours(n) + ' ' + esc(T(hoursWord(savedHours(n)))) + '</div></div>';
+            '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
+            esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
+            '</div></div>';
 
         var allBtn = haveText < n
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
@@ -1132,12 +1136,6 @@
             body + '</div>';
     }
 
-    function hoursWord(n) {
-        var m10 = n % 10, m100 = n % 100;
-        if (m10 === 1 && m100 !== 11) return 'час';
-        if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return 'часа';
-        return 'часов';
-    }
 
     function ribbonCard(p) {
         var fi = fmtInfo(p.format);
