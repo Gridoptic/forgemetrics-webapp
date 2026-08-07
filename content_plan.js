@@ -13,6 +13,7 @@
     var _ap = null;
     var _rubrics = [];
     var _review = null;
+    var _cal = null;
     var _rubBusy = false;
     var _avg = 1;
     var _spread = 'live';
@@ -165,6 +166,7 @@
     window.__cpSetAp = function (ap) { _ap = ap; };
     window.__cpSetRubrics = function (r) { _rubrics = r || []; };
     window.__cpSetReview = function (r) { _review = r || null; };
+    window.__cpSetCal = function (c) { _cal = c || null; };
 
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
@@ -226,6 +228,7 @@
                     loadAutopilot();
                     loadRubrics();
                     loadReview(false);
+                    loadCalendar();
                 }
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
@@ -277,22 +280,6 @@
         _days = d;
         return true;
     }
-    function togglePin(i, key) {
-        var d = days().slice();
-        var pins = dayPins(i);
-        var at = pins.indexOf(key);
-        if (at >= 0) pins.splice(at, 1);
-        else {
-            if (pins.length >= dayN(i)) {
-                toast(T('Закреплено столько же рубрик, сколько постов в этом дне'));
-                return false;
-            }
-            pins.push(key);
-        }
-        d[i] = { n: dayN(i), pins: pins };
-        _days = d;
-        return true;
-    }
     function spreadPosts(avg, mode) {
         var pattern = mode === 'even' ? [0, 0, 0, 0, 0, 0, 0]
             : (mode === 'waves' ? [-1, 1, -1, 2, -1, 0, 0] : [1, -1, 0, 1, -1, 0, 0]);
@@ -305,22 +292,72 @@
         if (totalPosts() < MIN_POSTS) { _days[0].n = MIN_POSTS; }
     }
 
+    function histDays() {
+        var h = _cal && _cal.history;
+        return (h && h.ready && (h.days || []).length === 7) ? h.days : null;
+    }
+    function dayViews(i) {
+        var h = histDays();
+        return h ? (h[i].views || 0) : 0;
+    }
+    function busyOf(i) {
+        return ((_cal && _cal.busy) || []).filter(function (b) { return b.day === i; });
+    }
+    function bestHours() { return (_cal && _cal.hours) || []; }
+
     function weekCells(frozen) {
+        var hist = histDays();
+        var max = 0, best = -1;
+        if (hist) {
+            hist.forEach(function (d, i) {
+                if ((d.views || 0) > max) { max = d.views || 0; best = i; }
+            });
+        }
+        var busy = {};
+        ((_cal && _cal.busy) || []).forEach(function (b) { busy[b.day] = true; });
         return days().map(function (d, i) {
             var n = Math.max(0, +d.n || 0);
-            var day = '<span class="d">' + esc(T(WD[i])) + '</span>';
-            if (!n) {
-                return '<div class="cp-hd off"' + (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
-                    '><span class="num">—</span>' + day +
-                    '<span class="f">' + esc(T('выкл')) + '</span></div>';
+            var pins = (d.pins || []).filter(function (p) { return !!p; }).length;
+            var cls = 'cp-dcol';
+            if (!n) cls += ' off';
+            else if (pins) cls += ' pinned';
+            if (busy[i]) cls += ' ad';
+            if (hist && i === best && max > 0) cls += ' best';
+            var col = '';
+            if (hist) {
+                var v = hist[i].views || 0;
+                var pct = (max && v) ? Math.max(8, Math.round(v / max * 100)) : 0;
+                col = '<span class="cp-hist">' + (pct ? '<i style="height:' + pct + '%"></i>' : '') +
+                    '</span><span class="cp-hval">' + (v ? esc(numShort(v)) : '') + '</span>';
             }
-            var pins = (d.pins || []).length;
-            var label = pins ? (pins + ' ' + T('закр.')) : '';
-            return '<div class="cp-hd on' + (pins ? ' fix' : '') + '"' +
-                (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
-                '><span class="num">' + n + '</span>' + day +
-                (label ? '<span class="f">' + esc(label) + '</span>' : '') + '</div>';
+            return '<div class="' + cls + '"' +
+                (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') + '>' + col +
+                '<span class="cp-plan"><b>' + (n || '—') + '</b>' +
+                '<em>' + esc(T(WD[i])) + '</em></span></div>';
         }).join('');
+    }
+
+    function tipBlock() {
+        var t = _cal && _cal.tip;
+        if (!t || readiness().reason === 'paused') return '';
+        return '<div class="cp-tip"><i class="ti ti-bulb"></i><span>' +
+            '<b>' + esc(T(WD_FULL[t.strong])) + '</b> — ' + esc(T('сильный день канала') + ': ') +
+            '<b>' + esc(numShort(t.strong_views)) + '</b> ' +
+            esc(T('против') + ' ' + numShort(t.weak_views) + ' (' + T(WD[t.weak]) + '). ' +
+                T('Постов там меньше') + ': ' + t.strong_n + ' ' + T('против') + ' ' + t.weak_n + '.') +
+            '<button class="cp-tipgo" data-act="tipmove">' +
+            esc(T('Перенести') + ' ' + t.move + ' ' +
+                T(plural3(t.move, 'пост', 'поста', 'постов')) + ': ' +
+                T(WD[t.weak]) + ' → ' + T(WD[t.strong])) + '</button></span></div>';
+    }
+
+    function adNote() {
+        var deals = ((_cal && _cal.busy) || []).filter(function (b) { return b.kind === 'deal'; });
+        if (!deals.length) return '';
+        var d = deals[0];
+        return ' ' + esc(T('Оплаченная реклама') + ': ' + T(WD[d.day]) + ' ' + d.at +
+            (deals.length > 1 ? ' +' + (deals.length - 1) : '') + ' — ' +
+            T('свои посты обойдут это время.'));
     }
 
     function goalWord() {
@@ -355,7 +392,7 @@
                     T(plural3(weeks, 'неделю', 'недели', 'недель')) + '.');
         }
         return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
-            esc(head) + tail + '</span></div>';
+            esc(head) + tail + adNote() + '</span></div>';
     }
 
     function rhythmBlock() {
@@ -549,36 +586,59 @@
                 '<div class="cp-rubwait"><div class="cp-spin sm"></div><span>' +
                 esc(T('Определяю рубрики по постам канала...')) + '</span></div></div>';
         }
-        var src = _rubrics[0] && _rubrics[0].source;
-        var badge = src === 'auto'
-            ? '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
-              esc(T('определены по постам канала')) + '</div>'
-            : '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
-              esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>';
+        var own = _rubrics.filter(function (r) { return r.source !== 'suggest'; });
+        var src = own[0] && own[0].source;
+        var badge = src === 'base'
+            ? '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
+              esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>'
+            : '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
+              esc(T('определены по постам канала')) + '</div>';
 
-        var groups = [[false, 'пишется само', 'ti-book'], [true, 'нужны твои две строки', 'ti-camera']];
+        var max = 0;
+        own.forEach(function (r) { if ((r.avg_views || 0) > max) max = r.avg_views || 0; });
+
+        var groups = [
+            ['a', 'ti-file-text', 'пишется само',
+             function (r) { return r.source !== 'suggest' && !r.needs_fact; }],
+            ['z', 'ti-camera', 'нужны твои две строки',
+             function (r) { return r.source !== 'suggest' && r.needs_fact; }],
+            ['n', 'ti-sparkles', 'можно попробовать',
+             function (r) { return r.source === 'suggest'; }],
+        ];
         var body = '';
         groups.forEach(function (g) {
-            var items = _rubrics.filter(function (r) { return !!r.needs_fact === g[0]; });
+            var items = _rubrics.filter(g[3]);
             if (!items.length) return;
-            body += '<div class="cp-rgh ' + (g[0] ? 'z' : 'a') + '"><i class="ti ' + g[2] + '"></i>' +
-                '<span>' + esc(T(g[1])) + '</span><i class="ln"></i></div>' +
+            body += '<div class="cp-rgh ' + g[0] + '"><i class="ti ' + g[1] + '"></i>' +
+                '<span>' + esc(T(g[2])) + '</span><i class="ln"></i></div>' +
                 '<div class="cp-rubs">' + items.map(function (r) {
-                    var cnt = r.post_count ? (r.post_count + ' ' +
+                    var tip = g[0] === 'n';
+                    var cnt = r.post_count ? (' · ' + r.post_count + ' ' +
                         T(plural3(r.post_count, 'пост', 'поста', 'постов'))) : '';
-                    return '<button class="cp-rub' + (g[0] ? ' z' : ' a') +
-                        (r.disabled ? ' off' : '') + '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
-                        '<i class="ti ' + (g[0] ? 'ti-camera' : 'ti-file-text') + '"></i>' +
+                    var pct = (max && r.avg_views) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
+                    var strong = (max && r.avg_views === max) ? ' top' : '';
+                    return '<button class="cp-rub ' + g[0] + strong +
+                        (r.disabled && !tip ? ' off' : '') +
+                        '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
+                        '<i class="ti ' + g[1] + '"></i>' +
                         '<span class="tx"><b>' + esc(r.title) + '</b>' +
-                        '<em>' + esc(r.off_reason || r.about || '') + '</em></span>' +
-                        (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') +
+                        '<em>' + esc((r.off_reason || r.about || '') + (tip ? '' : cnt)) + '</em>' +
+                        (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
+                        '</span>' +
+                        (tip ? '<span class="cp-plus"><i class="ti ti-plus"></i></span>'
+                             : (r.avg_views ? '<span class="pw"><i class="ti ti-eye"></i>' +
+                                    esc(numShort(r.avg_views)) + '</span>' : '')) +
                         (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
                             esc(r.key) + '"></i>' : '') + '</button>';
                 }).join('') + '</div>';
         });
+        var hasTips = _rubrics.some(function (r) { return r.source === 'suggest'; });
         return '<div class="cp-sec">' + secHead('Рубрики канала',
-                'Из чего собирается неделя. Нажми, чтобы отключить или вернуть рубрику.') +
+                'Из чего собирается неделя. Цифра — средние просмотры рубрики.') +
             badge + body +
+            (hasTips ? '<div class="cp-dshint">' +
+                esc(T('Предложены под нишу канала. Пока не включишь — в неделю не попадут.')) +
+                '</div>' : '') +
             '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
             esc(T('Своя рубрика')) + '</button></div>';
     }
@@ -615,52 +675,108 @@
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
-            weekBar() + '</div>';
+            tipBlock() + weekBar() + '</div>';
+    }
+
+    function setPin(i, k, key) {
+        var d = days().slice();
+        var pins = dayPins(i);
+        while (pins.length <= k) pins.push('');
+        pins[k] = key || '';
+        while (pins.length && !pins[pins.length - 1]) pins.pop();
+        d[i] = { n: dayN(i), pins: pins };
+        _days = d;
+    }
+
+    function rubOf(key) {
+        for (var i = 0; i < _rubrics.length; i++) if (_rubrics[i].key === key) return _rubrics[i];
+        return null;
+    }
+
+    function daySlots(i) {
+        var got = ((_cal && _cal.slots) || {})[String(i)] || [];
+        var n = dayN(i), pins = dayPins(i), out = [];
+        for (var k = 0; k < n; k++) {
+            var g = got[k] || {};
+            out.push({
+                seq: k, at: g.at || null, views: g.views,
+                key: (pins[k] || null) || (g.rubric || null),
+                pinned: !!pins[k]
+            });
+        }
+        return out;
+    }
+
+    function slotRow(sl) {
+        var r = sl.key ? rubOf(sl.key) : null;
+        var cls = 'cp-slot' + (r ? (r.needs_fact ? ' fact' : '') : ' auto');
+        var title = r ? r.title : (sl.key ? sl.key : T('Рубрику подберёт система'));
+        var sub = r ? (r.needs_fact ? T('спрошу пару строк за день до выхода') : (r.about || ''))
+                    : T('под сюжет недели');
+        var power = (sl.views != null && sl.views > 0) ? sl.views
+            : ((r && r.avg_views) ? r.avg_views : 0);
+        return '<button class="' + cls + '" data-slot="' + sl.seq + '">' +
+            '<span class="tm">' + esc(sl.at || '—') + '</span>' +
+            '<span class="tx"><b>' + esc(title) + '</b>' +
+            (sub ? '<em>' + esc(sub) + '</em>' : '') + '</span>' +
+            (power ? '<span class="pw">' + esc(numShort(power)) + '</span>' : '') +
+            '<i class="ti ti-chevron-right ch"></i></button>';
+    }
+
+    function adRow(b) {
+        return '<div class="cp-slot ad"><span class="tm">' + esc(b.at) + '</span>' +
+            '<span class="tx"><b>' + esc(T(b.kind === 'deal' ? 'Оплаченная реклама'
+                                                            : 'Пост в очереди')) + '</b>' +
+            '<em>' + esc(T('время занято')) + '</em></span>' +
+            '<i class="ti ' + (b.kind === 'deal' ? 'ti-ad-2' : 'ti-clock') + ' ch"></i></div>';
     }
 
     function daySheetBody(i) {
-        var n = dayN(i), pins = dayPins(i);
-        var counter = '<div class="cp-dscnt">' +
-            '<button class="cp-dsb" data-dayn="' + (n - 1) + '"' + (n <= 0 ? ' disabled' : '') +
-            '><i class="ti ti-minus"></i></button>' +
-            '<span class="v"><b>' + n + '</b><em>' +
-            esc(n ? T(plural3(n, 'пост', 'поста', 'постов')) : T('без публикации')) +
-            '</em></span>' +
-            '<button class="cp-dsb" data-dayn="' + (n + 1) + '"' + (n >= MAX_PER_DAY ? ' disabled' : '') +
-            '><i class="ti ti-plus"></i></button></div>';
+        var n = dayN(i);
         if (!n) {
-            return counter + '<div class="cp-dsnote">' +
-                esc(T('В этот день ничего не выйдет.')) + '</div>';
+            return '<div class="cp-dsnote">' + esc(T('В этот день ничего не выйдет.')) + '</div>' +
+                '<div class="cp-addrow"><button class="cp-add" data-dayn="1">' +
+                '<i class="ti ti-plus"></i>' + esc(T('Вернуть день')) + '</button></div>';
         }
+        var rows = daySlots(i).map(function (sl) {
+            return { at: sl.at || '99:99', html: slotRow(sl) };
+        });
+        busyOf(i).forEach(function (b) { rows.push({ at: b.at, html: adRow(b) }); });
+        rows.sort(function (a, b) { return a.at < b.at ? -1 : (a.at > b.at ? 1 : 0); });
+
+        var addOff = n >= MAX_PER_DAY;
+        return '<div class="cp-slots">' + rows.map(function (r) { return r.html; }).join('') + '</div>' +
+            '<div class="cp-addrow">' +
+            '<button class="cp-add"' + (addOff ? ' disabled' : ' data-dayn="' + (n + 1) + '"') + '>' +
+            '<i class="ti ti-plus"></i>' + esc(T('Ещё пост')) + '</button>' +
+            '<button class="cp-add warn" data-dayn="0">' + esc(T('Убрать день')) + '</button></div>' +
+            '<div class="cp-dshint">' +
+            esc(T('Нажми на пост, чтобы сменить рубрику. Между постами не меньше двух часов — ' +
+                  'иначе они съедают охват друг друга.')) + '</div>';
+    }
+
+    function slotSheetBody(i, k) {
+        var cur = dayPins(i)[k] || '';
         var live = liveRubrics();
         var rows = live.map(function (r) {
-            var on = pins.indexOf(r.key) >= 0;
-            return '<button class="cp-dsr' + (on ? ' on' : '') + (r.needs_fact ? ' fact' : '') +
-                '" data-daypin="' + esc(r.key) + '">' +
+            var on = cur === r.key;
+            return '<button class="cp-dsr wide' + (on ? ' on' : '') + (r.needs_fact ? ' fact' : '') +
+                '" data-setpin="' + esc(r.key) + '">' +
                 '<i class="ti ' + (r.needs_fact ? 'ti-camera' : 'ti-file-text') + '"></i>' +
                 '<span class="tx"><b>' + esc(r.title) + '</b>' +
-                (r.needs_fact ? '<em>' + esc(T('спрошу пару строк за день')) + '</em>' : '') +
-                '</span>' + (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+                '<em>' + esc(r.needs_fact ? T('спрошу пару строк за день до выхода')
+                                          : (r.about || '')) + '</em></span>' +
+                (r.avg_views ? '<span class="pw">' + esc(numShort(r.avg_views)) + '</span>' : '') +
+                (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
-        var free = n - pins.length;
-        var note;
-        if (!free) {
-            note = n > 1 ? T('Все посты этого дня заданы вручную.')
-                         : T('Пост этого дня задан вручную.');
-        } else if (free === n) {
-            note = n > 1 ? T('Все посты дня подберёт система.')
-                         : T('Пост подберёт система.');
-        } else {
-            note = T('Ещё') + ' ' + free + ' ' +
-                T(plural3(free, 'пост', 'поста', 'постов')) + ' ' +
-                T('подберёт система.');
-        }
-        return counter +
+        return '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
+            '<i class="ti ti-wand"></i><span class="tx"><b>' +
+            esc(T('Рубрику подберёт система')) + '</b>' +
+            '<em>' + esc(T('под сюжет недели')) + '</em></span>' +
+            (cur ? '' : '<i class="ti ti-check ck"></i>') + '</button>' +
             '<div class="cp-dssep"></div>' +
-            '<div class="cp-dss">' + esc(T('Закрепить рубрику за постом дня')) + '</div>' +
-            (live.length ? '<div class="cp-dsgrid">' + rows + '</div>'
-                : '<div class="cp-dsnote">' + esc(T('Рубрики ещё не определены.')) + '</div>') +
-            '<div class="cp-dsnote">' + esc(note) + '</div>';
+            (live.length ? rows
+                : '<div class="cp-dsnote">' + esc(T('Рубрики ещё не определены.')) + '</div>');
     }
 
     function pickDay(i) {
@@ -670,12 +786,29 @@
         host = document.createElement('div');
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
+        var slot = null;
         var draw = function () {
+            var views = dayViews(i);
+            var hours = bestHours();
+            var head, sub, body;
+            if (slot === null) {
+                head = '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b>' +
+                    (views ? '<span>' + esc(T('обычно') + ' ' + numShort(views) + ' ' +
+                        T('просмотров')) + '</span>' : '') + '</div>';
+                sub = hours.length
+                    ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
+                        hours.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
+                            .join(', ')) + '</div>'
+                    : '';
+                body = daySheetBody(i);
+            } else {
+                head = '<div class="cp-dsh2"><b>' + esc(T('Рубрика поста')) + '</b></div>';
+                sub = '<div class="cp-dss">' + esc(T(WD_FULL[i]) + ' · ' + T('пост') + ' ' +
+                    (slot + 1)) + '</div>';
+                body = slotSheetBody(i, slot);
+            }
             host.innerHTML = '<div class="cp-dsheet">' +
-                '<div class="cp-dsgrab"></div>' +
-                '<div class="cp-dsh">' + esc(T(WD_FULL[i])) + '</div>' +
-                '<div class="cp-dss">' + esc(T('Сколько постов и что в них')) + '</div>' +
-                daySheetBody(i) + '</div>';
+                '<div class="cp-dsgrab"></div>' + head + sub + body + '</div>';
         };
         draw();
         document.body.appendChild(host);
@@ -685,12 +818,17 @@
             var t = e.target;
             var cnt = t.closest ? t.closest('[data-dayn]') : null;
             if (cnt) {
-                if (setDayN(i, +cnt.getAttribute('data-dayn'))) { haptic('light'); draw(); renderBrief(); }
+                if (setDayN(i, +cnt.getAttribute('data-dayn'))) {
+                    haptic('light'); slot = null; draw(); renderBrief(); loadCalendar();
+                }
                 return;
             }
-            var pin = t.closest ? t.closest('[data-daypin]') : null;
-            if (pin) {
-                if (togglePin(i, pin.getAttribute('data-daypin'))) { haptic('light'); draw(); renderBrief(); }
+            var sl = t.closest ? t.closest('[data-slot]') : null;
+            if (sl) { haptic('light'); slot = +sl.getAttribute('data-slot'); draw(); return; }
+            var sp = t.closest ? t.closest('[data-setpin]') : null;
+            if (sp && slot !== null) {
+                setPin(i, slot, sp.getAttribute('data-setpin'));
+                haptic('light'); slot = null; draw(); renderBrief();
                 return;
             }
             if (e.target === host) host.remove();
@@ -817,6 +955,18 @@
                 else if (r && r.error) toast(T('Не удалось изменить рубрики'));
             })
             .catch(function () { _rubBusy = false; toast(T('Не удалось изменить рубрики')); });
+    }
+
+    function loadCalendar() {
+        var cid = _chId || (_state && _state.channel_id);
+        if (!cid) return;
+        apiRequest('/api/v1/content-plan/calendar?channel_id=' + cid)
+            .then(function (r) {
+                if (!r || !r.ok) return;
+                if ((_chId || (_state && _state.channel_id)) !== r.channel_id) return;
+                _cal = r;
+                rerender();
+            }).catch(function () {});
     }
 
     function loadRubrics() {
@@ -1147,11 +1297,13 @@
                 _ap = null;
                 _rubrics = [];
                 _review = null;
+                _cal = null;
                 _days = null;
                 renderBrief();
                 loadAutopilot();
                 loadRubrics();
                 loadReview(false);
+                loadCalendar();
                 apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                     .then(function (d) {
                         if (!d || !d.ok) return;
@@ -1656,6 +1808,23 @@
         if (act === 'apstop') { apStop(); return; }
         if (act === 'pickchan') { pickChannel(); return; }
         if (act === 'pickday') { pickDay(+actEl.getAttribute('data-day')); return; }
+        if (act === 'tipmove') {
+            var tp = _cal && _cal.tip;
+            if (!tp) return;
+            haptic('light');
+            var mv = Math.min(tp.move, Math.max(0, dayN(tp.weak) - 1),
+                              MAX_PER_DAY - dayN(tp.strong));
+            if (mv < 1) { toast(T('Переносить нечего')); return; }
+            var dd = days().slice();
+            var leftN = dayN(tp.weak) - mv;
+            dd[tp.weak] = { n: leftN, pins: dayPins(tp.weak).slice(0, leftN) };
+            dd[tp.strong] = { n: dayN(tp.strong) + mv, pins: dayPins(tp.strong) };
+            _days = dd;
+            _cal.tip = null;
+            renderBrief();
+            loadCalendar();
+            return;
+        }
         if (act === 'rubtoggle') {
             haptic('light');
             var rk = actEl.getAttribute('data-v');
