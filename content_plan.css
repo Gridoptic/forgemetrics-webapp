@@ -1297,3 +1297,28 @@
     font-family: inherit; font-size: 11.5px; font-weight: 600; color: #818cf8; cursor: pointer;
 }
 .cp-rmore i { font-size: 13px; }
+
+.cp-slotrow { display: flex; align-items: stretch; gap: 6px; }
+.cp-slotrow .cp-slot { flex: 1; min-width: 0; }
+.cp-slotx {
+    width: 34px; flex-shrink: 0; border-radius: 12px; background: transparent;
+    border: 1px solid rgba(255, 255, 255, .06); color: #4a4d61;
+    display: grid; place-items: center; cursor: pointer; font-family: inherit;
+}
+.cp-slotx i { font-size: 15px; }
+.cp-slot .tm.man { color: #fbbf24; }
+
+.cp-tgrid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 8px;
+}
+.cp-trow { display: flex; gap: 5px; margin-top: 5px; }
+.cp-th, .cp-tm {
+    min-height: 38px; border-radius: 10px; font-family: inherit; font-size: 12px;
+    font-weight: 650; color: #8d93a8; cursor: pointer;
+    background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .06);
+    font-variant-numeric: tabular-nums;
+}
+.cp-tm { flex: 1; }
+.cp-th.on, .cp-tm.on {
+    background: rgba(99, 102, 241, .2); border-color: rgba(99, 102, 241, .55); color: #c7cbff;
+}

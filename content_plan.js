@@ -197,8 +197,12 @@
     function syncDays(d) {
         if (_days || !d || !d.days || d.days.length !== 7) return;
         _days = d.days.map(function (x) {
-            if (x && typeof x === 'object') return { n: +x.n || 0, pins: (x.pins || []).slice() };
-            return { n: x === 'off' ? 0 : 1, pins: (x && x !== 'auto' && x !== 'off') ? [x] : [] };
+            if (x && typeof x === 'object') {
+                return { n: +x.n || 0, pins: (x.pins || []).slice(),
+                         times: (x.times || []).slice() };
+            }
+            return { n: x === 'off' ? 0 : 1,
+                     pins: (x && x !== 'auto' && x !== 'off') ? [x] : [], times: [] };
         });
         var live = _days.filter(function (x) { return x.n > 0; });
         _avg = live.length
@@ -249,7 +253,7 @@
     function days() {
         if (!_days || _days.length !== 7) {
             _days = [];
-            for (var i = 0; i < 7; i++) _days.push({ n: 1, pins: [] });
+            for (var i = 0; i < 7; i++) _days.push({ n: 1, pins: [], times: [] });
         }
         return _days;
     }
@@ -279,7 +283,7 @@
             toast(T('Больше семидесяти постов в неделю не собирается'));
             return false;
         }
-        d[i] = { n: n, pins: dayPins(i).slice(0, n) };
+        d[i] = { n: n, pins: dayPins(i).slice(0, n), times: dayTimes(i).slice(0, n) };
         _days = d;
         return true;
     }
@@ -289,7 +293,7 @@
         var d = [];
         for (var i = 0; i < 7; i++) {
             var n = Math.max(0, Math.min(MAX_PER_DAY, avg + (avg > 1 ? pattern[i] : 0)));
-            d.push({ n: n, pins: dayPins(i).slice(0, n) });
+            d.push({ n: n, pins: dayPins(i).slice(0, n), times: dayTimes(i).slice(0, n) });
         }
         _days = d;
         if (totalPosts() < MIN_POSTS) { _days[0].n = MIN_POSTS; }
@@ -730,13 +734,40 @@
             histNote() + tipBlock() + weekBar() + '</div>';
     }
 
+    function dayTimes(i) { return ((days()[i] || {}).times || []).slice(); }
+
+    function setTime(i, k, at) {
+        var d = days().slice();
+        var t = dayTimes(i);
+        while (t.length <= k) t.push('');
+        t[k] = at || '';
+        while (t.length && !t[t.length - 1]) t.pop();
+        d[i] = { n: dayN(i), pins: dayPins(i), times: t };
+        _days = d;
+    }
+
+    function dropSlot(i, k) {
+        var n = dayN(i);
+        if (n <= 0) return false;
+        if (totalPosts() - 1 < MIN_POSTS) {
+            toast(T('В неделе не может быть меньше трёх постов'));
+            return false;
+        }
+        var pins = dayPins(i), t = dayTimes(i), d = days().slice();
+        if (k < pins.length) pins.splice(k, 1);
+        if (k < t.length) t.splice(k, 1);
+        d[i] = { n: n - 1, pins: pins, times: t };
+        _days = d;
+        return true;
+    }
+
     function setPin(i, k, key) {
         var d = days().slice();
         var pins = dayPins(i);
         while (pins.length <= k) pins.push('');
         pins[k] = key || '';
         while (pins.length && !pins[pins.length - 1]) pins.pop();
-        d[i] = { n: dayN(i), pins: pins };
+        d[i] = { n: dayN(i), pins: pins, times: dayTimes(i) };
         _days = d;
     }
 
@@ -754,7 +785,7 @@
             var g = got[k] || {};
             var at = byPlan ? g.at : ((soon[k] || {}).at || g.at || null);
             out.push({
-                seq: k, at: at || null, views: g.views,
+                seq: k, at: at || null, views: g.views, manual: !!(dayTimes(i)[k]),
                 key: (pins[k] || null) || (g.rubric || null),
                 pinned: !!pins[k]
             });
@@ -770,12 +801,14 @@
                     : T('под сюжет недели');
         var power = (sl.views != null && sl.views > 0) ? sl.views
             : ((r && r.avg_views) ? r.avg_views : 0);
-        return '<button class="' + cls + '" data-slot="' + sl.seq + '">' +
-            '<span class="tm">' + esc(sl.at || '—') + '</span>' +
+        return '<div class="cp-slotrow"><button class="' + cls + '" data-slot="' + sl.seq + '">' +
+            '<span class="tm' + (sl.manual ? ' man' : '') + '">' + esc(sl.at || '—') + '</span>' +
             '<span class="tx"><b>' + esc(title) + '</b>' +
             (sub ? '<em>' + esc(sub) + '</em>' : '') + '</span>' +
             (power ? '<span class="pw">' + esc(numExact(power)) + '</span>' : '') +
-            '<i class="ti ti-chevron-right ch"></i></button>';
+            '<i class="ti ti-chevron-right ch"></i></button>' +
+            '<button class="cp-slotx" data-drop="' + sl.seq + '" aria-label="' +
+            esc(T('Убрать пост')) + '"><i class="ti ti-x"></i></button></div>';
     }
 
     function adRow(b) {
@@ -810,6 +843,29 @@
                   'иначе они съедают охват друг друга.')) + '</div>';
     }
 
+    function timePicker(i, k) {
+        var cur = dayTimes(i)[k] || '';
+        var hours = '';
+        for (var h = 8; h <= 22; h++) {
+            var hh = (h < 10 ? '0' : '') + h;
+            hours += '<button class="cp-th' + (cur.slice(0, 2) === hh ? ' on' : '') +
+                '" data-hour="' + hh + '">' + hh + '</button>';
+        }
+        var mins = ['00', '15', '30', '45'].map(function (m) {
+            return '<button class="cp-tm' + (cur.slice(3) === m ? ' on' : '') +
+                '" data-min="' + m + '">:' + m + '</button>';
+        }).join('');
+        return '<div class="cp-dss">' + esc(T('Время выхода')) + '</div>' +
+            '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-hour="">' +
+            '<i class="ti ti-wand"></i><span class="tx"><b>' +
+            esc(T('Время подберёт система')) + '</b>' +
+            '<em>' + esc(T('по лучшим часам канала')) + '</em></span>' +
+            (cur ? '' : '<i class="ti ti-check ck"></i>') + '</button>' +
+            '<div class="cp-tgrid">' + hours + '</div>' +
+            '<div class="cp-trow">' + mins + '</div>' +
+            '<div class="cp-dssep"></div>';
+    }
+
     function slotSheetBody(i, k) {
         var cur = dayPins(i)[k] || '';
         var live = liveRubrics();
@@ -826,7 +882,9 @@
                 (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
         var off = _rubrics.filter(function (r) { return r.disabled; }).length;
-        return '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
+        return timePicker(i, k) +
+            '<div class="cp-dss">' + esc(T('Рубрика')) + '</div>' +
+            '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
             '<i class="ti ti-wand"></i><span class="tx"><b>' +
             esc(T('Рубрику подберёт система')) + '</b>' +
             '<em>' + esc(T('под сюжет недели')) + '</em></span>' +
@@ -891,8 +949,31 @@
                 }
                 return;
             }
+            var rm = t.closest ? t.closest('[data-drop]') : null;
+            if (rm) {
+                if (dropSlot(i, +rm.getAttribute('data-drop'))) {
+                    haptic('medium'); slot = null; draw(); renderBrief(); loadCalendarSoon();
+                }
+                return;
+            }
             var sl = t.closest ? t.closest('[data-slot]') : null;
             if (sl) { haptic('light'); slot = +sl.getAttribute('data-slot'); draw(); return; }
+            var hb = t.closest ? t.closest('[data-hour]') : null;
+            if (hb && slot !== null) {
+                var hv = hb.getAttribute('data-hour');
+                if (!hv) setTime(i, slot, '');
+                else setTime(i, slot, hv + ':' + ((dayTimes(i)[slot] || '').slice(3) || '00'));
+                haptic('light'); draw(); renderBrief(); loadCalendarSoon();
+                return;
+            }
+            var mb = t.closest ? t.closest('[data-min]') : null;
+            if (mb && slot !== null) {
+                var base = (dayTimes(i)[slot] || '').slice(0, 2) ||
+                    ((daySlots(i)[slot] || {}).at || '12:00').slice(0, 2);
+                setTime(i, slot, base + ':' + mb.getAttribute('data-min'));
+                haptic('light'); draw(); renderBrief(); loadCalendarSoon();
+                return;
+            }
             var sp = t.closest ? t.closest('[data-setpin]') : null;
             if (sp && slot !== null) {
                 setPin(i, slot, sp.getAttribute('data-setpin'));
