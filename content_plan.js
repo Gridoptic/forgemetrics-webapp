@@ -11,6 +11,10 @@
     var _dayBusy = {};
     var _batchTimer = null;
     var _ap = null;
+    var _rubrics = [];
+    var _rubBusy = false;
+    var _avg = 1;
+    var _spread = 'live';
     var _apBusy = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -34,7 +38,9 @@
 
     var WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     var WD_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
-    var MIN_DAYS = 3;
+    var MIN_POSTS = 3;
+    var MAX_PER_DAY = 10;
+    var MAX_WEEK = 70;
     var GOALS = [
         ['growth', 'Рост подписчиков'], ['engagement', 'Вовлечённость'],
         ['sales', 'Продажи'], ['warmup', 'Прогрев к запуску'], ['retention', 'Удержание'],
@@ -126,6 +132,8 @@
             host.className = 'cp-screen';
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
+            host.addEventListener('input', onInput);
+            host.addEventListener('change', onChange);
         }
         host.style.display = 'flex';
         document.documentElement.classList.add('cs-modal-open');
@@ -178,6 +186,7 @@
     }
 
     window.__cpSetAp = function (ap) { _ap = ap; };
+    window.__cpSetRubrics = function (r) { _rubrics = r || []; };
 
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
@@ -204,7 +213,14 @@
 
     function syncDays(d) {
         if (_days || !d || !d.days || d.days.length !== 7) return;
-        _days = d.days.slice();
+        _days = d.days.map(function (x) {
+            if (x && typeof x === 'object') return { n: +x.n || 0, pins: (x.pins || []).slice() };
+            return { n: x === 'off' ? 0 : 1, pins: (x && x !== 'auto' && x !== 'off') ? [x] : [] };
+        });
+        var live = _days.filter(function (x) { return x.n > 0; });
+        _avg = live.length
+            ? Math.max(1, Math.min(MAX_PER_DAY, Math.round(totalPosts() / live.length)))
+            : 1;
     }
 
     function route(d) {
@@ -230,6 +246,7 @@
                         })
                         .catch(function () {});
                     loadAutopilot();
+                    loadRubrics();
                 }
             }).catch(function () { _channels = []; renderBrief(); });
         } else { renderBrief(); }
@@ -249,40 +266,84 @@
     }
 
     function days() {
-        if (!_days || _days.length !== 7) _days = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
+        if (!_days || _days.length !== 7) {
+            _days = [];
+            for (var i = 0; i < 7; i++) _days.push({ n: 1, pins: [] });
+        }
         return _days;
     }
+    function dayN(i) { return Math.max(0, Math.min(MAX_PER_DAY, +(days()[i] || {}).n || 0)); }
+    function dayPins(i) { return ((days()[i] || {}).pins || []).slice(); }
+    function totalPosts() {
+        return days().reduce(function (s, d) { return s + Math.max(0, +d.n || 0); }, 0);
+    }
     function activeDays() {
-        return days().reduce(function (a, v, i) { if (v !== 'off') a.push(i); return a; }, []);
+        return days().reduce(function (a, d, i) { if ((+d.n || 0) > 0) a.push(i); return a; }, []);
     }
-    function pinnedDays() {
-        return days().reduce(function (a, v, i) { if (FMT[v]) a.push(i); return a; }, []);
+    function rubTitle(key) {
+        for (var i = 0; i < _rubrics.length; i++) if (_rubrics[i].key === key) return _rubrics[i].title;
+        return key;
     }
-    function setDay(i, val) {
+    function liveRubrics() {
+        return _rubrics.filter(function (r) { return !r.disabled; });
+    }
+    function setDayN(i, n) {
+        n = Math.max(0, Math.min(MAX_PER_DAY, n));
         var d = days().slice();
-        if (val === 'off' && activeDays().length <= MIN_DAYS && d[i] !== 'off') {
+        if (n === 0 && totalPosts() - dayN(i) < MIN_POSTS) {
             toast(T('В неделе не может быть меньше трёх постов'));
             return false;
         }
-        d[i] = val;
+        if (n > dayN(i) && totalPosts() - dayN(i) + n > MAX_WEEK) {
+            toast(T('Больше семидесяти постов в неделю не собирается'));
+            return false;
+        }
+        d[i] = { n: n, pins: dayPins(i).slice(0, n) };
         _days = d;
         return true;
     }
+    function togglePin(i, key) {
+        var d = days().slice();
+        var pins = dayPins(i);
+        var at = pins.indexOf(key);
+        if (at >= 0) pins.splice(at, 1);
+        else {
+            if (pins.length >= dayN(i)) {
+                toast(T('Закреплено столько же рубрик, сколько постов в этом дне'));
+                return false;
+            }
+            pins.push(key);
+        }
+        d[i] = { n: dayN(i), pins: pins };
+        _days = d;
+        return true;
+    }
+    function spreadPosts(avg, mode) {
+        var pattern = mode === 'even' ? [0, 0, 0, 0, 0, 0, 0]
+            : (mode === 'waves' ? [-1, 1, -1, 2, -1, 0, 0] : [1, -1, 0, 1, -1, 0, 0]);
+        var d = [];
+        for (var i = 0; i < 7; i++) {
+            var n = Math.max(0, Math.min(MAX_PER_DAY, avg + (avg > 1 ? pattern[i] : 0)));
+            d.push({ n: n, pins: dayPins(i).slice(0, n) });
+        }
+        _days = d;
+        if (totalPosts() < MIN_POSTS) { _days[0].n = MIN_POSTS; }
+    }
 
     function weekCells(frozen) {
-        return days().map(function (v, i) {
+        return days().map(function (d, i) {
+            var n = Math.max(0, +d.n || 0);
             var day = '<span class="d">' + esc(T(WD[i])) + '</span>';
-            if (v === 'off') {
+            if (!n) {
                 return '<div class="cp-hd off"' + (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
-                    '><span class="dash">—</span>' + day +
+                    '><span class="num">—</span>' + day +
                     '<span class="f">' + esc(T('выкл')) + '</span></div>';
             }
-            var fi = FMT[v];
-            var cls = fi ? 'fix' : 'auto';
-            var ic = fi ? fi[1] : 'ti-sparkles';
-            var label = fi ? T(FMT_SHORT[v] || fi[0]) : T('система');
-            return '<div class="cp-hd ' + cls + '"' + (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
-                '><i class="ti ' + ic + '"></i>' + day +
+            var pins = (d.pins || []).length;
+            var label = pins ? (pins + ' ' + T('закр.')) : T('система');
+            return '<div class="cp-hd on' + (pins ? ' fix' : '') + '"' +
+                (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
+                '><span class="num">' + n + '</span>' + day +
                 '<span class="f">' + esc(label) + '</span></div>';
         }).join('');
     }
@@ -295,32 +356,101 @@
 
     function weekLegend() {
         return '<div class="cp-lgd">' +
-            '<span class="cp-lg"><i class="a"></i>' + esc(T('задано вручную')) + '</span>' +
+            '<span class="cp-lg"><i class="a"></i>' + esc(T('есть закреплённые')) + '</span>' +
             '<span class="cp-lg"><i class="b"></i>' + esc(T('решает система')) + '</span>' +
             '<span class="cp-lg"><i class="c"></i>' + esc(T('без публикации')) + '</span></div>';
     }
 
     function weekBar() {
-        var act = activeDays().length, pin = pinnedDays().length, free = act - pin;
+        var total = totalPosts();
         var w = wallet();
-        var price = (w.price_day || 10) * act;
-        var postsWord = plural3(act, 'пост', 'поста', 'постов');
-        if (free === 0) {
-            return '<div class="cp-hbar warn"><i class="ti ti-rotate"></i><span>' +
-                esc(T('Задано вручную') + ' ' + act + ' ' +
-                    T(plural3(act, 'день', 'дня', 'дней')) + ' ' + T('из') + ' ' + act + '. ' +
-                    T('Неделя выйдет набором отдельных постов —') + ' ') +
-                '<b>' + esc(T('оставь два-три дня системе')) + '</b>' +
-                esc(', ' + T('чтобы она связала их одним сюжетом.')) + '</span></div>';
+        var price = (w.price_day || 10) * total;
+        var bal = w.balance;
+        var postsWord = plural3(total, 'пост', 'поста', 'постов');
+        var head = total + ' ' + T(postsWord) + ' ' + T('на неделе.');
+        if (w.is_tester) {
+            return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
+                esc(head) + '</span></div>';
         }
-        var head = pin
-            ? T('Закреплено') + ' ' + pin + ' ' + T(plural3(pin, 'день', 'дня', 'дней')) + ' ' +
-              T('из') + ' ' + act + ' — ' + T('остальные разложит система под сюжет недели.')
-            : T('Все дни на усмотрение системы — она разложит форматы под сюжет недели.');
-        var tail = w.is_tester ? ''
-            : ' <b>' + esc(act + ' ' + T(postsWord) + ' — ' + price + ' Forge.') + '</b>';
+        var tail = ' <b>' + esc(price + ' Forge.') + '</b>';
+        if (bal != null && price > 0) {
+            if (bal < price) {
+                return '<div class="cp-hbar stop"><i class="ti ti-wallet"></i><span>' +
+                    esc(head) + tail + ' ' +
+                    esc(T('На балансе') + ' ' + bal + ' — ' + T('не хватает.') + ' ' +
+                        T('Убавь постов или пополни баланс.')) + '</span></div>';
+            }
+            var weeks = Math.floor(bal / price);
+            tail += ' ' + esc(T('На балансе') + ' ' + bal + ' — ' + T('хватит на') + ' ' +
+                weeks + ' ' + T(plural3(weeks, 'неделю', 'недели', 'недель')) + '.');
+        }
         return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
             esc(head) + tail + '</span></div>';
+    }
+
+    function rhythmBlock() {
+        var marks = [1, 3, 5, 7, 10];
+        var pct = Math.round((_avg - 1) / 9 * 100);
+        var seg = [['even', 'Ровно', '3 · 3 · 3'], ['live', 'Живой', '2 · 4 · 3'],
+                   ['waves', 'Волнами', '1 · 5 · 2']].map(function (s) {
+            return '<button class="cp-sg' + (_spread === s[0] ? ' on' : '') +
+                '" data-spread="' + s[0] + '"><b>' + esc(T(s[1])) + '</b>' +
+                '<span>' + esc(s[2]) + '</span></button>';
+        }).join('');
+        return '<div class="cp-sec">' + secHead('Постов в день',
+                'Сколько выходит в среднем. Точное число по дням система разложит сама — ' +
+                'любой день можно поправить вручную.') +
+            '<div class="cp-slider">' +
+            '<div class="cp-srow"><span>' + esc(T('в среднем в день')) + '</span><b>' + _avg + '</b></div>' +
+            '<input class="cp-range" type="range" min="1" max="10" step="1" value="' + _avg +
+            '" data-act="avg" aria-label="' + esc(T('Постов в день')) + '">' +
+            '<div class="cp-ticks">' + marks.map(function (m) {
+                return '<span' + (m === _avg ? ' class="on"' : '') + '>' + m + '</span>';
+            }).join('') + '</div></div>' +
+            '<div class="cp-lbl" style="margin-top:14px">' + esc(T('Разброс')) + '</div>' +
+            '<div class="cp-seg">' + seg + '</div></div>';
+    }
+
+    function rubricsBlock() {
+        if (!_chId) return '';
+        if (!_rubrics.length) {
+            return '<div class="cp-sec">' + secHead('Рубрики канала',
+                    'Из чего собирается неделя.') +
+                '<div class="cp-rubwait"><div class="cp-spin sm"></div><span>' +
+                esc(T('Определяю рубрики по постам канала...')) + '</span></div></div>';
+        }
+        var src = _rubrics[0] && _rubrics[0].source;
+        var badge = src === 'auto'
+            ? '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
+              esc(T('определены по постам канала')) + '</div>'
+            : '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
+              esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>';
+
+        var groups = [[false, 'пишется само', 'ti-book'], [true, 'нужны твои две строки', 'ti-camera']];
+        var body = '';
+        groups.forEach(function (g) {
+            var items = _rubrics.filter(function (r) { return !!r.needs_fact === g[0]; });
+            if (!items.length) return;
+            body += '<div class="cp-rgh ' + (g[0] ? 'z' : 'a') + '"><i class="ti ' + g[2] + '"></i>' +
+                '<span>' + esc(T(g[1])) + '</span><i class="ln"></i></div>' +
+                '<div class="cp-rubs">' + items.map(function (r) {
+                    var cnt = r.post_count ? (r.post_count + ' ' +
+                        T(plural3(r.post_count, 'пост', 'поста', 'постов'))) : '';
+                    return '<button class="cp-rub' + (g[0] ? ' z' : ' a') +
+                        (r.disabled ? ' off' : '') + '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
+                        '<i class="ti ' + (g[0] ? 'ti-camera' : 'ti-file-text') + '"></i>' +
+                        '<span class="tx"><b>' + esc(r.title) + '</b>' +
+                        '<em>' + esc(r.off_reason || r.about || '') + '</em></span>' +
+                        (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') +
+                        (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
+                            esc(r.key) + '"></i>' : '') + '</button>';
+                }).join('') + '</div>';
+        });
+        return '<div class="cp-sec">' + secHead('Рубрики канала',
+                'Из чего собирается неделя. Нажми, чтобы отключить или вернуть рубрику.') +
+            badge + body +
+            '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
+            esc(T('Своя рубрика')) + '</button></div>';
     }
 
     function heroWeek() {
@@ -340,28 +470,86 @@
                 '<i class="ti ti-settings"></i> ' + esc(T('Открыть настройки канала')) +
                 '</button></div>';
         }
-        var act = activeDays().length;
+        var total = totalPosts();
         return '<div class="cp-hero">' +
-            '<div class="cp-hero-eye">' + esc(T('План на неделю') + ' · ' + act + ' ' +
-                T(plural3(act, 'пост', 'поста', 'постов'))) + '</div>' +
+            '<div class="cp-hero-eye">' + esc(T('План на неделю') + ' · ' + total + ' ' +
+                T(plural3(total, 'пост', 'поста', 'постов'))) + '</div>' +
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
-            '<p>' + esc(T('Нажми на день, чтобы задать формат или убрать публикацию.')) + '</p>' +
+            '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
             weekLegend() + weekBar() + '</div>';
     }
 
+    function daySheetBody(i) {
+        var n = dayN(i), pins = dayPins(i);
+        var counter = '<div class="cp-dscnt">' +
+            '<button class="cp-dsb" data-dayn="' + (n - 1) + '"' + (n <= 0 ? ' disabled' : '') +
+            '><i class="ti ti-minus"></i></button>' +
+            '<span class="v"><b>' + n + '</b><em>' +
+            esc(n ? T(plural3(n, 'пост', 'поста', 'постов')) : T('без публикации')) +
+            '</em></span>' +
+            '<button class="cp-dsb" data-dayn="' + (n + 1) + '"' + (n >= MAX_PER_DAY ? ' disabled' : '') +
+            '><i class="ti ti-plus"></i></button></div>';
+        if (!n) {
+            return counter + '<div class="cp-dsnote">' +
+                esc(T('В этот день ничего не выйдет.')) + '</div>';
+        }
+        var live = liveRubrics();
+        var rows = live.map(function (r) {
+            var on = pins.indexOf(r.key) >= 0;
+            return '<button class="cp-dsr' + (on ? ' on' : '') + '" data-daypin="' + esc(r.key) + '">' +
+                '<i class="ti ' + (r.needs_fact ? 'ti-camera' : 'ti-file-text') + '"></i>' +
+                '<span class="tx"><b>' + esc(r.title) + '</b></span>' +
+                (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+        }).join('');
+        var free = n - pins.length;
+        var note = free > 0
+            ? T('Остальные') + ' ' + free + ' — ' + T('на усмотрение системы.')
+            : T('Все посты этого дня заданы вручную.');
+        return counter +
+            '<div class="cp-dssep"></div>' +
+            '<div class="cp-dss">' + esc(T('Закрепить рубрику за постом дня')) + '</div>' +
+            (live.length ? '<div class="cp-dsgrid">' + rows + '</div>'
+                : '<div class="cp-dsnote">' + esc(T('Рубрики ещё не определены.')) + '</div>') +
+            '<div class="cp-dsnote">' + esc(note) + '</div>';
+    }
+
     function pickDay(i) {
         haptic('light');
-        var cur = days()[i];
-        var blocked = blockedFmts();
-        var rows = Object.keys(FMT).filter(function (k) { return blocked.indexOf(k) < 0; })
-            .map(function (k) {
-                var fi = FMT[k];
-                return '<button class="cp-dsr' + (cur === k ? ' on' : '') + '" data-dayv="' + k + '">' +
-                    '<i class="ti ' + fi[1] + '"></i><span class="tx"><b>' + esc(T(fi[0])) + '</b></span>' +
-                    (cur === k ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
-            }).join('');
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        var draw = function () {
+            host.innerHTML = '<div class="cp-dsheet">' +
+                '<div class="cp-dsgrab"></div>' +
+                '<div class="cp-dsh">' + esc(T(WD_FULL[i])) + '</div>' +
+                '<div class="cp-dss">' + esc(T('Сколько постов и что в них')) + '</div>' +
+                daySheetBody(i) + '</div>';
+        };
+        draw();
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
 
+        host.addEventListener('click', function (e) {
+            var t = e.target;
+            var cnt = t.closest ? t.closest('[data-dayn]') : null;
+            if (cnt) {
+                if (setDayN(i, +cnt.getAttribute('data-dayn'))) { haptic('light'); draw(); renderBrief(); }
+                return;
+            }
+            var pin = t.closest ? t.closest('[data-daypin]') : null;
+            if (pin) {
+                if (togglePin(i, pin.getAttribute('data-daypin'))) { haptic('light'); draw(); renderBrief(); }
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
+    }
+
+    function askRubric() {
+        haptic('light');
         var host = document.getElementById('cp-daybox');
         if (host) host.remove();
         host = document.createElement('div');
@@ -369,33 +557,68 @@
         host.className = 'cp-dsov';
         host.innerHTML = '<div class="cp-dsheet">' +
             '<div class="cp-dsgrab"></div>' +
-            '<div class="cp-dsh">' + esc(T(WD_FULL[i])) + '</div>' +
-            '<div class="cp-dss">' + esc(T('Что выходит в этот день')) + '</div>' +
-            '<button class="cp-dsr wide' + (cur === 'auto' ? ' on' : '') + '" data-dayv="auto">' +
-            '<i class="ti ti-sparkles"></i><span class="tx"><b>' + esc(T('Решает система')) + '</b>' +
-            '<em>' + esc(T('подберёт формат под сюжет недели')) + '</em></span>' +
-            (cur === 'auto' ? '<i class="ti ti-check ck"></i>' : '') + '</button>' +
-            '<button class="cp-dsr wide mut' + (cur === 'off' ? ' on' : '') + '" data-dayv="off">' +
-            '<i class="ti ti-ban"></i><span class="tx"><b>' + esc(T('Не публиковать')) + '</b>' +
-            '<em>' + esc(T('день останется пустым')) + '</em></span>' +
-            (cur === 'off' ? '<i class="ti ti-check ck"></i>' : '') + '</button>' +
-            '<div class="cp-dssep"></div>' +
-            '<div class="cp-dsgrid">' + rows + '</div></div>';
+            '<div class="cp-dsh">' + esc(T('Своя рубрика')) + '</div>' +
+            '<div class="cp-dss">' + esc(T('Как она называется и что в ней выходит')) + '</div>' +
+            '<input class="cp-inp" id="cp-rub-title" maxlength="40" placeholder="' +
+            esc(T('Название, 2-3 слова')) + '">' +
+            '<input class="cp-inp" id="cp-rub-about" maxlength="90" placeholder="' +
+            esc(T('Что содержит такой пост')) + '">' +
+            '<button class="cp-dsr wide" id="cp-rub-fact"><i class="ti ti-camera"></i>' +
+            '<span class="tx"><b>' + esc(T('Нужны мои факты')) + '</b>' +
+            '<em>' + esc(T('пост о том, что произошло со мной')) + '</em></span></button>' +
+            '<button class="cp-go" id="cp-rub-save" style="margin-top:14px">' +
+            esc(T('Добавить рубрику')) + '</button></div>';
         document.body.appendChild(host);
         requestAnimationFrame(function () { host.classList.add('vis'); });
-
+        var fact = false;
         host.addEventListener('click', function (e) {
-            var b = e.target.closest ? e.target.closest('[data-dayv]') : null;
-            if (b) {
-                if (setDay(i, b.getAttribute('data-dayv'))) {
-                    haptic('light');
-                    host.remove();
-                    renderBrief();
-                }
+            if (e.target.closest && e.target.closest('#cp-rub-fact')) {
+                fact = !fact;
+                host.querySelector('#cp-rub-fact').classList.toggle('on', fact);
+                haptic('light');
+                return;
+            }
+            if (e.target.closest && e.target.closest('#cp-rub-save')) {
+                var title = (host.querySelector('#cp-rub-title').value || '').trim();
+                if (!title) { toast(T('Введи название рубрики')); return; }
+                rubApi('add', { title: title, needs_fact: fact,
+                                about: (host.querySelector('#cp-rub-about').value || '').trim() });
+                host.remove();
                 return;
             }
             if (e.target === host) host.remove();
         });
+    }
+
+    function rubApi(op, extra) {
+        if (!_chId || _rubBusy) return;
+        _rubBusy = true;
+        var body = { channel_id: _chId };
+        for (var k in (extra || {})) body[k] = extra[k];
+        apiRequest('/api/v1/content-plan/rubrics/' + op,
+                   { method: 'POST', body: JSON.stringify(body) })
+            .then(function (r) {
+                _rubBusy = false;
+                if (r && r.ok && r.rubrics) { _rubrics = r.rubrics; rerender(); }
+                else if (r && r.error === 'too_many') toast(T('Больше шестнадцати рубрик не бывает'));
+                else if (r && r.error) toast(T('Не удалось изменить рубрики'));
+            })
+            .catch(function () { _rubBusy = false; toast(T('Не удалось изменить рубрики')); });
+    }
+
+    function loadRubrics() {
+        if (!_chId) return;
+        var cid = _chId;
+        apiRequest('/api/v1/content-plan/rubrics?channel_id=' + cid)
+            .then(function (r) {
+                if (!r || !r.ok || cid !== _chId) return;
+                if (r.rubrics && r.rubrics.length) { _rubrics = r.rubrics; rerender(); return; }
+                apiRequest('/api/v1/content-plan/rubrics/build',
+                           { method: 'POST', body: JSON.stringify({ channel_id: cid }) })
+                    .then(function (b) {
+                        if (b && b.ok && b.rubrics && cid === _chId) { _rubrics = b.rubrics; rerender(); }
+                    }).catch(function () {});
+            }).catch(function () {});
     }
 
     function renderBrief() {
@@ -429,7 +652,7 @@
         var rdy = (_state && _state.readiness) || {};
         var blocked = rdy.blocked === true;
         var w = wallet();
-        var weekPrice = (w.price_day || 10) * activeDays().length;
+        var weekPrice = (w.price_day || 10) * totalPosts();
         var priceTag = w.is_tester ? '' :
             '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
         var lowNote = (!w.is_tester && w.balance != null && w.balance < weekPrice)
@@ -445,7 +668,7 @@
             '<div class="cp-sec">' + secHead('Цель недели',
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
             '<div class="cp-goals">' + goals + '</div></div>' +
-            apFormats() +
+            rubricsBlock() + rhythmBlock() +
 
             '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
@@ -650,9 +873,11 @@
             onSelect: function (id) {
                 _chId = +id;
                 _ap = null;
+                _rubrics = [];
                 _days = null;
                 renderBrief();
                 loadAutopilot();
+                loadRubrics();
                 apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                     .then(function (d) {
                         if (!d || !d.ok) return;
@@ -1104,6 +1329,23 @@
         apiRequest('/api/v1/content-plan').then(function (d) { if (d && d.ok) { _state = d; renderWeek(); } }).catch(function () {});
     }
 
+    function onInput(ev) {
+        var r = ev.target;
+        if (!r || r.getAttribute('data-act') !== 'avg') return;
+        _avg = Math.max(1, Math.min(MAX_PER_DAY, +r.value || 1));
+        var row = r.parentElement && r.parentElement.querySelector('.cp-srow b');
+        if (row) row.textContent = _avg;
+    }
+
+    function onChange(ev) {
+        var r = ev.target;
+        if (!r || r.getAttribute('data-act') !== 'avg') return;
+        _avg = Math.max(1, Math.min(MAX_PER_DAY, +r.value || 1));
+        spreadPosts(_avg, _spread);
+        haptic('light');
+        renderBrief();
+    }
+
     function onClick(ev) {
         var t = ev.target;
         var chip = t.closest ? t.closest('[data-chip]') : null;
@@ -1112,6 +1354,14 @@
             if (name === 'goal') _goal = v;
             var wrap = chip.parentElement;
             wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
+            haptic('light');
+            renderBrief();
+            return;
+        }
+        var spread = t.closest ? t.closest('[data-spread]') : null;
+        if (spread) {
+            _spread = spread.getAttribute('data-spread');
+            spreadPosts(_avg, _spread);
             haptic('light');
             renderBrief();
             return;
@@ -1151,6 +1401,20 @@
         if (act === 'apstop') { apStop(); return; }
         if (act === 'pickchan') { pickChannel(); return; }
         if (act === 'pickday') { pickDay(+actEl.getAttribute('data-day')); return; }
+        if (act === 'rubtoggle') {
+            haptic('light');
+            var rk = actEl.getAttribute('data-v');
+            var cur = _rubrics.filter(function (r) { return r.key === rk; })[0];
+            if (!cur) return;
+            rubApi('toggle', { key: rk, disabled: !cur.disabled });
+            return;
+        }
+        if (act === 'rubdel') {
+            haptic('medium');
+            rubApi('remove', { key: actEl.getAttribute('data-v') });
+            return;
+        }
+        if (act === 'rubadd') { askRubric(); return; }
         if (act === 'fmtback') {
             haptic('light');
             var back = (actEl.getAttribute('data-v') || '').split(',');

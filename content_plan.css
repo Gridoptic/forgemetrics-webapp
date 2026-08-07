@@ -584,6 +584,12 @@
     .cp-hero-week { gap: 2px; }
 }
 
+.cp-hd .num {
+    display: block; font-size: 17px; font-weight: 750; color: #c7cbff; line-height: 1.05;
+}
+.cp-hd.off .num { color: #4a4d61; font-size: 14px; }
+.cp-hd.on { background: rgba(99, 102, 241, .16); border-color: rgba(99, 102, 241, .38); }
+
 .cp-hd.fix { background: rgba(99, 102, 241, .20); border-color: rgba(99, 102, 241, .5); }
 .cp-hd.fix .d { color: #c7cbff; }
 .cp-hd.fix::after {
@@ -683,6 +689,129 @@
 
 .cp-dssep { height: 1px; background: rgba(255, 255, 255, .06); margin: 10px 2px; }
 .cp-dsgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.cp-hbar.stop {
+    background: rgba(239, 68, 68, .08); border-color: rgba(239, 68, 68, .24); color: #e8b0b0;
+}
+.cp-hbar.stop i { color: #ef8080; }
+
+.cp-dscnt {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    padding: 6px 0 4px;
+}
+.cp-dsb {
+    width: 44px; height: 44px; border-radius: 13px; flex: 0 0 auto; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .10);
+    color: #c7cbff; cursor: pointer;
+}
+.cp-dsb:disabled { opacity: .3; cursor: default; }
+.cp-dscnt .v { min-width: 96px; text-align: center; }
+.cp-dscnt .v b { display: block; font-size: 26px; font-weight: 750; color: #e8eaf1; line-height: 1.05; }
+.cp-dscnt .v em {
+    display: block; font-style: normal; font-size: 10.5px; color: #6f748c; margin-top: 2px;
+}
+.cp-dsnote { font-size: 10.5px; color: #6f748c; line-height: 1.45; margin-top: 9px; }
+
+.cp-inp {
+    width: 100%; padding: 11px 12px; border-radius: 12px; margin-bottom: 8px;
+    background: rgba(0, 0, 0, .3); border: 1px solid rgba(255, 255, 255, .09);
+    color: #e8eaf1; font-family: inherit; font-size: 13px; min-height: 44px;
+}
+.cp-inp::placeholder { color: #4a4d61; }
+
+.cp-slider { margin-top: 4px; }
+.cp-srow { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
+.cp-srow span { font-size: 11.5px; color: #8d93a8; }
+.cp-srow b { font-size: 15px; font-weight: 750; color: #e8eaf1; }
+.cp-range {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 24px;
+    background: transparent; cursor: pointer; display: block;
+}
+.cp-range::-webkit-slider-runnable-track {
+    height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .09);
+}
+.cp-range::-moz-range-track { height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .09); }
+.cp-range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; margin-top: -7.5px;
+    background: #fff; border: 0; box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+}
+.cp-range::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+}
+.cp-ticks {
+    display: flex; justify-content: space-between; margin-top: 2px; font-size: 9.5px; color: #4a4d61;
+}
+.cp-ticks .on { color: #818cf8; font-weight: 700; }
+
+.cp-seg { display: flex; gap: 5px; }
+.cp-sg {
+    flex: 1; min-width: 0; padding: 9px 4px; border-radius: 11px; text-align: center;
+    min-height: 46px; font-family: inherit; cursor: pointer;
+    background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .06);
+}
+.cp-sg b { display: block; font-size: 11.5px; font-weight: 650; color: #8d93a8; }
+.cp-sg span { display: block; font-size: 9px; color: #4a4d61; margin-top: 2px; }
+.cp-sg.on { background: rgba(99, 102, 241, .15); border-color: rgba(99, 102, 241, .45); }
+.cp-sg.on b { color: #c7cbff; }
+.cp-sg.on span { color: #818cf8; }
+
+.cp-rsrc {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 8px;
+    margin-bottom: 11px; font-size: 10px; color: #34d399;
+    background: rgba(52, 211, 153, .10); border: 1px solid rgba(52, 211, 153, .28);
+}
+.cp-rsrc.base {
+    color: #8d93a8; background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .08);
+}
+.cp-rsrc i { font-size: 12px; }
+
+.cp-rgh { display: flex; align-items: center; gap: 7px; margin: 14px 0 8px; }
+.cp-rgh:first-of-type { margin-top: 0; }
+.cp-rgh i { font-size: 13px; flex-shrink: 0; }
+.cp-rgh span {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+}
+.cp-rgh .ln { flex: 1; height: 1px; background: currentColor; opacity: .22; }
+.cp-rgh.a { color: #34d399; }
+.cp-rgh.z { color: #38bdf8; }
+
+.cp-rubs { display: flex; flex-direction: column; gap: 6px; }
+.cp-rub {
+    display: flex; align-items: flex-start; gap: 9px; width: 100%; text-align: left;
+    padding: 10px 11px; border-radius: 12px; font-family: inherit; cursor: pointer;
+    background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .06);
+    position: relative;
+}
+.cp-rub > i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.cp-rub.a { border-color: rgba(52, 211, 153, .26); background: rgba(52, 211, 153, .06); }
+.cp-rub.a > i { color: #34d399; }
+.cp-rub.z { border-color: rgba(56, 189, 248, .26); background: rgba(56, 189, 248, .06); }
+.cp-rub.z > i { color: #38bdf8; }
+.cp-rub .tx { min-width: 0; flex: 1; }
+.cp-rub b { display: block; font-size: 12.5px; font-weight: 650; color: #e8eaf1; }
+.cp-rub em {
+    display: block; font-style: normal; font-size: 10.5px; color: #6f748c; margin-top: 2px;
+    line-height: 1.35;
+}
+.cp-rub .cnt {
+    flex-shrink: 0; font-size: 9.5px; color: #6f748c; padding: 3px 7px; border-radius: 7px;
+    background: rgba(255, 255, 255, .05); white-space: nowrap;
+}
+.cp-rub .rm { font-size: 14px; color: #4a4d61; flex-shrink: 0; padding: 2px; }
+.cp-rub.off { opacity: .45; }
+.cp-rub.off b { text-decoration: line-through; }
+
+.cp-radd {
+    display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+    margin-top: 9px; padding: 11px; border-radius: 12px; min-height: 44px; font-family: inherit;
+    background: transparent; border: 1px dashed rgba(255, 255, 255, .18);
+    font-size: 12px; font-weight: 600; color: #8d93a8; cursor: pointer;
+}
+.cp-radd i { font-size: 14px; }
+
+.cp-rubwait { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: #8d93a8; }
 
 .cp-ready {
     padding: 14px;
