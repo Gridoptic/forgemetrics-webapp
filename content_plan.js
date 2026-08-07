@@ -315,11 +315,11 @@
                     '<span class="f">' + esc(T('выкл')) + '</span></div>';
             }
             var pins = (d.pins || []).length;
-            var label = pins ? (pins + ' ' + T('закр.')) : T('система');
+            var label = pins ? (pins + ' ' + T('закр.')) : '';
             return '<div class="cp-hd on' + (pins ? ' fix' : '') + '"' +
                 (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') +
                 '><span class="num">' + n + '</span>' + day +
-                '<span class="f">' + esc(label) + '</span></div>';
+                (label ? '<span class="f">' + esc(label) + '</span>' : '') + '</div>';
         }).join('');
     }
 
@@ -329,12 +329,6 @@
         return lang === 'ru' ? g.toLowerCase() : g;
     }
 
-    function weekLegend() {
-        return '<div class="cp-lgd">' +
-            '<span class="cp-lg"><i class="a"></i>' + esc(T('есть закреплённые')) + '</span>' +
-            '<span class="cp-lg"><i class="b"></i>' + esc(T('решает система')) + '</span>' +
-            '<span class="cp-lg"><i class="c"></i>' + esc(T('без публикации')) + '</span></div>';
-    }
 
     function weekBar() {
         var total = totalPosts();
@@ -620,7 +614,7 @@
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
-            weekLegend() + weekBar() + '</div>';
+            weekBar() + '</div>';
     }
 
     function daySheetBody(i) {
@@ -640,15 +634,26 @@
         var live = liveRubrics();
         var rows = live.map(function (r) {
             var on = pins.indexOf(r.key) >= 0;
-            return '<button class="cp-dsr' + (on ? ' on' : '') + '" data-daypin="' + esc(r.key) + '">' +
+            return '<button class="cp-dsr' + (on ? ' on' : '') + (r.needs_fact ? ' fact' : '') +
+                '" data-daypin="' + esc(r.key) + '">' +
                 '<i class="ti ' + (r.needs_fact ? 'ti-camera' : 'ti-file-text') + '"></i>' +
-                '<span class="tx"><b>' + esc(r.title) + '</b></span>' +
-                (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
+                '<span class="tx"><b>' + esc(r.title) + '</b>' +
+                (r.needs_fact ? '<em>' + esc(T('спрошу пару строк за день')) + '</em>' : '') +
+                '</span>' + (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
         var free = n - pins.length;
-        var note = free > 0
-            ? T('Остальные') + ' ' + free + ' — ' + T('на усмотрение системы.')
-            : T('Все посты этого дня заданы вручную.');
+        var note;
+        if (!free) {
+            note = n > 1 ? T('Все посты этого дня заданы вручную.')
+                         : T('Пост этого дня задан вручную.');
+        } else if (free === n) {
+            note = n > 1 ? T('Все посты дня подберёт система.')
+                         : T('Пост подберёт система.');
+        } else {
+            note = T('Ещё') + ' ' + free + ' ' +
+                T(plural3(free, 'пост', 'поста', 'постов')) + ' ' +
+                T('подберёт система.');
+        }
         return counter +
             '<div class="cp-dssep"></div>' +
             '<div class="cp-dss">' + esc(T('Закрепить рубрику за постом дня')) + '</div>' +
