@@ -341,17 +341,18 @@
             return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
                 esc(head) + '</span></div>';
         }
-        var tail = ' <b>' + esc(price + ' Forge.') + '</b>';
+        var tail = ' <b class="cp-hprice">' + forgeTag(price) + '</b>.';
         if (bal != null && price > 0) {
             if (bal < price) {
                 return '<div class="cp-hbar stop"><i class="ti ti-wallet"></i><span>' +
-                    esc(head) + tail + ' ' +
-                    esc(T('На балансе') + ' ' + bal + ' — ' + T('не хватает.') + ' ' +
-                        T('Убавь постов или пополни баланс.')) + '</span></div>';
+                    esc(head) + tail + ' ' + esc(T('На балансе')) + ' ' + forgeTag(bal) + ' — ' +
+                    esc(T('не хватает.') + ' ' + T('Убавь постов или пополни баланс.')) +
+                    '</span></div>';
             }
             var weeks = Math.floor(bal / price);
-            tail += ' ' + esc(T('На балансе') + ' ' + bal + ' — ' + T('хватит на') + ' ' +
-                weeks + ' ' + T(plural3(weeks, 'неделю', 'недели', 'недель')) + '.');
+            tail += ' ' + esc(T('На балансе')) + ' ' + forgeTag(bal) + ' — ' +
+                esc(T('хватит на') + ' ' + weeks + ' ' +
+                    T(plural3(weeks, 'неделю', 'недели', 'недель')) + '.');
         }
         return '<div class="cp-hbar ok"><i class="ti ti-check"></i><span>' +
             esc(head) + tail + '</span></div>';

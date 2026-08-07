@@ -1145,3 +1145,10 @@
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .cp-dsr.fact.on { background: rgba(56, 189, 248, .16); border-color: rgba(56, 189, 248, .5); }
+
+.cp-hbar .forge-price {
+    display: inline-flex; align-items: center; gap: 3px; vertical-align: -2px;
+    font-variant-numeric: tabular-nums;
+}
+.cp-hbar .forge-price svg, .cp-hbar .forge-price img { flex-shrink: 0; }
+.cp-hprice { color: #e8eaf1; font-weight: 700; }
