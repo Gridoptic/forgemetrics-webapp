@@ -292,6 +292,23 @@
         if (totalPosts() < MIN_POSTS) { _days[0].n = MIN_POSTS; }
     }
 
+    function numExact(n) {
+        n = Math.round(+n || 0);
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009');
+    }
+
+    function periodNote() {
+        var h = _cal && _cal.history;
+        if (!h || !h.ready || !h.since) return '';
+        var mm = function (iso) {
+            var p = String(iso).split('-');
+            return p[1] + '.' + p[0];
+        };
+        var span = mm(h.since) === mm(h.until) ? mm(h.since) : (mm(h.since) + ' — ' + mm(h.until));
+        return esc(T('по') + ' ' + h.total + ' ' +
+            T(plural3(h.total, 'посту', 'постам', 'постам')) + ', ' + span);
+    }
+
     function histDays() {
         var h = _cal && _cal.history;
         return (h && h.ready && (h.days || []).length === 7) ? h.days : null;
@@ -327,8 +344,10 @@
             if (hist) {
                 var v = hist[i].views || 0;
                 var pct = (max && v) ? Math.max(8, Math.round(v / max * 100)) : 0;
+                var vs = v ? numExact(v) : '';
                 col = '<span class="cp-hist">' + (pct ? '<i style="height:' + pct + '%"></i>' : '') +
-                    '</span><span class="cp-hval">' + (v ? esc(numShort(v)) : '') + '</span>';
+                    '</span><span class="cp-hval' + (vs.length > 6 ? ' sm' : '') + '">' +
+                    esc(vs) + '</span>';
             }
             return '<div class="' + cls + '"' +
                 (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') + '>' + col +
@@ -354,8 +373,8 @@
         if (!t || readiness().reason === 'paused') return '';
         return '<div class="cp-tip"><i class="ti ti-bulb"></i><span>' +
             '<b>' + esc(T(WD_FULL[t.strong])) + '</b> — ' + esc(T('сильный день канала') + ': ') +
-            '<b>' + esc(numShort(t.strong_views)) + '</b> ' +
-            esc(T('против') + ' ' + numShort(t.weak_views) + ' (' + T(WD[t.weak]) + '). ' +
+            '<b>' + esc(numExact(t.strong_views)) + '</b> ' +
+            esc(T('против') + ' ' + numExact(t.weak_views) + ' (' + T(WD[t.weak]) + '). ' +
                 T('Постов там меньше') + ': ' + t.strong_n + ' ' + T('против') + ' ' + t.weak_n + '.') +
             '<button class="cp-tipgo" data-act="tipmove">' +
             esc(T('Перенести') + ' ' + t.move + ' ' +
@@ -639,7 +658,7 @@
                         '</span>' +
                         (tip ? '<span class="cp-plus"><i class="ti ti-plus"></i></span>'
                              : (r.avg_views ? '<span class="pw"><i class="ti ti-eye"></i>' +
-                                    esc(numShort(r.avg_views)) + '</span>' : '')) +
+                                    esc(numExact(r.avg_views)) + '</span>' : '')) +
                         (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
                             esc(r.key) + '"></i>' : '') + '</button>';
                 }).join('') + '</div>';
@@ -687,6 +706,7 @@
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
+            (periodNote() ? '<div class="cp-hsrc">' + periodNote() + '</div>' : '') +
             histNote() + tipBlock() + weekBar() + '</div>';
     }
 
@@ -731,7 +751,7 @@
             '<span class="tm">' + esc(sl.at || '—') + '</span>' +
             '<span class="tx"><b>' + esc(title) + '</b>' +
             (sub ? '<em>' + esc(sub) + '</em>' : '') + '</span>' +
-            (power ? '<span class="pw">' + esc(numShort(power)) + '</span>' : '') +
+            (power ? '<span class="pw">' + esc(numExact(power)) + '</span>' : '') +
             '<i class="ti ti-chevron-right ch"></i></button>';
     }
 
@@ -778,7 +798,7 @@
                 '<span class="tx"><b>' + esc(r.title) + '</b>' +
                 '<em>' + esc(r.needs_fact ? T('спрошу пару строк за день до выхода')
                                           : (r.about || '')) + '</em></span>' +
-                (r.avg_views ? '<span class="pw">' + esc(numShort(r.avg_views)) + '</span>' : '') +
+                (r.avg_views ? '<span class="pw">' + esc(numExact(r.avg_views)) + '</span>' : '') +
                 (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
         return '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
@@ -806,7 +826,7 @@
             if (slot === null) {
                 var hd = (histDays() || [])[i] || {};
                 head = '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b>' +
-                    (views ? '<span>' + esc(numShort(views) + ' ' + T('просмотров') + ' · ' +
+                    (views ? '<span>' + esc(numExact(views) + ' ' + T('просмотров') + ' · ' +
                         T('по') + ' ' + hd.posts + ' ' +
                         T(plural3(hd.posts, 'посту', 'постам', 'постам'))) + '</span>' : '') +
                     '</div>';
