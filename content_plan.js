@@ -708,7 +708,14 @@
             '<button class="cp-go" style="max-width:280px;" data-act="regen">' + esc(T('Собрать заново')) + '</button></div>');
     }
 
-    function fmtInfo(f) { return FMT[f] || ['Пост', 'ti-file-text']; }
+    function fmtInfo(f) {
+        for (var i = 0; i < _rubrics.length; i++) {
+            if (_rubrics[i].key === f) {
+                return [_rubrics[i].title, _rubrics[i].needs_fact ? 'ti-camera' : 'ti-file-text'];
+            }
+        }
+        return FMT[f] || ['Пост', 'ti-file-text'];
+    }
     function statusOf(p) {
         var ps = p.publish_status;
         if (ps === 'published') return [T('Опубликован'), 'pub'];
@@ -801,11 +808,22 @@
 
     function askCap() {
         var cur = (_ap && _ap.weekly_forge_cap) || 100;
-        var opts = [70, 100, 150, 300];
+        var w = wallet();
+        var week = (w.price_day || 10) * totalPosts();
+        var opts = [100, 300, 700, 1500];
+        if (opts.indexOf(cur) < 0) opts.push(cur);
+        opts.sort(function (a, b) { return a - b; });
         var html = opts.map(function (v) {
-            return '<button class="cp-capopt' + (v === cur ? ' on' : '') + '" data-capv="' + v + '">' +
-                v + ' Forge</button>';
+            var thin = week > 0 && v < week;
+            return '<button class="cp-capopt' + (v === cur ? ' on' : '') + (thin ? ' thin' : '') +
+                '" data-capv="' + v + '">' + v + ' Forge' +
+                (thin ? '<span>' + esc(T('меньше недели')) + '</span>' : '') + '</button>';
         }).join('');
+        var warn = (week > 0 && cur < week)
+            ? '<div class="cp-capwarn">' + esc(T('Неделя по текущим настройкам стоит') + ' ' +
+                week + ' Forge — ' + T('при этом потолке автопилот остановится, не собрав её.')) +
+              '</div>'
+            : '';
         var host = document.getElementById('cp-capbox');
         if (host) host.remove();
         host = document.createElement('div');
@@ -814,7 +832,7 @@
         host.innerHTML = '<div class="cp-capin"><div class="cp-caph">' +
             esc(T('Потолок расхода в неделю')) + '</div>' +
             '<div class="cp-caps">' + esc(T('Автопилот остановится, когда достигнет этой суммы.')) +
-            '</div><div class="cp-capopts">' + html + '</div>' +
+            '</div>' + warn + '<div class="cp-capopts">' + html + '</div>' +
             '<button class="cp-capclose">' + esc(T('Закрыть')) + '</button></div>';
         (document.getElementById('content-plan-screen') || document.body).appendChild(host);
         host.addEventListener('click', function (e) {
