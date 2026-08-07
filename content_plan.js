@@ -1727,6 +1727,43 @@
     }
 
     var _mediaBusy = {};
+    var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
+                   ask: 'вопрос' };
+    var COVER_PRICE = { cover_variant: 1, cover_phrase: 2 };
+
+    function coverPrice(op) {
+        var w = wallet();
+        return (w.prices && w.prices[op]) || COVER_PRICE[op] || 1;
+    }
+
+    function regenCover(id, what) {
+        if (_mediaBusy[id]) return;
+        _mediaBusy[id] = what === 'phrase' ? T('Подбираю фразу...') : T('Рисую вариант...');
+        rerender();
+        apiRequest('/api/v1/content-plan/cover/regen',
+                   { method: 'POST', body: JSON.stringify({ post_id: id, what: what }) })
+            .then(function (r) {
+                delete _mediaBusy[id];
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.media_kind = 'photo'; p.media_url = r.url; p.cover_layout = r.layout; }
+                    haptic('light');
+                } else if (r && r.error === 'no_phrase') {
+                    toast(T('Не удалось выбрать фразу — попробуй ещё раз'));
+                } else if (r && r.error === 'not_cover_mode') {
+                    toast(T('У поста своя картинка — обложка не рисуется'));
+                } else {
+                    toast(T('Обложка не обновилась'));
+                }
+                rerender();
+            })
+            .catch(function () {
+                delete _mediaBusy[id];
+                toast(T('Обложка не обновилась'));
+                rerender();
+            });
+    }
+
 
     var COVER_PAL = [
         ['indigo', '#0a0d18', '#818cf8', '#c084fc', 'Индиго'],
@@ -1862,8 +1899,9 @@
         }
         if (p.media_url) {
             var isVideo = p.media_kind === 'video';
-            var label = p.media_kind === 'animation' ? T('гифка')
-                : (isVideo ? T('видео') : T('картинка'));
+            var isCover = (p.media_url || '').indexOf('/covers/') >= 0;
+            var label = isCover ? (T('обложка') + (p.cover_layout ? ' · ' + T(LAY_RU[p.cover_layout] || '') : ''))
+                : (p.media_kind === 'animation' ? T('гифка') : (isVideo ? T('видео') : T('картинка')));
             var body = isVideo
                 ? '<div class="cp-mfilebg"><i class="ti ti-player-play"></i></div>'
                 : '<img src="' + esc(p.media_url) + '" alt="">';
@@ -1872,12 +1910,23 @@
                   esc(T('Текст длиннее 1024 знаков — файл уйдёт отдельным сообщением перед постом.')) +
                   '</span></div>'
                 : '';
+            var row = isCover
+                ? '<div class="cp-mrow">' +
+                  '<button class="cp-mrepl" data-act="coverregen" data-id="' + p.id +
+                  '" data-what="variant"><i class="ti ti-refresh"></i>' +
+                  esc(T('Другой вариант')) + ' ' + forgeTag(coverPrice('cover_variant')) + '</button>' +
+                  '<button class="cp-mrepl" data-act="coverregen" data-id="' + p.id +
+                  '" data-what="phrase"><i class="ti ti-quote"></i>' +
+                  esc(T('Другая фраза')) + ' ' + forgeTag(coverPrice('cover_phrase')) + '</button>' +
+                  '</div>' +
+                  '<button class="cp-mrepl" data-act="coverstyle"><i class="ti ti-palette"></i>' +
+                  esc(T('Стиль обложек')) + '</button>'
+                : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
+                  esc(T('Заменить файл')) + '</button>';
             return '<div class="cp-media"><div class="cp-mthumb">' + body +
                 '<span class="cp-mbadge">' + esc(label) + '</span>' +
                 '<button class="cp-mx" data-act="mediaclear" data-id="' + p.id + '">' +
-                '<i class="ti ti-x"></i></button></div>' + warn +
-                '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
-                esc(T('Заменить файл')) + '</button></div>';
+                '<i class="ti ti-x"></i></button></div>' + warn + row + '</div>';
         }
         return '<button class="cp-madd" data-act="mediamode" data-id="' + p.id + '">' +
             '<i class="ti ti-photo-plus"></i>' + esc(T('Добавить картинку')) + '</button>';
@@ -2265,6 +2314,11 @@
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverstyle') { askCoverStyle(); return; }
+        if (act === 'coverregen') {
+            haptic('medium');
+            regenCover(+actEl.getAttribute('data-id'), actEl.getAttribute('data-what'));
+            return;
+        }
         if (act === 'openstyle') {
             haptic('medium');
             var cid = _chId;

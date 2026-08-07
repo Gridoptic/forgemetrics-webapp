@@ -1373,3 +1373,8 @@
 .cp-chip.on {
     border-color: rgba(129, 140, 248, .45); background: rgba(129, 140, 248, .13); color: #a9b0ff;
 }
+
+.cp-mrow { display: flex; gap: 7px; margin-top: 7px; }
+.cp-mrow .cp-mrepl { margin-top: 0; }
+.cp-mrepl i { font-size: 13px; margin-right: 5px; vertical-align: -2px; }
+.cp-mrepl .forge-price { vertical-align: -2px; margin-left: 4px; }
