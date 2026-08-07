@@ -337,6 +337,18 @@
         }).join('');
     }
 
+    function histNote() {
+        var h = _cal && _cal.history;
+        if (!h || h.ready || readiness().reason === 'paused') return '';
+        var have = h.total || 0, need = h.need || 12;
+        var tail = (!have && h.archive)
+            ? T('Канал давно не публиковал — старые замеры для расчёта не годятся.')
+            : T('Столбики появятся, когда наберётся достаточно.');
+        return '<div class="cp-hnote"><i class="ti ti-chart-bar-off"></i><span>' +
+            esc(T('Постов с замерами за полгода') + ': ' + have + ' ' + T('из') + ' ' +
+                need + '. ' + tail) + '</span></div>';
+    }
+
     function tipBlock() {
         var t = _cal && _cal.tip;
         if (!t || readiness().reason === 'paused') return '';
@@ -675,7 +687,7 @@
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
-            tipBlock() + weekBar() + '</div>';
+            histNote() + tipBlock() + weekBar() + '</div>';
     }
 
     function setPin(i, k, key) {
@@ -792,9 +804,12 @@
             var hours = bestHours();
             var head, sub, body;
             if (slot === null) {
+                var hd = (histDays() || [])[i] || {};
                 head = '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b>' +
-                    (views ? '<span>' + esc(T('обычно') + ' ' + numShort(views) + ' ' +
-                        T('просмотров')) + '</span>' : '') + '</div>';
+                    (views ? '<span>' + esc(numShort(views) + ' ' + T('просмотров') + ' · ' +
+                        T('по') + ' ' + hd.posts + ' ' +
+                        T(plural3(hd.posts, 'посту', 'постам', 'постам'))) + '</span>' : '') +
+                    '</div>';
                 sub = hours.length
                     ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
                         hours.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
