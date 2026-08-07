@@ -166,7 +166,10 @@
     window.__cpSetAp = function (ap) { _ap = ap; };
     window.__cpSetRubrics = function (r) { _rubrics = r || []; };
     window.__cpSetReview = function (r) { _review = r || null; };
-    window.__cpSetCal = function (c) { _cal = c || null; };
+    window.__cpSetCal = function (c) {
+        _cal = c || null;
+        if (_dayDraw && document.getElementById('cp-daybox')) _dayDraw();
+    };
 
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
@@ -820,7 +823,7 @@
     function pickDay(i) {
         haptic('light');
         var host = document.getElementById('cp-daybox');
-        if (host) host.remove();
+        if (host) { _dayDraw = null; host.remove(); }
         host = document.createElement('div');
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
@@ -852,6 +855,7 @@
                 '<div class="cp-dsgrab"></div>' + head + sub + body + '</div>';
         };
         draw();
+        _dayDraw = draw;
         document.body.appendChild(host);
         requestAnimationFrame(function () { host.classList.add('vis'); });
 
@@ -872,7 +876,7 @@
                 haptic('light'); slot = null; draw(); renderBrief();
                 return;
             }
-            if (e.target === host) host.remove();
+            if (e.target === host) { _dayDraw = null; host.remove(); }
         });
     }
 
@@ -1003,6 +1007,7 @@
     }
 
     var _calTimer = null;
+    var _dayDraw = null;
 
     function loadCalendarSoon() {
         if (_calTimer) clearTimeout(_calTimer);
@@ -1020,6 +1025,7 @@
                 if (!r || !r.ok) return;
                 if ((_chId || (_state && _state.channel_id)) !== r.channel_id) return;
                 _cal = r;
+                if (_dayDraw && document.getElementById('cp-daybox')) _dayDraw();
                 rerender();
             }).catch(function () {});
     }
