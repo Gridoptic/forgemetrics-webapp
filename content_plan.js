@@ -529,6 +529,70 @@
         });
     }
 
+    function askAd(id) {
+        var p = post(id);
+        if (!p) return;
+        haptic('light');
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        host.innerHTML = '<div class="cp-dsheet">' +
+            '<div class="cp-dsgrab"></div>' +
+            '<div class="cp-dsh">' + esc(T('Разметка рекламы')) + '</div>' +
+            '<div class="cp-dss">' +
+            esc(T('Рекламный пост выходит с пометкой — это требование закона.')) + '</div>' +
+            '<button class="cp-dsr wide' + (p.is_ad ? '' : ' on') + '" data-adv="off">' +
+            '<i class="ti ti-ad-off"></i><span class="tx"><b>' + esc(T('Обычный пост')) + '</b>' +
+            '<em>' + esc(T('выйдет как есть')) + '</em></span></button>' +
+            '<button class="cp-dsr wide' + (p.is_ad ? ' on' : '') + '" data-adv="on">' +
+            '<i class="ti ti-ad-2"></i><span class="tx"><b>' + esc(T('Рекламный пост')) + '</b>' +
+            '<em>' + esc(T('в конце добавится «Реклама» и данные ниже')) + '</em></span></button>' +
+            '<div class="cp-dssep"></div>' +
+            '<input class="cp-inp" id="cp-ad-who" maxlength="80" placeholder="' +
+            esc(T('Рекламодатель, если нужно указать')) + '" value="' + esc(p.ad_advertiser || '') + '">' +
+            '<input class="cp-inp" id="cp-ad-erid" maxlength="60" placeholder="' +
+            esc(T('erid, если получен')) + '" value="' + esc(p.ad_erid || '') + '">' +
+            '<div class="cp-dsnote">' +
+            esc(T('erid выдаёт рекламодатель или оператор рекламных данных. ' +
+                  'Без него пометка всё равно ставится.')) + '</div>' +
+            '<button class="cp-go" id="cp-ad-save" style="margin-top:14px">' +
+            esc(T('Сохранить')) + '</button></div>';
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+        var isAd = !!p.is_ad;
+        host.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-adv]') : null;
+            if (b) {
+                isAd = b.getAttribute('data-adv') === 'on';
+                host.querySelectorAll('[data-adv]').forEach(function (x) {
+                    x.classList.toggle('on', (x.getAttribute('data-adv') === 'on') === isAd);
+                });
+                haptic('light');
+                return;
+            }
+            if (e.target.closest && e.target.closest('#cp-ad-save')) {
+                var who = (host.querySelector('#cp-ad-who').value || '').trim();
+                var erid = (host.querySelector('#cp-ad-erid').value || '').trim();
+                host.remove();
+                apiRequest('/api/v1/content-plan/ad-mark', {
+                    method: 'POST',
+                    body: JSON.stringify({ post_id: id, is_ad: isAd,
+                                           advertiser: who, erid: erid })
+                }).then(function (r) {
+                    if (r && r.ok) {
+                        p.is_ad = isAd; p.ad_advertiser = who; p.ad_erid = erid;
+                        renderWeek();
+                        toast(T(isAd ? 'Пост помечен как рекламный' : 'Пометка снята'));
+                    } else toast(T('Не удалось сохранить'));
+                }).catch(function () { toast(T('Не удалось сохранить')); });
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
+    }
+
     function askRubric() {
         haptic('light');
         var host = document.getElementById('cp-daybox');
@@ -709,6 +773,13 @@
             '<button class="cp-go" style="max-width:280px;" data-act="regen">' + esc(T('Собрать заново')) + '</button></div>');
     }
 
+    function numShort(n) {
+        n = +n || 0;
+        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K';
+        return String(n);
+    }
+
     function hoursWord(n) { return plural3(n, 'час', 'часа', 'часов'); }
 
     function fmtInfo(f) {
@@ -808,6 +879,36 @@
                 } else { toast(T('Не удалось изменить настройки')); if (done) done(false); }
             })
             .catch(function () { _apBusy = false; toast(T('Не удалось изменить настройки')); });
+    }
+
+    function askPause() {
+        haptic('light');
+        var host = document.getElementById('cp-capbox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-capbox';
+        host.className = 'cp-capbox';
+        var opts = [1, 2, 4, 8].map(function (w) {
+            return '<button class="cp-capopt" data-pausew="' + w + '">' + w + ' ' +
+                esc(T(plural3(w, 'неделя', 'недели', 'недель'))) + '</button>';
+        }).join('');
+        host.innerHTML = '<div class="cp-capin"><div class="cp-caph">' +
+            esc(T('Пауза на отпуск')) + '</div>' +
+            '<div class="cp-caps">' + esc(T('Сборка не запустится указанный срок. ' +
+                'Ступень и накопленные недели без правок сохраняются.')) + '</div>' +
+            '<div class="cp-capopts">' + opts + '</div>' +
+            '<button class="cp-capclose">' + esc(T('Закрыть')) + '</button></div>';
+        (document.getElementById('content-plan-screen') || document.body).appendChild(host);
+        host.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-pausew]') : null;
+            if (b) {
+                haptic('light');
+                apSave({ pause_weeks: +b.getAttribute('data-pausew') });
+                host.remove();
+                return;
+            }
+            if (e.target === host || (e.target.closest && e.target.closest('.cp-capclose'))) host.remove();
+        });
     }
 
     function askCap() {
@@ -957,11 +1058,26 @@
                 '<b>' + (_ap.veto_hours || 6) + ' ' + esc(T(hoursWord(_ap.veto_hours || 6))) + '</b></div>';
         }
 
+        if (_ap.paused_until) {
+            var till = '';
+            try {
+                var lg = (window.getLang ? window.getLang() : 'ru') || 'ru';
+                till = new Date(_ap.paused_until).toLocaleDateString(lg, { day: 'numeric', month: 'long' });
+            } catch (e) {}
+            body += '<div class="cp-ap-pause"><i class="ti ti-beach"></i><span>' +
+                esc(T('Пауза до') + ' ' + till + ' — ' +
+                    T('ступень и недели без правок сохранены.')) + '</span>' +
+                '<button class="cp-ap-mini" data-act="apresume">' + esc(T('вернуть')) + '</button></div>';
+        }
         if (_ap.stopped_reason) {
             body += '<div class="cp-ap-stopped"><i class="ti ti-alert-triangle"></i>' +
                 esc(T('Остановлен: ') + _ap.stopped_reason) + '</div>';
         }
         if (on) {
+            if (!_ap.paused_until) {
+                body += '<button class="cp-ap-mini wide" data-act="appause">' +
+                    '<i class="ti ti-beach"></i> ' + esc(T('Пауза на отпуск')) + '</button>';
+            }
             body += '<button class="cp-ap-stop" data-act="apstop">' +
                 '<i class="ti ti-player-stop"></i> ' + esc(T('Остановить автопилот')) + '</button>';
         }
@@ -1146,11 +1262,17 @@
             ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm) + '</span>' +
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
             : '';
+        var ad = p.is_ad
+            ? '<span class="cp-adm"><i class="ti ti-ad-2"></i>' + esc(T('реклама')) + '</span>'
+            : '';
+        var views = (p.views != null && p.views > 0)
+            ? '<span class="cp-views"><i class="ti ti-eye"></i>' + esc(numShort(p.views)) + '</span>'
+            : '';
         return '<div class="cp-day s-' + st[1] + (p.day_index === _selDay ? ' sel' : '') + '" data-act="selday" data-day="' + p.day_index + '">' +
             '<div class="cp-dhead"><span class="d">' + esc(T(wd)) + '</span><span class="dt">' + esc(dateLabel(p.date_iso)) + '</span></div>' +
-            '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' +
+            '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' + ad +
             '<div class="cp-dtitle">' + esc(p.title || '') + '</div>' + slot +
-            '<div class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + '</div></div>';
+            '<div class="cp-dstat"><span class="sd"></span>' + esc(T(st[0])) + views + '</div></div>';
     }
 
     function detailPanel() {
@@ -1162,6 +1284,14 @@
         var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['гипотеза · уточним', 'lo'];
         var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm) +
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
+        var adRow = '<button class="cp-adrow' + (p.is_ad ? ' on' : '') +
+            '" data-act="admark" data-id="' + p.id + '">' +
+            '<i class="ti ' + (p.is_ad ? 'ti-ad-2' : 'ti-ad-off') + '"></i>' +
+            '<span class="tx"><b>' + esc(T(p.is_ad ? 'Рекламный пост' : 'Обычный пост')) + '</b>' +
+            '<em>' + esc(p.is_ad
+                ? (p.ad_erid ? (T('пометка и erid добавятся при выходе') + ' · ' + p.ad_erid)
+                             : T('пометка добавится при выходе · нажми, чтобы указать erid'))
+                : T('нажми, если это размещение рекламодателя')) + '</em></span></button>';
 
         var body;
         var pubc = '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>';
@@ -1194,7 +1324,7 @@
         return '<div class="cp-detail">' +
             '<div class="cp-dtop2"><span class="d2">' + esc(T(wd)) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
-            slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + body + '</div>';
+            slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' + adRow + body + '</div>';
     }
 
     function post(id) { return (_state && _state.posts || []).filter(function (p) { return p.id === id; })[0]; }
@@ -1369,6 +1499,7 @@
             return;
         }
         if (act === 'rubadd') { askRubric(); return; }
+        if (act === 'admark') { askAd(+actEl.getAttribute('data-id')); return; }
         if (act === 'openstyle') {
             haptic('medium');
             var cid = _chId;
@@ -1390,6 +1521,8 @@
             return;
         }
         if (act === 'apcap') { askCap(); return; }
+        if (act === 'apresume') { haptic('light'); apSave({ pause_weeks: 0 }); return; }
+        if (act === 'appause') { askPause(); return; }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') { renderBrief(); return; }
         if (act === 'selday') {
