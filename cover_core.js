@@ -334,7 +334,9 @@ function coverSvg(cfg){
   const shape = cfg.shape === "auto"
     ? SHAPES[Math.floor(srand(seed * 61) * SHAPES.length) % SHAPES.length]
     : cfg.shape;
-  const geoSeed = (cfg.shape && cfg.shape !== "auto") ? 7 : seed;
+  const geoSeed = (cfg.shape && cfg.shape !== "auto")
+    ? 7 + ((cfg.variant || 1) - 1) * 13
+    : seed;
   const pad = 84;
   const left = pad;
   const sign = cfg.sign || cfg.sig || "full";

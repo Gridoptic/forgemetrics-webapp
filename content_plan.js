@@ -2061,6 +2061,7 @@
                 pal: c.palette || 'indigo',
                 shape: c.shape || 'auto',
                 sign: c.sign || 'full',
+                variant: c.variant || 1,
                 lay: 'thesis', seed: 7,
                 name: ch ? chanSub(ch).replace(/^приватный канал$/, (ch.title || '')) : '',
                 avatar: (function () {
@@ -2106,6 +2107,15 @@
                 '<div class="cp-pals">' + pal + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
                 '<div class="cp-chips">' + shp + '</div>' +
+                (((c.shape || 'auto') !== 'auto' && c.shape !== 'none')
+                    ? '<div class="cp-clbl">' + esc(T('Вид орнамента')) + '</div>' +
+                      '<div class="cp-vstep">' +
+                      '<button class="cp-vbtn" data-cvar="-1"><i class="ti ti-minus"></i></button>' +
+                      '<span class="cp-vnum">' + (c.variant || 1) + '</span>' +
+                      '<button class="cp-vbtn" data-cvar="1"><i class="ti ti-plus"></i></button>' +
+                      '<span class="cp-vhint">' + esc(T('листай, глядя на превью')) + '</span>' +
+                      '</div>'
+                    : '') +
                 '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
                 '<div class="cp-chips">' + sgn + '</div>' +
                 '<div class="cp-dshint">' +
@@ -2123,6 +2133,15 @@
             var sh = t.closest ? t.closest('[data-cshape]') : null;
             if (sh) { c.shape = sh.getAttribute('data-cshape'); draw(); haptic('light');
                       saveCover({ shape: c.shape }); return; }
+            var vb = t.closest ? t.closest('[data-cvar]') : null;
+            if (vb) {
+                var nv = Math.max(1, Math.min(99, (c.variant || 1) + (+vb.getAttribute('data-cvar'))));
+                if (nv !== (c.variant || 1)) {
+                    c.variant = nv; draw(); haptic('light');
+                    saveCover({ variant: nv });
+                }
+                return;
+            }
             var sg = t.closest ? t.closest('[data-csign]') : null;
             if (sg) { c.sign = sg.getAttribute('data-csign'); draw(); haptic('light');
                       saveCover({ sign: c.sign }); return; }

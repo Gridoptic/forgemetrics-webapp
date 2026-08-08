@@ -1417,3 +1417,16 @@
 .cp-shauto {
     font-size: 10px; color: #6f748c; margin: 6px 2px 0; line-height: 1.4;
 }
+
+.cp-vstep { display: flex; align-items: center; gap: 10px; }
+.cp-vbtn {
+    width: 40px; height: 36px; border-radius: 9px; border: 1px solid rgba(255, 255, 255, .09);
+    background: rgba(255, 255, 255, .03); color: #a9b0ff; cursor: pointer;
+    display: grid; place-items: center; font-family: inherit;
+}
+.cp-vbtn i { font-size: 14px; }
+.cp-vnum {
+    min-width: 30px; text-align: center; font-size: 14px; font-weight: 800; color: #e8eaf1;
+    font-variant-numeric: tabular-nums;
+}
+.cp-vhint { font-size: 10px; color: #6f748c; margin-left: 4px; }
