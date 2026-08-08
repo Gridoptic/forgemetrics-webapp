@@ -397,12 +397,33 @@
         }
         var busy = {};
         ((_cal && _cal.busy) || []).forEach(function (b) { busy[b.day] = true; });
+        var byDay = null;
+        if (frozen === true) {
+            byDay = {};
+            ((_state && _state.posts) || []).forEach(function (p) {
+                (byDay[p.day_index] = byDay[p.day_index] || []).push(p);
+            });
+        }
         return days().map(function (d, i) {
             var n = Math.max(0, +d.n || 0);
             var pins = (d.pins || []).filter(function (p) { return !!p; }).length;
-            var cls = 'cp-dcol';
+            var stat = '';
+            if (byDay) {
+                var dps = byDay[i] || [];
+                n = dps.length;
+                if (n) {
+                    var pub = dps.filter(function (p) { return p.publish_status === 'published'; }).length;
+                    var q = dps.some(function (p) {
+                        return p.publish_status === 'queued' || p.publish_status === 'publishing';
+                    });
+                    if (pub === n) stat = ' d-sent';
+                    else if (pub > 0) stat = ' d-part';
+                    else if (q) stat = ' d-q';
+                }
+            }
+            var cls = 'cp-dcol' + stat;
             if (!n) cls += ' off';
-            else if (pins) cls += ' pinned';
+            else if (!byDay && pins) cls += ' pinned';
             if (busy[i]) cls += ' ad';
             if (hist && i === best && max > 0) cls += ' best';
             var col = '';
@@ -420,6 +441,7 @@
                              : ' data-act="pickday" data-day="' + i + '"';
             }
             return '<div class="' + cls + '"' + act + '>' + col +
+                (stat ? '<i class="dst"></i>' : '') +
                 '<span class="cp-plan"><b>' + (n || '—') + '</b>' +
                 '<em>' + esc(T(WD[i])) + '</em></span></div>';
         }).join('');

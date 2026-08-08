@@ -570,6 +570,17 @@
     overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
 .cp-dcol.best .cp-hval { color: #34d399; }
+.cp-dcol .dst {
+    position: absolute; top: 2px; right: 3px; width: 5px; height: 5px; border-radius: 50%;
+}
+.cp-dcol.d-sent .dst { background: #5DCAA5; box-shadow: 0 0 6px rgba(93, 202, 165, .8); }
+.cp-dcol.d-part .dst { background: #E8B04B; }
+.cp-dcol.d-q .dst { background: #818cf8; }
+.cp-dcol.d-sent .cp-plan {
+    border-color: rgba(93, 202, 165, .38); background: rgba(93, 202, 165, .13);
+}
+.cp-dcol.d-sent .cp-plan b { color: #5DCAA5; }
+.cp-dcol.d-q .cp-plan { border-color: rgba(129, 140, 248, .5); }
 
 .cp-plan {
     border-radius: 11px; padding: 8px 2px 7px; text-align: center; position: relative;
