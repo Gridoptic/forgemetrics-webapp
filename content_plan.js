@@ -1147,6 +1147,21 @@
             }).catch(function () {});
     }
 
+    function thesisSplit(title) {
+        var words = title.split(' ');
+        if (words.length < 4) return [title, '', ''];
+        var m = null, re = /[:,\u2014\u2013-]\s+/g, mm;
+        while ((mm = re.exec(title)) !== null) m = mm;
+        if (m) {
+            var head = title.slice(0, m.index + 1).replace(/\s+$/, '');
+            var tail = title.slice(m.index + m[0].length).trim();
+            var tw = tail.split(' ');
+            if (tw.length >= 2 && tw.length <= 8) return [head, tail, ''];
+        }
+        var cut = Math.max(2, words.length - 3);
+        return [words.slice(0, cut).join(' '), words.slice(cut).join(' '), ''];
+    }
+
     function buildChanBlock() {
         if (!_channels || !_channels.length) {
             return '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
@@ -2005,8 +2020,7 @@
             var p = ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
             var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
             var title = (p && p.title) || 'Заголовок поста появится здесь';
-            var words = title.split(' ');
-            var cut = Math.max(1, Math.floor(words.length / 3));
+            var parts = thesisSplit(title);
             return {
                 pal: c.palette || 'indigo',
                 shape: c.shape || 'auto',
@@ -2014,9 +2028,7 @@
                 lay: 'thesis', seed: 7,
                 name: ch ? chanSub(ch).replace(/^приватный канал$/, (ch.title || '')) : '',
                 avatar: '',
-                item: [words.slice(0, cut).join(' '),
-                       words.slice(cut, cut * 2).join(' '),
-                       words.slice(cut * 2).join(' ')]
+                item: parts
             };
         };
 

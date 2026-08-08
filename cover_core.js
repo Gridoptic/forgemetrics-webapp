@@ -336,7 +336,8 @@ function coverSvg(cfg){
     : cfg.shape;
   const pad = 84;
   const left = pad;
-  const sigTop = srand(seed * 73) > 0.4;
+  const sign = cfg.sign || cfg.sig || "full";
+  const sigTop = true;
   let lay = cfg.lay;
   if (lay === "auto"){
     const order = ["thesis", "num", "vs", "list", "ask"];
@@ -365,19 +366,19 @@ function coverSvg(cfg){
   const bandBot = (sigTop ? botY : botY - 46) - 40;
 
   let sig = "";
-  if (cfg.sig !== "none"){
+  if (sign !== "none"){
     const y = sigTop ? topY : botY;
-    const av = cfg.sig === "full"
+    const av = (sign === "full" && cfg.avatar)
       ? `<clipPath id="a${uid}"><circle cx="${left + 19}" cy="${y - 7}" r="19"/></clipPath>
          <image href="${cfg.avatar}" x="${left}" y="${y - 26}" width="38" height="38"
            clip-path="url(#a${uid})"/>`
       : "";
-    sig = `${av}<text x="${left + (cfg.sig === "full" ? 50 : 0)}" y="${y}" fill="${p.mut}"
+    sig = `${av}<text x="${left + ((sign === "full" && cfg.avatar) ? 50 : 0)}" y="${y}" fill="${p.mut}"
       font-size="25" font-weight="600">${esc(cfg.name)}</text>`;
   }
   const rub = lay === "ask" ? "вопрос читателям" : lay === "vs" ? "сравнение" :
               lay === "list" ? "подборка" : lay === "num" ? "разбор исследования" : "обзор добавки";
-  const foot = `<text x="${left}" y="${(cfg.sig !== "none" && !sigTop) ? botY - 44 : botY}"
+  const foot = `<text x="${left}" y="${botY}"
     fill="${p.dim}" font-size="22">${esc(rub)}</text>`;
 
   const midY = (bandTop + bandBot) / 2;
