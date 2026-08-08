@@ -210,7 +210,25 @@
         _state = d;
         syncDays(d);
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
-        if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
+        if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') {
+            if (_chId == null && d.readiness_channel_id) _chId = d.readiness_channel_id;
+            if (_channels === null) {
+                apiRequest('/api/v1/channels/active').then(function (cd) {
+                    _channels = (cd && cd.channels) || [];
+                    if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
+                    renderWeek();
+                }).catch(function () {});
+            }
+            if (_chId) {
+                if (!_rubrics.length) loadRubrics();
+                if (!_ap) loadAutopilot();
+                if (!_cover) loadCover();
+                loadReview(false);
+            }
+            renderWeek();
+            if (d.batch_running) startBatchPoll();
+            return;
+        }
         if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
                 _channels = (cd && cd.channels) || [];
@@ -1128,6 +1146,29 @@
             }).catch(function () {});
     }
 
+    function buildChanBlock() {
+        if (!_channels || !_channels.length) {
+            return '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
+        }
+        if (_channels.length === 1) {
+            var c = _channels[0]; _chId = c.id;
+            return '<div class="cp-onechan"><div class="av" data-chav="' + c.id + '">' +
+                esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
+                '<div class="nm"><b>' + esc(chanName(c)) + '</b><span>' +
+                esc(chanSub(c)) + '</span></div></div>';
+        }
+        var cur = _channels.filter(function (c) { return c.id === _chId; })[0] || _channels[0];
+        _chId = cur.id;
+        var styleNote = cur.voice_status === 'done' ? 'стиль настроен' : 'стиль не настроен';
+        return '<button class="cp-chanpick" data-act="pickchan">' +
+            '<span class="av" data-chav="' + cur.id + '">' +
+            esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
+            '<span class="nm"><b>' + esc(chanName(cur)) + '</b>' +
+            '<span>' + esc(chanSub(cur) + ' · ' + T(styleNote)) + '</span></span>' +
+            '<span class="sw">' + esc(T('сменить')) + '</span>' +
+            '<i class="ti ti-chevron-down"></i></button>';
+    }
+
     function chanName(c) {
         return c.title || (c.username ? '@' + c.username : T('Приватный канал'));
     }
@@ -1138,28 +1179,7 @@
 
     function renderBrief() {
         if (!_ap && _chId) setTimeout(loadAutopilot, 0);
-        var chanBlock;
-        if (!_channels || !_channels.length) {
-            chanBlock = '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
-        } else if (_channels.length === 1) {
-            var c = _channels[0]; _chId = c.id;
-            chanBlock = '<div class="cp-onechan"><div class="av" data-chav="' + c.id + '">' +
-                esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
-                '<div class="nm"><b>' + esc(chanName(c)) + '</b><span>' +
-                esc(chanSub(c)) + '</span></div></div>';
-        } else {
-            // список кнопок нежизнеспособен на сетке: до пятидесяти каналов на тарифе
-            var cur = _channels.filter(function (c) { return c.id === _chId; })[0] || _channels[0];
-            _chId = cur.id;
-            var styleNote = cur.voice_status === 'done' ? 'стиль настроен' : 'стиль не настроен';
-            chanBlock = '<button class="cp-chanpick" data-act="pickchan">' +
-                '<span class="av" data-chav="' + cur.id + '">' +
-                esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
-                '<span class="nm"><b>' + esc(chanName(cur)) + '</b>' +
-                '<span>' + esc(chanSub(cur) + ' · ' + T(styleNote)) + '</span></span>' +
-                '<span class="sw">' + esc(T('сменить')) + '</span>' +
-                '<i class="ti ti-chevron-down"></i></button>';
-        }
+        var chanBlock = buildChanBlock();
         var goals = GOALS.map(function (g) {
             return '<button class="cp-goal' + (g[0] === _goal ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
@@ -1287,6 +1307,7 @@
         var pct = n ? Math.round(appr / n * 100) : 0;
         var haveText = ps.filter(function (p) { return p.text; }).length;
 
+        var chanBlock = buildChanBlock();
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
             '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
@@ -1312,7 +1333,7 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
+        setView(chanBlock + header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
     }
@@ -2228,13 +2249,21 @@
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
-                '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>';
+                '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>' + factNote(p);
         }
         return '<div class="cp-detail">' +
             '<div class="cp-dtop2"><span class="d2">' + esc(T(wd)) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
             slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' +
             mediaBlock(p) + adRow + body + '</div>';
+    }
+
+    function factNote(p) {
+        var r = _rubrics.filter(function (x) { return x.key === p.format; })[0];
+        if (!r || !r.needs_fact || p.text) return '';
+        return '<div class="cp-hint" style="margin-top:8px">' +
+            esc(T('Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.')) +
+            '</div>';
     }
 
     function post(id) { return (_state && _state.posts || []).filter(function (p) { return p.id === id; })[0]; }
@@ -2290,9 +2319,13 @@
                 withText.forEach(function (p) { _dayBusy[p.id] = false; });
                 var pending = (d.posts || []).filter(function (p) { return !p.text; }).length;
                 if (withText.length !== prevN || !pending) { prevN = withText.length; renderWeek(); }
-                if (!pending || ticks > 80) {
+                var stalled = !d.batch_running && withText.length === prevN && ticks > 2;
+                if (!pending || ticks > 80 || stalled) {
                     clearInterval(_batchTimer); _batchTimer = null;
                     for (var k in _dayBusy) _dayBusy[k] = false;
+                    if (pending && stalled) {
+                        toast(T('Часть текстов не написалась — открой пост и попробуй ещё раз'));
+                    }
                     renderWeek();
                 }
             }).catch(function () {});
