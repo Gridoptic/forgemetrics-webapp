@@ -75,7 +75,9 @@
 .cp-note.fail { color: #ef8080; }
 
 .cp-ribbon { display: grid; grid-auto-flow: column; grid-auto-columns: 168px; gap: 10px;
-    overflow-x: auto; overflow-y: hidden; padding: 4px 2px 12px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+    overflow-x: auto; overflow-y: hidden; padding: 4px 2px 12px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y; scrollbar-width: none; }
+.cp-ribbon::-webkit-scrollbar { display: none; }
 .cp-day { scroll-snap-align: start; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 15px;
     padding: 13px; min-height: 194px; display: flex; flex-direction: column; gap: 9px; cursor: pointer;
     box-shadow: 0 20px 44px -30px rgba(0,0,0,0.85); transition: border-color .16s, background .16s; }

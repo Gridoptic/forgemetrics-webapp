@@ -152,7 +152,48 @@
         host.scrollTop = pos;
         _lastView = view || null;
         fillAvatars(host);
+        cpFadeH(host);
         return host;
+    }
+
+    function cpFadeH(scope) {
+        Array.prototype.slice.call(
+            (scope || document).querySelectorAll('.cp-ribbon')).forEach(function (el2) {
+            if (el2.__cpFade) return;
+            el2.__cpFade = 1;
+            function upd() {
+                var canScroll = el2.scrollWidth - el2.clientWidth > 2;
+                var more = el2.scrollWidth - el2.clientWidth - el2.scrollLeft > 2;
+                var less = el2.scrollLeft > 2;
+                var m = more && less ? 'linear-gradient(90deg,transparent,#000 22px,#000 calc(100% - 26px),transparent)'
+                    : (more ? 'linear-gradient(90deg,#000 calc(100% - 26px),transparent)'
+                        : (less ? 'linear-gradient(90deg,transparent,#000 22px)' : ''));
+                el2.style.webkitMaskImage = m;
+                el2.style.maskImage = m;
+                el2.style.cursor = canScroll ? 'grab' : '';
+            }
+            var _dx = 0, _dl = 0, _drag = false, _moved = false;
+            el2.addEventListener('pointerdown', function (e) {
+                if (e.pointerType !== 'mouse' || e.button !== 0) return;
+                if (el2.scrollWidth - el2.clientWidth <= 2) return;
+                _drag = true; _moved = false; _dx = e.clientX; _dl = el2.scrollLeft;
+                try { el2.setPointerCapture(e.pointerId); } catch (e2) {}
+            });
+            el2.addEventListener('pointermove', function (e) {
+                if (!_drag) return;
+                var dx = e.clientX - _dx;
+                if (Math.abs(dx) > 3) _moved = true;
+                if (_moved) { el2.scrollLeft = _dl - dx; el2.style.cursor = 'grabbing'; }
+            });
+            function _dragEnd() { if (_drag) { _drag = false; upd(); } }
+            el2.addEventListener('pointerup', _dragEnd);
+            el2.addEventListener('pointercancel', _dragEnd);
+            el2.addEventListener('click', function (e) {
+                if (_moved) { e.stopPropagation(); e.preventDefault(); _moved = false; }
+            }, true);
+            el2.addEventListener('scroll', upd, { passive: true });
+            upd();
+        });
     }
     function renderCenter(icon, msg, sub) {
         setView('<div class="cp-center"><div class="big">' + icon + '</div><div class="m">' + esc(msg) + '</div>' +
@@ -598,12 +639,14 @@
             .catch(function () { if (open) toast(T('Не удалось собрать разбор')); });
     }
 
-    function rubricsBlock() {
+    function rubricsBlock(inWeek) {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid) return '';
+        var note = inWeek
+            ? 'Из чего собирается неделя. Правки рубрик применятся при следующей сборке.'
+            : 'Из чего собирается неделя. Цифра — средние просмотры рубрики.';
         if (!_rubrics.length) {
-            return '<div class="cp-sec">' + secHead('Рубрики канала',
-                    'Из чего собирается неделя.') +
+            return '<div class="cp-sec">' + secHead('Рубрики канала', note) +
                 '<div class="cp-rubwait"><div class="cp-spin sm"></div><span>' +
                 esc(T('Определяю рубрики по постам канала...')) + '</span></div></div>';
         }
@@ -668,8 +711,7 @@
             }
         });
         var hasTips = _rubrics.some(function (r) { return r.source === 'suggest'; });
-        return '<div class="cp-sec">' + secHead('Рубрики канала',
-                'Из чего собирается неделя. Цифра — средние просмотры рубрики.') +
+        return '<div class="cp-sec">' + secHead('Рубрики канала', note) +
             badge + body +
             (hasTips ? '<div class="cp-dshint">' +
                 esc(T('Предложены под нишу канала. Пока не включишь — в неделю не попадут.')) +
@@ -1375,15 +1417,19 @@
         return c.username ? '@' + c.username : T('приватный канал');
     }
 
-    function renderBrief() {
-        if (!_ap && _chId) setTimeout(loadAutopilot, 0);
-        var chanBlock = buildChanBlock();
+    function goalChips() {
         var goalSel = (_goal || 'engagement').split('+');
-        var goals = GOALS.map(function (g) {
+        return GOALS.map(function (g) {
             return '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
                 '<span>' + esc(T(g[1])) + '</span></button>';
         }).join('');
+    }
+
+    function renderBrief() {
+        if (!_ap && _chId) setTimeout(loadAutopilot, 0);
+        var chanBlock = buildChanBlock();
+        var goals = goalChips();
         var rdy = readiness();
         var blocked = rdy.blocked === true;
         var w = wallet();
@@ -1516,6 +1562,9 @@
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
+        var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
+            'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
+            '<div class="cp-goals">' + goalChips() + '</div></div>';
 
         var allBtn = haveText < n
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
@@ -1535,7 +1584,7 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(chanBlock + weekCal + header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
+        setView(chanBlock + weekCal + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
     }
@@ -2717,7 +2766,7 @@
                 else b.classList.toggle('on', b === chip);
             });
             haptic('light');
-            renderBrief();
+            if (_lastView === 'week') renderWeek(); else renderBrief();
             return;
         }
         var chan = t.closest ? t.closest('[data-chan]') : null;
