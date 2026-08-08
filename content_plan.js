@@ -54,10 +54,6 @@
         listicle: ['Подборка', 'ti-list-check'], offer: ['Продающий', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вопрос читателям', 'ti-message-circle'],
     };
-    var FMT_SHORT = {
-        news: 'Новость', analysis: 'Разбор', case: 'Кейс', listicle: 'Подборка',
-        offer: 'Продажи', poll: 'Опрос', story: 'История', engagement: 'Вопрос',
-    };
     var SG = {
         niche: '<path d="M10.2 3.5H5.4a1.9 1.9 0 0 0-1.9 1.9v4.4h.9a2.1 2.1 0 0 1 0 4.2h-.9v4.6a1.9 1.9 0 0 0 1.9 1.9h4.4v-1.1a2.1 2.1 0 0 1 4.2 0v1.1h4.6a1.9 1.9 0 0 0 1.9-1.9v-4.4h-1.1a2.1 2.1 0 0 1 0-4.2h1.1V5.4a1.9 1.9 0 0 0-1.9-1.9h-4.4v.9a2.1 2.1 0 0 1-4.2 0z"/>',
         audience: '<circle cx="12" cy="9" r="3.2"/><path d="M6.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="4" cy="8.5" r="1.6"/><path d="M1.6 15a3.4 3.4 0 0 1 3.2-3"/><circle cx="20" cy="8.5" r="1.6"/><path d="M22.4 15a3.4 3.4 0 0 0-3.2-3"/>',
@@ -100,6 +96,7 @@
         'Складываю неделю в единый сюжет...',
     ];
 
+    var _open = false;
     function ensureScreen() {
         var host = document.getElementById('content-plan-screen');
         if (!host) {
@@ -109,6 +106,7 @@
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
         }
+        if (!_open) return host;
         host.style.display = 'flex';
         document.documentElement.classList.add('cs-modal-open');
         document.body.classList.add('cs-modal-open');
@@ -116,8 +114,13 @@
         return host;
     }
     function close() {
+        _open = false;
         stopTimers();
         if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
+        var day = document.getElementById('cp-daybox');
+        if (day) day.remove();
+        var cap = document.getElementById('cp-capbox');
+        if (cap) cap.remove();
         var host = document.getElementById('content-plan-screen');
         if (host) host.style.display = 'none';
         document.documentElement.classList.remove('cs-modal-open');
@@ -221,15 +224,28 @@
     window.__cpDays = function () { return days().slice(); };
 
     window.__openContentPlan = function () {
+        _open = true;
+        if (!_batchTimer) _dayBusy = {};
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
-        loadAutopilot();
-        apiRequest('/api/v1/content-plan' + (_chId ? ('?channel_id=' + _chId) : '')).then(route).catch(function () {
-            renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.'));
-        });
+        var go = function () {
+            loadAutopilot();
+            apiRequest('/api/v1/content-plan' + (_chId ? ('?channel_id=' + _chId) : '')).then(route).catch(function () {
+                renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.'));
+            });
+        };
+        if (_chId == null) {
+            apiRequest('/api/v1/channels/active').then(function (cd) {
+                _channels = (cd && cd.channels) || [];
+                if (cd && cd.active_channel_id) _chId = cd.active_channel_id;
+                else if (_channels.length) _chId = _channels[0].id;
+                go();
+            }).catch(function () { if (_channels === null) _channels = []; go(); });
+        } else go();
     };
 
     function rerender() {
+        if (!_open || _pollTimer) return;
         if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
     }
 
@@ -302,10 +318,6 @@
     function secHead(title, note) {
         return '<div class="cp-lbl">' + esc(T(title)) + '</div>' +
             (note ? '<div class="cp-note">' + esc(T(note)) + '</div>' : '');
-    }
-
-    function chip(name, val, cur, label) {
-        return '<button class="cp-chip' + (val === cur ? ' on' : '') + '" data-chip="' + name + '" data-v="' + esc(val) + '">' + esc(T(label)) + '</button>';
     }
 
     function days() {
@@ -402,9 +414,12 @@
                     '</span><span class="cp-hval' + (vs.length > 6 ? ' sm' : '') + '">' +
                     esc(vs) + '</span>';
             }
-            return '<div class="' + cls + '"' +
-                (frozen ? ' data-act="wkday" data-day="' + i + '"'
-                        : ' data-act="pickday" data-day="' + i + '"') + '>' + col +
+            var act = '';
+            if (frozen !== 'dead') {
+                act = frozen ? ' data-act="wkday" data-day="' + i + '"'
+                             : ' data-act="pickday" data-day="' + i + '"';
+            }
+            return '<div class="' + cls + '"' + act + '>' + col +
                 '<span class="cp-plan"><b>' + (n || '—') + '</b>' +
                 '<em>' + esc(T(WD[i])) + '</em></span></div>';
         }).join('');
@@ -652,11 +667,14 @@
         }
         var own = _rubrics.filter(function (r) { return r.source !== 'suggest'; });
         var src = own[0] && own[0].source;
-        var badge = src === 'base'
-            ? '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
-              esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>'
-            : '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
-              esc(T('определены по постам канала')) + '</div>';
+        var badge = '';
+        if (own.length) {
+            badge = src === 'base'
+                ? '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
+                  esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>'
+                : '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
+                  esc(T('определены по постам канала')) + '</div>';
+        }
 
             var max = 0;
         own.forEach(function (r) {
@@ -739,7 +757,7 @@
                 '<h2>' + esc(T('Канал приостановлен')) + '</h2>' +
                 '<p>' + esc(T('Подключено больше каналов, чем допускает тариф. ' +
                     'Публикация не проходит.')) + '</p>' +
-                '<div class="cp-hero-week">' + weekCells(true) + '</div>' +
+                '<div class="cp-hero-week">' + weekCells('dead') + '</div>' +
                 '<div class="cp-frznote"><i class="ti ti-player-pause"></i><span>' +
                 esc(T('Сними паузу в настройках канала или выбери другой — ' +
                     'тогда неделя соберётся.')) +
@@ -1458,7 +1476,10 @@
             apPanel() + reviewEntry() + strategyBlock(), 'brief');
     }
 
+    var _genBusy = false;
     function doGenerate(btn) {
+        if (_genBusy) return;
+        _genBusy = true;
         if (btn) btn.disabled = true;
         haptic('medium');
         if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
@@ -1466,15 +1487,27 @@
         var body = { channel_id: _chId, goal: _goal, days: days(), tz_offset_minutes: tz };
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
+                _genBusy = false;
                 if (r && r.ok) { renderGenerating(); startPoll(); }
                 else if (r && r.error) { if (btn) btn.disabled = false; toast(cap(r)); }
                 else { if (btn) btn.disabled = false; toast(T('Не удалось запустить сборку')); }
             })
-            .catch(function () { if (btn) btn.disabled = false; toast(T('Не удалось запустить сборку')); });
+            .catch(function (err) { _genBusy = false; if (btn) btn.disabled = false; toast(apiErrText(err, 'Не удалось запустить сборку')); });
     }
     function cap(r) {
         if (r && r.detail && r.detail.message) return r.detail.message;
-        return T('Лимит на сегодня исчерпан — попробуй позже.');
+        return T('Не получилось — попробуй ещё раз.');
+    }
+    function apiErrText(err, fb) {
+        try {
+            var s = String((err && err.message) || '');
+            var body = s.slice(s.indexOf(': ') + 2);
+            var d = JSON.parse(body);
+            var t = d && (typeof d.detail === 'string' ? d.detail
+                : (d.detail && d.detail.message));
+            if (t) return t;
+        } catch (e) {}
+        return T(fb);
     }
 
     function renderGenerating() {
@@ -1494,8 +1527,10 @@
         var ticks = 0;
         _pollTimer = setInterval(function () {
             ticks++;
+            if (ticks > 240) { stopTimers(); return; }
             if (ticks === 20) { var el = document.getElementById('cp-gen-text'); if (el) el.textContent = T('Ещё чуть-чуть...'); }
-            apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) {
+            var pcid = _chId || (_state && _state.channel_id);
+            apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { _state = d; stopTimers(); renderWeek(); }
                 else if (d.status === 'error') { _state = d; stopTimers(); renderError(); }
@@ -1596,8 +1631,7 @@
             .then(function (r) {
                 if (r && r.ok) {
                     _ap = r.autopilot;
-                    if (_state && _state.posts && _state.posts.length) renderWeek();
-                    else renderBrief();
+                    rerender();
                 }
             })
             .catch(function () {});
@@ -2039,14 +2073,17 @@
             '</div></div>';
     }
 
+    var _editSaveBusy = {};
     function saveEdit(id) {
         var ta = document.getElementById('cp-edit-' + id);
-        if (!ta) return;
+        if (!ta || _editSaveBusy[id]) return;
         var body = (ta.value || '').trim();
         if (!body) { toast(T('Пустой текст не сохраняю')); return; }
+        _editSaveBusy[id] = true;
         apiRequest('/api/v1/content-plan/edit-post',
                    { method: 'POST', body: JSON.stringify({ post_id: id, text: body }) })
             .then(function (r) {
+                _editSaveBusy[id] = false;
                 if (r && r.ok) {
                     var p = post(id);
                     if (p) { p.text = r.text; p.status = 'draft'; }
@@ -2058,7 +2095,7 @@
                     toast(T('Длиннее 4096 знаков Telegram не примет — сократи.'));
                 } else toast(T('Не удалось сохранить текст'));
             })
-            .catch(function () { toast(T('Не удалось сохранить текст')); });
+            .catch(function () { _editSaveBusy[id] = false; toast(T('Не удалось сохранить текст')); });
     }
 
     var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
@@ -2669,18 +2706,21 @@
                     refreshState();
                 } else { toast(cap(r)); renderWeek(); }
             })
-            .catch(function () { _dayBusy[id] = false; toast(T('Не удалось написать текст')); renderWeek(); });
+            .catch(function (err) { _dayBusy[id] = false; toast(apiErrText(err, 'Не удалось написать текст')); renderWeek(); });
     }
 
+    var _genAllBusy = false;
     function genAll() {
         var pending = (_state.posts || []).filter(function (p) { return !p.text; });
-        if (!pending.length) return;
+        if (!pending.length || _genAllBusy || _batchTimer) return;
+        _genAllBusy = true;
         haptic('medium');
         pending.forEach(function (p) { _dayBusy[p.id] = true; });
         renderWeek();
         apiRequest('/api/v1/content-plan/generate-all',
-                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId || (_state && _state.channel_id) }) })
             .then(function (r) {
+                _genAllBusy = false;
                 if (r && r.ok) { toast(T('Пишу всю неделю — карточки будут заполняться')); startBatchPoll(); }
                 else {
                     pending.forEach(function (p) { _dayBusy[p.id] = false; });
@@ -2695,24 +2735,31 @@
     function startBatchPoll() {
         if (_batchTimer) clearInterval(_batchTimer);
         var prevN = (_state.posts || []).filter(function (p) { return p.text; }).length;
-        var ticks = 0;
+        var ticks = 0, quiet = 0;
+        var canDraw = function () {
+            return _open && _lastView === 'week' && !Object.keys(_editing).some(function (k) { return _editing[k]; });
+        };
         _batchTimer = setInterval(function () {
             ticks++;
-            apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) {
+            var pcid = _chId || (_state && _state.channel_id);
+            apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 _state = d;
                 var withText = (d.posts || []).filter(function (p) { return p.text; });
                 withText.forEach(function (p) { _dayBusy[p.id] = false; });
                 var pending = (d.posts || []).filter(function (p) { return !p.text; }).length;
-                if (withText.length !== prevN || !pending) { prevN = withText.length; renderWeek(); }
-                var stalled = !d.batch_running && withText.length === prevN && ticks > 2;
+                var grew = withText.length !== prevN;
+                quiet = grew ? 0 : quiet + 1;
+                prevN = withText.length;
+                if ((grew || !pending) && canDraw()) renderWeek();
+                var stalled = !d.batch_running && !grew && quiet > 3;
                 if (!pending || ticks > 80 || stalled) {
                     clearInterval(_batchTimer); _batchTimer = null;
                     for (var k in _dayBusy) _dayBusy[k] = false;
                     if (pending && stalled) {
                         toast(T('Часть текстов не написалась — открой пост и попробуй ещё раз'));
                     }
-                    renderWeek();
+                    if (canDraw()) renderWeek();
                 }
             }).catch(function () {});
         }, 3000);
@@ -2739,7 +2786,10 @@
     }
 
     function refreshState() {
-        apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) { if (d && d.ok) { _state = d; renderWeek(); } }).catch(function () {});
+        var pcid = _chId || (_state && _state.channel_id);
+        apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : ''))
+            .then(function (d) { if (d && d.ok && _open) { _state = d; rerender(); } })
+            .catch(function () {});
     }
 
     function onClick(ev) {
@@ -2767,15 +2817,6 @@
             });
             haptic('light');
             if (_lastView === 'week') renderWeek(); else renderBrief();
-            return;
-        }
-        var chan = t.closest ? t.closest('[data-chan]') : null;
-        if (chan) {
-            _chId = +chan.getAttribute('data-chan');
-            var box = chan.parentElement;
-            box.querySelectorAll('[data-chan]').forEach(function (b) { b.classList.toggle('on', b === chan); });
-            haptic('light');
-            loadAutopilot();
             return;
         }
         var actEl = t.closest ? t.closest('[data-act]') : null;
@@ -2813,8 +2854,10 @@
             if (mv < 1) { toast(T('Переносить нечего')); return; }
             var dd = days().slice();
             var leftN = dayN(tp.weak) - mv;
-            dd[tp.weak] = { n: leftN, pins: dayPins(tp.weak).slice(0, leftN) };
-            dd[tp.strong] = { n: dayN(tp.strong) + mv, pins: dayPins(tp.strong) };
+            dd[tp.weak] = { n: leftN, pins: dayPins(tp.weak).slice(0, leftN),
+                            times: dayTimes(tp.weak).slice(0, leftN) };
+            dd[tp.strong] = { n: dayN(tp.strong) + mv, pins: dayPins(tp.strong),
+                              times: dayTimes(tp.strong).slice() };
             _days = dd;
             _cal.tip = null;
             renderBrief();
@@ -2969,28 +3012,38 @@
         }
     }
 
+    var _schedBusy = false;
     function doSchedule() {
+        if (_schedBusy) return;
         if (!_state.can_post) {
             toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
             return;
         }
+        _schedBusy = true;
         haptic('medium');
         apiRequest('/api/v1/content-plan/schedule',
-                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId || (_state && _state.channel_id) }) })
             .then(function (r) {
+                _schedBusy = false;
                 if (r && r.ok) { toast(T('Неделя запланирована — посты выйдут в канал сами')); refreshState(); }
                 else if (r && r.error === 'no_bot_rights') toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
                 else if (r && r.error === 'nothing_approved') toast(T('Сначала утверди хотя бы один пост.'));
                 else toast(T('Не удалось запланировать'));
             })
-            .catch(function () { toast(T('Не удалось запланировать')); });
+            .catch(function () { _schedBusy = false; toast(T('Не удалось запланировать')); });
     }
     function doUnschedule() {
+        if (_schedBusy) return;
+        _schedBusy = true;
         haptic('medium');
         apiRequest('/api/v1/content-plan/unschedule',
-                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
-            .then(function (r) { if (r && r.ok) { toast(T('Неделя снята с очереди')); refreshState(); } else toast(T('Не удалось снять с очереди')); })
-            .catch(function () { toast(T('Не удалось снять с очереди')); });
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId || (_state && _state.channel_id) }) })
+            .then(function (r) {
+                _schedBusy = false;
+                if (r && r.ok) { toast(T('Неделя снята с очереди')); refreshState(); }
+                else toast(T('Не удалось снять с очереди'));
+            })
+            .catch(function () { _schedBusy = false; toast(T('Не удалось снять с очереди')); });
     }
     function cancelDay(id) {
         haptic('light');
