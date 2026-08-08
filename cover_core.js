@@ -403,7 +403,7 @@ function coverSvg(cfg){
     const lh = f.fs * 1.14;
     const y0 = midY - (f.lines.length - 1) * lh / 2 + f.fs * 0.34;
     body = f.lines.map(function(ln, i){
-      return `<text x="${left}" y="${y0 + i * lh}" font-size="${f.fs}" font-weight="800"
+      return `<text x="${left}" y="${y0 + i * lh}" data-mw="${textW}" font-size="${f.fs}" font-weight="800"
         letter-spacing="-1">${ln.map(function(t){
           return `<tspan fill="${t[1]}">${esc(t[0])}</tspan>`; }).join(" ")}</text>`;
     }).join("");
@@ -411,12 +411,12 @@ function coverSvg(cfg){
     const numFs = Math.min(200, Math.round(textW / Math.max(1, item[0].length) * 1.55));
     const cap = fitLines(item[2].split(/\s+/).map(function(t){ return [t, p.mut]; }),
                          textW, 90, 30, 400);
-    body = `<text x="${left}" y="${midY + numFs * 0.18}" font-size="${numFs}" font-weight="800"
+    body = `<text x="${left}" y="${midY + numFs * 0.18}" data-mw="${textW}" font-size="${numFs}" font-weight="800"
       fill="${p.ink}" letter-spacing="-8">${esc(item[0])}<tspan font-size="${Math.round(numFs*0.26)}"
       fill="${p.acc}" dx="24" dy="-${Math.round(numFs*0.06)}" letter-spacing="0"
       font-weight="700">${esc(item[1])}</tspan></text>` +
       cap.lines.map(function(ln, i){
-        return `<text x="${left}" y="${midY + numFs * 0.5 + i * cap.fs * 1.3}"
+        return `<text x="${left}" y="${midY + numFs * 0.5 + i * cap.fs * 1.3}" data-mw="${textW}"
           font-size="${cap.fs}" fill="${p.mut}">${ln.map(function(t){ return esc(t[0]); }).join(" ")}</text>`;
       }).join("");
   } else if (lay === "vs"){
@@ -434,13 +434,13 @@ function coverSvg(cfg){
       y2="${bandBot - 2}" stroke="${p.ink}" opacity=".12"/>
       <text x="${left}" y="${capY}" font-size="22" fill="${p.dim}"
         letter-spacing=".5">${esc(item[0])}</text>
-      <text x="${left}" y="${nameY}" font-size="${fs}" font-weight="800"
+      <text x="${left}" y="${nameY}" data-mw="${halfW}" data-fitgroup="vs" font-size="${fs}" font-weight="800"
         fill="${p.ink}">${esc(item[1])}</text>
       <rect x="${left}" y="${lineY}" width="${Math.min(halfW, item[1].length * fs * 0.5)}"
         height="4" rx="2" fill="${p.ink}" opacity=".22"/>
       <text x="${rx}" y="${capY}" font-size="22" fill="${p.dim}"
         letter-spacing=".5">${esc(item[2])}</text>
-      <text x="${rx}" y="${nameY}" font-size="${fs}" font-weight="800"
+      <text x="${rx}" y="${nameY}" data-mw="${halfW}" data-fitgroup="vs" font-size="${fs}" font-weight="800"
         fill="${p.acc}">${esc(item[3])}</text>
       <rect x="${rx}" y="${lineY}" width="${Math.min(halfW, item[3].length * fs * 0.5)}"
         height="4" rx="2" fill="${p.acc}" opacity=".5"/>`;
@@ -450,7 +450,7 @@ function coverSvg(cfg){
     const rowH = 62;
     const startY = midY - (item[1].length * rowH) / 2 + head.lines.length * head.fs * 0.42;
     body = head.lines.map(function(ln, i){
-      return `<text x="${left}" y="${bandTop + 46 + i * head.fs * 1.14}" font-size="${head.fs}"
+      return `<text x="${left}" y="${bandTop + 46 + i * head.fs * 1.14}" data-mw="${textW}" font-size="${head.fs}"
         font-weight="800" fill="${p.ink}">${ln.map(function(t){ return esc(t[0]); }).join(" ")}</text>`;
     }).join("") + item[1].map(function(t, i){
       const y = startY + i * rowH + 26;
@@ -458,7 +458,7 @@ function coverSvg(cfg){
         opacity=".16"/>
         <text x="${left + 17}" y="${y}" font-size="20" font-weight="800" fill="${p.acc}"
           text-anchor="middle">${i + 1}</text>
-        <text x="${left + 52}" y="${y}" font-size="29" fill="${p.ink}" opacity=".92">${esc(t)}</text>`;
+        <text x="${left + 52}" y="${y}" data-mw="${textW - 60}" font-size="29" fill="${p.ink}" opacity=".92">${esc(t)}</text>`;
     }).join("");
   } else {
     const f = fitLines(item[0].split(/\s+/).map(function(t){ return [t, p.ink]; }),
@@ -468,7 +468,7 @@ function coverSvg(cfg){
     body = `<text x="${W/2}" y="${y0 - f.lines.length * lh / 2 - 44}" font-size="86"
       fill="${p.acc}" opacity=".4" text-anchor="middle" font-weight="800">?</text>` +
       f.lines.map(function(ln, i){
-        return `<text x="${W/2}" y="${y0 + i * lh}" font-size="${f.fs}" font-weight="800"
+        return `<text x="${W/2}" y="${y0 + i * lh}" data-mw="${W - pad * 2 - 60}" font-size="${f.fs}" font-weight="800"
           fill="${p.ink}" text-anchor="middle">${ln.map(function(t){ return esc(t[0]); }).join(" ")}</text>`;
       }).join("");
   }
@@ -490,6 +490,45 @@ function coverSvg(cfg){
     ${sig}${foot}${body}</svg>`;
 }
 
-window.__coverSvg = coverSvg;
+
+function __fitTexts(root) {
+  var texts = root.querySelectorAll("text[data-mw]");
+  for (var i = 0; i < texts.length; i++) {
+    var t = texts[i];
+    var mw = parseFloat(t.getAttribute("data-mw"));
+    if (!mw) continue;
+    var fs = parseFloat(t.getAttribute("font-size")) || 30;
+    for (var k = 0; k < 6; k++) {
+      var len = 0;
+      try { len = t.getComputedTextLength(); } catch (e) { break; }
+      if (len <= mw || fs <= 15) break;
+      fs = Math.max(15, Math.floor(fs * mw / len * 0.97));
+      t.setAttribute("font-size", fs);
+    }
+  }
+  var groups = {};
+  var gt = root.querySelectorAll("text[data-fitgroup]");
+  for (var g = 0; g < gt.length; g++) {
+    var key = gt[g].getAttribute("data-fitgroup");
+    var v = parseFloat(gt[g].getAttribute("font-size")) || 30;
+    if (!(key in groups) || v < groups[key]) groups[key] = v;
+  }
+  for (var g2 = 0; g2 < gt.length; g2++) {
+    gt[g2].setAttribute("font-size", groups[gt[g2].getAttribute("data-fitgroup")]);
+  }
+}
+
+window.__coverSvg = function (spec) {
+  var svg = coverSvg(spec);
+  var host = document.createElement("div");
+  host.style.cssText = "position:absolute;left:-99999px;top:0;width:1200px";
+  host.innerHTML = svg;
+  document.body.appendChild(host);
+  __fitTexts(host);
+  var out = host.innerHTML;
+  host.remove();
+  return out;
+};
+window.__coverSvgRaw = coverSvg;
 
 })();
