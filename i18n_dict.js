@@ -1,5 +1,10 @@
 window.__I18N_DICT = {
  "en": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -3334,6 +3339,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -6668,6 +6678,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -10002,6 +10017,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -13331,6 +13351,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -16665,6 +16690,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -19998,6 +20028,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -23332,6 +23367,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -26666,6 +26706,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -30000,6 +30045,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -33334,6 +33384,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -36668,6 +36723,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -40002,6 +40062,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -43336,6 +43401,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -46670,6 +46740,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -50004,6 +50079,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -53338,6 +53418,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -56672,6 +56757,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",
@@ -60006,6 +60096,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Ужать текст до подписи": "Shrink the text to caption size",
+  "Ужимаю текст...": "Shrinking the text…",
+  "знаков — выйдет одним сообщением": "characters — it will go as one message",
+  "Текст уже помещается в подпись": "The text already fits the caption",
+  "Не удалось ужать — попробуй ещё раз": "Could not shrink it — try again",
   "Править": "Edit",
   "Сохранить текст": "Save the text",
   "Текст сохранён": "Text saved",

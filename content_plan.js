@@ -2145,7 +2145,10 @@
                   esc(T(isVideo
                       ? 'Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.'
                       : 'Текст длиннее 1024 знаков — картинка станет превью над полным текстом.')) +
-                  '</span></div>'
+                  '</span></div>' +
+                  '<button class="cp-mrepl" data-act="shrink" data-id="' + p.id + '">' +
+                  '<i class="ti ti-arrows-minimize"></i>' +
+                  esc(T('Ужать текст до подписи')) + ' ' + forgeTag(2) + '</button>'
                 : '';
             var row = isCover
                 ? '<div class="cp-mrow">' +
@@ -2583,6 +2586,34 @@
             return;
         }
         if (act === 'editsave') { saveEdit(+actEl.getAttribute('data-id')); return; }
+        if (act === 'shrink') {
+            var sid = +actEl.getAttribute('data-id');
+            if (_mediaBusy[sid]) return;
+            haptic('medium');
+            _mediaBusy[sid] = T('Ужимаю текст...');
+            rerender();
+            apiRequest('/api/v1/content-plan/shrink-post',
+                       { method: 'POST', body: JSON.stringify({ post_id: sid }) })
+                .then(function (r) {
+                    delete _mediaBusy[sid];
+                    if (r && r.ok) {
+                        var p = post(sid);
+                        if (p) { p.text = r.text; p.status = 'draft'; }
+                        toast(T('Готово:') + ' ' + r.chars + ' ' + T('знаков — выйдет одним сообщением'));
+                    } else if (r && r.error === 'already_fits') {
+                        toast(T('Текст уже помещается в подпись'));
+                    } else {
+                        toast(T('Не удалось ужать — попробуй ещё раз'));
+                    }
+                    rerender();
+                })
+                .catch(function () {
+                    delete _mediaBusy[sid];
+                    toast(T('Не удалось ужать — попробуй ещё раз'));
+                    rerender();
+                });
+            return;
+        }
         if (act === 'coverlay') { askLayout(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverregen') {
             haptic('medium');
