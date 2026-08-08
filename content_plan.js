@@ -193,7 +193,9 @@
     }
 
     function syncDays(d) {
-        if (d && d.goal && GOAL_MAP[d.goal]) _goal = d.goal;
+        if (d && d.goal && String(d.goal).split('+').every(function (x) { return GOAL_MAP[x]; })) {
+            _goal = d.goal;
+        }
         if (_days || !d || !d.days || d.days.length !== 7) return;
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
@@ -403,7 +405,7 @@
     }
 
     function goalWord() {
-        var g = T(GOAL_MAP[_goal] || _goal);
+        var g = goalTitle(_goal);
         var lang = (typeof window.getLang === 'function') ? window.getLang() : 'ru';
         return lang === 'ru' ? g.toLowerCase() : g;
     }
@@ -1164,6 +1166,94 @@
         return [words.slice(0, cut).join(' '), words.slice(cut).join(' '), ''];
     }
 
+    function goalTitle(g) {
+        return String(g || '').split('+').map(function (x) {
+            return T(GOAL_MAP[x] || x);
+        }).filter(Boolean).join(' + ');
+    }
+
+    function weekDaySheet(i) {
+        var host = document.getElementById('cp-daybox');
+        if (host) host.remove();
+        host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        var draw = function () {
+            var ps = ((_state && _state.posts) || []).filter(function (p) {
+                return p.day_index === i;
+            }).sort(function (a, b) { return (a.slot_hm || '').localeCompare(b.slot_hm || ''); });
+            var rows = ps.map(function (p) {
+                var fixed = p.publish_status === 'published' || p.publish_status === 'queued';
+                return '<div class="cp-wdrow" data-goto="' + p.id + '">' +
+                    '<span class="tm">' + esc(p.slot_hm || '—') + '</span>' +
+                    '<span class="tx">' + esc((p.title || '').slice(0, 60)) + '</span>' +
+                    (fixed ? '<span class="lk"><i class="ti ti-lock"></i></span>'
+                           : '<button class="cp-wdx" data-wdel="' + p.id +
+                             '"><i class="ti ti-trash"></i></button>') +
+                    '</div>';
+            }).join('') || '<div class="cp-dsnote">' + esc(T('В этом дне постов нет.')) + '</div>';
+            host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
+                '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b></div>' +
+                '<div class="cp-dss">' + esc(T('Нажми на пост, чтобы открыть его в ленте.')) +
+                '</div>' + rows +
+                '<button class="cp-dsr wide" data-wadd="1"><i class="ti ti-plus"></i>' +
+                '<span class="tx"><b>' + esc(T('Добавить пост в этот день')) + '</b>' +
+                '<em>' + esc(T('тема сразу, текст и обложка следом') + ' · ') +
+                (wallet().price_day || 10) + ' Forge</em></span></button></div>';
+        };
+        draw();
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
+        host.addEventListener('click', function (e) {
+            var t = e.target;
+            var del = t.closest ? t.closest('[data-wdel]') : null;
+            if (del) {
+                haptic('medium');
+                var did = +del.getAttribute('data-wdel');
+                apiRequest('/api/v1/content-plan/delete-post',
+                           { method: 'POST', body: JSON.stringify({ post_id: did }) })
+                    .then(function (r) {
+                        if (r && r.ok) {
+                            _state.posts = (_state.posts || []).filter(function (p) {
+                                return p.id !== did;
+                            });
+                            draw();
+                            renderWeek();
+                        } else toast(T('Этот пост уже в очереди — сначала сними неделю с выхода'));
+                    })
+                    .catch(function () { toast(T('Не удалось удалить пост')); });
+                return;
+            }
+            if (t.closest && t.closest('[data-wadd]')) {
+                haptic('medium');
+                host.remove();
+                toast(T('Придумываю тему...'));
+                apiRequest('/api/v1/content-plan/add-post',
+                           { method: 'POST',
+                             body: JSON.stringify({ channel_id: _chId, day_index: i }) })
+                    .then(function (r) {
+                        if (r && r.ok) {
+                            toast(T('Добавлено:') + ' ' + (r.title || ''));
+                            refreshState();
+                            startBatchPoll();
+                        } else if (r && r.error === 'day_full') {
+                            toast(T('В этом дне уже максимум постов'));
+                        } else toast(T('Не удалось добавить пост'));
+                    })
+                    .catch(function () { toast(T('Не удалось добавить пост')); });
+                return;
+            }
+            var go = t.closest ? t.closest('[data-goto]') : null;
+            if (go && !(t.closest && t.closest('[data-wdel]'))) {
+                _selDay = i;
+                host.remove();
+                renderWeek();
+                return;
+            }
+            if (e.target === host) host.remove();
+        });
+    }
+
     function buildChanBlock() {
         if (!_channels || !_channels.length) {
             return '<div class="cp-hint">' + esc(T('Канал не подключён — план соберётся в нейтральном стиле. Подключи канал, чтобы писать точно в его стиле.')) + '</div>';
@@ -1198,8 +1288,9 @@
     function renderBrief() {
         if (!_ap && _chId) setTimeout(loadAutopilot, 0);
         var chanBlock = buildChanBlock();
+        var goalSel = (_goal || 'engagement').split('+');
         var goals = GOALS.map(function (g) {
-            return '<button class="cp-goal' + (g[0] === _goal ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
+            return '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
                 '<span>' + esc(T(g[1])) + '</span></button>';
         }).join('');
@@ -1331,7 +1422,7 @@
             '</div>';
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
-            '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
+            '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(goalTitle(_state.goal)) + '</div></div>' +
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
@@ -2124,8 +2215,12 @@
                 '<div class="cp-chips">' + shp + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
                 '<div class="cp-chips">' + sgn + '</div>' +
+                '<button class="cp-dsave" data-csave="1"><i class="ti ti-lock"></i> ' +
+                esc(T('Сохранить стиль навсегда')) + '</button>' +
+                '<button class="cp-dmix" data-cmix="1"><i class="ti ti-arrows-shuffle"></i> ' +
+                esc(T('Микс — у каждого поста свой стиль')) + '</button>' +
                 '<div class="cp-dshint">' +
-                esc(T('Выбор ничего не стоит: списание только за перегенерацию готовой обложки.')) +
+                esc(T('Сохранённый стиль применяется ко всем новым постам и автопилоту. Пока не сохранишь — действует микс.')) +
                 '</div></div>';
         };
         draw();
@@ -2139,16 +2234,29 @@
             var sh = t.closest ? t.closest('[data-cshape]') : null;
             if (sh) { c.shape = sh.getAttribute('data-cshape'); draw(); haptic('light');
                       saveCover({ shape: c.shape }); return; }
+            if (t.closest && t.closest('[data-csave]')) {
+                haptic('medium');
+                saveCover({ mode: (_cover && _cover.mode) === 'cover' ? 'cover' : 'cover_auto',
+                            palette: c.palette, shape: c.shape,
+                            sign: c.sign, variant: c.variant });
+                toast(T('Стиль сохранён — применяю к обложкам'));
+                host.remove();
+                return;
+            }
+            if (t.closest && t.closest('[data-cmix]')) {
+                haptic('medium');
+                c.palette = 'auto'; c.shape = 'auto';
+                saveCover({ palette: 'auto', shape: 'auto', sign: c.sign });
+                toast(T('Микс включён — каждый пост будет свой'));
+                host.remove();
+                return;
+            }
             var vb = t.closest ? t.closest('[data-cvar]') : null;
             if (vb) {
                 var nv = Math.max(1, Math.min(12, (c.variant || 1) + (+vb.getAttribute('data-cvar'))));
                 if (nv !== (c.variant || 1)) {
                     c.variant = nv; draw(); haptic('light');
-                    if (_varTimer) clearTimeout(_varTimer);
-                    _varTimer = setTimeout(function () {
-                        _varTimer = null;
-                        saveCover({ variant: c.variant });
-                    }, 700);
+
                 }
                 return;
             }
@@ -2500,9 +2608,24 @@
         var chip = t.closest ? t.closest('[data-chip]') : null;
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');
-            if (name === 'goal') { _goal = v; saveDaysSoon(); }
+            if (name === 'goal') {
+                var parts = (_goal || 'engagement').split('+').filter(Boolean);
+                var at = parts.indexOf(v);
+                if (at >= 0) {
+                    if (parts.length > 1) parts.splice(at, 1);
+                } else {
+                    parts.push(v);
+                    if (parts.length > 2) parts.shift();
+                }
+                _goal = parts.join('+');
+                saveDaysSoon();
+            }
             var wrap = chip.parentElement;
-            wrap.querySelectorAll('[data-chip]').forEach(function (b) { b.classList.toggle('on', b === chip); });
+            var sel = (_goal || '').split('+');
+            wrap.querySelectorAll('[data-chip]').forEach(function (b) {
+                if (name === 'goal') b.classList.toggle('on', sel.indexOf(b.getAttribute('data-v')) >= 0);
+                else b.classList.toggle('on', b === chip);
+            });
             haptic('light');
             renderBrief();
             return;
@@ -2683,16 +2806,7 @@
         if (act === 'regen') { renderBrief(); return; }
         if (act === 'wkday') {
             haptic('light');
-            var wd = +actEl.getAttribute('data-day');
-            var has = (_state && _state.posts || []).some(function (p) { return p.day_index === wd; });
-            if (!has) { toast(T('В этом дне поста нет')); return; }
-            _selDay = wd;
-            renderWeek();
-            requestAnimationFrame(function () {
-                var el = document.querySelector('.cp-day.sel');
-                if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth',
-                    block: 'nearest', inline: 'center' });
-            });
+            weekDaySheet(+actEl.getAttribute('data-day'));
             return;
         }
         if (act === 'selday') {
