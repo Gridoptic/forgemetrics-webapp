@@ -1,5 +1,12 @@
 window.__I18N_DICT = {
  "en": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -3327,6 +3334,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -6654,6 +6668,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -9981,6 +10002,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -13303,6 +13331,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -16630,6 +16665,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -19956,6 +19998,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -23283,6 +23332,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -26610,6 +26666,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -29937,6 +30000,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -33264,6 +33334,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -36591,6 +36668,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -39918,6 +40002,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -43245,6 +43336,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -46572,6 +46670,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -49899,6 +50004,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -53226,6 +53338,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -56553,6 +56672,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
@@ -59880,6 +60006,13 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Править": "Edit",
+  "Сохранить текст": "Save the text",
+  "Текст сохранён": "Text saved",
+  "Не удалось сохранить текст": "Could not save the text",
+  "Пустой текст не сохраняю": "An empty text cannot be saved",
+  "Длиннее 4096 знаков Telegram не примет — сократи.": "Telegram will not accept more than 4096 characters — shorten it.",
+  "Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.": "Ornament “system's choice”: each post gets its own; this is one of the variants.",
   "Обновляю обложки постов...": "Updating the post covers…",
   "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",

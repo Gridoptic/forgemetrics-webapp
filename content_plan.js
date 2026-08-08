@@ -1793,6 +1793,42 @@
     }
 
     var _mediaBusy = {};
+    var _editing = {};
+
+    function editBlock(p) {
+        return '<div class="cp-editbox">' +
+            '<textarea class="cp-edit" id="cp-edit-' + p.id + '" maxlength="4096">' +
+            esc(p.text || '') + '</textarea>' +
+            '<div class="cp-editrow">' +
+            '<button class="cp-act" data-act="editcancel" data-id="' + p.id + '">' +
+            esc(T('Отмена')) + '</button>' +
+            '<button class="cp-act gen" data-act="editsave" data-id="' + p.id + '">' +
+            '<i class="ti ti-check"></i> ' + esc(T('Сохранить текст')) + '</button>' +
+            '</div></div>';
+    }
+
+    function saveEdit(id) {
+        var ta = document.getElementById('cp-edit-' + id);
+        if (!ta) return;
+        var body = (ta.value || '').trim();
+        if (!body) { toast(T('Пустой текст не сохраняю')); return; }
+        apiRequest('/api/v1/content-plan/edit-post',
+                   { method: 'POST', body: JSON.stringify({ post_id: id, text: body }) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.text = r.text; p.status = 'draft'; }
+                    delete _editing[id];
+                    haptic('light');
+                    toast(T('Текст сохранён'));
+                    renderWeek();
+                } else if (r && r.error === 'too_long') {
+                    toast(T('Длиннее 4096 знаков Telegram не примет — сократи.'));
+                } else toast(T('Не удалось сохранить текст'));
+            })
+            .catch(function () { toast(T('Не удалось сохранить текст')); });
+    }
+
     var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
                    ask: 'вопрос' };
     var COVER_PRICE = { cover_variant: 1, cover_phrase: 2 };
@@ -2027,7 +2063,7 @@
                 sign: c.sign || 'full',
                 lay: 'thesis', seed: 7,
                 name: ch ? chanSub(ch).replace(/^приватный канал$/, (ch.title || '')) : '',
-                avatar: '',
+                avatar: (ch && ch.avatar_url) || '',
                 item: parts
             };
         };
@@ -2048,7 +2084,12 @@
                     '" data-csign="' + x[0] + '">' + esc(T(x[1])) + '</button>';
             }).join('');
             var prev = (typeof window.__coverSvg === 'function')
-                ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) + '</div>'
+                ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) + '</div>' +
+                  ((c.shape || 'auto') === 'auto'
+                      ? '<div class="cp-shauto">' +
+                        esc(T('Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.')) +
+                        '</div>'
+                      : '')
                 : '';
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
@@ -2280,7 +2321,9 @@
 
         var body;
         var pubc = '<button class="cp-act" data-act="copy" data-id="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>';
-        if (_dayBusy[p.id]) {
+        if (_editing[p.id] && p.text) {
+            body = editBlock(p);
+        } else if (_dayBusy[p.id]) {
             body = '<div class="cp-dload"><div class="cp-spin sm"></div>' + esc(T('Пишу текст...')) + '</div>';
         } else if (p.publish_status === 'published') {
             body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
@@ -2301,7 +2344,9 @@
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
-                '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + '</button>' + pubc + '</div>';
+                '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
+                forgeTag((wallet().price_day || 10)) + '</button>' +
+                '<button class="cp-act" data-act="editpost" data-id="' + p.id + '"><i class="ti ti-pencil"></i> ' + esc(T('Править')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
                 '<button class="cp-act gen wide" data-act="genday" data-id="' + p.id + '"><i class="ti ti-wand"></i> ' + esc(T('Написать текст')) + '</button>' + factNote(p);
@@ -2526,6 +2571,18 @@
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverstyle') { askCoverStyle(); return; }
+        if (act === 'editpost') {
+            haptic('light');
+            _editing[+actEl.getAttribute('data-id')] = true;
+            renderWeek();
+            return;
+        }
+        if (act === 'editcancel') {
+            delete _editing[+actEl.getAttribute('data-id')];
+            renderWeek();
+            return;
+        }
+        if (act === 'editsave') { saveEdit(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverlay') { askLayout(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverregen') {
             haptic('medium');
