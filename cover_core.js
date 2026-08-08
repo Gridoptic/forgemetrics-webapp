@@ -334,6 +334,7 @@ function coverSvg(cfg){
   const shape = cfg.shape === "auto"
     ? SHAPES[Math.floor(srand(seed * 61) * SHAPES.length) % SHAPES.length]
     : cfg.shape;
+  const geoSeed = (cfg.shape && cfg.shape !== "auto") ? 7 : seed;
   const pad = 84;
   const left = pad;
   const sign = cfg.sign || cfg.sig || "full";
@@ -479,7 +480,7 @@ function coverSvg(cfg){
         : `<rect x="${zone.x}" y="${zone.y}" width="${zone.w}" height="${zone.h}"/>`}</clipPath>
     </defs>
     <rect width="${W}" height="${H}" fill="${p.bg}"/>
-    ${shape === 'none' ? '' : shapeSvg(shape, p, seed, W, H, zone, uid, zmode)}
+    ${shape === 'none' ? '' : shapeSvg(shape, p, geoSeed, W, H, zone, uid, zmode)}
     ${sig}${foot}${body}</svg>`;
 }
 
