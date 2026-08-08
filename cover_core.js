@@ -328,7 +328,12 @@ function fitLines(words, maxW, maxH, base, weight){
 let UID = 0;
 
 function coverSvg(cfg){
-  const W = 1200, H = 675, p = palOf(cfg.pal);
+  const W = 1200, H = 675;
+  const seed0 = cfg.seed || 1;
+  const palId = (cfg.pal === "auto")
+    ? PALETTES[Math.floor(srand(seed0 * 23) * PALETTES.length) % PALETTES.length].id
+    : cfg.pal;
+  const p = palOf(palId);
   const uid = ++UID;
   const seed = cfg.seed;
   const shape = cfg.shape === "auto"

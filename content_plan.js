@@ -1964,6 +1964,7 @@
 
 
     var COVER_PAL = [
+        ['auto', 'mix', '#818cf8', '#34d399', 'Микс'],
         ['indigo', '#0a0d18', '#818cf8', '#c084fc', 'Индиго'],
         ['cobalt', '#070c1a', '#6366f1', '#38bdf8', 'Кобальт'],
         ['steel', '#0b1016', '#60a5fa', '#5eead4', 'Сталь'],
@@ -2079,8 +2080,11 @@
 
         var draw = function () {
             var pal = COVER_PAL.map(function (p) {
+                var bg = p[1] === 'mix'
+                    ? 'linear-gradient(135deg,#171226,#06120f 55%,#140f06)'
+                    : p[1];
                 return '<button class="cp-pal' + (c.palette === p[0] ? ' on' : '') +
-                    '" data-cpal="' + p[0] + '" style="background:' + p[1] + '" title="' +
+                    '" data-cpal="' + p[0] + '" style="background:' + bg + '" title="' +
                     esc(T(p[4])) + '"><i style="background:' + p[2] + '"></i>' +
                     '<i style="background:' + p[3] + '"></i></button>';
             }).join('');
@@ -2095,8 +2099,8 @@
             var prev = (typeof window.__coverSvg === 'function')
                 ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) + '</div>' +
                   '<div class="cp-shauto">' +
-                  esc((c.shape || 'auto') === 'auto'
-                      ? T('Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.')
+                  esc((c.palette === 'auto' || (c.shape || 'auto') === 'auto')
+                      ? T('Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.')
                       : T('Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.')) +
                   '</div>'
                 : '';

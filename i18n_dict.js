@@ -1,5 +1,7 @@
 window.__I18N_DICT = {
  "en": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -3344,6 +3346,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -6688,6 +6692,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -10032,6 +10038,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -13371,6 +13379,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -16715,6 +16725,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -20058,6 +20070,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -23402,6 +23416,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -26746,6 +26762,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -30090,6 +30108,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -33434,6 +33454,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -36778,6 +36800,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -40122,6 +40146,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -43466,6 +43492,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -46810,6 +46838,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -50154,6 +50184,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -53498,6 +53530,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -56842,6 +56876,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
@@ -60186,6 +60222,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Микс": "Mix",
+  "Микс: у каждого поста свои цвета и орнамент, здесь показан один из вариантов.": "Mix: each post gets its own colors and ornament; this is one of the variants.",
   "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
