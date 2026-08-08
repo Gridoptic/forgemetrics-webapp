@@ -1,5 +1,6 @@
 window.__I18N_DICT = {
  "en": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -3343,6 +3344,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -6686,6 +6688,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -10029,6 +10032,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -13367,6 +13371,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -16710,6 +16715,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -20052,6 +20058,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -23395,6 +23402,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -26738,6 +26746,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -30081,6 +30090,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -33424,6 +33434,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -36767,6 +36778,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -40110,6 +40122,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -43453,6 +43466,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -46796,6 +46810,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -50139,6 +50154,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -53482,6 +53498,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -56825,6 +56842,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",
@@ -60168,6 +60186,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "В этом дне поста нет": "There is no post on this day",
   "Вид орнамента": "Ornament look",
   "листай, глядя на превью": "step through, watching the preview",
   "Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.": "The chosen ornament sits identically on every cover — exactly as here.",

@@ -360,7 +360,8 @@
                     esc(vs) + '</span>';
             }
             return '<div class="' + cls + '"' +
-                (frozen ? '' : ' data-act="pickday" data-day="' + i + '"') + '>' + col +
+                (frozen ? ' data-act="wkday" data-day="' + i + '"'
+                        : ' data-act="pickday" data-day="' + i + '"') + '>' + col +
                 '<span class="cp-plan"><b>' + (n || '—') + '</b>' +
                 '<em>' + esc(T(WD[i])) + '</em></span></div>';
         }).join('');
@@ -2676,6 +2677,20 @@
         if (act === 'appause') { askPause(); return; }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') { renderBrief(); return; }
+        if (act === 'wkday') {
+            haptic('light');
+            var wd = +actEl.getAttribute('data-day');
+            var has = (_state && _state.posts || []).some(function (p) { return p.day_index === wd; });
+            if (!has) { toast(T('В этом дне поста нет')); return; }
+            _selDay = wd;
+            renderWeek();
+            requestAnimationFrame(function () {
+                var el = document.querySelector('.cp-day.sel');
+                if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth',
+                    block: 'nearest', inline: 'center' });
+            });
+            return;
+        }
         if (act === 'selday') {
             _selDay = +actEl.getAttribute('data-day'); renderWeek(); haptic('light'); return;
         }
