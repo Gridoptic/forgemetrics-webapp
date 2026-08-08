@@ -2108,7 +2108,7 @@
                     ? '<div class="cp-clbl">' + esc(T('Вид орнамента')) + '</div>' +
                       '<div class="cp-vstep">' +
                       '<button class="cp-vbtn" data-cvar="-1"><i class="ti ti-minus"></i></button>' +
-                      '<span class="cp-vnum">' + (((c.variant || 1) - 1) % 12 + 1) + ' / 12</span>' +
+                      '<span class="cp-vnum">' + Math.max(1, Math.min(12, c.variant || 1)) + ' / 12</span>' +
                       '<button class="cp-vbtn" data-cvar="1"><i class="ti ti-plus"></i></button>' +
                       '<span class="cp-vhint">' + esc(T('листай, глядя на превью')) + '</span>' +
                       '</div>'
@@ -2136,7 +2136,7 @@
                       saveCover({ shape: c.shape }); return; }
             var vb = t.closest ? t.closest('[data-cvar]') : null;
             if (vb) {
-                var nv = ((c.variant || 1) - 1 + (+vb.getAttribute('data-cvar')) + 12) % 12 + 1;
+                var nv = Math.max(1, Math.min(12, (c.variant || 1) + (+vb.getAttribute('data-cvar'))));
                 if (nv !== (c.variant || 1)) {
                     c.variant = nv; draw(); haptic('light');
                     if (_varTimer) clearTimeout(_varTimer);
