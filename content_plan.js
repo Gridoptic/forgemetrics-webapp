@@ -1969,6 +1969,7 @@
                     _cover.mode = r.mode; _cover.palette = r.palette;
                     _cover.shape = r.shape; _cover.sign = r.sign;
                     rerender();
+                    if (r.redrawn) setTimeout(refreshState, 1800);
                 } else toast(T('Не удалось сохранить стиль'));
             })
             .catch(function () { toast(T('Не удалось сохранить стиль')); });
@@ -1982,6 +1983,25 @@
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
         var c = _cover || {};
+        var previewSpec = function () {
+            var p = ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
+            var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
+            var title = (p && p.title) || 'Заголовок поста появится здесь';
+            var words = title.split(' ');
+            var cut = Math.max(1, Math.floor(words.length / 3));
+            return {
+                pal: c.palette || 'indigo',
+                shape: c.shape || 'auto',
+                sign: c.sign || 'full',
+                lay: 'thesis', seed: 7,
+                name: ch ? chanSub(ch).replace(/^приватный канал$/, (ch.title || '')) : '',
+                avatar: '',
+                item: [words.slice(0, cut).join(' '),
+                       words.slice(cut, cut * 2).join(' '),
+                       words.slice(cut * 2).join(' ')]
+            };
+        };
+
         var draw = function () {
             var pal = COVER_PAL.map(function (p) {
                 return '<button class="cp-pal' + (c.palette === p[0] ? ' on' : '') +
@@ -1997,11 +2017,15 @@
                 return '<button class="cp-chip' + (c.sign === x[0] ? ' on' : '') +
                     '" data-csign="' + x[0] + '">' + esc(T(x[1])) + '</button>';
             }).join('');
+            var prev = (typeof window.__coverSvg === 'function')
+                ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) +
+                  '<span class="cp-cprevtag">' + esc(T('так будет выглядеть')) + '</span></div>'
+                : '';
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
                 '<div class="cp-dsh2"><b>' + esc(T('Стиль обложек')) + '</b></div>' +
                 '<div class="cp-dss">' +
-                esc(T('Применится ко всем новым постам канала')) + '</div>' +
+                esc(T('Применится к обложкам постов канала')) + '</div>' + prev +
                 '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
                 '<div class="cp-pals">' + pal + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
@@ -2048,7 +2072,9 @@
                 : '<img src="' + esc(p.media_url) + '" alt="">';
             var warn = (p.text && p.text.length > 1024)
                 ? '<div class="cp-mwarn"><i class="ti ti-alert-triangle"></i><span>' +
-                  esc(T('Текст длиннее 1024 знаков — файл уйдёт отдельным сообщением перед постом.')) +
+                  esc(T(isVideo
+                      ? 'Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.'
+                      : 'Текст длиннее 1024 знаков — картинка станет превью над полным текстом.')) +
                   '</span></div>'
                 : '';
             var row = isCover

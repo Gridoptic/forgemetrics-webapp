@@ -1,5 +1,10 @@
 window.__I18N_DICT = {
  "en": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Private channel",
@@ -3320,6 +3325,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Canal privado",
@@ -6640,6 +6650,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Privater Kanal",
@@ -9960,6 +9975,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Жабық арна",
@@ -13275,6 +13295,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Yopiq kanal",
@@ -16595,6 +16620,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Прыватны канал",
@@ -19914,6 +19944,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Qapalı kanal",
@@ -23234,6 +23269,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "قناة خاصة",
@@ -26554,6 +26594,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "کانال خصوصی",
@@ -29874,6 +29919,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Özel kanal",
@@ -33194,6 +33244,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "निजी चैनल",
@@ -36514,6 +36569,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "প্রাইভেট চ্যানেল",
@@ -39834,6 +39894,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Kanal privat",
@@ -43154,6 +43219,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Kênh riêng tư",
@@ -46474,6 +46544,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Canal privado",
@@ -49794,6 +49869,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Chaîne privée",
@@ -53114,6 +53194,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Canale privato",
@@ -56434,6 +56519,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "የግል ቻናል",
@@ -59754,6 +59844,11 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "так будет выглядеть": "this is how it will look",
+  "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
+  "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
+  "Текст длиннее 1024 знаков — картинка станет превью над полным текстом.": "The text is over 1024 characters — the image will become a preview above the full text.",
+  "Заголовок поста появится здесь": "The post title will appear here",
   "Часть текстов не написалась — открой пост и попробуй ещё раз": "Some texts were not written — open the post and try again",
   "Эта рубрика пишется по твоей фактуре: бот спросит пару строк за день до выхода, текст появится после ответа.": "This rubric is written from your input: the bot will ask for a couple of lines a day before publishing; the text appears after you reply.",
   "Приватный канал": "Chaneli ya faragha",

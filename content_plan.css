@@ -1384,3 +1384,14 @@
 
 .cp-allbtn[data-act="genall"] { margin-top: 14px; }
 .cp-wkhead { margin-top: 12px; }
+
+.cp-cprev {
+    position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 4px;
+    border: 1px solid rgba(255, 255, 255, .09);
+}
+.cp-cprev svg { display: block; width: 100%; height: auto; }
+.cp-cprevtag {
+    position: absolute; left: 8px; bottom: 8px; font-size: 9px; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; padding: 4px 8px; border-radius: 7px;
+    background: rgba(5, 7, 15, .72); border: 1px solid rgba(255, 255, 255, .14); color: #cfd3e0;
+}
