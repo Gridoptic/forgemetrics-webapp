@@ -1,5 +1,6 @@
 window.__I18N_DICT = {
  "en": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -3339,6 +3340,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -6678,6 +6680,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -10017,6 +10020,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -13351,6 +13355,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -16690,6 +16695,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -20028,6 +20034,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -23367,6 +23374,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -26706,6 +26714,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -30045,6 +30054,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -33384,6 +33394,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -36723,6 +36734,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -40062,6 +40074,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -43401,6 +43414,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -46740,6 +46754,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -50079,6 +50094,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -53418,6 +53434,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -56757,6 +56774,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",
@@ -60096,6 +60114,7 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».": "The ornament's shape is fixed per channel, while its position and size vary per post — use “Another version” to change a post's look.",
   "Ужать текст до подписи": "Shrink the text to caption size",
   "Ужимаю текст...": "Shrinking the text…",
   "знаков — выйдет одним сообщением": "characters — it will go as one message",

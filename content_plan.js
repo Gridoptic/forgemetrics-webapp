@@ -2063,7 +2063,13 @@
                 sign: c.sign || 'full',
                 lay: 'thesis', seed: 7,
                 name: ch ? chanSub(ch).replace(/^приватный канал$/, (ch.title || '')) : '',
-                avatar: (ch && ch.avatar_url) || '',
+                avatar: (function () {
+                    var u = (ch && ch.avatar_url) || '';
+                    if (u && u.charAt(0) === '/' && typeof API_BASE_URL === 'string') {
+                        u = API_BASE_URL + u;
+                    }
+                    return u;
+                })(),
                 item: parts
             };
         };
@@ -2085,11 +2091,11 @@
             }).join('');
             var prev = (typeof window.__coverSvg === 'function')
                 ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) + '</div>' +
-                  ((c.shape || 'auto') === 'auto'
-                      ? '<div class="cp-shauto">' +
-                        esc(T('Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.')) +
-                        '</div>'
-                      : '')
+                  '<div class="cp-shauto">' +
+                  esc((c.shape || 'auto') === 'auto'
+                      ? T('Орнамент «на выбор системы»: у каждого поста он будет свой, здесь показан один из вариантов.')
+                      : T('Форма орнамента одна на канал, а положение и размер у каждого поста свои — вид поста меняется кнопкой «Другой вариант».')) +
+                  '</div>'
                 : '';
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
