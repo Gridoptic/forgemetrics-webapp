@@ -1,5 +1,7 @@
 window.__I18N_DICT = {
  "en": {
+  "Приватный канал": "Private channel",
+  "приватный канал": "private channel",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -3316,6 +3318,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Приватный канал": "Canal privado",
+  "приватный канал": "canal privado",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -6632,6 +6636,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Приватный канал": "Privater Kanal",
+  "приватный канал": "privater Kanal",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -9948,6 +9954,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Приватный канал": "Жабық арна",
+  "приватный канал": "жабық арна",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -13259,6 +13267,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Приватный канал": "Yopiq kanal",
+  "приватный канал": "yopiq kanal",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -16575,6 +16585,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Приватный канал": "Прыватны канал",
+  "приватный канал": "прыватны канал",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -19890,6 +19902,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Приватный канал": "Qapalı kanal",
+  "приватный канал": "qapalı kanal",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -23206,6 +23220,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Приватный канал": "قناة خاصة",
+  "приватный канал": "قناة خاصة",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -26522,6 +26538,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Приватный канал": "کانال خصوصی",
+  "приватный канал": "کانال خصوصی",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -29838,6 +29856,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Приватный канал": "Özel kanal",
+  "приватный канал": "özel kanal",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -33154,6 +33174,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Приватный канал": "निजी चैनल",
+  "приватный канал": "निजी चैनल",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -36470,6 +36492,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Приватный канал": "প্রাইভেট চ্যানেল",
+  "приватный канал": "প্রাইভেট চ্যানেল",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -39786,6 +39810,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Приватный канал": "Kanal privat",
+  "приватный канал": "kanal privat",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -43102,6 +43128,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Приватный канал": "Kênh riêng tư",
+  "приватный канал": "kênh riêng tư",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -46418,6 +46446,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Приватный канал": "Canal privado",
+  "приватный канал": "canal privado",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -49734,6 +49764,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Приватный канал": "Chaîne privée",
+  "приватный канал": "chaîne privée",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -53050,6 +53082,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Приватный канал": "Canale privato",
+  "приватный канал": "canale privato",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -56366,6 +56400,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Приватный канал": "የግል ቻናል",
+  "приватный канал": "የግል ቻናል",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",
@@ -59682,6 +59718,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Приватный канал": "Chaneli ya faragha",
+  "приватный канал": "chaneli ya faragha",
   "Композиция обложки": "Cover composition",
   "Композиция": "Composition",
   "Тезис": "Thesis",

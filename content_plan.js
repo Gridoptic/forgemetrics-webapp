@@ -213,7 +213,7 @@
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { renderWeek(); return; }
         if (_channels === null) {
             apiRequest('/api/v1/channels/active').then(function (cd) {
-                _channels = (cd && cd.channels) ? cd.channels.filter(function (c) { return c.username; }) : [];
+                _channels = (cd && cd.channels) || [];
                 if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
                 if (_chId == null && _channels.length) _chId = _channels[0].id;
                 renderBrief();
@@ -1128,6 +1128,14 @@
             }).catch(function () {});
     }
 
+    function chanName(c) {
+        return c.title || (c.username ? '@' + c.username : T('Приватный канал'));
+    }
+
+    function chanSub(c) {
+        return c.username ? '@' + c.username : T('приватный канал');
+    }
+
     function renderBrief() {
         if (!_ap && _chId) setTimeout(loadAutopilot, 0);
         var chanBlock;
@@ -1137,7 +1145,8 @@
             var c = _channels[0]; _chId = c.id;
             chanBlock = '<div class="cp-onechan"><div class="av" data-chav="' + c.id + '">' +
                 esc((c.title || c.username || '?').charAt(0).toUpperCase()) + '</div>' +
-                '<div class="nm"><b>' + esc(c.title || ('@' + c.username)) + '</b><span>@' + esc(c.username) + '</span></div></div>';
+                '<div class="nm"><b>' + esc(chanName(c)) + '</b><span>' +
+                esc(chanSub(c)) + '</span></div></div>';
         } else {
             // список кнопок нежизнеспособен на сетке: до пятидесяти каналов на тарифе
             var cur = _channels.filter(function (c) { return c.id === _chId; })[0] || _channels[0];
@@ -1146,8 +1155,8 @@
             chanBlock = '<button class="cp-chanpick" data-act="pickchan">' +
                 '<span class="av" data-chav="' + cur.id + '">' +
                 esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
-                '<span class="nm"><b>' + esc(cur.title || ('@' + cur.username)) + '</b>' +
-                '<span>@' + esc(cur.username || '') + ' · ' + esc(T(styleNote)) + '</span></span>' +
+                '<span class="nm"><b>' + esc(chanName(cur)) + '</b>' +
+                '<span>' + esc(chanSub(cur) + ' · ' + T(styleNote)) + '</span></span>' +
                 '<span class="sw">' + esc(T('сменить')) + '</span>' +
                 '<i class="ti ti-chevron-down"></i></button>';
         }
@@ -1425,7 +1434,7 @@
             items: _channels.map(function (c) {
                 return {
                     id: c.id,
-                    title: c.title || ('@' + c.username),
+                    title: chanName(c),
                     subtitle: (c.voice_status === 'done')
                         ? (c.voice_preview || T('стиль настроен'))
                         : T('стиль не настроен'),
