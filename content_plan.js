@@ -1277,7 +1277,7 @@
                         (fixed
                             ? '<span class="tm">' + esc(p.slot_hm || '—') + '</span>'
                             : '<span class="tm man" data-wtime="' + p.id + '">' +
-                              esc(p.slot_hm || '—') + '</span>') +
+                              esc(p.slot_hm || '—') + '<i class="ti ti-pencil"></i></span>') +
                         '<span class="tx"><b>' + esc((p.title || '').slice(0, 60)) + '</b>' +
                         '<em>' + esc(T(st[0])) + '</em></span>' +
                         '<i class="ti ti-chevron-right ch"></i></button>' +
