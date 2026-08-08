@@ -1178,34 +1178,119 @@
         host = document.createElement('div');
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
-        var draw = function () {
-            var ps = ((_state && _state.posts) || []).filter(function (p) {
+        var timeFor = null;
+        var dayPosts = function () {
+            return ((_state && _state.posts) || []).filter(function (p) {
                 return p.day_index === i;
             }).sort(function (a, b) { return (a.slot_hm || '').localeCompare(b.slot_hm || ''); });
-            var rows = ps.map(function (p) {
-                var fixed = p.publish_status === 'published' || p.publish_status === 'queued';
-                return '<div class="cp-wdrow" data-goto="' + p.id + '">' +
-                    '<span class="tm">' + esc(p.slot_hm || '—') + '</span>' +
-                    '<span class="tx">' + esc((p.title || '').slice(0, 60)) + '</span>' +
-                    (fixed ? '<span class="lk"><i class="ti ti-lock"></i></span>'
-                           : '<button class="cp-wdx" data-wdel="' + p.id +
-                             '"><i class="ti ti-trash"></i></button>') +
-                    '</div>';
-            }).join('') || '<div class="cp-dsnote">' + esc(T('В этом дне постов нет.')) + '</div>';
+        };
+        var draw = function () {
+            var ps = dayPosts();
+            var body;
+            if (timeFor !== null) {
+                var tp = post(timeFor) || {};
+                var cur = tp.slot_hm || '';
+                var hours = '';
+                for (var h = 8; h <= 22; h++) {
+                    var hh = (h < 10 ? '0' : '') + h;
+                    hours += '<button class="cp-th' + (cur.slice(0, 2) === hh ? ' on' : '') +
+                        '" data-whour="' + hh + '">' + hh + '</button>';
+                }
+                var mins = ['00', '15', '30', '45'].map(function (m) {
+                    return '<button class="cp-tm' + (cur.slice(3) === m ? ' on' : '') +
+                        '" data-wmin="' + m + '">:' + m + '</button>';
+                }).join('');
+                body = '<div class="cp-dss">' + esc(T('Время выхода')) + ' · ' +
+                    esc((tp.title || '').slice(0, 40)) + '</div>' +
+                    '<div class="cp-tgrid">' + hours + '</div>' +
+                    '<div class="cp-trow">' + mins + '</div>' +
+                    '<button class="cp-dsr wide" data-wback="1"><i class="ti ti-arrow-left"></i>' +
+                    '<span class="tx"><b>' + esc(T('Назад к дню')) + '</b></span></button>';
+            } else {
+                var hoursHint = bestHours();
+                var rows = ps.map(function (p) {
+                    var st = statusOf(p);
+                    var fixed = p.publish_status === 'published' ||
+                        p.publish_status === 'publishing' || p.publish_status === 'queued';
+                    return '<div class="cp-slotrow">' +
+                        '<button class="cp-slot" data-goto="' + p.id + '">' +
+                        (fixed
+                            ? '<span class="tm">' + esc(p.slot_hm || '—') + '</span>'
+                            : '<span class="tm man" data-wtime="' + p.id + '">' +
+                              esc(p.slot_hm || '—') + '</span>') +
+                        '<span class="tx"><b>' + esc((p.title || '').slice(0, 60)) + '</b>' +
+                        '<em>' + esc(T(st[0])) + '</em></span>' +
+                        '<i class="ti ti-chevron-right ch"></i></button>' +
+                        (fixed
+                            ? '<span class="cp-slotx lk"><i class="ti ti-lock"></i></span>'
+                            : '<button class="cp-slotx" data-wdel="' + p.id + '" aria-label="' +
+                              esc(T('Убрать пост')) + '"><i class="ti ti-x"></i></button>') +
+                        '</div>';
+                }).join('') || '<div class="cp-dsnote">' + esc(T('В этом дне постов нет.')) + '</div>';
+                body = (hoursHint.length
+                    ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
+                        hoursHint.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
+                            .join(', ')) + '</div>'
+                    : '<div class="cp-dss">' + esc(T('Нажми на время, чтобы изменить его. Пост откроется в ленте по нажатию.')) + '</div>') +
+                    '<div class="cp-slots">' + rows + '</div>' +
+                    '<button class="cp-dsr wide" data-wadd="1"><i class="ti ti-plus"></i>' +
+                    '<span class="tx"><b>' + esc(T('Добавить пост в этот день')) + '</b>' +
+                    '<em>' + esc(T('тема сразу, текст и обложка следом') + ' · ') +
+                    (wallet().price_day || 10) + ' Forge</em></span></button>';
+            }
             host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
-                '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b></div>' +
-                '<div class="cp-dss">' + esc(T('Нажми на пост, чтобы открыть его в ленте.')) +
-                '</div>' + rows +
-                '<button class="cp-dsr wide" data-wadd="1"><i class="ti ti-plus"></i>' +
-                '<span class="tx"><b>' + esc(T('Добавить пост в этот день')) + '</b>' +
-                '<em>' + esc(T('тема сразу, текст и обложка следом') + ' · ') +
-                (wallet().price_day || 10) + ' Forge</em></span></button></div>';
+                '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b>' +
+                (ps.length ? '<span>' + ps.length + ' ' +
+                    esc(T(plural3(ps.length, 'пост', 'поста', 'постов'))) + '</span>' : '') +
+                '</div>' + body + '</div>';
         };
         draw();
         document.body.appendChild(host);
         requestAnimationFrame(function () { host.classList.add('vis'); });
+        var sendTime = function (hm) {
+            var pid = timeFor;
+            apiRequest('/api/v1/content-plan/post-time',
+                       { method: 'POST', body: JSON.stringify({ post_id: pid, hm: hm }) })
+                .then(function (r) {
+                    if (r && r.ok) {
+                        var p = post(pid);
+                        if (p) p.slot_hm = r.slot_hm;
+                        haptic('light');
+                        timeFor = null;
+                        draw();
+                        renderWeek();
+                    } else if (r && r.error === 'already_out') {
+                        toast(T('Пост уже в очереди — сначала сними неделю с выхода'));
+                    } else toast(T('Не удалось изменить время'));
+                })
+                .catch(function () { toast(T('Не удалось изменить время')); });
+        };
         host.addEventListener('click', function (e) {
             var t = e.target;
+            var wt = t.closest ? t.closest('[data-wtime]') : null;
+            if (wt) {
+                haptic('light');
+                timeFor = +wt.getAttribute('data-wtime');
+                draw();
+                return;
+            }
+            if (t.closest && t.closest('[data-wback]')) {
+                timeFor = null;
+                draw();
+                return;
+            }
+            var wh = t.closest ? t.closest('[data-whour]') : null;
+            if (wh && timeFor !== null) {
+                var tp2 = post(timeFor) || {};
+                sendTime(wh.getAttribute('data-whour') + ':' + ((tp2.slot_hm || '12:00').slice(3) || '00'));
+                return;
+            }
+            var wm = t.closest ? t.closest('[data-wmin]') : null;
+            if (wm && timeFor !== null) {
+                var tp3 = post(timeFor) || {};
+                sendTime(((tp3.slot_hm || '12:00').slice(0, 2)) + ':' + wm.getAttribute('data-wmin'));
+                return;
+            }
             var del = t.closest ? t.closest('[data-wdel]') : null;
             if (del) {
                 haptic('medium');
@@ -1248,6 +1333,11 @@
                 _selDay = i;
                 host.remove();
                 renderWeek();
+                requestAnimationFrame(function () {
+                    var el = document.querySelector('.cp-day.sel');
+                    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth',
+                        block: 'nearest', inline: 'center' });
+                });
                 return;
             }
             if (e.target === host) host.remove();
