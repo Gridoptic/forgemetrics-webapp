@@ -1395,3 +1395,6 @@
     letter-spacing: .07em; text-transform: uppercase; padding: 4px 8px; border-radius: 7px;
     background: rgba(5, 7, 15, .72); border: 1px solid rgba(255, 255, 255, .14); color: #cfd3e0;
 }
+
+.cp-hero.wk { padding: 13px 14px 11px; margin-top: 12px; }
+.cp-hero.wk .cp-hero-week { margin-top: 0; }

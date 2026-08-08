@@ -223,6 +223,7 @@
                 if (!_rubrics.length) loadRubrics();
                 if (!_ap) loadAutopilot();
                 if (!_cover) loadCover();
+                if (!_cal) loadCalendar();
                 loadReview(false);
             }
             renderWeek();
@@ -1308,6 +1309,9 @@
         var haveText = ps.filter(function (p) { return p.text; }).length;
 
         var chanBlock = buildChanBlock();
+        var weekCal = '<div class="cp-hero wk"><div class="cp-hero-week">' + weekCells(true) +
+            '</div>' + (periodNote() ? '<div class="cp-hsrc">' + periodNote() + '</div>' : '') +
+            '</div>';
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
             '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(T(GOAL_MAP[_state.goal] || _state.goal || '')) + '</div></div>' +
@@ -1333,7 +1337,7 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(chanBlock + header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
+        setView(chanBlock + weekCal + header + apPanel() + rubricsBlock() + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
     }
