@@ -1267,7 +1267,7 @@
         _pollTimer = setInterval(function () {
             ticks++;
             if (ticks === 20) { var el = document.getElementById('cp-gen-text'); if (el) el.textContent = T('Ещё чуть-чуть...'); }
-            apiRequest('/api/v1/content-plan').then(function (d) {
+            apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { _state = d; stopTimers(); renderWeek(); }
                 else if (d.status === 'error') { _state = d; stopTimers(); renderError(); }
@@ -2426,7 +2426,8 @@
         haptic('medium');
         pending.forEach(function (p) { _dayBusy[p.id] = true; });
         renderWeek();
-        apiRequest('/api/v1/content-plan/generate-all', { method: 'POST', body: '{}' })
+        apiRequest('/api/v1/content-plan/generate-all',
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
             .then(function (r) {
                 if (r && r.ok) { toast(T('Пишу всю неделю — карточки будут заполняться')); startBatchPoll(); }
                 else {
@@ -2445,7 +2446,7 @@
         var ticks = 0;
         _batchTimer = setInterval(function () {
             ticks++;
-            apiRequest('/api/v1/content-plan').then(function (d) {
+            apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 _state = d;
                 var withText = (d.posts || []).filter(function (p) { return p.text; });
@@ -2486,7 +2487,7 @@
     }
 
     function refreshState() {
-        apiRequest('/api/v1/content-plan').then(function (d) { if (d && d.ok) { _state = d; renderWeek(); } }).catch(function () {});
+        apiRequest('/api/v1/content-plan' + (_chId ? '?channel_id=' + _chId : '')).then(function (d) { if (d && d.ok) { _state = d; renderWeek(); } }).catch(function () {});
     }
 
     function onClick(ev) {
@@ -2702,7 +2703,8 @@
             return;
         }
         haptic('medium');
-        apiRequest('/api/v1/content-plan/schedule', { method: 'POST', body: '{}' })
+        apiRequest('/api/v1/content-plan/schedule',
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
             .then(function (r) {
                 if (r && r.ok) { toast(T('Неделя запланирована — посты выйдут в канал сами')); refreshState(); }
                 else if (r && r.error === 'no_bot_rights') toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
@@ -2713,7 +2715,8 @@
     }
     function doUnschedule() {
         haptic('medium');
-        apiRequest('/api/v1/content-plan/unschedule', { method: 'POST', body: '{}' })
+        apiRequest('/api/v1/content-plan/unschedule',
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId }) })
             .then(function (r) { if (r && r.ok) { toast(T('Неделя снята с очереди')); refreshState(); } else toast(T('Не удалось снять с очереди')); })
             .catch(function () { toast(T('Не удалось снять с очереди')); });
     }
