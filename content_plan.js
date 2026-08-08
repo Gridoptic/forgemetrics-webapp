@@ -1958,21 +1958,35 @@
 
     function saveCover(patch) {
         var cid = _chId || (_state && _state.channel_id);
-        if (!cid) return;
+        if (!cid) { toast(T('Сначала выбери канал')); return; }
+        _cover = _cover || {};
+        var before = { mode: _cover.mode, palette: _cover.palette,
+                       shape: _cover.shape, sign: _cover.sign };
+        Object.keys(patch).forEach(function (k) { _cover[k] = patch[k]; });
         var body = { channel_id: cid };
         Object.keys(patch).forEach(function (k) { body[k] = patch[k]; });
         apiRequest('/api/v1/content-plan/cover-style',
                    { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 if (r && r.ok) {
-                    _cover = _cover || {};
                     _cover.mode = r.mode; _cover.palette = r.palette;
                     _cover.shape = r.shape; _cover.sign = r.sign;
                     rerender();
-                    if (r.redrawn) setTimeout(refreshState, 1800);
-                } else toast(T('Не удалось сохранить стиль'));
+                    if (r.redrawn) {
+                        toast(T('Обновляю обложки постов...'));
+                        setTimeout(refreshState, 1800);
+                    }
+                } else {
+                    _cover = before;
+                    toast(T('Не удалось сохранить стиль'));
+                    rerender();
+                }
             })
-            .catch(function () { toast(T('Не удалось сохранить стиль')); });
+            .catch(function () {
+                _cover = before;
+                toast(T('Не удалось сохранить стиль'));
+                rerender();
+            });
     }
 
     function askCoverStyle() {

@@ -1,5 +1,7 @@
 window.__I18N_DICT = {
  "en": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -3325,6 +3327,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "the rest will be arranged by the system to match the week's storyline."
  },
  "es": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -6650,6 +6654,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "el resto lo distribuirá el sistema según el hilo de la semana."
  },
  "de": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -9975,6 +9981,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "die übrigen verteilt das System passend zum Wochenthema."
  },
  "kk": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -13295,6 +13303,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "қалғанын жүйе апта сюжетіне қарай орналастырады."
  },
  "uz": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -16620,6 +16630,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qolganini tizim hafta syujetiga moslab joylashtiradi."
  },
  "be": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -19944,6 +19956,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "астатнія разложыць сістэма пад сюжэт тыдня."
  },
  "az": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -23269,6 +23283,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "qalanlarını sistem həftənin süjetinə uyğun düzür."
  },
  "ar": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -26594,6 +26610,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "والباقي يوزّعه النظام وفق مسار الأسبوع."
  },
  "fa": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -29919,6 +29937,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "بقیه را سیستم بر اساس روند هفته می‌چیند."
  },
  "tr": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -33244,6 +33264,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "kalanları sistem haftanın temasına göre yerleştirir."
  },
  "hi": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -36569,6 +36591,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "बाक़ी को सिस्टम हफ़्ते के विषय के अनुसार लगाएगा।"
  },
  "bn": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -39894,6 +39918,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "বাকিগুলো সিস্টেম সপ্তাহের বিষয় অনুযায়ী সাজাবে।"
  },
  "id": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -43219,6 +43245,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "sisanya diatur sistem sesuai tema minggu ini."
  },
  "vi": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -46544,6 +46572,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "phần còn lại do hệ thống sắp xếp theo mạch nội dung tuần."
  },
  "pt": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -49869,6 +49899,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "os demais serão distribuídos pelo sistema conforme o tema da semana."
  },
  "fr": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -53194,6 +53226,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "le reste sera réparti par le système selon le fil de la semaine."
  },
  "it": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -56519,6 +56553,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "i restanti saranno disposti dal sistema in base al tema della settimana."
  },
  "am": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
@@ -59844,6 +59880,8 @@ window.__I18N_DICT = {
   "остальные разложит система под сюжет недели.": "የቀሩትን ስርዓቱ በሳምንቱ ጭብጥ መሠረት ያዘጋጃል።"
  },
  "sw": {
+  "Обновляю обложки постов...": "Updating the post covers…",
+  "Сначала выбери канал": "Choose a channel first",
   "так будет выглядеть": "this is how it will look",
   "Применится к обложкам постов канала": "Applies to the covers of the channel's posts",
   "Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.": "The text is over 1024 characters — the video will go as a separate message before the post.",
