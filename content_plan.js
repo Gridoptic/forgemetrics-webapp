@@ -2036,8 +2036,7 @@
                     '" data-csign="' + x[0] + '">' + esc(T(x[1])) + '</button>';
             }).join('');
             var prev = (typeof window.__coverSvg === 'function')
-                ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) +
-                  '<span class="cp-cprevtag">' + esc(T('так будет выглядеть')) + '</span></div>'
+                ? '<div class="cp-cprev">' + window.__coverSvg(previewSpec()) + '</div>'
                 : '';
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
@@ -2112,9 +2111,9 @@
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
             return '<div class="cp-media"><div class="cp-mthumb">' + body +
-                '<span class="cp-mbadge">' + esc(label) + '</span>' +
                 '<button class="cp-mx" data-act="mediaclear" data-id="' + p.id + '">' +
-                '<i class="ti ti-x"></i></button></div>' + warn + row + '</div>';
+                '<i class="ti ti-x"></i></button></div>' +
+                '<div class="cp-mfoot">' + esc(label) + '</div>' + warn + row + '</div>';
         }
         return '<button class="cp-madd" data-act="mediamode" data-id="' + p.id + '">' +
             '<i class="ti ti-photo-plus"></i>' + esc(T('Добавить картинку')) + '</button>';
