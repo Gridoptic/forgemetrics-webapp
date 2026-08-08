@@ -1094,6 +1094,7 @@
 
     var _calTimer = null;
     var _daysTimer = null;
+    var _varTimer = null;
 
     function saveDaysSoon() {
         if (_daysTimer) clearTimeout(_daysTimer);
@@ -2103,10 +2104,6 @@
                 '<div class="cp-dsh2"><b>' + esc(T('Стиль обложек')) + '</b></div>' +
                 '<div class="cp-dss">' +
                 esc(T('Применится к обложкам постов канала')) + '</div>' + prev +
-                '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
-                '<div class="cp-pals">' + pal + '</div>' +
-                '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
-                '<div class="cp-chips">' + shp + '</div>' +
                 (((c.shape || 'auto') !== 'auto' && c.shape !== 'none')
                     ? '<div class="cp-clbl">' + esc(T('Вид орнамента')) + '</div>' +
                       '<div class="cp-vstep">' +
@@ -2116,6 +2113,10 @@
                       '<span class="cp-vhint">' + esc(T('листай, глядя на превью')) + '</span>' +
                       '</div>'
                     : '') +
+                '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
+                '<div class="cp-pals">' + pal + '</div>' +
+                '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
+                '<div class="cp-chips">' + shp + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
                 '<div class="cp-chips">' + sgn + '</div>' +
                 '<div class="cp-dshint">' +
@@ -2138,7 +2139,11 @@
                 var nv = Math.max(1, Math.min(99, (c.variant || 1) + (+vb.getAttribute('data-cvar'))));
                 if (nv !== (c.variant || 1)) {
                     c.variant = nv; draw(); haptic('light');
-                    saveCover({ variant: nv });
+                    if (_varTimer) clearTimeout(_varTimer);
+                    _varTimer = setTimeout(function () {
+                        _varTimer = null;
+                        saveCover({ variant: c.variant });
+                    }, 700);
                 }
                 return;
             }
