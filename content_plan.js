@@ -184,12 +184,14 @@
                 if (e.pointerType !== 'mouse' || e.button !== 0) return;
                 if (el2.scrollWidth - el2.clientWidth <= 2) return;
                 _drag = true; _moved = false; _dx = e.clientX; _dl = el2.scrollLeft;
-                try { el2.setPointerCapture(e.pointerId); } catch (e2) {}
             });
             el2.addEventListener('pointermove', function (e) {
                 if (!_drag) return;
                 var dx = e.clientX - _dx;
-                if (Math.abs(dx) > 6) _moved = true;
+                if (!_moved && Math.abs(dx) > 6) {
+                    _moved = true;
+                    try { el2.setPointerCapture(e.pointerId); } catch (e2) {}
+                }
                 if (_moved) { el2.scrollLeft = _dl - dx; el2.style.cursor = 'grabbing'; }
             });
             function _dragEnd() {
