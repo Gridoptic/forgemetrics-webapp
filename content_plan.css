@@ -63,7 +63,7 @@
 .cp-allbtn { width: 100%; padding: 12px; border: 1px solid rgba(129,140,248,0.45); border-radius: 12px; margin-bottom: 12px;
     background: rgba(129,140,248,0.12); color: #a9b0ff; font-weight: 700; font-size: 13px; font-family: inherit; cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 7px; }
-.cp-allbtn.sched { border: 0; color: #fff; background: linear-gradient(135deg,#5DCAA5,#3fa985); box-shadow: 0 12px 26px -14px rgba(93,202,165,0.8); }
+.cp-allbtn.sched { border: 0; color: #fff; margin-top: 14px; background: linear-gradient(135deg,#5DCAA5,#3fa985); box-shadow: 0 12px 26px -14px rgba(93,202,165,0.8); }
 .cp-allbtn.rgn { margin: 12px 0 0; }
 .cp-doneban {
     display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px;
