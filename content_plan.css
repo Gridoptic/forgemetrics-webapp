@@ -1472,3 +1472,21 @@
 .cp-dsheet .cp-slots { margin-bottom: 10px; }
 .cp-dsheet .cp-dsnote { margin-bottom: 10px; }
 .cp-dsheet .cp-trow { margin-bottom: 10px; }
+
+.cp-shgrp { margin-bottom: 8px; }
+.cp-shgh {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; padding: 10px 12px; border-radius: 11px; min-height: 42px;
+    border: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .03);
+    color: #c6cdde; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+}
+.cp-shgh i { color: #6f748c; font-size: 14px; }
+.cp-shgrid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 7px;
+}
+.cp-shp {
+    padding: 0; border-radius: 10px; overflow: hidden; cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, .08); background: transparent; line-height: 0;
+}
+.cp-shp svg { display: block; width: 100%; height: auto; }
+.cp-shp.on { border-color: rgba(129, 140, 248, .85); box-shadow: 0 0 10px rgba(129, 140, 248, .35); }

@@ -2362,14 +2362,28 @@
         ['jade', '#04130f', '#10b981', '#5eead4', 'Нефрит'],
         ['wine', '#12070c', '#e11d48', '#c084fc', 'Бордо']
     ];
-    var COVER_SHAPE = [
-        ['auto', 'На выбор системы'], ['arc', 'Дуга'], ['rings', 'Кольца'], ['diag', 'Скос'],
-        ['grid', 'Сетка'], ['bars', 'Столбцы'], ['blob', 'Пятно'], ['dots', 'Россыпь'],
-        ['wave', 'Волна'], ['rays', 'Лучи'], ['hex', 'Соты'], ['topo', 'Горизонтали'],
-        ['cross', 'Кресты'], ['stairs', 'Ступени'], ['orbit', 'Орбиты'], ['prism', 'Призма'],
-        ['ripple', 'Круги на воде'], ['mesh', 'Плетение'], ['chart', 'График'],
-        ['spiral', 'Спираль'], ['scatter', 'Рой'], ['none', 'Без орнамента']
-    ];
+    var SHAPE_GROUP_TITLES = {
+        neutral: 'Универсальные', med: 'Медицина и здоровье', travel: 'Путешествия',
+        auto: 'Авто и мастерские', food: 'Еда и рестораны', fin: 'Финансы и крипта',
+        sport: 'Спорт', beauty: 'Красота и мода', tech: 'IT и технологии',
+        edu: 'Образование', psy: 'Психология', estate: 'Недвижимость', kids: 'Дети',
+        music: 'Музыка', games: 'Игры', law: 'Право', mkt: 'Маркетинг',
+        vlog: 'Влоги и медиа', fun: 'Юмор'
+    };
+
+    function shapeGroups() {
+        var groups = [];
+        var nicheKey = _cover && _cover.niche_key;
+        var sets = window.__shapeSets || {};
+        if (nicheKey && sets[nicheKey]) {
+            groups.push([nicheKey, sets[nicheKey]]);
+        }
+        groups.push(['neutral', window.__neutralShapes || []]);
+        Object.keys(sets).forEach(function (k) {
+            if (k !== nicheKey) groups.push([k, sets[k]]);
+        });
+        return groups;
+    }
     var COVER_SIGN = [['full', 'Аватар и имя'], ['name', 'Только имя'], ['none', 'Без подписи']];
 
     function loadCover() {
@@ -2413,6 +2427,8 @@
             });
     }
 
+    var _shapeGrpOpen = null;
+
     function askCoverStyle() {
         haptic('light');
         var host = document.getElementById('cp-daybox');
@@ -2421,6 +2437,8 @@
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
         var c = _cover || {};
+        _shapeGrpOpen = (c.niche_key && (window.__shapeSets || {})[c.niche_key])
+            ? c.niche_key : 'neutral';
         var previewSpec = function () {
             var p = ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
             var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
@@ -2454,10 +2472,27 @@
                     esc(T(p[4])) + '"><i style="background:' + p[2] + '"></i>' +
                     '<i style="background:' + p[3] + '"></i></button>';
             }).join('');
-            var shp = COVER_SHAPE.map(function (x) {
+            var shp = [['auto', 'На выбор системы'], ['none', 'Без орнамента']].map(function (x) {
                 return '<button class="cp-chip' + (c.shape === x[0] ? ' on' : '') +
                     '" data-cshape="' + x[0] + '">' + esc(T(x[1])) + '</button>';
             }).join('');
+            var canPrev = typeof window.__shapePreview === 'function';
+            var grps = canPrev ? shapeGroups().map(function (g) {
+                var open = _shapeGrpOpen === g[0];
+                var tiles = '';
+                if (open) {
+                    tiles = '<div class="cp-shgrid">' + g[1].map(function (k) {
+                        return '<button class="cp-shp' + (c.shape === k ? ' on' : '') +
+                            '" data-cshape="' + k + '">' +
+                            window.__shapePreview(k, c.palette) + '</button>';
+                    }).join('') + '</div>';
+                }
+                return '<div class="cp-shgrp">' +
+                    '<button class="cp-shgh" data-cgrp="' + g[0] + '">' +
+                    esc(T(SHAPE_GROUP_TITLES[g[0]] || g[0])) +
+                    '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + '"></i></button>' +
+                    tiles + '</div>';
+            }).join('') : '';
             var sgn = COVER_SIGN.map(function (x) {
                 return '<button class="cp-chip' + (c.sign === x[0] ? ' on' : '') +
                     '" data-csign="' + x[0] + '">' + esc(T(x[1])) + '</button>';
@@ -2487,7 +2522,7 @@
                 '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
                 '<div class="cp-pals">' + pal + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
-                '<div class="cp-chips">' + shp + '</div>' +
+                '<div class="cp-chips">' + shp + '</div>' + grps +
                 '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
                 '<div class="cp-chips">' + sgn + '</div>' +
                 '<button class="cp-dsave" data-csave="1"><i class="ti ti-lock"></i> ' +
@@ -2506,6 +2541,14 @@
             var p = t.closest ? t.closest('[data-cpal]') : null;
             if (p) { c.palette = p.getAttribute('data-cpal'); draw(); haptic('light');
                      saveCover({ palette: c.palette }); return; }
+            var gr = t.closest ? t.closest('[data-cgrp]') : null;
+            if (gr) {
+                var gk = gr.getAttribute('data-cgrp');
+                _shapeGrpOpen = (_shapeGrpOpen === gk) ? null : gk;
+                draw();
+                haptic('light');
+                return;
+            }
             var sh = t.closest ? t.closest('[data-cshape]') : null;
             if (sh) { c.shape = sh.getAttribute('data-cshape'); draw(); haptic('light');
                       saveCover({ shape: c.shape }); return; }

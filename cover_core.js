@@ -2811,6 +2811,22 @@ function __fitTexts(root) {
   }
 }
 
+window.__shapeSets = ORN2_SETS;
+window.__neutralShapes = SHAPES.slice();
+window.__shapePreview = function (kind, palId) {
+  var p = palOf(palId && palId !== "auto" ? palId : "indigo");
+  var uid = ++UID;
+  var zone = {x: 0, y: 0, w: 440, h: 248};
+  var body = "";
+  try { body = shapeSvg(kind, p, 7, 440, 248, zone, uid, "side"); } catch (e) {}
+  return '<svg viewBox="0 0 440 248" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><clipPath id="z' + uid + '"><rect width="440" height="248"/></clipPath>' +
+    '<radialGradient id="gl' + uid + '"><stop offset="0%" stop-color="' + p.acc +
+    '" stop-opacity=".55"/><stop offset="100%" stop-color="' + p.acc +
+    '" stop-opacity="0"/></radialGradient></defs>' +
+    '<rect width="440" height="248" fill="' + p.bg + '"/>' + body + "</svg>";
+};
+
 window.__coverSvg = function (spec) {
   var svg = coverSvg(spec);
   var host = document.createElement("div");
