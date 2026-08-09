@@ -278,7 +278,15 @@
         if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
     }
 
+    function pushBalance(d) {
+        var w = d && d.wallet;
+        if (w && w.balance != null && typeof window.setForgeBalance === 'function') {
+            window.setForgeBalance(w.balance);
+        }
+    }
+
     function syncDays(d) {
+        pushBalance(d);
         if (d && d.goal && String(d.goal).split('+').every(function (x) { return GOAL_MAP[x]; })) {
             _goal = d.goal;
         }
@@ -2366,6 +2374,7 @@
                     var p = post(id);
                     if (p) { p.media_kind = 'photo'; p.media_url = r.url; p.cover_layout = r.layout; }
                     haptic('light');
+                    refreshState();
                 } else if (r && r.error === 'no_phrase') {
                     toast(T('Не удалось выбрать фразу — попробуй ещё раз'));
                 } else if (r && r.error === 'not_cover_mode') {
@@ -2853,8 +2862,8 @@
             }).join('') +
             ((mode === 'cover' || mode === 'cover_auto')
                 ? '<button class="cp-dsr wide" data-mstyle="1"><i class="ti ti-palette"></i>' +
-                  '<span class="tx"><b>' + esc(T('Настроить стиль обложек')) + '</b>' +
-                  '<em>' + esc(T('палитра, орнамент, подпись канала')) + '</em></span>' +
+                  '<span class="tx"><b>' + esc(T('Стиль этой картинки')) + '</b>' +
+                  '<em>' + esc(T('палитра и орнамент — только для этого поста')) + '</em></span>' +
                   '<i class="ti ti-chevron-right ck"></i></button>'
                 : '') +
             '<div class="cp-dshint">' +
@@ -2865,7 +2874,7 @@
         host.addEventListener('click', function (e) {
             if (e.target.closest && e.target.closest('[data-mstyle]')) {
                 host.remove();
-                askCoverStyle();
+                askCoverStyle(id);
                 return;
             }
             var b = e.target.closest ? e.target.closest('[data-mmode]') : null;
@@ -3002,6 +3011,7 @@
             apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 _state = d;
+                pushBalance(d);
                 var withText = (d.posts || []).filter(function (p) { return p.text; });
                 withText.forEach(function (p) { _dayBusy[p.id] = false; });
                 var pending = (d.posts || []).filter(function (p) { return !p.text; }).length;
@@ -3045,7 +3055,7 @@
     function refreshState() {
         var pcid = _chId || (_state && _state.channel_id);
         apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : ''))
-            .then(function (d) { if (d && d.ok && _open) { _state = d; rerender(); } })
+            .then(function (d) { if (d && d.ok && _open) { _state = d; pushBalance(d); rerender(); } })
             .catch(function () {});
     }
 
