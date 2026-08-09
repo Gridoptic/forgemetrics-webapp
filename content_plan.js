@@ -1498,10 +1498,15 @@
         var weekPrice = (w.price_day || 10) * totalPosts();
         var priceTag = w.is_tester ? '' :
             '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
-        var lowNote = (!w.is_tester && w.balance != null && w.balance < weekPrice)
-            ? '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
-                ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>'
-            : '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
+        var lowNote;
+        if (w.is_tester) {
+            lowNote = '<div class="cp-gonote">' + esc(T('Тестовый доступ — Forge не списываются')) + '</div>';
+        } else if (w.balance != null && w.balance < weekPrice) {
+            lowNote = '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
+                ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>';
+        } else {
+            lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
+        }
         setView(
             heroWeek() +
 
