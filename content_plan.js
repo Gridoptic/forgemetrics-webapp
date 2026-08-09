@@ -189,7 +189,7 @@
             el2.addEventListener('pointermove', function (e) {
                 if (!_drag) return;
                 var dx = e.clientX - _dx;
-                if (Math.abs(dx) > 3) _moved = true;
+                if (Math.abs(dx) > 6) _moved = true;
                 if (_moved) { el2.scrollLeft = _dl - dx; el2.style.cursor = 'grabbing'; }
             });
             function _dragEnd() {
@@ -1700,9 +1700,15 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
+        var oldRb = document.querySelector('#content-plan-screen .cp-ribbon');
+        var keepScroll = oldRb ? oldRb.scrollLeft : 0;
         setView(chanBlock + weekCal + doneBanner + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
+        if (keepScroll) {
+            var newRb = document.querySelector('#content-plan-screen .cp-ribbon');
+            if (newRb) newRb.scrollLeft = keepScroll;
+        }
     }
 
     function loadAutopilot() {
