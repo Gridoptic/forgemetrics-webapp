@@ -2133,9 +2133,461 @@ ORN.coaster = function(p,s){
   return out;
 };
 
+ORN.syringe = function(p,s){
+  var cx = W*0.74, cy = H*0.46;
+  return '<g transform="rotate(-32 '+cx+' '+cy+')">' +
+    '<rect x="'+(cx-70)+'" y="'+(cy-18)+'" width="110" height="36" rx="8" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-46)+'" y1="'+(cy-18)+'" x2="'+(cx-46)+'" y2="'+(cy+18)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".7"/>' +
+    '<line x1="'+(cx-22)+'" y1="'+(cy-18)+'" x2="'+(cx-22)+'" y2="'+(cy+18)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".5"/>' +
+    '<line x1="'+(cx+2)+'" y1="'+(cy-18)+'" x2="'+(cx+2)+'" y2="'+(cy+18)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".3"/>' +
+    '<rect x="'+(cx-96)+'" y="'+(cy-10)+'" width="26" height="20" rx="4" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+    '<line x1="'+(cx-108)+'" y1="'+cy+'" x2="'+(cx-96)+'" y2="'+cy+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".7"/>' +
+    '<line x1="'+(cx+40)+'" y1="'+cy+'" x2="'+(cx+92)+'" y2="'+cy+'" stroke="'+p.acc+'" stroke-width="2" opacity=".85"/></g>';
+};
+ORN.brainhalf = function(p,s){
+  var cx = W*0.79, cy = H*0.48, out = "";
+  out += '<path d="M'+cx+' '+(cy-64)+' q -58 -8 -66 40 q -30 8 -12 40 q -14 30 22 36 q 10 26 40 16 q 8 8 16 8" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<path d="M'+cx+' '+(cy-64)+' q 58 -8 66 40 q 30 8 12 40 q 14 30 -22 36 q -10 26 -40 16 q -8 8 -16 8" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".7" stroke-linejoin="round"/>' +
+    '<line x1="'+cx+'" y1="'+(cy-64)+'" x2="'+cx+'" y2="'+(cy+76)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5" stroke-dasharray="4 6"/>' +
+    '<path d="M'+(cx-40)+' '+(cy-20)+' q 16 10 0 22 M'+(cx+40)+' '+(cy-10)+' q -16 10 0 22" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>';
+  return out;
+};
+ORN.bone = function(p,s){
+  var out = "";
+  var sets = [[W*0.66,H*0.32,-24],[W*0.84,H*0.66,20]];
+  for (var i = 0; i < 2; i++){
+    var x = sets[i][0], y = sets[i][1];
+    out += '<g transform="rotate('+sets[i][2]+' '+x+' '+y+')" opacity="'+(0.85-i*0.25)+'">' +
+      '<line x1="'+(x-40)+'" y1="'+y+'" x2="'+(x+40)+'" y2="'+y+'" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="10" stroke-linecap="round"/>' +
+      '<circle cx="'+(x-46)+'" cy="'+(y-8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
+      '<circle cx="'+(x-46)+'" cy="'+(y+8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
+      '<circle cx="'+(x+46)+'" cy="'+(y-8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
+      '<circle cx="'+(x+46)+'" cy="'+(y+8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/></g>';
+  }
+  return out;
+};
+ORN.microscope = function(p,s){
+  var cx = W*0.78, base = H*0.78;
+  return '<line x1="'+(cx-46)+'" y1="'+base+'" x2="'+(cx+50)+'" y2="'+base+'" stroke="'+p.acc+'" stroke-width="2.8" opacity=".8"/>' +
+    '<path d="M'+(cx+26)+' '+base+' q 6 -46 -20 -68 l -22 -20" fill="none" stroke="'+p.acc+'" stroke-width="2.8" opacity=".85"/>' +
+    '<g transform="rotate(26 '+(cx-28)+' '+(base-96)+')">' +
+    '<rect x="'+(cx-40)+'" y="'+(base-124)+'" width="24" height="56" rx="7" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".9"/>' +
+    '<rect x="'+(cx-36)+'" y="'+(base-148)+'" width="16" height="22" rx="5" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".9"/></g>' +
+    '<line x1="'+(cx-54)+'" y1="'+(base-38)+'" x2="'+(cx+4)+'" y2="'+(base-38)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>' +
+    '<circle cx="'+(cx-25)+'" cy="'+(base-38)+'" r="4.5" fill="'+p.acc2+'" opacity=".8"/>';
+};
+ORN.bandage = function(p,s){
+  var out = "";
+  var sets = [[W*0.68,H*0.38,32],[W*0.84,H*0.66,-18]];
+  for (var i = 0; i < 2; i++){
+    var x = sets[i][0], y = sets[i][1];
+    out += '<g transform="rotate('+sets[i][2]+' '+x+' '+y+')" opacity="'+(0.9-i*0.3)+'">' +
+      '<rect x="'+(x-62)+'" y="'+(y-22)+'" width="124" height="44" rx="22" fill="none" stroke="'+(i?p.acc:p.acc2)+'" stroke-width="2.4"/>' +
+      '<rect x="'+(x-22)+'" y="'+(y-14)+'" width="44" height="28" rx="6" fill="none" stroke="'+(i?p.acc:p.acc2)+'" stroke-width="1.8" opacity=".7"/>';
+    for (var dx = -10; dx <= 10; dx += 10)
+      for (var dy = -6; dy <= 6; dy += 12)
+        out += '<circle cx="'+(x+dx)+'" cy="'+(y+dy)+'" r="1.8" fill="'+(i?p.acc:p.acc2)+'" opacity=".8"/>';
+    out += "</g>";
+  }
+  return out;
+};
+
+ORN.anchor2 = function(p,s){
+  var cx = W*0.74, cy = H*0.44;
+  return '<circle cx="'+cx+'" cy="'+(cy-58)+'" r="14" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+cx+'" y1="'+(cy-44)+'" x2="'+cx+'" y2="'+(cy+64)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-38)+'" y1="'+(cy-16)+'" x2="'+(cx+38)+'" y2="'+(cy-16)+'" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>' +
+    '<path d="M'+(cx-52)+' '+(cy+34)+' q 6 34 52 34 q 46 0 52 -34 l 14 10 m -14 -10 l -18 4" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>' +
+    '<path d="M'+(cx-52)+' '+(cy+34)+' l -14 10 m 14 -10 l 18 4" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>';
+};
+ORN.lighthouse = function(p,s){
+  var cx = W*0.76, base = H*0.84, out = "";
+  out += '<path d="M'+(cx-24)+' '+base+' L'+(cx-14)+' '+(H*0.24)+' h 28 L'+(cx+24)+' '+base+' Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<rect x="'+(cx-18)+'" y="'+(H*0.18)+'" width="36" height="26" rx="5" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<path d="M'+cx+' '+(H*0.14)+' l -10 4 h 20 Z" fill="'+p.acc+'" opacity=".7"/>';
+  for (var i = 0; i < 3; i++)
+    out += '<line x1="'+(cx-19+i*3)+'" y1="'+(H*(0.4+i*0.14))+'" x2="'+(cx+19-i*3)+'" y2="'+(H*(0.4+i*0.14))+'" stroke="'+p.acc2+'" stroke-width="5" opacity="'+(0.5-i*0.1)+'"/>';
+  out += '<line x1="'+(cx+26)+'" y1="'+(H*0.2)+'" x2="'+(cx+70)+'" y2="'+(H*0.14)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".5"/>' +
+    '<line x1="'+(cx-26)+'" y1="'+(H*0.2)+'" x2="'+(cx-64)+'" y2="'+(H*0.14)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".4"/>' +
+    '<path d="M'+(cx-90)+' '+(base+6)+' q 30 -10 60 0 t 60 0 t 60 0" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".4"/>';
+  return out;
+};
+ORN.postcard = function(p,s){
+  var x = W*0.64, y = H*0.32, w = 180, h = 114;
+  return '<g transform="rotate(-7 '+(x+w/2)+' '+(y+h/2)+')">' +
+    '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="10" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".85"/>' +
+    '<line x1="'+(x+w/2)+'" y1="'+(y+14)+'" x2="'+(x+w/2)+'" y2="'+(y+h-14)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+    '<rect x="'+(x+w-46)+'" y="'+(y+12)+'" width="30" height="24" rx="3" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".85"/>' +
+    '<line x1="'+(x+16)+'" y1="'+(y+40)+'" x2="'+(x+w/2-14)+'" y2="'+(y+40)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".55"/>' +
+    '<line x1="'+(x+16)+'" y1="'+(y+60)+'" x2="'+(x+w/2-14)+'" y2="'+(y+60)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".4"/>' +
+    '<path d="M'+(x+w/2+12)+' '+(y+70)+' q 14 -12 28 0 t 28 0" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/></g>';
+};
+ORN.camper = function(p,s){
+  var x = W*0.64, y = H*0.44, w = 185, h = 90;
+  return '<path d="M'+x+' '+(y+h)+' v -'+(h-24)+' q 0 -24 24 -24 h '+(w-48)+' q 24 0 24 24 v '+(h-24)+' Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+(x+48)+'" cy="'+(y+h)+'" r="18" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>' +
+    '<circle cx="'+(x+w-48)+'" cy="'+(y+h)+'" r="18" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>' +
+    '<rect x="'+(x+26)+'" y="'+(y+16)+'" width="44" height="32" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".7"/>' +
+    '<line x1="'+(x+92)+'" y1="'+(y+16)+'" x2="'+(x+92)+'" y2="'+(y+h-20)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+    '<line x1="'+(x+112)+'" y1="'+(y+34)+'" x2="'+(x+w-24)+'" y2="'+(y+34)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>';
+};
+ORN.seawaves = function(p,s){
+  var out = "";
+  for (var l = 0; l < 4; l++){
+    var y = H*0.36 + l*44, d = "M"+(W*0.3)+" "+y;
+    for (var i = 0; i < 5; i++)
+      d += " a 26 22 0 0 1 52 0";
+    out += '<path d="'+d+'" fill="none" stroke="'+(l===1?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.7-l*0.13)+'"/>';
+  }
+  return out;
+};
+
+ORN.carkey = function(p,s){
+  var cx = W*0.7, cy = H*0.44;
+  return '<g transform="rotate(28 '+cx+' '+cy+')">' +
+    '<rect x="'+(cx-44)+'" y="'+(cy-64)+'" width="88" height="74" rx="20" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+(cx-16)+'" cy="'+(cy-28)+'" r="9" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>' +
+    '<rect x="'+(cx+8)+'" y="'+(cy-40)+'" width="20" height="24" rx="5" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>' +
+    '<line x1="'+cx+'" y1="'+(cy+10)+'" x2="'+cx+'" y2="'+(cy+92)+'" stroke="'+p.acc+'" stroke-width="6" opacity=".8"/>' +
+    '<path d="M'+(cx+3)+' '+(cy+52)+' h 16 M'+(cx+3)+' '+(cy+72)+' h 12" stroke="'+p.acc+'" stroke-width="4" opacity=".7"/></g>';
+};
+ORN.exhaust = function(p,s){
+  var out = '<path d="M'+(W*0.5)+' '+(H*0.62)+' h 120 q 20 0 20 -14" fill="none" stroke="'+p.acc+'" stroke-width="3" opacity=".7"/>';
+  for (var i = 0; i < 4; i++){
+    var r = 12 + i*10;
+    out += '<circle cx="'+(W*0.66+34+i*44)+'" cy="'+(H*0.56-i*16)+'" r="'+r+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity="'+(0.7-i*0.14)+'"/>';
+  }
+  return out;
+};
+ORN.pistons = function(p,s){
+  var out = "", x = W*0.68;
+  for (var i = 0; i < 3; i++){
+    var y = H*0.3 + (i%2)*36;
+    out += '<rect x="'+x+'" y="'+y+'" width="52" height="64" rx="8" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.4" opacity=".85"/>' +
+      '<line x1="'+(x+26)+'" y1="'+(y+64)+'" x2="'+(x+26)+'" y2="'+(y+108)+'" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="4" opacity=".7"/>' +
+      '<circle cx="'+(x+26)+'" cy="'+(y+118)+'" r="9" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.2" opacity=".8"/>' +
+      '<line x1="'+(x+10)+'" y1="'+(y+14)+'" x2="'+(x+42)+'" y2="'+(y+14)+'" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2" opacity=".5"/>';
+    x += 72;
+  }
+  return out;
+};
+ORN.carfront = function(p,s){
+  var x = W*0.64, y = H*0.42, w = 195, h = 98;
+  return '<path d="M'+x+' '+(y+h)+' v -50 q 0 -18 14 -26 l 20 -22 q 8 -6 18 -6 h '+(w-104)+' q 10 0 18 6 l 20 22 q 14 8 14 26 v 50 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<circle cx="'+(x+38)+'" cy="'+(y+h-34)+'" r="15" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<circle cx="'+(x+w-38)+'" cy="'+(y+h-34)+'" r="15" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<line x1="'+(x+70)+'" y1="'+(y+h-40)+'" x2="'+(x+w-70)+'" y2="'+(y+h-40)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".5"/>' +
+    '<line x1="'+(x+70)+'" y1="'+(y+h-28)+'" x2="'+(x+w-70)+'" y2="'+(y+h-28)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".4"/>';
+};
+
+ORN.burger = function(p,s){
+  var cx = W*0.79, cy = H*0.48;
+  return '<path d="M'+(cx-70)+' '+(cy-20)+' q 0 -44 70 -44 q 70 0 70 44 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-70)+'" y1="'+(cy-6)+'" x2="'+(cx+70)+'" y2="'+(cy-6)+'" stroke="'+p.acc2+'" stroke-width="4" opacity=".7"/>' +
+    '<path d="M'+(cx-74)+' '+(cy+10)+' q 24 12 48 0 t 48 0 t 52 0" fill="none" stroke="'+p.acc2+'" stroke-width="3" opacity=".8"/>' +
+    '<line x1="'+(cx-70)+'" y1="'+(cy+26)+'" x2="'+(cx+70)+'" y2="'+(cy+26)+'" stroke="'+p.acc+'" stroke-width="5" opacity=".6"/>' +
+    '<path d="M'+(cx-70)+' '+(cy+40)+' h 140 q 0 26 -26 26 h -88 q -26 0 -26 -26 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+(cx-30)+'" cy="'+(cy-42)+'" r="2" fill="'+p.acc+'" opacity=".7"/>' +
+    '<circle cx="'+cx+'" cy="'+(cy-48)+'" r="2" fill="'+p.acc+'" opacity=".7"/>' +
+    '<circle cx="'+(cx+30)+'" cy="'+(cy-42)+'" r="2" fill="'+p.acc+'" opacity=".7"/>';
+};
+ORN.icecream = function(p,s){
+  var cx = W*0.78, cy = H*0.5;
+  return '<path d="M'+(cx-30)+' '+cy+' L'+cx+' '+(cy+96)+' L'+(cx+30)+' '+cy+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<line x1="'+(cx-22)+'" y1="'+(cy+28)+'" x2="'+(cx+16)+'" y2="'+(cy+12)+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".5"/>' +
+    '<line x1="'+(cx-14)+'" y1="'+(cy+52)+'" x2="'+(cx+14)+'" y2="'+(cy+40)+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".5"/>' +
+    '<circle cx="'+(cx-18)+'" cy="'+(cy-22)+'" r="24" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>' +
+    '<circle cx="'+(cx+18)+'" cy="'+(cy-22)+'" r="24" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".7"/>' +
+    '<circle cx="'+cx+'" cy="'+(cy-46)+'" r="24" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>';
+};
+ORN.skewer = function(p,s){
+  var out = "";
+  var sets = [[-30, p.acc], [16, p.acc2]];
+  for (var l = 0; l < 2; l++){
+    var x0 = W*0.56, y0 = H*0.44 + sets[l][0], col = sets[l][1];
+    out += '<line x1="'+x0+'" y1="'+(y0+40)+'" x2="'+(x0+240)+'" y2="'+(y0-40)+'" stroke="'+col+'" stroke-width="2.4" opacity="'+(0.8-l*0.2)+'"/>';
+    for (var i = 0; i < 4; i++){
+      var t = 0.22 + i*0.2;
+      var x = x0 + 240*t, y = y0 + 40 - 80*t;
+      out += '<rect x="'+(x-14)+'" y="'+(y-14)+'" width="28" height="28" rx="8" fill="none" stroke="'+col+'" stroke-width="2.2" opacity="'+(0.8-l*0.2)+'" transform="rotate(18 '+x+' '+y+')"/>';
+    }
+  }
+  return out;
+};
+ORN.bottle2 = function(p,s){
+  var cx = W*0.72, y = H*0.24;
+  return '<path d="M'+(cx-10)+' '+y+' h 20 v 30 q 34 14 34 60 v 68 q 0 16 -16 16 h -36 q -16 0 -16 -16 v -68 q 0 -46 34 -60 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<line x1="'+(cx-13)+'" y1="'+y+'" x2="'+(cx+13)+'" y2="'+y+'" stroke="'+p.acc+'" stroke-width="3" opacity=".8"/>' +
+    '<rect x="'+(cx-26)+'" y="'+(y+104)+'" width="52" height="40" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>' +
+    '<line x1="'+(cx-14)+'" y1="'+(y+120)+'" x2="'+(cx+14)+'" y2="'+(y+120)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".6"/>';
+};
+ORN.donut = function(p,s){
+  var cx = W*0.74, cy = H*0.48, out = "";
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="66" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="24" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+    '<path d="M'+(cx-62)+' '+(cy-10)+' q 10 26 -8 34 M'+(cx+50)+' '+(cy-34)+' q -6 20 14 24" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".4"/>';
+  for (var i = 0; i < 9; i++){
+    var a = sr(s+i)*Math.PI*2, r = 34 + sr(s+i*3)*22;
+    var x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+    out += '<line x1="'+x+'" y1="'+y+'" x2="'+(x+7*Math.cos(a+1))+'" y2="'+(y+7*Math.sin(a+1))+'" stroke="'+p.acc2+'" stroke-width="3" opacity="'+(0.5+sr(s+i*7)*0.4)+'" stroke-linecap="round"/>';
+  }
+  return out;
+};
+
+ORN.bank = function(p,s){
+  var cx = W*0.77, y = H*0.32, w = 180;
+  var out = '<path d="M'+(cx-w/2)+' '+(y+40)+' L'+cx+' '+y+' L'+(cx+w/2)+' '+(y+40)+' Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<line x1="'+(cx-w/2-10)+'" y1="'+(y+52)+'" x2="'+(cx+w/2+10)+'" y2="'+(y+52)+'" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>';
+  for (var i = 0; i < 4; i++){
+    var x = cx - w/2 + 30 + i*44;
+    out += '<line x1="'+x+'" y1="'+(y+64)+'" x2="'+x+'" y2="'+(y+150)+'" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="8" opacity=".6"/>';
+  }
+  out += '<line x1="'+(cx-w/2-10)+'" y1="'+(y+162)+'" x2="'+(cx+w/2+10)+'" y2="'+(y+162)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".7"/>' +
+    '<circle cx="'+cx+'" cy="'+(y+26)+'" r="7" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".9"/>';
+  return out;
+};
+ORN.calc = function(p,s){
+  var x = W*0.66, y = H*0.28, w = 110, h = 150;
+  var out = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="14" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<rect x="'+(x+16)+'" y="'+(y+14)+'" width="'+(w-32)+'" height="30" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".8"/>';
+  for (var r = 0; r < 3; r++)
+    for (var c = 0; c < 3; c++)
+      out += '<circle cx="'+(x+28+c*28)+'" cy="'+(y+70+r*28)+'" r="8" fill="none" stroke="'+((r+c)%2?p.acc2:p.acc)+'" stroke-width="2" opacity=".7"/>';
+  return out;
+};
+ORN.billstack = function(p,s){
+  var out = "", cx = W*0.78, y = H*0.62;
+  for (var i = 0; i < 4; i++){
+    out += '<rect x="'+(cx-84+(sr(s+i)-0.5)*16)+'" y="'+(y-i*14)+'" width="168" height="52" rx="8" fill="none" stroke="'+(i===3?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.4+i*0.16)+'"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+(y-42+26)+'" r="16" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>' +
+    '<rect x="'+(cx-22)+'" y="'+(y-3*14-6)+'" width="44" height="70" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".6"/>';
+  return out;
+};
+ORN.coinclock = function(p,s){
+  var cx = W*0.79, cy = H*0.5, r = 62, out = "";
+  var teeth = 22;
+  for (var k = 0; k < teeth; k++){
+    var a = Math.PI*2/teeth*k;
+    out += '<line x1="'+(cx+r*Math.cos(a))+'" y1="'+(cy+r*Math.sin(a))+'" x2="'+(cx+(r+8)*Math.cos(a))+'" y2="'+(cy+(r+8)*Math.sin(a))+'" stroke="'+p.acc+'" stroke-width="3" opacity=".6"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-16)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.6" opacity=".4"/>' +
+    '<line x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(cy-34)+'" stroke="'+p.acc2+'" stroke-width="2.8" opacity=".9" stroke-linecap="round"/>' +
+    '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+26)+'" y2="'+(cy+12)+'" stroke="'+p.acc2+'" stroke-width="2.8" opacity=".9" stroke-linecap="round"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="4.4" fill="'+p.acc2+'"/>';
+  return out;
+};
+ORN.vaultdoor = function(p,s){
+  var cx = W*0.79, cy = H*0.5, out = "";
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="82" fill="none" stroke="'+p.acc+'" stroke-width="2.8" opacity=".85"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="64" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="24" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>';
+  for (var k = 0; k < 6; k++){
+    var a = Math.PI/3*k;
+    out += '<line x1="'+(cx+24*Math.cos(a))+'" y1="'+(cy+24*Math.sin(a))+'" x2="'+(cx+52*Math.cos(a))+'" y2="'+(cy+52*Math.sin(a))+'" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".8"/>';
+    out += '<circle cx="'+(cx+73*Math.cos(a+0.5))+'" cy="'+(cy+73*Math.sin(a+0.5))+'" r="4" fill="'+p.acc+'" opacity=".6"/>';
+  }
+  return out;
+};
+
+ORN.kettlebell = function(p,s){
+  var cx = W*0.78, cy = H*0.58;
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="54" fill="none" stroke="'+p.acc+'" stroke-width="2.8" opacity=".85"/>' +
+    '<path d="M'+(cx-30)+' '+(cy-44)+' q -10 -40 30 -40 q 40 0 30 40" fill="none" stroke="'+p.acc2+'" stroke-width="2.8" opacity=".9"/>' +
+    '<line x1="'+(cx-20)+'" y1="'+(cy-8)+'" x2="'+(cx+20)+'" y2="'+(cy-8)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".5"/>';
+};
+ORN.whistle = function(p,s){
+  var cx = W*0.7, cy = H*0.46, out = "";
+  out += '<g transform="rotate(-16 '+cx+' '+cy+')">' +
+    '<circle cx="'+cx+'" cy="'+(cy+18)+'" r="34" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<path d="M'+(cx-8)+' '+(cy-14)+' l 8 -26 h 66 q 12 0 12 12 v 10 q 0 12 -12 12 l -46 8" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".85" stroke-linejoin="round"/>' +
+    '<circle cx="'+cx+'" cy="'+(cy+18)+'" r="8" fill="'+p.acc2+'" opacity=".85"/></g>';
+  for (var i = 0; i < 3; i++)
+    out += '<line x1="'+(cx+74+i*14)+'" y1="'+(cy-48-i*8)+'" x2="'+(cx+92+i*14)+'" y2="'+(cy-56-i*8)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity="'+(0.8-i*0.2)+'" stroke-linecap="round"/>';
+  return out;
+};
+ORN.podium = function(p,s){
+  var cx = W*0.78, base = H*0.8;
+  return '<rect x="'+(cx-42)+'" y="'+(base-104)+'" width="84" height="104" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>' +
+    '<rect x="'+(cx-124)+'" y="'+(base-70)+'" width="82" height="70" rx="6" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>' +
+    '<rect x="'+(cx+42)+'" y="'+(base-48)+'" width="82" height="48" rx="6" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".55"/>' +
+    '<path d="M'+cx+' '+(base-140)+' l 5 11 l 12 1 l -9 8 l 3 12 l -11 -6 l -11 6 l 3 -12 l -9 -8 l 12 -1 Z" fill="'+p.acc2+'" opacity=".85"/>';
+};
+ORN.pingpong = function(p,s){
+  var cx = W*0.75, cy = H*0.5;
+  return '<g transform="rotate(-24 '+cx+' '+cy+')">' +
+    '<ellipse cx="'+cx+'" cy="'+(cy-16)+'" rx="52" ry="58" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<rect x="'+(cx-11)+'" y="'+(cy+40)+'" width="22" height="52" rx="9" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/></g>' +
+    '<circle cx="'+(cx+82)+'" cy="'+(cy-58)+'" r="13" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<path d="M'+(cx+70)+' '+(cy-30)+' q -10 20 6 34" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity=".5" stroke-dasharray="4 6"/>';
+};
+ORN.gymrings = function(p,s){
+  var out = "";
+  var sets = [[W*0.64, 0], [W*0.84, 26]];
+  for (var i = 0; i < 2; i++){
+    var x = sets[i][0], dy = sets[i][1];
+    out += '<line x1="'+x+'" y1="-10" x2="'+x+'" y2="'+(H*0.3+dy)+'" stroke="'+p.acc+'" stroke-width="2.4" opacity=".6"/>' +
+      '<circle cx="'+x+'" cy="'+(H*0.3+dy+34)+'" r="34" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.8" opacity=".85"/>';
+  }
+  return out;
+};
+
+ORN.scissors = function(p,s){
+  var cx = W*0.7, cy = H*0.46;
+  return '<g transform="rotate(-20 '+cx+' '+cy+')">' +
+    '<circle cx="'+(cx-34)+'" cy="'+(cy+44)+'" r="16" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".85"/>' +
+    '<circle cx="'+(cx+10)+'" cy="'+(cy+52)+'" r="16" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".85"/>' +
+    '<line x1="'+(cx-26)+'" y1="'+(cy+30)+'" x2="'+(cx+34)+'" y2="'+(cy-58)+'" stroke="'+p.acc2+'" stroke-width="2.8" opacity=".9" stroke-linecap="round"/>' +
+    '<line x1="'+(cx+4)+'" y1="'+(cy+37)+'" x2="'+(cx-36)+'" y2="'+(cy-54)+'" stroke="'+p.acc2+'" stroke-width="2.8" opacity=".9" stroke-linecap="round"/>' +
+    '<circle cx="'+(cx-2)+'" cy="'+(cy+2)+'" r="4" fill="'+p.acc+'" opacity=".9"/></g>';
+};
+ORN.hairdryer = function(p,s){
+  var cx = W*0.68, cy = H*0.44, out = "";
+  out += '<g transform="rotate(12 '+cx+' '+cy+')">' +
+    '<path d="M'+(cx-50)+' '+(cy-34)+' q 60 -14 104 0 v 40 q -44 14 -104 0 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<path d="M'+(cx-44)+' '+(cy+4)+' l -8 64 q 0 12 12 12 h 18 q 12 0 10 -12 l -4 -58" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+    '<circle cx="'+(cx+34)+'" cy="'+(cy-14)+'" r="8" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".7"/></g>';
+  for (var i = 0; i < 3; i++)
+    out += '<path d="M'+(cx+66)+' '+(cy-30+i*16)+' q 18 '+((i-1)*10)+' 40 '+((i-1)*14)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity="'+(0.75-i*0.15)+'" stroke-linecap="round"/>';
+  return out;
+};
+ORN.nailpolish = function(p,s){
+  var cx = W*0.72, y = H*0.34;
+  return '<rect x="'+(cx-14)+'" y="'+y+'" width="28" height="44" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<line x1="'+cx+'" y1="'+(y+44)+'" x2="'+cx+'" y2="'+(y+68)+'" stroke="'+p.acc2+'" stroke-width="4" opacity=".7"/>' +
+    '<path d="M'+(cx-34)+' '+(y+92)+' q 0 -24 34 -24 q 34 0 34 24 v 46 q 0 14 -14 14 h -40 q -14 0 -14 -14 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<path d="M'+(cx-16)+' '+(y+84)+' q 16 10 32 0" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>';
+};
+ORN.lashes = function(p,s){
+  var cx = W*0.74, cy = H*0.46, out = "";
+  out += '<path d="M'+(cx-92)+' '+cy+' Q '+cx+' '+(cy+54)+' '+(cx+92)+' '+cy+'" fill="none" stroke="'+p.acc+'" stroke-width="2.8" opacity=".85"/>';
+  for (var i = 0; i < 7; i++){
+    var t = 0.12 + i*0.13;
+    var x = cx - 92 + 184*t;
+    var y = cy + 54*4*t*(1-t)*0.5;
+    out += '<path d="M'+x+' '+y+' q '+((t-0.5)*30)+' 26 '+((t-0.5)*46)+' 40" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity="'+(0.5+Math.sin(t*Math.PI)*0.4)+'" stroke-linecap="round"/>';
+  }
+  return out;
+};
+ORN.hanger = function(p,s){
+  var cx = W*0.78, cy = H*0.42;
+  return '<circle cx="'+cx+'" cy="'+(cy-52)+'" r="12" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<path d="M'+cx+' '+(cy-40)+' v 12 L'+(cx-92)+' '+(cy+26)+' q -8 8 2 14 h 180 q 10 -6 2 -14 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>';
+};
+
+ORN.serverrack = function(p,s){
+  var x = W*0.66, y = H*0.24, w = 120, out = "";
+  for (var i = 0; i < 4; i++){
+    var yy = y + i*54;
+    out += '<rect x="'+x+'" y="'+yy+'" width="'+w+'" height="42" rx="8" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.6+i*0.08)+'"/>' +
+      '<circle cx="'+(x+18)+'" cy="'+(yy+21)+'" r="4" fill="'+(i===1?p.acc2:p.acc)+'" opacity=".85"/>' +
+      '<line x1="'+(x+36)+'" y1="'+(yy+21)+'" x2="'+(x+w-16)+'" y2="'+(yy+21)+'" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2" opacity=".4"/>';
+  }
+  return out;
+};
+ORN.bugsy = function(p,s){
+  var cx = W*0.74, cy = H*0.48, out = "";
+  out += '<ellipse cx="'+cx+'" cy="'+cy+'" rx="34" ry="46" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+cx+'" y1="'+(cy-46)+'" x2="'+cx+'" y2="'+(cy+46)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+    '<path d="M'+(cx-12)+' '+(cy-44)+' q -6 -18 -20 -22 M'+(cx+12)+' '+(cy-44)+' q 6 -18 20 -22" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".8"/>';
+  for (var i = 0; i < 3; i++){
+    var y = cy - 20 + i*20;
+    out += '<line x1="'+(cx-34)+'" y1="'+y+'" x2="'+(cx-58)+'" y2="'+(y+10)+'" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".75"/>' +
+      '<line x1="'+(cx+34)+'" y1="'+y+'" x2="'+(cx+58)+'" y2="'+(y+10)+'" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".75"/>';
+  }
+  return out;
+};
+ORN.gitbranch = function(p,s){
+  var x = W*0.64, out = "";
+  out += '<line x1="'+x+'" y1="'+(H*0.14)+'" x2="'+x+'" y2="'+(H*0.86)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".7"/>' +
+    '<path d="M'+x+' '+(H*0.34)+' q 0 26 40 26 h 40 q 40 0 40 30 v 12" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>';
+  [[x, H*0.14], [x, H*0.5], [x, H*0.86], [x+120, H*0.62], [x+120, H*0.82]].forEach(function(pt, i){
+    out += '<circle cx="'+pt[0]+'" cy="'+pt[1]+'" r="9" fill="none" stroke="'+(i>2?p.acc2:p.acc)+'" stroke-width="2.6" opacity=".9"/>';
+  });
+  out += '<line x1="'+(x+120)+'" y1="'+(H*0.62+9)+'" x2="'+(x+120)+'" y2="'+(H*0.82-9)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".7"/>';
+  return out;
+};
+ORN.qrbits = function(p,s){
+  var out = "", x0 = W*0.68, y0 = H*0.24, a = 140;
+  function eye(x, y){
+    return '<rect x="'+x+'" y="'+y+'" width="40" height="40" rx="8" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+      '<rect x="'+(x+12)+'" y="'+(y+12)+'" width="16" height="16" rx="4" fill="'+p.acc2+'" opacity=".85"/>';
+  }
+  out += eye(x0, y0) + eye(x0 + a, y0) + eye(x0, y0 + a);
+  for (var i = 0; i < 16; i++){
+    var x = x0 + 54 + sr(s+i)*(a-58), y = y0 + 8 + sr(s+i*7)*(a+20);
+    if (x < x0 + 48 && y > y0 + a - 8) continue;
+    out += '<rect x="'+x+'" y="'+y+'" width="11" height="11" rx="3" fill="'+(i%3?p.acc:p.acc2)+'" opacity="'+(0.35+sr(s+i*5)*0.45)+'"/>';
+  }
+  return out;
+};
+ORN.satdish = function(p,s){
+  var cx = W*0.72, cy = H*0.5, out = "";
+  out += '<path d="M'+(cx-58)+' '+(cy-44)+' q 74 -22 96 52 q -74 22 -96 -52 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-8)+'" y1="'+(cy+2)+'" x2="'+(cx+34)+'" y2="'+(cy-40)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>' +
+    '<circle cx="'+(cx+38)+'" cy="'+(cy-44)+'" r="6" fill="'+p.acc2+'" opacity=".9"/>' +
+    '<path d="M'+(cx-10)+' '+(cy+30)+' l -14 62 m 40 -54 l 10 54" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".6"/>';
+  for (var i = 0; i < 3; i++){
+    var r = 20 + i*16;
+    out += '<path d="M'+(cx+52+r*0.3)+' '+(cy-58-r*0.3)+' a '+r+' '+r+' 0 0 1 '+(r*0.5)+' '+(r*0.2)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity="'+(0.6-i*0.15)+'"/>';
+  }
+  return out;
+};
+
+ORN.glasses = function(p,s){
+  var cy = H*0.46;
+  return '<circle cx="'+(W*0.7)+'" cy="'+cy+'" r="36" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<circle cx="'+(W*0.87)+'" cy="'+cy+'" r="38" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<path d="M'+(W*0.7+36)+' '+cy+' q '+(W*0.085-36)+' -18 '+(W*0.17-72)+' 0" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>' +
+    '<line x1="'+(W*0.7-36)+'" y1="'+cy+'" x2="'+(W*0.65)+'" y2="'+(cy-10)+'" stroke="'+p.acc+'" stroke-width="2.2" opacity=".6"/>' +
+    '<line x1="'+(W*0.87+36)+'" y1="'+cy+'" x2="'+(W*0.93)+'" y2="'+(cy-10)+'" stroke="'+p.acc+'" stroke-width="2.2" opacity=".6"/>';
+};
+ORN.bookopen = function(p,s){
+  var cx = W*0.79, cy = H*0.46, out = "";
+  out += '<path d="M'+cx+' '+(cy-30)+' q -50 -22 -96 -6 v 96 q 46 -16 96 6 q 50 -22 96 -6 v -96 q -46 -16 -96 6 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<line x1="'+cx+'" y1="'+(cy-30)+'" x2="'+cx+'" y2="'+(cy+66)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".6"/>';
+  for (var i = 0; i < 3; i++){
+    var y = cy - 4 + i*22;
+    out += '<path d="M'+(cx-78)+' '+y+' q 40 -10 66 2" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity="'+(0.6-i*0.13)+'"/>' +
+      '<path d="M'+(cx+12)+' '+(y+2)+' q 40 -12 66 -2" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity="'+(0.6-i*0.13)+'"/>';
+  }
+  return out;
+};
+ORN.pencil2 = function(p,s){
+  var cx = W*0.72, cy = H*0.48;
+  return '<g transform="rotate(38 '+cx+' '+cy+')">' +
+    '<rect x="'+(cx-16)+'" y="'+(cy-96)+'" width="32" height="140" rx="4" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-5)+'" y1="'+(cy-96)+'" x2="'+(cx-5)+'" y2="'+(cy+44)+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".4"/>' +
+    '<line x1="'+(cx+5)+'" y1="'+(cy-96)+'" x2="'+(cx+5)+'" y2="'+(cy+44)+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".4"/>' +
+    '<path d="M'+(cx-16)+' '+(cy+44)+' L'+cx+' '+(cy+84)+' L'+(cx+16)+' '+(cy+44)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9" stroke-linejoin="round"/>' +
+    '<rect x="'+(cx-16)+'" y="'+(cy-118)+'" width="32" height="22" rx="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/></g>';
+};
+ORN.globestand = function(p,s){
+  var cx = W*0.79, cy = H*0.42, r = 55;
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(r*0.45)+'" ry="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="1.6" opacity=".45"/>' +
+    '<line x1="'+(cx-r)+'" y1="'+cy+'" x2="'+(cx+r)+'" y2="'+cy+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".45"/>' +
+    '<path d="M'+(cx+r*0.7)+' '+(cy-r*0.9)+' a '+(r*1.15)+' '+(r*1.15)+' 0 0 1 0 '+(r*1.8)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>' +
+    '<line x1="'+cx+'" y1="'+(cy+r)+'" x2="'+cx+'" y2="'+(cy+r+30)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".7"/>' +
+    '<line x1="'+(cx-30)+'" y1="'+(cy+r+34)+'" x2="'+(cx+30)+'" y2="'+(cy+r+34)+'" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".8"/>';
+};
+ORN.notebook2 = function(p,s){
+  var x = W*0.64, y = H*0.26, w = 130, h = 170, out = "";
+  out += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="10" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>';
+  for (var i = 0; i < 6; i++){
+    var yy = y + 20 + i*26;
+    out += '<circle cx="'+x+'" cy="'+yy+'" r="6" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".8"/>';
+  }
+  for (var l = 0; l < 4; l++)
+    out += '<line x1="'+(x+22)+'" y1="'+(y+34+l*32)+'" x2="'+(x+w-18)+'" y2="'+(y+34+l*32)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity="'+(0.5-l*0.08)+'"/>';
+  return out;
+};
+
   return ORN;
 })();
 const ORN2_BACK = {
+  seawaves: 1, bone: 1, bandage: 1, exhaust: 1, skewer: 1, gymrings: 1, lashes: 1,
   stars5: 1, dizzy: 1, calmwaves2: 1, coaster: 1, partyhat: 1,
   drops: 1, cells: 1, pluses: 1, footsteps: 1, spices: 1, jumprope: 1,
   calmwaves: 1, skyline: 1, roofs: 1, strings: 1, sinewave: 1, balloons: 1,
@@ -2145,8 +2597,8 @@ const ORN2_BACK = {
   stepsup: 1, doodle: 1, barbell: 1, filmstrip: 1, netgraph: 1, molecules: 1,
   capsule: 1, nuts: 1, beans: 1, fizz: 1, sparkle: 1, beads: 1 };
 const ORN2_SETS = {
-  med: ["dna", "molecules", "hexchain", "heartbeat", "capsule", "drops", "cells", "pluses", "pulsering", "atomorbit"],
-  edu: ["books", "page", "bulb", "pencilline", "progress", "gradcap", "abacus", "ruler", "backpack", "diploma"],
+  med: ["dna", "molecules", "hexchain", "heartbeat", "capsule", "drops", "cells", "pluses", "pulsering", "atomorbit", "syringe", "brainhalf", "bone", "microscope", "bandage"],
+  edu: ["books", "page", "bulb", "pencilline", "progress", "gradcap", "abacus", "ruler", "backpack", "diploma", "glasses", "bookopen", "pencil2", "globestand", "notebook2"],
   psy: ["maze", "balance", "thoughts", "branches", "calmwaves", "spiral2", "zenstones", "lotus", "pendulum", "puzzlebit"],
   estate: ["skyline", "roofs", "wingrid", "keyring", "blueprint", "doorway", "crane", "fence", "tagkey", "lamppost"],
   kids: ["pyramid", "balloons", "cubes", "garland", "paperplane", "kite", "carousel", "toytrain", "sunny", "stars5"],
@@ -2155,13 +2607,13 @@ const ORN2_SETS = {
   law: ["scales", "columns", "stamp", "signature", "paragraphs", "gavel", "lawbook", "contract", "quill", "waxseal"],
   mkt: ["funnel", "megaphone", "cursorclick", "heartflow", "reach", "bellnotify", "rocket2", "abtest", "pricetag2", "magnet"],
 
-  travel: ["route", "contrails", "mountains", "compass", "horizon", "suitcase", "palmtree", "ticket", "globe2", "footsteps"],
-  auto: ["gears", "speedo", "tread", "nuts", "road", "wheelrim", "trafficlight", "cone", "battery", "headlights"],
-  food: ["plates", "steam", "beans", "fizz", "citrus", "pizza", "whisk", "pot", "spices", "teacup"],
-  fin: ["candles", "trendup", "coins", "blocks", "pie", "wallet2", "safe", "percentup", "growthbars", "exchange"],
-  sport: ["barbell", "track", "stepsup", "rings3", "target", "ball", "medal", "jumprope", "stopwatch", "bikewheels"],
-  beauty: ["petals", "silk", "sparkle", "veil", "beads", "mirror", "lipstick2", "perfume", "combrow", "gemring"],
-  tech: ["circuit", "pixels", "chevrons", "terminal", "netgraph", "cloudup", "lockpad", "curly", "wifi", "chip2"],
+  travel: ["route", "contrails", "mountains", "compass", "horizon", "suitcase", "palmtree", "ticket", "globe2", "footsteps", "anchor2", "lighthouse", "postcard", "camper", "seawaves"],
+  auto: ["gears", "speedo", "tread", "nuts", "road", "wheelrim", "trafficlight", "cone", "battery", "headlights", "carkey", "exhaust", "pistons", "carfront"],
+  food: ["plates", "steam", "beans", "fizz", "citrus", "pizza", "whisk", "pot", "spices", "teacup", "burger", "icecream", "skewer", "bottle2", "donut"],
+  fin: ["candles", "trendup", "coins", "blocks", "pie", "wallet2", "safe", "percentup", "growthbars", "exchange", "bank", "calc", "billstack", "coinclock", "vaultdoor"],
+  sport: ["barbell", "track", "stepsup", "rings3", "target", "ball", "medal", "jumprope", "stopwatch", "bikewheels", "kettlebell", "whistle", "podium", "pingpong", "gymrings"],
+  beauty: ["petals", "silk", "sparkle", "veil", "beads", "mirror", "lipstick2", "perfume", "combrow", "gemring", "scissors", "hairdryer", "nailpolish", "lashes", "hanger"],
+  tech: ["circuit", "pixels", "chevrons", "terminal", "netgraph", "cloudup", "lockpad", "curly", "wifi", "chip2", "serverrack", "bugsy", "gitbranch", "qrbits", "satdish"],
   vlog: ["playset", "frames", "wavebars", "filmstrip", "spotlight", "camera2", "clapper", "subtitles", "eyeview", "lightring"],
   fun: ["confetti", "zigzag", "doodle", "speech", "burst", "dizzy", "popcorn", "partyhat", "masks", "coaster"]
 };
