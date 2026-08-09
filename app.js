@@ -1106,6 +1106,7 @@ const TM_ACTS = [
     { k: 'edit', t: 'Редактировать оффер и календарь', ic: 'pencil' },
     { k: 'pub', t: 'Публиковать · замораживать', ic: 'rocket' },
     { k: 'links', t: 'Ссылки отслеживания и кампании', ic: 'link' },
+    { k: 'content', t: 'Контент-план канала', ic: 'calendar' },
     { k: 'del', t: 'Удалить оффер', ic: 'trash' },
     { k: 'team', t: 'Управлять командой', ic: 'users', lock: 'owner' },
 ];
