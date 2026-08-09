@@ -65,6 +65,18 @@
     display: flex; align-items: center; justify-content: center; gap: 7px; }
 .cp-allbtn.sched { border: 0; color: #fff; background: linear-gradient(135deg,#5DCAA5,#3fa985); box-shadow: 0 12px 26px -14px rgba(93,202,165,0.8); }
 .cp-allbtn.rgn { margin: 12px 0 0; }
+.cp-doneban {
+    display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px;
+    border-radius: 15px; margin-bottom: 10px;
+    background: linear-gradient(160deg, rgba(93, 202, 165, .14), rgba(93, 202, 165, .03));
+    border: 1px solid rgba(93, 202, 165, .35);
+}
+.cp-doneban > i { font-size: 19px; color: #5DCAA5; margin-top: 1px; }
+.cp-doneban b { display: block; font-size: 13.5px; color: #e8eaf1; }
+.cp-doneban em {
+    display: block; font-style: normal; font-size: 11px; color: #8d93a8;
+    line-height: 1.45; margin-top: 2px;
+}
 .cp-note { font-size: 11.5px; color: #8d93a8; margin-top: 10px; line-height: 1.45; }
 .cp-note.fail { color: #ef8080; }
 

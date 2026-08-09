@@ -1637,6 +1637,14 @@
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
+        var allPub = n > 0 && ps.every(function (p) { return p.publish_status === 'published'; });
+        var doneBanner = allPub
+            ? '<div class="cp-doneban"><i class="ti ti-circle-check"></i>' +
+              '<span><b>' + esc(T('Неделя вышла полностью')) + '</b>' +
+              '<em>' + esc(T('Все посты в канале. Собери следующую неделю — прошлая уйдёт в архив.')) + '</em></span></div>' +
+              '<button class="cp-allbtn sched" data-act="regen"><i class="ti ti-sparkles"></i> ' +
+              esc(T('Собрать следующую неделю')) + '</button>'
+            : '';
         var goalChanged = _goal && _state.goal && _goal !== _state.goal;
         var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
             'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
@@ -1665,7 +1673,7 @@
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
-        setView(chanBlock + weekCal + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
+        setView(chanBlock + weekCal + doneBanner + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
     }
