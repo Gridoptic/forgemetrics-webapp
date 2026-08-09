@@ -48,6 +48,13 @@ function palOf(id){
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 function shapeSvg(kind, p, seed, W, H, zone, uid, mode){
+  if (ORN2[kind]){
+    var d2 = ORN2_BACK[kind]
+      ? (mode === "back" ? 0.25 : 0.3)
+      : (mode === "back" ? 0.4 : (mode === "edge" ? 0.5 : 0.85));
+    return '<g opacity="' + d2 + '" transform="scale(' + (W / 440) + ')">' +
+      ORN2[kind](p, seed) + "</g>";
+  }
   const a = p.acc;
   const dim = mode === "back" ? 0.24 : (mode === "edge" ? 0.55 : 1);
   const o = (0.26 + srand(seed * 3) * 0.22) * dim;
@@ -327,6 +334,549 @@ function fitLines(words, maxW, maxH, base, weight){
 
 let UID = 0;
 
+
+const ORN2 = (function () {
+  var W = 440, H = 248;
+  function sr(n){ var x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
+  var ORN = {};
+ORN.dna = function(p,s){
+  function helix(cx, cy, len, rot, amp, per, col1, col2, o, lw){
+    var g = '<g transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')" opacity="' + o + '">';
+    var d1 = "", d2 = "", rungs = "", dots = "";
+    for (var t = 0; t <= 30; t++){
+      var y = cy - len/2 + t*len/30;
+      var ph = y/per*Math.PI*2 + s;
+      var x1 = cx + Math.sin(ph)*amp, x2 = cx + Math.sin(ph+Math.PI)*amp;
+      d1 += (t ? " L" : "M") + x1.toFixed(1) + " " + y.toFixed(1);
+      d2 += (t ? " L" : "M") + x2.toFixed(1) + " " + y.toFixed(1);
+      if (t % 3 === 1){
+        var vis = Math.cos(ph);
+        rungs += '<line x1="'+x1.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+col1+'" stroke-width="'+(lw*0.7)+'" opacity="'+(0.25+Math.abs(vis)*0.4)+'"/>';
+        dots += '<circle cx="'+x1.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(lw*1.15)+'" fill="'+col1+'"/>' +
+                '<circle cx="'+x2.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(lw*1.15)+'" fill="'+col2+'"/>';
+      }
+    }
+    g += rungs;
+    g += '<path d="'+d1+'" fill="none" stroke="'+col1+'" stroke-width="'+lw+'" opacity=".85"/>';
+    g += '<path d="'+d2+'" fill="none" stroke="'+col2+'" stroke-width="'+lw+'" opacity=".6"/>';
+    g += dots + "</g>";
+    return g;
+  }
+  return helix(W*0.74, H*0.5, H*1.3, 24, 40, 118, p.acc, p.acc2, 0.9, 2.4) +
+         helix(W*0.58, H*0.9, H*0.5, -28, 20, 70, p.acc, p.acc2, 0.35, 1.6) +
+         helix(W*0.95, H*0.24, H*0.55, -12, 20, 66, p.acc2, p.acc, 0.35, 1.5);
+}
+ORN.molecules = function(p,s){
+  var nodes = [], out = "";
+  for (var i = 0; i < 9; i++)
+    nodes.push([W*0.35 + sr(s+i)*W*0.6, H*0.08 + sr(s+i*7)*H*0.86, 5 + sr(s+i*13)*9]);
+  for (i = 0; i < 8; i++){
+    var a = nodes[i], b = nodes[(i+2)%9];
+    out += '<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="'+p.acc+'" stroke-width="1.3" opacity=".35"/>';
+  }
+  for (i = 0; i < 9; i++)
+    out += '<circle cx="'+nodes[i][0]+'" cy="'+nodes[i][1]+'" r="'+nodes[i][2]+'" fill="none" stroke="'+(i%3?p.acc:p.acc2)+'" stroke-width="2" opacity=".8"/>';
+  return out;
+};
+ORN.hexchain = function(p,s){
+  function hex(cx,cy,r,o,col){ var pts=[]; for(var k=0;k<6;k++){var a=Math.PI/3*k+Math.PI/6; pts.push((cx+r*Math.cos(a)).toFixed(1)+","+(cy+r*Math.sin(a)).toFixed(1));} return '<polygon points="'+pts.join(" ")+'" fill="none" stroke="'+col+'" stroke-width="2" opacity="'+o+'"/>'; }
+  var out = "", x = W*0.56, y = H*0.72;
+  for (var i = 0; i < 5; i++){
+    out += hex(x, y, 34, .75 - i*0.09, i%2 ? p.acc2 : p.acc);
+    x += 52; y -= 34 * (i%2 ? 1 : -0.3);
+  }
+  out += hex(W*0.7, H*0.18, 20, .5, p.acc);
+  return out;
+};
+ORN.heartbeat = function(p,s){
+  var y = H*0.58, d = "M-10 "+y;
+  var x = 30 + sr(s)*40;
+  while (x < W + 20){
+    d += " L"+x+" "+y+" l10 -6 l8 34 l9 -58 l8 34 l9 -10 l12 6";
+    x += 190; d += " L"+x+" "+y;
+  }
+  return '<path d="'+d+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8" stroke-linejoin="round"/>' +
+         '<circle cx="'+(W*0.72)+'" cy="'+(y-2)+'" r="4" fill="'+p.acc2+'" opacity=".9"/>';
+};
+ORN.capsule = function(p,s){
+  var out = "";
+  for (var i = 0; i < 7; i++){
+    var x = W*0.3 + sr(s+i)*W*0.62, y = H*0.1 + sr(s+i*5)*H*0.8;
+    var rot = Math.floor(sr(s+i*9)*360), w = 44, h = 18;
+    out += '<g transform="rotate('+rot+' '+x+' '+y+')" opacity="'+(0.4+sr(s+i*3)*0.45)+'">' +
+      '<rect x="'+(x-w/2)+'" y="'+(y-h/2)+'" width="'+w+'" height="'+h+'" rx="'+h/2+'" fill="none" stroke="'+(i%2?p.acc:p.acc2)+'" stroke-width="2"/>' +
+      '<line x1="'+x+'" y1="'+(y-h/2)+'" x2="'+x+'" y2="'+(y+h/2)+'" stroke="'+(i%2?p.acc:p.acc2)+'" stroke-width="1.4"/></g>';
+  }
+  return out;
+};
+
+ORN.route = function(p,s){
+  var pts = [[W*0.3,H*0.85],[W*0.48,H*0.55],[W*0.68,H*0.68],[W*0.82,H*0.3],[W*0.94,H*0.42]];
+  var d = "M"+pts[0][0]+" "+pts[0][1], out = "";
+  for (var i = 1; i < pts.length; i++){
+    var mx = (pts[i-1][0]+pts[i][0])/2;
+    d += " Q"+mx+" "+(pts[i-1][1]-30)+" "+pts[i][0]+" "+pts[i][1];
+  }
+  out += '<path d="'+d+'" fill="none" stroke="'+p.acc+'" stroke-width="2" stroke-dasharray="7 8" opacity=".75"/>';
+  for (i = 0; i < pts.length - 1; i++)
+    out += '<circle cx="'+pts[i][0]+'" cy="'+pts[i][1]+'" r="4.5" fill="none" stroke="'+p.acc+'" stroke-width="2" opacity=".8"/>';
+  var e = pts[pts.length-1];
+  out += '<path d="M'+e[0]+' '+(e[1]-24)+' a12 12 0 1 1 -0.1 0 Z" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".95"/>' +
+         '<circle cx="'+e[0]+'" cy="'+(e[1]-12-0)+'" r="4" fill="'+p.acc2+'"/>' ;
+  return out;
+};
+ORN.contrails = function(p,s){
+  var out = "";
+  for (var i = 0; i < 3; i++){
+    var y0 = H*(0.75 - i*0.22), x1 = W*0.25 + i*30;
+    out += '<path d="M'+x1+' '+y0+' Q'+(W*0.65)+' '+(y0-70)+' '+(W+10)+' '+(y0-95)+'" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2" stroke-dasharray="'+(i===1?'2 7':'14 9')+'" opacity="'+(0.7-i*0.15)+'"/>';
+  }
+  out += '<circle cx="'+(W*0.86)+'" cy="'+(H*0.2)+'" r="5" fill="'+p.acc2+'" opacity=".9"/>';
+  return out;
+};
+ORN.mountains = function(p,s){
+  var out = "";
+  for (var l = 0; l < 3; l++){
+    var base = H*(0.66 + l*0.16), d = "M-10 "+base, x = -10;
+    var i = 0;
+    while (x < W + 30){
+      x += 60 + sr(s+l*9+i)*70;
+      d += " L"+x+" "+(base - 40 - sr(s+l*7+i)*55 - l*8);
+      x += 55 + sr(s+l*3+i)*60;
+      d += " L"+x+" "+base;
+      i++;
+    }
+    out += '<path d="'+d+'" fill="none" stroke="'+(l===0?p.acc2:p.acc)+'" stroke-width="2" opacity="'+(0.8-l*0.25)+'" stroke-linejoin="round"/>';
+  }
+  return out;
+};
+ORN.compass = function(p,s){
+  var cx = W*0.72, cy = H*0.5, r = 78, out = "";
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2" opacity=".65"/>';
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*0.72)+'" fill="none" stroke="'+p.acc+'" stroke-width="1" opacity=".35"/>';
+  for (var k = 0; k < 16; k++){
+    var a = Math.PI/8*k, l = (k%4===0) ? 12 : 6;
+    out += '<line x1="'+(cx+(r-l)*Math.cos(a))+'" y1="'+(cy+(r-l)*Math.sin(a))+'" x2="'+(cx+r*Math.cos(a))+'" y2="'+(cy+r*Math.sin(a))+'" stroke="'+p.acc+'" stroke-width="2" opacity=".6"/>';
+  }
+  out += '<polygon points="'+cx+','+(cy-r*0.55)+' '+(cx-10)+','+cy+' '+cx+','+(cy-6)+'" fill="'+p.acc2+'" opacity=".9"/>' +
+         '<polygon points="'+cx+','+(cy+r*0.55)+' '+(cx+10)+','+cy+' '+cx+','+(cy+6)+'" fill="'+p.acc+'" opacity=".6"/>';
+  return out;
+};
+ORN.horizon = function(p,s){
+  var out = '<circle cx="'+(W*0.7)+'" cy="'+(H*0.42)+'" r="52" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".85"/>';
+  for (var i = 0; i < 5; i++){
+    var y = H*0.62 + i*16;
+    out += '<path d="M'+(W*0.3 - i*20)+' '+y+' q 40 -12 80 0 t 80 0 t 80 0 t 80 0" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity="'+(0.7-i*0.12)+'"/>';
+  }
+  return out;
+};
+
+ORN.gears = function(p,s){
+  function gear(cx,cy,r,teeth,col,o){
+    var out2 = "", step = Math.PI*2/teeth;
+    for (var k = 0; k < teeth; k++){
+      var a = step*k;
+      out2 += '<rect x="'+(cx+r-3)+'" y="'+(cy-4)+'" width="12" height="8" rx="2" fill="'+col+'" opacity="'+o+'" transform="rotate('+(a*180/Math.PI)+' '+cx+' '+cy+')"/>';
+    }
+    out2 += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="2.4" opacity="'+o+'"/>' +
+            '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*0.4)+'" fill="none" stroke="'+col+'" stroke-width="2" opacity="'+o+'"/>';
+    return out2;
+  }
+  return gear(W*0.74, H*0.32, 42, 10, p.acc, .8) + gear(W*0.92, H*0.62, 30, 8, p.acc2, .65) + gear(W*0.58, H*0.78, 22, 7, p.acc, .4);
+};
+ORN.speedo = function(p,s){
+  var cx = W*0.68, cy = H*0.78, r = 105, out = "";
+  out += '<path d="M'+(cx-r)+' '+cy+' A'+r+' '+r+' 0 0 1 '+(cx+r)+' '+cy+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>';
+  for (var k = 0; k <= 10; k++){
+    var a = Math.PI + Math.PI*k/10, l = (k%5===0)?16:8;
+    out += '<line x1="'+(cx+(r-l)*Math.cos(a))+'" y1="'+(cy+(r-l)*Math.sin(a))+'" x2="'+(cx+r*Math.cos(a))+'" y2="'+(cy+r*Math.sin(a))+'" stroke="'+p.acc+'" stroke-width="2" opacity=".65"/>';
+  }
+  var na = Math.PI + Math.PI*0.72;
+  out += '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+(r-26)*Math.cos(na))+'" y2="'+(cy+(r-26)*Math.sin(na))+'" stroke="'+p.acc2+'" stroke-width="3.4" opacity=".95" stroke-linecap="round"/>' +
+         '<circle cx="'+cx+'" cy="'+cy+'" r="7" fill="'+p.acc2+'" opacity=".9"/>';
+  return out;
+};
+ORN.tread = function(p,s){
+  var out = "";
+  for (var i = 0; i < 9; i++){
+    var x = W*0.34 + i*36;
+    out += '<path d="M'+x+' -10 l26 46 l-26 46 l26 46 l-26 46 l26 46 l-26 46" fill="none" stroke="'+(i%3===1?p.acc2:p.acc)+'" stroke-width="'+(i%3===1?3:2)+'" opacity="'+(0.55-Math.abs(i-4)*0.06)+'" stroke-linejoin="round"/>';
+  }
+  return out;
+};
+ORN.nuts = function(p,s){
+  function hexn(cx,cy,r,col,o){ var pts=[]; for(var k=0;k<6;k++){var a=Math.PI/3*k; pts.push((cx+r*Math.cos(a)).toFixed(1)+","+(cy+r*Math.sin(a)).toFixed(1));} return '<polygon points="'+pts.join(" ")+'" fill="none" stroke="'+col+'" stroke-width="2.4" opacity="'+o+'"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(r*0.45)+'" fill="none" stroke="'+col+'" stroke-width="2" opacity="'+o+'"/>'; }
+  var out = "";
+  for (var i = 0; i < 6; i++)
+    out += hexn(W*0.34 + sr(s+i)*W*0.58, H*0.12 + sr(s+i*7)*H*0.76, 14 + sr(s+i*11)*16, i%2?p.acc:p.acc2, 0.35 + sr(s+i*5)*0.5);
+  return out;
+};
+ORN.road = function(p,s){
+  return '<path d="M'+(W*0.34)+' '+(H+10)+' L'+(W*0.66)+' -10" stroke="'+p.acc+'" stroke-width="2" opacity=".5"/>' +
+    '<path d="M'+(W*0.52)+' '+(H+10)+' L'+(W*0.84)+' -10" stroke="'+p.acc+'" stroke-width="2" opacity=".5"/>' +
+    '<path d="M'+(W*0.43)+' '+(H+10)+' L'+(W*0.75)+' -10" stroke="'+p.acc2+'" stroke-width="3" stroke-dasharray="18 14" opacity=".8"/>';
+};
+
+ORN.plates = function(p,s){
+  var out = "";
+  var sets = [[W*0.74,H*0.4,50],[W*0.92,H*0.7,32],[W*0.55,H*0.84,22]];
+  for (var i = 0; i < 3; i++){
+    var c = sets[i];
+    out += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="none" stroke="'+p.acc+'" stroke-width="2.2" opacity=".75"/>' +
+           '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+(c[2]*0.62)+'" fill="none" stroke="'+(i?p.acc:p.acc2)+'" stroke-width="1.6" opacity=".5"/>';
+  }
+  return out;
+};
+ORN.steam = function(p,s){
+  var out = "";
+  for (var i = 0; i < 4; i++){
+    var x = W*0.45 + i*46;
+    out += '<path d="M'+x+' '+(H*0.9)+' q 14 -28 0 -52 q -14 -24 0 -50 q 12 -22 4 -44" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.7-i*0.12)+'" stroke-linecap="round"/>';
+  }
+  return out;
+};
+ORN.beans = function(p,s){
+  var out = "";
+  for (var i = 0; i < 7; i++){
+    var x = W*0.32 + sr(s+i)*W*0.6, y = H*0.1 + sr(s+i*7)*H*0.8;
+    var rot = Math.floor(sr(s+i*9)*360);
+    out += '<g transform="rotate('+rot+' '+x+' '+y+')" opacity="'+(0.4+sr(s+i*3)*0.45)+'">' +
+      '<ellipse cx="'+x+'" cy="'+y+'" rx="17" ry="24" fill="none" stroke="'+(i%2?p.acc:p.acc2)+'" stroke-width="2.2"/>' +
+      '<path d="M'+x+' '+(y-22)+' q 8 22 0 44" fill="none" stroke="'+(i%2?p.acc:p.acc2)+'" stroke-width="1.8"/></g>';
+  }
+  return out;
+};
+ORN.fizz = function(p,s){
+  var out = "";
+  for (var i = 0; i < 18; i++){
+    var x = W*0.4 + sr(s+i)*W*0.5;
+    var y = H - sr(s+i*3)*H*1.05;
+    var r = 2.5 + sr(s+i*7)*7 * (y/H);
+    out += '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="'+(i%4?p.acc:p.acc2)+'" stroke-width="1.8" opacity="'+(0.25+ (1-y/H)*0.55)+'"/>';
+  }
+  return out;
+};
+ORN.citrus = function(p,s){
+  var cx = W*0.72, cy = H*0.5, r = 72, out = "";
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+         '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-9)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.2" opacity=".45"/>';
+  for (var k = 0; k < 8; k++){
+    var a = Math.PI/4*k + 0.18;
+    out += '<path d="M'+cx+' '+cy+' L'+(cx+(r-12)*Math.cos(a))+' '+(cy+(r-12)*Math.sin(a))+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".55"/>';
+  }
+  return out;
+};
+
+ORN.candles = function(p,s){
+  var out = "", base = H*0.85;
+  for (var i = 0; i < 8; i++){
+    var x = W*0.36 + i*38, up = sr(s+i)>0.45;
+    var bh = 26 + sr(s+i*7)*52, y = base - bh - sr(s+i*3)*60;
+    var col = up ? p.acc : p.acc2;
+    out += '<line x1="'+(x+8)+'" y1="'+(y-14)+'" x2="'+(x+8)+'" y2="'+(y+bh+14)+'" stroke="'+col+'" stroke-width="2" opacity=".6"/>' +
+           '<rect x="'+x+'" y="'+y+'" width="16" height="'+bh+'" rx="3" fill="none" stroke="'+col+'" stroke-width="2.2" opacity=".85"/>';
+  }
+  return out;
+};
+ORN.trendup = function(p,s){
+  var pts = [[W*0.3,H*0.82],[W*0.45,H*0.6],[W*0.56,H*0.7],[W*0.72,H*0.36],[W*0.83,H*0.46],[W*0.95,H*0.16]];
+  var d = "M"+pts.map(function(q){return q[0]+" "+q[1];}).join(" L");
+  var e = pts[pts.length-1];
+  return '<path d="'+d+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<path d="M'+(e[0]-16)+' '+(e[1]+2)+' L'+e[0]+' '+e[1]+' L'+(e[0]-4)+' '+(e[1]+18)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".95"/>' +
+    pts.slice(0,-1).map(function(q,i){ return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3.4" fill="'+(i%2?p.acc2:p.acc)+'" opacity=".8"/>'; }).join("");
+};
+ORN.coins = function(p,s){
+  var out = "", stacks = [[W*0.56,4],[W*0.7,7],[W*0.85,5]];
+  for (var i = 0; i < 3; i++){
+    var x = stacks[i][0], n = stacks[i][1];
+    for (var k = 0; k < n; k++){
+      var y = H*0.82 - k*13;
+      out += '<ellipse cx="'+x+'" cy="'+y+'" rx="30" ry="9" fill="none" stroke="'+(k===n-1?p.acc2:p.acc)+'" stroke-width="2" opacity="'+(0.4+k*0.08)+'"/>';
+    }
+  }
+  return out;
+};
+ORN.blocks = function(p,s){
+  var out = "", x = W*0.32, y = H*0.62;
+  for (var i = 0; i < 5; i++){
+    out += '<rect x="'+x+'" y="'+(y-21)+'" width="42" height="42" rx="9" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.85-i*0.1)+'"/>';
+    if (i < 4) out += '<line x1="'+(x+42)+'" y1="'+y+'" x2="'+(x+62)+'" y2="'+y+'" stroke="'+p.acc+'" stroke-width="2" opacity=".5" stroke-dasharray="4 4"/>';
+    x += 62; y -= 26;
+  }
+  return out;
+};
+ORN.pie = function(p,s){
+  var cx = W*0.7, cy = H*0.5, r = 70;
+  function arc(a0,a1,col,o,rr){
+    var x0=cx+rr*Math.cos(a0), y0=cy+rr*Math.sin(a0), x1=cx+rr*Math.cos(a1), y1=cy+rr*Math.sin(a1);
+    return '<path d="M'+x0+' '+y0+' A'+rr+' '+rr+' 0 '+((a1-a0)>Math.PI?1:0)+' 1 '+x1+' '+y1+'" fill="none" stroke="'+col+'" stroke-width="13" opacity="'+o+'"/>';
+  }
+  return arc(-1.4, 0.9, p.acc, .8, r) + arc(1.05, 2.6, p.acc2, .7, r) + arc(2.75, 4.6, p.acc, .35, r) +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-26)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.4" opacity=".3"/>';
+};
+
+ORN.barbell = function(p,s){
+  var cy = H*0.52, out = '<line x1="'+(W*0.3)+'" y1="'+cy+'" x2="'+(W*0.96)+'" y2="'+cy+'" stroke="'+p.acc+'" stroke-width="3" opacity=".7"/>';
+  [[W*0.42,30],[W*0.47,40],[W*0.79,40],[W*0.84,30]].forEach(function(dset, i){
+    out += '<rect x="'+(dset[0]-6)+'" y="'+(cy-dset[1])+'" width="12" height="'+(dset[1]*2)+'" rx="6" fill="none" stroke="'+(i===1||i===2?p.acc2:p.acc)+'" stroke-width="2.6" opacity=".85"/>';
+  });
+  return out;
+};
+ORN.track = function(p,s){
+  var out = "";
+  for (var i = 0; i < 4; i++){
+    var r = 60 + i*24;
+    out += '<path d="M'+(W*0.35)+' '+(H+10)+' A'+r+' '+r+' 0 0 1 '+(W*0.35+r*1.7)+' '+(H+10)+'" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.75-i*0.14)+'" '+(i===2?'stroke-dasharray="10 10"':'')+'/>';
+  }
+  return out;
+};
+ORN.stepsup = function(p,s){
+  var out = "", x = W*0.34, y = H*0.86;
+  for (var i = 0; i < 6; i++){
+    out += '<path d="M'+x+' '+y+' h 46 v -34" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.6" opacity="'+(0.45+i*0.09)+'" stroke-linejoin="round"/>';
+    x += 46; y -= 34;
+  }
+  return out;
+};
+ORN.rings3 = function(p,s){
+  return '<circle cx="'+(W*0.64)+'" cy="'+(H*0.46)+'" r="50" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".75"/>' +
+    '<circle cx="'+(W*0.79)+'" cy="'+(H*0.6)+'" r="50" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".65"/>' +
+    '<circle cx="'+(W*0.94)+'" cy="'+(H*0.44)+'" r="50" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".45"/>';
+};
+ORN.target = function(p,s){
+  var cx = W*0.72, cy = H*0.5, out = "";
+  for (var i = 0; i < 4; i++)
+    out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(18+i*20)+'" fill="none" stroke="'+(i===0?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.85-i*0.16)+'"/>';
+  out += '<line x1="'+(cx-100)+'" y1="'+(cy+70)+'" x2="'+(cx-8)+'" y2="'+(cy+6)+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>' +
+    '<path d="M'+(cx-26)+' '+(cy+4)+' L'+(cx-8)+' '+(cy+6)+' L'+(cx-14)+' '+(cy+22)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>';
+  return out;
+};
+
+ORN.petals = function(p,s){
+  var cx = W*0.78, cy = H*0.48, out = "";
+  for (var k = 0; k < 10; k++){
+    var a = Math.PI*2/10*k + sr(s)*0.6;
+    out += '<ellipse cx="'+(cx+52*Math.cos(a))+'" cy="'+(cy+52*Math.sin(a))+'" rx="30" ry="13" fill="none" stroke="'+(k%2?p.acc:p.acc2)+'" stroke-width="2" opacity="'+(0.35+ (k%3)*0.2)+'" transform="rotate('+(a*180/Math.PI)+' '+(cx+52*Math.cos(a))+' '+(cy+52*Math.sin(a))+')"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="12" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>';
+  return out;
+};
+ORN.silk = function(p,s){
+  var out = "";
+  for (var i = 0; i < 5; i++){
+    var y = H*0.2 + i*34;
+    out += '<path d="M'+(W*0.26)+' '+y+' C '+(W*0.45)+' '+(y-46)+', '+(W*0.6)+' '+(y+52)+', '+(W*0.8)+' '+(y-6)+' S '+(W+30)+' '+(y+8)+', '+(W+30)+' '+(y-20)+'" fill="none" stroke="'+(i===2?p.acc2:p.acc)+'" stroke-width="2" opacity="'+(0.65-i*0.1)+'"/>';
+  }
+  return out;
+};
+ORN.sparkle = function(p,s){
+  var out = "";
+  for (var i = 0; i < 8; i++){
+    var x = W*0.35 + sr(s+i)*W*0.6, y = H*0.1 + sr(s+i*7)*H*0.8, r = 7 + sr(s+i*3)*15;
+    out += '<path d="M'+x+' '+(y-r)+' Q '+x+' '+y+' '+(x+r)+' '+y+' Q '+x+' '+y+' '+x+' '+(y+r)+' Q '+x+' '+y+' '+(x-r)+' '+y+' Q '+x+' '+y+' '+x+' '+(y-r)+' Z" fill="'+(i%3?p.acc:p.acc2)+'" opacity="'+(0.25+sr(s+i*5)*0.6)+'"/>';
+  }
+  return out;
+};
+ORN.veil = function(p,s){
+  var cx = W*0.66, cy = H*0.96, out = "";
+  for (var i = 0; i < 4; i++){
+    var r = 62 + i*36;
+    out += '<path d="M'+(cx - r*Math.cos(0.42))+' '+(cy - r*Math.sin(0.42))+' A'+r+' '+r+' 0 0 1 '+(cx + r*Math.cos(0.42))+' '+(cy - r*Math.sin(0.42))+'" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="'+(2.6-i*0.3)+'" opacity="'+(0.85-i*0.16)+'"/>';
+  }
+  for (var k = 0; k <= 7; k++){
+    var a = 0.45 + (Math.PI - 0.9)*k/7;
+    out += '<line x1="'+(cx + 30*Math.cos(a))+'" y1="'+(cy - 30*Math.sin(a))+'" x2="'+(cx + 178*Math.cos(a))+'" y2="'+(cy - 178*Math.sin(a))+'" stroke="'+(k%2?p.acc:p.acc2)+'" stroke-width="1.6" opacity=".45"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+(cy-14)+'" r="8" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>';
+  return out;
+}
+ORN.beads = function(p,s){
+  var out = "";
+  for (var l = 0; l < 3; l++){
+    var y0 = -20 + l*10, sag = 90 + l*44;
+    out += '<path d="M'+(W*0.3)+' '+y0+' Q '+(W*0.66)+' '+(y0+sag)+' '+(W+16)+' '+(y0+18)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.4" opacity=".4"/>';
+    for (var k = 1; k < 8; k++){
+      var t = k/8, x = (1-t)*(1-t)*(W*0.3) + 2*(1-t)*t*(W*0.66) + t*t*(W+16);
+      var y = (1-t)*(1-t)*y0 + 2*(1-t)*t*(y0+sag) + t*t*(y0+18);
+      out += '<circle cx="'+x+'" cy="'+y+'" r="'+(4+((k+l)%3)*2.6)+'" fill="none" stroke="'+((k+l)%2?p.acc:p.acc2)+'" stroke-width="2" opacity=".75"/>';
+    }
+  }
+  return out;
+};
+
+ORN.circuit = function(p,s){
+  var out = "", segs = [
+    "M"+(W*0.52)+" "+(H+10)+" V"+(H*0.62)+" H"+(W*0.66)+" V"+(H*0.32),
+    "M"+(W*0.72)+" -10 V"+(H*0.28)+" H"+(W*0.86)+" V"+(H*0.62),
+    "M"+(W*0.62)+" "+(H*0.8)+" H"+(W*0.82)+" V"+(H*0.94)
+  ];
+  segs.forEach(function(d, i){
+    out += '<path d="'+d+'" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.2" opacity=".65"/>';
+  });
+  [[W*0.66,H*0.32],[W*0.86,H*0.62],[W*0.82,H*0.94],[W*0.52,H*0.62]].forEach(function(pt, i){
+    out += '<circle cx="'+pt[0]+'" cy="'+pt[1]+'" r="6" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.4" opacity=".9"/>';
+  });
+  return out;
+};
+ORN.pixels = function(p,s){
+  var out = "";
+  for (var gx = 0; gx < 9; gx++)
+    for (var gy = 0; gy < 6; gy++){
+      var v = sr(s + gx*7 + gy*13);
+      if (v < 0.45) continue;
+      out += '<rect x="'+(W*0.36+gx*26)+'" y="'+(H*0.12+gy*26)+'" width="17" height="17" rx="4" fill="'+(v>0.85?p.acc2:p.acc)+'" opacity="'+((v-0.4)*0.9)+'"/>';
+    }
+  return out;
+};
+ORN.chevrons = function(p,s){
+  var out = "";
+  for (var i = 0; i < 5; i++){
+    var x = W*0.4 + i*44;
+    out += '<path d="M'+x+' '+(H*0.24)+' l 34 '+(H*0.26)+' l -34 '+(H*0.26)+'" fill="none" stroke="'+(i===2?p.acc2:p.acc)+'" stroke-width="3" opacity="'+(0.85-i*0.14)+'" stroke-linejoin="round" stroke-linecap="round"/>';
+  }
+  return out;
+};
+ORN.terminal = function(p,s){
+  var out = "", rows = [[0.5,0.34],[0.72,0.3],[0.4,0.26],[0.62,0.22],[0.3,0.18]];
+  for (var i = 0; i < 5; i++){
+    var y = H*0.2 + i*30;
+    out += '<rect x="'+(W*0.36)+'" y="'+y+'" width="'+(W*rows[i][0]*0.8)+'" height="10" rx="5" fill="'+(i===1?p.acc2:p.acc)+'" opacity="'+rows[i][1]+'"/>';
+  }
+  out += '<rect x="'+(W*0.36)+'" y="'+(H*0.2+150)+'" width="26" height="12" rx="3" fill="'+p.acc2+'" opacity=".95"/>';
+  return out;
+};
+ORN.netgraph = function(p,s){
+  var nodes = [], out = "";
+  for (var i = 0; i < 7; i++)
+    nodes.push([W*0.36 + sr(s+i*3)*W*0.58, H*0.1 + sr(s+i*11)*H*0.8]);
+  for (i = 0; i < 7; i++)
+    for (var j = i+1; j < 7; j++){
+      if (sr(s+i*17+j*7) > 0.55) continue;
+      out += '<line x1="'+nodes[i][0]+'" y1="'+nodes[i][1]+'" x2="'+nodes[j][0]+'" y2="'+nodes[j][1]+'" stroke="'+p.acc+'" stroke-width="1.2" opacity=".3"/>';
+    }
+  for (i = 0; i < 7; i++)
+    out += '<circle cx="'+nodes[i][0]+'" cy="'+nodes[i][1]+'" r="'+(4+sr(s+i*5)*5)+'" fill="'+(i%3?p.acc:p.acc2)+'" opacity=".85"/>';
+  return out;
+};
+
+ORN.playset = function(p,s){
+  var out = "";
+  var sets = [[W*0.74,H*0.34,32],[W*0.9,H*0.62,24],[W*0.58,H*0.8,18]];
+  for (var i = 0; i < 3; i++){
+    var c = sets[i], r = c[2];
+    out += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+r+'" fill="none" stroke="'+(i?p.acc:p.acc2)+'" stroke-width="2.4" opacity="'+(0.85-i*0.2)+'"/>' +
+      '<polygon points="'+(c[0]-r*0.28)+','+(c[1]-r*0.42)+' '+(c[0]+r*0.5)+','+c[1]+' '+(c[0]-r*0.28)+','+(c[1]+r*0.42)+'" fill="'+(i?p.acc:p.acc2)+'" opacity="'+(0.8-i*0.2)+'"/>';
+  }
+  return out;
+};
+ORN.frames = function(p,s){
+  var out = "";
+  for (var i = 0; i < 3; i++){
+    out += '<rect x="'+(W*0.58+i*24)+'" y="'+(H*0.22+i*20)+'" width="'+(W*0.4)+'" height="'+(H*0.5)+'" rx="14" fill="none" stroke="'+(i===0?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.85-i*0.25)+'"/>';
+  }
+  out += '<circle cx="'+(W*0.63)+'" cy="'+(H*0.3)+'" r="5" fill="'+p.acc2+'" opacity=".9"/>';
+  return out;
+};
+ORN.wavebars = function(p,s){
+  var out = "", cy = H*0.52;
+  for (var i = 0; i < 26; i++){
+    var x = W*0.32 + i*11;
+    var h = 8 + Math.abs(Math.sin(i*0.55 + s))*62;
+    out += '<line x1="'+x+'" y1="'+(cy-h/2)+'" x2="'+x+'" y2="'+(cy+h/2)+'" stroke="'+(i%5===2?p.acc2:p.acc)+'" stroke-width="4" stroke-linecap="round" opacity="'+(0.35+Math.abs(Math.sin(i*0.55+s))*0.5)+'"/>';
+  }
+  return out;
+};
+ORN.filmstrip = function(p,s){
+  var out = '<path d="M'+(W*0.3)+' '+(H*0.7)+' Q '+(W*0.6)+' '+(H*0.2)+' '+(W+20)+' '+(H*0.44)+'" fill="none" stroke="'+p.acc+'" stroke-width="34" opacity=".18"/>';
+  for (var t = 0; t < 12; t++){
+    var tt = t/12, x = (1-tt)*(1-tt)*(W*0.3) + 2*(1-tt)*tt*(W*0.6) + tt*tt*(W+20);
+    var y = (1-tt)*(1-tt)*(H*0.7) + 2*(1-tt)*tt*(H*0.2) + tt*tt*(H*0.44);
+    out += '<rect x="'+(x-5)+'" y="'+(y-5)+'" width="10" height="10" rx="2" fill="'+p.acc2+'" opacity=".6"/>';
+  }
+  return out;
+};
+ORN.spotlight = function(p,s){
+  var out = "";
+  for (var i = 0; i < 4; i++){
+    var a = 0.5 + i*0.24;
+    out += '<path d="M'+(W+16)+' -16 L'+(W - Math.cos(a)*W*0.75)+' '+(Math.sin(a)*H*1.1)+'" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="'+(14-i*3)+'" opacity="'+(0.18+i*0.04)+'" stroke-linecap="round"/>';
+  }
+  out += '<circle cx="'+(W*0.42)+'" cy="'+(H*0.76)+'" r="9" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>';
+  return out;
+};
+
+ORN.confetti = function(p,s){
+  var out = "";
+  for (var i = 0; i < 16; i++){
+    var x = W*0.32 + sr(s+i)*W*0.62, y = H*0.06 + sr(s+i*7)*H*0.88;
+    var rot = Math.floor(sr(s+i*9)*360), kind = i%3;
+    var col = i%2 ? p.acc : p.acc2, o = 0.3 + sr(s+i*3)*0.55;
+    if (kind === 0) out += '<rect x="'+x+'" y="'+y+'" width="14" height="6" rx="2" fill="'+col+'" opacity="'+o+'" transform="rotate('+rot+' '+x+' '+y+')"/>';
+    else if (kind === 1) out += '<circle cx="'+x+'" cy="'+y+'" r="5" fill="none" stroke="'+col+'" stroke-width="2" opacity="'+o+'"/>';
+    else out += '<path d="M'+x+' '+y+' q 7 -8 14 0 q -7 8 -14 0" fill="'+col+'" opacity="'+o+'"/>';
+  }
+  return out;
+};
+ORN.zigzag = function(p,s){
+  var out = "";
+  for (var l = 0; l < 4; l++){
+    var y = H*0.24 + l*46, d = "M"+(W*0.28)+" "+y, x = W*0.28;
+    while (x < W + 20){ x += 34; d += " L"+x+" "+(y - 22); x += 34; d += " L"+x+" "+y; }
+    out += '<path d="'+d+'" fill="none" stroke="'+(l===1?p.acc2:p.acc)+'" stroke-width="2.6" opacity="'+(0.7-l*0.13)+'" stroke-linejoin="round"/>';
+  }
+  return out;
+};
+ORN.doodle = function(p,s){
+  var d = "M"+(W*0.38)+" "+(H*0.74), x = W*0.38;
+  for (var i = 0; i < 4; i++){
+    x += 70;
+    d += " a 26 26 0 1 1 26 -26 q 8 30 44 " + (i%2 ? "8" : "-4");
+  }
+  return '<path d="'+d+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7" stroke-linecap="round"/>' +
+    '<circle cx="'+(W*0.88)+'" cy="'+(H*0.32)+'" r="6" fill="'+p.acc2+'" opacity=".85"/>';
+};
+ORN.speech = function(p,s){
+  var out = "";
+  var sets = [[W*0.62,H*0.28,92,52],[W*0.82,H*0.64,70,42]];
+  for (var i = 0; i < 2; i++){
+    var c = sets[i];
+    out += '<rect x="'+(c[0]-c[2]/2)+'" y="'+(c[1]-c[3]/2)+'" width="'+c[2]+'" height="'+c[3]+'" rx="'+(c[3]/2.4)+'" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.85-i*0.2)+'"/>' +
+      '<path d="M'+(c[0]-10)+' '+(c[1]+c[3]/2)+' l -6 16 l 20 -16" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.85-i*0.2)+'"/>';
+    for (var k = 0; k < 3; k++)
+      out += '<circle cx="'+(c[0]-16+k*16)+'" cy="'+c[1]+'" r="3" fill="'+(i?p.acc2:p.acc)+'" opacity=".8"/>';
+  }
+  return out;
+};
+ORN.burst = function(p,s){
+  var cx = W*0.78, cy = H*0.46, out = "";
+  for (var k = 0; k < 14; k++){
+    var a = Math.PI*2/14*k, r0 = 34 + sr(s+k)*10, r1 = r0 + 20 + sr(s+k*3)*30;
+    out += '<line x1="'+(cx+r0*Math.cos(a))+'" y1="'+(cy+r0*Math.sin(a))+'" x2="'+(cx+r1*Math.cos(a))+'" y2="'+(cy+r1*Math.sin(a))+'" stroke="'+(k%3?p.acc:p.acc2)+'" stroke-width="3" opacity="'+(0.4+sr(s+k*7)*0.4)+'" stroke-linecap="round"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="16" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>';
+  return out;
+};
+
+  return ORN;
+})();
+const ORN2_BACK = { heartbeat: 1, mountains: 1, horizon: 1, tread: 1, road: 1, silk: 1,
+  track: 1, zigzag: 1, wavebars: 1, pixels: 1, confetti: 1, terminal: 1, candles: 1,
+  stepsup: 1, doodle: 1, barbell: 1, filmstrip: 1, netgraph: 1, molecules: 1,
+  capsule: 1, nuts: 1, beans: 1, fizz: 1, sparkle: 1, beads: 1 };
+const ORN2_SETS = {
+  med: ["dna", "molecules", "hexchain", "heartbeat", "capsule"],
+  travel: ["route", "contrails", "mountains", "compass", "horizon"],
+  auto: ["gears", "speedo", "tread", "nuts", "road"],
+  food: ["plates", "steam", "beans", "fizz", "citrus"],
+  fin: ["candles", "trendup", "coins", "blocks", "pie"],
+  sport: ["barbell", "track", "stepsup", "rings3", "target"],
+  beauty: ["petals", "silk", "sparkle", "veil", "beads"],
+  tech: ["circuit", "pixels", "chevrons", "terminal", "netgraph"],
+  vlog: ["playset", "frames", "wavebars", "filmstrip", "spotlight"],
+  fun: ["confetti", "zigzag", "doodle", "speech", "burst"]
+};
+
 function coverSvg(cfg){
   const W = 1200, H = 675;
   const seed0 = cfg.seed || 1;
@@ -336,8 +886,10 @@ function coverSvg(cfg){
   const p = palOf(palId);
   const uid = ++UID;
   const seed = cfg.seed;
+  const pool = (cfg.shape === "auto" && cfg.pool && cfg.pool.length) ? cfg.pool : null;
   const shape = cfg.shape === "auto"
-    ? SHAPES[Math.floor(srand(seed * 61) * SHAPES.length) % SHAPES.length]
+    ? (pool ? pool[Math.floor(srand(seed * 61) * pool.length) % pool.length]
+            : SHAPES[Math.floor(srand(seed * 61) * SHAPES.length) % SHAPES.length])
     : cfg.shape;
   const vnum = Math.min(12, Math.max(1, cfg.variant || 1));
   const geoSeed = (cfg.shape && cfg.shape !== "auto") ? 7 + (vnum - 1) * 13 : seed;
