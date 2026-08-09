@@ -2606,6 +2606,8 @@
                         ? '<button class="cp-dmix" data-creset="1"><i class="ti ti-restore"></i> ' +
                           esc(T('Вернуть стиль канала')) + '</button>'
                         : '') +
+                    '<button class="cp-dmix" data-callch="1"><i class="ti ti-color-swatch"></i> ' +
+                    esc(T('Стиль всех обложек')) + '</button>' +
                     '<div class="cp-dshint">' +
                     esc(T('Применится только к этому посту, остальные не изменятся.')) +
                     '</div>';
@@ -2665,6 +2667,12 @@
                       if (p0) savePostCover(postId, { shape: c.shape }, function () { p0 = post(postId) || p0; draw(); });
                       else saveCover({ shape: c.shape });
                       return; }
+            if (p0 && t.closest && t.closest('[data-callch]')) {
+                haptic('light');
+                host.remove();
+                askCoverStyle();
+                return;
+            }
             if (p0 && t.closest && t.closest('[data-creset]')) {
                 haptic('medium');
                 savePostCover(postId, { reset: true }, function () {
@@ -2864,6 +2872,10 @@
                 ? '<button class="cp-dsr wide" data-mstyle="1"><i class="ti ti-palette"></i>' +
                   '<span class="tx"><b>' + esc(T('Стиль этой картинки')) + '</b>' +
                   '<em>' + esc(T('палитра и орнамент — только для этого поста')) + '</em></span>' +
+                  '<i class="ti ti-chevron-right ck"></i></button>' +
+                  '<button class="cp-dsr wide" data-mstyleall="1"><i class="ti ti-color-swatch"></i>' +
+                  '<span class="tx"><b>' + esc(T('Стиль всех обложек')) + '</b>' +
+                  '<em>' + esc(T('один стиль или микс — сразу для всего канала')) + '</em></span>' +
                   '<i class="ti ti-chevron-right ck"></i></button>'
                 : '') +
             '<div class="cp-dshint">' +
@@ -2872,6 +2884,11 @@
         document.body.appendChild(host);
         requestAnimationFrame(function () { host.classList.add('vis'); });
         host.addEventListener('click', function (e) {
+            if (e.target.closest && e.target.closest('[data-mstyleall]')) {
+                host.remove();
+                askCoverStyle();
+                return;
+            }
             if (e.target.closest && e.target.closest('[data-mstyle]')) {
                 host.remove();
                 askCoverStyle(id);
