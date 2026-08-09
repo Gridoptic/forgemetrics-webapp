@@ -1877,7 +1877,7 @@
 
         var cap = _ap.weekly_forge_cap || 100;
         var spent = _ap.spent_this_week || 0;
-        body += '<div class="cp-ap-row"><span>' + esc(T('Потолок расхода в неделю')) + '</span>' +
+        body += '<div class="cp-ap-row"><span>' + esc(T('Расход автопилота за неделю')) + '</span>' +
             '<b>' + (typeof window.forgeAmount === 'function' ? window.forgeAmount(spent, 12) : spent) +
             ' ' + esc(T('из')) + ' ' + cap + '</b>' +
             '<button class="cp-ap-mini" data-act="apcap">' + esc(T('изменить')) + '</button></div>';
