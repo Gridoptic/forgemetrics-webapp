@@ -1843,7 +1843,7 @@
         var cls = on ? ' on' : '';
 
         var head = '<div class="cp-ap-top">' +
-            '<span class="cp-ap-ic"><i class="ti ti-robot"></i></span>' +
+            '<span class="cp-ap-ic"><i class="ti ti-plane"></i></span>' +
             '<span class="cp-ap-tx"><b>' + esc(T('Автопилот')) + '</b><span>' +
             esc(T(apSubtitle())) + '</span></span>' +
             '<button class="cp-tgl' + (on ? '' : ' off') + '" data-act="aptoggle"></button></div>';
