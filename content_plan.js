@@ -2483,18 +2483,48 @@
 
     var _shapeGrpOpen = null;
 
-    function askCoverStyle() {
+    function savePostCover(postId, patch, done) {
+        var body = { post_id: postId };
+        Object.keys(patch).forEach(function (k) { body[k] = patch[k]; });
+        apiRequest('/api/v1/content-plan/post-cover-style',
+                   { method: 'POST', body: JSON.stringify(body) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    var p = post(postId);
+                    if (p) {
+                        p.cover_palette = r.cover_palette;
+                        p.cover_shape = r.cover_shape;
+                        if (r.url) p.media_url = r.url;
+                    }
+                    if (_lastView === 'week') renderWeek();
+                    if (done) done(r);
+                } else {
+                    toast(T('Не удалось сохранить стиль'));
+                }
+            })
+            .catch(function () { toast(T('Не удалось сохранить стиль')); });
+    }
+
+    function askCoverStyle(postId) {
         haptic('light');
         var host = document.getElementById('cp-daybox');
         if (host) host.remove();
         host = document.createElement('div');
         host.id = 'cp-daybox';
         host.className = 'cp-dsov';
-        var c = _cover || {};
+        var p0 = postId ? post(postId) : null;
+        if (postId && !p0) return;
+        var base = _cover || {};
+        var c = p0
+            ? { mode: base.mode, sign: base.sign, variant: base.variant,
+                niche_key: base.niche_key,
+                palette: p0.cover_palette || base.palette,
+                shape: p0.cover_shape || base.shape }
+            : base;
         _shapeGrpOpen = (c.niche_key && (window.__shapeSets || {})[c.niche_key])
             ? c.niche_key : 'neutral';
         var previewSpec = function () {
-            var p = ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
+            var p = p0 || ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
             var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
             var title = (p && p.title) || 'Заголовок поста появится здесь';
             var parts = thesisSplit(title);
@@ -2561,12 +2591,33 @@
                 : '';
             var oldSheet = host.querySelector('.cp-dsheet');
             var keepTop = oldSheet ? oldSheet.scrollTop : 0;
+            var tail;
+            if (p0) {
+                tail = ((p0.cover_palette || p0.cover_shape)
+                        ? '<button class="cp-dmix" data-creset="1"><i class="ti ti-restore"></i> ' +
+                          esc(T('Вернуть стиль канала')) + '</button>'
+                        : '') +
+                    '<div class="cp-dshint">' +
+                    esc(T('Применится только к этому посту, остальные не изменятся.')) +
+                    '</div>';
+            } else {
+                tail = '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
+                    '<div class="cp-chips">' + sgn + '</div>' +
+                    '<button class="cp-dsave" data-csave="1"><i class="ti ti-lock"></i> ' +
+                    esc(T('Сохранить стиль навсегда')) + '</button>' +
+                    '<button class="cp-dmix" data-cmix="1"><i class="ti ti-arrows-shuffle"></i> ' +
+                    esc(T('Микс — у каждого поста свой стиль')) + '</button>' +
+                    '<div class="cp-dshint">' +
+                    esc(T('Сохранённый стиль применяется ко всем новым постам и автопилоту. Пока не сохранишь — действует микс.')) +
+                    '</div>';
+            }
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
-                '<div class="cp-dsh2"><b>' + esc(T('Стиль обложек')) + '</b></div>' +
+                '<div class="cp-dsh2"><b>' + esc(T(p0 ? 'Стиль этой картинки' : 'Стиль обложек')) + '</b></div>' +
                 '<div class="cp-dss">' +
-                esc(T('Применится к обложкам постов канала')) + '</div>' + prev +
-                (((c.shape || 'auto') !== 'auto' && c.shape !== 'none')
+                esc(T(p0 ? 'Меняется только картинка этого поста'
+                         : 'Применится к обложкам постов канала')) + '</div>' + prev +
+                (!p0 && ((c.shape || 'auto') !== 'auto' && c.shape !== 'none')
                     ? '<div class="cp-clbl">' + esc(T('Вид орнамента')) + '</div>' +
                       '<div class="cp-vstep">' +
                       '<button class="cp-vbtn" data-cvar="-1"><i class="ti ti-minus"></i></button>' +
@@ -2578,16 +2629,7 @@
                 '<div class="cp-clbl">' + esc(T('Палитра')) + '</div>' +
                 '<div class="cp-pals">' + pal + '</div>' +
                 '<div class="cp-clbl">' + esc(T('Орнамент')) + '</div>' +
-                '<div class="cp-chips">' + shp + '</div>' + grps +
-                '<div class="cp-clbl">' + esc(T('Подпись канала')) + '</div>' +
-                '<div class="cp-chips">' + sgn + '</div>' +
-                '<button class="cp-dsave" data-csave="1"><i class="ti ti-lock"></i> ' +
-                esc(T('Сохранить стиль навсегда')) + '</button>' +
-                '<button class="cp-dmix" data-cmix="1"><i class="ti ti-arrows-shuffle"></i> ' +
-                esc(T('Микс — у каждого поста свой стиль')) + '</button>' +
-                '<div class="cp-dshint">' +
-                esc(T('Сохранённый стиль применяется ко всем новым постам и автопилоту. Пока не сохранишь — действует микс.')) +
-                '</div></div>';
+                '<div class="cp-chips">' + shp + '</div>' + grps + tail + '</div>';
             var newSheet = host.querySelector('.cp-dsheet');
             if (newSheet && keepTop) newSheet.scrollTop = keepTop;
         };
@@ -2598,7 +2640,9 @@
             var t = e.target;
             var p = t.closest ? t.closest('[data-cpal]') : null;
             if (p) { c.palette = p.getAttribute('data-cpal'); draw(); haptic('light');
-                     saveCover({ palette: c.palette }); return; }
+                     if (p0) savePostCover(postId, { palette: c.palette }, function () { p0 = post(postId) || p0; draw(); });
+                     else saveCover({ palette: c.palette });
+                     return; }
             var gr = t.closest ? t.closest('[data-cgrp]') : null;
             if (gr) {
                 var gk = gr.getAttribute('data-cgrp');
@@ -2609,7 +2653,19 @@
             }
             var sh = t.closest ? t.closest('[data-cshape]') : null;
             if (sh) { c.shape = sh.getAttribute('data-cshape'); draw(); haptic('light');
-                      saveCover({ shape: c.shape }); return; }
+                      if (p0) savePostCover(postId, { shape: c.shape }, function () { p0 = post(postId) || p0; draw(); });
+                      else saveCover({ shape: c.shape });
+                      return; }
+            if (p0 && t.closest && t.closest('[data-creset]')) {
+                haptic('medium');
+                savePostCover(postId, { reset: true }, function () {
+                    p0 = post(postId) || p0;
+                    c.palette = (_cover || {}).palette;
+                    c.shape = (_cover || {}).shape;
+                    draw();
+                });
+                return;
+            }
             if (t.closest && t.closest('[data-csave]')) {
                 haptic('medium');
                 saveCover({ mode: (_cover && _cover.mode) === 'cover' ? 'cover' : 'cover_auto',
@@ -2681,7 +2737,8 @@
                   '<div class="cp-mrow">' +
                   '<button class="cp-mrepl" data-act="coverlay" data-id="' + p.id +
                   '"><i class="ti ti-layout-grid"></i>' + esc(T('Композиция')) + '</button>' +
-                  '<button class="cp-mrepl" data-act="coverstyle"><i class="ti ti-palette"></i>' +
+                  '<button class="cp-mrepl" data-act="coverstyle" data-id="' + p.id +
+                  '"><i class="ti ti-palette"></i>' +
                   esc(T('Стиль')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
@@ -3114,7 +3171,7 @@
         if (act === 'mediamode') { askMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
-        if (act === 'coverstyle') { askCoverStyle(); return; }
+        if (act === 'coverstyle') { askCoverStyle(+actEl.getAttribute('data-id') || null); return; }
         if (act === 'editpost') {
             haptic('light');
             _editing[+actEl.getAttribute('data-id')] = true;
