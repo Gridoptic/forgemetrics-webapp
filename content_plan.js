@@ -1537,7 +1537,13 @@
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 _genBusy = false;
-                if (r && r.ok) { _rubChanged = false; renderGenerating(); startPoll(); }
+                if (r && r.ok) {
+                    _rubChanged = false;
+                    _days = null;
+                    _cal = null;
+                    renderGenerating();
+                    startPoll();
+                }
                 else if (r && r.error) { if (btn) btn.disabled = false; toast(cap(r)); }
                 else { if (btn) btn.disabled = false; toast(T('Не удалось запустить сборку')); }
             })
@@ -1581,7 +1587,13 @@
             var pcid = _chId || (_state && _state.channel_id);
             apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : '')).then(function (d) {
                 if (!d || !d.ok) return;
-                if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') { _state = d; stopTimers(); renderWeek(); }
+                if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') {
+                    _state = d;
+                    stopTimers();
+                    syncDays(d);
+                    if (!_cal) loadCalendar();
+                    renderWeek();
+                }
                 else if (d.status === 'error') { _state = d; stopTimers(); renderError(); }
             }).catch(function () {});
         }, 2500);
