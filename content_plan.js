@@ -192,11 +192,17 @@
                 if (Math.abs(dx) > 3) _moved = true;
                 if (_moved) { el2.scrollLeft = _dl - dx; el2.style.cursor = 'grabbing'; }
             });
-            function _dragEnd() { if (_drag) { _drag = false; upd(); } }
+            function _dragEnd() {
+                if (_drag) {
+                    _drag = false;
+                    upd();
+                    setTimeout(function () { _moved = false; }, 80);
+                }
+            }
             el2.addEventListener('pointerup', _dragEnd);
             el2.addEventListener('pointercancel', _dragEnd);
             el2.addEventListener('click', function (e) {
-                if (_moved) { e.stopPropagation(); e.preventDefault(); _moved = false; }
+                if (_moved) { e.stopPropagation(); e.preventDefault(); }
             }, true);
             el2.addEventListener('scroll', upd, { passive: true });
             upd();
@@ -2115,7 +2121,7 @@
         var fi = fmtInfo(p.format);
         var st = statusOf(p);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['гипотеза · уточним', 'lo'];
+        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm
             ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm) + '</span>' +
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
@@ -2704,7 +2710,7 @@
         if (!p) return '';
         var fi = fmtInfo(p.format);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['гипотеза · уточним', 'lo'];
+        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm) +
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
         var adRow = '<button class="cp-adrow' + (p.is_ad ? ' on' : '') +
