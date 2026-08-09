@@ -3870,6 +3870,7 @@ function renderLimitBanner(limits) {
     const balance = Number(limits.balance || 0);
     const isTester = !!limits.is_tester;
     const canChoose = !!limits.can_choose_model;
+    if (state.post.model == null && limits.default_model) state.post.model = limits.default_model;
     const model = postActiveModel(limits);
     const premium = model === 'premium';
     const price = postModelPrice(limits, model);

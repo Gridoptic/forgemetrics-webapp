@@ -6,6 +6,7 @@
     var _channels = null;
     var _chId = null;
     var _goal = 'engagement';
+    var _model = 'premium';
     var _days = null;
     var _selDay = 0;
     var _dayBusy = {};
@@ -20,6 +21,10 @@
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function wallet() { return (_state && _state.wallet) || {}; }
+    function priceDay() {
+        var w = wallet();
+        return _model === 'standard' ? (w.price_day_std || 5) : (w.price_day || 10);
+    }
     function forgeTag(n) {
         if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
         return esc(String(n)) + ' Forge';
@@ -276,6 +281,7 @@
         if (d && d.goal && String(d.goal).split('+').every(function (x) { return GOAL_MAP[x]; })) {
             _goal = d.goal;
         }
+        if (d && d.model_choice) _model = d.model_choice === 'standard' ? 'standard' : 'premium';
         if (_days || !d || !d.days || d.days.length !== 7) return;
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
@@ -515,7 +521,7 @@
     function weekBar() {
         var total = totalPosts();
         var w = wallet();
-        var price = (w.price_day || 10) * total;
+        var price = priceDay() * total;
         var bal = w.balance;
         var postsWord = plural3(total, 'пост', 'поста', 'постов');
         var head = total + ' ' + T(postsWord) + ' ' + T('на неделе.');
@@ -1354,7 +1360,7 @@
                     '<i class="ti ti-plus"></i>' + esc(T('Ещё пост')) + '</button></div>' +
                     '<div class="cp-dshint">' +
                     esc(T('тема сразу, текст и обложка следом') + ' · ') +
-                    (wallet().price_day || 10) + ' Forge</div>';
+                    priceDay() + ' Forge</div>';
             }
             var hd = (histDays() || [])[i] || {};
             var views = dayViews(i);
@@ -1513,7 +1519,7 @@
         var rdy = readiness();
         var blocked = rdy.blocked === true;
         var w = wallet();
-        var weekPrice = (w.price_day || 10) * totalPosts();
+        var weekPrice = priceDay() * totalPosts();
         var priceTag = w.is_tester ? '' :
             '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
         var lowNote;
@@ -1535,12 +1541,27 @@
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
             '<div class="cp-goals">' + goals + '</div></div>' +
             rubricsBlock() +
+            '<div class="cp-sec">' + secHead('Модель текстов',
+                'Какая модель пишет посты недели. Влияет на цену каждого поста.') +
+            '<div class="cp-msel">' + modelOpt('premium') + modelOpt('standard') + '</div></div>' +
 
             '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать план недели')) + (blocked ? '' : priceTag) + '</button>' +
             (blocked ? '' : lowNote) +
             apPanel() + reviewEntry() + strategyBlock(), 'brief');
+    }
+
+    function modelOpt(m) {
+        var w = wallet();
+        var prem = m === 'premium';
+        var price = prem ? (w.price_day || 10) : (w.price_day_std || 5);
+        return '<button class="cp-mopt' + (_model === m ? ' on' : '') +
+            '" data-act="mchoice" data-m="' + m + '">' +
+            '<i class="ti ti-' + (prem ? 'diamond' : 'edit') + '"></i>' +
+            '<span><b>' + esc(T(prem ? 'Премиум' : 'Стандарт')) + '</b>' +
+            '<em>' + esc(T(prem ? 'Точнее, глубже' : 'Быстрее, легче')) + '</em></span>' +
+            '<span class="cp-mpx">' + forgeTag(price) + '<u>' + esc(T('за пост')) + '</u></span></button>';
     }
 
     var _genBusy = false;
@@ -1551,7 +1572,8 @@
         haptic('medium');
         if (_batchTimer) { clearInterval(_batchTimer); _batchTimer = null; }
         var tz = deviceTz();
-        var body = { channel_id: _chId, goal: _goal, days: days(), tz_offset_minutes: tz };
+        var body = { channel_id: _chId, goal: _goal, days: days(), tz_offset_minutes: tz,
+                     model: _model };
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 _genBusy = false;
@@ -1789,8 +1811,7 @@
 
     function askCap() {
         var cur = (_ap && _ap.weekly_forge_cap) || 100;
-        var w = wallet();
-        var week = (w.price_day || 10) * totalPosts();
+        var week = priceDay() * totalPosts();
         var opts = [100, 300, 700, 1500];
         if (opts.indexOf(cur) < 0) opts.push(cur);
         opts.sort(function (a, b) { return a - b; });
@@ -2813,7 +2834,7 @@
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
-                forgeTag((wallet().price_day || 10)) + '</button>' +
+                forgeTag(priceDay()) + '</button>' +
                 '<button class="cp-act" data-act="editpost" data-id="' + p.id + '"><i class="ti ti-pencil"></i> ' + esc(T('Править')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
@@ -3130,6 +3151,11 @@
         if (act === 'apcap') { askCap(); return; }
         if (act === 'apresume') { haptic('light'); apSave({ pause_weeks: 0 }); return; }
         if (act === 'appause') { askPause(); return; }
+        if (act === 'mchoice') {
+            var mv = actEl.getAttribute('data-m') === 'standard' ? 'standard' : 'premium';
+            if (mv !== _model) { _model = mv; haptic('light'); renderBrief(); }
+            return;
+        }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') { renderBrief(); return; }
         if (act === 'wkday') {
