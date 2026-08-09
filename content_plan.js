@@ -874,7 +874,8 @@
         var power = (sl.views != null && sl.views > 0) ? sl.views
             : ((r && r.avg_views) ? r.avg_views : 0);
         return '<div class="cp-slotrow"><button class="' + cls + '" data-slot="' + sl.seq + '">' +
-            '<span class="tm' + (sl.manual ? ' man' : '') + '">' + esc(sl.at || '—') + '</span>' +
+            '<span class="tm tmb' + (sl.manual ? ' man' : '') + '">' + esc(sl.at || '—') +
+            '<i class="ti ti-pencil"></i></span>' +
             '<span class="tx"><b>' + esc(title) + '</b>' +
             (sub ? '<em>' + esc(sub) + '</em>' : '') + '</span>' +
             (power ? '<span class="pw">' + esc(numExact(power)) + '</span>' : '') +
@@ -1309,7 +1310,7 @@
                         '<button class="cp-slot" data-goto="' + p.id + '">' +
                         (fixed
                             ? '<span class="tm">' + esc(p.slot_hm || '—') + '</span>'
-                            : '<span class="tm man" data-wtime="' + p.id + '">' +
+                            : '<span class="tm man tmb" data-wtime="' + p.id + '">' +
                               esc(p.slot_hm || '—') + '<i class="ti ti-pencil"></i></span>') +
                         '<span class="tx"><b>' + esc((p.title || '').slice(0, 60)) + '</b>' +
                         '<em>' + esc(T(st[0])) + '</em></span>' +
@@ -1320,21 +1321,27 @@
                               esc(T('Убрать пост')) + '"><i class="ti ti-x"></i></button>') +
                         '</div>';
                 }).join('') || '<div class="cp-dsnote">' + esc(T('В этом дне постов нет.')) + '</div>';
+                var full = ps.length >= MAX_PER_DAY;
                 body = (hoursHint.length
                     ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
                         hoursHint.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
                             .join(', ')) + '</div>'
                     : '<div class="cp-dss">' + esc(T('Нажми на время, чтобы изменить его. Пост откроется в ленте по нажатию.')) + '</div>') +
                     '<div class="cp-slots">' + rows + '</div>' +
-                    '<button class="cp-dsr wide" data-wadd="1"><i class="ti ti-plus"></i>' +
-                    '<span class="tx"><b>' + esc(T('Добавить пост в этот день')) + '</b>' +
-                    '<em>' + esc(T('тема сразу, текст и обложка следом') + ' · ') +
-                    (wallet().price_day || 10) + ' Forge</em></span></button>';
+                    '<div class="cp-addrow">' +
+                    '<button class="cp-add"' + (full ? ' disabled' : ' data-wadd="1"') + '>' +
+                    '<i class="ti ti-plus"></i>' + esc(T('Ещё пост')) + '</button></div>' +
+                    '<div class="cp-dshint">' +
+                    esc(T('тема сразу, текст и обложка следом') + ' · ') +
+                    (wallet().price_day || 10) + ' Forge</div>';
             }
+            var hd = (histDays() || [])[i] || {};
+            var views = dayViews(i);
             host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
                 '<div class="cp-dsh2"><b>' + esc(T(WD_FULL[i])) + '</b>' +
-                (ps.length ? '<span>' + ps.length + ' ' +
-                    esc(T(plural3(ps.length, 'пост', 'поста', 'постов'))) + '</span>' : '') +
+                (views ? '<span>' + esc(numExact(views) + ' ' + T('просмотров') + ' · ' +
+                    T('по') + ' ' + hd.posts + ' ' +
+                    T(plural3(hd.posts, 'посту', 'постам', 'постам'))) + '</span>' : '') +
                 '</div>' + body + '</div>';
         };
         draw();
