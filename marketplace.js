@@ -228,6 +228,16 @@
             el2.addEventListener('click', function (e) {
                 if (_moved) { e.stopPropagation(); e.preventDefault(); }
             }, true);
+            el2.addEventListener('wheel', function (e) {
+                if (el2.scrollWidth - el2.clientWidth <= 2) return;
+                var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                if (!d) return;
+                var atStart = el2.scrollLeft <= 0;
+                var atEnd = el2.scrollLeft >= el2.scrollWidth - el2.clientWidth - 1;
+                if ((d < 0 && atStart) || (d > 0 && atEnd)) return;
+                e.preventDefault();
+                el2.scrollLeft += d;
+            }, { passive: false });
             el2.addEventListener('scroll', upd, { passive: true });
             upd();
         });
