@@ -15,6 +15,7 @@
     var _review = null;
     var _cal = null;
     var _rubBusy = false;
+    var _rubChanged = false;
     var _apBusy = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -225,6 +226,7 @@
 
     window.__openContentPlan = function () {
         _open = true;
+        _rubChanged = false;
         if (!_batchTimer) _dayBusy = {};
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
@@ -760,7 +762,12 @@
             '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
             esc(T('Своя рубрика')) + '</button>' +
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
-            esc(T('Обновить набор')) + '</button></div></div>';
+            esc(T('Обновить набор')) + '</button></div>' +
+            (inWeek && _rubChanged
+                ? '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
+                  esc(T('Пересобрать неделю с новыми рубриками')) + '</button>' +
+                  '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>'
+                : '') + '</div>';
     }
 
     function readiness() {
@@ -1166,7 +1173,11 @@
                    { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 _rubBusy = false;
-                if (r && r.ok && r.rubrics) { _rubrics = r.rubrics; rerender(); }
+                if (r && r.ok && r.rubrics) {
+                    _rubrics = r.rubrics;
+                    if (_lastView === 'week') _rubChanged = true;
+                    rerender();
+                }
                 else if (r && r.error === 'too_many') toast(T('Больше шестнадцати рубрик не бывает'));
                 else if (r && r.error) toast(T('Не удалось изменить рубрики'));
             })
@@ -1510,7 +1521,7 @@
         apiRequest('/api/v1/content-plan/generate', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 _genBusy = false;
-                if (r && r.ok) { renderGenerating(); startPoll(); }
+                if (r && r.ok) { _rubChanged = false; renderGenerating(); startPoll(); }
                 else if (r && r.error) { if (btn) btn.disabled = false; toast(cap(r)); }
                 else { if (btn) btn.disabled = false; toast(T('Не удалось запустить сборку')); }
             })
@@ -1619,9 +1630,15 @@
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
+        var goalChanged = _goal && _state.goal && _goal !== _state.goal;
         var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
             'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
-            '<div class="cp-goals">' + goalChips() + '</div></div>';
+            '<div class="cp-goals">' + goalChips() + '</div>' +
+            (goalChanged
+                ? '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
+                  esc(T('Пересобрать неделю под новую цель')) + '</button>' +
+                  '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>'
+                : '') + '</div>';
 
         var allBtn = haveText < n
             ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
