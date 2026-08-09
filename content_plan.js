@@ -7,6 +7,7 @@
     var _chId = null;
     var _goal = 'engagement';
     var _model = 'premium';
+    var _building = false;
     var _days = null;
     var _selDay = 0;
     var _dayBusy = {};
@@ -297,14 +298,14 @@
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
         syncDays(d);
-        if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
+        if (d.status === 'generating') { _building = true; renderGenerating(); startPoll(); return; }
         if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') {
             if (_chId == null && d.readiness_channel_id) _chId = d.readiness_channel_id;
             if (_channels === null) {
                 apiRequest('/api/v1/channels/active').then(function (cd) {
                     _channels = (cd && cd.channels) || [];
                     if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
-                    renderWeek();
+                    if (!_building) renderWeek();
                 }).catch(function () {});
             }
             if (_chId) {
@@ -313,6 +314,14 @@
                 if (!_cover) loadCover();
                 if (!_cal) loadCalendar();
                 loadReview(false);
+            }
+            var bps = d.posts || [];
+            var bwt = bps.filter(function (p) { return p.text; }).length;
+            if (d.batch_running && bwt < bps.length) {
+                _building = true;
+                renderGenerating();
+                startPoll();
+                return;
             }
             renderWeek();
             if (d.batch_running) startBatchPoll();
@@ -1581,6 +1590,7 @@
                     _rubChanged = false;
                     _days = null;
                     _cal = null;
+                    _building = true;
                     renderGenerating();
                     startPoll();
                 }
@@ -1617,24 +1627,47 @@
             if (i < GEN_TEXTS.length - 1) { i++; el.textContent = T(GEN_TEXTS[i]); }
         }, 5000);
     }
+    function genProgressLine(d) {
+        var ps = (d && d.posts) || [];
+        if (!ps.length) return null;
+        var withText = ps.filter(function (p) { return p.text; }).length;
+        if (withText < ps.length) {
+            return T('Пишу тексты') + ' · ' + withText + ' ' + T('из') + ' ' + ps.length;
+        }
+        return T('Рисую обложки...');
+    }
     function startPoll() {
         if (_pollTimer) clearInterval(_pollTimer);
         var ticks = 0;
         _pollTimer = setInterval(function () {
             ticks++;
-            if (ticks > 240) { stopTimers(); return; }
-            if (ticks === 20) { var el = document.getElementById('cp-gen-text'); if (el) el.textContent = T('Ещё чуть-чуть...'); }
+            if (ticks > 400) {
+                stopTimers();
+                if (_building) { _building = false; if (_state && _state.posts) renderWeek(); }
+                return;
+            }
             var pcid = _chId || (_state && _state.channel_id);
             apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : '')).then(function (d) {
                 if (!d || !d.ok) return;
                 if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') {
                     _state = d;
-                    stopTimers();
                     syncDays(d);
+                    var ps = d.posts || [];
+                    var withText = ps.filter(function (p) { return p.text; }).length;
+                    if (_building && d.batch_running && document.getElementById('cp-gen-text')) {
+                        if (_genTimer) { clearInterval(_genTimer); _genTimer = null; }
+                        var el = document.getElementById('cp-gen-text');
+                        var line = genProgressLine(d);
+                        if (el && line) el.textContent = line;
+                        return;
+                    }
+                    _building = false;
+                    stopTimers();
                     if (!_cal) loadCalendar();
                     renderWeek();
+                    if (d.batch_running && withText < ps.length) startBatchPoll();
                 }
-                else if (d.status === 'error') { _state = d; stopTimers(); renderError(); }
+                else if (d.status === 'error') { _state = d; _building = false; stopTimers(); renderError(); }
             }).catch(function () {});
         }, 2500);
     }
