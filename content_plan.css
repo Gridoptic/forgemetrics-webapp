@@ -174,6 +174,13 @@
 }
 
 .cp-goal.on i { color: #818cf8; }
+.cp-goal .tx { flex: 1; min-width: 0; }
+.cp-goal .tx b { display: block; font-size: 12.5px; font-weight: 700; }
+.cp-goal .tx em {
+    display: block; font-style: normal; font-size: 10.5px; font-weight: 500;
+    color: #6f748c; line-height: 1.35; margin-top: 2px;
+}
+.cp-goal.on .tx em { color: #9aa0f5; }
 
 .cp-gopx {
     display: inline-flex;
@@ -265,8 +272,7 @@
 .cp-hcell .v { font-size: 15px; font-weight: 750; color: #e8eaf1; margin: 2px 0; }
 .cp-hcell .d { font-size: 9.5px; color: #4a4d61; line-height: 1.3; }
 
-.cp-goals { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.cp-goals .cp-goal:nth-child(5) { grid-column: 1 / -1; }
+.cp-goals { display: grid; grid-template-columns: 1fr; gap: 7px; }
 
 
 .cp-ap {
