@@ -858,14 +858,431 @@ ORN.burst = function(p,s){
   return out;
 };
 
+ORN.books = function(p,s){
+  var out = "", x = W*0.74, y = H*0.88;
+  var ws = [120, 104, 112, 88, 96];
+  for (var i = 0; i < 5; i++){
+    var h = 22, off = (sr(s+i*7) - 0.5) * 26;
+    out += '<rect x="'+(x+off-ws[i]/2)+'" y="'+(y-h)+'" width="'+ws[i]+'" height="'+h+'" rx="5" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.45+i*0.11)+'"/>' +
+      '<line x1="'+(x+off-ws[i]/2+10)+'" y1="'+(y-h/2)+'" x2="'+(x+off-ws[i]/2+22)+'" y2="'+(y-h/2)+'" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2" opacity=".5"/>';
+    y -= h + 4;
+  }
+  return out;
+};
+ORN.page = function(p,s){
+  var x = W*0.6, y = H*0.14, w = 140, h = 180, f = 26;
+  var out = '<path d="M'+x+' '+y+' H'+(x+w-f)+' L'+(x+w)+' '+(y+f)+' V'+(y+h)+' H'+x+' Z" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+    '<path d="M'+(x+w-f)+' '+y+' V'+(y+f)+' H'+(x+w)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>';
+  for (var i = 1; i <= 5; i++)
+    out += '<line x1="'+(x+18)+'" y1="'+(y+22+i*24)+'" x2="'+(x+w-18-(i===5?40:0))+'" y2="'+(y+22+i*24)+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".4"/>';
+  return out;
+};
+ORN.bulb = function(p,s){
+  var cx = W*0.74, cy = H*0.42, r = 46, out = "";
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<path d="M'+(cx-14)+' '+(cy+r)+' v 16 h 28 v -16" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>' +
+    '<line x1="'+(cx-14)+'" y1="'+(cy+r+22)+'" x2="'+(cx+14)+'" y2="'+(cy+r+22)+'" stroke="'+p.acc+'" stroke-width="2.4" opacity=".55"/>' +
+    '<path d="M'+(cx-12)+' '+(cy+6)+' q 12 -18 24 0" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".8"/>';
+  for (var k = 0; k < 7; k++){
+    var a = -Math.PI*0.85 + k*Math.PI*0.28;
+    if (Math.abs(Math.sin(a)) < 0.2) continue;
+    out += '<line x1="'+(cx+(r+12)*Math.cos(a))+'" y1="'+(cy+(r+12)*Math.sin(a))+'" x2="'+(cx+(r+26)*Math.cos(a))+'" y2="'+(cy+(r+26)*Math.sin(a))+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".7"/>';
+  }
+  return out;
+};
+ORN.pencilline = function(p,s){
+  return '<path d="M'+(W*0.3)+' '+(H*0.78)+' C '+(W*0.5)+' '+(H*0.6)+', '+(W*0.55)+' '+(H*0.95)+', '+(W*0.72)+' '+(H*0.8)+' S '+(W*0.95)+' '+(H*0.55)+', '+(W+20)+' '+(H*0.68)+'" fill="none" stroke="'+p.acc+'" stroke-width="3" opacity=".7" stroke-linecap="round"/>' +
+    '<path d="M'+(W*0.84)+' '+(H*0.2)+' l 26 -8 l -6 26 Z" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>' +
+    '<line x1="'+(W*0.84)+'" y1="'+(H*0.2)+'" x2="'+(W*0.7)+'" y2="'+(H*0.34)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".5" stroke-dasharray="3 6"/>';
+};
+ORN.progress = function(p,s){
+  var out = "", x = W*0.62, w = 140;
+  for (var i = 0; i < 4; i++){
+    var y = H*0.26 + i*42, f = [1, 0.7, 0.45, 0.2][i];
+    out += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="12" rx="6" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+      '<rect x="'+x+'" y="'+y+'" width="'+(w*f)+'" height="12" rx="6" fill="'+(i?p.acc:p.acc2)+'" opacity="'+(0.7-i*0.12)+'"/>' +
+      (f === 1 ? '<circle cx="'+(x+w+24)+'" cy="'+(y+6)+'" r="9" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".9"/><path d="M'+(x+w+19)+' '+(y+6)+' l 4 4 l 7 -8" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".9"/>' : '');
+  }
+  return out;
+};
+
+ORN.maze = function(p,s){
+  var cx = W*0.74, cy = H*0.5, out = "", r = 16;
+  var d = "M"+cx+" "+cy;
+  for (var i = 0; i < 7; i++){
+    var dir = i % 4, len = r * (i + 1) * 0.62;
+    if (dir === 0) d += " h " + len;
+    else if (dir === 1) d += " v " + len;
+    else if (dir === 2) d += " h -" + len;
+    else d += " v -" + len;
+  }
+  out += '<path d="'+d+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".8" stroke-linejoin="round"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="'+p.acc2+'" opacity=".9"/>' +
+    '<circle cx="'+(cx+r*7*0.62-20)+'" cy="'+(cy-r*4*0.62-14)+'" r="6" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".85"/>';
+  return out;
+};
+ORN.balance = function(p,s){
+  var cx = W*0.74, cy = H*0.5, R = 74;
+  return '<path d="M'+cx+' '+(cy-R)+' A'+R+' '+R+' 0 0 1 '+cx+' '+(cy+R)+'" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".8"/>' +
+    '<path d="M'+cx+' '+(cy-R)+' A'+R+' '+R+' 0 0 0 '+cx+' '+(cy+R)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".55"/>' +
+    '<circle cx="'+cx+'" cy="'+(cy-R/2)+'" r="10" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9"/>' +
+    '<circle cx="'+cx+'" cy="'+(cy+R/2)+'" r="10" fill="'+p.acc+'" opacity=".7"/>';
+};
+ORN.thoughts = function(p,s){
+  var out = "", cx = W*0.68, y = H*0.86;
+  var rs = [7, 11, 16, 24, 34];
+  for (var i = 0; i < 5; i++){
+    var x = cx + (sr(s+i*7) - 0.5) * 60 + i*18;
+    out += '<circle cx="'+x+'" cy="'+y+'" r="'+rs[i]+'" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.4+i*0.12)+'"/>';
+    y -= rs[i] + 26;
+  }
+  return out;
+};
+ORN.branches = function(p,s){
+  function br(x, y, ang, len, depth, col){
+    if (depth === 0 || len < 12) return "";
+    var x2 = x + Math.cos(ang)*len, y2 = y + Math.sin(ang)*len;
+    var out2 = '<line x1="'+x.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+col+'" stroke-width="'+(depth*0.8)+'" opacity="'+(0.25+depth*0.15)+'"/>';
+    out2 += br(x2, y2, ang - 0.5 - sr(s+depth)*0.3, len*0.72, depth-1, col);
+    out2 += br(x2, y2, ang + 0.45 + sr(s+depth*3)*0.3, len*0.72, depth-1, col);
+    if (depth === 1) out2 += '<circle cx="'+x2.toFixed(1)+'" cy="'+y2.toFixed(1)+'" r="3.4" fill="'+p.acc2+'" opacity=".7"/>';
+    return out2;
+  }
+  return br(W*0.76, H*1.02, -Math.PI/2, 62, 5, p.acc);
+};
+ORN.calmwaves = function(p,s){
+  var out = "";
+  for (var i = 0; i < 5; i++){
+    var y = H*0.3 + i*(26 + i*7);
+    out += '<path d="M'+(W*0.3)+' '+y+' q 55 -'+(16-i*2)+' 110 0 t 110 0 t 110 0" fill="none" stroke="'+(i===2?p.acc2:p.acc)+'" stroke-width="2" opacity="'+(0.65-i*0.1)+'"/>';
+  }
+  return out;
+};
+
+ORN.skyline = function(p,s){
+  var out = "", x = W*0.5;
+  var hs = [90, 150, 118, 176, 96, 140];
+  for (var i = 0; i < 6; i++){
+    var w = 34 + sr(s+i)*22, h = hs[i];
+    out += '<rect x="'+x+'" y="'+(H-h+8)+'" width="'+w+'" height="'+h+'" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.4+i*0.09)+'"/>';
+    for (var wy = H-h+26; wy < H - 16; wy += 24)
+      for (var wx = x+9; wx < x+w-8; wx += 16)
+        if (sr(s+wx*3+wy*7) > 0.45)
+          out += '<rect x="'+wx+'" y="'+wy+'" width="6" height="8" fill="'+(i%2?p.acc2:p.acc)+'" opacity=".5"/>';
+    x += w + 9;
+  }
+  return out;
+};
+ORN.roofs = function(p,s){
+  var out = "", x = W*0.46;
+  for (var i = 0; i < 4; i++){
+    var w = 74 + sr(s+i)*30, peak = 40 + sr(s+i*3)*22, base = H*0.72;
+    out += '<path d="M'+x+' '+base+' l '+(w/2)+' -'+peak+' l '+(w/2)+' '+peak+'" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.6" opacity="'+(0.5+i*0.12)+'" stroke-linejoin="round"/>' +
+      '<line x1="'+(x+w*0.18)+'" y1="'+(base-peak*0.36)+'" x2="'+(x+w*0.18)+'" y2="'+(base-peak*0.36-22)+'" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity=".5"/>';
+    x += w * 0.6;
+  }
+  return out;
+};
+ORN.wingrid = function(p,s){
+  var out = "", x0 = W*0.66, y0 = H*0.18;
+  for (var gx = 0; gx < 4; gx++)
+    for (var gy = 0; gy < 4; gy++){
+      var lit = sr(s + gx*7 + gy*13) > 0.4;
+      out += '<rect x="'+(x0+gx*40)+'" y="'+(y0+gy*40)+'" width="28" height="28" rx="4" fill="'+(lit ? p.acc : 'none')+'" stroke="'+p.acc+'" stroke-width="1.8" opacity="'+(lit?0.35:0.55)+'"/>';
+    }
+  return out + '<rect x="'+(x0-14)+'" y="'+(y0-14)+'" width="'+(4*40+16)+'" height="'+(4*40+16)+'" rx="8" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity=".6"/>';
+};
+ORN.keyring = function(p,s){
+  var cx = W*0.76, cy = H*0.36;
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="34" fill="none" stroke="'+p.acc+'" stroke-width="3" opacity=".85"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="14" fill="none" stroke="'+p.acc+'" stroke-width="2" opacity=".5"/>' +
+    '<path d="M'+(cx+24)+' '+(cy+24)+' l 52 52 h 18 v -14 h -14 v -12 h -14 l -14 -14" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>';
+};
+ORN.blueprint = function(p,s){
+  var x = W*0.52, y = H*0.18, w = 200, h = 150;
+  return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".7"/>' +
+    '<line x1="'+(x+w*0.44)+'" y1="'+y+'" x2="'+(x+w*0.44)+'" y2="'+(y+h*0.55)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".6"/>' +
+    '<line x1="'+x+'" y1="'+(y+h*0.55)+'" x2="'+(x+w*0.62)+'" y2="'+(y+h*0.55)+'" stroke="'+p.acc+'" stroke-width="2" opacity=".6"/>' +
+    '<path d="M'+(x+w*0.44)+' '+(y+h*0.24)+' a 22 22 0 0 1 22 22" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity=".8"/>' +
+    '<path d="M'+(x+w*0.2)+' '+(y+h*0.55)+' a 20 20 0 0 1 20 -20" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity=".8"/>' +
+    '<line x1="'+x+'" y1="'+(y+h+16)+'" x2="'+(x+w)+'" y2="'+(y+h+16)+'" stroke="'+p.acc2+'" stroke-width="1.6" opacity=".5" stroke-dasharray="4 5"/>';
+};
+
+ORN.pyramid = function(p,s){
+  var out = "", cx = W*0.72, y = H*0.84;
+  var ws = [150, 118, 88, 58, 30];
+  for (var i = 0; i < 5; i++){
+    out += '<rect x="'+(cx-ws[i]/2)+'" y="'+(y-30)+'" width="'+ws[i]+'" height="30" rx="14" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.5+i*0.11)+'"/>';
+    y -= 36;
+  }
+  return out;
+};
+ORN.balloons = function(p,s){
+  var out = "";
+  for (var i = 0; i < 4; i++){
+    var x = W*0.58 + i*46 + (sr(s+i)-0.5)*20, y = H*0.3 + sr(s+i*7)*H*0.24;
+    var r = 22 + sr(s+i*3)*12;
+    out += '<ellipse cx="'+x+'" cy="'+y+'" rx="'+r+'" ry="'+(r*1.15)+'" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.5+sr(s+i*5)*0.35)+'"/>' +
+      '<path d="M'+x+' '+(y+r*1.15)+' q '+((i%2?-1:1)*10)+' 30 0 60" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="1.6" opacity=".5"/>';
+  }
+  return out;
+};
+ORN.cubes = function(p,s){
+  var out = "", positions = [[W*0.62,H*0.72],[W*0.74,H*0.72],[W*0.68,H*0.5],[W*0.88,H*0.66]];
+  for (var i = 0; i < 4; i++){
+    var x = positions[i][0], y = positions[i][1], a = 46;
+    out += '<g transform="rotate('+((sr(s+i)-0.5)*14)+' '+x+' '+y+')">' +
+      '<rect x="'+(x-a/2)+'" y="'+(y-a/2)+'" width="'+a+'" height="'+a+'" rx="7" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.55+i*0.1)+'"/>' +
+      '<circle cx="'+x+'" cy="'+y+'" r="7" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2" opacity=".6"/></g>';
+  }
+  return out;
+};
+ORN.garland = function(p,s){
+  var out = '<path d="M'+(W*0.3)+' '+(H*0.14)+' Q '+(W*0.62)+' '+(H*0.4)+' '+(W+16)+' '+(H*0.18)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>';
+  for (var k = 1; k < 9; k++){
+    var t = k/9;
+    var x = (1-t)*(1-t)*(W*0.3) + 2*(1-t)*t*(W*0.62) + t*t*(W+16);
+    var y = (1-t)*(1-t)*(H*0.14) + 2*(1-t)*t*(H*0.4) + t*t*(H*0.18);
+    out += '<path d="M'+(x-11)+' '+y+' h 22 l -11 26 Z" fill="'+(k%2?p.acc:p.acc2)+'" opacity="'+(0.4+sr(s+k)*0.4)+'"/>';
+  }
+  return out;
+};
+ORN.paperplane = function(p,s){
+  var x = W*0.78, y = H*0.32;
+  return '<path d="M'+x+' '+y+' l -64 26 l 26 10 l 6 24 l 12 -18 l 34 12 Z" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9" stroke-linejoin="round"/>' +
+    '<path d="M'+(x-64+26)+' '+(y+36)+' l 12 -18" fill="none" stroke="'+p.acc2+'" stroke-width="1.8" opacity=".6"/>' +
+    '<path d="M'+(W*0.34)+' '+(H*0.78)+' Q '+(W*0.5)+' '+(H*0.86)+' '+(W*0.6)+' '+(H*0.6)+' T '+(x-40)+' '+(y+30)+'" fill="none" stroke="'+p.acc+'" stroke-width="2" opacity=".55" stroke-dasharray="4 9"/>';
+};
+
+ORN.staff = function(p,s){
+  var out = "", x0 = W*0.5, w = W*0.48;
+  for (var i = 0; i < 5; i++)
+    out += '<line x1="'+x0+'" y1="'+(H*0.6+i*16)+'" x2="'+(x0+w)+'" y2="'+(H*0.6+i*16)+'" stroke="'+p.acc+'" stroke-width="1.6" opacity=".45"/>';
+  var notes = [[0.1,1],[0.28,3],[0.44,0],[0.6,2],[0.78,4],[0.9,1]];
+  notes.forEach(function(n, i){
+    var nx = x0 + w*n[0], ny = H*0.6 + n[1]*16;
+    out += '<ellipse cx="'+nx+'" cy="'+ny+'" rx="10" ry="7.5" fill="'+(i%2?p.acc2:p.acc)+'" opacity=".85" transform="rotate(-18 '+nx+' '+ny+')"/>' +
+      '<line x1="'+(nx+9)+'" y1="'+ny+'" x2="'+(nx+9)+'" y2="'+(ny-42)+'" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity=".85"/>';
+  });
+  return out;
+};
+ORN.vinyl = function(p,s){
+  var cx = W*0.74, cy = H*0.5, out = "";
+  for (var i = 0; i < 5; i++)
+    out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(88-i*15)+'" fill="none" stroke="'+p.acc+'" stroke-width="'+(i===0?2.6:1.4)+'" opacity="'+(0.75-i*0.1)+'"/>';
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="17" fill="none" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="'+p.acc2+'" opacity=".9"/>' +
+    '<path d="M'+(cx-88)+' '+cy+' A 88 88 0 0 1 '+(cx-30)+' '+(cy-82)+'" fill="none" stroke="'+p.acc2+'" stroke-width="3" opacity=".5"/>';
+  return out;
+};
+ORN.strings = function(p,s){
+  var out = "";
+  for (var i = 0; i < 5; i++){
+    var x = W*0.56 + i*36;
+    out += '<line x1="'+x+'" y1="-10" x2="'+x+'" y2="'+(H+10)+'" stroke="'+(i===2?p.acc2:p.acc)+'" stroke-width="'+(1.4+i*0.35)+'" opacity="'+(0.6-Math.abs(i-2)*0.1)+'"/>' +
+      '<circle cx="'+x+'" cy="'+(H*0.2+sr(s+i*7)*H*0.6)+'" r="6" fill="'+(i===2?p.acc2:p.acc)+'" opacity=".8"/>';
+  }
+  return out;
+};
+ORN.sinewave = function(p,s){
+  var out = "";
+  for (var l = 0; l < 3; l++){
+    var d = "M"+(W*0.3)+" "+(H*0.5), amp = 34 - l*9;
+    for (var x = 0; x <= W*0.72; x += 8)
+      d += " L"+(W*0.3+x)+" "+(H*0.5 + Math.sin(x/46 + s + l*0.8)*amp);
+    out += '<path d="'+d+'" fill="none" stroke="'+(l===1?p.acc2:p.acc)+'" stroke-width="2" opacity="'+(0.7-l*0.2)+'"/>';
+  }
+  return out;
+};
+ORN.pianokeys = function(p,s){
+  var out = "", x = W*0.5, y = H*0.62, kw = 30, kh = 96;
+  for (var i = 0; i < 7; i++)
+    out += '<rect x="'+(x+i*kw)+'" y="'+y+'" width="'+kw+'" height="'+kh+'" fill="none" stroke="'+p.acc+'" stroke-width="2" opacity=".65"/>';
+  for (var b = 0; b < 6; b++){
+    if (b === 2) continue;
+    out += '<rect x="'+(x+(b+1)*kw-9)+'" y="'+y+'" width="18" height="'+(kh*0.6)+'" rx="3" fill="'+p.acc2+'" opacity=".75"/>';
+  }
+  return out;
+};
+
+ORN.joystick = function(p,s){
+  var cx = W*0.62, cy = H*0.5;
+  var out = '<path d="M'+(cx-14)+' '+(cy-44)+' h 28 v 30 h 30 v 28 h -30 v 30 h -28 v -30 h -30 v -28 h 30 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".8" stroke-linejoin="round"/>';
+  var bx = W*0.87, positions = [[0,-26],[26,0],[0,26],[-26,0]];
+  positions.forEach(function(o, i){
+    out += '<circle cx="'+(bx+o[0])+'" cy="'+(cy+o[1])+'" r="12" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.6+ (i%2)*0.25)+'"/>';
+  });
+  return out;
+};
+ORN.shield = function(p,s){
+  var cx = W*0.8, cy = H*0.46;
+  return '<path d="M'+cx+' '+(cy-58)+' l 52 20 v 42 q 0 40 -52 62 q -52 -22 -52 -62 v -42 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<path d="M'+(cx-20)+' '+cy+' l 14 16 l 28 -30" fill="none" stroke="'+p.acc2+'" stroke-width="3" opacity=".9" stroke-linecap="round" stroke-linejoin="round"/>';
+};
+ORN.levelup = function(p,s){
+  var out = "", x = W*0.5, y = H*0.8;
+  for (var i = 0; i < 4; i++){
+    out += '<rect x="'+x+'" y="'+(y-16)+'" width="74" height="16" rx="6" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.4" opacity="'+(0.5+i*0.12)+'"/>';
+    x += 60; y -= 52;
+  }
+  out += '<line x1="'+(x+20)+'" y1="'+(y+4)+'" x2="'+(x+20)+'" y2="'+(y-40)+'" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".9"/>' +
+    '<path d="M'+(x+20)+' '+(y-40)+' l 32 10 l -32 12 Z" fill="'+p.acc2+'" opacity=".9"/>';
+  return out;
+};
+ORN.dice = function(p,s){
+  var out = "", sets = [[W*0.64,H*0.4,-10],[W*0.84,H*0.66,12]];
+  var pips = [[[0,0],[-14,-14],[14,14],[-14,14],[14,-14]],[[-13,-13],[13,-13],[0,0],[-13,13],[13,13]]];
+  for (var i = 0; i < 2; i++){
+    var x = sets[i][0], y = sets[i][1], a = 62;
+    out += '<g transform="rotate('+sets[i][2]+' '+x+' '+y+')">' +
+      '<rect x="'+(x-a/2)+'" y="'+(y-a/2)+'" width="'+a+'" height="'+a+'" rx="12" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.6" opacity=".85"/>';
+    pips[i].forEach(function(o){
+      out += '<circle cx="'+(x+o[0])+'" cy="'+(y+o[1])+'" r="4.4" fill="'+(i?p.acc2:p.acc)+'" opacity=".85"/>';
+    });
+    out += "</g>";
+  }
+  return out;
+};
+ORN.aim = function(p,s){
+  var cx = W*0.72, cy = H*0.48, r = 62;
+  var out = '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="2.4" opacity=".8"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*0.55)+'" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="'+p.acc2+'" opacity=".95"/>';
+  [[0,-1],[0,1],[-1,0],[1,0]].forEach(function(v){
+    out += '<line x1="'+(cx+v[0]*(r-14))+'" y1="'+(cy+v[1]*(r-14))+'" x2="'+(cx+v[0]*(r+16))+'" y2="'+(cy+v[1]*(r+16))+'" stroke="'+p.acc2+'" stroke-width="2.6" opacity=".85"/>';
+  });
+  return out;
+};
+
+ORN.scales = function(p,s){
+  var cx = W*0.78, top = H*0.14, beam = H*0.3;
+  var out = '<line x1="'+cx+'" y1="'+top+'" x2="'+cx+'" y2="'+(H*0.78)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".8"/>' +
+    '<line x1="'+(cx-92)+'" y1="'+beam+'" x2="'+(cx+92)+'" y2="'+(beam-14)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85"/>' +
+    '<line x1="'+(cx-110)+'" y1="'+(H*0.78)+'" x2="'+(cx+110)+'" y2="'+(H*0.78)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".6"/>';
+  [[-92, beam, 1], [92, beam-14, 0]].forEach(function(a, i){
+    var px = cx + a[0], py = a[1] + 44;
+    out += '<line x1="'+(cx+a[0])+'" y1="'+a[1]+'" x2="'+(px-24)+'" y2="'+py+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".6"/>' +
+      '<line x1="'+(cx+a[0])+'" y1="'+a[1]+'" x2="'+(px+24)+'" y2="'+py+'" stroke="'+p.acc+'" stroke-width="1.8" opacity=".6"/>' +
+      '<path d="M'+(px-26)+' '+py+' A 26 26 0 0 0 '+(px+26)+' '+py+'" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4" opacity=".85"/>';
+  });
+  return out;
+};
+ORN.columns = function(p,s){
+  var out = "", x = W*0.52;
+  for (var i = 0; i < 4; i++){
+    out += '<rect x="'+x+'" y="'+(H*0.3)+'" width="26" height="'+(H*0.54)+'" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.5+i*0.1)+'"/>' +
+      '<rect x="'+(x-8)+'" y="'+(H*0.24)+'" width="42" height="16" rx="3" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.5+i*0.1)+'"/>' +
+      '<rect x="'+(x-8)+'" y="'+(H*0.84)+'" width="42" height="14" rx="3" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.5+i*0.1)+'"/>';
+    x += 66;
+  }
+  out += '<line x1="'+(W*0.48)+'" y1="'+(H*0.18)+'" x2="'+(W*0.52+4*66)+'" y2="'+(H*0.18)+'" stroke="'+p.acc+'" stroke-width="2.6" opacity=".7"/>';
+  return out;
+};
+ORN.stamp = function(p,s){
+  var cx = W*0.79, cy = H*0.5, r = 62, out = "";
+  var teeth = 26;
+  for (var k = 0; k < teeth; k++){
+    var a = Math.PI*2/teeth*k;
+    out += '<circle cx="'+(cx+r*Math.cos(a)).toFixed(1)+'" cy="'+(cy+r*Math.sin(a)).toFixed(1)+'" r="3.6" fill="'+p.acc+'" opacity=".6"/>';
+  }
+  out += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-12)+'" fill="none" stroke="'+p.acc+'" stroke-width="2.2" opacity=".8"/>' +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-30)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2" opacity=".7"/>' +
+    '<line x1="'+(cx-r+34)+'" y1="'+cy+'" x2="'+(cx+r-34)+'" y2="'+cy+'" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".8"/>';
+  return out;
+};
+ORN.signature = function(p,s){
+  return '<path d="M'+(W*0.4)+' '+(H*0.62)+' C '+(W*0.48)+' '+(H*0.3)+', '+(W*0.54)+' '+(H*0.86)+', '+(W*0.62)+' '+(H*0.56)+' S '+(W*0.74)+' '+(H*0.3)+', '+(W*0.78)+' '+(H*0.6)+' q 6 26 24 10" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linecap="round"/>' +
+    '<line x1="'+(W*0.38)+'" y1="'+(H*0.76)+'" x2="'+(W*0.9)+'" y2="'+(H*0.76)+'" stroke="'+p.acc2+'" stroke-width="2" opacity=".6"/>' +
+    '<circle cx="'+(W*0.86)+'" cy="'+(H*0.52)+'" r="4" fill="'+p.acc2+'" opacity=".9"/>';
+};
+ORN.paragraphs = function(p,s){
+  var out = "", y = H*0.2;
+  var ws = [0.42, 0.36, 0.3];
+  for (var b = 0; b < 3; b++){
+    out += '<circle cx="'+(W*0.52)+'" cy="'+(y+5)+'" r="4" fill="'+p.acc2+'" opacity=".85"/>';
+    for (var l = 0; l < 2; l++){
+      out += '<rect x="'+(W*0.56)+'" y="'+y+'" width="'+(W*ws[b]*(l?0.7:1))+'" height="9" rx="4.5" fill="'+p.acc+'" opacity="'+(0.4-l*0.13)+'"/>';
+      y += 22;
+    }
+    y += 22;
+  }
+  return out;
+};
+
+ORN.funnel = function(p,s){
+  var out = "", cx = W*0.72, y = H*0.16;
+  var ws = [190, 138, 92, 52];
+  for (var i = 0; i < 4; i++){
+    out += '<path d="M'+(cx-ws[i]/2)+' '+y+' h '+ws[i]+' l -'+((ws[i]-(ws[i+1]||36))/2)+' 34 h -'+(ws[i+1]||36)+' Z" fill="none" stroke="'+(i%2?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.45+i*0.14)+'" stroke-linejoin="round"/>';
+    y += 46;
+  }
+  out += '<circle cx="'+cx+'" cy="'+(y+18)+'" r="7" fill="'+p.acc2+'" opacity=".9"/>';
+  return out;
+};
+ORN.megaphone = function(p,s){
+  var x = W*0.62, y = H*0.54;
+  var out = '<path d="M'+x+' '+(y-16)+' h 40 l 66 -34 v 100 l -66 -34 h -40 Z" fill="none" stroke="'+p.acc+'" stroke-width="2.6" opacity=".85" stroke-linejoin="round"/>' +
+    '<path d="M'+(x+18)+' '+(y+16)+' v 30 h 22 v -28" fill="none" stroke="'+p.acc+'" stroke-width="2.2" opacity=".6"/>';
+  for (var i = 0; i < 3; i++){
+    var r = 26 + i*20;
+    out += '<path d="M'+(x+120)+' '+(y-r)+' A '+r+' '+r+' 0 0 1 '+(x+120)+' '+(y+r)+'" fill="none" stroke="'+p.acc2+'" stroke-width="2.2" opacity="'+(0.75-i*0.2)+'"/>';
+  }
+  return out;
+};
+ORN.cursorclick = function(p,s){
+  var x = W*0.8, y = H*0.48;
+  var out = '<path d="M'+x+' '+y+' v 44 l 12 -12 l 10 22 l 10 -5 l -10 -21 l 17 -2 Z" fill="none" stroke="'+p.acc2+'" stroke-width="2.4" opacity=".9" stroke-linejoin="round"/>';
+  for (var i = 0; i < 3; i++){
+    var r = 20 + i*16;
+    out += '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity="'+(0.6-i*0.16)+'" stroke-dasharray="5 7"/>';
+  }
+  return out;
+};
+ORN.heartflow = function(p,s){
+  function heart(cx, cy, sc, col, o){
+    return '<path transform="translate('+cx+' '+cy+') scale('+sc+')" d="M0 6 C -7 -4, -18 0, -12 10 C -8 16, 0 20, 0 20 C 0 20, 8 16, 12 10 C 18 0, 7 -4, 0 6 Z" fill="none" stroke="'+col+'" stroke-width="'+(2.4/sc)+'" opacity="'+o+'" stroke-linejoin="round"/>';
+  }
+  var out = "";
+  for (var i = 0; i < 6; i++){
+    var x = W*0.6 + sr(s+i)*W*0.32;
+    var y = H*0.85 - i*H*0.13;
+    out += heart(x, y, 0.8 + sr(s+i*7)*1.3, i%2 ? p.acc2 : p.acc, 0.35 + i*0.09);
+  }
+  return out;
+};
+ORN.reach = function(p,s){
+  var cx = W*0.7, cy = H*0.82, out = '<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="'+p.acc2+'" opacity=".95"/>';
+  for (var i = 0; i < 4; i++){
+    var r = 40 + i*34;
+    out += '<path d="M'+(cx+r*Math.cos(-2.4))+' '+(cy+r*Math.sin(-2.4))+' A '+r+' '+r+' 0 0 1 '+(cx+r*Math.cos(0.42))+' '+(cy+r*Math.sin(0.42))+'" fill="none" stroke="'+(i===1?p.acc2:p.acc)+'" stroke-width="2.2" opacity="'+(0.8-i*0.16)+'"/>';
+  }
+  for (var k = 0; k < 5; k++){
+    var a = -2.2 + k*0.55, rr = 40 + 3*34 + 18;
+    out += '<circle cx="'+(cx+rr*Math.cos(a))+'" cy="'+(cy+rr*Math.sin(a))+'" r="4" fill="'+p.acc+'" opacity="'+(0.4+sr(s+k)*0.4)+'"/>';
+  }
+  return out;
+};
+
   return ORN;
 })();
-const ORN2_BACK = { heartbeat: 1, mountains: 1, horizon: 1, tread: 1, road: 1, silk: 1,
+const ORN2_BACK = {
+  calmwaves: 1, skyline: 1, roofs: 1, strings: 1, sinewave: 1, balloons: 1,
+  garland: 1, heartflow: 1, thoughts: 1, branches: 1, paragraphs: 1,
+  heartbeat: 1, mountains: 1, horizon: 1, tread: 1, road: 1, silk: 1,
   track: 1, zigzag: 1, wavebars: 1, pixels: 1, confetti: 1, terminal: 1, candles: 1,
   stepsup: 1, doodle: 1, barbell: 1, filmstrip: 1, netgraph: 1, molecules: 1,
   capsule: 1, nuts: 1, beans: 1, fizz: 1, sparkle: 1, beads: 1 };
 const ORN2_SETS = {
   med: ["dna", "molecules", "hexchain", "heartbeat", "capsule"],
+  edu: ["books", "page", "bulb", "pencilline", "progress"],
+  psy: ["maze", "balance", "thoughts", "branches", "calmwaves"],
+  estate: ["skyline", "roofs", "wingrid", "keyring", "blueprint"],
+  kids: ["pyramid", "balloons", "cubes", "garland", "paperplane"],
+  music: ["staff", "vinyl", "strings", "sinewave", "pianokeys"],
+  games: ["joystick", "shield", "levelup", "dice", "aim"],
+  law: ["scales", "columns", "stamp", "signature", "paragraphs"],
+  mkt: ["funnel", "megaphone", "cursorclick", "heartflow", "reach"],
+
   travel: ["route", "contrails", "mountains", "compass", "horizon"],
   auto: ["gears", "speedo", "tread", "nuts", "road"],
   food: ["plates", "steam", "beans", "fizz", "citrus"],
