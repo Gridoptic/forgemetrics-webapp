@@ -2152,20 +2152,6 @@ ORN.brainhalf = function(p,s){
     '<path d="M'+(cx-40)+' '+(cy-20)+' q 16 10 0 22 M'+(cx+40)+' '+(cy-10)+' q -16 10 0 22" fill="none" stroke="'+p.acc+'" stroke-width="1.8" opacity=".5"/>';
   return out;
 };
-ORN.bone = function(p,s){
-  var out = "";
-  var sets = [[W*0.66,H*0.32,-24],[W*0.84,H*0.66,20]];
-  for (var i = 0; i < 2; i++){
-    var x = sets[i][0], y = sets[i][1];
-    out += '<g transform="rotate('+sets[i][2]+' '+x+' '+y+')" opacity="'+(0.85-i*0.25)+'">' +
-      '<line x1="'+(x-40)+'" y1="'+y+'" x2="'+(x+40)+'" y2="'+y+'" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="10" stroke-linecap="round"/>' +
-      '<circle cx="'+(x-46)+'" cy="'+(y-8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
-      '<circle cx="'+(x-46)+'" cy="'+(y+8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
-      '<circle cx="'+(x+46)+'" cy="'+(y-8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/>' +
-      '<circle cx="'+(x+46)+'" cy="'+(y+8)+'" r="10" fill="none" stroke="'+(i?p.acc2:p.acc)+'" stroke-width="2.4"/></g>';
-  }
-  return out;
-};
 ORN.microscope = function(p,s){
   var cx = W*0.78, base = H*0.78;
   return '<line x1="'+(cx-46)+'" y1="'+base+'" x2="'+(cx+50)+'" y2="'+base+'" stroke="'+p.acc+'" stroke-width="2.8" opacity=".8"/>' +
@@ -3037,7 +3023,7 @@ ORN.fireworks2 = function(p,s){
 })();
 const ORN2_BACK = {
   moodwave: 1, chainlink: 1, slinky: 1, fireworks2: 1, rainbow: 1,
-  seawaves: 1, bone: 1, bandage: 1, exhaust: 1, skewer: 1, gymrings: 1, lashes: 1,
+  seawaves: 1, bandage: 1, exhaust: 1, skewer: 1, gymrings: 1, lashes: 1,
   stars5: 1, dizzy: 1, calmwaves2: 1, coaster: 1, partyhat: 1,
   drops: 1, cells: 1, pluses: 1, footsteps: 1, spices: 1, jumprope: 1,
   calmwaves: 1, skyline: 1, roofs: 1, strings: 1, sinewave: 1, balloons: 1,
@@ -3047,7 +3033,7 @@ const ORN2_BACK = {
   stepsup: 1, doodle: 1, barbell: 1, filmstrip: 1, netgraph: 1, molecules: 1,
   capsule: 1, nuts: 1, beans: 1, fizz: 1, sparkle: 1, beads: 1 };
 const ORN2_SETS = {
-  med: ["dna", "molecules", "hexchain", "heartbeat", "capsule", "drops", "cells", "pluses", "pulsering", "atomorbit", "syringe", "brainhalf", "bone", "microscope", "bandage"],
+  med: ["dna", "molecules", "hexchain", "heartbeat", "capsule", "drops", "cells", "pluses", "pulsering", "atomorbit", "syringe", "brainhalf", "microscope", "bandage"],
   edu: ["books", "page", "bulb", "pencilline", "progress", "gradcap", "abacus", "ruler", "backpack", "diploma", "glasses", "bookopen", "pencil2", "globestand", "notebook2"],
   psy: ["maze", "balance", "thoughts", "branches", "calmwaves", "spiral2", "zenstones", "lotus", "pendulum", "puzzlebit", "breath", "moodwave", "growup", "knot8", "ladderup"],
   estate: ["skyline", "roofs", "wingrid", "keyring", "blueprint", "doorway", "crane", "fence", "tagkey", "lamppost", "sofa", "housetag", "stairshome", "window3", "pinhouse"],
