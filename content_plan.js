@@ -1609,7 +1609,7 @@
         setView('<div class="cp-center"><div class="cp-genic"><i class="ti ti-calendar-week"></i></div>' +
             '<div class="cp-spin"></div>' +
             '<div class="m" id="cp-gen-text">' + esc(T(GEN_TEXTS[0])) + '</div>' +
-            '<div class="s">' + esc(T('Обычно 15–30 секунд. Можно закрыть — план соберётся сам.')) + '</div></div>');
+            '<div class="s">' + esc(T('Обычно пара минут. Можно закрыть — план соберётся сам.')) + '</div></div>');
         var i = 0;
         _genTimer = setInterval(function () {
             var el = document.getElementById('cp-gen-text');
