@@ -2505,6 +2505,8 @@
                       : T('Выбранный орнамент стоит одинаково на всех обложках — ровно как здесь.')) +
                   '</div>'
                 : '';
+            var oldSheet = host.querySelector('.cp-dsheet');
+            var keepTop = oldSheet ? oldSheet.scrollTop : 0;
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
                 '<div class="cp-dsh2"><b>' + esc(T('Стиль обложек')) + '</b></div>' +
@@ -2532,6 +2534,8 @@
                 '<div class="cp-dshint">' +
                 esc(T('Сохранённый стиль применяется ко всем новым постам и автопилоту. Пока не сохранишь — действует микс.')) +
                 '</div></div>';
+            var newSheet = host.querySelector('.cp-dsheet');
+            if (newSheet && keepTop) newSheet.scrollTop = keepTop;
         };
         draw();
         document.body.appendChild(host);
