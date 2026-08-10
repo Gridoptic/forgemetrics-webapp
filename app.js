@@ -5371,6 +5371,7 @@ function renderSettingsExamplesSection(data) {
 function renderSettingsBehaviorSection(data) {
     const paused = !!data.is_paused;
     const profanity = !!data.use_profanity_default;
+    const openPolls = !!data.open_polls;
 
     return `
         <div class="cs-section">
@@ -5410,6 +5411,25 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${profanity ? 'on' : ''}" data-toggle-target="profanity">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="polls">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-message-circle" style="color: ${openPolls ? '#818cf8' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">Открытые опросы</span>
+                        <button class="cs-info-btn" data-info="polls" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${openPolls ? 'Разрешены вопросы в комментарии' : 'Только анонимные опросы реакциями'}</div>
+                    <div class="cs-info-popup" id="cs-info-polls" style="display:none;">
+                        Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${openPolls ? 'on' : ''}" data-toggle-target="polls">
                     <span class="cs-toggle-knob"></span>
                 </button>
             </div>
@@ -5761,10 +5781,12 @@ async function handleToggleSwitch(target, newValue) {
     const payload = {};
     if (target === 'paused') payload.is_paused = !newValue;
     if (target === 'profanity') payload.use_profanity_default = newValue;
+    if (target === 'polls') payload.open_polls = newValue;
 
     if (_settingsState.data) {
         if (target === 'paused') _settingsState.data.is_paused = !newValue;
         if (target === 'profanity') _settingsState.data.use_profanity_default = newValue;
+        if (target === 'polls') _settingsState.data.open_polls = newValue;
         updateToggleVisual(target, newValue);
     }
 
@@ -5780,6 +5802,7 @@ async function handleToggleSwitch(target, newValue) {
         if (_settingsState.data) {
             if (target === 'paused') _settingsState.data.is_paused = newValue;
             if (target === 'profanity') _settingsState.data.use_profanity_default = !newValue;
+            if (target === 'polls') _settingsState.data.open_polls = !newValue;
             updateToggleVisual(target, !newValue);
         }
         if (target === 'paused' && e && e.status === 400 && String(e.message || '').indexOf('channel_limit_reached') !== -1) {
