@@ -171,6 +171,57 @@ function openForgeSheet() {
     localizeTree(sheet);
 }
 
+let _hsCtx = null;
+
+function closeHelpSheet() {
+    if (!_hsCtx) return;
+    const { overlay, sheet } = _hsCtx;
+    overlay.classList.remove('visible');
+    sheet.classList.remove('visible');
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+    setTimeout(() => { if (overlay.parentNode) overlay.remove(); if (sheet.parentNode) sheet.remove(); }, 260);
+    _hsCtx = null;
+}
+
+function openHelpSheet() {
+    closeHelpSheet();
+    hapticLight();
+    const terms = [
+        ['ERR', 'Какой процент подписчиков видит пост: охват ÷ подписчики. Значение выше 100% — просмотров больше, чем подписчиков: виральный пост или повод проверить источник охвата.'],
+        ['ER', 'Вовлечённость: реакции, репосты и комментарии по отношению к охвату. Всегда единицы процентов.'],
+        ['CPM', 'Цена тысячи показов: стоимость размещения ÷ охват × 1000. Главная мера справедливости цены рекламы.'],
+        ['Индекс здоровья', 'Сводная оценка канала: честность охвата, вовлечённость, регулярность выхода постов и рекламная нагрузка ленты.'],
+    ];
+    const overlay = document.createElement('div');
+    overlay.className = 'bs-overlay';
+    const sheet = document.createElement('div');
+    sheet.className = 'bs-sheet fs-sheet';
+    sheet.innerHTML = `<div class="bs-handle"></div>
+        <div class="hs-title">Справка и поддержка</div>
+        <button class="hs-support" id="hs-support"><i class="ti ti-message-circle"></i> Написать в поддержку</button>
+        <div class="fs-sec">Метрики</div>
+        <div class="hs-terms">${terms.map(([k, v]) =>
+            `<div class="hs-term"><b>${escapeHtml(k)}</b><span>${escapeHtml(v)}</span></div>`).join('')}</div>
+        <div class="fs-sec">Forge</div>
+        <div class="hs-note">Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».</div>
+        <div class="hs-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
+    overlay.addEventListener('click', closeHelpSheet);
+    _hsCtx = { overlay, sheet };
+    const sup = sheet.querySelector('#hs-support');
+    if (sup) sup.addEventListener('click', () => {
+        hapticLight();
+        if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot');
+        else window.open('https://t.me/ForgeMetricsBot', '_blank');
+    });
+    localizeTree(sheet);
+}
+
 function setForgeBalance(n) {
     window.__fmForge = Number(n || 0);
     const val = document.getElementById('forge-chip-val');
@@ -2380,7 +2431,7 @@ function renderCabinet(d) {
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-info-circle"></i></div><div class="cab-si"><div class="cab-snm">Помощь и о приложении</div><div class="cab-sd">Правила, метрики, поддержка</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">Справка и поддержка</div><div class="cab-sd">Метрики, Forge, связь с нами</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
     html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>На информационном ресурсе применяются рекомендательные технологии</span></div>`;
@@ -2487,7 +2538,7 @@ function wireCabinet(d) {
     on('cab-upgrade', goUpgrade);
     on('cab-compare', () => { openTariffs(); });
     on('cab-team', () => { openTeam(); });
-    on('cab-about', () => { hapticLight(); if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot'); });
+    on('cab-about', () => { openHelpSheet(); });
     on('cab-terms', openUserTerms);
     on('cab-theme', () => cabToast('Темы оформления — скоро'));
     on('cab-lang', () => openLangPicker());

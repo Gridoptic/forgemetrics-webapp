@@ -5496,6 +5496,67 @@ html.cs-modal-open {
     height: 15px;
 }
 
+.hs-title {
+    font-size: 16px;
+    font-weight: 750;
+    margin: 2px 0 12px;
+}
+
+.hs-support {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    min-height: 44px;
+    border-radius: 13px;
+    background: rgba(99, 102, 241, 0.16);
+    border: 1px solid rgba(99, 102, 241, 0.36);
+    color: #c7cbff;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 14px;
+}
+
+.hs-terms {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.hs-term b {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #c7cbff;
+    margin-bottom: 2px;
+}
+
+.hs-term span {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.hs-note {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+}
+
+.hs-foot {
+    font-size: 10.5px;
+    color: #4a4d61;
+    text-align: center;
+    padding-bottom: 4px;
+}
+
+.hs-foot b { color: var(--text-secondary); }
+
 .fs-row.off .fs-ico {
     background: rgba(255, 255, 255, 0.04);
     border-color: rgba(255, 255, 255, 0.08);
