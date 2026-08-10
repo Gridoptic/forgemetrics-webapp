@@ -10286,8 +10286,8 @@
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
-    window.__fmxOpenFaq = function (tab) { if (tab) _faqTab = tab; openFaq(); };
-    window.__fmxOpenBadges = function () { openBadgeGuide(); };
+    window.__fmxOpenFaq = function (tab) { injectStyles(); if (tab) _faqTab = tab; openFaq(); };
+    window.__fmxOpenBadges = function () { injectStyles(); openBadgeGuide(); };
     var _PROMO_DESC = {
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
