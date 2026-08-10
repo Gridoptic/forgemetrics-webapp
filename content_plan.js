@@ -2982,6 +2982,10 @@
                 '<button class="cp-act ok" data-act="approve" data-id="' + p.id + '"><i class="ti ti-circle-check"></i> ' + esc(T('Утвердить')) + '</button>' + pubc + '</div>' +
                 '<div class="cp-note fail">' + esc(T('Пост не отправлен. Проверь права бота и запланируй заново.')) + '</div>';
         } else if (p.text) {
+            var queueBtn = (_state && _state.status === 'scheduled' && p.status === 'approved')
+                ? '<button class="cp-act ok" data-act="queue1" data-id="' + p.id + '"><i class="ti ti-calendar-plus"></i> ' +
+                  esc(T('Вернуть в очередь')) + '</button>'
+                : '';
             var resBtn = p.research_links
                 ? '<button class="cp-act" data-act="resdel" data-id="' + p.id + '"><i class="ti ti-file-search"></i> ' +
                   esc(T('Убрать исследования')) + '</button>'
@@ -2992,6 +2996,7 @@
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
+                queueBtn +
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
                 forgeTag(priceDay()) + '</button>' +
                 resBtn +
@@ -3342,6 +3347,7 @@
         if (act === 'schedule') { doSchedule(); return; }
         if (act === 'unschedule') { doUnschedule(); return; }
         if (act === 'canceld') { cancelDay(+id); return; }
+        if (act === 'queue1') { queueDay(+id); return; }
         if (act === 'resadd') { researchAdd(+id); return; }
         if (act === 'resdel') { researchRemove(+id); return; }
         if (act === 'rollback') { rollbackDay(+id); return; }
@@ -3386,6 +3392,16 @@
                 else toast(T('Не удалось снять с очереди'));
             })
             .catch(function () { _schedBusy = false; toast(T('Не удалось снять с очереди')); });
+    }
+    function queueDay(id) {
+        haptic('light');
+        apiRequest('/api/v1/content-plan/queue-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                if (r && r.ok) { toast(T('Пост вернулся в очередь')); refreshState(); }
+                else if (r && r.error === 'no_bot_rights') toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
+                else toast(T('Не удалось вернуть пост в очередь'));
+            })
+            .catch(function () { toast(T('Не удалось вернуть пост в очередь')); });
     }
     function cancelDay(id) {
         haptic('light');
