@@ -10040,12 +10040,17 @@
         _bmPaint(u, on);
     }
 
-    function buildModals() {
+    function _ensureFaqModal() {
+        if (el('fmx-faqBg')) return;
         var faq = document.createElement('div'); faq.className = 'fmx-mbg'; faq.id = 'fmx-faqBg';
         faq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-help-circle" style="color:#818cf8;"></i> Справка</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-faqBody"></div></div>';
         document.body.appendChild(faq);
         faq.addEventListener('click', function (e) { if (e.target === faq) hideModal('fmx-faqBg'); });
         faq.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-faqBg'); });
+    }
+
+    function buildModals() {
+        _ensureFaqModal();
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
         promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть оффер</h2><p>Поднимает оффер выше в умной сортировке — его видит больше рекламодателей. Топ смешанный: платные и обычные офферы чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
         document.body.appendChild(promo);
@@ -10272,6 +10277,7 @@
     }
 
     function openFaq() {
+        _ensureFaqModal();
         var body;
         if (_faqTab === 'terms') body = TERMS.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> Единые правила Площадки. За контент отвечает разместивший; дополнительно действуют законы страны, на аудиторию которой направлена реклама.</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
@@ -10280,6 +10286,8 @@
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
     }
+    window.__fmxOpenFaq = function (tab) { if (tab) _faqTab = tab; openFaq(); };
+    window.__fmxOpenBadges = function () { openBadgeGuide(); };
     var _PROMO_DESC = {
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',

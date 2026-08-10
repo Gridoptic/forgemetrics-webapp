@@ -5502,43 +5502,50 @@ html.cs-modal-open {
     margin: 2px 0 12px;
 }
 
-.hs-support {
+.hs-links {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+.hs-link {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 7px;
+    gap: 10px;
     width: 100%;
-    min-height: 44px;
+    min-height: 46px;
+    padding: 0 12px;
     border-radius: 13px;
-    background: rgba(99, 102, 241, 0.16);
-    border: 1px solid rgba(99, 102, 241, 0.36);
-    color: #c7cbff;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
-    margin-bottom: 14px;
+    text-align: left;
 }
 
-.hs-terms {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
+.hs-link > i:first-child {
+    color: #a5adff;
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
-.hs-term b {
-    display: block;
-    font-size: 12.5px;
-    font-weight: 750;
-    color: #c7cbff;
-    margin-bottom: 2px;
-}
+.hs-link span { flex: 1; min-width: 0; }
 
-.hs-term span {
-    font-size: 11.5px;
-    line-height: 1.5;
+.hs-link .ch {
     color: var(--text-secondary);
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.hs-mail {
+    color: #a5adff;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(165, 173, 255, 0.4);
 }
 
 .hs-note {

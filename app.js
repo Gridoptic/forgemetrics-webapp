@@ -184,27 +184,26 @@ function closeHelpSheet() {
     _hsCtx = null;
 }
 
+const SUPPORT_EMAIL = 'support@fmtr.click';
+
 function openHelpSheet() {
     closeHelpSheet();
     hapticLight();
-    const terms = [
-        ['ERR', 'Какой процент подписчиков видит пост: охват ÷ подписчики. Значение выше 100% — просмотров больше, чем подписчиков: виральный пост или повод проверить источник охвата.'],
-        ['ER', 'Вовлечённость: реакции, репосты и комментарии по отношению к охвату. Всегда единицы процентов.'],
-        ['CPM', 'Цена тысячи показов: стоимость размещения ÷ охват × 1000. Главная мера справедливости цены рекламы.'],
-        ['Индекс здоровья', 'Сводная оценка канала: честность охвата, вовлечённость, регулярность выхода постов и рекламная нагрузка ленты.'],
-    ];
     const overlay = document.createElement('div');
     overlay.className = 'bs-overlay';
     const sheet = document.createElement('div');
     sheet.className = 'bs-sheet fs-sheet';
     sheet.innerHTML = `<div class="bs-handle"></div>
         <div class="hs-title">Справка и поддержка</div>
-        <button class="hs-support" id="hs-support"><i class="ti ti-message-circle"></i> Написать в поддержку</button>
-        <div class="fs-sec">Метрики</div>
-        <div class="hs-terms">${terms.map(([k, v]) =>
-            `<div class="hs-term"><b>${escapeHtml(k)}</b><span>${escapeHtml(v)}</span></div>`).join('')}</div>
+        <div class="hs-links">
+            <button class="hs-link" id="hs-terms"><i class="ti ti-book-2"></i><span>Метрики и термины</span><i class="ti ti-chevron-right ch"></i></button>
+            <button class="hs-link" id="hs-rules"><i class="ti ti-scale"></i><span>Правила и советы</span><i class="ti ti-chevron-right ch"></i></button>
+            <button class="hs-link" id="hs-badges"><i class="ti ti-rosette-discount-check"></i><span>Бейджи и статусы</span><i class="ti ti-chevron-right ch"></i></button>
+        </div>
         <div class="fs-sec">Forge</div>
         <div class="hs-note">Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».</div>
+        <div class="fs-sec">Поддержка</div>
+        <div class="hs-note">Вопросы, проблемы и предложения — на почту <a class="hs-mail" href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></div>
         <div class="hs-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -213,12 +212,13 @@ function openHelpSheet() {
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
     overlay.addEventListener('click', closeHelpSheet);
     _hsCtx = { overlay, sheet };
-    const sup = sheet.querySelector('#hs-support');
-    if (sup) sup.addEventListener('click', () => {
-        hapticLight();
-        if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me/ForgeMetricsBot');
-        else window.open('https://t.me/ForgeMetricsBot', '_blank');
-    });
+    const go = (id, fn) => {
+        const b = sheet.querySelector('#' + id);
+        if (b) b.addEventListener('click', () => { hapticLight(); closeHelpSheet(); fn(); });
+    };
+    go('hs-terms', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('terms'); });
+    go('hs-rules', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('rules'); });
+    go('hs-badges', () => { if (window.__fmxOpenBadges) window.__fmxOpenBadges(); });
     localizeTree(sheet);
 }
 
