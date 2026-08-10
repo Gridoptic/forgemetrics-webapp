@@ -2233,6 +2233,8 @@ function forgeTxDate(iso) {
 const FW_PRICE_EXPLAIN = {
     generate: 'Готовый пост по заданию с учётом профиля стиля канала. Премиум-модель точнее держит тему, глубже прорабатывает аргументацию и требует меньше правок.',
     generate_std: 'Готовый пост по заданию стандартной моделью. Рабочий вариант для регулярного контента: анонсы, подборки, короткие форматы.',
+    generate_proofs: 'Пост премиум-моделью плюс живой поиск первоисточников: система находит 1-3 исследования (PubMed, журналы), проверяет каждую ссылку и вставляет их в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается.',
+    generate_std_proofs: 'Пост стандартной моделью с поиском первоисточников: 1-3 проверенные ссылки на исследования, оформленные в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается.',
     modify: 'Точечная доработка готового поста по инструкции: сменить тон, сократить, расширить, переписать фрагмент. Пост не пересобирается с нуля — правится только указанное.',
     rewrite: 'Переработка чужого поста в уникальный текст под стиль твоего канала: смысл и факты сохраняются, структура и формулировки — новые.',
     voice: 'Анализ опубликованных постов канала и настройка профиля стиля: тон, лексика, структура, оформление. Профиль применяется ко всем последующим генерациям.',
@@ -5372,6 +5374,7 @@ function renderSettingsBehaviorSection(data) {
     const paused = !!data.is_paused;
     const profanity = !!data.use_profanity_default;
     const openPolls = !!data.open_polls;
+    const research = !!data.research_links;
 
     return `
         <div class="cs-section">
@@ -5430,6 +5433,25 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${openPolls ? 'on' : ''}" data-toggle-target="polls">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="research">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-microscope" style="color: ${research ? '#5DCAA5' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">Ссылки на исследования</span>
+                        <button class="cs-info-btn" data-info="research" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${research ? 'Включены — пост дороже: 30 Forge премиум / 15 стандарт' : 'Выключены — обычная цена поста'}</div>
+                    <div class="cs-info-popup" id="cs-info-research" style="display:none;">
+                        К научным утверждениям поста система живым поиском находит 1-3 первоисточника (PubMed, журналы), проверяет каждую ссылку и вставляет их в манере канала. Цена поста выше из-за поиска и проверки; если подтверждённых работ не нашлось — разница возвращается.
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${research ? 'on' : ''}" data-toggle-target="research">
                     <span class="cs-toggle-knob"></span>
                 </button>
             </div>
@@ -5782,11 +5804,13 @@ async function handleToggleSwitch(target, newValue) {
     if (target === 'paused') payload.is_paused = !newValue;
     if (target === 'profanity') payload.use_profanity_default = newValue;
     if (target === 'polls') payload.open_polls = newValue;
+    if (target === 'research') payload.research_links = newValue;
 
     if (_settingsState.data) {
         if (target === 'paused') _settingsState.data.is_paused = !newValue;
         if (target === 'profanity') _settingsState.data.use_profanity_default = newValue;
         if (target === 'polls') _settingsState.data.open_polls = newValue;
+        if (target === 'research') _settingsState.data.research_links = newValue;
         updateToggleVisual(target, newValue);
     }
 
@@ -5803,6 +5827,7 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'paused') _settingsState.data.is_paused = newValue;
             if (target === 'profanity') _settingsState.data.use_profanity_default = !newValue;
             if (target === 'polls') _settingsState.data.open_polls = !newValue;
+            if (target === 'research') _settingsState.data.research_links = !newValue;
             updateToggleVisual(target, !newValue);
         }
         if (target === 'paused' && e && e.status === 400 && String(e.message || '').indexOf('channel_limit_reached') !== -1) {
