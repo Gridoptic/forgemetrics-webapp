@@ -9087,7 +9087,7 @@
             _ctcLinesHtml(l) +
             _moreBlock(l) +
             _trustRow(l) +
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
+            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
             (!l.id ? '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>'
@@ -9276,12 +9276,12 @@
             _nicheLine(l, '') + '</div>' + scoreHtml + '</div>' +
             _alertsRow(l, _promoB);
         var actsHtml = l.id
-            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
+            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
               '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button>' +
               '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>'
-            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-report-analytics"></i>Разбор</button>' +
+            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
               '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>';
@@ -10074,7 +10074,7 @@
         _root.appendChild(cbar);
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
-        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-report-analytics" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div><div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-hourglass-high"></i><h3>Скоро</h3><p>Глубокий разбор подключается. Пока смотри метрики в «Развернуть» и бейджи здоровья в оффере.</p></div></div></div>';
+        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-microscope" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-anBody"></div></div>';
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
@@ -10368,10 +10368,154 @@
             });
         }).catch(function () { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; });
     }
+    var _anBusy = false;
+    var _AN_PRICE = 30;
+    var _AN_STEPS = ['Считываю метрики канала...', 'Сверяю цифры между собой...',
+                     'Ищу признаки накрутки...', 'Считаю честный охват...',
+                     'Оцениваю справедливую цену...', 'Формирую вердикт...'];
+    var _anStepT = null;
+
     function openAnalyze(u) {
         _haptic('light');
         var nm = el('fmx-anName'); if (nm) nm.textContent = '@' + u;
         showModal('fmx-anBg');
+        var body = el('fmx-anBody');
+        if (!body) return;
+        body.innerHTML = '<div class="fmxan-load"><div class="fmx-spinner"></div></div>';
+        apiRequest('/api/v1/marketplace/analyze?username=' + encodeURIComponent(u))
+            .then(function (r) {
+                if (r && r.price) _AN_PRICE = r.price;
+                if (r && r.ok && r.analysis) _anRender(u, r.analysis);
+                else _anIntro(u);
+            })
+            .catch(function () { _anIntro(u); });
+    }
+
+    function _anIntro(u) {
+        var body = el('fmx-anBody');
+        if (!body) return;
+        body.innerHTML =
+            '<div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div>' +
+            '<button class="fmxan-go" id="fmx-anGo"><i class="ti ti-microscope"></i> Разобрать канал <span class="fz">⚡ ' + _AN_PRICE + '</span></button>' +
+            '<div class="fmxan-hint">Готовый разбор хранится 7 дней — повторное открытие бесплатно.</div>';
+        var go = el('fmx-anGo');
+        if (go) go.addEventListener('click', function () { _anStart(u); });
+    }
+
+    function _anStart(u) {
+        if (_anBusy) return;
+        _anBusy = true;
+        _haptic('medium');
+        var body = el('fmx-anBody');
+        body.innerHTML = '<div class="fmxan-scan"><div class="beam"></div>' +
+            '<i class="ti ti-microscope"></i>' +
+            '<div class="st" id="fmx-anStep">' + _AN_STEPS[0] + '</div>' +
+            '<div class="sub">Глубокий разбор — обычно одна-две минуты. Окно можно не закрывать.</div></div>';
+        var i = 0;
+        _anStepT = setInterval(function () {
+            var s = el('fmx-anStep');
+            if (!s) return;
+            i = (i + 1) % _AN_STEPS.length;
+            s.textContent = _AN_STEPS[i];
+        }, 9000);
+        apiRequest('/api/v1/marketplace/analyze', {
+            method: 'POST', body: JSON.stringify({ username: u })
+        }).then(function (r) {
+            _anBusy = false;
+            if (_anStepT) { clearInterval(_anStepT); _anStepT = null; }
+            if (r && r.ok && r.analysis) { _haptic('light'); _anRender(u, r.analysis); }
+            else if (r && r.error === 'no_data') {
+                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-database-off"></i><h3>Мало данных</h3><p>По этому каналу ещё не накоплены замеры — разбор недоступен. Forge не списаны.</p></div>';
+            } else {
+                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>Не получилось</h3><p>Разбор не собрался — попробуй ещё раз. Forge за неудачную попытку возвращены.</p></div>';
+            }
+        }).catch(function (err) {
+            _anBusy = false;
+            if (_anStepT) { clearInterval(_anStepT); _anStepT = null; }
+            var msg = 'Разбор не собрался — попробуй ещё раз. Forge за неудачную попытку возвращены.';
+            try {
+                var s = String((err && err.message) || '');
+                var d = JSON.parse(s.slice(s.indexOf(': ') + 2));
+                if (d && d.detail) msg = (typeof d.detail === 'string') ? d.detail : (d.detail.message || msg);
+            } catch (e) {}
+            body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>Не получилось</h3><p>' + _esc(msg) + '</p></div>';
+        });
+    }
+
+    function _anTone(t) {
+        return t === 'red' ? '#ef8080' : (t === 'orange' ? '#f59e0b' : (t === 'green' ? '#5DCAA5' : '#c2c6d2'));
+    }
+
+    function _anRender(u, a) {
+        var body = el('fmx-anBody');
+        if (!body) return;
+        var v = a.verdict === 'take' ? ['#5DCAA5', 'ti-circle-check'] :
+                (a.verdict === 'conditions' ? ['#f59e0b', 'ti-alert-triangle'] : ['#ef8080', 'ti-ban']);
+        var score = Math.max(0, Math.min(100, +a.score || 0));
+        var dash = Math.round(289 - 289 * score / 100);
+        var h = '';
+        if (a._cached_at) {
+            var dt = new Date(a._cached_at);
+            h += '<div class="fmxan-cache">Разбор от ' + dt.toLocaleDateString('ru-RU') +
+                ' · <a id="fmx-anRe">обновить ⚡' + _AN_PRICE + '</a></div>';
+        }
+        h += '<div class="fmxan-verd"><div class="ring">' +
+            '<svg width="104" height="104" viewBox="0 0 108 108">' +
+            '<circle cx="54" cy="54" r="46" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="9"/>' +
+            '<circle cx="54" cy="54" r="46" fill="none" stroke="' + v[0] + '" stroke-width="9" stroke-linecap="round" ' +
+            'stroke-dasharray="289" stroke-dashoffset="' + dash + '" transform="rotate(-90 54 54)" class="fg"/></svg>' +
+            '<div class="val"><b style="color:' + v[0] + ';">' + score + '</b><span>из 100</span></div></div>' +
+            '<div class="vt"><b style="color:' + v[0] + ';">' + _esc(a.verdict_title || '') + '</b>' +
+            '<em>' + _esc(a.summary || '') + '</em>' +
+            '<span class="conf" style="color:' + v[0] + ';border-color:' + v[0] + '4d;background:' + v[0] + '1a;"><i class="ti ' + v[1] + '"></i> уверенность ' + (+a.confidence || 0) + '%</span></div></div>';
+
+        if (a.reach_real) {
+            h += '<div class="fmxan-lbl">Реальный охват рекламного поста</div><div class="fmxan-card">' +
+                '<div class="reach">' +
+                (a.reach_claimed ? '<div class="was"><b>' + _num(+a.reach_claimed) + '</b><span>заявлено</span></div><div class="arr">→</div>' : '') +
+                '<div class="now"><b>' + _esc(String(a.reach_real)) + '</b><span>честный прогноз</span></div></div>' +
+                (a.reach_note ? '<div class="note">' + _esc(a.reach_note) + '</div>' : '') + '</div>';
+        }
+        if (a.audience && a.audience.length) {
+            h += '<div class="fmxan-lbl">Качество аудитории</div><div class="fmxan-grid">' +
+                a.audience.slice(0, 4).map(function (m) {
+                    return '<div class="mt"><div class="k">' + _esc(m.k || '') + '</div>' +
+                        '<div class="v" style="color:' + _anTone(m.tone) + ';">' + _esc(m.v || '') + '</div>' +
+                        (m.d ? '<div class="d">' + _esc(m.d) + '</div>' : '') + '</div>';
+                }).join('') + '</div>';
+        }
+        if (a.flags && a.flags.length) {
+            h += '<div class="fmxan-lbl">Красные флаги · ' + a.flags.length + '</div><div class="fmxan-card">' +
+                a.flags.slice(0, 6).map(function (f) {
+                    return '<div class="flag"><span class="fi"><i class="ti ti-flag-3"></i></span>' +
+                        '<div><b>' + _esc(f.title || '') + '</b><em>' + _esc(f.why || '') + '</em></div></div>';
+                }).join('') + '</div>';
+        }
+        if (a.price_fair) {
+            h += '<div class="fmxan-lbl">Цена размещения</div><div class="fmxan-card">' +
+                '<div class="cpm"><div class="col fair"><b>' + _esc(String(a.price_fair)) + '</b><span>справедливая</span></div>' +
+                (a.price_asked ? '<div class="cbar"><i></i></div><div class="col bad"><b>' + _num(+a.price_asked) + ' ₽</b><span>запрошено</span></div>' : '') +
+                '</div>' + (a.price_note ? '<div class="note">' + _esc(a.price_note) + '</div>' : '') + '</div>';
+        }
+        if (a.forecast && a.forecast.length) {
+            h += '<div class="fmxan-lbl">Прогноз результата</div><div class="fmxan-fore">' +
+                a.forecast.slice(0, 3).map(function (f) {
+                    return '<div class="f"><b>' + _esc(f.v || '') + '</b><span>' + _esc(f.k || '') + '</span></div>';
+                }).join('') + '</div>';
+        }
+        if (a.checklist && a.checklist.length) {
+            h += '<div class="fmxan-lbl">Проверь руками перед сделкой</div><div class="fmxan-card">' +
+                a.checklist.slice(0, 5).map(function (c) {
+                    return '<div class="check"><span class="cb"></span><p>' + _esc(c) + '</p></div>';
+                }).join('') + '</div>';
+        }
+        if (a.deal_advice) {
+            h += '<div class="fmxan-deal"><b>Позиция для сделки</b><p>' + _esc(a.deal_advice) + '</p></div>';
+        }
+        h += '<div class="fmxan-foot">Разбор строится на замерах и открытых данных канала.<br>Это аналитика для решения, а не гарантия результата.</div>';
+        body.innerHTML = h;
+        var re = el('fmx-anRe');
+        if (re) re.addEventListener('click', function () { _anStart(u); });
     }
     function _gainTxt(g) {
         if (!(g > 0)) return 'подписчиков не будет';

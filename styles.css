@@ -6044,3 +6044,63 @@ html.cs-modal-open {
     color: #fbbf24;
     margin-top: 2px;
 }
+
+/* AI-разбор канала */
+.fmxan-fee { font-style: normal; font-size: 9.5px; font-weight: 700; opacity: .75; margin-left: 3px; }
+.fmxan-load { display: flex; justify-content: center; padding: 34px 0; }
+.fmxan-go { width: 100%; border: 0; border-radius: 14px; padding: 13px; margin-top: 12px; font-family: inherit; font-size: 13.5px; font-weight: 800; color: #fff; background: linear-gradient(135deg,#818cf8,#6366f1); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+.fmxan-go .fz { background: rgba(255,255,255,.18); border-radius: 20px; font-size: 11.5px; padding: 2px 9px; }
+.fmxan-hint { text-align: center; font-size: 10.5px; color: #6f748c; margin-top: 9px; }
+.fmxan-scan { position: relative; overflow: hidden; text-align: center; padding: 34px 16px 30px; border-radius: 16px; border: 1px solid rgba(129,140,248,.25); background: linear-gradient(160deg, rgba(129,140,248,.08), rgba(10,13,24,.3)); }
+.fmxan-scan .beam { position: absolute; left: 0; right: 0; top: -40%; height: 34%; background: linear-gradient(180deg, transparent, rgba(129,140,248,.16), transparent); animation: fmxanSweep 2.4s ease-in-out infinite; pointer-events: none; }
+@keyframes fmxanSweep { 0% { top: -35%; } 60% { top: 105%; } 100% { top: 105%; } }
+.fmxan-scan > i { font-size: 30px; color: #818cf8; }
+.fmxan-scan .st { font-size: 13px; font-weight: 700; margin-top: 12px; }
+.fmxan-scan .sub { font-size: 10.5px; color: #8d93a8; margin-top: 7px; line-height: 1.45; }
+.fmxan-cache { font-size: 10.5px; color: #8d93a8; text-align: center; margin-bottom: 10px; }
+.fmxan-cache a { color: #9aa0f5; cursor: pointer; text-decoration: none; border-bottom: 1px dashed rgba(154,160,245,.5); }
+.fmxan-verd { display: flex; gap: 14px; align-items: center; }
+.fmxan-verd .ring { position: relative; width: 104px; height: 104px; flex-shrink: 0; }
+.fmxan-verd .ring .fg { transition: stroke-dashoffset 1.2s cubic-bezier(.2,.8,.25,1); }
+.fmxan-verd .val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.fmxan-verd .val b { font-size: 25px; font-weight: 900; }
+.fmxan-verd .val span { font-size: 9px; color: #8d93a8; letter-spacing: .5px; text-transform: uppercase; }
+.fmxan-verd .vt b { display: block; font-size: 18px; font-weight: 900; letter-spacing: .3px; }
+.fmxan-verd .vt em { display: block; font-style: normal; font-size: 11.5px; color: #c2c6d2; margin-top: 4px; line-height: 1.45; }
+.fmxan-verd .conf { display: inline-flex; align-items: center; gap: 5px; margin-top: 7px; font-size: 10.5px; font-weight: 700; border: 1px solid; border-radius: 20px; padding: 2px 9px; }
+.fmxan-lbl { font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: #6f748c; margin: 15px 0 7px; }
+.fmxan-card { border-radius: 15px; border: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.028); padding: 12px; }
+.fmxan-card .reach { display: flex; align-items: flex-end; gap: 12px; }
+.fmxan-card .reach .was b { font-size: 18px; font-weight: 800; color: #6f748c; text-decoration: line-through; text-decoration-color: rgba(239,128,128,.75); display: block; }
+.fmxan-card .reach .now b { font-size: 24px; font-weight: 900; color: #f59e0b; display: block; }
+.fmxan-card .reach span { font-size: 9.5px; color: #8d93a8; }
+.fmxan-card .reach .arr { color: #6f748c; padding-bottom: 8px; }
+.fmxan-card .note { margin-top: 9px; font-size: 11px; color: #c2c6d2; line-height: 1.5; border-top: 1px solid rgba(255,255,255,.06); padding-top: 9px; }
+.fmxan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.fmxan-grid .mt { border-radius: 13px; padding: 10px 11px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+.fmxan-grid .k { font-size: 9.5px; color: #8d93a8; }
+.fmxan-grid .v { font-size: 14.5px; font-weight: 800; margin-top: 2px; }
+.fmxan-grid .d { font-size: 9px; color: #6f748c; margin-top: 2px; }
+.fmxan-card .flag { display: flex; gap: 9px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.fmxan-card .flag:last-child { border-bottom: 0; }
+.fmxan-card .flag .fi { width: 28px; height: 28px; flex-shrink: 0; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(239,128,128,.1); border: 1px solid rgba(239,128,128,.28); color: #ef8080; font-size: 13px; }
+.fmxan-card .flag b { display: block; font-size: 12px; }
+.fmxan-card .flag em { display: block; font-style: normal; font-size: 10.5px; color: #8d93a8; line-height: 1.45; margin-top: 2px; }
+.fmxan-card .cpm { display: flex; align-items: center; gap: 11px; }
+.fmxan-card .cpm .col b { font-size: 16px; font-weight: 900; display: block; }
+.fmxan-card .cpm .col span { font-size: 9.5px; color: #8d93a8; }
+.fmxan-card .cpm .fair b { color: #5DCAA5; }
+.fmxan-card .cpm .bad b { color: #ef8080; }
+.fmxan-card .cpm .cbar { flex: 1; position: relative; height: 7px; border-radius: 6px; background: linear-gradient(90deg,#5DCAA5,#f59e0b 45%,#ef8080); }
+.fmxan-card .cpm .cbar i { position: absolute; top: -4px; right: 2%; width: 14px; height: 14px; border-radius: 50%; background: #ef8080; border: 3px solid #0a0d18; }
+.fmxan-fore { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.fmxan-fore .f { text-align: center; border-radius: 13px; padding: 11px 5px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+.fmxan-fore b { display: block; font-size: 15px; font-weight: 900; color: #f59e0b; }
+.fmxan-fore span { font-size: 9px; color: #8d93a8; display: block; margin-top: 3px; line-height: 1.35; }
+.fmxan-card .check { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; }
+.fmxan-card .check .cb { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; border-radius: 5px; border: 1.5px solid rgba(129,140,248,.5); }
+.fmxan-card .check p { font-size: 11px; color: #c2c6d2; line-height: 1.45; margin: 0; }
+.fmxan-deal { margin-top: 14px; border-radius: 15px; padding: 12px; background: linear-gradient(160deg, rgba(93,202,165,.12), rgba(93,202,165,.02)); border: 1px solid rgba(93,202,165,.3); }
+.fmxan-deal b { font-size: 12.5px; color: #5DCAA5; }
+.fmxan-deal p { font-size: 11px; color: #c2c6d2; line-height: 1.5; margin: 4px 0 0; }
+.fmxan-foot { margin-top: 13px; text-align: center; font-size: 10px; color: #6f748c; line-height: 1.5; }
