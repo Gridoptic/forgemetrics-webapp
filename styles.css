@@ -6046,7 +6046,16 @@ html.cs-modal-open {
 }
 
 /* AI-разбор канала */
-.fmxan-fee { font-style: normal; font-size: 9.5px; font-weight: 700; opacity: .75; margin-left: 3px; }
+.fmxan-fee { font-style: normal; display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; color: #f5c542; margin-left: 3px; }
+.fmxan-fee svg { width: 11px; height: 11px; }
+.fmxan-mi { display: inline-flex; }
+.fmxan-mi svg { width: 13px; height: 13px; }
+.fmxan-hi { display: inline-flex; color: #818cf8; }
+.fmxan-hi svg { width: 18px; height: 18px; }
+.fmxan-hi.big svg { width: 30px; height: 30px; }
+.fmxan-go .fz { display: inline-flex; align-items: center; gap: 3px; }
+.fmxan-go .fz svg { width: 11px; height: 11px; color: #f5c542; }
+.fmxan-cache a .fmxan-fee { font-size: 9.5px; margin-left: 1px; }
 .fmxan-load { display: flex; justify-content: center; padding: 34px 0; }
 .fmxan-go { width: 100%; border: 0; border-radius: 14px; padding: 13px; margin-top: 12px; font-family: inherit; font-size: 13.5px; font-weight: 800; color: #fff; background: linear-gradient(135deg,#818cf8,#6366f1); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
 .fmxan-go .fz { background: rgba(255,255,255,.18); border-radius: 20px; font-size: 11.5px; padding: 2px 9px; }
@@ -6054,7 +6063,6 @@ html.cs-modal-open {
 .fmxan-scan { position: relative; overflow: hidden; text-align: center; padding: 34px 16px 30px; border-radius: 16px; border: 1px solid rgba(129,140,248,.25); background: linear-gradient(160deg, rgba(129,140,248,.08), rgba(10,13,24,.3)); }
 .fmxan-scan .beam { position: absolute; left: 0; right: 0; top: -40%; height: 34%; background: linear-gradient(180deg, transparent, rgba(129,140,248,.16), transparent); animation: fmxanSweep 2.4s ease-in-out infinite; pointer-events: none; }
 @keyframes fmxanSweep { 0% { top: -35%; } 60% { top: 105%; } 100% { top: 105%; } }
-.fmxan-scan > i { font-size: 30px; color: #818cf8; }
 .fmxan-scan .st { font-size: 13px; font-weight: 700; margin-top: 12px; }
 .fmxan-scan .sub { font-size: 10.5px; color: #8d93a8; margin-top: 7px; line-height: 1.45; }
 .fmxan-cache { font-size: 10.5px; color: #8d93a8; text-align: center; margin-bottom: 10px; }

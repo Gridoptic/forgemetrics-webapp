@@ -9087,7 +9087,7 @@
             _ctcLinesHtml(l) +
             _moreBlock(l) +
             _trustRow(l) +
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
+            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
             '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
             '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
             (!l.id ? '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>'
@@ -9276,12 +9276,12 @@
             _nicheLine(l, '') + '</div>' + scoreHtml + '</div>' +
             _alertsRow(l, _promoB);
         var actsHtml = l.id
-            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
+            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
               '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button>' +
               '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>'
-            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><i class="ti ti-microscope"></i>Разбор <em class="fmxan-fee">⚡30</em></button>' +
+            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
               '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>';
@@ -10074,7 +10074,7 @@
         _root.appendChild(cbar);
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
-        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-microscope" style="color:#818cf8;"></i> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-anBody"></div></div>';
+        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><span class="fmxan-hi">' + AN_ICO + '</span> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-anBody"></div></div>';
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
@@ -10370,6 +10370,16 @@
     }
     var _anBusy = false;
     var _AN_PRICE = 30;
+    var AN_ICO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+        + '<path d="M4 4v14a2 2 0 0 0 2 2h14"/><path d="M8 16v-5"/><path d="M12.5 16V8"/><path d="M17 16v-3"/>'
+        + '<path d="M14.6 4.6l1.9 1.9 3.3-3.3" stroke-width="2"/></svg>';
+    var AN_BOLT = '<svg viewBox="0 0 24 24" fill="none">'
+        + '<circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.25" opacity="0.4"/>'
+        + '<path d="M13.7 4.6 7.9 13.5h3.7l-1 5.9 5.7-8.6h-3.7l1.1-6.2z" fill="currentColor"/></svg>';
+
+    function anFee(n) {
+        return '<em class="fmxan-fee">' + AN_BOLT + n + '</em>';
+    }
     var _AN_STEPS = ['Считываю метрики канала...', 'Сверяю цифры между собой...',
                      'Ищу признаки накрутки...', 'Считаю честный охват...',
                      'Оцениваю справедливую цену...', 'Формирую вердикт...'];
@@ -10396,7 +10406,7 @@
         if (!body) return;
         body.innerHTML =
             '<div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div>' +
-            '<button class="fmxan-go" id="fmx-anGo"><i class="ti ti-microscope"></i> Разобрать канал <span class="fz">⚡ ' + _AN_PRICE + '</span></button>' +
+            '<button class="fmxan-go" id="fmx-anGo"><span class="fmxan-mi">' + AN_ICO + '</span> Разобрать канал <span class="fz">' + AN_BOLT + _AN_PRICE + '</span></button>' +
             '<div class="fmxan-hint">Готовый разбор хранится 7 дней — повторное открытие бесплатно.</div>';
         var go = el('fmx-anGo');
         if (go) go.addEventListener('click', function () { _anStart(u); });
@@ -10408,7 +10418,7 @@
         _haptic('medium');
         var body = el('fmx-anBody');
         body.innerHTML = '<div class="fmxan-scan"><div class="beam"></div>' +
-            '<i class="ti ti-microscope"></i>' +
+            '<span class="fmxan-hi big">' + AN_ICO + '</span>' +
             '<div class="st" id="fmx-anStep">' + _AN_STEPS[0] + '</div>' +
             '<div class="sub">Глубокий разбор — обычно одна-две минуты. Окно можно не закрывать.</div></div>';
         var i = 0;
@@ -10457,7 +10467,7 @@
         if (a._cached_at) {
             var dt = new Date(a._cached_at);
             h += '<div class="fmxan-cache">Разбор от ' + dt.toLocaleDateString('ru-RU') +
-                ' · <a id="fmx-anRe">обновить ⚡' + _AN_PRICE + '</a></div>';
+                ' · <a id="fmx-anRe">обновить ' + anFee(_AN_PRICE) + '</a></div>';
         }
         h += '<div class="fmxan-verd"><div class="ring">' +
             '<svg width="104" height="104" viewBox="0 0 108 108">' +
