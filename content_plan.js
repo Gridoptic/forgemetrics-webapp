@@ -26,6 +26,12 @@
         var w = wallet();
         return _model === 'standard' ? (w.price_day_std || 5) : (w.price_day || 10);
     }
+    function canEdit() { return !_state || _state.can_edit !== false; }
+    var VIEW_ACTS = { close: 1, wkday: 1, revback: 1, review: 1, tipsmore: 1, copy: 1 };
+    function denyEdit() {
+        haptic('light');
+        toast(T('Создатель канала не выдал тебе право менять контент-план'));
+    }
     function forgeTag(n) {
         if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
         return esc(String(n)) + ' Forge';
@@ -1315,7 +1321,7 @@
         if (host) host.remove();
         host = document.createElement('div');
         host.id = 'cp-daybox';
-        host.className = 'cp-dsov';
+        host.className = 'cp-dsov' + (canEdit() ? '' : ' cp-vonly');
         var timeFor = null;
         var dayPosts = function () {
             return ((_state && _state.posts) || []).filter(function (p) {
@@ -1411,6 +1417,11 @@
         };
         host.addEventListener('click', function (e) {
             var t = e.target;
+            if (!canEdit() && t.closest &&
+                t.closest('[data-wtime],[data-whour],[data-wmin],[data-wdel],[data-wadd]')) {
+                denyEdit();
+                return;
+            }
             var wt = t.closest ? t.closest('[data-wtime]') : null;
             if (wt) {
                 haptic('light');
@@ -1777,9 +1788,15 @@
             : esc(T('Слоты времени — рекомендация; точное время подтянется по данным канала. Утверди посты и запланируй выход.'));
         var oldRb = document.querySelector('#content-plan-screen .cp-ribbon');
         var keepScroll = oldRb ? oldRb.scrollLeft : 0;
-        setView(chanBlock + weekCal + doneBanner + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
+        var viewBan = canEdit() ? '' :
+            '<div class="cp-hbar stop"><i class="ti ti-eye"></i><span>' +
+            esc(T('Режим просмотра — права на изменения выдаёт создатель канала.')) +
+            '</span></div>';
+        setView(viewBan + chanBlock + weekCal + doneBanner + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
             reviewEntry() + insightsBlock() + strategyBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
+        var scrEl = document.getElementById('content-plan-screen');
+        if (scrEl) scrEl.classList.toggle('cp-vonly', !canEdit());
         if (keepScroll) {
             var newRb = document.querySelector('#content-plan-screen .cp-ribbon');
             if (newRb) newRb.scrollLeft = keepScroll;
@@ -3078,6 +3095,13 @@
 
     function onClick(ev) {
         var t = ev.target;
+        if (!canEdit()) {
+            var gEl = t.closest ? t.closest('[data-act],[data-chip]') : null;
+            if (gEl) {
+                var gAct = gEl.getAttribute('data-act');
+                if (!gAct || !VIEW_ACTS[gAct]) { denyEdit(); return; }
+            }
+        }
         var chip = t.closest ? t.closest('[data-chip]') : null;
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');

@@ -336,6 +336,12 @@
     .cp-msel { grid-template-columns: 1fr; }
 }
 
+.cp-vonly .cp-act, .cp-vonly .cp-allbtn, .cp-vonly .cp-adrow,
+.cp-vonly .cp-ap button, .cp-vonly .cp-mrepl, .cp-vonly .cp-madd,
+.cp-vonly .cp-mx, .cp-vonly .cp-goal, .cp-vonly .cp-radd,
+.cp-vonly .cp-mopt, .cp-vonly .cp-go, .cp-vonly .tm,
+.cp-vonly .cp-add, .cp-vonly .cp-editbox { opacity: .45; }
+
 
 .cp-ap {
     border-radius: 18px;
