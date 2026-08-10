@@ -50,6 +50,10 @@ function forgeAmount(n, size) {
     return `<span class="forge-price">${forgeIco(size)}${val}</span>`;
 }
 
+const ANALYZE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M4 4v14a2 2 0 0 0 2 2h14"/><path d="M8 16v-5"/><path d="M12.5 16V8"/><path d="M17 16v-3"/>'
+    + '<path d="M14.6 4.6l1.9 1.9 3.3-3.3" stroke-width="2"/></svg>';
+
 const FORGE_SHEET_ITEMS = [
     { key: 'generate', one: 'премиум-пост', few: 'премиум-поста', many: 'премиум-постов',
       short: 'Премиум-пост', icon: 'sparkles' },
@@ -61,6 +65,8 @@ const FORGE_SHEET_ITEMS = [
       short: 'Настройка стиля канала', icon: 'wand' },
     { key: 'adpick', one: 'подбор каналов для рекламы', few: 'подбора каналов для рекламы', many: 'подборов каналов для рекламы',
       short: 'Подбор каналов для рекламы', icon: 'target-arrow' },
+    { key: 'channel_analyze', one: 'AI-разбор канала', few: 'AI-разбора канала', many: 'AI-разборов канала',
+      short: 'AI-разбор канала', svg: ANALYZE_SVG },
     { key: 'audit', one: 'AI-аудит канала', few: 'AI-аудита канала', many: 'AI-аудитов канала',
       short: 'AI-аудит канала', icon: 'chart-dots' },
     { key: 'deep_audit', one: 'коммерческий аудит', few: 'коммерческих аудита', many: 'коммерческих аудитов',
@@ -106,7 +112,7 @@ function openForgeSheet() {
             : `<span class="fs-nm">${escapeHtml(it.short)}</span>` +
               `<span class="fs-pr">${forgeAmount(price, 12)}</span>`;
         return `<div class="fs-row${count > 0 ? '' : ' off'}">` +
-            `<span class="fs-ico"><i class="ti ti-${it.icon}"></i></span>${body}</div>`;
+            `<span class="fs-ico">${it.svg || `<i class="ti ti-${it.icon}"></i>`}</span>${body}</div>`;
     }).join('');
 
     const baseRate = (f.packs && f.packs.length)
@@ -2674,11 +2680,11 @@ const TFC_SHORT = {
     generate: 'Премиум-пост', generate_std: 'Стандартный пост',
     modify: 'Правка поста', rewrite: 'Рерайт поста',
     voice: 'Настройка стиля', adpick: 'Подбор каналов',
-    audit: 'AI-аудит', deep_audit: 'Коммерческий аудит',
+    channel_analyze: 'AI-разбор', audit: 'AI-аудит', deep_audit: 'Коммерческий аудит',
     competitors: 'Анализ конкурентов',
 };
 const TFC_MAX = { generate: 300, generate_std: 400, rewrite: 100, modify: 200, voice: 20,
-    adpick: 45, audit: 30, deep_audit: 20, competitors: 20 };
+    adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20 };
 const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
 const TFC_PRESETS = [
     { t: 'Один канал', ic: 'user', color: 'bl',

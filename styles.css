@@ -5456,6 +5456,11 @@ html.cs-modal-open {
     font-size: 14px;
 }
 
+.fs-ico svg {
+    width: 15px;
+    height: 15px;
+}
+
 .fs-row.off .fs-ico {
     background: rgba(255, 255, 255, 0.04);
     border-color: rgba(255, 255, 255, 0.08);
