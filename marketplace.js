@@ -10433,6 +10433,9 @@
         }).then(function (r) {
             _anBusy = false;
             if (_anStepT) { clearInterval(_anStepT); _anStepT = null; }
+            if (r && r.balance != null && typeof window.setForgeBalance === 'function') {
+                window.setForgeBalance(r.balance);
+            }
             if (r && r.ok && r.analysis) { _haptic('light'); _anRender(u, r.analysis); }
             else if (r && r.error === 'no_data') {
                 body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-database-off"></i><h3>Мало данных</h3><p>По этому каналу ещё не накоплены замеры — разбор недоступен. Forge не списаны.</p></div>';
