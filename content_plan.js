@@ -414,16 +414,25 @@
         return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
-    function periodNote() {
+    function histAvg() {
+        var h = histDays();
+        if (!h) return 0;
+        var s = 0;
+        h.forEach(function (d) { s += d.views || 0; });
+        return s / 7;
+    }
+    function qbHead() {
         var h = _cal && _cal.history;
         if (!h || !h.ready || !h.since) return '';
         var mm = function (iso) {
             var p = String(iso).split('-');
-            return p[1] + '.' + p[0];
+            return p[1] + '.' + String(p[0]).slice(2);
         };
-        var span = mm(h.since) === mm(h.until) ? mm(h.since) : (mm(h.since) + ' — ' + mm(h.until));
-        return esc(T('по') + ' ' + h.total + ' ' +
-            T(plural3(h.total, 'посту', 'постам', 'постам')) + ', ' + span);
+        var span = mm(h.since) === mm(h.until) ? mm(h.since) : (mm(h.since) + '—' + mm(h.until));
+        return '<div class="cp-qhead"><span class="l"><i></i>' +
+            esc(T('охват по дням') + ' · ' + h.total + ' ' +
+                T(plural3(h.total, 'пост', 'поста', 'постов'))) + '</span>' +
+            '<span class="r">Ø ' + esc(numExact(histAvg())) + ' · ' + esc(span) + '</span></div>';
     }
 
     function histDays() {
@@ -447,6 +456,7 @@
                 if ((d.views || 0) > max) { max = d.views || 0; best = i; }
             });
         }
+        var avg = histAvg();
         var busy = {};
         ((_cal && _cal.busy) || []).forEach(function (b) { busy[b.day] = true; });
         var byDay = null;
@@ -456,7 +466,7 @@
                 (byDay[p.day_index] = byDay[p.day_index] || []).push(p);
             });
         }
-        return days().map(function (d, i) {
+        var cols = days().map(function (d, i) {
             var n = Math.max(0, +d.n || 0);
             var pins = (d.pins || []).filter(function (p) { return !!p; }).length;
             var stat = '';
@@ -473,30 +483,38 @@
                     else if (q) stat = ' d-q';
                 }
             }
-            var cls = 'cp-dcol' + stat;
+            var cls = 'cp-qcol' + stat;
             if (!n) cls += ' off';
             else if (!byDay && pins) cls += ' pinned';
             if (busy[i]) cls += ' ad';
             if (hist && i === best && max > 0) cls += ' best';
-            var col = '';
+            var mid = '';
             if (hist) {
                 var v = hist[i].views || 0;
-                var pct = (max && v) ? Math.max(8, Math.round(v / max * 100)) : 0;
-                var vs = v ? numExact(v) : '';
-                col = '<span class="cp-hist">' + (pct ? '<i style="height:' + pct + '%"></i>' : '') +
-                    '</span><span class="cp-hval' + (vs.length > 6 ? ' sm' : '') + '">' +
-                    esc(vs) + '</span>';
+                var vs = v ? numExact(v) : '—';
+                var dl = '—';
+                var dcls = 'dn';
+                if (v && avg) {
+                    var dp = Math.round((v - avg) / avg * 100);
+                    dcls = dp >= 0 ? 'up' : 'dn';
+                    dl = (dp >= 0 ? '▲' : '▼') + Math.abs(dp) + '%';
+                }
+                var w = (max && v) ? Math.max(6, Math.round(v / max * 100)) : 0;
+                mid = '<span class="cp-qv' + (vs.length > 5 ? ' sm' : '') + '">' + esc(vs) + '</span>' +
+                    '<span class="cp-qd ' + dcls + '">' + dl + '</span>' +
+                    '<span class="cp-qbar">' + (w ? '<i style="width:' + w + '%"></i>' : '') + '</span>';
             }
             var act = '';
             if (frozen !== 'dead') {
                 act = frozen ? ' data-act="wkday" data-day="' + i + '"'
                              : ' data-act="pickday" data-day="' + i + '"';
             }
-            return '<div class="' + cls + '"' + act + '>' + col +
-                (stat ? '<i class="dst"></i>' : '') +
-                '<span class="cp-plan"><b>' + (n || '—') + '</b>' +
-                '<em>' + esc(T(WD[i])) + '</em></span></div>';
+            return '<div class="' + cls + '"' + act + '>' +
+                '<span class="cp-qwd">' + esc(T(WD[i])) + '</span>' + mid +
+                '<span class="cp-qn">' + (stat ? '<i class="qdot"></i>' : '') +
+                '<b>' + (n || '—') + '</b></span></div>';
         }).join('');
+        return qbHead() + '<div class="cp-qb' + (hist ? '' : ' nohist') + '">' + cols + '</div>';
     }
 
     function histNote() {
@@ -852,7 +870,6 @@
             '<h2>' + esc(T('Неделя под') + ' ' + goalWord()) + '</h2>' +
             '<p>' + esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</p>' +
             '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
-            (periodNote() ? '<div class="cp-hsrc">' + periodNote() + '</div>' : '') +
             histNote() + tipBlock() + weekBar() + '</div>';
     }
 
@@ -1742,8 +1759,7 @@
 
         var chanBlock = buildChanBlock();
         var weekCal = '<div class="cp-hero wk"><div class="cp-hero-week">' + weekCells(true) +
-            '</div>' + (periodNote() ? '<div class="cp-hsrc">' + periodNote() + '</div>' : '') +
-            '</div>';
+            '</div></div>';
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
             '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(goalTitle(_state.goal)) + '</div></div>' +
