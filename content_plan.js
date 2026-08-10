@@ -2956,7 +2956,11 @@
             body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
                 '<button class="cp-act" data-act="canceld" data-id="' + p.id + '"><i class="ti ti-calendar-off"></i> ' + esc(T('Снять с очереди')) + '</button>' + pubc + '</div>' +
                 '<div class="cp-note">' + esc(T('Выйдет в канал автоматически в указанное время.')) + '</div>';
-        } else if (p.publish_status === 'failed' || p.publish_status === 'needs_check') {
+        } else if (p.publish_status === 'needs_check') {
+            body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
+                '<button class="cp-act" data-act="canceld" data-id="' + p.id + '"><i class="ti ti-calendar-off"></i> ' + esc(T('Снять с очереди')) + '</button>' + pubc + '</div>' +
+                '<div class="cp-note fail">' + esc(T('Публикация остановлена: текст задел ограничения площадки. Сними пост с очереди, поправь формулировки и запланируй заново.')) + '</div>';
+        } else if (p.publish_status === 'failed') {
             body = '<div class="cp-dtext2">' + esc(p.text) + '</div><div class="cp-dacts">' +
                 '<button class="cp-act ok" data-act="approve" data-id="' + p.id + '"><i class="ti ti-circle-check"></i> ' + esc(T('Утвердить')) + '</button>' + pubc + '</div>' +
                 '<div class="cp-note fail">' + esc(T('Пост не отправлен. Проверь права бота и запланируй заново.')) + '</div>';
