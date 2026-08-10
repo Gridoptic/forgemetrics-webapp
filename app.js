@@ -212,13 +212,23 @@ function openHelpSheet() {
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
     overlay.addEventListener('click', closeHelpSheet);
     _hsCtx = { overlay, sheet };
-    const go = (id, fn) => {
+    const go = (id, fn, bgId) => {
         const b = sheet.querySelector('#' + id);
-        if (b) b.addEventListener('click', () => { hapticLight(); closeHelpSheet(); fn(); });
+        if (b) b.addEventListener('click', () => {
+            hapticLight();
+            closeHelpSheet();
+            fn();
+            const bg = document.getElementById(bgId);
+            if (!bg || typeof MutationObserver === 'undefined') return;
+            const obs = new MutationObserver(() => {
+                if (!bg.classList.contains('fmx-show')) { obs.disconnect(); openHelpSheet(); }
+            });
+            obs.observe(bg, { attributes: true, attributeFilter: ['class'] });
+        });
     };
-    go('hs-terms', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('terms'); });
-    go('hs-rules', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('rules'); });
-    go('hs-badges', () => { if (window.__fmxOpenBadges) window.__fmxOpenBadges(); });
+    go('hs-terms', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('terms'); }, 'fmx-faqBg');
+    go('hs-rules', () => { if (window.__fmxOpenFaq) window.__fmxOpenFaq('rules'); }, 'fmx-faqBg');
+    go('hs-badges', () => { if (window.__fmxOpenBadges) window.__fmxOpenBadges(); }, 'fmx-bgdBg');
     localizeTree(sheet);
 }
 
