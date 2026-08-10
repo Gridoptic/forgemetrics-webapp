@@ -5316,6 +5316,41 @@ html.cs-modal-open {
 .fw-prow span { color: var(--text-secondary); }
 .fw-prow b { color: #fbbf24; font-weight: 600; flex-shrink: 0; }
 
+.fw-pitem {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fw-pitem:last-child { border-bottom: none; }
+
+.fw-pitem .fw-prow {
+    border-bottom: none;
+    padding: 11px 0;
+}
+
+.fw-pitem .fw-prow span:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.fw-prow.tap { cursor: pointer; }
+
+.fw-pchev {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    transition: transform 0.18s ease;
+}
+
+.fw-prow.open .fw-pchev { transform: rotate(180deg); }
+
+.fw-pex {
+    padding: 0 0 11px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
 .fw-ti {
     display: flex;
     flex-direction: column;

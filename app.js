@@ -2230,6 +2230,45 @@ function forgeTxDate(iso) {
         + ' · ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 }
 
+const FW_PRICE_EXPLAIN = {
+    generate: 'Готовый пост по заданию с учётом профиля стиля канала. Премиум-модель точнее держит тему, глубже прорабатывает аргументацию и требует меньше правок.',
+    generate_std: 'Готовый пост по заданию стандартной моделью. Рабочий вариант для регулярного контента: анонсы, подборки, короткие форматы.',
+    modify: 'Точечная доработка готового поста по инструкции: сменить тон, сократить, расширить, переписать фрагмент. Пост не пересобирается с нуля — правится только указанное.',
+    rewrite: 'Переработка чужого поста в уникальный текст под стиль твоего канала: смысл и факты сохраняются, структура и формулировки — новые.',
+    voice: 'Анализ опубликованных постов канала и настройка профиля стиля: тон, лексика, структура, оформление. Профиль применяется ко всем последующим генерациям.',
+    channel_analyze: 'Оценка чужого канала перед покупкой рекламы: вердикт с баллом доверия, реальный охват против заявленного, портрет аудитории, красные флаги, справедливая цена размещения и прогноз отдачи. Готовая позиция для переговоров с продавцом.',
+    adpick: 'Подбор площадок под закуп рекламы: сбор кандидатов с проверенными метриками — охват, вовлечённость, доля рекламы в ленте, динамика подписчиков — и ранжирование лучших с оценкой совпадения аудитории и обоснованием по цифрам.',
+    audit: 'Полный аудит твоего канала: балл по контенту, охвату, регулярности и монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места с оценкой потерь, прогноз развития и пошаговый план с дедлайнами.',
+    deep_audit: 'Коммерческий аудит канала как рекламной площадки: позиция среди каналов ниши, цена размещения против рыночной вилки, качество трафика с проверкой на накрутку, аудитория как аргумент в продаже, рекомендованные цены форматов и потенциал дохода в месяц.',
+    competitors: 'Поиск и разбор каналов-конкурентов: карта ниши, сравнение с каждым по охвату, частоте и подписчикам, приёмы, которые приносят им результат, твои пробелы и план действий, чтобы их закрыть.',
+};
+
+function fwPriceRows(list) {
+    return (list || []).filter(p => p.price > 0)
+        .slice().sort((a, b) => a.price - b.price)
+        .map(p => {
+            const ex = FW_PRICE_EXPLAIN[p.key];
+            return `<div class="fw-pitem">` +
+                `<div class="fw-prow${ex ? ' tap' : ''}"><span>${escapeHtml(p.label)}</span>` +
+                `<b>${forgeAmount(p.price, 13)}</b>` +
+                (ex ? `<i class="ti ti-chevron-down fw-pchev"></i>` : '') + `</div>` +
+                (ex ? `<div class="fw-pex" hidden>${escapeHtml(ex)}</div>` : '') +
+                `</div>`;
+        }).join('');
+}
+
+function bindFwPriceRows(boxId) {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    box.querySelectorAll('.fw-prow.tap').forEach((row) => row.addEventListener('click', () => {
+        const ex = row.nextElementSibling;
+        if (!ex || !ex.classList.contains('fw-pex')) return;
+        hapticLight();
+        ex.hidden = !ex.hidden;
+        row.classList.toggle('open', !ex.hidden);
+    }));
+}
+
 function cabForgeHtml(f, tier) {
     if (!f) return '';
     const bal = Number(f.balance || 0);
@@ -2237,8 +2276,7 @@ function cabForgeHtml(f, tier) {
     const pct = grant > 0 ? Math.min(100, Math.round(bal / grant * 100)) : 0;
     const low = grant > 0 && bal < grant * 0.15;
 
-    const prices = (f.prices || []).filter(p => p.price > 0).map(p =>
-        `<div class="fw-prow"><span>${escapeHtml(p.label)}</span><b>${forgeAmount(p.price, 13)}</b></div>`).join('');
+    const prices = fwPriceRows(f.prices);
 
     const baseRate = (f.packs && f.packs.length)
         ? f.packs[0].price_rub / f.packs[0].amount : 0;
@@ -2467,6 +2505,7 @@ function wireCabinet(d) {
     };
     fold('fw-prices-t', 'fw-prices');
     fold('fw-hist-t', 'fw-hist');
+    bindFwPriceRows('fw-prices');
 
     document.querySelectorAll('[data-forgepack]').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -2952,8 +2991,7 @@ function renderTariffs(d) {
         html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> Пополнить баланс Forge</div>` +
             `<div class="tf-sub" style="margin:-2px 0 10px;">На балансе ${forgeAmount(bal, 13)} · Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов</div>` +
             `<div class="fw-packs">${packs}</div>`;
-        const prices = (d.forge_prices || []).filter(x => x.price > 0).map(x =>
-            `<div class="fw-prow"><span>${escapeHtml(x.label)}</span><b>${forgeAmount(x.price, 13)}</b></div>`).join('');
+        const prices = fwPriceRows(d.forge_prices);
         if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">Сколько стоят действия <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-prices" id="tf-prices" hidden>${prices}</div>`;
         html += `</div>`;
@@ -2972,6 +3010,7 @@ function renderTariffs(d) {
         box.hidden = !box.hidden;
         tfPricesT.classList.toggle('open', !box.hidden);
     });
+    bindFwPriceRows('tf-prices');
     body.querySelectorAll('[data-tfpack]').forEach((btn) => btn.addEventListener('click', () => {
         const amount = parseInt(btn.getAttribute('data-tfpack'), 10);
         const pack = (d.forge_packs || []).find(p => p.amount === amount);
