@@ -27,6 +27,7 @@
         return _model === 'standard' ? (w.price_day_std || 5) : (w.price_day || 10);
     }
     function canEdit() { return !_state || _state.can_edit !== false; }
+    function priceResearch() { return wallet().price_research || 20; }
     var VIEW_ACTS = { close: 1, wkday: 1, revback: 1, review: 1, tipsmore: 1, copy: 1 };
     function denyEdit() {
         haptic('light');
@@ -2981,6 +2982,11 @@
                 '<button class="cp-act ok" data-act="approve" data-id="' + p.id + '"><i class="ti ti-circle-check"></i> ' + esc(T('Утвердить')) + '</button>' + pubc + '</div>' +
                 '<div class="cp-note fail">' + esc(T('Пост не отправлен. Проверь права бота и запланируй заново.')) + '</div>';
         } else if (p.text) {
+            var resBtn = p.research_links
+                ? '<button class="cp-act" data-act="resdel" data-id="' + p.id + '"><i class="ti ti-file-search"></i> ' +
+                  esc(T('Убрать исследования')) + '</button>'
+                : '<button class="cp-act" data-act="resadd" data-id="' + p.id + '"><i class="ti ti-file-search"></i> ' +
+                  esc(T('Исследования')) + ' ' + forgeTag(priceResearch()) + '</button>';
             body = '<div class="cp-dtext2">' + esc(p.text) + '</div>' +
                 '<div class="cp-dacts">' +
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
@@ -2988,6 +2994,7 @@
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
                 forgeTag(priceDay()) + '</button>' +
+                resBtn +
                 '<button class="cp-act" data-act="editpost" data-id="' + p.id + '"><i class="ti ti-pencil"></i> ' + esc(T('Править')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
@@ -3335,6 +3342,8 @@
         if (act === 'schedule') { doSchedule(); return; }
         if (act === 'unschedule') { doUnschedule(); return; }
         if (act === 'canceld') { cancelDay(+id); return; }
+        if (act === 'resadd') { researchAdd(+id); return; }
+        if (act === 'resdel') { researchRemove(+id); return; }
         if (act === 'rollback') { rollbackDay(+id); return; }
         if (act === 'openpost') {
             var url = actEl.getAttribute('data-url');
@@ -3383,6 +3392,45 @@
         apiRequest('/api/v1/content-plan/cancel-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
             .then(function (r) { if (r && r.ok) { toast(T('Пост снят с очереди')); refreshState(); } else toast(T('Не удалось снять с очереди')); })
             .catch(function () { toast(T('Не удалось снять с очереди')); });
+    }
+    var _resBusy = {};
+    function researchAdd(id) {
+        if (_resBusy[id]) return;
+        _resBusy[id] = true;
+        haptic('light');
+        toast(T('Ищу и проверяю исследования — обычно около минуты'));
+        apiRequest('/api/v1/content-plan/research-add', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                delete _resBusy[id];
+                if (r && r.ok && r.links) {
+                    var p = post(id);
+                    if (p) { p.text = r.text; p.research_links = true; }
+                    toast(T('Ссылки на исследования добавлены'));
+                    refreshState();
+                } else if (r && r.ok) {
+                    toast(T('Подтверждённых работ не нашлось — пост остался без ссылок. Вернули 15 из 20: удержан сбор за поиск и сверку источников.'));
+                    refreshState();
+                } else if (r && r.error === 'already_out') {
+                    toast(T('Пост уже в очереди — сначала сними неделю с выхода'));
+                } else toast(cap(r));
+            })
+            .catch(function (err) {
+                delete _resBusy[id];
+                toast(apiErrText(err, 'Не удалось добавить исследования'));
+            });
+    }
+    function researchRemove(id) {
+        haptic('light');
+        apiRequest('/api/v1/content-plan/research-remove', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    var p = post(id);
+                    if (p) { p.text = r.text; p.research_links = false; }
+                    toast(T('Ссылки на исследования убраны'));
+                    refreshState();
+                } else toast(T('Не удалось убрать ссылки'));
+            })
+            .catch(function () { toast(T('Не удалось убрать ссылки')); });
     }
     function rollbackDay(id) {
         haptic('medium');
