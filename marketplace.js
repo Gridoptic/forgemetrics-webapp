@@ -10252,7 +10252,7 @@
             pulseRow('mid', 'Регулярный', 'от 3 до 7 постов в неделю — несколько раз в неделю, без больших пауз.') +
             pulseRow('rare', 'Редкие посты', 'от 1 до 3 постов в неделю либо пауза дольше недели.') +
             pulseRow('low', 'Единичные посты', 'публикует реже раза в неделю либо пауза дольше двух недель. Канал живой, но выходит редко.') +
-            pulseRow('none', 'Не публикует', 'новых публикаций больше месяца — размещение здесь охвата не даст.') +
+            pulseRow('none', 'Не публикует', 'последний пост вышел больше месяца назад — размещение здесь охвата не даст.') +
             '<div class="fmx-bgd-desc" style="margin-top:9px;">Редкие посты — не приговор: у нишевых и авторских каналов такой ритм нормален. Но размещение в молчащем канале охвата почти не даст.</div>' +
             '</div>' +
             card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
@@ -10266,7 +10266,7 @@
             card('<span class="fmx-aud" style="color:#ff6fae;border:0.5px solid #ff6fae55;background:#ff6fae1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-female"></i> Женская</span>', 'Аудитория: женская',
                 'Больше половины читателей — женщины. Подходит под офферы с женской целевой аудиторией: красота, мода, дети, дом, маркетплейсы.') +
             card('<span class="fmx-aud" style="color:#9aa0b5;border:0.5px solid #9aa0b555;background:#9aa0b51a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-users-group"></i> Смешанная</span>', 'Аудитория: смешанная',
-                'Заметной перекоса по полу нет — канал читают и мужчины, и женщины. Универсальный вариант под широкие офферы: финансы, новости, развлечения.');
+                'Заметного перекоса по полу нет — канал читают и мужчины, и женщины. Универсальный вариант под широкие офферы: финансы, новости, развлечения.');
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
         bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат бейджи</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Бейджи в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
