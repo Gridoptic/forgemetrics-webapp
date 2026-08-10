@@ -2248,8 +2248,11 @@ function cabForgeHtml(f, tier) {
     const prices = (f.prices || []).filter(p => p.price > 0).map(p =>
         `<div class="fw-prow"><span>${escapeHtml(p.label)}</span><b>${forgeAmount(p.price, 13)}</b></div>`).join('');
 
+    const baseRate = (f.packs && f.packs.length)
+        ? f.packs[0].price_rub / f.packs[0].amount : 0;
     const packs = (f.packs || []).map(p => {
-        const disc = Math.round((1 - p.price_rub / p.amount) * 100);
+        const disc = baseRate
+            ? Math.round((1 - (p.price_rub / p.amount) / baseRate) * 100) : 0;
         return `<button class="fw-pack" data-forgepack="${p.amount}">` +
             `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
             `<span class="fw-pack-p">${cabNum(p.price_rub)} ₽</span>` +
