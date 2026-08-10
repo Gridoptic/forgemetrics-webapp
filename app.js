@@ -2130,21 +2130,7 @@ function refCardHtml(r) {
   </div>
 
   <div class="rf-card rf-glow">
-    <div class="rf-lbl" style="margin-top:0">Твой промокод</div>
-    <div class="rf-field" id="cab-promo-view">
-      <span class="link">${escapeHtml(r.promo_code || '—')}</span>
-      <button class="rf-fbtn" id="cab-copy" aria-label="Копировать промокод"><i class="ti ti-copy"></i></button>
-      <button class="rf-fbtn" id="cab-edit" aria-label="Изменить промокод"><i class="ti ti-pencil"></i></button>
-    </div>
-    <div class="rf-promoed" id="cab-promo-edit">
-      <input class="rf-pinp" id="cab-pinp" maxlength="12" autocomplete="off" spellcheck="false" placeholder="ПРОМОКОД">
-      <div class="cab-pmsg" id="cab-pmsg"></div>
-      <div class="rf-prow">
-        <button class="rf-pbtn" id="cab-pcancel">Отмена</button>
-        <button class="rf-pbtn acc" id="cab-psave" disabled>Сохранить</button>
-      </div>
-    </div>
-    <div class="rf-lbl">Твоя ссылка</div>
+    <div class="rf-lbl" style="margin-top:0">Твоя ссылка</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
@@ -2495,14 +2481,6 @@ function wireCabinet(d) {
 function wireReferral(d) {
     d = d || {};
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    on('cab-copy', () => {
-        const code = (d.referral && d.referral.promo_code) || '';
-        const btn = document.getElementById('cab-copy');
-        copyText(code).then(() => {
-            if (btn) { btn.classList.add('ok'); btn.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { btn.classList.remove('ok'); btn.innerHTML = '<i class="ti ti-copy"></i>'; }, 1600); }
-            cabToast('Промокод скопирован');
-        });
-    });
     on('cab-share', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
@@ -2522,65 +2500,6 @@ function wireReferral(d) {
         const b = document.getElementById('cab-invite-copy');
         copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
-    (function () {
-        const curCode = (d.referral && d.referral.promo_code) || '';
-        const inp = document.getElementById('cab-pinp');
-        const setMsg = (txt, cls) => { const m = document.getElementById('cab-pmsg'); if (m) { m.textContent = txt; m.className = 'cab-pmsg' + (cls ? ' ' + cls : ''); } };
-        const setSave = (ok) => { const b = document.getElementById('cab-psave'); if (b) b.disabled = !ok; };
-        let chkT = null, chkLast = '';
-        function check() {
-            const el = document.getElementById('cab-pinp'); if (!el) return;
-            const code = el.value.trim();
-            if (!code) { setMsg(t('Промокод не может быть пустым'), ''); setSave(false); return; }
-            if (code === curCode) { setMsg('Это твой текущий код', ''); setSave(false); return; }
-            if (code.length < 4) { setMsg('Минимум 4 символа', 'bad'); setSave(false); return; }
-            setMsg('Проверяю…', ''); setSave(false); chkLast = code;
-            apiRequest('/api/v1/referral/promo/check', { method: 'POST', body: JSON.stringify({ code: code }), headers: { 'Content-Type': 'application/json' } })
-                .then((res) => {
-                    if (chkLast !== code) return;
-                    if (res && res.available) { setMsg('✓ ' + t(res.message || 'Промокод свободен'), 'ok'); setSave(true); }
-                    else { setMsg(t((res && res.message) || 'Недоступно'), 'bad'); setSave(false); }
-                }).catch(() => { if (chkLast === code) { setMsg('Не удалось проверить', 'bad'); setSave(false); } });
-        }
-        on('cab-edit', () => {
-            hapticLight();
-            const dl = (d.referral && d.referral.promo_change_days_left) || 0;
-            if (dl > 0) { cabToast('Сменить промокод можно через ' + dl + ' дн.'); return; }
-            const view = document.getElementById('cab-promo-view'), ed = document.getElementById('cab-promo-edit'), el = document.getElementById('cab-pinp');
-            if (!ed || !el) return;
-            if (view) view.style.display = 'none';
-            ed.classList.add('on'); el.value = curCode;
-            try { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } catch (e) {}
-            check();
-        });
-        on('cab-pcancel', () => {
-            const view = document.getElementById('cab-promo-view'), ed = document.getElementById('cab-promo-edit');
-            if (ed) ed.classList.remove('on'); if (view) view.style.display = '';
-        });
-        if (inp) inp.addEventListener('input', () => {
-            const v = inp.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
-            if (v !== inp.value) inp.value = v;
-            clearTimeout(chkT); chkT = setTimeout(check, 320);
-        });
-        on('cab-psave', () => {
-            const el = document.getElementById('cab-pinp'), btn = document.getElementById('cab-psave'); if (!el || (btn && btn.disabled)) return;
-            const code = el.value.trim(); if (!code) return;
-            if (btn) btn.disabled = true; setMsg('Сохраняю…', '');
-            apiRequest('/api/v1/referral/promo/change', { method: 'POST', body: JSON.stringify({ new_code: code }), headers: { 'Content-Type': 'application/json' } })
-                .then((res) => {
-                    if (res && res.success) {
-                        hapticLight();
-                        d.referral = d.referral || {};
-                        d.referral.promo_code = res.promo_code;
-                        d.referral.referral_link = 'https://t.me/ForgeMetricsBot?start=' + res.promo_code;
-                        cabToast('Промокод изменён');
-                        renderReferral(d);
-                    } else {
-                        setMsg(t((res && res.message) || 'Не удалось изменить'), 'bad'); setSave(false);
-                    }
-                }).catch(() => { setMsg('Не удалось изменить', 'bad'); setSave(false); });
-        });
-    })();
 }
 
 
