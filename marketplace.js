@@ -2996,6 +2996,35 @@
             if (_mainTab === 'market' && _subTab === 'buy') paintBuyBody();
         });
     }
+    function _liveMarket() {
+        if (!_opened || !_root || _root.style.display === 'none') return false;
+        if (document.querySelector('.fmx-mbg.fmx-show')) return false;
+        if (window.scrollY > 400) return false;
+        if (_mainTab === 'market' && _subTab === 'buy') {
+            if (_feedState !== 'ready') return false;
+            var rid = ++_feedReq;
+            _feedOffset = 0;
+            apiGet(feedQuery()).then(function (r) {
+                if (rid !== _feedReq || _feedState !== 'ready') return;
+                if (r && r.listings) {
+                    _feed = r.listings;
+                    _feedTotal = (typeof r.total === 'number') ? r.total : _feed.length;
+                    if (_mainTab === 'market' && _subTab === 'buy') {
+                        var sy = window.scrollY; paintBuyBody(); window.scrollTo(0, sy);
+                    }
+                }
+            }).catch(function () {});
+            return true;
+        }
+        if (_mainTab === 'catalog') {
+            if (_catState !== 'ready') return false;
+            loadCatalog();
+            return true;
+        }
+        return false;
+    }
+    if (window.FMLive) window.FMLive.register('market', 120000, _liveMarket);
+
     function loadCatalog() {
         _catState = 'loading';
         apiGet('/api/v1/marketplace/base').then(function (r) {

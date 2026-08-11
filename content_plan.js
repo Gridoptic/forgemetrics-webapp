@@ -3121,9 +3121,20 @@
     function refreshState() {
         var pcid = _chId || (_state && _state.channel_id);
         apiRequest('/api/v1/content-plan' + (pcid ? '?channel_id=' + pcid : ''))
-            .then(function (d) { if (d && d.ok && _open) { _state = d; pushBalance(d); rerender(); } })
+            .then(function (d) {
+                if (d && d.ok && _open) {
+                    _state = d; pushBalance(d);
+                    var sy = window.scrollY; rerender(); window.scrollTo(0, sy);
+                }
+            })
             .catch(function () {});
     }
+
+    if (window.FMLive) window.FMLive.register('content-plan', 60000, function () {
+        if (!_open || _building || _pollTimer) return false;
+        refreshState();
+        return true;
+    });
 
     function onClick(ev) {
         var t = ev.target;

@@ -444,28 +444,49 @@ async function refreshDashboardSilent() {
         const sy = window.scrollY;
         renderDashboard(data);
         window.scrollTo(0, sy);
-        _liveLastAt = Date.now();
+        if (window.FMLive) window.FMLive.touch('dashboard');
     } catch (e) {
     }
 }
 
 
-var _liveLastAt = 0;
+window.FMLive = (function () {
+    const regs = {};
+    function editing() {
+        const a = document.activeElement;
+        return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
+    }
+    function blocked() {
+        return document.hidden || editing() ||
+            !!document.querySelector('.bs-sheet.visible, .bs-overlay.visible, .pw-sheet-ov.show, .lang-ov.show');
+    }
+    function tick(force) {
+        if (blocked()) return;
+        const now = Date.now();
+        Object.keys(regs).forEach((k) => {
+            const r = regs[k];
+            if (now - r.last < (force ? 15000 : r.every)) return;
+            try { if (r.fn() === true) r.last = now; } catch (e) {}
+        });
+    }
+    setInterval(() => tick(false), 30000);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) setTimeout(() => tick(true), 400);
+    });
+    return {
+        register(name, every, fn) { regs[name] = { every, last: Date.now(), fn }; },
+        touch(name) { if (regs[name]) regs[name].last = Date.now(); }
+    };
+})();
+
 function _dashVisible() {
     const s = screens.dashboard;
     return !!(s && s.style.display !== 'none' && s.offsetParent !== null);
 }
-function _liveTick(force) {
-    if (document.hidden || !_dashVisible()) return;
-    if (document.querySelector('.bs-sheet.visible, .bs-overlay.visible, .fmx-mbg.fmx-show, .pw-sheet-ov.show, .lang-ov.show')) return;
-    const now = Date.now();
-    if (!force && now - _liveLastAt < 60000) return;
-    if (force && now - _liveLastAt < 15000) return;
+window.FMLive.register('dashboard', 90000, function () {
+    if (!_dashVisible()) return false;
     refreshDashboardSilent();
-}
-setInterval(function () { _liveTick(false); }, 90000);
-document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) _liveTick(true);
+    return true;
 });
 
 
