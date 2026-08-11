@@ -441,10 +441,32 @@ async function refreshDashboardSilent() {
     try {
         const data = await apiRequest('/api/v1/user/dashboard');
         state.dashboard = data;
+        const sy = window.scrollY;
         renderDashboard(data);
+        window.scrollTo(0, sy);
+        _liveLastAt = Date.now();
     } catch (e) {
     }
 }
+
+
+var _liveLastAt = 0;
+function _dashVisible() {
+    const s = screens.dashboard;
+    return !!(s && s.style.display !== 'none' && s.offsetParent !== null);
+}
+function _liveTick(force) {
+    if (document.hidden || !_dashVisible()) return;
+    if (document.querySelector('.bs-sheet.visible, .bs-overlay.visible, .fmx-mbg.fmx-show, .pw-sheet-ov.show, .lang-ov.show')) return;
+    const now = Date.now();
+    if (!force && now - _liveLastAt < 60000) return;
+    if (force && now - _liveLastAt < 15000) return;
+    refreshDashboardSilent();
+}
+setInterval(function () { _liveTick(false); }, 90000);
+document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) _liveTick(true);
+});
 
 
 function showStartBotScreen() {
