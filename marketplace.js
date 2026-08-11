@@ -1354,7 +1354,7 @@
             '.fmx-mineacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);}',
             '.fmx-mineacts .fmx-btn:nth-child(odd):last-child{grid-column:1/-1;}',
             '.fmx-mineacts .fmx-btn:nth-child(odd):nth-last-child(2){grid-column:1/-1;}',
-            '.fmx-calguide{margin:0 0 10px;border:0.5px solid rgba(129,140,248,0.25);border-radius:10px;background:rgba(129,140,248,0.06);}',
+            '.fmx-calguide{margin:12px 0 10px;border:0.5px solid rgba(129,140,248,0.25);border-radius:10px;background:rgba(129,140,248,0.06);}',
             '.fmx-calguide summary{list-style:none;cursor:pointer;padding:9px 12px;font-size:11.5px;font-weight:700;color:#c7ccf7;display:flex;align-items:center;gap:6px;}',
             '.fmx-calguide summary i{color:#818cf8;font-size:14px;}',
             '.fmx-calguide summary::-webkit-details-marker{display:none;}',
