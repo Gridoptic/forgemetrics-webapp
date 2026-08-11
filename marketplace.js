@@ -1912,7 +1912,14 @@
     }
     function _tTreemap(items, hottest) {
         var W = 1000, H = 690, PXW = 320, PXH = 260, MAX_TILES = 13;
-        var list = items.slice().sort(function (a, b) { return (b.count || 1) - (a.count || 1); }).slice(0, MAX_TILES);
+        var movers = items.filter(function (n) { return n.delta7 != null && n.delta7 !== 0 && n.cpm_own !== false; })
+            .sort(function (a, b) { return Math.abs(b.delta7) - Math.abs(a.delta7); }).slice(0, MAX_TILES);
+        var picked = {};
+        movers.forEach(function (n) { picked[n.niche] = 1; });
+        var rest = items.filter(function (n) { return !picked[n.niche]; })
+            .sort(function (a, b) { return (b.count || 1) - (a.count || 1); });
+        var list = movers.concat(rest.slice(0, Math.max(0, MAX_TILES - movers.length)));
+        list.sort(function (a, b) { return (b.count || 1) - (a.count || 1); });
         var total = 0;
         list.forEach(function (n) { total += Math.max(1, n.count || 1); });
         var scale = W * H / total;
@@ -2145,7 +2152,7 @@
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
             html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Топ-13 ниш по числу каналов · размер — каналов в нише · цвет — динамика медианы CPM за 7 дней: зелёный — рост, красный — снижение, синеватый — без изменений, тёмный — мало данных · остальные ниши — в списке ниже</div>';
+            html += '<div class="fmx-t2hint">13 ниш: все с движением цены за 7 дней + крупнейшие стабильные · размер — каналов в нише · цвет: зелёный — рост, красный — снижение, синеватый — без изменений · остальные ниши — в списке ниже</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
