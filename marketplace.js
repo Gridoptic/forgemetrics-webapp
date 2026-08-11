@@ -1972,6 +1972,9 @@
             } else if (wpx >= 50 && hpx >= 24) {
                 body = '<span class="n">' + _esc(n.niche) + '</span>' +
                     (n.delta7 != null ? '<div class="b"><span class="p">' + _tFmtDelta(n.delta7) + '</span></div>' : '');
+            } else if (wpx >= 32 && hpx >= 30) {
+                body = '<span class="n" style="font-size:8px;">' + _esc(n.niche) + '</span>' +
+                    (n.delta7 != null ? '<div class="b"><span class="p" style="font-size:8px;">' + _tFmtDelta(n.delta7) + '</span></div>' : '');
             }
             return '<div class="fmx-t2cell fmx-t2tmc ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;border-radius:6px;' +
                 (heat || '') +
