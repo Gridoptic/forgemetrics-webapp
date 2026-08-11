@@ -1812,30 +1812,24 @@
         if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
-        var amp = Math.min(1, (mx > 0 ? (mx - mn) / mx : 0) / 0.15) || 0.02;
+        var rel = mx > 0 ? (mx - mn) / mx : 0;
+        var flat = rel < 0.005;
+        if (flat) color = '#8990a8';
+        var amp = flat ? 0 : Math.max(0.08, Math.min(1, rel / 0.15));
         var mid = (mn + mx) / 2;
         var pts = vals.map(function (v, i) {
-            return [3 + (i / (vals.length - 1) * 57), (12.25 - (v - mid) / span * 12.5 * amp)];
+            return [4 + (i / (vals.length - 1) * 53), (12 - (v - mid) / span * 11 * amp)];
         });
         var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
-        var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',21 L3,21 Z';
+        var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',22 L4,22 Z';
         var last = pts[pts.length - 1];
         var gid = color === '#5DCAA5' ? 'fmxSpG' : (color === '#f06978' ? 'fmxSpR' : 'fmxSpN');
         return '<span class="fmx-t2spw"><svg width="62" height="24" viewBox="0 0 62 24">' +
             '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
-            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.22"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
-            '<line x1="2" y1="6" x2="62" y2="6" stroke="rgba(255,255,255,0.07)" stroke-dasharray="2 3"/>' +
-            '<line x1="2" y1="13.5" x2="62" y2="13.5" stroke="rgba(255,255,255,0.07)" stroke-dasharray="2 3"/>' +
-            '<line x1="1.5" y1="1" x2="1.5" y2="21.5" stroke="rgba(255,255,255,0.16)"/>' +
-            '<line x1="1.5" y1="21.5" x2="62" y2="21.5" stroke="rgba(255,255,255,0.16)"/>' +
-            '<line x1="0" y1="6" x2="3" y2="6" stroke="rgba(255,255,255,0.22)"/>' +
-            '<line x1="0" y1="13.5" x2="3" y2="13.5" stroke="rgba(255,255,255,0.22)"/>' +
-            '<line x1="16" y1="20" x2="16" y2="23" stroke="rgba(255,255,255,0.22)"/>' +
-            '<line x1="31" y1="20" x2="31" y2="23" stroke="rgba(255,255,255,0.22)"/>' +
-            '<line x1="46" y1="20" x2="46" y2="23" stroke="rgba(255,255,255,0.22)"/>' +
-            '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
-            '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round"/>' +
-            '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2" fill="' + color + '"/></svg>' +
+            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.10"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+            (flat ? '' : '<path d="' + area + '" fill="url(#' + gid + ')"/>') +
+            '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' + (flat ? ' stroke-opacity="0.55"' : '') + '/>' +
+            '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2.5" fill="' + color + '" stroke="rgba(10,13,24,0.9)" stroke-width="1.5"/></svg>' +
             '<span class="fmx-t2spd">' + _termSpark + 'д</span></span>';
     }
     var _MON_S = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
@@ -1864,9 +1858,9 @@
         var t1 = Math.round(x0 + (x1 - x0) / 4), t2 = Math.round(x0 + (x1 - x0) / 2), t3 = Math.round(x0 + (x1 - x0) * 3 / 4);
         return '<svg viewBox="0 0 340 84" preserveAspectRatio="none" style="display:block;width:100%;">' +
             '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
-            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.30"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
-            '<line x1="' + x0 + '" y1="' + g1 + '" x2="' + w + '" y2="' + g1 + '" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 4"/>' +
-            '<line x1="' + x0 + '" y1="' + g2 + '" x2="' + w + '" y2="' + g2 + '" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 4"/>' +
+            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.12"/><stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+            '<line x1="' + x0 + '" y1="' + g1 + '" x2="' + w + '" y2="' + g1 + '" stroke="rgba(255,255,255,0.06)"/>' +
+            '<line x1="' + x0 + '" y1="' + g2 + '" x2="' + w + '" y2="' + g2 + '" stroke="rgba(255,255,255,0.06)"/>' +
             '<line x1="1.5" y1="4" x2="1.5" y2="' + yBase + '" stroke="rgba(255,255,255,0.16)"/>' +
             '<line x1="1.5" y1="' + yBase + '" x2="' + w + '" y2="' + yBase + '" stroke="rgba(255,255,255,0.16)"/>' +
             '<line x1="0" y1="' + g1 + '" x2="4" y2="' + g1 + '" stroke="rgba(255,255,255,0.24)"/>' +
@@ -1876,7 +1870,7 @@
             '<line x1="' + t3 + '" y1="' + (yBase - 2) + '" x2="' + t3 + '" y2="' + (yBase + 3) + '" stroke="rgba(255,255,255,0.24)"/>' +
             '<path d="' + area + '" fill="url(#' + gid + ')"/>' +
             '<path class="fmx-t2line" d="' + line + '" style="stroke:' + color + ';"/>' +
-            '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '"/></svg>' +
+            '<circle class="fmx-t2pt" cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.2" fill="' + color + '" stroke="rgba(10,13,24,0.9)" stroke-width="1.5"/></svg>' +
             (function () {
                 var n = series.length;
                 function _at(f) { return _dl(isTime ? series[Math.round((n - 1) * f)].t : series[Math.round((n - 1) * f)].day); }
