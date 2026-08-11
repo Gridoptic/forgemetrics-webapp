@@ -341,7 +341,7 @@
     function _hlInfo(l) {
         var m = { green: ['#5DCAA5', 'Здоровый'], amber: ['#f59e0b', 'Средний'], yellow: ['#f59e0b', 'Средний'], red: ['#ef4444', 'Риск'] };
         var cls = l.health_class && m[l.health_class] ? (l.health_class === 'yellow' ? 'amber' : l.health_class) : null;
-        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма' || st === 'выше нормы') ? 'green' : (st === 'низковат') ? 'amber' : 'red'; }
+        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма' || st === 'выше нормы') ? 'green' : (st === 'низковат' || st === 'ниже нормы') ? 'amber' : 'red'; }
         if (!cls) return { cls: 'none', color: '#565b73', word: 'Нет данных' };
         return { cls: cls, color: m[cls][0], word: m[cls][1] };
     }
@@ -352,7 +352,7 @@
         }).join('');
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
-    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'низковат') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
+    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'низковат' || st === 'ниже нормы') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
     function _warnTri(sz) { sz = sz || 14; return '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" style="vertical-align:-2px;flex:0 0 auto;"><path d="M12 3.4 L21.7 20.2 A1.35 1.35 0 0 1 20.55 22.2 L3.45 22.2 A1.35 1.35 0 0 1 2.3 20.2 Z" fill="#f5b23d" stroke="#0a0d18" stroke-width="1.4" stroke-linejoin="round"/><rect x="10.9" y="8.4" width="2.2" height="6.2" rx="1.1" fill="#0a0d18"/><circle cx="12" cy="17.8" r="1.3" fill="#0a0d18"/></svg>'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
