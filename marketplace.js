@@ -5448,8 +5448,6 @@
                         '<div class="fmx-osw' + (isBusy ? ' busy' : '') + '"></div></div>';
                 }).join('');
                 h += '<div class="fmx-tslots" style="margin-top:10px;"><div class="fmx-tslh"><i class="ti ti-calendar"></i> Занятость · ' + _fmtDayRu(_ownerSelDay) + '</div>' + rows + '</div>';
-            } else {
-                h += '<div class="fmx-tshint" style="margin-top:8px;"><i class="ti ti-hand-finger"></i> Выбери день в календаре, чтобы отметить занятые слоты этого дня.</div>';
             }
         } else {
             h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-plus"></i> Включить слоты по времени</button>';
