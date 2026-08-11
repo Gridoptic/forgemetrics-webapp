@@ -3958,7 +3958,9 @@
                     '<span class="num" style="display:block;font-size:13px;font-weight:800;">' + (l.base_price != null ? _num(l.base_price) + ' ₽' : '—') + '</span>' +
                     '<span class="num" style="display:block;font-size:10.5px;color:#8990a8;">' + netShort(reachV) + (cpm != null ? ' · CPM ' + _num(cpm) : '') + '</span></span>';
             } else if (ch.username && ch.is_paused) {
-                right = '<span style="font-size:10px;color:#565b73;flex:0 0 auto;max-width:92px;text-align:right;"><span>На паузе · сверх лимита</span></span>';
+                right = '<span style="flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
+                    '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе</span>' +
+                    '<span style="font-size:9px;color:#565b73;white-space:nowrap;">сверх лимита тарифа</span></span>';
             } else if (ch.username) {
                 right = '<button data-netmk="' + ch.id + '" style="flex:0 0 auto;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;color:#818cf8;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);border-radius:999px;padding:6px 12px;"><span>Создать</span></button>';
             } else {
