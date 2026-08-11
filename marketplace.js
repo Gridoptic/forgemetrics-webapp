@@ -1808,12 +1808,14 @@
         return d > 0 ? '<span class="fmx-tup">▲' + s + '%</span>' : (d < 0 ? '<span class="fmx-tdn">▼' + s + '%</span>' : '<span class="fmx-tfl">0%</span>');
     }
     function _tSpark(vals, color) {
-        if (vals && vals.length > _termSpark) vals = vals.slice(-_termSpark);
+        if (_termSpark !== 1 && vals && vals.length > _termSpark) vals = vals.slice(-_termSpark);
         if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
+        var amp = Math.min(1, (mx > 0 ? (mx - mn) / mx : 0) / 0.15) || 0.02;
+        var mid = (mn + mx) / 2;
         var pts = vals.map(function (v, i) {
-            return [3 + (i / (vals.length - 1) * 57), (18.5 - (v - mn) / span * 12.5)];
+            return [3 + (i / (vals.length - 1) * 57), (12.25 - (v - mid) / span * 12.5 * amp)];
         });
         var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
         var area = line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',21 L3,21 Z';
