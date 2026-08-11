@@ -3879,7 +3879,7 @@
 
     function netEligible() {
         return _net.ch.filter(function (ch) {
-            return ch.username && ch.bot_status === 'connected' && !netListingOf(ch);
+            return ch.username && ch.bot_status === 'connected' && !ch.is_paused && !netListingOf(ch);
         });
     }
 
@@ -3957,6 +3957,8 @@
                 right = '<span style="text-align:right;flex:0 0 auto;">' +
                     '<span class="num" style="display:block;font-size:13px;font-weight:800;">' + (l.base_price != null ? _num(l.base_price) + ' ₽' : '—') + '</span>' +
                     '<span class="num" style="display:block;font-size:10.5px;color:#8990a8;">' + netShort(reachV) + (cpm != null ? ' · CPM ' + _num(cpm) : '') + '</span></span>';
+            } else if (ch.username && ch.is_paused) {
+                right = '<span style="font-size:10px;color:#565b73;flex:0 0 auto;max-width:92px;text-align:right;"><span>На паузе · сверх лимита</span></span>';
             } else if (ch.username) {
                 right = '<button data-netmk="' + ch.id + '" style="flex:0 0 auto;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;color:#818cf8;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);border-radius:999px;padding:6px 12px;"><span>Создать</span></button>';
             } else {
@@ -6906,7 +6908,9 @@
         var cur = channelById(_ss.channelId);
         var rows = _chSortForPicker(_channels, function (cid) { return !!listingForChannel(cid); }).map(function (c) {
             var pub = !!c.username;
-            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (pub ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '"><div class="fmx-chav"' + (pub ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (pub ? '@' + _esc(c.username) : 'приватный — нужен публичный @username') + '</div></div>' + (pub ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
+            var paused = !!c.is_paused;
+            var ok = pub && !paused;
+            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (ok ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '" data-paused="' + (paused ? 1 : 0) + '"><div class="fmx-chav"' + (ok ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (!pub ? 'приватный — нужен публичный @username' : (paused ? 'на паузе — сверх лимита тарифа' : '@' + _esc(c.username))) + '</div></div>' + (ok ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ' + (paused ? 'ti-player-pause' : 'ti-lock') + '" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
@@ -6937,7 +6941,7 @@
             '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
-        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
+        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } if (r.getAttribute('data-paused') === '1') { toast('Канал на паузе — сверх лимита тарифа. Возобнови канал или повысь тариф.'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
         var ra = el('fmx-resetAll');
