@@ -1069,9 +1069,10 @@
             '.fmx-t2cell .p{font-size:8.5px;flex:0 0 auto;}',
             '.fmx-t2cell.g1{background:rgba(93,202,165,0.30);border:0.5px solid rgba(93,202,165,0.5);}',
             '.fmx-t2cell.g2{background:rgba(93,202,165,0.18);border:0.5px solid rgba(93,202,165,0.35);}',
-            '.fmx-t2cell.g3{background:rgba(93,202,165,0.09);border:0.5px solid rgba(93,202,165,0.22);}',
+            '.fmx-t2cell.g3{background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.26);}',
             '.fmx-t2cell.r1{background:rgba(240,105,120,0.26);border:0.5px solid rgba(240,105,120,0.5);}',
-            '.fmx-t2cell.r2{background:rgba(240,105,120,0.13);border:0.5px solid rgba(240,105,120,0.3);}',
+            '.fmx-t2cell.r2{background:rgba(240,105,120,0.15);border:0.5px solid rgba(240,105,120,0.34);}',
+            '.fmx-t2cell.z0{background:rgba(129,140,248,0.10);border:0.5px solid rgba(129,140,248,0.20);}',
             '.fmx-t2cell.n0{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);}',
             '.fmx-t2cell.hot{animation:fmxThot 2.6s ease-in-out infinite;}',
             '@keyframes fmxThot{0%,100%{box-shadow:0 0 0 0 rgba(93,202,165,0);}50%{box-shadow:0 0 18px -2px rgba(93,202,165,0.45);}}',
@@ -1967,7 +1968,7 @@
         if (own === false || d == null) return 'n0';
         if (d >= 5) return 'g1'; if (d >= 1.5) return 'g2'; if (d > 0) return 'g3';
         if (d <= -5) return 'r1'; if (d < 0) return 'r2';
-        return 'n0';
+        return 'z0';
     }
     var _EV_META = {
         spike: { ic: 'ti-trending-up', cls: 'g' }, offer: { ic: 'ti-sparkles', cls: 'i' },
@@ -2144,7 +2145,7 @@
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
             html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Топ-13 ниш по числу каналов · размер — каналов в нише · цвет — динамика медианы CPM · остальные ниши — в списке ниже</div>';
+            html += '<div class="fmx-t2hint">Топ-13 ниш по числу каналов · размер — каналов в нише · цвет — динамика медианы CPM за 7 дней: зелёный — рост, красный — снижение, синеватый — без изменений, тёмный — мало данных · остальные ниши — в списке ниже</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
