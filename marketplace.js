@@ -1080,6 +1080,7 @@
             '.fmx-t2hotline{display:flex;align-items:center;gap:6px;font-size:11px;color:#c2c6d2;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.25);border-radius:9px;padding:7px 10px;margin-bottom:7px;cursor:pointer;}',
             '.fmx-t2hotline i{color:#f5bf4f;font-size:13px;}',
             '.fmx-t2hotline b{text-transform:capitalize;}',
+            '.fmx-t2tmc{transition:left 0.6s ease,top 0.6s ease,width 0.6s ease,height 0.6s ease,background 0.6s ease;}',
             '.fmx-t2fold{position:relative;overflow:hidden;max-height:var(--fh);}',
             '.fmx-t2fold.open{max-height:none;}',
             '.fmx-t2fold:not(.open):after{content:\'\';position:absolute;left:-2px;right:-2px;bottom:0;height:54px;background:linear-gradient(180deg,rgba(10,13,24,0),rgba(10,13,24,0.88) 62%,#0a0d18 96%);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);pointer-events:none;}',
@@ -1916,7 +1917,7 @@
     }
     function _tTreemap(items, hottest) {
         var W = 1000, H = 690, PXW = 320, PXH = 260, MAX_TILES = 13;
-        function _wt(n) { return Math.max(1, n.reach || (n.count || 1) * 1000); }
+        function _wt(n) { return Math.sqrt(Math.max(1, n.reach || (n.count || 1) * 1000)); }
         var list = items.slice().sort(function (a, b) { return _wt(b) - _wt(a); }).slice(0, MAX_TILES);
         var total = 0;
         list.forEach(function (n) { total += _wt(n); });
@@ -1948,9 +1949,19 @@
             else squarify(i, x + thick, y, w - thick, h);
         }
         squarify(0, 0, 0, W, H);
+        function _heatStyle(d, own) {
+            if (own === false || d == null) return null;
+            if (d === 0) return null;
+            var a = 0.07 + 0.33 * Math.min(1, Math.abs(d) / 15);
+            var ba = Math.min(0.6, a + 0.12);
+            return d > 0
+                ? 'background:rgba(93,202,165,' + a.toFixed(3) + ');border-color:rgba(93,202,165,' + ba.toFixed(3) + ');'
+                : 'background:rgba(240,105,120,' + a.toFixed(3) + ');border-color:rgba(240,105,120,' + ba.toFixed(3) + ');';
+        }
         var cells = list.map(function (n, i) {
             var r = rects[i]; if (!r) return '';
-            var cls = _tHeatClass(n.delta7, n.cpm_own);
+            var heat = _heatStyle(n.delta7, n.cpm_own);
+            var cls = heat ? '' : _tHeatClass(n.delta7, n.cpm_own);
             var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
             var wpx = r.w / W * PXW, hpx = r.h / H * PXH;
             var body = '';
@@ -1962,7 +1973,8 @@
                 body = '<span class="n">' + _esc(n.niche) + '</span>' +
                     (n.delta7 != null ? '<div class="b"><span class="p">' + _tFmtDelta(n.delta7) + '</span></div>' : '');
             }
-            return '<div class="fmx-t2cell ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;border-radius:6px;' +
+            return '<div class="fmx-t2cell fmx-t2tmc ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;border-radius:6px;' +
+                (heat || '') +
                 'left:' + (r.x / W * 100).toFixed(2) + '%;top:' + (r.y / H * 100).toFixed(2) + '%;' +
                 'width:' + (r.w / W * 100).toFixed(2) + '%;height:' + (r.h / H * 100).toFixed(2) + '%;' +
                 (body ? '' : 'padding:0;') + '" data-tniche="' + _esc(n.niche) + '">' + body + '</div>';
@@ -2158,7 +2170,7 @@
                 html += '<div class="fmx-t2hotline" data-tniche="' + _esc(hotN.niche) + '"><i class="ti ti-flame"></i> Сильнейшее движение недели: <b>' + _esc(hotN.niche) + '</b> ' + _tFmtDelta(hotN.delta7) + '</div>';
             }
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Крупнейшие ниши рынка · размер — суммарный охват каналов ниши · цвет: зелёный — CPM растёт, красный — снижается, синеватый — без изменений, тёмный — мало данных для динамики</div>';
+            html += '<div class="fmx-t2hint">Размер плитки — вес ниши на рынке (суммарный охват каналов) · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг · синеватый — без изменений, тёмный — мало данных</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
