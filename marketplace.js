@@ -1772,7 +1772,7 @@
             if (cb) cb();
         }).catch(function () { if (cb) cb(); });
     }
-    var _term = null, _termTs = 0, _termRange = 30, _termSpark = 30, _termSrc = 'all', _termSort = 'cpm', _termRefTimer = null;
+    var _term = null, _termTs = 0, _termRange = 30, _termSpark = 30, _termSrc = 'all', _termSort = 'delta', _termRefTimer = null;
     var _tFold = { map: false, mv: false, list: false };
     function _tFoldOpen(html, key, fh) {
         return '<div class="fmx-t2fold' + (_tFold[key] ? ' open' : '') + '" data-tfold="' + key + '" style="--fh:' + fh + 'px;">' + html + '</div>' +
@@ -1812,8 +1812,9 @@
         return d > 0 ? '<span class="fmx-tup">▲' + s + '%</span>' : (d < 0 ? '<span class="fmx-tdn">▼' + s + '%</span>' : '<span class="fmx-tfl">0%</span>');
     }
     function _tSpark(vals, color) {
-        if (_termSpark !== 1 && vals && vals.length > _termSpark) vals = vals.slice(-_termSpark);
-        if (!vals || vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
+        vals = (vals || []).filter(function (v) { return typeof v === 'number' && isFinite(v); });
+        if (_termSpark !== 1 && vals.length > _termSpark) vals = vals.slice(-_termSpark);
+        if (vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
         var rel = mx > 0 ? (mx - mn) / mx : 0;
@@ -2185,7 +2186,7 @@
             ['all', 'Все источники'], ['market', 'Площадка · точные'], ['base', 'Радар · публичные']
         ].map(function (c) { return '<span class="fmx-t2chip' + (_termSrc === c[0] ? ' on' : '') + '" data-tsrc="' + c[0] + '">' + c[1] + '</span>'; }).join('') + '</div>';
         html += '<div class="fmx-t2chips">' + [
-            ['cpm', 'По CPM'], ['delta', 'По росту'], ['count', 'По каналам']
+            ['delta', 'По движению'], ['cpm', 'По CPM'], ['count', 'По каналам']
         ].map(function (c) { return '<span class="fmx-t2chip' + (_termSort === c[0] ? ' on' : '') + '" data-tsort="' + c[0] + '">' + c[1] + '</span>'; }).join('') + '</div>';
 
         var list = (_term.niches || []).filter(function (n) { return _termSrc === 'all' ? n.source === 'base' : n.source === _termSrc; });
@@ -2193,7 +2194,11 @@
             var ra = (a.spark && a.spark.length >= 3) ? 0 : 1;
             var rb = (b.spark && b.spark.length >= 3) ? 0 : 1;
             if (ra !== rb) return ra - rb;
-            if (_termSort === 'delta') return (b.delta7 == null ? -999 : b.delta7) - (a.delta7 == null ? -999 : a.delta7);
+            if (_termSort === 'delta') {
+                var da = a.delta7 == null ? -1 : Math.abs(a.delta7), db2 = b.delta7 == null ? -1 : Math.abs(b.delta7);
+                if (db2 !== da) return db2 - da;
+                return (b.median_cpm || 0) - (a.median_cpm || 0);
+            }
             if (_termSort === 'count') return (b.count || 0) - (a.count || 0);
             return (b.median_cpm || 0) - (a.median_cpm || 0);
         });
