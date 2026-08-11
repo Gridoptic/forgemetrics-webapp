@@ -1354,6 +1354,13 @@
             '.fmx-mineacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);}',
             '.fmx-mineacts .fmx-btn:nth-child(odd):last-child{grid-column:1/-1;}',
             '.fmx-mineacts .fmx-btn:nth-child(odd):nth-last-child(2){grid-column:1/-1;}',
+            '.fmx-calguide{margin:0 0 10px;border:0.5px solid rgba(129,140,248,0.25);border-radius:10px;background:rgba(129,140,248,0.06);}',
+            '.fmx-calguide summary{list-style:none;cursor:pointer;padding:9px 12px;font-size:11.5px;font-weight:700;color:#c7ccf7;display:flex;align-items:center;gap:6px;}',
+            '.fmx-calguide summary i{color:#818cf8;font-size:14px;}',
+            '.fmx-calguide summary::-webkit-details-marker{display:none;}',
+            '.fmx-calguide ol{margin:0;padding:0 12px 10px 26px;font-size:11px;color:#9aa0b8;line-height:1.55;}',
+            '.fmx-calguide li{margin-bottom:5px;}',
+            '.fmx-calguide b{color:#c2c6d2;}',
             '.fmx-mineacts .fmx-btn{min-height:44px;font-size:11.5px;background:rgba(255,255,255,0.035);border-color:rgba(255,255,255,0.09);border-radius:11px;color:#d9dbe6;gap:7px;}',
             '.fmx-mineacts .fmx-btn:active{background:rgba(255,255,255,0.07);}',
             '.fmx-hotbtn{width:100%;margin-top:9px;display:flex;align-items:center;gap:10px;padding:8px 10px;min-height:46px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.035);cursor:pointer;text-align:left;color:#e8e8ed;font-family:inherit;transition:background .15s;}',
@@ -5418,7 +5425,14 @@
         var chips = presets.map(function (t) {
             return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + '" data-tc="' + t + '">' + t + '</button>';
         }).join('');
-        var h = '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> Слоты по времени</div>' +
+        var h = '<details class="fmx-calguide"><summary><i class="ti ti-help-circle"></i> Как пользоваться календарём</summary><ol>' +
+            '<li><b>Открытые месяцы.</b> Покупатели бронируют размещения только в открытых месяцах — включи те, что готов продавать.</li>' +
+            '<li><b>Слоты по времени.</b> Отметь времена выхода, которые продаёшь, и сохрани — покупатель выберет свободный слот.</li>' +
+            '<li><b>Занятость.</b> Выбери день в календаре и отметь занятые слоты — их нельзя будет забронировать.</li>' +
+            '<li><b>Скидка на дату.</b> Задай процент на конкретный день — дата подсветится, а оффер получит бейдж «Горящие даты».</li>' +
+            '<li><b>Час пик</b> — подсказка по часам максимальной активности твоей аудитории.</li>' +
+            '</ol></details>' +
+            '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> Слоты по времени</div>' +
             '<div class="fmx-tshint">Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот.</div>' +
             '<div class="fmx-tchips">' + chips + '</div>' +
             '<div class="fmx-tswrow"><span>Только 1 выход в сутки<i>эксклюзив для премиум-каналов</i></span><div class="fmx-tsw2' + (cfg && cfg.one_per_day ? ' on' : '') + '" id="fmx-oneDay"></div></div>';
@@ -5435,7 +5449,7 @@
                 }).join('');
                 h += '<div class="fmx-tslots" style="margin-top:10px;"><div class="fmx-tslh"><i class="ti ti-calendar"></i> Занятость · ' + _fmtDayRu(_ownerSelDay) + '</div>' + rows + '</div>';
             } else {
-                h += '<div class="fmx-tshint" style="margin-top:8px;"><i class="ti ti-hand-finger"></i> Тапни день в календаре — отметишь занятые слоты этого дня.</div>';
+                h += '<div class="fmx-tshint" style="margin-top:8px;"><i class="ti ti-hand-finger"></i> Выбери день в календаре, чтобы отметить занятые слоты этого дня.</div>';
             }
         } else {
             h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-plus"></i> Включить слоты по времени</button>';
@@ -5945,7 +5959,7 @@
             '<li><b>Повторный тап по выбранному тексту</b> — правка надписи; то же делает кнопка «Изменить текст» под холстом.</li>' +
             '<li><b>Зажми текст на секунду</b> — откроется передвижное окно цвета: спектр, оттенок, HEX и RGB; цветовые точки есть и под холстом.</li>' +
             '<li>Закупщик видит верхнюю половину витрины сразу, остальное — по кнопке «Развернуть». Самое важное размещай сверху.</li>' +
-            '<li>Жми <b>«Сохранить витрину»</b> — изменения сразу видны в развороте оффера.</li>' +
+            '<li>Нажми <b>«Сохранить витрину»</b> — изменения сразу видны в развороте оффера.</li>' +
             '</ol></div>' +
             '<input type="file" id="fmx-tedFile" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime" style="display:none;">';
         _tedDrawCanvas();

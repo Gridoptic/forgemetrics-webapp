@@ -1365,7 +1365,7 @@ function _tmOwnerView(d) {
             <div class="t"><b>Настроить права вручную</b><span>галочками по каждой роли · пресеты — быстрый старт</span></div>
             <span class="tm-sw${d.custom ? ' on' : ''}"></span></div>
         <div class="tm-matrix" id="tm-matrix"></div>
-        <div class="tm-mhint" id="tm-mhint" style="display:none;">Тапни по галочке, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.</div>
+        <div class="tm-mhint" id="tm-mhint" style="display:none;">Нажми на галочку, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.</div>
         <div class="tm-savebar" id="tm-save" style="display:none;">
             <button class="tm-btn" id="tm-reset">Сбросить к пресетам</button>
             <button class="tm-btn tm-primary" id="tm-apply">Сохранить права</button></div>
