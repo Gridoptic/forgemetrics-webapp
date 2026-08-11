@@ -6910,7 +6910,12 @@
             var pub = !!c.username;
             var paused = !!c.is_paused;
             var ok = pub && !paused;
-            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (ok ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '" data-paused="' + (paused ? 1 : 0) + '"><div class="fmx-chav"' + (ok ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div><div class="fmx-chuu">' + (!pub ? 'приватный — нужен публичный @username' : (paused ? 'на паузе — сверх лимита тарифа' : '@' + _esc(c.username))) + '</div></div>' + (ok ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : '<i class="ti ' + (paused ? 'ti-player-pause' : 'ti-lock') + '" style="color:#565b73;flex-shrink:0;"></i>') + '</div>';
+            var sub2 = !pub
+                ? '<div class="fmx-chuu">приватный — нужен публичный @username</div>'
+                : (paused
+                    ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе · сверх лимита тарифа</span></div>'
+                    : '<div class="fmx-chuu">@' + _esc(c.username) + '</div>');
+            return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (ok ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '" data-paused="' + (paused ? 1 : 0) + '"><div class="fmx-chav"' + (ok ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div>' + sub2 + '</div>' + (ok ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : (paused ? '' : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>')) + '</div>';
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
