@@ -1909,6 +1909,59 @@
         }
         return { pct: pct, label: label };
     }
+    function _tTreemap(items, hottest) {
+        var W = 1000, H = 690, PXW = 340, PXH = 240;
+        var list = items.slice().sort(function (a, b) { return (b.count || 1) - (a.count || 1); });
+        var total = 0;
+        list.forEach(function (n) { total += Math.max(1, n.count || 1); });
+        var scale = W * H / total;
+        var areas = list.map(function (n) { return Math.max(1, n.count || 1) * scale; });
+        var rects = new Array(list.length);
+        function squarify(idx, x, y, w, h) {
+            if (idx >= list.length || w <= 0 || h <= 0) return;
+            var side = Math.min(w, h);
+            var row = [], sum = 0, mx = 0, mn = Infinity;
+            function worst(s, ma, mi) {
+                return Math.max((side * side * ma) / (s * s), (s * s) / (side * side * mi));
+            }
+            var i = idx;
+            while (i < list.length) {
+                var a = areas[i];
+                var ns = sum + a, nmx = Math.max(mx, a), nmn = Math.min(mn, a);
+                if (row.length && worst(ns, nmx, nmn) > worst(sum, mx, mn)) break;
+                row.push(i); sum = ns; mx = nmx; mn = nmn; i++;
+            }
+            var thick = sum / side, off = 0;
+            row.forEach(function (ri) {
+                var len = areas[ri] / thick;
+                rects[ri] = (w < h) ? { x: x + off, y: y, w: len, h: thick }
+                                    : { x: x, y: y + off, w: thick, h: len };
+                off += len;
+            });
+            if (w < h) squarify(i, x, y + thick, w, h - thick);
+            else squarify(i, x + thick, y, w - thick, h);
+        }
+        squarify(0, 0, 0, W, H);
+        var cells = list.map(function (n, i) {
+            var r = rects[i]; if (!r) return '';
+            var cls = _tHeatClass(n.delta7, n.cpm_own);
+            var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
+            var wpx = r.w / W * PXW, hpx = r.h / H * PXH;
+            var body = '';
+            if (wpx >= 62 && hpx >= 34) {
+                body = '<span class="n">' + _esc(n.niche) + '</span>' +
+                    '<div class="b"><span class="m">' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</span>' +
+                    '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
+            } else if (wpx >= 38 && hpx >= 17) {
+                body = '<span class="n">' + _esc(n.niche) + '</span>';
+            }
+            return '<div class="fmx-t2cell ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;' +
+                'left:' + (r.x / W * 100).toFixed(2) + '%;top:' + (r.y / H * 100).toFixed(2) + '%;' +
+                'width:' + (r.w / W * 100).toFixed(2) + '%;height:' + (r.h / H * 100).toFixed(2) + '%;' +
+                (body ? '' : 'padding:0;') + '" data-tniche="' + _esc(n.niche) + '">' + body + '</div>';
+        }).join('');
+        return '<div class="fmx-t2tm" style="position:relative;width:100%;height:' + PXH + 'px;">' + cells + '</div>';
+    }
     function _tHeatClass(d, own) {
         if (own === false || d == null) return 'n0';
         if (d >= 5) return 'g1'; if (d >= 1.5) return 'g2'; if (d > 0) return 'g3';
@@ -2089,16 +2142,7 @@
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
             html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
-            var _mapHtml = '<div class="fmx-t2map">' + hm.map(function (n, i) {
-                var cls = _tHeatClass(n.delta7, n.cpm_own);
-                var span = i === 0 ? 'grid-column:span 3;grid-row:span 2;' : (i <= 2 ? 'grid-column:span 3;' : 'grid-column:span 2;');
-                var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
-                return '<div class="fmx-t2cell ' + cls + hot + '" style="' + span + '" data-tniche="' + _esc(n.niche) + '">' +
-                    '<span class="n">' + _esc(n.niche) + '</span>' +
-                    '<div class="b"><span class="m">' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</span>' +
-                    '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div></div>';
-            }).join('') + '</div>';
-            html += _tFoldOpen(_mapHtml, 'map', 200);
+            html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 250);
             html += '<div class="fmx-t2hint">Размер — каналов в нише · цвет — динамика медианы CPM · «оценка» — мало своих данных</div>';
         }
 
