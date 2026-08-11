@@ -1918,7 +1918,8 @@
     function _tTreemap(items, hottest) {
         var W = 1000, H = 690, PXW = 320, PXH = 260, MAX_TILES = 13;
         function _wt(n) { return Math.sqrt(Math.max(1, n.reach || (n.count || 1) * 1000)); }
-        var list = items.slice().sort(function (a, b) { return _wt(b) - _wt(a); }).slice(0, MAX_TILES);
+        var list = items.filter(function (n) { return (n.count || 0) >= 3 && n.cpm_own !== false; })
+            .sort(function (a, b) { return _wt(b) - _wt(a); }).slice(0, MAX_TILES);
         var total = 0;
         list.forEach(function (n) { total += _wt(n); });
         var scale = W * H / total;
@@ -2173,7 +2174,7 @@
                 html += '<div class="fmx-t2hotline" data-tniche="' + _esc(hotN.niche) + '"><i class="ti ti-flame"></i> Сильнейшее движение недели: <b>' + _esc(hotN.niche) + '</b> ' + _tFmtDelta(hotN.delta7) + '</div>';
             }
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Размер плитки — вес ниши на рынке (суммарный охват каналов) · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг · синеватый — без изменений, тёмный — мало данных</div>';
+            html += '<div class="fmx-t2hint">Крупнейшие ниши с реальной медианой цены (от 3 каналов) · размер — суммарный охват каналов ниши · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг, синеватый — без изменений</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
