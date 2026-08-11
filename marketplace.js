@@ -1910,8 +1910,8 @@
         return { pct: pct, label: label };
     }
     function _tTreemap(items, hottest) {
-        var W = 1000, H = 690, PXW = 340, PXH = 240;
-        var list = items.slice().sort(function (a, b) { return (b.count || 1) - (a.count || 1); });
+        var W = 1000, H = 690, PXW = 320, PXH = 260, MAX_TILES = 13;
+        var list = items.slice().sort(function (a, b) { return (b.count || 1) - (a.count || 1); }).slice(0, MAX_TILES);
         var total = 0;
         list.forEach(function (n) { total += Math.max(1, n.count || 1); });
         var scale = W * H / total;
@@ -1948,14 +1948,15 @@
             var hot = (n.delta7 != null && n.delta7 === hottest && n.delta7 >= 3) ? ' hot' : '';
             var wpx = r.w / W * PXW, hpx = r.h / H * PXH;
             var body = '';
-            if (wpx >= 62 && hpx >= 34) {
+            if (wpx >= 74 && hpx >= 40 && n.median_cpm != null) {
                 body = '<span class="n">' + _esc(n.niche) + '</span>' +
-                    '<div class="b"><span class="m">' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</span>' +
+                    '<div class="b"><span class="m">' + _num(n.median_cpm) + ' ₽</span>' +
                     '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
-            } else if (wpx >= 38 && hpx >= 17) {
-                body = '<span class="n">' + _esc(n.niche) + '</span>';
+            } else if (wpx >= 50 && hpx >= 24) {
+                body = '<span class="n">' + _esc(n.niche) + '</span>' +
+                    (n.delta7 != null ? '<div class="b"><span class="p">' + _tFmtDelta(n.delta7) + '</span></div>' : '');
             }
-            return '<div class="fmx-t2cell ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;' +
+            return '<div class="fmx-t2cell ' + cls + hot + '" style="position:absolute;box-sizing:border-box;border:1.5px solid #0b0e19;border-radius:6px;' +
                 'left:' + (r.x / W * 100).toFixed(2) + '%;top:' + (r.y / H * 100).toFixed(2) + '%;' +
                 'width:' + (r.w / W * 100).toFixed(2) + '%;height:' + (r.h / H * 100).toFixed(2) + '%;' +
                 (body ? '' : 'padding:0;') + '" data-tniche="' + _esc(n.niche) + '">' + body + '</div>';
@@ -2142,8 +2143,8 @@
             var hottest = null;
             hm.forEach(function (n) { if (n.delta7 != null && (hottest == null || n.delta7 > hottest)) hottest = n.delta7; });
             html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта ниш · Δ CPM за 7 дней</div>';
-            html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 250);
-            html += '<div class="fmx-t2hint">Размер — каналов в нише · цвет — динамика медианы CPM · «оценка» — мало своих данных</div>';
+            html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
+            html += '<div class="fmx-t2hint">Топ-13 ниш по числу каналов · размер — каналов в нише · цвет — динамика медианы CPM · остальные ниши — в списке ниже</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null; });
