@@ -889,6 +889,16 @@ async function loadReachSeries() {
             }
         } else {
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
+            const chIdE = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+            if (r && r.stale === false) {
+                pwDormantSet(chIdE, null);
+                markPulseHealthy(state.dashboard && state.dashboard.pulse);
+                pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
+            } else if (r && r.stale === true) {
+                markPulseStale(r.stale_days, r.last_date);
+                pwDormantSet(chIdE, { d: r.stale_days, ld: r.last_date });
+                pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
+            }
         }
     } catch (e) {
         host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
