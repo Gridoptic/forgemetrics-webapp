@@ -1358,6 +1358,8 @@
             '.fmx-calguide summary{list-style:none;cursor:pointer;padding:9px 12px;font-size:11.5px;font-weight:700;color:#c7ccf7;display:flex;align-items:center;gap:6px;}',
             '.fmx-calguide summary i{color:#818cf8;font-size:14px;}',
             '.fmx-calguide summary::-webkit-details-marker{display:none;}',
+            '.fmx-calguide summary .chev{margin-left:auto;color:#6b7088;transition:transform 0.25s ease;}',
+            '.fmx-calguide[open] summary .chev{transform:rotate(180deg);}',
             '.fmx-calguide ol{margin:0;padding:0 12px 10px 26px;font-size:11px;color:#9aa0b8;line-height:1.55;}',
             '.fmx-calguide li{margin-bottom:5px;}',
             '.fmx-calguide b{color:#c2c6d2;}',
@@ -5425,7 +5427,7 @@
         var chips = presets.map(function (t) {
             return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + '" data-tc="' + t + '">' + t + '</button>';
         }).join('');
-        var h = '<details class="fmx-calguide"><summary><i class="ti ti-help-circle"></i> Как пользоваться календарём</summary><ol>' +
+        var h = '<details class="fmx-calguide"><summary><i class="ti ti-help-circle"></i> Как пользоваться календарём<i class="ti ti-chevron-down chev"></i></summary><ol>' +
             '<li><b>Открытые месяцы.</b> Покупатели бронируют размещения только в открытых месяцах — включи те, что готов продавать.</li>' +
             '<li><b>Слоты по времени.</b> Отметь времена выхода, которые продаёшь, и сохрани — покупатель выберет свободный слот.</li>' +
             '<li><b>Занятость.</b> Выбери день в календаре и отметь занятые слоты — их нельзя будет забронировать.</li>' +
