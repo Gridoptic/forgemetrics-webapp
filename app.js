@@ -2196,7 +2196,7 @@ function refCardHtml(r) {
           <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>Приглашённый пополнил</span><span>Твоё начисление</span></div>
           ${[300, 900, 2500, 6000].map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${cabNum(v)} Forge</span><b class="num" style="color:#5DCAA5;">+${cabNum(Math.round(v * rate / 100))} Forge</b></div>`).join('')}
         </div>
-        <p style="margin-top:8px;">Начисление после оплаты, холд 30 дней. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
+        <p style="margin-top:8px;">Начисление автоматически после оплаты. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
       </div>
     </div>
     <div class="rf-bal">
