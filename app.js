@@ -3067,6 +3067,10 @@ function openCheckout(opts) {
           <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
           <div class="co-row co-total"><span>К оплате</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
+        <div class="co-methods" style="display:flex;gap:8px;margin:10px 0 2px;">
+          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> СБП</button>
+          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> Карта</button>
+        </div>
         <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> Оплатить ${cabNum(price)} ₽</button>
         <button class="co-close">Закрыть</button>
     `;
@@ -3075,9 +3079,20 @@ function openCheckout(opts) {
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
-    _coCtx = { overlay, sheet, opts };
+    _coCtx = { overlay, sheet, opts, method: 'sbp' };
     overlay.addEventListener('click', closeCheckout);
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
+    sheet.querySelectorAll('.co-met').forEach((mb) => mb.addEventListener('click', () => {
+        if (!_coCtx || _coCtx.sheet !== sheet) return;
+        hapticLight();
+        _coCtx.method = mb.getAttribute('data-met');
+        sheet.querySelectorAll('.co-met').forEach((b) => {
+            const on = b === mb;
+            b.style.border = on ? '0.5px solid rgba(93,202,165,0.55)' : '0.5px solid rgba(255,255,255,0.14)';
+            b.style.background = on ? 'rgba(93,202,165,0.10)' : 'transparent';
+            b.style.color = on ? '#e8eaf6' : '#a9aec0';
+        });
+    }));
     const payBtn = sheet.querySelector('[data-copay]');
     if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(opts); });
 }
@@ -3147,14 +3162,25 @@ async function coPay(opts) {
         const btn = sheet.querySelector('[data-copay]');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Готовим оплату…'; }
 
+        const payMethod = (_coCtx && _coCtx.method) || 'sbp';
         let res = null;
         try {
             res = await apiRequest('/api/v1/payment/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(opts.pay),
+                body: JSON.stringify({ ...opts.pay, method: payMethod }),
             });
         } catch (e) { res = null; }
+        if (res && res.ok === false && res.error === 'payment_create_failed') {
+            try {
+                res = await apiRequest('/api/v1/payment/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(opts.pay),
+                });
+            } catch (e) { res = null; }
+        }
+        if (!_coCtx || _coCtx.sheet !== sheet) return;
         if (res && res.ok && res.confirmation_url) {
             const paid = [];
             if (res.discount_rub) paid.push(`скидка −${cabNum(res.discount_rub)} ₽`);
@@ -6640,6 +6666,62 @@ function startLiveUpdate() {
     window.addEventListener('focus', _fmCheck);
 }
 
+async function fmDeviceHash() {
+    try {
+        const c = document.createElement('canvas');
+        c.width = 240; c.height = 60;
+        const x = c.getContext('2d');
+        x.textBaseline = 'top'; x.font = '14px Arial';
+        x.fillStyle = '#f60'; x.fillRect(0, 0, 120, 30);
+        x.fillStyle = '#069'; x.fillText('ForgeMetrics-fp', 2, 15);
+        x.strokeStyle = 'rgba(120,60,200,0.6)'; x.beginPath(); x.arc(60, 30, 20, 0, Math.PI * 1.5); x.stroke();
+        const cd = c.toDataURL();
+        let gl = '';
+        try {
+            const g = document.createElement('canvas').getContext('webgl');
+            if (g) {
+                const di = g.getExtension('WEBGL_debug_renderer_info');
+                gl = di ? (g.getParameter(di.UNMASKED_VENDOR_WEBGL) + '|' + g.getParameter(di.UNMASKED_RENDERER_WEBGL))
+                    : (g.getParameter(g.VENDOR) + '|' + g.getParameter(g.RENDERER));
+            }
+        } catch (e) {}
+        let salt = '';
+        try {
+            salt = localStorage.getItem('fm_dev_salt') || '';
+            if (!salt) {
+                salt = (crypto.randomUUID ? crypto.randomUUID()
+                    : String(Math.random()).slice(2) + '-' + Date.now());
+                localStorage.setItem('fm_dev_salt', salt);
+            }
+        } catch (e) {}
+        const raw = [salt, navigator.userAgent || '', cd.length, cd.slice(-64), gl,
+            screen.width + 'x' + screen.height + 'x' + (screen.colorDepth || ''),
+            window.devicePixelRatio || '',
+            (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
+            (navigator.languages || []).join(','),
+            navigator.platform || '', navigator.hardwareConcurrency || '',
+            navigator.deviceMemory || ''].join('~');
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+        return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) { return null; }
+}
+
+async function fmSendDevice() {
+    try {
+        const uid = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) || '0';
+        const key = 'fm_dev_sent_' + uid;
+        const today = new Date().toISOString().slice(0, 10);
+        if (localStorage.getItem(key) === today) return;
+        const hash = await fmDeviceHash();
+        if (!hash) return;
+        await apiRequest('/api/v1/user/device', {
+            method: 'POST',
+            body: JSON.stringify({ hash }),
+        });
+        try { localStorage.setItem(key, today); } catch (e) {}
+    } catch (e) {}
+}
+
 async function main() {
     setupEventListeners();
     initAutoLocalize();
@@ -6654,6 +6736,7 @@ async function main() {
     startLiveUpdate();
     initChannelsAutoRefresh();
     fmTrack('app_open');
+    setTimeout(fmSendDevice, 4000);
 
 
     document.addEventListener('visibilitychange', function () { if (!document.hidden) fmUnstick(); });
