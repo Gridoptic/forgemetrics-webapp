@@ -4513,6 +4513,9 @@ html.cs-modal-open {
 .cab-hstat .l{font-size:10.5px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cab-up{color:#5DCAA5;font-size:11px;font-weight:700;}
 .cab-tarpill{margin-left:auto;align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:0.04em;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-subtle);color:var(--text-secondary);white-space:nowrap;flex-shrink:0;}
+.cab-tarpill.glow{background:linear-gradient(135deg,rgba(247,181,86,0.16),rgba(247,181,86,0.05));border-color:rgba(247,181,86,0.45);color:#F7B556;box-shadow:0 0 14px rgba(247,181,86,0.22);cursor:pointer;transition:transform 0.12s ease,box-shadow 0.12s ease;}
+.cab-tarpill.glow i{font-size:11px;vertical-align:-1px;}
+.cab-tarpill.glow:active{transform:scale(0.95);box-shadow:0 0 18px rgba(247,181,86,0.32);}
 .cab-tarpill.paid{background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);color:#5DCAA5;}
 .cab-pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-top:1px solid rgba(255,255,255,0.07);margin:15px -16px -16px;position:relative;}
 .cab-pstats:has(+.cab-status){margin-bottom:0;}
