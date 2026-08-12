@@ -6743,7 +6743,9 @@ async function main() {
     window.addEventListener('focus', fmUnstick);
     await loadDashboard();
     try {
-        if ((location.hash || '') === '#pricing') openTariffs();
+        if ((location.hash || '') === '#pricing') {
+            openTariffs().then(() => { try { window.scrollTo(0, 0); } catch (e) {} });
+        }
     } catch (e) {}
 }
 
