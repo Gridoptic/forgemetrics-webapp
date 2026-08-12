@@ -2410,7 +2410,7 @@ function renderCabinet(d) {
             `</div>`;
     })() : '';
     const _fbal = Number(((d || {}).forge || {}).balance || 0);
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill glow" id="cab-tarpill"><i class="ti ti-bolt"></i> ${cabNum(_fbal)} FORGE</span></div>${_hstats}</div>`;
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><button class="forge-chip" id="cab-tarpill" type="button" style="margin-left:auto;align-self:flex-start;"><span class="forge-chip-ico">${FORGE_SVG}</span><span class="forge-chip-val">${cabNum(_fbal)}</span></button></div>${_hstats}</div>`;
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
