@@ -6742,6 +6742,9 @@ async function main() {
     document.addEventListener('visibilitychange', function () { if (!document.hidden) fmUnstick(); });
     window.addEventListener('focus', fmUnstick);
     await loadDashboard();
+    try {
+        if ((location.hash || '') === '#pricing') openTariffs();
+    } catch (e) {}
 }
 
 
