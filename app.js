@@ -2134,7 +2134,7 @@ async function openCabinet(scrollTo) {
     }
 }
 
-const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', elite: 'Elite', titan: 'Titan', legend: 'Legend' };
+const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', partner: 'Partner', senior_partner: 'Senior Partner', managing_partner: 'Managing Partner' };
 const RF_PERK_TEXT = {
     burst_per_friend: 'всплеск продвижения 24 ч за каждого активного реферала',
     forge_200: 'ежемесячное начисление 200 Forge',
