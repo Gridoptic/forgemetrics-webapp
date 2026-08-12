@@ -2166,7 +2166,7 @@
             return '<div class="cp-str offer">' +
                 '<div class="cp-str-h"><span class="cp-str-ic pk"><i class="ti ti-target-arrow"></i></span>' +
                 '<span><b>' + esc(T('Посты выходят, аудитория стоит')) + '</b>' +
-                '<span>' + esc(T('AI-стратегия')) + ' · ' + o.price + ' ₽</span></span></div>' +
+                '<span>' + esc(T('AI-стратегия')) + ' · ' + o.price + ' Forge</span></span></div>' +
                 '<div class="cp-str-w">' +
                 esc(T('За ' + o.weeks + ' ' + plural3(o.weeks, 'неделю', 'недели', 'недель') +
                       ' опубликовано ' + o.published + ' ' + plural3(o.published, 'пост', 'поста', 'постов') +

@@ -75,6 +75,14 @@ const FORGE_SHEET_ITEMS = [
       short: 'Коммерческий аудит', icon: 'briefcase' },
     { key: 'competitors', one: 'анализ конкурентов', few: 'анализа конкурентов', many: 'анализов конкурентов',
       short: 'Анализ конкурентов', icon: 'binoculars' },
+    { key: 'promo_burst24', one: 'всплеск продвижения на сутки', few: 'всплеска продвижения на сутки', many: 'всплесков продвижения на сутки',
+      short: 'Всплеск продвижения 24 ч', icon: 'bolt' },
+    { key: 'promo_week', one: 'неделя продвижения в ленте', few: 'недели продвижения в ленте', many: 'недель продвижения в ленте',
+      short: 'Неделя продвижения в ленте', icon: 'speakerphone' },
+    { key: 'promo_month', one: 'месяц продвижения в ленте', few: 'месяца продвижения в ленте', many: 'месяцев продвижения в ленте',
+      short: 'Месяц продвижения в ленте', icon: 'rocket' },
+    { key: 'ai_strategy', one: 'AI-стратегия канала', few: 'AI-стратегии канала', many: 'AI-стратегий канала',
+      short: 'AI-стратегия канала', icon: 'compass' },
 ];
 
 let _fsCtx = null;
@@ -2284,6 +2292,10 @@ async function loadRefLeaderboard() {
 }
 
 const FORGE_OP_LABEL = {
+    promo_burst24: 'Продвижение · всплеск 24 ч', promo_burst48: 'Продвижение · всплеск 48 ч',
+    promo_week: 'Продвижение · неделя в ленте', promo_month: 'Продвижение · месяц в ленте',
+    ai_strategy: 'AI-стратегия канала', strategy_renewal: 'Продление AI-стратегии',
+    welcome: 'Стартовый запас',
     generate: 'Пост · премиум', generate_std: 'Пост · стандарт',
     modify: 'Правка · премиум', modify_std: 'Правка · стандарт',
     rewrite: 'Рерайт', rewrite_std: 'Рерайт · стандарт',
@@ -2328,6 +2340,12 @@ const FW_PRICE_EXPLAIN = {
     audit: 'Полный аудит твоего канала: балл по контенту, охвату, регулярности и монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места с оценкой потерь, прогноз развития и пошаговый план с дедлайнами.',
     deep_audit: 'Коммерческий аудит канала как рекламной площадки: позиция среди каналов ниши, цена размещения против рыночной вилки, качество трафика с проверкой на накрутку, аудитория как аргумент в продаже, рекомендованные цены форматов и потенциал дохода в месяц.',
     competitors: 'Поиск и разбор каналов-конкурентов: карта ниши, сравнение с каждым по охвату, частоте и подписчикам, приёмы, которые приносят им результат, твои пробелы и план действий, чтобы их закрыть.',
+    promo_burst24: 'Кратковременный подъём твоего оффера в платной полосе ленты Площадки на сутки. Открывает стиль «Свечение» на время продвижения. Покупается на оффере: Площадка → Мои офферы → «Продвинуть».',
+    promo_burst48: 'Подъём оффера в платной полосе ленты на двое суток. Открывает стиль «Свечение» на время продвижения. Всплесков 24 и 48 ч вместе — не больше 3 в месяц.',
+    promo_week: 'Присутствие оффера в платной полосе ленты 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры. Платные офферы занимают не более 20% ленты — органику не топит.',
+    promo_month: 'Присутствие оффера в платной полосе 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается».',
+    ai_strategy: 'Личный стратег: интервью, выбор ниши, контент-план с первыми 10 постами, гайды трафика и месяц ведения — еженедельные разборы и чат. Покупается на экране «AI-стратегия».',
+    strategy_renewal: 'Ещё 30 дней ведения стратегии: еженедельные разборы плана с фактом, гайды шагов и чат со стратегом.',
 };
 
 function fwPriceRows(list) {
@@ -2691,21 +2709,13 @@ function flipToggle(owner, toggle, open, fadeSel) {
     setTimeout(() => { run(); fade.style.transition = ''; fade.style.opacity = ''; }, 120);
 }
 
-function tfErow(e) {
-    const hasEx = !!e.explain;
-    const chev = hasEx ? '<i class="ti ti-chevron-down tf-exchev"></i>' : '';
-    const cta = e.key
-        ? `<button class="tf-excta" data-buyx="${escapeHtml(e.key)}"><i class="ti ti-shopping-cart"></i> Купить — ${cabNum(e.price)} ₽</button>`
-        : '';
-    const ex = hasEx ? `<div class="tf-ex"><div class="tf-exin">${escapeHtml(e.explain)}${cta}</div></div>` : '';
-    return `<div class="tf-erow${hasEx ? ' tap' : ''}"><div class="tf-erow-h"><span class="l">${escapeHtml(e.label)}</span><span class="p">${cabNum(e.price)} ₽</span>${chev}</div>${ex}</div>`;
-}
-
-
 const TFC_MAIN = ['generate', 'generate_std', 'audit', 'adpick'];
 // короткие подписи: полные названия из прайса рвутся на две строки и отрывают цену
 const TFC_SHORT = {
     generate: 'Премиум-пост', generate_std: 'Стандартный пост',
+    promo_burst24: 'Всплеск продвижения 24 ч', promo_burst48: 'Всплеск продвижения 48 ч',
+    promo_week: 'Неделя продвижения', promo_month: 'Месяц продвижения',
+    ai_strategy: 'AI-стратегия', strategy_renewal: 'Продление стратегии',
     generate_proofs: 'Пост с исследованиями', generate_std_proofs: 'Стандарт с исследованиями',
     research_attach: 'Исследования к посту',
     modify: 'Правка поста', rewrite: 'Рерайт поста',
@@ -2715,7 +2725,9 @@ const TFC_SHORT = {
 };
 const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
     generate_std_proofs: 100, research_attach: 100, rewrite: 100, modify: 200, voice: 20,
-    adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20 };
+    adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20,
+    promo_burst24: 30, promo_burst48: 30, promo_week: 20, promo_month: 12,
+    ai_strategy: 3, strategy_renewal: 12 };
 const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
 const TFC_PRESETS = [
     { t: 'Один канал', ic: 'user', color: 'bl',
@@ -2989,10 +3001,6 @@ function renderTariffs(d) {
         html += `</div>`;
     }
     html += tfCalculatorHtml(d);
-    const extras = (d.extras || []).map((e) => tfErow(e)).join('');
-    if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Покупается отдельно (за рубли)</div>${extras}</div>`;
-    const promos = (d.promotions || []).map((e) => tfErow(e)).join('');
-    if (promos) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-speakerphone"></i></span> Продвижение в ленте рекламы</div>${promos}</div>`;
     body.innerHTML = html;
     localizeTree(screens.tariffs);
     const tfPricesT = document.getElementById('tf-prices-t');
@@ -3016,36 +3024,11 @@ function renderTariffs(d) {
             pay: { product_type: 'package', product_key: `forge_${amount}` },
         });
     }));
-    body.querySelectorAll('.tf-erow.tap .tf-erow-h').forEach((h) => h.addEventListener('click', () => {
-        const row = h.closest('.tf-erow');
-        if (!row) return;
-        hapticLight();
-        const open = !row.classList.contains('open');
-        flipToggle(row, (o) => row.classList.toggle('open', o), open, '.tf-exin');
-    }));
-    body.querySelectorAll('[data-buyx]').forEach((btn) => btn.addEventListener('click', (ev) => {
-        ev.stopPropagation();
-        hapticMed();
-        coBuyExtra(btn.getAttribute('data-buyx'));
-    }));
     wireTfCalc(d);
 }
 
 
 let _coCtx = null;
-
-function coBuyExtra(key) {
-    const d = tariffsData;
-    if (!d) return;
-    const e = [].concat(d.extras || [], d.promotions || []).find((x) => x.key === key);
-    if (!e) return;
-    const isPromo = key.indexOf('promo_') === 0;
-    openCheckout({
-        name: e.label, price: e.price, sub: false, icon: 'shopping-cart', color: 'pu', rowLabel: e.label,
-        pay: isPromo ? null : { product_type: 'package', product_key: key },
-        promoHint: isPromo,
-    });
-}
 
 function openCheckout(opts) {
     if (!opts || !opts.price) return;
@@ -3183,49 +3166,16 @@ async function coPay(opts) {
         return;
     }
 
-    if (opts.promoHint) {
-        coPayPending(sheet, 'Выбери оффер для продвижения',
-            'Продвижение покупается для конкретного оффера: Площадка → твой оффер → «Продвинуть».');
-        return;
-    }
-
-    const lockHtml = opts.lock
-        ? `<button class="co-pay" data-colock="1"><i class="ti ti-lock-check"></i> Закрепить цену — ${cabNum(opts.price)} ₽</button>`
-        : '';
-    const extraLine = opts.lock
-        ? ' Можешь закрепить текущую цену — уведомим, когда откроем оплату.'
-        : ' Мы уведомим, когда оплата откроется.';
     sheet.innerHTML = `
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
           <div class="co-pend-t">Приём платежей подключается</div>
-          <div class="co-pend-s">Оплата станет доступна в ближайшее время.${extraLine}</div>
-          ${lockHtml}
+          <div class="co-pend-s">Оплата станет доступна в ближайшее время. Мы уведомим, когда оплата откроется.</div>
           <button class="co-close">Закрыть</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
-    const lockBtn = sheet.querySelector('[data-colock]');
-    if (lockBtn && opts.lock) lockBtn.addEventListener('click', async () => {
-        hapticMed();
-        lockBtn.disabled = true;
-        try {
-            const r = await opts.lock();
-            if (r && r.ok) {
-                closeCheckout();
-                try {
-                    if (r.booked && tariffsData) {
-                        tariffsData.booked_plan = r.booked;
-                        tariffsData.booked_price = r.booked_price;
-                        if (screens.tariffs && screens.tariffs.style.display !== 'none') renderTariffs(tariffsData);
-                    }
-                } catch (e) {}
-                cabToast('Цена закреплена — уведомим при запуске оплаты');
-            }
-            else { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
-        } catch (e) { lockBtn.disabled = false; cabToast('Не удалось закрепить цену'); }
-    });
 }
 
 function closeCheckout() {

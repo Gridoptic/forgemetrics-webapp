@@ -159,14 +159,15 @@
 
     function renderShowcase() {
         if (_state && _state.access === 'expired') {
+            var rprice = ((_state.prices || {}).renewal) || 1990;
             setView(
                 '<div class="stg-flag"><div class="glow"></div>' +
                 '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
-                '<div class="stg-fprice"><b>1 990 ₽</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
-                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + '</button>' +
+                '<div class="stg-fprice"><b>' + num(rprice) + ' Forge</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
+                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + ' — ' + num(rprice) + ' Forge</button>' +
                 '</div></div>');
             return;
         }
@@ -181,9 +182,11 @@
         var what = rows.map(function (r) {
             return '<div class="stg-fw"><span class="tick">✓</span><span><b>' + esc(T(r[0])) + '</b> ' + esc(T(r[1])) + '</span></div>';
         }).join('');
+        var nprice = ((_state && _state.prices) || {}).new || 3990;
+        var rprice2 = ((_state && _state.prices) || {}).renewal || 1990;
         var cta = locked
-            ? '<button class="stg-fcta" data-act="book"><i class="ti ti-bookmark"></i> ' + esc(T('Забронировать место')) + '</button>' +
-              '<div class="stg-fnote">' + esc(T('Бронь бесплатная. Забронировавшие получают доступ первыми и фиксируют цену 3 990 ₽ на запуске')) + '</div>'
+            ? '<button class="stg-fcta" data-act="buy"><i class="ti ti-bolt"></i> ' + esc(T('Открыть доступ')) + ' — ' + num(nprice) + ' Forge</button>' +
+              '<div class="stg-fnote">' + esc(T('Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.')) + '</div>'
             : '<button class="stg-fcta" data-act="start">' + esc(T('Построить мою стратегию')) + '</button>' +
               '<div class="stg-fnote">' + esc(T('≈ 5 минут интервью — и полный план у тебя на руках')) + '</div>';
         setView(
@@ -193,42 +196,36 @@
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
             '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка')) + '</div></div></div>' +
             '<div class="stg-fwhat">' + what + '</div>' +
-            '<div class="stg-fprice"><b>3 990 ₽</b><span>' + esc(T('разово · продление ведения — 1 990 ₽/мес')) + '</span></div>' +
+            '<div class="stg-fprice"><b>' + num(nprice) + ' Forge</b><span>' + esc(T('разово · продление ведения —')) + ' ' + num(rprice2) + ' Forge</span></div>' +
             cta + '</div></div>');
-        if (locked) markBooked();
     }
 
-    function markBooked() {
-        apiRequest('/api/v1/user/tariffs').then(function (d) {
-            var booked = (d && d.booked_extras) || [];
-            if (booked.indexOf('ai_strategy') >= 0) setBookedCta();
-        }).catch(function () {});
+    function num(n) {
+        try { return Number(n || 0).toLocaleString('ru-RU'); } catch (e) { return String(n); }
     }
 
-    function setBookedCta() {
-        var btn = document.querySelector('#strategy-screen [data-act="book"]');
-        if (btn) {
-            btn.classList.add('booked');
-            btn.removeAttribute('data-act');
-            btn.innerHTML = '<i class="ti ti-circle-check"></i> ' + esc(T('Забронировано · уведомим при запуске'));
-        }
-    }
-
-    function doBook(btn) {
+    function doPurchase(btn, renewal) {
         haptic('medium');
         btn.disabled = true;
-        apiRequest('/api/v1/user/book-extra', { method: 'POST', body: JSON.stringify({ key: 'ai_strategy' }) })
+        var old = btn.innerHTML;
+        btn.textContent = T('Оформляю…');
+        apiRequest('/api/v1/strategy/purchase', { method: 'POST', body: JSON.stringify({ renewal: !!renewal }) })
             .then(function (r) {
-                btn.disabled = false;
-                if (r && r.ok && r.booked) {
+                if (r && r.ok) {
                     haptic('medium');
-                    setBookedCta();
-                    toast(T('Бронь оформлена — пришлём уведомление при запуске'));
-                } else {
-                    toast(T('Не удалось забронировать — попробуй ещё раз'));
+                    toast(T('Доступ открыт — стратег готов к работе'));
+                    load();
+                    return;
                 }
+                btn.disabled = false; btn.innerHTML = old;
+                uiAlertStg((r && r.message) || T('Не удалось оформить — попробуй ещё раз'));
             })
-            .catch(function () { btn.disabled = false; toast(T('Не удалось забронировать — попробуй ещё раз')); });
+            .catch(function () { btn.disabled = false; btn.innerHTML = old; toast(T('Не удалось оформить — попробуй ещё раз')); });
+    }
+
+    function uiAlertStg(msg) {
+        if (typeof alertDialog === 'function') { alertDialog(msg); return; }
+        toast(msg);
     }
 
 
@@ -843,15 +840,8 @@
         var act = actEl.getAttribute('data-act');
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
         if (act === 'start') { startFlow(); return; }
-        if (act === 'book') { doBook(actEl); return; }
-        if (act === 'renew') {
-            haptic('medium');
-            if (typeof openCheckout === 'function') {
-                openCheckout({ name: T('Продление AI-стратегии'), price: 990, sub: false,
-                               icon: 'shopping-cart', color: 'pu', rowLabel: T('Продление AI-стратегии') });
-            }
-            return;
-        }
+        if (act === 'buy') { doPurchase(actEl, false); return; }
+        if (act === 'renew') { doPurchase(actEl, true); return; }
         if (act === 'next') { stepNext(); return; }
         if (act === 'prev') { haptic('light'); _ivStep = Math.max(0, _ivStep - 1); renderStep(); return; }
         if (act === 'regen') { regen(actEl); return; }

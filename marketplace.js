@@ -10399,59 +10399,27 @@
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
         week: 'Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.',
-        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их даёт только это продвижение.',
-        pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
-        pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их даёт только это продвижение.'
     };
     var _promoListingId = null;
 
     function _buyPromo(btn, product) {
         var old = btn.innerHTML;
         btn.disabled = true;
-        btn.textContent = 'Готовим оплату…';
-        var body = { product_type: 'promo', product_key: product, months: 1, listing_id: _promoListingId };
-        _buyPromoWeb(btn, product, old);
-    }
-
-    function _buyPromoWeb(btn, product, old) {
-        apiPost('/api/v1/payment/create', {
-            product_type: 'promo', product_key: product, months: 1, listing_id: _promoListingId,
+        btn.textContent = 'Запускаю…';
+        apiPost('/api/v1/marketplace/promo-buy', {
+            listing_id: _promoListingId, product: product,
         }).then(function (res) {
-            if (res && res.ok && res.confirmation_url) {
-                btn.textContent = 'Ожидаем оплату…';
-                if (!old) old = 'Выбрать';
-                try {
-                    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) Telegram.WebApp.openLink(res.confirmation_url);
-                    else window.open(res.confirmation_url, '_blank');
-                } catch (e) { window.open(res.confirmation_url, '_blank'); }
-                _waitPromoPayment(btn, res.payment_id, old);
+            if (res && res.ok) {
+                _haptic('medium');
+                hideModal('fmx-promoBg');
+                toast('Продвижение запущено — списано ' + _num(res.spent) + ' Forge');
+                loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
                 return;
             }
             btn.disabled = false; btn.innerHTML = old;
-            toast(res && res.error === 'amount_too_small' ? 'Сумма слишком мала для оплаты' : 'Не удалось открыть оплату');
-        }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast('Не удалось открыть оплату'); });
-    }
-
-    function _waitPromoPayment(btn, paymentId, oldHtml) {
-        var tries = 0;
-        var timer = setInterval(function () {
-            tries++;
-            if (tries > 40) { clearInterval(timer); btn.disabled = false; btn.innerHTML = oldHtml; return; }
-            apiGet('/api/v1/payment/check/' + paymentId).then(function (r) {
-                if (!r) return;
-                if (r.status === 'succeeded') {
-                    clearInterval(timer);
-                    _haptic('medium');
-                    hideModal('fmx-promoBg');
-                    toast('Продвижение оплачено и запущено');
-                    loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
-                } else if (r.status === 'canceled' || r.status === 'refunded') {
-                    clearInterval(timer);
-                    btn.disabled = false; btn.innerHTML = oldHtml;
-                    toast('Оплата отменена');
-                }
-            }).catch(function () {});
-        }, 3000);
+            uiAlert((res && res.message) || 'Не удалось запустить продвижение.');
+        }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast('Не удалось запустить продвижение'); });
     }
 
     function openPromo(listingId) {
@@ -10462,20 +10430,19 @@
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
             if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; return; }
             var opts = r.options || [], html = '';
+            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;"><i class="ti ti-bolt"></i> На балансе: ' + _num(r.balance || 0) + ' Forge — списание с баланса, без кассы</div>';
             opts.forEach(function (o) {
-                var ic = o.kind === 'credits' ? 'ti-package' : (o.in_burst_cap ? 'ti-bolt' : 'ti-rocket');
-                var pr = '<b>' + _num(o.price) + ' ₽</b>';
-                if (o.base_price && o.base_price > o.price) pr = '<span style="text-decoration:line-through;opacity:.45;font-weight:600;margin-right:6px;">' + _num(o.base_price) + '</span>' + pr;
+                var ic = o.in_burst_cap ? 'ti-bolt' : 'ti-rocket';
+                var pr = '<b>' + _num(o.price) + '</b> <i class="ti ti-bolt" style="color:#f5bf4f;font-size:12px;"></i>';
                 html += '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ' + ic + '" style="color:#818cf8;"></i> ' + _esc(o.label) + '</div><div class="fmx-po-pr">' + pr + '</div></div>' +
                     '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> ' + _esc(_PROMO_DESC[o.product] || '') + '</div>' +
-                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">Выбрать</button></div>';
+                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">Запустить — ' + _num(o.price) + ' Forge</button></div>';
             });
             html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Всплески 24 и 48 ч вместе — не больше ' + (r.burst_cap || 3) + ' раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.</div>';
             body.innerHTML = html;
             qsa(body, '[data-buy]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     _haptic('light');
-                    if (!r.billing_ready) { uiAlert('Приём платежей подключается. Оплата станет доступна в ближайшее время.'); return; }
                     if (!_promoListingId) { uiAlert('Открой продвижение из своего оффера: «Мои офферы» → «Продвинуть».'); return; }
                     _buyPromo(b, b.getAttribute('data-buy'));
                 });
