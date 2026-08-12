@@ -2134,29 +2134,21 @@ async function openCabinet(scrollTo) {
     }
 }
 
-const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle' };
+const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', elite: 'Elite', titan: 'Titan', legend: 'Legend' };
 const RF_PERK_TEXT = {
-    burst_per_friend: 'всплеск 24 ч за каждого друга',
-    forge_200: '+200 Forge/мес',
-    forge_550: '+550 Forge/мес',
-    forge_900: '+900 Forge/мес',
-    adpick_monthly: '+200 Forge/мес',
-    audit_monthly: '+550 Forge/мес',
-    audit_monthly_2: '+900 Forge/мес',
-    promo_week_monthly: 'неделя продвижения/мес',
-    promo_month_monthly: 'месяц продвижения/мес',
-    anim_sticker: 'анимированные стикеры',
-    burst24_monthly: '+1 всплеск 24 ч/мес',
-    fx_glow: 'стиль «Свечение»',
-    extra_audit_1: '+1 аудит/мес',
-    leaderboard: 'лидерборд',
-    fx_glass: 'стеклянные кнопки',
-    extra_audit_2: '+2 аудита/мес',
-    promo_discount_10: '−10% на продвижение',
-    founders_shelf: 'полка Founders',
-    fx_all: 'все стили карточек',
-    sub_discount_10: '−10% на подписку навсегда',
-    promo_discount_20: '−20% на продвижение',
+    burst_per_friend: 'всплеск продвижения 24 ч за каждого активного реферала',
+    forge_200: 'ежемесячное начисление 200 Forge',
+    forge_550: 'ежемесячное начисление 550 Forge',
+    forge_900: 'ежемесячное начисление 900 Forge',
+    forge_1300: 'ежемесячное начисление 1 300 Forge',
+    forge_2000: 'ежемесячное начисление 2 000 Forge',
+    forge_3000: 'ежемесячное начисление 3 000 Forge',
+    forge_5000: 'ежемесячное начисление 5 000 Forge',
+    promo_week_monthly: 'неделя продвижения оффера ежемесячно',
+    promo_month_monthly: 'месяц продвижения оффера ежемесячно',
+    anim_sticker: 'анимированные стикеры на оффере',
+    fx_glow: 'оформление оффера «Свечение»',
+    fx_glass: 'оформление «Стекло»',
 };
 
 function cabRefLadder(r) {
@@ -2167,12 +2159,9 @@ function cabRefLadder(r) {
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
         const here = i === ci ? '<span class="rf-here">ты здесь</span>' : '';
-        const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
+        const need = x.need > 0 ? `от ${cabNum(x.need)} ${plural3(x.need, 'оплатившего', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
-        const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
-        const rate = `${x.rate_pct}% с каждого пополнения — в Forge`;
-        const perkLine = `${rate}${perks ? ' · ' + perks : ''}`;
-        return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}${seats}</span></div><div class="perk">${escapeHtml(perkLine)}</div></div>${here}</div>`;
+        return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}</span><b style="float:right;font-size:13px;color:#c7cdff;">${x.rate_pct}%</b></div><div class="perk">${escapeHtml(perks || '—')}</div></div>${here}</div>`;
     }).join('');
     return `<div class="rf-ladder">${rows}</div>`;
 }
@@ -2182,7 +2171,6 @@ function refCardHtml(r) {
     const rate = r.rate_pct || 30;
     const fDisc = r.friend_discount_pct || 15;
     const fBonus = r.friend_welcome_bonus || 100;
-    const sample = Math.round(900 * rate / 100);
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
         ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
@@ -2203,9 +2191,12 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>в Forge с каждого пополнения приглашённого — навсегда</span></div>
-        <p>Друг купил 900 Forge — тебе ${sample}. И так с каждой его покупки, без ограничения по числу платежей. Другу −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
-        <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
+        <div class="rf-rate"><b>${rate}%</b><span>с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей</span></div>
+        <div style="margin:9px 0 2px;border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;overflow:hidden;font-size:11.5px;">
+          <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>Приглашённый пополнил</span><span>Твоё начисление</span></div>
+          ${[300, 900, 2500, 6000].map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${cabNum(v)} Forge</span><b class="num" style="color:#5DCAA5;">+${cabNum(Math.round(v * rate / 100))} Forge</b></div>`).join('')}
+        </div>
+        <p style="margin-top:8px;">Начисление после оплаты, холд 30 дней. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
       </div>
     </div>
     <div class="rf-bal">
@@ -2237,10 +2228,10 @@ function refCardHtml(r) {
 
   <div class="rf-how">
     <span class="rf-eyebrow">Как это работает</span>
-    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой с админами каналов.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">4</span><p>Достигнутый уровень остаётся за тобой навсегда — ставка не снижается, даже если сделаешь паузу.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Передай ссылку админам каналов — лично или в своих постах.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Приглашённый регистрируется по ней и получает −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">4</span><p>Достигнутый уровень фиксируется навсегда — ставка не снижается.</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
