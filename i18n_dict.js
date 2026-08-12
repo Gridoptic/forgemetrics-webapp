@@ -1,5 +1,6 @@
 window.__I18N_DICT = {
  "en": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Run a Telegram channel seriously? Take a look at ForgeMetrics — a strategist and an editor in one:\n\n— posts and topics in the voice of your channel, a week of content in a couple of clicks;\n— a personal strategy: what to change, where to grow, how to turn the channel into income;\n— before buying ads — real reach, inflation signs and an AI forecast of returns before you pay.\n\nThe link activates an extended starter pack on first launch:",
   "СБП": "SBP",
   "Карта": "Card",
   "Доступ приостановлен": "Access suspended",
@@ -1487,7 +1488,6 @@ window.__I18N_DICT = {
   "Скоро": "Soon",
   "Язык интерфейса": "Interface language",
   "Русский": "Russian",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Join ForgeMetrics — an AI assistant and ad marketplace for Telegram channels. −15% on the first month via my link:",
   "активен": "active",
   "Забронировано · уведомим": "Reserved · we'll notify you",
   "Забронировать": "Reserve",
@@ -2005,7 +2005,6 @@ window.__I18N_DICT = {
   "оплативших": "paid referrals",
   "Текст приглашения скопирован": "Invitation text copied",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "A friend registers through it and gets −15% for the first month.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Join ForgeMetrics — an AI tool and ad exchange for Telegram channel admins. Use my link for −15% on the first month:",
   "Месяц": "Month",
   "Год": "Year",
   "Продвижение в ленте рекламы": "Promotion in the ad feed",
@@ -2902,6 +2901,7 @@ window.__I18N_DICT = {
   "Вопрос": "Question"
  },
  "es": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "¿Llevas un canal de Telegram en serio? Mira ForgeMetrics — estratega y editor en uno:\n\n— publicaciones y temas al estilo de tu canal, una semana de contenido en un par de clics;\n— estrategia personal: qué cambiar, dónde crecer, cómo llevar el canal a generar ingresos;\n— antes de comprar publicidad — alcance real, señales de inflado y pronóstico AI del retorno antes de pagar.\n\nEl enlace activa un paquete inicial ampliado en el primer inicio:",
   "СБП": "SBP",
   "Карта": "Tarjeta",
   "Доступ приостановлен": "Acceso suspendido",
@@ -4383,7 +4383,6 @@ window.__I18N_DICT = {
   "Скоро": "Próximamente",
   "Язык интерфейса": "Idioma de la interfaz",
   "Русский": "Ruso",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Únete a ForgeMetrics — asistente AI y bolsa de publicidad para canales de Telegram. Con mi enlace, −15% el primer mes:",
   "активен": "activo",
   "Забронировано · уведомим": "Reservado · te avisaremos",
   "Забронировать": "Reservar",
@@ -4900,7 +4899,6 @@ window.__I18N_DICT = {
   "оплативших": "referidos de pago",
   "Текст приглашения скопирован": "Texto de invitación copiado",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Tu amigo se registra con él y obtiene −15% el primer mes.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Únete a ForgeMetrics — herramienta AI y bolsa de publicidad para administradores de canales de Telegram. Con mi enlace, −15% el primer mes:",
   "Месяц": "Mes",
   "Год": "Año",
   "Продвижение в ленте рекламы": "Promoción en el feed de anuncios",
@@ -5804,6 +5802,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "de": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Du führst einen Telegram-Kanal ernsthaft? Sieh dir ForgeMetrics an — Stratege und Redakteur in einem:\n\n— Beiträge und Themen im Stil deines Kanals, eine Woche Content mit ein paar Klicks;\n— persönliche Strategie: was ändern, wo wachsen, wie der Kanal Einnahmen bringt;\n— vor dem Werbekauf — echte Reichweite, Anzeichen von Botting und eine AI-Prognose des Ertrags vor der Zahlung.\n\nDer Link aktiviert ein erweitertes Startpaket beim ersten Start:",
   "СБП": "SBP",
   "Карта": "Karte",
   "Доступ приостановлен": "Zugang ausgesetzt",
@@ -7285,7 +7284,6 @@ window.__I18N_DICT = {
   "Скоро": "Bald",
   "Язык интерфейса": "Sprache der Oberfläche",
   "Русский": "Russisch",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Werde Teil von ForgeMetrics — AI-Assistent und Werbebörse für Telegram-Kanäle. Über meinen Link −15% im ersten Monat:",
   "активен": "aktiv",
   "Забронировано · уведомим": "Reserviert · wir benachrichtigen",
   "Забронировать": "Reservieren",
@@ -7802,7 +7800,6 @@ window.__I18N_DICT = {
   "оплативших": "zahlende Nutzer",
   "Текст приглашения скопирован": "Einladungstext kopiert",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Ein Freund registriert sich darüber und erhält −15% im ersten Monat.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Komm zu ForgeMetrics — AI-Tool und Werbebörse für Admins von Telegram-Kanälen. Über meinen Link −15% im ersten Monat:",
   "Месяц": "Monat",
   "Год": "Jahr",
   "Продвижение в ленте рекламы": "Promotion im Werbe-Feed",
@@ -8706,6 +8703,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Sonntag"
  },
  "kk": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram-арнаңды байыппен жүргізсең — ForgeMetrics-ке қара. Бір қосымшада стратег және редактор:\n\n— посттар мен тақырыптар дәл өз арнаңның мәнерінде, бір апталық контент бірнеше кликпен;\n— жеке стратегия: нені өзгерту, қайда өсу, арнаны табысқа қалай шығару;\n— жарнама сатып алар алдында — нақты қамту, жасанды өсім белгілері және төлемге дейінгі AI-болжам.\n\nСілтеме алғашқы іске қосуда кеңейтілген бастапқы жинақты ашады:",
   "СБП": "СБП",
   "Карта": "Карта",
   "Доступ приостановлен": "Қолжетімділік тоқтатылды",
@@ -10182,7 +10180,6 @@ window.__I18N_DICT = {
   "Скоро": "Жақында",
   "Язык интерфейса": "Интерфейс тілі",
   "Русский": "Орысша",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ке қосыл — Telegram-арналарға арналған AI-көмекші және жарнама биржасы. Менің сілтемем бойынша бірінші айға −15%:",
   "активен": "белсенді",
   "Забронировано · уведомим": "Брондалды · хабарлаймыз",
   "Забронировать": "Брондау",
@@ -10699,7 +10696,6 @@ window.__I18N_DICT = {
   "оплативших": "төлеген",
   "Текст приглашения скопирован": "Шақыру мәтіні көшірілді",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Досың сол сілтеме бойынша тіркеледі және бірінші айға −15% алады.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ке қосыл — Telegram-арналарының әкімшілеріне арналған AI-құрал және жарнама биржасы. Менің сілтемем бойынша бірінші айға −15%:",
   "Месяц": "Ай",
   "Год": "Жыл",
   "Продвижение в ленте рекламы": "Жарнама лентасында жылжыту",
@@ -11603,6 +11599,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Жексенбі"
  },
  "uz": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram-kanalni jiddiy yuritasanmi — ForgeMetrics-ga qara. Bitta ilovada strateg va muharrir:\n\n— postlar va mavzular aynan kanaling uslubida, bir haftalik kontent bir necha klikda;\n— shaxsiy strategiya: nimani o‘zgartirish, qayerda o‘sish, kanalni daromadga qanday chiqarish;\n— reklama sotib olishdan oldin — haqiqiy qamrov, soxta o‘sish belgilari va to‘lovgacha AI-prognoz.\n\nHavola birinchi ishga tushirishda kengaytirilgan boshlang‘ich to‘plamni faollashtiradi:",
   "СБП": "SBP",
   "Карта": "Karta",
   "Доступ приостановлен": "Kirish to‘xtatildi",
@@ -13084,7 +13081,6 @@ window.__I18N_DICT = {
   "Скоро": "Tez orada",
   "Язык интерфейса": "Interfeys tili",
   "Русский": "Ruscha",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics'ga qoʻshiling — Telegram-kanallar uchun AI-yordamchi va reklama birjasi. Havolam orqali birinchi oyga −15%:",
   "активен": "faol",
   "Забронировано · уведомим": "Band qilindi · xabar beramiz",
   "Забронировать": "Band qilish",
@@ -13601,7 +13597,6 @@ window.__I18N_DICT = {
   "оплативших": "toʻlaganlar",
   "Текст приглашения скопирован": "Taklif matni nusxalandi",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Doʻsting u orqali roʻyxatdan oʻtadi va birinchi oy uchun −15% oladi.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetricsga qoʻshil — Telegram kanallari adminlari uchun AI-vosita va reklama birjasi. Havolam orqali birinchi oy uchun −15%:",
   "Месяц": "Oy",
   "Год": "Yil",
   "Продвижение в ленте рекламы": "Reklama lentasida targ'ib qilish",
@@ -14505,6 +14500,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Yakshanba"
  },
  "be": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Калі вядзеш Telegram-канал усур'ёз — паглядзі ForgeMetrics. Гэта стратэг і рэдактар у адным:\n\n— пасты і тэмы ў манеры менавіта твайго канала, тыдзень кантэнту ў пару клікаў;\n— персанальная стратэгія: што мяняць, дзе расці, як вывесці канал на даход;\n— перад закупкай рэкламы — сапраўдны ахоп, прыкметы накруткі і AI-прагноз аддачы яшчэ да аплаты.\n\nСпасылка актывуе пашыраны стартавы набор пры першым запуску:",
   "СБП": "СБП",
   "Карта": "Картка",
   "Доступ приостановлен": "Доступ прыпынены",
@@ -15984,7 +15980,6 @@ window.__I18N_DICT = {
   "Скоро": "Хутка",
   "Язык интерфейса": "Мова інтэрфейсу",
   "Русский": "Руская",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Далучайся да ForgeMetrics — AI-памочнік і біржа рэкламы для Telegram-каналаў. Па маёй спасылцы −15% на першы месяц:",
   "активен": "актыўны",
   "Забронировано · уведомим": "Забраніравана · паведамім",
   "Забронировать": "Забраніраваць",
@@ -16501,7 +16496,6 @@ window.__I18N_DICT = {
   "оплативших": "аплаціўшых",
   "Текст приглашения скопирован": "Тэкст запрашэння скапіраваны",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Сябар рэгіструецца па ёй і атрымлівае −15% на першы месяц.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Далучайся да ForgeMetrics — AI-інструмент і біржа рэкламы для адмінаў Telegram-каналаў. Па маёй спасылцы −15% на першы месяц:",
   "Месяц": "Месяц",
   "Год": "Год",
   "Продвижение в ленте рекламы": "Прасоўванне ў стужцы рэкламы",
@@ -17405,6 +17399,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Нядзеля"
  },
  "az": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram kanalını ciddi aparırsansa — ForgeMetrics-ə bax. Bir tətbiqdə strateq və redaktor:\n\n— postlar və mövzular məhz sənin kanalının üslubunda, bir həftəlik kontent bir neçə klikə;\n— fərdi strategiya: nəyi dəyişmək, harada böyümək, kanalı gəlirə necə çıxarmaq;\n— reklam almazdan əvvəl — real əhatə, süni artım əlamətləri və ödənişdən əvvəl AI-proqnoz.\n\nKeçid ilk açılışda genişləndirilmiş başlanğıc dəstini aktivləşdirir:",
   "СБП": "SBP",
   "Карта": "Kart",
   "Доступ приостановлен": "Giriş dayandırılıb",
@@ -18886,7 +18881,6 @@ window.__I18N_DICT = {
   "Скоро": "Tezliklə",
   "Язык интерфейса": "İnterfeys dili",
   "Русский": "Rus dili",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ə qoşul — Telegram-kanalları üçün AI-köməkçi və reklam birjası. Mənim linkimlə ilk ay üçün −15%:",
   "активен": "aktiv",
   "Забронировано · уведомим": "Rezerv edildi · xəbər verəcəyik",
   "Забронировать": "Rezerv et",
@@ -19403,7 +19397,6 @@ window.__I18N_DICT = {
   "оплативших": "ödəyən",
   "Текст приглашения скопирован": "Dəvət mətni kopyalandı",
   "Друг регистрируется по ней и получает −15% на первый месяц.": "Dost onunla qeydiyyatdan keçir və ilk aya −15% əldə edir.",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-ə qoşul — Telegram kanalları adminləri üçün AI aləti və reklam birjası. Mənim linkimlə ilk aya −15%:",
   "Месяц": "Ay",
   "Год": "İl",
   "Продвижение в ленте рекламы": "Reklam lentində təşviq",
@@ -20307,6 +20300,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Bazar"
  },
  "ar": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "تدير قناة تيليجرام بجدية؟ ألقِ نظرة على ForgeMetrics — استراتيجي ومحرر في تطبيق واحد:\n\n— منشورات ومواضيع بأسلوب قناتك تحديداً، وأسبوع من المحتوى بنقرات معدودة؛\n— استراتيجية شخصية: ماذا تغيّر، وأين تنمو، وكيف تجعل القناة مصدر دخل؛\n— قبل شراء الإعلانات — وصول حقيقي وعلامات التضخيم وتوقع AI للعائد قبل الدفع.\n\nيفعّل الرابط باقة بداية موسّعة عند أول تشغيل:",
   "СБП": "SBP",
   "Карта": "بطاقة",
   "Доступ приостановлен": "تم تعليق الوصول",
@@ -21631,8 +21625,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "النمو خلال 30 يومًا",
   "Прислал картинкой": "أرسلها كصورة",
   "Прислать постер в чат с ботом": "إرسال الملصق إلى محادثة البوت",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "انضم إلى ForgeMetrics — أداة AI وبورصة إعلانات لمديري قنوات تيليجرام. عبر رابطي خصم −15% على الشهر الأول:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "انضم إلى ForgeMetrics — مساعد AI وبورصة إعلانات لقنوات تيليجرام. عبر رابطي خصم −15% على الشهر الأول:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "حضور 30 يومًا — أوفر لليوم من الأسبوعي. حصري: التوهج الذهبي ووسم «مُروَّج» — لا تقدمهما أي خطة.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "حضور 30 يوماً — أوفر لليوم الواحد من الأسبوعي. للحضور الدائم اختر المنتج الشهري: 4 أسابيع منفصلة أغلى من شهر.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "حضور العرض في الشريط المدفوع من الخلاصة لمدة 7 أيام. خارج حد الدفعات. لا تتجاوز العروض المدفوعة 20% من الخلاصة — فلا تُغرق المحتوى العضوي.",
@@ -23209,6 +23201,7 @@ window.__I18N_DICT = {
   "Воскресенье": "الأحد"
  },
  "fa": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "کانال تلگرام را جدی اداره می‌کنی؟ به ForgeMetrics نگاه کن — استراتژیست و ویراستار در یک برنامه:\n\n— پست‌ها و موضوع‌ها دقیقاً به سبک کانال تو، یک هفته محتوا با چند کلیک؛\n— استراتژی شخصی: چه چیزی را تغییر دهی، کجا رشد کنی، چطور کانال را به درآمد برسانی؛\n— پیش از خرید تبلیغ — دسترسی واقعی، نشانه‌های تقلب و پیش‌بینی AI بازده پیش از پرداخت.\n\nاین لینک در نخستین اجرا بسته شروع گسترده را فعال می‌کند:",
   "СБП": "SBP",
   "Карта": "کارت",
   "Доступ приостановлен": "دسترسی متوقف شد",
@@ -24532,8 +24525,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "رشد در ۳۰ روز",
   "Прислал картинкой": "به‌صورت تصویر ارسال شد",
   "Прислать постер в чат с ботом": "ارسال پوستر به چت با بات",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "به ForgeMetrics بپیوندید — ابزار AI و بازار تبلیغات برای ادمین‌های کانال‌های تلگرام. با لینک من −15% تخفیف ماه اول:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "به ForgeMetrics بپیوندید — دستیار AI و بازار تبلیغات برای کانال‌های تلگرام. با لینک من −15% تخفیف ماه اول:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "حضور ۳۰روزه — به ازای هر روز از هفتگی به‌صرفه‌تر. انحصاری: درخشش طلایی و برچسب «تبلیغ‌شده» — هیچ تعرفه‌ای آن‌ها را نمی‌دهد.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "حضور ۳۰ روزه — به‌ازای هر روز ارزان‌تر از هفتگی. برای حضور دائم، محصول ماهانه را انتخاب کنید: ۴ هفته جداگانه گران‌تر از یک ماه است.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "حضور آفر در نوار پولی فید به‌مدت ۷ روز. خارج از سقف بوست‌ها. آفرهای پولی حداکثر ۲۰٪ فید را می‌گیرند — محتوای ارگانیک غرق نمی‌شود.",
@@ -26111,6 +26102,7 @@ window.__I18N_DICT = {
   "Воскресенье": "یکشنبه"
  },
  "tr": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram kanalını ciddi yönetiyorsan — ForgeMetrics'e bak. Tek uygulamada stratejist ve editör:\n\n— gönderiler ve konular tam senin kanalının üslubunda, bir haftalık içerik birkaç tıkla;\n— kişisel strateji: neyi değiştirmeli, nerede büyümeli, kanal nasıl gelire dönüşür;\n— reklam satın almadan önce — gerçek erişim, şişirme belirtileri ve ödemeden önce AI getiri tahmini.\n\nBağlantı ilk açılışta genişletilmiş başlangıç paketini etkinleştirir:",
   "СБП": "SBP",
   "Карта": "Kart",
   "Доступ приостановлен": "Erişim askıya alındı",
@@ -27424,8 +27416,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "30 günlük artış",
   "Прислал картинкой": "Görsel olarak gönderdi",
   "Прислать постер в чат с ботом": "Posteri bot sohbetine gönder",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics'e katıl — Telegram kanal adminleri için AI aracı ve reklam borsası. Bağlantımla ilk ay −15%:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics'e katıl — Telegram kanalları için AI asistanı ve reklam borsası. Bağlantımla ilk ay −15%:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "30 günlük varlık — gün başına haftalıktan avantajlı. Ayrıcalık: altın parıltı ve «Öne çıkarılıyor» etiketi — hiçbir tarifede yok.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "30 günlük görünürlük — gün başına haftalıktan daha uygun. Sürekli görünürlük için aylık ürünü öneriyoruz: 4 ayrı hafta bir aydan pahalıya gelir.",
   "Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.": "Teklifin ücretli şeritte 7 gün görünürlüğü. «Parıltı», «Cam» ve animasyonlu çıkartmaları açar.",
@@ -29013,6 +29003,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Pazar"
  },
  "hi": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram चैनल गंभीरता से चलाते हो? ForgeMetrics देखो — एक ही ऐप में स्ट्रैटेजिस्ट और एडिटर:\n\n— पोस्ट और विषय ठीक तुम्हारे चैनल के अंदाज़ में, हफ़्ते का कंटेंट कुछ क्लिक में;\n— निजी रणनीति: क्या बदलें, कहाँ बढ़ें, चैनल से आय कैसे बनाएं;\n— विज्ञापन ख़रीदने से पहले — असली पहुँच, फर्ज़ी बढ़त के संकेत और भुगतान से पहले AI-पूर्वानुमान।\n\nलिंक पहले लॉन्च पर विस्तारित स्टार्टर पैक सक्रिय करता है:",
   "СБП": "SBP",
   "Карта": "कार्ड",
   "Доступ приостановлен": "पहुँच निलंबित",
@@ -30333,8 +30324,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "30 दिनों में वृद्धि",
   "Прислал картинкой": "इमेज के रूप में भेजा",
   "Прислать постер в чат с ботом": "पोस्टर बॉट की चैट में भेजें",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics से जुड़ें — Telegram चैनल एडमिन के लिए AI-टूल और ऐड एक्सचेंज। मेरे लिंक से पहले महीने पर −15%:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics से जुड़ें — Telegram चैनलों के लिए AI-सहायक और ऐड एक्सचेंज। मेरे लिंक से पहले महीने पर −15%:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "30 दिन की मौजूदगी — प्रति दिन साप्ताहिक से किफ़ायती। एक्सक्लूसिव: गोल्ड ग्लो और «प्रमोटेड» टैग — कोई भी प्लान इन्हें नहीं देता।",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "30 दिन की मौजूदगी — प्रति दिन साप्ताहिक से सस्ती। स्थायी मौजूदगी के लिए मासिक प्रोडक्ट: 4 अलग-अलग सप्ताह एक महीने से महँगे पड़ते हैं।",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "फ़ीड की पेड लेन में ऑफ़र की 7 दिन की मौजूदगी। बूस्ट लिमिट से बाहर। पेड ऑफ़र फ़ीड का अधिकतम 20% घेरते हैं — ऑर्गेनिक दबता नहीं।",
@@ -31915,6 +31904,7 @@ window.__I18N_DICT = {
   "Воскресенье": "रविवार"
  },
  "bn": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram চ্যানেল সিরিয়াসভাবে চালাও? ForgeMetrics দেখো — এক অ্যাপে স্ট্র্যাটেজিস্ট ও এডিটর:\n\n— পোস্ট ও বিষয় ঠিক তোমার চ্যানেলের ধাঁচে, এক সপ্তাহের কনটেন্ট কয়েক ক্লিকে;\n— ব্যক্তিগত কৌশল: কী বদলাবে, কোথায় বাড়বে, চ্যানেল থেকে আয় কীভাবে;\n— বিজ্ঞাপন কেনার আগে — আসল রিচ, ভুয়া বৃদ্ধির লক্ষণ আর পেমেন্টের আগে AI-পূর্বাভাস।\n\nলিঙ্কটি প্রথম চালুতে বর্ধিত স্টার্টার প্যাক চালু করে:",
   "СБП": "SBP",
   "Карта": "কার্ড",
   "Доступ приостановлен": "অ্যাক্সেস স্থগিত",
@@ -33232,8 +33222,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "৩০ দিনে বৃদ্ধি",
   "Прислал картинкой": "ছবি হিসেবে পাঠিয়েছে",
   "Прислать постер в чат с ботом": "বটের চ্যাটে পোস্টার পাঠান",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-এ যোগ দিন — Telegram-চ্যানেল অ্যাডমিনদের জন্য AI-টুল ও অ্যাড এক্সচেঞ্জ। আমার লিংকে প্রথম মাসে −15%:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics-এ যোগ দিন — Telegram-চ্যানেলের জন্য AI-সহকারী ও অ্যাড মার্কেটপ্লেস। আমার লিংকে প্রথম মাসে −15%:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "৩০ দিনের উপস্থিতি — প্রতিদিনের হিসাবে সাপ্তাহিকের চেয়ে সাশ্রয়ী। এক্সক্লুসিভ: গোল্ড গ্লো এবং «প্রমোটেড» ট্যাগ — কোনো প্ল্যানে নেই।",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "৩০ দিনের উপস্থিতি — সাপ্তাহিকের চেয়ে দৈনিক হিসেবে সাশ্রয়ী। স্থায়ী উপস্থিতির জন্য মাসিক প্রোডাক্ট: আলাদা ৪ সপ্তাহ এক মাসের চেয়ে ব্যয়বহুল।",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "ফিডের পেইড লেনে ৭ দিনের অফার উপস্থিতি। বুস্ট লিমিটের বাইরে। পেইড অফার ফিডের সর্বোচ্চ ২০% জায়গা নেয় — অর্গানিক কনটেন্ট চাপা পড়ে না।",
@@ -34817,6 +34805,7 @@ window.__I18N_DICT = {
   "Воскресенье": "রবিবার"
  },
  "id": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Serius mengelola kanal Telegram? Lihat ForgeMetrics — strateg dan editor dalam satu aplikasi:\n\n— postingan dan topik persis dengan gaya kanalmu, konten seminggu dalam beberapa klik;\n— strategi personal: apa yang diubah, di mana tumbuh, cara membuat kanal menghasilkan;\n— sebelum membeli iklan — jangkauan asli, tanda manipulasi, dan prakiraan AI hasil sebelum bayar.\n\nTautan mengaktifkan paket awal yang diperluas saat pertama dibuka:",
   "СБП": "SBP",
   "Карта": "Kartu",
   "Доступ приостановлен": "Akses ditangguhkan",
@@ -36135,8 +36124,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Pertumbuhan 30 hari",
   "Прислал картинкой": "Dikirim sebagai gambar",
   "Прислать постер в чат с ботом": "Kirim poster ke chat bot",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Gabung ForgeMetrics — tool AI dan bursa iklan untuk admin channel Telegram. Lewat tautanku dapat −15% untuk bulan pertama:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Gabung ForgeMetrics — asisten AI dan marketplace iklan untuk channel Telegram. −15% untuk bulan pertama lewat tautanku:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Kehadiran 30 hari — per hari lebih hemat daripada mingguan. Eksklusif: kilau emas dan tag «Dipromosikan» — tidak ada paket yang menyediakannya.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Tampil 30 hari — per harinya lebih hemat daripada mingguan. Untuk kehadiran terus-menerus pakai produk bulanan: 4 minggu terpisah lebih mahal dari sebulan.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Offer tampil di jalur berbayar feed selama 7 hari. Di luar limit boost. Offer berbayar maksimal 20% dari feed — konten organik tidak tenggelam.",
@@ -37719,6 +37706,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Minggu"
  },
  "vi": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Vận hành kênh Telegram nghiêm túc? Xem ForgeMetrics — chiến lược gia và biên tập viên trong một ứng dụng:\n\n— bài đăng và chủ đề đúng phong cách kênh của bạn, một tuần nội dung trong vài cú nhấp;\n— chiến lược cá nhân: thay đổi gì, tăng trưởng ở đâu, đưa kênh ra doanh thu thế nào;\n— trước khi mua quảng cáo — lượt tiếp cận thật, dấu hiệu gian lận và dự báo AI về hiệu quả trước khi trả tiền.\n\nLiên kết kích hoạt gói khởi đầu mở rộng ở lần chạy đầu:",
   "СБП": "SBP",
   "Карта": "Thẻ",
   "Доступ приостановлен": "Quyền truy cập bị tạm dừng",
@@ -39039,8 +39027,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Tăng trưởng 30 ngày",
   "Прислал картинкой": "Đã gửi dạng ảnh",
   "Прислать постер в чат с ботом": "Gửi poster vào chat với bot",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Tham gia ForgeMetrics — công cụ AI và sàn quảng cáo cho admin kênh Telegram. Dùng link của tôi để được −15% tháng đầu:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Tham gia ForgeMetrics — trợ lý AI và sàn quảng cáo cho kênh Telegram. −15% tháng đầu qua link của tôi:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Hiện diện 30 ngày — tính theo ngày lợi hơn gói tuần. Độc quyền: ánh vàng và thẻ «Được quảng bá» — không gói nào có.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Hiện diện 30 ngày — rẻ hơn mỗi ngày so với gói tuần. Muốn hiện diện liên tục hãy dùng gói tháng: mua 4 tuần lẻ đắt hơn một tháng.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Offer hiện diện trong làn trả phí của feed trong 7 ngày. Không tính vào giới hạn đẩy top. Offer trả phí chiếm tối đa 20% feed — không lấn át nội dung tự nhiên.",
@@ -40621,6 +40607,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Chủ Nhật"
  },
  "pt": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Leva um canal do Telegram a sério? Veja o ForgeMetrics — estrategista e editor em um só:\n\n— posts e temas no estilo do seu canal, uma semana de conteúdo em poucos cliques;\n— estratégia pessoal: o que mudar, onde crescer, como levar o canal à renda;\n— antes de comprar anúncios — alcance real, sinais de inflação e previsão AI do retorno antes de pagar.\n\nO link ativa um pacote inicial ampliado no primeiro acesso:",
   "СБП": "SBP",
   "Карта": "Cartão",
   "Доступ приостановлен": "Acesso suspenso",
@@ -41941,8 +41928,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Crescimento em 30 dias",
   "Прислал картинкой": "Enviado como imagem",
   "Прислать постер в чат с ботом": "Enviar o pôster para o chat com o bot",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Entre no ForgeMetrics — ferramenta de AI e marketplace de anúncios para admins de canais do Telegram. Pelo meu link, −15% no primeiro mês:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Entre no ForgeMetrics — assistente de AI e marketplace de anúncios para canais do Telegram. −15% no primeiro mês pelo meu link:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Presença de 30 dias — por dia sai mais em conta que a semanal. Exclusivo: o brilho dourado e a etiqueta «Promovido» — nenhum plano os oferece.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Presença por 30 dias — mais barato por dia que a semanal. Presença contínua vai para o produto mensal: 4 semanas avulsas custam mais que um mês.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Presença da oferta na faixa paga do feed por 7 dias. Fora do limite de impulsos. Ofertas pagas ocupam no máximo 20% do feed — não afogam o orgânico.",
@@ -43523,6 +43508,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "fr": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Tu gères un canal Telegram sérieusement ? Regarde ForgeMetrics — stratège et rédacteur en un :\n\n— des posts et des sujets dans le style de ton canal, une semaine de contenu en quelques clics ;\n— une stratégie personnelle : quoi changer, où grandir, comment amener le canal au revenu ;\n— avant d'acheter de la pub — portée réelle, signes de triche et prévision AI du retour avant de payer.\n\nLe lien active un pack de départ étendu au premier lancement :",
   "СБП": "SBP",
   "Карта": "Carte",
   "Доступ приостановлен": "Accès suspendu",
@@ -44836,8 +44822,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Croissance sur 30 jours",
   "Прислал картинкой": "Envoyé en image",
   "Прислать постер в чат с ботом": "Envoyer le poster dans le chat du bot",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Rejoins ForgeMetrics — outil AI et place de marché pub pour admins de canaux Telegram. Avec mon lien, −15% sur le premier mois :",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Rejoins ForgeMetrics — assistant AI et place de marché pub pour canaux Telegram. −15% sur le premier mois avec mon lien :",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Présence de 30 jours — plus avantageux par jour que l’hebdo. Exclusif : le halo doré et le badge « Sponsorisé » — aucun forfait ne les propose.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Présence 30 jours — moins cher par jour qu'une semaine. Pour une présence continue, prends la formule mensuelle : 4 semaines séparées coûtent plus cher qu'un mois.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Présence de ton offre dans la bande payante du feed pendant 7 jours. Hors limite de boosts. Les offres payantes occupent au max 20% du feed — l'organique n'est pas noyé.",
@@ -46425,6 +46409,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Dimanche"
  },
  "it": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Gestisci un canale Telegram sul serio? Guarda ForgeMetrics — stratega ed editor in uno:\n\n— post e temi nello stile del tuo canale, una settimana di contenuti in pochi clic;\n— strategia personale: cosa cambiare, dove crescere, come portare il canale al guadagno;\n— prima di comprare pubblicità — copertura reale, segni di gonfiaggio e previsione AI della resa prima di pagare.\n\nIl link attiva un pacchetto iniziale esteso al primo avvio:",
   "СБП": "SBP",
   "Карта": "Carta",
   "Доступ приостановлен": "Accesso sospeso",
@@ -47734,8 +47719,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Crescita in 30 giorni",
   "Прислал картинкой": "Inviato come immagine",
   "Прислать постер в чат с ботом": "Invia il poster nella chat col bot",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Unisciti a ForgeMetrics — strumento AI e marketplace pubblicitario per admin di canali Telegram. Col mio link −15% sul primo mese:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Unisciti a ForgeMetrics — assistente AI e marketplace pubblicitario per canali Telegram. Col mio link −15% sul primo mese:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Presenza di 30 giorni — al giorno conviene più della settimanale. Esclusiva: il bagliore dorato e il tag «Promosso» — nessun piano li offre.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Presenza per 30 giorni — costo al giorno più basso della settimana. Per la presenza continua c'è il prodotto mensile: 4 settimane separate costano più di un mese.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Presenza dell'offerta nella fascia a pagamento del feed per 7 giorni. Fuori dal limite dei boost. Le offerte a pagamento occupano al massimo il 20% del feed — non soffocano l'organico.",
@@ -49327,6 +49310,7 @@ window.__I18N_DICT = {
   "Воскресенье": "Domenica"
  },
  "am": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "የTelegram ቻናል በቁም ነገር ትመራለህ? ForgeMetrics-ን ተመልከት — በአንድ መተግበሪያ ስትራቴጂስት እና አርታዒ:\n\n— ልጥፎች እና ርዕሶች በቻናልህ ስልት፣ የሳምንት ይዘት በጥቂት ጠቅታዎች;\n— የግል ስትራቴጂ: ምን መቀየር፣ የት ማደግ፣ ቻናሉን ወደ ገቢ እንዴት ማድረስ;\n— ማስታወቂያ ከመግዛት በፊት — እውነተኛ ተደራሽነት፣ የማጭበርበር ምልክቶች እና ከክፍያ በፊት የAI ትንበያ።\n\nሊንኩ በመጀመሪያ ማስጀመሪያ የተስፋፋ የመነሻ ጥቅል ያስከፍታል:",
   "СБП": "SBP",
   "Карта": "ካርድ",
   "Доступ приостановлен": "መዳረሻ ታግዷል",
@@ -50651,8 +50635,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "በ30 ቀናት እድገት",
   "Прислал картинкой": "እንደ ምስል ልኳል",
   "Прислать постер в чат с ботом": "ፖስተሩን ወደ ቦቱ ቻት ላክ",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics ተቀላቀል — ለTelegram ቻናል አድሚኖች የAI መሣሪያ እና የማስታወቂያ ልውውጥ። በሊንኬ ለመጀመሪያ ወር −15%፦",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "ForgeMetrics ተቀላቀል — ለTelegram ቻናሎች የAI ረዳት እና የማስታወቂያ ገበያ። በሊንኬ ለመጀመሪያ ወር −15%፦",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "የ30 ቀናት መገኘት — በቀን ሲሰላ ከሳምንታዊው የተሻለ ነው። ብቸኛ: የወርቅ ብርሃን እና «ፕሮሞት ተደርጓል» መለያ — የትኛውም ታሪፍ አይሰጣቸውም።",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "የ30 ቀን መገኘት — በቀን ሲሰላ ከሳምንታዊው ይረክሳል። ቀጣይ መገኘት በወርሃዊ ምርት ይሻላል፦ 4 ሳምንታት ተነጣጥለው ከወር ይወደዳሉ።",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "ኦፈሩ በተከፈለው የፊድ መስመር ለ7 ቀን ይገኛል። ከማንሳት ገደብ ውጭ። የተከፈሉ ኦፈሮች ከፊዱ ከ20% አይበልጡም — ኦርጋኒኩን አያሰጥሙም።",
@@ -52229,6 +52211,7 @@ window.__I18N_DICT = {
   "Воскресенье": "እሁድ"
  },
  "sw": {
+  "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Unaendesha kituo cha Telegram kwa umakini? Angalia ForgeMetrics — mtaalamu wa mkakati na mhariri kwenye programu moja:\n\n— machapisho na mada kwa mtindo wa kituo chako, maudhui ya wiki kwa mibofyo michache;\n— mkakati binafsi: nini kubadilisha, wapi kukua, jinsi ya kufanya kituo kilete mapato;\n— kabla ya kununua matangazo — ufikiaji halisi, dalili za usanii na utabiri wa AI wa matokeo kabla ya kulipa.\n\nKiungo huwasha kifurushi cha kuanzia kilichopanuliwa katika uzinduzi wa kwanza:",
   "СБП": "SBP",
   "Карта": "Kadi",
   "Доступ приостановлен": "Ufikiaji umesimamishwa",
@@ -53528,8 +53511,6 @@ window.__I18N_DICT = {
   "Прирост за 30 дней": "Ukuaji wa siku 30",
   "Прислал картинкой": "Imetumwa kama picha",
   "Прислать постер в чат с ботом": "Tuma bango kwenye chati na boti",
-  "Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:": "Jiunge na ForgeMetrics — zana ya AI na soko la matangazo kwa waendeshaji wa chaneli za Telegram. Kupitia kiungo changu −15% mwezi wa kwanza:",
-  "Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:": "Jiunge na ForgeMetrics — msaidizi wa AI na soko la matangazo kwa chaneli za Telegram. Kupitia kiungo changu −15% mwezi wa kwanza:",
   "Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.": "Uwepo wa siku 30 — kwa siku ni nafuu kuliko wa wiki. Ya kipekee: mng’ao wa dhahabu na lebo ya «Inatangazwa» — hakuna mpango unaozitoa.",
   "Присутствие на 30 дней — выгоднее за день, чем недельное. Постоянное присутствие ведём в месячный продукт: 4 недели по отдельности дороже месяца.": "Uwepo wa siku 30 — nafuu zaidi kwa siku kuliko wa wiki. Uwepo wa kudumu unaelekezwa kwenye bidhaa ya mwezi: wiki 4 tofauti ni ghali kuliko mwezi mmoja.",
   "Присутствие оффера в платной полосе ленты на 7 дней. Вне лимита всплесков. Платные офферы занимают не более 20% ленты — органику не топит.": "Uwepo wa ofa kwenye ukanda wa kulipiwa wa mlisho kwa siku 7. Nje ya kikomo cha kupandisha. Ofa za kulipiwa hazizidi 20% ya mlisho — hazizamishi maudhui ya kawaida.",

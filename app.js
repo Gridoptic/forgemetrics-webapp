@@ -2600,7 +2600,7 @@ function wireReferral(d) {
     on('cab-share', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = 'Присоединяйся к ForgeMetrics — ИИ-помощник и биржа рекламы для Telegram-каналов. По моей ссылке −15% на первый месяц:';
+        const text = t('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:');
         const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
         if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
     });
@@ -2612,7 +2612,7 @@ function wireReferral(d) {
     on('cab-invite-copy', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = t('Присоединяйся к ForgeMetrics — ИИ-инструмент и биржа рекламы для админов Telegram-каналов. По моей ссылке −15% на первый месяц:') + '\n' + link;
+        const text = t('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:') + '\n' + link;
         const b = document.getElementById('cab-invite-copy');
         copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
