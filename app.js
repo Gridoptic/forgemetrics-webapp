@@ -385,6 +385,12 @@ async function apiRequest(path, options = {}) {
             signal: _ctrl.signal,
         });
 
+        if (response.status === 423) {
+            try { fmShowFrozen(); } catch (e) {}
+            const frozenErr = new Error('API 423: account_frozen');
+            frozenErr.status = 423;
+            throw frozenErr;
+        }
         if (!response.ok) {
             const errorText = await response.text();
             const apiErr = new Error(`API ${response.status}: ${errorText || response.statusText}`);
@@ -400,6 +406,23 @@ async function apiRequest(path, options = {}) {
     } finally {
         clearTimeout(_to);
     }
+}
+
+
+let _frozenShown = false;
+function fmShowFrozen() {
+    if (_frozenShown) return;
+    _frozenShown = true;
+    const d = document.createElement('div');
+    d.id = 'fmFrozen';
+    d.style.cssText = 'position:fixed;inset:0;z-index:99990;background:#0d1017;display:flex;align-items:center;justify-content:center;padding:24px;';
+    d.innerHTML = '<div style="max-width:340px;text-align:center;">'
+        + '<div style="font-size:34px;margin-bottom:14px;">🔒</div>'
+        + '<div style="font-size:17px;font-weight:700;color:#e8eaf6;margin-bottom:10px;">Доступ приостановлен</div>'
+        + '<div style="font-size:13.5px;line-height:1.55;color:#8990a8;">По платежу зафиксирован возврат средств. Доступ к приложению приостановлен до завершения проверки.</div>'
+        + '<div style="font-size:13px;margin-top:14px;"><a href="mailto:support@fmtr.click" style="color:#7aa2ff;">support@fmtr.click</a></div>'
+        + '</div>';
+    document.body.appendChild(d);
 }
 
 
@@ -2183,7 +2206,7 @@ function refCardHtml(r) {
       <div class="rf-divx"></div>
       <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">оплатили</div></div>
       <div class="rf-divx"></div>
-      <div class="rf-stat"><div class="n">${cabNum(r.pending_bonuses)}</div><div class="l">в ожидании</div></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.forge_earned_total)}</div><div class="l">получено Forge</div></div>
     </div>
   </div>
 
@@ -2521,7 +2544,7 @@ function openUserTerms() {
     };
     if (window.__FM_TERMS_HTML) { paint(); return; }
     const s = document.createElement('script');
-    s.src = 'terms.js?v=20260803d';
+    s.src = 'terms.js?v=20260812a';
     s.onload = paint;
     s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>Не удалось загрузить документ. Проверь связь и повтори попытку.</span>'; };
     document.head.appendChild(s);
