@@ -1913,7 +1913,7 @@ function fillDrawerHeader() {
     const setChip = (forge) => {
         if (!chipEl) return;
         chipEl.className = 'dp-chip';
-        chipEl.innerHTML = '<i class="ti ti-hammer"></i> ' + cabNum(forge) + ' Forge';
+        chipEl.innerHTML = '<i class="ti ti-bolt"></i> ' + cabNum(forge) + ' Forge';
     };
     if (cabinetData && cabinetData.forge) {
         setChip(Number(cabinetData.forge.balance || 0));
