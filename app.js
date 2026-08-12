@@ -2164,16 +2164,13 @@ function cabRefLadder(r) {
     const ladder = (r.ladder && r.ladder.length) ? r.ladder : [];
     let ci = ladder.findIndex((x) => x.key === curKey);
     if (ci < 0) ci = 0;
-    const firstN = r.reward_first_payments || 3;
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
         const here = i === ci ? '<span class="rf-here">ты здесь</span>' : '';
         const need = x.need > 0 ? `${cabNum(x.need)} ${plural3(x.need, 'оплативший', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         const seats = x.seats ? ` · ${cabNum(x.seats)} мест` : '';
-        const rate = firstN === 1
-            ? `${x.rate_pct}% с первого платежа друга — в Forge`
-            : `${x.rate_pct}% с первых ${firstN} платежей — в Forge`;
+        const rate = `${x.rate_pct}% с каждого пополнения — в Forge`;
         const perkLine = `${rate}${perks ? ' · ' + perks : ''}`;
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}${seats}</span></div><div class="perk">${escapeHtml(perkLine)}</div></div>${here}</div>`;
     }).join('');
@@ -2182,9 +2179,10 @@ function cabRefLadder(r) {
 
 function refCardHtml(r) {
     r = r || {};
-    const rate = r.rate_pct || 20;
-    const firstN = r.reward_first_payments || 3;
+    const rate = r.rate_pct || 30;
     const fDisc = r.friend_discount_pct || 15;
+    const fBonus = r.friend_welcome_bonus || 100;
+    const sample = Math.round(900 * rate / 100);
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
         ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
@@ -2205,8 +2203,8 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>${firstN === 1 ? 'с первого платежа каждого приглашённого — в Forge на баланс' : `с первых ${firstN} платежей каждого приглашённого — в Forge на баланс`}</span></div>
-        <p>Начисляем с коэффициентом 1.5 — на 50% больше номинала. Другу −${fDisc}% на первое пополнение Forge.</p>
+        <div class="rf-rate"><b>${rate}%</b><span>в Forge с каждого пополнения приглашённого — навсегда</span></div>
+        <p>Друг купил 900 Forge — тебе ${sample}. И так с каждой его покупки, без ограничения по числу платежей. Другу −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
         <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
       </div>
     </div>
@@ -2240,8 +2238,8 @@ function refCardHtml(r) {
   <div class="rf-how">
     <span class="rf-eyebrow">Как это работает</span>
     <div class="rf-hrow"><span class="rf-hnum">1</span><p>Делишься ссылкой с админами каналов.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первый месяц и ${fDays} дней триала вместо ${bDays}.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>${firstN === 1 ? 'С его первого платежа тебе идут Forge, а за каждого активного друга — всплеск продвижения.' : `С каждого из его первых ${firstN} платежей тебе идут Forge — тем больше, чем выше уровень.`}</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Друг регистрируется по ней: −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.</p></div>
     <div class="rf-hrow"><span class="rf-hnum">4</span><p>Достигнутый уровень остаётся за тобой навсегда — ставка не снижается, даже если сделаешь паузу.</p></div>
   </div>
 

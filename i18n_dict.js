@@ -1,5 +1,11 @@
 window.__I18N_DICT = {
  "en": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "in Forge from every top-up your invitee makes — forever",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Every top-up they make sends Forge your way — the higher your level, the more. An active friend also earns you a promotion burst.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "A friend bought 900 Forge — you get %1. And so with every purchase, no limit on the number of payments. Your friend gets −%2% on the first top-up and +%3 Forge added to the starting balance.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Your friend signs up through it: −%1% on the first Forge top-up and +%2 Forge added to the starting balance.",
+  "%1% с каждого пополнения — в Forge": "%1% of every top-up — in Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% in Forge from every friend's top-up",
   "Продвижение · всплеск 24 ч": "Promotion · 24h burst",
   "Продвижение · всплеск 48 ч": "Promotion · 48h burst",
   "Продвижение · неделя в ленте": "Promotion · a week in the feed",
@@ -2868,6 +2874,12 @@ window.__I18N_DICT = {
   "Вопрос": "Question"
  },
  "es": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "en Forge de cada recarga de tu invitado — para siempre",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Cada recarga suya te envía Forge: cuanto más alto tu nivel, más recibes. Un amigo activo además te da un impulso de promoción.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Un amigo compró 900 Forge y recibes %1. Y así con cada compra, sin límite de pagos. Tu amigo recibe −%2% en la primera recarga y +%3 Forge al saldo inicial.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Tu amigo se registra con él: −%1% en la primera recarga de Forge y +%2 Forge al saldo inicial.",
+  "%1% с каждого пополнения — в Forge": "%1% de cada recarga — en Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% en Forge de cada recarga del amigo",
   "Продвижение · всплеск 24 ч": "Promoción · impulso 24 h",
   "Продвижение · всплеск 48 ч": "Promoción · impulso 48 h",
   "Продвижение · неделя в ленте": "Promoción · una semana en el feed",
@@ -5736,6 +5748,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "de": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "in Forge von jeder Aufladung deines Eingeladenen — für immer",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Jede seiner Aufladungen bringt dir Forge — je höher dein Level, desto mehr. Für einen aktiven Freund gibt es zudem einen Promotionsschub.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Ein Freund kaufte 900 Forge — du bekommst %1. Und so bei jedem Kauf, ohne Begrenzung der Zahlungen. Dein Freund erhält −%2% auf die erste Aufladung und +%3 Forge zum Startguthaben.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Dein Freund registriert sich darüber: −%1% auf die erste Forge-Aufladung und +%2 Forge zum Startguthaben.",
+  "%1% с каждого пополнения — в Forge": "%1% von jeder Aufladung — in Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% in Forge von jeder Aufladung des Freundes",
   "Продвижение · всплеск 24 ч": "Promotion · 24-h-Schub",
   "Продвижение · всплеск 48 ч": "Promotion · 48-h-Schub",
   "Продвижение · неделя в ленте": "Promotion · eine Woche im Feed",
@@ -8604,6 +8622,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Sonntag"
  },
  "kk": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "шақырылғанның әр толықтыруынан Forge түрінде — мәңгі",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Оның әр толықтыруынан саған Forge келеді — деңгейің жоғары болған сайын көбірек. Белсенді дос үшін — жылжыту өршуі.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Дос 900 Forge сатып алды — саған %1. Әр сатып алуында солай, төлем санына шек жоқ. Досқа алғашқы толықтыруға −%2% және бастапқы қорға +%3 Forge.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Дос сол арқылы тіркеледі: алғашқы Forge толықтыруға −%1% және бастапқы қорға +%2 Forge.",
+  "%1% с каждого пополнения — в Forge": "әр толықтырудан %1% — Forge түрінде",
+  "%1% в Forge с каждого пополнения друга": "достың әр толықтыруынан %1% Forge түрінде",
   "Продвижение · всплеск 24 ч": "Жылжыту · 24 сағ өршу",
   "Продвижение · всплеск 48 ч": "Жылжыту · 48 сағ өршу",
   "Продвижение · неделя в ленте": "Жылжыту · лентада бір апта",
@@ -11467,6 +11491,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Жексенбі"
  },
  "uz": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "taklif qilinganning har bir to‘ldirishidan Forge ko‘rinishida — abadiy",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Uning har bir to‘ldirishidan senga Forge keladi — daraja qancha yuqori bo‘lsa, shuncha ko‘p. Faol do‘st uchun — targ‘ibot portlashi.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Do‘st 900 Forge sotib oldi — senga %1. Har bir xaridida shunday, to‘lovlar soniga cheklov yo‘q. Do‘stga birinchi to‘ldirishga −%2% va boshlang‘ich zaxiraga +%3 Forge.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Do‘st u orqali ro‘yxatdan o‘tadi: birinchi Forge to‘ldirishga −%1% va boshlang‘ich zaxiraga +%2 Forge.",
+  "%1% с каждого пополнения — в Forge": "har to‘ldirishdan %1% — Forge ko‘rinishida",
+  "%1% в Forge с каждого пополнения друга": "do‘stning har to‘ldirishidan %1% Forge ko‘rinishida",
   "Продвижение · всплеск 24 ч": "Targ‘ibot · 24 soat portlash",
   "Продвижение · всплеск 48 ч": "Targ‘ibot · 48 soat portlash",
   "Продвижение · неделя в ленте": "Targ‘ibot · lentada bir hafta",
@@ -14335,6 +14365,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Yakshanba"
  },
  "be": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "у Forge з кожнага папаўнення запрошанага — назаўсёды",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "З кожнага яго папаўнення табе ідуць Forge — чым вышэйшы ўзровень, тым больш. За актыўнага сябра — усплёск прасоўвання.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Сябар купіў 900 Forge — табе %1. І так з кожнай яго пакупкі, без абмежавання па колькасці плацяжоў. Сябру −%2% на першае папаўненне і +%3 Forge да стартавага запасу.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Сябар рэгіструецца па ёй: −%1% на першае папаўненне Forge і +%2 Forge да стартавага запасу.",
+  "%1% с каждого пополнения — в Forge": "%1% з кожнага папаўнення — у Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% у Forge з кожнага папаўнення сябра",
   "Продвижение · всплеск 24 ч": "Прасоўванне · усплёск 24 г",
   "Продвижение · всплеск 48 ч": "Прасоўванне · усплёск 48 г",
   "Продвижение · неделя в ленте": "Прасоўванне · тыдзень у стужцы",
@@ -17201,6 +17237,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Нядзеля"
  },
  "az": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "dəvətlinin hər artırmasından Forge şəklində — həmişəlik",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Onun hər artırmasından sənə Forge gəlir — səviyyə nə qədər yüksəkdirsə, o qədər çox. Aktiv dost üçün — irəliləyiş sıçrayışı.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Dost 900 Forge aldı — sənə %1. Hər alışında belə, ödəniş sayına məhdudiyyət yoxdur. Dosta ilk artırmaya −%2% və başlanğıc ehtiyata +%3 Forge.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Dost onunla qeydiyyatdan keçir: ilk Forge artırmasına −%1% və başlanğıc ehtiyata +%2 Forge.",
+  "%1% с каждого пополнения — в Forge": "hər artırmadan %1% — Forge şəklində",
+  "%1% в Forge с каждого пополнения друга": "dostun hər artırmasından %1% Forge şəklində",
   "Продвижение · всплеск 24 ч": "İrəliləyiş · 24 saat sıçrayış",
   "Продвижение · всплеск 48 ч": "İrəliləyiş · 48 saat sıçrayış",
   "Продвижение · неделя в ленте": "İrəliləyiş · lentdə bir həftə",
@@ -20069,6 +20111,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Bazar"
  },
  "ar": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "بعملة Forge من كل شحن يجريه مدعوك — للأبد",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "كل شحن يجريه يرسل لك Forge — كلما ارتفع مستواك زاد نصيبك. والصديق النشط يمنحك أيضاً دفعة ترويج.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "اشترى صديق 900 Forge — تحصل على %1. وهكذا مع كل شراء، بلا حد لعدد الدفعات. صديقك يحصل على −%2% على أول شحن و+%3 Forge إلى الرصيد الابتدائي.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "يسجّل صديقك عبره: −%1% على أول شحن لرصيد Forge و+%2 Forge إلى الرصيد الابتدائي.",
+  "%1% с каждого пополнения — в Forge": "%1% من كل شحن — بعملة Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% بعملة Forge من كل شحن يجريه الصديق",
   "Продвижение · всплеск 24 ч": "ترويج · دفعة 24 ساعة",
   "Продвижение · всплеск 48 ч": "ترويج · دفعة 48 ساعة",
   "Продвижение · неделя в ленте": "ترويج · أسبوع في الموجز",
@@ -22937,6 +22985,12 @@ window.__I18N_DICT = {
   "Воскресенье": "الأحد"
  },
  "fa": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "به Forge از هر شارژ دعوت‌شده‌ات — برای همیشه",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "هر شارژ او برایت Forge می‌آورد — هرچه سطح بالاتر، بیشتر. برای دوست فعال هم یک جهش تبلیغ می‌گیری.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "دوستی ۹۰۰ Forge خرید — %1 مال توست. و همین‌طور با هر خرید، بدون محدودیت در تعداد پرداخت‌ها. دوستت −%2٪ روی اولین شارژ و +%3 Forge به موجودی اولیه می‌گیرد.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "دوستت با آن ثبت‌نام می‌کند: −%1٪ روی اولین شارژ Forge و +%2 Forge به موجودی اولیه.",
+  "%1% с каждого пополнения — в Forge": "%1٪ از هر شارژ — به Forge",
+  "%1% в Forge с каждого пополнения друга": "%1٪ به Forge از هر شارژ دوست",
   "Продвижение · всплеск 24 ч": "تبلیغ · جهش ۲۴ ساعته",
   "Продвижение · всплеск 48 ч": "تبلیغ · جهش ۴۸ ساعته",
   "Продвижение · неделя в ленте": "تبلیغ · یک هفته در فید",
@@ -25805,6 +25859,12 @@ window.__I18N_DICT = {
   "Воскресенье": "یکشنبه"
  },
  "tr": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "davetlinin her yüklemesinden Forge olarak — sonsuza dek",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Onun her yüklemesi sana Forge getirir — seviyen ne kadar yüksekse o kadar çok. Aktif arkadaş için ayrıca tanıtım patlaması.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Arkadaşın 900 Forge aldı — sana %1. Her alışverişte böyle, ödeme sayısında sınır yok. Arkadaşın ilk yüklemede −%2% ve başlangıç bakiyesine +%3 Forge alır.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Arkadaşın onunla kaydolur: ilk Forge yüklemesinde −%1% ve başlangıç bakiyesine +%2 Forge.",
+  "%1% с каждого пополнения — в Forge": "her yüklemenin %1%'i — Forge olarak",
+  "%1% в Forge с каждого пополнения друга": "arkadaşın her yüklemesinden Forge olarak %1%",
   "Продвижение · всплеск 24 ч": "Tanıtım · 24s patlama",
   "Продвижение · всплеск 48 ч": "Tanıtım · 48s patlama",
   "Продвижение · неделя в ленте": "Tanıtım · akışta bir hafta",
@@ -28673,6 +28733,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Pazar"
  },
  "hi": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "आमंत्रित के हर टॉप-अप से Forge में — हमेशा के लिए",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "उसके हर टॉप-अप से आपको Forge मिलता है — स्तर जितना ऊँचा, उतना अधिक। सक्रिय दोस्त पर प्रमोशन बर्स्ट भी।",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "दोस्त ने 900 Forge खरीदे — आपको %1। हर खरीद पर ऐसा ही, भुगतानों की कोई सीमा नहीं। दोस्त को पहले टॉप-अप पर −%2% और शुरुआती बैलेंस में +%3 Forge।",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "दोस्त इससे रजिस्टर करता है: पहले Forge टॉप-अप पर −%1% और शुरुआती बैलेंस में +%2 Forge।",
+  "%1% с каждого пополнения — в Forge": "हर टॉप-अप का %1% — Forge में",
+  "%1% в Forge с каждого пополнения друга": "दोस्त के हर टॉप-अप से %1% Forge में",
   "Продвижение · всплеск 24 ч": "प्रमोशन · 24 घं. बर्स्ट",
   "Продвижение · всплеск 48 ч": "प्रमोशन · 48 घं. बर्स्ट",
   "Продвижение · неделя в ленте": "प्रमोशन · फ़ीड में एक सप्ताह",
@@ -31541,6 +31607,12 @@ window.__I18N_DICT = {
   "Воскресенье": "रविवार"
  },
  "bn": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "আমন্ত্রিতের প্রতিটি টপ-আপ থেকে Forge-এ — চিরকাল",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "তার প্রতিটি টপ-আপ থেকে তোমার কাছে Forge আসে — স্তর যত উঁচু, তত বেশি। সক্রিয় বন্ধুর জন্য প্রোমোশন বার্স্টও।",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "বন্ধু ৯০০ Forge কিনল — তোমার %1। প্রতিটি কেনাকাটায় তা-ই, পেমেন্ট সংখ্যার সীমা নেই। বন্ধু পায় প্রথম টপ-আপে −%2% এবং শুরুর ব্যালেন্সে +%3 Forge।",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "বন্ধু এটি দিয়ে নিবন্ধন করে: প্রথম Forge টপ-আপে −%1% এবং শুরুর ব্যালেন্সে +%2 Forge।",
+  "%1% с каждого пополнения — в Forge": "প্রতিটি টপ-আপের %1% — Forge-এ",
+  "%1% в Forge с каждого пополнения друга": "বন্ধুর প্রতিটি টপ-আপ থেকে %1% Forge-এ",
   "Продвижение · всплеск 24 ч": "প্রোমোশন · ২৪ ঘণ্টার বার্স্ট",
   "Продвижение · всплеск 48 ч": "প্রোমোশন · ৪৮ ঘণ্টার বার্স্ট",
   "Продвижение · неделя в ленте": "প্রোমোশন · ফিডে এক সপ্তাহ",
@@ -34409,6 +34481,12 @@ window.__I18N_DICT = {
   "Воскресенье": "রবিবার"
  },
  "id": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "dalam Forge dari setiap top-up undanganmu — selamanya",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Setiap top-upnya mengirim Forge untukmu — makin tinggi levelmu, makin banyak. Teman aktif juga memberi lonjakan promosi.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Teman membeli 900 Forge — kamu dapat %1. Dan begitu untuk setiap pembelian, tanpa batas jumlah pembayaran. Temanmu dapat −%2% untuk top-up pertama dan +%3 Forge ke saldo awal.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Temanmu mendaftar lewat itu: −%1% untuk top-up Forge pertama dan +%2 Forge ke saldo awal.",
+  "%1% с каждого пополнения — в Forge": "%1% dari setiap top-up — dalam Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% dalam Forge dari setiap top-up teman",
   "Продвижение · всплеск 24 ч": "Promosi · lonjakan 24 jam",
   "Продвижение · всплеск 48 ч": "Promosi · lonjakan 48 jam",
   "Продвижение · неделя в ленте": "Promosi · seminggu di feed",
@@ -37277,6 +37355,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Minggu"
  },
  "vi": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "bằng Forge từ mỗi lần nạp của người được mời — mãi mãi",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Mỗi lần họ nạp, bạn nhận Forge — cấp càng cao càng nhiều. Bạn bè hoạt động còn tặng bạn một đợt bùng nổ quảng bá.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Bạn bè mua 900 Forge — bạn nhận %1. Và cứ thế với mỗi lần mua, không giới hạn số lần thanh toán. Bạn của bạn nhận −%2% cho lần nạp đầu và +%3 Forge vào số dư khởi đầu.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Bạn của bạn đăng ký qua đó: −%1% cho lần nạp Forge đầu tiên và +%2 Forge vào số dư khởi đầu.",
+  "%1% с каждого пополнения — в Forge": "%1% mỗi lần nạp — bằng Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% bằng Forge từ mỗi lần nạp của bạn bè",
   "Продвижение · всплеск 24 ч": "Quảng bá · bùng nổ 24 giờ",
   "Продвижение · всплеск 48 ч": "Quảng bá · bùng nổ 48 giờ",
   "Продвижение · неделя в ленте": "Quảng bá · một tuần trên bảng tin",
@@ -40145,6 +40229,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Chủ Nhật"
  },
  "pt": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "em Forge de cada recarga do seu convidado — para sempre",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Cada recarga dele envia Forge para você — quanto mais alto o nível, mais recebe. Um amigo ativo ainda rende um impulso de promoção.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Um amigo comprou 900 Forge — você recebe %1. E assim em cada compra, sem limite de pagamentos. Seu amigo ganha −%2% na primeira recarga e +%3 Forge no saldo inicial.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Seu amigo se cadastra por ele: −%1% na primeira recarga de Forge e +%2 Forge no saldo inicial.",
+  "%1% с каждого пополнения — в Forge": "%1% de cada recarga — em Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% em Forge de cada recarga do amigo",
   "Продвижение · всплеск 24 ч": "Promoção · impulso 24h",
   "Продвижение · всплеск 48 ч": "Promoção · impulso 48h",
   "Продвижение · неделя в ленте": "Promoção · uma semana no feed",
@@ -43013,6 +43103,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "fr": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "en Forge sur chaque recharge de ton invité — à vie",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Chacune de ses recharges t'envoie des Forge — plus ton niveau est haut, plus tu reçois. Un ami actif t'offre aussi un pic de promotion.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Un ami a acheté 900 Forge — tu reçois %1. Et ainsi à chaque achat, sans limite de paiements. Ton ami reçoit −%2% sur la première recharge et +%3 Forge sur le solde de départ.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Ton ami s'inscrit via ce lien : −%1% sur la première recharge Forge et +%2 Forge sur le solde de départ.",
+  "%1% с каждого пополнения — в Forge": "%1% de chaque recharge — en Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% en Forge sur chaque recharge de l'ami",
   "Продвижение · всплеск 24 ч": "Promotion · pic 24 h",
   "Продвижение · всплеск 48 ч": "Promotion · pic 48 h",
   "Продвижение · неделя в ленте": "Promotion · une semaine dans le flux",
@@ -45881,6 +45977,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Dimanche"
  },
  "it": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "in Forge da ogni ricarica del tuo invitato — per sempre",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Ogni sua ricarica ti porta Forge — più alto è il livello, più ricevi. Un amico attivo vale anche un picco di promozione.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Un amico ha comprato 900 Forge — a te vanno %1. E così per ogni acquisto, senza limite di pagamenti. Il tuo amico riceve −%2% sulla prima ricarica e +%3 Forge sul saldo iniziale.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Il tuo amico si registra tramite esso: −%1% sulla prima ricarica di Forge e +%2 Forge sul saldo iniziale.",
+  "%1% с каждого пополнения — в Forge": "%1% di ogni ricarica — in Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% in Forge da ogni ricarica dell'amico",
   "Продвижение · всплеск 24 ч": "Promozione · picco 24 h",
   "Продвижение · всплеск 48 ч": "Promozione · picco 48 h",
   "Продвижение · неделя в ленте": "Promozione · una settimana nel feed",
@@ -48749,6 +48851,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domenica"
  },
  "am": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "ከተጋባዡ እያንዳንዱ ሙሌት በForge — ለዘላለም",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "እያንዳንዱ ሙሌቱ Forge ያመጣልሃል — ደረጃህ ከፍ ባለ ቁጥር ይበዛል። ንቁ ጓደኛም የማስተዋወቅ ግፊት ያስገኝልሃል።",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "ጓደኛ 900 Forge ገዛ — ላንተ %1። በእያንዳንዱ ግዢም እንዲሁ፣ የክፍያ ብዛት ገደብ የለም። ጓደኛው በመጀመሪያ ሙሌት −%2% እና ወደ መነሻ ቀሪ +%3 Forge ያገኛል።",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "ጓደኛ በእሱ ይመዘገባል፦ በመጀመሪያ Forge ሙሌት −%1% እና ወደ መነሻ ቀሪ +%2 Forge።",
+  "%1% с каждого пополнения — в Forge": "ከእያንዳንዱ ሙሌት %1% — በForge",
+  "%1% в Forge с каждого пополнения друга": "ከጓደኛ እያንዳንዱ ሙሌት %1% በForge",
   "Продвижение · всплеск 24 ч": "ማስተዋወቅ · የ24 ሰዓት ግፊት",
   "Продвижение · всплеск 48 ч": "ማስተዋወቅ · የ48 ሰዓት ግፊት",
   "Продвижение · неделя в ленте": "ማስተዋወቅ · በዥረቱ ውስጥ አንድ ሳምንት",
@@ -51617,6 +51725,12 @@ window.__I18N_DICT = {
   "Воскресенье": "እሁድ"
  },
  "sw": {
+  "в Forge с каждого пополнения приглашённого — навсегда": "kwa Forge kutoka kila ujazo wa mwalikwa wako — milele",
+  "С каждого его пополнения тебе идут Forge — тем больше, чем выше уровень. За активного друга — всплеск продвижения.": "Kila ujazo wake unakuletea Forge — kiwango kikiwa juu zaidi, unapata zaidi. Rafiki hai pia anakupa mlipuko wa utangazaji.",
+  "Друг купил 900 Forge — тебе %1. И так с каждой его покупки, без ограничения по числу платежей. Другу −%2% на первое пополнение и +%3 Forge к стартовому запасу.": "Rafiki alinunua Forge 900 — unapata %1. Na hivyo kwa kila ununuzi, bila kikomo cha idadi ya malipo. Rafiki yako anapata −%2% kwenye ujazo wa kwanza na +%3 Forge kwenye salio la kuanzia.",
+  "Друг регистрируется по ней: −%1% на первое пополнение Forge и +%2 Forge к стартовому запасу.": "Rafiki yako anajisajili kupitia hicho: −%1% kwenye ujazo wa kwanza wa Forge na +%2 Forge kwenye salio la kuanzia.",
+  "%1% с каждого пополнения — в Forge": "%1% ya kila ujazo — kwa Forge",
+  "%1% в Forge с каждого пополнения друга": "%1% kwa Forge kutoka kila ujazo wa rafiki",
   "Продвижение · всплеск 24 ч": "Utangazaji · mlipuko wa saa 24",
   "Продвижение · всплеск 48 ч": "Utangazaji · mlipuko wa saa 48",
   "Продвижение · неделя в ленте": "Utangazaji · wiki moja kwenye mkondo",
