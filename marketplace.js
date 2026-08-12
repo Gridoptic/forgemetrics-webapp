@@ -1271,9 +1271,6 @@
             '.fmx-pright{flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;}',
             '.fmx-pval{font-size:11.5px;font-weight:700;color:#c5c8d6;font-variant-numeric:tabular-nums;}',
             '.fmx-pdate{font-size:10px;color:#565b73;font-variant-numeric:tabular-nums;}',
-            '.fmx-tchip{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px;color:#8990a8;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.1);}',
-            '.fmx-tchip.paid{color:#5DCAA5;background:rgba(93,202,165,0.12);border-color:rgba(93,202,165,0.3);}',
-            '.fmx-tchip.trial{color:#7dd3fc;background:rgba(125,211,252,0.12);border-color:rgba(125,211,252,0.3);}',
             '.fmx-pmore{width:100%;margin-top:10px;padding:9px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#8990a8;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;}',
             '.fmx-bar{height:5px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin-top:8px;}',
             '.fmx-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#6366f1,#8b5cf6);}',
@@ -2429,14 +2426,14 @@
         return '<div class="fmx-ctrlcard">' +
             '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Тестовый доступ</div>' +
             '<div class="fmx-ctrls">' + (on
-                ? 'Для перечисленных лимиты тарифа не применяются — функции работают без ограничений.'
-                : 'ВЫКЛЮЧЕН: все, включая тестеров, работают по лимитам своего тарифа.') + '</div></div>' +
+                ? 'Для перечисленных ограничения не применяются — функции работают без ограничений.'
+                : 'ВЫКЛЮЧЕН: все, включая тестеров, работают в обычном режиме.') + '</div></div>' +
             '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-tssw" role="switch" aria-checked="' + on + '"><span></span></button>' +
             '</div>' +
             '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
             '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
             '<button class="fmx-mdbtn" id="fmx-tsadd">Выдать доступ</button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:8px;">Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен потолком тарифа — держи список коротким.</div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен — держи список коротким.</div>' +
             '</div>';
     }
 
@@ -2444,7 +2441,7 @@
         var sw = el('fmx-tssw');
         if (sw) sw.addEventListener('click', function () {
             var next = !sw.classList.contains('on');
-            uiConfirm(next ? 'Включить тестовый доступ?' : 'Выключить тестовый доступ? Тестеры вернутся на лимиты своих тарифов.', function () {
+            uiConfirm(next ? 'Включить тестовый доступ?' : 'Выключить тестовый доступ? Тестеры вернутся в обычный режим.', function () {
                 apiPost('/api/v1/admin/controls/tester-mode', { enabled: next }).then(function (res) {
                     if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
                     _haptic('success'); toast(next ? 'Тестовый доступ включён' : 'Тестовый доступ выключен');
@@ -2760,7 +2757,6 @@
             var h = '<div class="fmx-mgrid">' +
                 _modStatTile('Пользователей', _num(u.total), 'всего') +
                 _modStatTile('Платных', _num(u.paid), 'на подписке') +
-                _modStatTile('На Trial', _num(u.trial), 'пробный период') +
                 _modStatTile('Выручка / мес', _num(r.revenue_month_rub) + ' ₽', 'оплачено') +
                 '</div>';
             h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Расходы на ИИ<em>' + pct + '% бюджета</em></div>' +
@@ -2791,10 +2787,6 @@
         return '#';
     }
 
-    function _tierChip(tier) {
-        var cls = (tier === 'trial') ? ' trial' : ((tier && tier !== 'free') ? ' paid' : '');
-        return '<span class="fmx-tchip' + cls + '">' + _esc(_TIERN[tier] || tier || '—') + '</span>';
-    }
 
     function _pRow(o) {
         return '<div class="fmx-prow" data-uid="' + o.id + '">' +
@@ -2810,7 +2802,7 @@
     function _userRow(v, extraVal) {
         var nm = (v.name && v.name !== '—') ? v.name : ('ID ' + v.user_id);
         var meta = (v.username ? '@' + v.username + ' · ' : '') + 'ID ' + v.user_id;
-        return _pRow({ id: v.user_id, name: nm, meta: meta, chip: _tierChip(v.tier),
+        return _pRow({ id: v.user_id, name: nm, meta: meta,
             val: extraVal || '', date: v.at || v.last_at || '' });
     }
 
@@ -2835,9 +2827,8 @@
             n.addEventListener('click', function () { _modOpenUser(n.getAttribute('data-uid')); });
         });
     }
-    var _EVN = { app_open: 'Вход в приложение', tariffs: 'Тарифы', fn_create_post: 'Создать пост', fn_rewrite_post: 'Рерайт поста', fn_content_plan: 'Контент-план', fn_ai_audit: 'AI-аудит', fn_ai_strategy: 'ИИ-стратегия', fn_competitor_analysis: 'Анализ конкурентов', fn_my_channels: 'Мои каналы', fn_add_channel: 'Подключение канала', fn_radar: 'Радар', fn_marketplace: 'Рынок рекламы', fn_referral: 'Друзья и промокод', fn_profile: 'Кабинет', fn_find_advertisers: 'Поиск рекламодателей', fn_post_price: 'Цена поста', fn_negotiation_templates: 'Шаблоны переговоров', fn_voice_settings: 'Голос канала', mx_catalog: 'Радар (раздел)', mx_market: 'Площадка (раздел)', mx_mod: 'Админ-панель', mxs_buy: 'Площадка · Купить', mxs_sell: 'Площадка · Продать', mxs_mine: 'Мои офферы', mxs_create: 'Конструктор оффера', mxs_deals: 'Сделки' };
+    var _EVN = { app_open: 'Вход в приложение', tariffs: 'Витрина Forge', fn_create_post: 'Создать пост', fn_rewrite_post: 'Рерайт поста', fn_content_plan: 'Контент-план', fn_ai_audit: 'AI-аудит', fn_ai_strategy: 'ИИ-стратегия', fn_competitor_analysis: 'Анализ конкурентов', fn_my_channels: 'Мои каналы', fn_add_channel: 'Подключение канала', fn_radar: 'Радар', fn_marketplace: 'Рынок рекламы', fn_referral: 'Друзья и промокод', fn_profile: 'Кабинет', fn_find_advertisers: 'Поиск рекламодателей', fn_post_price: 'Цена поста', fn_negotiation_templates: 'Шаблоны переговоров', fn_voice_settings: 'Голос канала', mx_catalog: 'Радар (раздел)', mx_market: 'Площадка (раздел)', mx_mod: 'Админ-панель', mxs_buy: 'Площадка · Купить', mxs_sell: 'Площадка · Продать', mxs_mine: 'Мои офферы', mxs_create: 'Конструктор оффера', mxs_deals: 'Сделки' };
     var _OPN = { generate: 'Генерация поста', modify: 'Правка поста', intent: 'Уточняющие вопросы', suggest: 'Подсказки правок', ideas: 'Идеи тем', rewrite: 'Рерайт (ИИ)', voice: 'Голос канала (ИИ)', audit: 'AI-аудит', strategy: 'ИИ-стратегия', strategy_chat: 'Чат стратегии', competitors: 'Анализ конкурентов', ad_exchange: 'Биржа (ИИ)', content_plan: 'Контент-план: идея', content_plan_day: 'Контент-план: день', moderation: 'Модерация (платформа)', niche: 'Ниша (платформа)' };
-    var _TIERN = { free: 'Free', trial: 'Trial', light: 'Лайт', pro: 'Pro', pro_plus: 'Pro+', agency: 'Agency', network: 'Network' };
     function _modRenderActivity(box) {
         apiGet('/api/v1/admin/activity').then(function (a) {
             if (_mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
@@ -2862,24 +2853,10 @@
                 if (total > 6) h += '<button class="fmx-pmore" data-more="users">Показать всех · ' + _num(total) + '</button>';
                 h += '</div>';
             }
-            var tiers = a.tiers || {};
-            var tierOrder = ['network', 'agency', 'pro_plus', 'pro', 'light', 'trial', 'free'];
-            var tierMax = 0;
-            tierOrder.forEach(function (k) { if (tiers[k] > tierMax) tierMax = tiers[k]; });
-            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Распределение по тарифам</div>';
-            tierOrder.forEach(function (k) {
-                if (!tiers[k]) return;
-                var w = tierMax ? Math.max(4, Math.round(tiers[k] / tierMax * 100)) : 0;
-                h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(_TIERN[k] || k) + '</span>' +
-                    '<span class="fmx-fbar"><i style="width:' + w + '%"></i></span>' +
-                    '<span class="fmx-fval">' + _num(tiers[k]) + '</span></div>';
-            });
-            h += '</div>';
             if (a.paid_users && a.paid_users.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Платящие<em>' + _num(a.paid_users.length) + '</em></div><div class="fmx-plist">';
                 a.paid_users.forEach(function (p) {
-                    h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: p.until ? 'подписка до ' + p.until : 'без срока',
-                        chip: _tierChip(p.tier) });
+                    h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: _num(p.forge || 0) + ' Forge' });
                 });
                 h += '</div></div>';
             }
@@ -2906,14 +2883,6 @@
                         '<span class="fmx-fval">' + _num(x.c) + '</span></div>';
                 });
                 h += '</div>';
-            }
-            if (a.bookings && a.bookings.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Забронировали тариф<em>ждут запуска</em></div><div class="fmx-plist">';
-                a.bookings.forEach(function (b) {
-                    h += _pRow({ id: b.user_id, name: 'ID ' + b.user_id, meta: _num(b.price) + ' ₽/мес',
-                        chip: _tierChip(b.plan), date: b.at });
-                });
-                h += '</div></div>';
             }
             if (a.purchases && a.purchases.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Покупки<em>оплачено</em></div><div class="fmx-plist">';
@@ -2962,7 +2931,7 @@
                     '<div class="fmx-pav" style="width:38px;height:38px;border-radius:11px;font-size:15px;">' + _pInit(u.first_name, u.id) + '</div>' +
                     '<div style="flex:1;min-width:0;"><div class="fmx-mtitle">' + _esc(u.first_name || ('ID ' + u.id)) + '</div>' +
                     '<div class="fmx-pmeta">' + (u.username && u.username !== '—' ? '@' + _esc(u.username) : 'без @username') + '</div></div>' +
-                    _tierChip(u.tier) + '</div>' +
+                    '</div>' +
                     '<div class="fmx-mstatrow"><span>ID</span><b>' + u.id + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Уровень</span><b>' + _esc(u.referral_level) + '</b></div>' +
@@ -3694,13 +3663,13 @@
                 '<span class="num" style="font-size:11px;color:#8990a8;flex:0 0 auto;">' + _channels.length + '</span><i class="ti ti-chevron-right" style="color:#565b73;flex:0 0 auto;"></i></button>' : '') +
             '<div id="fmx-dealsPend"></div>' +
             _myListings.map(mineCard).join('') +
-            '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"' + (avail === 0 ? ' disabled style="margin-top:14px;opacity:0.5;"' : '') + '><i class="ti ti-plus"></i> Разместить ещё оффер' + (avail != null ? ' · ' + (avail > 0 ? 'доступен ещё ' + avail : 'лимит тарифа исчерпан') : '') + '</button>' +
-            '<div style="font-size:10px;color:#565b73;margin-top:7px;text-align:center;">Один канал — один оффер. Доступное количество зависит от тарифа</div>';
+            '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"' + (avail === 0 ? ' disabled style="margin-top:14px;opacity:0.5;"' : '') + '><i class="ti ti-plus"></i> Разместить ещё оффер' + (avail != null ? ' · ' + (avail > 0 ? 'доступен ещё ' + avail : 'лимит исчерпан') : '') + '</button>' +
+            '<div style="font-size:10px;color:#565b73;margin-top:7px;text-align:center;">Один канал — один оффер</div>';
         loadPendingDeals();
         var netBtn = el('fmx-netOpen');
         if (netBtn) netBtn.addEventListener('click', function () { netOpen(); });
         el('fmx-mineNew').addEventListener('click', function () {
-            if (avail === 0) { _haptic('error'); uiAlert('Лимит тарифа исчерпан. Повысь тариф или удали один из офферов.'); return; }
+            if (avail === 0) { _haptic('error'); uiAlert('Лимит исчерпан. Удали один из офферов, чтобы создать новый.'); return; }
             _haptic('light'); _backTo = 'mine'; _mineEditCh = null; setSubTab('create');
         });
         qsa(sub, '[data-medit]').forEach(function (b) {
@@ -3913,7 +3882,7 @@
                 '</div>';
         }
         var tiles = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
-            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', 'Каналы', _num(chPaused > 0 ? chActive : _net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), chPaused > 0 ? (chPaused + ' на паузе · сверх лимита') : '') +
+            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', 'Каналы', _num(chPaused > 0 ? chActive : _net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), chPaused > 0 ? (chPaused + ' на паузе') : '') +
             tile('ti-eye', '#60a5fa', 'rgba(59,130,246,0.15)', 'Суммарный охват', netShort(reach), '') +
             tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', 'Средний ERR', err != null ? String(err).replace('.', ',') + '%' : '—', '') +
             tile('ti-briefcase', '#f5bf4f', 'rgba(245,191,79,0.15)', 'Офферы', _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.lim) + '</span>' : ''),
@@ -3960,7 +3929,7 @@
             } else if (ch.username && ch.is_paused) {
                 right = '<span style="flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
                     '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе</span>' +
-                    '<span style="font-size:9px;color:#565b73;white-space:nowrap;">сверх лимита тарифа</span></span>';
+                    '';
             } else if (ch.username) {
                 right = '<button data-netmk="' + ch.id + '" style="flex:0 0 auto;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;color:#818cf8;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);border-radius:999px;padding:6px 12px;"><span>Создать</span></button>';
             } else {
@@ -4331,7 +4300,7 @@
                     '<span style="display:block;font-size:10.5px;color:#565b73;"><span>' + why + '</span></span></span></div>';
             }).join('');
             body.innerHTML = nbBar(1) +
-                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-bottom:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span><span>Офферов свободно по тарифу:</span> <b class="num">' + lim.listings + '</b> · <span>Показаны каналы без оффера</span></span></div>' +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-bottom:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span><span>Офферов свободно:</span> <b class="num">' + lim.listings + '</b> · <span>Показаны каналы без оффера</span></span></div>' +
                 '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
                 '<span style="font-size:12px;color:#8990a8;"><span>Выбрано:</span> <b class="num" style="color:#e8e8ed;">' + n + '</b><span class="num"> / ' + elig.length + '</span></span>' +
                 '<button id="fmx-nbAll" style="font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;color:#a9aec0;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:999px;padding:6px 12px;"><span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? 'Сброс' : 'Все') + '</span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? '' : ' <b class="num">' + Math.min(elig.length, lim.max) + '</b>') + '</button></div>' +
@@ -4953,7 +4922,7 @@
         var alerts = r.alerts || [], lim = r.limit || 1, used = r.used != null ? r.used : alerts.length;
         var canAdd = used < lim;
         var h = '<button class="fmx-alnew" id="fmx-al-new"' + (canAdd ? '' : ' disabled') + '><i class="ti ti-plus"></i> Новое уведомление</button>' +
-            '<div class="fmx-allim">Активно ' + used + ' из ' + (lim >= 100 ? '∞' : lim) + (canAdd ? '' : ' · достигнут лимит тарифа') + '</div>';
+            '<div class="fmx-allim">Активно ' + used + ' из ' + lim + (canAdd ? '' : ' · достигнут предел') + '</div>';
         if (!alerts.length) {
             h += emptyHtml('ti-bell-plus', 'Пока нет уведомлений', 'Задай нишу, потолок цены и качество — подходящие каналы придут сами.');
         } else {
@@ -6915,7 +6884,7 @@
             var sub2 = !pub
                 ? '<div class="fmx-chuu">приватный — нужен публичный @username</div>'
                 : (paused
-                    ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе · сверх лимита тарифа</span></div>'
+                    ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе</span></div>'
                     : '<div class="fmx-chuu">@' + _esc(c.username) + '</div>');
             return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (ok ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '" data-paused="' + (paused ? 1 : 0) + '"><div class="fmx-chav"' + (ok ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div>' + sub2 + '</div>' + (ok ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : (paused ? '' : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>')) + '</div>';
         }).join('');
@@ -6948,7 +6917,7 @@
             '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
-        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } if (r.getAttribute('data-paused') === '1') { toast('Канал на паузе — сверх лимита тарифа. Возобнови канал или повысь тариф.'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
+        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } if (r.getAttribute('data-paused') === '1') { toast('Канал на паузе. Сними паузу в настройках канала, чтобы разместить оффер.'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
         var ra = el('fmx-resetAll');
@@ -7053,13 +7022,13 @@
 
     function paneFx() {
         return '<div class="fmx-fxg"><div class="fmx-fxl vipc">Свечение оффера <i class="ti ti-lock"></i></div>' +
-            '<div class="fmx-fxlock">Золотое свечение карточки в ленте. Доступно при любом продвижении или на тарифе Pro+ — с замком можно примерить в предпросмотре.</div>' +
+            '<div class="fmx-fxlock">Золотое свечение карточки в ленте. Доступно при любом продвижении — с замком можно примерить в предпросмотре.</div>' +
             '<div class="fmx-fxw" id="fmx-glowcard">' +
             '<button class="fmx-fx' + (!_ss.glowCard ? ' on' : '') + '" data-gc="off">Выключено</button>' +
             '<button class="fmx-fx vip' + (_ss.glowCard ? ' on' : '') + '" data-gc="on"><i class="ti ti-lock"></i>Золотое свечение</button>' +
             '</div></div>' +
             '<div class="fmx-fxg"><div class="fmx-fxl vipc">Кнопки карточки <i class="ti ti-lock"></i></div>' +
-            '<div class="fmx-fxlock">Стекло — при продвижении от недели или на тарифе Agency. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.</div>' +
+            '<div class="fmx-fxlock">Стекло — при продвижении от недели. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.</div>' +
             '<div class="fmx-fxw" id="fmx-btnstyle">' +
             (function () {
                 var cur = _ss.glass !== 'none' ? _ss.glass : (_ss.btns === 'accent' ? 'accent' : 'std');
@@ -10430,7 +10399,7 @@
         burst24: 'Кратковременный подъём оффера в платной полосе ленты на сутки. Открывает стиль «Свечение» на время продвижения.',
         burst48: 'Подъём в платной полосе на двое суток. Открывает стиль «Свечение» на время продвижения.',
         week: 'Присутствие оффера в платной полосе на 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры.',
-        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их не даёт ни один тариф.',
+        month: 'Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их даёт только это продвижение.',
         pack5: '5 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».',
         pack15: '15 недельных размещений со скидкой за объём. Каждая активная неделя открывает стили уровня «Неделя».'
     };
@@ -10492,8 +10461,7 @@
         showModal('fmx-promoBg');
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
             if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; return; }
-            var opts = r.options || [], disc = r.discount_pct || 0, html = '';
-            if (disc > 0) html += '<div class="fmx-limit" style="border-color:rgba(52,211,153,.4);color:#34d399;"><i class="ti ti-discount-2"></i> Скидка твоего тарифа на всё продвижение: −' + disc + '%</div>';
+            var opts = r.options || [], html = '';
             opts.forEach(function (o) {
                 var ic = o.kind === 'credits' ? 'ti-package' : (o.in_burst_cap ? 'ti-bolt' : 'ti-rocket');
                 var pr = '<b>' + _num(o.price) + ' ₽</b>';

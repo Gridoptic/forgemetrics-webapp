@@ -231,8 +231,6 @@
         var actionBtn = '';
         if (opts.retry) {
             actionBtn = '<button class="audit-primary-btn" id="audit-error-retry"><i class="ti ti-refresh"></i><span>Попробовать снова</span></button>';
-        } else if (opts.pricing) {
-            actionBtn = '<button class="audit-primary-btn" id="audit-error-pricing"><i class="ti ti-crown"></i><span>Посмотреть тарифы</span></button>';
         }
         host.innerHTML = headerHtml() +
             '<div class="audit-center">' +
@@ -243,11 +241,6 @@
         attachBack(host);
         var r = host.querySelector('#audit-error-retry');
         if (r) r.addEventListener('click', function () { startAudit(); });
-        var p = host.querySelector('#audit-error-pricing');
-        if (p) p.addEventListener('click', function () {
-            closeAudit();
-            if (typeof handleAction === 'function') handleAction('profile');
-        });
     }
 
     function limitBarHtml(limits) {
@@ -437,7 +430,7 @@
             return;
         }
         if (m.indexOf('403') !== -1) {
-            showFatalError(detailFrom(m) || 'AI-аудит недоступен на твоём тарифе.', { pricing: true, icon: 'ti-lock' });
+            showFatalError(detailFrom(m) || 'Доступ к аудиту ограничен.', { icon: 'ti-lock' });
             return;
         }
         if (m.indexOf('400') !== -1) {

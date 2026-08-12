@@ -853,8 +853,7 @@
             return '<div class="cp-hero frozen">' +
                 '<div class="cp-hero-eye">' + esc(T('План недоступен')) + '</div>' +
                 '<h2>' + esc(T('Канал приостановлен')) + '</h2>' +
-                '<p>' + esc(T('Подключено больше каналов, чем допускает тариф. ' +
-                    'Публикация не проходит.')) + '</p>' +
+                '<p>' + esc(T('Канал на паузе — публикация не проходит.')) + '</p>' +
                 '<div class="cp-hero-week">' + weekCells('dead') + '</div>' +
                 '<div class="cp-frznote"><i class="ti ti-player-pause"></i><span>' +
                 esc(T('Сними паузу в настройках канала или выбери другой — ' +
@@ -2088,12 +2087,11 @@
                 '<span class="cp-ready-ic st"><i class="ti ti-player-pause"></i></span>' +
                 '<span><b>' + esc(T('Канал приостановлен')) + '</b>' +
                 '<span>' + esc(r.title || '') + '</span></span></div>' +
-                '<div class="cp-ready-w st">' + esc(T('Подключено больше каналов, чем допускает ' +
-                'тариф, — канал приостановлен. Публикация в него не проходит, ' +
-                'поэтому сборка недели недоступна.')) + '</div>' +
+                '<div class="cp-ready-w st">' + esc(T('Канал на паузе — публикация в него ' +
+                'не проходит, поэтому сборка недели недоступна.')) + '</div>' +
                 '<div class="cp-ready-way">' +
-                '<div class="cp-ready-wt">' + esc(T('Сними паузу в настройках канала, ' +
-                'выбери другой канал выше или перейди на тариф с бо́льшим числом каналов.')) + '</div>' +
+                '<div class="cp-ready-wt">' + esc(T('Сними паузу в настройках канала ' +
+                'или выбери другой канал выше.')) + '</div>' +
                 '<button class="cp-ready-b" data-act="openstyle">' +
                 '<i class="ti ti-settings"></i> ' + esc(T('Открыть настройки канала')) +
                 '</button></div></div>';
@@ -3056,8 +3054,7 @@
                 if (r && r.ok) { toast(T('Пишу всю неделю — карточки будут заполняться')); startBatchPoll(); }
                 else {
                     pending.forEach(function (p) { _dayBusy[p.id] = false; });
-                    if (r && r.gate === 'pro') toast(T('Вся неделя разом — на платном тарифе. Пока пиши тексты по одному.'));
-                    else toast(cap(r));
+                    toast(cap(r));
                     renderWeek();
                 }
             })

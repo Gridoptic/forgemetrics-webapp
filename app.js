@@ -129,7 +129,7 @@ function openForgeSheet() {
     }).join('');
 
     const grant = Number(f.grant || 0);
-    const sub = grant > 0 ? `Тариф начисляет ${cabNum(grant)} каждый месяц` : '';
+    const sub = grant > 0 ? `Начисляем ${cabNum(grant)} бесплатно каждый месяц` : '';
 
     const overlay = document.createElement('div');
     overlay.className = 'bs-overlay';
@@ -493,7 +493,7 @@ window.FMLive.register('dashboard', 90000, function () {
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
-            Сначала запусти бота — он покажет возможности и активирует бесплатный Trial на 7 дней.
+            Сначала запусти бота — он покажет возможности. За подключение живого канала начислится стартовый запас 300 Forge.
         </div>
     `;
 
@@ -1910,19 +1910,17 @@ function fillDrawerHeader() {
         const letter = (u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U';
         avEl.innerHTML = u.photo_url ? `<img src="${escapeHtml(u.photo_url)}" alt="">` : letter;
     }
-    const setChip = (tier, paid) => {
-        if (!chipEl || !tier) return;
-        chipEl.className = 'dp-chip' + (paid ? ' gold' : '');
-        chipEl.innerHTML = (paid ? '<i class="ti ti-crown"></i> ' : '') + escapeHtml(tier);
+    const setChip = (forge) => {
+        if (!chipEl) return;
+        chipEl.className = 'dp-chip';
+        chipEl.innerHTML = '<i class="ti ti-hammer"></i> ' + cabNum(forge) + ' Forge';
     };
-    const cu = cabinetData && cabinetData.user;
-    if (cu && cu.tier_display) {
-        setChip(cu.tier_display, cu.tier && cu.tier !== 'free' && cu.tier !== 'trial');
+    if (cabinetData && cabinetData.forge) {
+        setChip(Number(cabinetData.forge.balance || 0));
     } else {
         apiRequest('/api/v1/user/cabinet').then(d => {
             cabinetData = d;
-            const x = d && d.user;
-            setChip((x && x.tier_display) || 'Free', x && x.tier && x.tier !== 'free' && x.tier !== 'trial');
+            setChip(Number(((d || {}).forge || {}).balance || 0));
         }).catch(() => {});
     }
 }
@@ -1946,7 +1944,7 @@ const PLACEHOLDER_CONFIG = {
     competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них набирает охват и почему. Функция готовится к запуску.', icon: 'search' },
     post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
     negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
-    profile: { title: 'Тариф и подписка', text: 'Твой текущий тариф, баланс Forge, история. Скоро запустим.', icon: 'user-circle' },
+    profile: { title: 'Forge и покупки', text: 'Баланс Forge, пакеты пополнения, история. Скоро запустим.', icon: 'user-circle' },
     voice_settings: { title: 'Стиль канала', text: 'Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.', icon: 'microphone' },
     add_channel: { title: 'Подключение канала', text: 'Подключи свой Telegram-канал чтобы я видел метрики и подстраивался под твой стиль. Скоро.', icon: 'plus' },
 };
@@ -2108,22 +2106,6 @@ function plural3(n, one, few, many) {
     if (b === 1) return one;
     return many;
 }
-function cabStatusHtml(sub) {
-    sub = sub || {};
-    if (sub.kind === 'trial') {
-        const total = sub.total_days || 7;
-        const left = sub.days_left != null ? sub.days_left : total;
-        const pct = Math.max(5, Math.min(100, Math.round((sub.used_days || 0) / total * 100)));
-        return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-clock-hour-4" style="color:#fbbf24"></i> Пробный период</span><span class="cab-stval">осталось ${left} ${plural3(left, 'день', 'дня', 'дней')}</span></div><div class="cab-stbar"><div class="cab-stfill am" style="width:${pct}%"></div></div><div class="cab-stsub">Пробный набор Forge — на ознакомление с функциями</div></div>`;
-    }
-    if (sub.kind === 'paid') {
-        const tail = sub.days_left != null ? `осталось ${sub.days_left} ${plural3(sub.days_left, 'день', 'дня', 'дней')}` : (sub.ends_at ? 'до ' + escapeHtml(sub.ends_at) : 'активна');
-        return `<div class="cab-status"><div class="cab-strow"><span class="cab-stlbl"><i class="ti ti-rosette-discount-check" style="color:#5DCAA5"></i> Подписка активна</span><span class="cab-stval">${tail}</span></div><div class="cab-stsub">Все возможности тарифа открыты</div></div>`;
-    }
-    return '';
-}
-
-
 async function openCabinet(scrollTo) {
     hapticLight();
     showScreen('cabinet');
@@ -2142,19 +2124,6 @@ async function openCabinet(scrollTo) {
     } catch (e) {
         if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить кабинет.<br>Попробуй позже.</div>';
     }
-}
-
-function cabUsageRow(u) {
-    const limit = u.limit, used = u.used;
-    let vtext, fillCls, pct;
-    if (limit >= 999999) { vtext = `<b>${cabNum(used)}</b> · <span>без ограничений</span>`; fillCls = 'gr'; pct = 8; }
-    else if (limit <= 0) { vtext = '<span>недоступно на этом тарифе</span>'; fillCls = 'pu'; pct = 0; }
-    else {
-        vtext = `<b>${cabNum(used)}</b> / ${cabNum(limit)}`;
-        pct = Math.min(100, Math.round(used / limit * 100));
-        fillCls = used >= limit ? 'full' : (pct >= 75 ? 'am' : 'gr');
-    }
-    return `<div class="cab-use"><div class="cab-ui"><div class="cab-utop"><span class="cab-unm">${escapeHtml(u.label)}</span><span class="cab-uv">${vtext}</span></div><div class="cab-bar"><div class="cab-fill ${fillCls}" style="width:${pct}%"></div></div></div></div>`;
 }
 
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle' };
@@ -2208,8 +2177,6 @@ function refCardHtml(r) {
     const rate = r.rate_pct || 20;
     const firstN = r.reward_first_payments || 3;
     const fDisc = r.friend_discount_pct || 15;
-    const fDays = r.friend_trial_days || 10;
-    const bDays = r.base_trial_days || 7;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
         ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
@@ -2231,7 +2198,7 @@ function refCardHtml(r) {
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
         <div class="rf-rate"><b>${rate}%</b><span>${firstN === 1 ? 'с первого платежа каждого приглашённого — в Forge на баланс' : `с первых ${firstN} платежей каждого приглашённого — в Forge на баланс`}</span></div>
-        <p>Начисляем с коэффициентом 1.5 — на 50% больше номинала. Другу −${fDisc}% на первый месяц и расширенный триал: ${fDays} дней вместо ${bDays}.</p>
+        <p>Начисляем с коэффициентом 1.5 — на 50% больше номинала. Другу −${fDisc}% на первое пополнение Forge.</p>
         <span class="rf-chip"><span class="dot"></span>Ранний партнёр · повышенная ставка · активируется с запуском оплаты</span>
       </div>
     </div>
@@ -2309,7 +2276,7 @@ async function loadRefLeaderboard() {
         const me = r.me ? `<p class="rf-lbme">Твоя позиция: ${r.me}</p>` : '';
         const block = document.createElement('div');
         block.className = 'rf-how rf-lb';
-        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Приз лучшему — ${escapeHtml(r.prize)}. Считаются приглашённые, активировавшие триал за 7 дней.</p>`;
+        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Приз лучшему — ${escapeHtml(r.prize)}. Считаются приглашённые, подключившие живой канал за 7 дней.</p>`;
         const foot = host.querySelector('.rf-foot');
         if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
         localizeTree(block);
@@ -2328,7 +2295,8 @@ const FORGE_OP_LABEL = {
 };
 
 const FORGE_KIND_LABEL = {
-    tier: 'Начисление по тарифу', topup: 'Пополнение баланса',
+    tier: 'Начисление', topup: 'Пополнение баланса',
+    welcome: 'Стартовый запас',
     referral: 'Партнёрское вознаграждение', referral_perk: 'Бонус уровня',
     free: 'Ежемесячное начисление', refund: 'Возврат', spend: 'Списание',
 };
@@ -2388,7 +2356,7 @@ function bindFwPriceRows(boxId) {
     }));
 }
 
-function cabForgeHtml(f, tier) {
+function cabForgeHtml(f) {
     if (!f) return '';
     const bal = Number(f.balance || 0);
     const grant = Number(f.grant || 0);
@@ -2413,9 +2381,9 @@ function cabForgeHtml(f, tier) {
         `<i>${escapeHtml(forgeTxDate(tx.created_at))}</i></div>` +
         `<b class="${tx.amount > 0 ? 'pos' : ''}">${tx.amount > 0 ? '+' : '−'}${cabNum(Math.abs(tx.amount))}</b></div>`).join('');
 
-    const monthly = grant > 0 && tier !== 'trial'
-        ? `<div class="fw-sub">Начисляем ${cabNum(grant)} каждый месяц по тарифу</div>`
-        : (tier === 'trial' ? `<div class="fw-sub">Пробный набор — на ознакомление с функциями</div>` : '');
+    const monthly = grant > 0
+        ? `<div class="fw-sub">Начисляем ${cabNum(grant)} бесплатно каждый месяц</div>`
+        : '';
 
     return `<div class="cab-card" id="cab-sec-forge">` +
         `<div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Баланс Forge</h3></div>` +
@@ -2437,7 +2405,6 @@ function renderCabinet(d) {
     const u = d.user || {};
     const photo = tg?.initDataUnsafe?.user?.photo_url;
     const initial = escapeHtml((u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U');
-    const isPaid = u.tier && u.tier !== 'free' && u.tier !== 'trial';
 
     const _hstats = (u.channels_count != null) ? (function () {
         const chN = u.channels_count || 0, liN = u.listings_count || 0, dN = u.member_days || 0;
@@ -2455,43 +2422,10 @@ function renderCabinet(d) {
             (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, 'день с нами', 'дня с нами', 'дней с нами')}</div></div>` : '') +
             `</div>`;
     })() : '';
-    const _sk = (d.subscription || {}).kind;
-    const _hbottom = (_sk === 'trial' || _sk === 'paid') ? cabStatusHtml(d.subscription) : '';
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill${isPaid ? ' paid' : ''}">${escapeHtml((u.tier_display || 'Free').toUpperCase())}${u.bonus_days ? ' · +' + cabNum(u.bonus_days) : ''}</span></div>${_hstats}${_hbottom}</div>`;
+    const _fbal = Number(((d || {}).forge || {}).balance || 0);
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill">${cabNum(_fbal)} FORGE</span></div>${_hstats}</div>`;
 
-    if (d.upgrade) {
-        const up = d.upgrade;
-        const nowParts = [];
-        if (up.now_forge) nowParts.push(`${forgeAmount(up.now_forge, 12)} Forge на месяц`);
-        if (up.now_channels) nowParts.push(escapeHtml(`${up.now_channels} ${plural(up.now_channels, 'канал', 'канала', 'каналов')}`));
-        const nowLine = nowParts.length ? `<div class="cab-now"><span>${nowParts.join(' · ')}</span></div>` : '';
-        const benRows = [];
-        if (up.forge) benRows.push({ html: `${forgeAmount(up.forge, 13)} Forge на месяц` });
-        if (up.channels) benRows.push(`${up.channels} ${plural(up.channels, 'канал', 'канала', 'каналов')}`);
-        const bens = benRows.concat(up.features || [])
-            .map((b) => `<div class="cab-ben"><i class="ti ti-check"></i><span>${b && b.html ? b.html : escapeHtml(b)}</span></div>`).join('');
-        html += `<div class="cab-card">`
-            + `<div class="cab-plan-hd">${cabTile('bl', 'user')}<div class="txt">`
-            + `<div class="k">Текущий тариф</div>`
-            + `<div class="v">${escapeHtml(u.tier_display)}</div>${nowLine}</div></div>`
-            + `<div class="cab-upsep"><span>${escapeHtml('Что даёт ' + up.target_display)}</span></div>`
-            + `<div class="cab-bens">${bens}</div>`
-            + `<button class="cab-cta" id="cab-upgrade"><i class="ti ti-rocket"></i> Оформить ${escapeHtml(up.target_display)} — ${cabNum(up.price)} ₽/мес</button>`
-            + `<div class="cab-cta-note">Помесячная подписка · <b id="cab-compare">сравнить все тарифы →</b></div></div>`;
-    } else {
-        html += `<div class="cab-card"><div class="cab-plan-hd">${cabTile('am', 'crown')}<div class="txt"><div class="k">Текущий тариф</div><div class="v">${escapeHtml(u.tier_display)} · максимум</div></div></div><div class="cab-bens"><div class="cab-ben"><i class="ti ti-check"></i> У тебя высший тариф — все возможности открыты</div></div></div>`;
-    }
-
-    html += cabForgeHtml(d.forge, u.tier);
-
-    const _umon = (d.usage || []).filter(x => x.period === 'month');
-    if (_umon.length) {
-        html += `<div class="cab-card" id="cab-sec-usage"><div class="cab-stt"><h3>${cabTile('bl', 'exchange', 'sm')} Каналы</h3></div>` +
-            `<div class="cab-usec"><span>В этом месяце</span><i>скользящие 30 дней</i></div>` +
-            _umon.map(cabUsageRow).join('') + `</div>`;
-    }
-
-
+    html += cabForgeHtml(d.forge);
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
     html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">Справка и поддержка</div><div class="cab-sd">Метрики, Forge, связь с нами</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
@@ -2588,18 +2522,6 @@ function openUserTerms() {
 
 function wireCabinet(d) {
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    const goUpgrade = () => {
-        const up = d && d.upgrade;
-        if (!up || !up.target) { openTariffs(); return; }
-        hapticMed();
-        openCheckout({
-            name: up.target_display, price: up.price, sub: true, periodWord: 'Месяц', per: '/мес',
-            icon: 'rocket', color: 'pu', rowLabel: `Тариф ${up.target_display}, месяц`,
-            lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: up.target }) }).then((r) => r),
-        });
-    };
-    on('cab-upgrade', goUpgrade);
-    on('cab-compare', () => { openTariffs(); });
     on('cab-team', () => { openTeam(); });
     on('cab-about', () => { openHelpSheet(); });
     on('cab-terms', openUserTerms);
@@ -2701,11 +2623,7 @@ function openLangPicker() {
 }
 
 let tariffsData = null;
-let tfPeriod = 'month';
 let tfReturn = 'dashboard';
-const TP_COLOR = { light: 'bl', pro: 'pu', pro_plus: 'gd', agency: 'gr', network: 'pk' };
-
-function tfIcon(key) { return key === 'light' ? 'package' : key === 'pro' ? 'rocket' : key === 'agency' ? 'briefcase' : key === 'network' ? 'affiliate' : 'crown'; }
 
 async function openTariffs() {
     try {
@@ -2723,59 +2641,15 @@ async function openTariffs() {
         tariffsData = data;
         renderTariffs(data);
     } catch (e) {
-        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Не удалось загрузить тарифы.</div>';
+        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Не удалось загрузить витрину Forge.</div>';
     }
 }
-
-function tfCurBanner(d) {
-    if (d.current_tier === 'trial') {
-        const n = d.trial_days_left;
-        const dw = (n != null) ? `осталось ${n} ${plural3(n, 'день', 'дня', 'дней')}` : 'активен';
-        return `<div class="tf-cur trial"><div class="ic"><i class="ti ti-rocket"></i></div><div class="t"><div class="n">Trial активен — премиум-модель генерации</div><div class="s">Пробный период · ${dw}. Закрепи тариф, чтобы сохранить премиум-модель и каналы после триала.</div></div></div>`;
-    }
-    if (['light', 'pro', 'pro_plus', 'agency', 'network'].includes(d.current_tier)) return '';
-    return `<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n">Сейчас у тебя Free</div><div class="s">30 Forge в месяц, 1 канал. Выбери план для полного доступа.</div></div></div>`;
-}
-
 
 function plural(n, one, few, many) {
     const n10 = n % 10, n100 = n % 100;
     if (n10 === 1 && n100 !== 11) return one;
     if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
     return many;
-}
-
-function tfPlanCard(plan, d) {
-    const isYear = tfPeriod === 'year';
-    const price = isYear ? plan.price_year : plan.price;
-    const per = isYear ? '/год' : '/мес';
-    const color = TP_COLOR[plan.key] || 'pu';
-    const ribbon = plan.popular ? '<span class="tp-rib">★ Оптимальный</span>' : '';
-    const rows = [];
-    if (plan.forge) {
-        rows.push({ html: `${forgeAmount(plan.forge, 13)} Forge ${isYear ? 'каждый месяц, 12 месяцев' : 'на месяц'}` });
-    }
-    if (plan.channels) rows.push(`${plan.channels} ${plural(plan.channels, 'канал', 'канала', 'каналов')}`);
-    const row = (f) => `<div class="tp-feat"><i class="ti ti-check"></i><span>${f && f.html ? f.html : escapeHtml(f)}</span></div>`;
-    const volumes = rows.map(row).join('');
-    const feats = volumes + (plan.features || []).map(row).join('');
-    const save = isYear ? '<div class="tp-save">2 месяца в подарок · неизрасходованное переносится</div>' : '';
-    let cta;
-    if (d.current_tier === plan.key) cta = '<div class="tp-cta cur"><i class="ti ti-circle-check"></i> Твой тариф</div>';
-    else cta = `<button class="tp-cta" data-buy="${plan.key}">Оформить · ${cabNum(price)} ₽</button>`;
-    const openCls = plan.popular ? ' open' : '';
-    const popCls = plan.popular ? ' pop' : '';
-    return `<div class="tp-card tp-${color}${popCls}${openCls}" data-plan="${escapeHtml(plan.key)}">
-      <button class="tp-head" data-tphead="${escapeHtml(plan.key)}" aria-expanded="${plan.popular ? 'true' : 'false'}">
-        <div class="tp-tile"><i class="ti ti-${tfIcon(plan.key)}"></i></div>
-        <div class="tp-main">
-          <div class="tp-r1"><span class="tp-name">${escapeHtml(plan.name)}</span>${ribbon}<span class="tp-price"><b>${cabNum(price)} ₽</b><span class="tp-per">${per}</span></span></div>
-          <div class="tp-brief">${escapeHtml(plan.brief || '')}</div>
-        </div>
-        <i class="ti ti-chevron-down tp-chev"></i>
-      </button>
-      <div class="tp-body"><div class="tp-in"><div class="tp-feats">${feats}</div>${save}${cta}</div></div>
-    </div>`;
 }
 
 const tfReduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -2815,10 +2689,6 @@ function flipToggle(owner, toggle, open, fadeSel) {
     fade.style.transition = 'opacity .12s ease';
     fade.style.opacity = '0';
     setTimeout(() => { run(); fade.style.transition = ''; fade.style.opacity = ''; }, 120);
-}
-
-function tfAnimateCard(card, open) {
-    flipToggle(card, (o) => card.classList.toggle('open', o), open, '.tp-in');
 }
 
 function tfErow(e) {
@@ -2864,7 +2734,9 @@ function tfcOps(d) {
 }
 
 function tfcTier(d) {
-    return (d.plans || []).find((p) => p.key === tfCalc.tier) || (d.plans || [])[1] || null;
+    const packs = d.forge_packs || [];
+    const p = packs.find((x) => x.amount === tfCalc.pack) || packs[1] || packs[0] || null;
+    return p ? { key: p.amount, name: cabNum(p.amount) + ' Forge', forge: p.amount } : null;
 }
 
 function tfcSpent(d) {
@@ -2877,7 +2749,7 @@ function tfcLeft(d) {
 }
 
 function tfcClamp(d) {
-    // из намерения набираем столько, сколько влезает в запас тарифа:
+    // из намерения набираем столько, сколько влезает в пакет:
     // сначала дешёвые позиции, потом дорогие — так помещается больше задуманного
     const t = tfcTier(d);
     const budget = t ? t.forge : 0;
@@ -2923,8 +2795,9 @@ function tfCalculatorHtml(d) {
     const ops = tfcOps(d);
     if (!ops.length) return '';
     if (!tfCalc) {
-        const cur = (d.plans || []).find((p) => p.key === d.current_tier && p.forge);
-        tfCalc = { tier: cur ? cur.key : 'pro', preset: 1, open: false,
+        const packs = d.forge_packs || [];
+        const def = packs[1] || packs[0] || {};
+        tfCalc = { pack: def.amount || 0, preset: 1, open: false,
                    shown: false, v: {}, want: { ...TFC_PRESETS[1].v } };
     }
     ops.forEach((o) => {
@@ -2936,15 +2809,17 @@ function tfCalculatorHtml(d) {
     const t = tfcTier(d);
     if (!t || !t.forge) return '';
     const rest = tfcLeft(d);
-    const idx = (d.plans || []).findIndex((p) => p.key === t.key);
-    const next = (d.plans || [])[idx + 1];
+    const packsAll = d.forge_packs || [];
+    const idx = packsAll.findIndex((p) => p.amount === t.key);
+    const next = packsAll[idx + 1]
+        ? { name: cabNum(packsAll[idx + 1].amount) + ' Forge', forge: packsAll[idx + 1].amount } : null;
     const main = ops.filter((o) => TFC_MAIN.includes(o.key));
     const more = ops.filter((o) => !TFC_MAIN.includes(o.key));
 
     const head = '<button class="tfc-head" id="tfc-toggle">'
         + '<span class="et">' + forgeIco(17) + '</span>'
         + '<span class="tfc-htxt"><b>Калькулятор Forge</b>'
-        + '<i>Посчитай, на что хватит запаса тарифа</i></span>'
+        + '<i>Посчитай, на что хватит пакета</i></span>'
         + '<i class="ti ti-chevron-' + (tfCalc.shown ? 'up' : 'down') + ' tfc-chev"></i></button>';
 
     if (!tfCalc.shown) return '<div class="tf-extras tfc collapsed">' + head + '</div>';
@@ -2957,18 +2832,18 @@ function tfCalculatorHtml(d) {
             + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
             + '<i class="ti ti-' + p.ic + '"></i>'
             + '<span>' + escapeHtml(p.t) + '</span></button>').join('') + '</div>'
-        + '<div class="tfc-tiers">' + (d.plans || []).filter((p) => p.forge).map((p) =>
-            '<button class="tfc-tier tp-' + (TP_COLOR[p.key] || 'pu')
-            + (p.key === tfCalc.tier ? ' on' : '') + '" data-tfctier="' + escapeHtml(p.key) + '">'
-            + '<i class="ti ti-' + tfIcon(p.key) + '"></i>'
-            + '<span>' + escapeHtml(p.name) + '</span></button>').join('') + '</div>'
+        + '<div class="tfc-tiers">' + (d.forge_packs || []).map((p) =>
+            '<button class="tfc-tier tp-am'
+            + (p.amount === tfCalc.pack ? ' on' : '') + '" data-tfcpack="' + p.amount + '">'
+            + '<i class="ti ti-bolt"></i>'
+            + '<span>' + cabNum(p.amount) + '</span></button>').join('') + '</div>'
         + '<div class="tfc-budget' + (rest === 0 ? ' full' : '') + '">'
         + '<span class="tfc-bic"><i class="ti ti-circle-check"></i></span>'
         + '<span class="tfc-bt"><small>'
         + (rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить') + '</small>'
         + '<b>' + forgeAmount(rest, 15) + '</b>'
-        + '<i>из ' + cabNum(t.forge) + ' на тарифе ' + escapeHtml(t.name)
-        + (next && next.forge ? ' · ' + escapeHtml(next.name) + ' даст ' + cabNum(next.forge) : '')
+        + '<i>из пакета ' + escapeHtml(t.name)
+        + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '')
         + '</i></span></div>'
         + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
         + '<button class="tfc-more" id="tfc-more"><i class="ti ti-'
@@ -3011,8 +2886,10 @@ function tfcRefresh(d) {
     if (!box) return;
     const rest = tfcLeft(d);
     const t = tfcTier(d);
-    const idx = (d.plans || []).findIndex((p) => p.key === t.key);
-    const next = (d.plans || [])[idx + 1];
+    const packsAll = d.forge_packs || [];
+    const idx = packsAll.findIndex((p) => p.amount === t.key);
+    const next = packsAll[idx + 1]
+        ? { name: cabNum(packsAll[idx + 1].amount) + ' Forge', forge: packsAll[idx + 1].amount } : null;
     box.classList.toggle('full', rest === 0);
     // строго внутри текстовой части: тег i снаружи — это иконка галочки
     const sm = box.querySelector('.tfc-bt small');
@@ -3021,8 +2898,8 @@ function tfcRefresh(d) {
     if (b) b.innerHTML = forgeAmount(rest, 15);
     const note = box.querySelector('.tfc-bt i');
     if (note) {
-        note.textContent = 'из ' + cabNum(t.forge) + ' на тарифе ' + t.name
-            + (next && next.forge ? ' · ' + next.name + ' даст ' + cabNum(next.forge) : '');
+        note.textContent = 'из пакета ' + t.name
+            + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '');
     }
 }
 
@@ -3070,10 +2947,10 @@ function wireTfCalc(d) {
             renderTariffs(d);
             return;
         }
-        const tier = e.target.closest('[data-tfctier]');
-        if (tier) {
+        const pk = e.target.closest('[data-tfcpack]');
+        if (pk) {
             hapticLight();
-            tfCalc.tier = tier.dataset.tfctier;
+            tfCalc.pack = +pk.dataset.tfcpack;
             renderTariffs(d);
             return;
         }
@@ -3094,14 +2971,7 @@ function wireTfCalc(d) {
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
-    const disc = d.annual_discount_pct || 17;
-    let html = tfCurBanner(d);
-    html += `<div class="tf-billtog"><button class="tf-bt${tfPeriod === 'month' ? ' on' : ''}" data-per="month">Месяц</button><button class="tf-bt${tfPeriod === 'year' ? ' on' : ''}" data-per="year">Год <span class="sv">−${disc}%</span></button></div>`;
-    html += '<div class="tf-sub">Выбери план и оформи подписку. После триала остаётся бесплатный Free.</div>';
-    if ((d.bookings_count || 0) >= 25) html += `<div class="tf-sub" style="margin-top:-6px;"><i class="ti ti-users"></i> ${cabNum(d.bookings_count)} админов уже забронировали тарифы — цена брони фиксируется навсегда.</div>`;
-    if (d.booked_plan && d.booked_price) html += `<div class="tf-sub" style="margin-top:-6px;color:#34d399;"><i class="ti ti-lock-check"></i> Твоя бронь: ${escapeHtml(TIER_NAMES[d.booked_plan] || d.booked_plan)} по ${cabNum(d.booked_price)} ₽/мес — цена зафиксирована.</div>`;
-    html += (d.plans || []).map((p) => tfPlanCard(p, d)).join('');
-    html += tfCalculatorHtml(d);
+    let html = '<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n"><span>Без тарифов и подписок</span></div><div class="s"><span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div></div></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -3118,6 +2988,7 @@ function renderTariffs(d) {
             `<div class="fw-prices" id="tf-prices" hidden>${prices}</div>`;
         html += `</div>`;
     }
+    html += tfCalculatorHtml(d);
     const extras = (d.extras || []).map((e) => tfErow(e)).join('');
     if (extras) html += `<div class="tf-extras"><div class="tf-eh"><span class="et"><i class="ti ti-plus"></i></span> Покупается отдельно (за рубли)</div>${extras}</div>`;
     const promos = (d.promotions || []).map((e) => tfErow(e)).join('');
@@ -3142,21 +3013,8 @@ function renderTariffs(d) {
             name: `${amount.toLocaleString('ru-RU')} Forge`,
             price: pack.price, sub: false, icon: 'bolt', color: 'am',
             rowLabel: `Пополнение баланса · ${amount.toLocaleString('ru-RU')} Forge`,
-            pay: { product_type: 'package', product_key: `forge_${amount}`, months: 1 },
+            pay: { product_type: 'package', product_key: `forge_${amount}` },
         });
-    }));
-    body.querySelectorAll('[data-per]').forEach((btn) => btn.addEventListener('click', () => {
-        const per = btn.getAttribute('data-per');
-        if (per === tfPeriod) return;
-        tfPeriod = per; hapticLight(); renderTariffs(d);
-    }));
-    body.querySelectorAll('[data-tphead]').forEach((h) => h.addEventListener('click', () => {
-        const card = h.closest('.tp-card');
-        if (!card) return;
-        hapticLight();
-        const open = !card.classList.contains('open');
-        h.setAttribute('aria-expanded', open ? 'true' : 'false');
-        tfAnimateCard(card, open);
     }));
     body.querySelectorAll('.tf-erow.tap .tf-erow-h').forEach((h) => h.addEventListener('click', () => {
         const row = h.closest('.tf-erow');
@@ -3170,34 +3028,11 @@ function renderTariffs(d) {
         hapticMed();
         coBuyExtra(btn.getAttribute('data-buyx'));
     }));
-    body.querySelectorAll('[data-buy]').forEach((btn) => {
-        btn.addEventListener('click', () => { hapticMed(); coBuyPlan(btn.getAttribute('data-buy')); });
-    });
     wireTfCalc(d);
 }
 
 
 let _coCtx = null;
-
-function coPeriodWord() { return tfPeriod === 'year' ? 'Год' : 'Месяц'; }
-
-function coBuyPlan(planKey) {
-    const d = tariffsData;
-    if (!d || !Array.isArray(d.plans)) return;
-    const plan = d.plans.find((p) => p.key === planKey);
-    if (!plan) return;
-    const isYear = tfPeriod === 'year';
-    const price = isYear ? plan.price_year : plan.price;
-    const pw = coPeriodWord();
-    openCheckout({
-        name: plan.name, price, sub: true, periodWord: pw, per: isYear ? '/год' : '/мес',
-        icon: tfIcon(plan.key), color: TP_COLOR[plan.key] || 'pu',
-        rowLabel: `Тариф ${plan.name}, ${pw.toLowerCase()}`,
-        pay: { product_type: 'tier', product_key: plan.key, months: isYear ? 12 : 1 },
-        lock: () => apiRequest('/api/v1/user/book-tariff', { method: 'POST', body: JSON.stringify({ plan: plan.key }) })
-            .then((r) => { if (r && r.ok && tariffsData) { tariffsData.booked_plan = plan.key; renderTariffs(tariffsData); } return r; }),
-    });
-}
 
 function coBuyExtra(key) {
     const d = tariffsData;
@@ -3207,7 +3042,7 @@ function coBuyExtra(key) {
     const isPromo = key.indexOf('promo_') === 0;
     openCheckout({
         name: e.label, price: e.price, sub: false, icon: 'shopping-cart', color: 'pu', rowLabel: e.label,
-        pay: isPromo ? null : { product_type: 'package', product_key: key, months: 1 },
+        pay: isPromo ? null : { product_type: 'package', product_key: key },
         promoHint: isPromo,
     });
 }
@@ -3278,7 +3113,7 @@ function coPayDone(sheet, name) {
     sheet.querySelector('.co-close').addEventListener('click', () => {
         closeCheckout();
         loadDashboard();
-        if (screens.tariffs && screens.tariffs.style.display !== 'none') loadTariffs();
+        if (screens.tariffs && screens.tariffs.style.display !== 'none') { tariffsData = null; openTariffs(); }
     });
 }
 
@@ -4315,7 +4150,6 @@ function renderChannels(data) {
             .join('');
     }
 
-    renderConnectionLimitsBanner(data.connection_limits, data.voice_refresh_limits);
     renderAddMoreOrLimit(data);
     renderDeletedChannels(deleted, false);
     loadChannelAvatars();
@@ -4326,91 +4160,6 @@ function renderChannels(data) {
     } else {
         stopVoicePolling();
     }
-}
-
-
-function renderConnectionLimitsBanner(connLimits, voiceRefreshLimits) {
-    let banner = document.getElementById('channels-limits-card');
-
-    if (!connLimits) {
-        if (banner) banner.style.display = 'none';
-        return;
-    }
-
-    const container = els.channelsStateList || document.getElementById('channels-state-list');
-    if (!container) return;
-
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.id = 'channels-limits-card';
-        banner.className = 'channels-limits-card';
-        container.insertBefore(banner, container.firstChild);
-    } else if (banner.parentNode !== container) {
-        container.insertBefore(banner, container.firstChild);
-    }
-
-    banner.innerHTML = `
-        ${renderLimitRow({
-            icon: 'plug-connected',
-            label: 'Подключений в месяц',
-            used: connLimits.used,
-            limit: connLimits.limit,
-            seconds_until_reset: connLimits.seconds_until_reset,
-            color: 'purple',
-            available: true,
-            isTester: connLimits.is_tester,
-        })}
-        ${renderLimitRow({
-            icon: 'refresh',
-            label: 'Обновлений стиля',
-            used: voiceRefreshLimits ? voiceRefreshLimits.used : 0,
-            limit: voiceRefreshLimits ? voiceRefreshLimits.limit : 0,
-            seconds_until_reset: voiceRefreshLimits ? voiceRefreshLimits.seconds_until_reset : null,
-            color: 'green',
-            available: voiceRefreshLimits ? voiceRefreshLimits.available_on_tier : false,
-            isTester: voiceRefreshLimits ? voiceRefreshLimits.is_tester : false,
-            lockedHint: 'Доступно на платных тарифах',
-        })}
-    `;
-    banner.style.display = '';
-}
-
-
-function renderLimitRow({ icon, label, used, limit, seconds_until_reset, color, available, isTester, lockedHint }) {
-    if (!available) {
-        return `
-            <div class="limit-row limit-row-locked">
-                <div class="limit-row-head">
-                    <span class="limit-row-icon"><i class="ti ti-lock"></i></span>
-                    <span class="limit-row-label">${label}</span>
-                    <span class="limit-row-hint">${lockedHint || ''}</span>
-                </div>
-            </div>
-        `;
-    }
-
-    const safeLimit = Math.max(1, limit);
-    const remaining = Math.max(0, limit - used);
-    const exhausted = used >= limit && !isTester;
-    const percent = exhausted ? 0 : Math.max(0, Math.min(100, Math.round((remaining / safeLimit) * 100)));
-
-    const timerTxt = (exhausted && seconds_until_reset)
-        ? `<span class="limit-row-timer">${formatRemainingTime(seconds_until_reset)}</span>`
-        : '';
-
-    const rowClass = exhausted ? `limit-row limit-row-${color} limit-row-exhausted` : `limit-row limit-row-${color}`;
-
-    return `
-        <div class="${rowClass}">
-            <div class="limit-row-head">
-                <span class="limit-row-icon"><i class="ti ti-${icon}"></i></span>
-                <span class="limit-row-label">${label}</span>
-                <span class="limit-row-count">${remaining}<span class="limit-row-count-total"> / ${limit}</span></span>
-            </div>
-            <div class="limit-row-bar"><div class="limit-row-bar-fill" style="width: ${percent}%"></div></div>
-            ${timerTxt}
-        </div>
-    `;
 }
 
 
@@ -4495,7 +4244,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
 
     box.innerHTML = `
         <div class="channels-deleted-label">Недавно удалённые</div>
-        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом стираются из системы. Слот тарифа уже свободен. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.</div>
+        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом стираются из системы. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.</div>
         ${items}
     `;
     box.style.display = '';
@@ -4508,7 +4257,7 @@ window.__channelMenu = async function (channelId, title) {
         window.__refreshVoice(channelId, title);
     } else if (action === 'delete') {
         const confirmed = await confirmDialog(
-            `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`
+            `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», данные сохранятся 7 дней. Переподключить можно в любой момент.`
         );
         if (confirmed) {
             doSoftDeleteChannel(channelId);
@@ -4639,36 +4388,15 @@ window.__refreshVoice = async function (channelId, title) {
 };
 
 
-const TIER_NAMES = {
-    free: 'Free',
-    trial: 'Trial',
-    light: 'Start',
-    pro: 'Pro',
-    pro_plus: 'Pro+',
-    agency: 'Agency',
-    network: 'Network',
-};
-
-
 function renderAddMoreOrLimit(data) {
     const btn = els.channelsAddMore;
     if (!btn) return;
 
-    const limit = data.channel_limit || 1;
+    const limit = data.channel_limit || 100;
     const used = data.channels_used != null ? data.channels_used : (data.channels || []).length;
-    const canAdd = !!data.can_add_more;
-    const tierName = TIER_NAMES[(data.tier || 'free')] || 'Free';
+    const canAdd = data.can_add_more !== false;
 
     let limitBox = document.getElementById('channels-limit-box');
-
-    if (canAdd || data.limit_bypass) {
-        btn.style.display = '';
-        if (limitBox) limitBox.style.display = 'none';
-        return;
-    }
-
-    btn.style.display = 'none';
-
     if (!limitBox) {
         limitBox = document.createElement('div');
         limitBox.id = 'channels-limit-box';
@@ -4676,31 +4404,20 @@ function renderAddMoreOrLimit(data) {
         btn.parentNode.insertBefore(limitBox, btn.nextSibling);
     }
 
-    const nextTierHint = (data.tier === 'free' || data.tier === 'trial' || data.tier === 'light')
-        ? 'Больше каналов — на тарифе Pro'
-        : 'Это максимум для твоего тарифа';
-    const over = used > limit;
-    const title = over
-        ? `Каналов подключено: ${used} · по тарифу: ${limit}`
-        : `Лимит каналов: ${used} из ${limit}`;
-    const sub = over
-        ? `Каналы сверх лимита на паузе — данные сохранены. ${nextTierHint}`
-        : `Тариф ${escapeHtml(tierName)}. ${nextTierHint}`;
+    if (canAdd) {
+        btn.style.display = '';
+        limitBox.innerHTML = `<div class="channels-limit-sub" style="text-align:center;">Каналов подключено: ${used} из ${limit}</div>`;
+        limitBox.style.display = '';
+        return;
+    }
 
+    btn.style.display = 'none';
     limitBox.innerHTML = `
-        <div class="channels-limit-icon"><i class="ti ti-${over ? 'alert-triangle' : 'lock'}"></i></div>
-        <div class="channels-limit-title">${title}</div>
-        <div class="channels-limit-sub">${sub}</div>
-        <button class="channels-limit-btn" id="channels-limit-btn">Подробнее о Pro</button>
+        <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
+        <div class="channels-limit-title">Каналов подключено: ${used} из ${limit}</div>
+        <div class="channels-limit-sub">Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.</div>
     `;
     limitBox.style.display = '';
-
-    const lb = document.getElementById('channels-limit-btn');
-    if (lb) {
-        lb.addEventListener('click', () => {
-            handleAction('profile');
-        });
-    }
 }
 
 
@@ -5003,9 +4720,6 @@ async function refreshChannelsListSilent() {
             els.channelsCards.innerHTML = data.channels.map(renderChannelCard).join('');
             loadChannelAvatars();
         }
-        if (typeof renderConnectionLimitsBanner === 'function') {
-            renderConnectionLimitsBanner(data.connection_limits, data.voice_refresh_limits);
-        }
     } catch (e) {}
 }
 
@@ -5243,7 +4957,7 @@ async function openActiveChannelSelector(opts) {
             let subtitle = '';
             let warn = false;
             if (ch.is_paused) {
-                subtitle = 'На паузе · сверх лимита тарифа';
+                subtitle = 'На паузе';
                 warn = true;
             } else if (ch.voice_status === 'done' && ch.voice_preview) {
                 subtitle = ch.voice_preview;
@@ -5761,11 +5475,9 @@ async function handleApplyExamples() {
     } catch (e) {
         const msg = (e?.message || '').includes('429')
             ? 'Не хватает Forge на обновление стиля.'
-            : (e?.message || '').includes('403')
-                ? 'Загрузка примеров недоступна на этом тарифе.'
-                : (e?.message || '').includes('400')
-                    ? 'Не нашёл осмысленных примеров. Каждый пример должен быть от 30 символов.'
-                    : 'Не удалось применить примеры. Попробуй позже.';
+            : (e?.message || '').includes('400')
+                ? 'Не нашёл осмысленных примеров. Каждый пример должен быть от 30 символов.'
+                : 'Не удалось применить примеры. Попробуй позже.';
         await alertDialog(msg);
         applyBtn.disabled = false;
         applyBtn.textContent = 'Применить';
@@ -5880,9 +5592,7 @@ async function handleRefreshVoiceFromSettings() {
     } catch (e) {
         const msg = (e?.message || '').includes('429')
             ? 'Не хватает Forge на обновление стиля.'
-            : (e?.message || '').includes('403')
-                ? 'Обновление недоступно на этом тарифе.'
-                : 'Не удалось запустить пересборку.';
+            : 'Не удалось запустить пересборку.';
         await alertDialog(msg);
     }
 }
@@ -5950,11 +5660,7 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'research') _settingsState.data.research_links = !newValue;
             updateToggleVisual(target, !newValue);
         }
-        if (target === 'paused' && e && e.status === 400 && String(e.message || '').indexOf('channel_limit_reached') !== -1) {
-            await alertDialog('Лимит каналов по тарифу исчерпан — снять канал с паузы нельзя. Поставь на паузу другой канал или повысь тариф.');
-        } else {
-            await alertDialog('Не удалось сохранить изменение.');
-        }
+        await alertDialog('Не удалось сохранить изменение.');
     }
 }
 
@@ -6018,7 +5724,7 @@ async function handleDeleteFromSettings() {
     if (!data) return;
     const title = data.title || 'Канал';
     const confirmed = await confirmDialog(
-        `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», слот тарифа освободится. В течение 7 дней его можно вернуть.`
+        `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», данные сохранятся 7 дней. Переподключить можно в любой момент.`
     );
     if (!confirmed) return;
     try {
