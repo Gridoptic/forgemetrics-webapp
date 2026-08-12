@@ -2932,7 +2932,7 @@ function renderTariffs(d) {
     const pctH = grantH > 0 ? Math.min(100, Math.round(balH / grantH * 100)) : 0;
     const lowH = grantH > 0 && balH < grantH * 0.15;
     let html = `<div class="cab-card" style="margin-bottom:10px;">` +
-        `<div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Баланс Forge</h3></div>` +
+        `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> Баланс Forge</h3></div>` +
         `<div class="fw-hero${lowH ? ' low' : ''}">` +
             `<div class="fw-bal">${forgeAmount(balH, 26)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
