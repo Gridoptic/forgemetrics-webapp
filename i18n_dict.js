@@ -1,5 +1,11 @@
 window.__I18N_DICT = {
  "en": {
+  "Баланс Forge": "Forge balance",
+  "История операций": "Operation history",
+  "Сколько стоят действия": "What actions cost",
+  "Пополнить": "Top up",
+  "Пополнить баланс Forge": "Top up Forge balance",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge is spent on generation, audits, matching and competitor analysis",
   "Баланс, пакеты пополнения и цены действий": "Balance, top-up packs and action prices",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Run a Telegram channel seriously? Take a look at ForgeMetrics — a strategist and an editor in one:\n\n— posts and topics in the voice of your channel, a week of content in a couple of clicks;\n— a personal strategy: what to change, where to grow, how to turn the channel into income;\n— before buying ads — real reach, inflation signs and an AI forecast of returns before you pay.\n\nThe link activates an extended starter pack on first launch:",
   "СБП": "SBP",
@@ -2902,6 +2908,12 @@ window.__I18N_DICT = {
   "Вопрос": "Question"
  },
  "es": {
+  "Баланс Forge": "Saldo Forge",
+  "История операций": "Historial de operaciones",
+  "Сколько стоят действия": "Cuánto cuestan las acciones",
+  "Пополнить": "Recargar",
+  "Пополнить баланс Forge": "Recargar saldo Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge se gasta en generación, auditorías, selección y análisis de competidores",
   "Баланс, пакеты пополнения и цены действий": "Saldo, paquetes de recarga y precios de acciones",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "¿Llevas un canal de Telegram en serio? Mira ForgeMetrics — estratega y editor en uno:\n\n— publicaciones y temas al estilo de tu canal, una semana de contenido en un par de clics;\n— estrategia personal: qué cambiar, dónde crecer, cómo llevar el canal a generar ingresos;\n— antes de comprar publicidad — alcance real, señales de inflado y pronóstico AI del retorno antes de pagar.\n\nEl enlace activa un paquete inicial ampliado en el primer inicio:",
   "СБП": "SBP",
@@ -5804,6 +5816,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "de": {
+  "Баланс Forge": "Forge-Guthaben",
+  "История операций": "Vorgangsverlauf",
+  "Сколько стоят действия": "Was Aktionen kosten",
+  "Пополнить": "Aufladen",
+  "Пополнить баланс Forge": "Forge-Guthaben aufladen",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge wird für Generierung, Audits, Auswahl und Konkurrenzanalyse verwendet",
   "Баланс, пакеты пополнения и цены действий": "Guthaben, Aufladepakete und Preise der Aktionen",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Du führst einen Telegram-Kanal ernsthaft? Sieh dir ForgeMetrics an — Stratege und Redakteur in einem:\n\n— Beiträge und Themen im Stil deines Kanals, eine Woche Content mit ein paar Klicks;\n— persönliche Strategie: was ändern, wo wachsen, wie der Kanal Einnahmen bringt;\n— vor dem Werbekauf — echte Reichweite, Anzeichen von Botting und eine AI-Prognose des Ertrags vor der Zahlung.\n\nDer Link aktiviert ein erweitertes Startpaket beim ersten Start:",
   "СБП": "SBP",
@@ -8706,6 +8724,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Sonntag"
  },
  "kk": {
+  "Баланс Forge": "Forge балансы",
+  "История операций": "Операциялар тарихы",
+  "Сколько стоят действия": "Әрекеттер қанша тұрады",
+  "Пополнить": "Толықтыру",
+  "Пополнить баланс Forge": "Forge балансын толықтыру",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge генерацияға, аудиттерге, іріктеуге және бәсекелестерді талдауға жұмсалады",
   "Баланс, пакеты пополнения и цены действий": "Баланс, толықтыру пакеттері және әрекет бағалары",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram-арнаңды байыппен жүргізсең — ForgeMetrics-ке қара. Бір қосымшада стратег және редактор:\n\n— посттар мен тақырыптар дәл өз арнаңның мәнерінде, бір апталық контент бірнеше кликпен;\n— жеке стратегия: нені өзгерту, қайда өсу, арнаны табысқа қалай шығару;\n— жарнама сатып алар алдында — нақты қамту, жасанды өсім белгілері және төлемге дейінгі AI-болжам.\n\nСілтеме алғашқы іске қосуда кеңейтілген бастапқы жинақты ашады:",
   "СБП": "СБП",
@@ -11603,6 +11627,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Жексенбі"
  },
  "uz": {
+  "Баланс Forge": "Forge balansi",
+  "История операций": "Amallar tarixi",
+  "Сколько стоят действия": "Amallar qancha turadi",
+  "Пополнить": "To‘ldirish",
+  "Пополнить баланс Forge": "Forge balansini to‘ldirish",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge generatsiya, auditlar, tanlov va raqobatchilar tahliliga sarflanadi",
   "Баланс, пакеты пополнения и цены действий": "Balans, to‘ldirish paketlari va amallar narxlari",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram-kanalni jiddiy yuritasanmi — ForgeMetrics-ga qara. Bitta ilovada strateg va muharrir:\n\n— postlar va mavzular aynan kanaling uslubida, bir haftalik kontent bir necha klikda;\n— shaxsiy strategiya: nimani o‘zgartirish, qayerda o‘sish, kanalni daromadga qanday chiqarish;\n— reklama sotib olishdan oldin — haqiqiy qamrov, soxta o‘sish belgilari va to‘lovgacha AI-prognoz.\n\nHavola birinchi ishga tushirishda kengaytirilgan boshlang‘ich to‘plamni faollashtiradi:",
   "СБП": "SBP",
@@ -14505,6 +14535,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Yakshanba"
  },
  "be": {
+  "Баланс Forge": "Баланс Forge",
+  "История операций": "Гісторыя аперацый",
+  "Сколько стоят действия": "Колькі каштуюць дзеянні",
+  "Пополнить": "Папоўніць",
+  "Пополнить баланс Forge": "Папоўніць баланс Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge траціцца на генерацыю, аудыты, падбор і аналіз канкурэнтаў",
   "Баланс, пакеты пополнения и цены действий": "Баланс, пакеты папаўнення і цэны дзеянняў",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Калі вядзеш Telegram-канал усур'ёз — паглядзі ForgeMetrics. Гэта стратэг і рэдактар у адным:\n\n— пасты і тэмы ў манеры менавіта твайго канала, тыдзень кантэнту ў пару клікаў;\n— персанальная стратэгія: што мяняць, дзе расці, як вывесці канал на даход;\n— перад закупкай рэкламы — сапраўдны ахоп, прыкметы накруткі і AI-прагноз аддачы яшчэ да аплаты.\n\nСпасылка актывуе пашыраны стартавы набор пры першым запуску:",
   "СБП": "СБП",
@@ -17405,6 +17441,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Нядзеля"
  },
  "az": {
+  "Баланс Forge": "Forge balansı",
+  "История операций": "Əməliyyat tarixçəsi",
+  "Сколько стоят действия": "Əməliyyatlar neçəyədir",
+  "Пополнить": "Artır",
+  "Пополнить баланс Forge": "Forge balansını artır",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge generasiya, auditlər, seçim və rəqib təhlilinə xərclənir",
   "Баланс, пакеты пополнения и цены действий": "Balans, artırma paketləri və əməliyyat qiymətləri",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram kanalını ciddi aparırsansa — ForgeMetrics-ə bax. Bir tətbiqdə strateq və redaktor:\n\n— postlar və mövzular məhz sənin kanalının üslubunda, bir həftəlik kontent bir neçə klikə;\n— fərdi strategiya: nəyi dəyişmək, harada böyümək, kanalı gəlirə necə çıxarmaq;\n— reklam almazdan əvvəl — real əhatə, süni artım əlamətləri və ödənişdən əvvəl AI-proqnoz.\n\nKeçid ilk açılışda genişləndirilmiş başlanğıc dəstini aktivləşdirir:",
   "СБП": "SBP",
@@ -20307,6 +20349,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Bazar"
  },
  "ar": {
+  "Баланс Forge": "رصيد Forge",
+  "История операций": "سجل العمليات",
+  "Сколько стоят действия": "كم تكلف العمليات",
+  "Пополнить": "شحن الرصيد",
+  "Пополнить баланс Forge": "شحن رصيد Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "تُنفق Forge على التوليد والتدقيق والاختيار وتحليل المنافسين",
   "Баланс, пакеты пополнения и цены действий": "الرصيد وباقات الشحن وأسعار العمليات",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "تدير قناة تيليجرام بجدية؟ ألقِ نظرة على ForgeMetrics — استراتيجي ومحرر في تطبيق واحد:\n\n— منشورات ومواضيع بأسلوب قناتك تحديداً، وأسبوع من المحتوى بنقرات معدودة؛\n— استراتيجية شخصية: ماذا تغيّر، وأين تنمو، وكيف تجعل القناة مصدر دخل؛\n— قبل شراء الإعلانات — وصول حقيقي وعلامات التضخيم وتوقع AI للعائد قبل الدفع.\n\nيفعّل الرابط باقة بداية موسّعة عند أول تشغيل:",
   "СБП": "SBP",
@@ -23209,6 +23257,12 @@ window.__I18N_DICT = {
   "Воскресенье": "الأحد"
  },
  "fa": {
+  "Баланс Forge": "موجودی Forge",
+  "История операций": "تاریخچه عملیات",
+  "Сколько стоят действия": "هزینه عملیات چقدر است",
+  "Пополнить": "شارژ",
+  "Пополнить баланс Forge": "شارژ موجودی Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge صرف تولید، ممیزی، انتخاب و تحلیل رقبا می‌شود",
   "Баланс, пакеты пополнения и цены действий": "موجودی، بسته‌های شارژ و قیمت عملیات",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "کانال تلگرام را جدی اداره می‌کنی؟ به ForgeMetrics نگاه کن — استراتژیست و ویراستار در یک برنامه:\n\n— پست‌ها و موضوع‌ها دقیقاً به سبک کانال تو، یک هفته محتوا با چند کلیک؛\n— استراتژی شخصی: چه چیزی را تغییر دهی، کجا رشد کنی، چطور کانال را به درآمد برسانی؛\n— پیش از خرید تبلیغ — دسترسی واقعی، نشانه‌های تقلب و پیش‌بینی AI بازده پیش از پرداخت.\n\nاین لینک در نخستین اجرا بسته شروع گسترده را فعال می‌کند:",
   "СБП": "SBP",
@@ -26111,6 +26165,12 @@ window.__I18N_DICT = {
   "Воскресенье": "یکشنبه"
  },
  "tr": {
+  "Баланс Forge": "Forge bakiyesi",
+  "История операций": "İşlem geçmişi",
+  "Сколько стоят действия": "İşlemler ne kadar",
+  "Пополнить": "Yükle",
+  "Пополнить баланс Forge": "Forge bakiyesi yükle",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge üretim, denetimler, seçim ve rakip analizine harcanır",
   "Баланс, пакеты пополнения и цены действий": "Bakiye, yükleme paketleri ve işlem fiyatları",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram kanalını ciddi yönetiyorsan — ForgeMetrics'e bak. Tek uygulamada stratejist ve editör:\n\n— gönderiler ve konular tam senin kanalının üslubunda, bir haftalık içerik birkaç tıkla;\n— kişisel strateji: neyi değiştirmeli, nerede büyümeli, kanal nasıl gelire dönüşür;\n— reklam satın almadan önce — gerçek erişim, şişirme belirtileri ve ödemeden önce AI getiri tahmini.\n\nBağlantı ilk açılışta genişletilmiş başlangıç paketini etkinleştirir:",
   "СБП": "SBP",
@@ -29013,6 +29073,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Pazar"
  },
  "hi": {
+  "Баланс Forge": "Forge बैलेंस",
+  "История операций": "ऑपरेशन इतिहास",
+  "Сколько стоят действия": "कार्रवाइयों की कीमत",
+  "Пополнить": "टॉप-अप",
+  "Пополнить баланс Forge": "Forge बैलेंस टॉप-अप करें",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge जनरेशन, ऑडिट, चयन और प्रतिस्पर्धी विश्लेषण पर खर्च होता है",
   "Баланс, пакеты пополнения и цены действий": "बैलेंस, टॉप-अप पैक और कार्रवाई की कीमतें",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram चैनल गंभीरता से चलाते हो? ForgeMetrics देखो — एक ही ऐप में स्ट्रैटेजिस्ट और एडिटर:\n\n— पोस्ट और विषय ठीक तुम्हारे चैनल के अंदाज़ में, हफ़्ते का कंटेंट कुछ क्लिक में;\n— निजी रणनीति: क्या बदलें, कहाँ बढ़ें, चैनल से आय कैसे बनाएं;\n— विज्ञापन ख़रीदने से पहले — असली पहुँच, फर्ज़ी बढ़त के संकेत और भुगतान से पहले AI-पूर्वानुमान।\n\nलिंक पहले लॉन्च पर विस्तारित स्टार्टर पैक सक्रिय करता है:",
   "СБП": "SBP",
@@ -31915,6 +31981,12 @@ window.__I18N_DICT = {
   "Воскресенье": "रविवार"
  },
  "bn": {
+  "Баланс Forge": "Forge ব্যালেন্স",
+  "История операций": "অপারেশন ইতিহাস",
+  "Сколько стоят действия": "কাজের খরচ কত",
+  "Пополнить": "টপ-আপ",
+  "Пополнить баланс Forge": "Forge ব্যালেন্স টপ-আপ",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge জেনারেশন, অডিট, বাছাই ও প্রতিযোগী বিশ্লেষণে খরচ হয়",
   "Баланс, пакеты пополнения и цены действий": "ব্যালেন্স, টপ-আপ প্যাক ও কাজের দাম",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Telegram চ্যানেল সিরিয়াসভাবে চালাও? ForgeMetrics দেখো — এক অ্যাপে স্ট্র্যাটেজিস্ট ও এডিটর:\n\n— পোস্ট ও বিষয় ঠিক তোমার চ্যানেলের ধাঁচে, এক সপ্তাহের কনটেন্ট কয়েক ক্লিকে;\n— ব্যক্তিগত কৌশল: কী বদলাবে, কোথায় বাড়বে, চ্যানেল থেকে আয় কীভাবে;\n— বিজ্ঞাপন কেনার আগে — আসল রিচ, ভুয়া বৃদ্ধির লক্ষণ আর পেমেন্টের আগে AI-পূর্বাভাস।\n\nলিঙ্কটি প্রথম চালুতে বর্ধিত স্টার্টার প্যাক চালু করে:",
   "СБП": "SBP",
@@ -34817,6 +34889,12 @@ window.__I18N_DICT = {
   "Воскресенье": "রবিবার"
  },
  "id": {
+  "Баланс Forge": "Saldo Forge",
+  "История операций": "Riwayat operasi",
+  "Сколько стоят действия": "Berapa biaya aksi",
+  "Пополнить": "Isi ulang",
+  "Пополнить баланс Forge": "Isi ulang saldo Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge digunakan untuk generasi, audit, seleksi, dan analisis pesaing",
   "Баланс, пакеты пополнения и цены действий": "Saldo, paket isi ulang, dan harga aksi",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Serius mengelola kanal Telegram? Lihat ForgeMetrics — strateg dan editor dalam satu aplikasi:\n\n— postingan dan topik persis dengan gaya kanalmu, konten seminggu dalam beberapa klik;\n— strategi personal: apa yang diubah, di mana tumbuh, cara membuat kanal menghasilkan;\n— sebelum membeli iklan — jangkauan asli, tanda manipulasi, dan prakiraan AI hasil sebelum bayar.\n\nTautan mengaktifkan paket awal yang diperluas saat pertama dibuka:",
   "СБП": "SBP",
@@ -37719,6 +37797,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Minggu"
  },
  "vi": {
+  "Баланс Forge": "Số dư Forge",
+  "История операций": "Lịch sử thao tác",
+  "Сколько стоят действия": "Chi phí các thao tác",
+  "Пополнить": "Nạp",
+  "Пополнить баланс Forge": "Nạp số dư Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge dùng cho tạo nội dung, kiểm toán, chọn kênh và phân tích đối thủ",
   "Баланс, пакеты пополнения и цены действий": "Số dư, gói nạp và giá thao tác",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Vận hành kênh Telegram nghiêm túc? Xem ForgeMetrics — chiến lược gia và biên tập viên trong một ứng dụng:\n\n— bài đăng và chủ đề đúng phong cách kênh của bạn, một tuần nội dung trong vài cú nhấp;\n— chiến lược cá nhân: thay đổi gì, tăng trưởng ở đâu, đưa kênh ra doanh thu thế nào;\n— trước khi mua quảng cáo — lượt tiếp cận thật, dấu hiệu gian lận và dự báo AI về hiệu quả trước khi trả tiền.\n\nLiên kết kích hoạt gói khởi đầu mở rộng ở lần chạy đầu:",
   "СБП": "SBP",
@@ -40621,6 +40705,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Chủ Nhật"
  },
  "pt": {
+  "Баланс Forge": "Saldo Forge",
+  "История операций": "Histórico de operações",
+  "Сколько стоят действия": "Quanto custam as ações",
+  "Пополнить": "Recarregar",
+  "Пополнить баланс Forge": "Recarregar saldo Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge é gasto em geração, auditorias, seleção e análise de concorrentes",
   "Баланс, пакеты пополнения и цены действий": "Saldo, pacotes de recarga e preços das ações",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Leva um canal do Telegram a sério? Veja o ForgeMetrics — estrategista e editor em um só:\n\n— posts e temas no estilo do seu canal, uma semana de conteúdo em poucos cliques;\n— estratégia pessoal: o que mudar, onde crescer, como levar o canal à renda;\n— antes de comprar anúncios — alcance real, sinais de inflação e previsão AI do retorno antes de pagar.\n\nO link ativa um pacote inicial ampliado no primeiro acesso:",
   "СБП": "SBP",
@@ -43523,6 +43613,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domingo"
  },
  "fr": {
+  "Баланс Forge": "Solde Forge",
+  "История операций": "Historique des opérations",
+  "Сколько стоят действия": "Combien coûtent les actions",
+  "Пополнить": "Recharger",
+  "Пополнить баланс Forge": "Recharger le solde Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge sert à la génération, aux audits, à la sélection et à l'analyse des concurrents",
   "Баланс, пакеты пополнения и цены действий": "Solde, packs de recharge et prix des actions",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Tu gères un canal Telegram sérieusement ? Regarde ForgeMetrics — stratège et rédacteur en un :\n\n— des posts et des sujets dans le style de ton canal, une semaine de contenu en quelques clics ;\n— une stratégie personnelle : quoi changer, où grandir, comment amener le canal au revenu ;\n— avant d'acheter de la pub — portée réelle, signes de triche et prévision AI du retour avant de payer.\n\nLe lien active un pack de départ étendu au premier lancement :",
   "СБП": "SBP",
@@ -46425,6 +46521,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Dimanche"
  },
  "it": {
+  "Баланс Forge": "Saldo Forge",
+  "История операций": "Cronologia operazioni",
+  "Сколько стоят действия": "Quanto costano le azioni",
+  "Пополнить": "Ricarica",
+  "Пополнить баланс Forge": "Ricarica il saldo Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge si spende per generazione, audit, selezione e analisi dei concorrenti",
   "Баланс, пакеты пополнения и цены действий": "Saldo, pacchetti di ricarica e prezzi delle azioni",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Gestisci un canale Telegram sul serio? Guarda ForgeMetrics — stratega ed editor in uno:\n\n— post e temi nello stile del tuo canale, una settimana di contenuti in pochi clic;\n— strategia personale: cosa cambiare, dove crescere, come portare il canale al guadagno;\n— prima di comprare pubblicità — copertura reale, segni di gonfiaggio e previsione AI della resa prima di pagare.\n\nIl link attiva un pacchetto iniziale esteso al primo avvio:",
   "СБП": "SBP",
@@ -49327,6 +49429,12 @@ window.__I18N_DICT = {
   "Воскресенье": "Domenica"
  },
  "am": {
+  "Баланс Forge": "የForge ቀሪ",
+  "История операций": "የክንውኖች ታሪክ",
+  "Сколько стоят действия": "ተግባራት ስንት ያስከፍላሉ",
+  "Пополнить": "ሙላ",
+  "Пополнить баланс Forge": "የForge ቀሪ ሙላ",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge ለማመንጨት፣ ለምርመራ፣ ለምርጫ እና ለተፎካካሪ ትንተና ይውላል",
   "Баланс, пакеты пополнения и цены действий": "ቀሪ፣ የመሙያ ጥቅሎች እና የተግባር ዋጋዎች",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "የTelegram ቻናል በቁም ነገር ትመራለህ? ForgeMetrics-ን ተመልከት — በአንድ መተግበሪያ ስትራቴጂስት እና አርታዒ:\n\n— ልጥፎች እና ርዕሶች በቻናልህ ስልት፣ የሳምንት ይዘት በጥቂት ጠቅታዎች;\n— የግል ስትራቴጂ: ምን መቀየር፣ የት ማደግ፣ ቻናሉን ወደ ገቢ እንዴት ማድረስ;\n— ማስታወቂያ ከመግዛት በፊት — እውነተኛ ተደራሽነት፣ የማጭበርበር ምልክቶች እና ከክፍያ በፊት የAI ትንበያ።\n\nሊንኩ በመጀመሪያ ማስጀመሪያ የተስፋፋ የመነሻ ጥቅል ያስከፍታል:",
   "СБП": "SBP",
@@ -52229,6 +52337,12 @@ window.__I18N_DICT = {
   "Воскресенье": "እሁድ"
  },
  "sw": {
+  "Баланс Forge": "Salio la Forge",
+  "История операций": "Historia ya shughuli",
+  "Сколько стоят действия": "Vitendo vinagharimu kiasi gani",
+  "Пополнить": "Ongeza salio",
+  "Пополнить баланс Forge": "Ongeza salio la Forge",
+  "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge hutumika kwa uzalishaji, ukaguzi, uteuzi na uchambuzi wa washindani",
   "Баланс, пакеты пополнения и цены действий": "Salio, vifurushi vya kuongeza na bei za vitendo",
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:": "Unaendesha kituo cha Telegram kwa umakini? Angalia ForgeMetrics — mtaalamu wa mkakati na mhariri kwenye programu moja:\n\n— machapisho na mada kwa mtindo wa kituo chako, maudhui ya wiki kwa mibofyo michache;\n— mkakati binafsi: nini kubadilisha, wapi kukua, jinsi ya kufanya kituo kilete mapato;\n— kabla ya kununua matangazo — ufikiaji halisi, dalili za usanii na utabiri wa AI wa matokeo kabla ya kulipa.\n\nKiungo huwasha kifurushi cha kuanzia kilichopanuliwa katika uzinduzi wa kwanza:",
   "СБП": "SBP",

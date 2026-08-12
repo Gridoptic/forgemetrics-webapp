@@ -175,7 +175,7 @@ function openForgeSheet() {
         });
     }));
     const more = sheet.querySelector('#fs-more');
-    if (more) more.addEventListener('click', () => { closeForgeSheet(); openCabinet('forge'); });
+    if (more) more.addEventListener('click', () => { closeForgeSheet(); openTariffs(); });
     localizeTree(sheet);
 }
 
@@ -2386,49 +2386,6 @@ function bindFwPriceRows(boxId) {
     }));
 }
 
-function cabForgeHtml(f) {
-    if (!f) return '';
-    const bal = Number(f.balance || 0);
-    const grant = Number(f.grant || 0);
-    const pct = grant > 0 ? Math.min(100, Math.round(bal / grant * 100)) : 0;
-    const low = grant > 0 && bal < grant * 0.15;
-
-    const prices = fwPriceRows(f.prices);
-
-    const baseRate = (f.packs && f.packs.length)
-        ? f.packs[0].price_rub / f.packs[0].amount : 0;
-    const packs = (f.packs || []).map(p => {
-        const disc = baseRate
-            ? Math.round((1 - (p.price_rub / p.amount) / baseRate) * 100) : 0;
-        return `<button class="fw-pack" data-forgepack="${p.amount}">` +
-            `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
-            `<span class="fw-pack-p">${cabNum(p.price_rub)} ₽</span>` +
-            (disc > 0 ? `<span class="fw-pack-d">−${disc}%</span>` : '') + `</button>`;
-    }).join('');
-
-    const hist = (f.history || []).slice(0, 8).map(tx =>
-        `<div class="fw-trow"><div class="fw-ti"><span>${escapeHtml(forgeTxLabel(tx))}</span>` +
-        `<i>${escapeHtml(forgeTxDate(tx.created_at))}</i></div>` +
-        `<b class="${tx.amount > 0 ? 'pos' : ''}">${tx.amount > 0 ? '+' : '−'}${cabNum(Math.abs(tx.amount))}</b></div>`).join('');
-
-    const monthly = grant > 0
-        ? `<div class="fw-sub">Начисляем ${cabNum(grant)} бесплатно каждый месяц</div>`
-        : '';
-
-    return `<div class="cab-card" id="cab-sec-forge">` +
-        `<div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Баланс Forge</h3></div>` +
-        `<div class="fw-hero${low ? ' low' : ''}">` +
-            `<div class="fw-bal">${forgeAmount(bal, 26)}</div>${monthly}` +
-            (grant > 0 ? `<div class="fw-bar"><i style="width:${pct}%"></i></div>` : '') +
-        `</div>` +
-        (packs ? `<div class="fw-sec">Пополнить</div><div class="fw-packs">${packs}</div>` : '') +
-        (prices ? `<div class="fw-sec fw-toggle" id="fw-prices-t">Сколько стоят действия <i class="ti ti-chevron-down"></i></div>` +
-                  `<div class="fw-prices" id="fw-prices" hidden>${prices}</div>` : '') +
-        (hist ? `<div class="fw-sec fw-toggle" id="fw-hist-t">История операций <i class="ti ti-chevron-down"></i></div>` +
-                `<div class="fw-hist" id="fw-hist" hidden>${hist}</div>` : '') +
-        `</div>`;
-}
-
 function renderCabinet(d) {
     const body = document.getElementById('cabinet-body');
     if (!body) return;
@@ -2455,7 +2412,6 @@ function renderCabinet(d) {
     const _fbal = Number(((d || {}).forge || {}).balance || 0);
     let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><span class="cab-tarpill">${cabNum(_fbal)} FORGE</span></div>${_hstats}</div>`;
 
-    html += cabForgeHtml(d.forge);
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
     html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">Справка и поддержка</div><div class="cab-sd">Метрики, Forge, связь с нами</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
@@ -2565,33 +2521,6 @@ function wireCabinet(d) {
         cabToast(now ? 'Уведомления включены' : 'Уведомления выключены');
     });
 
-    const fold = (btnId, boxId) => {
-        const btn = document.getElementById(btnId), box = document.getElementById(boxId);
-        if (!btn || !box) return;
-        btn.addEventListener('click', () => {
-            hapticLight();
-            box.hidden = !box.hidden;
-            btn.classList.toggle('open', !box.hidden);
-        });
-    };
-    fold('fw-prices-t', 'fw-prices');
-    fold('fw-hist-t', 'fw-hist');
-    bindFwPriceRows('fw-prices');
-
-    document.querySelectorAll('[data-forgepack]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const amount = parseInt(btn.getAttribute('data-forgepack'), 10);
-            const pack = ((d.forge || {}).packs || []).find(p => p.amount === amount);
-            if (!pack) return;
-            hapticMed();
-            openCheckout({
-                name: `${amount.toLocaleString('ru-RU')} Forge`,
-                price: pack.price_rub, sub: false, icon: 'bolt', color: 'am',
-                rowLabel: `Пополнение баланса · ${amount.toLocaleString('ru-RU')} Forge`,
-                pay: { product_type: 'package', product_key: `forge_${amount}`, months: 1 },
-            });
-        });
-    });
 }
 
 function wireReferral(d) {
@@ -2995,7 +2924,18 @@ function wireTfCalc(d) {
 function renderTariffs(d) {
     const body = document.getElementById('tariffs-body');
     if (!body) return;
-    let html = '<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n"><span>Без тарифов и подписок</span></div><div class="s"><span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div></div></div>';
+    const balH = Number(d.forge_balance || 0);
+    const grantH = Number(d.forge_grant || 0);
+    const pctH = grantH > 0 ? Math.min(100, Math.round(balH / grantH * 100)) : 0;
+    const lowH = grantH > 0 && balH < grantH * 0.15;
+    let html = `<div class="cab-card" style="margin-bottom:10px;">` +
+        `<div class="cab-stt"><h3>${cabTile('am', 'bolt', 'sm')} Баланс Forge</h3></div>` +
+        `<div class="fw-hero${lowH ? ' low' : ''}">` +
+            `<div class="fw-bal">${forgeAmount(balH, 26)}</div>` +
+            (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
+            (grantH > 0 ? `<div class="fw-bar"><i style="width:${pctH}%"></i></div>` : '') +
+        `</div></div>`;
+    html += '<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n"><span>Без тарифов и подписок</span></div><div class="s"><span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div></div></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -3003,13 +2943,18 @@ function renderTariffs(d) {
         (p.discount_pct > 0 ? `<span class="fw-pack-d">−${p.discount_pct}%</span>` : '') +
         `</button>`).join('');
     if (packs) {
-        const bal = Number(d.forge_balance || 0);
         html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> Пополнить баланс Forge</div>` +
-            `<div class="tf-sub" style="margin:-2px 0 10px;">На балансе ${forgeAmount(bal, 13)} · Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов</div>` +
+            `<div class="tf-sub" style="margin:-2px 0 10px;">Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов</div>` +
             `<div class="fw-packs">${packs}</div>`;
         const prices = fwPriceRows(d.forge_prices);
         if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">Сколько стоят действия <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-prices" id="tf-prices" hidden>${prices}</div>`;
+        const histRows = (d.forge_history || []).slice(0, 12).map(tx =>
+            `<div class="fw-trow"><div class="fw-ti"><span>${escapeHtml(forgeTxLabel(tx))}</span>` +
+            `<i>${escapeHtml(forgeTxDate(tx.created_at))}</i></div>` +
+            `<b class="${tx.amount > 0 ? 'pos' : ''}">${tx.amount > 0 ? '+' : '−'}${cabNum(Math.abs(tx.amount))}</b></div>`).join('');
+        if (histRows) html += `<div class="fw-sec fw-toggle" id="tf-hist-t">История операций <i class="ti ti-chevron-down"></i></div>` +
+            `<div class="fw-hist" id="tf-hist" hidden>${histRows}</div>`;
         html += `</div>`;
     }
     html += tfCalculatorHtml(d);
@@ -3024,6 +2969,14 @@ function renderTariffs(d) {
         tfPricesT.classList.toggle('open', !box.hidden);
     });
     bindFwPriceRows('tf-prices');
+    const tfHistT = document.getElementById('tf-hist-t');
+    if (tfHistT) tfHistT.addEventListener('click', () => {
+        const box = document.getElementById('tf-hist');
+        if (!box) return;
+        hapticLight();
+        box.hidden = !box.hidden;
+        tfHistT.classList.toggle('open', !box.hidden);
+    });
     body.querySelectorAll('[data-tfpack]').forEach((btn) => btn.addEventListener('click', () => {
         const amount = parseInt(btn.getAttribute('data-tfpack'), 10);
         const pack = (d.forge_packs || []).find(p => p.amount === amount);
