@@ -229,7 +229,7 @@ button:active {
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
     margin-bottom: var(--space-xl);
 }
 
@@ -238,6 +238,11 @@ button:active {
     font-weight: 500;
     letter-spacing: 0.3px;
     color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .header-btn {
@@ -300,27 +305,17 @@ button:active {
     border-radius: 50%;
 }
 
-.greeting {
-    margin-bottom: var(--space-xl);
-}
-
-.greeting-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
 .forge-chip {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 6px 13px 6px 10px;
-    border-radius: 13px;
-    background: rgba(245, 158, 11, 0.13);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    gap: 7px;
+    min-height: 38px;
+    padding: 5px 12px 5px 8px;
+    border-radius: 99px;
+    background: linear-gradient(135deg, rgba(247, 181, 86, 0.16), rgba(247, 181, 86, 0.05));
+    border: 1px solid rgba(247, 181, 86, 0.45);
+    box-shadow: 0 0 14px rgba(247, 181, 86, 0.20);
     color: #fbbf24;
     cursor: pointer;
     font-family: inherit;
@@ -335,8 +330,8 @@ button:active {
 .forge-chip-ico {
     display: flex;
     flex-shrink: 0;
-    width: 19px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
 }
 
 .forge-chip-ico svg {
@@ -344,24 +339,9 @@ button:active {
     height: 100%;
 }
 
-.forge-chip-txt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.1;
-}
-
-.forge-chip-lbl {
-    font-size: 9.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    opacity: 0.72;
-}
-
 .forge-chip-val {
-    font-size: 15px;
-    font-weight: 650;
+    font-size: 16px;
+    font-weight: 800;
     letter-spacing: -0.2px;
     font-variant-numeric: tabular-nums;
 }
@@ -379,25 +359,6 @@ button:active {
 
 .forge-price .forge-ico {
     margin-right: 4px;
-}
-
-.greeting-name {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    margin-bottom: var(--space-xs);
-}
-
-.greeting-meta {
-    font-size: 13px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.greeting-meta i {
-    font-size: 14px;
 }
 
 .metrics {
@@ -900,8 +861,7 @@ button:active {
 }
 
 @media (max-width: 360px) {
-    .greeting-name { font-size: 20px; }
-    .metric-number { font-size: 18px; }
+        .metric-number { font-size: 18px; }
     .action-card-title { font-size: 13px; }
     .action-card-icon { width: 32px; height: 32px; }
     .action-card-icon i { font-size: 16px; }
@@ -3963,16 +3923,6 @@ html.cs-modal-open {
     font-size: 36px;
     color: rgba(255, 255, 255, 0.3);
     margin-bottom: 10px;
-}
-
-.greeting-meta.clickable {
-    cursor: pointer;
-    user-select: none;
-    transition: opacity 0.15s ease;
-}
-
-.greeting-meta.clickable:active {
-    opacity: 0.6;
 }
 
 .dashboard-channel-switcher-icon {

@@ -251,7 +251,6 @@ function setForgeBalance(n) {
 const els = {
     errorMessage: document.getElementById('error-message'),
     avatarLetter: document.getElementById('avatar-letter'),
-    greetingName: document.getElementById('greeting-name'),
     actionsList: document.getElementById('actions-list'),
     menuBtn: document.getElementById('menu-btn'),
     menuDot: document.getElementById('menu-dot'),
@@ -636,7 +635,6 @@ function renderDashboard(data) {
     } else if (els.avatarLetter) {
         els.avatarLetter.textContent = (firstName.charAt(0) || 'F').toUpperCase();
     }
-    els.greetingName.textContent = firstName ? `Привет, ${firstName}` : 'Привет';
     setForgeBalance(data.forge_balance);
     if (data.forge) window.__fmForgeData = data.forge;
 
