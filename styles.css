@@ -344,6 +344,8 @@ button:active {
     font-weight: 800;
     letter-spacing: -0.2px;
     font-variant-numeric: tabular-nums;
+    position: relative;
+    top: 0.5px;
 }
 
 .forge-ico {
