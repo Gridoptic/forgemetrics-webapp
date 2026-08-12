@@ -1035,7 +1035,9 @@ function renderActions(actions) {
         const iconColor = (action.color && action.color !== 'primary') ? action.color : 'purple';
         const colorClass = `icon-${iconColor}`;
         const subtitleClass = '';
-        const iconInner = `<i class="ti ti-${action.icon}"></i>`;
+        const iconInner = action.icon === 'forge-bolt'
+            ? FORGE_SVG
+            : `<i class="ti ti-${action.icon}"></i>`;
 
         card.innerHTML = `
             <div class="action-card-content">
@@ -1088,7 +1090,7 @@ function openHomeConfig() {
         const on = enabled.indexOf(id) >= 0;
         return `<div class="hc-row${on ? '' : ' off'}" data-id="${c.id}">
             <span class="hc-grip"><i class="ti ti-grip-vertical"></i></span>
-            <span class="hc-ic icon-${c.color === 'primary' ? 'purple' : c.color}"><i class="ti ti-${c.icon}"></i></span>
+            <span class="hc-ic icon-${c.color === 'primary' ? 'purple' : c.color}">${c.icon === 'forge-bolt' ? FORGE_SVG : `<i class="ti ti-${c.icon}"></i>`}</span>
             <span class="hc-t">${escapeHtml(c.title)}</span>
             <span class="hc-sw${on ? ' on' : ''}"></span>
         </div>`;
