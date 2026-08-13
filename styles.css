@@ -311,7 +311,7 @@ button:active {
     align-items: center;
     gap: 7px;
     min-height: 38px;
-    padding: 5px 12px 5px 8px;
+    padding: 5px 9px 5px 8px;
     border-radius: 99px;
     background: linear-gradient(135deg, rgba(247, 181, 86, 0.16), rgba(247, 181, 86, 0.05));
     border: 1px solid rgba(247, 181, 86, 0.45);
@@ -345,7 +345,8 @@ button:active {
     letter-spacing: -0.2px;
     font-variant-numeric: tabular-nums;
     position: relative;
-    top: 0.5px;
+    top: 1px;
+    transform: translateY(0.4px);
 }
 
 .forge-ico {
