@@ -1590,7 +1590,7 @@
                 'Какая модель пишет посты недели. Влияет на цену каждого поста.') +
             '<div class="cp-msel">' + modelOpt('premium') + modelOpt('standard') + '</div>' +
             '<div class="cp-hint"><i class="ti ti-file-search" style="vertical-align:-2px;margin-right:3px;"></i>' +
-                esc(T('Проверенные исследования можно добавить к любому готовому посту — кнопка появится на его карточке.')) +
+                esc(T('Если в посте есть факты или статистика, к нему можно добавить ссылки на проверенные исследования — кнопка появится на его карточке.')) +
                 ' ' + forgeTag(priceResearch()) + ' ' + esc(T('за пост')) + '.</div></div>' +
 
             '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
