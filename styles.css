@@ -340,7 +340,7 @@ button:active {
 }
 
 .forge-chip-val {
-    font-size: 23px;
+    font-size: 27px;
     font-weight: 800;
     letter-spacing: -0.3px;
     font-variant-numeric: tabular-nums;
@@ -5337,7 +5337,7 @@ html.cs-modal-open {
 @media (max-width: 360px) {
     .fw-packs { grid-template-columns: repeat(2, 1fr); }
     .fw-bal { font-size: 24px; }
-    .forge-chip-val { font-size: 20px; }
+    .forge-chip-val { font-size: 27px; }
 }
 
 
