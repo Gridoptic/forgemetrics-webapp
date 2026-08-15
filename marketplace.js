@@ -9298,10 +9298,10 @@
     function _ctcInfo(c) {
         if (!c) return null;
         c = String(c).trim();
-        var u = _ctcUser(c);
-        if (u) return { kind: 'tg', label: '@' + u, val: u };
         var em = c.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/);
         if (em) return { kind: 'mail', label: em[0], val: em[0] };
+        var u = _ctcUser(c);
+        if (u) return { kind: 'tg', label: '@' + u, val: u };
         var url = c.match(/https?:\/\/\S+/i);
         if (url) return { kind: 'url', label: url[0].replace(/^https?:\/\//i, '').replace(/\/+$/, ''), val: url[0] };
         var dom = c.match(/(?:www\.)?[A-Za-z0-9\-]+\.[A-Za-z]{2,}(?:\/\S*)?/);
