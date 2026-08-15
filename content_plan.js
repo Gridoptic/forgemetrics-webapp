@@ -1811,8 +1811,8 @@
             '<div class="cp-hbar stop"><i class="ti ti-eye"></i><span>' +
             esc(T('Режим просмотра — права на изменения выдаёт создатель канала.')) +
             '</span></div>';
-        setView(viewBan + chanBlock + weekCal + doneBanner + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
-            reviewEntry() + insightsBlock() + strategyBlock() +
+        setView(viewBan + chanBlock + weekCal + doneBanner + strategyBlock() + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
+            reviewEntry() + insightsBlock() +
             '<div class="cp-foot">' + foot + '</div>', 'week');
         var scrEl = document.getElementById('content-plan-screen');
         if (scrEl) scrEl.classList.toggle('cp-vonly', !canEdit());
