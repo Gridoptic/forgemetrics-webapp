@@ -4030,9 +4030,12 @@ function showCopyToast(message) {
 }
 
 
+const _NO_FLAG_GLYPHS = /Windows/i.test((typeof navigator !== 'undefined' && navigator.userAgent) || '');
 function escapeHtml(s) {
     if (s == null) return '';
-    return String(s)
+    s = String(s);
+    if (_NO_FLAG_GLYPHS && /\uD83C/.test(s)) s = s.replace(/\uD83C[\uDDE6-\uDDFF]/g, '').replace(/ {2,}/g, ' ');
+    return s
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
