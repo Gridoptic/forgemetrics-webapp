@@ -974,7 +974,16 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted) {
     function smooth(p) { if (p.length < 2) return ''; let d = 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1); for (let i = 0; i < p.length - 1; i++) { const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c; const c1x = b[0] + (c[0] - a[0]) / 6, c1y = b[1] + (c[1] - a[1]) / 6, c2x = c[0] - (e[0] - b[0]) / 6, c2y = c[1] - (e[1] - b[1]) / 6; d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1); } return d; }
     const line = smooth(pts), area = line + ' L' + X(last).toFixed(1) + ',' + (Hh - padB) + ' L' + X(0).toFixed(1) + ',' + (Hh - padB) + ' Z';
     const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
-    const grids = [max, min];
+    const grids = (() => {
+        const raw = (hi - lo) / 3;
+        if (!(raw > 0)) return [max, min];
+        const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+        let step = pow * 10;
+        for (const m of [1, 2, 2.5, 5, 10]) { if (raw <= m * pow) { step = m * pow; break; } }
+        const out = [];
+        for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) { if (v > 0) out.push(Math.round(v)); }
+        return out.length ? out.slice(-4) : [max, min];
+    })();
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
     svg += `<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PC.a1}"/><stop offset="0.32" stop-color="${PC.a2}"/><stop offset="0.68" stop-color="${PC.a3}"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></linearGradient>`;
     svg += `<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${PC.l1}"/><stop offset="0.5" stop-color="${PC.l2}"/><stop offset="1" stop-color="${PC.l3}"/></linearGradient>`;
