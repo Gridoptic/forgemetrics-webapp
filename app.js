@@ -40,9 +40,6 @@ const screens = {
 const FORGE_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">'
     + '<circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.25" opacity="0.4"/>'
     + '<path d="M13.7 4.6 7.9 13.5h3.7l-1 5.9 5.7-8.6h-3.7l1.1-6.2z" fill="currentColor"/></svg>';
-const FORGE_COIN_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true">'
-    + '<circle cx="12" cy="12" r="10.5" fill="currentColor"/>'
-    + '<path d="M13.6 4.8 8 13.4h3.6l-1.1 5.8 5.6-8.5h-3.6l1.1-5.9z" fill="#141726"/></svg>';
 
 function forgeIco(size) {
     return `<span class="forge-ico" style="width:${size || 14}px;height:${size || 14}px;">${FORGE_SVG}</span>`;
@@ -247,7 +244,7 @@ function setForgeBalance(n) {
     window.__fmForge = Number(n || 0);
     const val = document.getElementById('forge-chip-val');
     const ico = document.getElementById('forge-chip-ico');
-    if (ico && !ico.innerHTML) ico.innerHTML = FORGE_COIN_SVG;
+    if (ico && !ico.innerHTML) ico.innerHTML = FORGE_SVG;
     if (val) val.textContent = window.__fmForge.toLocaleString('ru-RU').replace(/ /g, ' ');
 }
 
