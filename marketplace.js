@@ -3084,13 +3084,35 @@
     }
     if (window.FMLive) window.FMLive.register('market', 120000, _liveMarket);
 
+    var _CAT_PAGE = 1500;
+    var _catTotal = null, _catMoreState = 'idle', _catSrvQ = '', _catSegOn = false;
     function loadCatalog() {
         _catState = 'loading';
-        apiGet('/api/v1/marketplace/base').then(function (r) {
+        var url = '/api/v1/marketplace/base?limit=' + _CAT_PAGE;
+        if (_catSrvQ) url += '&q=' + encodeURIComponent(_catSrvQ);
+        apiGet(url).then(function (r) {
             _catalog = (r && r.channels) ? r.channels : []; _catState = 'ready';
             _adultOk = !!(r && r.adult_ok);
+            _catTotal = (r && r.total != null) ? r.total : _catalog.length;
             if (_mainTab === 'catalog') renderCatalog();
         }).catch(function () { _catState = 'error'; if (_mainTab === 'catalog') renderCatalog(); });
+    }
+    function _catFetchMore(cb) {
+        if (_catMoreState === 'loading' || _catTotal == null || !_catalog || _catalog.length >= _catTotal) { if (cb) cb(false, []); return; }
+        _catMoreState = 'loading';
+        var url = '/api/v1/marketplace/base?limit=' + _CAT_PAGE + '&offset=' + _catalog.length;
+        if (_catSrvQ) url += '&q=' + encodeURIComponent(_catSrvQ);
+        apiGet(url).then(function (r) {
+            _catMoreState = 'idle';
+            var ch = (r && r.channels) ? r.channels : [];
+            if (r && r.total != null) _catTotal = r.total;
+            var seen = {};
+            _catalog.forEach(function (c) { seen[(c.username || '').toLowerCase()] = 1; });
+            ch = ch.filter(function (c) { return !seen[(c.username || '').toLowerCase()]; });
+            if (!ch.length && _catalog.length < _catTotal) _catTotal = _catalog.length;
+            _catalog = _catalog.concat(ch);
+            if (cb) cb(ch.length > 0, ch);
+        }).catch(function () { _catMoreState = 'idle'; if (cb) cb(false, []); });
     }
     function loadChannels() { return apiGet('/api/v1/channels').then(function (r) { _channels = (r && r.channels) ? r.channels : []; return _channels; }).catch(function () { _channels = []; return []; }); }
     var _myLimit = null, _myUsed = null;
@@ -3125,15 +3147,22 @@
     var _catQ = '', _catQTimer = null;
     function _catList() {
         var list = _applySort(_catalog || []).filter(_rfPass);
-        _regionNote = false;
+        _regionNote = false; _catSegOn = false;
         if (!_regionAll) {
             var seg = list.filter(_segPass);
-            if (seg.length >= 6) list = seg;
+            if (seg.length >= 6) { list = seg; _catSegOn = true; }
             else if (seg.length < list.length) _regionNote = true;
         }
         var q = (_catQ || '').toLowerCase();
         if (q) list = list.filter(function (l) { return (((l.title || '') + ' @' + (l.username || '') + ' ' + (l.niche || '')).toLowerCase()).indexOf(q) >= 0; });
         return list;
+    }
+    function _catPagePass(arr) {
+        var out = _applySort(arr || []).filter(_rfPass);
+        if (_catSegOn) out = out.filter(_segPass);
+        var q = (_catQ || '').toLowerCase();
+        if (q) out = out.filter(function (l) { return (((l.title || '') + ' @' + (l.username || '') + ' ' + (l.niche || '')).toLowerCase()).indexOf(q) >= 0; });
+        return out;
     }
     function paintCatalogBody() {
         var box = el('fmx-catBody'); if (!box) return;
@@ -3160,23 +3189,60 @@
             '<div id="fmx-catTail"></div>';
         bindCards(box); if (_curView() === 'list') bindList(box); _bindAgeGate(box);
         var grid = el('fmx-catGrid'), token = (box._paintToken = (box._paintToken || 0) + 1);
-        (function drawTail(i) {
-            if (!grid || box._paintToken !== token || !grid.isConnected) return;
-            if (i >= list.length) {
-                var t = el('fmx-catTail');
-                if (t && list.length > FIRST) t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' — показаны все, что нашлись по фильтру</div>';
+        if (box._catIO) { try { box._catIO.disconnect(); } catch (e) { } box._catIO = null; }
+        var mounted = Math.min(FIRST, list.length);
+        function tailNote(loading) {
+            var t = el('fmx-catTail'); if (!t) return;
+            var pendingSrv = _catTotal != null && _catalog.length < _catTotal;
+            if (loading || mounted < list.length || pendingSrv) {
+                var known = pendingSrv ? (list.length === _catalog.length ? _catTotal : null) : list.length;
+                t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">Показано ' + mounted + (known ? ' из ' + known : '') + ' — дальше подгружается при прокрутке' + (loading ? '…' : '') + '</div>';
                 return;
             }
-            var tmp = document.createElement('div');
-            tmp.innerHTML = list.slice(i, i + CHUNK).map(_renderOne).join('');
-            var added = [];
-            while (tmp.firstChild) { added.push(tmp.firstChild); grid.appendChild(tmp.firstChild); }
-            added.forEach(function (n) {
-                if (!n || n.nodeType !== 1) return;
-                bindCards(n); if (_curView() === 'list') bindList(n); _bindAgeGate(n);
-            });
-            requestAnimationFrame(function () { drawTail(i + CHUNK); });
-        })(FIRST);
+            t.innerHTML = list.length > FIRST ? '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' — показаны все, что нашлись по фильтру</div>' : '';
+        }
+        function mountNext() {
+            if (box._paintToken !== token || !grid || !grid.isConnected) return;
+            if (mounted < list.length) {
+                var tmp = document.createElement('div');
+                tmp.innerHTML = list.slice(mounted, mounted + CHUNK).map(_renderOne).join('');
+                var added = [];
+                while (tmp.firstChild) { added.push(tmp.firstChild); grid.appendChild(tmp.firstChild); }
+                added.forEach(function (n) {
+                    if (!n || n.nodeType !== 1) return;
+                    bindCards(n); if (_curView() === 'list') bindList(n); _bindAgeGate(n);
+                });
+                mounted = Math.min(mounted + CHUNK, list.length);
+                tailNote();
+                return;
+            }
+            if (_catTotal != null && _catalog.length < _catTotal && _catMoreState !== 'loading') {
+                tailNote(true);
+                _catFetchMore(function (got, fresh) {
+                    if (box._paintToken !== token) return;
+                    if (got) list = list.concat(_catPagePass(fresh));
+                    tailNote();
+                    if (mounted < list.length) mountNext();
+                });
+                return;
+            }
+            tailNote();
+        }
+        var sentinel = el('fmx-catTail');
+        if (typeof IntersectionObserver !== 'undefined' && sentinel) {
+            box._catIO = new IntersectionObserver(function (ents) {
+                for (var i = 0; i < ents.length; i++) { if (ents[i].isIntersecting) { mountNext(); break; } }
+            }, { rootMargin: '900px 0px' });
+            box._catIO.observe(sentinel);
+            tailNote();
+        } else {
+            (function drawAll() {
+                if (box._paintToken !== token || !grid || !grid.isConnected) return;
+                if (mounted >= list.length) { tailNote(); return; }
+                mountNext();
+                requestAnimationFrame(drawAll);
+            })();
+        }
     }
     function renderCatalog() {
         var host = el('fmx-main');
@@ -3187,7 +3253,12 @@
         var _rfb = el('fmx-rfbtn'); if (_rfb) _rfb.addEventListener('click', openRadarFilters);
         _bindRegionChip(host, paintCatalogBody);
         var si = host.querySelector('.fmx-search input');
-        if (si) { si.value = _catQ; si.addEventListener('input', function () { var v = si.value; clearTimeout(_catQTimer); _catQTimer = setTimeout(function () { _catQ = v.trim(); paintCatalogBody(); }, 300); }); }
+        if (si) { si.value = _catQ; si.addEventListener('input', function () { var v = si.value; clearTimeout(_catQTimer); _catQTimer = setTimeout(function () {
+            _catQ = v.trim();
+            var needSrv = _catTotal != null && ((_catalog && _catalog.length < _catTotal) || _catSrvQ);
+            if (needSrv) { _catSrvQ = _catQ; loadCatalog(); }
+            else paintCatalogBody();
+        }, 300); }); }
         paintCatalogBody();
     }
 
