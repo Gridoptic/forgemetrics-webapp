@@ -309,13 +309,12 @@ button:active {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     min-height: 38px;
-    padding: 5px 9px 5px 8px;
+    padding: 0 13px 0 9px;
     border-radius: 99px;
-    background: linear-gradient(135deg, rgba(247, 181, 86, 0.16), rgba(247, 181, 86, 0.05));
-    border: 1px solid rgba(247, 181, 86, 0.45);
-    box-shadow: 0 0 14px rgba(247, 181, 86, 0.20);
+    background: rgba(247, 181, 86, 0.10);
+    border: 1px solid rgba(247, 181, 86, 0.35);
     color: #fbbf24;
     cursor: pointer;
     font-family: inherit;
@@ -330,8 +329,8 @@ button:active {
 .forge-chip-ico {
     display: flex;
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 21px;
+    height: 21px;
 }
 
 .forge-chip-ico svg {
@@ -340,13 +339,11 @@ button:active {
 }
 
 .forge-chip-val {
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
     font-variant-numeric: tabular-nums;
     line-height: 1;
-    position: relative;
-    top: 1.3px;
 }
 
 .forge-ico {
@@ -5338,7 +5335,7 @@ html.cs-modal-open {
 @media (max-width: 360px) {
     .fw-packs { grid-template-columns: repeat(2, 1fr); }
     .fw-bal { font-size: 24px; }
-    .forge-chip-val { font-size: 24px; }
+    .forge-chip-val { font-size: 17px; }
 }
 
 
