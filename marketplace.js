@@ -157,13 +157,7 @@
         ['Обеим сторонам · не забывай о маркировке рекламы', 'Если реклама направлена на аудиторию страны, где действует обязательная маркировка (в России — токен erid), заполни поле erid в оффере и согласуй маркировку со второй стороной до выхода поста. Ответственность за маркировку несут стороны сделки, а не Площадка.']
     ];
 
-    var _NO_FLAG_GLYPHS = /Windows/i.test((typeof navigator !== 'undefined' && navigator.userAgent) || '');
-    function _esc(s) {
-        if (s == null) return '';
-        s = String(s);
-        if (_NO_FLAG_GLYPHS && /\uD83C/.test(s)) s = s.replace(/\uD83C[\uDDE6-\uDDFF]/g, '').replace(/ {2,}/g, ' ');
-        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
+    function _esc(s) { if (s == null) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function _short(n) {
         if (n == null) return '—';
         if (n >= 1000000) return (Math.round(n / 100000) / 10 + '').replace('.', ',') + 'М';
