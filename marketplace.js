@@ -2109,6 +2109,10 @@
             clearTimeout(_termRefTimer);
             _termRefTimer = setTimeout(function _ref() {
                 if (_mainTab !== 'pulse' || !el('fmx-main')) return;
+                if (window.FMLive && window.FMLive.idleMs && window.FMLive.idleMs() < 6000) {
+                    _termRefTimer = setTimeout(_ref, 8000);
+                    return;
+                }
                 loadTerminal(function () {
                     if (_mainTab !== 'pulse' || !el('fmx-main')) return;
                     _paintTerminal();

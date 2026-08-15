@@ -482,13 +482,18 @@ async function refreshDashboardSilent() {
 
 window.FMLive = (function () {
     const regs = {};
+    let lastUX = 0;
+    ['pointerdown', 'wheel', 'touchmove', 'keydown', 'scroll'].forEach((ev) => {
+        window.addEventListener(ev, () => { lastUX = Date.now(); }, { passive: true, capture: true });
+    });
+    function idleMs() { return Date.now() - lastUX; }
     function editing() {
         const a = document.activeElement;
         return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
     }
     function blocked() {
-        return document.hidden || editing() ||
-            !!document.querySelector('.bs-sheet.visible, .bs-overlay.visible, .pw-sheet-ov.show, .lang-ov.show');
+        return document.hidden || editing() || idleMs() < 5000 ||
+            !!document.querySelector('.bs-sheet.visible, .bs-overlay.visible, .pw-sheet-ov.show, .lang-ov.show, .drawer.open, .drawer.visible');
     }
     function tick(force) {
         if (blocked()) return;
@@ -505,7 +510,8 @@ window.FMLive = (function () {
     });
     return {
         register(name, every, fn) { regs[name] = { every, last: Date.now(), fn }; },
-        touch(name) { if (regs[name]) regs[name].last = Date.now(); }
+        touch(name) { if (regs[name]) regs[name].last = Date.now(); },
+        idleMs: idleMs
     };
 })();
 

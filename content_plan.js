@@ -1682,7 +1682,10 @@
             ticks++;
             if (ticks > 400) {
                 stopTimers();
-                if (_building) { _building = false; if (_state && _state.posts) renderWeek(); }
+                if (_building) {
+                    _building = false;
+                    if (_state && _state.posts && (_lastView === 'week' || _lastView === 'brief' || !_lastView)) renderWeek();
+                }
                 return;
             }
             var pcid = _chId || (_state && _state.channel_id);
@@ -1703,7 +1706,7 @@
                     _building = false;
                     stopTimers();
                     if (!_cal) loadCalendar();
-                    renderWeek();
+                    if (_lastView === 'week' || _lastView === 'brief' || !_lastView) renderWeek();
                     if (d.batch_running && withText < ps.length) startBatchPoll();
                 }
                 else if (d.status === 'error') { _state = d; _building = false; stopTimers(); renderError(); }
@@ -3069,7 +3072,9 @@
         var prevN = (_state.posts || []).filter(function (p) { return p.text; }).length;
         var ticks = 0, quiet = 0;
         var canDraw = function () {
-            return _open && _lastView === 'week' && !Object.keys(_editing).some(function (k) { return _editing[k]; });
+            return _open && _lastView === 'week'
+                && !Object.keys(_editing).some(function (k) { return _editing[k]; })
+                && (!window.FMLive || window.FMLive.idleMs() > 6000);
         };
         _batchTimer = setInterval(function () {
             ticks++;
