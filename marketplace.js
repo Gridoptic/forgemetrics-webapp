@@ -3094,8 +3094,59 @@
             _catalog = (r && r.channels) ? r.channels : []; _catState = 'ready';
             _adultOk = !!(r && r.adult_ok);
             _catTotal = (r && r.total != null) ? r.total : _catalog.length;
+            _rvSeen = {}; _rvQueue = [];
             if (_mainTab === 'catalog') renderCatalog();
         }).catch(function () { _catState = 'error'; if (_mainTab === 'catalog') renderCatalog(); });
+    }
+    var _rvIO = null, _rvQueue = [], _rvSeen = {}, _rvTimer = null;
+    function _rvObserve(scope) {
+        if (typeof IntersectionObserver === 'undefined') return;
+        if (!_rvIO) _rvIO = new IntersectionObserver(function (ents) {
+            ents.forEach(function (en) {
+                if (!en.isIntersecting) return;
+                _rvIO.unobserve(en.target);
+                var u = (en.target.getAttribute('data-u') || '').toLowerCase();
+                if (!u || _rvSeen[u]) return;
+                _rvSeen[u] = 1;
+                _rvQueue.push(u);
+                _rvFlushSoon();
+            });
+        }, { rootMargin: '60px 0px' });
+        qsa(scope || el('fmx-main'), '.fmx-scard[data-u]').forEach(function (c) { _rvIO.observe(c); });
+    }
+    function _rvFlushSoon() {
+        if (_rvTimer) return;
+        _rvTimer = setTimeout(_rvFlush, 1800);
+    }
+    function _rvFlush() {
+        _rvTimer = null;
+        if (!_rvQueue.length) return;
+        var batch = _rvQueue.splice(0, 6);
+        apiPost('/api/v1/marketplace/base/refresh', { usernames: batch }).then(function (r) {
+            var ch = (r && r.ok && r.channels) ? r.channels : {};
+            Object.keys(ch).forEach(function (u) { _rvApply(u, ch[u]); });
+            if (_rvQueue.length) _rvFlushSoon();
+        }).catch(function () { if (_rvQueue.length) _rvFlushSoon(); });
+    }
+    function _rvApply(u, fresh) {
+        if (!fresh || !_catalog) return;
+        for (var i = 0; i < _catalog.length; i++) {
+            var c = _catalog[i];
+            if ((c.username || '').toLowerCase() === u) {
+                _catalog[i] = Object.assign({}, c, fresh);
+                fresh = _catalog[i];
+                break;
+            }
+        }
+        var node = document.querySelector('.fmx-scard[data-u="' + _esc(fresh.username || u) + '"]');
+        if (!node || !node.isConnected) return;
+        if (node.contains(document.activeElement) && document.activeElement && document.activeElement.tagName === 'INPUT') return;
+        var tmp = document.createElement('div');
+        tmp.innerHTML = simpleCard(fresh);
+        var nn = tmp.firstChild;
+        if (!nn || nn.nodeType !== 1) return;
+        node.replaceWith(nn);
+        bindCards(nn); _bindAgeGate(nn);
     }
     function _catFetchMore(cb) {
         if (_catMoreState === 'loading' || _catTotal == null || !_catalog || _catalog.length >= _catTotal) { if (cb) cb(false, []); return; }
@@ -3187,7 +3238,7 @@
             ? '<div class="fmx-grid" id="fmx-catGrid">' + head + '</div>'
             : '<div style="display:flex;flex-direction:column;gap:8px;" id="fmx-catGrid">' + head + '</div>') +
             '<div id="fmx-catTail"></div>';
-        bindCards(box); if (_curView() === 'list') bindList(box); _bindAgeGate(box);
+        bindCards(box); if (_curView() === 'list') bindList(box); _bindAgeGate(box); _rvObserve(box);
         var grid = el('fmx-catGrid'), token = (box._paintToken = (box._paintToken || 0) + 1);
         if (box._catIO) { try { box._catIO.disconnect(); } catch (e) { } box._catIO = null; }
         var mounted = Math.min(FIRST, list.length);
@@ -3213,6 +3264,7 @@
                     bindCards(n); if (_curView() === 'list') bindList(n); _bindAgeGate(n);
                 });
                 mounted = Math.min(mounted + CHUNK, list.length);
+                _rvObserve(grid);
                 tailNote();
                 return;
             }
