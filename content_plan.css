@@ -67,7 +67,7 @@
 .cp-allbtn.rgn { margin: 12px 0 0; }
 .cp-doneban {
     display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px;
-    border-radius: 15px; margin-bottom: 10px;
+    border-radius: 15px; margin: 12px 0 10px;
     background: linear-gradient(160deg, rgba(93, 202, 165, .14), rgba(93, 202, 165, .03));
     border: 1px solid rgba(93, 202, 165, .35);
 }
