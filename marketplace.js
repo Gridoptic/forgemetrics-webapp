@@ -1824,7 +1824,10 @@
     function _tSpark(vals, color) {
         vals = (vals || []).filter(function (v) { return typeof v === 'number' && isFinite(v); });
         if (_termSpark !== 1 && vals.length > _termSpark) vals = vals.slice(-_termSpark);
-        if (vals.length < 3) return '<span class="fmx-t2nospark">копится</span>';
+        if (vals.length < 3) {
+            return '<span class="fmx-t2nospark">' +
+                (vals.length ? 'день ' + vals.length + ' из 3' : 'копится') + '</span>';
+        }
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         var span = (mx - mn) || 1;
         var rel = mx > 0 ? (mx - mn) / mx : 0;
