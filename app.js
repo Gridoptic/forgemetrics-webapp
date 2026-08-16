@@ -847,7 +847,7 @@ function markPulseHealthy(pulse) {
     if (!badge || !pulse) return;
     const h = pwHealthState(pulse);
     badge.className = 'pw-health ' + h.c;
-    badge.innerHTML = '<span class="pw-dot"></span> ' + h.t + (h.s ? ' <span class="pw-hs">' + h.s + '</span>' : '');
+    badge.innerHTML = '<span class="pw-dot"></span> ' + h.t + (h.s ? ' <span class="pw-hs">· ' + h.s + '</span>' : '');
     const lab = document.querySelector('.pw-hlab');
     if (lab) lab.textContent = 'Средний охват · 30 дней';
 }
@@ -862,7 +862,7 @@ function renderPulse(pulse) {
         : '<span class="v">—</span>';
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
-        <span class="pw-health ${h.c}"><span class="pw-dot"></span> ${h.t}${h.s ? ` <span class="pw-hs">${h.s}</span>` : ''}</span>
+        <span class="pw-health ${h.c}"><span class="pw-dot"></span> ${h.t}${h.s ? ` <span class="pw-hs">· ${h.s}</span>` : ''}</span>
         <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
       </div>
       <div class="pw-hlab">Средний охват · 30 дней</div>
@@ -980,14 +980,10 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
     FR = Array.isArray(FR) ? FR.filter(Number.isFinite) : [];
     FRD = Array.isArray(FRD) ? FRD : [];
     const PC = muted
-        ? { a1: 'rgba(107,112,136,0.30)', a2: 'rgba(107,112,136,0.13)', a3: 'rgba(107,112,136,0.04)',
-            l1: '#565b73', l2: '#8990a8', l3: '#a5aabf', glow: '#6b7088',
-            ep: '#e2e4ee', eps: '#8990a8', halo: 'rgba(107,112,136,0.20)' }
-        : { a1: 'rgba(93,202,165,0.40)', a2: 'rgba(93,202,165,0.17)', a3: 'rgba(93,202,165,0.05)',
-            l1: '#2fb389', l2: '#57e0ab', l3: '#8af0cb', glow: '#5DCAA5',
-            ep: '#eafff6', eps: '#5DCAA5', halo: 'rgba(93,202,165,0.22)' };
+        ? { area: 'rgba(107,112,136,0.08)', ln: '#6b7088', ep: '#e2e4ee', eps: '#8990a8' }
+        : { area: 'rgba(93,202,165,0.10)', ln: '#5DCAA5', ep: '#eafff6', eps: '#5DCAA5' };
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const W = Math.max(260, host.clientWidth || 320), Hh = 74, padT = 10, padB = 18, padL = 6, padR = 6;
+    const W = Math.max(260, host.clientWidth || 320), Hh = 84, padT = 10, padB = 18, padL = 6, padR = 6;
     const ALL = DATA.concat(FR);
     const min = Math.min.apply(null, ALL), max = Math.max.apply(null, ALL);
     const lo = min - (max - min) * 0.15, hi = max + (max - min) * 0.12, rng = (hi - lo) || 1, last = DATA.length - 1;
@@ -1006,16 +1002,12 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
         for (const m of [1, 2, 2.5, 5, 10]) { if (raw <= m * pow) { step = m * pow; break; } }
         const out = [];
         for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) { if (v > 0) out.push(Math.round(v)); }
-        return out.length ? out.slice(-4) : [max, min];
+        return out.length ? out.slice(-3) : [max, min];
     })();
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
-    svg += `<defs><linearGradient id="pwag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PC.a1}"/><stop offset="0.32" stop-color="${PC.a2}"/><stop offset="0.68" stop-color="${PC.a3}"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></linearGradient>`;
-    svg += `<linearGradient id="pwlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${PC.l1}"/><stop offset="0.5" stop-color="${PC.l2}"/><stop offset="1" stop-color="${PC.l3}"/></linearGradient>`;
-    svg += '<filter id="pwglf" x="-20%" y="-60%" width="140%" height="240%"><feGaussianBlur stdDeviation="3.2"/></filter></defs>';
     grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
-    svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
-    svg += `<path d="${line}" fill="none" stroke="${PC.glow}" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
-    svg += `<path class="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    svg += `<path class="pw-area" d="${area}" fill="${PC.area}"/>`;
+    svg += `<path class="pw-cl" d="${line}" fill="none" stroke="${PC.ln}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     if (FR.length) {
         let fd = 'M' + X(last).toFixed(1) + ',' + Y(DATA[last]).toFixed(1);
         FR.forEach((v, j) => { fd += ' L' + X(last + 1 + j).toFixed(1) + ',' + Y(v).toFixed(1); });
@@ -1024,8 +1016,6 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
             svg += `<circle cx="${X(last + 1 + j).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="none" stroke="${PC.eps}" stroke-width="1.8" opacity="0.75"/>`;
         });
     }
-    svg += `<circle class="pw-eppulse" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="none" stroke="${PC.eps}" stroke-width="1.6"/>`;
-    svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="${PC.halo}"/>`;
     svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="${PC.ep}" stroke="${PC.eps}" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
