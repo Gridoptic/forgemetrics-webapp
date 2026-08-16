@@ -709,7 +709,8 @@ function pwCell(label, val, opts) {
     if (val == null) return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv">—</div></div>`;
     const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.k ? ' data-k="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
     const tr = opts.trend != null ? `<span class="${opts.trend >= 0 ? 'up' : 'dn'}">${opts.trend >= 0 ? '↗' : '↘'}${Math.abs(opts.trend)}%</span>` : '';
-    return `<div class="pw-mcell${opts.cls ? ' ' + opts.cls : ''}"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"><span class="pw-num" ${attrs}>0</span>${tr}</div>${opts.extra || ''}</div>`;
+    const vst = opts.vcolor ? ` style="color:${opts.vcolor}"` : '';
+    return `<div class="pw-mcell${opts.cls ? ' ' + opts.cls : ''}"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"${vst}><span class="pw-num" ${attrs}>0</span>${tr}</div>${opts.extra || ''}</div>`;
 }
 
 var PW_CATALOG = [
@@ -762,15 +763,8 @@ function pwRenderMetrics(pulse) {
     var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
     var _dorm = pwDormantGet(_dch);
     var hideReach = _dorm && !(_dorm.d != null && _dorm.d <= 30);
-    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } if (id === 'rr' && v != null && pulse.err24 != null) { o = Object.assign({}, m.o); o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">ERR24 ${String(pulse.err24).replace('.', ',')}%</span></div>`; } return pwCell(m.label, v, o); }).join('');
+    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } if (id === 'rr' && v != null) { o = Object.assign({}, m.o); var st = pulse.rr_status; var stCol = st === 'выше нормы' ? '#f5bf4f' : (st && st !== 'норма' ? '#ef8080' : null); if (stCol) o.vcolor = stCol; var lines = ''; if (st && st !== 'норма') lines += `<div class="pw-md" style="color:${stCol};white-space:nowrap;">${escapeHtml(st)}</div>`; if (pulse.err24 != null) lines += `<div class="pw-md" style="white-space:nowrap;">ERR24 ${String(pulse.err24).replace('.', ',')}%</div>`; if (lines) o.extra = lines; } return pwCell(m.label, v, o); }).join('');
     pwCountUp(grid);
-    if (ids.indexOf('rr') >= 0 && pulse && pulse.rr_status && pulse.rr_status !== 'норма') {
-        var rrCell = grid.querySelectorAll('.pw-mcell')[ids.indexOf('rr')];
-        if (rrCell) {
-            var rrCol = pulse.rr_status === 'выше нормы' ? '#f5bf4f' : '#ef8080';
-            rrCell.insertAdjacentHTML('beforeend', '<div style="font-size:9px;color:' + rrCol + ';margin-top:1px;white-space:nowrap;"><span>' + escapeHtml(pulse.rr_status) + '</span></div>');
-        }
-    }
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
 }
