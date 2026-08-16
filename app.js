@@ -710,9 +710,18 @@ var PW_CATALOG = [
     { id: 'rr', label: 'ERR', sub: '', get: p => p.reach_rate, o: { suf: '%' } },
     { id: 'err24', label: 'ERR24', sub: 'за первые сутки', get: p => p.err24, o: { suf: '%', dec: 1 } },
     { id: 'er', label: 'ER', sub: 'реакции к охвату', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
+    { id: 'price', label: 'Цена поста', sub: '', get: p => p.price_low, o: {} },
+    { id: 'cpm', label: 'CPM, ₽', sub: 'за 1000 просмотров', get: p => p.cpm, o: { sep: true } },
+    { id: 'cpf', label: 'CPF, ₽', sub: 'при конверсии 0,3–1,5%', get: p => p.cpf_low, o: {} },
 ];
-var PW_MAX = 5;
-var PW_LS = 'fm_pulse_metrics_v2';
+var PW_MAX = 8;
+
+function pwRub(n) { return Math.round(n).toLocaleString('ru-RU'); }
+function pwRangeTx(lo, hi) {
+    if (lo == null) return null;
+    return (hi != null && hi > lo) ? pwRub(lo) + '–' + pwRub(hi) + ' ₽' : pwRub(lo) + ' ₽';
+}
+var PW_LS = 'fm_pulse_metrics_v3';
 
 var PW_DORM_LS = 'fm_pulse_dormant_v1';
 function pwDormantGet(chId) {
@@ -735,7 +744,7 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    var order = ['subs', 'reach', 'rr', 'err24', 'er'];
+    var order = ['subs', 'reach', 'rr', 'err24', 'er', 'price'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
@@ -773,10 +782,25 @@ function pwRenderMetrics(pulse) {
                 vcls = warn ? ' warn' : ' bad';
             }
         }
+        if (id === 'price' && v != null) {
+            var pk = pulse.price_kind === 'owner' ? 'твоя цена' : 'оценка ниши';
+            var pd = pulse.price_delta_pct;
+            var pdTx = (pd != null && pd !== 0)
+                ? ` · <span style="color:${pd > 0 ? '#5DCAA5' : '#ef8080'};font-weight:700;">${pd > 0 ? '↗+' : '↘'}${Math.abs(pd)}%</span>`
+                : '';
+            sub = `<span class="s">${escapeHtml(pk)}${pdTx}</span>`;
+        }
         var o = m.o;
-        var valTx = (v == null)
-            ? '—'
-            : `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
+        var valTx;
+        if (v == null) {
+            valTx = '—';
+        } else if (id === 'price') {
+            valTx = escapeHtml(pwRangeTx(pulse.price_low, pulse.price_high) || '—');
+        } else if (id === 'cpf') {
+            valTx = escapeHtml(pwRangeTx(pulse.cpf_low, pulse.cpf_high) || '—');
+        } else {
+            valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
+        }
         return `<div class="pw-r"><span class="n">${escapeHtml(m.label)}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
     }).join('');
     pwCountUp(grid);
@@ -795,9 +819,15 @@ function pwOpenPicker(pulse) {
         + '<div class="pw-sheet-list">'
         + PW_CATALOG.map(m => {
             var v = m.get(pulse), has = v != null, on = sel.has(m.id);
+            var prev = '';
+            if (has) {
+                if (m.id === 'price') prev = pwRangeTx(pulse.price_low, pulse.price_high) || '';
+                else if (m.id === 'cpf') prev = pwRangeTx(pulse.cpf_low, pulse.cpf_high) || '';
+                else prev = pwPreview(v, m.o);
+            }
             return '<button class="pw-opt' + (on ? ' on' : '') + (has ? '' : ' nodata') + '" data-id="' + m.id + '" type="button">'
                 + '<span class="pw-opt-tx"><span class="pw-opt-l">' + escapeHtml(m.label) + '</span>'
-                + '<span class="pw-opt-v">' + (has ? pwPreview(v, m.o) : 'нет данных') + '</span></span>'
+                + '<span class="pw-opt-v">' + (has ? escapeHtml(prev) : 'нет данных') + '</span></span>'
                 + '<span class="pw-opt-ck"><i class="ti ti-check"></i></span></button>';
         }).join('')
         + '</div>'
