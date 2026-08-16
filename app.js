@@ -715,7 +715,6 @@ function pwCell(label, val, opts) {
 var PW_CATALOG = [
     { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
     { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
-    { id: 'err24', label: 'ERR24', get: p => p.err24, o: { suf: '%', dec: 1 } },
     { id: 'rr', label: 'ERR', get: p => p.reach_rate, o: { suf: '%' } },
     { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
@@ -743,7 +742,7 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    var order = ['subs', 'reach', 'err24', 'rr', 'er'];
+    var order = ['subs', 'reach', 'rr', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
@@ -763,7 +762,7 @@ function pwRenderMetrics(pulse) {
     var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
     var _dorm = pwDormantGet(_dch);
     var hideReach = _dorm && !(_dorm.d != null && _dorm.d <= 30);
-    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } return pwCell(m.label, v, o); }).join('');
+    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } if (id === 'rr' && v != null && pulse.err24 != null) { o = Object.assign({}, m.o); o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">ERR24 ${String(pulse.err24).replace('.', ',')}%</span></div>`; } return pwCell(m.label, v, o); }).join('');
     pwCountUp(grid);
     if (ids.indexOf('rr') >= 0 && pulse && pulse.rr_status && pulse.rr_status !== 'норма') {
         var rrCell = grid.querySelectorAll('.pw-mcell')[ids.indexOf('rr')];
@@ -906,8 +905,9 @@ async function loadReachSeries() {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
-            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale };
-            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted);
+            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
+                           fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [] };
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates);
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
@@ -959,15 +959,17 @@ function _reachRedraw() {
     try {
         var host = document.getElementById('pw-chart');
         if (!host || !_reachLast || !host.clientWidth) return;
-        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted);
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates);
     } catch (e) {}
 }
 function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
 window.addEventListener('resize', _reachRedrawSoon);
 try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
-function drawReachChart(host, DATA, dates, days, endLabel, muted) {
+function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
+    FR = Array.isArray(FR) ? FR.filter(Number.isFinite) : [];
+    FRD = Array.isArray(FRD) ? FRD : [];
     const PC = muted
         ? { a1: 'rgba(107,112,136,0.30)', a2: 'rgba(107,112,136,0.13)', a3: 'rgba(107,112,136,0.04)',
             l1: '#565b73', l2: '#8990a8', l3: '#a5aabf', glow: '#6b7088',
@@ -977,9 +979,11 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted) {
             ep: '#eafff6', eps: '#5DCAA5', halo: 'rgba(93,202,165,0.22)' };
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const W = Math.max(260, host.clientWidth || 320), Hh = 74, padT = 10, padB = 18, padL = 6, padR = 6;
-    const min = Math.min.apply(null, DATA), max = Math.max.apply(null, DATA);
+    const ALL = DATA.concat(FR);
+    const min = Math.min.apply(null, ALL), max = Math.max.apply(null, ALL);
     const lo = min - (max - min) * 0.5, hi = max + (max - min) * 0.22, rng = (hi - lo) || 1, last = DATA.length - 1;
-    const X = (i) => padL + i * (W - padL - padR) / last;
+    const lastIdx = last + FR.length;
+    const X = (i) => padL + i * (W - padL - padR) / (lastIdx || 1);
     const Y = (v) => padT + (1 - (v - lo) / rng) * (Hh - padT - padB);
     const pts = DATA.map((v, i) => [X(i), Y(v)]);
     function smooth(p) { if (p.length < 2) return ''; let d = 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1); for (let i = 0; i < p.length - 1; i++) { const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c; const c1x = b[0] + (c[0] - a[0]) / 6, c1y = b[1] + (c[1] - a[1]) / 6, c2x = c[0] - (e[0] - b[0]) / 6, c2y = c[1] - (e[1] - b[1]) / 6; d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1); } return d; }
@@ -1003,12 +1007,20 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted) {
     svg += `<path class="pw-area" d="${area}" fill="url(#pwag)"/>`;
     svg += `<path d="${line}" fill="none" stroke="${PC.glow}" stroke-width="4" opacity="0.42" filter="url(#pwglf)"/>`;
     svg += `<path class="pw-cl" d="${line}" fill="none" stroke="url(#pwlg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if (FR.length) {
+        let fd = 'M' + X(last).toFixed(1) + ',' + Y(DATA[last]).toFixed(1);
+        FR.forEach((v, j) => { fd += ' L' + X(last + 1 + j).toFixed(1) + ',' + Y(v).toFixed(1); });
+        svg += `<path d="${fd}" fill="none" stroke="${PC.eps}" stroke-width="2" stroke-dasharray="3 4" stroke-linecap="round" opacity="0.5"/>`;
+        FR.forEach((v, j) => {
+            svg += `<circle cx="${X(last + 1 + j).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="none" stroke="${PC.eps}" stroke-width="1.8" opacity="0.75"/>`;
+        });
+    }
     svg += `<circle class="pw-eppulse" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="none" stroke="${PC.eps}" stroke-width="1.6"/>`;
     svg += `<circle cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="6" fill="${PC.halo}"/>`;
     svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="${PC.ep}" stroke="${PC.eps}" stroke-width="2"/>`;
     const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
-    svg += `<text class="pw-xt" x="${X(last)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
+    svg += `<text class="pw-xt" x="${X(lastIdx)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
     svg += `<line class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
     svg += `<circle class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
     host.innerHTML = svg + '<div class="pw-tip"></div>';
@@ -1019,11 +1031,15 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted) {
     const tip = host.querySelector('.pw-tip'), cx = host.querySelector('.pw-cx'), cd = host.querySelector('.pw-cd'), ep = host.querySelector('.pw-ep');
     function at(clientX) {
         const r = host.getBoundingClientRect(); if (!r.width) return; const sx = (clientX - r.left) * (W / r.width);
-        let i = Math.round((sx - padL) / ((W - padL - padR) / last)); i = Math.max(0, Math.min(last, i));
-        const x = X(i), y = Y(DATA[i]); cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.opacity = 1;
+        let i = Math.round((sx - padL) / ((W - padL - padR) / (lastIdx || 1))); i = Math.max(0, Math.min(lastIdx, i));
+        const isFresh = i > last;
+        const val = isFresh ? FR[i - last - 1] : DATA[i];
+        const x = X(i), y = Y(val); cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.opacity = 1;
         cd.setAttribute('cx', x); cd.setAttribute('cy', y); cd.style.opacity = 1; ep.style.opacity = 0;
-        const dlab = (dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад');
-        tip.innerHTML = `<div class="d">${dlab}</div>${DATA[i].toLocaleString('ru-RU')} охват`;
+        const dlab = isFresh
+            ? (FRD[i - last - 1] || '')
+            : ((dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад'));
+        tip.innerHTML = `<div class="d">${dlab}</div>${val.toLocaleString('ru-RU')} охват` + (isFresh ? ' · набирает' : '');
         tip.style.opacity = 1;
         const pxX = x / W * r.width, pxY = y / Hh * r.height;
         const half = tip.offsetWidth / 2 + 4;
