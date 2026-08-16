@@ -1043,9 +1043,9 @@
             '.fmx-t2tk b{color:#e8e8ed;font-weight:700;text-transform:capitalize;}',
             '.fmx-t2hero{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:13px;margin-bottom:9px;}',
             '.fmx-t2hl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
-            '.fmx-t2hv{display:flex;align-items:baseline;gap:9px;margin-top:4px;}',
-            '.fmx-t2hv b{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;}',
-            '.fmx-t2hd{font-size:11.5px;font-weight:800;}',
+            '.fmx-t2hv{display:flex;align-items:baseline;gap:9px;margin-top:4px;flex-wrap:wrap;}',
+            '.fmx-t2hv b{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;white-space:nowrap;}',
+            '.fmx-t2hd{font-size:11.5px;font-weight:800;white-space:nowrap;}',
             '.fmx-t2rng{display:flex;gap:4px;}',
             '.fmx-t2rng span{font-size:9.5px;font-weight:700;color:#6b7088;padding:3px 8px;border-radius:7px;border:0.5px solid transparent;cursor:pointer;}',
             '.fmx-t2rng .on{color:#c7ccf7;background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.45);}',
@@ -1054,7 +1054,6 @@
             '.fmx-t2pt{animation:fmxTpulse 1.8s infinite;}',
             '.fmx-t2ax{position:relative;display:flex;justify-content:space-between;font-size:8px;color:#3f4358;margin-top:3px;min-height:10px;}',
             '.fmx-t2ax .mid{position:absolute;transform:translateX(-50%);white-space:nowrap;}',
-            '.fmx-t2note{font-size:9px;font-weight:600;color:#565b73;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.09);border-radius:6px;padding:2px 6px;white-space:nowrap;}',
             '.fmx-t2nochart{font-size:10.5px;color:#565b73;padding:22px 0;text-align:center;}',
             '.fmx-t2trow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}',
             '.fmx-t2tc{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;padding:8px 6px;text-align:center;min-width:0;}',
@@ -1902,26 +1901,19 @@
                     '<span>' + (isTime ? 'сейчас' : 'сегодня') + '</span></div>';
             })();
     }
-    function _tSpanNote(series, range) {
-        if (range === 1 || !series || series.length < 2 || series[0].t) return '';
-        var days = Math.round((Date.parse(series[series.length - 1].day) - Date.parse(series[0].day)) / 86400000);
-        if (days >= range - 1) return '';
-        return '<span class="fmx-t2note">данных ' + days + ' дн из ' + range + '</span>';
-    }
-    function _tSeriesDelta(series) {
+    function _tSeriesDelta(series, range) {
         if (!series || series.length < 2) return null;
-        var isTime = !!series[0].t;
         var v0 = series[0].v != null ? series[0].v : series[0].cpm;
         var v1 = series[series.length - 1].v != null ? series[series.length - 1].v : series[series.length - 1].cpm;
         if (!v0 || v0 <= 0 || v1 == null) return null;
         var pct = Math.round((v1 - v0) / v0 * 1000) / 10;
+        var days = Math.max(1, Math.round((Date.parse(series[series.length - 1].day) - Date.parse(series[0].day)) / 86400000));
         var label;
-        if (isTime) {
-            var hrs = Math.max(1, Math.round((Date.parse(series[series.length - 1].t) - Date.parse(series[0].t)) / 3600000));
-            label = 'за ' + hrs + ' ч';
+        if (range && days >= range - 1) {
+            label = 'за ' + range + ' дн';
         } else {
-            var days = Math.max(1, Math.round((Date.parse(series[series.length - 1].day) - Date.parse(series[0].day)) / 86400000));
-            label = 'за ' + days + ' дн';
+            var d0 = new Date(series[0].day);
+            label = 'с ' + ('0' + d0.getDate()).slice(-2) + '.' + ('0' + (d0.getMonth() + 1)).slice(-2);
         }
         return { pct: pct, label: label };
     }
@@ -2149,23 +2141,17 @@
             html += '<div class="fmx-t2tape"><div class="fmx-t2tapein">' + tk + tk + '</div></div>';
         }
 
-        var series;
-        if (_termRange === 1) {
-            series = idx.series1d || [];
-        } else {
-            series = (idx.series || []);
-            if (series.length > _termRange) series = series.slice(-_termRange);
-        }
+        var series = (idx.series || []);
+        if (series.length > _termRange) series = series.slice(-_termRange);
         html += '<div class="fmx-t2hero">' +
             '<div style="display:flex;align-items:flex-start;">' +
             '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">Индекс CPM рынка</div>' +
             '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
             (function () {
-                var d = _tSeriesDelta(series);
-                return (d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '') +
-                    _tSpanNote(series, _termRange);
+                var d = _tSeriesDelta(series, _termRange);
+                return d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '';
             })() + '</div></div>' +
-            '<div class="fmx-t2rng">' + [1, 7, 30, 90].map(function (r) {
+            '<div class="fmx-t2rng">' + [7, 30, 90].map(function (r) {
                 return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
             }).join('') + '</div></div>' +
             '<div style="margin-top:8px;">' + _tArea(series, '#818cf8', 'fmxTgIdx') + '</div></div>';
@@ -2210,7 +2196,7 @@
         }
 
         html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши' +
-            '<span class="fmx-t2rng" style="margin-left:auto;">' + [1, 7, 30, 90].map(function (r) {
+            '<span class="fmx-t2rng" style="margin-left:auto;">' + [7, 30, 90].map(function (r) {
                 return '<span data-tsprange="' + r + '"' + (r === _termSpark ? ' class="on"' : '') + '>' + r + 'д</span>';
             }).join('') + '</span></div>';
         html += '<div class="fmx-t2chips">' + [
@@ -2239,7 +2225,7 @@
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
                 '<span class="nm"><b>' + _esc(n.niche) + '</b><span>' + n.count + ' ' + kind + (n.median_er != null ? ' · ER ' + String(n.median_er).replace('.', ',') + '%' : '') + '</span>' +
                 (n.thin ? '<span class="fmx-t2thin">Мало данных</span>' : '') + '</span>' +
-                _tSpark(_termSpark === 1 ? (n.spark1d || []) : n.spark, col) +
+                _tSpark((n.spark || []).slice(-_termSpark), col) +
                 '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
                 (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
         }).join('') + '</div>';
@@ -2294,17 +2280,14 @@
         apiGet('/api/v1/marketplace/terminal/niche?name=' + encodeURIComponent(name)).then(function (r) {
             var b = el('fmx-tnBody'); if (!b) return;
             if (!r || !r.ok) { b.innerHTML = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Попробуй ещё раз позже.'); return; }
-            var ser = _termRange === 1
-                ? ((r.series && r.series.intraday) || [])
-                : ((r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || []);
-            var shown = _termRange === 1 ? ser : ser.slice(-_termRange);
+            var ser = ((r.series && (r.series.base && r.series.base.length >= 3 ? r.series.base : r.series.market)) || []);
+            var shown = ser.slice(-_termRange);
             var cur = ser.length ? ser[ser.length - 1].cpm : null;
-            var nd = _tSeriesDelta(shown);
+            var nd = _tSeriesDelta(shown, _termRange);
             var html = '<div class="fmx-t2hero">' +
                 '<div style="display:flex;align-items:baseline;gap:9px;">' +
                 '<b style="font-size:23px;font-variant-numeric:tabular-nums;">' + (cur != null ? _num(cur) + ' ₽' : '—') + '</b>' +
-                (nd ? '<span style="font-size:12px;font-weight:800;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') +
-                _tSpanNote(shown, _termRange) + '</div>' +
+                (nd ? '<span style="font-size:12px;font-weight:800;white-space:nowrap;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') + '</div>' +
                 '<div style="margin-top:8px;">' + _tArea(shown, '#5DCAA5', 'fmxTgN') + '</div>' +
                 '<div class="fmx-t2kv">' +
                 '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
