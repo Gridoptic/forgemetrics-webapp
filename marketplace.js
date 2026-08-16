@@ -575,14 +575,14 @@
             '.fmx-b-match{background:rgba(139,92,246,0.16);color:#a78bfa;}',
             '.fmx-desc{font-size:12px;color:#b9bdcf;line-height:1.45;margin-bottom:9px;overflow-wrap:anywhere;word-break:break-word;}',
             '.fmx-kmh{display:flex;justify-content:space-between;align-items:center;margin:12px 1px 7px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#565b73;}',
-            '.fmx-kmg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:12px;}',
-            '.fmx-kmt{background:#12162a;padding:9px 10px;min-width:0;}',
-            '.fmx-kmt .l{font-size:8.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#565b73;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.fmx-kmt .v{font-size:17px;font-weight:750;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
-            '.fmx-kmt .v.sm{font-size:14px;line-height:1.2;}',
-            '.fmx-kmt .v.xs{font-size:12px;letter-spacing:-0.03em;line-height:1.4;}',
-            '.fmx-kmt .v .v24{font-size:11.5px;font-weight:700;color:#8d93a8;}',
-            '.fmx-kmt .s{font-size:9.5px;color:#9aa0b8;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-kmg{display:flex;flex-direction:column;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;padding:2px 11px;margin-bottom:12px;}',
+            '.fmx-kmr{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);min-width:0;}',
+            '.fmx-kmr:last-child{border-bottom:none;}',
+            '.fmx-kmr .n{font-size:10.5px;color:#8d93a8;flex-shrink:0;}',
+            '.fmx-kmr .rv{display:flex;align-items:baseline;gap:8px;min-width:0;}',
+            '.fmx-kmr .v{font-size:15px;font-weight:750;letter-spacing:-0.02em;white-space:nowrap;color:#e8e8ed;font-variant-numeric:tabular-nums;}',
+            '.fmx-kmr .s{font-size:9.5px;color:#6f748c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}',
+            '.fmx-kmp{font-size:9px;font-weight:650;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;}',
             '.fmr-sec.num{font-size:12.5px;letter-spacing:0.02em;text-transform:none;font-weight:700;color:#c7cdfb;margin:0 0 8px;}',
             '.fmr-gline{display:flex;align-items:center;gap:8px;margin-top:4px;}',
             '.fmr-gline .gl{font-size:10.5px;font-weight:700;flex:0 0 auto;white-space:nowrap;}',
@@ -9150,12 +9150,20 @@
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow);
     }
-    function _htile(label, val, valCol, sub, subCol, isPrice) {
-        var vlen = String(val == null ? '' : val).replace(/<[^>]*>/g, '').length;
-        var fit = vlen >= 11 ? ' xs' : (vlen >= 8 ? ' sm' : '');
-        return '<div class="fmx-kmt"><div class="l">' + label + '</div>' +
-            '<div class="v' + (isPrice ? ' pr' : '') + fit + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</div>' +
-            (sub ? '<div class="s"' + (subCol ? ' style="color:' + subCol + ';"' : '') + '>' + sub + '</div>' : '') + '</div>';
+    function _kmPill(tx, col) {
+        if (!tx) return '';
+        var bg = 'rgba(255,255,255,0.05)', bd = 'rgba(255,255,255,0.12)';
+        if (col === '#5DCAA5') { bg = 'rgba(93,202,165,0.08)'; bd = 'rgba(93,202,165,0.28)'; }
+        else if (col === '#ef4444' || col === '#ef8080' || col === '#f06978') { bg = 'rgba(239,128,128,0.10)'; bd = 'rgba(239,128,128,0.3)'; }
+        else if (col === '#f59e0b' || col === '#f5bf4f') { bg = 'rgba(245,191,79,0.08)'; bd = 'rgba(245,191,79,0.3)'; }
+        return '<span class="fmx-kmp" style="color:' + (col || '#8d93a8') + ';background:' + bg + ';border:1px solid ' + bd + ';">' + tx + '</span>';
+    }
+    function _kmRow(name, right, val, valCol, isPrice) {
+        return '<div class="fmx-kmr"><span class="n">' + name + '</span><span class="rv">' + (right || '') +
+            '<span class="v' + (isPrice ? ' pr' : '') + '"' + (valCol ? ' style="color:' + valCol + ';"' : '') + '>' + val + '</span></span></div>';
+    }
+    function _kmSub(tx, col) {
+        return tx ? '<span class="s"' + (col ? ' style="color:' + col + ';"' : '') + '>' + tx + '</span>' : '';
     }
     function _shortRange(lo, hi) {
         if (hi >= 1000000) {
@@ -9195,24 +9203,25 @@
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var dead = _deadT;
-        var tiles =
-            _htile('Подписчики', _num(subs), '#e8e8ed', subsSub, subsSubCol) +
-            _htile('Охват', dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed',
-                dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : '') +
-            (function () {
-                var e24 = (!dead && rr != null && subs > 0 && typeof l.reach_24h_median === 'number' && l.reach_24h_median > 0)
-                    ? String(Math.round(l.reach_24h_median / subs * 1000) / 10).replace('.', ',') : null;
-                return _htile(e24 ? 'ERR · 24ч' : 'ERR',
-                    dead ? '—' : (rr != null ? rr + '%' + (e24 ? ' <span class="v24">· ' + e24 + '%</span>' : '') : '—'),
-                    dead ? '#c2c6d2' : rrCol,
-                    dead ? 'нет свежих постов' : (rstat || 'уточняется'), dead ? '' : (rstat ? rrCol : ''));
-            })() +
-            _htile('ER', ervTxt, erCol, erStat, erStat ? erCol : '') +
-            _htile('CPM, ₽', (!dead && cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed',
-                dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), '') +
-            _htile(priceLabel, priceVal, priceCol, priceSub, '', true);
+        var e24 = (!dead && rr != null && subs > 0 && typeof l.reach_24h_median === 'number' && l.reach_24h_median > 0)
+            ? String(Math.round(l.reach_24h_median / subs * 1000) / 10).replace('.', ',') : null;
+        var erRight = (erv != null && erStat) ? _kmPill(erStat, erCol) : _kmSub(erStat, '');
+        var rows =
+            _kmRow('Подписчики', _kmSub(subsSub, subsSubCol), _num(subs), '#e8e8ed') +
+            _kmRow('Охват',
+                _kmSub(dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : ''),
+                dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed') +
+            _kmRow('ERR',
+                dead ? _kmSub('нет свежих постов', '') : _kmPill(rstat || 'уточняется', rstat ? rrCol : '#8d93a8'),
+                dead ? '—' : (rr != null ? String(rr).replace('.', ',') + '%' : '—'), dead ? '#c2c6d2' : rrCol) +
+            (e24 ? _kmRow('ERR24', _kmSub('за первые сутки', ''), e24 + '%', '#e8e8ed') : '') +
+            _kmRow('ER', erRight, ervTxt, erCol) +
+            _kmRow('CPM, ₽',
+                _kmSub(dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), ''),
+                (!dead && cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed') +
+            _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
-            '<div class="fmx-kmg">' + tiles + '</div>';
+            '<div class="fmx-kmg">' + rows + '</div>';
     }
     function fullCard(l) {
         var top = _isTop(l), accent = _accent(l), hc = _healthColor(l);
