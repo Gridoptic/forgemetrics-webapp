@@ -1581,6 +1581,38 @@
         return p2(w[0]) + ':00–' + p2(w[1]) + ':00';
     }
 
+    function tzMin() {
+        if (_state && _state.tz_min != null) return _state.tz_min;
+        if (_cal && _cal.tz_min != null) return _cal.tz_min;
+        return null;
+    }
+
+    function tzLabel() {
+        var m = tzMin();
+        if (m == null) return '';
+        var s = m < 0 ? '−' : '+', a = Math.abs(m);
+        var h = Math.floor(a / 60), mm = a % 60;
+        return 'UTC' + s + h + (mm ? ':' + (mm < 10 ? '0' : '') + mm : '');
+    }
+
+    function tzFootNote() {
+        var l = tzLabel();
+        return l ? esc(T('Время — по каналу') + ' (' + l + '). ') : '';
+    }
+
+    function slotHint(hm) {
+        var tz = tzMin();
+        if (tz == null || !hm) return '';
+        var d = -new Date().getTimezoneOffset() - tz;
+        if (Math.abs(d) < 30) return '';
+        var p = String(hm).split(':');
+        if (p.length < 2) return '';
+        var raw = (+p[0]) * 60 + (+p[1]) + d;
+        var mins = ((raw % 1440) + 1440) % 1440;
+        var h = Math.floor(mins / 60), m2 = mins % 60;
+        return ' · ' + T('у тебя') + ' ' + (h < 10 ? '0' : '') + h + ':' + (m2 < 10 ? '0' : '') + m2;
+    }
+
     function lrnRow(iconCls, icon, title, why, pillCls, pill, extra) {
         return '<div class="cp-lrow">' +
             '<div class="cp-lrh"><span class="cp-lric ' + iconCls + '"><i class="ti ' + icon + '"></i></span>' +
@@ -1932,13 +1964,13 @@
                 : '';
             setView(viewBan + chanBlock + weekCal + doneBanner + learningBlock(true) + regenBtn +
                 strategyBlock() + reviewEntry() + insightsBlock() + archBtn + archBody +
-                '<div class="cp-foot">' +
+                '<div class="cp-foot">' + tzFootNote() +
                 esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
                 '</div>', 'week');
         } else {
             setView(viewBan + chanBlock + weekCal + strategyBlock() + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
                 reviewEntry() + insightsBlock() +
-                '<div class="cp-foot">' + foot + '</div>', 'week');
+                '<div class="cp-foot">' + tzFootNote() + foot + '</div>', 'week');
         }
         var scrEl = document.getElementById('content-plan-screen');
         if (scrEl) scrEl.classList.toggle('cp-vonly', !canEdit());
@@ -2366,7 +2398,7 @@
             : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
             : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm
-            ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm) + '</span>' +
+            ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm + slotHint(p.slot_hm)) + '</span>' +
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
             : '';
         var ad = p.is_ad
@@ -3078,7 +3110,7 @@
         var conf = (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
             : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
             : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
-        var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm) +
+        var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm + slotHint(p.slot_hm)) +
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
         var adRow = '<button class="cp-adrow' + (p.is_ad ? ' on' : '') +
             '" data-act="admark" data-id="' + p.id + '">' +
