@@ -981,13 +981,13 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
     const W = Math.max(260, host.clientWidth || 320), Hh = 74, padT = 10, padB = 18, padL = 6, padR = 6;
     const ALL = DATA.concat(FR);
     const min = Math.min.apply(null, ALL), max = Math.max.apply(null, ALL);
-    const lo = min - (max - min) * 0.5, hi = max + (max - min) * 0.22, rng = (hi - lo) || 1, last = DATA.length - 1;
+    const lo = min - (max - min) * 0.15, hi = max + (max - min) * 0.12, rng = (hi - lo) || 1, last = DATA.length - 1;
     const lastIdx = last + FR.length;
     const X = (i) => padL + i * (W - padL - padR) / (lastIdx || 1);
     const Y = (v) => padT + (1 - (v - lo) / rng) * (Hh - padT - padB);
     const pts = DATA.map((v, i) => [X(i), Y(v)]);
-    function smooth(p) { if (p.length < 2) return ''; let d = 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1); for (let i = 0; i < p.length - 1; i++) { const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c; const c1x = b[0] + (c[0] - a[0]) / 6, c1y = b[1] + (c[1] - a[1]) / 6, c2x = c[0] - (e[0] - b[0]) / 6, c2y = c[1] - (e[1] - b[1]) / 6; d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1); } return d; }
-    const line = smooth(pts), area = line + ' L' + X(last).toFixed(1) + ',' + (Hh - padB) + ' L' + X(0).toFixed(1) + ',' + (Hh - padB) + ' Z';
+    const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const area = line + ' L' + X(last).toFixed(1) + ',' + (Hh - padB) + ' L' + X(0).toFixed(1) + ',' + (Hh - padB) + ' Z';
     const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
     const grids = (() => {
         const raw = (hi - lo) / 3;
