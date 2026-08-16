@@ -799,7 +799,16 @@ function pwRenderMetrics(pulse) {
                 ? 'от ' + pwRub(pulse.price_low) + ' ₽'
                 : (pwRangeTx(pulse.price_low, pulse.price_high) || '—'));
         } else if (id === 'cpf') {
-            valTx = escapeHtml(pwRangeTx(pulse.cpf_low, pulse.cpf_high) || '—');
+            if (pulse.cpf_fact != null) {
+                valTx = escapeHtml('≈' + pwRub(pulse.cpf_fact) + ' ₽');
+                sub = '<span class="s" style="color:#5DCAA5;">по замерам сделок</span>';
+            } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
+                valTx = escapeHtml('≈' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' ₽');
+                sub = '<span class="s">' + escapeHtml('типовая конверсия · разброс ' +
+                    pwRub(pulse.cpf_low) + '–' + pwRub(pulse.cpf_high) + ' ₽') + '</span>';
+            } else {
+                valTx = '—';
+            }
         } else {
             valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
