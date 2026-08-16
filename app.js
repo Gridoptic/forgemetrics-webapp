@@ -712,7 +712,7 @@ var PW_CATALOG = [
     { id: 'er', label: 'ER', sub: 'реакции к охвату', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
 var PW_MAX = 5;
-var PW_LS = 'fm_pulse_metrics_v1';
+var PW_LS = 'fm_pulse_metrics_v2';
 
 var PW_DORM_LS = 'fm_pulse_dormant_v1';
 function pwDormantGet(chId) {
