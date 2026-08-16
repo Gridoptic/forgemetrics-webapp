@@ -715,6 +715,7 @@ function pwCell(label, val, opts) {
 var PW_CATALOG = [
     { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
     { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
+    { id: 'err24', label: 'ERR24', get: p => p.err24, o: { suf: '%', dec: 1 } },
     { id: 'rr', label: 'ERR', get: p => p.reach_rate, o: { suf: '%' } },
     { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
@@ -742,7 +743,7 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    var order = ['subs', 'reach', 'rr', 'er'];
+    var order = ['subs', 'reach', 'err24', 'rr', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
