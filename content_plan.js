@@ -721,7 +721,7 @@
         var acts = (r.actions || []).length
             ? '<div class="cp-lbl" style="margin-top:15px">' + esc(T('Что предлагаю сделать')) + '</div>' +
               '<div class="cp-acts">' + r.actions.map(function (a) {
-                  var ic = { ruler: 'ti-ruler-2', clock: 'ti-clock', hook: 'ti-hook',
+                  var ic = { ruler: 'ti-ruler-2', clock: 'ti-clock', hook: 'ti-quote',
                              layers: 'ti-stack-2' }[a.icon] || 'ti-bulb';
                   return '<div class="cp-actc"><i class="ti ' + ic + '"></i>' +
                       '<span class="tx"><b>' + esc(a.title) + '</b>' +
@@ -1638,11 +1638,11 @@
                 esc(T('Медиана сильных зрелых постов канала. Передаётся в задание каждому посту недели.')),
                 'teal', 'замер');
         }
-        var OPN = { question: 'с вопроса', number: 'с цифры', quote: 'с цитаты', short: 'с короткой фразы' };
+        var OPN = { question: 'вопрос', number: 'цифра', quote: 'цитата', short: 'короткая фраза' };
         if (L.opener && OPN[L.opener.kind]) {
-            rows += lrnRow('teal', 'ti-hook',
-                esc(T('Зачин —') + ' ' + T(OPN[L.opener.kind])),
-                esc(T('Так открывались сильные посты канала. Правило уходит в промпт генерации.')),
+            rows += lrnRow('teal', 'ti-quote',
+                esc(T('Первая строка —') + ' ' + T(OPN[L.opener.kind])),
+                esc(T('Так начинались сильные посты канала. Правило передаётся в задание генерации.')),
                 'teal', 'замер');
         }
         if (!rows) return '';
@@ -1658,7 +1658,7 @@
             esc(T('Каждый пост замерен на 1, 12, 24 и 48 часах после выхода. Выводы ниже включены в новую сборку.')) +
             '</div>' + rows +
             '<div class="cp-lrn-f"><i class="ti ti-bolt"></i><span>' +
-            esc(T('Частота → сетка недели · окна → расписание публикаций · длина и зачин → промпт постов.')) +
+            esc(T('Частота → сетка недели · окна → расписание публикаций · длина и первая строка → задание постов.')) +
             '</span></div></div>';
     }
 
