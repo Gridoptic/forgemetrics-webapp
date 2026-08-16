@@ -1843,6 +1843,7 @@
     }
     function statusOf(p) {
         var ps = p.publish_status;
+        if (ps === 'rolled_back') return [T('Удалён из канала'), 'fail'];
         if (ps === 'published') return [T('Опубликован'), 'pub'];
         if (ps === 'queued') return [T('Запланирован') + (p.slot_hm ? ' ' + p.slot_hm : ''), 'q'];
         if (ps === 'failed' || ps === 'needs_check') return [T('Не отправлен'), 'fail'];
@@ -1879,7 +1880,9 @@
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
-        var allPub = n > 0 && ps.every(function (p) { return p.publish_status === 'published'; });
+        var allPub = n > 0 &&
+            ps.every(function (p) { return p.publish_status === 'published' || p.publish_status === 'rolled_back'; }) &&
+            ps.some(function (p) { return p.publish_status === 'published'; });
         var doneBanner = allPub
             ? '<div class="cp-doneban"><i class="ti ti-circle-check"></i>' +
               '<span><b>' + esc(T('Неделя вышла полностью')) + '</b>' +
