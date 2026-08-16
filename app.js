@@ -704,22 +704,14 @@ function pwCountUp(root) {
         requestAnimationFrame(step);
     });
 }
-function pwCell(label, val, opts) {
-    opts = opts || {};
-    if (val == null) return `<div class="pw-mcell"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv">—</div></div>`;
-    const attrs = `data-to="${val}"${opts.sep ? ' data-sep="1"' : ''}${opts.k ? ' data-k="1"' : ''}${opts.suf ? ` data-suf="${opts.suf}"` : ''}${opts.dec ? ` data-dec="${opts.dec}"` : ''}`;
-    const tr = opts.trend != null ? `<span class="${opts.trend >= 0 ? 'up' : 'dn'}">${opts.trend >= 0 ? '↗' : '↘'}${Math.abs(opts.trend)}%</span>` : '';
-    const vst = opts.vcolor ? ` style="color:${opts.vcolor}"` : '';
-    return `<div class="pw-mcell${opts.cls ? ' ' + opts.cls : ''}"><div class="pw-ml">${escapeHtml(label)}</div><div class="pw-mv"${vst}><span class="pw-num" ${attrs}>0</span>${tr}</div>${opts.extra || ''}</div>`;
-}
-
 var PW_CATALOG = [
-    { id: 'subs', label: 'Подписчики', get: p => p.subscribers, o: { sep: true } },
-    { id: 'reach', label: 'Охват / пост', get: p => p.avg_views, o: { k: true } },
-    { id: 'rr', label: 'ERR', get: p => p.reach_rate, o: { suf: '%' } },
-    { id: 'er', label: 'ER', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
+    { id: 'subs', label: 'Подписчики', sub: '', get: p => p.subscribers, o: { sep: true } },
+    { id: 'reach', label: 'Охват / пост', sub: 'за 30 дней', get: p => p.avg_views, o: { k: true } },
+    { id: 'rr', label: 'ERR', sub: '', get: p => p.reach_rate, o: { suf: '%' } },
+    { id: 'err24', label: 'ERR24', sub: 'за первые сутки', get: p => p.err24, o: { suf: '%', dec: 1 } },
+    { id: 'er', label: 'ER', sub: 'реакции к охвату', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
 ];
-var PW_MAX = 4;
+var PW_MAX = 5;
 var PW_LS = 'fm_pulse_metrics_v1';
 
 var PW_DORM_LS = 'fm_pulse_dormant_v1';
@@ -743,7 +735,7 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    var order = ['subs', 'reach', 'rr', 'er'];
+    var order = ['subs', 'reach', 'rr', 'err24', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
@@ -763,7 +755,30 @@ function pwRenderMetrics(pulse) {
     var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
     var _dorm = pwDormantGet(_dch);
     var hideReach = _dorm && !(_dorm.d != null && _dorm.d <= 30);
-    grid.innerHTML = ids.map(id => { var m = PW_CATALOG.find(x => x.id === id); if (!m) return ''; var v = m.get(pulse); if (hideReach && (id === 'reach' || id === 'rr')) v = null; var o = m.o; if (id === 'subs') { o = Object.assign({}, m.o); if (v != null && v >= 1000000) { delete o.sep; o.k = true; } else if (v != null && v >= 100000) { o.cls = 'long'; } if (pulse.subs_join_today != null) o.extra = `<div class="pw-md"><span style="color:#5DCAA5;">+${pulse.subs_join_today}</span> · <span style="color:#ef4444;">−${pulse.subs_left_today || 0}</span> <span>сегодня</span></div>`; } if (id === 'rr' && v != null) { o = Object.assign({}, m.o); var st = pulse.rr_status; var stCol = st === 'выше нормы' ? '#f5bf4f' : (st && st !== 'норма' ? '#ef8080' : null); if (stCol) o.vcolor = stCol; var lines = ''; if (st && st !== 'норма') lines += `<div class="pw-md" style="color:${stCol};white-space:nowrap;">${escapeHtml(st)}</div>`; if (pulse.err24 != null) lines += `<div class="pw-md" style="white-space:nowrap;">ERR24 ${String(pulse.err24).replace('.', ',')}%</div>`; if (lines) o.extra = lines; } return pwCell(m.label, v, o); }).join('');
+    grid.innerHTML = ids.map(id => {
+        var m = PW_CATALOG.find(x => x.id === id);
+        if (!m) return '';
+        var v = m.get(pulse);
+        if (hideReach && (id === 'reach' || id === 'rr' || id === 'err24')) v = null;
+        var vcls = '';
+        var sub = m.sub ? `<span class="s">${escapeHtml(m.sub)}</span>` : '';
+        if (id === 'subs' && pulse.subs_join_today != null) {
+            sub = `<span class="s"><span class="up">+${pulse.subs_join_today}</span> · <span class="dn">−${pulse.subs_left_today || 0}</span> сегодня</span>`;
+        }
+        if (id === 'rr' && v != null) {
+            var st = pulse.rr_status;
+            if (st && st !== 'норма') {
+                var warn = st === 'выше нормы';
+                sub = `<span class="pw-rpill ${warn ? 'warn' : 'bad'}">${escapeHtml(st)}</span>`;
+                vcls = warn ? ' warn' : ' bad';
+            }
+        }
+        var o = m.o;
+        var valTx = (v == null)
+            ? '—'
+            : `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
+        return `<div class="pw-r"><span class="n">${escapeHtml(m.label)}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+    }).join('');
     pwCountUp(grid);
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
@@ -855,7 +870,7 @@ function renderPulse(pulse) {
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
         <div class="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button></div>
-        <div class="pw-mgrid" id="pw-mgrid"></div>
+        <div class="pw-mrows" id="pw-mgrid"></div>
       </div>
       <div id="pw-aihook"></div>
     </div>`;

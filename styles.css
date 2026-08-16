@@ -4660,11 +4660,20 @@ html.cs-modal-open {
 .pw-mgear:hover{background:rgba(255,255,255,0.09);color:var(--text-primary);}
 .pw-mgear:active{transform:rotate(50deg);}
 .pw-mgear i{font-size:15px;}
-.pw-mgrid{display:flex;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:11px;overflow:hidden;}
-.pw-mgrid .pw-mcell{flex:1 1 auto;padding:7px 8px;border-left:1px solid rgba(255,255,255,0.06);}
-.pw-mgrid .pw-mcell:first-child{border-left:0;}
-.pw-mgrid .pw-ml{min-height:auto;font-size:8.5px;letter-spacing:.1px;white-space:nowrap;overflow-wrap:normal;}
-.pw-mgrid .pw-mv{font-size:14.5px;margin-top:1px;}
+.pw-mrows{display:flex;flex-direction:column;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:2px 11px;}
+.pw-r{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);min-width:0;}
+.pw-r:last-child{border-bottom:none;}
+.pw-r .n{font-size:11px;color:var(--text-secondary);flex-shrink:0;}
+.pw-r .rv{display:flex;align-items:baseline;gap:8px;min-width:0;}
+.pw-r .s{font-size:10px;color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}
+.pw-r .s .up{color:#5DCAA5;font-weight:700;}
+.pw-r .s .dn{color:#ef4444;font-weight:700;}
+.pw-r .v{font-size:15.5px;font-weight:800;letter-spacing:-.2px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text-primary);}
+.pw-r .v.bad{color:#ef8080;}
+.pw-r .v.warn{color:#f5bf4f;}
+.pw-rpill{font-size:9px;font-weight:650;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;}
+.pw-rpill.bad{color:#ef8080;background:rgba(239,128,128,0.10);border:1px solid rgba(239,128,128,0.3);}
+.pw-rpill.warn{color:#f5bf4f;background:rgba(245,191,79,0.08);border:1px solid rgba(245,191,79,0.3);}
 
 .pw-sheet-ov{position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:flex-end;justify-content:center;}
 .pw-sheet-ov.show{opacity:1;pointer-events:auto;}
