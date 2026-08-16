@@ -6581,20 +6581,36 @@ function setupPostEventListeners() {
 
 
 
-var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js'];
+var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js',
+    'content_plan.js', 'content_plan.css', 'audit.js', 'audit.css',
+    'strategy.js', 'strategy.css', 'rewrite.js', 'rewrite.css',
+    'cover_core.js', 'placements.js', 'competitors.js', 'competitors.css', 'fonts.css'];
+var _fmHasPack = false;
 function _fmVerFromDom() {
-    return _FM_ASSETS.map(function (f) {
+    var sig = _FM_ASSETS.map(function (f) {
         var el = document.querySelector('script[src*="' + f + '?v="], link[href*="' + f + '?v="]');
         var u = el ? (el.getAttribute('src') || el.getAttribute('href') || '') : '';
         var m = u.match(/\?v=([0-9a-zA-Z.]+)/);
         return f + ':' + (m ? m[1] : '');
     }).join('|');
+    var lp = document.querySelector('script[src*="i18n/"]');
+    _fmHasPack = !!lp;
+    if (lp) {
+        var pm = (lp.getAttribute('src') || '').match(/\?v=([0-9a-zA-Z.]+)/);
+        sig += '|i18n-pack:' + (pm ? pm[1] : '');
+    }
+    return sig;
 }
 function _fmVerFromHtml(html) {
-    return _FM_ASSETS.map(function (f) {
+    var sig = _FM_ASSETS.map(function (f) {
         var m = (html || '').match(new RegExp(f.replace(/\./g, '\\.') + '\\?v=([0-9a-zA-Z.]+)'));
         return f + ':' + (m ? m[1] : '');
     }).join('|');
+    if (_fmHasPack) {
+        var pm = (html || '').match(/i18n\/[^"]*\?v=([0-9a-zA-Z.]+)/);
+        sig += '|i18n-pack:' + (pm ? pm[1] : '');
+    }
+    return sig;
 }
 var _fmBaseVer = null, _fmPending = false;
 function _fmTyping() {
