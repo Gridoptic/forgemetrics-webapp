@@ -1960,9 +1960,10 @@
             var archBtn = '<button class="cp-allbtn arch" data-act="archtoggle"><i class="ti ti-archive"></i> ' +
                 esc(T(_archOpen ? 'Скрыть посты недели' : 'Посты недели (архив)')) + '</button>';
             var archBody = _archOpen
-                ? header + goalsSec + apPanel() + rubricsBlock(true) + ribbon + detailPanel()
+                ? header + ribbon + detailPanel()
                 : '';
             setView(viewBan + chanBlock + weekCal + doneBanner + learningBlock(true) + regenBtn +
+                apPanel() + goalsSec + rubricsBlock(true) +
                 strategyBlock() + reviewEntry() + insightsBlock() + archBtn + archBody +
                 '<div class="cp-foot">' + tzFootNote() +
                 esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
