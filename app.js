@@ -915,8 +915,9 @@ async function loadReachSeries() {
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
             _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
-                           fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [] };
-            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates);
+                           fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [],
+                           freshLeft: r.fresh_left_h || [] };
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
@@ -968,17 +969,18 @@ function _reachRedraw() {
     try {
         var host = document.getElementById('pw-chart');
         if (!host || !_reachLast || !host.clientWidth) return;
-        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates);
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
     } catch (e) {}
 }
 function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
 window.addEventListener('resize', _reachRedrawSoon);
 try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
-function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
+function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     FR = Array.isArray(FR) ? FR.filter(Number.isFinite) : [];
     FRD = Array.isArray(FRD) ? FRD : [];
+    FRL = Array.isArray(FRL) ? FRL : [];
     const PC = muted
         ? { area: 'rgba(107,112,136,0.08)', ln: '#6b7088', ep: '#e2e4ee', eps: '#8990a8' }
         : { area: 'rgba(93,202,165,0.10)', ln: '#5DCAA5', ep: '#eafff6', eps: '#5DCAA5' };
@@ -1038,7 +1040,12 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD) {
         const dlab = isFresh
             ? (FRD[i - last - 1] || '')
             : ((dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад'));
-        tip.innerHTML = `<div class="d">${dlab}</div>${val.toLocaleString('ru-RU')} охват` + (isFresh ? ' · набирает' : '');
+        let freshTx = '';
+        if (isFresh) {
+            const lh = FRL[i - last - 1];
+            freshTx = ' · набирает' + (lh ? (lh >= 24 ? ', в линии через ' + Math.ceil(lh / 24) + ' дн' : ', в линии через ' + lh + ' ч') : '');
+        }
+        tip.innerHTML = `<div class="d">${dlab}</div>${val.toLocaleString('ru-RU')} охват${freshTx}`;
         tip.style.opacity = 1;
         const pxX = x / W * r.width, pxY = y / Hh * r.height;
         const half = tip.offsetWidth / 2 + 4;
