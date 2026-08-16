@@ -429,11 +429,22 @@
             var p = String(iso).split('-');
             return p[1] + '.' + String(p[0]).slice(2);
         };
-        var span = mm(h.since) === mm(h.until) ? mm(h.since) : (mm(h.since) + '—' + mm(h.until));
+        var span;
+        if (h.window_days === 0) span = T('за всё время');
+        else if (h.window_days === 365) span = T('за год');
+        else span = mm(h.since) === mm(h.until) ? mm(h.since) : (mm(h.since) + '—' + mm(h.until));
         return '<div class="cp-qhead"><span class="l"><i></i>' +
             esc(T('охват по дням') + ' · ' + h.total + ' ' +
                 T(plural3(h.total, 'пост', 'поста', 'постов'))) + '</span>' +
             '<span class="r">Ø ' + esc(numExact(histAvg())) + ' · ' + esc(span) + '</span></div>';
+    }
+
+    function qbNote() {
+        var h = _cal && _cal.history;
+        if (!h || !h.ready || h.window_days !== 0) return '';
+        return '<div class="cp-qnote"><i class="ti ti-info-circle"></i><span>' +
+            esc(T('История охватывает периоды с разной частотой выхода. Посты моложе 3 дней не входят в средние — они ещё набирают просмотры.')) +
+            '</span></div>';
     }
 
     function histDays() {
@@ -515,7 +526,7 @@
                 '<span class="cp-qn">' + (stat ? '<i class="qdot"></i>' : '') +
                 '<b>' + (n || '—') + '</b></span></div>';
         }).join('');
-        return qbHead() + '<div class="cp-qb' + (hist ? '' : ' nohist') + '">' + cols + '</div>';
+        return qbHead() + '<div class="cp-qb' + (hist ? '' : ' nohist') + '">' + cols + '</div>' + qbNote();
     }
 
     function histNote() {
@@ -721,8 +732,15 @@
         var base = '<div class="cp-revbase"><i class="ti ti-info-circle"></i><span>' +
             esc(T('Основано на') + ' ' + (r.posts || 0) + ' ' +
                 T(plural3(r.posts || 0, 'посте', 'постах', 'постах')) + '. ' +
-                T('Сравниваются твои сильные посты со слабыми — не с чужими каналами.')) +
+                T('Сравниваются твои сильные посты со слабыми — не с чужими каналами.') + ' ' +
+                T('Посты моложе 3 дней в сравнение не входят — они ещё набирают просмотры.')) +
             '</span></div>';
+
+        var spanName = (r.span_days === 90) ? T('за 90 дней')
+            : (r.span_days === 365) ? T('за год') : T('всё время канала');
+        var chips = '<div class="cp-lchips"><span class="cp-lchip on">' +
+            esc(T('зрелые посты · старше 3 дней')) + '</span>' +
+            '<span class="cp-lchip">' + esc(T('выборка:') + ' ' + spanName) + '</span></div>';
 
         setView('<div class="cp-verdict' + tone + '">' +
             '<div class="cp-veye">' + esc(T('Разбор за') + ' ' + (r.window_days || 21) + ' ' +
@@ -730,6 +748,7 @@
             '<h2>' + esc(T(r.head || '')) + '</h2>' + kpi + spark + shifts + '</div>' +
             '<div class="cp-sec">' + secHead('Твои сильные против слабых',
                 'Сравниваются верхние и нижние двадцать процентов постов канала.') +
+            chips +
             '<div class="cp-cmp">' + revSide(r.top || {}, 'top', 'верхние 20%') +
             revSide(r.low || {}, 'low', 'нижние 20%') + '</div>' + acts + base + '</div>' + back,
             'review');
@@ -1557,6 +1576,92 @@
         }).join('');
     }
 
+    function lrnWin(w) {
+        var p2 = function (h) { return (h < 10 ? '0' : '') + h; };
+        return p2(w[0]) + ':00–' + p2(w[1]) + ':00';
+    }
+
+    function lrnRow(iconCls, icon, title, why, pillCls, pill, extra) {
+        return '<div class="cp-lrow">' +
+            '<div class="cp-lrh"><span class="cp-lric ' + iconCls + '"><i class="ti ' + icon + '"></i></span>' +
+            '<b>' + title + '</b>' +
+            '<span class="cp-lpill ' + pillCls + '">' + esc(T(pill)) + '</span></div>' +
+            '<div class="cp-lwhy">' + why + '</div>' + (extra || '') + '</div>';
+    }
+
+    function learningBlock() {
+        var L = _state && _state.learning;
+        if (!L || !L.ready) return '';
+        var rows = '';
+        var f = L.freq;
+        if (f && f.recommended) {
+            var why = esc(T('Темп') + ' ' + f.tested + ' ' + T('в неделю совпал со спадом:'));
+            var left = (L.members || {}).left || 0;
+            if (left) why += ' −' + left + ' ' + esc(T(plural3(left, 'подписчик', 'подписчика', 'подписчиков')));
+            if (L.change_pct != null && L.change_pct < 0) {
+                why += (left ? ', ' : ' ') + L.change_pct + '% ' + esc(T('охвата на пост'));
+            }
+            why += '. ' + esc(T('Прежний темп') + ' ' + f.previous + ' ' + T('— застой канала.') + ' ' +
+                T('Расчётная середина:') + ' ' + f.recommended + '.');
+            var btn = canEdit()
+                ? '<button class="cp-lapply" data-act="applyfreq" data-n="' + f.recommended + '">' +
+                  esc(T('Применить к сетке недели')) + '</button>'
+                : '';
+            rows += lrnRow('amb', 'ti-stack-2',
+                esc(f.recommended + ' ' + T(plural3(f.recommended, 'пост', 'поста', 'постов')) + ' ' +
+                    T('в неделю вместо') + ' ' + Math.round(f.tested)),
+                why, 'amb', 'рекомендация', btn);
+        }
+        var H = L.hours || {};
+        if ((H.windows || []).length) {
+            var w1 = lrnWin(H.windows[0]);
+            var w2 = H.windows[1] ? lrnWin(H.windows[1]) : '';
+            if (H.mode === 'probe') {
+                rows += lrnRow('vio', 'ti-clock',
+                    esc(T(w2 ? 'Два окна времени — на пробу' : 'Окно времени — на пробу')),
+                    esc(T('Замеров по часам пока мало — сравнить окна не по чему. Новая неделя разложит посты по окнам') +
+                        ' ' + w1 + (w2 ? ' ' + T('и') + ' ' + w2 : '') + ' — ' +
+                        T('к следующей неделе появится замер.')),
+                    'vio', 'проба');
+            } else {
+                rows += lrnRow('teal', 'ti-clock',
+                    esc(T('Окно времени — по замерам')),
+                    esc(T('Лучший отклик у постов, вышедших в') + ' ' + w1 +
+                        (w2 ? ' ' + T('и') + ' ' + w2 : '') + '. ' +
+                        T('Расписание недели ставит посты в эти окна.')),
+                    'teal', 'замер');
+            }
+        }
+        if (L.length && L.length.chars) {
+            rows += lrnRow('teal', 'ti-ruler-2',
+                esc(T('Длина — около') + ' ' + numExact(L.length.chars) + ' ' + T('знаков')),
+                esc(T('Медиана сильных зрелых постов канала. Передаётся в задание каждому посту недели.')),
+                'teal', 'замер');
+        }
+        var OPN = { question: 'с вопроса', number: 'с цифры', quote: 'с цитаты', short: 'с короткой фразы' };
+        if (L.opener && OPN[L.opener.kind]) {
+            rows += lrnRow('teal', 'ti-hook',
+                esc(T('Зачин —') + ' ' + T(OPN[L.opener.kind])),
+                esc(T('Так открывались сильные посты канала. Правило уходит в промпт генерации.')),
+                'teal', 'замер');
+        }
+        if (!rows) return '';
+        var wkNo = L.week_no || 1;
+        var head = (wkNo === 1)
+            ? T('Неделя 1 — калибровка завершена')
+            : T('Неделя') + ' ' + wkNo + ' — ' + T('замеры собраны');
+        return '<div class="cp-lrn">' +
+            '<div class="cp-lrn-h"><span class="cp-lrn-ic"><i class="ti ti-sparkles"></i></span>' +
+            '<b>' + esc(head) + '</b>' +
+            '<em>' + esc(L.measured + ' ' + T(plural3(L.measured, 'пост', 'поста', 'постов'))) + '</em></div>' +
+            '<div class="cp-lrn-sub">' +
+            esc(T('Каждый пост замерен на 1, 12, 24 и 48 часах после выхода. Выводы ниже включены в новую сборку.')) +
+            '</div>' + rows +
+            '<div class="cp-lrn-f"><i class="ti ti-bolt"></i><span>' +
+            esc(T('Частота → сетка недели · окна → расписание публикаций · длина и зачин → промпт постов.')) +
+            '</span></div></div>';
+    }
+
     function renderBrief() {
         if (!_ap && _chId) setTimeout(loadAutopilot, 0);
         var chanBlock = buildChanBlock();
@@ -1577,7 +1682,7 @@
             lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         }
         setView(
-            heroWeek() +
+            heroWeek() + learningBlock() +
 
             '<div class="cp-sec">' + secHead('Канал',
                 'Для какого канала собираем неделю. Посты будут написаны в его манере.') +
@@ -2239,7 +2344,9 @@
         var fi = fmtInfo(p.format);
         var st = statusOf(p);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
+        var conf = (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
+            : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
+            : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm
             ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm) + '</span>' +
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
@@ -2950,7 +3057,9 @@
         if (!p) return '';
         var fi = fmtInfo(p.format);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
+        var conf = (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
+            : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
+            : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm) +
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
         var adRow = '<button class="cp-adrow' + (p.is_ad ? ' on' : '') +
@@ -3219,6 +3328,23 @@
             renderBrief();
             loadCalendarSoon();
             saveDaysSoon();
+            return;
+        }
+        if (act === 'applyfreq') {
+            haptic('medium');
+            var rn = Math.max(3, Math.min(7, +actEl.getAttribute('data-n') || 3));
+            var pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
+                        6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
+            var fd = days().slice();
+            for (var fi = 0; fi < 7; fi++) {
+                var fn = pat.indexOf(fi) >= 0 ? 1 : 0;
+                fd[fi] = { n: fn, pins: dayPins(fi).slice(0, fn), times: dayTimes(fi).slice(0, fn) };
+            }
+            _days = fd;
+            renderBrief();
+            loadCalendarSoon();
+            saveDaysSoon();
+            toast(T('Сетка недели обновлена'));
             return;
         }
         if (act === 'rubtoggle') {

@@ -881,17 +881,21 @@ function renderPulse(pulse) {
     loadReachSeries();
 }
 
-function renderPulseHook(trendPct) {
+function renderPulseHook(trendPct, planMeasured) {
     const hook = document.getElementById('pw-aihook');
     if (!hook) return;
     if (trendPct == null || trendPct >= 0) { hook.innerHTML = ''; return; }
     const drop = Math.abs(trendPct);
+    const calibrated = (planMeasured || 0) >= 3;
+    const tx = calibrated
+        ? `Калибровка завершена: замеры недели собраны. Новая неделя соберётся с их учётом.`
+        : `Охват снизился на <b>${drop}%</b> за 30 дней. Собери неделю постов по замерам канала.`;
     hook.innerHTML = `<div class="pw-aihook">`
         + `<span class="pw-aih-ic"><i class="ti ti-sparkles"></i></span>`
-        + `<div class="pw-aih-tx">Охват просел на <b>${drop}%</b> — ИИ подготовит вовлекающие посты, чтобы вернуть его.</div>`
-        + `<button class="pw-aih-go" type="button">Собрать <i class="ti ti-arrow-right"></i></button></div>`;
+        + `<div class="pw-aih-tx">${tx}</div>`
+        + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button></div>`;
     const go = hook.querySelector('.pw-aih-go');
-    if (go) go.addEventListener('click', () => { hapticLight(); handleAction('create_post'); });
+    if (go) go.addEventListener('click', () => { hapticLight(); handleAction('content_plan'); });
 }
 
 async function loadReachSeries() {
@@ -920,7 +924,7 @@ async function loadReachSeries() {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
                 if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
-                renderPulseHook(r.trend_pct);
+                renderPulseHook(r.trend_pct, r.plan_measured);
             }
         } else {
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
