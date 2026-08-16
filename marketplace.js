@@ -9127,10 +9127,21 @@
         }
         var flow = '';
         if (pp && av && !dead) {
-            var cpfLo = Math.round(pp / (av * 0.015));
-            var cpfHi = Math.round(pp / (av * 0.003));
+            var cpfHead;
+            if (l.cpf_conv_fact) {
+                conv = l.cpf_conv_fact;
+                _grw = av * conv / 100;
+                cps = _grw > 0 ? Math.round(pp / _grw) : cps;
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> ' +
+                    '<span style="font-size:11px;color:#5DCAA5;">по замерам ' + (l.cpf_deals || 1) + ' ' +
+                    _plural(l.cpf_deals || 1, 'сделки', 'сделок', 'сделок') + '</span></div>';
+            } else {
+                var cpfLo = Math.round(pp / (av * 0.015));
+                var cpfHi = Math.round(pp / (av * 0.003));
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>';
+            }
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
-                '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>' +
+                cpfHead +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
                 '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
@@ -9471,10 +9482,21 @@
         }
         var flow = '';
         if (pp && av && !dead) {
-            var cpfLo = Math.round(pp / (av * 0.015));
-            var cpfHi = Math.round(pp / (av * 0.003));
+            var cpfHead;
+            if (l.cpf_conv_fact) {
+                conv = l.cpf_conv_fact;
+                _grw = av * conv / 100;
+                cps = _grw > 0 ? Math.round(pp / _grw) : cps;
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> ' +
+                    '<span style="font-size:11px;color:#5DCAA5;">по замерам ' + (l.cpf_deals || 1) + ' ' +
+                    _plural(l.cpf_deals || 1, 'сделки', 'сделок', 'сделок') + '</span></div>';
+            } else {
+                var cpfLo = Math.round(pp / (av * 0.015));
+                var cpfHi = Math.round(pp / (av * 0.003));
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>';
+            }
             flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <i class="fmr-i ti ti-info-circle push" data-fi="flow"></i></div>' +
-                '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>' +
+                cpfHead +
                 '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
                 '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
                 '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +

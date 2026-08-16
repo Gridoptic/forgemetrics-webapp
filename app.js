@@ -812,9 +812,16 @@ function pwRenderMetrics(pulse) {
         } else {
             valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
-        return `<div class="pw-r"><span class="n">${escapeHtml(m.label)}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+        var nameTx = escapeHtml(m.label) +
+            (id === 'cpf' ? ' <i id="pw-cpf-i" class="ti ti-info-circle" style="font-size:11px;color:#4a4d61;cursor:pointer;"></i>' : '');
+        return `<div class="pw-r"><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
     }).join('');
     pwCountUp(grid);
+    var cpfI = document.getElementById('pw-cpf-i');
+    if (cpfI) cpfI.onclick = () => {
+        hapticLight();
+        cabToast('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.');
+    };
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
 }
