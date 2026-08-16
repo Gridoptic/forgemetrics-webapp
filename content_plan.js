@@ -1589,7 +1589,7 @@
             '<div class="cp-lwhy">' + why + '</div>' + (extra || '') + '</div>';
     }
 
-    function learningBlock() {
+    function learningBlock(readOnly) {
         var L = _state && _state.learning;
         if (!L || !L.ready) return '';
         var rows = '';
@@ -1603,7 +1603,7 @@
             }
             why += '. ' + esc(T('Прежний темп') + ' ' + f.previous + ' ' + T('— застой канала.') + ' ' +
                 T('Расчётная середина:') + ' ' + f.recommended + '.');
-            var btn = canEdit()
+            var btn = (!readOnly && canEdit())
                 ? '<button class="cp-lapply" data-act="applyfreq" data-n="' + f.recommended + '">' +
                   esc(T('Применить к сетке недели')) + '</button>'
                 : '';
@@ -1860,6 +1860,8 @@
 
     function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
 
+    var _archOpen = false;
+
     function renderWeek() {
         var ps = posts();
         var n = ps.length;
@@ -1881,9 +1883,7 @@
         var doneBanner = allPub
             ? '<div class="cp-doneban"><i class="ti ti-circle-check"></i>' +
               '<span><b>' + esc(T('Неделя вышла полностью')) + '</b>' +
-              '<em>' + esc(T('Все посты в канале. Собери следующую неделю — прошлая уйдёт в архив.')) + '</em></span></div>' +
-              '<button class="cp-allbtn sched" data-act="regen"><i class="ti ti-sparkles"></i> ' +
-              esc(T('Собрать следующую неделю')) + '</button>'
+              '<em>' + esc(T('Все посты в канале. Собери следующую неделю — прошлая уйдёт в архив.')) + '</em></span></div>'
             : '';
         var goalChanged = _goal && _state.goal && _goal !== _state.goal;
         var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
@@ -1919,9 +1919,24 @@
             '<div class="cp-hbar stop"><i class="ti ti-eye"></i><span>' +
             esc(T('Режим просмотра — права на изменения выдаёт создатель канала.')) +
             '</span></div>';
-        setView(viewBan + chanBlock + weekCal + doneBanner + strategyBlock() + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
-            reviewEntry() + insightsBlock() +
-            '<div class="cp-foot">' + foot + '</div>', 'week');
+        if (allPub) {
+            var regenBtn = '<button class="cp-allbtn sched" data-act="regen"><i class="ti ti-sparkles"></i> ' +
+                esc(T('Собрать следующую неделю')) + '</button>';
+            var archBtn = '<button class="cp-allbtn arch" data-act="archtoggle"><i class="ti ti-archive"></i> ' +
+                esc(T(_archOpen ? 'Скрыть посты недели' : 'Посты недели (архив)')) + '</button>';
+            var archBody = _archOpen
+                ? header + goalsSec + apPanel() + rubricsBlock(true) + ribbon + detailPanel()
+                : '';
+            setView(viewBan + chanBlock + weekCal + doneBanner + learningBlock(true) + regenBtn +
+                strategyBlock() + reviewEntry() + insightsBlock() + archBtn + archBody +
+                '<div class="cp-foot">' +
+                esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
+                '</div>', 'week');
+        } else {
+            setView(viewBan + chanBlock + weekCal + strategyBlock() + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
+                reviewEntry() + insightsBlock() +
+                '<div class="cp-foot">' + foot + '</div>', 'week');
+        }
         var scrEl = document.getElementById('content-plan-screen');
         if (scrEl) scrEl.classList.toggle('cp-vonly', !canEdit());
         if (keepScroll) {
@@ -3328,6 +3343,12 @@
             renderBrief();
             loadCalendarSoon();
             saveDaysSoon();
+            return;
+        }
+        if (act === 'archtoggle') {
+            haptic('light');
+            _archOpen = !_archOpen;
+            renderWeek();
             return;
         }
         if (act === 'applyfreq') {

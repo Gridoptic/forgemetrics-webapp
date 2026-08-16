@@ -65,6 +65,10 @@
     display: flex; align-items: center; justify-content: center; gap: 7px; }
 .cp-allbtn.sched { border: 0; color: #fff; margin-top: 14px; background: linear-gradient(135deg,#5DCAA5,#3fa985); box-shadow: 0 12px 26px -14px rgba(93,202,165,0.8); }
 .cp-allbtn.rgn { margin: 12px 0 0; }
+.cp-allbtn.arch {
+    margin-top: 12px; background: rgba(255, 255, 255, .035); color: #8d93a8;
+    border: 1px solid rgba(255, 255, 255, .09); box-shadow: none;
+}
 .cp-doneban {
     display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px;
     border-radius: 15px; margin: 12px 0 10px;
