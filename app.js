@@ -711,8 +711,8 @@ var PW_CATALOG = [
     { id: 'err24', label: 'ERR24', sub: 'за первые сутки', get: p => p.err24, o: { suf: '%', dec: 1 } },
     { id: 'er', label: 'ER', sub: 'реакции к охвату', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
     { id: 'price', label: 'Цена поста', sub: '', get: p => p.price_low, o: {} },
-    { id: 'cpm', label: 'CPM, ₽', sub: 'за 1000 просмотров', get: p => p.cpm, o: { sep: true } },
-    { id: 'cpf', label: 'CPF, ₽', sub: 'при конверсии 0,3–1,5%', get: p => p.cpf_low, o: {} },
+    { id: 'cpm', label: 'CPM', sub: 'за 1000 просмотров', get: p => p.cpm, o: { sep: true, suf: ' ₽' } },
+    { id: 'cpf', label: 'CPF', sub: 'при конверсии 0,3–1,5%', get: p => p.cpf_low, o: {} },
 ];
 var PW_MAX = 8;
 
@@ -783,7 +783,7 @@ function pwRenderMetrics(pulse) {
             }
         }
         if (id === 'price' && v != null) {
-            var pk = pulse.price_kind === 'owner' ? 'твоя цена' : 'оценка ниши';
+            var pk = (pulse.price_kind === 'owner' ? 'твоя цена' : 'оценка ниши') + ' · 1/24';
             var pd = pulse.price_delta_pct;
             var pdTx = (pd != null && pd !== 0)
                 ? ` · <span style="color:${pd > 0 ? '#5DCAA5' : '#ef8080'};font-weight:700;">${pd > 0 ? '↗+' : '↘'}${Math.abs(pd)}%</span>`
@@ -795,7 +795,9 @@ function pwRenderMetrics(pulse) {
         if (v == null) {
             valTx = '—';
         } else if (id === 'price') {
-            valTx = escapeHtml(pwRangeTx(pulse.price_low, pulse.price_high) || '—');
+            valTx = escapeHtml(pulse.price_kind === 'owner'
+                ? 'от ' + pwRub(pulse.price_low) + ' ₽'
+                : (pwRangeTx(pulse.price_low, pulse.price_high) || '—'));
         } else if (id === 'cpf') {
             valTx = escapeHtml(pwRangeTx(pulse.cpf_low, pulse.cpf_high) || '—');
         } else {
