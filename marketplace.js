@@ -9193,13 +9193,15 @@
             subsSubCol = g > 0 ? '#5DCAA5' : '#f59e0b';
         } else if (typeof g === 'number') { subsSub = 'стабильно'; subsSubCol = '#8990a8'; }
         else subsSub = '';
+        var _exact = function (x) { return x >= 100000 ? _kmNum(x) : _num(x); };
+        var _exactRange = function (lo2, hi2) { return hi2 >= 100000 ? _shortRange(lo2, hi2) : _num(lo2) + '–' + _num(hi2); };
         var priceLabel, priceVal, priceCol = '#5DCAA5', priceSub;
         if (mode === 'market') {
-            priceLabel = 'Цена от, ₽'; priceVal = pp ? _kmNum(pp) : '—'; priceSub = 'формат 1/24';
+            priceLabel = 'Цена от, ₽'; priceVal = pp ? _exact(pp) : '—'; priceSub = 'формат 1/24';
         } else {
             var plo = (l.price_low != null) ? l.price_low : (l.min_price != null ? l.min_price : null);
             var phi = (l.price_low != null && l.price_high != null && l.price_high > l.price_low) ? l.price_high : null;
-            priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? _shortRange(plo, phi) : (l.owner_price ? _kmNum(plo) : '≈' + _kmNum(plo))) : '—';
+            priceLabel = 'Цена, ₽'; priceVal = plo ? (phi ? _exactRange(plo, phi) : (l.owner_price ? _exact(plo) : '≈' + _exact(plo))) : '—';
             priceSub = (l.owner_price ? 'цена владельца' : (l.price_negotiable ? 'договорная' : (l.price_floored ? 'минимум ниши' : 'оценка ниши')));
         }
         var dead = _deadT;
@@ -9210,7 +9212,7 @@
             _kmRow('Подписчики', _kmSub(subsSub, subsSubCol), _num(subs), '#e8e8ed') +
             _kmRow('Охват',
                 _kmSub(dead ? 'не публикует' : ((typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? 'замер рекламных постов' : 'медиана постов'), dead ? '#ef4444' : ''),
-                dead ? '—' : (av ? '~' + _kmNum(av) : '—'), '#e8e8ed') +
+                dead ? '—' : (av ? '~' + _exact(av) : '—'), '#e8e8ed') +
             _kmRow('ERR',
                 dead ? _kmSub('нет свежих постов', '') : _kmPill(rstat || 'уточняется', rstat ? rrCol : '#8d93a8'),
                 dead ? '—' : (rr != null ? String(rr).replace('.', ',') + '%' : '—'), dead ? '#c2c6d2' : rrCol) +
@@ -9218,7 +9220,7 @@
             _kmRow('ER', erRight, ervTxt, erCol) +
             _kmRow('CPM, ₽',
                 _kmSub(dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), ''),
-                (!dead && cpm != null && !l.price_floored) ? _kmNum(cpm) : '—', '#e8e8ed') +
+                (!dead && cpm != null && !l.price_floored) ? _num(cpm) : '—', '#e8e8ed') +
             _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + rows + '</div>';
