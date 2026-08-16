@@ -1940,7 +1940,6 @@ function fmProbeDrawer() {
 
 function openDrawer() {
     fmUnstick();
-    fillDrawerHeader();
     els.drawer.classList.add('active');
     els.drawerOverlay.classList.add('active');
     document.documentElement.classList.add('cs-modal-open');
@@ -1949,32 +1948,6 @@ function openDrawer() {
     setTimeout(fmProbeDrawer, 1400);
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
-
-function fillDrawerHeader() {
-    const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-    const nameEl = document.getElementById('dp-name');
-    const avEl = document.getElementById('dp-av');
-    const chipEl = document.getElementById('dp-chip');
-    if (nameEl) nameEl.textContent = u.first_name || 'Профиль';
-    if (avEl) {
-        const letter = (u.first_name || 'U').trim().charAt(0).toUpperCase() || 'U';
-        avEl.innerHTML = u.photo_url ? `<img src="${escapeHtml(u.photo_url)}" alt="">` : letter;
-    }
-    const setChip = (forge) => {
-        if (!chipEl) return;
-        chipEl.className = 'dp-chip';
-        chipEl.innerHTML = '<i class="ti ti-bolt"></i> ' + cabNum(forge) + ' Forge';
-    };
-    if (cabinetData && cabinetData.forge) {
-        setChip(Number(cabinetData.forge.balance || 0));
-    } else {
-        apiRequest('/api/v1/user/cabinet').then(d => {
-            cabinetData = d;
-            setChip(Number(((d || {}).forge || {}).balance || 0));
-        }).catch(() => {});
-    }
-}
-
 
 function closeDrawer() {
     els.drawer.classList.remove('active');
