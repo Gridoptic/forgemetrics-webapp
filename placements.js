@@ -269,6 +269,7 @@
     }
 
     function close() {
+        _cntPrev = {};
         var host = document.getElementById('pl-screen');
         if (host) host.classList.remove('on');
         document.body.classList.remove('pl-noscroll');
@@ -516,7 +517,44 @@
             '<button class="rm" data-act="cand-del" data-item="' + c.id + '">' + esc(T('Убрать')) + '</button></div></div>';
     }
 
-    function effImp(l) { return l.impressions != null ? l.impressions : l.impressions_est; }
+    function effImp(l) {
+        if (l.impressions != null) return l.impressions;
+        if (l.views_scan != null) return l.views_scan;
+        return l.impressions_est;
+    }
+
+    function impSrc(l) {
+        if (l.impressions_manual != null) return 'manual';
+        if (l.deal_id && l.impressions != null) return 'deal';
+        if (l.views_scan != null) return 'scan';
+        if (l.impressions_est != null) return 'est';
+        return null;
+    }
+
+    var _cntPrev = {};
+    function animateCounters() {
+        if (Object.keys(_cntPrev).length > 600) _cntPrev = {};
+        var els = document.querySelectorAll('#pl-screen [data-cnt]');
+        for (var i = 0; i < els.length; i++) {
+            (function (el) {
+                var key = el.getAttribute('data-cnt');
+                var v = parseInt(el.getAttribute('data-v'), 10);
+                var prev = _cntPrev[key];
+                _cntPrev[key] = v;
+                if (prev == null || !isFinite(v) || prev === v) return;
+                var pre = el.getAttribute('data-pre') || '';
+                var start = null, from = prev, dur = 600;
+                function stepFrame(ts) {
+                    if (!document.body.contains(el)) return;
+                    if (start == null) start = ts;
+                    var p = Math.min(1, (ts - start) / dur);
+                    el.textContent = pre + num(Math.round(from + (v - from) * p));
+                    if (p < 1) requestAnimationFrame(stepFrame);
+                }
+                try { requestAnimationFrame(stepFrame); } catch (e) { el.textContent = pre + num(v); }
+            })(els[i]);
+        }
+    }
 
     function cpfBand(l) {
         var joinedN = l.joined || 0;
@@ -580,7 +618,7 @@
         h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + (l.cpf != null ? cpfColor(l) : '#565b73') + ';">' + (l.cpf != null ? rub(l.cpf) : '—') + '</div>' +
             '<div class="pl-cpfcap">' + esc(heroCap) + '</div></div>' +
             '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Подписались')) + '</div>' +
-            '<div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
+            '<div class="v" style="color:#5DCAA5;" data-cnt="hjoin' + l.id + '" data-v="' + joinedN + '" data-pre="' + (joinedN ? '+' : '') + '">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
         var band = cpfBand(l);
         if (band) {
             var pos = Math.max(0, Math.min(1, (l.cpf - band.lo) / (band.hi - band.lo)));
@@ -590,25 +628,32 @@
                 '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
         }
         var impEff = effImp(l);
-        var impEst = l.impressions == null && l.impressions_est != null;
+        var src = impSrc(l);
+        var impEst = src === 'est';
+        var scanRipe = src !== 'scan' || !!(l.post_published_at && (Date.now() - new Date(l.post_published_at).getTime()) >= 86400000);
+        var softEst = impEst || (src === 'scan' && !scanRipe);
         var tiles = [];
         tiles.push(impEff
-            ? { k: T('Показы'), v: (impEst ? '≈' : '') + num(impEff), c: impEst ? T('оценка по каналу') : T('охват поста') }
+            ? { k: T('Показы'), v: (impEst ? '≈' : '') + num(impEff),
+                cnt: 'imp' + l.id, raw: impEff, pre: impEst ? '≈' : '',
+                c: src === 'scan' ? T('автозамер') : (impEst ? T('оценка по каналу') : T('охват поста')) }
             : { k: T('Показы'), v: '—', dim: 1, c: T('указать') });
         if (l.clicks != null) {
-            var ctr = (impEff >= 100 && !badImp && l.clicks) ? 'CTR ' + (impEst ? '≈' : '') + (Math.round(l.clicks / impEff * 1000) / 10) + '%' : 'CTR —';
+            var ctr = (impEff >= 100 && !badImp && l.clicks && l.clicks <= impEff) ? 'CTR ' + (softEst ? '≈' : '') + (Math.round(l.clicks / impEff * 1000) / 10) + '%' : 'CTR —';
             tiles.push({ k: T('Переходы'), v: num(l.clicks), c: ctr });
         } else {
             tiles.push({ k: T('Переходы'), v: '—', dim: 1, c: T('прямая ссылка') });
         }
         var prevV = l.clicks != null ? l.clicks : (impEff || 0);
         var subJ = (prevV > 0 && joinedN <= prevV && !badImp) ? (Math.round(joinedN / prevV * 1000) / 10) + '%' : '';
-        tiles.push({ k: T('Подписки'), v: (joinedN ? '+' + num(joinedN) : '0'), c: subJ, g: 1 });
+        tiles.push({ k: T('Подписки'), v: (joinedN ? '+' + num(joinedN) : '0'),
+                     cnt: 'join' + l.id, raw: joinedN, pre: joinedN ? '+' : '', c: subJ, g: 1 });
         var subR = (l.r7 && l.r7.of) ? 'R7 ' + Math.round((l.r7.kept || 0) / l.r7.of * 100) + '%' : 'R7 —';
         tiles.push({ k: T('Остались'), v: num(retN), c: subR });
         h += '<div class="pl-f4g n' + tiles.length + '">' + tiles.map(function (x) {
             return '<div class="pl-f4"><div class="k">' + esc(x.k) + '</div>' +
-                '<div class="v" style="color:' + (x.dim ? '#565b73' : (x.g ? '#5DCAA5' : '#e8e8ed')) + ';">' + x.v + '</div>' +
+                '<div class="v" style="color:' + (x.dim ? '#565b73' : (x.g ? '#5DCAA5' : '#e8e8ed')) + ';"' +
+                (x.cnt ? ' data-cnt="' + x.cnt + '" data-v="' + x.raw + '" data-pre="' + (x.pre || '') + '"' : '') + '>' + x.v + '</div>' +
                 (x.c ? '<div class="c">' + esc(x.c) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
         var mets = [];
@@ -618,8 +663,8 @@
             var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
             var cpmMid = (bandLo + bandHi) / 2, cpmBad = bandHi * 4 / 3;
             var cpmCol = cpmV <= cpmMid ? '#5DCAA5' : (cpmV <= cpmBad ? '#f5bf4f' : '#ef4444');
-            mets.push({ k: 'CPM', v: (impEst ? '≈' : '') + rub(cpmV), col: cpmCol });
-            if (cpmV > cpmBad && !impEst) {
+            mets.push({ k: 'CPM', v: (softEst ? '≈' : '') + rub(cpmV), col: cpmCol });
+            if (cpmV > cpmBad && !softEst) {
                 cpmWarn = '<div class="pl-qwarn">' + esc(hasBandRaw
                     ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
                     : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
@@ -654,12 +699,14 @@
         if (badImp) {
             h += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
-        var impV = (l.impressions_manual != null) ? num(l.impressions_manual)
-            : ((l.deal_id && l.impressions != null) ? num(l.impressions)
-                : (l.impressions_est != null ? '≈' + num(l.impressions_est) : '—'));
-        var impE = (l.impressions_manual != null) ? T('вручную')
-            : ((l.deal_id && l.impressions != null) ? T('замер сделки')
-                : (l.impressions_est != null ? T('уточнить') : T('указать')));
+        var impV = src === 'manual' ? num(l.impressions_manual)
+            : (src === 'deal' ? num(l.impressions)
+                : (src === 'scan' ? num(l.views_scan)
+                    : (src === 'est' ? '≈' + num(l.impressions_est) : '—')));
+        var impE = src === 'manual' ? T('вручную')
+            : (src === 'deal' ? T('замер сделки')
+                : (src === 'scan' ? T('автозамер')
+                    : (src === 'est' ? T('уточнить') : T('указать'))));
         var ledger = '<div class="pl-ledger">' +
             '<div class="pl-lrow" data-act="price" data-id="' + l.id + '"><span class="k">' + esc(T('Цена размещения')) + '</span><span class="dots"></span>' +
             '<span class="v">' + (l.price_rub ? num(l.price_rub) + ' ₽' : '—') + '</span><span class="e">' + esc(l.price_rub ? T('изменить') : T('указать')) + '</span></div>' +
@@ -673,8 +720,23 @@
             ledger += '<div class="pl-lrow" data-act="tocamp" data-id="' + l.id + '"><span class="k">' + esc(T('Кампания')) + '</span><span class="dots"></span>' +
                 '<span class="v">' + esc(_cname || '—') + '</span><span class="e">' + esc(T('изменить')) + '</span></div>';
         }
+        if (l.scan_status) {
+            var postV = l.scan_status === 'search' ? T('ищем пост')
+                : (l.scan_status === 'not_found' ? T('не найден')
+                    : (l.post_deleted_at ? T('удалён') : T('найден')));
+            var postOpen = !!(l.post_url && !l.post_deleted_at);
+            ledger += '<div class="pl-lrow"' + (postOpen ? ' data-act="openpost" data-url="' + esc(l.post_url) + '"' : '') + '>' +
+                '<span class="k">' + esc(T('Рекламный пост')) + '</span><span class="dots"></span>' +
+                '<span class="v">' + esc(postV) + '</span>' +
+                (postOpen ? '<span class="e">' + esc(T('открыть')) + '</span>' : '') + '</div>';
+        }
         ledger += '</div>';
         h += ledger;
+        if (l.scan_status && l.post_deleted_at) {
+            var aliveDel = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + ' ч');
+            h += '<div class="pl-qwarn">' + esc(T('Пост удалён')) + ' ' + esc(fmtTime(l.post_deleted_at)) + ' · ' + esc(T('Срок в ленте')) + ': ' + esc(aliveDel) + ' — ' +
+                esc(l.alive_verdict === 'violated' ? T('нарушено') : T('выполнено')) + '</div>';
+        }
         if (active) {
             var postUrl = l.click_code ? (CLICK_BASE + '/r/' + l.click_code) : l.invite_link;
             h += '<div class="pl-lnk2"><code>' + esc(postUrl) + '</code>' +
@@ -691,6 +753,18 @@
                 : '<button class="pl-dbtn quiet" data-act="del" data-id="' + l.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить из списка')) + '</span></button>') +
             '</div>';
         var notes = '';
+        if (l.scan_status && !l.post_deleted_at) {
+            var aliveLbl = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + ' ч');
+            if (l.alive_verdict === 'ok') {
+                notes += '<div class="pl-note" style="color:#5DCAA5;">✓ ' + esc(T('Срок в ленте')) + ': ' + esc(aliveLbl) + ' — ' + esc(T('выполнено')) + '</div>';
+            } else if (l.scan_status === 'track') {
+                notes += '<div class="pl-note">' + esc(T('Срок в ленте')) + ': ' + esc(aliveLbl) + ' — ' + esc(T('проверяется')) + '</div>';
+            }
+        }
+        if (l.views_scan_at) {
+            notes += '<div class="pl-note">' + esc(T('обновлено')) + ' ' + esc(fmtTime(l.views_scan_at)) +
+                (l.scan_next_at ? ' · ' + esc(T('следующий замер')) + ' ≈ ' + esc(fmtTime(l.scan_next_at)) : '') + '</div>';
+        }
         if (active && l.attribution_until) notes += '<div class="pl-note">' + esc(T('вступления считаем до')) + ' ' + esc(fmtDay(l.attribution_until)) + '</div>';
         if (l.late_joined > 0) notes += '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>';
         if (l.joined_approx > 0) notes += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
@@ -809,6 +883,7 @@
         host.onclick = onClick;
         var bg = document.getElementById('pl-sheetbg');
         if (bg) bg.addEventListener('click', closeSheet);
+        animateCounters();
     }
 
     function loading() {
@@ -873,6 +948,10 @@
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="fmt" data-fmt="' + f[0] + '">' + esc(T(f[1])) + '</span>';
             }).join('') + '</div>' +
             '<div id="pl-fmt-hint" class="pl-note" style="display:none;margin-top:8px;"></div>' +
+            '<div class="pl-flabel">' + esc(T('Срок в ленте')) + '</div>' +
+            '<div class="pl-fmtrow">' + [['24', '24 ч'], ['48', '48 ч'], ['72', '72 ч'], ['0', 'без удаления']].map(function (a, i) {
+                return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="alv" data-alv="' + a[0] + '">' + esc(T(a[1])) + '</span>';
+            }).join('') + '</div>' +
             '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
@@ -957,7 +1036,7 @@
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt'), campaign_item_id: _pendingItem || null, seller_username: seller })
+            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel[data-fmt]') || { getAttribute: function () { return null; } }).getAttribute('data-fmt'), campaign_item_id: _pendingItem || null, seller_username: seller, min_alive_hours: (function () { var a = document.querySelector('#pl-sheet [data-act="alv"].sel'); return a ? parseInt(a.getAttribute('data-alv'), 10) : 24; })() })
         }).then(function (r) {
             _busy = false;
             if (r && r.ok) {
@@ -1116,7 +1195,7 @@
             var fdid = parseInt(b.getAttribute('data-deal'), 10);
             _busy = true;
             apiRequest('/api/v1/placements/from-deal', {
-                method: 'POST', body: JSON.stringify({ deal_id: fdid, channel_id: _chId })
+                method: 'POST', body: JSON.stringify({ deal_id: fdid, channel_id: _chId, min_alive_hours: (function () { var a = document.querySelector('#pl-sheet [data-act="alv"].sel'); return a ? parseInt(a.getAttribute('data-alv'), 10) : 24; })() })
             }).then(function (r) {
                 _busy = false;
                 if (!r || r.ok === false) { toast((r && r.message) || T('Не удалось. Повтори попытку.')); return; }
@@ -1165,8 +1244,15 @@
             }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             return;
         }
+        if (act === 'alv') {
+            var als = b.parentNode.querySelectorAll('.pl-fmt');
+            for (var ai = 0; ai < als.length; ai++) als[ai].classList.remove('sel');
+            b.classList.add('sel');
+            haptic('light');
+            return;
+        }
         if (act === 'fmt') {
-            var fms = document.querySelectorAll('#pl-sheet .pl-fmt');
+            var fms = b.parentNode.querySelectorAll('.pl-fmt');
             for (var fi = 0; fi < fms.length; fi++) fms[fi].classList.remove('sel');
             b.classList.add('sel');
             var fh = document.getElementById('pl-fmt-hint');
@@ -1241,6 +1327,13 @@
                 ? T('Ссылка перестанет работать, запись и её статистика будут удалены безвозвратно. Продолжить?')
                 : T('Удалить запись вместе с её статистикой? Действие необратимо.');
             domConfirm(delMsg, T('Удалить'), true).then(function (ok) { if (ok) doDel(); });
+            return;
+        }
+        if (act === 'openpost') {
+            var pu2 = b.getAttribute('data-url');
+            if (!pu2) return;
+            try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) { tg.openTelegramLink(pu2); return; } } catch (e4) {}
+            try { window.open(pu2, '_blank'); } catch (e5) {}
             return;
         }
         if (act === 'open-user') {
