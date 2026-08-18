@@ -74,7 +74,7 @@
     font-family: inherit; color: #c6cdde; cursor: pointer;
     background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); }
 .rw-seg button.on { color: #818cf8; background: linear-gradient(135deg,rgba(129,140,248,0.2),rgba(129,140,248,0.06));
-    border-color: rgba(129,140,248,0.55); box-shadow: 0 0 12px rgba(129,140,248,0.14); }
+    border-color: rgba(129,140,248,0.55); }
 
 .rw-tgl { display: flex; align-items: center; gap: 10px; margin-top: 14px; cursor: pointer; }
 .rw-tgl .sw { width: 40px; height: 23px; border-radius: 99px; flex: 0 0 auto; position: relative;
@@ -88,8 +88,7 @@
 .rw-tgl .tx span { display: block; font-size: 11px; color: #8d93a8; line-height: 1.4; }
 
 .rw-go { width: 100%; margin-top: 16px; padding: 14px; border: 0; border-radius: 13px; font-weight: 700; font-size: 14px;
-    font-family: inherit; color: #fff; cursor: pointer; background: linear-gradient(135deg,#6366f1,#8b5cf6);
-    box-shadow: 0 14px 30px -12px rgba(99,102,241,0.8); }
+    font-family: inherit; color: #fff; cursor: pointer; background: linear-gradient(135deg,#6366f1,#8b5cf6); }
 .rw-go:disabled { opacity: 0.55; }
 
 .rw-restabs { display: flex; gap: 6px; margin-bottom: 10px; }
@@ -117,7 +116,7 @@
 .rw-head .t { flex: 1; min-width: 0; }
 .rw-bal { flex: 0 0 auto; font-size: 10.5px; color: #8d93a8; border: 1px solid rgba(255,255,255,0.1);
     border-radius: 99px; padding: 6px 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.rw-bal b { color: #fbbf24; font-weight: 800; }
+.rw-bal .forge-price { color: #e8eaf1; font-weight: 700; }
 .rw-tafoot { display: flex; align-items: center; gap: 8px; margin-top: 8px; min-height: 16px; }
 .rw-tafoot .rw-link-note { margin-top: 0; flex: 1; min-width: 0; }
 .rw-count { margin-left: auto; flex: 0 0 auto; font-size: 10px; color: #565b73; font-variant-numeric: tabular-nums; }

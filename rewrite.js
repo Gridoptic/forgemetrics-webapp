@@ -47,7 +47,7 @@
     }
     function head() {
         var bal = (_limits && _limits.balance != null)
-            ? '<div class="rw-bal" id="rw-bal">' + esc(T('Баланс')) + ': <b>' + num(_limits.balance) + '</b> Forge</div>'
+            ? '<div class="rw-bal" id="rw-bal">' + esc(T('Баланс')) + ': ' + fa(_limits.balance) + '</div>'
             : '';
         return '<div class="rw-head"><button class="rw-back" data-act="close"><i class="ti ti-arrow-left"></i></button>' +
             '<div class="t">' + esc(T('Рерайт чужого поста')) + '</div>' + bal + '</div>';
@@ -64,7 +64,7 @@
     }
     function priceChip() {
         var p = price();
-        return p != null ? ' <span class="price">' + num(p) + ' Forge</span>' : '';
+        return p != null ? ' <span class="price">' + fa(p) + '</span>' : '';
     }
 
     window.__openRewrite = function () {
@@ -147,8 +147,13 @@
     function seg(name, val, opts, extra) {
         return '<div class="rw-seg' + (extra || '') + '" data-seg="' + name + '">' + opts.map(function (o) {
             return '<button data-v="' + o[0] + '" class="' + (val === o[0] ? 'on' : '') + '">' + esc(T(o[1])) +
-                (o[2] ? '<small>' + esc(o[2]) + '</small>' : '') + '</button>';
+                (o[2] ? '<small>' + (o[3] === 'html' ? o[2] : esc(o[2])) + '</small>' : '') + '</button>';
         }).join('') + '</div>';
+    }
+
+    function fa(n) {
+        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
+        return esc(num(n)) + ' Forge';
     }
 
     function modelBlock() {
@@ -156,8 +161,8 @@
         var pp = _limits.price_rewrite_premium, ps = _limits.price_rewrite_standard;
         return '<div class="rw-lbl">' + esc(T('Модель')) + '</div>' +
             seg('model', curModel(), [
-                ['premium', 'Премиум', T('точнее') + ' · ' + num(pp) + ' Forge'],
-                ['standard', 'Стандарт', T('быстрее') + ' · ' + num(ps) + ' Forge'],
+                ['premium', 'Премиум', esc(T('точнее')) + ' · ' + fa(pp), 'html'],
+                ['standard', 'Стандарт', esc(T('быстрее')) + ' · ' + fa(ps), 'html'],
             ]);
     }
 
@@ -217,7 +222,7 @@
         if (_limits && b != null) {
             _limits.balance = b;
             var el = document.getElementById('rw-bal');
-            if (el) el.innerHTML = esc(T('Баланс')) + ': <b>' + num(b) + '</b> Forge';
+            if (el) el.innerHTML = esc(T('Баланс')) + ': ' + fa(b);
         }
     }
 
@@ -292,7 +297,7 @@
             hooks +
             '<div class="rw-actions">' +
             '<button class="rw-act copy" data-act="copy"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>' +
-            '<button class="rw-act more" data-act="more"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + (price() != null ? ' <span class="p">· ' + num(price()) + ' Forge</span>' : '') + '</button></div>' +
+            '<button class="rw-act more" data-act="more"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + (price() != null ? ' <span class="p">· ' + fa(price()) + '</span>' : '') + '</button></div>' +
             '<button class="rw-planbtn" data-act="toplan"><i class="ti ti-calendar-plus"></i> ' + esc(T('В контент-план')) + '</button>' +
             (r.model_used ? '<div class="rw-modelnote">' + esc(T('Модель')) + ': ' + esc(r.model_used) + (r.style_applied ? ' · ' + esc(T('в стиле канала')) : '') + '</div>' : '') +
             '</div>';
