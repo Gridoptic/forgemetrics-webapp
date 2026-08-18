@@ -101,6 +101,7 @@
             '.pl-mc{background:#10141f;padding:8px 9px;min-width:0;}',
             '.pl-mc .k{font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-mc .v{font-size:13px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-mc .c{font-size:8px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-ledger{margin-top:11px;}',
             '.pl-lrow{display:flex;align-items:baseline;gap:8px;padding:10px 0;font-size:11.5px;cursor:pointer;}',
             '.pl-lrow .k{color:#8990a8;flex:0 0 auto;}',
@@ -569,18 +570,13 @@
         var joinedN = l.joined || 0, retN = l.retained_now || 0, leftN = Math.max(0, joinedN - retN);
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
         var hasBandRaw = !!(l.cpm_lo && l.cpm_hi);
+        var needPrice = !l.price_rub;
         var h = '';
-        if (l.cpf != null) {
-            h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + cpfColor(l) + ';">' + rub(l.cpf) + '</div>' +
-                '<div class="pl-cpfcap">' + esc(T('цена подписчика')) + ' · CPF</div></div>' +
-                '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Подписались')) + '</div>' +
-                '<div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
-        } else {
-            h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div>' +
-                '<div class="pl-cpfcap">' + esc(T('Подписались')) + '</div></div>' +
-                '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Осталось')) + '</div>' +
-                '<div class="v">' + num(retN) + '</div></div></div>';
-        }
+        var heroCap = T('цена подписчика') + ' · CPF' + (l.cpf == null && needPrice ? ' · ' + T('нужна цена') : '');
+        h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + (l.cpf != null ? cpfColor(l) : '#565b73') + ';">' + (l.cpf != null ? rub(l.cpf) : '—') + '</div>' +
+            '<div class="pl-cpfcap">' + esc(heroCap) + '</div></div>' +
+            '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Подписались')) + '</div>' +
+            '<div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
         var band = cpfBand(l);
         if (band) {
             var pos = Math.max(0, Math.min(1, (l.cpf - band.lo) / (band.hi - band.lo)));
@@ -590,19 +586,23 @@
                 '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
         }
         var tiles = [];
-        if (l.impressions) tiles.push({ k: T('Показы'), v: num(l.impressions), c: T('охват поста') });
+        tiles.push(l.impressions
+            ? { k: T('Показы'), v: num(l.impressions), c: T('охват поста') }
+            : { k: T('Показы'), v: '—', dim: 1, c: T('указать') });
         if (l.clicks != null) {
-            var ctr = (l.impressions >= 100 && !badImp && l.clicks) ? 'CTR ' + (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' : '';
+            var ctr = (l.impressions >= 100 && !badImp && l.clicks) ? 'CTR ' + (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' : 'CTR —';
             tiles.push({ k: T('Переходы'), v: num(l.clicks), c: ctr });
+        } else {
+            tiles.push({ k: T('Переходы'), v: '—', dim: 1, c: T('прямая ссылка') });
         }
         var prevV = l.clicks != null ? l.clicks : (l.impressions || 0);
         var subJ = (prevV > 0 && joinedN <= prevV && !badImp) ? (Math.round(joinedN / prevV * 1000) / 10) + '%' : '';
         tiles.push({ k: T('Подписки'), v: (joinedN ? '+' + num(joinedN) : '0'), c: subJ, g: 1 });
-        var subR = (l.r7 && l.r7.of) ? 'R7 ' + Math.round((l.r7.kept || 0) / l.r7.of * 100) + '%' : '';
+        var subR = (l.r7 && l.r7.of) ? 'R7 ' + Math.round((l.r7.kept || 0) / l.r7.of * 100) + '%' : 'R7 —';
         tiles.push({ k: T('Остались'), v: num(retN), c: subR });
         h += '<div class="pl-f4g n' + tiles.length + '">' + tiles.map(function (x) {
             return '<div class="pl-f4"><div class="k">' + esc(x.k) + '</div>' +
-                '<div class="v"' + (x.g ? ' style="color:#5DCAA5;"' : '') + '>' + x.v + '</div>' +
+                '<div class="v" style="color:' + (x.dim ? '#565b73' : (x.g ? '#5DCAA5' : '#e8e8ed')) + ';">' + x.v + '</div>' +
                 (x.c ? '<div class="c">' + esc(x.c) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
         var mets = [];
@@ -618,13 +618,22 @@
                     ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
                     : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
             }
+        } else {
+            mets.push({ k: 'CPM', v: '—', dim: 1,
+                        c: (needPrice && !l.impressions) ? T('нужны цена и показы')
+                            : (needPrice ? T('нужна цена')
+                                : (!l.impressions ? T('нужны показы') : T('недостаточно данных'))) });
         }
         if (l.clicks && l.price_rub) mets.push({ k: 'CPC', v: rub(Math.round(l.price_rub / l.clicks)) });
+        else mets.push({ k: 'CPC', v: '—', dim: 1,
+                         c: l.clicks == null ? T('прямая ссылка') : (needPrice ? T('нужна цена') : '') });
         if (l.cpf_retained != null) mets.push({ k: T('Цена ост.'), v: rub(l.cpf_retained) });
+        else mets.push({ k: T('Цена ост.'), v: '—', dim: 1, c: needPrice ? T('нужна цена') : '' });
         mets.push({ k: T('Отписки'), v: leftN ? '−' + num(leftN) : '0', col: leftN ? '#ef4444' : '#8990a8' });
         h += '<div class="pl-mgrid" style="grid-template-columns:repeat(' + mets.length + ',1fr);">' + mets.map(function (x) {
             return '<div class="pl-mc"><div class="k">' + esc(x.k) + '</div>' +
-                '<div class="v"' + (x.col ? ' style="color:' + x.col + ';"' : '') + '>' + x.v + '</div></div>';
+                '<div class="v" style="color:' + (x.dim ? '#565b73' : (x.col || '#e8e8ed')) + ';">' + x.v + '</div>' +
+                (x.c ? '<div class="c">' + esc(x.c) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
         h += '<button class="pl-whobtn" data-act="metricinfo" data-id="' + l.id + '" style="color:#565b73;font-weight:600;"><i class="ti ti-info-circle"></i> ' + esc(T('Что значат эти метрики')) + '</button>' +
             '<div class="pl-minfo" id="pl-minfo-' + l.id + '" style="display:none;">' +
