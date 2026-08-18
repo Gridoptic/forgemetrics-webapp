@@ -1701,7 +1701,8 @@
         var rdy = readiness();
         var blocked = rdy.blocked === true;
         var w = wallet();
-        var weekPrice = priceDay() * totalPosts();
+        var rebuildFee = (!w.is_tester && w.next_build_paid && w.reskeleton_price) ? w.reskeleton_price : 0;
+        var weekPrice = priceDay() * totalPosts() + rebuildFee;
         var priceTag = w.is_tester ? '' :
             '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
         var lowNote;
@@ -1710,6 +1711,8 @@
         } else if (w.balance != null && w.balance < weekPrice) {
             lowNote = '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
                 ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>';
+        } else if (rebuildFee) {
+            lowNote = '<div class="cp-gonote">' + esc(T('Сегодня уже была сборка — в цену добавлена пересборка недели')) + ' · ' + forgeTag(rebuildFee) + '</div>';
         } else {
             lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         }
