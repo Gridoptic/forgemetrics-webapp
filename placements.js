@@ -2,7 +2,7 @@
     'use strict';
 
     var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
-    var _chPaused = false, _pausedNote = '';
+    var _chPaused = false, _pausedNote = '', _openId = null;
     var _campaigns = [], _cands = [], _campId = null, _pendingItem = null, _campManual = null;
     var CLICK_BASE = 'https://fmtr.click';
 
@@ -18,6 +18,7 @@
     function haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(k || 'light'); } catch (e) {} }
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} }
     function num(n) { try { return new Intl.NumberFormat('ru-RU').format(n); } catch (e) { return String(n); } }
+    function rub(v) { return (v > 0 ? num(v) : '<1') + ' ₽'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function avInner(title, url) {
         return esc(String(title || '?').trim().charAt(0).toUpperCase() || '?') +
@@ -62,18 +63,71 @@
             '.pl-ready code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;background:rgba(0,0,0,0.3);border-radius:8px;padding:7px 9px;color:#9fd6a9;}',
             '.pl-ready .hint{font-size:10.5px;color:#8990a8;margin-top:7px;line-height:1.45;}',
             '.pl-new{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:13px;border:0;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:14px;}',
-            '.pl-card{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:12px 13px;margin-bottom:9px;}',
-            '.pl-r1{display:flex;align-items:center;gap:8px;}',
-            '.pl-nm{font-size:13px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
-            '.pl-tag{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap;flex:0 0 auto;}',
-            '.pl-tag.on{background:rgba(93,202,165,0.14);color:#5DCAA5;}',
-            '.pl-tag.off{background:rgba(255,255,255,0.06);color:#8990a8;}',
-            '.pl-tag.pause{background:rgba(245,191,79,0.14);color:#fbbf5f;}',
+            '.pl-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
+            '.pl-acc.open{border-color:rgba(99,102,241,0.3);}',
+            '.pl-acch{display:flex;align-items:center;gap:10px;padding:12px 13px;cursor:pointer;user-select:none;min-height:44px;box-sizing:border-box;}',
+            '.pl-dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}',
+            '.pl-dot.g{background:#5DCAA5;box-shadow:0 0 6px rgba(93,202,165,0.5);}',
+            '.pl-dot.p{background:#fbbf5f;box-shadow:0 0 6px rgba(245,191,79,0.4);}',
+            '.pl-dot.o{background:#565b73;}',
+            '.pl-amid{flex:1;min-width:0;}',
+            '.pl-anm{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-amt{font-size:10px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-abar{display:flex;gap:2px;margin-top:5px;height:3px;max-width:150px;}',
+            '.pl-abar span{border-radius:2px;background:rgba(129,140,248,0.55);}',
+            '.pl-abar span:nth-child(2){background:rgba(96,165,250,0.55);}',
+            '.pl-abar span:nth-child(3){background:rgba(93,202,165,0.7);}',
+            '.pl-aright{flex:0 0 auto;text-align:right;}',
+            '.pl-acpf{font-size:14.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-ajoin{font-size:10px;color:#5DCAA5;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-accb{max-height:0;overflow:hidden;transition:max-height 320ms ease;}',
+            '.pl-acc.open .pl-accb{max-height:2600px;}',
+            '.pl-acci{padding:2px 13px 15px;}',
+            '.pl-tape{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:13px;margin-bottom:12px;overflow:hidden;}',
+            '.pl-tq{padding:9px 10px;border-right:0.5px solid rgba(255,255,255,0.05);min-width:0;}',
+            '.pl-tq:last-child{border-right:0;}',
+            '.pl-tq .k{font-size:8.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-tq .v{font-size:14px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-hero{display:flex;align-items:flex-end;gap:10px;margin-top:8px;}',
+            '.pl-cpfbig{font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-cpfcap{font-size:10px;color:#8990a8;margin-top:4px;}',
+            '.pl-heror{margin-left:auto;text-align:right;min-width:0;}',
+            '.pl-heror .v{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-btrack{position:relative;height:7px;border-radius:4px;background:linear-gradient(90deg,rgba(93,202,165,0.55),rgba(245,158,11,0.5),rgba(239,68,68,0.5));margin-top:13px;}',
+            '.pl-bmark{position:absolute;top:-3.5px;width:3px;height:14px;border-radius:2px;background:#fff;box-shadow:0 0 0 2.5px rgba(255,255,255,0.18);}',
+            '.pl-blabs{display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#565b73;margin-top:5px;}',
+            '.pl-blabs span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-f4g{display:grid;gap:1px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;margin-top:13px;}',
+            '.pl-f4g.n2{grid-template-columns:repeat(2,1fr);}',
+            '.pl-f4g.n3{grid-template-columns:repeat(3,1fr);}',
+            '.pl-f4g.n4{grid-template-columns:repeat(4,1fr);}',
+            '@media(max-width:359px){.pl-f4g.n4{grid-template-columns:repeat(2,1fr);}.pl-f4g.n3{grid-template-columns:repeat(3,1fr);}}',
+            '.pl-f4{background:#10141f;padding:9px 8px;min-width:0;}',
+            '.pl-f4 .k{font-size:8.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-f4 .v{font-size:13px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-f4 .c{font-size:8.5px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-mgrid{display:grid;gap:1px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.05);border-radius:11px;overflow:hidden;margin-top:8px;}',
+            '.pl-mc{background:#10141f;padding:8px 9px;min-width:0;}',
+            '.pl-mc .k{font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-mc .v{font-size:13px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
+            '.pl-ledger{margin-top:11px;}',
+            '.pl-lrow{display:flex;align-items:baseline;gap:8px;padding:10px 0;font-size:11.5px;cursor:pointer;}',
+            '.pl-lrow .k{color:#8990a8;flex:0 0 auto;}',
+            '.pl-lrow .dots{flex:1;border-bottom:1px dotted rgba(255,255,255,0.14);transform:translateY(-3px);min-width:12px;}',
+            '.pl-lrow .v{font-weight:700;flex:0 0 auto;font-variant-numeric:tabular-nums;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.pl-lrow .e{color:#818cf8;font-size:10px;font-weight:600;flex:0 0 auto;}',
+            '.pl-lnk2{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 10px;margin-top:8px;}',
+            '.pl-lnk2 code{flex:1;min-width:0;font-size:10.5px;font-family:ui-monospace,monospace;color:#a5b4fc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-dacts{display:flex;gap:6px;margin-top:12px;}',
+            '.pl-dbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;border-radius:10px;padding:9px 4px;font-size:10.5px;font-weight:650;color:#c9cede;font-family:inherit;cursor:pointer;min-height:40px;min-width:0;}',
+            '.pl-dbtn i{font-size:14px;flex:0 0 auto;}',
+            '.pl-dbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+            '.pl-dbtn.quiet{color:#8990a8;}',
+            '.pl-dbtn.iconb{flex:0 0 44px;color:#c98181;}',
             '.pl-pausebox{display:flex;gap:11px;align-items:flex-start;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.30);border-radius:14px;padding:13px 14px;margin:10px 0 14px;}',
             '.pl-pausebox i{font-size:18px;color:#fbbf5f;flex:0 0 auto;margin-top:1px;}',
             '.pl-pausebox b{display:block;font-size:13px;color:#fbbf5f;margin-bottom:3px;}',
             '.pl-pausebox span{font-size:11.5px;color:#8990a8;line-height:1.45;}',
-            '.pl-meta{font-size:10.5px;color:#565b73;margin-top:2px;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
             '.pl-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch;}',
             '.pl-chip{flex:0 0 auto;font-size:11px;font-weight:700;padding:7px 13px;border-radius:99px;border:0.5px solid rgba(255,255,255,0.14);color:#8990a8;cursor:pointer;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;}',
@@ -87,30 +141,7 @@
             '.pl-cand .rm{flex:0 0 auto;border:0.5px solid rgba(255,255,255,0.14);background:transparent;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:600;color:#8990a8;font-family:inherit;cursor:pointer;min-height:36px;}',
             '.pl-cb{width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;color:#0b0c16;}',
             '.pl-cb.on{background:#818cf8;border-color:#818cf8;}',
-            '.pl-cmp{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;padding:9px 11px;margin-bottom:9px;font-size:10.5px;color:#a9aec0;line-height:1.55;}',
-            '.pl-cmp b{color:#e8e8ed;}',
-            '.pl-big3{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:1px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);border-radius:11px;overflow:hidden;margin-top:10px;}',
-            '.pl-bt{background:#10141f;padding:8px 9px;min-width:0;}',
-            '.pl-bt .k{font-size:8.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#565b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.pl-bt .v{font-size:15px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
-            '.pl-linkrow2{background:rgba(93,202,165,0.06);border:0.5px solid rgba(93,202,165,0.25);border-radius:10px;padding:8px 10px;margin-top:10px;}',
-            '.pl-lcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5DCAA5;opacity:0.85;margin-bottom:5px;}',
-            '.pl-lval{display:flex;align-items:center;gap:8px;}',
-            '.pl-lval code{font-size:11px;color:#5DCAA5;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,monospace;}',
-            '.pl-fun{margin-top:11px;}',
             '.pl-fcap{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#565b73;margin-bottom:6px;}',
-            '.pl-frow2{display:flex;align-items:center;gap:8px;margin-top:5px;}',
-            '.pl-flab{width:108px;flex:0 0 auto;font-size:10.5px;color:#a9aec0;}',
-            '.pl-fbarw{flex:1;height:14px;border-radius:5px;background:rgba(255,255,255,0.04);overflow:hidden;}',
-            '.pl-fbar{height:100%;border-radius:5px;background:linear-gradient(90deg,rgba(129,140,248,0.85),rgba(129,140,248,0.5));}',
-            '.pl-fbar.g{background:linear-gradient(90deg,rgba(93,202,165,0.9),rgba(93,202,165,0.5));}',
-            '.pl-fnum{width:56px;flex:0 0 auto;text-align:right;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;}',
-            '.pl-fconv{margin:1px 0 0 116px;font-size:9px;color:#565b73;}',
-            '.pl-fx{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px;padding-top:9px;border-top:0.5px solid rgba(255,255,255,0.05);}',
-            '.pl-fxi{flex:1 1 30%;min-width:96px;}',
-                        '.pl-fxk{font-size:8px;font-weight:700;color:#565b73;letter-spacing:0.05em;text-transform:uppercase;line-height:1.35;overflow-wrap:anywhere;}',
-            '.pl-fxv{font-size:13.5px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
-            '.pl-fxv small{font-size:9px;color:#8990a8;font-weight:600;}',
             '.pl-minfo{font-size:10.5px;color:#8990a8;line-height:1.6;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:9px;padding:9px 11px;margin-top:2px;}',
             '.pl-minfo b{color:#c9cede;font-weight:700;}',
             '.pl-minfo div{margin:3px 0;}',
@@ -228,7 +259,7 @@
                 if (boxes[i].style.display !== 'none') openIds.push(boxes[i].id.replace('pl-who-', ''));
             }
             var openPanels = [];
-            var panels = document.querySelectorAll('#pl-screen [id^="pl-adv-"], #pl-screen [id^="pl-minfo-"]');
+            var panels = document.querySelectorAll('#pl-screen [id^="pl-minfo-"]');
             for (var p = 0; p < panels.length; p++) {
                 if (panels[p].style.display !== 'none') openPanels.push(panels[p].id);
             }
@@ -493,150 +524,206 @@
             '<button class="rm" data-act="cand-del" data-item="' + c.id + '">' + esc(T('Убрать')) + '</button></div></div>';
     }
 
-    function linkCard(l) {
+    function cpfBand(l) {
+        var joinedN = l.joined || 0;
+        var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
+        if (l.cpf == null || !(l.impressions > 0) || !joinedN || badImp) return null;
+        var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
+        var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
+        var lo = Math.max(1, Math.round(l.impressions / 1000 * bandLo * fk / joinedN));
+        var hi = Math.max(lo + 1, Math.round(l.impressions / 1000 * bandHi * fk / joinedN));
+        return { lo: lo, hi: hi, hasBand: !!(l.cpm_lo && l.cpm_hi) };
+    }
+
+    function cpfColor(l) {
+        var b = cpfBand(l);
+        if (!b || l.cpf == null) return '#e8e8ed';
+        if (l.cpf <= (b.lo + b.hi) / 2) return '#5DCAA5';
+        return l.cpf <= b.hi * 4 / 3 ? '#f5bf4f' : '#ef4444';
+    }
+
+    function accCard(l) {
         var active = l.status === 'active';
-        var st = active
-            ? (_chPaused
-                ? '<span class="pl-tag pause">' + esc(T('канал на паузе')) + '</span>'
-                : '<span class="pl-tag on">' + esc(T('работает')) + '</span>')
-            : '<span class="pl-tag off">' + esc(T('отключена')) + '</span>';
+        var open = _openId === l.id;
+        var dot = active ? (_chPaused ? 'p' : 'g') : 'o';
         var meta = [];
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
         if (l.placement_format && _fmtMap[l.placement_format]) meta.push(T(_fmtMap[l.placement_format]));
+        if (!active) meta.push(T('отключена'));
+        else if (_chPaused) meta.push(T('канал на паузе'));
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
-        if (l.price_rub) meta.push(T('размещение за') + ' ' + num(l.price_rub) + ' ₽');
-        if (active && l.attribution_until) meta.push(T('вступления считаем до') + ' ' + fmtDay(l.attribution_until));
-        var postUrl = l.click_code ? (CLICK_BASE + '/r/' + l.click_code) : l.invite_link;
-        var hasFunnel = !!(l.impressions || l.clicks != null);
-        var fun = '<div class="pl-fun">';
-        if (hasFunnel) {
-            var rows = [];
-            if (l.impressions) rows.push({ lab: T('Увидели пост'), v: l.impressions, cap: null });
-            if (l.clicks != null) rows.push({ lab: T('Перешли по ссылке'), v: l.clicks, cap: rows.length ? T('от увидевших') : null });
-            rows.push({ lab: T('Подписались'), v: l.joined || 0,
-                        cap: rows.length ? (l.clicks != null ? T('от перешедших') : T('от увидевших')) : null });
-            rows.push({ lab: T('Сейчас в канале'), v: l.retained_now || 0, g: true, cap: T('остаются') });
-            var maxV = 0;
-            rows.forEach(function (r) { if (r.v > maxV) maxV = r.v; });
-            fun += '<div class="pl-fcap">' + esc(T('Воронка размещения')) + '</div>';
-            rows.forEach(function (r, i) {
-                if (i > 0 && rows[i - 1].v > 0 && r.cap) {
-                    var pct = Math.round(r.v / rows[i - 1].v * 1000) / 10;
-                    if (pct <= 100) fun += '<div class="pl-fconv">↓ ' + pct + '% ' + esc(r.cap) + '</div>';
-                }
-                var w = maxV > 0 ? Math.max(3, Math.round(r.v / maxV * 100)) : 3;
-                fun += '<div class="pl-frow2"><div class="pl-flab">' + esc(r.lab) + '</div>' +
-                    '<div class="pl-fbarw"><div class="pl-fbar' + (r.g ? ' g' : '') + '" style="width:' + w + '%;"></div></div>' +
-                    '<div class="pl-fnum">' + num(r.v) + '</div></div>';
-            });
+        if (l.price_rub) meta.push(num(l.price_rub) + ' ₽');
+        var joinedN = l.joined || 0;
+        var bar = '';
+        var base = l.impressions || (l.clicks != null ? l.clicks : 0) || joinedN;
+        if (base > 0) {
+            var seg = function (v) { return v > 0 ? '<span style="width:' + Math.max(6, Math.round(v / base * 58)) + '%;"></span>' : ''; };
+            bar = '<div class="pl-abar">' + (l.impressions ? seg(l.impressions) : '') + (l.clicks != null ? seg(l.clicks) : '') + seg(joinedN) + '</div>';
         }
+        var right = l.cpf != null
+            ? '<div class="pl-acpf" style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</div>' +
+              '<div class="pl-ajoin"' + (active ? '' : ' style="color:#8990a8;"') + '>+' + num(joinedN) + '</div>'
+            : '<div class="pl-acpf" style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</div>';
+        return '<div class="pl-acc' + (open ? ' open' : '') + '" data-id="' + l.id + '">' +
+            '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
+            '<span class="pl-dot ' + dot + '"></span>' +
+            '<div class="pl-amid"><div class="pl-anm">' + esc(l.name) + '</div>' +
+            '<div class="pl-amt">' + esc(meta.join(' · ')) + '</div>' + bar + '</div>' +
+            '<div class="pl-aright">' + right + '</div></div>' +
+            '<div class="pl-accb"' + (open ? ' style="max-height:none;"' : '') + '><div class="pl-acci">' + accBody(l) + '</div></div></div>';
+    }
+
+    function accBody(l) {
+        var active = l.status === 'active';
+        var joinedN = l.joined || 0, retN = l.retained_now || 0, leftN = Math.max(0, joinedN - retN);
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
-        var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500, hasBand = !!(l.cpm_lo && l.cpm_hi);
-        var fx = [];
+        var hasBandRaw = !!(l.cpm_lo && l.cpm_hi);
+        var h = '';
+        if (l.cpf != null) {
+            h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + cpfColor(l) + ';">' + rub(l.cpf) + '</div>' +
+                '<div class="pl-cpfcap">' + esc(T('цена подписчика')) + ' · CPF</div></div>' +
+                '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Подписались')) + '</div>' +
+                '<div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
+        } else {
+            h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div>' +
+                '<div class="pl-cpfcap">' + esc(T('Подписались')) + '</div></div>' +
+                '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Осталось')) + '</div>' +
+                '<div class="v">' + num(retN) + '</div></div></div>';
+        }
+        var band = cpfBand(l);
+        if (band) {
+            var pos = Math.max(0, Math.min(1, (l.cpf - band.lo) / (band.hi - band.lo)));
+            h += '<div class="pl-btrack"><div class="pl-bmark" style="left:' + (3 + Math.round(pos * 94)) + '%;"></div></div>' +
+                '<div class="pl-blabs"><span>' + num(band.lo) + ' ₽ · ' + esc(T('дешевле нормы')) + '</span>' +
+                '<span>' + esc(T(band.hasBand ? 'вилка ниши' : 'рыночный ориентир')) + '</span>' +
+                '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
+        }
+        var tiles = [];
+        if (l.impressions) tiles.push({ k: T('Показы'), v: num(l.impressions), c: T('охват поста') });
+        if (l.clicks != null) {
+            var ctr = (l.impressions >= 100 && !badImp && l.clicks) ? 'CTR ' + (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' : '';
+            tiles.push({ k: T('Переходы'), v: num(l.clicks), c: ctr });
+        }
+        var prevV = l.clicks != null ? l.clicks : (l.impressions || 0);
+        var subJ = (prevV > 0 && joinedN <= prevV && !badImp) ? (Math.round(joinedN / prevV * 1000) / 10) + '%' : '';
+        tiles.push({ k: T('Подписки'), v: (joinedN ? '+' + num(joinedN) : '0'), c: subJ, g: 1 });
+        var subR = (l.r7 && l.r7.of) ? 'R7 ' + Math.round((l.r7.kept || 0) / l.r7.of * 100) + '%' : '';
+        tiles.push({ k: T('Остались'), v: num(retN), c: subR });
+        h += '<div class="pl-f4g n' + tiles.length + '">' + tiles.map(function (x) {
+            return '<div class="pl-f4"><div class="k">' + esc(x.k) + '</div>' +
+                '<div class="v"' + (x.g ? ' style="color:#5DCAA5;"' : '') + '>' + x.v + '</div>' +
+                (x.c ? '<div class="c">' + esc(x.c) + '</div>' : '') + '</div>';
+        }).join('') + '</div>';
+        var mets = [];
         var cpmWarn = '';
         if (l.impressions >= 100 && l.price_rub && !badImp) {
             var cpmV = Math.round(l.price_rub / l.impressions * 1000);
+            var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
             var cpmMid = (bandLo + bandHi) / 2, cpmBad = bandHi * 4 / 3;
             var cpmCol = cpmV <= cpmMid ? '#5DCAA5' : (cpmV <= cpmBad ? '#f5bf4f' : '#ef4444');
-            fx.push({ k: 'CPM', v: '<span style="color:' + cpmCol + ';">' + num(cpmV) + ' ₽</span>' });
+            mets.push({ k: 'CPM', v: rub(cpmV), col: cpmCol });
             if (cpmV > cpmBad) {
-                cpmWarn = '<div class="pl-qwarn">' + esc(hasBand
+                cpmWarn = '<div class="pl-qwarn">' + esc(hasBandRaw
                     ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
                     : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
             }
         }
-        if (l.clicks && l.impressions >= 100 && !badImp) fx.push({ k: 'CTR', v: (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' });
-        if (l.clicks && l.price_rub) fx.push({ k: 'CPC', v: num(Math.round(l.price_rub / l.clicks)) + ' ₽' });
-        if (l.cpf_retained != null) fx.push({ k: T('цена оставшегося'), v: num(l.cpf_retained) + ' ₽' });
-        if (l.r7) fx.push({ k: T('Удержание 7 дней'), v: num(l.r7.kept) + ' <small>' + esc(T('из')) + ' ' + num(l.r7.of) + '</small>' });
-        if (fx.length) {
-            fun += '<div class="pl-fx">' + fx.map(function (x) {
-                return '<div class="pl-fxi"><div class="pl-fxk">' + esc(x.k) + '</div><div class="pl-fxv">' + x.v + '</div></div>';
-            }).join('') + '</div>';
-            fun += '<button class="pl-whobtn" data-act="metricinfo" data-id="' + l.id + '" style="color:#565b73;font-weight:600;"><i class="ti ti-info-circle"></i> ' + esc(T('Что значат эти метрики')) + '</button>' +
-                '<div class="pl-minfo" id="pl-minfo-' + l.id + '" style="display:none;">' +
-                '<div><b>CPM</b> — ' + esc(T('цена 1000 показов: цена ÷ показы × 1000. Дорого ли обошлась площадка.')) + '</div>' +
-                '<div><b>CTR</b> — ' + esc(T('кликабельность: клики ÷ показы. Цепляет ли креатив.')) + '</div>' +
-                '<div><b>CPC</b> — ' + esc(T('цена перехода: цена ÷ клики.')) + '</div>' +
-                '<div><b>CPF</b> — ' + esc(T('цена подписчика: цена ÷ подписавшиеся.')) + '</div>' +
-                '<div><b>' + esc(T('Цена оставшегося')) + '</b> — ' + esc(T('цена ÷ те, кто ещё в канале. Показывает, сколько трафика слилось.')) + '</div>' +
-                '<div><b>' + esc(T('Удержание 7 дней')) + '</b> — ' + esc(T('сколько из вступивших остаются в канале через неделю.')) + '</div>' +
-                '</div>';
-        }
-        fun += '</div>';
-
-        var joinedN = l.joined || 0, retN = l.retained_now || 0, leftN = Math.max(0, joinedN - retN);
-        var big = '<div class="pl-big3">' +
-            '<div class="pl-bt"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div>' +
-            '<div class="pl-bt"><div class="k">' + esc(T('Отписались')) + '</div><div class="v" style="color:' + (leftN ? '#ef4444' : '#8990a8') + ';">' + (leftN ? '−' + num(leftN) : '0') + '</div></div>' +
-            '<div class="pl-bt"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(retN) + '</div></div>' +
-            (l.cpf != null ? '<div class="pl-bt"><div class="k">CPF</div><div class="v">' + num(l.cpf) + ' ₽</div></div>' : '') +
+        if (l.clicks && l.price_rub) mets.push({ k: 'CPC', v: rub(Math.round(l.price_rub / l.clicks)) });
+        if (l.cpf_retained != null) mets.push({ k: T('Цена ост.'), v: rub(l.cpf_retained) });
+        mets.push({ k: T('Отписки'), v: leftN ? '−' + num(leftN) : '0', col: leftN ? '#ef4444' : '#8990a8' });
+        h += '<div class="pl-mgrid" style="grid-template-columns:repeat(' + mets.length + ',1fr);">' + mets.map(function (x) {
+            return '<div class="pl-mc"><div class="k">' + esc(x.k) + '</div>' +
+                '<div class="v"' + (x.col ? ' style="color:' + x.col + ';"' : '') + '>' + x.v + '</div></div>';
+        }).join('') + '</div>';
+        h += '<button class="pl-whobtn" data-act="metricinfo" data-id="' + l.id + '" style="color:#565b73;font-weight:600;"><i class="ti ti-info-circle"></i> ' + esc(T('Что значат эти метрики')) + '</button>' +
+            '<div class="pl-minfo" id="pl-minfo-' + l.id + '" style="display:none;">' +
+            '<div><b>CPM</b> — ' + esc(T('цена 1000 показов: цена ÷ показы × 1000. Дорого ли обошлась площадка.')) + '</div>' +
+            '<div><b>CTR</b> — ' + esc(T('кликабельность: клики ÷ показы. Цепляет ли креатив.')) + '</div>' +
+            '<div><b>CPC</b> — ' + esc(T('цена перехода: цена ÷ клики.')) + '</div>' +
+            '<div><b>CPF</b> — ' + esc(T('цена подписчика: цена ÷ подписавшиеся.')) + '</div>' +
+            '<div><b>' + esc(T('Цена оставшегося')) + '</b> — ' + esc(T('цена ÷ те, кто ещё в канале. Показывает, сколько трафика слилось.')) + '</div>' +
+            '<div><b>' + esc(T('Удержание 7 дней')) + '</b> — ' + esc(T('сколько из вступивших остаются в канале через неделю.')) + '</div>' +
             '</div>';
-        var lateNote = (l.late_joined > 0)
-            ? '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>'
-            : '';
-        if (l.joined_approx > 0) {
-            lateNote += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
-        }
-        var fairNote = '';
-        if (l.impressions > 0) {
-            var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
-            var fLo = Math.max(1, Math.round(l.impressions / 1000 * bandLo * fk));
-            var fHi = Math.max(fLo, Math.round(l.impressions / 1000 * bandHi * fk));
-            fairNote = '<div class="pl-note">' + esc(hasBand
-                ? T('Справедливая цена такого охвата в этой нише')
-                : T('Справедливая цена такого охвата')) + ': ≈' + num(fLo) + '–' + num(fHi) + ' ₽</div>';
-        }
-        var warns = fairNote + cpmWarn;
+        h += cpmWarn;
         if (badImp) {
-            warns += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
+            h += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
-        var dealLabel = l.deal_id
-            ? T('Показы поста привязаны к сделке · изменить')
-            : T('Показы поста — из сделки Площадки, если размещение куплено там');
-        var impSrc = (l.impressions_manual != null) ? 'manual'
-            : ((l.deal_id && l.impressions != null) ? 'deal' : null);
-        var impLabel = (impSrc === 'manual')
-            ? (T('Показы поста') + ': ' + num(l.impressions_manual) + ' · ' + T('вручную') + ' · ' + T('изменить'))
-            : (impSrc === 'deal')
-                ? (T('Показы поста') + ': ' + num(l.impressions) + ' · ' + T('замер сделки') + ' · ' + T('уточнить вручную'))
-                : T('Указать показы поста');
-        var impBtn = '<button class="pl-whobtn" data-act="imp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-eye"></i> ' + esc(impLabel) + '</button>';
-        var priceBtn = '<button class="pl-whobtn" data-act="price" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-cash"></i> ' +
-            esc(l.price_rub
-                ? (T('Цена размещения') + ': ' + num(l.price_rub) + ' ₽ · ' + T('изменить'))
-                : T('Указать цену размещения — для CPF/CPM')) + '</button>';
-        var campBtn = '';
+        var impV = (l.impressions_manual != null) ? num(l.impressions_manual)
+            : ((l.deal_id && l.impressions != null) ? num(l.impressions) : '—');
+        var impE = (l.impressions_manual != null) ? T('вручную')
+            : ((l.deal_id && l.impressions != null) ? T('замер сделки') : T('указать'));
+        var ledger = '<div class="pl-ledger">' +
+            '<div class="pl-lrow" data-act="price" data-id="' + l.id + '"><span class="k">' + esc(T('Цена размещения')) + '</span><span class="dots"></span>' +
+            '<span class="v">' + (l.price_rub ? num(l.price_rub) + ' ₽' : '—') + '</span><span class="e">' + esc(l.price_rub ? T('изменить') : T('указать')) + '</span></div>' +
+            '<div class="pl-lrow" data-act="imp" data-id="' + l.id + '"><span class="k">' + esc(T('Показы поста')) + '</span><span class="dots"></span>' +
+            '<span class="v">' + impV + '</span><span class="e">' + esc(impE) + '</span></div>' +
+            '<div class="pl-lrow" data-act="deal" data-id="' + l.id + '"><span class="k">' + esc(T('Сделка Площадки')) + '</span><span class="dots"></span>' +
+            '<span class="v">' + (l.deal_id ? '№' + l.deal_id : '—') + '</span><span class="e">' + esc(l.deal_id ? T('изменить') : T('привязать')) + '</span></div>';
         if (_campaigns.length) {
             var _cname = null;
             _campaigns.forEach(function (c) { if (c.id === l.campaign_id) _cname = c.name; });
-            campBtn = '<button class="pl-whobtn" data-act="tocamp" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-folder"></i> ' +
-                esc(_cname ? (T('Кампания') + ': ' + _cname + ' · ' + T('изменить')) : T('В кампанию…')) + '</button>';
+            ledger += '<div class="pl-lrow" data-act="tocamp" data-id="' + l.id + '"><span class="k">' + esc(T('Кампания')) + '</span><span class="dots"></span>' +
+                '<span class="v">' + esc(_cname || '—') + '</span><span class="e">' + esc(T('изменить')) + '</span></div>';
         }
-        return '<div class="pl-card" data-id="' + l.id + '">' +
-            '<div class="pl-r1"><div class="pl-nm">' + esc(l.name) + '</div>' + st + '</div>' +
-            '<div class="pl-meta">' + esc(meta.join(' · ')) + '</div>' +
+        ledger += '</div>';
+        h += ledger;
+        if (active) {
+            var postUrl = l.click_code ? (CLICK_BASE + '/r/' + l.click_code) : l.invite_link;
+            h += '<div class="pl-lnk2"><code>' + esc(postUrl) + '</code>' +
+                '<button class="pl-copy" data-act="copy" data-link="' + esc(postUrl) + '">' + esc(T('Скопировать')) + '</button></div>';
+        }
+        if (l.placement_format === 'story' || l.placement_format === 'circle' || l.placement_format === 'repost') {
+            h += '<div class="pl-note">' + esc(T('Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.')) + '</div>';
+        }
+        h += '<div class="pl-dacts">' +
+            '<button class="pl-dbtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i><span>' + esc(T('Кто вступил')) + '</span></button>' +
             (active
-                ? '<div class="pl-linkrow2"><div class="pl-lcap">' + esc(T('Эта ссылка — в рекламный пост')) + '</div>' +
-                  '<div class="pl-lval"><code>' + esc(postUrl) + '</code>' +
-                  '<button class="pl-copy" data-act="copy" data-link="' + esc(postUrl) + '">' + esc(T('Скопировать')) + '</button></div></div>'
-                : '') +
-            big + lateNote +
-            ((hasFunnel || fx.length || warns)
-                ? '<button class="pl-whobtn" data-act="adv" data-id="' + l.id + '"><i class="ti ti-chart-bar"></i> ' + esc(T('Продвинутые метрики')) + '</button>' +
-                  '<div id="pl-adv-' + l.id + '" style="display:none;">' + fun + warns + '</div>'
-                : '') +
-            '<button class="pl-whobtn" data-act="who" data-id="' + l.id + '"><i class="ti ti-users"></i> ' + esc(T('Кто вступил · качество трафика')) + '</button>' +
-            ((l.placement_format === 'story' || l.placement_format === 'circle' || l.placement_format === 'repost')
-                ? '<div class="pl-note" style="margin-top:2px;">' + esc(T('Для этого формата часть вступлений приходит мимо ссылки — смотри «Пришли сами» в списке вступивших.')) + '</div>'
-                : '') +
-            '<button class="pl-whobtn" data-act="deal" data-id="' + l.id + '" style="color:#8990a8;text-align:left;"><i class="ti ti-link"></i> ' + esc(dealLabel) + '</button>' + impBtn + priceBtn + campBtn +
-            '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>' +
-            (active
-                ? '<div class="pl-actrow"><button class="pl-revoke" data-act="revoke" data-id="' + l.id + '">' + esc(T('Отключить ссылку')) + '</button>' +
-                  '<button class="pl-revoke danger" data-act="del" data-st="active" data-id="' + l.id + '">' + esc(T('Удалить')) + '</button></div>'
-                : '<button class="pl-revoke" data-act="del" data-id="' + l.id + '">' + esc(T('Удалить из списка')) + '</button>') +
+                ? '<button class="pl-dbtn quiet" data-act="revoke" data-id="' + l.id + '"><i class="ti ti-power"></i><span>' + esc(T('Отключить')) + '</span></button>' +
+                  '<button class="pl-dbtn iconb" data-act="del" data-st="active" data-id="' + l.id + '" aria-label="' + esc(T('Удалить')) + '"><i class="ti ti-trash"></i></button>'
+                : '<button class="pl-dbtn quiet" data-act="del" data-id="' + l.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить из списка')) + '</span></button>') +
             '</div>';
+        var notes = '';
+        if (active && l.attribution_until) notes += '<div class="pl-note">' + esc(T('вступления считаем до')) + ' ' + esc(fmtDay(l.attribution_until)) + '</div>';
+        if (l.late_joined > 0) notes += '<div class="pl-note">+' + num(l.late_joined) + ' ' + esc(T('вступлений после окна атрибуции — учтены отдельно, в CPF не входят')) + '</div>';
+        if (l.joined_approx > 0) notes += '<div class="pl-note">≈' + num(l.joined_approx) + ' ' + esc(T('засчитаны по времени — вступили в течение 15 минут после перехода по ссылке')) + '</div>';
+        h += notes;
+        h += '<div class="pl-who" id="pl-who-' + l.id + '" style="display:none;"></div>';
+        return h;
+    }
+
+    function setAccOpen(card, open, anim) {
+        var b = card.querySelector('.pl-accb');
+        if (!b) return;
+        if (open) {
+            card.classList.add('open');
+            if (!anim) { b.style.maxHeight = 'none'; return; }
+            b.style.maxHeight = '';
+            var onEnd = function (ev) {
+                if (ev.target !== b) return;
+                b.removeEventListener('transitionend', onEnd);
+                if (card.classList.contains('open')) b.style.maxHeight = 'none';
+            };
+            b.addEventListener('transitionend', onEnd);
+        } else {
+            if (b.style.maxHeight === 'none') {
+                b.style.maxHeight = b.scrollHeight + 'px';
+                void b.offsetHeight;
+            }
+            b.style.maxHeight = '';
+            card.classList.remove('open');
+        }
+    }
+
+    function openAcc(id) {
+        _openId = id;
+        var cards = document.querySelectorAll('#pl-screen .pl-acc');
+        for (var i = 0; i < cards.length; i++) {
+            setAccOpen(cards[i], id != null && parseInt(cards[i].getAttribute('data-id'), 10) === id, true);
+        }
+        if (id != null) {
+            var a = document.querySelector('#pl-screen .pl-acc[data-id="' + id + '"]');
+            if (a && a.scrollIntoView) setTimeout(function () { a.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 120);
+        }
     }
 
     function render() {
@@ -674,25 +761,12 @@
                     if (x.price_rub) { sumSpend += x.price_rub; sumJoinPriced += x.joined || 0; }
                 });
                 var blended = (sumSpend > 0 && sumJoinPriced > 0) ? Math.round(sumSpend / sumJoinPriced) : null;
-                body += '<div class="pl-fcap" style="margin:2px 0 0;">' + esc(T(_campId == null ? 'Сводка по размещениям' : 'Сводка по кампании')) + '</div>' +
-                    '<div class="pl-big3" style="margin:6px 0 4px;">' +
-                    '<div class="pl-bt"><div class="k">' + esc(T('Расход')) + '</div><div class="v">' + (sumSpend ? num(sumSpend) + ' ₽' : '—') + '</div></div>' +
-                    '<div class="pl-bt"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (sumJoin ? '+' + num(sumJoin) : '0') + '</div></div>' +
-                    '<div class="pl-bt"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(sumRet) + '</div></div>' +
-                    '<div class="pl-bt"><div class="k">' + esc(T('Средний CPF')) + '</div><div class="v">' + (blended != null ? num(blended) + ' ₽' : '—') + '</div></div></div>';
-                var rated = view.filter(function (x) { return x.cpf != null; }).sort(function (a, b) { return a.cpf - b.cpf; });
-                if (rated.length >= 2) {
-                    body += '<div class="pl-fcap" style="margin:8px 0 0;">' + esc(T('Рейтинг по CPF')) + '</div>' +
-                        '<div class="pl-cmp" style="margin:6px 0 4px;padding:3px 11px;">' +
-                        rated.map(function (x, i) {
-                            return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;' + (i < rated.length - 1 ? 'border-bottom:0.5px solid rgba(255,255,255,0.05);' : '') + '">' +
-                                '<span style="flex:0 0 auto;width:16px;font-size:10px;color:#565b73;font-weight:700;">' + (i + 1) + '</span>' +
-                                '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:600;color:#e8e8ed;">' + esc(x.name) + '</span>' +
-                                '<span style="flex:0 0 auto;font-size:10px;color:#8990a8;">+' + num(x.joined || 0) + '</span>' +
-                                '<span style="flex:0 0 auto;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;color:' + (i === 0 ? '#5DCAA5' : '#e8e8ed') + ';">' + num(x.cpf) + ' ₽</span></div>';
-                        }).join('') + '</div>';
-                }
-                body += '<div style="height:6px;"></div>';
+                body += '<div class="pl-fcap" style="margin:2px 0 6px;">' + esc(T(_campId == null ? 'Сводка по размещениям' : 'Сводка по кампании')) + '</div>' +
+                    '<div class="pl-tape">' +
+                    '<div class="pl-tq"><div class="k">' + esc(T('Расход')) + '</div><div class="v">' + (sumSpend ? num(sumSpend) + ' ₽' : '—') + '</div></div>' +
+                    '<div class="pl-tq"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (sumJoin ? '+' + num(sumJoin) : '0') + '</div></div>' +
+                    '<div class="pl-tq"><div class="k">' + esc(T('Осталось')) + '</div><div class="v">' + num(sumRet) + '</div></div>' +
+                    '<div class="pl-tq"><div class="k">' + esc(T('Средний CPF')) + '</div><div class="v">' + (blended != null ? rub(blended) : '—') + '</div></div></div>';
             }
             if (_campId != null) {
                 if (cands.length) {
@@ -711,8 +785,9 @@
                         '<p>' + esc(T('Добавь каналы — из закладок или ссылкой на канал.')) + '</p></div>';
                 }
             } else {
-                if (_campId != null) body += '<div class="pl-fcap" style="margin:12px 0 6px;">' + esc(T('Ссылки кампании')) + ' · ' + view.length + '</div>';
-                body += view.map(linkCard).join('');
+                body += '<div class="pl-fcap" style="margin:' + (_campId != null ? '12px' : '2px') + ' 0 6px;">' +
+                    esc(_campId != null ? T('Ссылки кампании') : T('Размещения')) + ' · ' + view.length + '</div>';
+                body += view.map(accCard).join('');
                 body += '<div class="pl-note">' + esc(T('Счётчики обновляются сами каждые 10 секунд. «Осталось» — сколько вступивших сейчас в канале.')) + '</div>';
             }
             if (_campId != null) {
@@ -1170,10 +1245,10 @@
             haptic('light');
             return;
         }
-        if (act === 'adv') {
-            var advBox = document.getElementById('pl-adv-' + b.getAttribute('data-id'));
-            if (advBox) advBox.style.display = advBox.style.display === 'none' ? 'block' : 'none';
+        if (act === 'exp') {
             haptic('light');
+            var eid = parseInt(b.getAttribute('data-id'), 10);
+            openAcc(_openId === eid ? null : eid);
             return;
         }
         if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
@@ -1253,16 +1328,23 @@
         catch (e) { return ''; }
     }
 
+    function dayKey(iso) {
+        try {
+            var d = new Date(iso);
+            return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+        } catch (e) { return ''; }
+    }
+
     function daysChart(items) {
         var buckets = {};
         items.forEach(function (u) {
             if (u.ts) {
-                var d = u.ts.slice(0, 10);
-                (buckets[d] = buckets[d] || { j: 0, l: 0 }).j++;
+                var d = dayKey(u.ts);
+                if (d) (buckets[d] = buckets[d] || { j: 0, l: 0 }).j++;
             }
             if (u.left_ts) {
-                var d2 = u.left_ts.slice(0, 10);
-                (buckets[d2] = buckets[d2] || { j: 0, l: 0 }).l++;
+                var d2 = dayKey(u.left_ts);
+                if (d2) (buckets[d2] = buckets[d2] || { j: 0, l: 0 }).l++;
             }
         });
         var days = Object.keys(buckets).sort();
