@@ -953,8 +953,10 @@ function renderPulseHook(trendPct, planMeasured) {
     hook.innerHTML = `<div class="pw-aihook">`
         + `<span class="pw-aih-ic"><i class="ti ti-calendar"></i></span>`
         + `<div class="pw-aih-tx">${tx}</div>`
+        + `<div class="pw-aih-col">`
+        + `<button class="pw-aih-x" type="button" aria-label="Скрыть"><i class="ti ti-x"></i></button>`
         + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button>`
-        + `<button class="pw-aih-x" type="button" aria-label="Скрыть"><i class="ti ti-x"></i></button></div>`;
+        + `</div></div>`;
     const go = hook.querySelector('.pw-aih-go');
     if (go) go.addEventListener('click', () => { hapticLight(); handleAction('content_plan'); });
     const x = hook.querySelector('.pw-aih-x');
