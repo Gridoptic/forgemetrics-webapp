@@ -388,6 +388,17 @@
     function activeDays() {
         return days().reduce(function (a, d, i) { if ((+d.n || 0) > 0) a.push(i); return a; }, []);
     }
+    function applyFreqGrid(rn) {
+        rn = Math.max(3, Math.min(7, +rn || 3));
+        var pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
+                    6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
+        var fd = days().slice();
+        for (var fi = 0; fi < 7; fi++) {
+            var fn = pat.indexOf(fi) >= 0 ? 1 : 0;
+            fd[fi] = { n: fn, pins: dayPins(fi).slice(0, fn), times: dayTimes(fi).slice(0, fn) };
+        }
+        _days = fd;
+    }
     function rubTitle(key) {
         for (var i = 0; i < _rubrics.length; i++) if (_rubrics[i].key === key) return _rubrics[i].title;
         return key;
@@ -1638,8 +1649,10 @@
             why += '. ' + esc(T('Прежний темп') + ' ' + f.previous + ' ' + T('— застой канала.') + ' ' +
                 T('Расчётная середина:') + ' ' + f.recommended + '.');
             var btn = (!readOnly && canEdit())
-                ? '<button class="cp-lapply" data-act="applyfreq" data-n="' + f.recommended + '">' +
-                  esc(T('Применить к сетке недели')) + '</button>'
+                ? (totalPosts() === f.recommended
+                    ? '<div class="cp-lapplied"><i class="ti ti-check"></i> ' + esc(T('Применено к сетке недели')) + '</div>'
+                    : '<button class="cp-lapply" data-act="applyfreq" data-n="' + f.recommended + '">' +
+                      esc(T('Применить к сетке недели')) + '</button>')
                 : '';
             rows += lrnRow('amb', 'ti-stack-2',
                 esc(f.recommended + ' ' + T(plural3(f.recommended, 'пост', 'поста', 'постов')) + ' ' +
@@ -1963,7 +1976,7 @@
             '</span></div>';
         if (allPub) {
             var regenBtn = '<button class="cp-allbtn sched" data-act="regen"><i class="ti ti-sparkles"></i> ' +
-                esc(T('Собрать следующую неделю')) + '</button>';
+                esc(T('К сборке следующей недели')) + '</button>';
             var archBtn = '<button class="cp-allbtn arch" data-act="archtoggle"><i class="ti ti-archive"></i> ' +
                 esc(T(_archOpen ? 'Скрыть посты недели' : 'Посты недели (архив)')) + '</button>';
             var archBody = _archOpen
@@ -3396,15 +3409,7 @@
         }
         if (act === 'applyfreq') {
             haptic('medium');
-            var rn = Math.max(3, Math.min(7, +actEl.getAttribute('data-n') || 3));
-            var pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
-                        6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
-            var fd = days().slice();
-            for (var fi = 0; fi < 7; fi++) {
-                var fn = pat.indexOf(fi) >= 0 ? 1 : 0;
-                fd[fi] = { n: fn, pins: dayPins(fi).slice(0, fn), times: dayTimes(fi).slice(0, fn) };
-            }
-            _days = fd;
+            applyFreqGrid(+actEl.getAttribute('data-n'));
             renderBrief();
             loadCalendarSoon();
             saveDaysSoon();
@@ -3536,7 +3541,17 @@
             return;
         }
         if (act === 'generate') { doGenerate(actEl); return; }
-        if (act === 'regen') { renderBrief(); return; }
+        if (act === 'regen') {
+            var LF = _state && _state.learning;
+            var rec = LF && LF.ready && LF.freq && LF.freq.recommended;
+            if (rec && canEdit() && totalPosts() !== rec) {
+                applyFreqGrid(rec);
+                loadCalendarSoon();
+                saveDaysSoon();
+            }
+            renderBrief();
+            return;
+        }
         if (act === 'wkday') {
             haptic('light');
             weekDaySheet(+actEl.getAttribute('data-day'));
