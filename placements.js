@@ -52,16 +52,7 @@
             '.pl-step .n{width:24px;height:24px;flex:0 0 auto;border-radius:8px;background:rgba(129,140,248,0.15);border:1px solid rgba(129,140,248,0.4);color:#a5b0ff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;}',
             '.pl-step b{font-size:12px;display:block;color:#e8e8ed;}',
             '.pl-step span{font-size:10.5px;color:#8990a8;line-height:1.45;display:block;margin-top:1px;}',
-            '.pl-src{border:1px solid rgba(255,255,255,0.12);border-radius:13px;padding:12px;margin-top:8px;}',
-            '.pl-src.mk{border-color:rgba(93,202,165,0.45);background:rgba(93,202,165,0.06);}',
-            '.pl-src b{font-size:12.5px;display:flex;align-items:center;gap:7px;color:#e8e8ed;}',
-            '.pl-src > span{font-size:10.5px;color:#8990a8;display:block;margin-top:3px;line-height:1.45;}',
             '.pl-deal{background:#10131f;border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 11px;margin-top:7px;display:flex;align-items:center;gap:9px;cursor:pointer;min-height:44px;}',
-            '.pl-ready{background:rgba(93,202,165,0.08);border:1px solid rgba(93,202,165,0.35);border-radius:13px;padding:12px;margin-top:8px;}',
-            '.pl-ready .t{font-size:12.5px;font-weight:750;color:#5DCAA5;}',
-            '.pl-ready .lnk{display:flex;gap:6px;margin-top:8px;align-items:center;}',
-            '.pl-ready code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;background:rgba(0,0,0,0.3);border-radius:8px;padding:7px 9px;color:#9fd6a9;}',
-            '.pl-ready .hint{font-size:10.5px;color:#8990a8;margin-top:7px;line-height:1.45;}',
             '.pl-new{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:13px;border:0;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:14px;}',
             '.pl-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.pl-acc.open{border-color:rgba(99,102,241,0.3);}',
@@ -839,49 +830,14 @@
         if (bg) bg.classList.remove('on');
     }
 
-    function openSourceSheet() {
-        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
-        if (!sh || !bg) return;
-        sh.innerHTML = '<div class="pl-grip"></div>' +
-            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
-            '<div class="pl-note" style="margin-top:2px;">' + esc(T('Где куплено размещение?')) + '</div>' +
-            '<div class="pl-src mk"><b>' + esc(T('На Площадке')) + '</b>' +
-            '<span>' + esc(T('Выбери сделку — название, формат и привязка заполнятся сами, а показы поста приедут из автозамеров.')) + '</span>' +
-            '<div id="pl-src-deals"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div></div>' +
-            '<div class="pl-src" data-act="new-direct" style="cursor:pointer;"><b>' + esc(T('Напрямую у админа')) + '</b>' +
-            '<span>' + esc(T('Договорился с админом сам — в том числе с каналом из Радара. Вставь ссылку на канал: подписки, качество трафика и CPF посчитаются полностью, показы поста укажешь вручную.')) + '</span></div>';
-        bg.classList.add('on'); sh.classList.add('on');
-        apiRequest('/api/v1/placements/deals').then(function (r) {
-            var box = document.getElementById('pl-src-deals');
-            if (!box) return;
-            var items = (r && r.items) || [];
-            if (!items.length) {
-                box.innerHTML = '<div class="pl-center" style="padding:6px 0 2px;font-size:10.5px;">' + esc(T('Подтверждённых покупок на Площадке пока нет')) + '</div>' +
-                    '<button class="pl-copy" data-act="go-market" style="display:block;width:100%;margin-top:8px;padding:10px;text-align:center;">' + esc(T('Открыть Площадку и выбрать канал')) + '</button>';
-                return;
-            }
-            box.innerHTML = items.map(function (d) {
-                var m = d.measured && (d.reach_24h || d.reach_48h)
-                    ? ' · ~' + num(d.reach_24h || d.reach_48h) + ' ' + esc(T('показов'))
-                    : ' · ' + esc(T('замер ожидается'));
-                return '<div class="pl-deal" data-act="from-deal" data-deal="' + d.deal_id + '">' +
-                    '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(d.channel || ('@' + (d.username || ''))) + '</div>' +
-                    '<div style="font-size:10px;color:#8990a8;">' + esc(T('сделка')) + m + '</div></div>' +
-                    '<span style="color:#818cf8;flex:0 0 auto;">→</span></div>';
-            }).join('');
-        }).catch(function () {
-            var box = document.getElementById('pl-src-deals');
-            if (box) box.innerHTML = '<div class="pl-center">' + esc(T('Не удалось. Повтори попытку.')) + '</div>';
-        });
-    }
-
     function openCreateSheet() {
         var ch = curChannel();
         var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
         if (!sh || !bg) return;
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
-            '<div class="pl-flabel">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
+            '<div id="pl-src-deals" style="display:none;"></div>' +
+            '<div class="pl-flabel" id="pl-chan-label">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
             '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал" value="">' +
             '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:8px 0 4px;line-height:1.45;"></div>' +
             '<div class="pl-glink" id="pl-rename-lnk" data-act="rename-toggle" style="margin:2px 0 8px;">' + esc(T('Изменить название записи')) + '</div>' +
@@ -944,6 +900,23 @@
             });
             setTimeout(function () { try { chIn.focus(); } catch (e) {} }, 250);
         }
+        apiRequest('/api/v1/placements/deals').then(function (r) {
+            var box = document.getElementById('pl-src-deals');
+            if (!box || !r || !r.items || !r.items.length) return;
+            box.innerHTML = '<div class="pl-flabel" style="margin-top:12px;">' + esc(T('Твои сделки Площадки')) + '</div>' +
+                r.items.map(function (d) {
+                    var m = d.measured && (d.reach_24h || d.reach_48h)
+                        ? ' · ~' + num(d.reach_24h || d.reach_48h) + ' ' + esc(T('показов'))
+                        : ' · ' + esc(T('замер ожидается'));
+                    return '<div class="pl-deal" data-act="from-deal" data-deal="' + d.deal_id + '">' +
+                        '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(d.channel || ('@' + (d.username || ''))) + '</div>' +
+                        '<div style="font-size:10px;color:#8990a8;">' + esc(T('сделка')) + ' №' + d.deal_id + m + '</div></div>' +
+                        '<span style="color:#818cf8;flex:0 0 auto;">→</span></div>';
+                }).join('');
+            box.style.display = 'block';
+            var lbl = document.getElementById('pl-chan-label');
+            if (lbl) lbl.textContent = T('Или укажи канал сам — вставь ссылку или @имя');
+        }).catch(function () {});
     }
 
     var _resolvedDeal = null;
@@ -989,24 +962,6 @@
                 toast((r && r.message) || T('Не удалось. Повтори попытку.'));
             }
         }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
-    }
-
-    function infoNote(msg) {
-        var old = document.getElementById('pl-infonote');
-        if (old) old.remove();
-        var d = document.createElement('div');
-        d.id = 'pl-infonote';
-        d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;z-index:9600;background:rgba(24,28,46,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.12);border-radius:14px;padding:13px 14px;display:flex;gap:8px;align-items:flex-start;box-shadow:0 8px 32px rgba(0,0,0,0.45);';
-        var t = document.createElement('div');
-        t.style.cssText = 'flex:1;font-size:12.5px;line-height:1.55;color:#d9dce8;padding-top:2px;';
-        t.textContent = msg;
-        var x = document.createElement('button');
-        x.style.cssText = 'flex:0 0 auto;width:40px;height:40px;margin:-6px -8px -6px 0;border:0;background:transparent;color:#8990a8;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
-        x.innerHTML = '<i class="ti ti-x"></i>';
-        x.addEventListener('click', function () { d.remove(); });
-        d.appendChild(t);
-        d.appendChild(x);
-        document.body.appendChild(d);
     }
 
     function copyText(text, okMsg) {
@@ -1067,8 +1022,7 @@
         if (!b) return;
         var act = b.getAttribute('data-act');
         if (act === 'close') { close(); return; }
-        if (act === 'new') { haptic('light'); openSourceSheet(); return; }
-        if (act === 'new-direct') { haptic('light'); openCreateSheet(); return; }
+        if (act === 'new') { haptic('light'); openCreateSheet(); return; }
         if (act === 'chip') { haptic('light'); var cv = b.getAttribute('data-camp'); _campId = cv ? parseInt(cv, 10) : null; render(); return; }
         if (act === 'camp-new') { haptic('light'); openCampSheet(null); return; }
         if (act === 'camp-add') { haptic('light'); openCampSheet(_campId); return; }
@@ -1135,13 +1089,6 @@
             }
             return;
         }
-        if (act === 'go-market') {
-            haptic('light');
-            close();
-            try { window.__openMarketplace(); } catch (e) {}
-            infoNote(T('Открой оффер нужного канала и нажми «Отметить сделку» — после подтверждения владельцем сделка появится в Трекере'));
-            return;
-        }
         if (act === 'from-deal') {
             if (_busy) return;
             haptic('light');
@@ -1153,15 +1100,11 @@
                 _busy = false;
                 if (!r || r.ok === false) { toast((r && r.message) || T('Не удалось. Повтори попытку.')); return; }
                 var it = r.item || {};
-                var url = it.click_code ? ('https://fmtr.click/r/' + it.click_code) : (it.invite_link || '');
+                var url = it.click_code ? (CLICK_BASE + '/r/' + it.click_code) : (it.invite_link || '');
                 haptic('medium');
-                var box = document.getElementById('pl-src-deals');
-                if (box) {
-                    box.innerHTML = '<div class="pl-ready"><div class="t">✓ ' + esc(T('Ссылка готова — отдай её админу канала')) + '</div>' +
-                        '<div class="lnk"><code>' + esc(url) + '</code><button class="pl-copy" data-act="copy" data-link="' + esc(url) + '">' + esc(T('Скопировать')) + '</button></div>' +
-                        '<div class="hint">' + esc(T('Админ вставит её в рекламный пост. Подписки, клики и показы посчитаются в этой записи автоматически.')) + '</div></div>';
-                }
+                closeSheet();
                 load();
+                if (url) copyText(url, T('Ссылка создана и скопирована — вставь её в рекламный пост'));
             }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
             return;
         }
