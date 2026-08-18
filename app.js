@@ -3874,7 +3874,7 @@ function updateGenerateBtnPrice() {
         if (tag) tag.remove();
         return;
     }
-    const html = forgeAmount(postModelPrice(l, postActiveModel(l)), 12);
+    const html = forgeAmount(postModelPrice(l, postActiveModel(l)), 14);
     if (tag) {
         tag.innerHTML = html;
     } else {

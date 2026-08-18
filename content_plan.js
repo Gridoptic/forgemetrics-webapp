@@ -33,8 +33,8 @@
         haptic('light');
         toast(T('Создатель канала не выдал тебе право менять контент-план'));
     }
-    function forgeTag(n) {
-        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
+    function forgeTag(n, s) {
+        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, s || 12);
         return esc(String(n)) + ' Forge';
     }
     function plural3(n, one, few, many) {
@@ -1763,7 +1763,7 @@
         var rebuildFee = (!w.is_tester && w.next_build_paid && w.reskeleton_price) ? w.reskeleton_price : 0;
         var weekPrice = priceDay() * totalPosts() + rebuildFee;
         var priceTag = w.is_tester ? '' :
-            '<span class="cp-gopx">' + forgeTag(weekPrice) + '</span>';
+            '<span class="cp-gopx">' + forgeTag(weekPrice, 14) + '</span>';
         var lowNote;
         if (w.is_tester) {
             lowNote = '<div class="cp-gonote">' + esc(T('Тестовый доступ — Forge не списываются')) + '</div>';

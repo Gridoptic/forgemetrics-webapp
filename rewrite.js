@@ -64,7 +64,7 @@
     }
     function priceChip() {
         var p = price();
-        return p != null ? ' <span class="price">' + fa(p) + '</span>' : '';
+        return p != null ? ' <span class="price">' + fa(p, 14) + '</span>' : '';
     }
 
     window.__openRewrite = function () {
@@ -151,8 +151,8 @@
         }).join('') + '</div>';
     }
 
-    function fa(n) {
-        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, 12);
+    function fa(n, s) {
+        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, s || 12);
         return esc(num(n)) + ' Forge';
     }
 
@@ -161,8 +161,8 @@
         var pp = _limits.price_rewrite_premium, ps = _limits.price_rewrite_standard;
         return '<div class="rw-lbl">' + esc(T('Модель')) + '</div>' +
             seg('model', curModel(), [
-                ['premium', 'Премиум', esc(T('точнее')) + ' · ' + fa(pp), 'html'],
-                ['standard', 'Стандарт', esc(T('быстрее')) + ' · ' + fa(ps), 'html'],
+                ['premium', 'Премиум', esc(T('точнее')) + ' · ' + fa(pp, 11), 'html'],
+                ['standard', 'Стандарт', esc(T('быстрее')) + ' · ' + fa(ps, 11), 'html'],
             ]);
     }
 
@@ -297,7 +297,7 @@
             hooks +
             '<div class="rw-actions">' +
             '<button class="rw-act copy" data-act="copy"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>' +
-            '<button class="rw-act more" data-act="more"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + (price() != null ? ' <span class="p">· ' + fa(price()) + '</span>' : '') + '</button></div>' +
+            '<button class="rw-act more" data-act="more"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + (price() != null ? ' <span class="p">' + fa(price()) + '</span>' : '') + '</button></div>' +
             '<button class="rw-planbtn" data-act="toplan"><i class="ti ti-calendar-plus"></i> ' + esc(T('В контент-план')) + '</button>' +
             (r.model_used ? '<div class="rw-modelnote">' + esc(T('Модель')) + ': ' + esc(r.model_used) + (r.style_applied ? ' · ' + esc(T('в стиле канала')) : '') + '</div>' : '') +
             '</div>';
