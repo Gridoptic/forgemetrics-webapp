@@ -942,17 +942,27 @@ function renderPulseHook(trendPct, planMeasured) {
     const hook = document.getElementById('pw-aihook');
     if (!hook) return;
     if (trendPct == null || trendPct >= 0) { hook.innerHTML = ''; return; }
-    const drop = Math.abs(trendPct);
+    const chId = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : 0;
     const calibrated = (planMeasured || 0) >= 3;
+    const hideKey = 'fm_pulsehook_' + chId + '_' + (calibrated ? 'c' : 'd');
+    try { if ((+localStorage.getItem(hideKey) || 0) > Date.now()) { hook.innerHTML = ''; return; } } catch (e) {}
+    const drop = Math.abs(trendPct);
     const tx = calibrated
         ? `Калибровка завершена: замеры недели собраны. Новая неделя соберётся с их учётом.`
         : `Охват снизился на <b>${drop}%</b> за 30 дней. Собери неделю постов по замерам канала.`;
     hook.innerHTML = `<div class="pw-aihook">`
-        + `<span class="pw-aih-ic"><i class="ti ti-sparkles"></i></span>`
+        + `<span class="pw-aih-ic"><i class="ti ti-calendar"></i></span>`
         + `<div class="pw-aih-tx">${tx}</div>`
-        + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button></div>`;
+        + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button>`
+        + `<button class="pw-aih-x" type="button" aria-label="Скрыть"><i class="ti ti-x"></i></button></div>`;
     const go = hook.querySelector('.pw-aih-go');
     if (go) go.addEventListener('click', () => { hapticLight(); handleAction('content_plan'); });
+    const x = hook.querySelector('.pw-aih-x');
+    if (x) x.addEventListener('click', () => {
+        hapticLight();
+        try { localStorage.setItem(hideKey, String(Date.now() + 7 * 86400000)); } catch (e) {}
+        hook.innerHTML = '';
+    });
 }
 
 async function loadReachSeries() {
