@@ -766,7 +766,7 @@
             .catch(function () { if (open) toast(T('Не удалось собрать разбор')); });
     }
 
-    function rubricsBlock(inWeek) {
+    function rubricsBlock(inWeek, pubDone) {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid) return '';
         var note = inWeek
@@ -852,9 +852,11 @@
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
             esc(T('Обновить набор')) + '</button></div>' +
             (inWeek && _rubChanged
-                ? '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
-                  esc(T('Пересобрать неделю с новыми рубриками')) + '</button>' +
-                  '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>'
+                ? (pubDone
+                    ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
+                    : '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
+                      esc(T('Пересобрать неделю с новыми рубриками')) + '</button>' +
+                      '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>')
                 : '') + '</div>';
     }
 
@@ -1928,9 +1930,11 @@
             'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
             '<div class="cp-goals">' + goalChips() + '</div>' +
             (goalChanged
-                ? '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
-                  esc(T('Пересобрать неделю под новую цель')) + '</button>' +
-                  '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>'
+                ? (allPub
+                    ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
+                    : '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
+                      esc(T('Пересобрать неделю под новую цель')) + '</button>' +
+                      '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>')
                 : '') + '</div>';
 
         var allBtn = haveText < n
@@ -1966,7 +1970,7 @@
                 ? header + ribbon + detailPanel()
                 : '';
             setView(viewBan + chanBlock + weekCal + doneBanner + learningBlock(true) + regenBtn +
-                apPanel() + goalsSec + rubricsBlock(true) +
+                apPanel() + goalsSec + rubricsBlock(true, true) +
                 strategyBlock() + reviewEntry() + insightsBlock() + archBtn + archBody +
                 '<div class="cp-foot">' + tzFootNote() +
                 esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
