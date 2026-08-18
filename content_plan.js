@@ -804,6 +804,19 @@
             if ((r.post_count || 0) >= 2 && (r.avg_views || 0) > max) max = r.avg_views || 0;
         });
 
+        var MINS = 3;
+        var meas = own.filter(function (r) {
+            return !r.needs_fact && !r.disabled &&
+                (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
+        });
+        var wOn = false, topAv = 0, lowAv = 0;
+        if (meas.length >= 2) {
+            var avs = meas.map(function (r) { return r.avg_views; });
+            topAv = Math.max.apply(null, avs);
+            lowAv = Math.min.apply(null, avs);
+            wOn = topAv >= lowAv * 1.5;
+        }
+
         var groups = [
             ['a', 'ti-file-text', 'пишется само',
              function (r) { return r.source !== 'suggest' && !r.needs_fact; }],
@@ -831,11 +844,20 @@
                     var solid = (r.post_count || 0) >= 2 && r.avg_views;
                     var pct = (max && solid) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
                     var strong = (max && solid && r.avg_views === max) ? ' top' : '';
+                    var mb = '';
+                    if (wOn && g[0] === 'a' && !r.disabled) {
+                        if ((r.post_count || 0) >= MINS && (r.avg_views || 0) > 0) {
+                            if (r.avg_views === topAv) mb = '<span class="cp-rbdg up">' + esc(T('сильная · чаще')) + '</span>';
+                            else if (r.avg_views === lowAv) mb = '<span class="cp-rbdg dn">' + esc(T('ниже нормы · реже')) + '</span>';
+                        } else {
+                            mb = '<span class="cp-rbdg nd">' + esc(T('недостаточно данных')) + '</span>';
+                        }
+                    }
                     return '<button class="cp-rub ' + g[0] + strong +
                         (r.disabled && !tip ? ' off' : '') +
                         '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
                         '<i class="ti ' + g[1] + '"></i>' +
-                        '<span class="tx"><b>' + esc(r.title) + '</b>' +
+                        '<span class="tx"><b>' + esc(r.title) + mb + '</b>' +
                         '<em>' + esc((r.off_reason || r.about || '') + (tip ? '' : cnt)) + '</em>' +
                         (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
                         '</span>' +
@@ -862,6 +884,9 @@
             esc(T('Своя рубрика')) + '</button>' +
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
             esc(T('Обновить набор')) + '</button></div>' +
+            (wOn ? '<div class="cp-bfoot"><i class="ti ti-bolt"></i><span>' +
+                esc(T('Сильным рубрикам сборка даёт больше слотов, слабым — меньше. Бейджи — по замерам от 3 постов в рубрике.')) +
+                '</span></div>' : '') +
             (inWeek && _rubChanged
                 ? (pubDone
                     ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
@@ -1581,12 +1606,31 @@
 
     function goalChips() {
         var goalSel = (_goal || 'engagement').split('+');
+        var rec = goalRec();
         return GOALS.map(function (g) {
+            var mb = (rec && g[0] === 'retention')
+                ? '<span class="cp-rbdg dn">' + esc(T('рекомендация по замерам')) + '</span>' : '';
             return '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
-                '<span class="tx"><b>' + esc(T(g[1])) + '</b>' +
+                '<span class="tx"><b>' + esc(T(g[1])) + mb + '</b>' +
                 '<em>' + esc(T(g[2])) + '</em></span></button>';
         }).join('');
+    }
+
+    function goalRec() {
+        var L = _state && _state.learning;
+        if (!L || !L.ready) return null;
+        var left = (L.members || {}).left || 0;
+        return left > 0 ? { left: left } : null;
+    }
+
+    function goalRecNote() {
+        var rec = goalRec();
+        if (!rec) return '';
+        return '<div class="cp-bfoot"><i class="ti ti-anchor"></i><span>−' + rec.left + ' ' +
+            esc(T(plural3(rec.left, 'подписчик', 'подписчика', 'подписчиков')) + ' ' +
+                T('за неделю — по замерам рекомендована цель «Удержание». Цель не переключается сама — выбор за тобой.')) +
+            '</span></div>';
     }
 
     function lrnWin(w) {
@@ -1739,7 +1783,7 @@
             chanBlock + '</div>' + readinessBlock() +
             '<div class="cp-sec">' + secHead('Цель недели',
                 'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
-            '<div class="cp-goals">' + goals + '</div></div>' +
+            '<div class="cp-goals">' + goals + '</div>' + goalRecNote() + '</div>' +
             rubricsBlock() +
             '<div class="cp-sec">' + secHead('Модель текстов',
                 'Какая модель пишет посты недели. Влияет на цену каждого поста.') +
@@ -1941,7 +1985,7 @@
         var goalChanged = _goal && _state.goal && _goal !== _state.goal;
         var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
             'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
-            '<div class="cp-goals">' + goalChips() + '</div>' +
+            '<div class="cp-goals">' + goalChips() + '</div>' + goalRecNote() +
             (goalChanged
                 ? (allPub
                     ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
