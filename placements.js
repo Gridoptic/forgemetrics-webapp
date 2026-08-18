@@ -516,14 +516,17 @@
             '<button class="rm" data-act="cand-del" data-item="' + c.id + '">' + esc(T('Убрать')) + '</button></div></div>';
     }
 
+    function effImp(l) { return l.impressions != null ? l.impressions : l.impressions_est; }
+
     function cpfBand(l) {
         var joinedN = l.joined || 0;
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
-        if (l.cpf == null || !(l.impressions > 0) || !joinedN || badImp) return null;
+        var imp = effImp(l);
+        if (l.cpf == null || !(imp > 0) || !joinedN || badImp) return null;
         var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
         var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
-        var lo = Math.max(1, Math.round(l.impressions / 1000 * bandLo * fk / joinedN));
-        var hi = Math.max(lo + 1, Math.round(l.impressions / 1000 * bandHi * fk / joinedN));
+        var lo = Math.max(1, Math.round(imp / 1000 * bandLo * fk / joinedN));
+        var hi = Math.max(lo + 1, Math.round(imp / 1000 * bandHi * fk / joinedN));
         return { lo: lo, hi: hi, hasBand: !!(l.cpm_lo && l.cpm_hi) };
     }
 
@@ -547,10 +550,11 @@
         if (l.price_rub) meta.push(num(l.price_rub) + ' ₽');
         var joinedN = l.joined || 0;
         var bar = '';
-        var base = l.impressions || (l.clicks != null ? l.clicks : 0) || joinedN;
+        var impB = effImp(l);
+        var base = impB || (l.clicks != null ? l.clicks : 0) || joinedN;
         if (base > 0) {
             var seg = function (v) { return v > 0 ? '<span style="width:' + Math.max(6, Math.round(v / base * 58)) + '%;"></span>' : ''; };
-            bar = '<div class="pl-abar">' + (l.impressions ? seg(l.impressions) : '') + (l.clicks != null ? seg(l.clicks) : '') + seg(joinedN) + '</div>';
+            bar = '<div class="pl-abar">' + (impB ? seg(impB) : '') + (l.clicks != null ? seg(l.clicks) : '') + seg(joinedN) + '</div>';
         }
         var right = l.cpf != null
             ? '<div class="pl-acpf" style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</div>' +
@@ -585,17 +589,19 @@
                 '<span>' + esc(T(band.hasBand ? 'вилка ниши' : 'рыночный ориентир')) + '</span>' +
                 '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
         }
+        var impEff = effImp(l);
+        var impEst = l.impressions == null && l.impressions_est != null;
         var tiles = [];
-        tiles.push(l.impressions
-            ? { k: T('Показы'), v: num(l.impressions), c: T('охват поста') }
+        tiles.push(impEff
+            ? { k: T('Показы'), v: (impEst ? '≈' : '') + num(impEff), c: impEst ? T('оценка по каналу') : T('охват поста') }
             : { k: T('Показы'), v: '—', dim: 1, c: T('указать') });
         if (l.clicks != null) {
-            var ctr = (l.impressions >= 100 && !badImp && l.clicks) ? 'CTR ' + (Math.round(l.clicks / l.impressions * 1000) / 10) + '%' : 'CTR —';
+            var ctr = (impEff >= 100 && !badImp && l.clicks) ? 'CTR ' + (impEst ? '≈' : '') + (Math.round(l.clicks / impEff * 1000) / 10) + '%' : 'CTR —';
             tiles.push({ k: T('Переходы'), v: num(l.clicks), c: ctr });
         } else {
             tiles.push({ k: T('Переходы'), v: '—', dim: 1, c: T('прямая ссылка') });
         }
-        var prevV = l.clicks != null ? l.clicks : (l.impressions || 0);
+        var prevV = l.clicks != null ? l.clicks : (impEff || 0);
         var subJ = (prevV > 0 && joinedN <= prevV && !badImp) ? (Math.round(joinedN / prevV * 1000) / 10) + '%' : '';
         tiles.push({ k: T('Подписки'), v: (joinedN ? '+' + num(joinedN) : '0'), c: subJ, g: 1 });
         var subR = (l.r7 && l.r7.of) ? 'R7 ' + Math.round((l.r7.kept || 0) / l.r7.of * 100) + '%' : 'R7 —';
@@ -607,22 +613,22 @@
         }).join('') + '</div>';
         var mets = [];
         var cpmWarn = '';
-        if (l.impressions >= 100 && l.price_rub && !badImp) {
-            var cpmV = Math.round(l.price_rub / l.impressions * 1000);
+        if (impEff >= 100 && l.price_rub && !badImp) {
+            var cpmV = Math.round(l.price_rub / impEff * 1000);
             var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
             var cpmMid = (bandLo + bandHi) / 2, cpmBad = bandHi * 4 / 3;
             var cpmCol = cpmV <= cpmMid ? '#5DCAA5' : (cpmV <= cpmBad ? '#f5bf4f' : '#ef4444');
-            mets.push({ k: 'CPM', v: rub(cpmV), col: cpmCol });
-            if (cpmV > cpmBad) {
+            mets.push({ k: 'CPM', v: (impEst ? '≈' : '') + rub(cpmV), col: cpmCol });
+            if (cpmV > cpmBad && !impEst) {
                 cpmWarn = '<div class="pl-qwarn">' + esc(hasBandRaw
                     ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
                     : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
             }
         } else {
             mets.push({ k: 'CPM', v: '—', dim: 1,
-                        c: (needPrice && !l.impressions) ? T('нужны цена и показы')
+                        c: (needPrice && !impEff) ? T('нужны цена и показы')
                             : (needPrice ? T('нужна цена')
-                                : (!l.impressions ? T('нужны показы') : T('недостаточно данных'))) });
+                                : (!impEff ? T('нужны показы') : T('недостаточно данных'))) });
         }
         if (l.clicks && l.price_rub) mets.push({ k: 'CPC', v: rub(Math.round(l.price_rub / l.clicks)) });
         else mets.push({ k: 'CPC', v: '—', dim: 1,
@@ -649,9 +655,11 @@
             h += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }
         var impV = (l.impressions_manual != null) ? num(l.impressions_manual)
-            : ((l.deal_id && l.impressions != null) ? num(l.impressions) : '—');
+            : ((l.deal_id && l.impressions != null) ? num(l.impressions)
+                : (l.impressions_est != null ? '≈' + num(l.impressions_est) : '—'));
         var impE = (l.impressions_manual != null) ? T('вручную')
-            : ((l.deal_id && l.impressions != null) ? T('замер сделки') : T('указать'));
+            : ((l.deal_id && l.impressions != null) ? T('замер сделки')
+                : (l.impressions_est != null ? T('уточнить') : T('указать')));
         var ledger = '<div class="pl-ledger">' +
             '<div class="pl-lrow" data-act="price" data-id="' + l.id + '"><span class="k">' + esc(T('Цена размещения')) + '</span><span class="dots"></span>' +
             '<span class="v">' + (l.price_rub ? num(l.price_rub) + ' ₽' : '—') + '</span><span class="e">' + esc(l.price_rub ? T('изменить') : T('указать')) + '</span></div>' +
@@ -870,6 +878,7 @@
         bg.classList.add('on');
         sh.classList.add('on');
         _resolvedDeal = null;
+        _resolvedSeller = null;
         _pendingItem = null;
         var nmIn = document.getElementById('pl-name');
         if (nmIn) nmIn.addEventListener('input', function () { nmIn.removeAttribute('data-auto'); });
@@ -882,11 +891,13 @@
                     var v = chIn.value.trim();
                     var info = document.getElementById('pl-chinfo');
                     _resolvedDeal = null;
+                    _resolvedSeller = null;
                     if (!v || v.length < 4) { if (info) info.style.display = 'none'; return; }
                     apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
                         if (!info || !r || document.getElementById('pl-chan') !== chIn) return;
                         if (chIn.value.trim() !== v) return;
                         if (!r.username) { info.style.display = 'none'; return; }
+                        _resolvedSeller = r.username;
                         var nameIn = document.getElementById('pl-name');
                         if (nameIn && (!nameIn.value.trim() || nameIn.getAttribute('data-auto'))) {
                             nameIn.value = T('Реклама у') + ' @' + r.username;
@@ -928,24 +939,25 @@
         }).catch(function () {});
     }
 
-    var _resolvedDeal = null;
+    var _resolvedDeal = null, _resolvedSeller = null;
     function doCreate() {
         if (_busy) return;
         var name = (document.getElementById('pl-name') || {}).value || '';
         var price = (document.getElementById('pl-price') || {}).value || '';
         name = name.trim();
+        var chv = ((document.getElementById('pl-chan') || {}).value || '').trim();
+        var mch = chv.match(/(?:t\.me\/|@)([A-Za-z0-9_]{4,32})/) || chv.match(/^([A-Za-z0-9_]{4,32})$/);
         if (!name) {
-            var chv = ((document.getElementById('pl-chan') || {}).value || '').trim();
-            var mch = chv.match(/(?:t\.me\/|@)([A-Za-z0-9_]{4,32})/) || chv.match(/^([A-Za-z0-9_]{4,32})$/);
             if (mch) name = T('Реклама у') + ' @' + mch[1];
             else { toast(T('Вставь ссылку на канал или укажи название')); return; }
         }
+        var seller = _resolvedSeller || (mch ? mch[1] : null);
         var selOpt = document.querySelector('#pl-sheet .pl-ltopt.sel');
         var track = !!(selOpt && selOpt.getAttribute('data-track'));
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt'), campaign_item_id: _pendingItem || null })
+            body: JSON.stringify({ channel_id: _chId, name: name, price_rub: price ? parseInt(price, 10) : null, track_clicks: track, placement_format: (document.querySelector('#pl-sheet .pl-fmt.sel') || { getAttribute: function () { return null; } }).getAttribute('data-fmt'), campaign_item_id: _pendingItem || null, seller_username: seller })
         }).then(function (r) {
             _busy = false;
             if (r && r.ok) {
