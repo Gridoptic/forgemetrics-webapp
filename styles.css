@@ -4596,7 +4596,6 @@ html.cs-modal-open {
 .pw-pulse{background:linear-gradient(160deg,rgba(255,255,255,0.045),rgba(255,255,255,0.014));border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:11px 12px;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 16px 36px -24px rgba(0,0,0,0.7);position:relative;overflow:hidden;
   animation:pwRise .55s cubic-bezier(.2,.8,.2,1) both .05s;}
-.pw-pulse::before{content:"";position:absolute;top:-50px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(16,185,129,0.18),transparent 66%);pointer-events:none;}
 .pw-prow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;position:relative;}
 .pw-health{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;padding:6px 12px 6px 10px;border-radius:99px;}
 .pw-health.green{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(16,185,129,0.06));border:1px solid rgba(16,185,129,0.36);color:#6ee0b8;}
@@ -4617,7 +4616,7 @@ html.cs-modal-open {
 .pw-hbig .tr{font-size:12px;font-weight:800;color:#5DCAA5;}.pw-hbig .tr.dn{color:#ef8080;}
 .pw-hbig .u{font-size:10.5px;color:var(--text-tertiary);}
 .pw-chart{position:relative;width:100%;margin-top:5px;min-height:42px;touch-action:pan-y;}
-.pw-chart::before{content:"";position:absolute;inset:-2px -2px 4px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.022),rgba(93,202,165,0.03) 58%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);pointer-events:none;z-index:0;}
+.pw-chart::before{content:"";position:absolute;inset:-2px -2px 4px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.022),rgba(255,255,255,0.015) 58%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);pointer-events:none;z-index:0;}
 .pw-chart svg{display:block;width:100%;height:auto;overflow:visible;position:relative;z-index:1;}
 @keyframes pwPing{0%{transform:scale(1);opacity:.6}70%{transform:scale(3.6);opacity:0}100%{transform:scale(3.6);opacity:0}}
 .pw-chart svg text{font-family:inherit;}
