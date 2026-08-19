@@ -4855,7 +4855,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 ? `<div class="bs-item-avatar" data-avatar-bs="${it.id}"><i class="ti ti-brand-telegram"></i></div>`
                 : (it.is_private
                     ? `<div class="bs-item-avatar private"><i class="ti ti-lock"></i></div>`
-                    : `<div class="bs-item-avatar">${escapeHtml(getInitials(it.title || 'К'))}</div>`);
+                    : `<div class="bs-item-avatar">${escapeHtml(String(it.title || 'К').trim().charAt(0).toUpperCase())}</div>`);
 
             const sub = it.subtitle_warn
                 ? `<div class="bs-item-subtitle warn">${escapeHtml(it.subtitle || '')}</div>`
