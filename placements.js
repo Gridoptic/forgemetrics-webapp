@@ -63,7 +63,6 @@
             '.pl-eava i.p{background:#fbbf5f;}',
             '.pl-eava i.o{background:#565b73;}',
             '.pl-erow{display:flex;align-items:center;gap:6px;margin-top:5px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent);}',
-            '.pl-fst{font-size:9px;font-weight:700;color:#8990a8;white-space:nowrap;flex:0 0 auto;}',
             '.pl-fun{display:inline-flex;flex:0 0 auto;border:1px solid rgba(255,255,255,0.10);border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.02);}',
             '.pl-fseg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px 2.5px;border-left:1px solid rgba(255,255,255,0.07);min-width:0;}',
             '.pl-fseg:first-child{border-left:none;}',
@@ -615,9 +614,6 @@
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
         var joinedN = l.joined || 0;
         var impB = effImp(l);
-        var st = '';
-        if (!active) st = '<span class="pl-fst">' + esc(T('отключена')) + '</span>';
-        else if (_chPaused) st = '<span class="pl-fst">' + esc(T('канал на паузе')) + '</span>';
         var numK = function (v) {
             return v >= 10000 ? String(Math.round(v / 100) / 10).replace('.', ',') + 'K' : num(v);
         };
@@ -625,7 +621,7 @@
             '<span class="pl-fseg"><b>' + (impB ? numK(impB) + (l.views_scan == null ? '≈' : '') : '—') + '</b><em>' + esc(T('Показы')) + '</em></span>' +
             '<span class="pl-fseg"><b>' + (l.clicks != null ? numK(l.clicks) : '—') + '</b><em>' + esc(T('Клики')) + '</em></span>' +
             '<span class="pl-fseg gg"><b>+' + numK(joinedN) + '</b><em>' + esc(T('Подписки')) + '</em></span>' +
-            '</span>' + st;
+            '</span>';
         var letter = String(l.seller_username || l.name || '?').charAt(0).toUpperCase();
         var priceLn = l.price_rub
             ? '<u>' + num(l.price_rub) + ' ₽</u><s>' + esc(T('Цена')) + '</s>' : '';
@@ -785,7 +781,8 @@
             (active
                 ? '<button class="pl-dbtn quiet" data-act="revoke" data-id="' + l.id + '"><i class="ti ti-power"></i><span>' + esc(T('Отключить')) + '</span></button>' +
                   '<button class="pl-dbtn iconb" data-act="del" data-st="active" data-id="' + l.id + '" aria-label="' + esc(T('Удалить')) + '"><i class="ti ti-trash"></i></button>'
-                : '<button class="pl-dbtn quiet" data-act="del" data-id="' + l.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить из списка')) + '</span></button>') +
+                : '<button class="pl-dbtn" data-act="enable" data-id="' + l.id + '"><i class="ti ti-power"></i><span>' + esc(T('Включить')) + '</span></button>' +
+                  '<button class="pl-dbtn quiet" data-act="del" data-id="' + l.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить из списка')) + '</span></button>') +
             '</div>';
         var notes = '';
         if (l.scan_status && !l.post_deleted_at) {
@@ -1164,6 +1161,15 @@
             .then(function (ok) { if (ok) go(); });
     }
 
+    function doEnable(id) {
+        haptic('medium');
+        apiRequest('/api/v1/placements/links/' + id + '/enable', { method: 'POST', body: '{}' })
+            .then(function (r) {
+                if (r && r.ok) { haptic('light'); toast(T('Ссылка снова активна — прежний адрес работает')); load(); }
+                else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+    }
+
     function onClick(e) {
         var b = e.target.closest ? e.target.closest('[data-act]') : null;
         if (!b) return;
@@ -1335,6 +1341,7 @@
         if (act === 'create') { doCreate(); return; }
         if (act === 'copy') { copyText(b.getAttribute('data-link')); return; }
         if (act === 'revoke') { doRevoke(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'enable') { doEnable(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'recheck') { haptic('light'); load(); return; }
         if (act === 'metricinfo') {
             var mi = document.getElementById('pl-minfo-' + b.getAttribute('data-id'));
