@@ -37,8 +37,8 @@
 .cp-hint { font-size: 11.5px; color: #8d93a8; margin-top: 10px; line-height: 1.45; }
 .cp-onechan { display: flex; align-items: center; gap: 11px; }
 .cp-onechan .av { width: 38px; height: 38px; border-radius: 11px; flex: 0 0 auto; display: flex;
-    align-items: center; justify-content: center; font-weight: 800; font-size: 15px; color: #818cf8;
-    border: 1px solid rgba(129,140,248,0.3); background: linear-gradient(160deg,rgba(129,140,248,0.22),rgba(129,140,248,0.05)); }
+    align-items: center; justify-content: center; font-weight: 800; font-size: 15px; color: #aeb6cf;
+    border: 1px solid rgba(255,255,255,0.08); background: linear-gradient(140deg,#2a3350,#171d30); }
 .cp-onechan .nm b { display: block; font-size: 14px; }
 .cp-onechan .nm span { display: block; font-size: 11.5px; color: #8d93a8; }
 .cp-chip { padding: 9px 14px; border-radius: 11px; font-size: 12.5px; font-weight: 600; font-family: inherit; color: #c6cdde;
@@ -583,9 +583,10 @@
 }
 
 .cp-chanpick .av {
-    width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(99, 102, 241, .16); color: #818cf8; font-weight: 700; font-size: 14px;
+    background: linear-gradient(140deg,#2a3350,#171d30); border: 1px solid rgba(255,255,255,0.08);
+    color: #aeb6cf; font-weight: 800; font-size: 14px;
 }
 
 .cp-chanpick .nm { flex: 1; min-width: 0; }

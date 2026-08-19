@@ -3746,7 +3746,7 @@ function renderPostChannelSelector(channel) {
     } else if (isPrivate) {
         avatarHtml = `<div class="post-channel-selector-avatar private"><i class="ti ti-lock"></i></div>`;
     } else {
-        avatarHtml = `<div class="post-channel-selector-avatar">${escapeHtml(getInitials(channel.title || 'К'))}</div>`;
+        avatarHtml = `<div class="post-channel-selector-avatar">${escapeHtml(String(channel.title || 'К').trim().charAt(0).toUpperCase())}</div>`;
     }
 
     if (hasVoice) {
@@ -5139,7 +5139,7 @@ function renderChannelSettingsScreen(data) {
         ? `<div class="cs-avatar" data-avatar-for-cs="${data.id}"><i class="ti ti-brand-telegram"></i></div>`
         : (data.is_private
             ? `<div class="cs-avatar cs-avatar-private"><i class="ti ti-lock"></i></div>`
-            : `<div class="cs-avatar cs-avatar-letters">${escapeHtml(getInitials(data.title || 'К'))}</div>`);
+            : `<div class="cs-avatar cs-avatar-letters">${escapeHtml(String(data.title || 'К').trim().charAt(0).toUpperCase())}</div>`);
 
     host.innerHTML = `
         <div class="cs-header">

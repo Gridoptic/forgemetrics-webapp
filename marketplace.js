@@ -686,7 +686,7 @@
             '.fmx-al-b.dz{flex:0 0 auto;width:42px;color:#ef4444;}',
             '.fmx-ae-sec{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#565b73;margin:20px 3px 9px;}',
             '.fmx-am-it{display:flex;align-items:center;gap:11px;padding:12px 13px;border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));margin-bottom:9px;text-decoration:none;color:inherit;}',
-            '.fmx-am-av{width:40px;height:40px;border-radius:12px;flex:0 0 auto;object-fit:cover;background:linear-gradient(145deg,#818cf8,#6366f1);display:grid;place-items:center;font-weight:750;color:#0b0c16;font-size:16px;}',
+            '.fmx-am-av{width:40px;height:40px;border-radius:12px;flex:0 0 auto;object-fit:cover;background:linear-gradient(140deg,#2a3350,#171d30);border:1px solid rgba(255,255,255,0.08);display:grid;place-items:center;font-weight:800;color:#aeb6cf;font-size:16px;}',
             '.fmx-sp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-start;}',
             '.fmx-sp svg{display:block;margin-top:-1px;}',
             '.fmx-acts{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;}',
@@ -4043,7 +4043,7 @@
             var cpm = (l && l.base_price && reachV) ? Math.round(l.base_price / reachV * 1000) : null;
             var av = _net.mode
                 ? '<span style="width:22px;height:22px;border-radius:7px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;' + (checked ? 'background:#6366f1;box-shadow:0 0 10px rgba(99,102,241,0.5);' : 'border:2px solid #4a4d61;') + '">' + (checked ? '<i class="ti ti-check" style="font-size:13px;color:#fff;"></i>' : '') + '</span>'
-                : '<span style="position:relative;width:38px;height:38px;border-radius:12px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.16);color:#818cf8;font-weight:800;font-size:15px;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.1);overflow:hidden;">' + _esc((ch.title || ch.username || '?').charAt(0).toUpperCase()) +
+                : '<span style="position:relative;width:38px;height:38px;border-radius:12px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,#2a3350,#171d30);color:#aeb6cf;font-weight:800;font-size:15px;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.1);overflow:hidden;">' + _esc((ch.title || ch.username || '?').charAt(0).toUpperCase()) +
                     (ch.avatar_url ? '<img data-netav src="' + _esc(mediaAbs(ch.avatar_url)) + '" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">' : '') + '</span>';
             var right;
             if (l) {
