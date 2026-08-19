@@ -1544,7 +1544,7 @@ async function openTeamChannel(chId) {
 
 function _tmHead(d) {
     const c = d.channel;
-    return `<div class="tm-title">${_tmMulti ? '<button class="tm-back" id="tm-back"><i class="ti ti-chevron-left"></i></button>' : ''}<span class="tm-tile"><i class="ti ti-users"></i></span>
+    return `<div class="tm-title">${_tmMulti ? '<button class="tm-back" id="tm-back"><i class="ti ti-arrow-left"></i></button>' : ''}<span class="tm-tile"><i class="ti ti-users"></i></span>
         <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
         <div class="tm-hero">${_tmAv(c.avatar_url, c.title, 'tm-av-hero')}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>

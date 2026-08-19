@@ -5018,7 +5018,7 @@
     }
     function _alHead(title, sub, withBack) {
         return '<div class="grip"></div><div class="fmx-alhd">' +
-            (withBack ? '<button class="fmx-alback" id="fmx-al-back" title="Назад"><i class="ti ti-chevron-left"></i></button>'
+            (withBack ? '<button class="fmx-alback" id="fmx-al-back" title="Назад"><i class="ti ti-arrow-left"></i></button>'
                 : '<span class="fmx-alic"><i class="ti ti-bell"></i></span>') +
             '<div style="min-width:0;flex:1;"><h3 style="margin:0;">' + title + '</h3>' +
             '<div class="fmx-alsub">' + sub + '</div></div>' +
