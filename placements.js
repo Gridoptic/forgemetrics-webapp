@@ -933,6 +933,8 @@
             '<div id="pl-src-deals" style="display:none;"></div>' +
             '<div class="pl-flabel" id="pl-chan-label">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
             '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал" value="">' +
+            '<div style="font-size:10px;color:#565b73;margin:6px 0 2px;line-height:1.4;">' +
+            esc(T('Укажи @имя канала — показы рекламного поста замерятся автоматически.')) + '</div>' +
             '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:8px 0 4px;line-height:1.45;"></div>' +
             '<div class="pl-glink" id="pl-rename-lnk" data-act="rename-toggle" style="margin:2px 0 8px;">' + esc(T('Изменить название записи')) + '</div>' +
             '<div id="pl-name-wrap" style="display:none;">' +
@@ -977,7 +979,14 @@
                     apiRequest('/api/v1/placements/resolve-channel?u=' + encodeURIComponent(v)).then(function (r) {
                         if (!info || !r || document.getElementById('pl-chan') !== chIn) return;
                         if (chIn.value.trim() !== v) return;
-                        if (!r.username) { info.style.display = 'none'; return; }
+                        if (!r.username) {
+                            var m2 = v.match(/(?:t\.me\/|@)([A-Za-z0-9_]{4,32})/) || v.match(/^([A-Za-z0-9_]{4,32})$/);
+                            if (m2) { info.style.display = 'none'; return; }
+                            info.style.color = '#f5bf4f';
+                            info.textContent = T('Канал не распознан — автозамер показов не включится. Вставь @имя или ссылку t.me, иначе показы придётся указывать вручную.');
+                            info.style.display = 'block';
+                            return;
+                        }
                         _resolvedSeller = r.username;
                         var nameIn = document.getElementById('pl-name');
                         if (nameIn && (!nameIn.value.trim() || nameIn.getAttribute('data-auto'))) {
@@ -989,11 +998,12 @@
                             if (r.subscribers) bits.push(num(r.subscribers) + ' ' + T('подписчиков'));
                             if (r.market) bits.push(T('есть на Площадке'));
                             if (r.deal_id) { _resolvedDeal = r.deal_id; bits.push(T('сделка привяжется автоматически')); }
+                            bits.push(T('автозамер показов включится'));
                             info.style.color = '#5DCAA5';
                             info.textContent = bits.join(' · ');
                         } else {
                             info.style.color = '#8990a8';
-                            info.textContent = T('Канала нет в нашем каталоге — учёт всё равно будет работать полностью.');
+                            info.textContent = T('Канала нет в нашем каталоге — учёт и автозамер показов всё равно будут работать.');
                         }
                         info.style.display = 'block';
                     }).catch(function () {});
