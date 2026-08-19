@@ -758,6 +758,53 @@ function pwPreview(v, o) {
 }
 
 var pwCpfHintOpen = false;
+var pwPriceOpen = false;
+
+var PW_FMT_META = {
+    h1_24: ['1/24', '1 ч в топе · 24 ч в ленте'],
+    h2_48: ['2/48', '2 ч в топе · 48 ч в ленте'],
+    h3_72: ['3/72', '3 ч в топе · 72 ч в ленте'],
+    d7: ['7 дней', '3 ч в топе · 7 дней в ленте'],
+    perm: ['Без удаления', 'остаётся 30 дней или навсегда'],
+    native: ['Нативный', 'автор пишет сам по ТЗ'],
+    repost: ['Репост', 'пересылка вашего поста'],
+    circle: ['Кружок', 'видеосообщение внутри поста'],
+    stories: ['Сторис', 'формат сторис канала'],
+};
+
+function pwPricePanel(pulse) {
+    var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
+    var hasOwn = pulse.formats.some(f => f.price != null);
+    var PW_PST = { market: [_tp('в рынке'), '#5DCAA5'], above: [_tp('выше рынка'), '#f5bf4f'],
+                   below: [_tp('ниже рынка'), '#f5bf4f'], out: [_tp('вне рынка'), '#ef8080'] };
+    var rows = pulse.formats.map(f => {
+        var meta = PW_FMT_META[f.k];
+        if (!meta) return '';
+        var right;
+        if (f.price != null) {
+            var st = PW_PST[f.st];
+            var tail = '';
+            if (st) {
+                var pctTx = (f.st === 'above' || f.st === 'below')
+                    ? ' ' + (f.pct > 0 ? '+' : '−') + Math.abs(f.pct) + '%' : '';
+                tail = ' · <i style="color:' + st[1] + ';">' + escapeHtml(st[0] + pctTx) + '</i>';
+            }
+            right = '<b>' + escapeHtml(pwRub(f.price) + ' ₽') + '</b><em>' +
+                escapeHtml(_tp('оценка') + ' ' + pwRub(f.est) + ' ₽') + tail + '</em>';
+        } else {
+            right = '<b>' + escapeHtml('≈' + pwRub(f.est) + ' ₽') + '</b><em>' +
+                escapeHtml(_tp('оценка')) + '</em>';
+        }
+        return '<div class="pw-fr"><span class="fn">' + escapeHtml(_tp(meta[0])) + '</span>' +
+            '<span class="fs">' + escapeHtml(_tp(meta[1])) + '</span>' +
+            '<span class="fp">' + right + '</span></div>';
+    }).join('');
+    var foot = hasOwn
+        ? _tp('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.')
+        : _tp('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.');
+    return '<div class="pw-hintbox' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
+        rows + '<div class="pw-pfoot">' + escapeHtml(foot) + '</div></div></div>';
+}
 
 function pwRenderMetrics(pulse) {
     var grid = document.getElementById('pw-mgrid');
@@ -785,12 +832,25 @@ function pwRenderMetrics(pulse) {
             }
         }
         if (id === 'price' && v != null) {
-            var pk = (pulse.price_kind === 'owner' ? 'твоя цена' : 'оценка ниши') + ' · 1/24';
-            var pd = pulse.price_delta_pct;
-            var pdTx = (pd != null && pd !== 0)
-                ? ` · <span style="color:${pd > 0 ? '#5DCAA5' : '#ef8080'};font-weight:700;">${pd > 0 ? '↗+' : '↘'}${Math.abs(pd)}%</span>`
-                : '';
-            sub = `<span class="s">${escapeHtml(pk)}${pdTx}</span>`;
+            var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
+            if (pulse.price_kind === 'estimate') {
+                var pill = '';
+                if (pulse.own_price) {
+                    var PW_PST = { market: [_tp('в рынке'), ''], above: [_tp('выше рынка'), 'warn'],
+                                   below: [_tp('ниже рынка'), 'warn'], out: [_tp('вне рынка'), 'bad'] };
+                    var _ps = PW_PST[pulse.own_status];
+                    if (_ps) {
+                        var _pctTx = (pulse.own_status === 'above' || pulse.own_status === 'below')
+                            ? ' ' + (pulse.own_pct > 0 ? '+' : '−') + Math.abs(pulse.own_pct) + '%' : '';
+                        pill = `<span class="pw-rpill ${_ps[1] || 'ok'}">${escapeHtml(_ps[0] + _pctTx)}</span>`;
+                    }
+                    sub = pill + `<span class="s">${escapeHtml(_tp('оценка') + ' · 1/24')}</span>`;
+                } else {
+                    sub = `<span class="s">${escapeHtml(_tp('оценка по замерам') + ' · 1/24 · ' + _tp('цена не задана'))}</span>`;
+                }
+            } else {
+                sub = `<span class="s">${escapeHtml(_tp('твоя цена') + ' · 1/24')}</span>`;
+            }
         }
         var o = m.o;
         var valTx;
@@ -814,9 +874,13 @@ function pwRenderMetrics(pulse) {
         } else {
             valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
+        var _pfm = (id === 'price' && pulse.price_kind === 'estimate' &&
+                    pulse.formats && pulse.formats.length) ? pulse.formats : null;
         var nameTx = escapeHtml(m.label) +
-            (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '');
-        var rowTx = `<div class="pw-r"><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+            (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '') +
+            (_pfm ? ` <i class="ti ti-chevron-down pw-pch${pwPriceOpen ? ' up' : ''}"></i>` : '');
+        var rowTx = `<div class="pw-r${_pfm ? ' pw-tap' : ''}"${_pfm ? ' id="pw-price-row"' : ''}><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+        if (_pfm) rowTx += pwPricePanel(pulse);
         if (id === 'cpf') {
             var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
             rowTx += `<div class="pw-hintbox${pwCpfHintOpen ? ' open' : ''}" id="pw-cpf-hint"><div class="in">` +
@@ -833,6 +897,15 @@ function pwRenderMetrics(pulse) {
         cpfI.classList.toggle('on', pwCpfHintOpen);
         var hb = document.getElementById('pw-cpf-hint');
         if (hb) hb.classList.toggle('open', pwCpfHintOpen);
+    };
+    var prow = document.getElementById('pw-price-row');
+    if (prow) prow.onclick = () => {
+        hapticLight();
+        pwPriceOpen = !pwPriceOpen;
+        var bx = document.getElementById('pw-price-box');
+        if (bx) bx.classList.toggle('open', pwPriceOpen);
+        var ch = prow.querySelector('.pw-pch');
+        if (ch) ch.classList.toggle('up', pwPriceOpen);
     };
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
