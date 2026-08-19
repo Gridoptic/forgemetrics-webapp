@@ -3094,7 +3094,7 @@ function renderTariffs(d) {
             `<div class="fw-bal">${forgeAmount(balH, 22)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
         `</div></div>`;
-    html += '<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n"><span>Без тарифов и подписок</span></div><div class="s"><span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div></div></div>';
+    html += '<div class="tf-note"><b>Без тарифов и подписок</b> — <span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
