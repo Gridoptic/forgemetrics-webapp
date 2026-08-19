@@ -3087,14 +3087,12 @@ function renderTariffs(d) {
     if (!body) return;
     const balH = Number(d.forge_balance || 0);
     const grantH = Number(d.forge_grant || 0);
-    const pctH = grantH > 0 ? Math.min(100, Math.round(balH / grantH * 100)) : 0;
     const lowH = grantH > 0 && balH < grantH * 0.15;
     let html = `<div class="cab-card" style="margin-bottom:10px;">` +
         `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> Баланс Forge</h3></div>` +
-        `<div class="fw-hero${lowH ? ' low' : ''}">` +
-            `<div class="fw-bal">${forgeAmount(balH, 26)}</div>` +
+        `<div class="fw-balrow${lowH ? ' low' : ''}">` +
+            `<div class="fw-bal">${forgeAmount(balH, 22)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
-            (grantH > 0 ? `<div class="fw-bar"><i style="width:${pctH}%"></i></div>` : '') +
         `</div></div>`;
     html += '<div class="tf-cur free"><div class="ic"><i class="ti ti-sparkles"></i></div><div class="t"><div class="n"><span>Без тарифов и подписок</span></div><div class="s"><span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div></div></div>';
     const packs = (d.forge_packs || []).map((p) =>
