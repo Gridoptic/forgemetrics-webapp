@@ -2757,7 +2757,7 @@
             var pct = budget > 0 ? Math.min(100, Math.round(spent / budget * 100)) : 0;
             var h = '<div class="fmx-mgrid">' +
                 _modStatTile('Пользователей', _num(u.total), 'всего') +
-                _modStatTile('Платных', _num(u.paid), 'на подписке') +
+                _modStatTile('Платных', _num(u.paid), 'с покупками') +
                 _modStatTile('Выручка / мес', _num(r.revenue_month_rub) + ' ₽', 'оплачено') +
                 '</div>';
             h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Расходы на ИИ<em>' + pct + '% бюджета</em></div>' +
@@ -2939,7 +2939,7 @@
                     '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Уровень</span><b>' + _esc(u.referral_level) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Платных рефералов</span><b>' + _num(u.paid_referrals) + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Кредиты</span><b>' + _num(u.credits_rub) + ' ₽</b></div>' +
+                    '<div class="fmx-mstatrow"><span>Баланс Forge</span><b>' + _num(u.forge_balance) + '</b></div>' +
                     '<div class="fmx-mstatrow"><span>Расход за месяц</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' выз.</b></div>' +
                     '<div class="fmx-mstatrow"><span>Регистрация</span><b>' + _esc(u.created_at) + '</b></div>' +
                     (u.username && u.username !== '—'
