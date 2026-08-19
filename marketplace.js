@@ -4456,7 +4456,7 @@
                 '<textarea id="fmx-nbText" maxlength="400" style="width:100%;min-height:96px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8ed;font-family:inherit;font-size:13px;padding:11px 12px;resize:vertical;">' + _esc(_nb.text) + '</textarea>' +
                 '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-top:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Можно оставить пустым — текст возьмётся стандартный. Оформление у всех будет базовое: доведёшь позже в карточке любого оффера.</span></div>';
             foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"><span>Дальше</span></button>' +
-                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><span>Назад</span></button>';
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>Назад</span></button>';
             el('fmx-nbNext').addEventListener('click', function () {
                 _nb.text = (el('fmx-nbText') || {}).value || '';
                 _haptic('light'); _nb.step = 3; nbPaint();
@@ -4476,7 +4476,7 @@
                 '</div>' +
                 '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Офферы создадутся сразу и уйдут на модерацию по очереди в фоне. Приложение можно закрыть — бот пришлёт итог.</span></div>';
             foot.innerHTML = '<button class="fmx-save" id="fmx-nbGo"><i class="ti ti-rocket"></i> <span>Создать офферы</span> <span class="num">· ' + cnt + '</span></button>' +
-                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><span>Назад</span></button>';
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>Назад</span></button>';
             el('fmx-nbBack').addEventListener('click', function () { _haptic('light'); _nb.step = 2; nbPaint(); });
             el('fmx-nbGo').addEventListener('click', function () {
                 var ids = nbSelIds(); if (!ids.length) return;

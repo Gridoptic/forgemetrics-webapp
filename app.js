@@ -4783,7 +4783,7 @@ async function openChannelSettingsScreen(channelId) {
             <div class="channel-settings-loading">
                 <i class="ti ti-alert-triangle" style="font-size: 28px; color: #F0997B;"></i>
                 <div>Не удалось загрузить настройки</div>
-                <button class="btn-secondary" onclick="closeChannelSettings()">Назад</button>
+                <button class="cs-errback" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i><span>Назад</span></button>
             </div>
         `;
     }

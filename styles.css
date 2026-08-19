@@ -2980,6 +2980,32 @@ body,
     font-size: 13px;
 }
 
+.cs-errback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 18px;
+    border-radius: 11px;
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.72);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cs-errback i {
+    font-size: 15px;
+    line-height: 1;
+    display: block;
+}
+
+.cs-errback:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .cs-header {
     display: flex;
     align-items: center;

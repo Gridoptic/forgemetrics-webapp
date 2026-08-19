@@ -313,7 +313,7 @@
             '<div class="stg-note" style="margin:-2px 0 10px;">' + esc(T(st.note)) + '</div>' +
             body +
             '<button class="stg-next" data-act="next">' + esc(nextLabel) + '</button>' +
-            (_ivStep > 0 ? '<button class="stg-prev" data-act="prev">← ' + esc(T('Назад')) + '</button>' : '') +
+            (_ivStep > 0 ? '<button class="stg-prev" data-act="prev"><i class="ti ti-arrow-left"></i>' + esc(T('Назад')) + '</button>' : '') +
             '</div>');
     }
 
