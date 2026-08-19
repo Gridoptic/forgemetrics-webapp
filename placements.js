@@ -19,12 +19,6 @@
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} }
     function num(n) { try { return new Intl.NumberFormat('ru-RU').format(n); } catch (e) { return String(n); } }
     function rub(v) { return (v > 0 ? num(v) : '<1') + ' ₽'; }
-    function plural3(n, one, few, many) {
-        var a = n % 10, b = n % 100;
-        if (a === 1 && b !== 11) return one;
-        if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
-        return many;
-    }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function avInner(title, url) {
         return esc(String(title || '?').trim().charAt(0).toUpperCase() || '?') +
@@ -68,12 +62,17 @@
             '.pl-eava i.g{background:#5DCAA5;}',
             '.pl-eava i.p{background:#fbbf5f;}',
             '.pl-eava i.o{background:#565b73;}',
-            '.pl-echips{display:flex;gap:4px;margin-top:3px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);}',
-            '.pl-echip{display:inline-flex;align-items:baseline;gap:3px;font-size:9px;font-weight:700;padding:2.5px 7px;border-radius:6px;color:#e8eaf1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
-            '.pl-echip em{font-style:normal;font-weight:600;font-size:8.5px;color:#565b73;}',
-            '.pl-echip.gg{color:#5DCAA5;background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);}',
-            '.pl-echip.gg em{color:rgba(93,202,165,0.7);}',
-            '.pl-echip.off{color:#8990a8;}',
+            '.pl-erow{display:flex;align-items:center;gap:7px;margin-top:5px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent);}',
+            '.pl-fst{font-size:9px;font-weight:700;color:#8990a8;white-space:nowrap;flex:0 0 auto;}',
+            '.pl-fun{display:inline-flex;flex:0 0 auto;border:1px solid rgba(255,255,255,0.10);border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.02);}',
+            '.pl-fseg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 9px 2.5px;border-left:1px solid rgba(255,255,255,0.07);min-width:0;}',
+            '.pl-fseg:first-child{border-left:none;}',
+            '.pl-fseg b{font-size:10.5px;font-weight:800;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums;}',
+            '.pl-fseg em{font-style:normal;font-size:6.5px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:#565b73;white-space:nowrap;margin-top:1px;}',
+            '.pl-fseg.gg{background:rgba(93,202,165,0.07);}',
+            '.pl-fseg.gg b{color:#5DCAA5;}',
+            '.pl-fseg.gg em{color:rgba(93,202,165,0.65);}',
+            '.pl-fpr{font-size:10px;color:#8990a8;white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf b{display:block;font-size:13.5px;font-weight:800;line-height:1.1;}',
             '.pl-ecpf em{display:block;font-style:normal;font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
@@ -615,17 +614,16 @@
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
         var joinedN = l.joined || 0;
         var impB = effImp(l);
-        var chips = [];
-        if (!active) chips.push('<span class="pl-echip off">' + esc(T('отключена')) + '</span>');
-        else if (_chPaused) chips.push('<span class="pl-echip off">' + esc(T('канал на паузе')) + '</span>');
-        if (l.placement_format && _fmtMap[l.placement_format]) chips.push('<span class="pl-echip">' + esc(T(_fmtMap[l.placement_format])) + '</span>');
-        if (impB) chips.push('<span class="pl-echip">' + num(impB) + (l.views_scan == null ? '≈' : '') +
-            ' <em>' + esc(T(plural3(impB, 'показ', 'показа', 'показов'))) + '</em></span>');
-        if (l.clicks != null) chips.push('<span class="pl-echip">' + num(l.clicks) +
-            ' <em>' + esc(T(plural3(l.clicks, 'переход', 'перехода', 'переходов'))) + '</em></span>');
-        chips.push('<span class="pl-echip' + (joinedN ? ' gg' : '') + '">+' + num(joinedN) +
-            ' <em>' + esc(T(plural3(joinedN, 'подписка', 'подписки', 'подписок'))) + '</em></span>');
-        if (l.price_rub) chips.push('<span class="pl-echip">' + num(l.price_rub) + ' ₽ <em>' + esc(T('цена')) + '</em></span>');
+        var st = '';
+        if (!active) st = '<span class="pl-fst">' + esc(T('отключена')) + '</span>';
+        else if (_chPaused) st = '<span class="pl-fst">' + esc(T('канал на паузе')) + '</span>';
+        var fun = st +
+            '<span class="pl-fun">' +
+            '<span class="pl-fseg"><b>' + (impB ? num(impB) + (l.views_scan == null ? '≈' : '') : '—') + '</b><em>' + esc(T('Показы')) + '</em></span>' +
+            '<span class="pl-fseg"><b>' + (l.clicks != null ? num(l.clicks) : '—') + '</b><em>' + esc(T('Клики')) + '</em></span>' +
+            '<span class="pl-fseg gg"><b>+' + num(joinedN) + '</b><em>' + esc(T('Подписки')) + '</em></span>' +
+            '</span>' +
+            (l.price_rub ? '<span class="pl-fpr">' + num(l.price_rub) + ' ₽</span>' : '');
         var letter = String(l.seller_username || l.name || '?').charAt(0).toUpperCase();
         var right = l.cpf != null
             ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em></div>'
@@ -634,7 +632,7 @@
             '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
             '<span class="pl-eava">' + esc(letter) + '<i class="' + dot + '"></i></span>' +
             '<div class="pl-amid"><div class="pl-anm">' + esc(l.name) + '</div>' +
-            '<div class="pl-echips">' + chips.join('') + '</div></div>' +
+            '<div class="pl-erow">' + fun + '</div></div>' +
             right +
             '<i class="ti ti-chevron-down pl-accc"></i></div>' +
             '<div class="pl-accb"' + (open ? ' style="max-height:none;"' : '') + '><div class="pl-acci">' + accBody(l) + '</div></div></div>';
@@ -673,9 +671,9 @@
             : { k: T('Показы'), v: '—', dim: 1, c: T('указать') });
         if (l.clicks != null) {
             var ctr = (impEff >= 100 && !badImp && l.clicks && l.clicks <= impEff) ? 'CTR ' + (softEst ? '≈' : '') + (Math.round(l.clicks / impEff * 1000) / 10) + '%' : 'CTR —';
-            tiles.push({ k: T('Переходы'), v: num(l.clicks), c: ctr });
+            tiles.push({ k: T('Клики'), v: num(l.clicks), c: ctr });
         } else {
-            tiles.push({ k: T('Переходы'), v: '—', dim: 1, c: T('прямая ссылка') });
+            tiles.push({ k: T('Клики'), v: '—', dim: 1, c: T('прямая ссылка') });
         }
         var prevV = l.clicks != null ? l.clicks : (impEff || 0);
         var subJ = (prevV > 0 && joinedN <= prevV && !badImp) ? (Math.round(joinedN / prevV * 1000) / 10) + '%' : '';
