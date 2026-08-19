@@ -813,7 +813,7 @@ function pwRenderMetrics(pulse) {
             valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
         var nameTx = escapeHtml(m.label) +
-            (id === 'cpf' ? ' <i id="pw-cpf-i" class="ti ti-info-circle" style="font-size:11px;color:#4a4d61;cursor:pointer;"></i>' : '');
+            (id === 'cpf' ? ' <span id="pw-cpf-i" class="pw-hintq">?</span>' : '');
         return `<div class="pw-r"><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
     }).join('');
     pwCountUp(grid);

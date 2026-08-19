@@ -4669,6 +4669,12 @@ html.cs-modal-open {
 .pw-r{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);min-width:0;}
 .pw-r:last-child{border-bottom:none;}
 .pw-r .n{font-size:11px;color:var(--text-secondary);flex-shrink:0;}
+.pw-hintq{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:5px;margin-left:2px;vertical-align:-4px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);
+  color:#6b7088;font-size:9.5px;font-weight:800;cursor:pointer;}
+.pw-hintq::after{content:"";position:absolute;inset:-8px;}
+.pw-hintq:active{color:#c6cdde;background:rgba(255,255,255,0.09);}
 .pw-r .rv{display:flex;align-items:baseline;gap:8px;min-width:0;}
 .pw-r .s{font-size:10px;color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}
 .pw-r .s .up{color:#5DCAA5;font-weight:700;}
