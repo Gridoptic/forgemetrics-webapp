@@ -4906,8 +4906,6 @@ html.cs-modal-open {
 .rf-lvlnow .sub{font-size:11.5px;color:var(--rfx3);margin-top:1px;}
 .rf-lvlnext{font-size:11.5px;color:var(--rfx2);text-align:right;line-height:1.5;flex:0 0 auto;}
 .rf-lvlnext b{color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums;}
-.rf-bar{height:6px;border-radius:99px;background:rgba(255,255,255,0.06);margin-top:13px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);}
-.rf-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc-str),var(--acc));box-shadow:0 0 14px -1px var(--glow);}
 .rf-ladder{margin-top:16px;}
 .rf-step{position:relative;display:flex;gap:14px;padding:10px 0;align-items:flex-start;}
 .rf-rail{position:absolute;left:8px;top:0;bottom:0;width:1.5px;background:var(--rfstrokehi);}

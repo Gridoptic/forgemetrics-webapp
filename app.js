@@ -2391,7 +2391,6 @@ function refCardHtml(r) {
       <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">твой уровень</div></div></div>
       <div class="rf-lvlnext">${nextLine}</div>
     </div>
-    <div class="rf-bar"><i style="width:${Math.max(4, Math.min(100, r.progress_pct || 0))}%"></i></div>
     ${cabRefLadder(r)}
   </div>
 
