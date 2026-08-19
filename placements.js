@@ -212,7 +212,9 @@
             '.pl-year{color:#2f6bff;font-weight:800;}',
             '.pl-prem{color:#5DCAA5;font-weight:800;}',
             '.pl-days{display:flex;gap:5px;align-items:flex-end;overflow-x:auto;padding:4px 0 2px;}',
-            '.pl-dcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:22px;flex:0 0 auto;}',
+            '.pl-dcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:22px;flex:0 0 auto;padding:3px 3px 2px;border:1px solid transparent;border-radius:6px;}',
+            '.pl-dcol.sel{border-color:rgba(129,140,248,0.55);background:rgba(129,140,248,0.10);}',
+            '.pl-jdyn{padding:2px 14px 0;flex-shrink:0;}',
             '.pl-dbar{width:12px;border-radius:3px;}',
             '.pl-dbar.j{background:#5DCAA5;}',
             '.pl-dbar.l{background:#ef4444;margin-top:1px;}',
@@ -1428,14 +1430,14 @@
         } catch (e) { return ''; }
     }
 
-    function daysChart(daily, linkId) {
+    function daysChart(daily, linkId, selDay) {
         if (!daily || !daily.length) return '';
         var mx = 1;
         daily.forEach(function (b) { if (b.j > mx) mx = b.j; if (b.l > mx) mx = b.l; });
         var cols = daily.slice(-31).map(function (b) {
             var jh = b.j ? Math.max(3, Math.round(b.j / mx * 30)) : 0;
             var lh = b.l ? Math.max(3, Math.round(b.l / mx * 30)) : 0;
-            return '<div class="pl-dcol tap" data-act="jday" data-id="' + linkId + '" data-day="' + b.d + '">' +
+            return '<div class="pl-dcol tap' + (selDay === b.d ? ' sel' : '') + '" data-act="jday" data-id="' + linkId + '" data-day="' + b.d + '">' +
                 '<div class="pl-dnum">' + (b.j || '') + '</div>' +
                 '<div class="pl-dbar j" style="height:' + jh + 'px;"></div>' +
                 '<div class="pl-dbar l" style="height:' + lh + 'px;"></div>' +
@@ -1533,6 +1535,7 @@
                 var act = el.getAttribute('data-act');
                 if (act === 'jclose') { closeJoinersSheet(); return; }
                 if (act === 'jalltime') { haptic('light'); _j.day = ''; _j.flt = 'all'; _j.off = 0; loadJ(true); return; }
+                if (act === 'jday') { haptic('light'); _j.day = el.getAttribute('data-day'); _j.flt = 'all'; _j.off = 0; loadJ(true); return; }
                 if (act === 'jflt') { haptic('light'); _j.flt = el.getAttribute('data-v'); _j.off = 0; loadJ(true); return; }
                 if (act === 'jmore') { _j.off += 50; loadJ(false); return; }
                 if (act === 'open-user') {
@@ -1547,6 +1550,7 @@
         ov.innerHTML = '<div class="pl-jsh">' +
             '<div class="pl-jt"><i class="ti ti-arrow-left pl-jback" data-act="jclose"></i>' + esc(T('Вступившие по ссылке')) + '</div>' +
             '<div class="pl-jc" id="pl-jc"></div>' +
+            '<div class="pl-jdyn" id="pl-jdyn"></div>' +
             '<div class="pl-jchips" id="pl-jchips"></div>' +
             '<div class="pl-jsrch"><i class="ti ti-search"></i><input id="pl-jq" maxlength="64" placeholder="' + esc(T('Поиск по имени или @юзернейму')) + '"></div>' +
             '<div class="pl-jbody" id="pl-jbody"></div></div>';
@@ -1590,6 +1594,11 @@
                     ? '<b class="d">' + esc(fmtDayShort(_j.day)) + '</b> · <span class="g">' + esc(T('вступили')) + ' ' + num(c.joined || 0) + '</span> · <span class="r">' + esc(T('вышли')) + ' ' + num(c.left || 0) + '</span>' +
                       ' · <span class="pl-jreset" data-act="jalltime">' + esc(T('за всё время')) + ' ✕</span>'
                     : esc(T('всего')) + ' <b>' + num(c.all || 0) + '</b> · <span class="g">' + esc(T('остались')) + ' ' + num(c.stayed || 0) + '</span> · <span class="r">' + esc(T('вышли')) + ' ' + num(c.left || 0) + '</span>';
+            }
+            var dyn = document.getElementById('pl-jdyn');
+            if (dyn && reset) {
+                dyn.innerHTML = (r.daily && r.daily.length)
+                    ? daysChart(r.daily, _j.id, _j.day) : '';
             }
             var chips = _j.day
                 ? [['all', T('Все'), c.all], ['joined', T('Вступили'), c.joined], ['left', T('Вышли'), c.left]]
