@@ -19,6 +19,12 @@
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} }
     function num(n) { try { return new Intl.NumberFormat('ru-RU').format(n); } catch (e) { return String(n); } }
     function rub(v) { return (v > 0 ? num(v) : '<1') + ' ₽'; }
+    function plural3(n, one, few, many) {
+        var a = n % 10, b = n % 100;
+        if (a === 1 && b !== 11) return one;
+        if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+        return many;
+    }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function avInner(title, url) {
         return esc(String(title || '?').trim().charAt(0).toUpperCase() || '?') +
@@ -63,9 +69,10 @@
             '.pl-eava i.p{background:#fbbf5f;}',
             '.pl-eava i.o{background:#565b73;}',
             '.pl-echips{display:flex;gap:4px;margin-top:3px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);}',
-            '.pl-echip{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;color:#8d93a8;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
-            '.pl-echip i{font-size:9px;color:#565b73;}',
+            '.pl-echip{display:inline-flex;align-items:baseline;gap:3px;font-size:9px;font-weight:700;padding:2.5px 7px;border-radius:6px;color:#e8eaf1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
+            '.pl-echip em{font-style:normal;font-weight:600;font-size:8.5px;color:#565b73;}',
             '.pl-echip.gg{color:#5DCAA5;background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);}',
+            '.pl-echip.gg em{color:rgba(93,202,165,0.7);}',
             '.pl-echip.off{color:#8990a8;}',
             '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf b{display:block;font-size:13.5px;font-weight:800;line-height:1.1;}',
@@ -612,10 +619,13 @@
         if (!active) chips.push('<span class="pl-echip off">' + esc(T('отключена')) + '</span>');
         else if (_chPaused) chips.push('<span class="pl-echip off">' + esc(T('канал на паузе')) + '</span>');
         if (l.placement_format && _fmtMap[l.placement_format]) chips.push('<span class="pl-echip">' + esc(T(_fmtMap[l.placement_format])) + '</span>');
-        if (impB) chips.push('<span class="pl-echip"><i class="ti ti-eye"></i>' + num(impB) + (l.views_scan == null ? '≈' : '') + '</span>');
-        if (l.clicks != null) chips.push('<span class="pl-echip"><i class="ti ti-pointer"></i>' + num(l.clicks) + '</span>');
-        chips.push('<span class="pl-echip' + (joinedN ? ' gg' : '') + '">+' + num(joinedN) + '</span>');
-        if (l.price_rub) chips.push('<span class="pl-echip">' + num(l.price_rub) + ' ₽</span>');
+        if (impB) chips.push('<span class="pl-echip">' + num(impB) + (l.views_scan == null ? '≈' : '') +
+            ' <em>' + esc(T(plural3(impB, 'показ', 'показа', 'показов'))) + '</em></span>');
+        if (l.clicks != null) chips.push('<span class="pl-echip">' + num(l.clicks) +
+            ' <em>' + esc(T(plural3(l.clicks, 'переход', 'перехода', 'переходов'))) + '</em></span>');
+        chips.push('<span class="pl-echip' + (joinedN ? ' gg' : '') + '">+' + num(joinedN) +
+            ' <em>' + esc(T(plural3(joinedN, 'подписка', 'подписки', 'подписок'))) + '</em></span>');
+        if (l.price_rub) chips.push('<span class="pl-echip">' + num(l.price_rub) + ' ₽ <em>' + esc(T('цена')) + '</em></span>');
         var letter = String(l.seller_username || l.name || '?').charAt(0).toUpperCase();
         var right = l.cpf != null
             ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em></div>'
