@@ -795,14 +795,14 @@ function pwPricePanel(pulse) {
             right = '<b>' + escapeHtml('≈' + pwRub(f.est) + ' ₽') + '</b><em>' +
                 escapeHtml(_tp('оценка')) + '</em>';
         }
-        return '<div class="pw-fr"><span class="fn">' + escapeHtml(_tp(meta[0])) + '</span>' +
-            '<span class="fs">' + escapeHtml(_tp(meta[1])) + '</span>' +
+        return '<div class="pw-fr"><span class="ft"><b>' + escapeHtml(_tp(meta[0])) + '</b>' +
+            '<em>' + escapeHtml(_tp(meta[1])) + '</em></span>' +
             '<span class="fp">' + right + '</span></div>';
     }).join('');
     var foot = hasOwn
         ? _tp('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.')
         : _tp('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.');
-    return '<div class="pw-hintbox' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
+    return '<div class="pw-hintbox big' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
         rows + '<div class="pw-pfoot">' + escapeHtml(foot) + '</div></div></div>';
 }
 
@@ -844,7 +844,7 @@ function pwRenderMetrics(pulse) {
                             ? ' ' + (pulse.own_pct > 0 ? '+' : '−') + Math.abs(pulse.own_pct) + '%' : '';
                         pill = `<span class="pw-rpill ${_ps[1] || 'ok'}">${escapeHtml(_ps[0] + _pctTx)}</span>`;
                     }
-                    sub = pill + `<span class="s">${escapeHtml(_tp('оценка') + ' · 1/24')}</span>`;
+                    sub = pill + `<span class="s">1/24</span>`;
                 } else {
                     sub = `<span class="s">${escapeHtml(_tp('оценка по замерам') + ' · 1/24 · ' + _tp('цена не задана'))}</span>`;
                 }
