@@ -64,6 +64,28 @@
             '.pl-amid{flex:1;min-width:0;}',
             '.pl-anm{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-amt{font-size:10px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-dcol.tap{cursor:pointer;border-radius:6px;}',
+            '.pl-dcol.tap:active{background:rgba(129,140,248,0.12);}',
+            '.pl-jall{margin-top:10px;}',
+            '.pl-jall u{text-decoration:none;color:#818cf8;font-weight:800;font-variant-numeric:tabular-nums;margin-left:4px;}',
+            '.pl-jov{position:fixed;inset:0;z-index:9980;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:flex-end;justify-content:center;}',
+            '.pl-jov.on{opacity:1;pointer-events:auto;}',
+            '.pl-jsh{width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;background:#10131b;border:1px solid rgba(255,255,255,0.09);border-bottom:none;border-radius:20px 20px 0 0;padding:0 0 env(safe-area-inset-bottom);transform:translateY(24px);transition:transform .22s;}',
+            '.pl-jov.on .pl-jsh{transform:translateY(0);}',
+            '.pl-jgrip{width:36px;height:4px;border-radius:99px;background:rgba(255,255,255,0.14);margin:9px auto 10px;flex-shrink:0;}',
+            '.pl-jt{display:flex;align-items:center;font-size:14px;font-weight:800;padding:0 14px;flex-shrink:0;}',
+            '.pl-jx{margin-left:auto;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b7088;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);cursor:pointer;}',
+            '.pl-jc{font-size:10.5px;color:#8990a8;padding:5px 14px 0;flex-shrink:0;}',
+            '.pl-jc b{color:#e8eaf1;} .pl-jc .d{color:#818cf8;} .pl-jc .g{color:#5DCAA5;} .pl-jc .r{color:#ef8080;}',
+            '.pl-jreset{color:#818cf8;font-weight:700;cursor:pointer;}',
+            '.pl-jchips{display:flex;gap:6px;padding:10px 14px 4px;flex-wrap:wrap;flex-shrink:0;}',
+            '.pl-jchip{font-size:10.5px;font-weight:700;padding:6px 11px;border-radius:99px;cursor:pointer;color:#8990a8;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.1);}',
+            '.pl-jchip.on{color:#818cf8;background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.5);}',
+            '.pl-jsrch{display:flex;align-items:center;gap:7px;margin:8px 14px 4px;padding:8px 12px;border-radius:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#565b73;flex-shrink:0;}',
+            '.pl-jsrch input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:#e8eaf1;font-family:inherit;font-size:11.5px;}',
+            '.pl-jbody{flex:1;min-height:120px;overflow-y:auto;padding:2px 14px 12px;-webkit-overflow-scrolling:touch;}',
+            '.pl-jmore{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 4px;padding:10px;border-radius:11px;font-size:11.5px;font-weight:700;color:#c6cdde;cursor:pointer;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.12);}',
+            '.pl-jfoot{font-size:9.5px;color:#565b73;text-align:center;padding:6px 0 2px;}',
             '.pl-astat{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px;color:#8990a8;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;}',
             '.pl-astat i{font-size:11px;color:#565b73;flex-shrink:0;}',
             '.pl-astat s{text-decoration:none;color:#3a3f52;}',
@@ -1314,6 +1336,8 @@
             return;
         }
         if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'jall') { openJoinersSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'jday') { openJoinersSheet(parseInt(b.getAttribute('data-id'), 10), b.getAttribute('data-day')); return; }
         if (act === 'deal') { openDealPick(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'deal-pick') {
             var lid = parseInt(b.getAttribute('data-link'), 10);
@@ -1404,61 +1428,52 @@
         } catch (e) { return ''; }
     }
 
-    function daysChart(items) {
-        var buckets = {};
-        items.forEach(function (u) {
-            if (u.ts) {
-                var d = dayKey(u.ts);
-                if (d) (buckets[d] = buckets[d] || { j: 0, l: 0 }).j++;
-            }
-            if (u.left_ts) {
-                var d2 = dayKey(u.left_ts);
-                if (d2) (buckets[d2] = buckets[d2] || { j: 0, l: 0 }).l++;
-            }
-        });
-        var days = Object.keys(buckets).sort();
-        if (!days.length) return '';
-        var out = [];
-        var cur = new Date(days[0] + 'T00:00:00Z');
-        var end = new Date(days[days.length - 1] + 'T00:00:00Z');
-        var guard = 0;
-        while (cur <= end && guard < 31) {
-            var key = cur.toISOString().slice(0, 10);
-            out.push({ d: key, j: (buckets[key] || {}).j || 0, l: (buckets[key] || {}).l || 0 });
-            cur.setUTCDate(cur.getUTCDate() + 1);
-            guard++;
-        }
+    function daysChart(daily, linkId) {
+        if (!daily || !daily.length) return '';
         var mx = 1;
-        out.forEach(function (b) { if (b.j > mx) mx = b.j; if (b.l > mx) mx = b.l; });
-        var cols = out.map(function (b) {
+        daily.forEach(function (b) { if (b.j > mx) mx = b.j; if (b.l > mx) mx = b.l; });
+        var cols = daily.slice(-31).map(function (b) {
             var jh = b.j ? Math.max(3, Math.round(b.j / mx * 30)) : 0;
             var lh = b.l ? Math.max(3, Math.round(b.l / mx * 30)) : 0;
-            return '<div class="pl-dcol"><div class="pl-dnum">' + (b.j || '') + '</div>' +
+            return '<div class="pl-dcol tap" data-act="jday" data-id="' + linkId + '" data-day="' + b.d + '">' +
+                '<div class="pl-dnum">' + (b.j || '') + '</div>' +
                 '<div class="pl-dbar j" style="height:' + jh + 'px;"></div>' +
                 '<div class="pl-dbar l" style="height:' + lh + 'px;"></div>' +
                 '<div class="pl-dnum l2">' + (b.l || '') + '</div>' +
                 '<div class="pl-dday">' + b.d.slice(8, 10) + '.' + b.d.slice(5, 7) + '</div></div>';
         }).join('');
-        return '<div class="pl-fcap" style="margin-top:10px;">' + esc(T('Динамика по дням')) + '</div>' +
+        return '<div class="pl-fcap" style="margin-top:10px;">' + esc(T('Динамика по дням') + ' · ' + T('нажми на день')) + '</div>' +
             '<div class="pl-days">' + cols + '</div>' +
             '<div class="pl-qnote"><span style="color:#5DCAA5;">▮</span> ' + esc(T('вступления')) + ' · <span style="color:#ef4444;">▮</span> ' + esc(T('отписки')) + '</div>';
     }
 
-    function statsSummary(items) {
-        var total = items.length;
-        if (!total) return '';
-        var prem = 0, langs = {}, years = {};
-        items.forEach(function (u) {
-            if (u.premium) prem++;
-            if (u.lang) langs[u.lang] = (langs[u.lang] || 0) + 1;
-            if (u.acc_year) years[u.acc_year] = (years[u.acc_year] || 0) + 1;
-        });
-        var s = '<div class="pl-qnote"><span class="pl-prem">Premium</span>: ' + prem + ' ' + esc(T('из')) + ' ' + total + ' · ' + Math.round(prem / total * 100) + '%</div>';
-        var lk = Object.keys(langs).sort(function (a, b) { return langs[b] - langs[a]; }).slice(0, 4);
-        if (lk.length) s += '<div class="pl-qnote">' + esc(T('Языки:')) + ' ' + lk.map(function (k) { return esc(k) + ' ×' + langs[k]; }).join(' · ') + '</div>';
-        var yk = Object.keys(years).sort();
-        if (yk.length) s += '<div class="pl-qnote">' + esc(T('Годы аккаунтов:')) + ' ' + yk.map(function (k) { return '<span class="pl-year">≈' + esc(k) + '</span> ×' + years[k]; }).join(' · ') + '</div>';
+    function statsSummary(stats, total) {
+        if (!total || !stats) return '';
+        var s = '<div class="pl-qnote"><span class="pl-prem">Premium</span>: ' + (stats.premium || 0) + ' ' + esc(T('из')) + ' ' + total + ' · ' + Math.round((stats.premium || 0) / total * 100) + '%</div>';
+        var lk = stats.langs || [];
+        if (lk.length) s += '<div class="pl-qnote">' + esc(T('Языки:')) + ' ' + lk.map(function (p) { return esc(p[0]) + ' ×' + p[1]; }).join(' · ') + '</div>';
+        var yk = stats.years || [];
+        if (yk.length) s += '<div class="pl-qnote">' + esc(T('Годы аккаунтов:')) + ' ' + yk.map(function (p) { return '<span class="pl-year">≈' + esc(String(p[0])) + '</span> ×' + p[1]; }).join(' · ') + '</div>';
         return s;
+    }
+
+    function whoRow(u) {
+        var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
+        var bits = [];
+        if (u.username) bits.push(esc('@' + u.username));
+        bits.push(esc(fmtTime(u.ts)));
+        if (u.acc_year) bits.push('<span class="pl-year">≈' + esc(String(u.acc_year)) + '</span>');
+        if (u.premium) bits.push('<span class="pl-prem">Premium</span>');
+        var sub = bits.join(' · ');
+        var tags = '';
+        if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
+        else if (u.approx) tags += '<span class="pl-whotag late">≈ ' + esc(T('по клику')) + '</span>';
+        else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
+        var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
+        return '<div class="pl-whorow"' + open + '>' +
+            '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
+            '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
+            '<div class="pl-whosub">' + sub + (u.username ? '' : ' · ' + esc(T('профиль без @имени'))) + '</div></div>' + tags + '</div>';
     }
 
     function toggleWho(id) {
@@ -1477,38 +1492,20 @@
         box.style.display = 'block';
         apiRequest('/api/v1/placements/links/' + id + '/joiners').then(function (r) {
             if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
-            var items = r.items || [];
+            var q = r.quality || {};
+            var total = q.total || 0;
+            var recent = r.recent || [];
             var nolink = r.nolink_items || [];
-            if (!items.length && !nolink.length) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>'; return; }
-            function whoRow(u) {
-                var nm = u.first_name || (u.username ? '@' + u.username : ('ID ' + u.user_id));
-                var bits = [];
-                if (u.username) bits.push(esc('@' + u.username));
-                bits.push(esc(fmtTime(u.ts)));
-                if (u.acc_year) bits.push('<span class="pl-year">≈' + esc(String(u.acc_year)) + '</span>');
-                if (u.premium) bits.push('<span class="pl-prem">Premium</span>');
-                var sub = bits.join(' · ');
-                var tags = '';
-                if (u.left) tags += '<span class="pl-whotag left">' + esc(T('вышел')) + '</span>';
-                else if (u.approx) tags += '<span class="pl-whotag late">≈ ' + esc(T('по клику')) + '</span>';
-                else if (u.late) tags += '<span class="pl-whotag late">' + esc(T('поздний')) + '</span>';
-                var open = u.username ? ' data-act="open-user" data-u="' + esc(u.username) + '"' : '';
-                return '<div class="pl-whorow"' + open + '>' +
-                    '<div class="pl-whoav">' + esc(String(nm).charAt(0).toUpperCase()) + '</div>' +
-                    '<div class="pl-whomid"><div class="pl-whonm">' + esc(nm) + '</div>' +
-                    '<div class="pl-whosub">' + sub + (u.username ? '' : ' · ' + esc(T('профиль без @имени'))) + '</div></div>' + tags + '</div>';
-            }
             var nolinkHtml = '';
             if (nolink.length) {
                 nolinkHtml = '<div class="pl-nolink-hd">' + esc(T('Пришли сами в эти дни')) + ' · ' + nolink.length + ' <span style="font-size:9.5px;font-weight:600;color:#565b73;">' + esc(T('без ссылки')) + '</span></div>' +
                     '<div class="pl-qnote">' + esc(T('Зашли через @имя канала, из поиска или по пересланному посту — Telegram не сообщает их источник. Могут быть и от рекламы, и органикой.')) + '</div>' +
-                    nolink.map(whoRow).join('');
+                    nolink.slice(0, 20).map(whoRow).join('');
             }
-            if (!items.length) {
+            if (!total) {
                 box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Пока никто не вступил по этой ссылке')) + '</div>' + nolinkHtml;
                 return;
             }
-            var q = r.quality || {};
             var head = '';
             var ch = q.churn || {};
             if ((q.left || 0) > 0) {
@@ -1521,13 +1518,123 @@
             if (q.digit_names) flags.push(esc(T('юзернеймы с цифрами')) + ': ' + q.digit_names);
             if (q.no_username) flags.push(esc(T('без @имени')) + ': ' + q.no_username);
             if (flags.length) head += '<div class="pl-qnote">' + flags.join(' · ') + '</div>';
-            head += statsSummary(items) + daysChart(items);
+            head += statsSummary(r.stats, total) + daysChart(r.daily, id);
             var susp = (q.fresh_2024 || 0) + (q.digit_names || 0);
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
             }
-            box.innerHTML = head + items.map(whoRow).join('') + nolinkHtml;
+            box.innerHTML = head + recent.map(whoRow).join('') +
+                '<button class="pl-dbtn pl-jall" data-act="jall" data-id="' + id + '"><i class="ti ti-users"></i><span>' +
+                esc(T('Все вступившие')) + '</span><u>' + num(total) + '</u></button>' + nolinkHtml;
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
+    }
+
+    var _j = null;
+    function openJoinersSheet(id, day) {
+        _j = { id: id, day: day || '', flt: 'all', q: '', off: 0, total: 0, busy: false };
+        var ov = document.getElementById('pl-jov');
+        if (!ov) {
+            ov = document.createElement('div');
+            ov.id = 'pl-jov';
+            ov.className = 'pl-jov';
+            document.body.appendChild(ov);
+            ov.addEventListener('click', function (e) {
+                if (e.target === ov) { closeJoinersSheet(); return; }
+                var el = e.target.closest ? e.target.closest('[data-act]') : null;
+                if (!el) return;
+                var act = el.getAttribute('data-act');
+                if (act === 'jclose') { closeJoinersSheet(); return; }
+                if (act === 'jalltime') { haptic('light'); _j.day = ''; _j.flt = 'all'; _j.off = 0; loadJ(true); return; }
+                if (act === 'jflt') { haptic('light'); _j.flt = el.getAttribute('data-v'); _j.off = 0; loadJ(true); return; }
+                if (act === 'jmore') { _j.off += 50; loadJ(false); return; }
+                if (act === 'open-user') {
+                    var uu = el.getAttribute('data-u');
+                    if (!uu) return;
+                    try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) { tg.openTelegramLink('https://t.me/' + uu); return; } } catch (e2) {}
+                    try { window.open('https://t.me/' + uu, '_blank'); } catch (e3) {}
+                    return;
+                }
+            });
+        }
+        ov.innerHTML = '<div class="pl-jsh"><div class="pl-jgrip"></div>' +
+            '<div class="pl-jt">' + esc(T('Вступившие по ссылке')) +
+            '<i class="ti ti-x pl-jx" data-act="jclose"></i></div>' +
+            '<div class="pl-jc" id="pl-jc"></div>' +
+            '<div class="pl-jchips" id="pl-jchips"></div>' +
+            '<div class="pl-jsrch"><i class="ti ti-search"></i><input id="pl-jq" maxlength="64" placeholder="' + esc(T('Поиск по имени или @юзернейму')) + '"></div>' +
+            '<div class="pl-jbody" id="pl-jbody"></div></div>';
+        var inp = document.getElementById('pl-jq');
+        var _qt = null;
+        inp.addEventListener('input', function () {
+            if (_qt) clearTimeout(_qt);
+            _qt = setTimeout(function () {
+                var v = inp.value.trim();
+                if (v === _j.q) return;
+                _j.q = v; _j.off = 0; loadJ(true);
+            }, 350);
+        });
+        ov.classList.add('on');
+        haptic('light');
+        loadJ(true);
+    }
+
+    function closeJoinersSheet() {
+        var ov = document.getElementById('pl-jov');
+        if (ov) ov.classList.remove('on');
+    }
+
+    function fmtDayShort(d) { return d ? d.slice(8, 10) + '.' + d.slice(5, 7) : ''; }
+
+    function loadJ(reset) {
+        if (!_j || _j.busy) return;
+        _j.busy = true;
+        var body = document.getElementById('pl-jbody');
+        if (reset && body) body.innerHTML = '<div class="pl-center" style="padding:14px 0;">' + esc(T('Загружаю...')) + '</div>';
+        var url = '/api/v1/placements/links/' + _j.id + '/joiners/list?filter=' + encodeURIComponent(_j.flt) +
+            '&q=' + encodeURIComponent(_j.q) + '&day=' + encodeURIComponent(_j.day) + '&offset=' + _j.off;
+        apiRequest(url).then(function (r) {
+            _j.busy = false;
+            if (!r || !r.ok) { if (body) body.innerHTML = '<div class="pl-center" style="padding:14px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
+            _j.total = r.total || 0;
+            var c = r.counts || {};
+            var hc = document.getElementById('pl-jc');
+            if (hc) {
+                hc.innerHTML = _j.day
+                    ? '<b class="d">' + esc(fmtDayShort(_j.day)) + '</b> · <span class="g">' + esc(T('вступили')) + ' ' + num(c.joined || 0) + '</span> · <span class="r">' + esc(T('вышли')) + ' ' + num(c.left || 0) + '</span>' +
+                      ' · <span class="pl-jreset" data-act="jalltime">' + esc(T('за всё время')) + ' ✕</span>'
+                    : esc(T('всего')) + ' <b>' + num(c.all || 0) + '</b> · <span class="g">' + esc(T('остались')) + ' ' + num(c.stayed || 0) + '</span> · <span class="r">' + esc(T('вышли')) + ' ' + num(c.left || 0) + '</span>';
+            }
+            var chips = _j.day
+                ? [['all', T('Все'), c.all], ['joined', T('Вступили'), c.joined], ['left', T('Вышли'), c.left]]
+                : [['all', T('Все'), c.all], ['stayed', T('Остались'), c.stayed], ['left', T('Вышли'), c.left], ['premium', 'Premium', c.premium]];
+            var chEl = document.getElementById('pl-jchips');
+            if (chEl) {
+                chEl.innerHTML = chips.map(function (p) {
+                    return '<span class="pl-jchip' + (_j.flt === p[0] ? ' on' : '') + '" data-act="jflt" data-v="' + p[0] + '">' +
+                        esc(p[1]) + ' · ' + num(p[2] || 0) + '</span>';
+                }).join('');
+            }
+            var rows = (r.items || []).map(whoRow).join('');
+            var shown = _j.off + (r.items || []).length;
+            var more = shown < _j.total
+                ? '<div class="pl-jmore" data-act="jmore">' + esc(T('Показать ещё')) + ' ' + num(Math.min(50, _j.total - shown)) + ' ↓</div>'
+                : '';
+            var foot = _j.total
+                ? '<div class="pl-jfoot">' + esc(T('Показано')) + ' ' + num(shown) + ' ' + esc(T('из')) + ' ' + num(_j.total) + '</div>'
+                : '<div class="pl-center" style="padding:14px 0;">' + esc(T('Ничего не найдено')) + '</div>';
+            if (!body) return;
+            if (reset) body.innerHTML = rows + more + foot;
+            else {
+                var oldMore = body.querySelector('.pl-jmore');
+                var oldFoot = body.querySelector('.pl-jfoot');
+                if (oldMore) oldMore.remove();
+                if (oldFoot) oldFoot.remove();
+                body.insertAdjacentHTML('beforeend', rows + more + foot);
+            }
+        }).catch(function () {
+            _j.busy = false;
+            if (body) body.innerHTML = '<div class="pl-center" style="padding:14px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>';
+        });
     }
 
     window.__openPlacementsCreate = function (uname) {
