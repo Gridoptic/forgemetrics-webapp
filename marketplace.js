@@ -2430,11 +2430,11 @@
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
     }
 
-    var _mod = { q: null, ov: null, ctrl: null, act: null, open: {}, actState: 'idle', done: {}, err: {}, sigTasks: '', sigSecs: '', gen: 0, usersOpen: false };
+    var _mod = { q: null, ov: null, ctrl: null, act: null, open: {}, actState: 'idle', done: {}, err: {}, sigTasks: '', sigSecs: '', gen: 0, usersOpen: false, fetchSeq: 0, resolveSeq: 0 };
 
     function renderMod() {
         var host = el('fmx-main');
-        _mod.done = {}; _mod.sigTasks = ''; _mod.sigSecs = ''; _mod.gen++;
+        _mod.done = {}; _mod.sigTasks = ''; _mod.sigSecs = ''; _mod.gen++; _mod.resolveSeq = _mod.fetchSeq;
         _mod.q = null; _mod.ov = null; _mod.act = null; _mod.actState = 'idle'; _mod.err = {}; _mod.usersOpen = false;
         host.innerHTML =
             '<div id="fmx-mlamps" class="fmx-lamps"></div>' +
@@ -2443,16 +2443,17 @@
             '<div id="fmx-msecs"></div>' +
             '<div class="fmx-modfoot">Обновляется автоматически</div>';
         _modPaintLamps();
+        _modPaintSections();
         _modLoad();
     }
 
     function _modLoad(quiet) {
-        var gen = _mod.gen;
+        var gen = _mod.gen, seq = ++_mod.fetchSeq;
         function stale() { return _mainTab !== 'mod' || gen !== _mod.gen; }
         apiGet('/api/v1/admin/queue').then(function (r) {
             if (stale()) return;
             _mod.err.q = !r || r.ok === false;
-            if (!_mod.err.q) _mod.q = r;
+            if (!_mod.err.q) { _mod.q = r; _modReconcileDone(r, seq); }
             _modPaintLamps(); _modPaintVerdict(); _modPaintTasks(quiet);
         }).catch(function () { if (stale()) return; _mod.err.q = true; _modPaintLamps(); _modPaintVerdict(); _modPaintTasks(quiet); });
 
@@ -2471,6 +2472,15 @@
                 _modPaintLamps(); _modPaintSections();
             }).catch(function () { if (stale()) return; _mod.err.ctrl = true; _modPaintLamps(); _modPaintSections(); });
         }
+    }
+
+    function _modReconcileDone(r, seq) {
+        if (seq <= _mod.resolveSeq) return;
+        var live = {};
+        (r.listings || []).forEach(function (l) { live['l' + l.id] = 1; });
+        (r.requests || []).forEach(function (x) { live['r' + x.id] = 1; });
+        Object.keys(_mod.done).forEach(function (k) { delete _mod.done[k]; });
+        Object.keys(live).forEach(function (k) { delete _mod.done[k]; });
     }
 
     function _modTasks() {
@@ -2496,14 +2506,15 @@
                 '<div class="n">' + (n === 0 ? 'пусто' : n + ' ' + _plural(n, 'задача', 'задачи', 'задач')) + '</div></button>';
         }
 
-        if (_mod.err.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Бюджет ИИ</div><div class="n">нет связи</div></div>';
-        else if (!_mod.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Бюджет ИИ</div><div class="n">…</div></div>';
+        if (_mod.err.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Расход ИИ</div><div class="n">нет связи</div></div>';
+        else if (!_mod.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Расход ИИ</div><div class="n">…</div></div>';
         else {
             var s = _mod.ov.spend || {}, bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
             var pct = bud > 0 ? (sp / bud * 100) : 0;
             var cls = pct >= 80 ? 'bad' : (pct >= 60 ? 'warn' : 'ok');
-            h += '<button class="fmx-lamp ' + cls + '" data-lamp="money"><span class="dot"></span><div class="k">Бюджет ИИ</div>' +
-                '<div class="n">' + (bud > 0 ? (pct < 1 && pct > 0 ? '<1%' : Math.round(pct) + '%') : '$' + sp.toFixed(2)) + '</div></button>';
+            h += '<button class="fmx-lamp ' + cls + '" data-lamp="money"><span class="dot"></span>' +
+                '<div class="k">Расход ИИ</div>' +
+                '<div class="n">$' + (sp >= 100 ? Math.round(sp) : sp.toFixed(2)) + '</div></button>';
         }
 
         if (_isOwner()) {
@@ -2511,7 +2522,7 @@
             else if (!_mod.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Проверка</div><div class="n">…</div></div>';
             else {
                 var on = !!_mod.ctrl.moderation_enabled;
-                h += '<button class="fmx-lamp ' + (on ? 'ok' : 'bad') + '" data-lamp="access"><span class="dot"></span><div class="k">Проверка офферов</div>' +
+                h += '<button class="fmx-lamp ' + (on ? 'ok' : 'bad') + '" data-lamp="access"><span class="dot"></span><div class="k">Проверка</div>' +
                     '<div class="n">' + (on ? 'включена' : 'выключена') + '</div></button>';
             }
         }
@@ -2934,6 +2945,7 @@
     }
     function _modResolve(key, label) {
         _mod.done[key] = 1;
+        _mod.resolveSeq = _mod.fetchSeq;
         var card = document.querySelector('[data-task="' + key + '"]');
         if (card) {
             card.classList.add('done');
