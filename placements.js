@@ -57,13 +57,21 @@
             '.pl-acc{background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
             '.pl-acc.open{border-color:rgba(99,102,241,0.3);}',
             '.pl-acch{display:flex;align-items:center;gap:10px;padding:12px 13px;cursor:pointer;user-select:none;min-height:44px;box-sizing:border-box;}',
-            '.pl-dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}',
-            '.pl-dot.g{background:#5DCAA5;box-shadow:0 0 6px rgba(93,202,165,0.5);}',
-            '.pl-dot.p{background:#fbbf5f;box-shadow:0 0 6px rgba(245,191,79,0.4);}',
-            '.pl-dot.o{background:#565b73;}',
+            '.pl-eava{position:relative;width:34px;height:34px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#aeb6cf;background:linear-gradient(140deg,#2a3350,#171d30);border:1px solid rgba(255,255,255,0.08);}',
+            '.pl-eava i{position:absolute;right:-2px;bottom:-2px;width:9px;height:9px;border-radius:50%;border:2px solid #12151d;font-style:normal;}',
+            '.pl-eava i.g{background:#5DCAA5;}',
+            '.pl-eava i.p{background:#fbbf5f;}',
+            '.pl-eava i.o{background:#565b73;}',
+            '.pl-echips{display:flex;gap:4px;margin-top:3px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);}',
+            '.pl-echip{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;color:#8d93a8;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
+            '.pl-echip i{font-size:9px;color:#565b73;}',
+            '.pl-echip.gg{color:#5DCAA5;background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.3);}',
+            '.pl-echip.off{color:#8990a8;}',
+            '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
+            '.pl-ecpf b{display:block;font-size:13.5px;font-weight:800;line-height:1.1;}',
+            '.pl-ecpf em{display:block;font-style:normal;font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
             '.pl-amid{flex:1;min-width:0;}',
             '.pl-anm{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.pl-amt{font-size:10px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-dcol.tap{cursor:pointer;border-radius:6px;}',
             '.pl-dcol.tap:active{background:rgba(129,140,248,0.12);}',
             '.pl-jall{margin-top:10px;}',
@@ -85,15 +93,8 @@
             '.pl-jbody{flex:1;min-height:120px;overflow-y:auto;padding:2px 14px 12px;-webkit-overflow-scrolling:touch;}',
             '.pl-jmore{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 4px;padding:10px;border-radius:11px;font-size:11.5px;font-weight:700;color:#c6cdde;cursor:pointer;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.12);}',
             '.pl-jfoot{font-size:9.5px;color:#565b73;text-align:center;padding:6px 0 2px;}',
-            '.pl-astat{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px;color:#8990a8;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;}',
-            '.pl-astat i{font-size:11px;color:#565b73;flex-shrink:0;}',
-            '.pl-astat s{text-decoration:none;color:#3a3f52;}',
-            '.pl-astat u{text-decoration:none;color:#565b73;margin-left:1px;}',
             '.pl-accc{color:#565b73;font-size:17px;transition:transform 240ms;flex-shrink:0;}',
             '.pl-acc.open .pl-accc{transform:rotate(180deg);}',
-            '.pl-aright{flex:0 0 auto;text-align:right;}',
-            '.pl-acpf{font-size:14.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}',
-            '.pl-ajoin{font-size:10px;color:#5DCAA5;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
             '.pl-accb{max-height:0;overflow:hidden;transition:max-height 320ms ease;}',
             '.pl-acc.open .pl-accb{max-height:2600px;}',
             '.pl-acci{padding:2px 13px 15px;}',
@@ -604,30 +605,27 @@
         var active = l.status === 'active';
         var open = _openId === l.id;
         var dot = active ? (_chPaused ? 'p' : 'g') : 'o';
-        var meta = [];
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
-        if (l.placement_format && _fmtMap[l.placement_format]) meta.push(T(_fmtMap[l.placement_format]));
-        if (!active) meta.push(T('отключена'));
-        else if (_chPaused) meta.push(T('канал на паузе'));
-        if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
-        if (l.price_rub) meta.push(num(l.price_rub) + ' ₽');
         var joinedN = l.joined || 0;
         var impB = effImp(l);
-        var stats = [];
-        if (impB) stats.push('<i class="ti ti-eye"></i>' + num(impB) + (l.views_scan == null ? '<u>≈</u>' : ''));
-        if (l.clicks != null) stats.push('<i class="ti ti-pointer"></i>' + num(l.clicks));
-        var bar = stats.length
-            ? '<div class="pl-astat">' + stats.join('<s>·</s>') + '</div>' : '';
+        var chips = [];
+        if (!active) chips.push('<span class="pl-echip off">' + esc(T('отключена')) + '</span>');
+        else if (_chPaused) chips.push('<span class="pl-echip off">' + esc(T('канал на паузе')) + '</span>');
+        if (l.placement_format && _fmtMap[l.placement_format]) chips.push('<span class="pl-echip">' + esc(T(_fmtMap[l.placement_format])) + '</span>');
+        if (impB) chips.push('<span class="pl-echip"><i class="ti ti-eye"></i>' + num(impB) + (l.views_scan == null ? '≈' : '') + '</span>');
+        if (l.clicks != null) chips.push('<span class="pl-echip"><i class="ti ti-pointer"></i>' + num(l.clicks) + '</span>');
+        chips.push('<span class="pl-echip' + (joinedN ? ' gg' : '') + '">+' + num(joinedN) + '</span>');
+        if (l.price_rub) chips.push('<span class="pl-echip">' + num(l.price_rub) + ' ₽</span>');
+        var letter = String(l.seller_username || l.name || '?').charAt(0).toUpperCase();
         var right = l.cpf != null
-            ? '<div class="pl-acpf" style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</div>' +
-              '<div class="pl-ajoin"' + (active ? '' : ' style="color:#8990a8;"') + '>+' + num(joinedN) + '</div>'
-            : '<div class="pl-acpf" style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</div>';
+            ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em></div>'
+            : '<div class="pl-ecpf"><b style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</b><em>' + esc(T('подписки')) + '</em></div>';
         return '<div class="pl-acc' + (open ? ' open' : '') + '" data-id="' + l.id + '">' +
             '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
-            '<span class="pl-dot ' + dot + '"></span>' +
+            '<span class="pl-eava">' + esc(letter) + '<i class="' + dot + '"></i></span>' +
             '<div class="pl-amid"><div class="pl-anm">' + esc(l.name) + '</div>' +
-            '<div class="pl-amt">' + esc(meta.join(' · ')) + '</div>' + bar + '</div>' +
-            '<div class="pl-aright">' + right + '</div>' +
+            '<div class="pl-echips">' + chips.join('') + '</div></div>' +
+            right +
             '<i class="ti ti-chevron-down pl-accc"></i></div>' +
             '<div class="pl-accb"' + (open ? ' style="max-height:none;"' : '') + '><div class="pl-acci">' + accBody(l) + '</div></div></div>';
     }
