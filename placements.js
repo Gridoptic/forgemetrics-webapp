@@ -81,6 +81,7 @@
             '.pl-awin .tr{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden;}',
             '.pl-awin .tr i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,rgba(129,140,248,0.8),rgba(93,202,165,0.8));}',
             '.pl-awin .tx{display:block;font-size:8.5px;color:#565b73;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-awin.done .tx{color:rgba(245,191,79,0.75);}',
             '.pl-ecpf u{display:block;text-decoration:none;font-size:9.5px;font-weight:700;color:#8990a8;margin-top:4px;line-height:1.1;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf s{display:block;text-decoration:none;font-size:7px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
             '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
@@ -648,7 +649,8 @@
     function accCard(l) {
         var active = l.status === 'active';
         var open = _openId === l.id;
-        var dot = active ? (_chPaused ? 'p' : 'g') : 'o';
+        var winClosed = !!(l.attribution_until && new Date(l.attribution_until) <= new Date());
+        var dot = active ? ((_chPaused || winClosed) ? 'p' : 'g') : 'o';
         var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
         var joinedN = l.joined || 0;
         var impB = effImp(l);
@@ -886,6 +888,11 @@
             body = permCard();
         } else {
             var view = _campId == null ? _items : _items.filter(function (x) { return x.campaign_id === _campId; });
+            var wRank = function (x) {
+                if (x.status !== 'active') return 2;
+                return (x.attribution_until && new Date(x.attribution_until) <= new Date()) ? 1 : 0;
+            };
+            view = view.slice().sort(function (a, b) { return wRank(a) - wRank(b); });
             var cands = _campId == null ? [] : _cands.filter(function (c) { return c.campaign_id === _campId; });
             body = '<div class="pl-chips"><span class="pl-chip' + (_campId == null ? ' on' : '') + '" data-act="chip" data-camp="">' + esc(T('Все')) + '</span>' +
                 _campaigns.map(function (c) { return '<span class="pl-chip' + (_campId === c.id ? ' on' : '') + '" data-act="chip" data-camp="' + c.id + '">' + esc(c.name) + '</span>'; }).join('') +
