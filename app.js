@@ -2319,7 +2319,6 @@ async function openCabinet(scrollTo) {
 
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', stakeholder: 'Stakeholder', shareholder: 'Shareholder', majority_holder: 'Majority Holder' };
 const RF_PERK_TEXT = {
-    burst_per_friend: 'всплеск продвижения 24 ч за каждого активного реферала',
     forge_200: 'ежемесячное начисление 200 Forge',
     forge_550: 'ежемесячное начисление 550 Forge',
     forge_900: 'ежемесячное начисление 900 Forge',
@@ -2327,8 +2326,6 @@ const RF_PERK_TEXT = {
     forge_2000: 'ежемесячное начисление 2 000 Forge',
     forge_3000: 'ежемесячное начисление 3 000 Forge',
     forge_5000: 'ежемесячное начисление 5 000 Forge',
-    promo_week_monthly: 'неделя продвижения оффера ежемесячно',
-    promo_month_monthly: 'месяц продвижения оффера ежемесячно',
     anim_sticker: 'анимированные стикеры на оффере',
     fx_glow: 'оформление оффера «Свечение»',
     fx_glass: 'оформление «Стекло»',
@@ -2456,7 +2453,7 @@ async function loadRefLeaderboard() {
         const me = r.me ? `<p class="rf-lbme">Твоя позиция: ${r.me}</p>` : '';
         const block = document.createElement('div');
         block.className = 'rf-how rf-lb';
-        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Приз лучшему — ${escapeHtml(r.prize)}. Считаются приглашённые, подключившие живой канал за 7 дней.</p>`;
+        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Считаются приглашённые, подключившие живой канал за 7 дней.</p>`;
         const foot = host.querySelector('.rf-foot');
         if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
         localizeTree(block);
