@@ -1214,9 +1214,52 @@
             '.fmx-mqc{display:inline-block;}',
             '.fmx-mq-on .fmx-mqi{max-width:none;overflow:visible;text-overflow:clip;will-change:transform;backface-visibility:hidden;}',
             '.fmx-mq-on .fmx-mqc + .fmx-mqc{margin-left:var(--mqg,80px);}',
-            '.fmx-mtabs{display:flex;gap:6px;margin-bottom:14px;}',
-            '.fmx-mtab{flex:1;padding:9px 4px;border-radius:10px;border:0.5px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05);color:#8990a8;font-size:12px;font-weight:600;cursor:pointer;}',
-            '.fmx-mtab.on{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent;}',
+            '.fmx-lamps{display:flex;gap:8px;margin-bottom:11px;}',
+            '.fmx-lamp{flex:1;min-width:0;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:12px;padding:10px 9px;text-align:left;cursor:pointer;font-family:inherit;min-height:56px;}',
+            '.fmx-lamp .dot{width:8px;height:8px;border-radius:50%;display:block;margin-bottom:7px;background:#8990a8;}',
+            '.fmx-lamp.ok .dot{background:#5DCAA5;box-shadow:0 0 10px rgba(93,202,165,0.75);}',
+            '.fmx-lamp.warn .dot{background:#f59e0b;box-shadow:0 0 10px rgba(245,158,11,0.7);}',
+            '.fmx-lamp.bad .dot{background:#f87171;box-shadow:0 0 10px rgba(248,113,113,0.7);}',
+            '.fmx-lamp .k{font-size:10px;color:#6b7088;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-lamp .n{font-size:13px;font-weight:800;color:#e8e8ed;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.fmx-verd{border-radius:16px;padding:15px 15px 14px;margin-bottom:12px;background:linear-gradient(135deg,rgba(99,102,241,0.20),rgba(139,92,246,0.09));border:0.5px solid rgba(129,140,248,0.42);}',
+            '.fmx-verd .big{font-size:25px;font-weight:800;color:#fff;line-height:1.06;letter-spacing:-0.02em;overflow-wrap:anywhere;}',
+            '.fmx-verd .cap{font-size:11.5px;color:#c9cbe8;margin-top:5px;}',
+            '.fmx-verd .split{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;}',
+            '.fmx-vchip{font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:99px;border:0.5px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.06);color:#c5c8d6;white-space:nowrap;}',
+            '.fmx-vchip.bad{color:#f87171;border-color:rgba(248,113,113,0.34);background:rgba(239,68,68,0.12);}',
+            '.fmx-vchip.warn{color:#f59e0b;border-color:rgba(245,158,11,0.32);background:rgba(245,158,11,0.10);}',
+            '.fmx-verd.calm{background:linear-gradient(135deg,rgba(93,202,165,0.16),rgba(93,202,165,0.05));border-color:rgba(93,202,165,0.38);}',
+            '.fmx-verd.calm .big{font-size:19px;color:#5DCAA5;}',
+            '.fmx-verd.mute{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.10);}',
+            '.fmx-verd.mute .big{font-size:17px;color:#c5c8d6;}',
+            '.fmx-task{position:relative;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;padding:13px 14px 13px 16px;margin-bottom:10px;overflow:hidden;transition:opacity .25s;}',
+            '.fmx-task::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#818cf8;}',
+            '.fmx-task.s-complaint::before{background:#f87171;}',
+            '.fmx-task.s-stalled::before{background:#f59e0b;}',
+            '.fmx-task.s-adult::before{background:#c084fc;}',
+            '.fmx-task.done{opacity:.42;}',
+            '.fmx-tkrow{display:flex;align-items:center;gap:8px;margin-bottom:6px;}',
+            '.fmx-tkind{font-size:9.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;color:#a5b4fc;background:rgba(99,102,241,0.14);border:0.5px solid rgba(99,102,241,0.32);white-space:nowrap;}',
+            '.fmx-tkind.bad{color:#f87171;background:rgba(239,68,68,0.13);border-color:rgba(239,68,68,0.30);}',
+            '.fmx-tkind.warn{color:#f59e0b;background:rgba(245,158,11,0.11);border-color:rgba(245,158,11,0.28);}',
+            '.fmx-tkind.adult{color:#d8b4fe;background:rgba(192,132,252,0.12);border-color:rgba(192,132,252,0.30);}',
+            '.fmx-tai{font-size:11px;color:#8990a8;margin-top:7px;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.07);line-height:1.45;overflow-wrap:anywhere;}',
+            '.fmx-tai b{color:#c5c8d6;font-weight:700;}',
+            '.fmx-tdone{font-size:11.5px;color:#5DCAA5;font-weight:700;display:flex;align-items:center;gap:6px;margin-top:9px;}',
+            '.fmx-sec{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;margin-bottom:9px;overflow:hidden;}',
+            '.fmx-sechd{display:flex;align-items:center;gap:11px;padding:13px 14px;min-height:56px;width:100%;background:transparent;border:0;font-family:inherit;text-align:left;cursor:pointer;}',
+            '.fmx-secic{width:30px;height:30px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.10);color:#8990a8;}',
+            '.fmx-secic.green{background:rgba(93,202,165,0.13);border-color:rgba(93,202,165,0.28);color:#5DCAA5;}',
+            '.fmx-secic.vio{background:rgba(139,92,246,0.14);border-color:rgba(139,92,246,0.30);color:#c4b5fd;}',
+            '.fmx-secnm{font-size:13px;font-weight:700;color:#e8e8ed;}',
+            '.fmx-secsub{font-size:10.5px;color:#6b7088;margin-top:2px;overflow-wrap:anywhere;}',
+            '.fmx-secval{margin-left:auto;font-size:14px;font-weight:800;color:#e8e8ed;font-variant-numeric:tabular-nums;text-align:right;flex:0 0 auto;}',
+            '.fmx-secval span{display:block;font-size:9.5px;font-weight:600;color:#6b7088;}',
+            '.fmx-secchev{color:#565b73;font-size:14px;flex:0 0 auto;margin-left:8px;transition:transform .18s;}',
+            '.fmx-sec.open .fmx-secchev{transform:rotate(180deg);}',
+            '.fmx-secbody{padding:0 14px 13px;border-top:0.5px solid rgba(255,255,255,0.06);}',
+            '.fmx-modfoot{font-size:10.5px;color:#565b73;text-align:center;margin:14px 0 4px;}',
             '.fmx-ctrl{display:flex;flex-direction:column;gap:12px;}',
             '.fmx-ctrlcard{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:14px;}',
             '.fmx-ctrltop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}',
@@ -1287,10 +1330,6 @@
             '.fmx-fbar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;}',
             '.fmx-fbar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#a78bfa);border-radius:3px;}',
             '.fmx-fval{flex:0 0 auto;font-size:11px;font-weight:700;color:#8990a8;font-variant-numeric:tabular-nums;min-width:34px;text-align:right;}',
-            '.fmx-stile{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.10);border-radius:14px;padding:13px;}',
-            '.fmx-stv{font-size:19px;font-weight:800;color:#e8e8ed;overflow-wrap:anywhere;}',
-            '.fmx-stl{font-size:11px;color:#8990a8;margin-top:3px;}',
-            '.fmx-sts{font-size:10px;color:#565b73;margin-top:1px;}',
 
             '.fmx-slh{display:flex;align-items:center;gap:8px;margin-bottom:4px;}',
             '.fmx-slh .t{font-size:12px;font-weight:700;color:#e8e8ed;display:flex;align-items:center;gap:6px;}',
@@ -1775,7 +1814,7 @@
         if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }
         else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
         else if (t === 'pulse') renderPulse();
-        else if (t === 'mod') { _modTab = 'queue'; renderMod(); }
+        else if (t === 'mod') renderMod();
         else renderEnter();
         if (t !== 'market') _cmp = {};
         drawCmpBar();
@@ -2391,21 +2430,354 @@
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
     }
 
-    var _modTab = 'queue';
+    var _mod = { q: null, ov: null, ctrl: null, act: null, open: {}, actState: 'idle', done: {}, err: {}, sigTasks: '', sigSecs: '', gen: 0, usersOpen: false };
+
     function renderMod() {
         var host = el('fmx-main');
+        _mod.done = {}; _mod.sigTasks = ''; _mod.sigSecs = ''; _mod.gen++;
+        _mod.q = null; _mod.ov = null; _mod.act = null; _mod.actState = 'idle'; _mod.err = {}; _mod.usersOpen = false;
         host.innerHTML =
-            '<div class="fmx-mtabs">' +
-            '<button class="fmx-mtab' + (_modTab === 'queue' ? ' on' : '') + '" data-mt="queue">Очередь</button>' +
-            '<button class="fmx-mtab' + (_modTab === 'stats' ? ' on' : '') + '" data-mt="stats">Сводка</button>' +
-            '<button class="fmx-mtab' + (_modTab === 'user' ? ' on' : '') + '" data-mt="user">Пользователь</button>' +
-            (_isOwner() ? '<button class="fmx-mtab' + (_modTab === 'ctrl' ? ' on' : '') + '" data-mt="ctrl">Управление</button>' : '') +
-            '</div><div id="fmx-modbody"></div>';
-        qsa(host, '[data-mt]').forEach(function (b) { b.addEventListener('click', function () { _modTab = b.getAttribute('data-mt'); _haptic('light'); renderMod(); }); });
-        if (_modTab === 'queue') renderModQueue();
-        else if (_modTab === 'stats') renderModStats();
-        else if (_modTab === 'ctrl') renderModControls();
-        else renderModUser();
+            '<div id="fmx-mlamps" class="fmx-lamps"></div>' +
+            '<div id="fmx-mverd"></div>' +
+            '<div id="fmx-mtasks">' + loadHtml() + '</div>' +
+            '<div id="fmx-msecs"></div>' +
+            '<div class="fmx-modfoot">Обновляется автоматически</div>';
+        _modPaintLamps();
+        _modLoad();
+    }
+
+    function _modLoad(quiet) {
+        var gen = _mod.gen;
+        function stale() { return _mainTab !== 'mod' || gen !== _mod.gen; }
+        apiGet('/api/v1/admin/queue').then(function (r) {
+            if (stale()) return;
+            _mod.err.q = !r || r.ok === false;
+            if (!_mod.err.q) _mod.q = r;
+            _modPaintLamps(); _modPaintVerdict(); _modPaintTasks(quiet);
+        }).catch(function () { if (stale()) return; _mod.err.q = true; _modPaintLamps(); _modPaintVerdict(); _modPaintTasks(quiet); });
+
+        apiGet('/api/v1/admin/overview').then(function (r) {
+            if (stale()) return;
+            _mod.err.ov = !r || r.ok === false;
+            if (!_mod.err.ov) _mod.ov = r;
+            _modPaintLamps(); _modPaintSections();
+        }).catch(function () { if (stale()) return; _mod.err.ov = true; _modPaintLamps(); _modPaintSections(); });
+
+        if (_isOwner()) {
+            apiGet('/api/v1/admin/controls').then(function (r) {
+                if (stale()) return;
+                _mod.err.ctrl = !r || r.ok === false;
+                if (!_mod.err.ctrl) _mod.ctrl = r;
+                _modPaintLamps(); _modPaintSections();
+            }).catch(function () { if (stale()) return; _mod.err.ctrl = true; _modPaintLamps(); _modPaintSections(); });
+        }
+    }
+
+    function _modTasks() {
+        var q = _mod.q; if (!q) return [];
+        var out = [];
+        (q.listings || []).forEach(function (l) { out.push({ t: 'l', st: l.state || ((l.complaints || 0) > 0 ? 'complaint' : 'review'), d: l }); });
+        (q.requests || []).forEach(function (x) { out.push({ t: 'r', st: 'request', d: x }); });
+        var rank = { complaint: 0, stalled: 1, adult: 2, review: 3, request: 4 };
+        out.sort(function (a, b) { return (rank[a.st] == null ? 9 : rank[a.st]) - (rank[b.st] == null ? 9 : rank[b.st]); });
+        return out.filter(function (x) { return !_mod.done[x.t + x.d.id]; });
+    }
+
+    function _modLampCls(v) { return v === 0 ? 'ok' : (v <= 4 ? 'warn' : 'bad'); }
+
+    function _modPaintLamps() {
+        var box = el('fmx-mlamps'); if (!box) return;
+        var h = '';
+        if (_mod.err.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Очередь</div><div class="n">нет связи</div></div>';
+        else if (!_mod.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Очередь</div><div class="n">…</div></div>';
+        else {
+            var n = _modTasks().length;
+            h += '<button class="fmx-lamp ' + _modLampCls(n) + '" data-lamp="tasks"><span class="dot"></span><div class="k">Очередь</div>' +
+                '<div class="n">' + (n === 0 ? 'пусто' : n + ' ' + _plural(n, 'задача', 'задачи', 'задач')) + '</div></button>';
+        }
+
+        if (_mod.err.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Бюджет ИИ</div><div class="n">нет связи</div></div>';
+        else if (!_mod.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Бюджет ИИ</div><div class="n">…</div></div>';
+        else {
+            var s = _mod.ov.spend || {}, bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
+            var pct = bud > 0 ? (sp / bud * 100) : 0;
+            var cls = pct >= 80 ? 'bad' : (pct >= 60 ? 'warn' : 'ok');
+            h += '<button class="fmx-lamp ' + cls + '" data-lamp="money"><span class="dot"></span><div class="k">Бюджет ИИ</div>' +
+                '<div class="n">' + (bud > 0 ? (pct < 1 && pct > 0 ? '<1%' : Math.round(pct) + '%') : '$' + sp.toFixed(2)) + '</div></button>';
+        }
+
+        if (_isOwner()) {
+            if (_mod.err.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Проверка</div><div class="n">нет связи</div></div>';
+            else if (!_mod.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Проверка</div><div class="n">…</div></div>';
+            else {
+                var on = !!_mod.ctrl.moderation_enabled;
+                h += '<button class="fmx-lamp ' + (on ? 'ok' : 'bad') + '" data-lamp="access"><span class="dot"></span><div class="k">Проверка офферов</div>' +
+                    '<div class="n">' + (on ? 'включена' : 'выключена') + '</div></button>';
+            }
+        }
+        box.innerHTML = h;
+        qsa(box, '[data-lamp]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                _haptic('light');
+                var k = b.getAttribute('data-lamp');
+                if (k === 'tasks') { var t = el('fmx-mtasks'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+                _modOpenSec(k, true);
+            });
+        });
+    }
+
+    function _modPaintVerdict() {
+        var box = el('fmx-mverd'); if (!box) return;
+        if (_mod.err.q) {
+            box.innerHTML = '<div class="fmx-verd mute"><div class="big">Нет связи с очередью</div>' +
+                '<div class="cap">Пока связь не восстановится, о задачах судить нельзя.</div></div>';
+            return;
+        }
+        if (!_mod.q) { box.innerHTML = ''; return; }
+        var list = _modTasks();
+        if (!list.length) {
+            box.innerHTML = '<div class="fmx-verd calm"><div class="big">Всё разобрано</div>' +
+                '<div class="cap">Офферов на проверке и открытых жалоб нет.</div></div>';
+            return;
+        }
+        var c = { complaint: 0, stalled: 0, adult: 0, review: 0, request: 0 };
+        list.forEach(function (x) { if (c[x.st] != null) c[x.st]++; });
+        var chips = '';
+        if (c.complaint) chips += '<span class="fmx-vchip bad">' + c.complaint + ' ' + _plural(c.complaint, 'жалоба', 'жалобы', 'жалоб') + '</span>';
+        if (c.stalled) chips += '<span class="fmx-vchip warn">' + c.stalled + ' ' + _plural(c.stalled, 'зависла', 'зависли', 'зависло') + '</span>';
+        if (c.adult) chips += '<span class="fmx-vchip">' + c.adult + ' на раздел 18+</span>';
+        if (c.review) chips += '<span class="fmx-vchip">' + c.review + ' на проверке</span>';
+        if (c.request) chips += '<span class="fmx-vchip">' + c.request + ' ' + _plural(c.request, 'заявка', 'заявки', 'заявок') + '</span>';
+        box.innerHTML = '<div class="fmx-verd"><div class="big">Требует решения: ' + list.length + '</div>' +
+            '<div class="cap">Самое срочное — сверху</div>' +
+            '<div class="split">' + chips + '</div></div>';
+    }
+
+    var _MOD_KIND = {
+        complaint: ['bad', 'Жалоба'], stalled: ['warn', 'Зависла'],
+        adult: ['adult', 'Ждёт раздела 18+'], review: ['', 'На проверке'], request: ['', 'Заявка'],
+    };
+
+    function _modPaintTasks(quiet) {
+        var box = el('fmx-mtasks'); if (!box) return;
+        if (_mod.err.q) { _mod.sigTasks = ''; box.innerHTML = emptyHtml('ti-cloud-off', 'Очередь не загрузилась', 'Проверь связь — панель повторит попытку сама.'); return; }
+        if (!_mod.q) { if (!quiet) box.innerHTML = loadHtml(); return; }
+        var list = _modTasks();
+        var sig = list.map(function (x) { return x.t + x.d.id + ':' + x.st + ':' + (x.d.complaints || 0) + ':' + (x.d.is_adult ? 1 : 0); }).join('|');
+        if (quiet && sig === _mod.sigTasks) return;
+        _mod.sigTasks = sig;
+        var over0 = (_mod.q.listings_overflow || 0) + (_mod.q.requests_overflow || 0);
+        if (!list.length) {
+            box.innerHTML = over0 ? '<div class="fmx-mmeta" style="text-align:center;margin:2px 0 10px;">…и ещё ' + over0 + ' с жалобами — подтянутся при обновлении</div>' : '';
+            return;
+        }
+        var h = '';
+        list.forEach(function (x) {
+            var k = _MOD_KIND[x.st] || ['', 'На проверке'];
+            if (x.t === 'r') {
+                var q = x.d;
+                h += '<div class="fmx-task s-complaint" data-task="r' + q.id + '">' +
+                    '<div class="fmx-tkrow"><span class="fmx-tkind bad">Заявка · жалоб: ' + (q.complaints || 0) + '</span></div>' +
+                    '<div class="fmx-mtitle">Заявка R' + q.id + '</div>' +
+                    '<div class="fmx-msub">«' + _esc(q.text) + '»</div>' +
+                    '<div class="fmx-mmeta">' + _esc(q.note) + '</div>' +
+                    '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-rest="' + q.id + '">Вернуть</button>' +
+                    '<button class="fmx-mbtn no" data-rem="' + q.id + '">Снять</button></div></div>';
+                return;
+            }
+            var l = x.d, ai = '';
+            if (l.ai_category || l.ai_confidence != null) {
+                var bits = [];
+                if (l.ai_category) bits.push('<b>' + _esc(_CATRU[l.ai_category] || l.ai_category) + ' список</b>');
+                if (l.ai_confidence != null) bits.push('уверенность ' + l.ai_confidence + '%');
+                ai = 'Автопроверка: ' + bits.join(' · ');
+            }
+            if (l.ai_reason) ai += (ai ? '<br>' : '') + _esc(l.ai_reason);
+            if (!ai && x.st === 'stalled') ai = 'Автопроверка не ответила — решение за тобой';
+            h += '<div class="fmx-task s-' + x.st + '" data-task="l' + l.id + '">' +
+                '<div class="fmx-tkrow"><span class="fmx-tkind ' + k[0] + '">' + k[1] + (l.complaints ? ' · ' + l.complaints : '') + '</span>' +
+                (l.is_adult ? '<span class="fmx-tkind adult">18+</span>' : '') + '</div>' +
+                '<div class="fmx-mtitle">#' + l.id + ' @' + _esc(l.username) + '</div>' +
+                (l.title ? '<div class="fmx-msub">' + _esc(l.title) + '</div>' : '') +
+                '<div class="fmx-mmeta">' + _esc(l.note) + '</div>' +
+                (ai ? '<div class="fmx-tai">' + ai + '</div>' : '') +
+                '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-appr="' + l.id + '">Одобрить</button>' +
+                '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button>' +
+                (l.is_adult ? '<button class="fmx-mbtn" data-adoff="' + l.id + '">Снять 18+</button>' : '') + '</div>' +
+                (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> Открыть канал</button>' : '') +
+                '</div>';
+        });
+        var ov = (_mod.q.listings_overflow || 0) + (_mod.q.requests_overflow || 0);
+        if (ov) h += '<div class="fmx-mmeta" style="text-align:center;margin:6px 0 10px;">…и ещё ' + ov + ' с жалобами — появятся после разбора текущих</div>';
+        box.innerHTML = h;
+        qsa(box, '[data-appr]').forEach(function (b) { b.addEventListener('click', function () { modApprove(+b.getAttribute('data-appr')); }); });
+        qsa(box, '[data-rej]').forEach(function (b) { b.addEventListener('click', function () { modReject(+b.getAttribute('data-rej')); }); });
+        qsa(box, '[data-adoff]').forEach(function (b) { b.addEventListener('click', function () { modAdultOff(+b.getAttribute('data-adoff')); }); });
+        qsa(box, '[data-open]').forEach(function (b) { b.addEventListener('click', function () { _openChannel(b.getAttribute('data-open')); }); });
+        qsa(box, '[data-rest]').forEach(function (b) { b.addEventListener('click', function () { modRestore(+b.getAttribute('data-rest')); }); });
+        qsa(box, '[data-rem]').forEach(function (b) { b.addEventListener('click', function () { modRemove(+b.getAttribute('data-rem')); }); });
+    }
+
+    function _modTyping() {
+        try {
+            var a = document.activeElement;
+            if (!a) return false;
+            var tag = (a.tagName || '').toLowerCase();
+            if (tag !== 'input' && tag !== 'textarea') return false;
+            var secs = el('fmx-msecs');
+            return !!(secs && secs.contains(a));
+        } catch (e) { return false; }
+    }
+
+    function _modSec(key, ic, icCls, name, sub, val, valSub, body) {
+        var open = !!_mod.open[key];
+        return '<div class="fmx-sec' + (open ? ' open' : '') + '" data-sec="' + key + '">' +
+            '<button class="fmx-sechd" data-sectg="' + key + '" aria-expanded="' + open + '">' +
+            '<span class="fmx-secic ' + icCls + '"><i class="ti ' + ic + '"></i></span>' +
+            '<span style="min-width:0;flex:1;"><span class="fmx-secnm" style="display:block;">' + name + '</span>' +
+            '<span class="fmx-secsub" style="display:block;">' + sub + '</span></span>' +
+            (val ? '<span class="fmx-secval">' + val + (valSub ? '<span>' + valSub + '</span>' : '') + '</span>' : '') +
+            '<i class="ti ti-chevron-down fmx-secchev"></i></button>' +
+            (open ? '<div class="fmx-secbody">' + body + '</div>' : '') + '</div>';
+    }
+
+    function _modMoneyBody() {
+        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (!_mod.ov) return loadHtml();
+        var s = _mod.ov.spend || {}, rf = _mod.ov.referrals || {};
+        var bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
+        var pct = bud > 0 ? Math.min(100, Math.round(sp / bud * 100)) : 0;
+        return '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>Оплачено за месяц</span><b>' + _num(_mod.ov.revenue_month_rub) + ' ₽</b></div>' +
+            '<div class="fmx-mstatrow"><span>Расход на ИИ</span><b>$' + sp.toFixed(2) + ' из $' + bud + '</b></div>' +
+            '<div class="fmx-bar' + (pct >= 80 ? ' warn' : '') + '"><i style="width:' + Math.max(2, pct) + '%"></i></div>' +
+            '<div class="fmx-mstatrow"><span>За сегодня</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>Приглашено по ссылкам</span><b>' + _num(rf.total) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div>';
+    }
+
+    function _modPeopleBody() {
+        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (!_mod.ov) return loadHtml();
+        var u = _mod.ov.users || {}, h = '';
+        h += '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>Всего</span><b>' + _num(u.total) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>С покупками</span><b>' + _num(u.paid) + '</b></div>';
+        if ((_mod.ov.top_spenders || []).length) {
+            h += '<div class="fmx-meyebrow" style="margin-top:13px;">Кто тратит больше всех<em>за месяц</em></div><div class="fmx-plist">';
+            _mod.ov.top_spenders.forEach(function (t) {
+                h += _pRow({ id: t.user_id, name: 'ID ' + t.user_id, meta: t.calls + ' ' + _plural(t.calls, 'обращение', 'обращения', 'обращений') + ' к ИИ', val: '$' + t.spent_usd.toFixed(2) });
+            });
+            h += '</div>';
+        }
+        h += '<div class="fmx-meyebrow" style="margin-top:13px;">Найти по Telegram ID</div>' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например 100000000" style="flex:1;">' +
+            '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:7px;">Нажатие на любого человека в списках открывает его карточку.</div>';
+        h += '<div id="fmx-modact" style="margin-top:13px;">' +
+            (_mod.actState === 'loading' ? loadHtml() : '') +
+            (_mod.actState === 'error'
+                ? '<div class="fmx-mmeta" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">' +
+                  '<span>Списки активности не загрузились</span>' +
+                  '<button class="fmx-btn" id="fmx-actretry" style="flex:0 0 auto;padding:8px 12px;min-height:40px;">Повторить</button></div>'
+                : '') + '</div>';
+        return h;
+    }
+
+    function _modBoostCard() {
+        return '<div class="fmx-ctrlcard">' +
+            '<div class="fmx-ctrlt">Ручное продвижение оффера</div>' +
+            '<div class="fmx-ctrls" style="margin-bottom:10px;">Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней. Работает только со своим оффером — ID виден в задачах очереди.</div>' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
+            '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
+            '</div>';
+    }
+
+    function _modAccessBody() {
+        if (!_isOwner()) return '<div class="fmx-ctrl" style="margin-top:12px;">' + _modBoostCard() + '</div>';
+        if (_mod.err.ctrl) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (!_mod.ctrl) return loadHtml();
+        var r = _mod.ctrl, on = !!r.moderation_enabled;
+        var rows = (r.moderators || []).map(function (m) {
+            var who = _esc(m.name || ('ID ' + m.user_id));
+            var un = m.username ? '@' + _esc(m.username) : 'ID ' + m.user_id;
+            var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">владелец</span>'
+                : (m.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '');
+            var del = (m.source === 'db')
+                ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="Снять права"><i class="ti ti-x"></i></button>' : '';
+            return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
+                '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
+        }).join('');
+        return '<div class="fmx-ctrl" style="margin-top:12px;">' +
+            '<div class="fmx-ctrlcard">' +
+            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Проверка офферов</div>' +
+            '<div class="fmx-ctrls">' + (on
+                ? 'Каждый новый оффер проходит проверку перед публикацией.'
+                : 'ВЫКЛЮЧЕНА: офферы публикуются сразу, без проверки.') + '</div></div>' +
+            '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-modsw" role="switch" aria-checked="' + on + '"><span></span></button>' +
+            '</div>' +
+            (on ? '' : '<div class="fmx-ctrlwarn"><i class="ti ti-alert-triangle"></i>' +
+                'Пока выключено, на витрину может попасть запрещённый контент — ответственность за площадку на тебе. ' +
+                'Включай обратно после разбора очереди.</div>') +
+            '</div>' +
+            '<div class="fmx-ctrlcard">' +
+            '<div class="fmx-ctrlt">Модераторы</div>' +
+            '<div class="fmx-ctrls" style="margin-bottom:10px;">Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.</div>' +
+            '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
+            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
+            '<button class="fmx-mdbtn" id="fmx-mdadd">Выдать права</button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">Человек должен хотя бы раз открыть приложение — иначе его не найти.</div>' +
+            '</div>' +
+            _ctrlTestersHtml(r) +
+            _modBoostCard() + '</div>';
+    }
+
+    function _modPaintSections() {
+        var box = el('fmx-msecs'); if (!box || _modTyping()) return;
+        var sig = JSON.stringify([_mod.ov, _mod.ctrl, _mod.open, _mod.actState, _mod.err.ov, _mod.err.ctrl, _mod.act]);
+        if (sig === _mod.sigSecs && box.firstChild) return;
+        _mod.sigSecs = sig;
+        var keep = {};
+        qsa(box, 'input').forEach(function (i) { if (i.id && i.value) keep[i.id] = i.value; });
+        var u = (_mod.ov && _mod.ov.users) || {};
+        var money = _mod.ov ? (_num(_mod.ov.revenue_month_rub) + ' ₽') : '';
+        var h = _modSec('money', 'ti-coin', 'green', 'Деньги', 'выручка · расход на ИИ', money, money ? 'за месяц' : '', _modMoneyBody());
+        h += _modSec('people', 'ti-users', 'vio', 'Люди', 'кто пользуется и кто платит',
+            _mod.ov ? _num(u.total) : '', _mod.ov ? (_num(u.paid) + ' с покупками') : '', _modPeopleBody());
+        h += _modSec('access', 'ti-adjustments', '', 'Управление',
+            _isOwner() ? 'проверка офферов · модераторы · тестеры' : 'ручное продвижение оффера', '', '', _modAccessBody());
+        box.innerHTML = h;
+        qsa(box, '[data-sectg]').forEach(function (b) {
+            b.addEventListener('click', function () { _haptic('light'); _modOpenSec(b.getAttribute('data-sectg')); });
+        });
+        qsa(box, 'input').forEach(function (i) { if (i.id && keep[i.id]) i.value = keep[i.id]; });
+        _modWireUids(box);
+        _modBindPeople(box);
+        if (_mod.open.access) _modBindAccess(box);
+        if (_mod.open.people && _mod.actState === 'ready') _modPaintActivity();
+    }
+
+    function _modOpenSec(key, forceOpen) {
+        _mod.open[key] = forceOpen ? true : !_mod.open[key];
+        _modPaintSections();
+        if (key === 'people' && _mod.open.people && _mod.actState === 'idle') _modLoadActivity();
+        if (forceOpen) {
+            var node = document.querySelector('[data-sec="' + key + '"]');
+            if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function _modBindPeople(box) {
+        var rt = el('fmx-actretry');
+        if (rt) rt.addEventListener('click', function () { _haptic('light'); _modLoadActivity(); });
+        var find = function () {
+            var inp = el('fmx-muid'); if (!inp) return;
+            var v = (inp.value || '').trim();
+            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой Telegram ID'); return; }
+            _modUserSheet(v);
+        };
+        var fb = el('fmx-mufind');
+        if (fb) fb.addEventListener('click', find);
+        var inp = el('fmx-muid');
+        if (inp) inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') find(); });
     }
 
     function _isOwner() { try { return !!window.__fmIsOwner; } catch (e) { return false; } }
@@ -2446,7 +2818,7 @@
                 apiPost('/api/v1/admin/controls/tester-mode', { enabled: next }).then(function (res) {
                     if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
                     _haptic('success'); toast(next ? 'Тестовый доступ включён' : 'Тестовый доступ выключен');
-                    renderModControls();
+                    _modReloadCtrl();
                 }).catch(function () { uiAlert('Не удалось изменить'); });
             });
         });
@@ -2461,7 +2833,7 @@
                 if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || 'Не удалось'); return; }
                 _haptic('success'); toast(res.message || 'Доступ выдан');
                 inp.value = '';
-                renderModControls();
+                _modReloadCtrl();
             }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
         });
         qsa(box, '[data-tstg]').forEach(function (b) {
@@ -2472,7 +2844,7 @@
                 apiPost('/api/v1/admin/testers/' + uid + '/toggle', { enabled: next }).then(function (res) {
                     if (!res || res.ok === false) { b.disabled = false; uiAlert('Не удалось изменить'); return; }
                     _haptic('light'); toast(res.message || (next ? 'Доступ включён' : 'Доступ на паузе'));
-                    renderModControls();
+                    _modReloadCtrl();
                 }).catch(function () { b.disabled = false; uiAlert('Не удалось изменить'); });
             });
         });
@@ -2483,103 +2855,95 @@
                     apiRequest('/api/v1/admin/testers/' + uid, { method: 'DELETE' }).then(function (res) {
                         if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
                         _haptic('success'); toast(res.message || 'Доступ снят');
-                        renderModControls();
+                        _modReloadCtrl();
                     }).catch(function () { uiAlert('Не удалось'); });
                 });
             });
         });
     }
 
-    function renderModControls() {
-        var box = el('fmx-modbody'); if (!box) return;
-        box.innerHTML = loadHtml();
-        apiGet('/api/v1/admin/controls').then(function (r) {
-            if (_mainTab !== 'mod' || _modTab !== 'ctrl') return;
-            if (!r || r.ok === false) { _modFail(box); return; }
-            var on = !!r.moderation_enabled;
-            var mods = r.moderators || [];
-            var rows = mods.map(function (m) {
-                var who = _esc(m.name || ('ID ' + m.user_id));
-                var un = m.username ? '@' + _esc(m.username) : 'ID ' + m.user_id;
-                var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">владелец</span>'
-                    : (m.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '');
-                var del = (m.source === 'db')
-                    ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="Снять права"><i class="ti ti-x"></i></button>' : '';
-                return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
-                    '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
-            }).join('');
-
-            box.innerHTML =
-                '<div class="fmx-ctrl">' +
-                '<div class="fmx-ctrlcard">' +
-                '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Модерация офферов</div>' +
-                '<div class="fmx-ctrls">' + (on
-                    ? 'Каждый новый оффер проходит проверку перед публикацией.'
-                    : 'ВЫКЛЮЧЕНА: офферы публикуются сразу, без проверки.') + '</div></div>' +
-                '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-modsw" role="switch" aria-checked="' + on + '"><span></span></button>' +
-                '</div>' +
-                (on ? '' : '<div class="fmx-ctrlwarn"><i class="ti ti-alert-triangle"></i>' +
-                    'Пока выключено, на витрину может попасть запрещённый контент — ответственность за площадку на тебе. ' +
-                    'Включай обратно после разбора очереди.</div>') +
-                '</div>' +
-                '<div class="fmx-ctrlcard">' +
-                '<div class="fmx-ctrlt">Модераторы</div>' +
-                '<div class="fmx-ctrls" style="margin-bottom:10px;">Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.</div>' +
-                '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
-                '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
-                '<button class="fmx-mdbtn" id="fmx-mdadd">Выдать права</button></div>' +
-                '<div class="fmx-mdsub" style="margin-top:8px;">Человек должен хотя бы раз открыть приложение — иначе его не найти.</div>' +
-                '</div>' +
-                _ctrlTestersHtml(r) +
-                '</div>';
-
-            var sw = el('fmx-modsw');
-            if (sw) sw.addEventListener('click', function () {
-                var next = !sw.classList.contains('on');
-                var act = next ? 'Включить модерацию офферов?' : 'Выключить модерацию? Офферы будут публиковаться без проверки.';
-                uiConfirm(act, function () {
-                    apiPost('/api/v1/admin/controls/moderation', { enabled: next }).then(function (res) {
-                        if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
-                        _haptic('success');
-                        toast(next ? 'Модерация включена' : 'Модерация выключена');
-                        renderModControls();
-                    }).catch(function () { uiAlert('Не удалось изменить'); });
+    function _modBindAccess(box) {
+        var sw = el('fmx-modsw');
+        if (sw) sw.addEventListener('click', function () {
+            var next = !sw.classList.contains('on');
+            var act = next ? 'Включить проверку офферов?' : 'Выключить проверку? Офферы будут публиковаться без модерации.';
+            uiConfirm(act, function () {
+                apiPost('/api/v1/admin/controls/moderation', { enabled: next }).then(function (res) {
+                    if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
+                    _haptic('success');
+                    toast(next ? 'Проверка офферов включена' : 'Проверка офферов выключена');
+                    _modReloadCtrl();
+                }).catch(function () { uiAlert('Не удалось изменить'); });
+            });
+        });
+        var addBtn = el('fmx-mdadd');
+        if (addBtn) addBtn.addEventListener('click', function () {
+            var inp = el('fmx-mdq'); if (!inp) return;
+            var q = (inp.value || '').trim();
+            if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
+            addBtn.disabled = true;
+            apiPost('/api/v1/admin/moderators', { query: q }).then(function (res) {
+                addBtn.disabled = false;
+                if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || 'Не удалось'); return; }
+                _haptic('success'); toast(res.message || 'Права выданы');
+                inp.value = '';
+                _modReloadCtrl();
+            }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
+        });
+        qsa(box, '[data-modrm]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var uid = b.getAttribute('data-modrm');
+                uiConfirm('Снять права модератора?', function () {
+                    apiRequest('/api/v1/admin/moderators/' + uid, { method: 'DELETE' }).then(function (res) {
+                        if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
+                        _haptic('success'); toast(res.message || 'Права сняты');
+                        _modReloadCtrl();
+                    }).catch(function () { uiAlert('Не удалось'); });
                 });
             });
-            var addBtn = el('fmx-mdadd');
-            if (addBtn) addBtn.addEventListener('click', function () {
-                var inp = el('fmx-mdq'); if (!inp) return;
-                var q = (inp.value || '').trim();
-                if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
-                addBtn.disabled = true;
-                apiPost('/api/v1/admin/moderators', { query: q }).then(function (res) {
-                    addBtn.disabled = false;
-                    if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || 'Не удалось'); return; }
-                    _haptic('success'); toast(res.message || 'Права выданы');
-                    inp.value = '';
-                    renderModControls();
-                }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
-            });
-            qsa(box, '[data-modrm]').forEach(function (b) {
-                b.addEventListener('click', function () {
-                    var uid = b.getAttribute('data-modrm');
-                    uiConfirm('Снять права модератора?', function () {
-                        apiRequest('/api/v1/admin/moderators/' + uid, { method: 'DELETE' }).then(function (res) {
-                            if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
-                            _haptic('success'); toast(res.message || 'Права сняты');
-                            renderModControls();
-                        }).catch(function () { uiAlert('Не удалось'); });
-                    });
-                });
-            });
-            _bindTesterControls(box);
-        }).catch(function () { _modFail(box); });
+        });
+        var boost = el('fmx-mboostgo');
+        if (boost) boost.addEventListener('click', function () {
+            var f = el('fmx-mboostid'); if (!f) return;
+            var v = (f.value || '').trim();
+            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой ID оффера'); return; }
+            boost.disabled = true;
+            apiPost('/api/v1/marketplace/mod/boost', { listing_id: +v }).then(function (r) {
+                boost.disabled = false;
+                if (r && r.ok) { _haptic('success'); toast('Продвижение включено на 30 дней'); f.value = ''; }
+                else { uiAlert((r && r.error) || 'Не удалось'); }
+            }).catch(function () { boost.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+        });
+        _bindTesterControls(box);
     }
-    function _modFail(box) { box.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори попытку.'); }
-    function _modAfter(r) {
+
+    function _modReloadCtrl() {
+        apiGet('/api/v1/admin/controls').then(function (r) {
+            if (_mainTab !== 'mod') return;
+            _mod.err.ctrl = !r || r.ok === false;
+            if (!_mod.err.ctrl) _mod.ctrl = r;
+            _modPaintLamps(); _modPaintSections();
+        }).catch(function () {});
+    }
+
+    function _modAfter(r, key, label, keep) {
         if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
         _haptic('success'); toast((r && r.message) || 'Готово');
-        renderModQueue();
+        if (keep) { _modLoad(true); return; }
+        _modResolve(key, label);
+    }
+    function _modResolve(key, label) {
+        _mod.done[key] = 1;
+        var card = document.querySelector('[data-task="' + key + '"]');
+        if (card) {
+            card.classList.add('done');
+            var row = card.querySelector('.fmx-mrow'); if (row) row.remove();
+            var op = card.querySelector('.fmx-mopen'); if (op) op.remove();
+            if (!card.querySelector('.fmx-tdone')) {
+                card.insertAdjacentHTML('beforeend', '<div class="fmx-tdone"><i class="ti ti-check"></i>' + _esc(label || 'Решено') + '</div>');
+            }
+        }
+        _modPaintLamps(); _modPaintVerdict();
     }
     var _TERMS_B = [
         ['ti-brand-telegram', '#5DCAA5', 'Сделка — напрямую с владельцем', [
@@ -2663,17 +3027,17 @@
     }
     function modApprove(id) {
         uiConfirm('Одобрить оффер #' + id + ' и опубликовать?', function () {
-            apiPost('/api/v1/admin/listing/' + id + '/approve').then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/approve').then(function (r) { _modAfter(r, 'l' + id, 'Одобрено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function modAdultOff(id) {
         uiConfirm('Снять метку 18+ с оффера #' + id + '? Если оффер уже одобрен, он сразу выйдет в общую ленту.', function () {
-            apiPost('/api/v1/admin/listing/' + id + '/adult', { adult: false }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/adult', { adult: false }).then(function (r) { _modAfter(r, 'l' + id, 'Метка 18+ снята', true); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function modReject(id) {
         modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина (необязательно) — автор увидит и сможет исправить', btn: 'Отклонить', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(function (r) { _modAfter(r, 'l' + id, 'Отклонено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     var _CATRU = { white: 'белый', grey: 'серый', black: 'чёрный' };
@@ -2685,103 +3049,14 @@
     }
     function modRestore(id) {
         uiConfirm('Вернуть заявку R' + id + ' и снять жалобы?', function () {
-            apiPost('/api/v1/admin/request/' + id + '/restore').then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/request/' + id + '/restore').then(function (r) { _modAfter(r, 'r' + id, 'Возвращено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
     function modRemove(id) {
         modPrompt({ title: 'Снять заявку R' + id, placeholder: 'Причина (необязательно)', btn: 'Снять', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(_modAfter).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(function (r) { _modAfter(r, 'r' + id, 'Снято'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
         });
     }
-    function renderModQueue() {
-        var box = el('fmx-modbody'); if (!box) return;
-        box.innerHTML = loadHtml();
-        apiGet('/api/v1/admin/queue').then(function (r) {
-            if (_mainTab !== 'mod' || _modTab !== 'queue') return;
-            if (!r || r.ok === false) { _modFail(box); return; }
-            if (r.empty) { box.innerHTML = emptyHtml('ti-checks', 'Очередь пуста', 'Офферов на проверке и открытых жалоб нет.'); return; }
-            var h = '';
-            (r.listings || []).forEach(function (l) {
-                var acat = '';
-                if (l.ai_category || l.ai_confidence != null) {
-                    var bits = [];
-                    if (l.ai_category) bits.push('<b>' + _esc(_CATRU[l.ai_category] || l.ai_category) + '</b>');
-                    if (l.ai_confidence != null) bits.push('уверенность ' + l.ai_confidence + '%');
-                    acat = '<div class="fmx-macat">Автопроверка: ' + bits.join(' · ') + '</div>';
-                }
-                h += '<div class="fmx-mcard">' +
-                    '<div class="fmx-mtitle">#' + l.id + ' @' + _esc(l.username) + (l.is_adult ? '<span class="fmx-mbadge">18+</span>' : '') + '</div>' +
-                    (l.title ? '<div class="fmx-msub">' + _esc(l.title) + '</div>' : '') +
-                    '<div class="fmx-mmeta">' + _esc(l.note) + (l.complaints ? ' · жалоб: ' + l.complaints : '') + '</div>' +
-                    acat +
-                    (l.ai_reason ? '<div class="fmx-mai">ИИ: ' + _esc(l.ai_reason) + '</div>' : '') +
-                    (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> Открыть канал</button>' : '') +
-                    '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-appr="' + l.id + '">Одобрить</button>' +
-                    '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button>' +
-                    (l.is_adult ? '<button class="fmx-mbtn" data-adoff="' + l.id + '">Снять 18+</button>' : '') + '</div>' +
-                    '</div>';
-            });
-            (r.requests || []).forEach(function (q) {
-                h += '<div class="fmx-mcard">' +
-                    '<div class="fmx-mtitle">заявка R' + q.id + '</div>' +
-                    '<div class="fmx-msub">«' + _esc(q.text) + '»</div>' +
-                    '<div class="fmx-mmeta">' + _esc(q.note) + (q.complaints ? ' · жалоб: ' + q.complaints : '') + '</div>' +
-                    '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-rest="' + q.id + '">Вернуть</button>' +
-                    '<button class="fmx-mbtn no" data-rem="' + q.id + '">Снять</button></div>' +
-                    '</div>';
-            });
-            if (r.listings_overflow) h += '<div class="fmx-mmeta" style="text-align:center;margin-top:8px;">…и ещё ' + r.listings_overflow + ' офферов с жалобами — обнови после разбора</div>';
-            if (r.requests_overflow) h += '<div class="fmx-mmeta" style="text-align:center;margin-top:8px;">…и ещё ' + r.requests_overflow + ' заявок с жалобами</div>';
-            box.innerHTML = h;
-            qsa(box, '[data-appr]').forEach(function (b) { b.addEventListener('click', function () { modApprove(+b.getAttribute('data-appr')); }); });
-            qsa(box, '[data-rej]').forEach(function (b) { b.addEventListener('click', function () { modReject(+b.getAttribute('data-rej')); }); });
-            qsa(box, '[data-adoff]').forEach(function (b) { b.addEventListener('click', function () { modAdultOff(+b.getAttribute('data-adoff')); }); });
-            qsa(box, '[data-open]').forEach(function (b) { b.addEventListener('click', function () { _openChannel(b.getAttribute('data-open')); }); });
-            qsa(box, '[data-rest]').forEach(function (b) { b.addEventListener('click', function () { modRestore(+b.getAttribute('data-rest')); }); });
-            qsa(box, '[data-rem]').forEach(function (b) { b.addEventListener('click', function () { modRemove(+b.getAttribute('data-rem')); }); });
-        }).catch(function () { _modFail(box); });
-    }
-    function _modStatTile(label, val, sub) {
-        return '<div class="fmx-stile"><div class="fmx-stv">' + (val == null ? '—' : val) + '</div>' +
-            '<div class="fmx-stl">' + _esc(label) + '</div>' + (sub ? '<div class="fmx-sts">' + _esc(sub) + '</div>' : '') + '</div>';
-    }
-    function renderModStats() {
-        var box = el('fmx-modbody'); if (!box) return;
-        box.innerHTML = loadHtml();
-        apiGet('/api/v1/admin/overview').then(function (r) {
-            if (_mainTab !== 'mod' || _modTab !== 'stats') return;
-            if (!r || r.ok === false) { _modFail(box); return; }
-            var u = r.users || {}, s = r.spend || {}, rf = r.referrals || {};
-            var budget = s.month_budget_usd || 0;
-            var spent = s.month_usd || 0;
-            var pct = budget > 0 ? Math.min(100, Math.round(spent / budget * 100)) : 0;
-            var h = '<div class="fmx-mgrid">' +
-                _modStatTile('Пользователей', _num(u.total), 'всего') +
-                _modStatTile('Платных', _num(u.paid), 'с покупками') +
-                _modStatTile('Выручка / мес', _num(r.revenue_month_rub) + ' ₽', 'оплачено') +
-                '</div>';
-            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Расходы на ИИ<em>' + pct + '% бюджета</em></div>' +
-                '<div class="fmx-mstatrow" style="border-top:0;margin-top:0;padding-top:0;"><span>За месяц</span><b>$' + spent.toFixed(2) + ' из $' + budget + '</b></div>' +
-                '<div class="fmx-bar' + (pct >= 80 ? ' warn' : '') + '"><i style="width:' + Math.max(2, pct) + '%"></i></div>' +
-                '<div class="fmx-mstatrow"><span>За сегодня</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div></div>';
-            if (r.top_spenders && r.top_spenders.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Кто тратит больше всех<em>за месяц</em></div><div class="fmx-plist">';
-                r.top_spenders.forEach(function (t) {
-                    h += _pRow({ id: t.user_id, name: 'ID ' + t.user_id, meta: t.calls + ' обращений к ИИ',
-                        val: '$' + t.spent_usd.toFixed(2) });
-                });
-                h += '</div></div>';
-            }
-            h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Рефералы</div>' +
-                '<div class="fmx-mstatrow" style="border-top:0;margin-top:0;padding-top:0;"><span>Приглашено всего</span><b>' + _num(rf.total) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div></div>' +
-                '<div id="fmx-modact"></div>';
-            box.innerHTML = h;
-            _modWireUids(box);
-            _modRenderActivity();
-        }).catch(function () { _modFail(box); });
-    }
-    var _muPending = null;
 
     function _pInit(name, id) {
         var s = (name || '').trim();
@@ -2814,6 +3089,7 @@
                 var host = box.querySelector('[data-list="' + key + '"]');
                 if (!host) return;
                 host.classList.toggle('open');
+                if (key === 'users') _mod.usersOpen = host.classList.contains('open');
                 var hidden = qsa(host, '.fmx-prow.hid');
                 hidden.forEach(function (n) { n.style.display = host.classList.contains('open') ? '' : 'none'; });
                 b.textContent = host.classList.contains('open') ? 'Свернуть' : ('Показать всех · ' + total);
@@ -2821,7 +3097,7 @@
         });
     }
 
-    function _modOpenUser(id) { _muPending = String(id); _modTab = 'user'; _haptic('light'); renderMod(); }
+    function _modOpenUser(id) { _haptic('light'); _modUserSheet(String(id)); }
     function _modWireUids(scope) {
         qsa(scope, '[data-uid]').forEach(function (n) {
             if (n.__uidWired) return;
@@ -2831,10 +3107,25 @@
     }
     var _EVN = { app_open: 'Вход в приложение', tariffs: 'Витрина Forge', fn_create_post: 'Создать пост', fn_rewrite_post: 'Рерайт поста', fn_content_plan: 'Контент-план', fn_ai_audit: 'AI-аудит', fn_ai_strategy: 'ИИ-стратегия', fn_competitor_analysis: 'Анализ конкурентов', fn_my_channels: 'Мои каналы', fn_add_channel: 'Подключение канала', fn_radar: 'Радар', fn_marketplace: 'Рынок рекламы', fn_referral: 'Друзья и промокод', fn_profile: 'Кабинет', fn_find_advertisers: 'Поиск рекламодателей', fn_post_price: 'Цена поста', fn_negotiation_templates: 'Шаблоны переговоров', fn_voice_settings: 'Голос канала', mx_catalog: 'Радар (раздел)', mx_market: 'Площадка (раздел)', mx_mod: 'Админ-панель', mxs_buy: 'Площадка · Купить', mxs_sell: 'Площадка · Продать', mxs_mine: 'Мои офферы', mxs_create: 'Конструктор оффера', mxs_deals: 'Сделки' };
     var _OPN = { generate: 'Генерация поста', modify: 'Правка поста', intent: 'Уточняющие вопросы', suggest: 'Подсказки правок', ideas: 'Идеи тем', rewrite: 'Рерайт (ИИ)', voice: 'Голос канала (ИИ)', audit: 'AI-аудит', strategy: 'ИИ-стратегия', strategy_chat: 'Чат стратегии', competitors: 'Анализ конкурентов', ad_exchange: 'Биржа (ИИ)', content_plan: 'Контент-план: идея', content_plan_day: 'Контент-план: день', moderation: 'Модерация (платформа)', niche: 'Ниша (платформа)' };
-    function _modRenderActivity() {
+    function _modLoadActivity(quiet) {
+        var gen = _mod.gen;
+        if (!quiet) { _mod.actState = 'loading'; _modPaintSections(); }
         apiGet('/api/v1/admin/activity').then(function (a) {
-            var box = el('fmx-modact');
-            if (!box || _mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
+            if (_mainTab !== 'mod' || gen !== _mod.gen) return;
+            if (!a || a.ok === false) { _mod.actState = 'error'; _modPaintSections(); return; }
+            _mod.act = a;
+            _mod.actState = 'ready';
+            _modPaintSections();
+        }).catch(function () {
+            if (_mainTab !== 'mod' || gen !== _mod.gen) return;
+            _mod.actState = 'error'; _modPaintSections();
+        });
+    }
+
+    function _modPaintActivity() {
+        var box = el('fmx-modact');
+        var a = _mod.act;
+        if (box && a) {
             var h = '';
             if (a.visitors_7d && a.visitors_7d.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Активные<em>за 7 дней</em></div><div class="fmx-plist">';
@@ -2898,77 +3189,78 @@
             box.innerHTML = h;
             _modWireUids(box);
             _collapsible(box, 'users', (a.all_users || []).length);
-        }).catch(function () {});
-    }
-    function renderModUser() {
-        var box = el('fmx-modbody'); if (!box) return;
-        box.innerHTML =
-            '<div class="fmx-mcard"><div class="fmx-meyebrow">Найти пользователя</div>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="Telegram ID, например 100000000" style="flex:1;">' +
-            '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:7px;">ID можно нажать в любом списке на вкладке «Сводка» — карточка откроется сама.</div></div>' +
-            '<div id="fmx-mures"></div>' +
-            '<div class="fmx-mcard" style="margin-top:11px;"><div class="fmx-meyebrow">Ручное продвижение оффера<em>30 дней</em></div>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
-            '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:7px;">Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней бесплатно. ID оффера виден в очереди модерации.</div></div>';
-        el('fmx-mboostgo').addEventListener('click', function () {
-            var v = el('fmx-mboostid').value.trim();
-            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой ID оффера'); return; }
-            var b = this; b.disabled = true;
-            apiPost('/api/v1/marketplace/mod/boost', { listing_id: +v }).then(function (r) {
-                b.disabled = false;
-                if (r && r.ok) { _haptic('success'); toast('Топ включён на 30 дней'); }
-                else { uiAlert((r && r.error) || 'Не удалось'); }
-            }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
-        });
-        var find = function () {
-            var v = el('fmx-muid').value.trim();
-            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой Telegram ID'); return; }
-            var res = el('fmx-mures'); res.innerHTML = loadHtml();
-            apiGet('/api/v1/admin/user/' + v).then(function (r) {
-                if (!r || r.ok === false) { res.innerHTML = emptyHtml('ti-user-off', (r && r.error) || 'Пользователь не найден', 'Проверь ID и повтори.'); return; }
-                var u = r.user;
-                res.innerHTML = '<div class="fmx-mcard" style="margin-top:11px;">' +
-                    '<div style="display:flex;align-items:center;gap:11px;margin-bottom:4px;">' +
-                    '<div class="fmx-pav" style="width:38px;height:38px;border-radius:11px;font-size:15px;">' + _pInit(u.first_name, u.id) + '</div>' +
-                    '<div style="flex:1;min-width:0;"><div class="fmx-mtitle">' + _esc(u.first_name || ('ID ' + u.id)) + '</div>' +
-                    '<div class="fmx-pmeta">' + (u.username && u.username !== '—' ? '@' + _esc(u.username) : 'без @username') + '</div></div>' +
-                    '</div>' +
-                    '<div class="fmx-mstatrow"><span>ID</span><b>' + u.id + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Уровень</span><b>' + _esc(u.referral_level) + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Платных рефералов</span><b>' + _num(u.paid_referrals) + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Баланс Forge</span><b>' + _num(u.forge_balance) + '</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Расход за месяц</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' выз.</b></div>' +
-                    '<div class="fmx-mstatrow"><span>Регистрация</span><b>' + _esc(u.created_at) + '</b></div>' +
-                    (u.username && u.username !== '—'
-                        ? '<button class="fmx-btn" data-muopen="' + _esc(u.username) + '" style="width:100%;margin-top:10px;"><i class="ti ti-brand-telegram"></i> Написать @' + _esc(u.username) + '</button>'
-                        : '<button class="fmx-btn" data-mucopy="' + u.id + '" style="width:100%;margin-top:10px;"><i class="ti ti-copy"></i> Скопировать ID</button>' +
-                          '<div class="fmx-mdsub" style="margin-top:7px;text-align:center;">У пользователя нет @username — открыть профиль напрямую нельзя. Найди его по ID в поиске Telegram или через его оффер.</div>') +
-                    '</div>';
-                qsa(res, '[data-muopen]').forEach(function (b) {
-                    b.addEventListener('click', function () {
-                        _openChannel('https://t.me/' + b.getAttribute('data-muopen'));
-                    });
-                });
-                qsa(res, '[data-mucopy]').forEach(function (b) {
-                    b.addEventListener('click', function () {
-                        var id = b.getAttribute('data-mucopy');
-                        try {
-                            if (navigator.clipboard) navigator.clipboard.writeText(id);
-                            else { var t = document.createElement('textarea'); t.value = id; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
-                            _haptic('success'); toast('ID скопирован');
-                        } catch (e) { uiAlert('Не удалось скопировать. ID: ' + id); }
-                    });
-                });
-            }).catch(function () { _modFail(res); });
-        };
-        el('fmx-mufind').addEventListener('click', find);
-        el('fmx-muid').addEventListener('keydown', function (e) { if (e.key === 'Enter') find(); });
-        if (_muPending) { el('fmx-muid').value = _muPending; _muPending = null; find(); }
+            if (_mod.usersOpen) {
+                var ul = box.querySelector('[data-list="users"]');
+                if (ul) {
+                    ul.classList.add('open');
+                    qsa(ul, '.fmx-prow.hid').forEach(function (nd) { nd.style.display = ''; });
+                    var mb = box.querySelector('[data-more="users"]');
+                    if (mb) mb.textContent = 'Свернуть';
+                }
+            }
+        }
     }
 
+    function _modUserSheet(id) {
+        var old = el('fmx-muBg'); if (old) old.remove();
+        var bg = document.createElement('div');
+        bg.id = 'fmx-muBg'; bg.className = 'fmx-cfm solid';
+        bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t" style="display:flex;align-items:center;gap:8px;">' +
+            '<i class="ti ti-user" style="color:#818cf8;"></i><span style="flex:1;">Карточка пользователя</span>' +
+            '<button class="fmx-ibtn" data-mux style="width:30px;height:30px;"><i class="ti ti-x"></i></button></div>' +
+            '<div id="fmx-mubody" style="margin-top:11px;">' + loadHtml() + '</div></div>';
+        document.body.appendChild(bg);
+        function done() { bg.remove(); }
+        bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
+        bg.querySelector('[data-mux]').addEventListener('click', done);
+        apiGet('/api/v1/admin/user/' + id).then(function (r) {
+            var body = el('fmx-mubody'); if (!body) return;
+            if (!r || r.ok === false) { body.innerHTML = emptyHtml('ti-user-off', (r && r.error) || 'Пользователь не найден', 'Проверь ID и повтори.'); return; }
+            var u = r.user;
+            body.innerHTML =
+                '<div style="display:flex;align-items:center;gap:11px;margin-bottom:8px;">' +
+                '<div class="fmx-pav" style="width:38px;height:38px;border-radius:11px;font-size:15px;">' + _pInit(u.first_name, u.id) + '</div>' +
+                '<div style="flex:1;min-width:0;"><div class="fmx-mtitle">' + _esc(u.first_name || ('ID ' + u.id)) + '</div>' +
+                '<div class="fmx-pmeta">' + (u.username && u.username !== '—' ? '@' + _esc(u.username) : 'без @username') + '</div></div></div>' +
+                '<div class="fmx-mstatrow"><span>ID</span><b>' + u.id + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Уровень партнёрки</span><b>' + _esc(u.referral_level) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Платных рефералов</span><b>' + _num(u.paid_referrals) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Баланс Forge</span><b>' + _num(u.forge_balance) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>Расход за месяц</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' выз.</b></div>' +
+                '<div class="fmx-mstatrow"><span>Регистрация</span><b>' + _esc(u.created_at) + '</b></div>' +
+                (u.username && u.username !== '—'
+                    ? '<button class="fmx-btn" data-muopen="' + _esc(u.username) + '" style="width:100%;margin-top:12px;"><i class="ti ti-brand-telegram"></i> Написать @' + _esc(u.username) + '</button>'
+                    : '<button class="fmx-btn" data-mucopy="' + u.id + '" style="width:100%;margin-top:12px;"><i class="ti ti-copy"></i> Скопировать ID</button>' +
+                      '<div class="fmx-mdsub" style="margin-top:7px;text-align:center;">У пользователя нет @username — открыть профиль напрямую нельзя. Найди его по ID в поиске Telegram или через его оффер.</div>');
+            qsa(body, '[data-muopen]').forEach(function (b) {
+                b.addEventListener('click', function () { _openChannel('https://t.me/' + b.getAttribute('data-muopen')); });
+            });
+            qsa(body, '[data-mucopy]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var v = b.getAttribute('data-mucopy');
+                    try {
+                        if (navigator.clipboard) navigator.clipboard.writeText(v);
+                        else { var ta = document.createElement('textarea'); ta.value = v; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+                        _haptic('success'); toast('ID скопирован');
+                    } catch (e) { uiAlert('Не удалось скопировать. ID: ' + v); }
+                });
+            });
+        }).catch(function () {
+            var body = el('fmx-mubody');
+            if (body) body.innerHTML = emptyHtml('ti-cloud-off', 'Не загрузилось', 'Проверь связь и повтори попытку.');
+        });
+    }
+
+    function _liveMod() {
+        if (_mainTab !== 'mod' || !_opened) return false;
+        if (document.querySelector('.fmx-cfm')) return false;
+        if (_modTyping()) return false;
+        _modLoad(true);
+        if (_mod.open.people && _mod.actState === 'ready') _modLoadActivity(true);
+        return true;
+    }
+    if (window.FMLive) window.FMLive.register('mod', 60000, _liveMod);
     function feedQuery() {
         var p = ['limit=' + _FEED_PAGE, 'offset=' + _feedOffset];
         if (!_regionAll && !_regionFb) p.push('region=' + _uiSeg());
