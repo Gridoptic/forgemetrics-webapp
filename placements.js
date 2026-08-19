@@ -62,17 +62,18 @@
             '.pl-eava i.g{background:#5DCAA5;}',
             '.pl-eava i.p{background:#fbbf5f;}',
             '.pl-eava i.o{background:#565b73;}',
-            '.pl-erow{display:flex;align-items:center;gap:7px;margin-top:5px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent);}',
+            '.pl-erow{display:flex;align-items:center;gap:6px;margin-top:5px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent);}',
             '.pl-fst{font-size:9px;font-weight:700;color:#8990a8;white-space:nowrap;flex:0 0 auto;}',
             '.pl-fun{display:inline-flex;flex:0 0 auto;border:1px solid rgba(255,255,255,0.10);border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.02);}',
-            '.pl-fseg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 9px 2.5px;border-left:1px solid rgba(255,255,255,0.07);min-width:0;}',
+            '.pl-fseg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px 2.5px;border-left:1px solid rgba(255,255,255,0.07);min-width:0;}',
             '.pl-fseg:first-child{border-left:none;}',
             '.pl-fseg b{font-size:10.5px;font-weight:800;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums;}',
             '.pl-fseg em{font-style:normal;font-size:6.5px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:#565b73;white-space:nowrap;margin-top:1px;}',
             '.pl-fseg.gg{background:rgba(93,202,165,0.07);}',
             '.pl-fseg.gg b{color:#5DCAA5;}',
             '.pl-fseg.gg em{color:rgba(93,202,165,0.65);}',
-            '.pl-fpr{font-size:10px;color:#8990a8;white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums;}',
+            '.pl-ecpf u{display:block;text-decoration:none;font-size:9.5px;font-weight:700;color:#8990a8;margin-top:4px;line-height:1.1;font-variant-numeric:tabular-nums;}',
+            '.pl-ecpf s{display:block;text-decoration:none;font-size:7px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
             '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf b{display:block;font-size:13.5px;font-weight:800;line-height:1.1;}',
             '.pl-ecpf em{display:block;font-style:normal;font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
@@ -617,17 +618,20 @@
         var st = '';
         if (!active) st = '<span class="pl-fst">' + esc(T('отключена')) + '</span>';
         else if (_chPaused) st = '<span class="pl-fst">' + esc(T('канал на паузе')) + '</span>';
-        var fun = st +
-            '<span class="pl-fun">' +
-            '<span class="pl-fseg"><b>' + (impB ? num(impB) + (l.views_scan == null ? '≈' : '') : '—') + '</b><em>' + esc(T('Показы')) + '</em></span>' +
-            '<span class="pl-fseg"><b>' + (l.clicks != null ? num(l.clicks) : '—') + '</b><em>' + esc(T('Клики')) + '</em></span>' +
-            '<span class="pl-fseg gg"><b>+' + num(joinedN) + '</b><em>' + esc(T('Подписки')) + '</em></span>' +
-            '</span>' +
-            (l.price_rub ? '<span class="pl-fpr">' + num(l.price_rub) + ' ₽</span>' : '');
+        var numK = function (v) {
+            return v >= 10000 ? String(Math.round(v / 100) / 10).replace('.', ',') + 'K' : num(v);
+        };
+        var fun = '<span class="pl-fun">' +
+            '<span class="pl-fseg"><b>' + (impB ? numK(impB) + (l.views_scan == null ? '≈' : '') : '—') + '</b><em>' + esc(T('Показы')) + '</em></span>' +
+            '<span class="pl-fseg"><b>' + (l.clicks != null ? numK(l.clicks) : '—') + '</b><em>' + esc(T('Клики')) + '</em></span>' +
+            '<span class="pl-fseg gg"><b>+' + numK(joinedN) + '</b><em>' + esc(T('Подписки')) + '</em></span>' +
+            '</span>' + st;
         var letter = String(l.seller_username || l.name || '?').charAt(0).toUpperCase();
+        var priceLn = l.price_rub
+            ? '<u>' + num(l.price_rub) + ' ₽</u><s>' + esc(T('Цена')) + '</s>' : '';
         var right = l.cpf != null
-            ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em></div>'
-            : '<div class="pl-ecpf"><b style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</b><em>' + esc(T('подписки')) + '</em></div>';
+            ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em>' + priceLn + '</div>'
+            : '<div class="pl-ecpf"><b style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</b><em>' + esc(T('Подписки')) + '</em>' + priceLn + '</div>';
         return '<div class="pl-acc' + (open ? ' open' : '') + '" data-id="' + l.id + '">' +
             '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
             '<span class="pl-eava">' + esc(letter) + '<i class="' + dot + '"></i></span>' +
