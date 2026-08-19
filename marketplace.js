@@ -2774,10 +2774,11 @@
             }
             h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Рефералы</div>' +
                 '<div class="fmx-mstatrow" style="border-top:0;margin-top:0;padding-top:0;"><span>Приглашено всего</span><b>' + _num(rf.total) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div></div>';
+                '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div></div>' +
+                '<div id="fmx-modact"></div>';
             box.innerHTML = h;
             _modWireUids(box);
-            _modRenderActivity(box);
+            _modRenderActivity();
         }).catch(function () { _modFail(box); });
     }
     var _muPending = null;
@@ -2830,9 +2831,10 @@
     }
     var _EVN = { app_open: 'Вход в приложение', tariffs: 'Витрина Forge', fn_create_post: 'Создать пост', fn_rewrite_post: 'Рерайт поста', fn_content_plan: 'Контент-план', fn_ai_audit: 'AI-аудит', fn_ai_strategy: 'ИИ-стратегия', fn_competitor_analysis: 'Анализ конкурентов', fn_my_channels: 'Мои каналы', fn_add_channel: 'Подключение канала', fn_radar: 'Радар', fn_marketplace: 'Рынок рекламы', fn_referral: 'Друзья и промокод', fn_profile: 'Кабинет', fn_find_advertisers: 'Поиск рекламодателей', fn_post_price: 'Цена поста', fn_negotiation_templates: 'Шаблоны переговоров', fn_voice_settings: 'Голос канала', mx_catalog: 'Радар (раздел)', mx_market: 'Площадка (раздел)', mx_mod: 'Админ-панель', mxs_buy: 'Площадка · Купить', mxs_sell: 'Площадка · Продать', mxs_mine: 'Мои офферы', mxs_create: 'Конструктор оффера', mxs_deals: 'Сделки' };
     var _OPN = { generate: 'Генерация поста', modify: 'Правка поста', intent: 'Уточняющие вопросы', suggest: 'Подсказки правок', ideas: 'Идеи тем', rewrite: 'Рерайт (ИИ)', voice: 'Голос канала (ИИ)', audit: 'AI-аудит', strategy: 'ИИ-стратегия', strategy_chat: 'Чат стратегии', competitors: 'Анализ конкурентов', ad_exchange: 'Биржа (ИИ)', content_plan: 'Контент-план: идея', content_plan_day: 'Контент-план: день', moderation: 'Модерация (платформа)', niche: 'Ниша (платформа)' };
-    function _modRenderActivity(box) {
+    function _modRenderActivity() {
         apiGet('/api/v1/admin/activity').then(function (a) {
-            if (_mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
+            var box = el('fmx-modact');
+            if (!box || _mainTab !== 'mod' || _modTab !== 'stats' || !a || a.ok === false) return;
             var h = '';
             if (a.visitors_7d && a.visitors_7d.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Активные<em>за 7 дней</em></div><div class="fmx-plist">';
