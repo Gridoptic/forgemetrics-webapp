@@ -64,10 +64,12 @@
             '.pl-amid{flex:1;min-width:0;}',
             '.pl-anm{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-amt{font-size:10px;color:#565b73;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-            '.pl-abar{display:flex;gap:2px;margin-top:5px;height:3px;max-width:150px;}',
-            '.pl-abar span{border-radius:2px;background:rgba(129,140,248,0.55);}',
-            '.pl-abar span:nth-child(2){background:rgba(96,165,250,0.55);}',
-            '.pl-abar span:nth-child(3){background:rgba(93,202,165,0.7);}',
+            '.pl-astat{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px;color:#8990a8;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;}',
+            '.pl-astat i{font-size:11px;color:#565b73;flex-shrink:0;}',
+            '.pl-astat s{text-decoration:none;color:#3a3f52;}',
+            '.pl-astat u{text-decoration:none;color:#565b73;margin-left:1px;}',
+            '.pl-accc{color:#565b73;font-size:17px;transition:transform 240ms;flex-shrink:0;}',
+            '.pl-acc.open .pl-accc{transform:rotate(180deg);}',
             '.pl-aright{flex:0 0 auto;text-align:right;}',
             '.pl-acpf{font-size:14.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}',
             '.pl-ajoin{font-size:10px;color:#5DCAA5;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
@@ -587,13 +589,12 @@
         if (l.created_at) meta.push(T('создана') + ' ' + fmtDay(l.created_at));
         if (l.price_rub) meta.push(num(l.price_rub) + ' ₽');
         var joinedN = l.joined || 0;
-        var bar = '';
         var impB = effImp(l);
-        var base = impB || (l.clicks != null ? l.clicks : 0) || joinedN;
-        if (base > 0) {
-            var seg = function (v) { return v > 0 ? '<span style="width:' + Math.max(6, Math.round(v / base * 58)) + '%;"></span>' : ''; };
-            bar = '<div class="pl-abar">' + (impB ? seg(impB) : '') + (l.clicks != null ? seg(l.clicks) : '') + seg(joinedN) + '</div>';
-        }
+        var stats = [];
+        if (impB) stats.push('<i class="ti ti-eye"></i>' + num(impB) + (l.views_scan == null ? '<u>≈</u>' : ''));
+        if (l.clicks != null) stats.push('<i class="ti ti-pointer"></i>' + num(l.clicks));
+        var bar = stats.length
+            ? '<div class="pl-astat">' + stats.join('<s>·</s>') + '</div>' : '';
         var right = l.cpf != null
             ? '<div class="pl-acpf" style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</div>' +
               '<div class="pl-ajoin"' + (active ? '' : ' style="color:#8990a8;"') + '>+' + num(joinedN) + '</div>'
@@ -603,7 +604,8 @@
             '<span class="pl-dot ' + dot + '"></span>' +
             '<div class="pl-amid"><div class="pl-anm">' + esc(l.name) + '</div>' +
             '<div class="pl-amt">' + esc(meta.join(' · ')) + '</div>' + bar + '</div>' +
-            '<div class="pl-aright">' + right + '</div></div>' +
+            '<div class="pl-aright">' + right + '</div>' +
+            '<i class="ti ti-chevron-down pl-accc"></i></div>' +
             '<div class="pl-accb"' + (open ? ' style="max-height:none;"' : '') + '><div class="pl-acci">' + accBody(l) + '</div></div></div>';
     }
 
