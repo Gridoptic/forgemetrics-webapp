@@ -68,13 +68,12 @@
             '.pl-dcol.tap:active{background:rgba(129,140,248,0.12);}',
             '.pl-jall{margin-top:10px;}',
             '.pl-jall u{text-decoration:none;color:#818cf8;font-weight:800;font-variant-numeric:tabular-nums;margin-left:4px;}',
-            '.pl-jov{position:fixed;inset:0;z-index:9980;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:flex-end;justify-content:center;}',
+            '.pl-jov{position:fixed;inset:0;z-index:9980;background:#0b0e14;opacity:0;pointer-events:none;transition:opacity .18s;display:flex;justify-content:center;}',
             '.pl-jov.on{opacity:1;pointer-events:auto;}',
-            '.pl-jsh{width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;background:#10131b;border:1px solid rgba(255,255,255,0.09);border-bottom:none;border-radius:20px 20px 0 0;padding:0 0 env(safe-area-inset-bottom);transform:translateY(24px);transition:transform .22s;}',
-            '.pl-jov.on .pl-jsh{transform:translateY(0);}',
-            '.pl-jgrip{width:36px;height:4px;border-radius:99px;background:rgba(255,255,255,0.14);margin:9px auto 10px;flex-shrink:0;}',
-            '.pl-jt{display:flex;align-items:center;font-size:14px;font-weight:800;padding:0 14px;flex-shrink:0;}',
-            '.pl-jx{margin-left:auto;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b7088;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);cursor:pointer;}',
+            '.pl-jsh{width:100%;max-width:640px;height:100%;display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 0 env(safe-area-inset-bottom);}',
+            '.pl-jt{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;padding:4px 14px;flex-shrink:0;}',
+            '.pl-jback{width:36px;height:36px;margin-left:-8px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#c6cdde;cursor:pointer;}',
+            '.pl-jback:active{background:rgba(255,255,255,0.07);}',
             '.pl-jc{font-size:10.5px;color:#8990a8;padding:5px 14px 0;flex-shrink:0;}',
             '.pl-jc b{color:#e8eaf1;} .pl-jc .d{color:#818cf8;} .pl-jc .g{color:#5DCAA5;} .pl-jc .r{color:#ef8080;}',
             '.pl-jreset{color:#818cf8;font-weight:700;cursor:pointer;}',
@@ -827,6 +826,7 @@
             setAccOpen(cards[i], id != null && parseInt(cards[i].getAttribute('data-id'), 10) === id, true);
         }
         if (id != null) {
+            openWhoPanel(id);
             var a = document.querySelector('#pl-screen .pl-acc[data-id="' + id + '"]');
             if (a && a.scrollIntoView) setTimeout(function () { a.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 120);
         }
@@ -908,6 +908,7 @@
         var bg = document.getElementById('pl-sheetbg');
         if (bg) bg.addEventListener('click', closeSheet);
         animateCounters();
+        if (_openId != null) openWhoPanel(_openId);
     }
 
     function loading() {
@@ -1335,8 +1336,7 @@
             openAcc(_openId === eid ? null : eid);
             return;
         }
-        if (act === 'who') { toggleWho(parseInt(b.getAttribute('data-id'), 10)); return; }
-        if (act === 'jall') { openJoinersSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'who') { haptic('light'); openJoinersSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'jday') { openJoinersSheet(parseInt(b.getAttribute('data-id'), 10), b.getAttribute('data-day')); return; }
         if (act === 'deal') { openDealPick(parseInt(b.getAttribute('data-id'), 10)); return; }
         if (act === 'deal-pick') {
@@ -1476,25 +1476,15 @@
             '<div class="pl-whosub">' + sub + (u.username ? '' : ' · ' + esc(T('профиль без @имени'))) + '</div></div>' + tags + '</div>';
     }
 
-    function toggleWho(id) {
-        var box = document.getElementById('pl-who-' + id);
-        if (!box) return;
-        if (box.style.display !== 'none') { box.style.display = 'none'; return; }
-        box.style.display = 'block';
-        box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Загружаю...')) + '</div>';
-        haptic('light');
-        openWhoPanel(id);
-    }
-
     function openWhoPanel(id) {
         var box = document.getElementById('pl-who-' + id);
         if (!box) return;
+        if (!box.innerHTML) box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Загружаю...')) + '</div>';
         box.style.display = 'block';
         apiRequest('/api/v1/placements/links/' + id + '/joiners').then(function (r) {
             if (!r || !r.ok) { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc((r && r.message) || T('Не загрузилось. Открой ещё раз.')) + '</div>'; return; }
             var q = r.quality || {};
             var total = q.total || 0;
-            var recent = r.recent || [];
             var nolink = r.nolink_items || [];
             var nolinkHtml = '';
             if (nolink.length) {
@@ -1523,9 +1513,7 @@
             if (q.total >= 10 && susp / q.total > 0.5) {
                 head += '<div class="pl-qwarn">' + esc(T('Больше половины вступивших похожи на созданные недавно или шаблонные аккаунты — есть признаки недобросовестного трафика. Сверь список вручную перед оплатой следующего размещения.')) + '</div>';
             }
-            box.innerHTML = head + recent.map(whoRow).join('') +
-                '<button class="pl-dbtn pl-jall" data-act="jall" data-id="' + id + '"><i class="ti ti-users"></i><span>' +
-                esc(T('Все вступившие')) + '</span><u>' + num(total) + '</u></button>' + nolinkHtml;
+            box.innerHTML = head + nolinkHtml;
         }).catch(function () { box.innerHTML = '<div class="pl-center" style="padding:10px 0;">' + esc(T('Не загрузилось. Открой ещё раз.')) + '</div>'; });
     }
 
@@ -1556,9 +1544,8 @@
                 }
             });
         }
-        ov.innerHTML = '<div class="pl-jsh"><div class="pl-jgrip"></div>' +
-            '<div class="pl-jt">' + esc(T('Вступившие по ссылке')) +
-            '<i class="ti ti-x pl-jx" data-act="jclose"></i></div>' +
+        ov.innerHTML = '<div class="pl-jsh">' +
+            '<div class="pl-jt"><i class="ti ti-arrow-left pl-jback" data-act="jclose"></i>' + esc(T('Вступившие по ссылке')) + '</div>' +
             '<div class="pl-jc" id="pl-jc"></div>' +
             '<div class="pl-jchips" id="pl-jchips"></div>' +
             '<div class="pl-jsrch"><i class="ti ti-search"></i><input id="pl-jq" maxlength="64" placeholder="' + esc(T('Поиск по имени или @юзернейму')) + '"></div>' +
