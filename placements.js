@@ -19,6 +19,12 @@
     function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} }
     function num(n) { try { return new Intl.NumberFormat('ru-RU').format(n); } catch (e) { return String(n); } }
     function rub(v) { return (v > 0 ? num(v) : '<1') + ' ₽'; }
+    function plural3(n, one, few, many) {
+        var a = n % 10, b = n % 100;
+        if (a === 1 && b !== 11) return one;
+        if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+        return many;
+    }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function avInner(title, url) {
         return esc(String(title || '?').trim().charAt(0).toUpperCase() || '?') +
@@ -71,6 +77,10 @@
             '.pl-fseg.gg{background:rgba(93,202,165,0.07);}',
             '.pl-fseg.gg b{color:#5DCAA5;}',
             '.pl-fseg.gg em{color:rgba(93,202,165,0.65);}',
+            '.pl-awin{display:block;margin-top:6px;}',
+            '.pl-awin .tr{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden;}',
+            '.pl-awin .tr i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,rgba(129,140,248,0.8),rgba(93,202,165,0.8));}',
+            '.pl-awin .tx{display:block;font-size:8.5px;color:#565b73;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-ecpf u{display:block;text-decoration:none;font-size:9.5px;font-weight:700;color:#8990a8;margin-top:4px;line-height:1.1;font-variant-numeric:tabular-nums;}',
             '.pl-ecpf s{display:block;text-decoration:none;font-size:7px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#565b73;margin-top:1px;}',
             '.pl-ecpf{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;}',
@@ -607,6 +617,34 @@
         return l.cpf <= b.hi * 4 / 3 ? '#f5bf4f' : '#ef4444';
     }
 
+    function attrWin(l) {
+        if (!l.attribution_until) return '';
+        var end = new Date(l.attribution_until);
+        var now2 = new Date();
+        if (isNaN(end.getTime())) return '';
+        if (now2 >= end) {
+            return '<div class="pl-awin done"><span class="tx">' +
+                esc(T('окно атрибуции закрыто') + ' ' + fmtDay(l.attribution_until) + ' · ' + T('история сохранена')) +
+                '</span></div>';
+        }
+        var start = l.created_at ? new Date(l.created_at) : null;
+        var pct = 50;
+        if (start && !isNaN(start.getTime()) && end > start) {
+            pct = Math.max(3, Math.min(100, Math.round((now2 - start) / (end - start) * 100)));
+        }
+        var leftMs = end - now2;
+        var leftTx;
+        if (leftMs < 86400000) {
+            leftTx = T('осталось меньше суток');
+        } else {
+            var dl = Math.ceil(leftMs / 86400000);
+            leftTx = (dl === 1 ? T('остался') : T('осталось')) + ' ' + dl + ' ' + T(plural3(dl, 'день', 'дня', 'дней'));
+        }
+        return '<div class="pl-awin"><span class="tr"><i style="width:' + pct + '%;"></i></span>' +
+            '<span class="tx">' + esc(T('окно атрибуции до') + ' ' + fmtDay(l.attribution_until) + ' · ' + leftTx) +
+            '</span></div>';
+    }
+
     function accCard(l) {
         var active = l.status === 'active';
         var open = _openId === l.id;
@@ -632,7 +670,7 @@
             '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
             '<span class="pl-eava">' + esc(letter) + '<i class="' + dot + '"></i></span>' +
             '<div class="pl-amid"><div class="pl-anm">' + esc(l.name) + '</div>' +
-            '<div class="pl-erow">' + fun + '</div></div>' +
+            '<div class="pl-erow">' + fun + '</div>' + attrWin(l) + '</div>' +
             right +
             '<i class="ti ti-chevron-down pl-accc"></i></div>' +
             '<div class="pl-accb"' + (open ? ' style="max-height:none;"' : '') + '><div class="pl-acci">' + accBody(l) + '</div></div></div>';
