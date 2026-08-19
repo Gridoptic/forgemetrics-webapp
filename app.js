@@ -757,6 +757,8 @@ function pwPreview(v, o) {
     return String(Math.round(v)) + (o.suf || '');
 }
 
+var pwCpfHintOpen = false;
+
 function pwRenderMetrics(pulse) {
     var grid = document.getElementById('pw-mgrid');
     if (!grid) return;
@@ -813,14 +815,24 @@ function pwRenderMetrics(pulse) {
             valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
         var nameTx = escapeHtml(m.label) +
-            (id === 'cpf' ? ' <span id="pw-cpf-i" class="pw-hintq">?</span>' : '');
-        return `<div class="pw-r"><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+            (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '');
+        var rowTx = `<div class="pw-r"><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+        if (id === 'cpf') {
+            var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
+            rowTx += `<div class="pw-hintbox${pwCpfHintOpen ? ' open' : ''}" id="pw-cpf-hint"><div class="in">` +
+                escapeHtml(_th('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.')) +
+                `</div></div>`;
+        }
+        return rowTx;
     }).join('');
     pwCountUp(grid);
     var cpfI = document.getElementById('pw-cpf-i');
     if (cpfI) cpfI.onclick = () => {
         hapticLight();
-        cabToast('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.');
+        pwCpfHintOpen = !pwCpfHintOpen;
+        cpfI.classList.toggle('on', pwCpfHintOpen);
+        var hb = document.getElementById('pw-cpf-hint');
+        if (hb) hb.classList.toggle('open', pwCpfHintOpen);
     };
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
