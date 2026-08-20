@@ -9413,7 +9413,7 @@
                 '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         var erHtml = '';
-        if (!dead && l.engagement_percent != null) {
+        if (!dead) {
             var erBits = [];
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
@@ -9421,11 +9421,13 @@
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
             if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
             var _erv = l.engagement_percent;
-            var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
-            var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
+            var _erNo = (_erv == null);
+            var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
+            var _erCol = _erNo ? '#c2c6d2' : (_erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b'));
+            var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
+            if (_erNo) erSub = ' <span style="font-size:11px;color:#565b73;">— в канале отключены реакции и комментарии; цена считается по охвату</span>';
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
         }
         var facts = rrHtml + erHtml + _spikeLine(l) +
             (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
@@ -9512,7 +9514,7 @@
         var _deadT = l.activity === 'none';
         var erv = _deadT ? null : l.engagement_percent;
         var erCol = (erv == null) ? '#c2c6d2' : (erv >= 3.5 ? '#5DCAA5' : (erv >= 1 ? '#818cf8' : '#f59e0b'));
-        var erStat = (erv == null) ? (_deadT ? 'нет свежих постов' : '') : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
+        var erStat = (erv == null) ? (_deadT ? 'нет свежих постов' : 'не измеряется') : (erv >= 3.5 ? 'высокая' : (erv >= 1 ? 'норма' : 'низкая'));
         var ervTxt = (erv == null) ? '—' : (((erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(erv).replace('.', ',')) + '%');
         var isOwner = !!l.owner_price || mode === 'market';
         var g = (l.subs_d30 != null) ? l.subs_d30 : ((l.subs_d7 != null) ? l.subs_d7 : null);
@@ -9762,7 +9764,7 @@
                 '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
         }
         var erHtml = '';
-        if (!dead && l.engagement_percent != null) {
+        if (!dead) {
             var erBits = [];
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
@@ -9770,11 +9772,13 @@
             var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
             if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
             var _erv = l.engagement_percent;
-            var _erStat = _erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая');
-            var _erCol = _erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b');
-            var _ervTxt = (_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',');
-            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '%</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если взаимодействия скрыты — ER не показываем.</div>';
+            var _erNo = (_erv == null);
+            var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
+            var _erCol = _erNo ? '#c2c6d2' : (_erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b'));
+            var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
+            if (_erNo) erSub = ' <span style="font-size:11px;color:#565b73;">— в канале отключены реакции и комментарии; цена считается по охвату</span>';
+            erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
+                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
         }
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
         var facts = rrHtml + erHtml + _spikeLine(l) +
@@ -11145,7 +11149,7 @@
             if (l.forward_count) _eb.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) _eb.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
             var _ev = l.engagement_percent;
-            var _es = _ev >= 3.5 ? 'высокая' : (_ev >= 1 ? 'норма' : 'низкая');
+            var _es = (_ev == null) ? 'не измеряется' : (_ev >= 3.5 ? 'высокая' : (_ev >= 1 ? 'норма' : 'низкая'));
             var _ec = _ev >= 3.5 ? '#5DCAA5' : (_ev >= 1 ? '#818cf8' : '#f59e0b');
             _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;">ER — <b style="color:' + _ec + ';">' + _es + '</b>' + (_eb.length ? ' <span style="color:#565b73;">— по ' + _eb.join(', ') + ' на пост</span>' : '') + '</div>';
         }
