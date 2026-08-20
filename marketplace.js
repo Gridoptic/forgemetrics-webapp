@@ -8533,7 +8533,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260803h';
+    var PS_GLUE_V = '20260820a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -9425,7 +9425,13 @@
             var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
             var _erCol = _erNo ? '#c2c6d2' : (_erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b'));
             var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
-            if (_erNo) erSub = ' <span style="font-size:11px;color:#565b73;">— в канале отключены реакции и комментарии; цена считается по охвату</span>';
+            if (_erNo) {
+                var _hasSig = !!(l.react_count || l.comment_count);
+                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '') +
+                    ' <span style="font-size:11px;color:#565b73;">— ' + (_hasSig
+                        ? 'сигнала мало для честной оценки; цена считается по охвату'
+                        : 'в канале не видно реакций и комментариев; цена считается по охвату') + '</span>';
+            }
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
         }
@@ -9776,7 +9782,13 @@
             var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
             var _erCol = _erNo ? '#c2c6d2' : (_erv >= 3.5 ? '#5DCAA5' : (_erv >= 1 ? '#818cf8' : '#f59e0b'));
             var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
-            if (_erNo) erSub = ' <span style="font-size:11px;color:#565b73;">— в канале отключены реакции и комментарии; цена считается по охвату</span>';
+            if (_erNo) {
+                var _hasSig = !!(l.react_count || l.comment_count);
+                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '') +
+                    ' <span style="font-size:11px;color:#565b73;">— ' + (_hasSig
+                        ? 'сигнала мало для честной оценки; цена считается по охвату'
+                        : 'в канале не видно реакций и комментариев; цена считается по охвату') + '</span>';
+            }
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
         }
@@ -11187,7 +11199,7 @@
             cell('Аудитория', audTx || '—', !audTx) +
             '<div class="pw-mdiv"></div>' +
             (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false)
-                : ((!dead && l.engagement_percent != null) ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Вовлечённость (ER)', '—', true, dead ? 'нет свежих постов' : ''))) +
+                : ((!dead && l.engagement_percent != null) ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Вовлечённость (ER)', '—', true, dead ? 'нет свежих постов' : ((l.react_count || l.comment_count) ? 'сигнала мало для оценки' : 'не измеряется')))) +
             '</div>' +
             _xtra +
             (l.er != null && l.er > 100 ?
@@ -11205,8 +11217,12 @@
                 'Заметные реакции при таком охвате — знак, что просмотры живые; почти полное их отсутствие — что охват докручен ' +
                 '(боты просмотр открывают, а реакцию не ставят).';
         }
-        return 'Проверить это по вовлечённости не выйдет — реакции у канала скрыты. Настоящий ли охват, ' +
-            'здесь показывают только реакции: их нет — значит, нужна ручная проверка источников охвата.';
+        if (l.react_count || l.comment_count) {
+            return 'Вовлечённость здесь не измеряется: сигнал есть не на всех постах, поэтому честной цифры не получится. ' +
+                'Ориентируйся на число реакций в карточке и проверь источники охвата вручную.';
+        }
+        return 'Проверить это по вовлечённости не выйдет — реакций и комментариев у канала не видно. Настоящий ли охват, ' +
+            'здесь показывают только они: их нет — значит, нужна ручная проверка источников охвата.';
     }
     function _pwTrend(l) {
         var box = el('fmx-pwspark'); if (!box || !l.id) return;

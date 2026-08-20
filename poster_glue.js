@@ -351,8 +351,19 @@
       var cell = document.querySelector('.mcell[data-m="' + key + '"]');
       var chip = document.querySelector('#mChips .chip[data-m="' + key + '"]');
       var val = metricValue(key, data);
-      if (cell) { var v = cell.querySelector('.v'); if (v) v.textContent = (val != null ? val : '—'); }
-      if (chip) { chip.style.display = ''; chip.style.opacity = ''; chip.style.pointerEvents = ''; chip.title = ''; }
+      var _no = (val == null);
+      if (cell) {
+        var v = cell.querySelector('.v');
+        if (v) v.textContent = (_no ? '—' : val);
+        cell.classList.toggle('hide', _no);
+      }
+      if (chip) {
+        chip.style.display = '';
+        chip.style.opacity = _no ? '0.4' : '';
+        chip.style.pointerEvents = _no ? 'none' : '';
+        chip.title = _no ? 'Нет данных по этой метрике' : '';
+        if (_no) chip.classList.remove('on');
+      }
     });
   }
   var METRIC_KEYS = ['subs', 'reach', 'er', 'cpm', 'err', 'grow', 'freq', 'age'];
