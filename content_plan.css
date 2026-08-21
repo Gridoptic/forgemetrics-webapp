@@ -897,6 +897,9 @@
 .cp-rub.a > i { color: #34d399; }
 .cp-rub.z { border-color: rgba(56, 189, 248, .26); background: rgba(56, 189, 248, .06); }
 .cp-rub.z > i { color: #38bdf8; }
+/* добавленные владельцем рубрики — синим, чтобы отличать от собранных системой */
+.cp-rub.own { border-color: rgba(129, 140, 248, .34); background: rgba(129, 140, 248, .07); }
+.cp-rub.own > i { color: #818cf8; }
 .cp-rub .tx { min-width: 0; flex: 1; }
 .cp-rub b { display: block; font-size: 12.5px; font-weight: 650; color: #e8eaf1; }
 .cp-rub em {

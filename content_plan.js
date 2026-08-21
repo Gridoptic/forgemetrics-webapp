@@ -839,10 +839,12 @@
                 '<span>' + esc(T(g[2])) + '</span><i class="ln"></i></div>' +
                 '<div class="cp-rubs">' + items.map(function (r) {
                     var tip = g[0] === 'n';
-                    var cnt = r.post_count ? (' · ' + r.post_count + ' ' +
-                        T(plural3(r.post_count, 'пост', 'поста', 'постов'))) : '';
-                    var solid = (r.post_count || 0) >= 2 && r.avg_views;
+                    var _pc = r.post_count || 0;
+                    var cnt = _pc ? (' · ' + _pc + ' ' +
+                        T(plural3(_pc, 'пост', 'поста', 'постов')) +
+                        (_pc < MINS ? (', ' + T('для оценки нужно %1').replace('%1', MINS)) : '')) : '';
                     var rated = (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
+                    var solid = rated;
                     var pct = (max && rated) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
                     var strong = (max && rated && r.avg_views === max) ? ' top' : '';
                     var mb = '';
@@ -858,6 +860,7 @@
                         }
                     }
                     return '<button class="cp-rub ' + g[0] + strong +
+                        (r.source === 'user' ? ' own' : '') +
                         (r.disabled && !tip ? ' off' : '') +
                         '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
                         '<i class="ti ' + g[1] + '"></i>' +
@@ -889,7 +892,7 @@
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
             esc(T('Обновить набор')) + '</button></div>' +
             (wOn ? '<div class="cp-bfoot"><i class="ti ti-bolt"></i><span>' +
-                esc(T('Сильным рубрикам сборка даёт больше слотов, слабым — меньше. Бейджи — по замерам от 3 постов в рубрике. Нажатие включает и выключает рубрику; крестик убирает совсем — он есть только у добавленных тобой.')) +
+                esc(T('Рубрики собраны по твоим последним постам: число рядом с описанием — сколько постов канала попало в рубрику, а просмотры и полоска — средний охват этих постов и доля от лучшей рубрики. Замеры появляются от 3 постов, сильным рубрикам сборка даёт больше слотов. Нажатие включает и выключает рубрику; крестик возвращает её в предложения — он есть только у добавленных тобой.')) +
                 '</span></div>' : '') +
             (inWeek && _rubChanged
                 ? (pubDone
@@ -3475,6 +3478,7 @@
         if (act === 'rubdel') {
             haptic('medium');
             rubApi('remove', { key: actEl.getAttribute('data-v') });
+            toast(T('Рубрика убрана в предложения — включить можно в любой момент'), 'arrow-back-up');
             return;
         }
         if (act === 'tipsmore') { haptic('light'); _tipsOpen = true; rerender(); return; }
