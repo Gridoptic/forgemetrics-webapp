@@ -844,9 +844,9 @@ function pwRenderMetrics(pulse) {
                             ? ' ' + (pulse.own_pct > 0 ? '+' : '−') + Math.abs(pulse.own_pct) + '%' : '';
                         pill = `<span class="pw-rpill ${_ps[1] || 'ok'}">${escapeHtml(_ps[0] + _pctTx)}</span>`;
                     }
-                    sub = pill + `<span class="s">1/24</span>`;
+                    sub = pill + `<span class="s fx">1/24</span>`;
                 } else {
-                    sub = `<span class="s">${escapeHtml(_tp('оценка по замерам') + ' · 1/24 · ' + _tp('цена не задана'))}</span>`;
+                    sub = `<span class="pw-rpill mut">${escapeHtml(_tp('цена не задана'))}</span>`;
                 }
             } else {
                 sub = `<span class="s">${escapeHtml(_tp('твоя цена') + ' · 1/24')}</span>`;
@@ -6511,6 +6511,14 @@ function handlePostApiError(err) {
 
     if (msg.includes('401')) {
         showToast('Сессия истекла, переоткрой Mini App', 'alert-triangle');
+        return;
+    }
+
+    if (msg.includes('403')) {
+        var _d = '';
+        try { _d = (JSON.parse(msg.slice(msg.indexOf('{'))) || {}).detail || ''; } catch (e) { _d = ''; }
+        showToast(_d || 'Недостаточно прав в команде канала', 'lock');
+        showScreen('postCreate');
         return;
     }
 

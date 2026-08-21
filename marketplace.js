@@ -34,8 +34,9 @@
         return '<span class="fmx-aud" style="color:' + lab.color + ';border-color:' + lab.color + '55;background:' + lab.color + '1a;"><i class="ti ' + lab.icon + '"></i>' + lab.short + '</span>';
     }
     var _feedTotal = 0, _feedOffset = 0, _FEED_PAGE = 30;
-    var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var m = sp && /^card_(\d+)(?:_r_[A-Za-z0-9_-]+)?$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
-    if (_deepCard) {
+    var _deepUser = null;
+    var _deepCard = (function () { try { var sp = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.start_param; var mu = sp && /^ch_([A-Za-z0-9_]{3,64})$/.exec(sp); if (mu) { _deepUser = mu[1]; return null; } var m = sp && /^card_(\d+)(?:_r_[A-Za-z0-9_-]+)?$/.exec(sp); return m ? parseInt(m[1], 10) : null; } catch (e) { return null; } })();
+    if (_deepCard || _deepUser) {
         var _deepTry = 0;
         var _deepT = setInterval(function () {
             _deepTry++;
@@ -524,6 +525,11 @@
             '.fmx-tag{position:absolute;top:9px;left:9px;font-size:9px;font-weight:700;padding:4px 8px;border-radius:6px;background:rgba(10,13,24,0.5);color:#5DCAA5;backdrop-filter:blur(5px);z-index:7;display:flex;align-items:center;gap:4px;}',
             '.fmx-tag.gold{background:linear-gradient(135deg,#fde68a,#f5bf4f);color:#2a1c00;}',
             '.fmx-star{position:absolute;bottom:9px;right:9px;width:30px;height:30px;border-radius:8px;background:rgba(10,13,24,0.45);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);z-index:2;}',
+            '.fmr-hicons{display:flex;gap:5px;margin-bottom:6px;}',
+            '.fmx-ic27,.fmx-shb{width:27px;height:27px;font-size:14px;position:relative;}',
+            '.fmx-ic27::after,.fmx-shb::after{content:"";position:absolute;inset:-7px;}',
+            '.fmx-shb{color:#5DCAA5;}',
+            '.fmx-shb2{color:#5DCAA5;}',
             '.fmx-star.on{color:#f59e0b;}',
             '.fmx-btn.on{color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);}',
             '.fmx-cb{padding:11px 13px 12px;position:relative;z-index:3;}',
@@ -3331,6 +3337,10 @@
                 }
             }
             _feedState = 'ready';
+            if (_deepUser) {
+                var du = _deepUser; _deepUser = null;
+                setTimeout(function () { openListing(du); }, 250);
+            }
             if (_deepCard) {
                 var did = _deepCard; _deepCard = null;
                 var dl = _feed.filter(function (x) { return x.id === did; })[0];
@@ -4019,11 +4029,11 @@
             (l.hot_manual ? '<span class="fmx-hoton">вкл</span>' : '') +
             '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            (own && can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>Редактировать</button>' : '') +
+            (can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>Редактировать</button>' : '') +
             '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>Статистика</button>' +
             (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>Витрина</button>' : '') +
-            (own ? '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2" style="color:#5DCAA5;"></i>Поделиться</button>' +
-                '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
+            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2" style="color:#5DCAA5;"></i>Поделиться</button>' +
+            (can('edit') ? '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
             (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>Продвинуть</button>' : '') +
             (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>Возобновить' : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>Заморозить') + '</button>' : '') +
             (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
@@ -9512,6 +9522,11 @@
         var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow);
     }
+    function _shareBtn(l, style) {
+        return '<button class="fmx-star fmx-shb" data-share="' + _esc(l.username || '') +
+            '" data-slid="' + (l.id || '') + '" aria-label="Поделиться"' +
+            (style ? ' style="' + style + '"' : '') + '><i class="ti ti-share-2"></i></button>';
+    }
     function _kmPill(tx, col) {
         if (!tx) return '';
         var bg = 'rgba(255,255,255,0.05)', bd = 'rgba(255,255,255,0.12)';
@@ -9629,7 +9644,9 @@
         if (FX_VIP.glass.indexOf(gk) < 0) gk = 'none';
         var gs = glassKindStyles(gk, accent);
         if (gk === 'none' && (l.effects_json || {}).btns === 'accent') gs = { s: 'background:' + accent + '1f;border:0.5px solid ' + accent + '55;color:' + accent + ';', p: 'background:' + accent + ';color:#fff;' };
-        var starFlow = '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="position:static;margin-bottom:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);"><i class="ti ti-star"></i></button>';
+        var _flowSt = 'position:static;margin:0;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);';
+        var starFlow = '<div class="fmr-hicons"><button class="fmx-star fmx-ic27' + star + '" data-bm="' + _esc(l.username) + '" style="' + _flowSt + '"><i class="ti ti-star"></i></button>' +
+            _shareBtn(l, _flowSt) + '</div>';
         var scoreHtml = (function () {
             if (l.health_score == null) return noHead ? '<div style="margin-left:auto;align-self:flex-start;">' + starFlow + '</div>' : '';
             var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
@@ -9662,7 +9679,8 @@
         return '<div class="fmx-cwrap' + (glowOn ? ' fmx-goldw' : '') + '"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (tagInBody ? '' : tagHtml) +
-            (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>') +
+            (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>' +
+                _shareBtn(l, 'bottom:auto;top:8px;right:47px;z-index:7;')) +
             '<div class="fmx-cb">' + headHtml +
             (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
             alertsHtml +
@@ -9911,10 +9929,10 @@
               '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button>' +
-              '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>'
+              '<button class="fmx-btn fmx-shb2" data-share="' + _esc(l.username || '') + '" data-slid="' + (l.id || '') + '" style="flex:0 0 auto;width:44px;" aria-label="Поделиться"><i class="ti ti-share-2"></i></button>' + '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>'
             : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
-              '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
+              '<button class="fmx-btn fmx-shb2" data-share="' + _esc(l.username || '') + '" data-slid="' + (l.id || '') + '" style="flex:0 0 auto;width:44px;" aria-label="Поделиться"><i class="ti ti-share-2"></i></button>' + '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>';
         return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
@@ -10468,6 +10486,7 @@
         mediaWatch(scope);
         var host = scope || el('fmx-main');
         qsa(host, '[data-bm]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); toggleBm(b.getAttribute('data-bm')); }); });
+        qsa(host, '[data-share]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); shareCard(+b.getAttribute('data-slid') || null, b.getAttribute('data-share')); }); });
         qsa(host, '[data-toppost]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var u = b.getAttribute('data-toppost'); if (!u) return; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) return tg.openTelegramLink(u); } catch (err) {} window.open(u, '_blank'); }); });
         qsa(host, '[data-act="write"]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); trackListing(b.getAttribute('data-lid'), 'write'); openTg(b.getAttribute('data-u')); }); });
         qsa(host, '[data-act="expand"]').forEach(function (b) { b.addEventListener('click', function () {
@@ -10638,7 +10657,10 @@
         _haptic('light');
         var doShare = function () {
             var _t = (typeof window !== 'undefined' && window.t) ? window.t : function (s) { return s; };
-            var cardLink = 'https://t.me/ForgeMetricsBot?startapp=card_' + listingId;
+            var cardLink = listingId
+                ? 'https://t.me/ForgeMetricsBot?startapp=card_' + listingId
+                : 'https://t.me/ForgeMetricsBot?startapp=ch_' + String(username || '').replace(/[^A-Za-z0-9_]/g, '');
+            if (!listingId && !username) return;
             var text = _t('Оффер канала на ForgeMetrics: реальные метрики и цена размещения.') + (username ? ' @' + username : '');
             if (_myPromo) text += '\n' + _t('Бонус по приглашению — скидка на первый месяц и расширенный триал:') + ' https://t.me/ForgeMetricsBot?start=' + _myPromo;
             var url = 'https://t.me/share/url?url=' + encodeURIComponent(cardLink) + '&text=' + encodeURIComponent(text);

@@ -1,5 +1,7 @@
 window.__I18N_DICT = {
  "en": {
+  "Недостаточно прав в команде канала": "Not enough permissions in the channel team",
+  "Поделиться": "Share",
   "в %1 раза ниже обычного": "%1x lower than usual",
   "по %1 рекламному посту": "based on %1 ad post",
   "по %1 рекламным постам": "based on %1 ad posts",
@@ -3113,6 +3115,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "from deal measurements"
  },
  "es": {
+  "Недостаточно прав в команде канала": "Permisos insuficientes en el equipo del canal",
+  "Поделиться": "Compartir",
   "в %1 раза ниже обычного": "%1 veces por debajo de lo habitual",
   "по %1 рекламному посту": "por %1 publicación publicitaria",
   "по %1 рекламным постам": "por %1 publicaciones publicitarias",
@@ -4701,7 +4705,7 @@ window.__I18N_DICT = {
   "Анализ конкурентов": "Análisis de la competencia",
   "Что у них набирает охват и почему. Функция готовится к запуску.": "Qué les da alcance y por qué. La función se está preparando para el lanzamiento.",
   "Поиск рекламодателей": "Búsqueda de anunciantes",
-  "Цена поста": "Precio de la publicación",
+  "Цена поста": "Precio del post",
   "Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.": "Calculadora del precio justo según las métricas reales del canal. Listo pronto.",
   "Шаблоны переговоров": "Plantillas de negociación",
   "3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.": "3 respuestas para el anunciante: formal, cordial, firme. Lo lanzaremos pronto.",
@@ -6226,6 +6230,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "según mediciones de acuerdos"
  },
  "de": {
+  "Недостаточно прав в команде канала": "Nicht genug Rechte im Kanal-Team",
+  "Поделиться": "Teilen",
   "в %1 раза ниже обычного": "%1-mal niedriger als üblich",
   "по %1 рекламному посту": "auf Basis von %1 Werbebeitrag",
   "по %1 рекламным постам": "auf Basis von %1 Werbebeiträgen",
@@ -9324,7 +9330,7 @@ window.__I18N_DICT = {
   "у тебя": "deine Zeit",
   "Время — по каналу": "Zeiten in der Zeitzone des Kanals",
   "Меню": "Menü",
-  "Охват / пост": "Reichweite / Beitrag",
+  "Охват / пост": "Reichweite/Post",
   "за 30 дней": "in 30 Tagen",
   "за первые сутки": "erste 24 Stunden",
   "реакции к охвату": "Reaktionen zur Reichweite",
@@ -9339,6 +9345,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "aus Deal-Messungen"
  },
  "kk": {
+  "Недостаточно прав в команде канала": "Арна командасында құқық жеткіліксіз",
+  "Поделиться": "Бөлісу",
   "в %1 раза ниже обычного": "әдеттегіден %1 есе төмен",
   "по %1 рекламному посту": "%1 жарнамалық жазба бойынша",
   "по %1 рекламным постам": "%1 жарнамалық жазба бойынша",
@@ -12449,6 +12457,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "мәміле өлшемдері бойынша"
  },
  "uz": {
+  "Недостаточно прав в команде канала": "Kanal jamoasida huquqlar yetarli emas",
+  "Поделиться": "Ulashish",
   "в %1 раза ниже обычного": "odatdagidan %1 barobar past",
   "по %1 рекламному посту": "%1 ta reklama posti boʻyicha",
   "по %1 рекламным постам": "%1 ta reklama posti boʻyicha",
@@ -15562,6 +15572,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "bitim o'lchovlari bo'yicha"
  },
  "be": {
+  "Недостаточно прав в команде канала": "Недастаткова правоў у камандзе канала",
+  "Поделиться": "Падзяліцца",
   "в %1 раза ниже обычного": "у %1 разы ніжэй за звычайнае",
   "по %1 рекламному посту": "па %1 рэкламным допісе",
   "по %1 рекламным постам": "па %1 рэкламных допісах",
@@ -18673,6 +18685,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "па замерах здзелак"
  },
  "az": {
+  "Недостаточно прав в команде канала": "Kanal komandasında hüquqlar kifayət etmir",
+  "Поделиться": "Paylaş",
   "в %1 раза ниже обычного": "adətdən %1 dəfə aşağı",
   "по %1 рекламному посту": "%1 reklam paylaşımı üzrə",
   "по %1 рекламным постам": "%1 reklam paylaşımı üzrə",
@@ -21786,6 +21800,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "sövdələşmə ölçmələrinə görə"
  },
  "ar": {
+  "Недостаточно прав в команде канала": "الصلاحيات غير كافية في فريق القناة",
+  "Поделиться": "مشاركة",
   "в %1 раза ниже обычного": "أقل من المعتاد بـ %1 مرة",
   "по %1 рекламному посту": "بناءً على %1 منشور إعلاني",
   "по %1 рекламным постам": "بناءً على %1 منشور إعلاني",
@@ -24899,6 +24915,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "من قياسات الصفقات"
  },
  "fa": {
+  "Недостаточно прав в команде канала": "دسترسی کافی در تیم کانال ندارید",
+  "Поделиться": "هم‌رسانی",
   "в %1 раза ниже обычного": "%1 برابر پایین‌تر از معمول",
   "по %1 рекламному посту": "بر پایه %1 پست تبلیغاتی",
   "по %1 рекламным постам": "بر پایه %1 پست تبلیغاتی",
@@ -28012,6 +28030,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "از اندازه‌گیری معاملات"
  },
  "tr": {
+  "Недостаточно прав в команде канала": "Kanal ekibinde yetki yetersiz",
+  "Поделиться": "Paylaş",
   "в %1 раза ниже обычного": "olağanın %1 katı altında",
   "по %1 рекламному посту": "%1 reklam gönderisine göre",
   "по %1 рекламным постам": "%1 reklam gönderisine göre",
@@ -31125,6 +31145,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "anlaşma ölçümlerinden"
  },
  "hi": {
+  "Недостаточно прав в команде канала": "चैनल टीम में पर्याप्त अधिकार नहीं",
+  "Поделиться": "साझा करें",
   "в %1 раза ниже обычного": "सामान्य से %1 गुना कम",
   "по %1 рекламному посту": "%1 विज्ञापन पोस्ट के आधार पर",
   "по %1 рекламным постам": "%1 विज्ञापन पोस्ट के आधार पर",
@@ -34238,6 +34260,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "डील मापन से"
  },
  "bn": {
+  "Недостаточно прав в команде канала": "চ্যানেল টিমে যথেষ্ট অনুমতি নেই",
+  "Поделиться": "শেয়ার করুন",
   "в %1 раза ниже обычного": "স্বাভাবিকের চেয়ে %1 গুণ কম",
   "по %1 рекламному посту": "%1টি বিজ্ঞাপন পোস্টের ভিত্তিতে",
   "по %1 рекламным постам": "%1টি বিজ্ঞাপন পোস্টের ভিত্তিতে",
@@ -37351,6 +37375,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "ডিল পরিমাপ থেকে"
  },
  "id": {
+  "Недостаточно прав в команде канала": "Hak akses di tim kanal tidak cukup",
+  "Поделиться": "Bagikan",
   "в %1 раза ниже обычного": "%1 kali lebih rendah dari biasanya",
   "по %1 рекламному посту": "berdasarkan %1 unggahan iklan",
   "по %1 рекламным постам": "berdasarkan %1 unggahan iklan",
@@ -40464,6 +40490,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "dari pengukuran transaksi"
  },
  "vi": {
+  "Недостаточно прав в команде канала": "Không đủ quyền trong nhóm kênh",
+  "Поделиться": "Chia sẻ",
   "в %1 раза ниже обычного": "thấp hơn thường lệ %1 lần",
   "по %1 рекламному посту": "theo %1 bài quảng cáo",
   "по %1 рекламным постам": "theo %1 bài quảng cáo",
@@ -43577,6 +43605,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "theo số liệu giao dịch"
  },
  "pt": {
+  "Недостаточно прав в команде канала": "Permissões insuficientes na equipe do canal",
+  "Поделиться": "Compartilhar",
   "в %1 раза ниже обычного": "%1 vezes abaixo do habitual",
   "по %1 рекламному посту": "com base em %1 publicação publicitária",
   "по %1 рекламным постам": "com base em %1 publicações publicitárias",
@@ -46690,6 +46720,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "por medições de negócios"
  },
  "fr": {
+  "Недостаточно прав в команде канала": "Droits insuffisants dans l’équipe du canal",
+  "Поделиться": "Partager",
   "в %1 раза ниже обычного": "%1 fois plus bas que d’ordinaire",
   "по %1 рекламному посту": "sur %1 publication publicitaire",
   "по %1 рекламным постам": "sur %1 publications publicitaires",
@@ -49803,6 +49835,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "d'après les mesures de deals"
  },
  "it": {
+  "Недостаточно прав в команде канала": "Permessi insufficienti nel team del canale",
+  "Поделиться": "Condividi",
   "в %1 раза ниже обычного": "%1 volte più basso del solito",
   "по %1 рекламному посту": "su %1 post pubblicitario",
   "по %1 рекламным постам": "su %1 post pubblicitari",
@@ -52916,6 +52950,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "da misure degli accordi"
  },
  "am": {
+  "Недостаточно прав в команде канала": "በቻናል ቡድን ውስጥ በቂ መብት የለም",
+  "Поделиться": "አጋራ",
   "в %1 раза ниже обычного": "ከተለመደው %1 እጥፍ ያነሰ",
   "по %1 рекламному посту": "በ%1 የማስታወቂያ ልጥፍ መሠረት",
   "по %1 рекламным постам": "በ%1 የማስታወቂያ ልጥፎች መሠረት",
@@ -56029,6 +56065,8 @@ window.__I18N_DICT = {
   "по замерам сделок": "ከስምምነት መለኪያዎች"
  },
  "sw": {
+  "Недостаточно прав в команде канала": "Ruhusa hazitoshi katika timu ya chaneli",
+  "Поделиться": "Shiriki",
   "в %1 раза ниже обычного": "mara %1 chini ya kawaida",
   "по %1 рекламному посту": "kwa msingi wa chapisho %1 la matangazo",
   "по %1 рекламным постам": "kwa msingi wa machapisho %1 ya matangazo",
@@ -59127,7 +59165,7 @@ window.__I18N_DICT = {
   "у тебя": "saa yako",
   "Время — по каналу": "Saa ni kwa saa za kituo",
   "Меню": "Menyu",
-  "Охват / пост": "Ufikiaji / chapisho",
+  "Охват / пост": "Ufikiaji/post",
   "за 30 дней": "katika siku 30",
   "за первые сутки": "saa 24 za kwanza",
   "реакции к охвату": "miitikio kwa ufikiaji",
