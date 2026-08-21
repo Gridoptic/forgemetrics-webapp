@@ -818,11 +818,11 @@
         }
 
         var groups = [
-            ['a', 'ti-file-text', 'пишется само',
+            ['a', 'ti-file-text', 'пишутся без твоего участия',
              function (r) { return r.source !== 'suggest' && !r.needs_fact; }],
-            ['z', 'ti-camera', 'нужны твои две строки',
+            ['z', 'ti-camera', 'нужен факт от тебя',
              function (r) { return r.source !== 'suggest' && r.needs_fact; }],
-            ['n', 'ti-sparkles', 'можно попробовать',
+            ['n', 'ti-sparkles', 'предложены под нишу',
              function (r) { return r.source === 'suggest'; }],
         ];
         var body = '';
@@ -889,7 +889,7 @@
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
             esc(T('Обновить набор')) + '</button></div>' +
             (wOn ? '<div class="cp-bfoot"><i class="ti ti-bolt"></i><span>' +
-                esc(T('Сильным рубрикам сборка даёт больше слотов, слабым — меньше. Бейджи — по замерам от 3 постов в рубрике.')) +
+                esc(T('Сильным рубрикам сборка даёт больше слотов, слабым — меньше. Бейджи — по замерам от 3 постов в рубрике. Нажатие включает и выключает рубрику; крестик убирает совсем — он есть только у добавленных тобой.')) +
                 '</span></div>' : '') +
             (inWeek && _rubChanged
                 ? (pubDone
