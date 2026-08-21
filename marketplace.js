@@ -4032,7 +4032,7 @@
             (can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>Редактировать</button>' : '') +
             '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>Статистика</button>' +
             (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>Витрина</button>' : '') +
-            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share-2" style="color:#5DCAA5;"></i>Поделиться</button>' +
+            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share" style="color:#5DCAA5;"></i>Поделиться</button>' +
             (can('edit') ? '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
             (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>Продвинуть</button>' : '') +
             (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>Возобновить' : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>Заморозить') + '</button>' : '') +
@@ -9525,7 +9525,7 @@
     function _shareBtn(l, style) {
         return '<button class="fmx-star fmx-shb" data-share="' + _esc(l.username || '') +
             '" data-slid="' + (l.id || '') + '" aria-label="Поделиться"' +
-            (style ? ' style="' + style + '"' : '') + '><i class="ti ti-share-2"></i></button>';
+            (style ? ' style="' + style + '"' : '') + '><i class="ti ti-share"></i></button>';
     }
     function _kmPill(tx, col) {
         if (!tx) return '';
@@ -9918,7 +9918,12 @@
         var avHtml = l.avatar_url
             ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
             : '<div class="fmr-av" style="background:' + _esc(_acc) + ';">' + _esc(_t.charAt(0).toUpperCase()) + '</div>';
-        var scoreHtml = ring ? '<div class="fmr-score">' + ring + '<div class="fmr-scorelbl">индекс <span class="fmr-i" data-fi="health">?</span></div></div>' : '';
+        var _rIcoSt = 'position:static;margin:0;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);';
+        var _rIcons = '<div class="fmr-hicons">' +
+            '<button class="fmx-star fmx-ic27' + (_bookmarks[l.username] ? ' on' : '') + '" data-bm="' + _esc(l.username) + '" style="' + _rIcoSt + '"><i class="ti ti-star"></i></button>' +
+            _shareBtn(l, _rIcoSt) + '</div>';
+        var scoreHtml = '<div class="fmr-score">' + _rIcons +
+            (ring ? ring + '<div class="fmr-scorelbl">индекс <span class="fmr-i" data-fi="health">?</span></div>' : '') + '</div>';
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
             (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
@@ -9929,10 +9934,10 @@
               '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button>' +
-              '<button class="fmx-btn fmx-shb2" data-share="' + _esc(l.username || '') + '" data-slid="' + (l.id || '') + '" style="flex:0 0 auto;width:44px;" aria-label="Поделиться"><i class="ti ti-share-2"></i></button>' + '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>'
+              '</div>'
             : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
               '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
-              '<button class="fmx-btn fmx-shb2" data-share="' + _esc(l.username || '') + '" data-slid="' + (l.id || '') + '" style="flex:0 0 auto;width:44px;" aria-label="Поделиться"><i class="ti ti-share-2"></i></button>' + '<button class="fmx-btn' + (_bookmarks[l.username] ? ' on' : '') + '" style="flex:0 0 auto;width:44px;" data-bm="' + _esc(l.username) + '"><i class="ti ti-star"></i></button></div>' +
+              '</div>' +
               '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>';
         return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
@@ -11375,7 +11380,7 @@
             (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div>' : '') +
             (l.id ? '<div style="display:flex;gap:8px;margin-top:14px;">' +
-                '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share-2"></i> Поделиться оффером</button>' +
+                '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share"></i> Поделиться оффером</button>' +
                 '<button class="fmx-btn" id="fmx-ls-rep" style="flex:1;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться</button></div>' : '') +
             (!l.id ? '<button class="fmx-btn" id="fmx-lsTrack" style="width:100%;margin-top:14px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> Ссылка отслеживания в рекламный пост</button>' : '') +
             '<div class="fmx-lsfoot">' +
