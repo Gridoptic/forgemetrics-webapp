@@ -9437,8 +9437,8 @@
                 '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
         }
         var adHtml = '';
-        if (!dead) {
-            var _adv = l.ad_er_percent, _adn = l.ad_er_posts || 0, _adr = l.ad_er_ratio;
+        if (!dead && l.ad_er_posts != null) {
+            var _adv = l.ad_er_percent, _adn = l.ad_er_posts, _adr = l.ad_er_ratio;
             var _adCol = '#c2c6d2', _adTag = '', _adVal = '—', _adSub = '';
             if (_adv != null) {
                 _adVal = String(_adv).replace('.', ',') + '%';
@@ -9818,8 +9818,8 @@
         }
         var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
         var adHtml = '';
-        if (!dead) {
-            var _adv = l.ad_er_percent, _adn = l.ad_er_posts || 0, _adr = l.ad_er_ratio;
+        if (!dead && l.ad_er_posts != null) {
+            var _adv = l.ad_er_percent, _adn = l.ad_er_posts, _adr = l.ad_er_ratio;
             var _adCol = '#c2c6d2', _adTag = '', _adVal = '—', _adSub = '';
             if (_adv != null) {
                 _adVal = String(_adv).replace('.', ',') + '%';
