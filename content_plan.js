@@ -153,6 +153,7 @@
             '<div class="t">' + esc(T('Контент-план на неделю')) + '</div></div>';
     }
     var _lastView = null;
+    var _wantView = null;
 
     function fillAvatars(host) {
         if (typeof window.loadChannelAvatar !== 'function') return;
@@ -260,6 +261,7 @@
 
     window.__openContentPlan = function () {
         _open = true;
+        _wantView = null;
         _rubChanged = false;
         if (!_batchTimer) _dayBusy = {};
         ensureScreen();
@@ -280,8 +282,18 @@
         } else go();
     };
 
+    function cpBusy() {
+        try {
+            if (document.getElementById('cp-daybox') || document.getElementById('cp-capbox')) return true;
+            var a = document.activeElement;
+            if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable)) return true;
+        } catch (e) {}
+        return false;
+    }
+
     function rerender() {
         if (!_open || _pollTimer) return;
+        if (_wantView === 'brief') { renderBrief(); return; }
         if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
     }
 
@@ -881,8 +893,21 @@
             }
         });
         var hasTips = _rubrics.some(function (r) { return r.source === 'suggest'; });
+        var _onAll = _rubrics.filter(function (r) { return !r.disabled && r.source !== 'suggest'; });
+        var _onAuto = _onAll.filter(function (r) { return !r.needs_fact; });
+        var _slots = totalPosts();
+        var _willUse = Math.max(1, Math.min(5, _onAuto.length || 1, _slots));
+        var _fitLine = _onAll.length
+            ? '<div class="cp-dshint">' + esc(
+                T('В неделю попадут %1 из %2: по одной рубрике на пост.')
+                    .replace('%1', _willUse).replace('%2', _onAuto.length) +
+                (_onAll.length > _onAuto.length
+                    ? ' ' + T('Рубрики из «нужен факт от тебя» войдут, только если закрепить их за днём.')
+                    : '')) + '</div>'
+            : '';
         return '<div class="cp-sec">' + secHead('Рубрики канала', note) +
             badge + body +
+            _fitLine +
             (hasTips ? '<div class="cp-dshint">' +
                 esc(T('Предложены под нишу канала. Пока не включишь — в неделю не попадут.')) +
                 '</div>' : '') +
@@ -1821,6 +1846,7 @@
     var _genBusy = false;
     function doGenerate(btn) {
         if (_genBusy) return;
+        _wantView = null;
         _genBusy = true;
         if (btn) btn.disabled = true;
         haptic('medium');
@@ -3360,6 +3386,7 @@
             .then(function (d) {
                 if (d && d.ok && _open) {
                     _state = d; pushBalance(d);
+                    if (cpBusy()) return;
                     var sy = window.scrollY; rerender(); window.scrollTo(0, sy);
                 }
             })
@@ -3367,7 +3394,7 @@
     }
 
     if (window.FMLive) window.FMLive.register('content-plan', 60000, function () {
-        if (!_open || _building || _pollTimer) return false;
+        if (!_open || _building || _pollTimer || cpBusy()) return false;
         refreshState();
         return true;
     });
@@ -3598,14 +3625,11 @@
         }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'regen') {
-            var LF = _state && _state.learning;
-            var rec = LF && LF.ready && LF.freq && LF.freq.recommended;
-            if (rec && canEdit() && totalPosts() !== rec) {
-                applyFreqGrid(rec);
-                loadCalendarSoon();
-                saveDaysSoon();
-            }
+            haptic('light');
+            _wantView = 'brief';
             renderBrief();
+            var _host = ensureScreen();
+            if (_host) _host.scrollTop = 0;
             return;
         }
         if (act === 'wkday') {
