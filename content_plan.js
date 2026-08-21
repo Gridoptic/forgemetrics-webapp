@@ -842,15 +842,19 @@
                     var cnt = r.post_count ? (' · ' + r.post_count + ' ' +
                         T(plural3(r.post_count, 'пост', 'поста', 'постов'))) : '';
                     var solid = (r.post_count || 0) >= 2 && r.avg_views;
-                    var pct = (max && solid) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
-                    var strong = (max && solid && r.avg_views === max) ? ' top' : '';
+                    var rated = (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
+                    var pct = (max && rated) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
+                    var strong = (max && rated && r.avg_views === max) ? ' top' : '';
                     var mb = '';
                     if (wOn && g[0] === 'a' && !r.disabled) {
                         if ((r.post_count || 0) >= MINS && (r.avg_views || 0) > 0) {
                             if (r.avg_views === topAv) mb = '<span class="cp-rbdg up">' + esc(T('сильная · чаще')) + '</span>';
                             else if (r.avg_views === lowAv) mb = '<span class="cp-rbdg dn">' + esc(T('ниже нормы · реже')) + '</span>';
                         } else {
-                            mb = '<span class="cp-rbdg nd">' + esc(T('недостаточно данных')) + '</span>';
+                            mb = '<span class="cp-rbdg nd">' + esc(
+                                (r.post_count || 0) > 0
+                                    ? T('нужно от %1 постов').replace('%1', MINS)
+                                    : T('недостаточно данных')) + '</span>';
                         }
                     }
                     return '<button class="cp-rub ' + g[0] + strong +
