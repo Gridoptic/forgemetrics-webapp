@@ -48,7 +48,7 @@
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
     function haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(k || 'light'); } catch (e) {} }
-    function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) {} try { if (typeof alertDialog === 'function') alertDialog(m); } catch (e) {} }
+    function toast(m, icon) { try { if (typeof showToast === 'function') return showToast(m, icon); } catch (e) {} try { if (typeof alertDialog === 'function') alertDialog(m); } catch (e) {} }
 
     var WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     var WD_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -3494,12 +3494,16 @@
                         rerender();
                         toast(T('Набор рубрик обновлён'));
                     } else if (r && r.error === 'too_soon') {
-                        toast(T('Набор обновлялся сегодня — следующий раз завтра'));
+                        toast(T('Набор обновлялся сегодня — следующий раз завтра'), 'clock');
+                    } else if (r && r.error === 'no_access') {
+                        toast(T('Создатель канала не выдал тебе право менять контент-план'), 'lock');
+                    } else if (r && r.reason === 'few_posts') {
+                        toast(T('В канале мало постов — собран базовый набор'), 'info-circle');
                     } else {
-                        toast(T('Не удалось обновить набор'));
+                        toast(T('Не удалось обновить набор'), 'alert-triangle');
                     }
                 })
-                .catch(function () { _rubBusy = false; toast(T('Не удалось обновить набор')); });
+                .catch(function () { _rubBusy = false; toast(T('Не удалось обновить набор'), 'alert-triangle'); });
             return;
         }
         if (act === 'review') {
