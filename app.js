@@ -866,7 +866,8 @@ function pwRenderMetrics(pulse) {
                 sub = '<span class="s" style="color:#5DCAA5;">по замерам сделок</span>';
             } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
                 valTx = escapeHtml('≈' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' ₽');
-                sub = '<span class="s">' + escapeHtml(_tp2('разброс') + ' ' +
+                var _tpR = (typeof window.t === 'function') ? window.t : function (x) { return x; };
+                sub = '<span class="s">' + escapeHtml(_tpR('разброс') + ' ' +
                     pwRub(pulse.cpf_low) + '–' + pwRub(pulse.cpf_high) + ' ₽') + '</span>';
             } else {
                 valTx = '—';
@@ -881,7 +882,6 @@ function pwRenderMetrics(pulse) {
             (_pfm ? ` <i class="ti ti-chevron-down pw-pch${pwPriceOpen ? ' up' : ''}"></i>` : '');
         var rowTx = `<div class="pw-r${_pfm ? ' pw-tap' : ''}"${_pfm ? ' id="pw-price-row"' : ''}><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
         if (_pfm) rowTx += pwPricePanel(pulse);
-        var _tp2 = (typeof window.t === 'function') ? window.t : function (x) { return x; };
         if (id === 'cpf') {
             var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
             rowTx += `<div class="pw-hintbox${pwCpfHintOpen ? ' open' : ''}" id="pw-cpf-hint"><div class="in">` +
