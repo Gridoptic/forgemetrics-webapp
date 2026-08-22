@@ -1819,11 +1819,11 @@
 
     var GSEC_LS = 'fm_cp_gsec_v1';
     function gsecSt() { try { return JSON.parse(localStorage.getItem(GSEC_LS) || '{}'); } catch (e) { return {}; } }
-    function gSec(id, ico, title, sum, body, defOpen, grn) {
+    function gSec(id, ico, title, sum, body, defOpen, grn, plain) {
         if (!body) return '';
         var st = gsecSt();
         var open = (id in st) ? !!st[id] : !!defOpen;
-        return '<div class="cpg-sec' + (open ? ' open' : '') + '" data-gsec="' + id + '">' +
+        return '<div class="cpg-sec' + (open ? ' open' : '') + (plain ? ' plain' : '') + '" data-gsec="' + id + '">' +
             '<div class="cpg-h" data-act="gsec" data-v="' + id + '">' +
             '<i class="cpg-ic' + (grn ? ' gr' : '') + ' ti ti-' + ico + '"></i>' +
             '<b>' + esc(T(title)) + '</b>' +
@@ -1916,7 +1916,7 @@
         if (!h) return '';
         try { if (localStorage.getItem('fm_cp_strhide') === '1') return ''; } catch (e) {}
         return '<div class="cpg-strwrap">' + h +
-            '<button class="cpg-strhide" data-act="strhide">' + esc(T('Скрыть')) + '</button></div>';
+            '<button class="cpg-strhide" data-act="strhide" aria-label="' + esc(T('Скрыть')) + '"><i class="ti ti-x"></i></button></div>';
     }
     function archRow() {
         if (!(_state && _state.posts && _state.posts.length)) return '';
@@ -1962,7 +1962,7 @@
             gSec('days', 'layout-grid', 'Дни недели', daysSum(), daysBody, true) +
             chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
-            gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false) +
+            gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false, false, true) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
             gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
             gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
@@ -2210,7 +2210,7 @@
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true, true), false) +
+                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true, true), false, false, true) +
                 gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
                 gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
@@ -2236,7 +2236,7 @@
                 header + ribbon + detailPanel() +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true), false) +
+                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true), false, false, true) +
                 gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
                 gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
