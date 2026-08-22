@@ -1799,6 +1799,95 @@
             '</span></div></div>';
     }
 
+    var GSEC_LS = 'fm_cp_gsec_v1';
+    function gsecSt() { try { return JSON.parse(localStorage.getItem(GSEC_LS) || '{}'); } catch (e) { return {}; } }
+    function gSec(id, ico, title, sum, body, defOpen, grn) {
+        if (!body) return '';
+        var st = gsecSt();
+        var open = (id in st) ? !!st[id] : !!defOpen;
+        return '<div class="cpg-sec' + (open ? ' open' : '') + '" data-gsec="' + id + '">' +
+            '<div class="cpg-h" data-act="gsec" data-v="' + id + '">' +
+            '<i class="cpg-ic' + (grn ? ' gr' : '') + ' ti ti-' + ico + '"></i>' +
+            '<b>' + esc(T(title)) + '</b>' +
+            '<span class="cpg-sum">' + sum + '</span>' +
+            '<i class="cpg-ch ti ti-chevron-down"></i></div>' +
+            '<div class="cpg-b">' + body + '</div></div>';
+    }
+    function isoWeek(d) {
+        var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        var dn = (t.getUTCDay() + 6) % 7;
+        t.setUTCDate(t.getUTCDate() - dn + 3);
+        var f = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+        return 1 + Math.round(((t - f) / 86400000 - 3 + ((f.getUTCDay() + 6) % 7)) / 7);
+    }
+    function daysSum() {
+        var t = totalPosts(), names = [];
+        days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
+        return esc(t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')) +
+            (names.length && names.length <= 4 ? ' · ' + names.join(', ') : ''));
+    }
+    function goalSum() {
+        var rec = _state && _state.learning && _state.learning.members &&
+            (_state.learning.members.left || 0) > 0 && _goal === 'retention';
+        return esc(goalTitle(_goal) + (rec ? ' · ' + T('по замерам') : ''));
+    }
+    function rubSum() {
+        var on = (_rubrics || []).filter(function (r) { return !r.disabled; }).length;
+        return esc(on ? (on + ' ' + T('вкл')) : T('собираются'));
+    }
+    function lrnSum() {
+        var L = _state && _state.learning;
+        if (!L || !L.ready) return esc(T('собирается'));
+        var H = L.hours;
+        if (H && (H.windows || []).length) {
+            return esc(T('окна') + ' ' + H.windows.slice(0, 2).map(lrnWin).join(' · '));
+        }
+        return esc(T('готова'));
+    }
+    function insSum() {
+        var ins = (_state && _state.insights) || {};
+        var n = ins.published_total || 0;
+        return n ? esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов'))) : '';
+    }
+    function revSum() {
+        var r = _review;
+        if (!r) return '';
+        if (!r.ready) return esc((r.posts || 0) + ' ' + T('из') + ' ' + (r.need || 20));
+        var v = r.views || {};
+        return esc(v.change_pct != null ? ((v.change_pct > 0 ? '+' : '') + v.change_pct + '%')
+            : (r.median_views ? numShort(r.median_views) : ''));
+    }
+    function apSum() {
+        if (!_ap) return '';
+        return esc(T((_ap.level || 'manual') !== 'manual' ? 'включён' : 'выключен'));
+    }
+    function gHero() {
+        var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
+        var total = totalPosts();
+        var chips = '<span class="cpg-chip g">' + esc(total + ' ' + T(plural3(total, 'пост', 'поста', 'постов'))) + '</span>' +
+            '<span class="cpg-chip">' + esc(goalTitle(_goal)) + '</span>' +
+            '<span class="cpg-chip">' + esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум')) + '</span>' +
+            (_ap ? '<span class="cpg-chip' + ((_ap.level || 'manual') !== 'manual' ? ' g' : ' y') + '">' +
+                esc(T('автопилот') + ' ' + T((_ap.level || 'manual') !== 'manual' ? 'вкл' : 'выкл')) + '</span>' : '');
+        return '<div class="cpg-glow"></div><div class="cpg-hero">' +
+            '<div class="hk">' + esc(T('Неделя') + ' ' + isoWeek(new Date())) +
+            (cc ? ' · ' + esc(chanName(cc)) : '') + '</div>' +
+            '<div class="ht">' + esc(T('Сборка недели')) + '</div>' +
+            '<div class="hs">' + chips + '</div></div>';
+    }
+    function strategyWrap() {
+        var h = strategyBlock();
+        if (!h) return '';
+        try { if (localStorage.getItem('fm_cp_strhide') === '1') return ''; } catch (e) {}
+        return '<div class="cpg-strwrap">' + h +
+            '<button class="cpg-strhide" data-act="strhide">' + esc(T('Скрыть')) + '</button></div>';
+    }
+    function archRow() {
+        if (!(_state && _state.posts && _state.posts.length)) return '';
+        return '<button class="cpg-arch" data-act="gotoarch"><i class="ti ti-archive"></i> ' +
+            esc(T('Посты недели (архив)')) + '</button>';
+    }
+
     function renderBrief() {
         if (!_ap && _chId) setTimeout(loadAutopilot, 0);
         var chanBlock = buildChanBlock();
@@ -1821,28 +1910,36 @@
         } else {
             lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         }
-        setView(
-            heroWeek() + learningBlock() +
-
-            '<div class="cp-sec">' + secHead('Канал',
-                'Для какого канала собираем неделю. Посты будут написаны в его манере.') +
-            chanBlock + '</div>' + readinessBlock() +
-            '<div class="cp-sec">' + secHead('Цель недели',
-                'Под неё подбираются темы и виды постов: одна цель — один сюжет на всю неделю.') +
-            '<div class="cp-goals">' + goals + '</div>' + goalRecNote() + '</div>' +
-            rubricsBlock() +
-            '<div class="cp-sec">' + secHead('Модель текстов',
-                'Какая модель пишет посты недели. Влияет на цену каждого поста.') +
-            '<div class="cp-msel">' + modelOpt('premium') + modelOpt('standard') + '</div>' +
+        if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
+        var daysBody = '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
+            histNote() + tipBlock() + weekBar() +
+            '<div class="cp-note" style="margin-top:8px;">' +
+            esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</div>';
+        var goalsBody = '<div class="cp-goals">' + goals + '</div>' + goalRecNote();
+        var modelBody = '<div class="cp-msel">' + modelOpt('premium') + modelOpt('standard') + '</div>' +
             '<div class="cp-hint"><i class="ti ti-file-search" style="vertical-align:-2px;margin-right:3px;"></i>' +
-                esc(T('Если в посте есть факты или статистика, к нему можно добавить ссылки на проверенные исследования — кнопка появится на его карточке.')) +
-                ' ' + forgeTag(priceResearch()) + ' ' + esc(T('за пост')) + '.</div></div>' +
-
-            '<button class="cp-go' + (blocked ? ' off' : '') + '"' +
+            esc(T('Если в посте есть факты или статистика, к нему можно добавить ссылки на проверенные исследования — кнопка появится на его карточке.')) +
+            ' ' + forgeTag(priceResearch()) + ' ' + esc(T('за пост')) + '.</div>';
+        var ccur = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
+        setView(
+            gHero() + readinessBlock() +
+            gSec('days', 'layout-grid', 'Дни недели', daysSum(), daysBody, true) +
+            ((_channels || []).length > 1
+                ? gSec('chan', 'broadcast', 'Канал', ccur ? esc(chanName(ccur)) : '', chanBlock, false)
+                : '') +
+            gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
+            gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false) +
+            gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
+            gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
+            gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+            gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
+            gSec('model', 'diamond', 'Модель текстов',
+                esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум') + ' · ' + priceDay()), modelBody, false) +
+            strategyWrap() + archRow() +
+            '<div class="cpg-cta"><button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
-            esc(T('Собрать план недели')) + (blocked ? '' : priceTag) + '</button>' +
-            (blocked ? '' : lowNote) +
-            apPanel() + reviewEntry() + strategyBlock(), 'brief');
+            esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button>' +
+            (blocked ? '' : lowNote) + '</div>', 'brief');
     }
 
     function modelOpt(m) {
@@ -3638,6 +3735,29 @@
             return;
         }
         if (act === 'generate') { doGenerate(actEl); return; }
+        if (act === 'gsec') {
+            var gwrap = actEl.closest('.cpg-sec');
+            if (gwrap) {
+                gwrap.classList.toggle('open');
+                var gst = gsecSt();
+                gst[actEl.getAttribute('data-v')] = gwrap.classList.contains('open') ? 1 : 0;
+                try { localStorage.setItem(GSEC_LS, JSON.stringify(gst)); } catch (e) {}
+            }
+            return;
+        }
+        if (act === 'strhide') {
+            try { localStorage.setItem('fm_cp_strhide', '1'); } catch (e) {}
+            haptic('light');
+            renderBrief();
+            return;
+        }
+        if (act === 'gotoarch') {
+            haptic('light');
+            _archOpen = true;
+            _wantView = null;
+            renderWeek();
+            return;
+        }
         if (act === 'regen') {
             haptic('light');
             _wantView = 'brief';
