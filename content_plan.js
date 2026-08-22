@@ -1861,19 +1861,37 @@
         if (!_ap) return '';
         return esc(T((_ap.level || 'manual') !== 'manual' ? 'включён' : 'выключен'));
     }
-    function gHero() {
+    function apChip() {
+        if (!_ap) return '';
+        var on = (_ap.level || 'manual') !== 'manual';
+        return '<span class="cpg-chip' + (on ? ' g' : ' y') + '">' +
+            esc(T('автопилот') + ' ' + T(on ? 'вкл' : 'выкл')) + '</span>';
+    }
+    function gHeroBase(title, chips) {
         var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
-        var total = totalPosts();
-        var chips = '<span class="cpg-chip g">' + esc(total + ' ' + T(plural3(total, 'пост', 'поста', 'постов'))) + '</span>' +
-            '<span class="cpg-chip">' + esc(goalTitle(_goal)) + '</span>' +
-            '<span class="cpg-chip">' + esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум')) + '</span>' +
-            (_ap ? '<span class="cpg-chip' + ((_ap.level || 'manual') !== 'manual' ? ' g' : ' y') + '">' +
-                esc(T('автопилот') + ' ' + T((_ap.level || 'manual') !== 'manual' ? 'вкл' : 'выкл')) + '</span>' : '');
         return '<div class="cpg-glow"></div><div class="cpg-hero">' +
             '<div class="hk">' + esc(T('Неделя') + ' ' + isoWeek(new Date())) +
             (cc ? ' · ' + esc(chanName(cc)) : '') + '</div>' +
-            '<div class="ht">' + esc(T('Сборка недели')) + '</div>' +
+            '<div class="ht">' + esc(T(title)) + '</div>' +
             '<div class="hs">' + chips + '</div></div>';
+    }
+    function gHero() {
+        var total = totalPosts();
+        var chips = '<span class="cpg-chip g">' + esc(total + ' ' + T(plural3(total, 'пост', 'поста', 'постов'))) + '</span>' +
+            '<span class="cpg-chip">' + esc(goalTitle(_goal)) + '</span>' +
+            '<span class="cpg-chip">' + esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум')) + '</span>' + apChip();
+        return gHeroBase('Сборка недели', chips);
+    }
+    function chanSec() {
+        if ((_channels || []).length < 2) return '';
+        var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
+        return gSec('chan', 'broadcast', 'Канал', cc ? esc(chanName(cc)) : '', buildChanBlock(), false);
+    }
+    function ohvSum() {
+        var h = _cal && _cal.history;
+        if (!h || !h.ready) return '';
+        return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
+            T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
     function strategyWrap() {
         var h = strategyBlock();
@@ -1924,9 +1942,7 @@
         setView(
             gHero() + readinessBlock() +
             gSec('days', 'layout-grid', 'Дни недели', daysSum(), daysBody, true) +
-            ((_channels || []).length > 1
-                ? gSec('chan', 'broadcast', 'Канал', ccur ? esc(chanName(ccur)) : '', chanBlock, false)
-                : '') +
+            chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
             gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
@@ -2162,24 +2178,50 @@
             '<div class="cp-hbar stop"><i class="ti ti-eye"></i><span>' +
             esc(T('Режим просмотра — права на изменения выдаёт создатель канала.')) +
             '</span></div>';
+        if (!_ap && _chId) setTimeout(loadAutopilot, 0);
+        var ohvBody = weekCal + histNote();
         if (allPub) {
-            var regenBtn = '<button class="cp-allbtn sched" data-act="regen"><i class="ti ti-sparkles"></i> ' +
-                esc(T('К сборке следующей недели')) + '</button>';
-            var archBtn = '<button class="cp-allbtn arch" data-act="archtoggle"><i class="ti ti-archive"></i> ' +
-                esc(T(_archOpen ? 'Скрыть посты недели' : 'Посты недели (архив)')) + '</button>';
-            var archBody = _archOpen
-                ? header + ribbon + detailPanel()
-                : '';
-            setView(viewBan + chanBlock + weekCal + doneBanner + learningBlock(true) + regenBtn +
-                apPanel() + goalsSec + rubricsBlock(true, true) +
-                strategyBlock() + reviewEntry() + insightsBlock() + archBtn + archBody +
-                '<div class="cp-foot">' + tzFootNote() +
+            var archBody = header + ribbon + detailPanel();
+            setView(viewBan +
+                gHeroBase('Неделя вышла',
+                    '<span class="cpg-chip g">' + esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) +
+                        ' · ' + T('все в канале')) + '</span>' +
+                    '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' + apChip()) +
+                chanSec() +
+                gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
+                gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
+                gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
+                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true, true), false) +
+                gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
+                gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+                gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
+                gSec('arch', 'archive', 'Посты недели (архив)',
+                    esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов'))), archBody, false) +
+                strategyWrap() +
+                '<div class="cpg-cta"><button class="cp-go" data-act="regen"><i class="ti ti-sparkles"></i> ' +
+                esc(T('Собрать неделю')) + '</button>' +
+                '<div class="cp-foot" style="margin-top:6px;">' + tzFootNote() +
                 esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
-                '</div>', 'week');
+                '</div></div>', 'week');
         } else {
-            setView(viewBan + chanBlock + weekCal + strategyBlock() + header + goalsSec + apPanel() + rubricsBlock(true) + allBtn + schedBtn + ribbon + detailPanel() +
-                reviewEntry() + insightsBlock() +
-                '<div class="cp-foot">' + tzFootNote() + foot + '</div>', 'week');
+            var actBtns = (allBtn || schedBtn)
+                ? '<div class="cpg-cta">' + allBtn + schedBtn +
+                  '<div class="cp-foot" style="margin-top:6px;">' + tzFootNote() + foot + '</div></div>'
+                : '<div class="cp-foot">' + tzFootNote() + foot + '</div>';
+            setView(viewBan +
+                gHeroBase('Неделя в работе',
+                    '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
+                    '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' +
+                    (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') + apChip()) +
+                chanSec() +
+                header + ribbon + detailPanel() +
+                gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
+                gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
+                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true), false) +
+                gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
+                gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+                gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
+                strategyWrap() + actBtns, 'week');
         }
         var scrEl = document.getElementById('content-plan-screen');
         if (scrEl) scrEl.classList.toggle('cp-vonly', !canEdit());
