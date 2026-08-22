@@ -1710,7 +1710,8 @@
   border: 1px solid rgba(129,140,248,.55); backdrop-filter: blur(12px);
   box-shadow: 0 8px 30px rgba(99,102,241,.3), inset 0 1px 0 rgba(255,255,255,.16); }
 .cpg-strwrap { position: relative; margin-top: 9px; }
-.cpg-strhide { position: absolute; top: 10px; right: 12px; font-size: 10px; font-weight: 800;
+.cpg-strwrap > .cp-str { margin-top: 0; }
+.cpg-strhide { position: absolute; top: 12px; right: 12px; font-size: 10px; font-weight: 800;
   letter-spacing: .06em; color: #565b73; background: transparent; border: .5px solid rgba(255,255,255,.14);
   border-radius: 7px; padding: 3px 8px; cursor: pointer; z-index: 2; font-family: inherit; }
 .cpg-arch { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
