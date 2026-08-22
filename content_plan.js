@@ -1829,7 +1829,7 @@
             '<b>' + esc(T(title)) + '</b>' +
             '<span class="cpg-sum">' + sum + '</span>' +
             '<i class="cpg-ch ti ti-chevron-down"></i></div>' +
-            '<div class="cpg-b">' + body + '</div></div>';
+            '<div class="cpg-b"><div class="cpg-bi">' + body + '</div></div></div>';
     }
     function isoWeek(d) {
         var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));

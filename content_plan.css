@@ -1700,8 +1700,11 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cpg-ch { flex: none; color: #565b73; font-size: 12px; transition: transform .16s; margin-left: 2px; }
 .cpg-sec.open .cpg-ch { transform: rotate(180deg); }
-.cpg-b { display: none; padding: 5px 0 0; }
-.cpg-sec.open .cpg-b { display: block; }
+.cpg-b { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.cpg-bi { overflow: hidden; min-height: 0; }
+.cpg-bi > :first-child { margin-top: 5px; }
+.cpg-sec.open .cpg-b { grid-template-rows: 1fr; }
+@media (prefers-reduced-motion: reduce) { .cpg-b { transition: none; } }
 .cpg-b > .cp-sec { background: transparent; border: none; padding: 0; margin: 0; box-shadow: none; }
 .cpg-b > .cp-sec > .cp-lbl, .cpg-b > .cp-sec > .cp-note { display: none; }
 .cpg-cta { position: sticky; bottom: 0; z-index: 6; padding: 10px 0 8px; margin-top: 10px;
