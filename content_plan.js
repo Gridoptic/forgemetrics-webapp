@@ -291,10 +291,17 @@
         return false;
     }
 
+    var _bootT = null;
+    var _rrT = null;
     function rerender() {
-        if (!_open || _pollTimer) return;
-        if (_wantView === 'brief') { renderBrief(); return; }
-        if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+        if (!_open || _pollTimer || _bootT) return;
+        if (_rrT) return;
+        _rrT = setTimeout(function () {
+            _rrT = null;
+            if (!_open || _pollTimer || _bootT) return;
+            if (_wantView === 'brief') { renderBrief(); return; }
+            if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+        }, 120);
     }
 
     function pushBalance(d) {
@@ -350,8 +357,17 @@
                 startPoll();
                 return;
             }
-            renderWeek();
-            if (d.batch_running) startBatchPoll();
+            var bootStart = Date.now();
+            var bootDone = function () {
+                if (_bootT) { clearInterval(_bootT); _bootT = null; }
+                renderWeek();
+                if (d.batch_running) startBatchPoll();
+            };
+            if (_chId && (!_cal || !_rubrics.length || !_ap)) {
+                _bootT = setInterval(function () {
+                    if ((_cal && _rubrics.length && _ap) || Date.now() - bootStart > 700) bootDone();
+                }, 90);
+            } else bootDone();
             return;
         }
         if (_channels === null) {
