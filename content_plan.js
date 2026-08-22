@@ -1032,9 +1032,9 @@
     function slotRow(sl) {
         var r = sl.key ? rubOf(sl.key) : null;
         var cls = 'cp-slot' + (r ? (r.needs_fact ? ' fact' : '') : ' auto');
-        var title = r ? r.title : (sl.key ? sl.key : T('Рубрику подберёт система'));
+        var title = r ? r.title : (sl.key ? sl.key : T('Рубрика — из включённых'));
         var sub = r ? (r.needs_fact ? T('спрошу пару строк за день до выхода') : (r.about || ''))
-                    : T('под сюжет недели');
+                    : T('распределится при сборке');
         var power = (sl.views != null && sl.views > 0) ? sl.views
             : ((r && r.avg_views) ? r.avg_views : 0);
         return '<div class="cp-slotrow"><button class="' + cls + '" data-slot="' + sl.seq + '">' +
@@ -1123,8 +1123,8 @@
             '<div class="cp-dss">' + esc(T('Рубрика')) + '</div>' +
             '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
             '<i class="ti ti-wand"></i><span class="tx"><b>' +
-            esc(T('Рубрику подберёт система')) + '</b>' +
-            '<em>' + esc(T('под сюжет недели')) + '</em></span>' +
+            esc(T('Рубрика — из включённых')) + '</b>' +
+            '<em>' + esc(T('распределится при сборке')) + '</em></span>' +
             (cur ? '' : '<i class="ti ti-check ck"></i>') + '</button>' +
             '<div class="cp-dssep"></div>' +
             (live.length ? rows
