@@ -634,29 +634,47 @@
         var cid = _chId || (_state && _state.channel_id);
         if (!cid || !_review) return '';
         var r = _review;
-        if (!r.ready) {
-            var pct = Math.min(100, Math.round((r.posts || 0) / (r.need || 20) * 100));
-            return '<button class="cp-rev" data-act="review">' +
-                '<div class="cp-rev-h"><i class="ti ti-chart-dots"></i>' +
-                '<span><b>' + esc(T('Разбор канала')) + '</b>' +
-                '<em>' + esc(T('сравню сильные посты со слабыми') + ' · ' +
-                    (r.posts || 0) + ' ' + T('из') + ' ' + (r.need || 20)) + '</em></span>' +
-                '<i class="ti ti-chevron-right"></i></div>' +
-                '<div class="cp-rev-bar"><span style="width:' + pct + '%"></span></div></button>';
-        }
+        var need = r.need || 30;
+        var have = r.posts || 0;
         var v = r.views || {};
+        var inProgress = !r.ready || v.change_pct == null;
+        var goRow = '<span class="cp-rv2-go">' + esc(T('Открыть разбор канала')) +
+            ' <i class="ti ti-arrow-right"></i></span>';
+        if (inProgress) {
+            var pct = Math.min(1, need ? have / need : 0);
+            var C = 194.8;
+            var left = Math.max(1, need - have);
+            var big = r.median_views
+                ? '<span class="cp-rv2-big"><b>' + esc(numShort(r.median_views)) + '</b><span>' +
+                  esc(T('охват Ø')) + '</span></span>'
+                : '';
+            return '<button class="cp-rv2" data-act="review">' +
+                '<span class="cp-rv2-row">' +
+                '<span class="cp-rv2-ring"><svg width="74" height="74" viewBox="0 0 74 74">' +
+                '<circle cx="37" cy="37" r="31" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6"/>' +
+                '<circle cx="37" cy="37" r="31" fill="none" stroke="url(#cpRvG)" stroke-width="6" ' +
+                'stroke-linecap="round" stroke-dasharray="' + C + '" stroke-dashoffset="' +
+                Math.round(C * (1 - pct) * 10) / 10 + '" transform="rotate(-90 37 37)"/>' +
+                '<defs><linearGradient id="cpRvG" x1="0" y1="0" x2="1" y2="1">' +
+                '<stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#818cf8"/>' +
+                '</linearGradient></defs></svg>' +
+                '<span class="in"><b>' + have + '/' + need + '</b><span>' + esc(T('замеров')) + '</span></span></span>' +
+                '<span class="cp-rv2-tx"><b>' +
+                esc(T(pct >= 0.5 ? 'Вердикт почти готов' : 'Собираю замеры')) + '</b>' +
+                '<em>' + esc(T('Ещё %1 — и покажу, что менять в контенте.').replace('%1',
+                    left + ' ' + T(plural3(left, 'замеренный пост', 'замеренных поста', 'замеренных постов')))) +
+                '</em></span>' + big + '</span>' + goRow + '</button>';
+        }
         var tone = r.mood === 'drop' ? ' drop' : (r.mood === 'rise' ? ' rise' : '');
-        var num = (v.change_pct != null)
-            ? ((v.change_pct > 0 ? '+' : '') + v.change_pct + '%')
-            : (r.median_views ? numShort(r.median_views) : '—');
-        return '<button class="cp-rev' + tone + '" data-act="review">' +
-            '<div class="cp-rev-h"><i class="ti ti-chart-dots"></i>' +
-            '<span><b>' + esc(T(r.head || 'Разбор канала')) + '</b>' +
+        var num = (v.change_pct > 0 ? '+' : '') + v.change_pct + '%';
+        return '<button class="cp-rv2" data-act="review">' +
+            '<span class="cp-rv2-verd' + tone + '">' +
+            '<i class="vi ti ti-' + (r.mood === 'drop' ? 'trending-down' : (r.mood === 'rise' ? 'trending-up' : 'chart-dots')) + '"></i>' +
+            '<span class="tx"><b>' + esc(T(r.head || 'Разбор канала')) + '</b>' +
             '<em>' + esc(T('по') + ' ' + (r.posts || 0) + ' ' +
                 T(plural3(r.posts || 0, 'посту', 'постам', 'постам')) + ' · ' +
-                T('что менять')) + '</em></span>' +
-            '<span class="cp-rev-n">' + esc(num) + '</span>' +
-            '<i class="ti ti-chevron-right"></i></div></button>';
+                T('что менять — внутри')) + '</em></span>' +
+            '<span class="pc">' + esc(num) + '</span></span>' + goRow + '</button>';
     }
 
     function reviewSpark(series) {

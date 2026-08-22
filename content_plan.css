@@ -1718,3 +1718,41 @@
   padding: 11px; font-size: 12.5px; font-weight: 700; color: #9aa1c2;
   border: .5px solid rgba(255,255,255,.1); border-radius: 13px; background: rgba(255,255,255,.02);
   cursor: pointer; margin-top: 9px; font-family: inherit; }
+
+/* ===== статистика: кольцо прогресса ===== */
+.cp-rv2 { display: block; width: 100%; margin-top: 10px; padding: 12px; text-align: left;
+  background: rgba(255,255,255,.02); border: .5px solid rgba(255,255,255,.1); border-radius: 14px;
+  cursor: pointer; font-family: inherit; color: inherit; }
+.cp-rv2-row { display: flex; align-items: center; gap: 13px; }
+.cp-rv2-ring { position: relative; width: 74px; height: 74px; flex: none; display: block; }
+.cp-rv2-ring .in { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; }
+.cp-rv2-ring .in b { font-size: 15px; font-weight: 800; color: #eef0fa; font-variant-numeric: tabular-nums; }
+.cp-rv2-ring .in span { font-size: 8px; color: #565b73; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 700; }
+.cp-rv2-tx { min-width: 0; display: block; }
+.cp-rv2-tx b { display: block; font-size: 13px; font-weight: 700; color: #eef0fa; }
+.cp-rv2-tx em { font-style: normal; font-size: 11.5px; color: #9aa1c2; display: block; margin-top: 3px; }
+.cp-rv2-big { margin-left: auto; text-align: right; flex: none; display: block; }
+.cp-rv2-big b { font-size: 21px; font-weight: 800; color: #eef0fa;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.cp-rv2-big span { display: block; font-size: 9px; color: #565b73; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 700; }
+.cp-rv2-go { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 11px;
+  padding: 9px; font-size: 12px; font-weight: 700; color: #c3c9ff;
+  border: .5px solid rgba(129,140,248,.4); border-radius: 12px; background: rgba(129,140,248,.08); }
+.cp-rv2-verd { display: flex; align-items: center; gap: 10px; padding: 10px 11px;
+  border: .5px solid rgba(255,255,255,.12); border-radius: 13px; background: rgba(255,255,255,.03); }
+.cp-rv2-verd .vi { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; flex: none; background: rgba(129,140,248,.14); color: #b7c0ff; font-size: 16px; }
+.cp-rv2-verd .tx { min-width: 0; }
+.cp-rv2-verd .tx b { display: block; font-size: 12.5px; color: #eef0fa; }
+.cp-rv2-verd .tx em { font-style: normal; font-size: 11px; color: #9aa1c2; }
+.cp-rv2-verd .pc { margin-left: auto; font-size: 16px; font-weight: 800; flex: none;
+  color: #b7c0ff; font-variant-numeric: tabular-nums; }
+.cp-rv2-verd.rise { border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.06); }
+.cp-rv2-verd.rise .vi { background: rgba(52,211,153,.15); color: #8fe3c4; }
+.cp-rv2-verd.rise .pc { color: #8fe3c4; }
+.cp-rv2-verd.drop { border-color: rgba(239,128,128,.3); background: rgba(239,128,128,.05); }
+.cp-rv2-verd.drop .vi { background: rgba(239,128,128,.13); color: #f0a0a0; }
+.cp-rv2-verd.drop .pc { color: #f0a0a0; }
