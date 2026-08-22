@@ -2182,10 +2182,11 @@
         var ohvBody = weekCal + histNote();
         if (allPub) {
             var archBody = header + ribbon + detailPanel();
+            var pubN = ps.filter(function (p) { return p.publish_status === 'published'; }).length;
             setView(viewBan +
                 gHeroBase('Неделя вышла',
-                    '<span class="cpg-chip g">' + esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) +
-                        ' · ' + T('все в канале')) + '</span>' +
+                    '<span class="cpg-chip g">' + esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов')) +
+                        ' · ' + T(pubN < n ? 'в канале' : 'все в канале')) + '</span>' +
                     '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' + apChip()) +
                 chanSec() +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
@@ -2196,7 +2197,7 @@
                 gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
                 gSec('arch', 'archive', 'Посты недели (архив)',
-                    esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов'))), archBody, false) +
+                    esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов'))), archBody, false) +
                 strategyWrap() +
                 '<div class="cpg-cta"><button class="cp-go" data-act="regen"><i class="ti ti-sparkles"></i> ' +
                 esc(T('Собрать неделю')) + '</button>' +
