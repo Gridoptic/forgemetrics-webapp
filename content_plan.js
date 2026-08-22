@@ -2640,15 +2640,24 @@
                 }).join('') + '</div>';
         }
         if (hs.length) {
-            var top = hs.slice(0, 2).map(function (h) {
+            var hsReady = hs.filter(function (h) { return (h.posts || 0) >= 2; });
+            var hsPend = hs.filter(function (h) { return (h.posts || 0) < 2; })
+                .sort(function (a, b) { return a.hour - b.hour; });
+            var top = hsReady.slice(0, 2).map(function (h) {
                 return '<div class="cp-hcell"><div class="k">' + esc(T('окно')) + '</div>' +
                     '<div class="v">' + (h.hour < 10 ? '0' : '') + h.hour + ':00</div>' +
                     '<div class="d">' + h.posts + ' ' + esc(T(plural3(h.posts, 'пост', 'поста', 'постов'))) +
                     ' · ' + esc(T('в среднем')) + ' ' + h.views_avg + '</div></div>';
             }).join('');
+            var pend = hsPend.length
+                ? '<div class="cp-note in" style="margin-top:7px;">' +
+                  esc(T('Окно появляется от 2 замеренных постов в один час. Копятся:') + ' ' +
+                      hsPend.map(function (h) { return (h.hour < 10 ? '0' : '') + h.hour + ':00'; }).join(' · ')) +
+                  '</div>'
+                : '';
             body += '<div class="cp-ins-t">' + esc(T('Когда читают')) +
                 '<span>' + esc(T('просмотров за сутки')) + '</span></div>' +
-                '<div class="cp-hgrid">' + top + '</div>';
+                (top ? '<div class="cp-hgrid">' + top + '</div>' : '') + pend;
         }
         var since = ins.since ? ' · ' + esc(T('с')) + ' ' + esc(dateLabel(ins.since)) : '';
         return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
