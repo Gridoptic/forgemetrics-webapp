@@ -402,8 +402,16 @@
     }
     function applyFreqGrid(rn) {
         rn = Math.max(3, Math.min(7, +rn || 3));
-        var pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
+        var hist = histDays();
+        var pat;
+        if (hist && hist.some(function (d) { return (d.views || 0) > 0; })) {
+            pat = [0, 1, 2, 3, 4, 5, 6].sort(function (a, b) {
+                return (hist[b].views || 0) - (hist[a].views || 0) || a - b;
+            }).slice(0, rn);
+        } else {
+            pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
                     6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
+        }
         var fd = days().slice();
         for (var fi = 0; fi < 7; fi++) {
             var fn = pat.indexOf(fi) >= 0 ? 1 : 0;
@@ -1147,11 +1155,8 @@
                         T('по') + ' ' + hd.posts + ' ' +
                         T(plural3(hd.posts, 'посту', 'постам', 'постам'))) + '</span>' : '') +
                     '</div>';
-                sub = hours.length
-                    ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
-                        hours.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
-                            .join(', ')) + '</div>'
-                    : '';
+                var _hl = hoursHintLine();
+                sub = _hl ? '<div class="cp-dss">' + esc(_hl) + '</div>' : '';
                 body = daySheetBody(i);
             } else {
                 head = '<div class="cp-dsh2"><b>' + esc(T('Рубрика поста')) + '</b></div>';
@@ -1457,7 +1462,6 @@
                     '<button class="cp-dsr wide" data-wback="1"><i class="ti ti-arrow-left"></i>' +
                     '<span class="tx"><b>' + esc(T('Назад к дню')) + '</b></span></button>';
             } else {
-                var hoursHint = bestHours();
                 var rows = ps.map(function (p) {
                     var st = statusOf(p);
                     var fixed = p.publish_status === 'published' ||
@@ -1478,10 +1482,9 @@
                         '</div>';
                 }).join('') || '<div class="cp-dsnote">' + esc(T('В этом дне постов нет.')) + '</div>';
                 var full = ps.length >= MAX_PER_DAY;
-                body = (hoursHint.length
-                    ? '<div class="cp-dss">' + esc(T('Лучшие часы канала') + ': ' +
-                        hoursHint.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; })
-                            .join(', ')) + '</div>'
+                var _hl2 = hoursHintLine();
+                body = (_hl2
+                    ? '<div class="cp-dss">' + esc(_hl2) + '</div>'
                     : '<div class="cp-dss">' + esc(T('Нажми на время, чтобы изменить его. Пост откроется в ленте по нажатию.')) + '</div>') +
                     '<div class="cp-slots">' + rows + '</div>' +
                     '<div class="cp-addrow">' +
@@ -1665,6 +1668,17 @@
             '</span></div>';
     }
 
+    function hoursHintLine() {
+        var H = _state && _state.learning && _state.learning.hours;
+        if (H && (H.windows || []).length) {
+            var ws = (H.windows || []).slice(0, 2).map(lrnWin).join(' · ');
+            return T(H.mode === 'measured' ? 'Окна недели по замерам' : 'Окна недели на пробу') + ': ' + ws;
+        }
+        var bh = bestHours();
+        if (!bh.length) return '';
+        return T('Лучшие часы канала') + ': ' +
+            bh.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; }).join(', ');
+    }
     function lrnWin(w) {
         var p2 = function (h) { return (h < 10 ? '0' : '') + h; };
         return p2(w[0]) + ':00–' + p2(w[1]) + ':00';
