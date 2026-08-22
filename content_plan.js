@@ -2643,21 +2643,27 @@
             var hsReady = hs.filter(function (h) { return (h.posts || 0) >= 2; });
             var hsPend = hs.filter(function (h) { return (h.posts || 0) < 2; })
                 .sort(function (a, b) { return a.hour - b.hour; });
+            var hRange = function (h) {
+                var p2 = function (x) { return (x < 10 ? '0' : '') + x; };
+                return p2(h) + ':00–' + p2((h + 1) % 24) + ':00';
+            };
             var top = hsReady.slice(0, 2).map(function (h) {
                 return '<div class="cp-hcell"><div class="k">' + esc(T('окно')) + '</div>' +
-                    '<div class="v">' + (h.hour < 10 ? '0' : '') + h.hour + ':00</div>' +
+                    '<div class="v">' + hRange(h.hour) + '</div>' +
                     '<div class="d">' + h.posts + ' ' + esc(T(plural3(h.posts, 'пост', 'поста', 'постов'))) +
                     ' · ' + esc(T('в среднем')) + ' ' + h.views_avg + '</div></div>';
             }).join('');
             var pend = hsPend.length
                 ? '<div class="cp-note in" style="margin-top:7px;">' +
-                  esc(T('Окно появляется от 2 замеренных постов в один час. Копятся:') + ' ' +
-                      hsPend.map(function (h) { return (h.hour < 10 ? '0' : '') + h.hour + ':00'; }).join(' · ')) +
+                  esc(T('Окно появляется от 2 постов в один час. Пока по одному посту в часах:') + ' ' +
+                      hsPend.map(function (h) { return hRange(h.hour); }).join(' · ')) +
                   '</div>'
                 : '';
             body += '<div class="cp-ins-t">' + esc(T('Когда читают')) +
                 '<span>' + esc(T('просмотров за сутки')) + '</span></div>' +
-                (top ? '<div class="cp-hgrid">' + top + '</div>' : '') + pend;
+                (top ? '<div class="cp-hgrid">' + top + '</div>' : '') + pend +
+                '<div class="cp-note in" style="margin-top:7px;">' +
+                esc(T('Это замеры уже вышедших постов, а не расписание. Время следующей недели выбирает сборка.')) + '</div>';
         }
         var since = ins.since ? ' · ' + esc(T('с')) + ' ' + esc(dateLabel(ins.since)) : '';
         return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
