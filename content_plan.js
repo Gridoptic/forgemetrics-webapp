@@ -2080,13 +2080,12 @@
         var lowNote;
         if (w.is_tester) {
             lowNote = '<div class="cp-gonote">' + esc(T('Тестовый доступ — Forge не списываются')) + '</div>';
-        } else if (w.balance != null && w.balance < weekPrice) {
-            lowNote = '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
-                ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>';
-        } else if (rebuildFee) {
-            lowNote = '<div class="cp-gonote">' + esc(T('Сегодня уже была сборка — в цену добавлена пересборка недели')) + ' · ' + forgeTag(rebuildFee) + '</div>';
         } else {
-            lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
+            lowNote = priceBreak(weekPrice, rebuildFee);
+            if (w.balance != null && w.balance < weekPrice) {
+                lowNote += '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
+                    ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>';
+            }
         }
         if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
         var goalsBody = '<div class="cp-goals">' + goals + '</div>' + goalRecNote();
@@ -2110,6 +2109,23 @@
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button>' +
             (blocked ? '' : lowNote) + '</div>', 'brief');
+    }
+
+    function priceBreak(total, fee) {
+        var n = totalPosts(), per = priceDay(), base = per * n;
+        var rows = '<div class="cp-pbr"><span>' +
+            esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' × ' + per) +
+            '</span><b>' + esc(String(base)) + '</b></div>';
+        if (fee) {
+            rows += '<div class="cp-pbr"><span>' +
+                esc(T('повторная сборка сегодня')) + '</span><b>+' + esc(String(fee)) + '</b></div>';
+        }
+        rows += '<div class="cp-pbr sum"><span>' + esc(T('итого')) + '</span><b>' +
+            forgeTag(total) + '</b></div>';
+        return '<div class="cp-pbreak">' + rows + '</div>' +
+            '<div class="cp-gonote">' +
+            esc(T(fee ? 'Тексты списываются по мере написания. Доплата за повторную сборку держится сутки с прошлой.'
+                      : 'Тексты списываются по мере написания — каждый можно переписать.')) + '</div>';
     }
 
     function modelOpt(m) {
