@@ -492,8 +492,10 @@
                 return (hist[b].views || 0) - (hist[a].views || 0) || a - b;
             }).slice(0, rn);
         } else {
-            pat = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
-                    6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
+            var base = { 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4],
+                         6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] }[rn];
+            var sh = isoWeek(new Date()) % 7;
+            pat = base.map(function (d) { return (d + sh) % 7; });
         }
         var fd = days().slice();
         for (var fi = 0; fi < 7; fi++) {
@@ -1682,10 +1684,39 @@
                     : '<button class="cp-lapply" data-act="applyfreq" data-n="' + f.recommended + '">' +
                       esc(T('Применить к сетке недели')) + '</button>')
                 : '';
+            if (!daysUneven()) {
+                why += ' ' + esc(T('Дни для сокращённой недели ротируются от недели к неделе, ' +
+                    'пока замеры не выделят сильные.'));
+            }
             rows += lrnRow('amb', 'ti-stack-2',
                 esc(f.recommended + ' ' + T(plural3(f.recommended, 'пост', 'поста', 'постов')) + ' ' +
                     T('в неделю вместо') + ' ' + Math.round(f.tested)),
                 why, 'amb', 'рекомендация', btn);
+        }
+        var D = L.days;
+        if (D && D.spread_pct != null) {
+            if (D.verdict === 'strong') {
+                rows += lrnRow('teal', 'ti-calendar-check',
+                    esc(T('Сильные дни — по замерам')),
+                    esc(T('Разброс между днями') + ' ' + D.spread_pct + '%. ' +
+                        T('Раскладка недели учитывает сильные дни.')),
+                    'teal', 'замер');
+            } else if (D.verdict === 'even') {
+                rows += lrnRow('vio', 'ti-calendar-stats',
+                    esc(T('Дни одинаковы — повторный замер')),
+                    esc(T('Разброс между днями всего') + ' ' + D.spread_pct + '% (' +
+                        T('замерено') + ' ' + D.covered + ' ' +
+                        T(plural3(D.covered, 'день', 'дня', 'дней')) + '). ' +
+                        T('Сильных дней нет — неделя снова раскладывается по всем дням.')),
+                    'vio', 'проба');
+            } else {
+                rows += lrnRow('vio', 'ti-calendar-stats',
+                    esc(T('Дни — продолжаю замер')),
+                    esc(T('Разброс между днями') + ' ' + D.spread_pct + '% — ' +
+                        T('разница есть, но для вывода мало: порог 50%.') + ' ' +
+                        T('Раскладка остаётся по всем дням.')),
+                    'vio', 'проба');
+            }
         }
         var H = L.hours || {};
         if ((H.windows || []).length) {
@@ -1832,14 +1863,35 @@
         var t = totalPosts();
         if (noChannelData()) {
             var hstat = (_cal && _cal.history) || {};
-            var why0 = (hstat.total || hstat.archive)
-                ? T('Свежих замеров у канала мало — сильные дни по ним не определить.')
-                : T('У канала пока нет вышедших постов — сравнивать не с чем, ' +
+            var hd0 = histAny();
+            var why0, measuredWeek = false;
+            if (hd0) {
+                var mx0 = 0, mn0 = Infinity;
+                hd0.forEach(function (d) {
+                    if (d.views > 0) {
+                        if (d.views > mx0) mx0 = d.views;
+                        if (d.views < mn0) mn0 = d.views;
+                    }
+                });
+                var spread0 = (mx0 > 0 && mn0 < Infinity)
+                    ? Math.round((mx0 / mn0 - 1) * 100) : null;
+                measuredWeek = spread0 != null;
+                why0 = T('Разведочные замеры прошли: разброс между днями') + ' ' + spread0 + '% — ' +
+                    T(spread0 < 10 ? 'дни практически одинаковы.'
+                                   : 'лучший день пока не выделился, порог 50%.');
+            } else if (hstat.total || hstat.archive) {
+                why0 = T('Свежих замеров у канала мало — сильные дни по ним не определить.');
+            } else {
+                why0 = T('У канала пока нет вышедших постов — сравнивать не с чем, ' +
                     'сильные дни и часы определить не по чему.');
+            }
             var full0 = t === 7 && days().every(function (d) { return (d.n || 0) === 1; });
             var plan0 = full0
-                ? T('Предлагаю разведочную неделю: по посту в каждый день — за неделю ' +
-                    'станет видно, какие дни и часы у канала сильные.')
+                ? T(measuredWeek
+                    ? 'Повторяю разведочную неделю: по посту в каждый день — сильный день ' +
+                      'должен подтвердиться заметным отрывом.'
+                    : 'Предлагаю разведочную неделю: по посту в каждый день — за неделю ' +
+                      'станет видно, какие дни и часы у канала сильные.')
                 : T('Сейчас %1 — %2. Точнее всего разведочная неделя: по посту в каждый день.')
                     .replace('%1', t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')))
                     .replace('%2', names.join(', '));
