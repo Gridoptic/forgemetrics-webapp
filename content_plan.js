@@ -1699,18 +1699,45 @@
     }
     var _cpwDay = null;
     function cpwSugTitles() {
-        return (_rubrics || []).filter(function (r) { return r.source === 'suggest' && r.title; })
-            .map(function (r) { return r.title; });
+        return cpwCandidates().map(function (r) { return r.title; });
+    }
+    function cpwCandidates() {
+        var live = (_rubrics || []).filter(function (r) {
+            return r.title && !r.disabled && !r.needs_fact;
+        });
+        live.sort(function (a, b) { return (b.avg_views || 0) - (a.avg_views || 0); });
+        var sug = (_rubrics || []).filter(function (r) {
+            return r.title && r.disabled && r.source === 'suggest';
+        });
+        return live.concat(sug);
+    }
+    function rubByTitle(t) {
+        return (_rubrics || []).filter(function (r) { return r.title === t; })[0] || null;
+    }
+    function cpwReason(r) {
+        if (!r) return T('тема будет из включённых рубрик');
+        if ((r.post_count || 0) >= 3 && (r.avg_views || 0) > 0) {
+            var top = 0;
+            (_rubrics || []).forEach(function (x) {
+                if (!x.disabled && (x.post_count || 0) >= 3 && (x.avg_views || 0) > top) top = x.avg_views;
+            });
+            return (r.avg_views === top ? T('сильная рубрика') : T('рубрика канала')) +
+                ' · ' + T('охват') + ' ' + numExact(r.avg_views);
+        }
+        if (r.source === 'user') return T('твоя рубрика');
+        if (r.source === 'suggest') return T('предложение под нишу');
+        return T('рубрика канала') + (r.post_count ? ' · ' + r.post_count + ' ' +
+            T(plural3(r.post_count, 'пост', 'поста', 'постов')) : '');
     }
     function cpwWhy(i, k) {
         var tp = dayTopics(i)[k] || '';
         if (tp) {
-            return cpwSugTitles().indexOf(tp) >= 0
-                ? { t: T('предложение под нишу'), own: false }
-                : { t: T('твоя тема'), own: true };
+            var r = rubByTitle(tp);
+            return r ? { t: cpwReason(r), own: r.source === 'user' }
+                     : { t: T('твоя тема'), own: true };
         }
         var pin = dayPins(i)[k] || '';
-        if (pin) return { t: T('рубрика') + ' «' + rubTitle(pin) + '»', own: false };
+        if (pin) return { t: cpwReason(rubByTitle(rubTitle(pin))), own: false };
         return null;
     }
     function cpwRecDays() {
@@ -1788,7 +1815,7 @@
                 '<span class="tm' + (times[k] ? ' custom' : '') + '">' +
                 esc(times[k] || T('авто')) + '</span>' +
                 '<span class="tx">' + (tp ? esc(tp)
-                    : '<em>' + esc(T('тему придумает сборка')) + '</em>') +
+                    : '<em>' + esc(T('выбрать тему')) + '</em>') +
                 (why ? '<span class="why' + (why.own ? ' own' : '') + '">' + esc(why.t) + '</span>' : '') +
                 '</span><i class="ti ti-chevron-right ar"></i></div>';
         }
@@ -1910,16 +1937,16 @@
         var i = _cpwSheet.day, k = _cpwSheet.slot;
         var used = cpwUsedTopics(i, k);
         var cur = dayTopics(i)[k] || '';
-        var sugs = (_rubrics || []).filter(function (r) {
-            return r.source === 'suggest' && r.title && !used[r.title];
-        }).slice(0, 6);
+        var sugs = cpwCandidates().filter(function (r) { return !used[r.title]; }).slice(0, 8);
         return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
             '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' + T('тема поста')) + '</div>' +
             sugs.map(function (r) {
                 var isCur = r.title === cur;
-                return '<button class="cpw-pick" data-act="cpwpick" data-v="' + esc(r.title) + '">' +
+                return '<button class="cpw-pick' + (r.source === 'user' ? ' own' : '') +
+                    '" data-act="cpwpick" data-v="' + esc(r.title) + '">' +
                     '<span class="tx">' + esc(r.title) +
-                    '<em>' + esc(r.about || T('предложение под нишу')) + '</em></span>' +
+                    '<em>' + esc(cpwReason(r)) + '</em>' +
+                    (r.about ? '<span class="ab">' + esc(r.about) + '</span>' : '') + '</span>' +
                     '<i class="ti ti-' + (isCur ? 'check' : 'arrow-right') + ' go"></i></button>';
             }).join('') +
             '<button class="cpw-pick auto" data-act="cpwpick" data-v="">' +

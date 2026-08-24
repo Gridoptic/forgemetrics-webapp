@@ -1847,3 +1847,4 @@
   background: rgba(129,140,248,.09); border: .5px solid rgba(129,140,248,.32);
   border-radius: 15px; backdrop-filter: blur(12px); margin: 0; }
 .cpg-chan .cp-hint { margin-top: 6px; }
+.cpw-pick .ab { display: block; font-size: 10px; color: #9aa1c2; margin-top: 2px; }
