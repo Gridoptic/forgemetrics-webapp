@@ -312,6 +312,10 @@
         }
         return true;
     }
+    function showScreenByState() {
+        if (_wantView === 'week' && _state && _state.posts && _state.posts.length) renderWeek();
+        else renderBrief();
+    }
     function rerender() {
         if (!_open || _pollTimer || _bootT || !_state) return;
         if (_rrT) return;
@@ -358,7 +362,7 @@
                 apiRequest('/api/v1/channels/active').then(function (cd) {
                     _channels = (cd && cd.channels) || [];
                     if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
-                    if (!_building) renderWeek();
+                    if (!_building) showScreenByState();
                 }).catch(function () {});
             }
             if (_chId) {
@@ -402,7 +406,7 @@
                             if (!d2 || !d2.ok) return;
                             _state = d2;
                             syncDays(d2);
-                            if (d2.posts && d2.posts.length) renderWeek(); else renderBrief();
+                            showScreenByState();
                         })
                         .catch(function () {});
                     loadAutopilot();
@@ -2401,7 +2405,7 @@
                 _apBusy = false;
                 if (r && r.ok) {
                     _ap = r.autopilot;
-                    if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+                    showScreenByState();
                     if (done) done(true);
                 }
                 else if (r && r.error === 'not_earned') {
@@ -2522,7 +2526,7 @@
                         if (!d || !d.ok) return;
                         _state = d;
                         syncDays(d);
-                        if (d.posts && d.posts.length) renderWeek(); else renderBrief();
+                        showScreenByState();
                     })
                     .catch(function () {});
             },
