@@ -1967,6 +1967,17 @@
         }
     }
     var _cpwSheet = null;
+    function cpwCommitSlot() {
+        if (!_cpwSheet || !_cpwSheet.fresh) return true;
+        if (!setDayN(_cpwSheet.day, dayN(_cpwSheet.day) + 1)) {
+            _cpwSheet = null;
+            renderBrief();
+            return false;
+        }
+        _cpwSheet.fresh = false;
+        loadCalendarSoon();
+        return true;
+    }
     function cpwUsedTopics(exDay, exSlot) {
         var used = {};
         days().forEach(function (d, di) {
@@ -1979,11 +1990,13 @@
     function cpwSheetHtml() {
         if (!_cpwSheet) return '';
         var i = _cpwSheet.day, k = _cpwSheet.slot;
+        var fresh = !!_cpwSheet.fresh;
         var used = cpwUsedTopics(i, k);
-        var cur = dayTopics(i)[k] || '';
+        var cur = fresh ? '' : (dayTopics(i)[k] || '');
         var sugs = cpwCandidates().filter(function (r) { return !used[r.title]; }).slice(0, 8);
         return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
-            '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' + T('тема поста')) +
+            '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' +
+                T(fresh ? 'новый пост' : 'тема поста')) +
             '<button class="cpw-hx" data-act="cpwx" aria-label="' + esc(T('Закрыть')) + '">' +
             '<i class="ti ti-x"></i></button></div>' +
             sugs.map(function (r) {
@@ -2003,10 +2016,15 @@
             esc(rubByTitle(cur) ? '' : cur) + '" ' +
             'placeholder="' + esc(T('Своя тема поста')) + '...">' +
             '<button data-act="cpwown"><i class="ti ti-check"></i></button></div>' +
-            cpwTimeBlock(i, k) +
-            '<button class="cpw-drop" data-act="cpwdrop" data-v="' + i + '" data-k="' + k + '">' +
-            '<i class="ti ti-trash"></i> ' + esc(T('Убрать этот пост')) + '</button>' +
-            '<button class="cpw-close" data-act="cpwx">' + esc(T('Закрыть')) + '</button>' +
+            (fresh
+                ? '<div class="cpw-fresh">' +
+                  esc(T('Пост появится в неделе, когда выберешь тему. Время и правки — после этого.')) +
+                  '</div>'
+                : cpwTimeBlock(i, k) +
+                  '<button class="cpw-drop" data-act="cpwdrop" data-v="' + i + '" data-k="' + k + '">' +
+                  '<i class="ti ti-trash"></i> ' + esc(T('Убрать этот пост')) + '</button>') +
+            '<button class="cpw-close" data-act="cpwx">' +
+            esc(T(fresh ? 'Отмена' : 'Закрыть')) + '</button>' +
             '</div></div>';
     }
     function cpwTimeBlock(i, k) {
@@ -3968,14 +3986,16 @@
         if (act === 'cpwadd') {
             haptic('light');
             var _ai = +actEl.getAttribute('data-v');
-            if (setDayN(_ai, dayN(_ai) + 1)) {
-                saveDaysSoon();
-                loadCalendarSoon();
-                var _ak = dayN(_ai) - 1;
-                _topicCleared[_ai + '_' + _ak] = 1;
-                _cpwSheet = { day: _ai, slot: _ak };
-                renderBrief();
+            if (dayN(_ai) >= MAX_PER_DAY) {
+                toast(T('В одном дне не больше десяти постов'));
+                return;
             }
+            if (totalPosts() + 1 > MAX_WEEK) {
+                toast(T('Больше семидесяти постов в неделю не собирается'));
+                return;
+            }
+            _cpwSheet = { day: _ai, slot: dayN(_ai), fresh: true };
+            renderBrief();
             return;
         }
         if (act === 'cpwdrop') {
@@ -4018,6 +4038,7 @@
         if (act === 'cpwpick') {
             haptic('light');
             var _pv = actEl.getAttribute('data-v') || '';
+            if (!cpwCommitSlot()) return;
             if (!_pv) _topicCleared[_cpwSheet.day + '_' + _cpwSheet.slot] = 1;
             setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _pv);
             _cpwSheet = null;
@@ -4028,6 +4049,8 @@
             var _ti = document.getElementById('cpw-ti');
             var _tv = (_ti && _ti.value || '').trim();
             haptic('light');
+            if (!_tv && _cpwSheet && _cpwSheet.fresh) { _cpwSheet = null; renderBrief(); return; }
+            if (!cpwCommitSlot()) return;
             if (!_tv) _topicCleared[_cpwSheet.day + '_' + _cpwSheet.slot] = 1;
             setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _tv);
             _cpwSheet = null;
