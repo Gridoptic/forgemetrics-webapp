@@ -1813,3 +1813,37 @@
 .cpw-add { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 10px;
   width: 100%; border: .5px dashed rgba(129,140,248,.4); background: transparent; border-radius: 12px;
   padding: 10px; color: #a5b0fb; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+/* ===== рубрики без кухни ===== */
+.cp-rauto { display: flex; gap: 8px; align-items: flex-start; font-size: 11.5px; color: #9aa1c2;
+  padding: 9px 11px; border: .5px dashed rgba(52,211,153,.35); border-radius: 12px; margin-bottom: 4px; }
+.cp-rauto i { color: #8fe3c4; font-size: 12px; flex: none; margin-top: 1px; }
+.cp-rgt { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #565b73;
+  font-weight: 800; margin: 13px 2px 7px; display: flex; justify-content: space-between; align-items: baseline; }
+.cp-rgt em { font-style: normal; font-weight: 600; letter-spacing: 0; text-transform: none;
+  font-size: 10.5px; color: #565b73; }
+.cp-rub2 { display: flex; align-items: flex-start; gap: 9px; width: 100%; text-align: left;
+  padding: 10px 11px; border-radius: 13px; margin-bottom: 7px; cursor: pointer; font-family: inherit;
+  border: .5px solid rgba(52,211,153,.26); background: rgba(52,211,153,.05); color: inherit; }
+.cp-rub2.own { border-color: rgba(129,140,248,.4); background: rgba(129,140,248,.06); }
+.cp-rub2.sug { border-style: dashed; border-color: rgba(129,140,248,.3); background: transparent; }
+.cp-rub2 .tx { min-width: 0; flex: 1; }
+.cp-rub2 b { font-size: 12.5px; color: #eef0fa; }
+.cp-rub2 em { font-style: normal; font-size: 11px; color: #9aa1c2; display: block; margin-top: 2px; }
+.cp-rub2 .cp-rbdg { margin-left: 5px; vertical-align: 1px; }
+.cp-rbdg.ownb { background: rgba(129,140,248,.14); color: #b0b9ff; }
+.cp-rfact { display: block; font-size: 10px; color: #f5cf7a; opacity: .9; margin-top: 3px; }
+.cp-rub2 .rr { margin-left: auto; flex: none; display: flex; align-items: center; gap: 8px; }
+.cp-rub2 .pw { font-size: 11px; color: #eef0fa; font-weight: 800; font-variant-numeric: tabular-nums;
+  display: inline-flex; align-items: center; gap: 3px; }
+.cp-rub2 .pw i { font-size: 11px; color: #5fe0af; }
+.cp-rub2 .rm { color: #565b73; font-size: 13px; padding: 3px 5px; position: relative; }
+.cp-rub2 .rm::after { content: ''; position: absolute; inset: -8px; }
+.cp-rub2 .pl { width: 26px; height: 26px; border-radius: 8px; border: .5px solid rgba(129,140,248,.4);
+  display: flex; align-items: center; justify-content: center; color: #b0b9ff; font-size: 13px; }
+.cp-rline { display: flex; gap: 7px; margin-top: 10px; }
+.cp-rleg { font-size: 10.5px; color: #565b73; margin-top: 10px; padding-top: 9px;
+  border-top: .5px solid rgba(255,255,255,.06); }
+.cp-rleg i { font-style: normal; }
+.cp-rleg .g { color: #5fe0af; }
+.cp-rleg .b { color: #b0b9ff; }

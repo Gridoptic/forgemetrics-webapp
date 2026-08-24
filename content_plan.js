@@ -868,139 +868,101 @@
     function rubricsBlock(inWeek, pubDone) {
         var cid = _chId || (_state && _state.channel_id);
         if (!cid) return '';
-        var note = inWeek
-            ? 'Из чего собирается неделя. Правки рубрик применятся при следующей сборке.'
-            : 'Из чего собирается неделя. Цифра — средние просмотры рубрики.';
         if (!_rubrics.length) {
-            return '<div class="cp-sec">' + secHead('Рубрики канала', note) +
+            return '<div class="cp-sec">' +
                 '<div class="cp-rubwait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Определяю рубрики по постам канала...')) + '</span></div></div>';
+                esc(T('Разбираю посты канала и собираю рубрики...')) + '</span></div></div>';
         }
-        var own = _rubrics.filter(function (r) { return r.source !== 'suggest'; });
-        var src = own[0] && own[0].source;
-        var badge = '';
-        if (own.length) {
-            badge = src === 'base'
-                ? '<div class="cp-rsrc base"><i class="ti ti-info-circle"></i>' +
-                  esc(T('канал новый — базовый набор, обновится по мере постов')) + '</div>'
-                : '<div class="cp-rsrc"><i class="ti ti-eye"></i>' +
-                  esc(T('определены по постам канала')) + '</div>';
-        }
-
-            var max = 0;
-        own.forEach(function (r) {
-            if ((r.post_count || 0) >= 2 && (r.avg_views || 0) > max) max = r.avg_views || 0;
-        });
-
         var MINS = 3;
-        var meas = own.filter(function (r) {
-            return !r.needs_fact && !r.disabled &&
-                (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
+        var inWork = _rubrics.filter(function (r) { return !r.disabled; });
+        var sugg = _rubrics.filter(function (r) { return r.disabled; });
+        var rated = inWork.filter(function (r) {
+            return (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
         });
-        var wOn = false, topAv = 0, lowAv = 0;
-        if (meas.length >= 2) {
-            var avs = meas.map(function (r) { return r.avg_views; });
-            topAv = Math.max.apply(null, avs);
-            lowAv = Math.min.apply(null, avs);
-            wOn = topAv >= lowAv * 1.5;
+        var topAv = 0, lowAv = Infinity, maxV = 0;
+        rated.forEach(function (r) {
+            if (r.avg_views > topAv) topAv = r.avg_views;
+            if (r.avg_views < lowAv) lowAv = r.avg_views;
+            if (r.avg_views > maxV) maxV = r.avg_views;
+        });
+        function row(r, working) {
+            var badges = '';
+            if (working) {
+                if (rated.length && r.avg_views === topAv && (r.post_count || 0) >= MINS) {
+                    badges += '<span class="cp-rbdg up">' + esc(T('РЕКОМЕНДАЦИЯ · ЧАЩЕ')) + '</span>';
+                } else if (rated.length > 1 && r.avg_views === lowAv && (r.post_count || 0) >= MINS) {
+                    badges += '<span class="cp-rbdg dn">' + esc(T('СЛАБАЯ · РЕЖЕ')) + '</span>';
+                } else if ((r.post_count || 0) > 0 && (r.post_count || 0) < MINS) {
+                    badges += '<span class="cp-rbdg nd">' + esc(T('нужно от %1 постов').replace('%1', MINS)) + '</span>';
+                }
+            }
+            if (r.source === 'user') {
+                badges += '<span class="cp-rbdg ownb">' + esc(T('ДОБАВЛЕНА ТОБОЙ')) + '</span>';
+            }
+            var pc = r.post_count || 0;
+            var cnt = pc ? (' · ' + pc + ' ' + T(plural3(pc, 'пост', 'поста', 'постов'))) : '';
+            var isRated = (pc >= MINS) && (r.avg_views || 0) > 0;
+            var pct = (maxV && isRated) ? Math.max(6, Math.round(r.avg_views / maxV * 100)) : 0;
+            var fact = r.needs_fact
+                ? '<span class="cp-rfact">' + esc('\u26A1 ' +
+                    T('бот сам спросит пару строк в чате за день до выхода')) + '</span>'
+                : '';
+            return '<button class="cp-rub2' + (working ? '' : ' sug') +
+                (r.source === 'user' ? ' own' : '') +
+                '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
+                '<span class="tx"><b>' + esc(r.title) + '</b>' + badges +
+                '<em>' + esc((r.about || '') + cnt) + '</em>' + fact +
+                (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
+                '</span>' +
+                '<span class="rr">' +
+                (isRated ? '<span class="pw"><i class="ti ti-eye"></i>' +
+                    esc(numExact(r.avg_views)) + '</span>' : '') +
+                (working
+                    ? (r.source === 'user'
+                        ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' + esc(r.key) + '"></i>' : '')
+                    : '<i class="pl ti ti-plus"></i>') +
+                '</span></button>';
         }
-
-        var groups = [
-            ['a', 'ti-file-text', 'пишутся без твоего участия',
-             function (r) { return r.source !== 'suggest' && !r.needs_fact; }],
-            ['z', 'ti-camera', 'нужен факт от тебя',
-             function (r) { return r.source !== 'suggest' && r.needs_fact; }],
-            ['n', 'ti-sparkles', 'предложены под нишу',
-             function (r) { return r.source === 'suggest'; }],
-        ];
-        var body = '';
         var TIPS_SHOWN = 4;
-        groups.forEach(function (g) {
-            var items = _rubrics.filter(g[3]);
-            if (!items.length) return;
-            var hidden = 0;
-            if (g[0] === 'n' && !_tipsOpen && items.length > TIPS_SHOWN) {
-                hidden = items.length - TIPS_SHOWN;
-                items = items.slice(0, TIPS_SHOWN);
-            }
-            body += '<div class="cp-rgh ' + g[0] + '"><i class="ti ' + g[1] + '"></i>' +
-                '<span>' + esc(T(g[2])) + '</span><i class="ln"></i></div>' +
-                '<div class="cp-rubs">' + items.map(function (r) {
-                    var tip = g[0] === 'n';
-                    var _pc = r.post_count || 0;
-                    var cnt = _pc ? (' · ' + _pc + ' ' +
-                        T(plural3(_pc, 'пост', 'поста', 'постов')) +
-                        (_pc < MINS ? (', ' + T('для оценки нужно %1').replace('%1', MINS)) : '')) : '';
-                    var rated = (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
-                    var solid = rated;
-                    var pct = (max && rated) ? Math.max(6, Math.round(r.avg_views / max * 100)) : 0;
-                    var strong = (max && rated && r.avg_views === max) ? ' top' : '';
-                    var mb = '';
-                    if (wOn && g[0] === 'a' && !r.disabled) {
-                        if ((r.post_count || 0) >= MINS && (r.avg_views || 0) > 0) {
-                            if (r.avg_views === topAv) mb = '<span class="cp-rbdg up">' + esc(T('сильная · чаще')) + '</span>';
-                            else if (r.avg_views === lowAv) mb = '<span class="cp-rbdg dn">' + esc(T('ниже нормы · реже')) + '</span>';
-                        } else {
-                            mb = '<span class="cp-rbdg nd">' + esc(
-                                (r.post_count || 0) > 0
-                                    ? T('нужно от %1 постов').replace('%1', MINS)
-                                    : T('недостаточно данных')) + '</span>';
-                        }
-                    }
-                    return '<button class="cp-rub ' + g[0] + strong +
-                        (r.source === 'user' ? ' own' : '') +
-                        (r.disabled && !tip ? ' off' : '') +
-                        '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
-                        '<i class="ti ' + g[1] + '"></i>' +
-                        '<span class="tx"><b>' + esc(r.title) + mb + '</b>' +
-                        '<em>' + esc((r.off_reason || r.about || '') + (tip ? '' : cnt)) + '</em>' +
-                        (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
-                        '</span>' +
-                        (tip ? '<span class="cp-plus"><i class="ti ti-plus"></i></span>'
-                             : (solid ? '<span class="pw"><i class="ti ti-eye"></i>' +
-                                    esc(numExact(r.avg_views)) + '</span>' : '')) +
-                        (r.source === 'user' ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' +
-                            esc(r.key) + '"></i>' : '') + '</button>';
-                }).join('') + '</div>';
-            if (hidden) {
-                body += '<button class="cp-rmore" data-act="tipsmore">' +
-                    esc(T('Показать ещё') + ' ' + hidden) + '<i class="ti ti-chevron-down"></i>' +
-                    '</button>';
-            }
-        });
-        var hasTips = _rubrics.some(function (r) { return r.source === 'suggest'; });
-        var _onAll = _rubrics.filter(function (r) { return !r.disabled && r.source !== 'suggest'; });
-        var _onAuto = _onAll.filter(function (r) { return !r.needs_fact; });
-        var _slots = totalPosts();
-        var _maxSame = Math.max(2, Math.ceil(_slots / Math.max(1, _onAuto.length)));
-        var _fitLine = _onAll.length
-            ? '<div class="cp-dshint">' + esc(
-                T('Сборка распределит %1 по включённым рубрикам: сильным — больше постов, слабым — меньше. Одна рубрика займёт не больше %2 — неделя не будет однообразной.')
-                    .replace('%1', _slots + ' ' + T(plural3(_slots, 'пост', 'поста', 'постов')))
-                    .replace('%2', _maxSame + ' ' + T(plural3(_maxSame, 'поста', 'постов', 'постов'))) +
-                (_onAll.length > _onAuto.length
-                    ? ' ' + T('Рубрики из «нужен факт от тебя» войдут, только если закрепить их за днём.')
-                    : '')) + '</div>'
-            : '';
-        return '<div class="cp-sec">' + secHead('Рубрики канала', note) +
-            badge + body +
-            _fitLine +
-            (hasTips ? '<div class="cp-dshint">' +
-                esc(T('Предложены под нишу канала. Пока не включишь — в неделю не попадут.')) +
-                '</div>' : '') +
-            '<div class="cp-rbtns">' +
+        var hidden = 0;
+        var suggShow = sugg;
+        if (!_tipsOpen && sugg.length > TIPS_SHOWN) {
+            hidden = sugg.length - TIPS_SHOWN;
+            suggShow = sugg.slice(0, TIPS_SHOWN);
+        }
+        var _slots2 = totalPosts();
+        var autoCnt = inWork.filter(function (r) { return !r.needs_fact; }).length;
+        var _maxSame2 = Math.max(2, Math.ceil(_slots2 / Math.max(1, autoCnt)));
+        var auto = '<div class="cp-rauto"><i class="ti ti-sparkles"></i><span>' +
+            esc(T('Сборка распределит %1 по включённым рубрикам: сильным — больше постов, слабым — меньше. Одна рубрика займёт не больше %2 — неделя не будет однообразной.')
+                .replace('%1', _slots2 + ' ' + T(plural3(_slots2, 'пост', 'поста', 'постов')))
+                .replace('%2', _maxSame2 + ' ' + T(plural3(_maxSame2, 'поста', 'постов', 'постов')))) +
+            '</span></div>';
+        var _ex2 = (inWork[0] || {}).title;
+        return '<div class="cp-sec">' + auto +
+            '<div class="cp-rgt">' + esc(T('В работе')) +
+            '<em>' + esc(T('нажатие выключает')) + '</em></div>' +
+            (inWork.length ? inWork.map(function (r) { return row(r, true); }).join('')
+                : '<div class="cp-dsnote">' + esc(T('Все рубрики выключены — включи хотя бы одну ниже.')) + '</div>') +
+            (sugg.length
+                ? '<div class="cp-rgt">' + esc(T('Предложения')) +
+                  '<em>' + esc(T('включаются плюсом')) + '</em></div>' +
+                  suggShow.map(function (r) { return row(r, false); }).join('') +
+                  (hidden ? '<button class="cp-rmore" data-act="tipsmore">' +
+                      esc(T('Показать ещё') + ' ' + hidden) + '<i class="ti ti-chevron-down"></i></button>' : '')
+                : '') +
+            '<div class="cp-rline">' +
             '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
             esc(T('Своя рубрика')) + '</button>' +
             '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
             esc(T('Обновить набор')) + '</button></div>' +
-            (wOn ? '<div class="cp-bfoot"><i class="ti ti-bolt"></i><span>' +
-                esc((function () {
-                    var _hint = T('Рубрика задаёт формат, а конкретную тему каждого поста придумывает сборка под сюжет недели; темы появятся на карточках постов.');
-                    var _ex = (liveRubrics()[0] || {}).title;
-                    if (_ex) _hint += ' ' + T('Например, для «%1» сборка сама решит, о чём будет пост.').replace('%1', _ex);
-                    return _hint + ' ' + T('Число рядом с описанием — сколько постов канала попало в рубрику, просмотры и полоска — их средний охват и доля от лучшей рубрики (замеры от 3 постов). Нажатие включает и выключает рубрику; крестик возвращает её в предложения — он есть только у добавленных тобой.');
-                })()) +
-                '</span></div>' : '') +
+            '<div class="cp-rleg"><i class="g">\u25A0</i> ' + esc(T('найдены в твоих постах')) +
+            ' · <i class="b">\u25A0</i> ' + esc(T('добавлены тобой')) +
+            ' · \u25A2 ' + esc(T('предложения ИИ')) + '</div>' +
+            '<div class="cp-dshint">' +
+            esc(T('Ничего настраивать не обязательно: сборка сама выберет сильные рубрики и придумает темы.') +
+                (_ex2 ? ' ' + T('Например, для «%1» сборка сама решит, о чём будет пост.').replace('%1', _ex2) : '')) +
+            '</div>' +
             (inWeek && _rubChanged
                 ? (pubDone
                     ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
