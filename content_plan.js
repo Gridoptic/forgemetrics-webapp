@@ -1996,9 +1996,7 @@
         var sugs = cpwCandidates().filter(function (r) { return !used[r.title]; }).slice(0, 8);
         return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
             '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' +
-                T(fresh ? 'новый пост' : 'тема поста')) +
-            '<button class="cpw-hx" data-act="cpwx" aria-label="' + esc(T('Закрыть')) + '">' +
-            '<i class="ti ti-x"></i></button></div>' +
+                T(fresh ? 'новый пост' : 'тема поста')) + '</div>' +
             sugs.map(function (r) {
                 var isCur = r.title === cur;
                 return '<button class="cpw-pick' + (r.source === 'user' ? ' own' : '') +
@@ -4058,8 +4056,7 @@
             return;
         }
         if (act === 'cpwx') {
-            if (t.closest && t.closest('.cpw-sheet') &&
-                !t.closest('.cpw-close, .cpw-hx')) return;
+            if (t.closest && t.closest('.cpw-sheet') && !t.closest('.cpw-close')) return;
             _cpwSheet = null;
             renderBrief();
             return;
