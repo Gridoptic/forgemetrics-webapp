@@ -987,9 +987,11 @@
         var byPlan = got.length === n;
         for (var k = 0; k < n; k++) {
             var g = got[k] || {};
+            var s = byPlan ? g : (soon[k] || g || {});
             var at = byPlan ? g.at : ((soon[k] || {}).at || g.at || null);
             out.push({
                 seq: k, at: at || null, views: g.views, manual: !!(dayTimes(i)[k]),
+                conf: s.conf || 'low',
                 key: (pins[k] || null) || (g.rubric || null),
                 pinned: !!pins[k]
             });
@@ -1856,8 +1858,15 @@
     }
     function cpwSlotTime(i, k) {
         var mine = dayTimes(i)[k] || '';
-        if (mine) return { at: mine, mine: true };
-        return { at: (daySlots(i)[k] || {}).at || '', mine: false };
+        if (mine) return { at: mine, mine: true, conf: 'manual' };
+        var sl = daySlots(i)[k] || {};
+        return { at: sl.at || '', mine: false, conf: sl.conf || 'low' };
+    }
+    function confLabel(conf) {
+        if (conf === 'measured') return T('по замерам канала');
+        if (conf === 'probe') return T('проба окна');
+        if (conf === 'high') return T('по данным канала');
+        return T('время по нише');
     }
     function cpwFocus() {
         var i = _cpwDay || 0;
@@ -2074,10 +2083,11 @@
         }).join('');
         return '<div class="cpw-time">' +
             '<div class="th">' + esc(T('Время выхода')) +
-            '<span class="' + (tm.mine ? 'own' : 'rec') + '">' + esc(tm.at || '--:--') +
-            (tm.mine ? '' : ' · ' + esc(T('по замерам канала'))) + '</span></div>' +
+            '<span class="' + (tm.mine ? 'own' : (tm.conf === 'low' ? 'lo' : 'rec')) + '">' +
+            esc(tm.at || '--:--') +
+            (tm.mine ? '' : ' · ' + esc(confLabel(tm.conf))) + '</span></div>' +
             (cur ? '<button class="cpw-tauto" data-act="cpwhour" data-v="">' +
-                esc(T('Вернуть время по замерам')) + '</button>' : '') +
+                esc(T('Вернуть время, которое подберёт система')) + '</button>' : '') +
             '<div class="cpw-tg">' + hours + '</div>' +
             '<div class="cpw-tr">' + mins + '</div></div>';
     }

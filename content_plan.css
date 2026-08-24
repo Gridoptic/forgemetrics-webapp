@@ -1861,6 +1861,7 @@
 .cpw-time .th span { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
   text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cpw-time .th .rec { color: #8fe3c4; }
+.cpw-time .th .lo { color: #8990a8; }
 .cpw-time .th .own { color: #f5cf7a; }
 .cpw-tauto { width: 100%; margin-bottom: 8px; padding: 8px; font: inherit; font-size: 11px;
   font-weight: 700; color: #9aa1c2; background: rgba(255,255,255,.03); cursor: pointer;
