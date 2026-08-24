@@ -1906,6 +1906,113 @@
         var f = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
         return 1 + Math.round(((t - f) / 86400000 - 3 + ((f.getUTCDay() + 6) % 7)) / 7);
     }
+    var _cpwDay = null;
+    function cpwSugTitles() {
+        return (_rubrics || []).filter(function (r) { return r.source === 'suggest' && r.title; })
+            .map(function (r) { return r.title; });
+    }
+    function cpwWhy(i, k) {
+        var tp = dayTopics(i)[k] || '';
+        if (tp) {
+            return cpwSugTitles().indexOf(tp) >= 0
+                ? { t: T('предложение под нишу'), own: false }
+                : { t: T('твоя тема'), own: true };
+        }
+        var pin = dayPins(i)[k] || '';
+        if (pin) return { t: T('рубрика') + ' «' + rubTitle(pin) + '»', own: false };
+        return null;
+    }
+    function cpwRecDays() {
+        var hist = histDays();
+        if (!hist) return {};
+        var idx = [0, 1, 2, 3, 4, 5, 6].sort(function (a, b) {
+            return (hist[b].views || 0) - (hist[a].views || 0);
+        });
+        var lim = Math.max(3, days().filter(function (d) { return d.n > 0; }).length);
+        var out = {};
+        idx.slice(0, lim).forEach(function (i) { if ((hist[i].views || 0) > 0) out[i] = 1; });
+        return out;
+    }
+    function edBubble() {
+        var L = _state && _state.learning;
+        var names = [];
+        days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
+        var t = totalPosts();
+        var parts = [];
+        parts.push(T('Я уже расставил неделю:') + ' ' +
+            t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')) +
+            (names.length && names.length <= 5 ? ' — ' + names.join(', ') : ''));
+        var hist = histDays();
+        if (_autoFreq && hist) {
+            var mx = 0;
+            hist.forEach(function (d) { if ((d.views || 0) > mx) mx = d.views || 0; });
+            var avg = histAvg();
+            if (avg > 0 && mx > avg) {
+                parts.push(T('в эти дни охват до +%1% к среднему')
+                    .replace('%1', Math.round((mx / avg - 1) * 100)));
+            }
+        }
+        var H = L && L.hours;
+        if (H && (H.windows || []).length) {
+            parts.push(T('время — по окнам') + ' ' +
+                H.windows.slice(0, 2).map(lrnWin).join(' ' + T('и') + ' '));
+        }
+        var hasTopics = days().some(function (d) { return (d.topics || []).some(Boolean); });
+        if (hasTopics) parts.push(T('темы подобрал под нишу'));
+        return '<div class="cpw-ed"><i class="av ti ti-sparkles"></i><div class="bub">' +
+            esc(parts.join(', ')) + '.' +
+            '<div class="sub">' + esc(T('Всё можно поменять: нажми на день, тему или время. Настройка бесплатна.')) + '</div>' +
+            '</div></div>';
+    }
+    function cpwStrip() {
+        var hist = histDays();
+        var rec = cpwRecDays();
+        if (_cpwDay == null) {
+            _cpwDay = 0;
+            for (var q = 0; q < 7; q++) if (dayN(q) > 0) { _cpwDay = q; break; }
+        }
+        return '<div class="cpw-strip">' + [0, 1, 2, 3, 4, 5, 6].map(function (i) {
+            var v = hist ? (hist[i].views || 0) : 0;
+            return '<div class="cpw-d' + (rec[i] ? ' rec' : '') + (i === _cpwDay ? ' on' : '') +
+                (dayN(i) > 0 ? ' has' : '') + '" data-act="cpwd" data-v="' + i + '">' +
+                '<div class="d">' + esc(T(WD[i])) + '</div>' +
+                (v ? '<div class="v">' + numExact(v) + '</div>' : '<div class="v">—</div>') +
+                '<div class="dot"></div></div>';
+        }).join('') + '</div>';
+    }
+    function cpwFocus() {
+        var i = _cpwDay || 0;
+        var hist = histDays();
+        var rec = cpwRecDays();
+        var v = hist ? (hist[i].views || 0) : 0;
+        var avg = histAvg();
+        var pct = (v && avg) ? Math.round((v / avg - 1) * 100) : null;
+        var n = dayN(i);
+        var times = dayTimes(i), topics = dayTopics(i);
+        var rows = '';
+        for (var k = 0; k < n; k++) {
+            var why = cpwWhy(i, k);
+            var tp = topics[k] || '';
+            rows += '<div class="cpw-slot" data-act="cpwslot" data-v="' + i + '">' +
+                '<span class="tm' + (times[k] ? ' custom' : '') + '">' +
+                esc(times[k] || T('авто')) + '</span>' +
+                '<span class="tx">' + (tp ? esc(tp)
+                    : '<em>' + esc(T('тему придумает сборка')) + '</em>') +
+                (why ? '<span class="why' + (why.own ? ' own' : '') + '">' + esc(why.t) + '</span>' : '') +
+                '</span><i class="ti ti-chevron-right ar"></i></div>';
+        }
+        return '<div class="cpw-focus">' +
+            '<div class="fh"><span class="fd">' + esc(T(WD_FULL[i])) + '</span>' +
+            (rec[i] && pct != null
+                ? '<span class="fr">' + esc(T('сильный день') + ' · +' + pct + '%') + '</span>'
+                : (pct != null ? '<span class="fr mut">' + esc((pct >= 0 ? '+' : '') + pct + '% ' + T('к среднему')) + '</span>' : '')) +
+            (v ? '<span class="fv">' + esc(T('охват') + ' ' + numExact(v)) + '</span>' : '') +
+            '</div>' + rows +
+            (canEdit() ? '<button class="cpw-add" data-act="cpwadd" data-v="' + i + '">+ ' +
+                esc(T('Пост в этот день')) + '</button>' : '') +
+            '</div>';
+    }
+
     function daysSum() {
         var t = totalPosts(), names = [];
         days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
@@ -2002,6 +2109,18 @@
         if (_recB && canEdit() && rdy.reason !== 'paused' && daysIsDefault() &&
                 totalPosts() !== _recB) {
             applyFreqGrid(_recB);
+            var _sugs = cpwSugTitles();
+            if (_sugs.length) {
+                var _fd2 = days().slice();
+                var _si = 0;
+                for (var _fi2 = 0; _fi2 < 7 && _si < _sugs.length; _fi2++) {
+                    if ((_fd2[_fi2] || {}).n > 0) {
+                        _fd2[_fi2] = { n: _fd2[_fi2].n, pins: _fd2[_fi2].pins || [],
+                            times: _fd2[_fi2].times || [], topics: [_sugs[_si++]] };
+                    }
+                }
+                _days = _fd2;
+            }
             saveDaysSoon();
             _autoFreq = true;
         } else if (_recB && totalPosts() === _recB) {
@@ -2036,13 +2155,7 @@
         }
         if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
         var _hl3 = hoursHintLine();
-        var daysBody = (_autoFreq
-                ? '<div class="cp-note" style="margin-top:8px;"><span class="cp-rbdg dn">' +
-                  esc(T('рекомендация по замерам')) + '</span> ' +
-                  esc(T('Посты расставлены по замерам канала: сильные дни' +
-                        (_hl3 ? ' и окна времени' : '') + '. Изменить можно нажатием на день.')) + '</div>'
-                : '') +
-            '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
+        var daysBody = '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
             histNote() + tipBlock() + weekBar() +
             (_hl3 ? '<div class="cp-note" style="margin-top:8px;">' + esc(_hl3) + '</div>' : '') +
             '<div class="cp-note" style="margin-top:8px;">' +
@@ -2055,7 +2168,12 @@
         var ccur = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
         setView(
             gHero() + readinessBlock() +
-            gSec('days', 'layout-grid', 'Дни недели', daysSum(), daysBody, true) +
+            edBubble() + cpwStrip() + cpwFocus() +
+            (_autoFreq ? '<div class="cp-note" style="margin:8px 2px 0;"><span class="cp-rbdg dn">' +
+                esc(T('рекомендация по замерам')) + '</span> ' +
+                esc(T('Посты расставлены по замерам канала: сильные дни' +
+                    (hoursHintLine() ? ' и окна времени' : '') + '. Изменить можно нажатием на день.')) + '</div>' : '') +
+            gSec('days', 'layout-grid', 'Охват по дням', daysSum(), daysBody, false) +
             chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
             gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false, false, true) +
@@ -3908,6 +4026,27 @@
             return;
         }
         if (act === 'generate') { doGenerate(actEl); return; }
+        if (act === 'cpwd') {
+            haptic('light');
+            _cpwDay = +actEl.getAttribute('data-v');
+            renderBrief();
+            return;
+        }
+        if (act === 'cpwslot') {
+            haptic('light');
+            pickDay(+actEl.getAttribute('data-v'));
+            return;
+        }
+        if (act === 'cpwadd') {
+            haptic('light');
+            var _ai = +actEl.getAttribute('data-v');
+            if (setDayN(_ai, dayN(_ai) + 1)) {
+                saveDaysSoon();
+                renderBrief();
+                pickDay(_ai);
+            }
+            return;
+        }
         if (act === 'gsec') {
             var gwrap = actEl.closest('.cpg-sec');
             if (gwrap) {
