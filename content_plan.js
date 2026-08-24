@@ -1793,8 +1793,7 @@
         return out;
     }
     function noChannelData() {
-        var L = _state && _state.learning;
-        return !histDays() && !(L && L.ready);
+        return !histDays();
     }
     function edBubble() {
         var L = _state && _state.learning;
@@ -1803,8 +1802,9 @@
         var t = totalPosts();
         if (noChannelData()) {
             return '<div class="cpw-ed"><i class="av ti ti-sparkles"></i><div class="bub">' +
-                esc(T('У канала пока нет вышедших постов — сравнивать не с чем.') + ' ' +
-                    T('Поставил %1 для старта: %2.')
+                esc(T('У канала пока нет вышедших постов — сравнивать не с чем, ' +
+                      'сильные дни и часы определить не по чему.') + ' ' +
+                    T('Разложил %1 через день — %2, чтобы они не шли подряд.')
                         .replace('%1', t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')))
                         .replace('%2', names.join(', ')) + ' ' +
                     T('Темы взял из базовых рубрик.')) +
@@ -1998,10 +1998,7 @@
                 changed = true;
             }
         }
-        if (changed) {
-            _days = d;
-            saveDaysSoon();
-        }
+        if (changed) _days = d;
     }
     var _cpwSheet = null;
     function cpwCommitSlot() {
@@ -2121,7 +2118,6 @@
                 }
                 _days = _fd2;
             }
-            saveDaysSoon();
             _autoFreq = true;
         } else if (_recB && totalPosts() === _recB) {
             _autoFreq = true;
