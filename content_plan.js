@@ -1905,6 +1905,14 @@
         return esc(v.change_pct != null ? ((v.change_pct > 0 ? '+' : '') + v.change_pct + '%')
             : (r.median_views ? numShort(r.median_views) : ''));
     }
+    function statsSum() {
+        return revSum() || insSum();
+    }
+    function statsBlock() {
+        var rev = reviewEntry(), ins = insightsBlock();
+        if (!rev && !ins) return '';
+        return rev + ins;
+    }
     function apSum() {
         if (!_ap) return '';
         return esc(T((_ap.level || 'manual') !== 'manual' ? 'включён' : 'выключен'));
@@ -2133,8 +2141,7 @@
             edBubble() + cpwStrip() + cpwFocus() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
-            gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
-            gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+            gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
             gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
             gSec('model', 'diamond', 'Модель текстов',
                 esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум') + ' · ' + priceDay()), modelBody, false) +
@@ -2412,8 +2419,7 @@
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
-                gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+                gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
                 gSec('arch', 'archive', 'Посты недели (архив)',
                     esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов'))), archBody, false) +
@@ -2442,8 +2448,7 @@
                     header + ribbon + detailPanel(), true) +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
-                gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
+                gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
                 strategyWrap() + actBtns, 'week');
         }
@@ -2824,7 +2829,7 @@
         if (!fm.length && !hs.length) {
             if (!ins.published_total) return '';
             return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
-                esc(T('Накопленные данные')) + '</div><div class="cp-ins-empty">' +
+                esc(T('Замеры вышедших постов')) + '</div><div class="cp-ins-empty">' +
                 esc(T('Опубликовано постов: ' + ins.published_total +
                       '. Отклик собирается двое суток после выхода — выводы появятся, ' +
                       'когда наберётся хотя бы по два поста одного формата.')) + '</div></div>';
@@ -2872,10 +2877,10 @@
         }
         var since = ins.since ? ' · ' + esc(T('с')) + ' ' + esc(dateLabel(ins.since)) : '';
         return '<div class="cp-ins"><div class="cp-ins-h"><i class="ti ti-chart-dots"></i>' +
-            esc(T('Накопленные данные')) + '<em>' + (ins.published_total || 0) + ' ' +
+            esc(T('Замеры вышедших постов')) + '<em>' + (ins.published_total || 0) + ' ' +
             esc(T(plural3(ins.published_total || 0, 'пост', 'поста', 'постов'))) + since + '</em></div>' +
-            '<div class="cp-note in">' + esc(T('Замеры вышедших постов: на что аудитория ' +
-            'откликается и когда читает. По ним подбираются форматы и время.')) + '</div>' +
+            '<div class="cp-note in">' + esc(T('На что аудитория откликается и когда читает. ' +
+            'По этим замерам подбираются форматы и время.')) + '</div>' +
             body + '</div>';
     }
 
