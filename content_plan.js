@@ -1935,13 +1935,14 @@
             T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
     function prefillTopics() {
-        if (!canEdit()) return;
+        if (!canEdit() || _cpwSheet) return;
         var sugs = cpwSugTitles();
         if (!sugs.length) return;
         var used = {};
         days().forEach(function (d) {
             (d.topics || []).forEach(function (t) { if (t) used[t] = 1; });
         });
+        if (Object.keys(used).length) return;
         var free = sugs.filter(function (t) { return !used[t]; });
         if (!free.length) return;
         var d = days().slice();
@@ -1996,7 +1997,8 @@
             '<span class="tx">' + esc(T('Пусть тему придумает сборка')) +
             '<em>' + esc(T('под сюжет недели и сильные рубрики')) + '</em></span>' +
             (cur ? '' : '<i class="ti ti-check go"></i>') + '</button>' +
-            '<div class="cpw-own"><input id="cpw-ti" maxlength="200" value="' + esc(cur) + '" ' +
+            '<div class="cpw-own"><input id="cpw-ti" maxlength="200" value="' +
+            esc(rubByTitle(cur) ? '' : cur) + '" ' +
             'placeholder="' + esc(T('Своя тема поста')) + '...">' +
             '<button data-act="cpwown"><i class="ti ti-check"></i></button></div>' +
             cpwTimeBlock(i, k) +
@@ -3967,7 +3969,9 @@
             if (setDayN(_ai, dayN(_ai) + 1)) {
                 saveDaysSoon();
                 loadCalendarSoon();
-                _cpwSheet = { day: _ai, slot: dayN(_ai) - 1 };
+                var _ak = dayN(_ai) - 1;
+                _topicCleared[_ai + '_' + _ak] = 1;
+                _cpwSheet = { day: _ai, slot: _ak };
                 renderBrief();
             }
             return;
