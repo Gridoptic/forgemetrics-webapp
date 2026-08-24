@@ -267,6 +267,7 @@
         _open = true;
         _wantView = null;
         _state = null;
+        _modelTouched = false;
         _rubChanged = false;
         if (!_batchTimer) _dayBusy = {};
         ensureScreen();
@@ -301,6 +302,7 @@
     var _autoFreq = false;
     var _goalAuto = false;
     var _goalTouched = false;
+    var _modelTouched = false;
     function daysIsDefault() {
         var d = days();
         for (var i = 0; i < 7; i++) {
@@ -334,7 +336,10 @@
         if (d && d.goal && String(d.goal).split('+').every(function (x) { return GOAL_MAP[x]; })) {
             _goal = d.goal;
         }
-        if (d && d.model_choice) _model = d.model_choice === 'standard' ? 'standard' : 'premium';
+        if (!_modelTouched) {
+            _model = (d && d.model_choice === 'standard' && (d.posts || []).length)
+                ? 'standard' : 'premium';
+        }
         if (_days || !d || !d.days || d.days.length !== 7) return;
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
@@ -3965,6 +3970,7 @@
         if (act === 'appause') { askPause(); return; }
         if (act === 'mchoice') {
             var mv = actEl.getAttribute('data-m') === 'standard' ? 'standard' : 'premium';
+            _modelTouched = true;
             if (mv !== _model) { _model = mv; haptic('light'); renderBrief(); }
             return;
         }
