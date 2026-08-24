@@ -447,8 +447,9 @@
 
     function days() {
         if (!_days || _days.length !== 7) {
-            _days = [];
-            for (var i = 0; i < 7; i++) _days.push({ n: 1, pins: [], times: [] });
+            var stub = [];
+            for (var i = 0; i < 7; i++) stub.push({ n: 1, pins: [], times: [], topics: [] });
+            return stub;
         }
         return _days;
     }
@@ -1994,6 +1995,7 @@
     }
     function prefillTopics() {
         if (!canEdit() || _cpwSheet) return;
+        if (!_state || !_state.days || !_days) return;
         var sugs = cpwSugTitles();
         if (!sugs.length) return;
         var used = {};
