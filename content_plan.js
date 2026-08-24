@@ -339,10 +339,12 @@
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
                 return { n: +x.n || 0, pins: (x.pins || []).slice(),
-                         times: (x.times || []).slice() };
+                         times: (x.times || []).slice(),
+                         topics: (x.topics || []).slice() };
             }
             return { n: x === 'off' ? 0 : 1,
-                     pins: (x && x !== 'auto' && x !== 'off') ? [x] : [], times: [] };
+                     pins: (x && x !== 'auto' && x !== 'off') ? [x] : [],
+                     times: [], topics: [] };
         });
     }
 
@@ -354,7 +356,14 @@
             _chId = d.readiness_channel_id || d.channel_id ||
                 ((_channels || [])[0] || {}).id || null;
         }
-        if (d.status === 'generating') { _building = true; renderGenerating(); startPoll(); return; }
+        if (d.status === 'generating') {
+            if (_chId) {
+                if (!_rubrics.length) loadRubrics();
+                if (!_ap) loadAutopilot();
+                if (!_cal) loadCalendar();
+            }
+            _building = true; renderGenerating(); startPoll(); return;
+        }
         if ((d.status === 'ready' || d.status === 'scheduled' || d.status === 'done')
                 && (d.posts || []).length) {
             if (_channels === null) {
@@ -2118,14 +2127,30 @@
             '</span><b>' + esc(String(base)) + '</b></div>';
         if (fee) {
             rows += '<div class="cp-pbr"><span>' +
-                esc(T('повторная сборка сегодня')) + '</span><b>+' + esc(String(fee)) + '</b></div>';
+                esc(T('вторая сборка за сутки')) + '</span><b>+' + esc(String(fee)) + '</b></div>';
         }
         rows += '<div class="cp-pbr sum"><span>' + esc(T('итого')) + '</span><b>' +
             forgeTag(total) + '</b></div>';
+        var note = T('Тексты списываются по мере написания — каждый можно переписать.');
+        if (fee) {
+            var left = feeLeft();
+            note = T('Первая сборка за сутки — без доплаты. Эта вторая, потому что неделя уже собиралась.') +
+                (left ? ' ' + T('Доплата снимется через') + ' ' + left + '.' : '');
+        }
         return '<div class="cp-pbreak">' + rows + '</div>' +
-            '<div class="cp-gonote">' +
-            esc(T(fee ? 'Тексты списываются по мере написания. Доплата за повторную сборку держится сутки с прошлой.'
-                      : 'Тексты списываются по мере написания — каждый можно переписать.')) + '</div>';
+            '<div class="cp-gonote">' + esc(note) + '</div>';
+    }
+
+    function feeLeft() {
+        var iso = wallet().reskeleton_until;
+        if (!iso) return '';
+        var ms = Date.parse(iso) - Date.now();
+        if (!(ms > 0)) return '';
+        var mins = Math.round(ms / 60000);
+        if (mins < 60) return mins + ' ' + T(plural3(mins, 'минуту', 'минуты', 'минут'));
+        var h = Math.floor(mins / 60), m = mins % 60;
+        return h + ' ' + T(plural3(h, 'час', 'часа', 'часов')) +
+            (m ? ' ' + m + ' ' + T(plural3(m, 'минуту', 'минуты', 'минут')) : '');
     }
 
     function modelOpt(m) {
@@ -2235,6 +2260,7 @@
                     _building = false;
                     stopTimers();
                     if (!_cal) loadCalendar();
+                    if (!_rubrics.length) loadRubrics();
                     if (_lastView === 'week' || _lastView === 'brief' || !_lastView) renderWeek();
                     if (d.batch_running && withText < ps.length) startBatchPoll();
                 }
