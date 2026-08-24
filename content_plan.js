@@ -1788,9 +1788,18 @@
         if (pin) return { t: cpwReason(rubByTitle(rubTitle(pin))), own: false };
         return null;
     }
+    function daysUneven() {
+        var hist = histDays();
+        if (!hist) return false;
+        var mx = 0, mn = Infinity;
+        hist.forEach(function (d) {
+            if (d.views > 0) { if (d.views > mx) mx = d.views; if (d.views < mn) mn = d.views; }
+        });
+        return mx > 0 && mn < Infinity && mx >= mn * 1.5;
+    }
     function cpwRecDays() {
         var hist = histDays();
-        if (!hist) return {};
+        if (!hist || !daysUneven()) return {};
         var idx = [0, 1, 2, 3, 4, 5, 6].sort(function (a, b) {
             return (hist[b].views || 0) - (hist[a].views || 0);
         });
@@ -1835,7 +1844,7 @@
             t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')) +
             (names.length && names.length <= 5 ? ' — ' + names.join(', ') : ''));
         var hist = histDays();
-        if (_autoFreq && hist) {
+        if (_autoFreq && hist && daysUneven()) {
             var mx = 0;
             hist.forEach(function (d) { if ((d.views || 0) > mx) mx = d.views || 0; });
             var avg = histAvg();
@@ -1892,7 +1901,7 @@
         var v = hist ? (hist[i].views || 0) : 0;
         var np = hist ? (hist[i].posts || 0) : 0;
         var avg = histAvg();
-        var pct = (ready && v && avg) ? Math.round((v / avg - 1) * 100) : null;
+        var pct = (ready && daysUneven() && v && avg) ? Math.round((v / avg - 1) * 100) : null;
         var n = dayN(i);
         var topics = dayTopics(i);
         var rows = '';
@@ -2134,8 +2143,8 @@
         var _lfB = _state && _state.learning;
         var _recB = _lfB && _lfB.ready && _lfB.freq && _lfB.freq.recommended;
         _autoFreq = false;
-        if (_recB && !noChannelData() && canEdit() && rdy.reason !== 'paused' &&
-                daysIsDefault() && totalPosts() !== _recB) {
+        if (_recB && !noChannelData() && daysUneven() && canEdit() &&
+                rdy.reason !== 'paused' && daysIsDefault() && totalPosts() !== _recB) {
             applyFreqGrid(_recB);
             var _sugs = cpwSugTitles();
             if (_sugs.length) {
