@@ -522,11 +522,11 @@
     }
 
     function histAvg() {
-        var h = histDays();
+        var h = histAny();
         if (!h) return 0;
-        var s = 0;
-        h.forEach(function (d) { s += d.views || 0; });
-        return s / 7;
+        var s = 0, n = 0;
+        h.forEach(function (d) { if (d.views > 0) { s += d.views; n++; } });
+        return n ? s / n : 0;
     }
     function qbHead() {
         var h = _cal && _cal.history;
@@ -556,6 +556,10 @@
     function histDays() {
         var h = _cal && _cal.history;
         return (h && h.ready && (h.days || []).length === 7) ? h.days : null;
+    }
+    function histAny() {
+        var h = _cal && _cal.history;
+        return (h && (h.days || []).length === 7 && (h.total || 0) > 0) ? h.days : null;
     }
     function dayViews(i) {
         var h = histDays();
@@ -1853,7 +1857,7 @@
             '</div></div>';
     }
     function cpwStrip() {
-        var hist = histDays();
+        var hist = histAny();
         var rec = cpwRecDays();
         if (_cpwDay == null) {
             _cpwDay = 0;
@@ -1882,11 +1886,13 @@
     }
     function cpwFocus() {
         var i = _cpwDay || 0;
-        var hist = histDays();
+        var hist = histAny();
+        var ready = !!histDays();
         var rec = cpwRecDays();
         var v = hist ? (hist[i].views || 0) : 0;
+        var np = hist ? (hist[i].posts || 0) : 0;
         var avg = histAvg();
-        var pct = (v && avg) ? Math.round((v / avg - 1) * 100) : null;
+        var pct = (ready && v && avg) ? Math.round((v / avg - 1) * 100) : null;
         var n = dayN(i);
         var topics = dayTopics(i);
         var rows = '';
@@ -1916,7 +1922,8 @@
             (rec[i] && pct != null
                 ? '<span class="fr">' + esc(T('сильный день') + ' · +' + pct + '%') + '</span>'
                 : (pct != null ? '<span class="fr mut">' + esc((pct >= 0 ? '+' : '') + pct + '% ' + T('к среднему')) + '</span>' : '')) +
-            (v ? '<span class="fv">' + esc(T('охват') + ' ' + numExact(v)) + '</span>' : '') +
+            (v ? '<span class="fv">' + esc(T('охват') + ' ' + numExact(v) +
+                (ready ? '' : ' · ' + np + ' ' + T(plural3(np, 'пост', 'поста', 'постов')))) + '</span>' : '') +
             '</div>' + rows +
             (canEdit() ? '<button class="cpw-add" data-act="cpwadd" data-v="' + i + '">+ ' +
                 esc(T('Пост в этот день')) + '</button>' : '') +
