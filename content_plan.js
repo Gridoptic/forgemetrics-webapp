@@ -1804,13 +1804,6 @@
             '</div>';
     }
 
-    function daysSum() {
-        var t = totalPosts(), names = [];
-        days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
-        return esc(t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')) +
-            (names.length && names.length <= 4 ? ' · ' + names.join(', ') : '') +
-            (_autoFreq ? ' · ' + T('по замерам') : ''));
-    }
     function goalSum() {
         return esc(goalTitle(_goal) + (_goalAuto ? ' · ' + T('по замерам') : ''));
     }
@@ -2072,15 +2065,13 @@
         } else if (rebuildFee) {
             lowNote = '<div class="cp-gonote">' + esc(T('Сегодня уже была сборка — в цену добавлена пересборка недели')) + ' · ' + forgeTag(rebuildFee) + '</div>';
         } else {
-            lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
+            var _wk = (w.balance != null && weekPrice > 0)
+                ? Math.floor(w.balance / weekPrice) : null;
+            lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать') +
+                (_wk != null && _wk > 0 ? ' · ' + T('на балансе') + ' ' + w.balance +
+                    ' — ' + T('хватит на') + ' ' + _wk + ' ' + T(plural3(_wk, 'неделю', 'недели', 'недель')) : '')) + '</div>';
         }
         if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
-        var _hl3 = hoursHintLine();
-        var daysBody = '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
-            histNote() + tipBlock() + weekBar() +
-            (_hl3 ? '<div class="cp-note" style="margin-top:8px;">' + esc(_hl3) + '</div>' : '') +
-            '<div class="cp-note" style="margin-top:8px;">' +
-            esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</div>';
         var goalsBody = '<div class="cp-goals">' + goals + '</div>' + goalRecNote();
         var modelBody = '<div class="cp-msel">' + modelOpt('premium') + modelOpt('standard') + '</div>' +
             '<div class="cp-hint"><i class="ti ti-file-search" style="vertical-align:-2px;margin-right:3px;"></i>' +
@@ -2090,11 +2081,6 @@
         setView(
             gHero() + readinessBlock() +
             edBubble() + cpwStrip() + cpwFocus() +
-            (_autoFreq ? '<div class="cp-note" style="margin:8px 2px 0;"><span class="cp-rbdg dn">' +
-                esc(T('рекомендация по замерам')) + '</span> ' +
-                esc(T('Посты расставлены по замерам канала: сильные дни' +
-                    (hoursHintLine() ? ' и окна времени' : '') + '. Изменить можно нажатием на день.')) + '</div>' : '') +
-            gSec('days', 'layout-grid', 'Охват по дням', daysSum(), daysBody, false) +
             chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
