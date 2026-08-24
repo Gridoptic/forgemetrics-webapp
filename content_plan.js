@@ -260,8 +260,7 @@
         _days = null;
         syncDays(st);
         if (chans) _channels = chans;
-        if (st && st.posts && st.posts.length && !weekIsOver()) renderWeek();
-        else renderBrief();
+        renderBrief();
     };
     window.__cpDays = function () { return days().slice(); };
 
@@ -319,9 +318,8 @@
         _rrT = setTimeout(function () {
             _rrT = null;
             if (!_open || _pollTimer || _bootT || !_state) return;
-            if (_wantView === 'brief') { renderBrief(); return; }
-            if (_state.posts && _state.posts.length && !weekIsOver()) renderWeek();
-            else renderBrief();
+            if (_wantView === 'week') { renderWeek(); return; }
+            renderBrief();
         }, 120);
     }
 
@@ -381,7 +379,7 @@
             var bootStart = Date.now();
             var bootDone = function () {
                 if (_bootT) { clearInterval(_bootT); _bootT = null; }
-                if (weekIsOver()) renderBrief(); else renderWeek();
+                renderBrief();
                 if (d.batch_running) startBatchPoll();
             };
             if (_chId && (!_cal || !_rubrics.length || !_ap)) {
@@ -1874,6 +1872,27 @@
         return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
             T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
+    function postIsPast(p) {
+        if (p.publish_status === 'published' || p.publish_status === 'rolled_back') return true;
+        if (!p.scheduled_at) return false;
+        var t = Date.parse(p.scheduled_at);
+        return isFinite(t) && t < Date.now() - 3 * 3600 * 1000;
+    }
+    function pastCards(list) {
+        var lg = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+        return '<div class="cpa-list">' + list.slice().sort(function (a, b) {
+            return Date.parse(a.scheduled_at || 0) - Date.parse(b.scheduled_at || 0);
+        }).map(function (p) {
+            var dt = p.scheduled_at ? new Date(p.scheduled_at) : null;
+            var ds = dt ? dt.toLocaleDateString(lg, { day: 'numeric', month: 'short' }) : '';
+            var pub = p.publish_status === 'published';
+            return '<div class="cpa-card"><span class="d">' + esc(ds) + '</span>' +
+                '<span class="tx">' + esc((p.topic || '').slice(0, 60)) + '</span>' +
+                (pub ? '<span class="st ok">' + esc(T('вышел')) +
+                        (p.views ? ' · ' + esc(numShort(p.views)) : '') + '</span>'
+                     : '<span class="st">' + esc(T('не вышел')) + '</span>') + '</div>';
+        }).join('') + '</div>';
+    }
     function weekIsOver() {
         var ps = (_state && _state.posts) || [];
         if (!ps.length) return false;
@@ -1932,26 +1951,36 @@
         return '<div class="cpg-strwrap">' + h +
             '<button class="cpg-strhide" data-act="strhide" aria-label="' + esc(T('Скрыть')) + '"><i class="ti ti-x"></i></button></div>';
     }
-    function archRow() {
-        var ps = (_state && _state.posts) || [];
-        if (!ps.length || !weekIsOver()) return '';
+    function plannedRow() {
+        var ps = ((_state && _state.posts) || []).filter(function (p) { return !postIsPast(p); });
+        if (!ps.length) return '';
         var lg = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
         var cards = ps.slice().sort(function (a, b) {
             return Date.parse(a.scheduled_at || 0) - Date.parse(b.scheduled_at || 0);
         }).map(function (p) {
             var dt = p.scheduled_at ? new Date(p.scheduled_at) : null;
             var ds = dt ? dt.toLocaleDateString(lg, { day: 'numeric', month: 'short' }) : '';
-            var pub = p.publish_status === 'published';
+            var st = p.publish_status === 'queued' ? T('в очереди')
+                : (p.status === 'approved' ? T('утверждён') : T('черновик'));
             return '<div class="cpa-card"><span class="d">' + esc(ds) + '</span>' +
                 '<span class="tx">' + esc((p.topic || '').slice(0, 60)) + '</span>' +
-                (pub ? '<span class="st ok">' + esc(T('вышел')) +
-                        (p.views ? ' · ' + esc(numShort(p.views)) : '') + '</span>'
-                     : '<span class="st">' + esc(T('не вышел')) + '</span>') + '</div>';
+                '<span class="st ok">' + esc(st) + '</span></div>';
         }).join('');
-        var n = ps.length;
-        return gSec('arch', 'archive', 'Архив недели',
-            esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов'))),
+        return gSec('plan2', 'clock', 'Запланировано',
+            esc(ps.length + ' ' + T(plural3(ps.length, 'пост', 'поста', 'постов'))),
             '<div class="cpa-list">' + cards + '</div>' +
+            '<button class="cpg-arch" data-act="gotoweek" style="margin-top:9px;"><i class="ti ti-external-link"></i> ' +
+            esc(T('Открыть неделю: тексты, утверждение, выход в канал')) + '</button>' +
+            '<div class="cp-note" style="margin-top:8px;">' +
+            esc(T('Сборка новой недели заменит незапущенные посты — вышедшие останутся в канале.')) + '</div>',
+            false);
+    }
+    function archRow() {
+        var ps = ((_state && _state.posts) || []).filter(postIsPast);
+        if (!ps.length) return '';
+        return gSec('arch', 'archive', 'Архив недели',
+            esc(ps.length + ' ' + T(plural3(ps.length, 'пост', 'поста', 'постов'))),
+            pastCards(ps) +
             '<div class="cp-note" style="margin-top:8px;">' +
             esc(T('Вышедшие посты остаются в канале. Сборка новой недели заменит план, не тронув канал.')) + '</div>',
             false);
@@ -2041,7 +2070,7 @@
             gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
             gSec('model', 'diamond', 'Модель текстов',
                 esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум') + ' · ' + priceDay()), modelBody, false) +
-            strategyWrap() + archRow() + cpwSheetHtml() +
+            strategyWrap() + plannedRow() + archRow() + cpwSheetHtml() +
             '<div class="cpg-cta"><button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button>' +
@@ -2134,7 +2163,8 @@
                 if (_building) {
                     _building = false;
                     if (_state && _state.posts && (_lastView === 'week' || _lastView === 'brief' || !_lastView)) {
-                        if (weekIsOver()) renderBrief(); else renderWeek();
+                        _wantView = 'week';
+                        renderWeek();
                     }
                 }
                 return;
@@ -2157,7 +2187,7 @@
                     _building = false;
                     stopTimers();
                     if (!_cal) loadCalendar();
-                    if (_lastView === 'week' || _lastView === 'brief' || !_lastView) { if (weekIsOver()) renderBrief(); else renderWeek(); }
+                    if (_lastView === 'week' || _lastView === 'brief' || !_lastView) { _wantView = 'week'; renderWeek(); }
                     if (d.batch_running && withText < ps.length) startBatchPoll();
                 }
                 else if (d.status === 'error') { _state = d; _building = false; stopTimers(); renderError(); }
@@ -2210,7 +2240,9 @@
     var _archOpen = false;
 
     function renderWeek() {
-        var ps = posts();
+        var psAll = posts();
+        var psPast = psAll.filter(postIsPast);
+        var ps = psAll.filter(function (p) { return !postIsPast(p); });
         var n = ps.length;
         if (_selDay == null || !ps.some(function (p) { return p.day_index === _selDay; })) _selDay = ps.length ? ps[0].day_index : 0;
         var appr = ps.filter(function (p) { return p.status === 'approved'; }).length;
@@ -2309,6 +2341,9 @@
                 gSec('posts', 'layout-list', 'Посты недели',
                     esc(appr + '/' + n + ' ' + T('утверждено')),
                     header + ribbon + detailPanel(), true) +
+                (psPast.length ? gSec('arch', 'archive', 'Архив недели',
+                    esc(psPast.length + ' ' + T(plural3(psPast.length, 'пост', 'поста', 'постов'))),
+                    pastCards(psPast), false) : '') +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
                 gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
@@ -3912,10 +3947,9 @@
             renderBrief();
             return;
         }
-        if (act === 'gotoarch') {
+        if (act === 'gotoweek') {
             haptic('light');
-            _archOpen = true;
-            _wantView = null;
+            _wantView = 'week';
             renderWeek();
             return;
         }
