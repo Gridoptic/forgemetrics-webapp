@@ -1763,6 +1763,84 @@
 .cp-rv2-verd.drop .vi { background: rgba(239,128,128,.13); color: #f0a0a0; }
 .cp-rv2-verd.drop .pc { color: #f0a0a0; }
 
+/* поле «Своя тема поста» в шторке слота */
+.cp-topic-in { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.04);
+  border: .5px solid rgba(255,255,255,.14); border-radius: 11px; padding: 10px 12px;
+  font: inherit; font-size: 12.5px; color: #e8eaf1; margin: 2px 0 8px; }
+.cp-topic-in::placeholder { color: #565b73; }
+.cp-topic-in:focus { outline: none; border-color: rgba(129,140,248,.55); }
+
+/* ===== полотно недели с голосом редактора ===== */
+.cpw-ed { display: flex; gap: 9px; margin: 2px 0 12px; align-items: flex-start; }
+.cpw-ed .av { width: 30px; height: 30px; border-radius: 10px; flex: none; display: flex;
+  align-items: center; justify-content: center; background: rgba(129,140,248,.16);
+  border: .5px solid rgba(129,140,248,.4); color: #b7c0ff; font-size: 14px; }
+.cpw-ed .bub { background: rgba(255,255,255,.05); border: .5px solid rgba(255,255,255,.13);
+  border-radius: 4px 15px 15px 15px; padding: 11px 13px; font-size: 12.5px; color: #c2c6d2;
+  backdrop-filter: blur(12px); min-width: 0; }
+.cpw-ed .sub { font-size: 10.5px; color: #565b73; margin-top: 4px; }
+.cpw-strip { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 10px; scrollbar-width: none; }
+.cpw-strip::-webkit-scrollbar { display: none; }
+.cpw-d { flex: 1; min-width: 44px; text-align: center; border: .5px solid rgba(255,255,255,.12);
+  border-radius: 12px; padding: 7px 0 6px; cursor: pointer; background: rgba(255,255,255,.03); }
+.cpw-d .d { font-size: 10px; font-weight: 800; color: #9aa1c2; }
+.cpw-d .v { font-size: 9px; color: #565b73; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.cpw-d .dot { width: 5px; height: 5px; border-radius: 50%; background: transparent; margin: 4px auto 0; }
+.cpw-d.has .dot { background: #818cf8; }
+.cpw-d.rec { border-color: rgba(52,211,153,.4); }
+.cpw-d.on { border-color: rgba(129,140,248,.85); background: rgba(129,140,248,.13); }
+.cpw-d.on .d { color: #e3e6ff; }
+.cpw-focus { border: .5px solid rgba(255,255,255,.13); border-radius: 16px;
+  background: rgba(255,255,255,.045); backdrop-filter: blur(12px); padding: 13px; }
+.cpw-focus .fh { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cpw-focus .fd { font-size: 16px; font-weight: 800; color: #eef0fa; }
+.cpw-focus .fr { font-size: 10.5px; color: #8fe3c4; }
+.cpw-focus .fr.mut { color: #565b73; }
+.cpw-focus .fv { margin-left: auto; font-size: 11px; color: #9aa1c2; font-variant-numeric: tabular-nums; }
+.cpw-slot { display: flex; align-items: center; gap: 9px; margin-top: 10px; width: 100%;
+  background: rgba(129,140,248,.08); border: .5px solid rgba(129,140,248,.35);
+  border-radius: 12px; padding: 10px 11px; cursor: pointer; }
+.cpw-slot .tm { font-size: 12px; font-weight: 800; color: #c3c9ff;
+  border: .5px solid rgba(129,140,248,.4); border-radius: 8px; padding: 3px 8px; flex: none;
+  font-variant-numeric: tabular-nums; }
+.cpw-slot .tm.custom { color: #f5cf7a; border-color: rgba(245,191,79,.45); }
+.cpw-slot .tx { font-size: 12px; color: #eef0fa; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; }
+.cpw-slot .tx em { font-style: italic; color: #565b73; font-size: 11px; }
+.cpw-slot .why { display: block; font-style: normal; font-size: 9.5px; color: #8fe3c4; margin-top: 1px; }
+.cpw-slot .why.own { color: #b0b9ff; }
+.cpw-slot .ar { flex: none; color: #565b73; font-size: 12px; }
+.cpw-add { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 10px;
+  width: 100%; border: .5px dashed rgba(129,140,248,.4); background: transparent; border-radius: 12px;
+  padding: 10px; color: #a5b0fb; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+/* лист тем полотна */
+.cpw-sw { position: fixed; inset: 0; z-index: 60; background: rgba(5,6,12,.55); backdrop-filter: blur(3px); }
+.cpw-sheet { position: absolute; left: 8px; right: 8px; bottom: 8px; max-height: 78vh; overflow-y: auto;
+  border: .5px solid rgba(255,255,255,.14); border-radius: 18px; background: rgba(18,20,34,.97);
+  backdrop-filter: blur(16px); padding: 14px 12px; }
+.cpw-sheet .sh { font-size: 12.5px; font-weight: 800; color: #eef0fa; margin-bottom: 9px; }
+.cpw-pick { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  padding: 10px 11px; border-radius: 12px; margin-bottom: 6px; cursor: pointer; font-family: inherit;
+  border: .5px solid rgba(52,211,153,.3); background: rgba(52,211,153,.05); color: #eef0fa; font-size: 12px; }
+.cpw-pick.auto { border-color: rgba(129,140,248,.4); background: rgba(129,140,248,.06); }
+.cpw-pick .tx { flex: 1; min-width: 0; }
+.cpw-pick em { font-style: normal; display: block; font-size: 10px; color: #8fe3c4; margin-top: 1px; }
+.cpw-pick.auto em { color: #b0b9ff; }
+.cpw-pick .go { flex: none; color: #b0b9ff; font-size: 13px; }
+.cpw-own { display: flex; gap: 7px; margin-top: 4px; }
+.cpw-own input { flex: 1; background: rgba(255,255,255,.05); border: .5px solid rgba(255,255,255,.16);
+  border-radius: 11px; padding: 10px 11px; font: inherit; font-size: 12px; color: #eef0fa; min-width: 0; }
+.cpw-own input::placeholder { color: #565b73; }
+.cpw-own button { flex: none; width: 42px; border-radius: 11px; border: .5px solid rgba(129,140,248,.5);
+  background: rgba(129,140,248,.14); color: #c3c9ff; font-size: 14px; cursor: pointer; }
+.cpw-more { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+  margin-top: 8px; padding: 10px; font-size: 12px; font-weight: 700; color: #9aa1c2;
+  border: .5px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.03);
+  cursor: pointer; font-family: inherit; }
+.cpw-close { width: 100%; margin-top: 5px; background: transparent; border: none; color: #565b73;
+  font: inherit; font-size: 11.5px; cursor: pointer; padding: 7px; }
+
 /* канал — первая строка экрана: он определяет все данные ниже */
 .cpg-chan { margin: 0 0 10px; }
 .cpg-chan .cp-onechan, .cpg-chan .cp-chanpick {
