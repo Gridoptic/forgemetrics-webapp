@@ -1762,3 +1762,10 @@
 .cp-rv2-verd.drop { border-color: rgba(239,128,128,.3); background: rgba(239,128,128,.05); }
 .cp-rv2-verd.drop .vi { background: rgba(239,128,128,.13); color: #f0a0a0; }
 .cp-rv2-verd.drop .pc { color: #f0a0a0; }
+
+/* поле «Своя тема поста» в шторке слота */
+.cp-topic-in { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.04);
+  border: .5px solid rgba(255,255,255,.14); border-radius: 11px; padding: 10px 12px;
+  font: inherit; font-size: 12.5px; color: #e8eaf1; margin: 2px 0 8px; }
+.cp-topic-in::placeholder { color: #565b73; }
+.cp-topic-in:focus { outline: none; border-color: rgba(129,140,248,.55); }

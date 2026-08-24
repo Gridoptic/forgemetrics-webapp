@@ -122,6 +122,12 @@
             host.className = 'cp-screen';
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
+            host.addEventListener('change', function (e) {
+                var t = e.target;
+                if (t && t.hasAttribute && t.hasAttribute('data-slot-topic')) {
+                    setSlotTopic(+t.getAttribute('data-di'), +t.getAttribute('data-dk'), t.value);
+                }
+            });
         }
         if (!_open) return host;
         host.style.display = 'flex';
@@ -302,7 +308,8 @@
         for (var i = 0; i < 7; i++) {
             var x = d[i] || {};
             if ((x.n || 0) !== 1) return false;
-            if ((x.pins || []).length || (x.times || []).length) return false;
+            if ((x.pins || []).length || (x.times || []).length ||
+                (x.topics || []).length) return false;
         }
         return true;
     }
@@ -423,6 +430,18 @@
     }
     function dayN(i) { return Math.max(0, Math.min(MAX_PER_DAY, +(days()[i] || {}).n || 0)); }
     function dayPins(i) { return ((days()[i] || {}).pins || []).slice(); }
+    function dayTopics(i) { return ((days()[i] || {}).topics || []).slice(); }
+    function setSlotTopic(i, k, v) {
+        var d = days().slice();
+        var x = d[i] || { n: 1, pins: [], times: [] };
+        var tp = (x.topics || []).slice();
+        while (tp.length <= k) tp.push('');
+        tp[k] = String(v || '').slice(0, 200);
+        while (tp.length && !tp[tp.length - 1]) tp.pop();
+        d[i] = { n: x.n, pins: x.pins || [], times: x.times || [], topics: tp };
+        _days = d;
+        saveDaysSoon();
+    }
     function totalPosts() {
         return days().reduce(function (s, d) { return s + Math.max(0, +d.n || 0); }, 0);
     }
@@ -444,7 +463,8 @@
         var fd = days().slice();
         for (var fi = 0; fi < 7; fi++) {
             var fn = pat.indexOf(fi) >= 0 ? 1 : 0;
-            fd[fi] = { n: fn, pins: dayPins(fi).slice(0, fn), times: dayTimes(fi).slice(0, fn) };
+            fd[fi] = { n: fn, pins: dayPins(fi).slice(0, fn), times: dayTimes(fi).slice(0, fn),
+                       topics: dayTopics(fi).slice(0, fn) };
         }
         _days = fd;
     }
@@ -466,7 +486,8 @@
             toast(T('Больше семидесяти постов в неделю не собирается'));
             return false;
         }
-        d[i] = { n: n, pins: dayPins(i).slice(0, n), times: dayTimes(i).slice(0, n) };
+        d[i] = { n: n, pins: dayPins(i).slice(0, n), times: dayTimes(i).slice(0, n),
+                 topics: dayTopics(i).slice(0, n) };
         _days = d;
         return true;
     }
@@ -1086,7 +1107,9 @@
         var r = sl.key ? rubOf(sl.key) : null;
         var cls = 'cp-slot' + (r ? (r.needs_fact ? ' fact' : '') : ' auto');
         var title = r ? r.title : (sl.key ? sl.key : T('Рубрика — из включённых'));
-        var sub = r ? (r.needs_fact ? T('спрошу пару строк за день до выхода') : (r.about || ''))
+        var _tpc = dayTopics(i)[k] || '';
+        var sub = _tpc ? ('📌 ' + _tpc)
+            : r ? (r.needs_fact ? T('спрошу пару строк за день до выхода') : (r.about || ''))
                     : T('распределится при сборке');
         var power = (sl.views != null && sl.views > 0) ? sl.views
             : ((r && r.avg_views) ? r.avg_views : 0);
@@ -1172,7 +1195,15 @@
                 (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
         }).join('');
         var off = _rubrics.filter(function (r) { return r.disabled; }).length;
+        var curTopic = dayTopics(i)[k] || '';
         return timePicker(i, k) +
+            '<div class="cp-dss">' + esc(T('Своя тема поста')) + '</div>' +
+            '<input class="cp-topic-in" data-slot-topic maxlength="200" ' +
+            'placeholder="' + esc(T('Например: «Магний глицинат — когда работает». Пусто — тему придумает сборка')) + '" ' +
+            'value="' + esc(curTopic) + '" data-di="' + i + '" data-dk="' + k + '">' +
+            (curTopic ? '<div class="cp-dshint">' +
+                esc(T('Пост этого дня выйдет ровно на эту тему.')) + '</div>' : '') +
+            '<div class="cp-dssep"></div>' +
             '<div class="cp-dss">' + esc(T('Рубрика')) + '</div>' +
             '<button class="cp-dsr wide' + (cur ? '' : ' on') + '" data-setpin="">' +
             '<i class="ti ti-wand"></i><span class="tx"><b>' +
