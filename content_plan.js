@@ -951,11 +951,12 @@
         var _onAll = _rubrics.filter(function (r) { return !r.disabled && r.source !== 'suggest'; });
         var _onAuto = _onAll.filter(function (r) { return !r.needs_fact; });
         var _slots = totalPosts();
-        var _willUse = Math.max(1, Math.min(5, _onAuto.length || 1, _slots));
+        var _maxSame = Math.max(2, Math.ceil(_slots / Math.max(1, _onAuto.length)));
         var _fitLine = _onAll.length
             ? '<div class="cp-dshint">' + esc(
-                T('В неделю попадут %1 из %2: по одной рубрике на пост.')
-                    .replace('%1', _willUse).replace('%2', _onAuto.length) +
+                T('Сборка распределит %1 по включённым рубрикам: сильным — больше постов, слабым — меньше. Одна рубрика займёт не больше %2 — неделя не будет однообразной.')
+                    .replace('%1', _slots + ' ' + T(plural3(_slots, 'пост', 'поста', 'постов')))
+                    .replace('%2', _maxSame + ' ' + T(plural3(_maxSame, 'поста', 'постов', 'постов'))) +
                 (_onAll.length > _onAuto.length
                     ? ' ' + T('Рубрики из «нужен факт от тебя» войдут, только если закрепить их за днём.')
                     : '')) + '</div>'
