@@ -256,12 +256,21 @@
     };
 
     window.__cpRenderForCheck = function (st, chans) {
+        _open = true;
         ensureScreen();
         _days = null;
         if (chans) _channels = chans;
         route(st);
     };
     window.__cpDays = function () { return days().slice(); };
+    window.__cpLiveTick = function (st) {
+        if (!(st && st.ok && _open)) return;
+        _state = st;
+        pushBalance(st);
+        syncDays(st);
+        if (cpBusy()) return;
+        rerender();
+    };
 
     window.__openContentPlan = function () {
         _open = true;
@@ -341,7 +350,8 @@
             _model = (d && d.model_choice === 'standard' && (d.posts || []).length)
                 ? 'standard' : 'premium';
         }
-        if (_days || !d || !d.days || d.days.length !== 7) return;
+        if (!d || !d.days || d.days.length !== 7) return;
+        if (_days && (_daysDirty || _daysTimer)) return;
         _days = d.days.map(function (x) {
             if (x && typeof x === 'object') {
                 return { n: +x.n || 0, pins: (x.pins || []).slice(),
@@ -1275,9 +1285,11 @@
 
     var _calTimer = null;
     var _daysTimer = null;
+    var _daysDirty = false;
     var _varTimer = null;
 
     function saveDaysSoon() {
+        _daysDirty = true;
         if (_daysTimer) clearTimeout(_daysTimer);
         _daysTimer = setTimeout(function () {
             _daysTimer = null;
@@ -1285,6 +1297,8 @@
             apiRequest('/api/v1/content-plan/days', {
                 method: 'POST',
                 body: JSON.stringify({ channel_id: cid, days: days(), goal: _goal })
+            }).then(function (r) {
+                if (r && r.ok && !_daysTimer) _daysDirty = false;
             }).catch(function () {});
         }, 600);
     }
@@ -2654,6 +2668,7 @@
                 _cal = null;
                 _cover = null;
                 _days = null;
+                _daysDirty = false;
                 _goal = 'engagement';
                 _goalTouched = false;
                 _modelTouched = false;
@@ -3857,6 +3872,7 @@
             .then(function (d) {
                 if (d && d.ok && _open) {
                     _state = d; pushBalance(d);
+                    syncDays(d);
                     if (cpBusy()) return;
                     var sy = window.scrollY; rerender(); window.scrollTo(0, sy);
                 }
