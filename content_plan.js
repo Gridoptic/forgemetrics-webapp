@@ -1922,9 +1922,7 @@
         return gHeroBase('Сборка недели', chips);
     }
     function chanSec() {
-        if ((_channels || []).length < 2) return '';
-        var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
-        return gSec('chan', 'broadcast', 'Канал', cc ? esc(chanName(cc)) : '', buildChanBlock(), false);
+        return '<div class="cpg-chan">' + buildChanBlock() + '</div>';
     }
     function ohvSum() {
         var h = _cal && _cal.history;
@@ -1979,9 +1977,8 @@
             ' ' + forgeTag(priceResearch()) + ' ' + esc(T('за пост')) + '.</div>';
         var ccur = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
         setView(
-            gHero() + readinessBlock() +
+            chanSec() + gHero() + readinessBlock() +
             gSec('days', 'layout-grid', 'Дни недели', daysSum(), daysBody, true) +
-            chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
             gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false, false, true) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
@@ -2222,12 +2219,11 @@
         if (allPub) {
             var archBody = header + ribbon + detailPanel();
             var pubN = ps.filter(function (p) { return p.publish_status === 'published'; }).length;
-            setView(viewBan +
+            setView(viewBan + chanSec() +
                 gHeroBase('Неделя вышла',
                     '<span class="cpg-chip g">' + esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов')) +
                         ' · ' + T(pubN < n ? 'в канале' : 'все в канале')) + '</span>' +
                     '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' + apChip()) +
-                chanSec() +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
@@ -2248,12 +2244,11 @@
                 ? '<div class="cpg-cta">' + allBtn + schedBtn +
                   '<div class="cp-foot" style="margin-top:6px;">' + tzFootNote() + foot + '</div></div>'
                 : '<div class="cp-foot">' + tzFootNote() + foot + '</div>';
-            setView(viewBan +
+            setView(viewBan + chanSec() +
                 gHeroBase('Неделя в работе',
                     '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
                     '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' +
                     (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') + apChip()) +
-                chanSec() +
                 header + ribbon + detailPanel() +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +

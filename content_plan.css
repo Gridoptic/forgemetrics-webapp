@@ -1762,3 +1762,10 @@
 .cp-rv2-verd.drop { border-color: rgba(239,128,128,.3); background: rgba(239,128,128,.05); }
 .cp-rv2-verd.drop .vi { background: rgba(239,128,128,.13); color: #f0a0a0; }
 .cp-rv2-verd.drop .pc { color: #f0a0a0; }
+
+/* канал — первая строка экрана: он определяет все данные ниже */
+.cpg-chan { margin: 0 0 10px; }
+.cpg-chan .cp-onechan, .cpg-chan .cp-chanpick {
+  background: rgba(129,140,248,.09); border: .5px solid rgba(129,140,248,.32);
+  border-radius: 15px; backdrop-filter: blur(12px); margin: 0; }
+.cpg-chan .cp-hint { margin-top: 6px; }
