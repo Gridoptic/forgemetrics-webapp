@@ -15,6 +15,7 @@
     var _ap = null;
     var _rubrics = [];
     var _review = null;
+    var _topicCleared = {};
     var _cal = null;
     var _rubChanged = false;
     var _apBusy = false;
@@ -349,7 +350,10 @@
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
         syncDays(d);
-        if (_chId == null && d.readiness_channel_id) _chId = d.readiness_channel_id;
+        if (_chId == null) {
+            _chId = d.readiness_channel_id || d.channel_id ||
+                ((_channels || [])[0] || {}).id || null;
+        }
         if (d.status === 'generating') { _building = true; renderGenerating(); startPoll(); return; }
         if ((d.status === 'ready' || d.status === 'scheduled' || d.status === 'done')
                 && (d.posts || []).length) {
@@ -394,7 +398,6 @@
                 if (_chId == null && cd && cd.active_channel_id) _chId = cd.active_channel_id;
                 if (_chId == null && _channels.length) _chId = _channels[0].id;
                 renderBrief();
-                // первый запрос ушёл без канала — состояние надо уточнить по выбранному
                 if (_chId) {
                     apiRequest('/api/v1/content-plan?channel_id=' + _chId)
                         .then(function (d2) {
@@ -411,7 +414,15 @@
                     loadCover();
                 }
             }).catch(function () { _channels = []; renderBrief(); });
-        } else { renderBrief(); }
+            return;
+        }
+        if (_chId) {
+            if (!_rubrics.length) loadRubrics();
+            if (!_ap) loadAutopilot();
+            if (!_cal) loadCalendar();
+            loadReview(false);
+        }
+        renderBrief();
     }
 
     function secHead(title, note) {
@@ -905,7 +916,7 @@
         while (t.length <= k) t.push('');
         t[k] = at || '';
         while (t.length && !t[t.length - 1]) t.pop();
-        d[i] = { n: dayN(i), pins: dayPins(i), times: t };
+        d[i] = { n: dayN(i), pins: dayPins(i), times: t, topics: dayTopics(i) };
         _days = d;
     }
 
@@ -916,12 +927,27 @@
             toast(T('В неделе не может быть меньше трёх постов'));
             return false;
         }
-        var pins = dayPins(i), t = dayTimes(i), d = days().slice();
+        var pins = dayPins(i), t = dayTimes(i), tp = dayTopics(i), d = days().slice();
         if (k < pins.length) pins.splice(k, 1);
         if (k < t.length) t.splice(k, 1);
-        d[i] = { n: n - 1, pins: pins, times: t };
+        if (k < tp.length) tp.splice(k, 1);
+        d[i] = { n: n - 1, pins: pins, times: t, topics: tp };
         _days = d;
+        shiftCleared(i, k, n - 1);
         return true;
+    }
+
+    function shiftCleared(i, k, n) {
+        var out = {};
+        Object.keys(_topicCleared).forEach(function (key) {
+            var parts = key.split('_');
+            var di = +parts[0], dk = +parts[1];
+            if (di !== i) { out[key] = 1; return; }
+            if (dk === k) return;
+            var nk = dk > k ? dk - 1 : dk;
+            if (nk < n) out[di + '_' + nk] = 1;
+        });
+        _topicCleared = out;
     }
 
     function setPin(i, k, key) {
@@ -930,7 +956,7 @@
         while (pins.length <= k) pins.push('');
         pins[k] = key || '';
         while (pins.length && !pins[pins.length - 1]) pins.pop();
-        d[i] = { n: dayN(i), pins: pins, times: dayTimes(i) };
+        d[i] = { n: dayN(i), pins: pins, times: dayTimes(i), topics: dayTopics(i) };
         _days = d;
     }
 
@@ -956,11 +982,11 @@
         return out;
     }
 
-    function slotRow(sl) {
+    function slotRow(i, sl) {
         var r = sl.key ? rubOf(sl.key) : null;
         var cls = 'cp-slot' + (r ? (r.needs_fact ? ' fact' : '') : ' auto');
         var title = r ? r.title : (sl.key ? sl.key : T('Рубрика — из включённых'));
-        var _tpc = dayTopics(i)[k] || '';
+        var _tpc = dayTopics(i)[sl.seq] || '';
         var sub = _tpc ? ('📌 ' + _tpc)
             : r ? (r.needs_fact ? T('спрошу пару строк за день до выхода') : (r.about || ''))
                     : T('распределится при сборке');
@@ -993,7 +1019,7 @@
                 '<i class="ti ti-plus"></i>' + esc(T('Вернуть день')) + '</button></div>';
         }
         var rows = daySlots(i).map(function (sl) {
-            return { at: sl.at || '99:99', html: slotRow(sl) };
+            return { at: sl.at || '99:99', html: slotRow(i, sl) };
         });
         busyOf(i).forEach(function (b) { rows.push({ at: b.at, html: adRow(b) }); });
         rows.sort(function (a, b) { return a.at < b.at ? -1 : (a.at > b.at ? 1 : 0); });
@@ -1797,6 +1823,11 @@
                 '<div class="dot"></div></div>';
         }).join('') + '</div>';
     }
+    function cpwSlotTime(i, k) {
+        var mine = dayTimes(i)[k] || '';
+        if (mine) return { at: mine, mine: true };
+        return { at: (daySlots(i)[k] || {}).at || '', mine: false };
+    }
     function cpwFocus() {
         var i = _cpwDay || 0;
         var hist = histDays();
@@ -1805,18 +1836,23 @@
         var avg = histAvg();
         var pct = (v && avg) ? Math.round((v / avg - 1) * 100) : null;
         var n = dayN(i);
-        var times = dayTimes(i), topics = dayTopics(i);
+        var topics = dayTopics(i);
         var rows = '';
         for (var k = 0; k < n; k++) {
             var why = cpwWhy(i, k);
             var tp = topics[k] || '';
+            var tm = cpwSlotTime(i, k);
             rows += '<div class="cpw-slot" data-act="cpwslot" data-v="' + i + '" data-k="' + k + '">' +
-                '<span class="tm' + (times[k] ? ' custom' : '') + '">' +
-                esc(times[k] || T('авто')) + '</span>' +
+                '<span class="tm' + (tm.mine ? ' custom' : '') + '">' +
+                esc(tm.at || '--:--') + '</span>' +
                 '<span class="tx">' + (tp ? esc(tp)
                     : '<em>' + esc(T('выбрать тему')) + '</em>') +
                 (why ? '<span class="why' + (why.own ? ' own' : '') + '">' + esc(why.t) + '</span>' : '') +
-                '</span><i class="ti ti-chevron-right ar"></i></div>';
+                '</span>' +
+                (canEdit() ? '<button class="cpw-x" data-act="cpwdrop" data-v="' + i +
+                    '" data-k="' + k + '" aria-label="' + esc(T('Убрать пост')) + '">' +
+                    '<i class="ti ti-x"></i></button>' : '') +
+                '<i class="ti ti-chevron-right ar"></i></div>';
         }
         return '<div class="cpw-focus">' +
             '<div class="fh"><span class="fd">' + esc(T(WD_FULL[i])) + '</span>' +
@@ -1889,7 +1925,6 @@
         return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
             T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
-    var _topicCleared = {};
     function prefillTopics() {
         if (!canEdit()) return;
         var sugs = cpwSugTitles();
@@ -1955,10 +1990,33 @@
             '<div class="cpw-own"><input id="cpw-ti" maxlength="200" value="' + esc(cur) + '" ' +
             'placeholder="' + esc(T('Своя тема поста')) + '...">' +
             '<button data-act="cpwown"><i class="ti ti-check"></i></button></div>' +
-            '<button class="cpw-more" data-act="cpwmore">' +
-            '<i class="ti ti-clock"></i> ' + esc(T('Время и рубрика')) + '</button>' +
+            cpwTimeBlock(i, k) +
+            '<button class="cpw-drop" data-act="cpwdrop" data-v="' + i + '" data-k="' + k + '">' +
+            '<i class="ti ti-trash"></i> ' + esc(T('Убрать этот пост')) + '</button>' +
             '<button class="cpw-close" data-act="cpwx">' + esc(T('Закрыть')) + '</button>' +
             '</div></div>';
+    }
+    function cpwTimeBlock(i, k) {
+        var tm = cpwSlotTime(i, k);
+        var cur = dayTimes(i)[k] || '';
+        var hours = '';
+        for (var h = 8; h <= 22; h++) {
+            var hh = (h < 10 ? '0' : '') + h;
+            hours += '<button class="cpw-th' + (cur.slice(0, 2) === hh ? ' on' : '') +
+                '" data-act="cpwhour" data-v="' + hh + '">' + hh + '</button>';
+        }
+        var mins = ['00', '15', '30', '45'].map(function (m) {
+            return '<button class="cpw-tm' + (cur.slice(3) === m ? ' on' : '') +
+                '" data-act="cpwmin" data-v="' + m + '">:' + m + '</button>';
+        }).join('');
+        return '<div class="cpw-time">' +
+            '<div class="th">' + esc(T('Время выхода')) +
+            '<span class="' + (tm.mine ? 'own' : 'rec') + '">' + esc(tm.at || '--:--') +
+            (tm.mine ? '' : ' · ' + esc(T('по замерам канала'))) + '</span></div>' +
+            (cur ? '<button class="cpw-tauto" data-act="cpwhour" data-v="">' +
+                esc(T('Вернуть время по замерам')) + '</button>' : '') +
+            '<div class="cpw-tg">' + hours + '</div>' +
+            '<div class="cpw-tr">' + mins + '</div></div>';
     }
 
     function strategyWrap() {
@@ -3866,7 +3924,45 @@
             var _ai = +actEl.getAttribute('data-v');
             if (setDayN(_ai, dayN(_ai) + 1)) {
                 saveDaysSoon();
+                loadCalendarSoon();
                 _cpwSheet = { day: _ai, slot: dayN(_ai) - 1 };
+                renderBrief();
+            }
+            return;
+        }
+        if (act === 'cpwdrop') {
+            haptic('medium');
+            var _di = +actEl.getAttribute('data-v'), _dk = +actEl.getAttribute('data-k');
+            if (dropSlot(_di, _dk)) {
+                _cpwSheet = null;
+                saveDaysSoon();
+                loadCalendarSoon();
+                renderBrief();
+            }
+            return;
+        }
+        if (act === 'cpwhour') {
+            haptic('light');
+            var _hv = actEl.getAttribute('data-v') || '';
+            if (_cpwSheet) {
+                if (!_hv) setTime(_cpwSheet.day, _cpwSheet.slot, '');
+                else setTime(_cpwSheet.day, _cpwSheet.slot,
+                    _hv + ':' + ((dayTimes(_cpwSheet.day)[_cpwSheet.slot] || '').slice(3) || '00'));
+                saveDaysSoon();
+                loadCalendarSoon();
+                renderBrief();
+            }
+            return;
+        }
+        if (act === 'cpwmin') {
+            haptic('light');
+            if (_cpwSheet) {
+                var _bd = _cpwSheet.day, _bk = _cpwSheet.slot;
+                var _base = (dayTimes(_bd)[_bk] || '').slice(0, 2) ||
+                    (cpwSlotTime(_bd, _bk).at || '12:00').slice(0, 2);
+                setTime(_bd, _bk, _base + ':' + actEl.getAttribute('data-v'));
+                saveDaysSoon();
+                loadCalendarSoon();
                 renderBrief();
             }
             return;
@@ -3888,14 +3984,6 @@
             setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _tv);
             _cpwSheet = null;
             renderBrief();
-            return;
-        }
-        if (act === 'cpwmore') {
-            haptic('light');
-            var _md = _cpwSheet.day;
-            _cpwSheet = null;
-            renderBrief();
-            pickDay(_md);
             return;
         }
         if (act === 'cpwx') {

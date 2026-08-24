@@ -1779,9 +1779,9 @@
   border-radius: 4px 15px 15px 15px; padding: 11px 13px; font-size: 12.5px; color: #c2c6d2;
   backdrop-filter: blur(12px); min-width: 0; }
 .cpw-ed .sub { font-size: 10.5px; color: #565b73; margin-top: 4px; }
-.cpw-strip { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 10px; scrollbar-width: none; }
+.cpw-strip { display: flex; gap: 5px; overflow-x: auto; padding: 2px 2px 10px; scrollbar-width: none; }
 .cpw-strip::-webkit-scrollbar { display: none; }
-.cpw-d { flex: 1; min-width: 44px; text-align: center; border: .5px solid rgba(255,255,255,.12);
+.cpw-d { flex: 1; min-width: 37px; text-align: center; border: .5px solid rgba(255,255,255,.12);
   border-radius: 12px; padding: 7px 0 6px; cursor: pointer; background: rgba(255,255,255,.03); }
 .cpw-d .d { font-size: 10px; font-weight: 800; color: #9aa1c2; }
 .cpw-d .v { font-size: 9px; color: #565b73; margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -1834,10 +1834,30 @@
 .cpw-own input::placeholder { color: #565b73; }
 .cpw-own button { flex: none; width: 42px; border-radius: 11px; border: .5px solid rgba(129,140,248,.5);
   background: rgba(129,140,248,.14); color: #c3c9ff; font-size: 14px; cursor: pointer; }
-.cpw-more { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
-  margin-top: 8px; padding: 10px; font-size: 12px; font-weight: 700; color: #9aa1c2;
-  border: .5px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.03);
+.cpw-time { margin-top: 11px; padding-top: 11px; border-top: .5px solid rgba(255,255,255,.09); }
+.cpw-time .th { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 11.5px; font-weight: 800; color: #9aa1c2; margin-bottom: 8px; }
+.cpw-time .th span { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cpw-time .th .rec { color: #8fe3c4; }
+.cpw-time .th .own { color: #f5cf7a; }
+.cpw-tauto { width: 100%; margin-bottom: 8px; padding: 8px; font: inherit; font-size: 11px;
+  font-weight: 700; color: #9aa1c2; background: rgba(255,255,255,.03); cursor: pointer;
+  border: .5px solid rgba(255,255,255,.12); border-radius: 10px; }
+.cpw-tg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.cpw-tr { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
+.cpw-th, .cpw-tm { padding: 9px 0; font: inherit; font-size: 11.5px; font-weight: 700; color: #c2c6d2;
+  background: rgba(255,255,255,.04); border: .5px solid rgba(255,255,255,.1); border-radius: 9px;
+  cursor: pointer; font-variant-numeric: tabular-nums; }
+.cpw-th.on, .cpw-tm.on { color: #f5cf7a; border-color: rgba(245,191,79,.5); background: rgba(245,191,79,.12); }
+.cpw-drop { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+  margin-top: 11px; padding: 10px; font-size: 12px; font-weight: 700; color: #d99a9a;
+  border: .5px solid rgba(217,154,154,.28); border-radius: 12px; background: rgba(217,154,154,.06);
   cursor: pointer; font-family: inherit; }
+.cpw-slot .cpw-x { flex: none; width: 26px; height: 26px; display: flex; align-items: center;
+  justify-content: center; padding: 0; font-size: 12px; color: #6b7091; cursor: pointer;
+  background: rgba(255,255,255,.05); border: .5px solid rgba(255,255,255,.12); border-radius: 8px;
+  font-family: inherit; }
 .cpw-close { width: 100%; margin-top: 5px; background: transparent; border: none; color: #565b73;
   font: inherit; font-size: 11.5px; cursor: pointer; padding: 7px; }
 
