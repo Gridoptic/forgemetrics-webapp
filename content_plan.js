@@ -1983,7 +1983,9 @@
         var cur = dayTopics(i)[k] || '';
         var sugs = cpwCandidates().filter(function (r) { return !used[r.title]; }).slice(0, 8);
         return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
-            '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' + T('тема поста')) + '</div>' +
+            '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' + T('тема поста')) +
+            '<button class="cpw-hx" data-act="cpwx" aria-label="' + esc(T('Закрыть')) + '">' +
+            '<i class="ti ti-x"></i></button></div>' +
             sugs.map(function (r) {
                 var isCur = r.title === cur;
                 return '<button class="cpw-pick' + (r.source === 'user' ? ' own' : '') +
@@ -4033,8 +4035,8 @@
             return;
         }
         if (act === 'cpwx') {
-            if (actEl !== t && t.closest && t.closest('.cpw-sheet') &&
-                !t.closest('[data-act="cpwx"], .cpw-close')) return;
+            if (t.closest && t.closest('.cpw-sheet') &&
+                !t.closest('.cpw-close, .cpw-hx')) return;
             _cpwSheet = null;
             renderBrief();
             return;
