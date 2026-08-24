@@ -1840,3 +1840,14 @@
   cursor: pointer; font-family: inherit; }
 .cpw-close { width: 100%; margin-top: 5px; background: transparent; border: none; color: #565b73;
   font: inherit; font-size: 11.5px; cursor: pointer; padding: 7px; }
+
+/* компактный архив недели */
+.cpa-list { display: flex; flex-direction: column; gap: 5px; }
+.cpa-card { display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+  border: .5px solid rgba(255,255,255,.09); border-radius: 11px; background: rgba(255,255,255,.02); }
+.cpa-card .d { flex: none; font-size: 10px; color: #565b73; font-weight: 700; width: 46px;
+  font-variant-numeric: tabular-nums; }
+.cpa-card .tx { flex: 1; min-width: 0; font-size: 11.5px; color: #c2c6d2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cpa-card .st { flex: none; font-size: 10px; color: #565b73; }
+.cpa-card .st.ok { color: #5fe0af; }

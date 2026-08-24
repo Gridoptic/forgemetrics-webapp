@@ -260,7 +260,8 @@
         _days = null;
         syncDays(st);
         if (chans) _channels = chans;
-        if (st && st.posts) renderWeek(); else renderBrief();
+        if (st && st.posts && st.posts.length && !weekIsOver()) renderWeek();
+        else renderBrief();
     };
     window.__cpDays = function () { return days().slice(); };
 
@@ -319,7 +320,8 @@
             _rrT = null;
             if (!_open || _pollTimer || _bootT || !_state) return;
             if (_wantView === 'brief') { renderBrief(); return; }
-            if (_state.posts && _state.posts.length) renderWeek(); else renderBrief();
+            if (_state.posts && _state.posts.length && !weekIsOver()) renderWeek();
+            else renderBrief();
         }, 120);
     }
 
@@ -379,7 +381,7 @@
             var bootStart = Date.now();
             var bootDone = function () {
                 if (_bootT) { clearInterval(_bootT); _bootT = null; }
-                renderWeek();
+                if (weekIsOver()) renderBrief(); else renderWeek();
                 if (d.batch_running) startBatchPoll();
             };
             if (_chId && (!_cal || !_rubrics.length || !_ap)) {
@@ -1872,6 +1874,17 @@
         return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
             T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
+    function weekIsOver() {
+        var ps = (_state && _state.posts) || [];
+        if (!ps.length) return false;
+        var grace = 3 * 3600 * 1000;
+        return ps.every(function (p) {
+            if (p.publish_status === 'published' || p.publish_status === 'rolled_back') return true;
+            if (!p.scheduled_at) return false;
+            var t = Date.parse(p.scheduled_at);
+            return isFinite(t) && t < Date.now() - grace;
+        });
+    }
     var _cpwSheet = null;
     function cpwUsedTopics(exDay, exSlot) {
         var used = {};
@@ -1920,9 +1933,28 @@
             '<button class="cpg-strhide" data-act="strhide" aria-label="' + esc(T('Скрыть')) + '"><i class="ti ti-x"></i></button></div>';
     }
     function archRow() {
-        if (!(_state && _state.posts && _state.posts.length)) return '';
-        return '<button class="cpg-arch" data-act="gotoarch"><i class="ti ti-archive"></i> ' +
-            esc(T('Посты недели (архив)')) + '</button>';
+        var ps = (_state && _state.posts) || [];
+        if (!ps.length || !weekIsOver()) return '';
+        var lg = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+        var cards = ps.slice().sort(function (a, b) {
+            return Date.parse(a.scheduled_at || 0) - Date.parse(b.scheduled_at || 0);
+        }).map(function (p) {
+            var dt = p.scheduled_at ? new Date(p.scheduled_at) : null;
+            var ds = dt ? dt.toLocaleDateString(lg, { day: 'numeric', month: 'short' }) : '';
+            var pub = p.publish_status === 'published';
+            return '<div class="cpa-card"><span class="d">' + esc(ds) + '</span>' +
+                '<span class="tx">' + esc((p.topic || '').slice(0, 60)) + '</span>' +
+                (pub ? '<span class="st ok">' + esc(T('вышел')) +
+                        (p.views ? ' · ' + esc(numShort(p.views)) : '') + '</span>'
+                     : '<span class="st">' + esc(T('не вышел')) + '</span>') + '</div>';
+        }).join('');
+        var n = ps.length;
+        return gSec('arch', 'archive', 'Архив недели',
+            esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов'))),
+            '<div class="cpa-list">' + cards + '</div>' +
+            '<div class="cp-note" style="margin-top:8px;">' +
+            esc(T('Вышедшие посты остаются в канале. Сборка новой недели заменит план, не тронув канал.')) + '</div>',
+            false);
     }
 
     function renderBrief() {
@@ -2101,7 +2133,9 @@
                 stopTimers();
                 if (_building) {
                     _building = false;
-                    if (_state && _state.posts && (_lastView === 'week' || _lastView === 'brief' || !_lastView)) renderWeek();
+                    if (_state && _state.posts && (_lastView === 'week' || _lastView === 'brief' || !_lastView)) {
+                        if (weekIsOver()) renderBrief(); else renderWeek();
+                    }
                 }
                 return;
             }
@@ -2123,7 +2157,7 @@
                     _building = false;
                     stopTimers();
                     if (!_cal) loadCalendar();
-                    if (_lastView === 'week' || _lastView === 'brief' || !_lastView) renderWeek();
+                    if (_lastView === 'week' || _lastView === 'brief' || !_lastView) { if (weekIsOver()) renderBrief(); else renderWeek(); }
                     if (d.batch_running && withText < ps.length) startBatchPoll();
                 }
                 else if (d.status === 'error') { _state = d; _building = false; stopTimers(); renderError(); }
