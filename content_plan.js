@@ -294,6 +294,18 @@
 
     var _bootT = null;
     var _rrT = null;
+    var _autoFreq = false;
+    var _goalAuto = false;
+    var _goalTouched = false;
+    function daysIsDefault() {
+        var d = days();
+        for (var i = 0; i < 7; i++) {
+            var x = d[i] || {};
+            if ((x.n || 0) !== 1) return false;
+            if ((x.pins || []).length || (x.times || []).length) return false;
+        }
+        return true;
+    }
     function rerender() {
         if (!_open || _pollTimer || _bootT || !_state) return;
         if (_rrT) return;
@@ -1704,7 +1716,9 @@
         if (!rec) return '';
         return '<div class="cp-bfoot"><i class="ti ti-anchor"></i><span>−' + rec.left + ' ' +
             esc(T(plural3(rec.left, 'подписчик', 'подписчика', 'подписчиков')) + ' ' +
-                T('за неделю — по замерам рекомендована цель «Удержание». Цель не переключается сама — выбор за тобой.')) +
+                T(_goalAuto
+                    ? 'за неделю — по замерам выставлена цель «Удержание». Сменить можно нажатием.'
+                    : 'за неделю — по замерам рекомендована цель «Удержание». Цель не переключается сама — выбор за тобой.')) +
             '</span></div>';
     }
 
@@ -1864,12 +1878,11 @@
         var t = totalPosts(), names = [];
         days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
         return esc(t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')) +
-            (names.length && names.length <= 4 ? ' · ' + names.join(', ') : ''));
+            (names.length && names.length <= 4 ? ' · ' + names.join(', ') : '') +
+            (_autoFreq ? ' · ' + T('по замерам') : ''));
     }
     function goalSum() {
-        var rec = _state && _state.learning && _state.learning.members &&
-            (_state.learning.members.left || 0) > 0 && _goal === 'retention';
-        return esc(goalTitle(_goal) + (rec ? ' · ' + T('по замерам') : ''));
+        return esc(goalTitle(_goal) + (_goalAuto ? ' · ' + T('по замерам') : ''));
     }
     function rubSum() {
         var on = (_rubrics || []).filter(function (r) { return !r.disabled; }).length;
@@ -1951,6 +1964,27 @@
         var chanBlock = buildChanBlock();
         var goals = goalChips();
         var rdy = readiness();
+        var _lfB = _state && _state.learning;
+        var _recB = _lfB && _lfB.ready && _lfB.freq && _lfB.freq.recommended;
+        _autoFreq = false;
+        if (_recB && canEdit() && rdy.reason !== 'paused' && daysIsDefault() &&
+                totalPosts() !== _recB) {
+            applyFreqGrid(_recB);
+            saveDaysSoon();
+            _autoFreq = true;
+        } else if (_recB && totalPosts() === _recB) {
+            _autoFreq = true;
+        }
+        var _recGoal = (_lfB && _lfB.ready && _lfB.members &&
+            (_lfB.members.left || 0) > 0) ? 'retention' : null;
+        _goalAuto = false;
+        if (_recGoal && canEdit() && !_goalTouched && _goal !== _recGoal &&
+                !(_state && _state.goal)) {
+            _goal = _recGoal;
+            _goalAuto = true;
+        } else if (_recGoal && _goal === _recGoal) {
+            _goalAuto = true;
+        }
         var blocked = rdy.blocked === true;
         var w = wallet();
         var rebuildFee = (!w.is_tester && w.next_build_paid && w.reskeleton_price) ? w.reskeleton_price : 0;
@@ -1969,8 +2003,16 @@
             lowNote = '<div class="cp-gonote">' + esc(T('Списывается при сборке · тексты можно переписать')) + '</div>';
         }
         if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
-        var daysBody = '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
+        var _hl3 = hoursHintLine();
+        var daysBody = (_autoFreq
+                ? '<div class="cp-note" style="margin-top:8px;"><span class="cp-rbdg dn">' +
+                  esc(T('рекомендация по замерам')) + '</span> ' +
+                  esc(T('Посты расставлены по замерам канала: сильные дни' +
+                        (_hl3 ? ' и окна времени' : '') + '. Изменить можно нажатием на день.')) + '</div>'
+                : '') +
+            '<div class="cp-hero-week">' + weekCells(false) + '</div>' +
             histNote() + tipBlock() + weekBar() +
+            (_hl3 ? '<div class="cp-note" style="margin-top:8px;">' + esc(_hl3) + '</div>' : '') +
             '<div class="cp-note" style="margin-top:8px;">' +
             esc(T('Нажми на день, чтобы изменить число постов или закрепить рубрику.')) + '</div>';
         var goalsBody = '<div class="cp-goals">' + goals + '</div>' + goalRecNote();
@@ -3621,6 +3663,7 @@
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');
             if (name === 'goal') {
+                _goalTouched = true;
                 var parts = (_goal || 'engagement').split('+').filter(Boolean);
                 var at = parts.indexOf(v);
                 if (at >= 0) {
