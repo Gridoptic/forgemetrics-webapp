@@ -1803,13 +1803,24 @@
         days().forEach(function (d, i) { if (d.n) names.push(T(WD[i])); });
         var t = totalPosts();
         if (noChannelData()) {
+            var hstat = (_cal && _cal.history) || {};
+            var why0 = (hstat.total || hstat.archive)
+                ? T('Свежих замеров у канала мало — сильные дни по ним не определить.')
+                : T('У канала пока нет вышедших постов — сравнивать не с чем, ' +
+                    'сильные дни и часы определить не по чему.');
+            var full0 = t === 7 && days().every(function (d) { return (d.n || 0) === 1; });
+            var plan0 = full0
+                ? T('Предлагаю разведочную неделю: по посту в каждый день — за неделю ' +
+                    'станет видно, какие дни и часы у канала сильные.')
+                : T('Сейчас %1 — %2. Точнее всего разведочная неделя: по посту в каждый день.')
+                    .replace('%1', t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')))
+                    .replace('%2', names.join(', '));
+            var hasTp0 = days().some(function (d) { return (d.topics || []).some(Boolean); });
+            var real0 = (_rubrics || []).some(function (r) { return (r.post_count || 0) > 0; });
+            var tp0 = !hasTp0 ? '' : ' ' +
+                T(real0 ? 'Темы — из рубрик канала.' : 'Темы взял из базовых рубрик.');
             return '<div class="cpw-ed"><i class="av ti ti-sparkles"></i><div class="bub">' +
-                esc(T('У канала пока нет вышедших постов — сравнивать не с чем, ' +
-                      'сильные дни и часы определить не по чему.') + ' ' +
-                    T('Разложил %1 через день — %2, чтобы они не шли подряд.')
-                        .replace('%1', t + ' ' + T(plural3(t, 'пост', 'поста', 'постов')))
-                        .replace('%2', names.join(', ')) + ' ' +
-                    T('Темы взял из базовых рубрик.')) +
+                esc(why0 + ' ' + plan0 + tp0) +
                 '<div class="sub">' + esc(T('Меняй дни, темы и время как считаешь нужным. ' +
                     'После первой недели подстрою расстановку по замерам канала.')) + '</div>' +
                 '</div></div>';
@@ -1978,7 +1989,8 @@
         var h = _cal && _cal.history;
         if (!h || !h.ready) return '';
         return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
-            T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
+            T(plural3(h.total || 0, 'пост', 'поста', 'постов')) +
+            (h.since ? ' · ' + T('с') + ' ' + dateLabel(h.since) : ''));
     }
     function prefillTopics() {
         if (!canEdit() || _cpwSheet) return;
@@ -2113,8 +2125,8 @@
         var _lfB = _state && _state.learning;
         var _recB = _lfB && _lfB.ready && _lfB.freq && _lfB.freq.recommended;
         _autoFreq = false;
-        if (_recB && canEdit() && rdy.reason !== 'paused' && daysIsDefault() &&
-                totalPosts() !== _recB) {
+        if (_recB && !noChannelData() && canEdit() && rdy.reason !== 'paused' &&
+                daysIsDefault() && totalPosts() !== _recB) {
             applyFreqGrid(_recB);
             var _sugs = cpwSugTitles();
             if (_sugs.length) {
