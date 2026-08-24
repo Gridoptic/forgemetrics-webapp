@@ -262,6 +262,7 @@
     window.__openContentPlan = function () {
         _open = true;
         _wantView = null;
+        _state = null;
         _rubChanged = false;
         if (!_batchTimer) _dayBusy = {};
         ensureScreen();
@@ -294,13 +295,13 @@
     var _bootT = null;
     var _rrT = null;
     function rerender() {
-        if (!_open || _pollTimer || _bootT) return;
+        if (!_open || _pollTimer || _bootT || !_state) return;
         if (_rrT) return;
         _rrT = setTimeout(function () {
             _rrT = null;
-            if (!_open || _pollTimer || _bootT) return;
+            if (!_open || _pollTimer || _bootT || !_state) return;
             if (_wantView === 'brief') { renderBrief(); return; }
-            if (_state && _state.posts && _state.posts.length) renderWeek(); else renderBrief();
+            if (_state.posts && _state.posts.length) renderWeek(); else renderBrief();
         }, 120);
     }
 
