@@ -1904,6 +1904,38 @@
             return isFinite(t) && t < Date.now() - grace;
         });
     }
+    var _topicCleared = {};
+    function prefillTopics() {
+        if (!canEdit()) return;
+        var sugs = cpwSugTitles();
+        if (!sugs.length) return;
+        var used = {};
+        days().forEach(function (d) {
+            (d.topics || []).forEach(function (t) { if (t) used[t] = 1; });
+        });
+        var free = sugs.filter(function (t) { return !used[t]; });
+        if (!free.length) return;
+        var d = days().slice();
+        var changed = false, fi = 0;
+        for (var i = 0; i < 7 && fi < free.length; i++) {
+            var x = d[i] || {};
+            var n = x.n || 0;
+            for (var k = 0; k < n && fi < free.length; k++) {
+                if (((x.topics || [])[k] || '')) continue;
+                if (_topicCleared[i + '_' + k]) continue;
+                var arr = (x.topics || []).slice();
+                while (arr.length <= k) arr.push('');
+                arr[k] = free[fi++];
+                x = { n: x.n, pins: x.pins || [], times: x.times || [], topics: arr };
+                d[i] = x;
+                changed = true;
+            }
+        }
+        if (changed) {
+            _days = d;
+            saveDaysSoon();
+        }
+    }
     var _cpwSheet = null;
     function cpwUsedTopics(exDay, exSlot) {
         var used = {};
@@ -2014,6 +2046,7 @@
         } else if (_recB && totalPosts() === _recB) {
             _autoFreq = true;
         }
+        prefillTopics();
         var _recGoal = (_lfB && _lfB.ready && _lfB.members &&
             (_lfB.members.left || 0) > 0) ? 'retention' : null;
         _goalAuto = false;
@@ -3902,7 +3935,9 @@
         }
         if (act === 'cpwpick') {
             haptic('light');
-            setSlotTopic(_cpwSheet.day, _cpwSheet.slot, actEl.getAttribute('data-v') || '');
+            var _pv = actEl.getAttribute('data-v') || '';
+            if (!_pv) _topicCleared[_cpwSheet.day + '_' + _cpwSheet.slot] = 1;
+            setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _pv);
             _cpwSheet = null;
             renderBrief();
             return;
@@ -3911,6 +3946,7 @@
             var _ti = document.getElementById('cpw-ti');
             var _tv = (_ti && _ti.value || '').trim();
             haptic('light');
+            if (!_tv) _topicCleared[_cpwSheet.day + '_' + _cpwSheet.slot] = 1;
             setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _tv);
             _cpwSheet = null;
             renderBrief();
