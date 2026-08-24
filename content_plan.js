@@ -256,11 +256,9 @@
 
     window.__cpRenderForCheck = function (st, chans) {
         ensureScreen();
-        _state = st;
         _days = null;
-        syncDays(st);
         if (chans) _channels = chans;
-        if (st && st.posts) renderWeek(); else renderBrief();
+        route(st);
     };
     window.__cpDays = function () { return days().slice(); };
 
@@ -351,9 +349,10 @@
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
         syncDays(d);
+        if (_chId == null && d.readiness_channel_id) _chId = d.readiness_channel_id;
         if (d.status === 'generating') { _building = true; renderGenerating(); startPoll(); return; }
-        if (d.status === 'ready' || d.status === 'scheduled' || d.status === 'done') {
-            if (_chId == null && d.readiness_channel_id) _chId = d.readiness_channel_id;
+        if ((d.status === 'ready' || d.status === 'scheduled' || d.status === 'done')
+                && (d.posts || []).length) {
             if (_channels === null) {
                 apiRequest('/api/v1/channels/active').then(function (cd) {
                     _channels = (cd && cd.channels) || [];
@@ -2300,10 +2299,14 @@
                 esc(T('Вышедшие посты остаются в канале. Сборка следующей недели заменит план, не тронув канал.')) +
                 '</div></div>', 'week');
         } else {
-            var actBtns = (allBtn || schedBtn)
-                ? '<div class="cpg-cta">' + allBtn + schedBtn +
-                  '<div class="cp-foot" style="margin-top:6px;">' + tzFootNote() + foot + '</div></div>'
-                : '<div class="cp-foot">' + tzFootNote() + foot + '</div>';
+            var resetBtn = canEdit()
+                ? '<button class="cp-allbtn arch" data-act="weekreset"><i class="ti ti-trash"></i> ' +
+                  esc(T('Сбросить неделю')) + '</button>'
+                : '';
+            var actBtns = '<div class="cpg-cta">' + allBtn + schedBtn + resetBtn +
+                '<div class="cp-foot" style="margin-top:6px;">' + tzFootNote() + foot +
+                (resetBtn ? ' ' + esc(T('Сброс удалит план и невышедшие посты — вышедшие останутся в канале.')) : '') +
+                '</div></div>';
             setView(viewBan + chanSec() +
                 gHeroBase('Неделя в работе',
                     '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
@@ -3948,6 +3951,7 @@
         if (act === 'copy') { copyDay(+id); return; }
         if (act === 'schedule') { doSchedule(); return; }
         if (act === 'unschedule') { doUnschedule(); return; }
+        if (act === 'weekreset') { doWeekReset(); return; }
         if (act === 'canceld') { cancelDay(+id); return; }
         if (act === 'queue1') { queueDay(+id); return; }
         if (act === 'resadd') { researchAdd(+id); return; }
@@ -3994,6 +3998,27 @@
                 else toast(T('Не удалось снять с очереди'));
             })
             .catch(function () { _schedBusy = false; toast(T('Не удалось снять с очереди')); });
+    }
+    function doWeekReset() {
+        if (_schedBusy) return;
+        haptic('medium');
+        confirmDialog('Сбросить неделю?\n\nПлан и невышедшие посты будут удалены. ' +
+            'Вышедшее в канале останется на месте. После сброса можно собрать неделю заново.',
+            'Сбросить').then(function (ok) {
+            if (!ok) return;
+            _schedBusy = true;
+            apiRequest('/api/v1/content-plan/reset',
+                       { method: 'POST', body: JSON.stringify({ channel_id: _chId || (_state && _state.channel_id) }) })
+                .then(function (r) {
+                    _schedBusy = false;
+                    if (r && r.ok) {
+                        _days = null; _cal = null; _review = null;
+                        toast(T('Неделя сброшена'));
+                        window.__openContentPlan();
+                    } else toast(T('Не удалось сбросить неделю'));
+                })
+                .catch(function () { _schedBusy = false; toast(T('Не удалось сбросить неделю')); });
+        });
     }
     function queueDay(id) {
         haptic('light');
