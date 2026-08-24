@@ -2636,6 +2636,15 @@
                 _cal = null;
                 _cover = null;
                 _days = null;
+                _goal = 'engagement';
+                _goalTouched = false;
+                _modelTouched = false;
+                _model = 'premium';
+                _topicCleared = {};
+                _cpwDay = null;
+                _cpwSheet = null;
+                _sgOpen = false;
+                _state = null;
                 renderBrief();
                 loadAutopilot();
                 loadRubrics();
