@@ -16,7 +16,6 @@
     var _rubrics = [];
     var _review = null;
     var _cal = null;
-    var _rubBusy = false;
     var _rubChanged = false;
     var _apBusy = false;
 
@@ -865,113 +864,6 @@
             .catch(function () { if (open) toast(T('Не удалось собрать разбор')); });
     }
 
-    function rubricsBlock(inWeek, pubDone) {
-        var cid = _chId || (_state && _state.channel_id);
-        if (!cid) return '';
-        if (!_rubrics.length) {
-            return '<div class="cp-sec">' +
-                '<div class="cp-rubwait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Разбираю посты канала и собираю рубрики...')) + '</span></div></div>';
-        }
-        var MINS = 3;
-        var inWork = _rubrics.filter(function (r) { return !r.disabled; });
-        var sugg = _rubrics.filter(function (r) { return r.disabled; });
-        var rated = inWork.filter(function (r) {
-            return (r.post_count || 0) >= MINS && (r.avg_views || 0) > 0;
-        });
-        var topAv = 0, lowAv = Infinity, maxV = 0;
-        rated.forEach(function (r) {
-            if (r.avg_views > topAv) topAv = r.avg_views;
-            if (r.avg_views < lowAv) lowAv = r.avg_views;
-            if (r.avg_views > maxV) maxV = r.avg_views;
-        });
-        function row(r, working) {
-            var badges = '';
-            if (working) {
-                if (rated.length && r.avg_views === topAv && (r.post_count || 0) >= MINS) {
-                    badges += '<span class="cp-rbdg up">' + esc(T('РЕКОМЕНДАЦИЯ · ЧАЩЕ')) + '</span>';
-                } else if (rated.length > 1 && r.avg_views === lowAv && (r.post_count || 0) >= MINS) {
-                    badges += '<span class="cp-rbdg dn">' + esc(T('СЛАБАЯ · РЕЖЕ')) + '</span>';
-                } else if ((r.post_count || 0) > 0 && (r.post_count || 0) < MINS) {
-                    badges += '<span class="cp-rbdg nd">' + esc(T('нужно от %1 постов').replace('%1', MINS)) + '</span>';
-                }
-            }
-            if (r.source === 'user') {
-                badges += '<span class="cp-rbdg ownb">' + esc(T('ДОБАВЛЕНА ТОБОЙ')) + '</span>';
-            }
-            var pc = r.post_count || 0;
-            var cnt = pc ? (' · ' + pc + ' ' + T(plural3(pc, 'пост', 'поста', 'постов'))) : '';
-            var isRated = (pc >= MINS) && (r.avg_views || 0) > 0;
-            var pct = (maxV && isRated) ? Math.max(6, Math.round(r.avg_views / maxV * 100)) : 0;
-            var fact = r.needs_fact
-                ? '<span class="cp-rfact">' + esc('\u26A1 ' +
-                    T('бот сам спросит пару строк в чате за день до выхода')) + '</span>'
-                : '';
-            return '<button class="cp-rub2' + (working ? '' : ' sug') +
-                (r.source === 'user' ? ' own' : '') +
-                '" data-act="rubtoggle" data-v="' + esc(r.key) + '">' +
-                '<span class="tx"><b>' + esc(r.title) + '</b>' + badges +
-                '<em>' + esc((r.about || '') + cnt) + '</em>' + fact +
-                (pct ? '<span class="cp-strip"><i style="width:' + pct + '%"></i></span>' : '') +
-                '</span>' +
-                '<span class="rr">' +
-                (isRated ? '<span class="pw"><i class="ti ti-eye"></i>' +
-                    esc(numExact(r.avg_views)) + '</span>' : '') +
-                (working
-                    ? (r.source === 'user'
-                        ? '<i class="ti ti-x rm" data-act="rubdel" data-v="' + esc(r.key) + '"></i>' : '')
-                    : '<i class="pl ti ti-plus"></i>') +
-                '</span></button>';
-        }
-        var TIPS_SHOWN = 4;
-        var hidden = 0;
-        var suggShow = sugg;
-        if (!_tipsOpen && sugg.length > TIPS_SHOWN) {
-            hidden = sugg.length - TIPS_SHOWN;
-            suggShow = sugg.slice(0, TIPS_SHOWN);
-        }
-        var _slots2 = totalPosts();
-        var autoCnt = inWork.filter(function (r) { return !r.needs_fact; }).length;
-        var _maxSame2 = Math.max(2, Math.ceil(_slots2 / Math.max(1, autoCnt)));
-        var auto = '<div class="cp-rauto"><i class="ti ti-sparkles"></i><span>' +
-            esc(T('Сборка распределит %1 по включённым рубрикам: сильным — больше постов, слабым — меньше. Одна рубрика займёт не больше %2 — неделя не будет однообразной.')
-                .replace('%1', _slots2 + ' ' + T(plural3(_slots2, 'пост', 'поста', 'постов')))
-                .replace('%2', _maxSame2 + ' ' + T(plural3(_maxSame2, 'поста', 'постов', 'постов')))) +
-            '</span></div>';
-        var _ex2 = (inWork[0] || {}).title;
-        return '<div class="cp-sec">' + auto +
-            '<div class="cp-rgt">' + esc(T('В работе')) +
-            '<em>' + esc(T('нажатие выключает')) + '</em></div>' +
-            (inWork.length ? inWork.map(function (r) { return row(r, true); }).join('')
-                : '<div class="cp-dsnote">' + esc(T('Все рубрики выключены — включи хотя бы одну ниже.')) + '</div>') +
-            (sugg.length
-                ? '<div class="cp-rgt">' + esc(T('Предложения')) +
-                  '<em>' + esc(T('включаются плюсом')) + '</em></div>' +
-                  suggShow.map(function (r) { return row(r, false); }).join('') +
-                  (hidden ? '<button class="cp-rmore" data-act="tipsmore">' +
-                      esc(T('Показать ещё') + ' ' + hidden) + '<i class="ti ti-chevron-down"></i></button>' : '')
-                : '') +
-            '<div class="cp-rline">' +
-            '<button class="cp-radd" data-act="rubadd"><i class="ti ti-plus"></i>' +
-            esc(T('Своя рубрика')) + '</button>' +
-            '<button class="cp-radd" data-act="rubrebuild"><i class="ti ti-refresh"></i>' +
-            esc(T('Обновить набор')) + '</button></div>' +
-            '<div class="cp-rleg"><i class="g">\u25A0</i> ' + esc(T('найдены в твоих постах')) +
-            ' · <i class="b">\u25A0</i> ' + esc(T('добавлены тобой')) +
-            ' · \u25A2 ' + esc(T('предложения ИИ')) + '</div>' +
-            '<div class="cp-dshint">' +
-            esc(T('Ничего настраивать не обязательно: сборка сама выберет сильные рубрики и придумает темы.') +
-                (_ex2 ? ' ' + T('Например, для «%1» сборка сама решит, о чём будет пост.').replace('%1', _ex2) : '')) +
-            '</div>' +
-            (inWeek && _rubChanged
-                ? (pubDone
-                    ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
-                    : '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
-                      esc(T('Пересобрать неделю с новыми рубриками')) + '</button>' +
-                      '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>')
-                : '') + '</div>';
-    }
-
     function readiness() {
         var st = _state || {};
         var rid = st.readiness_channel_id;
@@ -1330,68 +1222,6 @@
         });
     }
 
-    function askRubric() {
-        haptic('light');
-        var host = document.getElementById('cp-daybox');
-        if (host) host.remove();
-        host = document.createElement('div');
-        host.id = 'cp-daybox';
-        host.className = 'cp-dsov';
-        host.innerHTML = '<div class="cp-dsheet">' +
-            '<div class="cp-dsgrab"></div>' +
-            '<div class="cp-dsh">' + esc(T('Своя рубрика')) + '</div>' +
-            '<div class="cp-dss">' + esc(T('Как она называется и что в ней выходит')) + '</div>' +
-            '<input class="cp-inp" id="cp-rub-title" maxlength="40" placeholder="' +
-            esc(T('Название, 2-3 слова')) + '">' +
-            '<input class="cp-inp" id="cp-rub-about" maxlength="90" placeholder="' +
-            esc(T('Что содержит такой пост')) + '">' +
-            '<button class="cp-dsr wide" id="cp-rub-fact"><i class="ti ti-camera"></i>' +
-            '<span class="tx"><b>' + esc(T('Нужны мои факты')) + '</b>' +
-            '<em>' + esc(T('пост о том, что произошло со мной')) + '</em></span></button>' +
-            '<button class="cp-go" id="cp-rub-save" style="margin-top:14px">' +
-            esc(T('Добавить рубрику')) + '</button></div>';
-        document.body.appendChild(host);
-        requestAnimationFrame(function () { host.classList.add('vis'); });
-        var fact = false;
-        host.addEventListener('click', function (e) {
-            if (e.target.closest && e.target.closest('#cp-rub-fact')) {
-                fact = !fact;
-                host.querySelector('#cp-rub-fact').classList.toggle('on', fact);
-                haptic('light');
-                return;
-            }
-            if (e.target.closest && e.target.closest('#cp-rub-save')) {
-                var title = (host.querySelector('#cp-rub-title').value || '').trim();
-                if (!title) { toast(T('Введи название рубрики')); return; }
-                rubApi('add', { title: title, needs_fact: fact,
-                                about: (host.querySelector('#cp-rub-about').value || '').trim() });
-                host.remove();
-                return;
-            }
-            if (e.target === host) host.remove();
-        });
-    }
-
-    function rubApi(op, extra) {
-        if (!_chId || _rubBusy) return;
-        _rubBusy = true;
-        var body = { channel_id: _chId };
-        for (var k in (extra || {})) body[k] = extra[k];
-        apiRequest('/api/v1/content-plan/rubrics/' + op,
-                   { method: 'POST', body: JSON.stringify(body) })
-            .then(function (r) {
-                _rubBusy = false;
-                if (r && r.ok && r.rubrics) {
-                    _rubrics = r.rubrics;
-                    if (_lastView === 'week') _rubChanged = true;
-                    rerender();
-                }
-                else if (r && r.error === 'too_many') toast(T('Больше шестнадцати рубрик не бывает'));
-                else if (r && r.error) toast(T('Не удалось изменить рубрики'));
-            })
-            .catch(function () { _rubBusy = false; toast(T('Не удалось изменить рубрики')); });
-    }
-
     function deviceTz() {
         try { return -(new Date().getTimezoneOffset()); } catch (e) { return null; }
     }
@@ -1413,7 +1243,6 @@
     }
 
     var _dayDraw = null;
-    var _tipsOpen = false;
     var _cover = null;
 
     function loadCalendarSoon() {
@@ -1955,7 +1784,7 @@
         for (var k = 0; k < n; k++) {
             var why = cpwWhy(i, k);
             var tp = topics[k] || '';
-            rows += '<div class="cpw-slot" data-act="cpwslot" data-v="' + i + '">' +
+            rows += '<div class="cpw-slot" data-act="cpwslot" data-v="' + i + '" data-k="' + k + '">' +
                 '<span class="tm' + (times[k] ? ' custom' : '') + '">' +
                 esc(times[k] || T('авто')) + '</span>' +
                 '<span class="tx">' + (tp ? esc(tp)
@@ -1984,10 +1813,6 @@
     }
     function goalSum() {
         return esc(goalTitle(_goal) + (_goalAuto ? ' · ' + T('по замерам') : ''));
-    }
-    function rubSum() {
-        var on = (_rubrics || []).filter(function (r) { return !r.disabled; }).length;
-        return esc(on ? (on + ' ' + T('вкл')) : T('собираются'));
     }
     function lrnSum() {
         var L = _state && _state.learning;
@@ -2047,6 +1872,46 @@
         return esc('Ø ' + numExact(histAvg()) + ' · ' + (h.total || 0) + ' ' +
             T(plural3(h.total || 0, 'пост', 'поста', 'постов')));
     }
+    var _cpwSheet = null;
+    function cpwUsedTopics(exDay, exSlot) {
+        var used = {};
+        days().forEach(function (d, di) {
+            (d.topics || []).forEach(function (t, k) {
+                if (t && !(di === exDay && k === exSlot)) used[t] = 1;
+            });
+        });
+        return used;
+    }
+    function cpwSheetHtml() {
+        if (!_cpwSheet) return '';
+        var i = _cpwSheet.day, k = _cpwSheet.slot;
+        var used = cpwUsedTopics(i, k);
+        var cur = dayTopics(i)[k] || '';
+        var sugs = (_rubrics || []).filter(function (r) {
+            return r.source === 'suggest' && r.title && !used[r.title];
+        }).slice(0, 6);
+        return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
+            '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' + T('тема поста')) + '</div>' +
+            sugs.map(function (r) {
+                var isCur = r.title === cur;
+                return '<button class="cpw-pick" data-act="cpwpick" data-v="' + esc(r.title) + '">' +
+                    '<span class="tx">' + esc(r.title) +
+                    '<em>' + esc(r.about || T('предложение под нишу')) + '</em></span>' +
+                    '<i class="ti ti-' + (isCur ? 'check' : 'arrow-right') + ' go"></i></button>';
+            }).join('') +
+            '<button class="cpw-pick auto" data-act="cpwpick" data-v="">' +
+            '<span class="tx">' + esc(T('Пусть тему придумает сборка')) +
+            '<em>' + esc(T('под сюжет недели и сильные рубрики')) + '</em></span>' +
+            (cur ? '' : '<i class="ti ti-check go"></i>') + '</button>' +
+            '<div class="cpw-own"><input id="cpw-ti" maxlength="200" value="' + esc(cur) + '" ' +
+            'placeholder="' + esc(T('Своя тема поста')) + '...">' +
+            '<button data-act="cpwown"><i class="ti ti-check"></i></button></div>' +
+            '<button class="cpw-more" data-act="cpwmore">' +
+            '<i class="ti ti-clock"></i> ' + esc(T('Время и рубрика')) + '</button>' +
+            '<button class="cpw-close" data-act="cpwx">' + esc(T('Закрыть')) + '</button>' +
+            '</div></div>';
+    }
+
     function strategyWrap() {
         var h = strategyBlock();
         if (!h) return '';
@@ -2138,14 +2003,13 @@
             gSec('days', 'layout-grid', 'Охват по дням', daysSum(), daysBody, false) +
             chanSec() +
             gSec('goal', 'target', 'Цель недели', goalSum(), goalsBody, false) +
-            gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(), false, false, true) +
             gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(), false) +
             gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
             gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
             gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
             gSec('model', 'diamond', 'Модель текстов',
                 esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум') + ' · ' + priceDay()), modelBody, false) +
-            strategyWrap() + archRow() +
+            strategyWrap() + archRow() + cpwSheetHtml() +
             '<div class="cpg-cta"><button class="cp-go' + (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
             esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button>' +
@@ -2386,7 +2250,6 @@
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true, true), false, false, true) +
                 gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
                 gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
@@ -2409,10 +2272,11 @@
                     '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' +
                     (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') + apChip()) +
                 chanSec() +
-                header + ribbon + detailPanel() +
+                gSec('posts', 'layout-list', 'Посты недели',
+                    esc(appr + '/' + n + ' ' + T('утверждено')),
+                    header + ribbon + detailPanel(), true) +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
-                gSec('rub', 'list-details', 'Рубрики канала', rubSum(), rubricsBlock(true), false, false, true) +
                 gSec('ins', 'chart-dots', 'Накопленные данные', insSum(), insightsBlock(), false, true) +
                 gSec('rev', 'chart-bar', 'Статистика', revSum(), reviewEntry(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
@@ -3858,49 +3722,6 @@
             toast(T('Сетка недели обновлена'));
             return;
         }
-        if (act === 'rubtoggle') {
-            haptic('light');
-            var rk = actEl.getAttribute('data-v');
-            var cur = _rubrics.filter(function (r) { return r.key === rk; })[0];
-            if (!cur) return;
-            rubApi('toggle', { key: rk, disabled: !cur.disabled });
-            return;
-        }
-        if (act === 'rubdel') {
-            haptic('medium');
-            rubApi('remove', { key: actEl.getAttribute('data-v') });
-            toast(T('Рубрика убрана в предложения — включить можно в любой момент'), 'arrow-back-up');
-            return;
-        }
-        if (act === 'tipsmore') { haptic('light'); _tipsOpen = true; rerender(); return; }
-        if (act === 'rubadd') { askRubric(); return; }
-        if (act === 'rubrebuild') {
-            haptic('medium');
-            var cid = _chId || (_state && _state.channel_id);
-            if (!cid || _rubBusy) return;
-            _rubBusy = true;
-            toast(T('Разбираю посты канала...'));
-            apiRequest('/api/v1/content-plan/rubrics/build',
-                       { method: 'POST', body: JSON.stringify({ channel_id: cid, force: true }) })
-                .then(function (r) {
-                    _rubBusy = false;
-                    if (r && r.ok && r.rubrics) {
-                        _rubrics = r.rubrics;
-                        rerender();
-                        toast(T('Набор рубрик обновлён'));
-                    } else if (r && r.error === 'too_soon') {
-                        toast(T('Набор обновлялся сегодня — следующий раз завтра'), 'clock');
-                    } else if (r && r.error === 'no_access') {
-                        toast(T('Создатель канала не выдал тебе право менять контент-план'), 'lock');
-                    } else if (r && r.reason === 'few_posts') {
-                        toast(T('В канале мало постов — собран базовый набор'), 'info-circle');
-                    } else {
-                        toast(T('Не удалось обновить набор'), 'alert-triangle');
-                    }
-                })
-                .catch(function () { _rubBusy = false; toast(T('Не удалось обновить набор'), 'alert-triangle'); });
-            return;
-        }
         if (act === 'review') {
             haptic('light');
             if (_review) renderReview();
@@ -3996,7 +3817,8 @@
         }
         if (act === 'cpwslot') {
             haptic('light');
-            pickDay(+actEl.getAttribute('data-v'));
+            _cpwSheet = { day: +actEl.getAttribute('data-v'), slot: +actEl.getAttribute('data-k') };
+            renderBrief();
             return;
         }
         if (act === 'cpwadd') {
@@ -4004,9 +3826,40 @@
             var _ai = +actEl.getAttribute('data-v');
             if (setDayN(_ai, dayN(_ai) + 1)) {
                 saveDaysSoon();
+                _cpwSheet = { day: _ai, slot: dayN(_ai) - 1 };
                 renderBrief();
-                pickDay(_ai);
             }
+            return;
+        }
+        if (act === 'cpwpick') {
+            haptic('light');
+            setSlotTopic(_cpwSheet.day, _cpwSheet.slot, actEl.getAttribute('data-v') || '');
+            _cpwSheet = null;
+            renderBrief();
+            return;
+        }
+        if (act === 'cpwown') {
+            var _ti = document.getElementById('cpw-ti');
+            var _tv = (_ti && _ti.value || '').trim();
+            haptic('light');
+            setSlotTopic(_cpwSheet.day, _cpwSheet.slot, _tv);
+            _cpwSheet = null;
+            renderBrief();
+            return;
+        }
+        if (act === 'cpwmore') {
+            haptic('light');
+            var _md = _cpwSheet.day;
+            _cpwSheet = null;
+            renderBrief();
+            pickDay(_md);
+            return;
+        }
+        if (act === 'cpwx') {
+            if (actEl !== t && t.closest && t.closest('.cpw-sheet') &&
+                !t.closest('[data-act="cpwx"], .cpw-close')) return;
+            _cpwSheet = null;
+            renderBrief();
             return;
         }
         if (act === 'gsec') {
