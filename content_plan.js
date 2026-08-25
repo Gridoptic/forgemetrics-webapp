@@ -4088,6 +4088,7 @@
                 var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
                 if (ch && ch.username) lines.push('https://t.me/' + ch.username);
                 if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
+                if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
                 var text = lines.join('\n');
                 var run = (typeof copyText === 'function') ? copyText(text) : Promise.reject();
                 Promise.resolve(run).then(function () { toast(T('Описание скопировано')); }).catch(function () { toast(text); });
