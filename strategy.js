@@ -95,6 +95,7 @@
     function stopTimers() {
         if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
         if (_genTimer) { clearInterval(_genTimer); _genTimer = null; }
+        if (_trTimer) { clearTimeout(_trTimer); _trTimer = null; }
     }
 
     function headHtml() {
@@ -102,10 +103,11 @@
             '<i class="ti ti-arrow-left"></i></button><div class="t">' + T('AI-стратегия') + '</div></div>';
     }
 
-    function setView(html) {
+    function setView(html, head) {
         var host = ensureScreen();
         stopTimers();
-        host.innerHTML = headHtml() + html;
+        _trOpen = !!head;
+        host.innerHTML = (head || headHtml()) + html;
         host.scrollTop = 0;
         return host;
     }
@@ -583,7 +585,10 @@
             '<span id="stg-doc-sub">' + sub + '</span></div>' +
             '<button class="stg-jump" data-act="jump" data-to="week1">' + esc(T('Начни с задач первой недели')) + ' →</button></div>';
 
+        var trInserted = false;
         (doc.sections || []).forEach(function (sec) {
+            if (sec.key === 'traffic_free') { html += trafficCard(); trInserted = true; return; }
+            if (sec.key === 'traffic_paid') return;
             var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
                 (sec.chart && sec.chart.bars && sec.chart.bars.length) || (sec.posts && sec.posts.length);
             if (!hasContent) return;
@@ -602,6 +607,7 @@
             html += '<div class="stg-sec" data-sec="' + esc(sec.key) + '">' + inner + '</div>';
         });
 
+        if (!trInserted) html += trafficCard();
         html += reviewHtml();
         html += chatHtml();
         html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' +
@@ -832,12 +838,296 @@
         Promise.resolve(run).then(function () { toast(T('Текст поста скопирован')); }).catch(function () {});
     }
 
+    var _tr = null, _trTimer = null, _trChan = null, _trOpen = false, _trBusy = {};
+    var TR_DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    var TR_GEO = { ru: 'Россия', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Кыргызстан', tj: 'Таджикистан', az: 'Азербайджан', ua: 'Украина' };
+
+    function trForge(n) {
+        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 12) : ('⚡ ' + num(n));
+    }
+    function trPct(x) {
+        var s = String(x == null ? '' : x);
+        return ((typeof window.getLang === 'function' ? window.getLang() : 'ru') === 'en') ? s : s.replace('.', ',');
+    }
+    function trafficCard() {
+        return '<div class="stg-sec stg-trcard" data-act="traffic"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-rocket"></i></span> ' + esc(T('Трафик — двигатель роста')) + '</div>' +
+            '<div class="stg-note" style="margin-top:9px;">' + esc(T('Креативы для площадок из постов недели, платный перелив с расчётом по CPM ниши, доноры из Радара, ссылки отслеживания и сверка — что дало приток.')) + '</div>' +
+            '<div class="stg-trgo">' + esc(T('Открыть модуль')) + ' <i class="ti ti-chevron-right"></i></div></div>';
+    }
+    function trHead() {
+        return '<div class="stg-head"><button class="stg-back" data-act="trback"><i class="ti ti-arrow-left"></i></button><div class="t">' + esc(T('Трафик')) + '</div></div>';
+    }
+    function trCenter(icon, msg) {
+        setView('<div class="stg-center"><div class="big">' + icon + '</div><div class="m">' + esc(msg) + '</div></div>', trHead());
+    }
+    function openTraffic() {
+        _trChan = (_state && _state.channel_id) || _trChan || null;
+        trCenter('<div class="stg-spin"></div>', T('Загружаю модуль трафика...'));
+        loadTraffic(false);
+    }
+    function trErrText(d) {
+        var e = d && d.error;
+        if (e === 'no_channel') return T('Подключи канал — модуль трафика работает с его данными.');
+        if (e === 'locked') return T('Доступ к стратегии не открыт.');
+        if (e === 'no_strategy') return T('Сначала открой стратегию.');
+        return (d && d.message) || T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.');
+    }
+    function loadTraffic(silent) {
+        var q = _trChan ? '?channel_id=' + _trChan : '';
+        return apiRequest('/api/v1/strategy/traffic' + q).then(function (d) {
+            if (!_trOpen) return;
+            if (!d || !d.ok) { if (!silent) trCenter('⚠️', trErrText(d)); return; }
+            _tr = d;
+            if (d.channel) _trChan = d.channel.id;
+            renderTraffic();
+        }).catch(function () {
+            if (!silent && _trOpen) trCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.'));
+        });
+    }
+    function trLive() {
+        if (!_tr) return false;
+        var posts = (_tr.conveyor && _tr.conveyor.posts) || [];
+        var building = posts.some(function (p) { return p.creative && (p.creative.status === 'queued' || p.creative.status === 'generating'); });
+        var picking = _tr.donors && (_tr.donors.status === 'running' || _tr.donors.status === 'analyzing');
+        return building || !!picking;
+    }
+    function trPoll() {
+        if (_trTimer) clearTimeout(_trTimer);
+        if (!_trOpen || !trLive()) return;
+        _trTimer = setTimeout(function () {
+            _trTimer = null;
+            if (!_trOpen) return;
+            loadTraffic(true).then(trPoll);
+        }, 15000);
+    }
+    function renderTraffic() {
+        var d = _tr || {}, ch = d.channel || {}, g = d.goal || {}, pl = d.platforms || {}, cv = d.conveyor || {},
+            pd = d.paid || {}, dn = d.donors || {}, lk = d.links || {}, rv = d.review || {};
+        var growth = (g.growth_30d === null || g.growth_30d === undefined) ? null : g.growth_30d;
+        var html = '<div class="stg-trchan"><b>' + esc(ch.title || ('@' + (ch.username || ''))) + '</b>' + (ch.username ? '<span>@' + esc(ch.username) + '</span>' : '') + '</div>';
+
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-target-arrow"></i></span> ' + esc(T('Цель')) + '</div>' +
+            '<div class="stg-trbig"><span class="v">+' + num(g.target_add || 0) + '</span><span class="u">' + esc(T('подписчиков за 30 дней')) + '</span>' +
+            '<button class="stg-tredit" data-act="trgoal" aria-label="' + esc(T('Изменить цель')) + '"><i class="ti ti-pencil"></i></button></div>' +
+            '<div id="stg-trgoal-form" class="stg-trform" style="display:none;"><input class="stg-inp stg-trinp" id="stg-trgoal-inp" type="number" inputmode="numeric" min="10" value="' + (g.target_add || 0) + '">' +
+            '<button class="stg-trbtn pri" data-act="trgoalsave">' + esc(T('Сохранить')) + '</button></div>' +
+            '<div class="stg-trkv"><span>' + esc(T('Сейчас')) + '</span><b>' + num(ch.subscribers || 0) + '</b>' +
+            '<span>' + esc(T('Прирост за месяц')) + '</span><b>' + (growth === null ? esc(T('не измерен')) : ((growth > 0 ? '+' : '') + num(growth))) + '</b></div>' +
+            (g.is_default ? '<div class="stg-note" style="margin-top:8px;">' + esc(T('Цель по умолчанию — +10% за месяц. Поставь свою.')) + '</div>' : '') +
+            '<div class="stg-note" style="margin-top:6px;">' + esc(T('Постами это не сделать — нужен приток: креативы на площадках и платный перелив.')) + '</div></div>';
+
+        var geoName = pl.geo ? (TR_GEO[pl.geo] ? T(TR_GEO[pl.geo]) : String(pl.geo).toUpperCase()) : T('страна не определена');
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-player-play"></i></span> ' + esc(T('УБТ · площадки')) + ' · ' + esc(geoName) + '</div>';
+        (pl.use || []).forEach(function (p) {
+            var link = lk.platforms && lk.platforms[p.key];
+            var url = link ? (link.click_url || link.invite_link || '') : '';
+            html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + '</b>' +
+                (link ? '<em><span class="stg-trlink" data-act="trcopy" data-text="' + esc(url) + '">' + esc(url.replace(/^https?:\/\//, '')) + '</span> · +' + num(link.joined || 0) + ' ' + esc(T('вступили')) +
+                    ((link.clicks !== null && link.clicks !== undefined) ? ' · ' + num(link.clicks) + ' ' + esc(T('переходов')) : '') + '</em>'
+                    : '<em>' + esc(T('Ссылка для описания ролика ещё не создана')) + '</em>') + '</div>' +
+                (link ? '' : '<button class="stg-trbtn" data-act="trplink" data-key="' + esc(p.key) + '"' + (ch.connected ? '' : ' disabled') + '>' + esc(T('Создать ссылку')) + '</button>') + '</div>';
+        });
+        if (pl.excluded && pl.excluded.length) html += '<div class="stg-note" style="margin-top:8px;">' + esc(pl.excluded.map(function (p) { return p.name; }).join(', ')) + ' — ' + esc(T('только под VPN, из плана исключены.')) + '</div>';
+        if (!ch.connected) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылки создаёт бот — подключи его к каналу в настройках канала.')) + '</div>';
+        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылка площадки ставится в описание ролика: сверка увидит, сколько подписчиков дала каждая площадка.')) + '</div></div>';
+
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-movie"></i></span> ' + esc(T('Конвейер креативов из постов недели')) +
+            (cv.per_week ? '<span class="stg-trchip">' + num(cv.ready || 0) + ' / ' + num(cv.per_week) + '</span>' : '') + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Каждый пост недели → ролик 9:16 с озвучкой и музыкой: хук, тезисы, число, призыв в канал. Готовый файл через 3–4 минуты.')) + '</div>';
+        if (!cv.has_plan) {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Недели в контент-плане нет — собери её, и посты появятся здесь.')) + '</div>' +
+                '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>';
+        } else if (!(cv.posts || []).length) {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('В неделе пока нет постов с текстом.')) + '</div>';
+        } else {
+            (cv.posts || []).forEach(function (p) {
+                var c = p.creative, right = '';
+                if (_trBusy[p.id] || (c && (c.status === 'queued' || c.status === 'generating'))) {
+                    right = '<span class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю')) + '</span>';
+                } else if (c && c.status === 'ready' && c.url) {
+                    right = '<button class="stg-trbtn ok" data-act="tropen" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i> MP4</button>' +
+                        '<button class="stg-trbtn" data-act="trdesc" data-id="' + c.id + '" aria-label="' + esc(T('Описание для ролика')) + '"><i class="ti ti-copy"></i></button>';
+                } else if (c && c.status === 'error') {
+                    right = '<button class="stg-trbtn" data-act="trbuild" data-id="' + p.id + '">' + esc(T('Собрать заново')) + '</button>';
+                } else {
+                    right = '<button class="stg-trbtn pri" data-act="trbuild" data-id="' + p.id + '">' + esc(T('Собрать креатив')) + '</button>';
+                }
+                html += '<div class="stg-trrow"><div class="day">' + esc(T(TR_DAYS[p.day_index] || '')) + '</div><div class="tx"><b>' + esc(p.title || p.rubric || '') + '</b>' +
+                    (p.published ? '<em>' + esc(T('пост вышел')) + '</em>' : '') + '</div><div class="acts">' + right + '</div></div>';
+            });
+        }
+        html += '</div>';
+
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-coin"></i></span> ' + esc(T('Платный перелив')) + '</div>' +
+            '<div class="stg-trform" style="margin-top:8px;"><label class="stg-trlab" for="stg-trbudget-inp">' + esc(T('Бюджет, ₽')) + '</label>' +
+            '<input class="stg-inp stg-trinp" id="stg-trbudget-inp" type="number" inputmode="numeric" min="0" step="500" value="' + (pd.budget || 0) + '">' +
+            '<button class="stg-trbtn" data-act="trbudget">' + esc(T('Пересчитать')) + '</button></div>' +
+            '<div class="stg-trbig"><span class="v">≈ ' + num(pd.est_lo || 0) + '–' + num(pd.est_hi || 0) + '</span><span class="u">' + esc(T('подписчиков за')) + ' ' + num(pd.budget || 0) + ' ₽</span></div>' +
+            '<div class="stg-trkv"><span>' + esc(T('CPM ниши')) + '</span><b>' + num(pd.cpm_lo || 0) + '–' + num(pd.cpm_hi || 0) + ' ₽</b>' +
+            '<span>' + esc(T('Цена подписчика')) + '</span><b>' + num(pd.cpf_lo || 0) + '–' + num(pd.cpf_hi || 0) + ' ₽</b>' +
+            '<span>' + esc(T('Конверсия')) + '</span><b>' + trPct(pd.conv_lo) + '–' + trPct(pd.conv_hi) + '% · ' + esc(pd.conv_source === 'deals' ? T('по замерам сделок') : T('норма рынка')) + '</b>' +
+            (pd.placements ? '<span>' + esc(T('Размещений')) + '</span><b>≈ ' + num(pd.placements) + ' · ' + esc(T('медиана цены доноров')) + ' ' + num(pd.donor_median_price) + ' ₽</b>' : '') + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Расчёт: бюджет ÷ цена подписчика. Цена подписчика = CPM ниши ÷ 1000 ÷ конверсия из охвата в подписку.')) + '</div></div>';
+
+        var picking = dn.status === 'running' || dn.status === 'analyzing';
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-radar"></i></span> ' + esc(T('Доноры из Радара')) + '</div>';
+        if (picking) {
+            html += '<div class="stg-trwait" style="margin-top:8px;"><span class="stg-spin sm"></span>' + esc(T('Подбираю каналы под нишу — 1–2 минуты')) + '</div>';
+        } else if (dn.picks && dn.picks.length) {
+            dn.picks.forEach(function (p) {
+                html += '<div class="stg-trrow"><div class="tx"><b>@' + esc(p.username || '') + '</b><em>' + num(p.subscribers || 0) + ' ' + esc(T('подп.')) +
+                    (p.er ? ' · ER ' + trPct(p.er) + '%' : (p.err ? ' · ERR ' + Math.round(p.err) + '%' : '')) +
+                    (p.price ? ' · ' + num(p.price) + ' ₽' : '') + (p.cpm ? ' · CPM ' + num(p.cpm) : '') + '</em></div>' +
+                    (p.match ? '<span class="stg-trchip">' + p.match + '%</span>' : '') + '</div>';
+            });
+            if (dn.total > dn.picks.length) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ещё')) + ' ' + num(dn.total - dn.picks.length) + ' ' + esc(T('в отчёте подбора')) + '</div>';
+        } else if (dn.status === 'empty') {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('В прошлый раз подходящих каналов не нашлось — Радар пополняется, попробуй снова.')) + '</div>';
+        } else {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Подбор смотрит каналы твоей ниши в Радаре: живые, без накрутки и рекламного шума, с ценой и CPM.')) + '</div>';
+        }
+        if (!picking) html += '<button class="stg-trbtn wide" data-act="trpick">' + esc(dn.picks && dn.picks.length ? T('Подобрать заново') : T('Подобрать доноров')) + ' · ' + trForge(dn.price || 0) + '</button>';
+        html += '</div>';
+
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-link"></i></span> ' + esc(T('Ссылки на размещения')) + '</div>';
+        if (lk.placements && lk.placements.length) {
+            lk.placements.forEach(function (r) {
+                var v = r.verdict || 'no_est';
+                var vt = v === 'ok' ? T('по расчёту') : v === 'below' ? T('ниже расчёта') : v === 'low' ? T('сильно ниже') : v === 'wait' ? T('ждём') : T('без расчёта');
+                html += '<div class="stg-trrow"><div class="tx"><b>' + esc(r.seller ? '@' + r.seller : (r.name || '')) + '</b><em>' + (r.price ? num(r.price) + ' ₽ · ' : '') +
+                    '+' + num(r.joined || 0) + ' ' + esc(T('вступили')) +
+                    ((r.est_joined !== null && r.est_joined !== undefined) ? ' · ' + esc(T('расчёт')) + ' ' + num(r.est_joined) : '') +
+                    (r.cpf ? ' · ' + num(r.cpf) + ' ₽/' + esc(T('подп.')) : '') + '</em></div><span class="stg-trverd ' + esc(v) + '">' + esc(vt) + '</span></div>';
+            });
+        } else {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('На каждое размещение — своя ссылка: сколько пришло, сколько осталось через 48 часов и цена подписчика по факту.')) + '</div>';
+        }
+        html += '<button class="stg-trbtn wide" data-act="trlinks">' + esc(T('Ссылки отслеживания')) + '</button></div>';
+
+        var total = (rv.platform_joined || 0) + (rv.placement_joined || 0);
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-chart-bar"></i></span> ' + esc(T('Сверка: что дало приток')) + '</div>';
+        if (rv.has_data) {
+            html += '<div class="stg-trkv" style="margin-top:8px;"><span>' + esc(T('Площадки')) + '</span><b>+' + num(rv.platform_joined || 0) + '</b>' +
+                '<span>' + esc(T('Размещения')) + '</span><b>+' + num(rv.placement_joined || 0) + '</b>' +
+                '<span>' + esc(T('Итого по ссылкам')) + '</span><b>+' + num(total) + ' ' + esc(T('из')) + ' ' + num(g.target_add || 0) + '</b></div>';
+        } else {
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сверка появится, когда по ссылкам площадок и размещений пойдут переходы.')) + '</div>';
+        }
+        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Стратег сверяет расчёт с фактом раз в неделю и перераспределяет бюджет и задачи.')) + '</div></div>';
+
+        setView(html, trHead());
+        trPoll();
+    }
+    function trSave(body) {
+        body.channel_id = _trChan;
+        if (body.target_add !== undefined && !(body.target_add > 0)) { toast(T('Укажи число')); return; }
+        if (body.budget !== undefined && !(body.budget >= 0)) { toast(T('Укажи число')); return; }
+        apiRequest('/api/v1/strategy/traffic', { method: 'POST', body: JSON.stringify(body) }).then(function (r) {
+            if (r && r.ok) { haptic('light'); toast(T('Сохранено')); loadTraffic(true); }
+            else toast(trErrText(r));
+        }).catch(function () { toast(T('Не удалось сохранить')); });
+    }
+    function trBuild(pid) {
+        if (_trBusy[pid]) return;
+        _trBusy[pid] = true;
+        haptic('medium');
+        renderTraffic();
+        var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+        apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify({ post_id: pid, lang: lang }) }).then(function (r) {
+            delete _trBusy[pid];
+            if (r && r.ok) { toast(T('Собираю ролик — сообщу, когда будет готов')); loadTraffic(true).then(trPoll); }
+            else { toast((r && (r.message || r.error)) || T('Не удалось запустить сборку')); renderTraffic(); }
+        }).catch(function (err) { delete _trBusy[pid]; toast((err && err.message) || T('Не удалось запустить сборку')); renderTraffic(); });
+    }
+    function trOpenUrl(u) {
+        try {
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) window.Telegram.WebApp.openLink(u);
+            else window.open(u, '_blank');
+        } catch (e) { window.open(u, '_blank'); }
+    }
+    function trCopy(text, doneMsg) {
+        var run = (typeof copyText === 'function') ? copyText(text) : Promise.reject();
+        Promise.resolve(run).then(function () { haptic('light'); toast(doneMsg || T('Ссылка скопирована')); }).catch(function () { toast(text); });
+    }
+    function trDescription(cid) {
+        apiRequest('/api/v1/creative/' + cid).then(function (r) {
+            var c = r && r.creative;
+            if (!c) { toast(T('Не удалось получить описание')); return; }
+            var lines = [];
+            if (c.cta_text) lines.push(c.cta_text);
+            var pls = (_tr && _tr.links && _tr.links.platforms) || {};
+            var pick = pls.shorts || pls.dzen || pls.vk || pls.tiktok || pls.reels;
+            var ch = (_tr && _tr.channel) || {};
+            if (pick && (pick.click_url || pick.invite_link)) lines.push(pick.click_url || pick.invite_link);
+            else if (ch.username) lines.push('https://t.me/' + ch.username);
+            if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
+            if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
+            trCopy(lines.join('\n'), T('Описание скопировано'));
+        }).catch(function () { toast(T('Не удалось получить описание')); });
+    }
+    function trPlatformLink(key, btn) {
+        if (btn) btn.disabled = true;
+        haptic('medium');
+        apiRequest('/api/v1/strategy/traffic/platform-link', { method: 'POST', body: JSON.stringify({ channel_id: _trChan, key: key }) }).then(function (r) {
+            if (r && r.ok) { toast(T('Ссылка создана')); loadTraffic(true); }
+            else { toast((r && (r.message || r.error)) || T('Не удалось создать ссылку')); if (btn) btn.disabled = false; }
+        }).catch(function () { toast(T('Не удалось создать ссылку')); if (btn) btn.disabled = false; });
+    }
+    function trPick(btn) {
+        var price = (_tr && _tr.donors && _tr.donors.price) || 0;
+        var bal = (_tr && _tr.balance) || 0;
+        var ask = (typeof confirmDialog === 'function')
+            ? confirmDialog(T('Подбор доноров') + '\n' + T('Спишется') + ' ⚡' + num(price) + '. ' + T('На балансе') + ' ⚡' + num(bal) + '.', T('Списать и подобрать'))
+            : Promise.resolve(true);
+        Promise.resolve(ask).then(function (ok) {
+            if (!ok) return;
+            if (btn) btn.disabled = true;
+            haptic('medium');
+            apiRequest('/api/v1/adpick/start', { method: 'POST', body: JSON.stringify({ channel_id: _trChan }) }).then(function (r) {
+                if (r && r.ok) { toast(T('Подбираю каналы — 1–2 минуты')); loadTraffic(true).then(trPoll); }
+                else { toast((r && (r.message || r.error)) || T('Не удалось запустить подбор')); if (btn) btn.disabled = false; }
+            }).catch(function (err) { toast((err && err.message) || T('Не удалось запустить подбор')); if (btn) btn.disabled = false; });
+        });
+    }
+    function trAction(act, el) {
+        if (act === 'traffic') { haptic('light'); openTraffic(); return true; }
+        if (act === 'trback') {
+            haptic('light');
+            _trOpen = false;
+            if (_state && _state.status === 'active' && _state.doc) renderDoc(); else load();
+            return true;
+        }
+        if (act === 'trgoal') {
+            var f = document.getElementById('stg-trgoal-form');
+            if (f) {
+                var show = f.style.display === 'none';
+                f.style.display = show ? 'flex' : 'none';
+                var inp = document.getElementById('stg-trgoal-inp');
+                if (show && inp) inp.focus();
+            }
+            return true;
+        }
+        if (act === 'trgoalsave') { trSave({ target_add: parseInt((document.getElementById('stg-trgoal-inp') || {}).value, 10) }); return true; }
+        if (act === 'trbudget') { trSave({ budget: parseInt((document.getElementById('stg-trbudget-inp') || {}).value, 10) }); return true; }
+        if (act === 'trbuild') { trBuild(parseInt(el.getAttribute('data-id'), 10)); return true; }
+        if (act === 'tropen') { haptic('light'); trOpenUrl(el.getAttribute('data-url')); return true; }
+        if (act === 'trdesc') { trDescription(parseInt(el.getAttribute('data-id'), 10)); return true; }
+        if (act === 'trplink') { trPlatformLink(el.getAttribute('data-key'), el); return true; }
+        if (act === 'trcopy') { trCopy(el.getAttribute('data-text') || ''); return true; }
+        if (act === 'trpick') { trPick(el); return true; }
+        if (act === 'trplan') { haptic('light'); _trOpen = false; closeStrategy(); if (typeof window.__openContentPlan === 'function') window.__openContentPlan(); return true; }
+        if (act === 'trlinks') { haptic('light'); _trOpen = false; closeStrategy(); if (typeof window.__openPlacements === 'function') window.__openPlacements(); return true; }
+        return false;
+    }
+    window.__stgTrafficForCheck = function (data, channelId) { _tr = data; _trChan = channelId || null; ensureScreen(); renderTraffic(); };
+
     function onScreenClick(ev) {
         var t = ev.target;
         var actEl = t.closest ? t.closest('[data-act]') : null;
         if (t.closest && t.closest('.stg-term')) { toggleTerm(t.closest('.stg-term')); return; }
         if (!actEl) return;
         var act = actEl.getAttribute('data-act');
+        if (trAction(act, actEl)) return;
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
         if (act === 'start') { startFlow(); return; }
         if (act === 'buy') { doPurchase(actEl, false); return; }
