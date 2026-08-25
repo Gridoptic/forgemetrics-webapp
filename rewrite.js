@@ -4,6 +4,7 @@
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _tone = 'channel', _strip = true, _caption = false, _model = null, _limits = null;
     var _lastOriginal = '', _lastResult = '', _lastHooks = [], _lastMeta = null, _busy = false, _tab = 'res';
+    var _ctx = null;
     var _avCache = {};
 
     var TONE_OPTS = [['channel', 'Как в канале'], ['expert', 'Экспертно'], ['provocative', 'Провокационно'], ['selling', 'Продажно']];
@@ -67,6 +68,16 @@
         return p != null ? ' <span class="price">' + fa(p, 14) + '</span>' : '';
     }
 
+    window.__rwRenderForCheck = function (meta, ctx) {
+        ensureScreen();
+        _lastMeta = meta; _lastResult = meta.text || ''; _lastOriginal = meta.original || ''; _lastHooks = meta.hooks || []; _tab = 'res';
+        _ctx = ctx || null;
+        if (!document.getElementById('rw-result')) {
+            var h = document.getElementById('rewrite-screen');
+            h.insertAdjacentHTML('beforeend', '<div id="rw-result"></div>');
+        }
+        renderResult();
+    };
     window.__openRewrite = function () {
         setView('<div class="rw-center"><div class="rw-spin"></div><div class="m">' + esc(T('Секунду...')) + '</div></div>');
         var chP = apiRequest('/api/v1/channels/active').catch(function () { return null; });
@@ -256,8 +267,10 @@
                 _lastResult = r.text; _tab = 'res';
                 _lastHooks = r.hooks || [];
                 _lastMeta = r;
+                _ctx = { currentPostId: r.post_id || null, media: null, mediaBusy: '', placeInfo: null, placed: null, onPlaced: renderResult };
                 setBalance(r.balance);
                 renderResult();
+                if (_ctx.currentPostId && r.channel && window.FMPostTools) window.FMPostTools.loadPlaceInfo(_ctx);
             })
             .catch(function (e) {
                 _busy = false; if (goBtn) goBtn.disabled = false;
@@ -295,29 +308,43 @@
             '<button class="' + (_tab === 'orig' ? 'on' : '') + '" data-tab="orig">' + esc(T('Оригинал')) + '</button></div>' +
             '<div class="rw-out' + (_tab === 'orig' ? ' orig' : '') + '" id="rw-out">' + esc(body) + '</div>' +
             hooks +
-            '<div class="rw-actions">' +
-            '<button class="rw-act copy" data-act="copy"><i class="ti ti-copy"></i> ' + esc(T('Скопировать')) + '</button>' +
-            '<button class="rw-act more" data-act="more"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + (price() != null ? ' <span class="p">' + fa(price()) + '</span>' : '') + '</button></div>' +
-            '<button class="rw-planbtn" data-act="toplan"><i class="ti ti-calendar-plus"></i> ' + esc(T('В контент-план')) + '</button>' +
+            (_ctx && _ctx.currentPostId ? '<div class="rw-lbl" style="margin-top:12px;">' + esc(T('Обложка')) + '</div><div id="rw-cover"></div>' : '') +
+            '<div class="rw-lbl" style="margin-top:12px;">' + esc(T('Что сделать с постом')) + '</div>' +
+            '<div class="rs-acts">' +
+            actRow('copy', 'ti-copy', 'Скопировать', T('Текст в буфер обмена — для ручной публикации'), '', false, '') +
+            actRow('toplan', 'ti-calendar-plus', 'В контент-план', planHint(), 'g' + (_ctx && _ctx.placed ? ' done' : ''), actLocked(), '') +
+            actRow('pubnow', 'ti-send', 'Опубликовать сейчас', sendHint(), 'w', actLocked(), '') +
+            actRow('more', 'ti-refresh', 'Ещё вариант', T('Переписать заново, другая подача'), '', false, price() != null ? fa(price()) : '') +
+            '</div>' +
             (r.model_used ? '<div class="rw-modelnote">' + esc(T('Модель')) + ': ' + esc(r.model_used) + (r.style_applied ? ' · ' + esc(T('в стиле канала')) : '') + '</div>' : '') +
             '</div>';
+        var cov = document.getElementById('rw-cover');
+        if (cov && window.FMPostTools) { window.FMPostTools.coverRender(cov, _ctx); window.FMPostTools.coverBind(cov, _ctx); }
         try { res.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
     }
 
-    function toPlan() {
-        if (_busy || !_lastResult) return;
-        _busy = true; haptic('medium');
-        apiRequest('/api/v1/content_plan/add-post', {
-            method: 'POST',
-            body: JSON.stringify({ channel_id: _chId, day_index: -1, ready_text: _lastResult })
-        }).then(function (r) {
-            _busy = false;
-            if (r && r.ok) { toast(T('Пост добавлен в контент-план')); return; }
-            var err = r && r.error;
-            if (err === 'no_plan') toast(T('Сначала собери контент-план недели'));
-            else if (err === 'day_full') toast(T('В плане этой недели нет свободных мест'));
-            else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
-        }).catch(function () { _busy = false; toast(T('Не удалось. Повтори попытку.')); });
+    function actLocked() {
+        var r = _lastMeta || {};
+        return !(r.channel && _ctx && _ctx.currentPostId);
+    }
+    function actRow(act, icon, title, hint, cls, locked, val) {
+        return '<button class="rs-row' + (cls ? ' ' + cls : '') + '" data-act="' + act + '"' + (locked ? ' data-locked="true"' : '') + '>' +
+            '<span class="ic"><i class="ti ' + icon + '"></i></span>' +
+            '<span class="tx"><b>' + esc(T(title)) + '</b><em>' + esc(hint) + '</em></span>' +
+            (val ? '<span class="val">' + val + '</span>' : '') +
+            '<i class="ti ti-chevron-right ch"></i></button>';
+    }
+    function planHint() {
+        var p = _ctx && _ctx.placed;
+        if (p && window.FMPostTools) {
+            return T('В плане:') + ' ' + window.FMPostTools.dateLabel(p.date_iso, true) + ' ' + p.hm + ' · ' + T(p.queued ? 'выйдет сам' : 'черновик');
+        }
+        return T('Выбрать день и время — пост встанет в неделю и выйдет сам');
+    }
+    function sendHint() {
+        var r = _lastMeta || {};
+        var where = r.channel && r.channel.username ? '@' + r.channel.username : T('подключённый канал');
+        return T('Бот выложит в') + ' ' + where + ' ' + T('в течение минуты. Перед отправкой спросит подтверждение');
     }
 
     function onClick(ev) {
@@ -374,7 +401,17 @@
         }
         if (act === 'go') { go(false); return; }
         if (act === 'more') { go(true); return; }
-        if (act === 'toplan') { toPlan(); return; }
+        if (act === 'toplan') {
+            if (actLocked()) { toast(T('Сначала подключи канал — публиковать некуда')); return; }
+            if (_ctx.placed && window.FMPostTools) { toast(T('Пост уже в плане:') + ' ' + window.FMPostTools.dateLabel(_ctx.placed.date_iso, true) + ' ' + _ctx.placed.hm); return; }
+            if (window.FMPostTools) window.FMPostTools.planSheet(_ctx);
+            return;
+        }
+        if (act === 'pubnow') {
+            if (actLocked()) { toast(T('Сначала подключи канал — публиковать некуда')); return; }
+            if (window.FMPostTools) window.FMPostTools.publishNow(_ctx);
+            return;
+        }
         if (act === 'hookcopy') {
             var hi = parseInt(actEl.getAttribute('data-i'), 10);
             var hv = _lastHooks[hi];

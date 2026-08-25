@@ -1,5 +1,6 @@
 window.__I18N_DICT = {
  "en": {
+  "Переписать заново, другая подача": "Rewrite again, a different angle",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -3419,6 +3420,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "from deal measurements"
  },
  "es": {
+  "Переписать заново, другая подача": "Reescribir de nuevo, otro enfoque",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -6838,6 +6840,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "según mediciones de acuerdos"
  },
  "de": {
+  "Переписать заново, другая подача": "Neu umschreiben, anderer Ansatz",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -10257,6 +10260,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "aus Deal-Messungen"
  },
  "kk": {
+  "Переписать заново, другая подача": "Қайта жазу, басқа әдіс",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -13673,6 +13677,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "мәміле өлшемдері бойынша"
  },
  "uz": {
+  "Переписать заново, другая подача": "Qayta yozish, boshqa uslub",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -17092,6 +17097,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "bitim o'lchovlari bo'yicha"
  },
  "be": {
+  "Переписать заново, другая подача": "Перапісаць нанова, іншая падача",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -20509,6 +20515,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "па замерах здзелак"
  },
  "az": {
+  "Переписать заново, другая подача": "Yenidən yaz, başqa tərz",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -23928,6 +23935,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "sövdələşmə ölçmələrinə görə"
  },
  "ar": {
+  "Переписать заново, другая подача": "إعادة الصياغة بأسلوب آخر",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -27347,6 +27355,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "من قياسات الصفقات"
  },
  "fa": {
+  "Переписать заново, другая подача": "بازنویسی دوباره، سبک دیگر",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -30766,6 +30775,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "از اندازه‌گیری معاملات"
  },
  "tr": {
+  "Переписать заново, другая подача": "Yeniden yaz, farklı bir yaklaşım",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -34185,6 +34195,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "anlaşma ölçümlerinden"
  },
  "hi": {
+  "Переписать заново, другая подача": "फिर से लिखें, अलग अंदाज़",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -37604,6 +37615,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "डील मापन से"
  },
  "bn": {
+  "Переписать заново, другая подача": "আবার লিখুন, ভিন্ন ভঙ্গি",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -41023,6 +41035,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "ডিল পরিমাপ থেকে"
  },
  "id": {
+  "Переписать заново, другая подача": "Tulis ulang, gaya lain",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -44442,6 +44455,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "dari pengukuran transaksi"
  },
  "vi": {
+  "Переписать заново, другая подача": "Viết lại, cách khác",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -47861,6 +47875,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "theo số liệu giao dịch"
  },
  "pt": {
+  "Переписать заново, другая подача": "Reescrever de novo, outra abordagem",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -51280,6 +51295,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "por medições de negócios"
  },
  "fr": {
+  "Переписать заново, другая подача": "Réécrire, autre approche",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -54699,6 +54715,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "d'après les mesures de deals"
  },
  "it": {
+  "Переписать заново, другая подача": "Riscrivi, taglio diverso",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -58118,6 +58135,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "da misure degli accordi"
  },
  "am": {
+  "Переписать заново, другая подача": "እንደገና ጻፍ፣ ሌላ አቀራረብ",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",
@@ -61537,6 +61555,7 @@ window.__I18N_DICT = {
   "по замерам сделок": "ከስምምነት መለኪያዎች"
  },
  "sw": {
+  "Переписать заново, другая подача": "Andika upya, mtindo mwingine",
   "Камчатка": "Kamchatka",
   "Магадан": "Magadan",
   "Владивосток": "Vladivostok",

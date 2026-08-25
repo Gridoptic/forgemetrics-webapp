@@ -1788,11 +1788,11 @@ function apErr(e) {
     showToast(m || t('Не получилось — попробуй ещё раз'), 'alert-triangle');
 }
 
-function publishPostNow() {
-    const pid = state.post.currentPostId;
+function publishPostNow(ctx) {
+    const pid = ctx && ctx.currentPostId;
     if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
     hapticLight();
-    const _pi = state.post.placeInfo;
+    const _pi = ctx.placeInfo;
     const _where = _pi && _pi.channel_username ? '@' + _pi.channel_username : (_pi && _pi.channel_title) || t('канал');
     apConfirm(t('Опубликовать пост в') + ' ' + _where + ' ' + t('прямо сейчас?'), async () => {
         try {
@@ -1879,7 +1879,7 @@ async function openQueueSheet(channelId) {
             catch (e) { apErr(e); }
         }));
         body.querySelectorAll('[data-apmv]').forEach(b => b.addEventListener('click', () => {
-            openPlanSheet(+b.dataset.apmv);
+            openPlanSheet({ currentPostId: +b.dataset.apmv, placeInfo: null, placed: null, onPlaced: load });
         }));
         body.querySelectorAll('[data-apurl]').forEach(b => b.addEventListener('click', () => {
             const u = b.dataset.apurl;
@@ -5327,6 +5327,11 @@ const TZ_OTHER = [-720, -660, -600, -540, -480, -420, -360, -300, -240, -180, -1
 let _tzCtx = null;
 let _tzTick = null;
 
+window.FMPostTools = {
+    coverRender: rsCoverRender, coverBind: rsBindCover, planSheet: openPlanSheet,
+    loadPlaceInfo: loadPlaceInfo, publishNow: publishPostNow, dateLabel: rsDateLabel,
+};
+
 function tzFmt(min) {
     const m = Math.round(+min || 0);
     const a = Math.abs(m);
@@ -6298,9 +6303,10 @@ function renderResult(result) {
     state.post.mediaBusy = '';
     state.post.placeInfo = null;
     state.post.placed = null;
-    renderResultCover();
+    state.post.onPlaced = renderResultHints;
+    rsCoverRender(document.getElementById('post-cover-block'), state.post);
     renderResultHints();
-    if (hasChannel && result.post_id) loadPlaceInfo(result.post_id);
+    if (hasChannel && result.post_id) loadPlaceInfo(state.post);
 
     showScreen('postResult');
 }
@@ -6360,13 +6366,15 @@ function rsDefaultHm(dayIndex) {
     return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
 }
 
-async function loadPlaceInfo(postId) {
+async function loadPlaceInfo(ctx) {
+    const postId = ctx.currentPostId;
+    if (!postId) return;
     try {
         const r = await apiRequest('/api/v1/content-plan/place-info?post_id=' + postId);
-        if (r && r.ok && state.post.currentPostId === postId) {
-            state.post.placeInfo = r;
-            if (r.placed) state.post.placed = r.placed;
-            renderResultHints();
+        if (r && r.ok && ctx.currentPostId === postId) {
+            ctx.placeInfo = r;
+            if (r.placed) ctx.placed = r.placed;
+            if (typeof ctx.onPlaced === 'function') ctx.onPlaced();
         }
     } catch (e) {}
 }
@@ -6386,11 +6394,10 @@ function renderResultHints() {
     if (els.postPlanBtn) els.postPlanBtn.classList.toggle('done', !!placed);
 }
 
-function renderResultCover() {
-    const host = document.getElementById('post-cover-block');
-    if (!host) return;
-    const m = state.post.media;
-    const busy = state.post.mediaBusy;
+function rsCoverRender(host, ctx) {
+    if (!host || !ctx) return;
+    const m = ctx.media;
+    const busy = ctx.mediaBusy;
     const price = (typeof forgeAmount === 'function') ? forgeAmount(5, 12) : '5';
     if (busy) {
         host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb"><div class="cp-spin sm"></div></span>' +
@@ -6420,12 +6427,25 @@ function renderResultCover() {
         t('Обложка в стиле канала') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button></div>';
 }
 
-function rsSetBusy(text) {
-    state.post.mediaBusy = text || '';
-    renderResultCover();
+function rsSetBusy(ctx, host, text) {
+    ctx.mediaBusy = text || '';
+    rsCoverRender(host, ctx);
 }
 
-function rsPickFile() {
+function rsBindCover(host, ctx) {
+    if (!host || host.dataset.rsBound) return;
+    host.dataset.rsBound = '1';
+    host.addEventListener('click', (e) => {
+        const b = e.target.closest ? e.target.closest('[data-rc]') : null;
+        if (!b || ctx.mediaBusy) return;
+        const a = b.dataset.rc;
+        if (a === 'file') { hapticLight(); rsPickFile(ctx, host); }
+        else if (a === 'cover') rsMakeCover(ctx, host);
+        else if (a === 'clear') { hapticLight(); rsClearCover(ctx, host); }
+    });
+}
+
+function rsPickFile(ctx, host) {
     let inp = document.getElementById('post-cover-file');
     if (!inp) {
         inp = document.createElement('input');
@@ -6438,48 +6458,48 @@ function rsPickFile() {
     inp.onchange = async () => {
         const f = inp.files && inp.files[0];
         inp.value = '';
-        const pid = state.post.currentPostId;
+        const pid = ctx.currentPostId;
         if (!f || !pid) return;
         const lim = RS_LIMITS[f.type];
         if (!lim) { showToast(rsErr('bad_type'), 'alert-triangle'); return; }
         const mb = f.size / 1048576;
         if (mb > lim) { showToast(t('Файл') + ' ' + mb.toFixed(1) + ' ' + t('МБ — это больше предела в') + ' ' + lim + ' ' + t('МБ'), 'alert-triangle'); return; }
-        rsSetBusy(t('Загружаю файл...'));
+        rsSetBusy(ctx, host, t('Загружаю файл...'));
         try {
             const fd = new FormData();
             fd.append('post_id', pid);
             fd.append('file', f);
             const r = await apiRequest('/api/v1/content-plan/media', { method: 'POST', body: fd });
             if (r && r.ok) {
-                state.post.media = { kind: r.kind, url: r.url, cover: false, name: f.name };
+                ctx.media = { kind: r.kind, url: r.url, cover: false, name: f.name };
                 hapticLight();
             } else showToast(rsErr(r && r.error), 'alert-triangle');
         } catch (e) { showToast(t('Файл не загрузился'), 'alert-triangle'); }
-        rsSetBusy('');
+        rsSetBusy(ctx, host, '');
     };
     inp.click();
 }
 
-async function rsMakeCover() {
-    const pid = state.post.currentPostId;
+async function rsMakeCover(ctx, host) {
+    const pid = ctx.currentPostId;
     if (!pid) return;
     hapticLight();
-    rsSetBusy(t('Рисую обложку...'));
+    rsSetBusy(ctx, host, t('Рисую обложку...'));
     try {
         const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid }) });
         if (r && r.ok) {
-            state.post.media = { kind: 'photo', url: r.url, cover: true };
+            ctx.media = { kind: 'photo', url: r.url, cover: true };
             showToast(t('Обложка готова'), 'check');
             apiRequest('/api/v1/post/limits').then((fresh) => { state.post.limits = fresh; renderLimitBanner(fresh); }).catch(() => {});
         } else showToast(rsErr(r && r.error), 'alert-triangle');
     } catch (e) { apErr(e); }
-    rsSetBusy('');
+    rsSetBusy(ctx, host, '');
 }
 
-async function rsClearCover() {
-    const pid = state.post.currentPostId;
-    state.post.media = null;
-    renderResultCover();
+async function rsClearCover(ctx, host) {
+    const pid = ctx.currentPostId;
+    ctx.media = null;
+    rsCoverRender(host, ctx);
     if (pid) apiRequest('/api/v1/content-plan/media/clear', { method: 'POST', body: JSON.stringify({ post_id: pid }) }).catch(() => {});
 }
 
@@ -6490,20 +6510,20 @@ function rsClose() {
     document.body.classList.remove('cs-modal-open');
 }
 
-async function openPlanSheet(postId) {
-    const pid = postId || state.post.currentPostId;
+async function openPlanSheet(ctx) {
+    const pid = ctx && ctx.currentPostId;
     if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
     hapticLight();
     apClose();
     rsClose();
-    if (!state.post.placeInfo || state.post.currentPostId !== pid) {
+    if (!ctx.placeInfo) {
         try {
             const r = await apiRequest('/api/v1/content-plan/place-info?post_id=' + pid);
             if (!r || !r.ok) { showToast(rsErr(r && r.error), 'alert-triangle'); return; }
-            state.post.placeInfo = r;
+            ctx.placeInfo = r;
         } catch (e) { apErr(e); return; }
     }
-    const pi = state.post.placeInfo;
+    const pi = ctx.placeInfo;
     if (pi.plan_busy) { showToast(rsErr('plan_busy'), 'alert-triangle'); return; }
     const rec = pi.recommended;
     const sel = { day: rec ? rec.day_index : pi.today_index, hm: '', busy: false };
@@ -6617,11 +6637,11 @@ async function openPlanSheet(postId) {
                 const r = await apiRequest('/api/v1/content-plan/place', { method: 'POST',
                     body: JSON.stringify({ post_id: pid, day_index: sel.day, hm: sel.hm, queue: !!pi.can_post, lang }) });
                 if (r && r.ok) {
-                    state.post.placed = { day_index: sel.day, hm: r.slot_hm, date_iso: r.date_iso, queued: !!r.queued };
+                    ctx.placed = { day_index: sel.day, hm: r.slot_hm, date_iso: r.date_iso, queued: !!r.queued };
                     pi.has_plan = true;
                     pi.counts[String(sel.day)] = (pi.counts[String(sel.day)] || 0) + 1;
                     rsClose();
-                    renderResultHints();
+                    if (typeof ctx.onPlaced === 'function') ctx.onPlaced();
                     showToast((r.queued ? t('В контент-плане, выйдет сам:') : t('Сохранён в план:')) + ' ' + rsDateLabel(r.date_iso, true) + ' ' + r.slot_hm, 'check');
                 } else {
                     sel.busy = false; drawGo();
@@ -7069,7 +7089,7 @@ function setupPostEventListeners() {
         els.postSendChannelBtn.addEventListener('click', () => {
             const locked = els.postSendChannelBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('channel');
-            else publishPostNow();
+            else publishPostNow(state.post);
         });
     }
 
@@ -7078,20 +7098,10 @@ function setupPostEventListeners() {
             const locked = els.postPlanBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('schedule');
             else if (state.post.placed) showToast(t('Пост уже в плане:') + ' ' + rsDateLabel(state.post.placed.date_iso, true) + ' ' + state.post.placed.hm, 'check');
-            else openPlanSheet();
+            else openPlanSheet(state.post);
         });
     }
-    const _coverHost = document.getElementById('post-cover-block');
-    if (_coverHost) {
-        _coverHost.addEventListener('click', (e) => {
-            const b = e.target.closest ? e.target.closest('[data-rc]') : null;
-            if (!b || state.post.mediaBusy) return;
-            const a = b.dataset.rc;
-            if (a === 'file') { hapticLight(); rsPickFile(); }
-            else if (a === 'cover') rsMakeCover();
-            else if (a === 'clear') { hapticLight(); rsClearCover(); }
-        });
-    }
+    rsBindCover(document.getElementById('post-cover-block'), state.post);
 
     if (els.postRegenerateBtn) {
         els.postRegenerateBtn.addEventListener('click', regeneratePost);
