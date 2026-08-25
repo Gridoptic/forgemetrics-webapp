@@ -1946,7 +1946,7 @@
             var real0 = (_rubrics || []).some(function (r) { return (r.post_count || 0) > 0; });
             var tp0 = !hasTp0 ? '' : ' ' +
                 T(real0 ? 'Темы — из рубрик канала.' : 'Темы взял из базовых рубрик.');
-            return '<div class="cpw-ed"><i class="av ti ti-sparkles"></i><div class="bub">' +
+            return '<div class="cpw-ed"><i class="av ti ti-calendar"></i><div class="bub">' +
                 esc(why0 + ' ' + plan0 + tp0) +
                 '<div class="sub">' + esc(T('Меняй дни, темы и время как считаешь нужным. ' +
                     'После первой недели подстрою расстановку по замерам канала.')) + '</div>' +
@@ -1973,7 +1973,7 @@
         }
         var hasTopics = days().some(function (d) { return (d.topics || []).some(Boolean); });
         if (hasTopics) parts.push(T('темы подобрал под нишу'));
-        return '<div class="cpw-ed"><i class="av ti ti-sparkles"></i><div class="bub">' +
+        return '<div class="cpw-ed"><i class="av ti ti-calendar"></i><div class="bub">' +
             esc(parts.join(', ')) + '.' +
             '<div class="sub">' + esc(T('Всё можно поменять: нажми на день, тему или время. Настройка бесплатна.')) + '</div>' +
             '</div></div>';
