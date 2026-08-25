@@ -1024,10 +1024,10 @@ function renderPulse(pulse) {
     loadReachSeries();
 }
 
-function renderPulseHook(trendPct, planMeasured) {
+function renderPulseHook(trendPct, planMeasured, planActive) {
     const hook = document.getElementById('pw-aihook');
     if (!hook) return;
-    if (trendPct == null || trendPct >= 0) { hook.innerHTML = ''; return; }
+    if (trendPct == null || trendPct >= 0 || planActive) { hook.innerHTML = ''; return; }
     const chId = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : 0;
     const calibrated = (planMeasured || 0) >= 3;
     const hideKey = 'fm_pulsehook_' + chId + '_' + (calibrated ? 'c' : 'd');
@@ -1044,7 +1044,12 @@ function renderPulseHook(trendPct, planMeasured) {
         + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button>`
         + `</div></div>`;
     const go = hook.querySelector('.pw-aih-go');
-    if (go) go.addEventListener('click', () => { hapticLight(); handleAction('content_plan'); });
+    if (go) go.addEventListener('click', () => {
+        hapticLight();
+        try { localStorage.setItem(hideKey, String(Date.now() + 7 * 86400000)); } catch (e) {}
+        hook.innerHTML = '';
+        handleAction('content_plan');
+    });
     const x = hook.querySelector('.pw-aih-x');
     if (x) x.addEventListener('click', () => {
         hapticLight();
@@ -1081,7 +1086,7 @@ async function loadReachSeries() {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
                 if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
-                renderPulseHook(r.trend_pct, r.plan_measured);
+                renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
         } else {
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
