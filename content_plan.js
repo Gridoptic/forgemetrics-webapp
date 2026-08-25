@@ -70,6 +70,7 @@
         news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
         listicle: ['Подборка', 'ti-list-check'], offer: ['Продающий', 'ti-building-store'],
         poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вопрос читателям', 'ti-message-circle'],
+        own: ['Свой пост', 'ti-pencil'],
     };
     var SG = {
         niche: '<path d="M10.2 3.5H5.4a1.9 1.9 0 0 0-1.9 1.9v4.4h.9a2.1 2.1 0 0 1 0 4.2h-.9v4.6a1.9 1.9 0 0 0 1.9 1.9h4.4v-1.1a2.1 2.1 0 0 1 4.2 0v1.1h4.6a1.9 1.9 0 0 0 1.9-1.9v-4.4h-1.1a2.1 2.1 0 0 1 0-4.2h1.1V5.4a1.9 1.9 0 0 0-1.9-1.9h-4.4v.9a2.1 2.1 0 0 1-4.2 0z"/>',
@@ -330,7 +331,7 @@
             _rrT = null;
             if (!_open || _pollTimer || _bootT || !_state) return;
             if (_wantView === 'brief') { renderBrief(); return; }
-            if (_state.posts && _state.posts.length) renderWeek(); else renderBrief();
+            if ((_state.posts && _state.posts.length) || _state.manual) renderWeek(); else renderBrief();
         }, 120);
     }
 
@@ -381,7 +382,7 @@
             _building = true; renderGenerating(); startPoll(); return;
         }
         if ((d.status === 'ready' || d.status === 'scheduled' || d.status === 'done')
-                && (d.posts || []).length) {
+                && ((d.posts || []).length || d.manual)) {
             if (_channels === null) {
                 apiRequest('/api/v1/channels/active').then(function (cd) {
                     _channels = (cd && cd.channels) || [];
@@ -429,7 +430,7 @@
                             if (!d2 || !d2.ok) return;
                             _state = d2;
                             syncDays(d2);
-                            if (d2.posts && d2.posts.length) renderWeek(); else renderBrief();
+                            if ((d2.posts && d2.posts.length) || d2.manual) renderWeek(); else renderBrief();
                         })
                         .catch(function () {});
                     loadAutopilot();
@@ -1425,12 +1426,16 @@
                     ? '<div class="cp-dss">' + esc(_hl2) + '</div>'
                     : '<div class="cp-dss">' + esc(T('Нажми на время, чтобы изменить его. Пост откроется в ленте по нажатию.')) + '</div>') +
                     '<div class="cp-slots">' + rows + '</div>' +
-                    '<div class="cp-addrow">' +
-                    '<button class="cp-add"' + (full ? ' disabled' : ' data-wadd="1"') + '>' +
-                    '<i class="ti ti-plus"></i>' + esc(T('Ещё пост')) + '</button></div>' +
-                    '<div class="cp-dshint">' +
-                    esc(T('тема сразу, текст и обложка следом') + ' · ') +
-                    priceDay() + ' Forge</div>';
+                    '<div class="cp-addcol">' +
+                    '<button class="cp-add2"' + (full ? ' disabled' : ' data-wadd="1"') + '>' +
+                    '<i class="ti ti-sparkles"></i><span class="tx"><b>' + esc(T('Пост от ИИ')) + '</b>' +
+                    '<em>' + esc(T('Тема сразу, текст и обложка следом.')) + '</em></span>' +
+                    '<span class="pr">' + forgeTag(priceDay()) + '</span></button>' +
+                    '<button class="cp-add2 own"' + (full ? ' disabled' : ' data-wown="1"') + '>' +
+                    '<i class="ti ti-pencil"></i><span class="tx"><b>' + esc(T('Свой пост')) + '</b>' +
+                    '<em>' + esc(ownDayNote(i)) + '</em></span>' +
+                    '<span class="pr">' + forgeTag(0) + '</span></button></div>' +
+                    (full ? '<div class="cp-dshint">' + esc(T('В этом дне уже максимум постов.')) + '</div>' : '');
             }
             var hd = (histDays() || [])[i] || {};
             var views = dayViews(i);
@@ -1465,7 +1470,7 @@
         host.addEventListener('click', function (e) {
             var t = e.target;
             if (!canEdit() && t.closest &&
-                t.closest('[data-wtime],[data-whour],[data-wmin],[data-wdel],[data-wadd]')) {
+                t.closest('[data-wtime],[data-whour],[data-wmin],[data-wdel],[data-wadd],[data-wown]')) {
                 denyEdit();
                 return;
             }
@@ -1511,6 +1516,12 @@
                     .catch(function () { toast(T('Не удалось удалить пост')); });
                 return;
             }
+            if (t.closest && t.closest('[data-wown]')) {
+                haptic('light');
+                host.remove();
+                openOwnSheet(i);
+                return;
+            }
             if (t.closest && t.closest('[data-wadd]')) {
                 haptic('medium');
                 host.remove();
@@ -1544,6 +1555,357 @@
             }
             if (e.target === host) host.remove();
         });
+    }
+
+
+    var WD_IN = ['в понедельник', 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу', 'в воскресенье'];
+    var OWN_LIMITS = { 'image/jpeg': 8, 'image/png': 8, 'image/webp': 8, 'image/gif': 12, 'video/mp4': 40, 'video/quicktime': 40 };
+    var _own = null;
+    var _ownWeekBusy = false;
+
+    function ownDate(i) { return ((_state && _state.week_dates) || [])[i] || ''; }
+    function ownIsToday(i) { return !!(_state && _state.today_index === i); }
+    function ownDayNote(i) {
+        var when = T('Выйдет') + ' ' + T(WD_IN[i]) +
+            (ownIsToday(i) ? ' — ' + T('сегодня') : (ownDate(i) ? ', ' + dateLabel(ownDate(i)) : '')) + '. ';
+        return when + T('Текст, время выхода и вложение (фото, GIF или видео) задаёшь сам.');
+    }
+    function ownChanNow() {
+        var shift = (tzMin() != null) ? (tzMin() - deviceTz()) : 0;
+        var d = new Date(Date.now() + shift * 60000);
+        return [d.getHours(), d.getMinutes()];
+    }
+    function ownDefaultHm(i) {
+        if (!ownIsToday(i)) return '12:00';
+        var now = ownChanNow();
+        var mins = now[0] * 60 + now[1] + 20;
+        mins = Math.ceil(mins / 15) * 15;
+        if (mins < 8 * 60) mins = 8 * 60;
+        if (mins > 22 * 60 + 45) return '';
+        var h = Math.floor(mins / 60), m = mins % 60;
+        return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+    }
+    function ownPast(i, hm) {
+        if (!ownIsToday(i) || !hm) return false;
+        var now = ownChanNow();
+        return (+hm.slice(0, 2)) * 60 + (+hm.slice(3)) <= now[0] * 60 + now[1] + 1;
+    }
+
+    function doOwnWeek() {
+        if (_ownWeekBusy || !_chId) return;
+        _ownWeekBusy = true;
+        haptic('medium');
+        apiRequest('/api/v1/content-plan/week/manual',
+                   { method: 'POST',
+                     body: JSON.stringify({ channel_id: _chId, lang: (window.getLang ? window.getLang() : 'ru') || 'ru',
+                                            goal: _goal || 'engagement' }) })
+            .then(function (r) {
+                _ownWeekBusy = false;
+                if (r && r.ok) {
+                    toast(T('Неделя создана — нажми на день, чтобы добавить пост'));
+                    refreshState();
+                } else if (r && r.error === 'has_plan') refreshState();
+                else if (r && r.error === 'no_content_perm') denyEdit();
+                else toast(T('Не удалось создать неделю'));
+            })
+            .catch(function () { _ownWeekBusy = false; toast(T('Не удалось создать неделю')); });
+    }
+
+    function ownErr(code) {
+        var M = {
+            past_time: 'Это время уже прошло — выбери позже.',
+            day_full: 'В этом дне уже максимум постов',
+            too_long: 'Длиннее 4096 знаков Telegram не примет — сократи.',
+            no_bot_rights: 'Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.',
+            paused: 'Канал на паузе — публикация не проходит.',
+            no_plan: 'Неделя не найдена — открой контент-план заново',
+            empty: 'Пустой текст не сохраняю',
+            no_content_perm: 'Создатель канала не выдал тебе право менять контент-план',
+            already_out: 'Пост уже в очереди — сначала сними его с очереди',
+            upload: 'Файл не загрузился — пост сохранён черновиком без вложения.',
+        };
+        return T(M[code] || 'Не удалось сохранить пост');
+    }
+
+    function ownCoverFor(id) {
+        if (_mediaBusy[id]) return;
+        haptic('light');
+        _mediaBusy[id] = T('Обложка в стиле канала');
+        rerender();
+        apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+            .then(function (r) {
+                delete _mediaBusy[id];
+                if (r && r.ok) {
+                    var pp = post(id);
+                    if (pp) { pp.media_kind = 'photo'; pp.media_url = r.url; }
+                    toast(T('Обложка готова'));
+                    refreshState();
+                } else { toast(r && r.error === 'no_text' ? T('Сначала вставь текст — фраза на обложку берётся из него') : cap(r)); rerender(); }
+            })
+            .catch(function (err) { delete _mediaBusy[id]; toast(apiErrText(err, 'Не удалось нарисовать обложку')); rerender(); });
+    }
+
+    function openOwnSheet(i) {
+        var old = document.getElementById('cp-daybox');
+        if (old) old.remove();
+        var host = document.createElement('div');
+        host.id = 'cp-daybox';
+        host.className = 'cp-dsov';
+        var def = ownDefaultHm(i);
+        _own = { day: i, text: '', hm: def, file: null, fileUrl: '', fileKind: '', postId: null,
+                 coverUrl: '', busy: '', timeOpen: !def };
+        var canQueue = !!(_state && _state.can_post);
+        var sub = (ownIsToday(i) ? T('сегодня') : T(WD_FULL[i])) +
+            (ownDate(i) ? ', ' + dateLabel(ownDate(i)) : '');
+        host.innerHTML = '<div class="cp-dsheet own"><div class="cp-dsgrab"></div>' +
+            '<div class="cp-dsh2"><b>' + esc(T('Свой пост')) + '</b><span class="mut">' + esc(sub) + '</span></div>' +
+            '<div class="cp-own-lab">' + esc(T('Текст поста')) + '</div>' +
+            '<textarea class="cp-own-ta" id="cp-own-ta" maxlength="4096" placeholder="' +
+            esc(T('Вставь текст поста — он уйдёт в канал как написан')) + '"></textarea>' +
+            '<div class="cp-own-cnt" id="cp-own-cnt"></div>' +
+            '<div class="cp-own-lab">' + esc(T('Вложение')) + '</div>' +
+            '<div id="cp-own-media"></div>' +
+            '<div class="cp-own-lab">' + esc(T('Время выхода')) + '</div>' +
+            '<div id="cp-own-time"></div>' +
+            '<div class="cp-own-cta" id="cp-own-cta"></div></div>';
+        var q = function (sel) { return host.querySelector(sel); };
+        var drawCnt = function () {
+            var el = q('#cp-own-cnt');
+            if (!el) return;
+            var n = _own.text.length;
+            var hasMedia = !!(_own.file || _own.coverUrl);
+            var over = hasMedia && n > 1024;
+            el.className = 'cp-own-cnt' + (over ? ' warn' : '');
+            el.innerHTML = '<span>' + esc(over
+                ? T('Длиннее 1024 знаков — вложение уйдёт отдельным сообщением, текст следом.')
+                : T('Текст уйдёт как есть, без разметки.')) + '</span>' +
+                '<span>' + n + ' / ' + (hasMedia ? 1024 : 4096) + '</span>';
+        };
+        var drawMedia = function () {
+            var el = q('#cp-own-media');
+            if (!el) return;
+            var lim = T('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ');
+            if (_own.busy && _own.busy.media) {
+                el.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb"><div class="cp-spin sm"></div></span>' +
+                    '<span class="tx"><b>' + esc(_own.busy.media) + '</b></span></div>';
+                return;
+            }
+            if (_own.coverUrl || _own.file) {
+                var isVid = _own.fileKind === 'video';
+                var thumb = _own.coverUrl
+                    ? '<img src="' + esc(_own.coverUrl) + '" alt="">'
+                    : (isVid ? '<i class="ti ti-player-play"></i>' : '<img src="' + esc(_own.fileUrl) + '" alt="">');
+                var name = _own.coverUrl ? T('Обложка в стиле канала')
+                    : (_own.file.name || '') ;
+                var kind = _own.coverUrl ? T('фраза из текста, палитра канала')
+                    : (_own.fileKind === 'animation' ? 'GIF' : (isVid ? T('видео') : T('фото'))) +
+                      ' · ' + (_own.file.size / 1048576).toFixed(1) + ' ' + T('МБ');
+                el.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
+                    '<span class="tx"><b>' + esc(name) + '</b><em>' + esc(kind) + '</em></span>' +
+                    '<button class="act" data-oact="clear" type="button">' + esc(T('Убрать')) + '</button></div>' +
+                    '<div class="cp-own-acts">' +
+                    '<button class="cp-mrepl" data-oact="file" type="button"><i class="ti ti-upload"></i>' + esc(T('Заменить файлом')) + '</button>' +
+                    '<button class="cp-mrepl" data-oact="cover" type="button"><i class="ti ti-photo"></i>' +
+                    esc(T(_own.coverUrl ? 'Другая обложка' : 'Обложка в стиле канала')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button></div>';
+                return;
+            }
+            el.innerHTML = '<div class="cp-addcol" style="margin-top:0">' +
+                '<button class="cp-add2" data-oact="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
+                esc(T('Файл с устройства')) + '</b><em>' + esc(lim) + '</em></span><span class="pr">' + forgeTag(0) + '</span></button>' +
+                '<button class="cp-add2" data-oact="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
+                esc(T('Обложка в стиле канала')) + '</b><em>' + esc(T('Если своей картинки нет: фраза из текста, палитра канала')) +
+                '</em></span><span class="pr">' + forgeTag(coverPrice('cover_own')) + '</span></button></div>';
+        };
+        var drawTime = function () {
+            var el = q('#cp-own-time');
+            if (!el) return;
+            var now = ownIsToday(i) ? ownChanNow() : null;
+            var hm = _own.hm;
+            var sub2 = (ownIsToday(i) ? T('Сегодня') : T(WD_FULL[i])) + ' · ' + T('время канала') + ' (' + tzLabel() + ')';
+            var html = '<button class="cp-own-row" data-oact="time" type="button"><span class="ic"><i class="ti ti-clock"></i></span>' +
+                '<span class="tx"><b>' + esc(hm || T('выбери время')) + '</b><em>' + esc(sub2) + '</em></span>' +
+                '<span class="act">' + esc(T(_own.timeOpen ? 'Свернуть' : 'Изменить')) + '</span></button>';
+            if (_own.timeOpen) {
+                var hours = '';
+                for (var h = 8; h <= 22; h++) {
+                    var hh = (h < 10 ? '0' : '') + h;
+                    var off = now && (h * 60 + 45 <= now[0] * 60 + now[1] + 1);
+                    hours += '<button type="button" class="cp-th' + ((hm || '').slice(0, 2) === hh ? ' on' : '') + (off ? ' off' : '') +
+                        '" data-ohour="' + hh + '">' + hh + '</button>';
+                }
+                var mins = ['00', '15', '30', '45'].map(function (m) {
+                    var offm = now && hm && ((+hm.slice(0, 2)) * 60 + (+m) <= now[0] * 60 + now[1] + 1);
+                    return '<button type="button" class="cp-tm' + ((hm || '').slice(3) === m ? ' on' : '') + (offm ? ' off' : '') +
+                        '" data-omin="' + m + '">:' + m + '</button>';
+                }).join('');
+                html += '<div class="cp-tgrid">' + hours + '</div><div class="cp-trow">' + mins + '</div>';
+                if (!hm) html += '<div class="cp-own-note">' + esc(T('На сегодня время вышло — выбери другой день.')) + '</div>';
+            }
+            el.innerHTML = html;
+        };
+        var drawCta = function () {
+            var el = q('#cp-own-cta');
+            if (!el) return;
+            var ready = !!_own.text.trim() && !!_own.hm && !ownPast(i, _own.hm) && !_own.busy;
+            var label = _own.busy ? (_own.busy.text || '') :
+                (canQueue ? T('Запланировать на') + ' ' + _own.hm : T('Сохранить в план'));
+            var note = canQueue
+                ? T('Пост встанет в очередь недели и выйдет сам. До выхода его можно править или снять.')
+                : T('Бот не подключён к каналу с правом публикации — пост сохранится в план без автовыхода.');
+            el.innerHTML = '<button type="button" class="cp-go' + (canQueue ? ' grn' : '') + '" data-oact="save"' +
+                (ready ? '' : ' disabled') + '>' + (_own.busy ? '<div class="cp-spin sm"></div> ' : '<i class="ti ti-' + (canQueue ? 'calendar-up' : 'device-floppy') + '"></i> ') +
+                esc(label) + '</button><div class="cp-own-note">' + esc(note) + '</div>';
+        };
+        var setBusy = function (text, media) {
+            _own.busy = text ? { text: text, media: media || '' } : '';
+            drawMedia(); drawCta();
+        };
+        var upsert = function (queue) {
+            return apiRequest('/api/v1/content-plan/own-post',
+                              { method: 'POST',
+                                body: JSON.stringify({ channel_id: _chId, post_id: _own.postId, day_index: i,
+                                                       text: _own.text.trim(), hm: _own.hm, queue: !!queue }) })
+                .then(function (r) {
+                    if (!r || !r.ok) throw new Error((r && r.error) || 'save');
+                    _own.postId = r.post_id;
+                    return r;
+                });
+        };
+        var upload = function (pid, f) {
+            var fd = new FormData();
+            fd.append('post_id', pid);
+            fd.append('file', f);
+            return apiRequest('/api/v1/content-plan/media', { method: 'POST', body: fd })
+                .then(function (r) { if (!r || !r.ok) throw new Error('upload'); return r; });
+        };
+        var pick = function () {
+            var inp = document.getElementById('cp-own-file');
+            if (!inp) {
+                inp = document.createElement('input');
+                inp.type = 'file';
+                inp.id = 'cp-own-file';
+                inp.accept = 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime';
+                inp.style.display = 'none';
+                document.body.appendChild(inp);
+            }
+            inp.onchange = function () {
+                var f = inp.files && inp.files[0];
+                inp.value = '';
+                if (!f || !_own) return;
+                var lim = OWN_LIMITS[f.type];
+                if (!lim) { toast(T('Такой формат не подойдёт: нужна картинка, GIF или видео')); return; }
+                var mb = f.size / 1048576;
+                if (mb > lim) { toast(T('Файл') + ' ' + mb.toFixed(1) + ' ' + T('МБ — это больше предела в') + ' ' + lim + ' ' + T('МБ')); return; }
+                _own.file = f;
+                _own.fileKind = f.type === 'image/gif' ? 'animation' : (f.type.indexOf('video/') === 0 ? 'video' : 'photo');
+                try { _own.fileUrl = URL.createObjectURL(f); } catch (e) { _own.fileUrl = ''; }
+                _own.coverUrl = '';
+                haptic('light');
+                drawMedia(); drawCnt();
+            };
+            inp.click();
+        };
+        var makeCover = function () {
+            if (!_own.text.trim()) { toast(T('Сначала вставь текст — фраза на обложку берётся из него')); return; }
+            if (!_own.hm) { toast(T('Сначала выбери время выхода')); return; }
+            setBusy(T('Рисую обложку...'), T('Рисую обложку...'));
+            upsert(false)
+                .then(function () {
+                    return apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: _own.postId }) });
+                })
+                .then(function (r) {
+                    if (!r || !r.ok) { setBusy(''); toast(cap(r)); return; }
+                    _own.coverUrl = r.url; _own.file = null; _own.fileUrl = ''; _own.fileKind = '';
+                    haptic('light');
+                    setBusy(''); drawCnt();
+                })
+                .catch(function (err) { setBusy(''); toast(err && err.message && ownErr(err.message) !== T('Не удалось сохранить пост') ? ownErr(err.message) : apiErrText(err, 'Не удалось нарисовать обложку')); });
+        };
+        var clearMedia = function () {
+            _own.file = null; _own.fileUrl = ''; _own.fileKind = '';
+            if (_own.coverUrl && _own.postId) {
+                _own.coverUrl = '';
+                apiRequest('/api/v1/content-plan/media/clear', { method: 'POST', body: JSON.stringify({ post_id: _own.postId }) }).catch(function () {});
+            }
+            _own.coverUrl = '';
+            drawMedia(); drawCnt();
+        };
+        var save = function () {
+            if (_own.busy) return;
+            haptic('medium');
+            setBusy(T('Сохраняю...'));
+            var hm = _own.hm;
+            upsert(false)
+                .then(function (r) {
+                    if (!_own.file) return r;
+                    setBusy(T('Загружаю файл...'), T('Загружаю файл...'));
+                    return upload(_own.postId, _own.file);
+                })
+                .then(function () {
+                    if (!canQueue) return { queued: false };
+                    setBusy(T('Ставлю в очередь...'));
+                    return upsert(true);
+                })
+                .then(function (r) {
+                    host.remove(); _own = null;
+                    toast(r && r.queued ? T('Пост запланирован на') + ' ' + hm : T('Пост сохранён в план'));
+                    refreshState();
+                })
+                .catch(function (err) {
+                    var code = (err && err.message) || '';
+                    if (code === 'upload' && _own.postId) {
+                        host.remove(); _own = null;
+                        toast(ownErr('upload'));
+                        refreshState();
+                        return;
+                    }
+                    setBusy('');
+                    toast(ownErr(code));
+                });
+        };
+        host.addEventListener('click', function (e) {
+            var t = e.target;
+            var a = t.closest ? t.closest('[data-oact]') : null;
+            if (a) {
+                var oa = a.getAttribute('data-oact');
+                if (oa === 'file') { pick(); return; }
+                if (oa === 'cover') { makeCover(); return; }
+                if (oa === 'clear') { haptic('light'); clearMedia(); return; }
+                if (oa === 'time') { _own.timeOpen = !_own.timeOpen; drawTime(); return; }
+                if (oa === 'save') { save(); return; }
+                return;
+            }
+            var oh = t.closest ? t.closest('[data-ohour]') : null;
+            if (oh) {
+                _own.hm = oh.getAttribute('data-ohour') + ':' + ((_own.hm || '12:00').slice(3) || '00');
+                if (ownPast(i, _own.hm)) {
+                    var pickm = ['00', '15', '30', '45'].filter(function (m) { return !ownPast(i, _own.hm.slice(0, 2) + ':' + m); })[0];
+                    if (pickm) _own.hm = _own.hm.slice(0, 2) + ':' + pickm;
+                }
+                haptic('light'); drawTime(); drawCta();
+                return;
+            }
+            var om = t.closest ? t.closest('[data-omin]') : null;
+            if (om) {
+                _own.hm = ((_own.hm || '12:00').slice(0, 2)) + ':' + om.getAttribute('data-omin');
+                haptic('light'); drawTime(); drawCta();
+                return;
+            }
+            if (t === host) {
+                var had = _own && _own.postId;
+                host.remove(); _own = null;
+                if (had) refreshState();
+            }
+        });
+        host.addEventListener('input', function (e) {
+            if (e.target && e.target.id === 'cp-own-ta') {
+                _own.text = e.target.value || '';
+                drawCnt(); drawCta();
+            }
+        });
+        drawCnt(); drawMedia(); drawTime(); drawCta();
+        document.body.appendChild(host);
+        requestAnimationFrame(function () { host.classList.add('vis'); });
     }
 
     function buildChanBlock() {
@@ -2314,8 +2676,8 @@
         } else {
             lowNote = priceBreak(weekPrice, rebuildFee);
             if (w.balance != null && w.balance < weekPrice) {
-                lowNote += '<div class="cp-hint low">' + esc(T('Не хватает Forge: нужно ' + weekPrice +
-                    ', на балансе ' + (w.balance || 0) + '. Пополни в кабинете.')) + '</div>';
+                lowNote += '<div class="cp-hint low">' + esc(T('Не хватает: нужно')) + ' ' + forgeTag(weekPrice) +
+                    ', ' + esc(T('на балансе')) + ' ' + forgeTag(w.balance || 0) + '. ' + esc(T('Пополни в кабинете.')) + '</div>';
             }
         }
         if (rdy.reason === 'paused') { setView(heroWeek(), 'brief'); return; }
@@ -2340,7 +2702,11 @@
             '<div class="cpg-cta' + (rdyBlock ? ' flow' : '') + '"><button class="cp-go' +
             (blocked ? ' off' : '') + '"' +
             (blocked ? ' disabled' : ' data-act="generate"') + '><i class="ti ti-sparkles"></i> ' +
-            esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button></div>', 'brief');
+            esc(T('Собрать неделю')) + (blocked ? '' : priceTag) + '</button>' +
+            ((blocked || !_chId || !canEdit()) ? '' :
+                '<button class="cp-go sec" data-act="ownweek"><i class="ti ti-pencil"></i> ' +
+                esc(T('Наполнить своими постами')) + (w.is_tester ? '' : '<span class="cp-gopx">' + forgeTag(0, 14) + '</span>') + '</button>') +
+            '</div>', 'brief');
     }
 
     function priceBreak(total, fee) {
@@ -2615,7 +2981,9 @@
             schedBtn = '<button class="cp-allbtn sched" data-act="schedule"><i class="ti ti-calendar-up"></i> ' + esc(T('Запланировать выход в канал')) + '</button>';
         }
 
-        var ribbon = '<div class="cp-ribbon">' + ps.map(function (p) { return ribbonCard(p); }).join('') + '</div>';
+        var ribbon = n
+            ? '<div class="cp-ribbon">' + ps.map(function (p) { return ribbonCard(p); }).join('') + '</div>'
+            : '<div class="cp-note cp-emptywk">' + esc(T('Постов пока нет. Нажми на день в ленте выше и выбери «Свой пост» или «Пост от ИИ».')) + '</div>';
 
         var foot = scheduled
             ? esc(T('Посты выйдут в канал сами в указанное время. Любой ещё не вышедший можно снять с очереди.'))
@@ -2752,12 +3120,12 @@
         var html = opts.map(function (v) {
             var thin = week > 0 && v < week;
             return '<button class="cp-capopt' + (v === cur ? ' on' : '') + (thin ? ' thin' : '') +
-                '" data-capv="' + v + '">' + v + ' Forge' +
+                '" data-capv="' + v + '">' + forgeTag(v) +
                 (thin ? '<span>' + esc(T('меньше недели')) + '</span>' : '') + '</button>';
         }).join('');
         var warn = (week > 0 && cur < week)
-            ? '<div class="cp-capwarn">' + esc(T('Неделя по текущим настройкам стоит') + ' ' +
-                week + ' Forge — ' + T('при этом потолке автопилот остановится, не собрав её.')) +
+            ? '<div class="cp-capwarn">' + esc(T('Неделя по текущим настройкам стоит')) + ' ' +
+                forgeTag(week) + ' — ' + esc(T('при этом потолке автопилот остановится, не собрав её.')) +
               '</div>'
             : '';
         var host = document.getElementById('cp-capbox');
@@ -3040,7 +3408,7 @@
             return '<div class="cp-str offer">' +
                 '<div class="cp-str-h"><span class="cp-str-ic pk"><i class="ti ti-target-arrow"></i></span>' +
                 '<span><b>' + esc(T('Посты выходят, аудитория стоит')) + '</b>' +
-                '<span>' + esc(T('AI-стратегия')) + ' · ' + o.price + ' Forge</span></span></div>' +
+                '<span>' + esc(T('AI-стратегия')) + ' · ' + forgeTag(o.price) + '</span></span></div>' +
                 '<div class="cp-str-w">' +
                 esc(T('За ' + o.weeks + ' ' + plural3(o.weeks, 'неделю', 'недели', 'недель') +
                       ' опубликовано ' + o.published + ' ' + plural3(o.published, 'пост', 'поста', 'постов') +
@@ -3122,7 +3490,8 @@
         var fi = fmtInfo(p.format);
         var st = statusOf(p);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
+        var conf = p.is_own ? ['своё время', 'hi']
+            : (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
             : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
             : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm
@@ -3184,7 +3553,7 @@
 
     var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
                    ask: 'вопрос' };
-    var COVER_PRICE = { cover_variant: 1, cover_phrase: 2 };
+    var COVER_PRICE = { cover_variant: 1, cover_phrase: 2, cover_own: 5 };
 
     function coverPrice(op) {
         var w = wallet();
@@ -3238,9 +3607,9 @@
                     esc(T('Недоступные не подходят этому тексту — под ними написано почему.')) +
                     '</div>' + rows +
                     '<div class="cp-dshint">' +
-                    esc(r.has_cover
-                        ? T('Смена композиции перерисует обложку — 1 Forge.')
-                        : T('Первая обложка поста рисуется бесплатно.')) +
+                    (r.has_cover
+                        ? esc(T('Смена композиции перерисует обложку —')) + ' ' + forgeTag(coverPrice('cover_variant')) + '.'
+                        : esc(T('Первая обложка поста рисуется бесплатно.'))) +
                     '</div></div>';
             })
             .catch(function () { host.remove(); toast(T('Не удалось открыть выбор')); });
@@ -3661,9 +4030,10 @@
                       ? 'Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.'
                       : 'Текст длиннее 1024 знаков — картинка станет превью над полным текстом.')) +
                   '</span></div>' +
+                  (p.is_own ? '' :
                   '<button class="cp-mrepl" data-act="shrink" data-id="' + p.id + '">' +
                   '<i class="ti ti-arrows-minimize"></i>' +
-                  esc(T('Ужать текст до подписи')) + ' ' + forgeTag(2) + '</button>'
+                  esc(T('Ужать текст до подписи')) + ' ' + forgeTag(2) + '</button>')
                 : '';
             var row = isCover
                 ? '<div class="cp-mrow">' +
@@ -3682,13 +4052,23 @@
                   esc(T('Стиль')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
+            if (p.is_own) row = ownMediaRow(p, isCover);
             return '<div class="cp-media"><div class="cp-mthumb">' + body +
                 '<button class="cp-mx" data-act="mediaclear" data-id="' + p.id + '">' +
                 '<i class="ti ti-x"></i></button></div>' +
                 '<div class="cp-mfoot">' + esc(label) + '</div>' + warn + row + '</div>';
         }
+        if (p.is_own) return '<div class="cp-media">' + ownMediaRow(p, false) + '</div>';
         return '<button class="cp-madd" data-act="mediamode" data-id="' + p.id + '">' +
             '<i class="ti ti-photo-plus"></i>' + esc(T('Добавить картинку')) + '</button>';
+    }
+    function ownMediaRow(p, isCover) {
+        return '<div class="cp-mrow">' +
+            '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '"><i class="ti ti-upload"></i>' +
+            esc(T(p.media_url ? 'Заменить файлом' : 'Файл с устройства')) + '</button>' +
+            '<button class="cp-mrepl" data-act="owncover" data-id="' + p.id + '"><i class="ti ti-photo"></i>' +
+            esc(T(isCover ? 'Другая обложка' : 'Обложка в стиле канала')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
+            '</div>';
     }
 
     function pickFile(id) {
@@ -3835,7 +4215,8 @@
         if (!p) return '';
         var fi = fmtInfo(p.format);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
+        var conf = p.is_own ? ['своё время', 'hi']
+            : (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
             : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
             : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
         var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm + slotHint(p.slot_hm)) +
@@ -3892,9 +4273,10 @@
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
                 nowBtn + queueBtn +
+                (p.is_own ? '' :
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
                 forgeTag(priceDay()) + '</button>' +
-                resBtn +
+                resBtn) +
                 '<button class="cp-act" data-act="editpost" data-id="' + p.id + '"><i class="ti ti-pencil"></i> ' + esc(T('Править')) + '</button>' + pubc + '</div>';
         } else {
             body = (p.angle ? '<div class="cp-dangle2">' + esc(p.angle) + '</div>' : '') +
@@ -4149,6 +4531,8 @@
         if (act === 'admark') { askAd(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediamode') { askMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
+        if (act === 'ownweek') { doOwnWeek(); return; }
+        if (act === 'owncover') { ownCoverFor(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverstyle') { askCoverStyle(+actEl.getAttribute('data-id') || null); return; }
         if (act === 'editpost') {
