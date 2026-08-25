@@ -440,7 +440,16 @@ function showScreen(screenName) {
 
 
 function showError(message) {
-    els.errorMessage.textContent = message;
+    const stale = /API 401/.test(String(message)) && /init data/i.test(String(message));
+    els.errorMessage.textContent = stale
+        ? t('Данные входа Telegram устарели или не прошли проверку. Закрой мини-приложение и открой его заново из Telegram.')
+        : message;
+    const btn = els.error ? els.error.querySelector('button') : null;
+    if (btn) {
+        const canClose = stale && window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.close === 'function';
+        btn.textContent = canClose ? t('Закрыть и открыть заново') : t('Попробовать снова');
+        btn.onclick = canClose ? function () { try { window.Telegram.WebApp.close(); } catch (e) { location.reload(); } } : function () { location.reload(); };
+    }
     showScreen('error');
 }
 
