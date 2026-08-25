@@ -2551,7 +2551,13 @@
         } catch (e) { return ''; }
     }
 
-    function posts() { return (_state.posts || []).slice().sort(function (a, b) { return (a.day_index || 0) - (b.day_index || 0); }); }
+    function posts() {
+        return (_state.posts || []).slice().sort(function (a, b) {
+            var da = a.date_iso || '', db = b.date_iso || '';
+            if (da !== db) return da < db ? -1 : 1;
+            return ((a.day_index || 0) - (b.day_index || 0)) || ((a.slot_hm || '') < (b.slot_hm || '') ? -1 : 1);
+        });
+    }
 
     var _archOpen = false;
 
@@ -3868,6 +3874,10 @@
                 ? '<button class="cp-act ok" data-act="queue1" data-id="' + p.id + '"><i class="ti ti-calendar-plus"></i> ' +
                   esc(T('Вернуть в очередь')) + '</button>'
                 : '';
+            var nowBtn = (p.status === 'approved' && _state && _state.can_post !== false)
+                ? '<button class="cp-act ok" data-act="pubnow" data-id="' + p.id + '"><i class="ti ti-send"></i> ' +
+                  esc(T('Выпустить сейчас')) + '</button>'
+                : '';
             var resBtn = p.research_links
                 ? '<button class="cp-act" data-act="resdel" data-id="' + p.id + '"><i class="ti ti-file-search"></i> ' +
                   esc(T('Убрать исследования')) + '</button>'
@@ -3878,7 +3888,7 @@
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
                 esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
-                queueBtn +
+                nowBtn + queueBtn +
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +
                 forgeTag(priceDay()) + '</button>' +
                 resBtn +
@@ -4356,6 +4366,7 @@
         if (act === 'weekreset') { doWeekReset(); return; }
         if (act === 'canceld') { cancelDay(+id); return; }
         if (act === 'queue1') { queueDay(+id); return; }
+        if (act === 'pubnow') { publishNow(+id); return; }
         if (act === 'resadd') { researchAdd(+id); return; }
         if (act === 'resdel') { researchRemove(+id); return; }
         if (act === 'rollback') { rollbackDay(+id); return; }
@@ -4431,6 +4442,22 @@
                 else toast(T('Не удалось вернуть пост в очередь'));
             })
             .catch(function () { toast(T('Не удалось вернуть пост в очередь')); });
+    }
+    function publishNow(id) {
+        haptic('medium');
+        confirmDialog('Выпустить пост в канал сейчас?\n\nОн уйдёт в канал в течение минуты, не дожидаясь своего времени.',
+            'Выпустить').then(function (ok) {
+            if (!ok) return;
+            apiRequest('/api/v1/content-plan/publish-now', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+                .then(function (r) {
+                    if (r && r.ok) { toast(T('Пост отправляется в канал')); refreshState(); }
+                    else if (r && r.error === 'not_approved') toast(T('Сначала утверди пост'));
+                    else if (r && r.error === 'no_bot_rights') toast(T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'));
+                    else if (r && r.error === 'paused') toast(T('Канал на паузе — публикация не проходит.'));
+                    else toast(T('Не удалось выпустить пост'));
+                })
+                .catch(function () { toast(T('Не удалось выпустить пост')); });
+        });
     }
     function cancelDay(id) {
         haptic('light');
