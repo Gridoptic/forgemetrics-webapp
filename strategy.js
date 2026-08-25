@@ -6,7 +6,6 @@
     var _genTimer = null;
     var _channels = null;
     var _iv = {};
-    var _ivStep = 0;
     var _started = false;
     var _guides = {};
 
@@ -141,16 +140,7 @@
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'active') { renderDoc(); return; }
         if (d.status === 'error') { renderGenError(); return; }
-        if (d.status === 'interview') {
-            _started = true; _iv = d.interview || {};
-            if (_channels === null) {
-                apiRequest('/api/v1/channels/active').then(function (cd) {
-                    _channels = (cd && cd.channels) || [];
-                    startInterview(true);
-                }).catch(function () { _channels = []; startInterview(true); });
-            } else { startInterview(true); }
-            return;
-        }
+        if (d.status === 'interview') { _started = true; openTalk(); return; }
         renderShowcase();
     }
 
@@ -271,175 +261,117 @@
     }
 
 
-    var STEPS = [
-        { key: 'start', icon: '<i class="ti ti-target"></i>', head: 'Знакомство со стратегом', q: 'С чего начинаем?',
-          note: 'Пять коротких вопросов — и стратег соберёт план лично под тебя: нишу, контент, трафик и заработок.',
-          type: 'single', field: 'start_mode',
-          options: ['Уже есть канал — строим на его базе', 'Начинаю с нуля — подбери мне нишу'] },
-        { key: 'interests', icon: '<i class="ti ti-flame"></i>', head: 'Знакомство со стратегом', q: 'Чем тебе интересно заниматься?',
-          note: 'Это самый важный вопрос из всех. Канал, который ведёшь через силу, умирает за месяц — поэтому ниша ищется на пересечении твоих интересов и того, за что платят рекламодатели. Выбери всё, что откликается:',
-          type: 'multi', field: 'interests',
-          options: ['Спорт и ЗОЖ', 'Финансы и инвестиции', 'Технологии и ИИ', 'Игры', 'Кино и сериалы', 'Психология', 'Авто', 'Кулинария', 'Путешествия', 'Мода и стиль', 'Бизнес и карьера', 'Юмор и развлечения'],
-          custom: 'Свой вариант — напиши, чем горишь', customField: 'custom_interest' },
-        { key: 'geo', icon: '<i class="ti ti-world"></i>', head: 'Страна и аудитория', q: 'Где живёт твоя аудитория?',
-          note: 'От региона зависит всё: какие площадки работают, сколько стоит подписчик и какие рекламодатели платят.',
-          type: 'single', field: 'audience_geo',
-          options: ['Россия и СНГ', 'Европа', 'США и Канада', 'Латинская Америка', 'Ближний Восток', 'Юго-Восточная Азия', 'Индия', 'Весь мир'],
-          custom: 'Твоя страна — для точных советов по площадкам и ценам', customField: 'country' },
-        { key: 'resources', icon: '<i class="ti ti-clock"></i>', head: 'Время и бюджет', q: 'Сколько готов вкладывать?',
-          note: 'Честный ответ важнее красивого: план под 3 часа в неделю и план под 15 — это два разных плана.',
-          type: 'double',
-          groups: [
-              { sub: 'Время в неделю', field: 'time_per_week', options: ['До 3 часов', '3–7 часов', '7–15 часов', '15+ часов'] },
-              { sub: 'Бюджет на продвижение', field: 'budget', options: ['Без бюджета', 'До 3 000 ₽/мес', '3–10 тыс ₽/мес', 'Больше 10 тыс ₽/мес'] },
-          ] },
-        { key: 'goal', icon: '<i class="ti ti-coin"></i>', head: 'Цель', q: 'Что для тебя главное?',
-          note: 'Цель определяет монетизацию: под каждую соберётся своя лестница заработка.',
-          type: 'single', field: 'goal',
-          options: ['Зарабатывать на рекламе в канале', 'Продавать перелив трафика', 'Продавать свой продукт или услуги', 'Личный бренд и экспертность', 'Пока не знаю — подскажи'],
-          custom: 'Или своими словами', customField: 'custom_goal' },
-    ];
+    var _talk = null, _talkSel = null, _talkBusy = false;
 
     function startFlow() {
         haptic('medium');
         renderCenter('<div class="stg-spin"></div>', T('Секунду...'));
         apiRequest('/api/v1/channels/active').then(function (d) {
             _channels = (d && d.channels) || [];
-            startInterview(false);
-        }).catch(function () { _channels = []; startInterview(false); });
+            var chId = null;
+            if (_channels.length) chId = (d && d.active_channel_id) || _channels[0].id;
+            return apiRequest('/api/v1/strategy/start', { method: 'POST', body: JSON.stringify({ channel_id: chId }) });
+        }).then(function (r) {
+            if (!r || !r.ok) { toast(T('Доступ к стратегии не открыт.')); renderShowcase(); return; }
+            _started = true;
+            openTalk();
+        }).catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); renderShowcase(); });
     }
 
-    function startInterview(resume) {
-        _ivStep = 0;
-        if (resume) {
-            for (var i = 0; i < STEPS.length; i++) {
-                var st = STEPS[i];
-                var f = st.field || (st.groups && st.groups[0].field);
-                if (_iv[f] == null) { _ivStep = i; break; }
-                _ivStep = Math.min(i + 1, STEPS.length - 1);
-            }
+    function talkHead() {
+        return '<div class="stg-head"><button class="stg-back" data-act="close"><i class="ti ti-arrow-left"></i></button><div class="t">' + esc(T('Стратег')) + '</div></div>';
+    }
+    function openTalk() {
+        setView('<div class="stg-center"><div class="big"><div class="stg-spin"></div></div><div class="m">' + esc(T('Смотрю данные канала...')) + '</div></div>', talkHead());
+        apiRequest('/api/v1/strategy/talk').then(function (d) {
+            if (!d || !d.ok) { toast(trErrText(d)); renderShowcase(); return; }
+            _talk = d; _talkSel = null;
+            renderTalk();
+        }).catch(function () { toast(T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); renderShowcase(); });
+    }
+    function talkBubble(role, html) {
+        return '<div class="stg-tmsg ' + (role === 'user' ? 'u' : 'a') + '">' + (role === 'user' ? '' : '<span class="stg-tav"><i class="ti ti-target-arrow"></i></span>') + '<div class="b">' + html + '</div></div>';
+    }
+    function renderTalk() {
+        var d = _talk || {}, k = d.known, q = d.question, p = d.progress || {};
+        var html = '<div class="stg-talk">';
+        if (k) {
+            html += talkBubble('a', '<b>' + esc(k.title || T('Что я уже знаю о канале')) + '</b><div>' + esc(k.text || '') + '</div>' +
+                ((k.chips || []).length ? '<div class="stg-tchips">' + k.chips.map(function (c) {
+                    return '<span class="stg-tchip"><small>' + esc(T(c.label)) + '</small>' + esc(c.value) + '</span>';
+                }).join('') + '</div>' : ''));
+        } else if (!d.has_channel) {
+            html += talkBubble('a', esc(T('Канал ещё не подключён — начнём с подбора ниши: интерес, спрос рекламодателей и конкуренция.')));
         }
-        renderStep();
-    }
-
-    function renderStep() {
-        var st = STEPS[_ivStep];
-        var pct = Math.round(((_ivStep + 1) / STEPS.length) * 100);
-        var body = '';
-        if (st.type === 'double') {
-            st.groups.forEach(function (g) {
-                body += '<div class="stg-sub">' + esc(T(g.sub)) + '</div><div class="stg-chips" data-group="' + g.field + '">' +
-                    g.options.map(function (o) {
-                        var on = _iv[g.field] === o ? ' on' : '';
-                        return '<span class="stg-ch' + on + '" data-chip="' + esc(o) + '" data-field="' + g.field + '">' + esc(T(o)) + '</span>';
-                    }).join('') + '</div>';
-            });
-        } else {
-            var opts = st.options.slice();
-            body = '<div class="stg-chips" data-group="' + st.field + '">' + opts.map(function (o) {
-                var cur = _iv[st.field];
-                var on = (st.type === 'multi' ? (Array.isArray(cur) && cur.indexOf(o) >= 0) : cur === o) ? ' on' : '';
-                return '<span class="stg-ch' + on + '" data-chip="' + esc(o) + '" data-field="' + st.field + '">' + esc(T(o)) + '</span>';
-            }).join('') + '</div>';
-            if (st.custom) {
-                body += '<input class="stg-inp" id="stg-custom" placeholder="' + esc(T(st.custom)) + '" value="' + esc(_iv[st.customField] || '') + '" maxlength="120">';
-            }
+        (d.messages || []).forEach(function (m) { html += talkBubble(m.role === 'user' ? 'user' : 'a', esc(m.text || '')); });
+        if (q) {
+            var multi = !!q.multi;
+            var sel = _talkSel || (multi ? [] : '');
+            var chips = (q.options || []).map(function (o) {
+                var on = multi ? (sel.indexOf(o) >= 0) : (sel === o);
+                return '<span class="stg-ch' + (on ? ' on' : '') + '" data-tchip="' + esc(o) + '">' + esc(T(o)) + '</span>';
+            }).join('');
+            html += talkBubble('a', '<div class="stg-tq">' + esc(T(q.text)) + '</div>' +
+                '<div class="stg-tprog">' + esc(T('вопрос')) + ' ' + (p.i || 1) + ' ' + esc(T('из')) + ' ~' + (p.n || 6) + '</div>' +
+                '<div class="stg-chips" style="margin-top:8px;">' + chips + '</div>' +
+                (q.allow_text ? '<input class="stg-inp" id="stg-talk-inp" maxlength="500" placeholder="' + esc(T(q.hint || 'Своими словами')) + '">' : '') +
+                '<button class="stg-next" data-act="tnext"' + (_talkBusy ? ' disabled' : '') + '>' + esc(_talkBusy ? T('Секунду...') : T('Дальше')) + '</button>');
+        } else if (d.done) {
+            html += talkBubble('a', '<div class="stg-tq">' + esc(T('Мне всё ясно. Собираю стратегию: сетка недели и первая неделя появятся в контент-плане, трафик и заработок — разделами.')) + '</div>' +
+                '<button class="stg-next" data-act="tbuild"><i class="ti ti-sparkles"></i> ' + esc(T('Собрать стратегию')) + '</button>' +
+                '<div class="stg-fnote">' + esc(T('Обычно 2–4 минуты. Можно закрыть — стратегия соберётся сама')) + '</div>');
         }
-        var last = _ivStep === STEPS.length - 1;
-        var nextLabel = last ? T('Готово — строим стратегию')
-            : T('Дальше') + ' → ' + T(STEPS[_ivStep + 1].head);
-        setView(
-            '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile">' + st.icon + '</span> ' + esc(T(st.head)) + '</div>' +
-            '<div class="stg-prog"><i style="width:' + pct + '%"></i></div>' +
-            '<div class="stg-q">' + esc(T(st.q)) + '</div>' +
-            '<div class="stg-note" style="margin:-2px 0 10px;">' + esc(T(st.note)) + '</div>' +
-            body +
-            '<button class="stg-next" data-act="next">' + esc(nextLabel) + '</button>' +
-            (_ivStep > 0 ? '<button class="stg-prev" data-act="prev"><i class="ti ti-arrow-left"></i>' + esc(T('Назад')) + '</button>' : '') +
-            '</div>');
+        html += '</div>';
+        var host = setView(html, talkHead());
+        host.scrollTop = host.scrollHeight;
+        var inp = document.getElementById('stg-talk-inp');
+        if (inp && (q.options || []).length <= 1) inp.focus();
     }
-
-    function chipTap(elm) {
+    function talkChip(elm) {
+        if (!_talk || !_talk.question) return;
         haptic('light');
-        var st = STEPS[_ivStep];
-        var field = elm.getAttribute('data-field');
-        var val = elm.getAttribute('data-chip');
-        var multi = st.type === 'multi';
-        if (multi) {
-            var cur = Array.isArray(_iv[field]) ? _iv[field].slice() : [];
-            var i = cur.indexOf(val);
-            if (i >= 0) cur.splice(i, 1); else cur.push(val);
-            _iv[field] = cur;
+        var v = elm.getAttribute('data-tchip');
+        if (_talk.question.multi) {
+            var cur = Array.isArray(_talkSel) ? _talkSel.slice() : [];
+            var i = cur.indexOf(v);
+            if (i >= 0) cur.splice(i, 1); else cur.push(v);
+            _talkSel = cur;
             elm.classList.toggle('on');
         } else {
-            _iv[field] = val;
+            _talkSel = v;
             var box = elm.parentElement;
             box.querySelectorAll('.stg-ch').forEach(function (c) { c.classList.remove('on'); });
             elm.classList.add('on');
         }
     }
-
-    function stepNext() {
-        var st = STEPS[_ivStep];
-        var custom = document.getElementById('stg-custom');
-        if (custom && st.customField) _iv[st.customField] = custom.value.trim();
-        if (st.type === 'double') {
-            for (var i = 0; i < st.groups.length; i++) {
-                if (!_iv[st.groups[i].field]) { toast(T('Выбери вариант в каждой группе')); return; }
-            }
-        } else if (st.type === 'multi') {
-            if ((!Array.isArray(_iv[st.field]) || !_iv[st.field].length) && !_iv[st.customField]) {
-                toast(T('Выбери хотя бы один вариант')); return;
-            }
-        } else if (!_iv[st.field] && !(st.customField && _iv[st.customField])) {
-            toast(T('Выбери вариант')); return;
-        }
+    function talkNext() {
+        if (_talkBusy || !_talk || !_talk.question) return;
+        var q = _talk.question;
+        var inp = document.getElementById('stg-talk-inp');
+        var text = inp ? inp.value.trim() : '';
+        var val = _talkSel;
+        var empty = q.multi ? !(Array.isArray(val) && val.length) : !val;
+        if (empty && !text) { toast(q.allow_text ? T('Выбери вариант или напиши своими словами') : T('Выбери вариант')); return; }
         haptic('medium');
-        if (st.key === 'start') {
-            _iv.has_channel = _iv.start_mode === st.options[0];
-            if (_iv.has_channel && (!_channels || !_channels.length)) {
-                toast(T('Канал не подключён — начнём с подбора ниши'));
-                _iv.has_channel = false;
-                _iv.start_mode = st.options[1];
-            }
-            if (!_started) { createStrategy(); return; }
-        }
-        saveAndAdvance();
+        _talkBusy = true;
+        renderTalk();
+        apiRequest('/api/v1/strategy/talk', { method: 'POST', body: JSON.stringify({ key: q.key, value: val, text: text }) }).then(function (d) {
+            _talkBusy = false;
+            if (!d || !d.ok) { toast(trErrText(d) || T('Не удалось сохранить')); renderTalk(); return; }
+            _talk = d; _talkSel = null;
+            renderTalk();
+        }).catch(function () { _talkBusy = false; toast(T('Не удалось сохранить')); renderTalk(); });
     }
-
-    function createStrategy() {
-        var chId = null;
-        if (_iv.has_channel && _channels && _channels.length) {
-            chId = (_iv.channel_id != null) ? _iv.channel_id : _channels[0].id;
-        }
-        apiRequest('/api/v1/strategy/start', { method: 'POST', body: JSON.stringify({ channel_id: chId }) })
-            .then(function (r) {
-                if (!r || !r.ok) { toast(T('Функция откроется после оплаты — она уже близко')); return; }
-                _started = true;
-                saveAndAdvance();
-            })
-            .catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); });
-    }
-
-    function saveAndAdvance() {
-        var last = _ivStep === STEPS.length - 1;
-        var payload = { answers: _iv };
-        var req = apiRequest('/api/v1/strategy/interview', { method: 'POST', body: JSON.stringify(payload) });
-        if (!last) {
-            req.catch(function () {});
-            _ivStep++;
-            renderStep();
-            return;
-        }
+    function talkBuild(btn) {
+        haptic('medium');
+        if (btn) btn.disabled = true;
         renderCenter('<div class="stg-spin"></div>', T('Секунду...'));
-        req.then(function () {
-            return apiRequest('/api/v1/strategy/generate', { method: 'POST' });
-        }).then(function (r) {
+        apiRequest('/api/v1/strategy/generate', { method: 'POST' }).then(function (r) {
             if (r && r.ok) { renderGenerating(); startPoll(); }
-            else { toast(T('Не удалось запустить генерацию')); renderStep(); }
-        }).catch(function () { toast(T('Не удалось запустить генерацию')); renderStep(); });
+            else { toast(T('Не удалось запустить генерацию')); renderTalk(); }
+        }).catch(function () { toast(T('Не удалось запустить генерацию')); renderTalk(); });
     }
-
+    window.__stgTalkForCheck = function (state) { _talk = state; _talkSel = null; _talkBusy = false; ensureScreen(); renderTalk(); };
 
     var GEN_TEXTS = [
         'Изучаю твои ответы и данные канала...',
@@ -1173,8 +1105,8 @@
         if (act === 'start') { startFlow(); return; }
         if (act === 'buy') { doPurchase(actEl, false); return; }
         if (act === 'renew') { doPurchase(actEl, true); return; }
-        if (act === 'next') { stepNext(); return; }
-        if (act === 'prev') { haptic('light'); _ivStep = Math.max(0, _ivStep - 1); renderStep(); return; }
+        if (act === 'tnext') { talkNext(); return; }
+        if (act === 'tbuild') { talkBuild(actEl); return; }
         if (act === 'regen') { regen(actEl); return; }
         if (act === 'restart') { restartFlow(actEl); return; }
         if (act === 'jump') {
@@ -1212,12 +1144,13 @@
     document.addEventListener('click', function (ev) {
         var host = document.getElementById('strategy-screen');
         if (!host || host.style.display === 'none') return;
-        var chip = ev.target.closest ? ev.target.closest('.stg-ch') : null;
-        if (chip && host.contains(chip)) chipTap(chip);
+        var chip = ev.target.closest ? ev.target.closest('.stg-ch[data-tchip]') : null;
+        if (chip && host.contains(chip)) talkChip(chip);
     });
 
     document.addEventListener('keydown', function (ev) {
         if (ev.isComposing) return;
         if (ev.key === 'Enter' && ev.target && ev.target.id === 'stg-chat-inp') sendChat();
+        if (ev.key === 'Enter' && ev.target && ev.target.id === 'stg-talk-inp') talkNext();
     });
 })();
