@@ -159,47 +159,67 @@
     }
 
 
+    function forge(n) {
+        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 13) : ('⚡ ' + num(n));
+    }
+    function accessUntilText() {
+        var iso = _state && _state.access_until;
+        if (!iso) return '';
+        try {
+            var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+            return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
+        } catch (e) { return String(iso).slice(0, 10); }
+    }
+    function accessChip() {
+        if (!_state || _state.access !== 'full') return '';
+        if (_state.access_source === 'admin') return '<div class="stg-fchips"><span class="stg-fchip g"><i class="ti ti-circle-check"></i> ' + esc(T('Доступ открыт')) + '</span><span class="stg-fchip">' + esc(T('администратор')) + '</span></div>';
+        var until = accessUntilText();
+        return '<div class="stg-fchips"><span class="stg-fchip g"><i class="ti ti-circle-check"></i> ' + esc(T('Доступ открыт')) + (until ? ' · ' + esc(T('до')) + ' ' + esc(until) : '') + '</span></div>';
+    }
     function renderShowcase() {
+        var prices = (_state && _state.prices) || {};
+        var nprice = prices.new || 3990, rprice = prices.renewal || 1990;
         if (_state && _state.access === 'expired') {
-            var rprice = ((_state.prices || {}).renewal) || 1990;
             setView(
                 '<div class="stg-flag"><div class="glow"></div>' +
                 '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
-                '<div class="stg-fprice"><b>' + num(rprice) + ' Forge</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
-                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + ' — ' + num(rprice) + ' Forge</button>' +
+                '<div class="stg-fprice"><b>' + forge(rprice) + '</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
+                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + ' · ' + forge(rprice) + '</button>' +
+                '<div class="stg-fnote">' + esc(T('Перед списанием покажу сумму и остаток — без сюрпризов.')) + '</div>' +
                 '</div></div>');
             return;
         }
         var locked = !_state || _state.access !== 'full';
         var rows = [
-            ['Ниша под твои интересы.', 'Стратег расспросит, чем ты горишь и сколько времени готов тратить, и предложит 3 ниши, где сходятся твой интерес, спрос рекламодателей и невысокая конкуренция. Уже есть канал — оценит его по реальным постам и скажет, что усилить'],
-            ['Контент-план + первые 10 постов.', 'Не «пиши о пользе», а готовые рубрики по дням недели, сколько постить и почему именно столько, и 10 первых постов готовыми текстами: открыл, вставил, опубликовал'],
-            ['Трафик под твою страну.', 'Бесплатные и платные способы с гайдами до уровня «скачай вот это приложение, смонтируй ролик по этой формуле, выложи в это время». С правилами каждой площадки — как расти и не улететь в бан'],
-            ['Все модели заработка.', 'Реклама в канале, перелив трафика, партнёрки, свой продукт. По каждой: с какого размера канала включать, сколько это даёт в месяц в твоей нише и что подготовить заранее'],
-            ['Месяц ведения за руку.', 'Каждую неделю стратег сам сверяет план с фактом по данным твоего канала: что сработало, где отстаёшь, что делать дальше. Плюс чат — задавай вопросы в любой момент'],
+            ['Разговор, а не анкета.', 'Стратег уже знает твой канал по замерам и спрашивает только то, чего не знает'],
+            ['Сетка недели в контент-плане.', 'Рубрики по дням, частота и окна времени записываются в план — не в документ'],
+            ['Первая неделя собрана.', 'Посты с датами и временем в контент-плане: утверждаешь — выходят сами'],
+            ['Трафик и заработок под твою нишу и страну.', 'Креативы для площадок, перелив с расчётом, доноры и ссылки — задачами по дням, не абзацами'],
+            ['Месяц ведения.', 'Каждую неделю сверка плана с фактом по данным контент-плана и правка сетки'],
         ];
         var what = rows.map(function (r) {
             return '<div class="stg-fw"><span class="tick">✓</span><span><b>' + esc(T(r[0])) + '</b> ' + esc(T(r[1])) + '</span></div>';
         }).join('');
-        var nprice = ((_state && _state.prices) || {}).new || 3990;
-        var rprice2 = ((_state && _state.prices) || {}).renewal || 1990;
+        var price = locked
+            ? '<div class="stg-fprice"><b>' + forge(nprice) + '</b><span>' + esc(T('разово · включает сборку первой недели')) + '</span></div>' +
+              '<div class="stg-fpnote">' + esc(T('Продление ведения —')) + ' ' + forge(rprice) + ' ' + esc(T('в месяц. Спишется с баланса Forge после подтверждения.')) + '</div>'
+            : accessChip();
         var cta = locked
-            ? '<button class="stg-fcta" data-act="buy"><i class="ti ti-bolt"></i> ' + esc(T('Открыть доступ')) + ' — ' + num(nprice) + ' Forge</button>' +
-              '<div class="stg-fnote">' + esc(T('Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.')) + '</div>'
-            : '<button class="stg-fcta" data-act="start">' + esc(T('Построить мою стратегию')) + '</button>' +
-              '<div class="stg-fnote">' + esc(T('≈ 5 минут интервью — и полный план у тебя на руках')) + '</div>';
+            ? '<button class="stg-fcta" data-act="buy"><i class="ti ti-bolt"></i> ' + esc(T('Открыть доступ')) + ' · ' + forge(nprice) + '</button>' +
+              '<div class="stg-fnote">' + esc(T('Перед списанием покажу сумму и остаток — без сюрпризов.')) + '</div>'
+            : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
+              '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>';
         setView(
             '<div class="stg-flag"><div class="glow"></div>' +
             '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
             '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
-            '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка')) + '</div></div></div>' +
+            '<div class="stg-fsub">' + esc(T('персональный план роста, наполнения и заработка — исполняется контент-планом')) + '</div></div></div>' +
             '<div class="stg-fwhat">' + what + '</div>' +
-            '<div class="stg-fprice"><b>' + num(nprice) + ' Forge</b><span>' + esc(T('разово · продление ведения —')) + ' ' + num(rprice2) + ' Forge</span></div>' +
-            cta + '</div></div>');
+            price + cta + '</div></div>');
     }
 
     function num(n) {
@@ -207,6 +227,26 @@
     }
 
     function doPurchase(btn, renewal) {
+        var prices = (_state && _state.prices) || {};
+        var price = renewal ? (prices.renewal || 1990) : (prices.new || 3990);
+        var bal = prices.balance || 0;
+        haptic('light');
+        if (bal < price) {
+            uiAlertStg(T('Не хватает Forge') + '\n' + T('Нужно') + ' ⚡' + num(price) + ', ' + T('на балансе') + ' ⚡' + num(bal) + '. ' + T('Пополни баланс в кабинете и вернись.'));
+            return;
+        }
+        var title = renewal ? T('Продлить ведение') : T('Открыть AI-стратегию');
+        var body = (renewal
+            ? T('Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.')
+            : T('Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.')) +
+            '\n' + T('Стоимость') + ' ⚡' + num(price) + '\n' + T('На балансе') + ' ⚡' + num(bal) + ' → ⚡' + num(bal - price);
+        var ask = (typeof confirmDialog === 'function') ? confirmDialog(title + '\n' + body, T('Списать и открыть')) : Promise.resolve(true);
+        Promise.resolve(ask).then(function (ok) {
+            if (!ok) return;
+            purchaseNow(btn, renewal);
+        });
+    }
+    function purchaseNow(btn, renewal) {
         haptic('medium');
         btn.disabled = true;
         var old = btn.innerHTML;
@@ -933,7 +973,7 @@
 
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-movie"></i></span> ' + esc(T('Конвейер креативов из постов недели')) +
             (cv.per_week ? '<span class="stg-trchip">' + num(cv.ready || 0) + ' / ' + num(cv.per_week) + '</span>' : '') + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Каждый пост недели → ролик 9:16 с озвучкой и музыкой: хук, тезисы, число, призыв в канал. Готовый файл через 3–4 минуты.')) + '</div>';
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Каждый пост недели → ролик 9:16 с озвучкой и музыкой: хук, тезисы, число, призыв в канал. Готовый файл примерно через 5 минут.')) + '</div>';
         if (!cv.has_plan) {
             html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Недели в контент-плане нет — собери её, и посты появятся здесь.')) + '</div>' +
                 '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>';
@@ -1120,6 +1160,7 @@
         return false;
     }
     window.__stgTrafficForCheck = function (data, channelId) { _tr = data; _trChan = channelId || null; ensureScreen(); renderTraffic(); };
+    window.__stgShowcaseForCheck = function (state) { _state = state; ensureScreen(); renderShowcase(); };
 
     function onScreenClick(ev) {
         var t = ev.target;

@@ -4018,7 +4018,7 @@
             crvPoll();
             return '<div class="cp-crv">' + head +
                 '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно 3–4 минуты — можно уйти с экрана.')) + '</span></div></div>';
+                esc(T('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) + '</span></div></div>';
         }
         if (c && c.status === 'ready' && c.url) {
             var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
@@ -4043,7 +4043,7 @@
         return '<div class="cp-crv">' + head +
             '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-sparkles"></i>' +
             '<span class="tx"><b>' + esc(T('Собрать креатив')) + '</b><em>' +
-            esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл через 3–4 минуты')) + '</em></span></button></div>';
+            esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button></div>';
     }
     function crvBuild(pid) {
         if (_crvBusy[pid]) return;
