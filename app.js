@@ -19,6 +19,10 @@ const state = {
         thinkingTimer: null,
         thinkingTextIndex: 0,
         pendingInstruction: null,
+        media: null,
+        mediaBusy: '',
+        placeInfo: null,
+        placed: null,
     },
 };
 
@@ -313,7 +317,7 @@ const els = {
     postResultCustomSubmit: document.getElementById('post-result-custom-submit'),
     postCopyBtn: document.getElementById('post-copy-btn'),
     postSendChannelBtn: document.getElementById('post-send-channel-btn'),
-    postScheduleBtn: document.getElementById('post-schedule-btn'),
+    postPlanBtn: document.getElementById('post-plan-btn'),
     postRegenerateBtn: document.getElementById('post-regenerate-btn'),
     postEmojiBtn: document.getElementById('post-emoji-btn'),
 
@@ -1749,12 +1753,6 @@ function _tmMemberView(d) {
 }
 
 
-const AP_SRC_RU = {
-    smart_peak: 'час пик аудитории канала',
-    smart_niche: 'лучшее время для ниши',
-    smart_auto: 'ближайшее свободное время',
-};
-
 function apFmtWhen(iso) {
     const d = new Date(iso);
     const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
@@ -1794,7 +1792,9 @@ function publishPostNow() {
     const pid = state.post.currentPostId;
     if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
     hapticLight();
-    apConfirm('Опубликовать пост в канал прямо сейчас?', async () => {
+    const _pi = state.post.placeInfo;
+    const _where = _pi && _pi.channel_username ? '@' + _pi.channel_username : (_pi && _pi.channel_title) || t('канал');
+    apConfirm(t('Опубликовать пост в') + ' ' + _where + ' ' + t('прямо сейчас?'), async () => {
         try {
             await apiRequest('/api/v1/post/schedule', {
                 method: 'POST',
@@ -1810,87 +1810,6 @@ function apClose() {
     if (_apCtx) { try { _apCtx.ov.remove(); _apCtx.sh.remove(); } catch (e) {} _apCtx = null; }
     document.documentElement.classList.remove('cs-modal-open');
     document.body.classList.remove('cs-modal-open');
-}
-
-function apSlotDate(dayOffset, hour) {
-    const d = new Date();
-    d.setDate(d.getDate() + dayOffset);
-    d.setHours(hour, 0, 0, 0);
-    return d;
-}
-
-async function openScheduleSheet(postId) {
-    const pid = postId || state.post.currentPostId;
-    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
-    hapticLight();
-    apClose();
-    const ov = document.createElement('div');
-    ov.className = 'bs-overlay';
-    const sh = document.createElement('div');
-    sh.className = 'bs-sheet ap-sheet';
-    const now = new Date();
-    const slots = [];
-    const evToday = apSlotDate(0, 19);
-    if (evToday.getTime() > now.getTime() + 15 * 60000) slots.push({ d: evToday, label: 'Сегодня 19:00' });
-    slots.push({ d: apSlotDate(1, 9), label: 'Завтра 09:00' });
-    slots.push({ d: apSlotDate(1, 19), label: 'Завтра 19:00' });
-    const tomorrow = apSlotDate(1, 19);
-    const dv = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
-    sh.innerHTML = `<div class="bs-handle"></div>
-        <div class="ap-title">Когда опубликовать</div>
-        <div class="ap-sub">Пост выйдет автоматически — бот опубликует его сам</div>
-        <div class="ap-slot smart" id="ap-smart"><div class="t"><i class="ti ti-sparkles"></i> <span>Умное время</span></div><div class="d" id="ap-smart-d"><span>считаю лучшее время…</span></div></div>
-        <div class="ap-grid">${slots.map((s, i) => `<div class="ap-slot" data-aps="${i}"><div class="t">${s.label}</div></div>`).join('')}</div>
-        <div class="ap-custom"><input type="date" id="ap-date" value="${dv}"><input type="time" id="ap-time" value="19:00"></div>
-        <button class="ap-go" id="ap-go">Запланировать на своё время</button>`;
-    document.body.appendChild(ov);
-    document.body.appendChild(sh);
-    document.documentElement.classList.add('cs-modal-open');
-    document.body.classList.add('cs-modal-open');
-    requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
-    ov.addEventListener('click', apClose);
-    _apCtx = { ov, sh };
-    localizeTree(sh);
-
-    const doSchedule = async (body) => {
-        try {
-            const r = await apiRequest('/api/v1/post/schedule', { method: 'POST', body: JSON.stringify(body) });
-            apClose();
-            hapticMed();
-            showToast(`${t('Пост поставлен в очередь')}: ${apFmtWhen(r.scheduled_at)}`, 'check');
-        } catch (e) { apErr(e); }
-    };
-
-    sh.querySelectorAll('[data-aps]').forEach(el => {
-        el.addEventListener('click', () => {
-            const s = slots[+el.dataset.aps];
-            doSchedule({ post_id: pid, mode: 'at', at: s.d.toISOString() });
-        });
-    });
-    sh.querySelector('#ap-smart').addEventListener('click', () => {
-        doSchedule({ post_id: pid, mode: 'smart' });
-    });
-    sh.querySelector('#ap-go').addEventListener('click', () => {
-        const dvv = sh.querySelector('#ap-date').value;
-        const tvv = sh.querySelector('#ap-time').value;
-        if (!dvv || !tvv) { showToast(t('Укажи дату и время'), 'alert-triangle'); return; }
-        const dt = new Date(`${dvv}T${tvv}:00`);
-        if (isNaN(dt.getTime())) { showToast(t('Укажи дату и время'), 'alert-triangle'); return; }
-        doSchedule({ post_id: pid, mode: 'at', at: dt.toISOString() });
-    });
-
-    try {
-        const p = await apiRequest(`/api/v1/post/smart-slot?post_id=${pid}`);
-        const dEl = sh.querySelector('#ap-smart-d');
-        if (dEl && p && p.at) {
-            const srcTx = AP_SRC_RU['smart_' + p.source] || AP_SRC_RU.smart_auto;
-            dEl.innerHTML = `<b class="num">${apFmtWhen(p.at)}</b> · <span>${srcTx}</span>`;
-            localizeTree(dEl);
-        }
-    } catch (e) {
-        const dEl = sh.querySelector('#ap-smart-d');
-        if (dEl) { dEl.innerHTML = `<span>${escapeHtml((e && e.message) || 'канал недоступен для публикации')}</span>`; localizeTree(dEl); }
-    }
 }
 
 async function openQueueSheet(channelId) {
@@ -1960,7 +1879,7 @@ async function openQueueSheet(channelId) {
             catch (e) { apErr(e); }
         }));
         body.querySelectorAll('[data-apmv]').forEach(b => b.addEventListener('click', () => {
-            openScheduleSheet(+b.dataset.apmv);
+            openPlanSheet(+b.dataset.apmv);
         }));
         body.querySelectorAll('[data-apurl]').forEach(b => b.addEventListener('click', () => {
             const u = b.dataset.apurl;
@@ -6227,11 +6146,346 @@ function renderResult(result) {
     if (els.postSendChannelBtn) {
         els.postSendChannelBtn.dataset.locked = String(!hasChannel);
     }
-    if (els.postScheduleBtn) {
-        els.postScheduleBtn.dataset.locked = String(!hasChannel);
+    if (els.postPlanBtn) {
+        els.postPlanBtn.dataset.locked = String(!hasChannel);
+        els.postPlanBtn.classList.remove('done');
     }
+    state.post.media = null;
+    state.post.mediaBusy = '';
+    state.post.placeInfo = null;
+    state.post.placed = null;
+    renderResultCover();
+    renderResultHints();
+    if (hasChannel && result.post_id) loadPlaceInfo(result.post_id);
 
     showScreen('postResult');
+}
+
+const RS_LIMITS = { 'image/jpeg': 8, 'image/png': 8, 'image/webp': 8, 'image/gif': 12, 'video/mp4': 40, 'video/quicktime': 40 };
+const RS_REC_SRC = { peak: 'час пик аудитории канала', niche: 'лучшее время для ниши', auto: 'ближайшее свободное время' };
+const RS_WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
+function rsErr(code) {
+    const M = {
+        past_time: 'Это время уже прошло — выбери позже.',
+        day_full: 'В этом дне уже максимум постов',
+        too_long: 'Длиннее 4096 знаков Telegram не примет — сократи.',
+        no_bot_rights: 'Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.',
+        paused: 'Канал на паузе — публикация не проходит.',
+        plan_busy: 'Неделя сейчас собирается — подожди, пока сборка закончится.',
+        already_out: 'Пост уже в очереди — сначала сними его с очереди',
+        no_content_perm: 'Создатель канала не выдал тебе право менять контент-план',
+        no_channel: 'Сначала подключи канал — публиковать некуда',
+        no_text: 'Сначала нужен текст — фраза на обложку берётся из него',
+        bad_type: 'Такой формат не подойдёт: нужна картинка, GIF или видео',
+    };
+    return t(M[code] || 'Не получилось — попробуй ещё раз');
+}
+
+function rsDateLabel(iso, withWeekday) {
+    if (!iso) return '';
+    try {
+        const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+        return new Date(iso + 'T00:00:00').toLocaleDateString(lang, withWeekday
+            ? { weekday: 'long', day: 'numeric', month: 'long' } : { day: 'numeric', month: 'long' });
+    } catch (e) { return iso; }
+}
+
+function rsChanNow() {
+    const pi = state.post.placeInfo;
+    const shift = pi && pi.tz_min != null ? (pi.tz_min + new Date().getTimezoneOffset()) : 0;
+    const d = new Date(Date.now() + shift * 60000);
+    return [d.getHours(), d.getMinutes()];
+}
+
+function rsPast(dayIndex, hm) {
+    const pi = state.post.placeInfo;
+    if (!pi || pi.today_index !== dayIndex || !hm) return false;
+    const now = rsChanNow();
+    return (+hm.slice(0, 2)) * 60 + (+hm.slice(3)) <= now[0] * 60 + now[1] + 1;
+}
+
+function rsDefaultHm(dayIndex) {
+    const pi = state.post.placeInfo;
+    if (!pi || pi.today_index !== dayIndex) return '12:00';
+    const now = rsChanNow();
+    let mins = Math.ceil((now[0] * 60 + now[1] + 20) / 15) * 15;
+    if (mins < 8 * 60) mins = 8 * 60;
+    if (mins > 22 * 60 + 45) return '';
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+}
+
+async function loadPlaceInfo(postId) {
+    try {
+        const r = await apiRequest('/api/v1/content-plan/place-info?post_id=' + postId);
+        if (r && r.ok && state.post.currentPostId === postId) {
+            state.post.placeInfo = r;
+            if (r.placed) state.post.placed = r.placed;
+            renderResultHints();
+        }
+    } catch (e) {}
+}
+
+function renderResultHints() {
+    const pi = state.post.placeInfo;
+    const where = pi && pi.channel_username ? '@' + pi.channel_username : (pi && pi.channel_title) || t('подключённый канал');
+    const sendHint = document.getElementById('post-send-hint');
+    if (sendHint) sendHint.textContent = t('Бот выложит в') + ' ' + where + ' ' + t('в течение минуты. Перед отправкой спросит подтверждение');
+    const planHint = document.getElementById('post-plan-hint');
+    const placed = state.post.placed;
+    if (planHint) {
+        planHint.textContent = placed
+            ? t('В плане:') + ' ' + rsDateLabel(placed.date_iso, true) + ' ' + placed.hm + (placed.queued ? ' · ' + t('выйдет сам') : ' · ' + t('черновик'))
+            : t('Выбрать день и время — пост встанет в неделю и выйдет сам');
+    }
+    if (els.postPlanBtn) els.postPlanBtn.classList.toggle('done', !!placed);
+}
+
+function renderResultCover() {
+    const host = document.getElementById('post-cover-block');
+    if (!host) return;
+    const m = state.post.media;
+    const busy = state.post.mediaBusy;
+    const price = (typeof forgeAmount === 'function') ? forgeAmount(5, 12) : '5';
+    if (busy) {
+        host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb"><div class="cp-spin sm"></div></span>' +
+            '<span class="tx"><b>' + escapeHtml(busy) + '</b></span></div>';
+        return;
+    }
+    if (m) {
+        const isVid = m.kind === 'video';
+        const thumb = isVid ? '<i class="ti ti-player-play"></i>' : '<img src="' + escapeHtml(m.url) + '" alt="">';
+        const name = m.cover ? t('Обложка в стиле канала') : (m.name || t('Файл'));
+        const kind = m.cover ? t('фраза из текста, палитра канала')
+            : (m.kind === 'animation' ? 'GIF' : (isVid ? t('видео') : t('фото')));
+        host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
+            '<span class="tx"><b>' + escapeHtml(name) + '</b><em>' + escapeHtml(kind) + '</em></span>' +
+            '<button class="act" data-rc="clear" type="button">' + t('Убрать') + '</button></div>' +
+            '<div class="cp-own-acts">' +
+            '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + t('Заменить файлом') + '</button>' +
+            '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
+            t(m.cover ? 'Другая обложка' : 'Обложка в стиле канала') + ' ' + price + '</button></div>';
+        return;
+    }
+    const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
+    host.innerHTML = '<div class="cp-addcol" style="margin-top:0">' +
+        '<button class="cp-add2" data-rc="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
+        t('Файл с устройства') + '</b><em>' + t('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ') + '</em></span><span class="pr">' + zero + '</span></button>' +
+        '<button class="cp-add2 own" data-rc="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
+        t('Обложка в стиле канала') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button></div>';
+}
+
+function rsSetBusy(text) {
+    state.post.mediaBusy = text || '';
+    renderResultCover();
+}
+
+function rsPickFile() {
+    let inp = document.getElementById('post-cover-file');
+    if (!inp) {
+        inp = document.createElement('input');
+        inp.type = 'file';
+        inp.id = 'post-cover-file';
+        inp.accept = 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime';
+        inp.style.display = 'none';
+        document.body.appendChild(inp);
+    }
+    inp.onchange = async () => {
+        const f = inp.files && inp.files[0];
+        inp.value = '';
+        const pid = state.post.currentPostId;
+        if (!f || !pid) return;
+        const lim = RS_LIMITS[f.type];
+        if (!lim) { showToast(rsErr('bad_type'), 'alert-triangle'); return; }
+        const mb = f.size / 1048576;
+        if (mb > lim) { showToast(t('Файл') + ' ' + mb.toFixed(1) + ' ' + t('МБ — это больше предела в') + ' ' + lim + ' ' + t('МБ'), 'alert-triangle'); return; }
+        rsSetBusy(t('Загружаю файл...'));
+        try {
+            const fd = new FormData();
+            fd.append('post_id', pid);
+            fd.append('file', f);
+            const r = await apiRequest('/api/v1/content-plan/media', { method: 'POST', body: fd });
+            if (r && r.ok) {
+                state.post.media = { kind: r.kind, url: r.url, cover: false, name: f.name };
+                hapticLight();
+            } else showToast(rsErr(r && r.error), 'alert-triangle');
+        } catch (e) { showToast(t('Файл не загрузился'), 'alert-triangle'); }
+        rsSetBusy('');
+    };
+    inp.click();
+}
+
+async function rsMakeCover() {
+    const pid = state.post.currentPostId;
+    if (!pid) return;
+    hapticLight();
+    rsSetBusy(t('Рисую обложку...'));
+    try {
+        const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid }) });
+        if (r && r.ok) {
+            state.post.media = { kind: 'photo', url: r.url, cover: true };
+            showToast(t('Обложка готова'), 'check');
+            apiRequest('/api/v1/post/limits').then((fresh) => { state.post.limits = fresh; renderLimitBanner(fresh); }).catch(() => {});
+        } else showToast(rsErr(r && r.error), 'alert-triangle');
+    } catch (e) { apErr(e); }
+    rsSetBusy('');
+}
+
+async function rsClearCover() {
+    const pid = state.post.currentPostId;
+    state.post.media = null;
+    renderResultCover();
+    if (pid) apiRequest('/api/v1/content-plan/media/clear', { method: 'POST', body: JSON.stringify({ post_id: pid }) }).catch(() => {});
+}
+
+let _rsCtx = null;
+function rsClose() {
+    if (_rsCtx) { try { _rsCtx.ov.remove(); _rsCtx.sh.remove(); } catch (e) {} _rsCtx = null; }
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+}
+
+async function openPlanSheet(postId) {
+    const pid = postId || state.post.currentPostId;
+    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
+    hapticLight();
+    apClose();
+    rsClose();
+    if (!state.post.placeInfo || state.post.currentPostId !== pid) {
+        try {
+            const r = await apiRequest('/api/v1/content-plan/place-info?post_id=' + pid);
+            if (!r || !r.ok) { showToast(rsErr(r && r.error), 'alert-triangle'); return; }
+            state.post.placeInfo = r;
+        } catch (e) { apErr(e); return; }
+    }
+    const pi = state.post.placeInfo;
+    if (pi.plan_busy) { showToast(rsErr('plan_busy'), 'alert-triangle'); return; }
+    const rec = pi.recommended;
+    const sel = { day: rec ? rec.day_index : pi.today_index, hm: '', busy: false };
+    sel.hm = rec ? rec.hm : rsDefaultHm(sel.day);
+    if (rsPast(sel.day, sel.hm)) sel.hm = rsDefaultHm(sel.day);
+    const ov = document.createElement('div');
+    ov.className = 'bs-overlay';
+    const sh = document.createElement('div');
+    sh.className = 'bs-sheet ap-sheet rs-sheet';
+    const where = pi.channel_title || (pi.channel_username ? '@' + pi.channel_username : '');
+    const tzLab = 'UTC' + (pi.tz_min >= 0 ? '+' : '−') + Math.abs(Math.round(pi.tz_min / 60));
+    sh.innerHTML = '<div class="bs-handle"></div>' +
+        '<div class="rs-h2"><b>' + t('В контент-план') + '</b><span>' + escapeHtml(where) + ' · ' + t('время канала') + ' (' + tzLab + ')</span></div>' +
+        '<div class="ap-sub">' + t('Выбери день недели — неделя скользящая, прошедших дней нет') + '</div>' +
+        '<div class="rs-week" id="rs-week"></div>' +
+        '<div id="rs-rec"></div>' +
+        '<div id="rs-time"></div>' +
+        '<button class="cp-go" id="rs-go" type="button"></button>' +
+        '<div class="cp-own-note" id="rs-note"></div>';
+    document.body.appendChild(ov);
+    document.body.appendChild(sh);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
+    ov.addEventListener('click', rsClose);
+    _rsCtx = { ov, sh };
+    const q = (id) => sh.querySelector('#' + id);
+    const drawWeek = () => {
+        q('rs-week').innerHTML = RS_WD.map((wd, i) => {
+            const iso = (pi.week_dates || [])[i] || '';
+            const full = (pi.counts && pi.counts[String(i)] || 0) >= (pi.max_per_day || 3);
+            const d = iso ? new Date(iso + 'T00:00:00') : null;
+            const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+            const sub = i === pi.today_index ? t('сегодня') : (d ? d.toLocaleDateString(lang, { month: 'short' }).replace('.', '') : '');
+            return '<button type="button" class="rs-wd' + (i === sel.day ? ' on' : '') + (i === pi.today_index ? ' today' : '') + (full ? ' off' : '') +
+                '" data-rd="' + i + '"' + (full ? ' disabled' : '') + '><s>' + t(wd) + '</s><b>' + (d ? d.getDate() : '') + '</b><i>' + escapeHtml(sub) + '</i></button>';
+        }).join('');
+    };
+    const drawRec = () => {
+        const el = q('rs-rec');
+        if (!rec) { el.innerHTML = ''; return; }
+        const iso = (pi.week_dates || [])[rec.day_index] || '';
+        el.innerHTML = '<button type="button" class="rs-rec" data-rrec="1"><span class="ic"><i class="ti ti-sparkles"></i></span>' +
+            '<span class="tx"><b>' + t('Рекомендуемое:') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ', ' + rec.hm + '</b>' +
+            '<em>' + t(RS_REC_SRC[rec.source] || RS_REC_SRC.auto) + ' · ' + t('нажми, чтобы подставить') + '</em></span></button>';
+    };
+    const drawTime = () => {
+        const now = pi.today_index === sel.day ? rsChanNow() : null;
+        let hours = '';
+        for (let h = 8; h <= 22; h++) {
+            const hh = (h < 10 ? '0' : '') + h;
+            const off = now && (h * 60 + 45 <= now[0] * 60 + now[1] + 1);
+            hours += '<button type="button" class="cp-th' + ((sel.hm || '').slice(0, 2) === hh ? ' on' : '') + (off ? ' off' : '') + '" data-rh="' + hh + '">' + hh + '</button>';
+        }
+        const mins = ['00', '15', '30', '45'].map((m) => {
+            const offm = now && sel.hm && ((+sel.hm.slice(0, 2)) * 60 + (+m) <= now[0] * 60 + now[1] + 1);
+            return '<button type="button" class="cp-tm' + ((sel.hm || '').slice(3) === m ? ' on' : '') + (offm ? ' off' : '') + '" data-rm="' + m + '">:' + m + '</button>';
+        }).join('');
+        q('rs-time').innerHTML = '<div class="cp-tgrid">' + hours + '</div><div class="cp-trow">' + mins + '</div>' +
+            (!sel.hm ? '<div class="cp-own-note">' + t('На сегодня время вышло — выбери другой день.') + '</div>' : '');
+    };
+    const drawGo = () => {
+        const go = q('rs-go');
+        const iso = (pi.week_dates || [])[sel.day] || '';
+        const ready = !!sel.hm && !rsPast(sel.day, sel.hm) && !sel.busy;
+        go.className = 'cp-go' + (pi.can_post ? ' grn' : '');
+        go.disabled = !ready;
+        go.innerHTML = sel.busy ? '<div class="cp-spin sm"></div> ' + t('Сохраняю...') :
+            '<i class="ti ti-' + (pi.can_post ? 'calendar-up' : 'device-floppy') + '"></i> ' +
+            (pi.can_post ? t('Запланировать на') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ' ' + (sel.hm || '') : t('Сохранить в план'));
+        q('rs-note').textContent = pi.can_post
+            ? t('Пост появится в неделе контент-плана и выйдет сам. До выхода его можно править или снять.') + (pi.has_plan ? '' : ' ' + t('Недели ещё нет — она создастся.'))
+            : t('Бот не подключён к каналу с правом публикации — пост сохранится в план без автовыхода.');
+    };
+    const drawAll = () => { drawWeek(); drawRec(); drawTime(); drawGo(); };
+    drawAll();
+    localizeTree(sh);
+    sh.addEventListener('click', async (e) => {
+        const tg = e.target;
+        const wd = tg.closest ? tg.closest('[data-rd]') : null;
+        if (wd) {
+            sel.day = +wd.dataset.rd;
+            if (!sel.hm || rsPast(sel.day, sel.hm)) sel.hm = rsDefaultHm(sel.day);
+            hapticLight(); drawAll(); return;
+        }
+        if (tg.closest && tg.closest('[data-rrec]')) {
+            sel.day = rec.day_index; sel.hm = rec.hm;
+            if (rsPast(sel.day, sel.hm)) sel.hm = rsDefaultHm(sel.day);
+            hapticLight(); drawAll(); return;
+        }
+        const rh = tg.closest ? tg.closest('[data-rh]') : null;
+        if (rh) {
+            sel.hm = rh.dataset.rh + ':' + ((sel.hm || '12:00').slice(3) || '00');
+            if (rsPast(sel.day, sel.hm)) {
+                const pm = ['00', '15', '30', '45'].filter((m) => !rsPast(sel.day, sel.hm.slice(0, 2) + ':' + m))[0];
+                if (pm) sel.hm = sel.hm.slice(0, 2) + ':' + pm;
+            }
+            hapticLight(); drawTime(); drawGo(); return;
+        }
+        const rm = tg.closest ? tg.closest('[data-rm]') : null;
+        if (rm) {
+            sel.hm = (sel.hm || '12:00').slice(0, 2) + ':' + rm.dataset.rm;
+            hapticLight(); drawTime(); drawGo(); return;
+        }
+        if (tg.closest && tg.closest('#rs-go')) {
+            if (sel.busy) return;
+            sel.busy = true; drawGo();
+            hapticMed();
+            const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+            try {
+                const r = await apiRequest('/api/v1/content-plan/place', { method: 'POST',
+                    body: JSON.stringify({ post_id: pid, day_index: sel.day, hm: sel.hm, queue: !!pi.can_post, lang }) });
+                if (r && r.ok) {
+                    state.post.placed = { day_index: sel.day, hm: r.slot_hm, date_iso: r.date_iso, queued: !!r.queued };
+                    pi.has_plan = true;
+                    pi.counts[String(sel.day)] = (pi.counts[String(sel.day)] || 0) + 1;
+                    rsClose();
+                    renderResultHints();
+                    showToast((r.queued ? t('В контент-плане, выйдет сам:') : t('Сохранён в план:')) + ' ' + rsDateLabel(r.date_iso, true) + ' ' + r.slot_hm, 'check');
+                } else {
+                    sel.busy = false; drawGo();
+                    showToast(rsErr(r && r.error), 'alert-triangle');
+                }
+            } catch (err) { sel.busy = false; drawGo(); apErr(err); }
+        }
+    });
 }
 
 
@@ -6675,11 +6929,23 @@ function setupPostEventListeners() {
         });
     }
 
-    if (els.postScheduleBtn) {
-        els.postScheduleBtn.addEventListener('click', () => {
-            const locked = els.postScheduleBtn.dataset.locked === 'true';
+    if (els.postPlanBtn) {
+        els.postPlanBtn.addEventListener('click', () => {
+            const locked = els.postPlanBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('schedule');
-            else openScheduleSheet();
+            else if (state.post.placed) showToast(t('Пост уже в плане:') + ' ' + rsDateLabel(state.post.placed.date_iso, true) + ' ' + state.post.placed.hm, 'check');
+            else openPlanSheet();
+        });
+    }
+    const _coverHost = document.getElementById('post-cover-block');
+    if (_coverHost) {
+        _coverHost.addEventListener('click', (e) => {
+            const b = e.target.closest ? e.target.closest('[data-rc]') : null;
+            if (!b || state.post.mediaBusy) return;
+            const a = b.dataset.rc;
+            if (a === 'file') { hapticLight(); rsPickFile(); }
+            else if (a === 'cover') rsMakeCover();
+            else if (a === 'clear') { hapticLight(); rsClearCover(); }
         });
     }
 
