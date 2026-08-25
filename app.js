@@ -5311,7 +5311,148 @@ function renderSettingsBehaviorSection(data) {
                 </button>
             </div>
         </div>
+        ${renderTzSection(data)}
     `;
+}
+
+const TZ_ZONES = [
+    [120, 'Калининград'], [180, 'Москва'], [180, 'Минск'], [180, 'Киев'], [180, 'Стамбул'],
+    [240, 'Самара'], [240, 'Баку · Тбилиси · Ереван'], [240, 'Дубай'],
+    [300, 'Екатеринбург'], [300, 'Ташкент · Алматы'], [330, 'Дели · Мумбаи'],
+    [360, 'Омск · Бишкек'], [360, 'Дакка'], [420, 'Новосибирск · Красноярск'], [420, 'Бангкок · Джакарта · Ханой'],
+    [480, 'Иркутск'], [480, 'Пекин · Сингапур · Куала-Лумпур'], [540, 'Якутск'], [540, 'Токио · Сеул'],
+    [600, 'Владивосток'], [660, 'Магадан'], [720, 'Камчатка'],
+];
+const TZ_OTHER = [-720, -660, -600, -540, -480, -420, -360, -300, -240, -180, -120, -60, 0, 60, 120, 180, 240, 300, 330, 345, 360, 420, 480, 540, 570, 600, 630, 660, 720, 780, 840];
+let _tzCtx = null;
+let _tzTick = null;
+
+function tzFmt(min) {
+    const m = Math.round(+min || 0);
+    const a = Math.abs(m);
+    const h = Math.floor(a / 60), r = a % 60;
+    return 'UTC' + (m < 0 ? '−' : '+') + h + (r ? ':' + String(r).padStart(2, '0') : '');
+}
+function tzDevice() { return -new Date().getTimezoneOffset(); }
+function tzCity(min) {
+    const z = TZ_ZONES.find(z => z[0] === min);
+    return z ? t(z[1]) : '';
+}
+function tzLabel(min) {
+    const c = tzCity(min);
+    return (c ? c + ' · ' : '') + tzFmt(min);
+}
+function tzClock(min) {
+    const d = new Date(Date.now() + (min - tzDevice()) * 60000);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function tzNowLine(min) {
+    const dev = tzDevice();
+    let line = t('Сейчас по каналу') + ' ' + tzClock(min);
+    if (dev !== min) line += ' · ' + t('на твоём устройстве') + ' ' + tzClock(dev) + ' (' + tzFmt(dev) + ')';
+    return line;
+}
+function tzCurrent(data) {
+    return (data && data.tz_offset_minutes != null) ? data.tz_offset_minutes : tzDevice();
+}
+function renderTzSection(data) {
+    const cur = tzCurrent(data);
+    return `
+        <div class="cs-section">
+            <div class="cs-section-title">Время</div>
+            <button class="cs-toggle-row cs-tz-row" data-tz-open="1" type="button">
+                <div class="cs-toggle-icon-wrap"><i class="ti ti-clock" style="color: #818cf8;"></i></div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row"><span class="cs-toggle-title">Часовой пояс канала</span></div>
+                    <div class="cs-toggle-sub">По нему выходят посты и считаются замеры. Общий для всех админов канала</div>
+                    <div class="cs-tz-now" id="cs-tz-now">${escapeHtml(tzNowLine(cur))}</div>
+                </div>
+                <span class="cs-tz-val" id="cs-tz-val">${escapeHtml(tzLabel(cur))}</span>
+                <i class="ti ti-chevron-right cs-tz-ch"></i>
+            </button>
+        </div>
+    `;
+}
+function tzRefreshRow() {
+    const data = _settingsState.data;
+    if (!data) return;
+    const cur = tzCurrent(data);
+    const v = document.getElementById('cs-tz-val');
+    if (v) v.textContent = tzLabel(cur);
+    const n = document.getElementById('cs-tz-now');
+    if (n) n.textContent = tzNowLine(cur);
+    const sn = document.getElementById('tz-now');
+    if (sn) sn.textContent = t('сейчас по каналу') + ' ' + tzClock(cur);
+}
+function tzStartTick() {
+    if (_tzTick) clearInterval(_tzTick);
+    _tzTick = setInterval(() => {
+        if (!document.getElementById('cs-tz-now')) { clearInterval(_tzTick); _tzTick = null; return; }
+        tzRefreshRow();
+    }, 30000);
+}
+function tzClose() {
+    if (_tzCtx) { try { _tzCtx.ov.remove(); _tzCtx.sh.remove(); } catch (e) {} _tzCtx = null; }
+    document.documentElement.classList.remove('cs-modal-open');
+    document.body.classList.remove('cs-modal-open');
+}
+function openTzSheet() {
+    const data = _settingsState.data;
+    if (!data) return;
+    hapticLight();
+    tzClose();
+    const cur = (data.tz_offset_minutes != null) ? data.tz_offset_minutes : null;
+    const dev = tzDevice();
+    const ov = document.createElement('div');
+    ov.className = 'bs-overlay';
+    const sh = document.createElement('div');
+    sh.className = 'bs-sheet ap-sheet tz-sheet';
+    sh.innerHTML = '<div class="bs-handle"></div>' +
+        '<div class="rs-h2"><b>' + t('Часовой пояс канала') + '</b><span id="tz-now">' + t('сейчас по каналу') + ' ' + tzClock(cur == null ? dev : cur) + '</span></div>' +
+        '<div class="ap-sub">' + t('Один пояс на канал для всей команды. Расписание постов и замеры считаются по нему; уже запланированные посты сохраняют своё локальное время.') + '</div>' +
+        '<div class="tz-search"><i class="ti ti-search"></i><input id="tz-q" type="text" placeholder="' + t('Город или UTC+…') + '" autocomplete="off"></div>' +
+        '<div class="tz-list" id="tz-list"></div>';
+    document.body.appendChild(ov);
+    document.body.appendChild(sh);
+    document.documentElement.classList.add('cs-modal-open');
+    document.body.classList.add('cs-modal-open');
+    requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
+    ov.addEventListener('click', tzClose);
+    _tzCtx = { ov, sh };
+    const items = [{ min: dev, label: t('Твоё устройство'), sub: tzLabel(dev), dev: true }]
+        .concat(TZ_ZONES.map(z => ({ min: z[0], label: t(z[1]), sub: tzFmt(z[0]) })))
+        .concat(TZ_OTHER.filter(m => !TZ_ZONES.some(z => z[0] === m)).map(m => ({ min: m, label: tzFmt(m), sub: t('другое смещение') })));
+    const draw = (q) => {
+        const qq = (q || '').trim().toLowerCase().replace('utc', '').replace(/\s+/g, '');
+        const list = sh.querySelector('#tz-list');
+        list.innerHTML = items.filter(it => !qq || (it.label + ' ' + it.sub).toLowerCase().replace(/\s+/g, '').indexOf(qq) >= 0)
+            .map(it => '<button type="button" class="tz-it' + (it.min === cur ? ' on' : '') + (it.dev ? ' dev' : '') + '" data-tzv="' + it.min + '">' +
+                '<b>' + escapeHtml(it.label) + '</b><span>' + escapeHtml(it.sub) + '</span>' + (it.min === cur ? '<i class="ti ti-check"></i>' : '') + '</button>').join('') ||
+            '<div class="ap-sub">' + t('Ничего не найдено') + '</div>';
+    };
+    draw('');
+    sh.querySelector('#tz-q').addEventListener('input', (e) => draw(e.target.value));
+    sh.addEventListener('click', (e) => {
+        const b = e.target.closest ? e.target.closest('[data-tzv]') : null;
+        if (b) saveTz(+b.dataset.tzv);
+    });
+}
+async function saveTz(min) {
+    const id = _settingsState.channelId;
+    if (!id || !_settingsState.data) return;
+    try {
+        await apiRequest(`/api/v1/channels/${id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ tz_offset_minutes: min }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        _settingsState.data.tz_offset_minutes = min;
+        tzClose();
+        hapticMed();
+        tzRefreshRow();
+        showToast(t('Пояс канала:') + ' ' + tzLabel(min), 'check');
+        refreshSettingsHistory();
+    } catch (e) { apErr(e); }
 }
 
 
@@ -5442,6 +5583,8 @@ function attachSettingsHandlers() {
             await handleToggleSwitch(target, !isOn);
         });
     });
+    const tzRow = document.querySelector('[data-tz-open]');
+    if (tzRow) { tzRow.addEventListener('click', openTzSheet); tzStartTick(); }
 
     document.querySelectorAll('.cs-info-btn').forEach(b => {
         b.addEventListener('click', (e) => {
