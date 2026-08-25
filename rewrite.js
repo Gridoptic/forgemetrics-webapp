@@ -209,6 +209,7 @@
             '<div class="rw-lbl">' + esc(T('Эмодзи')) + '</div>' + seg('emoji', _emoji, [['none', 'Без'], ['few', 'Умеренно'], ['many', 'Живо']]) +
             '<div class="rw-lbl">' + esc(T('Длина')) + '</div>' + seg('length', _length, [['shorter', 'Короче'], ['same', 'Так же'], ['longer', 'Длиннее']], _caption ? ' dis' : '') +
             '<div class="rw-disnote" id="rw-lennote" style="display:' + (_caption ? 'block' : 'none') + ';">' + esc(T('Выключено: длину задаёт «Уложиться в подпись к фото»')) + '</div>' +
+            '<div class="rw-lensize" id="rw-lensize" style="display:' + (_caption ? 'none' : 'block') + ';">' + esc(lenSizeText()) + '</div>' +
             '<div class="rw-lbl">' + esc(T('Тон')) + '</div>' + toneRows() +
             modelBlock() +
             tgl('improve', _improve, 'Усилить пост', 'цепляющий хук, без воды, призыв в конце, формат под Telegram — версия соберёт не хуже') +
@@ -230,7 +231,24 @@
             if (note) note.classList.toggle('on', looksLink);
             var cnt = document.getElementById('rw-count');
             if (cnt) cnt.textContent = num(v.length) + ' / 8 000';
+            updateLenSize();
         }
+    }
+
+    var LEN_MULT = { shorter: 0.6, same: 1, longer: 1.5 };
+    function lenSizeText() {
+        var inp = document.getElementById('rw-input');
+        var v = inp ? (inp.value || '').trim() : '';
+        if (!v) return T('Размер посчитаю по вставленному тексту');
+        if (/t\.me\/[^\s]+/.test(v) && v.length < 200) return T('Размер — от длины поста по ссылке');
+        var n = Math.round(v.length * (LEN_MULT[_length] || 1));
+        var how = _length === 'shorter' ? T('на 40% короче оригинала')
+            : _length === 'longer' ? T('в полтора раза длиннее оригинала') : T('как оригинал');
+        return '≈ ' + num(n) + ' ' + T('знаков') + ' — ' + how;
+    }
+    function updateLenSize() {
+        var el = document.getElementById('rw-lensize');
+        if (el) { el.textContent = lenSizeText(); el.style.display = _caption ? 'none' : 'block'; }
     }
 
     function setBalance(b) {
@@ -358,7 +376,7 @@
             var box = segBtn.parentElement, name = box.getAttribute('data-seg'), v = segBtn.getAttribute('data-v');
             if (name === 'length' && box.classList.contains('dis')) return;
             if (name === 'emoji') _emoji = v;
-            else if (name === 'length') _length = v;
+            else if (name === 'length') { _length = v; updateLenSize(); }
             else if (name === 'model') { _model = v; var goB = document.querySelector('#rewrite-screen .rw-go'); if (goB) goB.innerHTML = esc(T('Переписать в моём стиле')) + priceChip(); }
             box.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === segBtn); });
             haptic('light'); return;
@@ -402,6 +420,7 @@
             if (lenSeg) lenSeg.classList.toggle('dis', _caption);
             var ln = document.getElementById('rw-lennote');
             if (ln) ln.style.display = _caption ? 'block' : 'none';
+            updateLenSize();
             haptic('light'); return;
         }
         if (act === 'go') { go(false); return; }
