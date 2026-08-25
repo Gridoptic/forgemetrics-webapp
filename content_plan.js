@@ -1851,7 +1851,7 @@
     function rubByTitle(t) {
         return (_rubrics || []).filter(function (r) { return r.title === t; })[0] || null;
     }
-    function cpwReason(r) {
+    function cpwReason(r, brief) {
         if (!r) return T('тема будет из включённых рубрик');
         if ((r.post_count || 0) >= 3 && (r.avg_views || 0) > 0) {
             var top = 0;
@@ -1859,7 +1859,7 @@
                 if (!x.disabled && (x.post_count || 0) >= 3 && (x.avg_views || 0) > top) top = x.avg_views;
             });
             return (r.avg_views === top ? T('сильная рубрика') : T('рубрика канала')) +
-                ' · ' + T('типичный охват') + ' ' + numExact(r.avg_views);
+                (brief ? '' : ' · ' + T('типичный охват') + ' ' + numExact(r.avg_views));
         }
         if (r.source === 'user') return T('твоя рубрика');
         if (r.source === 'suggest') return T('предложение под нишу');
@@ -1871,11 +1871,11 @@
         var tp = dayTopics(i)[k] || '';
         if (tp) {
             var r = rubByTitle(tp);
-            return r ? { t: cpwReason(r), own: r.source === 'user' }
+            return r ? { t: cpwReason(r, true), own: r.source === 'user' }
                      : { t: T('твоя тема'), own: true };
         }
         var pin = dayPins(i)[k] || '';
-        if (pin) return { t: cpwReason(rubByTitle(rubTitle(pin))), own: false };
+        if (pin) return { t: cpwReason(rubByTitle(rubTitle(pin)), true), own: false };
         return null;
     }
     function daysUneven() {
