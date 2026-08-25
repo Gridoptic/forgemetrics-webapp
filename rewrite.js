@@ -7,13 +7,18 @@
     var _ctx = null;
     var _avCache = {};
 
-    var TONE_OPTS = [['channel', 'Как в канале'], ['expert', 'Экспертно'], ['provocative', 'Провокационно'], ['selling', 'Продажно']];
-    var TONE_HINTS = {
-        channel: 'Как в канале — интонация и манера твоих постов: читатель не отличит от родного контента.',
-        expert: 'Экспертно — сдержанно и по делу: факты, цифры, выводы, без эмоций и кликбейта.',
-        provocative: 'Провокационно — дерзкий заход и спорный тезис: выжимает реакции и комментарии.',
-        selling: 'Продажно — выгода читателя с первых строк, аргументы и чёткий призыв в конце.'
-    };
+    var TONE_ROWS = [
+        ['channel', 'Как в канале', 'Интонация и манера твоих постов: читатель не отличит от родного контента'],
+        ['expert', 'Экспертно', 'Сдержанно и по делу: факты, цифры, выводы, без эмоций и кликбейта'],
+        ['provocative', 'Провокационно', 'Дерзкий заход и спорный тезис: выжимает реакции и комментарии'],
+        ['selling', 'Продажно', 'Выгода читателя с первых строк, аргументы и чёткий призыв в конце']
+    ];
+    function toneRows() {
+        return '<div class="rw-tone" data-seg="tone">' + TONE_ROWS.map(function (o) {
+            return '<button type="button" class="rw-tone-row' + (_tone === o[0] ? ' on' : '') + '" data-tone="' + o[0] + '">' +
+                '<span class="rd"></span><span class="tx"><b>' + esc(T(o[1])) + '</b><em>' + esc(T(o[2])) + '</em></span></button>';
+        }).join('') + '</div>';
+    }
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -204,8 +209,7 @@
             '<div class="rw-lbl">' + esc(T('Эмодзи')) + '</div>' + seg('emoji', _emoji, [['none', 'Без'], ['few', 'Умеренно'], ['many', 'Живо']]) +
             '<div class="rw-lbl">' + esc(T('Длина')) + '</div>' + seg('length', _length, [['shorter', 'Короче'], ['same', 'Так же'], ['longer', 'Длиннее']], _caption ? ' dis' : '') +
             '<div class="rw-disnote" id="rw-lennote" style="display:' + (_caption ? 'block' : 'none') + ';">' + esc(T('Выключено: длину задаёт «Уложиться в подпись к фото»')) + '</div>' +
-            '<div class="rw-lbl">' + esc(T('Тон')) + '</div>' + seg('tone', _tone, TONE_OPTS) +
-            '<div class="rw-seghint" id="rw-tonehint">' + esc(T(TONE_HINTS[_tone])) + '</div>' +
+            '<div class="rw-lbl">' + esc(T('Тон')) + '</div>' + toneRows() +
             modelBlock() +
             tgl('improve', _improve, 'Усилить пост', 'цепляющий хук, без воды, призыв в конце, формат под Telegram — версия соберёт не хуже') +
             tgl('strip', _strip, 'Вычистить чужие ссылки и @упоминания', 'чужие каналы, приглашения и призывы из оригинала не попадут в твой пост') +
@@ -356,12 +360,13 @@
             if (name === 'emoji') _emoji = v;
             else if (name === 'length') _length = v;
             else if (name === 'model') { _model = v; var goB = document.querySelector('#rewrite-screen .rw-go'); if (goB) goB.innerHTML = esc(T('Переписать в моём стиле')) + priceChip(); }
-            else if (name === 'tone') {
-                _tone = v;
-                var th = document.getElementById('rw-tonehint');
-                if (th) th.textContent = T(TONE_HINTS[v] || '');
-            }
             box.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === segBtn); });
+            haptic('light'); return;
+        }
+        var toneBtn = t.closest ? t.closest('[data-tone]') : null;
+        if (toneBtn) {
+            _tone = toneBtn.getAttribute('data-tone');
+            toneBtn.parentElement.querySelectorAll('.rw-tone-row').forEach(function (b) { b.classList.toggle('on', b === toneBtn); });
             haptic('light'); return;
         }
         var opt = t.closest ? t.closest('.rw-chopt') : null;
