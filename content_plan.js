@@ -1577,16 +1577,60 @@
         return c.username ? '@' + c.username : T('приватный канал');
     }
 
+    var GOAL_INFO = {
+        growth: {
+            posts: 'Минимум два поста — такие, что хочется переслать: разбор мифа, неожиданное сравнение, типичная ошибка ниши. Минимум один понятен новичку сам по себе. Ни один не рассчитывает, что читатель давно в канале.',
+            time: 'Время — по замерам канала, без привязки к окну.',
+            when: 'Когда канал открыт для новых читателей. Постоянной аудитории может не хватить глубины — посты обращены к тем, кто пришёл впервые.',
+        },
+        engagement: {
+            posts: 'Минимум два поста заканчиваются вопросом, на который читатель ответит из своего опыта. Минимум один занимает сторону в споре аудитории. Подача приглашает к несогласию.',
+            time: 'Дневное окно 11:00–16:00 — читают и отвечают в течение дня.',
+            when: 'Когда нужны реакции и обсуждение. Позиция в споре может вызвать несогласие части аудитории — убедись, что канал готов к дискуссии.',
+        },
+        sales: {
+            posts: 'Ровно один пост — сам оффер, во второй половине недели. Посты до него снимают возражения: цена, сомнение в результате, страх сделать неправильно. Первый пост недели не продаёт. Цены, скидки и «только сегодня» не выдумываются: если оффер не описан в канале, пост приглашает написать в личные сообщения.',
+            time: 'Вечернее окно 17:00–22:00 — решения о покупке принимают после работы.',
+            when: 'Когда есть что продавать и оффер описан в канале. Без оффера неделя выйдет холостой.',
+        },
+        warmup: {
+            posts: 'Неделя ведёт к событию, которого ещё не было: каждый пост поднимает ставки проблемы, которую решит запуск. Последний пост оставляет открытый вопрос — что дальше. Прямых продаж нет.',
+            time: 'Вечернее окно 17:00–22:00.',
+            when: 'За неделю до запуска или анонса. Если запуска не будет, интрига обманет ожидания.',
+        },
+        retention: {
+            posts: 'Минимум один пост возвращается к прошлой теме канала с тем, что изменилось. Минимум один — для тех, кто уже сделал то, что советовал канал: следующий шаг, а не первый. Азы не пересказываются.',
+            time: 'Дневное окно 11:00–16:00.',
+            when: 'Когда аудитория уходит или остывает. Цель для устоявшихся читателей — новичкам часть постов будет непонятна.',
+        },
+    };
+    var _goalInfo = null;
     function goalChips() {
         var goalSel = (_goal || 'engagement').split('+');
         var rec = goalRec();
         return GOALS.map(function (g) {
             var mb = (rec && g[0] === 'retention')
                 ? '<span class="cp-rbdg dn">' + esc(T('рекомендация по замерам')) + '</span>' : '';
-            return '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
+            var open = _goalInfo === g[0];
+            var inf = GOAL_INFO[g[0]];
+            return '<div class="cp-goalrow' + (open ? ' open' : '') + '">' +
+                '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
                 '<span class="tx"><b>' + esc(T(g[1])) + mb + '</b>' +
-                '<em>' + esc(T(g[2])) + '</em></span></button>';
+                '<em>' + esc(T(g[2])) + '</em></span></button>' +
+                '<button class="cp-goalq" data-act="goalinfo" data-v="' + g[0] + '" aria-label="' +
+                esc(T('Подробнее о цели')) + '">' + (open ? '<i class="ti ti-x"></i>' : '?') + '</button>' +
+                (open && inf
+                    ? '<div class="cp-goalinfo">' +
+                      '<div><b>' + esc(T('В постах')) + '</b>' + esc(T(inf.posts)) + '</div>' +
+                      '<div><b>' + esc(T('Время')) + '</b>' + esc(T(inf.time)) + '</div>' +
+                      '<div><b>' + esc(T('Когда выбирать')) + '</b>' + esc(T(inf.when)) + '</div>' +
+                      (goalSel.length > 1
+                        ? '<div class="two">' + esc(T('Выбраны две цели: посты недели делятся между ними, ' +
+                            'а не тянут обе сразу.')) + '</div>' : '') +
+                      '</div>'
+                    : '') +
+                '</div>';
         }).join('');
     }
 
@@ -3968,7 +4012,7 @@
                 _goal = parts.join('+');
                 saveDaysSoon();
             }
-            var wrap = chip.parentElement;
+            var wrap = chip.closest('.cp-goals') || chip.parentElement;
             var sel = (_goal || '').split('+');
             wrap.querySelectorAll('[data-chip]').forEach(function (b) {
                 if (name === 'goal') b.classList.toggle('on', sel.indexOf(b.getAttribute('data-v')) >= 0);
@@ -4127,6 +4171,13 @@
             return;
         }
         if (act === 'sgtog') { haptic('light'); _sgOpen = !_sgOpen; renderBrief(); return; }
+        if (act === 'goalinfo') {
+            haptic('light');
+            var _gv = actEl.getAttribute('data-v');
+            _goalInfo = (_goalInfo === _gv) ? null : _gv;
+            if (_lastView === 'week') renderWeek(); else renderBrief();
+            return;
+        }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'cpwd') {
             haptic('light');
