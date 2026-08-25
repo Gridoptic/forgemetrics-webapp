@@ -5425,9 +5425,10 @@ function openTzSheet() {
     const draw = (q) => {
         const qq = (q || '').trim().toLowerCase().replace('utc', '').replace(/\s+/g, '');
         const list = sh.querySelector('#tz-list');
+        const onIdx = items.findIndex(it => !it.dev && it.min === cur);
         list.innerHTML = items.filter(it => !qq || (it.label + ' ' + it.sub).toLowerCase().replace(/\s+/g, '').indexOf(qq) >= 0)
-            .map(it => '<button type="button" class="tz-it' + (it.min === cur ? ' on' : '') + (it.dev ? ' dev' : '') + '" data-tzv="' + it.min + '">' +
-                '<b>' + escapeHtml(it.label) + '</b><span>' + escapeHtml(it.sub) + '</span>' + (it.min === cur ? '<i class="ti ti-check"></i>' : '') + '</button>').join('') ||
+            .map(it => { const on = items.indexOf(it) === onIdx; return '<button type="button" class="tz-it' + (on ? ' on' : '') + (it.dev ? ' dev' : '') + '" data-tzv="' + it.min + '">' +
+                '<b>' + escapeHtml(it.label) + '</b><span>' + escapeHtml(it.sub) + '</span>' + (on ? '<i class="ti ti-check"></i>' : '') + '</button>'; }).join('') ||
             '<div class="ap-sub">' + t('Ничего не найдено') + '</div>';
     };
     draw('');
