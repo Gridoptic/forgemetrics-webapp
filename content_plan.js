@@ -1835,24 +1835,34 @@
         return 1 + Math.round(((t - f) / 86400000 - 3 + ((f.getUTCDay() + 6) % 7)) / 7);
     }
     var _cpwDay = null;
+    function rubRecentOnce(r) {
+        if (!r || (r.post_count || 0) > 1 || !r.last_at) return false;
+        var age = Date.now() - Date.parse(r.last_at);
+        return age >= 0 && age < 90 * 86400000;
+    }
     function cpwSugTitles() {
-        return cpwCandidates().map(function (r) { return r.title; });
+        return cpwCandidates().filter(function (r) { return !rubRecentOnce(r); })
+            .map(function (r) { return r.title; });
     }
     function cpwCandidates() {
         var live = (_rubrics || []).filter(function (r) {
-            return r.title && !r.disabled && !r.needs_fact;
+            return r.title && !r.disabled && !r.needs_fact && !rubRecentOnce(r);
         });
         live.sort(function (a, b) { return (b.avg_views || 0) - (a.avg_views || 0); });
         var sug = (_rubrics || []).filter(function (r) {
             return r.title && r.disabled && r.source === 'suggest';
         });
-        return live.concat(sug);
+        var once = (_rubrics || []).filter(function (r) {
+            return r.title && !r.disabled && !r.needs_fact && rubRecentOnce(r);
+        });
+        return live.concat(sug, once);
     }
     function rubByTitle(t) {
         return (_rubrics || []).filter(function (r) { return r.title === t; })[0] || null;
     }
     function cpwReason(r, brief) {
         if (!r) return T('тема будет из включённых рубрик');
+        if (rubRecentOnce(r)) return T('уже выходила') + ' ' + dateLabel(String(r.last_at).slice(0, 10));
         if ((r.post_count || 0) >= 3 && (r.avg_views || 0) > 0) {
             var top = 0;
             (_rubrics || []).forEach(function (x) {
@@ -2186,6 +2196,7 @@
             sugs.map(function (r) {
                 var isCur = r.title === cur;
                 return '<button class="cpw-pick' + (r.source === 'user' ? ' own' : '') +
+                    (rubRecentOnce(r) ? ' old' : '') +
                     '" data-act="cpwpick" data-v="' + esc(r.title) + '">' +
                     '<span class="tx">' + esc(r.title) +
                     '<em>' + esc(cpwReason(r)) + '</em>' +

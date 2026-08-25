@@ -1858,6 +1858,8 @@
 .cpw-pick { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
   padding: 10px 11px; border-radius: 12px; margin-bottom: 6px; cursor: pointer; font-family: inherit;
   border: .5px solid rgba(52,211,153,.3); background: rgba(52,211,153,.05); color: #eef0fa; font-size: 12px; }
+.cpw-pick.old { opacity: .55; border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.02); }
+.cpw-pick.old em { color: #b8915a; }
 .cpw-pick.auto { border-color: rgba(129,140,248,.4); background: rgba(129,140,248,.06); }
 .cpw-pick .tx { flex: 1; min-width: 0; }
 .cpw-pick em { font-style: normal; display: block; font-size: 10px; color: #8fe3c4; margin-top: 1px; }
