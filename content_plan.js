@@ -3996,6 +3996,104 @@
     }
 
 
+    var _crvBusy = {};
+    var _crvTimer = null;
+    function crvPoll() {
+        if (_crvTimer) clearTimeout(_crvTimer);
+        _crvTimer = setTimeout(function () {
+            _crvTimer = null;
+            if (!_open) return;
+            var live = (_state && _state.posts || []).some(function (x) {
+                return x.creative && (x.creative.status === 'queued' || x.creative.status === 'generating');
+            });
+            if (live) { refreshState(); crvPoll(); }
+        }, 15000);
+    }
+    function creativeBlock(p) {
+        if (p.publish_status === 'rolled_back' || !p.text) return '';
+        var c = p.creative;
+        var busy = _crvBusy[p.id];
+        var head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' + esc(T('Креатив для Shorts, Дзена и VK Клипов')) + '</b></div>';
+        if (busy || (c && (c.status === 'queued' || c.status === 'generating'))) {
+            crvPoll();
+            return '<div class="cp-crv">' + head +
+                '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
+                esc(T('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно 3–4 минуты — можно уйти с экрана.')) + '</span></div></div>';
+        }
+        if (c && c.status === 'ready' && c.url) {
+            var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
+            return '<div class="cp-crv">' + head +
+                '<div class="cp-crv-card">' +
+                '<button class="cp-crv-prev" data-act="crvopen" data-url="' + esc(c.url) + '">' +
+                (c.preview_url ? '<img src="' + esc(c.preview_url) + '" alt="">' : '') +
+                '<span class="cp-crv-play"><i class="ti ti-player-play-filled"></i></span>' +
+                (dur ? '<span class="cp-crv-dur">' + esc(dur) + '</span>' : '') + '</button>' +
+                '<div class="cp-crv-acts">' +
+                '<button class="cp-act ok" data-act="crvopen" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i> ' + esc(T('Скачать MP4')) + '</button>' +
+                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + '</button>' +
+                '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
+                '</div></div>' +
+                '<div class="cp-note">' + esc(T('9:16, 1080×1920 — под YouTube Shorts, Дзен и VK Клипы. Описание для публикации — по кнопке.')) + '</div></div>';
+        }
+        if (c && c.status === 'error') {
+            return '<div class="cp-crv">' + head +
+                '<div class="cp-note fail">' + esc(T('Ролик не собрался — попробуй ещё раз.')) + '</div>' +
+                '<button class="cp-act" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Собрать заново')) + '</button></div>';
+        }
+        return '<div class="cp-crv">' + head +
+            '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-sparkles"></i>' +
+            '<span class="tx"><b>' + esc(T('Собрать креатив')) + '</b><em>' +
+            esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл через 3–4 минуты')) + '</em></span></button></div>';
+    }
+    function crvBuild(pid) {
+        if (_crvBusy[pid]) return;
+        _crvBusy[pid] = true;
+        haptic('medium');
+        renderWeek();
+        apiRequest('/api/v1/creative/build', { method: 'POST',
+            body: JSON.stringify({ post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' }) })
+            .then(function (r) {
+                delete _crvBusy[pid];
+                if (r && r.ok) {
+                    var p = post(pid);
+                    if (p) p.creative = r.creative;
+                    toast(T('Собираю ролик — сообщу, когда будет готов'));
+                    renderWeek();
+                    crvPoll();
+                } else { toast(cap(r)); renderWeek(); }
+            })
+            .catch(function (err) { delete _crvBusy[pid]; toast(apiErrText(err, 'Не удалось запустить сборку')); renderWeek(); });
+    }
+    function crvVariant(cid) {
+        haptic('medium');
+        apiRequest('/api/v1/creative/variant', { method: 'POST', body: JSON.stringify({ id: cid }) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    var p = (_state.posts || []).filter(function (x) { return x.creative && x.creative.id === cid; })[0];
+                    if (p) p.creative = r.creative;
+                    toast(T('Собираю другой вариант'));
+                    renderWeek();
+                    crvPoll();
+                } else toast(cap(r));
+            })
+            .catch(function (err) { toast(apiErrText(err, 'Не удалось запустить сборку')); });
+    }
+    function crvDescription(cid) {
+        apiRequest('/api/v1/creative/' + cid)
+            .then(function (r) {
+                var c = r && r.creative;
+                if (!c) { toast(T('Не удалось получить описание')); return; }
+                var lines = [];
+                if (c.cta_text) lines.push(c.cta_text);
+                var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
+                if (ch && ch.username) lines.push('https://t.me/' + ch.username);
+                if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
+                var text = lines.join('\n');
+                var run = (typeof copyText === 'function') ? copyText(text) : Promise.reject();
+                Promise.resolve(run).then(function () { toast(T('Описание скопировано')); }).catch(function () { toast(text); });
+            })
+            .catch(function () { toast(T('Не удалось получить описание')); });
+    }
     function mediaBlock(p) {
         if (p.publish_status === 'published') return '';
         if (_mediaBusy[p.id]) {
@@ -4273,7 +4371,7 @@
             '<div class="cp-dtop2"><span class="d2">' + esc(T(wd)) + '</span><span class="dt2">' + esc(dateLabel(p.date_iso)) + '</span>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span></div>' +
             slot + '<div class="cp-dtitle2">' + esc(p.title || '') + '</div>' +
-            mediaBlock(p) + adRow + body + '</div>';
+            mediaBlock(p) + creativeBlock(p) + adRow + body + '</div>';
     }
 
     function factNote(p) {
@@ -4519,6 +4617,15 @@
         if (act === 'mediamode') { askMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'ownweek') { doOwnWeek(); return; }
+        if (act === 'crvbuild') { crvBuild(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvvariant') { crvVariant(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvdesc') { crvDescription(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvopen') {
+            haptic('light');
+            var _u = actEl.getAttribute('data-url');
+            try { if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) window.Telegram.WebApp.openLink(_u); else window.open(_u, '_blank'); } catch (e) { window.open(_u, '_blank'); }
+            return;
+        }
         if (act === 'owncover') { ownCoverFor(+actEl.getAttribute('data-id')); return; }
         if (act === 'mediaclear') { clearMedia(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverstyle') { askCoverStyle(+actEl.getAttribute('data-id') || null); return; }
