@@ -2940,7 +2940,7 @@
             '</div></div>';
         var header = '<div class="cp-wkhead">' +
             '<div class="cp-ring" style="--p:' + pct + '"><i>' + appr + '/' + n + '</i></div>' +
-            '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(goalTitle(_state.goal)) + '</div></div>' +
+            (_state.manual ? '' : '<div class="cp-hitem"><div class="k">' + esc(T('цель недели')) + '</div><div class="v">' + esc(goalTitle(_state.goal)) + '</div></div>') +
             '<div class="cp-saved"><i class="ti ti-calendar-week"></i> ' +
             esc(n + ' ' + T(plural3(n, 'пост', 'поста', 'постов')) + ' ' + T('в неделе')) +
             '</div></div>';
@@ -2952,17 +2952,6 @@
               '<span><b>' + esc(T('Неделя вышла полностью')) + '</b>' +
               '<em>' + esc(T('Все посты в канале. Собери следующую неделю — прошлая уйдёт в архив.')) + '</em></span></div>'
             : '';
-        var goalChanged = _goal && _state.goal && _goal !== _state.goal;
-        var goalsSec = '<div class="cp-sec">' + secHead('Цель недели',
-            'Эта неделя собрана под цель выше. Новая цель применится при следующей сборке.') +
-            '<div class="cp-goals">' + goalChips() + '</div>' + goalRecNote() +
-            (goalChanged
-                ? (allPub
-                    ? '<div class="cp-note">' + esc(T('Изменения применятся при сборке следующей недели.')) + '</div>'
-                    : '<button class="cp-allbtn rgn" data-act="regen"><i class="ti ti-refresh"></i> ' +
-                      esc(T('Пересобрать неделю под новую цель')) + '</button>' +
-                      '<div class="cp-note">' + esc(T('Откроется сборка: текущая неделя будет заменена, вышедшие посты останутся в канале.')) + '</div>')
-                : '') + '</div>';
 
         var allBtn = haveText < n
             ? '<div class="cp-note" style="margin:0 2px 8px;">' +
@@ -3003,10 +2992,9 @@
                 gHeroBase('Неделя вышла',
                     '<span class="cpg-chip g">' + esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов')) +
                         ' · ' + T(pubN < n ? 'в канале' : 'все в канале')) + '</span>' +
-                    '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' + apChip()) +
+                    (_state.manual ? '' : '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>') + apChip()) +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
-                gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
                 gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
                 gSec('arch', 'archive', 'Посты недели (архив)',
@@ -3028,13 +3016,12 @@
             setView(viewBan + chanSec() +
                 gHeroBase('Неделя в работе',
                     '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
-                    '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' +
+                    (_state.manual ? '' : '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>') +
                     (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') +
                     whoChip() + apChip()) +
                 gSec('posts', 'layout-list', 'Посты недели',
                     esc(appr + '/' + n + ' ' + T('утверждено')),
                     ohvBody + header + ribbon + detailPanel(), true) +
-                gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
                 gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
                 strategyWrap() + actBtns, 'week');
