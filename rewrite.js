@@ -243,7 +243,7 @@
         if (/t\.me\/[^\s]+/.test(v) && v.length < 200) return T('Размер — от длины поста по ссылке');
         var n = Math.round(v.length * (LEN_MULT[_length] || 1));
         var how = _length === 'shorter' ? T('на 40% короче оригинала')
-            : _length === 'longer' ? T('в полтора раза длиннее оригинала') : T('как оригинал');
+            : _length === 'longer' ? T('в полтора-два раза длиннее оригинала') : T('как оригинал');
         return '≈ ' + num(n) + ' ' + T('знаков') + ' — ' + how;
     }
     function updateLenSize() {
