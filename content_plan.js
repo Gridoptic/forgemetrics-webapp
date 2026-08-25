@@ -28,7 +28,7 @@
     }
     function canEdit() { return !_state || _state.can_edit !== false; }
     function priceResearch() { return wallet().price_research || 20; }
-    var VIEW_ACTS = { close: 1, wkday: 1, revback: 1, review: 1, tipsmore: 1, copy: 1 };
+    var VIEW_ACTS = { close: 1, wkday: 1, revback: 1, review: 1, tipsmore: 1, copy: 1, goalinfo: 1 };
     function denyEdit() {
         haptic('light');
         toast(T('Создатель канала не выдал тебе право менять контент-план'));
@@ -1613,13 +1613,13 @@
                 ? '<span class="cp-rbdg dn">' + esc(T('рекомендация по замерам')) + '</span>' : '';
             var open = _goalInfo === g[0];
             var inf = GOAL_INFO[g[0]];
-            return '<div class="cp-goalrow' + (open ? ' open' : '') + '">' +
-                '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
+            return '<button class="cp-goal' + (goalSel.indexOf(g[0]) >= 0 ? ' on' : '') +
+                (open ? ' qopen' : '') + '" data-chip="goal" data-v="' + g[0] + '">' +
                 '<i class="ti ' + (GOAL_ICON[g[0]] || 'ti-target') + '"></i>' +
                 '<span class="tx"><b>' + esc(T(g[1])) + mb + '</b>' +
-                '<em>' + esc(T(g[2])) + '</em></span></button>' +
-                '<button class="cp-goalq" data-act="goalinfo" data-v="' + g[0] + '" aria-label="' +
-                esc(T('Подробнее о цели')) + '">' + (open ? '<i class="ti ti-x"></i>' : '?') + '</button>' +
+                '<em>' + esc(T(g[2])) + '</em></span>' +
+                '<span class="cp-goalq" data-act="goalinfo" data-v="' + g[0] + '" role="button" tabindex="0" aria-label="' +
+                esc(T('Подробнее о цели')) + '">?</span></button>' +
                 (open && inf
                     ? '<div class="cp-goalinfo">' +
                       '<div><b>' + esc(T('В постах')) + '</b>' + esc(T(inf.posts)) + '</div>' +
@@ -1629,8 +1629,7 @@
                         ? '<div class="two">' + esc(T('Выбраны две цели: посты недели делятся между ними, ' +
                             'а не тянут обе сразу.')) + '</div>' : '') +
                       '</div>'
-                    : '') +
-                '</div>';
+                    : '');
         }).join('');
     }
 
@@ -3996,6 +3995,14 @@
                 if (!gAct || !VIEW_ACTS[gAct]) { denyEdit(); return; }
             }
         }
+        var gq = t.closest ? t.closest('[data-act="goalinfo"]') : null;
+        if (gq) {
+            haptic('light');
+            var _gqv = gq.getAttribute('data-v');
+            _goalInfo = (_goalInfo === _gqv) ? null : _gqv;
+            if (_lastView === 'week') renderWeek(); else renderBrief();
+            return;
+        }
         var chip = t.closest ? t.closest('[data-chip]') : null;
         if (chip) {
             var name = chip.getAttribute('data-chip'), v = chip.getAttribute('data-v');
@@ -4171,13 +4178,6 @@
             return;
         }
         if (act === 'sgtog') { haptic('light'); _sgOpen = !_sgOpen; renderBrief(); return; }
-        if (act === 'goalinfo') {
-            haptic('light');
-            var _gv = actEl.getAttribute('data-v');
-            _goalInfo = (_goalInfo === _gv) ? null : _gv;
-            if (_lastView === 'week') renderWeek(); else renderBrief();
-            return;
-        }
         if (act === 'generate') { doGenerate(actEl); return; }
         if (act === 'cpwd') {
             haptic('light');
