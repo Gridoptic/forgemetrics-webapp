@@ -2599,7 +2599,11 @@
                 : '') + '</div>';
 
         var allBtn = haveText < n
-            ? '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
+            ? '<div class="cp-note" style="margin:0 2px 8px;">' +
+              esc(T('Без текста осталось') + ' ' + (n - haveText) + ' ' +
+                  T(plural3(n - haveText, 'пост', 'поста', 'постов')) + ' — ' +
+                  T('запись была прервана. Допишу по нажатию; списываются только недописанные.')) + '</div>' +
+              '<button class="cp-allbtn" data-act="genall"><i class="ti ti-wand"></i> ' + esc(T('Написать все тексты')) + '</button>'
             : '';
 
         var apprText = ps.filter(function (p) { return p.status === 'approved' && p.text; }).length;
