@@ -1695,25 +1695,27 @@
         }
         var D = L.days;
         if (D && D.spread_pct != null) {
+            var dPair = (D.best && D.worst)
+                ? T('Лучший') + ' ' + T(WD[D.best.day]) + ' ' + numExact(D.best.views) + ' ' +
+                  T('против худшего') + ' ' + T(WD[D.worst.day]) + ' ' + numExact(D.worst.views) +
+                  ' — ' + T('разница') + ' ' + D.spread_pct + '%'
+                : T('Разброс между днями') + ' ' + D.spread_pct + '%';
             if (D.verdict === 'strong') {
                 rows += lrnRow('teal', 'ti-calendar-check',
                     esc(T('Сильные дни — по замерам')),
-                    esc(T('Разброс между днями') + ' ' + D.spread_pct + '%. ' +
-                        T('Раскладка недели учитывает сильные дни.')),
+                    esc(dPair + '. ' + T('Раскладка недели учитывает сильные дни.')),
                     'teal', 'замер');
             } else if (D.verdict === 'even') {
                 rows += lrnRow('vio', 'ti-calendar-stats',
                     esc(T('Дни одинаковы — повторный замер')),
-                    esc(T('Разброс между днями всего') + ' ' + D.spread_pct + '% (' +
-                        T('замерено') + ' ' + D.covered + ' ' +
+                    esc(dPair + ' (' + T('замерено') + ' ' + D.covered + ' ' +
                         T(plural3(D.covered, 'день', 'дня', 'дней')) + '). ' +
                         T('Сильных дней нет — неделя снова раскладывается по всем дням.')),
                     'vio', 'проба');
             } else {
                 rows += lrnRow('vio', 'ti-calendar-stats',
                     esc(T('Дни — продолжаю замер')),
-                    esc(T('Разброс между днями') + ' ' + D.spread_pct + '% — ' +
-                        T('разница есть, но для вывода мало: порог 50%.') + ' ' +
+                    esc(dPair + ' — ' + T('разница есть, но для вывода мало: порог 50%.') + ' ' +
                         T('Раскладка остаётся по всем дням.')),
                     'vio', 'проба');
             }
@@ -1814,7 +1816,7 @@
                 if (!x.disabled && (x.post_count || 0) >= 3 && (x.avg_views || 0) > top) top = x.avg_views;
             });
             return (r.avg_views === top ? T('сильная рубрика') : T('рубрика канала')) +
-                ' · ' + T('охват') + ' ' + numExact(r.avg_views);
+                ' · ' + T('типичный охват') + ' ' + numExact(r.avg_views);
         }
         if (r.source === 'user') return T('твоя рубрика');
         if (r.source === 'suggest') return T('предложение под нишу');
@@ -1866,19 +1868,21 @@
             var hd0 = histAny();
             var why0, measuredWeek = false;
             if (hd0) {
-                var mx0 = 0, mn0 = Infinity;
-                hd0.forEach(function (d) {
+                var mx0 = 0, mn0 = Infinity, bi0 = -1, wi0 = -1;
+                hd0.forEach(function (d, i) {
                     if (d.views > 0) {
-                        if (d.views > mx0) mx0 = d.views;
-                        if (d.views < mn0) mn0 = d.views;
+                        if (d.views > mx0) { mx0 = d.views; bi0 = i; }
+                        if (d.views < mn0) { mn0 = d.views; wi0 = i; }
                     }
                 });
                 var spread0 = (mx0 > 0 && mn0 < Infinity)
                     ? Math.round((mx0 / mn0 - 1) * 100) : null;
                 measuredWeek = spread0 != null;
-                why0 = T('Разведочные замеры прошли: разброс между днями') + ' ' + spread0 + '% — ' +
-                    T(spread0 < 10 ? 'дни практически одинаковы.'
-                                   : 'лучший день пока не выделился, порог 50%.');
+                why0 = T('Разведочные замеры прошли: лучший день') + ' ' + T(WD[bi0]) + ' ' +
+                    numExact(mx0) + ', ' + T('худший') + ' ' + T(WD[wi0]) + ' ' + numExact(mn0) +
+                    ' — ' + T('разница') + ' ' + spread0 + '%. ' +
+                    T(spread0 < 10 ? 'Дни практически одинаковы.'
+                                   : 'Сильным день считается от 50% отрыва — пока не дотягивает.');
             } else if (hstat.total || hstat.archive) {
                 why0 = T('Свежих замеров у канала мало — сильные дни по ним не определить.');
             } else {
@@ -1997,7 +2001,7 @@
             (rec[i] && pct != null
                 ? '<span class="fr">' + esc(T('сильный день') + ' · +' + pct + '%') + '</span>'
                 : (pct != null ? '<span class="fr mut">' + esc((pct >= 0 ? '+' : '') + pct + '% ' + T('к среднему')) + '</span>' : '')) +
-            (v ? '<span class="fv">' + esc(T('охват') + ' ' + numExact(v) +
+            (v ? '<span class="fv">' + esc(T('охват дня') + ' ' + numExact(v) +
                 (ready ? '' : ' · ' + np + ' ' + T(plural3(np, 'пост', 'поста', 'постов')))) + '</span>' : '') +
             '</div>' + rows +
             (canEdit() ? '<button class="cpw-add" data-act="cpwadd" data-v="' + i + '">+ ' +
@@ -3925,6 +3929,7 @@
                 if (d && d.ok && _open) {
                     _state = d; pushBalance(d);
                     syncDays(d);
+                    if (_chId) loadRubrics();
                     if (cpBusy()) return;
                     var sy = window.scrollY; rerender(); window.scrollTo(0, sy);
                 }
