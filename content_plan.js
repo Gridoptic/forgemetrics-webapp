@@ -2665,8 +2665,7 @@
                     whoChip() + apChip()) +
                 gSec('posts', 'layout-list', 'Посты недели',
                     esc(appr + '/' + n + ' ' + T('утверждено')),
-                    header + ribbon + detailPanel(), true) +
-                gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, false) +
+                    ohvBody + header + ribbon + detailPanel(), true) +
                 gSec('goal', 'target', 'Цель недели', goalSum(), goalsSec, false) +
                 gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
                 gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
