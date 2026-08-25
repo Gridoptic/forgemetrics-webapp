@@ -260,3 +260,13 @@
 .stg-tq { font-size: 14px; font-weight: 700; line-height: 1.4; }
 .stg-tprog { font-size: 10.5px; color: #565b73; margin-top: 3px; }
 .stg-tmsg .stg-next { margin-top: 10px; }
+
+.stg-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; margin-top: 10px; }
+.stg-wd { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); min-width: 0; }
+.stg-wd.on { background: rgba(129,140,248,0.12); border-color: rgba(129,140,248,0.4); }
+.stg-wd .d { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #8d93a8; }
+.stg-wd.on .d { color: #c7cbff; }
+.stg-wd .n { font-size: 15px; font-weight: 800; color: #e8eaf1; font-variant-numeric: tabular-nums; }
+.stg-wd .r { font-size: 9px; color: #a7aec6; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-height: 12px; }
+.stg-dayc { flex: 0 0 auto; align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #c7cbff; background: rgba(129,140,248,0.14); padding: 4px 7px; border-radius: 7px; margin-top: 2px; }
+.stg-dochead-sec .stg-dochead .t b { font-size: 15px; }

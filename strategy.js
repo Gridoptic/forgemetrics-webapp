@@ -95,6 +95,7 @@
         if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
         if (_genTimer) { clearInterval(_genTimer); _genTimer = null; }
         if (_trTimer) { clearTimeout(_trTimer); _trTimer = null; }
+        if (_docTimer) { clearTimeout(_docTimer); _docTimer = null; }
     }
 
     function headHtml() {
@@ -438,7 +439,9 @@
     function docTotals() {
         var total = 0, done = 0;
         var prog = _state.progress || {};
-        (_state.doc.sections || []).forEach(function (sec) {
+        var secs = _state.doc.sections || [];
+        var w1 = secs.filter(function (x) { return x.key === 'week1' && (x.steps || []).length; });
+        (w1.length ? w1 : secs).forEach(function (sec) {
             (sec.steps || []).forEach(function (s) {
                 if (s.checkable === false) return;
                 total++;
@@ -490,7 +493,7 @@
             (long ? '<span class="stg-more" data-act="more">' + esc(T('развернуть')) + '</span>' : '');
     }
 
-    function stepHtml(s) {
+    function stepHtml(s, extra) {
         var done = (_state.progress || {})[s.key];
         var how = (s.has_guide && _state.access === 'full')
             ? '<button class="stg-how" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Как сделать')) + '</button>' : '';
@@ -498,7 +501,7 @@
             ? '<span class="stg-dot"></span>'
             : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
         return '<div class="stg-step" data-step="' + esc(s.key) + '">' + mark +
-            '<div class="t"><b>' + esc(fixDays(s.title)) + '</b>' + (s.body ? bodyHtml(fixDays(s.body)) : '') + '</div>' + how +
+            '<div class="t"><b>' + esc(fixDays(s.title)) + '</b>' + (s.body ? bodyHtml(fixDays(s.body)) : '') + '</div>' + (extra || '') + how +
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
     }
 
@@ -531,63 +534,120 @@
         return rows + advice;
     }
 
-    function postsHtml(posts) {
-        if (!posts || !posts.length) return '';
-        var rows = posts.map(function (p, i) {
-            return '<div class="stg-post" data-post="' + i + '">' +
-                '<div class="h" data-act="post" data-i="' + i + '"><b>' + esc(p.title || (T('Пост') + ' ' + (i + 1))) + '</b>' +
-                '<button class="stg-copy" data-act="copy" data-i="' + i + '">' + esc(T('Скопировать')) + '</button></div>' +
-                '<div class="b">' + esc(p.text || '') + '</div></div>';
-        }).join('');
-        return '<div class="stg-sub" style="margin-top:14px;">' + esc(T('Первые 10 постов — готовы к публикации')) + '</div>' + rows;
+    function docSection(key) {
+        var doc = (_state && _state.doc) || {};
+        return ((doc.sections || []).filter(function (x) { return x.key === key; })[0]) || null;
     }
-
+    function fmtDate(iso) {
+        if (!iso) return '';
+        try {
+            var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+            return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
+        } catch (e) { return String(iso).slice(0, 10); }
+    }
+    function weekGridHtml() {
+        var sec = docSection('content') || {};
+        var grid = sec.grid || [];
+        if (!grid.length) return '';
+        var byDay = {};
+        grid.forEach(function (g) { byDay[g.day_index] = g; });
+        var cells = TR_DAYS.map(function (d, i) {
+            var g = byDay[i];
+            return '<div class="stg-wd' + (g ? ' on' : '') + '"><span class="d">' + esc(T(d)) + '</span><span class="n">' + (g ? '1' : '—') + '</span><span class="r">' + esc(g ? g.rubric : '') + '</span></div>';
+        }).join('');
+        var per = sec.per_week || grid.length;
+        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-circle-check"></i></span> ' + esc(T('Стратегия применена к контент-плану')) + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сетка недели:')) + ' ' + per + ' ' + esc(T('пост(ов), рубрики по дням')) + '</div>' +
+            '<div class="stg-week">' + cells + '</div></div>';
+    }
+    function firstWeekHtml() {
+        var p = _state && _state.plan;
+        var inner;
+        if (!_state || !_state.channel_id) {
+            inner = '<div class="stg-note">' + esc(T('Канал не подключён: сетка недели записана, первая неделя соберётся, когда подключишь канал.')) + '</div>';
+        } else if (!p) {
+            inner = '<div class="stg-note">' + esc(T('Первая неделя собирается по сетке стратегии — появится в контент-плане через несколько минут.')) + '</div>';
+        } else if (p.status === 'generating' || (p.with_text < p.posts)) {
+            inner = '<div class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю первую неделю')) + ' · ' + p.with_text + ' / ' + p.posts + '</div>';
+        } else {
+            inner = '<div class="stg-note"><b>' + p.posts + '</b> ' + esc(T('постов с датами и временем ждут утверждения в контент-плане')) + (p.published ? ' · ' + esc(T('вышло')) + ' ' + p.published : '') + '</div>';
+        }
+        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-calendar-event"></i></span> ' + esc(T('Первая неделя')) + '</div>' +
+            '<div style="margin-top:8px;">' + inner + '</div>' +
+            (_state && _state.channel_id ? '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>' : '') + '</div>';
+    }
+    function tasksHtml() {
+        var sec = docSection('week1');
+        if (!sec || !(sec.steps || []).length) return '';
+        var days = sec.days || [];
+        var t = docTotals();
+        var rows = sec.steps.map(function (st, i) {
+            var d = days[i];
+            var chip = (d !== null && d !== undefined && TR_DAYS[d]) ? '<span class="stg-dayc">' + esc(T(TR_DAYS[d])) + '</span>' : '';
+            return stepHtml(st, chip);
+        }).join('');
+        return '<div class="stg-sec" data-sec="week1"><div class="stg-dochead">' + ringHtml(t) +
+            '<div class="t"><b>' + esc(T('Задачи первой недели')) + '</b><span id="stg-doc-sub">' + t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено') + '</span></div></div>' +
+            '<div style="margin-top:6px;">' + rows + '</div></div>';
+    }
+    function reviewCardHtml() {
+        var when = fmtDate(_state && _state.next_review_at);
+        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-clock"></i></span> ' + esc(T('Месяц ведения')) + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(T('Сверка')) + (when ? ' ' + esc(when) : '') + '</b> — ' + esc(T('стратег сверит план с фактом по данным контент-плана и предложит правки сетки.')) + '</div></div>';
+    }
+    var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
     function renderDoc() {
         normalizeDoc(_state);
         var doc = _state.doc || {};
-        var t = docTotals();
         var iv = _state.interview || {};
         var week = _state.week || 1;
-        var sub = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено') +
-            ' · ' + T('неделя') + ' ' + week + (week <= 4 ? ' ' + T('из') + ' 4' : '') +
-            (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '');
-        var html =
-            '<div class="stg-sec"><div class="stg-dochead">' + ringHtml(t) +
+        var html = '<div class="stg-sec stg-dochead-sec"><div class="stg-dochead"><div class="stg-fic" style="width:44px;height:44px;">' + STG_ICON + '</div>' +
             '<div class="t"><b>' + esc(T('Стратегия:')) + ' «' + esc(doc.niche || '—') + '»</b>' +
-            '<span id="stg-doc-sub">' + sub + '</span></div>' +
-            '<button class="stg-jump" data-act="jump" data-to="week1">' + esc(T('Начни с задач первой недели')) + ' →</button></div>';
-
-        var trInserted = false;
-        (doc.sections || []).forEach(function (sec) {
-            if (sec.key === 'traffic_free') { html += trafficCard(); trInserted = true; return; }
-            if (sec.key === 'traffic_paid') return;
+            '<span>' + esc(T('неделя')) + ' ' + week + (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '') + '</span></div></div></div>';
+        html += weekGridHtml();
+        html += firstWeekHtml();
+        html += tasksHtml();
+        html += reviewCardHtml();
+        html += trafficCard();
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Спросить стратега')) + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Разделы плана ниже — ниша, аудитория, заработок, оффер, метрики — и чат в конце.')) + '</div>' +
+            '<button class="stg-trbtn wide" data-act="jump" data-to="chat">' + esc(T('Задать вопрос')) + '</button></div>';
+        DOC_ORDER.forEach(function (key) {
+            var sec = docSection(key);
+            if (!sec) return;
             var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
-                (sec.chart && sec.chart.bars && sec.chart.bars.length) || (sec.posts && sec.posts.length);
+                (sec.chart && sec.chart.bars && sec.chart.bars.length);
             if (!hasContent) return;
             var inner = '<div class="stg-eyebrow"><span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span> ' + esc(T(sec.title || sec.key)) + '</div>';
             if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
                 inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
             }
-            if (sec.intro && sec.intro.trim()) {
-                inner += bodyHtml(fixDays(sec.intro), true);
-            }
+            if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
             inner += chartHtml(sec.chart);
-            if (sec.steps && sec.steps.length) {
-                inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
-            }
-            inner += postsHtml(sec.posts);
+            if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
             html += '<div class="stg-sec" data-sec="' + esc(sec.key) + '">' + inner + '</div>';
         });
-
-        if (!trInserted) html += trafficCard();
         html += reviewHtml();
-        html += chatHtml();
-        html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' +
-            esc(T('Начать новую стратегию')) + '</button>';
+        html += '<div data-sec="chat">' + chatHtml() + '</div>';
+        html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
         var host = setView(html);
         unclampSmall(host);
         var chatBox = document.getElementById('stg-chat-msgs');
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        docPoll();
+    }
+    var _docTimer = null;
+    function docPoll() {
+        if (_docTimer) clearTimeout(_docTimer);
+        var p = _state && _state.plan;
+        var live = p && (p.status === 'generating' || p.with_text < p.posts);
+        if (!live) return;
+        _docTimer = setTimeout(function () {
+            _docTimer = null;
+            apiRequest('/api/v1/strategy').then(function (d) {
+                if (d && d.ok && d.status === 'active' && _state && _state.doc && !_trOpen) { _state = d; renderDoc(); }
+            }).catch(function () {});
+        }, 20000);
     }
 
     function unclampSmall(host) {
@@ -797,17 +857,6 @@
         tip.setAttribute('data-tip-for', key);
         tip.innerHTML = '<b>' + esc(key) + '</b> — ' + esc(def);
         elm.insertAdjacentElement('afterend', tip);
-    }
-
-    function copyPost(i) {
-        var doc = _state.doc || {};
-        var posts = null;
-        (doc.sections || []).forEach(function (s) { if (s.posts && s.posts.length) posts = s.posts; });
-        if (!posts || !posts[i]) return;
-        haptic('medium');
-        var p = posts[i];
-        var run = (typeof copyText === 'function') ? copyText(p.text || '') : Promise.reject();
-        Promise.resolve(run).then(function () { toast(T('Текст поста скопирован')); }).catch(function () {});
     }
 
     var _tr = null, _trTimer = null, _trChan = null, _trOpen = false, _trBusy = {};
@@ -1093,6 +1142,7 @@
     }
     window.__stgTrafficForCheck = function (data, channelId) { _tr = data; _trChan = channelId || null; ensureScreen(); renderTraffic(); };
     window.__stgShowcaseForCheck = function (state) { _state = state; ensureScreen(); renderShowcase(); };
+    window.__stgDocForCheck = function (state) { _state = state; ensureScreen(); renderDoc(); };
 
     function onScreenClick(ev) {
         var t = ev.target;
@@ -1131,12 +1181,6 @@
                 inp.focus();
                 inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-            return;
-        }
-        if (act === 'copy') { ev.stopPropagation(); copyPost(parseInt(actEl.getAttribute('data-i'), 10)); return; }
-        if (act === 'post') {
-            var row = actEl.closest('.stg-post');
-            if (row) { haptic('light'); row.classList.toggle('open'); }
             return;
         }
     }
