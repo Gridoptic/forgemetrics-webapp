@@ -2101,6 +2101,11 @@
         if (!_ap) return '';
         return esc(T((_ap.level || 'manual') !== 'manual' ? 'включён' : 'выключен'));
     }
+    function whoChip() {
+        var b = _state && _state.built_by;
+        if (!b || !b.name || (myTgId() && +b.id === myTgId())) return '';
+        return '<span class="cpg-chip"><i class="ti ti-users"></i> ' + esc(T('собрал') + ' ' + b.name) + '</span>';
+    }
     function apChip() {
         if (!_ap) return '';
         var on = (_ap.level || 'manual') !== 'manual';
@@ -2426,10 +2431,29 @@
         return T(fb);
     }
 
+    function myTgId() {
+        try { return +(((window.Telegram || {}).WebApp || {}).initDataUnsafe || {}).user.id || 0; }
+        catch (e) { return 0; }
+    }
+    function builtByLine(prefix) {
+        var b = _state && _state.built_by;
+        if (!b || !b.name || (myTgId() && +b.id === myTgId())) return '';
+        var when = '';
+        if (b.at) {
+            try {
+                var dt = new Date(b.at);
+                when = ' · ' + T('с') + ' ' + (dt.getHours() < 10 ? '0' : '') + dt.getHours() + ':' +
+                    (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
+            } catch (e) {}
+        }
+        return T(prefix) + ' ' + b.name + when;
+    }
     function renderGenerating() {
+        var who = builtByLine('Неделю собирает');
         setView('<div class="cp-center"><div class="cp-genic"><i class="ti ti-calendar-week"></i></div>' +
             '<div class="cp-spin"></div>' +
             '<div class="m" id="cp-gen-text">' + esc(T(GEN_TEXTS[0])) + '</div>' +
+            (who ? '<div class="cp-genwho"><i class="ti ti-users"></i>' + esc(who) + '</div>' : '') +
             '<div class="s">' + esc(T('Обычно пара минут. Можно закрыть — план соберётся сам.')) + '</div></div>');
         var i = 0;
         _genTimer = setInterval(function () {
@@ -2627,7 +2651,8 @@
                 gHeroBase('Неделя в работе',
                     '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
                     '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>' +
-                    (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') + apChip()) +
+                    (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') +
+                    whoChip() + apChip()) +
                 gSec('posts', 'layout-list', 'Посты недели',
                     esc(appr + '/' + n + ' ' + T('утверждено')),
                     header + ribbon + detailPanel(), true) +
