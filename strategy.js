@@ -163,7 +163,7 @@
     }
     function accessChip() {
         if (!_state || _state.access !== 'full') return '';
-        if (_state.access_source === 'admin') return '<div class="stg-fchips"><span class="stg-fchip g"><i class="ti ti-circle-check"></i> ' + esc(T('Доступ открыт')) + '</span><span class="stg-fchip">' + esc(T('администратор')) + '</span></div>';
+        if (_state.access_source === 'admin' || _state.access_source === 'tester') return '<div class="stg-fchips"><span class="stg-fchip g"><i class="ti ti-circle-check"></i> ' + esc(T('Доступ открыт')) + '</span><span class="stg-fchip">' + esc(_state.access_source === 'admin' ? T('администратор') : T('тестировщик')) + '</span></div>';
         var until = accessUntilText();
         return '<div class="stg-fchips"><span class="stg-fchip g"><i class="ti ti-circle-check"></i> ' + esc(T('Доступ открыт')) + (until ? ' · ' + esc(T('до')) + ' ' + esc(until) : '') + '</span></div>';
     }
