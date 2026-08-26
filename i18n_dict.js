@@ -3681,7 +3681,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30-day access: a conversation with the strategist, the weekly grid in your plan, the first week, tasks and weekly reviews.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Another 30 days of guidance: weekly reviews, step-by-step guides and chat.",
     "Недостаточно средств": "Insufficient funds",
-    "Пополни баланс в кабинете.": "Top up your balance in your account."
+    "Пополни баланс в кабинете.": "Top up your balance in your account.",
+    "Пополнить баланс — раздел": "Top up your balance — section"
   },
   "es": {
     "Видео": "Vídeo",
@@ -7365,7 +7366,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Acceso por 30 días: conversación con el estratega, cuadrícula semanal en el plan, primera semana, tareas y revisiones semanales.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "30 días más de acompañamiento: revisiones semanales, guías paso a paso y chat.",
     "Недостаточно средств": "Saldo insuficiente",
-    "Пополни баланс в кабинете.": "Recarga el saldo en tu perfil."
+    "Пополни баланс в кабинете.": "Recarga el saldo en tu perfil.",
+    "Пополнить баланс — раздел": "Recarga el saldo — sección"
   },
   "de": {
     "Видео": "Video",
@@ -11049,7 +11051,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Zugang für 30 Tage: Gespräch mit dem Strategen, Wochenraster im Plan, erste Woche, Aufgaben und wöchentliche Reviews.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Weitere 30 Tage Begleitung: wöchentliche Reviews, Schritt-für-Schritt-Guides und Chat.",
     "Недостаточно средств": "Guthaben nicht ausreichend",
-    "Пополни баланс в кабинете.": "Lade dein Guthaben im Kontobereich auf."
+    "Пополни баланс в кабинете.": "Lade dein Guthaben im Kontobereich auf.",
+    "Пополнить баланс — раздел": "Guthaben aufladen — Bereich"
   },
   "kk": {
     "Видео": "Видео",
@@ -14732,7 +14735,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 күнге қолжетімділік: стратегпен әңгіме, жоспардағы апта торы, бірінші апта, тапсырмалар мен апталық тексерулер.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Тағы 30 күн жүргізу: апталық тексерулер, қадамдық нұсқаулықтар және чат.",
     "Недостаточно средств": "Қаражат жеткіліксіз",
-    "Пополни баланс в кабинете.": "Кабинетте балансты толтыр."
+    "Пополни баланс в кабинете.": "Кабинетте балансты толтыр.",
+    "Пополнить баланс — раздел": "Балансты толтыру — бөлім"
   },
   "uz": {
     "Видео": "Video",
@@ -18416,7 +18420,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 kunlik kirish: strateg bilan suhbat, rejadagi haftalik to'r, birinchi hafta, vazifalar va haftalik tekshiruvlar.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Yana 30 kun yuritish: haftalik tekshiruvlar, bosqichma-bosqich qo'llanmalar va chat.",
     "Недостаточно средств": "Mablag' yetarli emas",
-    "Пополни баланс в кабинете.": "Kabinetda balansni to'ldir."
+    "Пополни баланс в кабинете.": "Kabinetda balansni to'ldir.",
+    "Пополнить баланс — раздел": "Balansni to‘ldirish — bo‘lim"
   },
   "be": {
     "Видео": "Відэа",
@@ -22099,7 +22104,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Доступ на 30 дзён: размова са стратэгам, сетка тыдня ў плане, першы тыдзень, задачы і зверкі.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Яшчэ 30 дзён вядзення: зверкі, гайды і чат.",
     "Недостаточно средств": "Недастаткова сродкаў",
-    "Пополни баланс в кабинете.": "Папоўні баланс у кабінеце."
+    "Пополни баланс в кабинете.": "Папоўні баланс у кабінеце.",
+    "Пополнить баланс — раздел": "Папоўніць баланс — раздзел"
   },
   "az": {
     "Видео": "Video",
@@ -25783,7 +25789,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 günlük giriş: strateqlə söhbət, planda həftəlik şəbəkə, ilk həftə, tapşırıqlar və həftəlik yoxlamalar.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Daha 30 gün müşayiət: həftəlik yoxlamalar, addım-addım bələdçilər və çat.",
     "Недостаточно средств": "Vəsait kifayət deyil",
-    "Пополни баланс в кабинете.": "Kabinetdə balansı artır."
+    "Пополни баланс в кабинете.": "Kabinetdə balansı artır.",
+    "Пополнить баланс — раздел": "Balansı artır — bölmə"
   },
   "ar": {
     "Видео": "فيديو",
@@ -29467,7 +29474,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "وصول لمدة 30 يوماً: حوار مع الاستراتيجي، شبكة الأسبوع في الخطة، الأسبوع الأول، المهام والمراجعات الأسبوعية.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "30 يوماً إضافية من المتابعة: مراجعات أسبوعية، أدلة خطوة بخطوة ودردشة.",
     "Недостаточно средств": "الرصيد غير كافٍ",
-    "Пополни баланс в кабинете.": "أعد شحن رصيدك في قسم الحساب."
+    "Пополни баланс в кабинете.": "أعد شحن رصيدك في قسم الحساب.",
+    "Пополнить баланс — раздел": "شحن الرصيد — قسم"
   },
   "fa": {
     "Видео": "ویدیو",
@@ -33151,7 +33159,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "دسترسی ۳۰ روزه: گفتگو با استراتژیست، جدول هفتگی در برنامه، هفته اول، وظایف و بازبینی‌های هفتگی.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "۳۰ روز همراهی دیگر: بازبینی‌های هفتگی، راهنماهای گام‌به‌گام و چت.",
     "Недостаточно средств": "موجودی کافی نیست",
-    "Пополни баланс в кабинете.": "موجودی را در بخش حساب کاربری شارژ کن."
+    "Пополни баланс в кабинете.": "موجودی را در بخش حساب کاربری شارژ کن.",
+    "Пополнить баланс — раздел": "افزایش موجودی — بخش"
   },
   "tr": {
     "Видео": "Video",
@@ -36835,7 +36844,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 günlük erişim: stratejistle görüşme, planda haftalık tablo, ilk hafta, görevler ve haftalık değerlendirmeler.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "30 gün daha takip: haftalık değerlendirmeler, adım adım rehberler ve sohbet.",
     "Недостаточно средств": "Yetersiz bakiye",
-    "Пополни баланс в кабинете.": "Hesap bölümünden bakiyeni yükle."
+    "Пополни баланс в кабинете.": "Hesap bölümünden bakiyeni yükle.",
+    "Пополнить баланс — раздел": "Bakiyeni yükle — bölüm"
   },
   "hi": {
     "Видео": "वीडियो",
@@ -40519,7 +40529,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 दिनों का एक्सेस: स्ट्रैटेजिस्ट से बातचीत, प्लान में साप्ताहिक ग्रिड, पहला सप्ताह, टास्क और साप्ताहिक समीक्षाएँ।",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "30 दिन और सहयोग: साप्ताहिक समीक्षाएँ, चरण-दर-चरण गाइड और चैट।",
     "Недостаточно средств": "बैलेंस अपर्याप्त है",
-    "Пополни баланс в кабинете.": "अकाउंट सेक्शन में बैलेंस रिचार्ज करो।"
+    "Пополни баланс в кабинете.": "अकाउंट सेक्शन में बैलेंस रिचार्ज करो।",
+    "Пополнить баланс — раздел": "बैलेंस टॉप-अप करें — सेक्शन"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -44203,7 +44214,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "৩০ দিনের অ্যাক্সেস: স্ট্র্যাটেজিস্টের সাথে আলোচনা, প্ল্যানে সাপ্তাহিক গ্রিড, প্রথম সপ্তাহ, টাস্ক ও সাপ্তাহিক রিভিউ।",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "আরও ৩০ দিনের সহায়তা: সাপ্তাহিক রিভিউ, ধাপে ধাপে গাইড ও চ্যাট।",
     "Недостаточно средств": "পর্যাপ্ত ব্যালেন্স নেই",
-    "Пополни баланс в кабинете.": "অ্যাকাউন্ট বিভাগে ব্যালেন্স রিচার্জ করো।"
+    "Пополни баланс в кабинете.": "অ্যাকাউন্ট বিভাগে ব্যালেন্স রিচার্জ করো।",
+    "Пополнить баланс — раздел": "ব্যালেন্স রিচার্জ করো — বিভাগ"
   },
   "id": {
     "Видео": "Video",
@@ -47887,7 +47899,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Akses 30 hari: percakapan dengan strategist, weekly grid dalam rencana, minggu pertama, tugas, dan weekly review.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Pendampingan 30 hari lagi: weekly review, panduan langkah demi langkah, dan chat.",
     "Недостаточно средств": "Saldo tidak mencukupi",
-    "Пополни баланс в кабинете.": "Isi ulang saldo di bagian akun."
+    "Пополни баланс в кабинете.": "Isi ulang saldo di bagian akun.",
+    "Пополнить баланс — раздел": "Isi ulang saldo — bagian"
   },
   "vi": {
     "Видео": "Video",
@@ -51571,7 +51584,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Truy cập 30 ngày: trao đổi với strategist, weekly grid trong kế hoạch, tuần đầu tiên, nhiệm vụ và weekly review.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Thêm 30 ngày đồng hành: weekly review, hướng dẫn từng bước và chat.",
     "Недостаточно средств": "Không đủ số dư",
-    "Пополни баланс в кабинете.": "Nạp thêm số dư trong mục tài khoản."
+    "Пополни баланс в кабинете.": "Nạp thêm số dư trong mục tài khoản.",
+    "Пополнить баланс — раздел": "Nạp số dư — mục"
   },
   "pt": {
     "Видео": "Vídeo",
@@ -55255,7 +55269,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Acesso por 30 dias: conversa com o estrategista, grade semanal no plano, primeira semana, tarefas e revisões semanais.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Mais 30 dias de acompanhamento: revisões semanais, guias passo a passo e chat.",
     "Недостаточно средств": "Saldo insuficiente",
-    "Пополни баланс в кабинете.": "Recarregue o saldo na sua conta."
+    "Пополни баланс в кабинете.": "Recarregue o saldo na sua conta.",
+    "Пополнить баланс — раздел": "Recarregue o saldo — seção"
   },
   "fr": {
     "Видео": "Vidéo",
@@ -58939,7 +58954,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Accès 30 jours : échange avec le stratège, grille hebdomadaire dans le plan, première semaine, tâches et bilans hebdomadaires.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "30 jours de suivi supplémentaires : bilans hebdomadaires, guides pas à pas et chat.",
     "Недостаточно средств": "Solde insuffisant",
-    "Пополни баланс в кабинете.": "Recharge ton solde dans ton espace personnel."
+    "Пополни баланс в кабинете.": "Recharge ton solde dans ton espace personnel.",
+    "Пополнить баланс — раздел": "Recharger le solde — section"
   },
   "it": {
     "Видео": "Video",
@@ -62623,7 +62639,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Accesso per 30 giorni: dialogo con lo strategist, griglia settimanale nel piano, prima settimana, attività e revisioni settimanali.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Altri 30 giorni di accompagnamento: revisioni settimanali, guide passo dopo passo e chat.",
     "Недостаточно средств": "Fondi insufficienti",
-    "Пополни баланс в кабинете.": "Ricarica il saldo nel tuo profilo."
+    "Пополни баланс в кабинете.": "Ricarica il saldo nel tuo profilo.",
+    "Пополнить баланс — раздел": "Ricarica il saldo — sezione"
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -66307,7 +66324,8 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "የ30 ቀን መዳረሻ፡ ከስትራቴጂስት ጋር ውይይት፣ በእቅዱ ውስጥ የሳምንት ፍርግርግ፣ የመጀመሪያ ሳምንት፣ ተግባራት እና ሳምንታዊ ግምገማዎች።",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "ተጨማሪ 30 ቀናት አጃቢነት፡ ሳምንታዊ ግምገማዎች፣ ደረጃ በደረጃ መመሪያዎች እና ቻት።",
     "Недостаточно средств": "በቂ ገንዘብ የለም",
-    "Пополни баланс в кабинете.": "በመለያህ ክፍል ውስጥ ሒሳብህን ሙላ።"
+    "Пополни баланс в кабинете.": "በመለያህ ክፍል ውስጥ ሒሳብህን ሙላ።",
+    "Пополнить баланс — раздел": "ቀሪ ሂሳብ መሙላት — ክፍል"
   },
   "sw": {
     "Видео": "Video",
@@ -69991,6 +70009,7 @@ window.__I18N_DICT = {
     "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Ufikiaji kwa siku 30: mazungumzo na strategist, gridi ya wiki katika mpango, wiki ya kwanza, kazi na mapitio ya kila wiki.",
     "Ещё 30 дней ведения: сверки, гайды и чат.": "Siku 30 zaidi za usimamizi: mapitio ya kila wiki, miongozo ya hatua kwa hatua na gumzo.",
     "Недостаточно средств": "Salio halitoshi",
-    "Пополни баланс в кабинете.": "Ongeza salio katika sehemu ya akaunti."
+    "Пополни баланс в кабинете.": "Ongeza salio katika sehemu ya akaunti.",
+    "Пополнить баланс — раздел": "Ongeza salio — sehemu"
   }
 };

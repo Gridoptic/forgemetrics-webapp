@@ -222,7 +222,8 @@
         var bal = prices.balance || 0;
         haptic('light');
         if (bal < price) {
-            var lack = esc(T('Нужно')) + ' ' + forge(price) + ', ' + esc(T('на балансе')) + ' ' + forge(bal) + '. ' + esc(T('Пополни баланс в кабинете.'));
+            var lack = esc(T('Нужно')) + ' ' + forge(price) + ', ' + esc(T('на балансе')) + ' ' + forge(bal) + '. ' +
+                esc(T('Пополнить баланс — раздел')) + ' <a href="#" class="as-go" data-go="openForgeSheet">' + esc(T('Forge и покупки')) + '</a>.';
             if (typeof window.alertDialogHtml === 'function') window.alertDialogHtml(T('Недостаточно средств'), lack);
             else toast(T('Недостаточно средств'));
             return;

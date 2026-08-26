@@ -4354,6 +4354,15 @@ function actionSheet(opts) {
         sheet.querySelectorAll('[data-as]').forEach((b) => {
             b.addEventListener('click', () => { hapticLight(); close(b.getAttribute('data-as')); });
         });
+        sheet.querySelectorAll('[data-go]').forEach((a) => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const fn = a.getAttribute('data-go');
+                hapticLight();
+                close('go');
+                setTimeout(() => { if (typeof window[fn] === 'function') window[fn](); }, 200);
+            });
+        });
     });
 }
 
