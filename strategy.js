@@ -939,16 +939,17 @@
 
         var geoName = pl.geo ? (TR_GEO[pl.geo] ? T(TR_GEO[pl.geo]) : String(pl.geo).toUpperCase()) : T('страна не определена');
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-player-play"></i></span> ' + esc(T('УБТ · площадки')) + ' · ' + esc(geoName) + '</div>';
+        var NOTE = { ok: T('без ограничений'), vpn: T('через VPN'), upload_limited: T('публикация — обходами'), blocked: T('недоступна в регионе') };
         (pl.use || []).forEach(function (p) {
             var link = lk.platforms && lk.platforms[p.key];
             var url = link ? (link.click_url || link.invite_link || '') : '';
-            html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + '</b>' +
+            var sub = p.text ? T('ролики, посты и статьи · ссылка на канал — в профиле') : (NOTE[p.note] || '');
+            html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + (p.note && p.note !== 'ok' ? ' <span class="stg-trnote">' + esc(NOTE[p.note] || '') + '</span>' : '') + '</b>' +
                 (link ? '<em><span class="stg-trlink" data-act="trcopy" data-text="' + esc(url) + '">' + esc(url.replace(/^https?:\/\//, '')) + '</span> · +' + num(link.joined || 0) + ' ' + esc(T('вступили')) +
                     ((link.clicks !== null && link.clicks !== undefined) ? ' · ' + num(link.clicks) + ' ' + esc(T('переходов')) : '') + '</em>'
-                    : '<em>' + esc(T('Ссылка для описания ролика ещё не создана')) + '</em>') + '</div>' +
+                    : '<em>' + esc(sub) + (sub ? ' · ' : '') + esc(T('ссылка для описания ещё не создана')) + '</em>') + '</div>' +
                 (link ? '' : '<button class="stg-trbtn" data-act="trplink" data-key="' + esc(p.key) + '"' + (ch.connected ? '' : ' disabled') + '>' + esc(T('Создать ссылку')) + '</button>') + '</div>';
         });
-        if (pl.excluded && pl.excluded.length) html += '<div class="stg-note" style="margin-top:8px;">' + esc(pl.excluded.map(function (p) { return p.name; }).join(', ')) + ' — ' + esc(T('только под VPN, из плана исключены.')) + '</div>';
         if (!ch.connected) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылки создаёт бот — подключи его к каналу в настройках канала.')) + '</div>';
         html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылка площадки ставится в описание ролика: сверка увидит, сколько подписчиков дала каждая площадка.')) + '</div></div>';
 
