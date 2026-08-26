@@ -11560,8 +11560,9 @@
         if (st.tester) return 'Тестовый режим · списания не применяются';
         var balance = Number(st.balance || 0);
         var price = Number(st.price || 0);
-        if (st.can_run) return 'Запуск спишет ' + price + ' Forge · на балансе ' + _num(balance);
-        return 'Не хватает Forge: нужно ' + price + ', на балансе ' + _num(balance);
+        var fa = window.forgeAmount || function (n) { return _num(n); };
+        if (st.can_run) return 'Запуск спишет ' + fa(price, 11) + ' · на балансе ' + fa(balance, 11);
+        return 'Недостаточно средств: нужно ' + fa(price, 11) + ', на балансе ' + fa(balance, 11);
     }
     function _apkHistoryHtml() {
         var runs = (_apkState && _apkState.runs || []).filter(function (r) { return r.status === 'done'; }).slice(0, 5);

@@ -4047,6 +4047,25 @@ function alertDialog(message) {
     }).then(() => undefined);
 }
 
+function alertDialogHtml(title, bodyHtml) {
+    return actionSheet({
+        title: _trDialog(title), message: bodyHtml, html: true,
+        actions: [{ id: 'ok', text: _trDialog('Понятно'), style: 'cancel' }],
+    }).then(() => undefined);
+}
+
+function confirmDialogHtml(title, bodyHtml, okText) {
+    return actionSheet({
+        title: _trDialog(title), message: bodyHtml, html: true,
+        actions: [
+            { id: 'ok', text: _trDialog(okText || 'Подтвердить'), icon: 'check', style: 'default' },
+            { id: 'cancel', text: _trDialog('Отмена'), style: 'cancel' },
+        ],
+    }).then((r) => r === 'ok');
+}
+window.alertDialogHtml = alertDialogHtml;
+window.confirmDialogHtml = confirmDialogHtml;
+
 
 function copyBotNameToClipboard(el) {
     const text = (el.textContent || '').trim();
@@ -4313,7 +4332,7 @@ function actionSheet(opts) {
         sheet.innerHTML = `
             <div class="bs-handle"></div>
             ${opts.title ? `<div class="as-title">${escapeHtml(opts.title)}</div>` : ''}
-            ${opts.message ? `<div class="as-msg">${escapeHtml(opts.message)}</div>` : ''}
+            ${opts.message ? `<div class="as-msg">${opts.html ? opts.message : escapeHtml(opts.message)}</div>` : ''}
             <div class="as-list">${rows}</div>
         `;
         document.body.appendChild(overlay);

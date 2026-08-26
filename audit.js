@@ -253,8 +253,8 @@
 
         var right = '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
         var note = enough
-            ? '<div class="fwb-note">Запуск спишет ' + price + ' Forge</div>'
-            : '<div class="fwb-note fwb-low">Не хватает Forge: нужно ' + price + ', на балансе ' + balance + '</div>';
+            ? '<div class="fwb-note">Запуск спишет ' + fa(price, 12) + '</div>'
+            : '<div class="fwb-note fwb-low">Недостаточно средств: нужно ' + fa(price, 12) + ', на балансе ' + fa(balance, 12) + '</div>';
 
         return '' +
             '<div class="limit-row limit-row-purple' + (enough ? '' : ' limit-row-exhausted') + '">' +
@@ -285,7 +285,7 @@
                 '<span>Пополнить баланс</span></button>';
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i>' +
-                '<span>Запустить аудит · ' + price + ' Forge</span></button>';
+                '<span>Запустить аудит · ' + (window.forgeAmount || function (n) { return String(n); })(price, 12) + '</span></button>';
         }
 
         host.innerHTML = headerHtml() +
@@ -330,9 +330,9 @@
         var ctaHtml;
         if (canDeep) {
             ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i>' +
-                '<span>Запустить коммерческий аудит · ' + priceDeep + ' Forge' + '</span></button>';
+                '<span>Запустить коммерческий аудит · ' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 12) + '</span></button>';
         } else {
-            ctaHtml = '<div class="ca-ctarow"><span class="l">Списывается с баланса · отчёт сохраняется</span><b>' + priceDeep + ' Forge</b></div>' +
+            ctaHtml = '<div class="ca-ctarow"><span class="l">Списывается с баланса · отчёт сохраняется</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
                 '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
         }
         host.innerHTML = headerHtml('Коммерческий аудит') +

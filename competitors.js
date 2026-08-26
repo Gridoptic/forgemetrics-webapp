@@ -346,8 +346,8 @@
                     '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>' +
                 '</div>' +
                 '<div class="fwb-note' + (enough ? '' : ' fwb-low') + '">' +
-                    (enough ? 'Запуск спишет ' + price + ' Forge'
-                            : 'Не хватает Forge: нужно ' + price + ', на балансе ' + balance) +
+                    (enough ? 'Запуск спишет ' + fa(price, 12)
+                            : 'Недостаточно средств: нужно ' + fa(price, 12) + ', на балансе ' + fa(balance, 12)) +
                 '</div>' +
             '</div>';
     }
@@ -374,7 +374,7 @@
         var runnable = canRun();
         var btnHtml;
         if (runnable) {
-            var pr = ' · ' + Number((_limits && _limits.price) || 0) + ' Forge';
+            var pr = ' · ' + (window.forgeAmount || function (n) { return String(n); })(Number((_limits && _limits.price) || 0), 12);
             btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>Найти конкурентов' + pr + '</span></button>';
         } else {
             btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';

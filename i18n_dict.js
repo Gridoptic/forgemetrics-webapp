@@ -3677,7 +3677,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs. channel average, {c} posts · can be restored in the content plan",
     "«{a}» — закреплена в сетке: {b} в неделю": "“{a}” — pinned in the grid: {b} per week",
     "Неделя: {a} подписчиков, {b} постов вышло": "Week: {a} subscribers, {b} posts published",
-    "Неделя: {a} постов вышло": "Week: {a} posts published"
+    "Неделя: {a} постов вышло": "Week: {a} posts published",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30-day access: a conversation with the strategist, the weekly grid in your plan, the first week, tasks and weekly reviews.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Another 30 days of guidance: weekly reviews, step-by-step guides and chat.",
+    "Недостаточно средств": "Insufficient funds",
+    "Пополни баланс в кабинете.": "Top up your balance in your account."
   },
   "es": {
     "Видео": "Vídeo",
@@ -7357,7 +7361,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs. media del canal, {c} publicaciones · se puede restaurar en el plan de contenido",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — fijada en la parrilla: {b} por semana",
     "Неделя: {a} подписчиков, {b} постов вышло": "Semana: {a} suscriptores, {b} publicaciones emitidas",
-    "Неделя: {a} постов вышло": "Semana: {a} publicaciones emitidas"
+    "Неделя: {a} постов вышло": "Semana: {a} publicaciones emitidas",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Acceso por 30 días: conversación con el estratega, cuadrícula semanal en el plan, primera semana, tareas y revisiones semanales.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "30 días más de acompañamiento: revisiones semanales, guías paso a paso y chat.",
+    "Недостаточно средств": "Saldo insuficiente",
+    "Пополни баланс в кабинете.": "Recarga el saldo en tu perfil."
   },
   "de": {
     "Видео": "Video",
@@ -11037,7 +11045,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs. Kanaldurchschnitt, {c} Beiträge · Wiederherstellung im Content-Plan möglich",
     "«{a}» — закреплена в сетке: {b} в неделю": "„{a}“ — im Wochenraster fixiert: {b} pro Woche",
     "Неделя: {a} подписчиков, {b} постов вышло": "Woche: {a} Abonnenten, {b} Beiträge veröffentlicht",
-    "Неделя: {a} постов вышло": "Woche: {a} Beiträge veröffentlicht"
+    "Неделя: {a} постов вышло": "Woche: {a} Beiträge veröffentlicht",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Zugang für 30 Tage: Gespräch mit dem Strategen, Wochenraster im Plan, erste Woche, Aufgaben und wöchentliche Reviews.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Weitere 30 Tage Begleitung: wöchentliche Reviews, Schritt-für-Schritt-Guides und Chat.",
+    "Недостаточно средств": "Guthaben nicht ausreichend",
+    "Пополни баланс в кабинете.": "Lade dein Guthaben im Kontobereich auf."
   },
   "kk": {
     "Видео": "Видео",
@@ -14716,7 +14728,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} — арна орташасына ×{b}, {c} пост · контент-жоспарда қайтаруға болады",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — торда бекітілген: аптасына {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "Апта: {a} жазылушы, {b} пост шықты",
-    "Неделя: {a} постов вышло": "Апта: {a} пост шықты"
+    "Неделя: {a} постов вышло": "Апта: {a} пост шықты",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 күнге қолжетімділік: стратегпен әңгіме, жоспардағы апта торы, бірінші апта, тапсырмалар мен апталық тексерулер.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Тағы 30 күн жүргізу: апталық тексерулер, қадамдық нұсқаулықтар және чат.",
+    "Недостаточно средств": "Қаражат жеткіліксіз",
+    "Пополни баланс в кабинете.": "Кабинетте балансты толтыр."
   },
   "uz": {
     "Видео": "Video",
@@ -18396,7 +18412,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} — kanal o‘rtachasiga nisbatan ×{b}, {c} ta post · kontent-rejada qaytarish mumkin",
     "«{a}» — закреплена в сетке: {b} в неделю": "“{a}” — haftalik setkaga biriktirilgan: haftasiga {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "Hafta: {a} obunachi, {b} ta post chiqdi",
-    "Неделя: {a} постов вышло": "Hafta: {a} ta post chiqdi"
+    "Неделя: {a} постов вышло": "Hafta: {a} ta post chiqdi",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 kunlik kirish: strateg bilan suhbat, rejadagi haftalik to'r, birinchi hafta, vazifalar va haftalik tekshiruvlar.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Yana 30 kun yuritish: haftalik tekshiruvlar, bosqichma-bosqich qo'llanmalar va chat.",
+    "Недостаточно средств": "Mablag' yetarli emas",
+    "Пополни баланс в кабинете.": "Kabinetda balansni to'ldir."
   },
   "be": {
     "Видео": "Відэа",
@@ -22075,7 +22095,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} да сярэдняй па канале, {c} пастоў · вярнуць можна ў кантэнт-плане",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — замацавана ў сетцы: {b} на тыдзень",
     "Неделя: {a} подписчиков, {b} постов вышло": "Тыдзень: {a} падпісчыкаў, {b} пастоў выйшла",
-    "Неделя: {a} постов вышло": "Тыдзень: {a} пастоў выйшла"
+    "Неделя: {a} постов вышло": "Тыдзень: {a} пастоў выйшла",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Доступ на 30 дзён: размова са стратэгам, сетка тыдня ў плане, першы тыдзень, задачы і зверкі.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Яшчэ 30 дзён вядзення: зверкі, гайды і чат.",
+    "Недостаточно средств": "Недастаткова сродкаў",
+    "Пополни баланс в кабинете.": "Папоўні баланс у кабінеце."
   },
   "az": {
     "Видео": "Video",
@@ -25755,7 +25779,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} kanal ortalamasına nisbətən, {c} post · kontent-planda geri qaytarmaq olar",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — həftəlik cədvəldə sabitlənib: həftədə {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "Həftə: {a} abunəçi, {b} post dərc olunub",
-    "Неделя: {a} постов вышло": "Həftə: {a} post dərc olunub"
+    "Неделя: {a} постов вышло": "Həftə: {a} post dərc olunub",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 günlük giriş: strateqlə söhbət, planda həftəlik şəbəkə, ilk həftə, tapşırıqlar və həftəlik yoxlamalar.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Daha 30 gün müşayiət: həftəlik yoxlamalar, addım-addım bələdçilər və çat.",
+    "Недостаточно средств": "Vəsait kifayət deyil",
+    "Пополни баланс в кабинете.": "Kabinetdə balansı artır."
   },
   "ar": {
     "Видео": "فيديو",
@@ -29435,7 +29463,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} مقارنة بمتوسط القناة، {c} منشورات · يمكن الاستعادة في خطة المحتوى",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — مثبّتة في الشبكة الأسبوعية: {b} في الأسبوع",
     "Неделя: {a} подписчиков, {b} постов вышло": "الأسبوع: {a} مشتركين، {b} منشورات نُشرت",
-    "Неделя: {a} постов вышло": "الأسبوع: {a} منشورات نُشرت"
+    "Неделя: {a} постов вышло": "الأسبوع: {a} منشورات نُشرت",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "وصول لمدة 30 يوماً: حوار مع الاستراتيجي، شبكة الأسبوع في الخطة، الأسبوع الأول، المهام والمراجعات الأسبوعية.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "30 يوماً إضافية من المتابعة: مراجعات أسبوعية، أدلة خطوة بخطوة ودردشة.",
+    "Недостаточно средств": "الرصيد غير كافٍ",
+    "Пополни баланс в кабинете.": "أعد شحن رصيدك في قسم الحساب."
   },
   "fa": {
     "Видео": "ویدیو",
@@ -33115,7 +33147,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} نسبت به میانگین کانال، {c} پست · بازگرداندن در برنامه محتوا ممکن است",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — در شبکه هفتگی تثبیت شده: {b} در هفته",
     "Неделя: {a} подписчиков, {b} постов вышло": "هفته: {a} مشترک، {b} پست منتشر شد",
-    "Неделя: {a} постов вышло": "هفته: {a} پست منتشر شد"
+    "Неделя: {a} постов вышло": "هفته: {a} پست منتشر شد",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "دسترسی ۳۰ روزه: گفتگو با استراتژیست، جدول هفتگی در برنامه، هفته اول، وظایف و بازبینی‌های هفتگی.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "۳۰ روز همراهی دیگر: بازبینی‌های هفتگی، راهنماهای گام‌به‌گام و چت.",
+    "Недостаточно средств": "موجودی کافی نیست",
+    "Пополни баланс в кабинете.": "موجودی را در بخش حساب کاربری شارژ کن."
   },
   "tr": {
     "Видео": "Video",
@@ -36795,7 +36831,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} — kanal ortalamasına göre ×{b}, {c} gönderi · içerik planından geri alınabilir",
     "«{a}» — закреплена в сетке: {b} в неделю": "“{a}” — haftalık tabloya sabitlendi: haftada {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "Hafta: {a} abone, {b} gönderi yayınlandı",
-    "Неделя: {a} постов вышло": "Hafta: {a} gönderi yayınlandı"
+    "Неделя: {a} постов вышло": "Hafta: {a} gönderi yayınlandı",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 günlük erişim: stratejistle görüşme, planda haftalık tablo, ilk hafta, görevler ve haftalık değerlendirmeler.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "30 gün daha takip: haftalık değerlendirmeler, adım adım rehberler ve sohbet.",
+    "Недостаточно средств": "Yetersiz bakiye",
+    "Пополни баланс в кабинете.": "Hesap bölümünden bakiyeni yükle."
   },
   "hi": {
     "Видео": "वीडियो",
@@ -40475,7 +40515,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} चैनल औसत की तुलना में, {c} पोस्ट · कंटेंट-प्लान में वापस लाया जा सकता है",
     "«{a}» — закреплена в сетке: {b} в неделю": "\"{a}\" — ग्रिड में स्थिर: {b} प्रति सप्ताह",
     "Неделя: {a} подписчиков, {b} постов вышло": "सप्ताह: {a} सब्सक्राइबर, {b} पोस्ट प्रकाशित",
-    "Неделя: {a} постов вышло": "सप्ताह: {a} पोस्ट प्रकाशित"
+    "Неделя: {a} постов вышло": "सप्ताह: {a} पोस्ट प्रकाशित",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "30 दिनों का एक्सेस: स्ट्रैटेजिस्ट से बातचीत, प्लान में साप्ताहिक ग्रिड, पहला सप्ताह, टास्क और साप्ताहिक समीक्षाएँ।",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "30 दिन और सहयोग: साप्ताहिक समीक्षाएँ, चरण-दर-चरण गाइड और चैट।",
+    "Недостаточно средств": "बैलेंस अपर्याप्त है",
+    "Пополни баланс в кабинете.": "अकाउंट सेक्शन में बैलेंस रिचार्ज करो।"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -44155,7 +44199,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} চ্যানেলের গড়ের তুলনায়, {c} পোস্ট · কন্টেন্ট-প্ল্যানে ফেরানো যাবে",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — সাপ্তাহিক গ্রিডে পিন করা: সপ্তাহে {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "সপ্তাহ: {a} সাবস্ক্রাইবার, {b} পোস্ট প্রকাশিত",
-    "Неделя: {a} постов вышло": "সপ্তাহ: {a} পোস্ট প্রকাশিত"
+    "Неделя: {a} постов вышло": "সপ্তাহ: {a} পোস্ট প্রকাশিত",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "৩০ দিনের অ্যাক্সেস: স্ট্র্যাটেজিস্টের সাথে আলোচনা, প্ল্যানে সাপ্তাহিক গ্রিড, প্রথম সপ্তাহ, টাস্ক ও সাপ্তাহিক রিভিউ।",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "আরও ৩০ দিনের সহায়তা: সাপ্তাহিক রিভিউ, ধাপে ধাপে গাইড ও চ্যাট।",
+    "Недостаточно средств": "পর্যাপ্ত ব্যালেন্স নেই",
+    "Пополни баланс в кабинете.": "অ্যাকাউন্ট বিভাগে ব্যালেন্স রিচার্জ করো।"
   },
   "id": {
     "Видео": "Video",
@@ -47835,7 +47883,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs. rata-rata kanal, {c} postingan · dapat dikembalikan di rencana konten",
     "«{a}» — закреплена в сетке: {b} в неделю": "\"{a}\" — disematkan di grid: {b} per minggu",
     "Неделя: {a} подписчиков, {b} постов вышло": "Minggu ini: {a} pelanggan, {b} postingan terbit",
-    "Неделя: {a} постов вышло": "Minggu ini: {a} postingan terbit"
+    "Неделя: {a} постов вышло": "Minggu ini: {a} postingan terbit",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Akses 30 hari: percakapan dengan strategist, weekly grid dalam rencana, minggu pertama, tugas, dan weekly review.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Pendampingan 30 hari lagi: weekly review, panduan langkah demi langkah, dan chat.",
+    "Недостаточно средств": "Saldo tidak mencukupi",
+    "Пополни баланс в кабинете.": "Isi ulang saldo di bagian akun."
   },
   "vi": {
     "Видео": "Video",
@@ -51515,7 +51567,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} so với trung bình kênh, {c} bài · có thể khôi phục trong kế hoạch nội dung",
     "«{a}» — закреплена в сетке: {b} в неделю": "“{a}” — đã ghim trong lưới tuần: {b} mỗi tuần",
     "Неделя: {a} подписчиков, {b} постов вышло": "Tuần: {a} người đăng ký, {b} bài đã đăng",
-    "Неделя: {a} постов вышло": "Tuần: {a} bài đã đăng"
+    "Неделя: {a} постов вышло": "Tuần: {a} bài đã đăng",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Truy cập 30 ngày: trao đổi với strategist, weekly grid trong kế hoạch, tuần đầu tiên, nhiệm vụ và weekly review.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Thêm 30 ngày đồng hành: weekly review, hướng dẫn từng bước và chat.",
+    "Недостаточно средств": "Không đủ số dư",
+    "Пополни баланс в кабинете.": "Nạp thêm số dư trong mục tài khoản."
   },
   "pt": {
     "Видео": "Vídeo",
@@ -55195,7 +55251,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs. média do canal, {c} posts · pode ser restaurada no plano de conteúdo",
     "«{a}» — закреплена в сетке: {b} в неделю": "“{a}” — fixada na grade semanal: {b} por semana",
     "Неделя: {a} подписчиков, {b} постов вышло": "Semana: {a} inscritos, {b} posts publicados",
-    "Неделя: {a} постов вышло": "Semana: {a} posts publicados"
+    "Неделя: {a} постов вышло": "Semana: {a} posts publicados",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Acesso por 30 dias: conversa com o estrategista, grade semanal no plano, primeira semana, tarefas e revisões semanais.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Mais 30 dias de acompanhamento: revisões semanais, guias passo a passo e chat.",
+    "Недостаточно средств": "Saldo insuficiente",
+    "Пополни баланс в кабинете.": "Recarregue o saldo na sua conta."
   },
   "fr": {
     "Видео": "Vidéo",
@@ -58875,7 +58935,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} vs moyenne de la chaîne, {c} publications · restauration possible dans le plan de contenu",
     "«{a}» — закреплена в сетке: {b} в неделю": "« {a} » — épinglée dans la grille : {b} par semaine",
     "Неделя: {a} подписчиков, {b} постов вышло": "Semaine : {a} abonnés, {b} publications parues",
-    "Неделя: {a} постов вышло": "Semaine : {a} publications parues"
+    "Неделя: {a} постов вышло": "Semaine : {a} publications parues",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Accès 30 jours : échange avec le stratège, grille hebdomadaire dans le plan, première semaine, tâches et bilans hebdomadaires.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "30 jours de suivi supplémentaires : bilans hebdomadaires, guides pas à pas et chat.",
+    "Недостаточно средств": "Solde insuffisant",
+    "Пополни баланс в кабинете.": "Recharge ton solde dans ton espace personnel."
   },
   "it": {
     "Видео": "Video",
@@ -62555,7 +62619,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} rispetto alla media del canale, {c} post · ripristinabile nel piano editoriale",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — fissata nella griglia: {b} a settimana",
     "Неделя: {a} подписчиков, {b} постов вышло": "Settimana: {a} iscritti, {b} post pubblicati",
-    "Неделя: {a} постов вышло": "Settimana: {a} post pubblicati"
+    "Неделя: {a} постов вышло": "Settimana: {a} post pubblicati",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Accesso per 30 giorni: dialogo con lo strategist, griglia settimanale nel piano, prima settimana, attività e revisioni settimanali.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Altri 30 giorni di accompagnamento: revisioni settimanali, guide passo dopo passo e chat.",
+    "Недостаточно средств": "Fondi insufficienti",
+    "Пополни баланс в кабинете.": "Ricarica il saldo nel tuo profilo."
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -66235,7 +66303,11 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} ከቻናሉ አማካይ ጋር፣ {c} ልጥፎች · በይዘት ዕቅድ ውስጥ መመለስ ይቻላል",
     "«{a}» — закреплена в сетке: {b} в неделю": "«{a}» — በሳምንታዊ ፍርግርግ ተሰክቷል፡ በሳምንት {b}",
     "Неделя: {a} подписчиков, {b} постов вышло": "ሳምንት፡ {a} ተከታዮች፣ {b} ልጥፎች ወጥተዋል",
-    "Неделя: {a} постов вышло": "ሳምንት፡ {a} ልጥፎች ወጥተዋል"
+    "Неделя: {a} постов вышло": "ሳምንት፡ {a} ልጥፎች ወጥተዋል",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "የ30 ቀን መዳረሻ፡ ከስትራቴጂስት ጋር ውይይት፣ በእቅዱ ውስጥ የሳምንት ፍርግርግ፣ የመጀመሪያ ሳምንት፣ ተግባራት እና ሳምንታዊ ግምገማዎች።",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "ተጨማሪ 30 ቀናት አጃቢነት፡ ሳምንታዊ ግምገማዎች፣ ደረጃ በደረጃ መመሪያዎች እና ቻት።",
+    "Недостаточно средств": "በቂ ገንዘብ የለም",
+    "Пополни баланс в кабинете.": "በመለያህ ክፍል ውስጥ ሒሳብህን ሙላ።"
   },
   "sw": {
     "Видео": "Video",
@@ -69915,6 +69987,10 @@ window.__I18N_DICT = {
     "{a} ×{b} к средней по каналу, {c} постов · вернуть можно в контент-плане": "{a} ×{b} dhidi ya wastani wa kituo, machapisho {c} · inaweza kurejeshwa katika mpango wa maudhui",
     "«{a}» — закреплена в сетке: {b} в неделю": "\"{a}\" — imebandikwa kwenye gridi ya wiki: {b} kwa wiki",
     "Неделя: {a} подписчиков, {b} постов вышло": "Wiki: wafuasi {a}, machapisho {b} yamechapishwa",
-    "Неделя: {a} постов вышло": "Wiki: machapisho {a} yamechapishwa"
+    "Неделя: {a} постов вышло": "Wiki: machapisho {a} yamechapishwa",
+    "Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Ufikiaji kwa siku 30: mazungumzo na strategist, gridi ya wiki katika mpango, wiki ya kwanza, kazi na mapitio ya kila wiki.",
+    "Ещё 30 дней ведения: сверки, гайды и чат.": "Siku 30 zaidi za usimamizi: mapitio ya kila wiki, miongozo ya hatua kwa hatua na gumzo.",
+    "Недостаточно средств": "Salio halitoshi",
+    "Пополни баланс в кабинете.": "Ongeza salio katika sehemu ya akaunti."
   }
 };

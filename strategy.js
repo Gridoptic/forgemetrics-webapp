@@ -151,7 +151,7 @@
 
 
     function forge(n) {
-        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 13) : ('⚡ ' + num(n));
+        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 13) : num(n);
     }
     function accessUntilText() {
         var iso = _state && _state.access_until;
@@ -222,15 +222,17 @@
         var bal = prices.balance || 0;
         haptic('light');
         if (bal < price) {
-            uiAlertStg(T('Не хватает Forge') + '\n' + T('Нужно') + ' ⚡' + num(price) + ', ' + T('на балансе') + ' ⚡' + num(bal) + '. ' + T('Пополни баланс в кабинете и вернись.'));
+            var lack = esc(T('Нужно')) + ' ' + forge(price) + ', ' + esc(T('на балансе')) + ' ' + forge(bal) + '. ' + esc(T('Пополни баланс в кабинете.'));
+            if (typeof window.alertDialogHtml === 'function') window.alertDialogHtml(T('Недостаточно средств'), lack);
+            else toast(T('Недостаточно средств'));
             return;
         }
         var title = renewal ? T('Продлить ведение') : T('Открыть AI-стратегию');
-        var body = (renewal
-            ? T('Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.')
-            : T('Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.')) +
-            '\n' + T('Стоимость') + ' ⚡' + num(price) + '\n' + T('На балансе') + ' ⚡' + num(bal) + ' → ⚡' + num(bal - price);
-        var ask = (typeof confirmDialog === 'function') ? confirmDialog(title + '\n' + body, T('Списать и открыть')) : Promise.resolve(true);
+        var body = esc(renewal
+            ? T('Ещё 30 дней ведения: сверки, гайды и чат.')
+            : T('Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.')) +
+            '<br>' + esc(T('Стоимость')) + ' ' + forge(price) + '<br>' + esc(T('На балансе')) + ' ' + forge(bal) + ' → ' + forge(bal - price);
+        var ask = (typeof window.confirmDialogHtml === 'function') ? window.confirmDialogHtml(title, body, T('Списать и открыть')) : Promise.resolve(true);
         Promise.resolve(ask).then(function (ok) {
             if (!ok) return;
             purchaseNow(btn, renewal);
@@ -988,7 +990,7 @@
     var TR_GEO = { ru: 'Россия', by: 'Беларусь', kz: 'Казахстан', uz: 'Узбекистан', kg: 'Кыргызстан', tj: 'Таджикистан', az: 'Азербайджан', ua: 'Украина' };
 
     function trForge(n) {
-        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 12) : ('⚡ ' + num(n));
+        return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 12) : num(n);
     }
     function trPct(x) {
         var s = String(x == null ? '' : x);
@@ -1223,7 +1225,7 @@
         var price = (_tr && _tr.donors && _tr.donors.price) || 0;
         var bal = (_tr && _tr.balance) || 0;
         var ask = (typeof confirmDialog === 'function')
-            ? confirmDialog(T('Подбор доноров') + '\n' + T('Спишется') + ' ⚡' + num(price) + '. ' + T('На балансе') + ' ⚡' + num(bal) + '.', T('Списать и подобрать'))
+            ? window.confirmDialogHtml(T('Подбор доноров'), esc(T('Спишется')) + ' ' + forge(price) + '. ' + esc(T('На балансе')) + ' ' + forge(bal) + '.', T('Списать и подобрать'))
             : Promise.resolve(true);
         Promise.resolve(ask).then(function (ok) {
             if (!ok) return;
