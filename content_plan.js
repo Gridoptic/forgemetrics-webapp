@@ -273,13 +273,17 @@
         rerender();
     };
 
-    window.__openContentPlan = function () {
+    window.__openContentPlan = function (channelId) {
         _open = true;
         _wantView = null;
         _state = null;
         _modelTouched = false;
         _rubChanged = false;
         if (!_batchTimer) _dayBusy = {};
+        if (channelId && +channelId !== _chId) {
+            _chId = +channelId;
+            _days = null; _cal = null; _review = null; _ap = null; _rubrics = [];
+        }
         ensureScreen();
         renderCenter('<div class="cp-spin"></div>', T('Секунду...'));
         var go = function () {

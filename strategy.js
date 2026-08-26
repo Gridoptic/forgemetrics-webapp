@@ -1171,7 +1171,7 @@
         if (act === 'trplink') { trPlatformLink(el.getAttribute('data-key'), el); return true; }
         if (act === 'trcopy') { trCopy(el.getAttribute('data-text') || ''); return true; }
         if (act === 'trpick') { trPick(el); return true; }
-        if (act === 'trplan') { haptic('light'); _trOpen = false; closeStrategy(); if (typeof window.__openContentPlan === 'function') window.__openContentPlan(); return true; }
+        if (act === 'trplan') { haptic('light'); _trOpen = false; var planChan = (_state && _state.channel_id) || _trChan || null; closeStrategy(); if (typeof window.__openContentPlan === 'function') window.__openContentPlan(planChan); return true; }
         if (act === 'trlinks') { haptic('light'); _trOpen = false; closeStrategy(); if (typeof window.__openPlacements === 'function') window.__openPlacements(); return true; }
         return false;
     }
