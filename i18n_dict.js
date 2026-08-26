@@ -3613,7 +3613,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "The week starting Monday, {when}, has been built from the strategy's weekly grid.",
     "Остаток недели с {when} собран по сетке стратегии.": "The rest of the week from {when} has been built from the strategy's weekly grid.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Autopilot will build the following weeks on its own — posts will wait for approval.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "The current week follows your plan and is unchanged. From Monday, {when}, weeks are built from the strategy's weekly grid."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "The current week follows your plan and is unchanged. From Monday, {when}, weeks are built from the strategy's weekly grid.",
+    "Сверка {n}": "Review {n}",
+    "Сверка {n} из 4": "Review {n} of 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "The strategist will compare the plan with actual results for its 7 days using content plan and traffic data, then suggest grid adjustments.",
+    "дата появится после сборки стратегии": "the date will appear once the strategy is built",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "every week, on {weekday}. Next — {date}, {time}"
   },
   "es": {
     "Видео": "Vídeo",
@@ -7229,7 +7234,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La semana desde el lunes {when} se ha construido según la cuadrícula de la estrategia.",
     "Остаток недели с {when} собран по сетке стратегии.": "El resto de la semana desde el {when} se ha construido según la cuadrícula de la estrategia.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Las próximas semanas las construirá el Autopilot por sí mismo: las publicaciones esperarán tu aprobación.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semana actual sigue tu plan y no se ha modificado. Desde el lunes {when}, las semanas se construyen según la cuadrícula de la estrategia."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semana actual sigue tu plan y no se ha modificado. Desde el lunes {when}, las semanas se construyen según la cuadrícula de la estrategia.",
+    "Сверка {n}": "Revisión {n}",
+    "Сверка {n} из 4": "Revisión {n} de 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "El estratega comparará el plan con los resultados de sus 7 días según los datos del plan de contenido y del tráfico, y propondrá ajustes de la cuadrícula semanal.",
+    "дата появится после сборки стратегии": "la fecha aparecerá tras la creación de la estrategia",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "cada semana, el {weekday}. Próxima: {date}, {time}"
   },
   "de": {
     "Видео": "Video",
@@ -10845,7 +10855,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Die Woche ab Montag, {when}, wurde nach dem Wochenraster der Strategie erstellt.",
     "Остаток недели с {when} собран по сетке стратегии.": "Der Rest der Woche ab {when} wurde nach dem Wochenraster der Strategie erstellt.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Die nächsten Wochen erstellt der Autopilot selbst – die Beiträge warten auf deine Freigabe.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Die aktuelle Woche läuft nach deinem Plan und bleibt unverändert. Ab Montag, {when}, werden die Wochen nach dem Wochenraster der Strategie erstellt."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Die aktuelle Woche läuft nach deinem Plan und bleibt unverändert. Ab Montag, {when}, werden die Wochen nach dem Wochenraster der Strategie erstellt.",
+    "Сверка {n}": "Review {n}",
+    "Сверка {n} из 4": "Review {n} von 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Der Stratege gleicht den Plan mit den Ist-Werten seiner 7 Tage anhand der Daten aus Content-Plan und Traffic ab und schlägt Anpassungen des Wochenrasters vor.",
+    "дата появится после сборки стратегии": "Datum erscheint nach Erstellung der Strategie",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "jede Woche am {weekday}. Nächstes — {date}, {time}"
   },
   "kk": {
     "Видео": "Видео",
@@ -14460,7 +14475,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when}, дүйсенбіден басталатын апта стратегия торы бойынша құрастырылды.",
     "Остаток недели с {when} собран по сетке стратегии.": "{when} бастап аптаның қалған бөлігі стратегия торы бойынша құрастырылды.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Келесі апталарды автопилот өзі құрастырады — посттар бекітуді күтеді.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Ағымдағы апта сенің жоспарың бойынша жүріп жатыр және өзгертілмеген. {when}, дүйсенбіден бастап апталар стратегия торы бойынша құрастырылады."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Ағымдағы апта сенің жоспарың бойынша жүріп жатыр және өзгертілмеген. {when}, дүйсенбіден бастап апталар стратегия торы бойынша құрастырылады.",
+    "Сверка {n}": "Салыстыру {n}",
+    "Сверка {n} из 4": "Салыстыру {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Стратег контент-план мен трафик деректері бойынша соңғы 7 күндегі жоспарды нақты нәтижемен салыстырып, апталық торға түзетулер ұсынады.",
+    "дата появится после сборки стратегии": "күні стратегия құрастырылғаннан кейін көрсетіледі",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "апта сайын, күні — {weekday}. Келесісі — {date}, {time}"
   },
   "uz": {
     "Видео": "Video",
@@ -18076,7 +18096,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Dushanba, {when} dan boshlanadigan hafta strategiya to‘ri bo‘yicha yig‘ildi.",
     "Остаток недели с {when} собран по сетке стратегии.": "{when} dan boshlab haftaning qolgan qismi strategiya to‘ri bo‘yicha yig‘ildi.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Keyingi haftalarni avtopilot o‘zi yig‘adi — postlar tasdiqlashni kutadi.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Joriy hafta sening rejang bo‘yicha davom etmoqda va o‘zgartirilmagan. Dushanba, {when} dan boshlab haftalar strategiya to‘ri bo‘yicha yig‘iladi."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Joriy hafta sening rejang bo‘yicha davom etmoqda va o‘zgartirilmagan. Dushanba, {when} dan boshlab haftalar strategiya to‘ri bo‘yicha yig‘iladi.",
+    "Сверка {n}": "Tekshiruv {n}",
+    "Сверка {n} из 4": "Tekshiruv {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strateg kontent-plan va trafik maʼlumotlari asosida oʻz 7 kunidagi rejani fakt bilan solishtiradi va haftalik jadvalga tuzatishlar taklif qiladi.",
+    "дата появится после сборки стратегии": "sana strategiya tuzilgandan keyin paydo boʻladi",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "har hafta, kun — {weekday}. Keyingisi — {date}, {time}"
   },
   "be": {
     "Видео": "Відэа",
@@ -21691,7 +21716,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Тыдзень з панядзелка, {when}, сабраны па сетцы стратэгіі.",
     "Остаток недели с {when} собран по сетке стратегии.": "Рэшта тыдня з {when} сабрана па сетцы стратэгіі.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Наступныя тыдні аўтапілот збярэ сам — пасты будуць чакаць зацвярджэння.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Бягучы тыдзень ідзе па тваім плане і не зменены. З панядзелка, {when}, тыдні збіраюцца па сетцы стратэгіі."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Бягучы тыдзень ідзе па тваім плане і не зменены. З панядзелка, {when}, тыдні збіраюцца па сетцы стратэгіі.",
+    "Сверка {n}": "Зверка {n}",
+    "Сверка {n} из 4": "Зверка {n} з 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Стратэг зверыць план з фактам за свае 7 дзён па даных кантэнт-плана і трафіку і прапануе праўкі сеткі.",
+    "дата появится после сборки стратегии": "дата з'явіцца пасля зборкі стратэгіі",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "штотыдзень, дзень — {weekday}. Наступная — {date}, {time}"
   },
   "az": {
     "Видео": "Video",
@@ -25307,7 +25337,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when} bazar ertəsindən başlayan həftə strategiya şəbəkəsi üzrə yığılıb.",
     "Остаток недели с {when} собран по сетке стратегии.": "Həftənin {when} tarixindən qalan hissəsi strategiya şəbəkəsi üzrə yığılıb.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Növbəti həftələri Avtopilot özü yığacaq — postlar təsdiq gözləyəcək.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Cari həftə sənin planınla davam edir və dəyişdirilməyib. {when} bazar ertəsindən etibarən həftələr strategiya şəbəkəsi üzrə yığılır."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Cari həftə sənin planınla davam edir və dəyişdirilməyib. {when} bazar ertəsindən etibarən həftələr strategiya şəbəkəsi üzrə yığılır.",
+    "Сверка {n}": "Yoxlama {n}",
+    "Сверка {n} из 4": "Yoxlama {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strateq kontent-plan və trafik məlumatlarına əsasən son 7 günün planını faktla tutuşduracaq və həftəlik cədvələ düzəlişlər təklif edəcək.",
+    "дата появится после сборки стратегии": "tarix strategiya hazırlandıqdan sonra görünəcək",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hər həftə, gün — {weekday}. Növbəti — {date}, {time}"
   },
   "ar": {
     "Видео": "فيديو",
@@ -28923,7 +28958,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "تم تجميع الأسبوع بدءًا من الاثنين {when} وفق شبكة الاستراتيجية.",
     "Остаток недели с {when} собран по сетке стратегии.": "تم تجميع بقية الأسبوع بدءًا من {when} وفق شبكة الاستراتيجية.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "سيجمع الطيار الآلي الأسابيع التالية تلقائيًا — وستنتظر المنشورات الموافقة.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "الأسبوع الحالي يسير وفق خطتك ولم يتغير. بدءًا من الاثنين {when} تُجمع الأسابيع وفق شبكة الاستراتيجية."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "الأسبوع الحالي يسير وفق خطتك ولم يتغير. بدءًا من الاثنين {when} تُجمع الأسابيع وفق شبكة الاستراتيجية.",
+    "Сверка {n}": "المراجعة {n}",
+    "Сверка {n} из 4": "المراجعة {n} من 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "سيقارن الاستراتيجي الخطة بالنتائج الفعلية خلال 7 أيام استنادًا إلى بيانات خطة المحتوى والترافيك، ويقترح تعديلات على الشبكة الأسبوعية.",
+    "дата появится после сборки стратегии": "سيظهر التاريخ بعد إنشاء الاستراتيجية",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "كل أسبوع، يوم {weekday}. التالية — {date}، {time}"
   },
   "fa": {
     "Видео": "ویدیو",
@@ -32539,7 +32579,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "هفتهٔ آغازشده از دوشنبه، {when}، بر اساس شبکهٔ استراتژی ساخته شد.",
     "Остаток недели с {when} собран по сетке стратегии.": "باقی‌ماندهٔ هفته از {when} بر اساس شبکهٔ استراتژی ساخته شد.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "هفته‌های بعدی را خلبان خودکار خودش می‌سازد — پست‌ها منتظر تأیید خواهند ماند.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "هفتهٔ جاری طبق برنامهٔ تو پیش می‌رود و تغییر نکرده است. از دوشنبه، {when}، هفته‌ها بر اساس شبکهٔ استراتژی ساخته می‌شوند."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "هفتهٔ جاری طبق برنامهٔ تو پیش می‌رود و تغییر نکرده است. از دوشنبه، {when}، هفته‌ها بر اساس شبکهٔ استراتژی ساخته می‌شوند.",
+    "Сверка {n}": "بازبینی {n}",
+    "Сверка {n} из 4": "بازبینی {n} از ۴",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "استراتژیست برنامه را با نتایج واقعی ۷ روز خود بر اساس داده‌های برنامه محتوا و ترافیک مقایسه می‌کند و اصلاحات جدول هفتگی را پیشنهاد می‌دهد.",
+    "дата появится после сборки стратегии": "تاریخ پس از ساخت استراتژی نمایش داده می‌شود",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "هر هفته، روز {weekday}. بعدی — {date}، {time}"
   },
   "tr": {
     "Видео": "Video",
@@ -36155,7 +36200,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when} Pazartesi'den başlayan hafta stratejinin haftalık şemasına göre oluşturuldu.",
     "Остаток недели с {when} собран по сетке стратегии.": "{when} tarihinden itibaren haftanın kalanı stratejinin haftalık şemasına göre oluşturuldu.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Sonraki haftaları Autopilot kendisi oluşturacak — gönderiler onay bekleyecek.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Bu hafta senin planına göre ilerliyor ve değiştirilmedi. {when} Pazartesi'den itibaren haftalar stratejinin haftalık şemasına göre oluşturulur."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Bu hafta senin planına göre ilerliyor ve değiştirilmedi. {when} Pazartesi'den itibaren haftalar stratejinin haftalık şemasına göre oluşturulur.",
+    "Сверка {n}": "Kontrol {n}",
+    "Сверка {n} из 4": "Kontrol {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Stratejist, içerik planı ve trafik verilerine göre son 7 günün planını gerçekleşenle karşılaştırır ve haftalık düzen için düzeltmeler önerir.",
+    "дата появится после сборки стратегии": "tarih, strateji oluşturulduktan sonra görünecek",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "her hafta, gün — {weekday}. Sonraki — {date}, {time}"
   },
   "hi": {
     "Видео": "वीडियो",
@@ -39771,7 +39821,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "सोमवार, {when} से शुरू होने वाला सप्ताह रणनीति की ग्रिड के अनुसार तैयार किया गया है।",
     "Остаток недели с {when} собран по сетке стратегии.": "{when} से सप्ताह का शेष भाग रणनीति की ग्रिड के अनुसार तैयार किया गया है।",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "अगले सप्ताह Autopilot स्वयं तैयार करेगा — पोस्ट अनुमोदन की प्रतीक्षा में रहेंगी।",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "वर्तमान सप्ताह तुम्हारी योजना के अनुसार चल रहा है और उसमें बदलाव नहीं किया गया। सोमवार, {when} से सप्ताह रणनीति की ग्रिड के अनुसार तैयार किए जाते हैं।"
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "वर्तमान सप्ताह तुम्हारी योजना के अनुसार चल रहा है और उसमें बदलाव नहीं किया गया। सोमवार, {when} से सप्ताह रणनीति की ग्रिड के अनुसार तैयार किए जाते हैं।",
+    "Сверка {n}": "समीक्षा {n}",
+    "Сверка {n} из 4": "समीक्षा {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "स्ट्रैटेजिस्ट कंटेंट-प्लान और ट्रैफ़िक के डेटा के आधार पर अपने 7 दिनों की योजना की तुलना वास्तविक नतीजों से करेगा और साप्ताहिक ग्रिड में सुधार सुझाएगा।",
+    "дата появится после сборки стратегии": "तारीख स्ट्रैटेजी तैयार होने के बाद दिखेगी",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "हर सप्ताह, दिन — {weekday}। अगली — {date}, {time}"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -43387,7 +43442,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "সোমবার, {when} থেকে সপ্তাহটি স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হয়েছে।",
     "Остаток недели с {when} собран по сетке стратегии.": "{when} থেকে সপ্তাহের বাকি অংশ স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হয়েছে।",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "পরবর্তী সপ্তাহগুলো অটোপাইলট নিজেই তৈরি করবে — পোস্টগুলো অনুমোদনের অপেক্ষায় থাকবে।",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "চলতি সপ্তাহ তোমার প্ল্যান অনুযায়ী চলছে এবং পরিবর্তন করা হয়নি। সোমবার, {when} থেকে সপ্তাহগুলো স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হবে।"
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "চলতি সপ্তাহ তোমার প্ল্যান অনুযায়ী চলছে এবং পরিবর্তন করা হয়নি। সোমবার, {when} থেকে সপ্তাহগুলো স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হবে।",
+    "Сверка {n}": "সমীক্ষা {n}",
+    "Сверка {n} из 4": "সমীক্ষা {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "স্ট্র্যাটেজিস্ট কনটেন্ট প্ল্যান ও ট্রাফিকের ডেটা অনুযায়ী গত ৭ দিনের পরিকল্পনা ও বাস্তব ফলাফল মিলিয়ে দেখবে এবং সাপ্তাহিক গ্রিডে সংশোধন প্রস্তাব করবে।",
+    "дата появится после сборки стратегии": "স্ট্র্যাটেজি তৈরি হওয়ার পর তারিখ দেখা যাবে",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "প্রতি সপ্তাহে, {weekday}। পরবর্তী — {date}, {time}"
   },
   "id": {
     "Видео": "Video",
@@ -47003,7 +47063,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Minggu mulai Senin, {when}, telah disusun sesuai grid strategi.",
     "Остаток недели с {when} собран по сетке стратегии.": "Sisa minggu mulai {when} telah disusun sesuai grid strategi.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Minggu-minggu berikutnya akan disusun otomatis oleh Autopilot — postingan akan menunggu persetujuan.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Minggu ini berjalan sesuai rencanamu dan tidak diubah. Mulai Senin, {when}, minggu-minggu disusun sesuai grid strategi."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Minggu ini berjalan sesuai rencanamu dan tidak diubah. Mulai Senin, {when}, minggu-minggu disusun sesuai grid strategi.",
+    "Сверка {n}": "Review {n}",
+    "Сверка {n} из 4": "Review {n} dari 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strategist akan membandingkan rencana dengan hasil aktual selama 7 hari berdasarkan data content plan dan traffic, lalu mengusulkan perubahan grid mingguan.",
+    "дата появится после сборки стратегии": "tanggal akan muncul setelah strategi disusun",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "setiap minggu, hari {weekday}. Berikutnya — {date}, {time}"
   },
   "vi": {
     "Видео": "Video",
@@ -50619,7 +50684,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Tuần bắt đầu từ thứ Hai, {when}, đã được xây dựng theo lưới của chiến lược.",
     "Остаток недели с {when} собран по сетке стратегии.": "Phần còn lại của tuần từ {when} đã được xây dựng theo lưới của chiến lược.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Các tuần tiếp theo Autopilot sẽ tự xây dựng — các bài đăng sẽ chờ phê duyệt.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Tuần hiện tại vẫn theo kế hoạch của bạn và không bị thay đổi. Từ thứ Hai, {when}, các tuần sẽ được xây dựng theo lưới của chiến lược."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Tuần hiện tại vẫn theo kế hoạch của bạn và không bị thay đổi. Từ thứ Hai, {when}, các tuần sẽ được xây dựng theo lưới của chiến lược.",
+    "Сверка {n}": "Đối chiếu {n}",
+    "Сверка {n} из 4": "Đối chiếu {n} / 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Chiến lược gia sẽ đối chiếu kế hoạch với thực tế 7 ngày qua theo dữ liệu kế hoạch nội dung và lưu lượng, rồi đề xuất chỉnh sửa lưới tuần.",
+    "дата появится после сборки стратегии": "ngày sẽ hiển thị sau khi xây dựng chiến lược",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hằng tuần, vào {weekday}. Lần tới — {date}, {time}"
   },
   "pt": {
     "Видео": "Vídeo",
@@ -54235,7 +54305,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "A semana a partir de segunda-feira, {when}, foi montada pela grade da estratégia.",
     "Остаток недели с {when} собран по сетке стратегии.": "O restante da semana a partir de {when} foi montado pela grade da estratégia.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "O Autopilot montará as próximas semanas por conta própria — as publicações aguardarão aprovação.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "A semana atual segue o seu plano e não foi alterada. A partir de segunda-feira, {when}, as semanas são montadas pela grade da estratégia."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "A semana atual segue o seu plano e não foi alterada. A partir de segunda-feira, {when}, as semanas são montadas pela grade da estratégia.",
+    "Сверка {n}": "Revisão {n}",
+    "Сверка {n} из 4": "Revisão {n} de 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "O estrategista vai comparar o plano com o realizado nos seus 7 dias, com base nos dados do plano de conteúdo e do tráfego, e propor ajustes na grade semanal.",
+    "дата появится после сборки стратегии": "a data aparece após a montagem da estratégia",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "toda semana, às {weekday}. Próxima — {date}, {time}"
   },
   "fr": {
     "Видео": "Vidéo",
@@ -57851,7 +57926,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La semaine à partir du lundi {when} est construite selon la grille de la stratégie.",
     "Остаток недели с {when} собран по сетке стратегии.": "Le reste de la semaine à partir du {when} est construit selon la grille de la stratégie.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "L'Autopilote construira lui-même les semaines suivantes — les publications attendront ton approbation.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semaine en cours suit ton plan et n'a pas été modifiée. À partir du lundi {when}, les semaines sont construites selon la grille de la stratégie."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semaine en cours suit ton plan et n'a pas été modifiée. À partir du lundi {when}, les semaines sont construites selon la grille de la stratégie.",
+    "Сверка {n}": "Bilan {n}",
+    "Сверка {n} из 4": "Bilan {n} sur 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Le stratège comparera le plan aux résultats réels de ses 7 jours d'après les données du plan de contenu et du trafic, puis proposera des ajustements de la grille.",
+    "дата появится после сборки стратегии": "la date apparaîtra une fois la stratégie constituée",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "chaque semaine, le {weekday}. Prochain — {date}, {time}"
   },
   "it": {
     "Видео": "Video",
@@ -61467,7 +61547,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La settimana da lunedì {when} è stata composta secondo la griglia della strategia.",
     "Остаток недели с {when} собран по сетке стратегии.": "Il resto della settimana dal {when} è stato composto secondo la griglia della strategia.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Le prossime settimane verranno composte automaticamente dall'Autopilot: i post resteranno in attesa di approvazione.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La settimana corrente segue il tuo piano e non è stata modificata. Da lunedì {when} le settimane vengono composte secondo la griglia della strategia."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La settimana corrente segue il tuo piano e non è stata modificata. Da lunedì {when} le settimane vengono composte secondo la griglia della strategia.",
+    "Сверка {n}": "Verifica {n}",
+    "Сверка {n} из 4": "Verifica {n} di 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Lo strategist confronterà il piano con i risultati dei suoi 7 giorni in base ai dati del piano contenuti e del traffico e proporrà modifiche alla griglia.",
+    "дата появится после сборки стратегии": "la data apparirà dopo la creazione della strategia",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "ogni settimana, il {weekday}. Prossima: {date}, {time}"
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -65083,7 +65168,12 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "ከሰኞ {when} ጀምሮ ያለው ሳምንት በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ተገንብቷል።",
     "Остаток недели с {when} собран по сетке стратегии.": "ከ{when} ጀምሮ ያለው የሳምንቱ ቀሪ ክፍል በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ተገንብቷል።",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "ቀጣዮቹን ሳምንታት አውቶፓይለት ራሱ ይገነባል — ልጥፎቹ ማጽደቅ ይጠብቃሉ።",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "የአሁኑ ሳምንት በአንተ ዕቅድ መሠረት ይቀጥላል እና አልተቀየረም። ከሰኞ {when} ጀምሮ ሳምንታት በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ይገነባሉ።"
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "የአሁኑ ሳምንት በአንተ ዕቅድ መሠረት ይቀጥላል እና አልተቀየረም። ከሰኞ {when} ጀምሮ ሳምንታት በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ይገነባሉ።",
+    "Сверка {n}": "ግምገማ {n}",
+    "Сверка {n} из 4": "ግምገማ {n} ከ 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "ስትራቴጂስቱ ባለፉት 7 ቀናት ውስጥ እቅዱን ከውጤቱ ጋር በይዘት እቅድ እና በትራፊክ መረጃ መሠረት ያመሳክራል፣ ለሳምንታዊው ፍርግርግ ማስተካከያዎችን ያቀርባል።",
+    "дата появится после сборки стратегии": "ቀኑ ስትራቴጂው ከተገነባ በኋላ ይታያል",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "በየሳምንቱ፣ ቀን — {weekday}። ቀጣዩ — {date}፣ {time}"
   },
   "sw": {
     "Видео": "Video",
@@ -68699,6 +68789,11 @@ window.__I18N_DICT = {
     "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Wiki kuanzia Jumatatu, {when}, imejengwa kulingana na gridi ya mkakati.",
     "Остаток недели с {when} собран по сетке стратегии.": "Sehemu iliyobaki ya wiki kuanzia {when} imejengwa kulingana na gridi ya mkakati.",
     "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Wiki zijazo Autopilot itazijenga yenyewe — machapisho yatasubiri idhini.",
-    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Wiki ya sasa inaendelea kulingana na mpango wako na haijabadilishwa. Kuanzia Jumatatu, {when}, wiki zinajengwa kulingana na gridi ya mkakati."
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Wiki ya sasa inaendelea kulingana na mpango wako na haijabadilishwa. Kuanzia Jumatatu, {when}, wiki zinajengwa kulingana na gridi ya mkakati.",
+    "Сверка {n}": "Ukaguzi {n}",
+    "Сверка {n} из 4": "Ukaguzi {n} kati ya 4",
+    "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Mwanamkakati atalinganisha mpango na matokeo halisi ya siku zake 7 kwa data ya mpango wa maudhui na trafiki, kisha atapendekeza marekebisho ya gridi ya wiki.",
+    "дата появится после сборки стратегии": "tarehe itaonekana baada ya mkakati kuundwa",
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "kila wiki, siku — {weekday}. Ijayo — {date}, {time}"
   }
 };

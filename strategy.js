@@ -603,10 +603,31 @@
             '<div class="t"><b>' + esc(T('Задачи первой недели')) + '</b><span id="stg-doc-sub">' + t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено') + '</span></div></div>' +
             '<div style="margin-top:6px;">' + rows + '</div></div>';
     }
+    function fmtWeekday(iso) {
+        if (!iso) return '';
+        try {
+            var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+            return new Date(iso).toLocaleDateString(lang, { weekday: 'long' });
+        } catch (e) { return ''; }
+    }
+    function fmtTime(iso) {
+        if (!iso) return '';
+        try {
+            var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
+            return new Date(iso).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+        } catch (e) { return ''; }
+    }
     function reviewCardHtml() {
-        var when = fmtDate(_state && _state.next_review_at);
+        var iso = _state && _state.next_review_at;
+        var week = (_state && _state.week) || 1;
+        var head = week <= 4
+            ? T('Сверка {n} из 4').replace('{n}', week)
+            : T('Сверка {n}').replace('{n}', week);
+        var line = iso
+            ? T('каждую неделю, день — {weekday}. Следующая — {date}, {time}').replace('{weekday}', fmtWeekday(iso)).replace('{date}', fmtDate(iso)).replace('{time}', fmtTime(iso))
+            : T('дата появится после сборки стратегии');
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-clock"></i></span> ' + esc(T('Месяц ведения')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(T('Сверка')) + (when ? ' ' + esc(when) : '') + '</b> — ' + esc(T('стратег сверит план с фактом по данным контент-плана и предложит правки сетки.')) + '</div></div>';
+            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.')) + '</div></div>';
     }
     var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
     function renderDoc() {
