@@ -263,23 +263,52 @@
 
     var _talk = null, _talkSel = null, _talkBusy = false;
 
-    function startFlow() {
-        haptic('medium');
+    var _chosen = null;
+    function channelLine() {
+        var c = _chosen || (_state && _state.channel) || null;
+        if (!c) return '';
+        return c.username ? '@' + c.username : (c.title || '');
+    }
+    function startWith(chId) {
         renderCenter('<div class="stg-spin"></div>', T('Секунду...'));
-        apiRequest('/api/v1/channels/active').then(function (d) {
-            _channels = (d && d.channels) || [];
-            var chId = null;
-            if (_channels.length) chId = (d && d.active_channel_id) || _channels[0].id;
-            return apiRequest('/api/v1/strategy/start', { method: 'POST', body: JSON.stringify({ channel_id: chId }) });
-        }).then(function (r) {
+        apiRequest('/api/v1/strategy/start', { method: 'POST', body: JSON.stringify({ channel_id: chId }) }).then(function (r) {
             if (!r || !r.ok) { toast(T('Доступ к стратегии не открыт.')); renderShowcase(); return; }
             _started = true;
             openTalk();
         }).catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); renderShowcase(); });
     }
+    function startFlow() {
+        haptic('medium');
+        renderCenter('<div class="stg-spin"></div>', T('Секунду...'));
+        apiRequest('/api/v1/channels/active').then(function (d) {
+            _channels = (d && d.channels) || [];
+            _chosen = null;
+            if (!_channels.length) { startWith(null); return; }
+            var activeId = (d && d.active_channel_id) || _channels[0].id;
+            var byId = function (id) { return _channels.filter(function (c) { return c.id === id; })[0] || null; };
+            if (_channels.length === 1 || typeof window.showBottomSheet !== 'function') {
+                _chosen = byId(activeId);
+                startWith(activeId);
+                return;
+            }
+            renderShowcase();
+            window.showBottomSheet({
+                title: T('Для какого канала строим стратегию?'),
+                subtitle: T('Ниша, сетка недели, посты и сверки — только этого канала'),
+                items: _channels.map(function (c) {
+                    return { id: c.id, title: c.title || (c.username ? '@' + c.username : T('Канал')),
+                             subtitle: c.username ? '@' + c.username : '', has_avatar: c.has_avatar, is_private: c.is_private };
+                }),
+                activeId: activeId,
+                onSelect: function (id) { _chosen = byId(id); startWith(id); }
+            });
+        }).catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); renderShowcase(); });
+    }
 
     function talkHead() {
-        return '<div class="stg-head"><button class="stg-back" data-act="close"><i class="ti ti-arrow-left"></i></button><div class="t">' + esc(T('Стратег')) + '</div></div>';
+        var line = channelLine();
+        return '<div class="stg-head"><button class="stg-back" data-act="close"><i class="ti ti-arrow-left"></i></button><div><div class="t">' + esc(T('Стратег')) + '</div>' +
+            (line ? '<div class="s">' + esc(T('Канал')) + ' · ' + esc(line) + '</div>' : '') + '</div></div>';
     }
     function openTalk() {
         setView('<div class="stg-center"><div class="big"><div class="stg-spin"></div></div><div class="m">' + esc(T('Смотрю данные канала...')) + '</div></div>', talkHead());
@@ -637,7 +666,7 @@
         var week = _state.week || 1;
         var html = '<div class="stg-sec stg-dochead-sec"><div class="stg-dochead"><div class="stg-fic" style="width:44px;height:44px;">' + STG_ICON + '</div>' +
             '<div class="t"><b>' + esc(T('Стратегия:')) + ' «' + esc(doc.niche || '—') + '»</b>' +
-            '<span>' + esc(T('неделя')) + ' ' + week + (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '') + '</span></div></div></div>';
+            '<span>' + (channelLine() ? esc(channelLine()) + ' · ' : '') + esc(T('неделя')) + ' ' + week + (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '') + '</span></div></div></div>';
         html += weekGridHtml();
         html += firstWeekHtml();
         html += tasksHtml();
@@ -1177,6 +1206,7 @@
     }
     window.__stgTrafficForCheck = function (data, channelId) { _tr = data; _trChan = channelId || null; ensureScreen(); renderTraffic(); };
     window.__stgShowcaseForCheck = function (state) { _state = state; ensureScreen(); renderShowcase(); };
+    window.__stgStartForCheck = function (state) { _state = state; ensureScreen(); startFlow(); };
     window.__stgDocForCheck = function (state) { _state = state; ensureScreen(); renderDoc(); };
 
     function onScreenClick(ev) {

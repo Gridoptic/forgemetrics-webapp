@@ -3618,7 +3618,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Review {n} of 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "The strategist will compare the plan with actual results for its 7 days using content plan and traffic data, then suggest grid adjustments.",
     "дата появится после сборки стратегии": "the date will appear once the strategy is built",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "every week, on {weekday}. Next — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "every week, on {weekday}. Next — {date}, {time}",
+    "Для какого канала строим стратегию?": "Which channel is the strategy for?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, weekly grid, posts and weekly reviews — for this channel only"
   },
   "es": {
     "Видео": "Vídeo",
@@ -7239,7 +7241,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Revisión {n} de 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "El estratega comparará el plan con los resultados de sus 7 días según los datos del plan de contenido y del tráfico, y propondrá ajustes de la cuadrícula semanal.",
     "дата появится после сборки стратегии": "la fecha aparecerá tras la creación de la estrategia",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "cada semana, el {weekday}. Próxima: {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "cada semana, el {weekday}. Próxima: {date}, {time}",
+    "Для какого канала строим стратегию?": "¿Para qué canal creamos la estrategia?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Nicho, cuadrícula semanal, posts y revisiones semanales: solo de este canal"
   },
   "de": {
     "Видео": "Video",
@@ -10860,7 +10864,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Review {n} von 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Der Stratege gleicht den Plan mit den Ist-Werten seiner 7 Tage anhand der Daten aus Content-Plan und Traffic ab und schlägt Anpassungen des Wochenrasters vor.",
     "дата появится после сборки стратегии": "Datum erscheint nach Erstellung der Strategie",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "jede Woche am {weekday}. Nächstes — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "jede Woche am {weekday}. Nächstes — {date}, {time}",
+    "Для какого канала строим стратегию?": "Für welchen Kanal erstellen wir die Strategie?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Nische, Wochenraster, Posts und Wochenabgleiche — nur für diesen Kanal"
   },
   "kk": {
     "Видео": "Видео",
@@ -14480,7 +14486,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Салыстыру {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Стратег контент-план мен трафик деректері бойынша соңғы 7 күндегі жоспарды нақты нәтижемен салыстырып, апталық торға түзетулер ұсынады.",
     "дата появится после сборки стратегии": "күні стратегия құрастырылғаннан кейін көрсетіледі",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "апта сайын, күні — {weekday}. Келесісі — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "апта сайын, күні — {weekday}. Келесісі — {date}, {time}",
+    "Для какого канала строим стратегию?": "Стратегияны қай арна үшін құрамыз?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Ниша, апта торы, посттар мен апталық тексерулер — тек осы арнаныкі"
   },
   "uz": {
     "Видео": "Video",
@@ -18101,7 +18109,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Tekshiruv {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strateg kontent-plan va trafik maʼlumotlari asosida oʻz 7 kunidagi rejani fakt bilan solishtiradi va haftalik jadvalga tuzatishlar taklif qiladi.",
     "дата появится после сборки стратегии": "sana strategiya tuzilgandan keyin paydo boʻladi",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "har hafta, kun — {weekday}. Keyingisi — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "har hafta, kun — {weekday}. Keyingisi — {date}, {time}",
+    "Для какого канала строим стратегию?": "Qaysi kanal uchun strategiya tuzamiz?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Nisha, haftalik jadval, postlar va haftalik tekshiruvlar — faqat shu kanal uchun"
   },
   "be": {
     "Видео": "Відэа",
@@ -21721,7 +21731,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Зверка {n} з 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Стратэг зверыць план з фактам за свае 7 дзён па даных кантэнт-плана і трафіку і прапануе праўкі сеткі.",
     "дата появится после сборки стратегии": "дата з'явіцца пасля зборкі стратэгіі",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "штотыдзень, дзень — {weekday}. Наступная — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "штотыдзень, дзень — {weekday}. Наступная — {date}, {time}",
+    "Для какого канала строим стратегию?": "Для якога канала будуем стратэгію?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Ніша, сетка тыдня, пасты і зверкі — толькі гэтага канала"
   },
   "az": {
     "Видео": "Video",
@@ -25342,7 +25354,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Yoxlama {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strateq kontent-plan və trafik məlumatlarına əsasən son 7 günün planını faktla tutuşduracaq və həftəlik cədvələ düzəlişlər təklif edəcək.",
     "дата появится после сборки стратегии": "tarix strategiya hazırlandıqdan sonra görünəcək",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hər həftə, gün — {weekday}. Növbəti — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hər həftə, gün — {weekday}. Növbəti — {date}, {time}",
+    "Для какого канала строим стратегию?": "Hansı kanal üçün strategiya qururuq?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niş, həftəlik şəbəkə, postlar və həftəlik yoxlamalar — yalnız bu kanal üçün"
   },
   "ar": {
     "Видео": "فيديو",
@@ -28963,7 +28977,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "المراجعة {n} من 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "سيقارن الاستراتيجي الخطة بالنتائج الفعلية خلال 7 أيام استنادًا إلى بيانات خطة المحتوى والترافيك، ويقترح تعديلات على الشبكة الأسبوعية.",
     "дата появится после сборки стратегии": "سيظهر التاريخ بعد إنشاء الاستراتيجية",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "كل أسبوع، يوم {weekday}. التالية — {date}، {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "كل أسبوع، يوم {weekday}. التالية — {date}، {time}",
+    "Для какого канала строим стратегию?": "لأي قناة نبني الاستراتيجية؟",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "النيش وشبكة الأسبوع والمنشورات والمراجعات الأسبوعية — لهذه القناة فقط"
   },
   "fa": {
     "Видео": "ویدیو",
@@ -32584,7 +32600,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "بازبینی {n} از ۴",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "استراتژیست برنامه را با نتایج واقعی ۷ روز خود بر اساس داده‌های برنامه محتوا و ترافیک مقایسه می‌کند و اصلاحات جدول هفتگی را پیشنهاد می‌دهد.",
     "дата появится после сборки стратегии": "تاریخ پس از ساخت استراتژی نمایش داده می‌شود",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "هر هفته، روز {weekday}. بعدی — {date}، {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "هر هفته، روز {weekday}. بعدی — {date}، {time}",
+    "Для какого канала строим стратегию?": "استراتژی را برای کدام کانال می‌سازیم؟",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "نیچ، شبکه هفتگی، پست‌ها و بازبینی‌های هفتگی — فقط برای همین کانال"
   },
   "tr": {
     "Видео": "Video",
@@ -36205,7 +36223,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Kontrol {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Stratejist, içerik planı ve trafik verilerine göre son 7 günün planını gerçekleşenle karşılaştırır ve haftalık düzen için düzeltmeler önerir.",
     "дата появится после сборки стратегии": "tarih, strateji oluşturulduktan sonra görünecek",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "her hafta, gün — {weekday}. Sonraki — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "her hafta, gün — {weekday}. Sonraki — {date}, {time}",
+    "Для какого канала строим стратегию?": "Strateji hangi kanal için oluşturulsun?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niş, haftalık grid, postlar ve haftalık değerlendirmeler — yalnızca bu kanal için"
   },
   "hi": {
     "Видео": "वीडियो",
@@ -39826,7 +39846,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "समीक्षा {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "स्ट्रैटेजिस्ट कंटेंट-प्लान और ट्रैफ़िक के डेटा के आधार पर अपने 7 दिनों की योजना की तुलना वास्तविक नतीजों से करेगा और साप्ताहिक ग्रिड में सुधार सुझाएगा।",
     "дата появится после сборки стратегии": "तारीख स्ट्रैटेजी तैयार होने के बाद दिखेगी",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "हर सप्ताह, दिन — {weekday}। अगली — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "हर सप्ताह, दिन — {weekday}। अगली — {date}, {time}",
+    "Для какого канала строим стратегию?": "किस चैनल के लिए strategy बनानी है?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, weekly grid, posts और weekly reviews — केवल इसी चैनल के"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -43447,7 +43469,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "সমীক্ষা {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "স্ট্র্যাটেজিস্ট কনটেন্ট প্ল্যান ও ট্রাফিকের ডেটা অনুযায়ী গত ৭ দিনের পরিকল্পনা ও বাস্তব ফলাফল মিলিয়ে দেখবে এবং সাপ্তাহিক গ্রিডে সংশোধন প্রস্তাব করবে।",
     "дата появится после сборки стратегии": "স্ট্র্যাটেজি তৈরি হওয়ার পর তারিখ দেখা যাবে",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "প্রতি সপ্তাহে, {weekday}। পরবর্তী — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "প্রতি সপ্তাহে, {weekday}। পরবর্তী — {date}, {time}",
+    "Для какого канала строим стратегию?": "কোন চ্যানেলের জন্য স্ট্র্যাটেজি তৈরি করব?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "নিশ, সাপ্তাহিক গ্রিড, পোস্ট ও সাপ্তাহিক রিভিউ — শুধু এই চ্যানেলের"
   },
   "id": {
     "Видео": "Video",
@@ -47068,7 +47092,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Review {n} dari 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Strategist akan membandingkan rencana dengan hasil aktual selama 7 hari berdasarkan data content plan dan traffic, lalu mengusulkan perubahan grid mingguan.",
     "дата появится после сборки стратегии": "tanggal akan muncul setelah strategi disusun",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "setiap minggu, hari {weekday}. Berikutnya — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "setiap minggu, hari {weekday}. Berikutnya — {date}, {time}",
+    "Для какого канала строим стратегию?": "Untuk channel mana strategi ini dibuat?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, weekly grid, posts, dan weekly reviews — hanya untuk channel ini"
   },
   "vi": {
     "Видео": "Video",
@@ -50689,7 +50715,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Đối chiếu {n} / 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Chiến lược gia sẽ đối chiếu kế hoạch với thực tế 7 ngày qua theo dữ liệu kế hoạch nội dung và lưu lượng, rồi đề xuất chỉnh sửa lưới tuần.",
     "дата появится после сборки стратегии": "ngày sẽ hiển thị sau khi xây dựng chiến lược",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hằng tuần, vào {weekday}. Lần tới — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "hằng tuần, vào {weekday}. Lần tới — {date}, {time}",
+    "Для какого канала строим стратегию?": "Xây dựng chiến lược cho kênh nào?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Ngách, lưới tuần, bài đăng và đối soát hằng tuần — chỉ của kênh này"
   },
   "pt": {
     "Видео": "Vídeo",
@@ -54310,7 +54338,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Revisão {n} de 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "O estrategista vai comparar o plano com o realizado nos seus 7 dias, com base nos dados do plano de conteúdo e do tráfego, e propor ajustes na grade semanal.",
     "дата появится после сборки стратегии": "a data aparece após a montagem da estratégia",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "toda semana, às {weekday}. Próxima — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "toda semana, às {weekday}. Próxima — {date}, {time}",
+    "Для какого канала строим стратегию?": "Para qual canal montar a estratégia?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Nicho, grade semanal, posts e revisões semanais — só deste canal"
   },
   "fr": {
     "Видео": "Vidéo",
@@ -57931,7 +57961,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Bilan {n} sur 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Le stratège comparera le plan aux résultats réels de ses 7 jours d'après les données du plan de contenu et du trafic, puis proposera des ajustements de la grille.",
     "дата появится после сборки стратегии": "la date apparaîtra une fois la stratégie constituée",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "chaque semaine, le {weekday}. Prochain — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "chaque semaine, le {weekday}. Prochain — {date}, {time}",
+    "Для какого канала строим стратегию?": "Pour quelle chaîne construire la stratégie ?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, grille hebdomadaire, posts et bilans hebdomadaires — uniquement pour cette chaîne"
   },
   "it": {
     "Видео": "Video",
@@ -61552,7 +61584,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Verifica {n} di 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Lo strategist confronterà il piano con i risultati dei suoi 7 giorni in base ai dati del piano contenuti e del traffico e proporrà modifiche alla griglia.",
     "дата появится после сборки стратегии": "la data apparirà dopo la creazione della strategia",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "ogni settimana, il {weekday}. Prossima: {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "ogni settimana, il {weekday}. Prossima: {date}, {time}",
+    "Для какого канала строим стратегию?": "Per quale canale costruiamo la strategia?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, weekly grid, post e weekly review: solo di questo canale"
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -65173,7 +65207,9 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "ግምገማ {n} ከ 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "ስትራቴጂስቱ ባለፉት 7 ቀናት ውስጥ እቅዱን ከውጤቱ ጋር በይዘት እቅድ እና በትራፊክ መረጃ መሠረት ያመሳክራል፣ ለሳምንታዊው ፍርግርግ ማስተካከያዎችን ያቀርባል።",
     "дата появится после сборки стратегии": "ቀኑ ስትራቴጂው ከተገነባ በኋላ ይታያል",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "በየሳምንቱ፣ ቀን — {weekday}። ቀጣዩ — {date}፣ {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "በየሳምንቱ፣ ቀን — {weekday}። ቀጣዩ — {date}፣ {time}",
+    "Для какого канала строим стратегию?": "ስትራቴጂ ለየትኛው ቻናል እንገንባ?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "ኒሽ፣ የሳምንት ፍርግርግ፣ ፖስቶች እና የሳምንት ግምገማዎች — የዚህ ቻናል ብቻ"
   },
   "sw": {
     "Видео": "Video",
@@ -68794,6 +68830,8 @@ window.__I18N_DICT = {
     "Сверка {n} из 4": "Ukaguzi {n} kati ya 4",
     "Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.": "Mwanamkakati atalinganisha mpango na matokeo halisi ya siku zake 7 kwa data ya mpango wa maudhui na trafiki, kisha atapendekeza marekebisho ya gridi ya wiki.",
     "дата появится после сборки стратегии": "tarehe itaonekana baada ya mkakati kuundwa",
-    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "kila wiki, siku — {weekday}. Ijayo — {date}, {time}"
+    "каждую неделю, день — {weekday}. Следующая — {date}, {time}": "kila wiki, siku — {weekday}. Ijayo — {date}, {time}",
+    "Для какого канала строим стратегию?": "Tunajenga strategy kwa channel ipi?",
+    "Ниша, сетка недели, посты и сверки — только этого канала": "Niche, weekly grid, posts na weekly reviews — za channel hii pekee"
   }
 };
