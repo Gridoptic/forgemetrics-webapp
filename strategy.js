@@ -141,7 +141,7 @@
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'active') { renderDoc(); return; }
         if (d.status === 'error') { renderGenError(); return; }
-        if (d.status === 'interview') { _started = true; openTalk(); return; }
+        if (d.status === 'interview' && d.access === 'full') { _started = true; openTalk(); return; }
         renderShowcase();
     }
 
@@ -313,7 +313,7 @@
     function openTalk() {
         setView('<div class="stg-center"><div class="big"><div class="stg-spin"></div></div><div class="m">' + esc(T('Смотрю данные канала...')) + '</div></div>', talkHead());
         apiRequest('/api/v1/strategy/talk').then(function (d) {
-            if (!d || !d.ok) { toast(trErrText(d)); renderShowcase(); return; }
+            if (!d || !d.ok) { if (!d || d.error !== 'locked') toast(trErrText(d)); renderShowcase(); return; }
             _talk = d; _talkSel = null;
             renderTalk();
         }).catch(function () { toast(T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); renderShowcase(); });
@@ -1268,6 +1268,7 @@
     window.__stgTrafficForCheck = function (data, channelId) { _tr = data; _trChan = channelId || null; ensureScreen(); renderTraffic(); };
     window.__stgShowcaseForCheck = function (state) { _state = state; ensureScreen(); renderShowcase(); };
     window.__stgStartForCheck = function (state) { _state = state; ensureScreen(); startFlow(); };
+    window.__stgRouteForCheck = function (data) { ensureScreen(); route(data); };
     window.__stgDocForCheck = function (state) { _state = state; ensureScreen(); renderDoc(); };
 
     function onScreenClick(ev) {
