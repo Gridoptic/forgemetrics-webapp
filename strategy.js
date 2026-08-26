@@ -267,7 +267,7 @@
     }
 
 
-    var _talk = null, _talkSel = null, _talkBusy = false;
+    var _talk = null, _talkSel = null, _talkBusy = false, _talkDraft = '';
 
     var _chosen = null;
     function channelLine() {
@@ -359,6 +359,8 @@
         }
         html += '</div>';
         var host = setView(html, talkHead());
+        var draftInp = document.getElementById('stg-talk-inp');
+        if (draftInp && _talkDraft) draftInp.value = _talkDraft;
         host.scrollTop = host.scrollHeight;
         var inp = document.getElementById('stg-talk-inp');
         if (inp && (q.options || []).length <= 1) inp.focus();
@@ -390,11 +392,12 @@
         if (empty && !text) { toast(q.allow_text ? T('Выбери вариант или напиши своими словами') : T('Выбери вариант')); return; }
         haptic('medium');
         _talkBusy = true;
+        _talkDraft = text;
         renderTalk();
         apiRequest('/api/v1/strategy/talk', { method: 'POST', body: JSON.stringify({ key: q.key, value: val, text: text }) }).then(function (d) {
             _talkBusy = false;
             if (!d || !d.ok) { toast(trErrText(d) || T('Не удалось сохранить')); renderTalk(); return; }
-            _talk = d; _talkSel = null;
+            _talk = d; _talkSel = null; _talkDraft = '';
             renderTalk();
         }).catch(function () { _talkBusy = false; toast(T('Не удалось сохранить')); renderTalk(); });
     }
@@ -1020,6 +1023,7 @@
     function trErrText(d) {
         var e = d && d.error;
         if (e === 'no_channel') return T('Подключи канал — модуль трафика работает с его данными.');
+        if (e === 'unclear') return (d && d.message) || T('Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».');
         if (e === 'locked') return T('Доступ к стратегии не открыт.');
         if (e === 'no_strategy') return T('Сначала открой стратегию.');
         return (d && d.message) || T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.');
