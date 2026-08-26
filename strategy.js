@@ -726,25 +726,86 @@
     }
 
 
+    var _rvOpen = {};
+    function tx(o, tplKey, paramsKey, textKey) {
+        if (!o) return '';
+        var tpl = o[tplKey];
+        if (!tpl) return String(o[textKey] || '');
+        var s = T(tpl), params = o[paramsKey] || {};
+        Object.keys(params).forEach(function (k) {
+            var v = String(params[k]).split(', ').map(function (part) { return T(part); }).join(', ');
+            s = s.split('{' + k + '}').join(v);
+        });
+        return s;
+    }
+    function rvKpi(k) {
+        var d = '';
+        if (k.delta !== null && k.delta !== undefined) d = '<i class="' + (k.delta > 0 ? 'up' : (k.delta < 0 ? 'down' : 'flat')) + '">' + (k.delta > 0 ? '+' : '') + k.delta + '</i>';
+        else if (k.of) d = '<i class="flat">' + esc(T('из')) + ' ' + k.of + '</i>';
+        return '<div class="stg-rv-kpi"><div class="v">' + esc(String(k.value)) + d + '</div><div class="l">' + esc(T(k.label)) + '</div></div>';
+    }
+    function rvGoal(g) {
+        if (!g || !g.target) return '';
+        var pct = Math.max(0, Math.min(100, Math.round((g.subscribers || 0) / g.target * 100)));
+        var f = g.pace_week !== null && g.pace_week !== undefined && g.weeks_lo
+            ? T('При темпе {pace}/нед — {lo}–{hi} недель до цели').replace('{pace}', (g.pace_week > 0 ? '+' : '') + g.pace_week).replace('{lo}', g.weeks_lo).replace('{hi}', g.weeks_hi)
+            : (g.pace_week !== null && g.pace_week !== undefined ? T('Темп {pace}/нед — при нём цель не приближается').replace('{pace}', g.pace_week)
+               : T('Прогноз темпа — со сверки 2: одна неделя не даёт честной оценки'));
+        return '<div class="stg-rv-goal"><div class="g"><span>' + esc(T('Цель: {n} подписчиков').replace('{n}', g.target)) + '</span><span><b>' + esc(String(g.subscribers)) + '</b> / ' + esc(String(g.target)) + '</span></div>' +
+            '<div class="bar"><i style="width:' + pct + '%"></i></div><div class="f">' + esc(f) + '</div></div>';
+    }
+    function rvTask(t, week) {
+        var done = !!((_state.progress || {})[t.key]);
+        var link = t.link === 'plan' ? 'trplan' : (t.link === 'traffic' ? 'trmod' : (t.link === 'market' ? 'market' : ''));
+        var ttl = tx(t, 'tpl', 'params', 'title'), sub = tx(t, 'sub_tpl', 'sub_params', 'sub');
+        return '<div class="stg-rv-task' + (done ? ' done' : '') + '"><span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(t.key) + '"></span>' +
+            '<span class="t"><b>' + esc(ttl) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span>' +
+            (t.minutes ? '<span class="pill">' + t.minutes + ' ' + esc(T('мин')) + '</span>' : '') +
+            (link ? '<button class="stg-rv-go" data-act="' + link + '"><i class="ti ti-arrow-right"></i></button>' : '') + '</div>';
+    }
+    function rvCard(r, open) {
+        var when = r.period && r.period.to ? fmtDate(r.period.to) : '';
+        var from = r.period && r.period.from ? fmtDate(r.period.from) : '';
+        var headline = r.headline_tpl ? tx(r.headline_tpl, 'tpl', 'params', 'text') : (r.headline || '');
+        var head = '<div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Сверка {n}').replace('{n}', r.week || 1)) + (when ? ' · ' + esc(when) : '') + '</div>';
+        if (!open) return '<div class="stg-sec stg-rv-past" data-act="rvopen" data-week="' + (r.week || 1) + '">' + head + '<div class="stg-note" style="margin-top:6px;">' + esc(headline) + '</div></div>';
+        var html = '<div class="stg-sec stg-rv hero">' + head +
+            '<div class="stg-rv-title">' + esc(headline) + '</div>' +
+            (from && when ? '<div class="stg-rv-sub">' + esc(from) + ' → ' + esc(when) + '</div>' : '') +
+            '<div class="stg-rv-kpis">' + (r.kpis || []).map(rvKpi).join('') + '</div>' + rvGoal(r.goal) +
+            '<div class="stg-rv-rows">' + (r.rows || []).map(function (x) { return '<div class="stg-rv-row"><span class="dot ' + esc(x.tone || 'mut') + '"></span><span>' + esc(tx(x, 'tpl', 'params', 'text')) + '</span></div>'; }).join('') + '</div></div>';
+        if ((r.learned || []).length || r.next_focus) {
+            html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile">2</span> ' + esc(T('Что понял стратег')) + '</div><div class="stg-rv-rows">' +
+                (r.learned || []).map(function (x) { return '<div class="stg-rv-row"><span class="dot ind"></span><span>' + esc(x.text) + '</span></div>'; }).join('') +
+                (r.next_focus ? '<div class="stg-rv-row"><span class="dot ind"></span><span><b>' + esc(T('Фокус недели:')) + '</b> ' + esc(r.next_focus) + '</span></div>' : '') + '</div></div>';
+        }
+        var ch = r.changes || [];
+        html += '<div class="stg-sec"><div class="stg-eyebrow ok"><span class="tile">3</span> ' + esc(T('Что меняю')) + '</div>' +
+            (ch.length ? '<div class="stg-rv-chg">' + ch.map(function (c) {
+                var ic = c.icon === 'up' ? '↑' : (c.icon === 'down' ? '−' : (c.icon === 'clock' ? '<i class="ti ti-clock"></i>' : '₽'));
+                var ct = tx(c, 'tpl', 'params', 'title'), cs = tx(c, 'sub_tpl', 'sub_params', 'sub');
+                return '<div class="stg-rv-ch"><span class="ico ' + esc(c.icon || '') + '">' + ic + '</span><span><b>' + esc(ct) + '</b>' + (cs ? '<small>' + esc(cs) + '</small>' : '') + '</span></div>';
+            }).join('') + '</div>' + (ch.some(function (c) { return c.applied; }) ? '<div class="stg-rv-auto">' + esc(T('Применено автоматически: сетка канала переписана, следующая неделя соберётся по ней. Идущая неделя не тронута.')) + '</div>' : '')
+            : '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сетка без изменений: данных для решений пока мало — рубрики и часы оцениваются от 3 постов.')) + '</div>') + '</div>';
+        var tasks = r.tasks || [];
+        html += '<div class="stg-sec"><div class="stg-eyebrow act"><span class="tile">4</span> ' + esc(T('Что сделать тебе')) + '</div>' +
+            (tasks.length ? '<div style="margin-top:6px;">' + tasks.map(function (t) { return rvTask(t, r.week); }).join('') + '</div>'
+            : '<div class="stg-note" style="margin-top:8px;">' + esc(T('На эту неделю задач нет — всё идёт по плану.')) + '</div>') + '</div>';
+        return html;
+    }
     function reviewHtml() {
-        var revs = _state.reviews || [];
+        var revs = (_state.reviews || []).filter(function (r) { return r && (r.v === 2 || r.summary); });
         if (!revs.length) {
-            return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Разбор недели')) + '</div>' +
-                '<div class="stg-note" style="margin-top:9px;">' + esc(T('Первый разбор стратег сделает через неделю: сверит план с фактическими цифрами канала — что сработало, где отстаёшь и что делать дальше.')) + '</div></div>';
+            return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Сверка')) + '</div>' +
+                '<div class="stg-note" style="margin-top:9px;">' + esc(T('Первую сверку стратег сделает ровно через неделю после старта: что произошло, что он понял, что меняет в сетке и что сделать тебе.')) + '</div></div>';
         }
-        var r = revs[0];
-        var inner = '<div class="stg-eyebrow"><span class="tile"><i class="ti ti-trending-up"></i></span> ' + esc(T('Неделя')) + ' ' + (r.week || 1) + ' · ' + esc(T('разбор от стратега')) + '</div>';
-        if (r.summary) inner += '<div class="stg-note" style="margin-top:9px;">' + esc(fixDays(r.summary)) + '</div>';
-        (r.wins || []).forEach(function (w) {
-            inner += '<div class="stg-verd"><span class="ic" style="color:#5DCAA5"><i class="ti ti-circle-check"></i></span><span><b>' + esc(T('Сработало:')) + '</b> ' + esc(fixDays(w.title ? w.title + '. ' : '')) + esc(fixDays(w.body || '')) + '</span></div>';
+        var html = '';
+        revs.forEach(function (r, i) {
+            if (r.v !== 2) return;
+            var open = i === 0 || !!_rvOpen[r.week];
+            html += rvCard(r, open);
         });
-        (r.lags || []).forEach(function (w) {
-            inner += '<div class="stg-verd"><span class="ic" style="color:#f5bf4f"><i class="ti ti-alert-triangle"></i></span><span><b>' + esc(T('Отстаём:')) + '</b> ' + esc(fixDays(w.title ? w.title + '. ' : '')) + esc(fixDays(w.body || '')) + '</span></div>';
-        });
-        if (r.task) {
-            inner += '<div class="stg-task"><b>' + esc(T('Задача недели')) + ' ' + ((r.week || 1) + 1) + ':</b> ' + esc(fixDays(r.task.title ? r.task.title + '. ' : '')) + esc(fixDays(r.task.body || '')) + '</div>';
-        }
-        return '<div class="stg-sec">' + inner + '</div>';
+        return html;
     }
 
 
@@ -1231,6 +1292,9 @@
             return;
         }
         if (act === 'cb') { toggleStep(actEl); return; }
+        if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; renderDoc(); return; }
+        if (act === 'trmod') { haptic('light'); openTraffic(); return; }
+        if (act === 'market') { haptic('light'); closeStrategy(); if (typeof window.__openMarket === 'function') window.__openMarket(); return; }
         if (act === 'how') { openGuide(actEl); return; }
         if (act === 'more') {
             var b = actEl.parentElement.querySelector('.stg-body');

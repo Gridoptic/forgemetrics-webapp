@@ -2478,10 +2478,21 @@
         return '<span class="cpg-chip' + (on ? ' g' : ' y') + '">' +
             esc(T('автопилот') + ' ' + T(on ? 'вкл' : 'выкл')) + '</span>';
     }
+    function weekRangeLabel() {
+        var lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+        var now = new Date();
+        var mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+        var sun = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 6);
+        try {
+            var end = sun.toLocaleDateString(lang, { day: 'numeric', month: 'long' });
+            var start = mon.getMonth() === sun.getMonth() ? String(mon.getDate()) : mon.toLocaleDateString(lang, { day: 'numeric', month: 'long' });
+            return start + (mon.getMonth() === sun.getMonth() ? '–' : ' – ') + end;
+        } catch (e) { return T('Неделя') + ' ' + isoWeek(now); }
+    }
     function gHeroBase(title, chips) {
         var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
         return '<div class="cpg-glow"></div><div class="cpg-hero">' +
-            '<div class="hk">' + esc(T('Неделя') + ' ' + isoWeek(new Date())) +
+            '<div class="hk">' + esc(weekRangeLabel()) +
             (cc ? ' · ' + esc(chanName(cc)) : '') + '</div>' +
             '<div class="ht">' + esc(T(title)) + '</div>' +
             '<div class="hs">' + chips + '</div></div>';

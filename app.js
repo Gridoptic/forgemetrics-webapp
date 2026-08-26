@@ -4468,6 +4468,10 @@ function renderVoiceStatus(ch) {
         return `<span class="channel-card-feat-val warn">Слабый — мало материала</span>`;
     }
 
+    if (status === 'done' && quality === 'strategy') {
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Задан стратегом</span>`;
+    }
+
     if (status === 'failed' && quality === 'private') {
         return `<span class="channel-card-feat-val warn">Приватный — загрузи примеры</span>`;
     }
@@ -5130,7 +5134,9 @@ function renderSettingsVoiceSection(data) {
     if (hasVoice && status === 'done') {
         const qualityLabel = quality === 'full'
             ? `${postsAnalyzed} постов · качественно`
-            : `${postsAnalyzed} постов · слабый стиль`;
+            : (quality === 'strategy'
+                ? 'задан стратегом · пересоберётся по постам'
+                : `${postsAnalyzed} постов · слабый стиль`);
         statusBadge = `
             <div class="cs-status-line cs-status-ok">
                 <i class="ti ti-circle-check"></i>
