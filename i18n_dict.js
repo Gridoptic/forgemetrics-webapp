@@ -3608,7 +3608,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubrics by day and posting frequency go into the content plan; every week of the month is built on the strategy’s weekly grid. Each week the strategist adjusts the grid based on actual results",
     "Трафик под твой регион.": "Traffic for your region.",
     "в месяц": "per month",
-    "разово": "one-time"
+    "разово": "one-time",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "You have turned Autopilot off for this channel — build the following weeks with the \"Build the week\" button in the content plan.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "The week starting Monday, {when}, has been built from the strategy's weekly grid.",
+    "Остаток недели с {when} собран по сетке стратегии.": "The rest of the week from {when} has been built from the strategy's weekly grid.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Autopilot will build the following weeks on its own — posts will wait for approval.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "The current week follows your plan and is unchanged. From Monday, {when}, weeks are built from the strategy's weekly grid."
   },
   "es": {
     "Видео": "Vídeo",
@@ -7219,7 +7224,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Las rúbricas por día y la frecuencia se registran en el content plan; todas las semanas del mes se arman según la weekly grid de la estrategia. El strategist ajusta la grid cada semana según los resultados",
     "Трафик под твой регион.": "Tráfico para tu región.",
     "в месяц": "al mes",
-    "разово": "pago único"
+    "разово": "pago único",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Has desactivado el Autopilot del canal: las próximas semanas, constrúyelas con el botón «Construir la semana» en el plan de contenido.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La semana desde el lunes {when} se ha construido según la cuadrícula de la estrategia.",
+    "Остаток недели с {when} собран по сетке стратегии.": "El resto de la semana desde el {when} se ha construido según la cuadrícula de la estrategia.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Las próximas semanas las construirá el Autopilot por sí mismo: las publicaciones esperarán tu aprobación.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semana actual sigue tu plan y no se ha modificado. Desde el lunes {when}, las semanas se construyen según la cuadrícula de la estrategia."
   },
   "de": {
     "Видео": "Video",
@@ -10830,7 +10840,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubriken nach Tagen und Frequenz werden in den Content-Plan übernommen; alle Wochen des Monats folgen dem Wochenraster der Strategie. Der Stratege passt das Raster jede Woche anhand der Ergebnisse an",
     "Трафик под твой регион.": "Traffic für deine Region.",
     "в месяц": "pro Monat",
-    "разово": "einmalig"
+    "разово": "einmalig",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Du hast den Autopilot für den Kanal deaktiviert – die nächsten Wochen erstellst du über die Schaltfläche „Woche erstellen“ im Content-Plan.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Die Woche ab Montag, {when}, wurde nach dem Wochenraster der Strategie erstellt.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Der Rest der Woche ab {when} wurde nach dem Wochenraster der Strategie erstellt.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Die nächsten Wochen erstellt der Autopilot selbst – die Beiträge warten auf deine Freigabe.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Die aktuelle Woche läuft nach deinem Plan und bleibt unverändert. Ab Montag, {when}, werden die Wochen nach dem Wochenraster der Strategie erstellt."
   },
   "kk": {
     "Видео": "Видео",
@@ -14440,7 +14455,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Күндер бойынша рубрикалар мен жиілік контент-планға жазылады; айдың барлық апталары стратегияның апталық торы бойынша құрылады. Стратег торды апта сайын нақты нәтижеге қарай түзетеді",
     "Трафик под твой регион.": "Сенің аймағыңа арналған трафик.",
     "в месяц": "айына",
-    "разово": "бір рет"
+    "разово": "бір рет",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Арнаның автопилотын сен өшірдің — келесі апталарды контент-жоспардағы «Аптаны құрастыру» түймесімен құрастыр.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when}, дүйсенбіден басталатын апта стратегия торы бойынша құрастырылды.",
+    "Остаток недели с {when} собран по сетке стратегии.": "{when} бастап аптаның қалған бөлігі стратегия торы бойынша құрастырылды.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Келесі апталарды автопилот өзі құрастырады — посттар бекітуді күтеді.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Ағымдағы апта сенің жоспарың бойынша жүріп жатыр және өзгертілмеген. {when}, дүйсенбіден бастап апталар стратегия торы бойынша құрастырылады."
   },
   "uz": {
     "Видео": "Video",
@@ -18051,7 +18071,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Kunlar bo‘yicha rubrikalar va chastota kontent-planga yoziladi; oyning barcha haftalari strategiya to‘ri bo‘yicha yig‘iladi. Strateg har hafta to‘rni real natijalarga qarab tuzatadi",
     "Трафик под твой регион.": "Sening mintaqang uchun trafik.",
     "в месяц": "oyiga",
-    "разово": "bir martalik"
+    "разово": "bir martalik",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Kanal avtopilotini o‘zing o‘chirgansan — keyingi haftalarni kontent-plandagi «Haftani yig‘ish» tugmasi orqali yig‘.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Dushanba, {when} dan boshlanadigan hafta strategiya to‘ri bo‘yicha yig‘ildi.",
+    "Остаток недели с {when} собран по сетке стратегии.": "{when} dan boshlab haftaning qolgan qismi strategiya to‘ri bo‘yicha yig‘ildi.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Keyingi haftalarni avtopilot o‘zi yig‘adi — postlar tasdiqlashni kutadi.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Joriy hafta sening rejang bo‘yicha davom etmoqda va o‘zgartirilmagan. Dushanba, {when} dan boshlab haftalar strategiya to‘ri bo‘yicha yig‘iladi."
   },
   "be": {
     "Видео": "Відэа",
@@ -21661,7 +21686,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Рубрыкі па днях і частата запісваюцца ў кантэнт-план; усе тыдні месяца збіраюцца па сетцы стратэгіі. Стратэг штотыдзень правіць сетку па факце",
     "Трафик под твой регион.": "Трафік пад твой рэгіён.",
     "в месяц": "у месяц",
-    "разово": "аднаразова"
+    "разово": "аднаразова",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Аўтапілот канала выключаны табой — наступныя тыдні збірай кнопкай «Сабраць тыдзень» у кантэнт-плане.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Тыдзень з панядзелка, {when}, сабраны па сетцы стратэгіі.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Рэшта тыдня з {when} сабрана па сетцы стратэгіі.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Наступныя тыдні аўтапілот збярэ сам — пасты будуць чакаць зацвярджэння.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Бягучы тыдзень ідзе па тваім плане і не зменены. З панядзелка, {when}, тыдні збіраюцца па сетцы стратэгіі."
   },
   "az": {
     "Видео": "Video",
@@ -25272,7 +25302,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Günlər üzrə rubrikalar və tezlik kontent-plana yazılır; ayın bütün həftələri strategiyanın həftəlik şəbəkəsi üzrə yığılır. Strateq hər həftə şəbəkəni faktiki nəticələrə görə düzəldir",
     "Трафик под твой регион.": "Sənin regionun üçün trafik.",
     "в месяц": "ayda",
-    "разово": "birdəfəlik"
+    "разово": "birdəfəlik",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Kanalın Avtopilotunu sən söndürmüsən — növbəti həftələri kontent-plandakı «Həftəni yığ» düyməsi ilə yığ.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when} bazar ertəsindən başlayan həftə strategiya şəbəkəsi üzrə yığılıb.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Həftənin {when} tarixindən qalan hissəsi strategiya şəbəkəsi üzrə yığılıb.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Növbəti həftələri Avtopilot özü yığacaq — postlar təsdiq gözləyəcək.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Cari həftə sənin planınla davam edir və dəyişdirilməyib. {when} bazar ertəsindən etibarən həftələr strategiya şəbəkəsi üzrə yığılır."
   },
   "ar": {
     "Видео": "فيديو",
@@ -28883,7 +28918,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "تُسجَّل الأقسام حسب الأيام والتكرار في خطة المحتوى؛ وتُبنى كل أسابيع الشهر وفق الشبكة الأسبوعية للاستراتيجية. يعدّل الاستراتيجي الشبكة كل أسبوع وفق النتائج الفعلية",
     "Трафик под твой регион.": "ترافيك لمنطقتك.",
     "в месяц": "شهريًا",
-    "разово": "دفعة واحدة"
+    "разово": "دفعة واحدة",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "لقد عطّلت الطيار الآلي لهذه القناة — اجمع الأسابيع التالية بزر «تجميع الأسبوع» في خطة المحتوى.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "تم تجميع الأسبوع بدءًا من الاثنين {when} وفق شبكة الاستراتيجية.",
+    "Остаток недели с {when} собран по сетке стратегии.": "تم تجميع بقية الأسبوع بدءًا من {when} وفق شبكة الاستراتيجية.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "سيجمع الطيار الآلي الأسابيع التالية تلقائيًا — وستنتظر المنشورات الموافقة.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "الأسبوع الحالي يسير وفق خطتك ولم يتغير. بدءًا من الاثنين {when} تُجمع الأسابيع وفق شبكة الاستراتيجية."
   },
   "fa": {
     "Видео": "ویدیو",
@@ -32494,7 +32534,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "روبریک‌های روزانه و فرکانس در برنامهٔ محتوایی ثبت می‌شوند؛ همهٔ هفته‌های ماه بر اساس جدول هفتگی استراتژی ساخته می‌شوند. استراتژیست هر هفته جدول را بر اساس نتایج واقعی اصلاح می‌کند",
     "Трафик под твой регион.": "ترافیک متناسب با منطقهٔ تو.",
     "в месяц": "در ماه",
-    "разово": "یک‌بار"
+    "разово": "یک‌بار",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "خلبان خودکار کانال را خودت خاموش کرده‌ای — هفته‌های بعدی را با دکمهٔ «ساخت هفته» در برنامهٔ محتوا بساز.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "هفتهٔ آغازشده از دوشنبه، {when}، بر اساس شبکهٔ استراتژی ساخته شد.",
+    "Остаток недели с {when} собран по сетке стратегии.": "باقی‌ماندهٔ هفته از {when} بر اساس شبکهٔ استراتژی ساخته شد.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "هفته‌های بعدی را خلبان خودکار خودش می‌سازد — پست‌ها منتظر تأیید خواهند ماند.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "هفتهٔ جاری طبق برنامهٔ تو پیش می‌رود و تغییر نکرده است. از دوشنبه، {when}، هفته‌ها بر اساس شبکهٔ استراتژی ساخته می‌شوند."
   },
   "tr": {
     "Видео": "Video",
@@ -36105,7 +36150,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Günlere göre rubrikler ve sıklık içerik planına yazılır; ayın tüm haftaları strateji ızgarasına göre oluşturulur. Strateji uzmanı her hafta ızgarayı gerçek sonuçlara göre düzeltir",
     "Трафик под твой регион.": "Bölgene uygun trafik.",
     "в месяц": "aylık",
-    "разово": "tek seferlik"
+    "разово": "tek seferlik",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Kanalın Autopilot modunu sen kapattın — sonraki haftaları içerik planındaki «Haftayı oluştur» düğmesiyle oluştur.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "{when} Pazartesi'den başlayan hafta stratejinin haftalık şemasına göre oluşturuldu.",
+    "Остаток недели с {when} собран по сетке стратегии.": "{when} tarihinden itibaren haftanın kalanı stratejinin haftalık şemasına göre oluşturuldu.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Sonraki haftaları Autopilot kendisi oluşturacak — gönderiler onay bekleyecek.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Bu hafta senin planına göre ilerliyor ve değiştirilmedi. {when} Pazartesi'den itibaren haftalar stratejinin haftalık şemasına göre oluşturulur."
   },
   "hi": {
     "Видео": "वीडियो",
@@ -39716,7 +39766,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "दिनों के अनुसार रूब्रिक और आवृत्ति कंटेंट प्लान में दर्ज होती हैं; महीने के सभी सप्ताह स्ट्रैटेजी की वीकली ग्रिड से बनते हैं। स्ट्रैटेजिस्ट हर सप्ताह वास्तविक नतीजों के अनुसार ग्रिड सुधारता है",
     "Трафик под твой регион.": "तेरे क्षेत्र के लिए ट्रैफ़िक.",
     "в месяц": "प्रति माह",
-    "разово": "एकमुश्त"
+    "разово": "एकमुश्त",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "तुमने चैनल का Autopilot बंद कर दिया है — अगले सप्ताह कंटेंट-प्लान में «सप्ताह तैयार करें» बटन से तैयार करो।",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "सोमवार, {when} से शुरू होने वाला सप्ताह रणनीति की ग्रिड के अनुसार तैयार किया गया है।",
+    "Остаток недели с {when} собран по сетке стратегии.": "{when} से सप्ताह का शेष भाग रणनीति की ग्रिड के अनुसार तैयार किया गया है।",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "अगले सप्ताह Autopilot स्वयं तैयार करेगा — पोस्ट अनुमोदन की प्रतीक्षा में रहेंगी।",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "वर्तमान सप्ताह तुम्हारी योजना के अनुसार चल रहा है और उसमें बदलाव नहीं किया गया। सोमवार, {when} से सप्ताह रणनीति की ग्रिड के अनुसार तैयार किए जाते हैं।"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -43327,7 +43382,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "দিন অনুযায়ী রুব্রিক ও ফ্রিকোয়েন্সি কনটেন্ট প্ল্যানে লেখা হয়; মাসের সব সপ্তাহ স্ট্র্যাটেজির সাপ্তাহিক গ্রিড অনুযায়ী তৈরি হয়। স্ট্র্যাটেজিস্ট প্রতি সপ্তাহে বাস্তব ফলাফল অনুযায়ী গ্রিড সংশোধন করে",
     "Трафик под твой регион.": "তোমার অঞ্চলের জন্য ট্রাফিক।",
     "в месяц": "প্রতি মাসে",
-    "разово": "এককালীন"
+    "разово": "এককালীন",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "চ্যানেলের অটোপাইলট তুমি বন্ধ করেছ — পরবর্তী সপ্তাহগুলো কনটেন্ট প্ল্যানে «সপ্তাহ তৈরি করো» বোতাম দিয়ে তৈরি করো।",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "সোমবার, {when} থেকে সপ্তাহটি স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হয়েছে।",
+    "Остаток недели с {when} собран по сетке стратегии.": "{when} থেকে সপ্তাহের বাকি অংশ স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হয়েছে।",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "পরবর্তী সপ্তাহগুলো অটোপাইলট নিজেই তৈরি করবে — পোস্টগুলো অনুমোদনের অপেক্ষায় থাকবে।",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "চলতি সপ্তাহ তোমার প্ল্যান অনুযায়ী চলছে এবং পরিবর্তন করা হয়নি। সোমবার, {when} থেকে সপ্তাহগুলো স্ট্র্যাটেজির গ্রিড অনুযায়ী তৈরি হবে।"
   },
   "id": {
     "Видео": "Video",
@@ -46938,7 +46998,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubrik per hari dan frekuensi dicatat ke content plan; semua minggu dalam sebulan disusun menurut weekly grid strategi. Setiap minggu strategist menyesuaikan grid berdasarkan hasil nyata",
     "Трафик под твой регион.": "Trafik untuk wilayahmu.",
     "в месяц": "per bulan",
-    "разово": "sekali bayar"
+    "разово": "sekali bayar",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Autopilot kanal telah kamu nonaktifkan — susun minggu-minggu berikutnya dengan tombol “Susun minggu” di rencana konten.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Minggu mulai Senin, {when}, telah disusun sesuai grid strategi.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Sisa minggu mulai {when} telah disusun sesuai grid strategi.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Minggu-minggu berikutnya akan disusun otomatis oleh Autopilot — postingan akan menunggu persetujuan.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Minggu ini berjalan sesuai rencanamu dan tidak diubah. Mulai Senin, {when}, minggu-minggu disusun sesuai grid strategi."
   },
   "vi": {
     "Видео": "Video",
@@ -50549,7 +50614,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Chuyên mục theo ngày và tần suất được ghi vào content plan; mọi tuần trong tháng được xây theo lưới tuần của chiến lược. Mỗi tuần strategist chỉnh lưới theo kết quả thực tế",
     "Трафик под твой регион.": "Traffic cho khu vực của bạn.",
     "в месяц": "mỗi tháng",
-    "разово": "một lần"
+    "разово": "một lần",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Bạn đã tắt Autopilot cho kênh — các tuần tiếp theo hãy xây dựng bằng nút “Xây dựng tuần” trong kế hoạch nội dung.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Tuần bắt đầu từ thứ Hai, {when}, đã được xây dựng theo lưới của chiến lược.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Phần còn lại của tuần từ {when} đã được xây dựng theo lưới của chiến lược.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Các tuần tiếp theo Autopilot sẽ tự xây dựng — các bài đăng sẽ chờ phê duyệt.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Tuần hiện tại vẫn theo kế hoạch của bạn và không bị thay đổi. Từ thứ Hai, {when}, các tuần sẽ được xây dựng theo lưới của chiến lược."
   },
   "pt": {
     "Видео": "Vídeo",
@@ -54160,7 +54230,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubricas por dia e frequência entram no plano de conteúdo; todas as semanas do mês são montadas pela grade da estratégia. A cada semana o estrategista ajusta a grade com base nos resultados",
     "Трафик под твой регион.": "Tráfego para a tua região.",
     "в месяц": "por mês",
-    "разово": "pagamento único"
+    "разово": "pagamento único",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Você desativou o Autopilot do canal — monte as próximas semanas com o botão “Montar semana” no plano de conteúdo.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "A semana a partir de segunda-feira, {when}, foi montada pela grade da estratégia.",
+    "Остаток недели с {when} собран по сетке стратегии.": "O restante da semana a partir de {when} foi montado pela grade da estratégia.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "O Autopilot montará as próximas semanas por conta própria — as publicações aguardarão aprovação.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "A semana atual segue o seu plano e não foi alterada. A partir de segunda-feira, {when}, as semanas são montadas pela grade da estratégia."
   },
   "fr": {
     "Видео": "Vidéo",
@@ -57771,7 +57846,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Les rubriques par jour et la fréquence sont inscrites dans le plan de contenu ; toutes les semaines du mois suivent la grille hebdomadaire de la stratégie. Chaque semaine, le stratège ajuste la grille d'après les résultats réels",
     "Трафик под твой регион.": "Trafic adapté à ta région.",
     "в месяц": "par mois",
-    "разово": "paiement unique"
+    "разово": "paiement unique",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Tu as désactivé l'Autopilote pour cette chaîne — construis les semaines suivantes avec le bouton « Construire la semaine » dans le plan de contenu.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La semaine à partir du lundi {when} est construite selon la grille de la stratégie.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Le reste de la semaine à partir du {when} est construit selon la grille de la stratégie.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "L'Autopilote construira lui-même les semaines suivantes — les publications attendront ton approbation.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La semaine en cours suit ton plan et n'a pas été modifiée. À partir du lundi {when}, les semaines sont construites selon la grille de la stratégie."
   },
   "it": {
     "Видео": "Video",
@@ -61382,7 +61462,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubriche per giorno e frequenza vengono registrate nel content plan; tutte le settimane del mese si costruiscono sulla griglia settimanale della strategia. Ogni settimana lo strategist corregge la griglia in base ai risultati",
     "Трафик под твой регион.": "Traffico per la tua regione.",
     "в месяц": "al mese",
-    "разово": "una tantum"
+    "разово": "una tantum",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Hai disattivato l'Autopilot per questo canale: le prossime settimane vanno composte con il pulsante «Componi la settimana» nel piano editoriale.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "La settimana da lunedì {when} è stata composta secondo la griglia della strategia.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Il resto della settimana dal {when} è stato composto secondo la griglia della strategia.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Le prossime settimane verranno composte automaticamente dall'Autopilot: i post resteranno in attesa di approvazione.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "La settimana corrente segue il tuo piano e non è stata modificata. Da lunedì {when} le settimane vengono composte secondo la griglia della strategia."
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -64993,7 +65078,12 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "በቀናት የተከፋፈሉ ሩብሪኮች እና ድግግሞሽ በይዘት ዕቅዱ ውስጥ ይመዘገባሉ፤ የወሩ ሁሉም ሳምንታት በስትራቴጂው ሳምንታዊ ፍርግርግ ይሰበሰባሉ። ስትራቴጂስቱ በየሳምንቱ ፍርግርጉን በእውነተኛ ውጤት ያስተካክላል",
     "Трафик под твой регион.": "ለክልልህ የተዘጋጀ ትራፊክ።",
     "в месяц": "በወር",
-    "разово": "አንድ ጊዜ"
+    "разово": "አንድ ጊዜ",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "የቻናሉን አውቶፓይለት አንተ አጥፍተኸዋል — ቀጣዮቹን ሳምንታት በይዘት ዕቅድ ውስጥ ባለው «ሳምንቱን ገንባ» ቁልፍ ገንባ።",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "ከሰኞ {when} ጀምሮ ያለው ሳምንት በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ተገንብቷል።",
+    "Остаток недели с {when} собран по сетке стратегии.": "ከ{when} ጀምሮ ያለው የሳምንቱ ቀሪ ክፍል በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ተገንብቷል።",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "ቀጣዮቹን ሳምንታት አውቶፓይለት ራሱ ይገነባል — ልጥፎቹ ማጽደቅ ይጠብቃሉ።",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "የአሁኑ ሳምንት በአንተ ዕቅድ መሠረት ይቀጥላል እና አልተቀየረም። ከሰኞ {when} ጀምሮ ሳምንታት በስትራቴጂው ሳምንታዊ ፍርግርግ መሠረት ይገነባሉ።"
   },
   "sw": {
     "Видео": "Video",
@@ -68604,6 +68694,11 @@ window.__I18N_DICT = {
     "Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту": "Rubriki kwa siku na marudio huandikwa kwenye mpango wa maudhui; wiki zote za mwezi hujengwa kwa gridi ya mkakati. Mtaalamu wa mkakati hurekebisha gridi kila wiki kulingana na matokeo halisi",
     "Трафик под твой регион.": "Trafiki kwa eneo lako.",
     "в месяц": "kwa mwezi",
-    "разово": "malipo ya mara moja"
+    "разово": "malipo ya mara moja",
+    "Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.": "Umezima Autopilot ya kituo — wiki zijazo zijenge kwa kitufe cha «Jenga wiki» katika mpango wa maudhui.",
+    "Неделя с понедельника, {when}, собрана по сетке стратегии.": "Wiki kuanzia Jumatatu, {when}, imejengwa kulingana na gridi ya mkakati.",
+    "Остаток недели с {when} собран по сетке стратегии.": "Sehemu iliyobaki ya wiki kuanzia {when} imejengwa kulingana na gridi ya mkakati.",
+    "Следующие недели автопилот соберёт сам — посты будут ждать утверждения.": "Wiki zijazo Autopilot itazijenga yenyewe — machapisho yatasubiri idhini.",
+    "Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.": "Wiki ya sasa inaendelea kulingana na mpango wako na haijabadilishwa. Kuanzia Jumatatu, {when}, wiki zinajengwa kulingana na gridi ya mkakati."
   }
 };

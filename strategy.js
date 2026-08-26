@@ -559,17 +559,31 @@
             '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сетка недели:')) + ' ' + per + ' ' + esc(T('пост(ов), рубрики по дням')) + '</div>' +
             '<div class="stg-week">' + cells + '</div></div>';
     }
+    function applyTail(ap) {
+        if (!ap) return '';
+        if (ap.autopilot === 'enabled') return ' ' + esc(T('Следующие недели автопилот соберёт сам — посты будут ждать утверждения.'));
+        if (ap.autopilot === 'stopped') return ' ' + esc(T('Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.'));
+        return '';
+    }
     function firstWeekHtml() {
         var p = _state && _state.plan;
+        var ap = (_state && _state.apply) || null;
+        var own = ap && p && ap.plan_id && p.id === ap.plan_id;
+        var when = ap && ap.from ? fmtDate(ap.from + 'T12:00:00') : '';
         var inner;
         if (!_state || !_state.channel_id) {
             inner = '<div class="stg-note">' + esc(T('Канал не подключён: сетка недели записана, первая неделя соберётся, когда подключишь канал.')) + '</div>';
-        } else if (!p) {
+        } else if (ap && ap.mode === 'next_week') {
+            inner = '<div class="stg-note">' + esc(T('Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.').replace('{when}', when)) + applyTail(ap) + '</div>';
+        } else if (!p || (ap && ap.plan_id && !own)) {
             inner = '<div class="stg-note">' + esc(T('Первая неделя собирается по сетке стратегии — появится в контент-плане через несколько минут.')) + '</div>';
         } else if (p.status === 'generating' || (p.with_text < p.posts)) {
             inner = '<div class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю первую неделю')) + ' · ' + p.with_text + ' / ' + p.posts + '</div>';
         } else {
-            inner = '<div class="stg-note"><b>' + p.posts + '</b> ' + esc(T('постов с датами и временем ждут утверждения в контент-плане')) + (p.published ? ' · ' + esc(T('вышло')) + ' ' + p.published : '') + '</div>';
+            var lead = '';
+            if (ap && ap.mode === 'partial') lead = esc(T('Остаток недели с {when} собран по сетке стратегии.').replace('{when}', when)) + ' ';
+            else if (ap && ap.mode === 'week') lead = esc(T('Неделя с понедельника, {when}, собрана по сетке стратегии.').replace('{when}', when)) + ' ';
+            inner = '<div class="stg-note">' + lead + '<b>' + p.posts + '</b> ' + esc(T('постов с датами и временем ждут утверждения в контент-плане')) + (p.published ? ' · ' + esc(T('вышло')) + ' ' + p.published : '') + applyTail(ap) + '</div>';
         }
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-calendar-event"></i></span> ' + esc(T('Первая неделя')) + '</div>' +
             '<div style="margin-top:8px;">' + inner + '</div>' +
