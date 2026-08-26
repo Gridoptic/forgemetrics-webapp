@@ -141,7 +141,6 @@
         if (d.status === 'generating') { renderGenerating(); startPoll(); return; }
         if (d.status === 'active') { renderDoc(); return; }
         if (d.status === 'error') { renderGenError(); return; }
-        if (d.status === 'interview' && d.access === 'full') { _started = true; openTalk(); return; }
         renderShowcase();
     }
 
@@ -198,10 +197,14 @@
             ? '<div class="stg-fprice"><b>' + forge(nprice) + '</b><span>' + esc(T('разово')) + '</span></div>' +
               '<div class="stg-fpnote">' + esc(T('Продление —')) + ' ' + forge(rprice) + ' ' + esc(T('в месяц')) + '</div>'
             : accessChip();
+        var inProgress = !locked && _state && _state.status === 'interview';
         var cta = locked
             ? '<button class="stg-fcta" data-act="buy"><i class="ti ti-bolt"></i> ' + esc(T('Открыть доступ')) + ' · ' + forge(nprice) + '</button>'
-            : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
-              '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>';
+            : (inProgress
+                ? '<button class="stg-fcta" data-act="continue"><i class="ti ti-message-circle"></i> ' + esc(T('Продолжить разговор со стратегом')) + '</button>' +
+                  '<div class="stg-fnote">' + esc(T('Разговор начат — ответы сохранены. Начать заново можно внутри.')) + '</div>'
+                : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
+                  '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>');
         setView(
             '<div class="stg-flag"><div class="glow"></div>' +
             '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
@@ -346,7 +349,8 @@
             html += talkBubble('a', '<div class="stg-tq">' + esc(T(q.text)) + '</div>' +
                 '<div class="stg-tprog">' + esc(T('вопрос')) + ' ' + (p.i || 1) + ' ' + esc(T('из')) + ' ~' + (p.n || 6) + '</div>' +
                 '<div class="stg-chips" style="margin-top:8px;">' + chips + '</div>' +
-                (q.allow_text ? '<input class="stg-inp" id="stg-talk-inp" maxlength="500" placeholder="' + esc(T(q.hint || 'Своими словами')) + '">' : '') +
+                (q.allow_text ? '<input class="stg-inp" id="stg-talk-inp" maxlength="500" placeholder="' + esc(T('Своими словами')) + '">' +
+                    (q.hint ? '<div class="stg-inhint">' + esc(T(q.hint)) + '</div>' : '') : '') +
                 '<button class="stg-next" data-act="tnext"' + (_talkBusy ? ' disabled' : '') + '>' + esc(_talkBusy ? T('Секунду...') : T('Дальше')) + '</button>');
         } else if (d.done) {
             html += talkBubble('a', '<div class="stg-tq">' + esc(T('Мне всё ясно. Собираю стратегию: сетка недели и первая неделя появятся в контент-плане, трафик и заработок — разделами.')) + '</div>' +
@@ -1283,6 +1287,7 @@
         if (trAction(act, actEl)) return;
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
         if (act === 'start') { startFlow(); return; }
+        if (act === 'continue') { haptic('light'); _started = true; openTalk(); return; }
         if (act === 'buy') { doPurchase(actEl, false); return; }
         if (act === 'renew') { doPurchase(actEl, true); return; }
         if (act === 'tnext') { talkNext(); return; }

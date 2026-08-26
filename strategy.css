@@ -312,3 +312,4 @@
 .stg-rv-past { cursor: pointer; }
 .stg-eyebrow.ok .tile { background: rgba(93,202,165,0.14); color: #5DCAA5; }
 .stg-eyebrow.act .tile { background: rgba(240,112,138,0.14); color: #f0708a; }
+.stg-inhint { position: relative; font-size: 11px; color: #8d93a8; line-height: 1.45; margin: 6px 2px 0; overflow-wrap: anywhere; }
