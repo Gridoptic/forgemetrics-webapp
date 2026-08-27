@@ -1279,16 +1279,17 @@
         var NOTE = { ok: T('без ограничений'), vpn: T('через VPN'), upload_limited: T('публикация — обходами'), blocked: T('недоступна в регионе') };
         (pl.use || []).forEach(function (p) {
             var link = lk.platforms && lk.platforms[p.key];
-            var url = link ? (link.click_url || link.invite_link || '') : '';
+            var url = link ? (link.invite_link || link.click_url || '') : '';
             var sub = p.text ? T('ролики, посты и статьи · ссылка на канал — в профиле') : (NOTE[p.note] || '');
             html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + (p.note && p.note !== 'ok' ? ' <span class="stg-trnote">' + esc(NOTE[p.note] || '') + '</span>' : '') + '</b>' +
                 (link ? '<em><span class="stg-trlink" data-act="trcopy" data-text="' + esc(url) + '">' + esc(url.replace(/^https?:\/\//, '')) + '</span> · +' + num(link.joined || 0) + ' ' + esc(T('вступили')) +
-                    ((link.clicks !== null && link.clicks !== undefined) ? ' · ' + num(link.clicks) + ' ' + esc(T('переходов')) : '') + '</em>'
+                    (link.clicks ? ' · ' + num(link.clicks) + ' ' + esc(T('переходов')) : '') + '</em>'
                     : '<em>' + esc(sub) + (sub ? ' · ' : '') + esc(T('ссылка для описания ещё не создана')) + '</em>') + '</div>' +
                 (link ? '' : '<button class="stg-trbtn" data-act="trplink" data-key="' + esc(p.key) + '"' + (ch.connected ? '' : ' disabled') + '>' + esc(T('Создать ссылку')) + '</button>') + '</div>';
         });
         if (!ch.connected) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылки создаёт бот — подключи его к каналу в настройках канала.')) + '</div>';
-        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылка площадки ставится в описание ролика: сверка увидит, сколько подписчиков дала каждая площадка.')) + '</div></div>';
+        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылка площадки ставится в описание ролика: сверка увидит, сколько подписчиков дала каждая площадка.')) + ' ' +
+            esc(T('Это обычная телеграм-ссылка (t.me): люди видят знакомый домен, а площадки не считают её сторонним редиректом.')) + '</div></div>';
 
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-movie"></i></span> ' + esc(T('Конвейер креативов из постов недели')) +
             (cv.per_week ? '<span class="stg-trchip">' + num(cv.ready || 0) + ' / ' + num(cv.per_week) + '</span>' : '') + '</div>' +
@@ -1417,7 +1418,7 @@
             var pls = (_tr && _tr.links && _tr.links.platforms) || {};
             var pick = pls.shorts || pls.dzen || pls.vk || pls.tiktok || pls.reels;
             var ch = (_tr && _tr.channel) || {};
-            if (pick && (pick.click_url || pick.invite_link)) lines.push(pick.click_url || pick.invite_link);
+            if (pick && (pick.invite_link || pick.click_url)) lines.push(pick.invite_link || pick.click_url);
             else if (ch.username) lines.push('https://t.me/' + ch.username);
             if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
             if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
