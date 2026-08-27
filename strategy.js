@@ -868,14 +868,28 @@
         if (_docTimer) clearTimeout(_docTimer);
         var p = _state && _state.plan;
         var tb = _state && _state.traffic_brief;
-        var live = (p && (p.status === 'generating' || p.with_text < p.posts)) || (tb && tb.building);
-        if (!live) return;
+        var busy = (p && (p.status === 'generating' || p.with_text < p.posts)) || (tb && tb.building);
         _docTimer = setTimeout(function () {
             _docTimer = null;
+            var host = document.getElementById('strategy-screen');
+            if (!host || host.style.display === 'none') return;
+            if (_trOpen) { docPoll(); return; }
+            var ae = document.activeElement;
+            if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA') && host.contains(ae)) { docPoll(); return; }
             apiRequest('/api/v1/strategy').then(function (d) {
-                if (d && d.ok && d.status === 'active' && _state && _state.doc && !_trOpen) { _state = d; renderDoc(); }
-            }).catch(function () {});
-        }, 20000);
+                if (!(d && d.ok && d.status === 'active' && _state && _state.doc && !_trOpen)) { docPoll(); return; }
+                var changed = JSON.stringify(d.doc) !== JSON.stringify(_state.doc) ||
+                    JSON.stringify(d.plan) !== JSON.stringify(_state.plan) ||
+                    JSON.stringify(d.traffic_brief) !== JSON.stringify(_state.traffic_brief) ||
+                    JSON.stringify(d.reviews || []) !== JSON.stringify(_state.reviews || []) ||
+                    d.next_review_at !== _state.next_review_at || d.week !== _state.week;
+                if (changed) {
+                    d.progress = Object.assign({}, d.progress || {}, _state.progress || {});
+                    _state = d;
+                    renderDoc();
+                } else docPoll();
+            }).catch(function () { docPoll(); });
+        }, busy ? 20000 : 60000);
     }
 
     function unclampSmall(host) {
