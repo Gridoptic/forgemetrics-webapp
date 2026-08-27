@@ -584,9 +584,21 @@
             }
             if (st.why) kv += '<div class="k why"><i>?</i>' + esc(T('Зачем')) + '</div><p>' + termWrap(fixDays(st.why)) + '</p>';
             if (st.avoid) kv += '<div class="k no"><i>✕</i>' + esc(T('Не делай')) + '</div><p>' + termWrap(fixDays(st.avoid)) + '</p>';
+            if (s.ready) {
+                kv += '<div class="k rdy"><i>✓</i>' + esc(T('Готовый текст — скопируй и вставь')) + '</div>' +
+                    '<div class="stg-tkready">' + esc(s.ready) + '</div>';
+            }
             var acts = '';
+            if (s.ready) {
+                acts += '<button class="stg-tkbtn pri" data-act="tkcopy" data-key="' + esc(s.key) + '">' + esc(T('Скопировать текст')) + '</button>';
+            }
+            if (s.link === 'market') {
+                acts += '<button class="stg-tkbtn' + (s.ready ? '' : ' pri') + '" data-act="tkradar">' + esc(T('Открыть Радар')) + '</button>';
+            } else if (s.link === 'traffic') {
+                acts += '<button class="stg-tkbtn' + (s.ready ? '' : ' pri') + '" data-act="trmod">' + esc(T('Открыть модуль')) + '</button>';
+            }
             if (s.has_guide && _state.access === 'full') {
-                acts += '<button class="stg-tkbtn pri" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Пошаговый план')) + '</button>';
+                acts += '<button class="stg-tkbtn' + (s.ready || s.link ? '' : ' pri') + '" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Пошаговый план')) + '</button>';
             }
             acts += '<button class="stg-tkbtn" data-act="ask" data-t="' + esc(s.title || '') + '">' + esc(T('Спросить стратега')) + '</button>';
             body = '<div class="stg-tkv">' + kv + '<div class="acts">' + acts + '</div></div>';
@@ -1508,6 +1520,17 @@
             return;
         }
         if (act === 'cb') { toggleStep(actEl); return; }
+        if (act === 'tkcopy') {
+            var cps = findStep(actEl.getAttribute('data-key'));
+            if (cps && cps.ready) trCopy(cps.ready, T('Текст скопирован'));
+            return;
+        }
+        if (act === 'tkradar') {
+            haptic('light');
+            closeStrategy();
+            if (typeof window.__openRadar === 'function') window.__openRadar();
+            return;
+        }
         if (act === 'tkopen') {
             if (t.closest && t.closest('.stg-tkv')) return;
             haptic('light');

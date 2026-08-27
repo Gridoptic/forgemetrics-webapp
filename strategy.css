@@ -161,6 +161,11 @@
 .stg-tkv .k { display: flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 800; letter-spacing: .07em;
     text-transform: uppercase; margin: 0 0 5px; }
 .stg-tkv .k.do { color: #a5aef7; } .stg-tkv .k.why { color: #5DCAA5; } .stg-tkv .k.no { color: #ef8080; }
+.stg-tkv .k.rdy { color: #f5bf4f; }
+.stg-tkv .k.rdy i { background: rgba(245,191,79,0.12); }
+.stg-tkready { margin: 0 0 10px; padding: 10px 12px; border-radius: 11px; background: rgba(245,191,79,0.06);
+    border: 1px solid rgba(245,191,79,0.25); font-size: 11.5px; line-height: 1.55; color: #d6d9e4;
+    white-space: pre-line; overflow-wrap: break-word; user-select: text; -webkit-user-select: text; cursor: auto; }
 .stg-tkv .k i { font-style: normal; width: 15px; height: 15px; border-radius: 5px; display: flex; align-items: center;
     justify-content: center; font-size: 9px; }
 .stg-tkv .k.do i { background: rgba(129,140,248,0.12); } .stg-tkv .k.why i { background: rgba(93,202,165,0.12); }
