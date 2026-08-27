@@ -561,7 +561,7 @@
         var d = Array.isArray(st.do) ? st.do.join(' · ') : String(st.do || '');
         return d || String(st.why || '');
     }
-    function taskCard(s, chip) {
+    function taskCard(s) {
         var done = !!(_state.progress || {})[s.key];
         var open = !!_taskOpen[s.key];
         var st = taskStruct(s);
@@ -571,8 +571,7 @@
         var min = s.minutes ? '<span class="stg-tkmin">◔ ' + s.minutes + ' ' + esc(T('мин')) + '</span>' : '';
         var row = '<div class="row">' + mark +
             '<span class="t"><b>' + esc(fixDays(s.title)) + '</b>' +
-            (open ? '' : '<em>' + esc(fixDays(taskSub(st))) + '</em>') + '</span>' +
-            (chip || '') + min +
+            (open ? '' : '<em>' + esc(fixDays(taskSub(st))) + '</em>') + '</span>' + min +
             '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + ' chev"></i></div>';
         var body = '';
         if (open) {
@@ -593,10 +592,11 @@
             body = '<div class="stg-tkv">' + kv + '<div class="acts">' + acts + '</div></div>';
         }
         return '<div class="stg-tk' + (open ? ' open' : '') + (done && s.checkable !== false ? ' on' : '') +
-            '" data-act="tkopen" data-key="' + esc(s.key) + '">' + row + body +
-            '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
+            '" data-act="tkopen" data-key="' + esc(s.key) + '">' + row + body + '</div>';
     }
-    function stepHtml(s) { return taskCard(s, ''); }
+    function stepHtml(s) {
+        return taskCard(s) + '<div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
+    }
     function secTotals(key) {
         var sec = docSection(key) || {};
         var prog = _state.progress || {};
@@ -748,7 +748,7 @@
                 cap = '<div class="stg-dcap"><b>' + esc(T(TR_DAYS[g.day])) + '</b></div>';
             }
             return '<div class="stg-tday' + cls + '" data-day-group="' + gk + '">' + cap +
-                g.items.map(function (s) { return taskCard(s, ''); }).join('') + '</div>';
+                g.items.map(stepHtml).join('') + '</div>';
         }).join('');
         var range, counted = 0;
         if (start && groups.length && groups[0].date && groups[groups.length - 1].date) {
@@ -790,6 +790,44 @@
             '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом и предложит правки сетки.')) + '</div></div>';
     }
     var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
+    function accSecHtml(key) {
+        var doc = (_state && _state.doc) || {};
+        var sec = docSection(key);
+        if (!sec) return '';
+        var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
+            (sec.chart && sec.chart.bars && sec.chart.bars.length);
+        if (!hasContent) return '';
+        var open = !!_secOpen[key];
+        var st = secTotals(key);
+        var cnt = st.total
+            ? '<span class="stg-acc-cnt' + (st.done === st.total ? ' all' : '') + '" data-cnt="' + esc(key) + '">' + st.done + ' / ' + st.total + '</span>'
+            : '';
+        var head = '<div class="stg-acc-head" data-act="secacc" data-sec="' + esc(key) + '">' +
+            '<span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span>' +
+            '<b>' + esc(T(sec.title || sec.key)) + '</b>' + cnt +
+            '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + '"></i></div>';
+        var inner = '';
+        if (open) {
+            if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
+                inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
+            }
+            if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
+            inner += chartHtml(sec.chart);
+            if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
+        }
+        return '<div class="stg-sec stg-acc' + (open ? ' open' : '') + '" data-sec="' + esc(sec.key) + '">' + head +
+            (inner ? '<div class="stg-acc-body">' + inner + '</div>' : '') + '</div>';
+    }
+    function findStep(key) {
+        var secs = (_state && _state.doc && _state.doc.sections) || [];
+        for (var i = 0; i < secs.length; i++) {
+            var st = secs[i].steps || [];
+            for (var j = 0; j < st.length; j++) {
+                if (st[j].key === key) return st[j];
+            }
+        }
+        return null;
+    }
     function renderDoc() {
         normalizeDoc(_state);
         var doc = _state.doc || {};
@@ -806,39 +844,16 @@
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Спросить стратега')) + '</div>' +
             '<div class="stg-note" style="margin-top:8px;">' + esc(T('Разделы плана ниже — ниша, аудитория, заработок, оффер, метрики — и чат в конце.')) + '</div>' +
             '<button class="stg-trbtn wide" data-act="jump" data-to="chat">' + esc(T('Задать вопрос')) + '</button></div>';
-        DOC_ORDER.forEach(function (key) {
-            var sec = docSection(key);
-            if (!sec) return;
-            var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
-                (sec.chart && sec.chart.bars && sec.chart.bars.length);
-            if (!hasContent) return;
-            var open = !!_secOpen[key];
-            var st = secTotals(key);
-            var cnt = st.total
-                ? '<span class="stg-acc-cnt' + (st.done === st.total ? ' all' : '') + '" data-cnt="' + esc(key) + '">' + st.done + ' / ' + st.total + '</span>'
-                : '';
-            var head = '<div class="stg-acc-head" data-act="secacc" data-sec="' + esc(key) + '">' +
-                '<span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span>' +
-                '<b>' + esc(T(sec.title || sec.key)) + '</b>' + cnt +
-                '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + '"></i></div>';
-            var inner = '';
-            if (open) {
-                if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
-                    inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
-                }
-                if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
-                inner += chartHtml(sec.chart);
-                if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
-            }
-            html += '<div class="stg-sec stg-acc' + (open ? ' open' : '') + '" data-sec="' + esc(sec.key) + '">' + head +
-                (inner ? '<div class="stg-acc-body">' + inner + '</div>' : '') + '</div>';
-        });
+        DOC_ORDER.forEach(function (key) { html += accSecHtml(key); });
         html += reviewHtml();
         html += '<div data-sec="chat">' + chatHtml() + '</div>';
         html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
+        var host0 = document.getElementById('strategy-screen');
+        var keepScroll = (host0 && host0.querySelector('.stg-dochead-sec')) ? host0.scrollTop : null;
         var chatDraftEl = document.getElementById('stg-chat-inp');
         var chatDraft = chatDraftEl ? chatDraftEl.value : '';
         var host = setView(html);
+        if (keepScroll !== null) host.scrollTop = keepScroll;
         if (chatDraft) {
             var ndr = document.getElementById('stg-chat-inp');
             if (ndr) ndr.value = chatDraft;
@@ -1482,11 +1497,8 @@
             haptic('light');
             var tkk = actEl.getAttribute('data-key');
             _taskOpen[tkk] = !_taskOpen[tkk];
-            renderDoc();
-            requestAnimationFrame(function () {
-                var el = document.querySelector('#strategy-screen .stg-tk[data-key="' + tkk + '"]');
-                if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
-            });
+            var tks = findStep(tkk);
+            if (tks) actEl.outerHTML = taskCard(tks); else renderDoc();
             return;
         }
         if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; renderDoc(); return; }
@@ -1494,13 +1506,9 @@
             haptic('light');
             var sk = actEl.getAttribute('data-sec');
             _secOpen[sk] = !_secOpen[sk];
-            renderDoc();
-            if (_secOpen[sk]) {
-                requestAnimationFrame(function () {
-                    var el = document.querySelector('#strategy-screen .stg-acc[data-sec="' + sk + '"]');
-                    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            }
+            var accEl = actEl.closest ? actEl.closest('.stg-acc') : null;
+            var accHtml = accSecHtml(sk);
+            if (accEl && accHtml) accEl.outerHTML = accHtml; else renderDoc();
             return;
         }
         if (act === 'trmod') { haptic('light'); openTraffic(); return; }
