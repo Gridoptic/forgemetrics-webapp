@@ -9,7 +9,7 @@
     var _model = 'premium';
     var _building = false;
     var _days = null;
-    var _selDay = 0;
+    var _selId = null;
     var _dayBusy = {};
     var _batchTimer = null;
     var _ap = null;
@@ -1367,7 +1367,7 @@
     function goalTitle(g) {
         return String(g || '').split('+').map(function (x) {
             return T(GOAL_MAP[x] || x);
-        }).filter(Boolean).join(' + ');
+        }).filter(Boolean).join(' + ') || T(GOAL_MAP.engagement);
     }
 
     function weekDaySheet(i) {
@@ -1547,7 +1547,7 @@
             }
             var go = t.closest ? t.closest('[data-goto]') : null;
             if (go && !(t.closest && t.closest('[data-wdel]'))) {
-                _selDay = i;
+                _selId = +go.getAttribute('data-goto') || null;
                 host.remove();
                 renderWeek();
                 requestAnimationFrame(function () {
@@ -2945,7 +2945,7 @@
     function renderWeek() {
         var ps = posts();
         var n = ps.length;
-        if (_selDay == null || !ps.some(function (p) { return p.day_index === _selDay; })) _selDay = ps.length ? ps[0].day_index : 0;
+        if (_selId == null || !ps.some(function (p) { return p.id === _selId; })) _selId = ps.length ? ps[0].id : null;
         var appr = ps.filter(function (p) { return p.status === 'approved'; }).length;
         var pct = n ? Math.round(appr / n * 100) : 0;
         var haveText = ps.filter(function (p) { return p.text; }).length;
@@ -3506,7 +3506,7 @@
         var views = (p.views != null && p.views > 0)
             ? '<span class="cp-views"><i class="ti ti-eye"></i>' + esc(numShort(p.views)) + '</span>'
             : '';
-        return '<div class="cp-day s-' + st[1] + (p.day_index === _selDay ? ' sel' : '') + '" data-act="selday" data-day="' + p.day_index + '">' +
+        return '<div class="cp-day s-' + st[1] + (p.id === _selId ? ' sel' : '') + '" data-act="selday" data-id="' + p.id + '">' +
             '<div class="cp-dhead"><span class="d">' + esc(T(wd)) + '</span><span class="dt">' + esc(dateLabel(p.date_iso)) + '</span></div>' +
             '<span class="cp-fmt"><i class="ti ' + fi[1] + '"></i>' + esc(T(fi[0])) + '</span>' + ad +
             '<div class="cp-dtitle">' + esc(p.title || '') + '</div>' + slot +
@@ -4312,7 +4312,7 @@
 
     function detailPanel() {
         var ps = posts();
-        var p = ps.filter(function (x) { return x.day_index === _selDay; })[0];
+        var p = ps.filter(function (x) { return x.id === _selId; })[0];
         if (!p) return '';
         var fi = fmtInfo(p.format);
         var wd = WD[(p.day_index || 0) % 7];
@@ -4404,7 +4404,7 @@
         var p = post(id);
         if (!p || _dayBusy[id]) return;
         _dayBusy[id] = true;
-        _selDay = p.day_index;
+        _selId = id;
         renderWeek();
         haptic('light');
         apiRequest('/api/v1/content-plan/generate-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
@@ -4477,16 +4477,25 @@
         }, 3000);
     }
 
+    var _apprBusy = {};
+
     function approve(id) {
         var p = post(id);
-        if (!p) return;
+        if (!p || _apprBusy[id]) return;
+        _apprBusy[id] = true;
         haptic('light');
         var was = p.status;
         p.status = (p.status === 'approved') ? (p.text ? 'draft' : 'idea') : 'approved';
         renderWeek();
         apiRequest('/api/v1/content-plan/approve', { method: 'POST', body: JSON.stringify({ post_id: id }) })
-            .then(function (r) { if (!r || !r.ok) { p.status = was; renderWeek(); } else { p.status = r.status; } })
-            .catch(function () { p.status = was; renderWeek(); toast(T('Не удалось сохранить')); });
+            .then(function (r) {
+                _apprBusy[id] = false;
+                if (!r || !r.ok) { p.status = was; renderWeek(); } else { p.status = r.status; }
+            })
+            .catch(function () {
+                _apprBusy[id] = false;
+                p.status = was; renderWeek(); toast(T('Не удалось сохранить'));
+            });
     }
 
     function copyDay(id) {
@@ -4851,7 +4860,7 @@
             return;
         }
         if (act === 'selday') {
-            _selDay = +actEl.getAttribute('data-day'); renderWeek(); haptic('light'); return;
+            _selId = +actEl.getAttribute('data-id'); renderWeek(); haptic('light'); return;
         }
         if (act === 'genday') { genDay(+id, false); return; }
         if (act === 'variant') { genDay(+id, true); return; }
