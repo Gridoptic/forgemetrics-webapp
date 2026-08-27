@@ -1064,7 +1064,7 @@
     }
 
 
-    function guideBlock(g) {
+    function guideBlock(g, key) {
         var steps = (g.steps || []).map(function (s, i) {
             var num = parseInt(s.n, 10); if (isNaN(num)) num = i + 1;
             return '<div class="stg-gstep"><span class="n">' + num + '</span><span>' + esc(fixDays(s.text || '')) + '</span></div>';
@@ -1077,7 +1077,8 @@
                 (tl.where ? ' — ' + esc(tl.where) : '') + (tl.for ? ' (' + esc(tl.for) + ')' : '') + '</span></div>';
         }).join('');
         return '<div class="stg-guide"><h4>' + esc(g.title || T('Пошагово')) + '</h4>' + steps + tools + warns +
-            '<button class="stg-ask" data-act="ask" data-t="' + esc(g.title || '') + '"><i class="ti ti-message-circle"></i> ' + esc(T('Спроси стратега об этом шаге')) + '</button></div>';
+            '<button class="stg-ask" data-act="ask" data-t="' + esc(g.title || '') + '"><i class="ti ti-message-circle"></i> ' + esc(T('Спроси стратега об этом шаге')) + '</button>' +
+            (key ? '<button class="stg-ask" data-act="how" data-key="' + esc(key) + '"><i class="ti ti-chevron-up"></i> ' + esc(T('Свернуть план')) + '</button>' : '') + '</div>';
     }
 
     function openGuide(btn) {
@@ -1086,13 +1087,13 @@
         if (!slot) return;
         haptic('light');
         if (slot.innerHTML) { slot.innerHTML = ''; return; }
-        if (_guides[key]) { slot.innerHTML = guideBlock(_guides[key]); return; }
+        if (_guides[key]) { slot.innerHTML = guideBlock(_guides[key], key); return; }
         slot.innerHTML = '<div class="stg-guide"><div class="stg-gstep"><span class="n"><span class="stg-spin" style="width:12px;height:12px;border-width:2px;"></span></span><span>' + esc(T('Стратег пишет подробный гайд под твою ситуацию...')) + '</span></div></div>';
         apiRequest('/api/v1/strategy/guide', { method: 'POST', body: JSON.stringify({ key: key }) })
             .then(function (r) {
                 if (r && r.ok && r.guide) {
                     _guides[key] = r.guide;
-                    slot.innerHTML = guideBlock(r.guide);
+                    slot.innerHTML = guideBlock(r.guide, key);
                 } else {
                     slot.innerHTML = '';
                     toast(T('Гайд не собрался — попробуй ещё раз'));
@@ -1497,6 +1498,10 @@
             haptic('light');
             var tkk = actEl.getAttribute('data-key');
             _taskOpen[tkk] = !_taskOpen[tkk];
+            if (!_taskOpen[tkk]) {
+                var gsl = document.querySelector('#strategy-screen [data-slot="' + tkk + '"]');
+                if (gsl) gsl.innerHTML = '';
+            }
             var tks = findStep(tkk);
             if (tks) actEl.outerHTML = taskCard(tks); else renderDoc();
             return;
