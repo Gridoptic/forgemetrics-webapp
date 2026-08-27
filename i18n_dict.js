@@ -3686,7 +3686,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Continue the conversation with the strategist",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "The conversation has started — your answers are saved. You can restart it inside.",
     "Своими словами": "In your own words",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Not understood. Select an option or describe it in words, for example: “reach 30K ₽ per month from advertising”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Not understood. Select an option or describe it in words, for example: “reach 30K ₽ per month from advertising”.",
+    "с {date}": "from {date}",
+    "постов в неделю:": "posts per week:",
+    "дни и рубрики выбрал стратег": "days and rubrics picked by the strategist",
+    "Стратег сверит план с фактом и предложит правки сетки.": "The strategist will compare the plan with the facts and propose grid changes.",
+    "Собираю ролики из постов недели": "Building clips from the week's posts",
+    "Готовые ролики из постов недели:": "Ready clips from the week's posts:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "paid traffic buying with estimates, donor channels from Radar, tracking links.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Platform clips from the week's posts, paid traffic buying with estimates, donor channels from Radar, tracking links."
   },
   "es": {
     "Видео": "Vídeo",
@@ -7375,7 +7383,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Continuar la conversación con el estratega",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "La conversación ya está iniciada; las respuestas están guardadas. Puedes reiniciarla desde dentro.",
     "Своими словами": "Con tus propias palabras",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "No se ha entendido. Elige una opción o descríbelo con palabras, por ejemplo: «alcanzar 30 mil ₽ al mes con publicidad»."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "No se ha entendido. Elige una opción o descríbelo con palabras, por ejemplo: «alcanzar 30 mil ₽ al mes con publicidad».",
+    "с {date}": "desde {date}",
+    "постов в неделю:": "posts por semana:",
+    "дни и рубрики выбрал стратег": "días y secciones elegidos por el estratega",
+    "Стратег сверит план с фактом и предложит правки сетки.": "El estratega comparará el plan con los hechos y propondrá cambios en la cuadrícula.",
+    "Собираю ролики из постов недели": "Montando los vídeos de los posts de la semana",
+    "Готовые ролики из постов недели:": "Vídeos listos de los posts de la semana:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "compra de tráfico de pago con cálculo, donantes de Radar, enlaces de seguimiento.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Vídeos para plataformas a partir de los posts de la semana, compra de tráfico de pago con cálculo, donantes de Radar, enlaces de seguimiento."
   },
   "de": {
     "Видео": "Video",
@@ -11064,7 +11080,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Gespräch mit dem Strategen fortsetzen",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Das Gespräch wurde begonnen – die Antworten sind gespeichert. Ein Neustart ist innerhalb möglich.",
     "Своими словами": "In eigenen Worten",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Nicht verstanden. Wähle eine Option oder beschreibe es in Worten, zum Beispiel: „30 Tsd. ₽ pro Monat mit Werbung erreichen“."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Nicht verstanden. Wähle eine Option oder beschreibe es in Worten, zum Beispiel: „30 Tsd. ₽ pro Monat mit Werbung erreichen“.",
+    "с {date}": "ab {date}",
+    "постов в неделю:": "Posts pro Woche:",
+    "дни и рубрики выбрал стратег": "Tage und Rubriken vom Strategen gewählt",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Der Stratege gleicht den Plan mit den Fakten ab und schlägt Raster-Änderungen vor.",
+    "Собираю ролики из постов недели": "Clips aus den Posts der Woche werden gebaut",
+    "Готовые ролики из постов недели:": "Fertige Clips aus den Posts der Woche:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "bezahlter Traffic-Einkauf mit Berechnung, Donor-Kanäle aus Radar, Tracking-Links.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips für Plattformen aus den Posts der Woche, bezahlter Traffic-Einkauf mit Berechnung, Donor-Kanäle aus Radar, Tracking-Links."
   },
   "kk": {
     "Видео": "Видео",
@@ -14752,7 +14776,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Стратегпен әңгімені жалғастыру",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Әңгіме басталды — жауаптар сақталды. Ішінде қайта бастауға болады.",
     "Своими словами": "Өз сөзіңмен",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Түсініксіз. Нұсқаны таңда немесе сөзбен жаз, мысалы: «жарнамадан айына 30 мың ₽ табу»."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Түсініксіз. Нұсқаны таңда немесе сөзбен жаз, мысалы: «жарнамадан айына 30 мың ₽ табу».",
+    "с {date}": "{date} бастап",
+    "постов в неделю:": "аптасына пост:",
+    "дни и рубрики выбрал стратег": "күндер мен айдарларды стратег таңдады",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Стратег жоспарды фактімен салыстырып, тор түзетулерін ұсынады.",
+    "Собираю ролики из постов недели": "Апта посттарынан роликтер құрастырылуда",
+    "Готовые ролики из постов недели:": "Апта посттарынан дайын роликтер:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "есеппен ақылы трафик сатып алу, Радардан донорлар, бақылау сілтемелері.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Апта посттарынан алаңдарға арналған роликтер, есеппен ақылы трафик сатып алу, Радардан донорлар, бақылау сілтемелері."
   },
   "uz": {
     "Видео": "Video",
@@ -18441,7 +18473,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Strateg bilan suhbatni davom ettirish",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Suhbat boshlangan — javoblar saqlandi. Ichida qaytadan boshlash mumkin.",
     "Своими словами": "O‘z so‘zlaring bilan",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Tushunarsiz. Variantni tanla yoki so‘z bilan yoz, masalan: “reklamadan oyiga 30 ming ₽ ga chiqish”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Tushunarsiz. Variantni tanla yoki so‘z bilan yoz, masalan: “reklamadan oyiga 30 ming ₽ ga chiqish”.",
+    "с {date}": "{date} dan boshlab",
+    "постов в неделю:": "haftasiga postlar:",
+    "дни и рубрики выбрал стратег": "kunlar va rubrikalarni strateg tanladi",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Strateg rejani fakt bilan solishtirib, setka tuzatishlarini taklif qiladi.",
+    "Собираю ролики из постов недели": "Hafta postlaridan roliklar tayyorlanmoqda",
+    "Готовые ролики из постов недели:": "Hafta postlaridan tayyor roliklar:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hisob-kitobli pullik trafik sotib olish, Radardan donorlar, kuzatuv havolalari.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Hafta postlaridan platformalar uchun roliklar, hisob-kitobli pullik trafik sotib olish, Radardan donorlar, kuzatuv havolalari."
   },
   "be": {
     "Видео": "Відэа",
@@ -22129,7 +22169,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Працягнуць размову са стратэгам",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Размова пачата — адказы захаваны. Пачаць нанова можна ўнутры.",
     "Своими словами": "Сваімі словамі",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Не зразумела. Выберы варыянт або напішы словамі, напрыклад: «выйсці на 30 тыс. ₽ у месяц з рэкламы»."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Не зразумела. Выберы варыянт або напішы словамі, напрыклад: «выйсці на 30 тыс. ₽ у месяц з рэкламы».",
+    "с {date}": "з {date}",
+    "постов в неделю:": "пастоў на тыдзень:",
+    "дни и рубрики выбрал стратег": "дні і рубрыкі выбраў стратэг",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Стратэг зверыць план з фактам і прапануе праўкі сеткі.",
+    "Собираю ролики из постов недели": "Збіраю ролікі з пастоў тыдня",
+    "Готовые ролики из постов недели:": "Гатовыя ролікі з пастоў тыдня:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "платны пераліў з разлікам, донары з Радара, спасылкі адсочвання.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Ролікі для пляцовак з пастоў тыдня, платны пераліў з разлікам, донары з Радара, спасылкі адсочвання."
   },
   "az": {
     "Видео": "Video",
@@ -25818,7 +25866,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Strateqlə söhbəti davam etdir",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Söhbət başlanıb — cavablar saxlanılıb. Yenidən başlamaq daxildə mümkündür.",
     "Своими словами": "Öz sözlərinlə",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Anlaşılmadı. Variantı seç və ya sözlə yaz, məsələn: “reklamdan ayda 30 min ₽ gəlirə çıxmaq”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Anlaşılmadı. Variantı seç və ya sözlə yaz, məsələn: “reklamdan ayda 30 min ₽ gəlirə çıxmaq”.",
+    "с {date}": "{date} tarixindən",
+    "постов в неделю:": "həftədə post:",
+    "дни и рубрики выбрал стратег": "günləri və rubrikaları strateq seçib",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Strateq planı faktlarla tutuşdurub şəbəkə düzəlişləri təklif edəcək.",
+    "Собираю ролики из постов недели": "Həftənin postlarından kliplər hazırlanır",
+    "Готовые ролики из постов недели:": "Həftənin postlarından hazır kliplər:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hesablamalı ödənişli trafik alışı, Radardan donorlar, izləmə linkləri.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Həftənin postlarından platformalar üçün kliplər, hesablamalı ödənişli trafik alışı, Radardan donorlar, izləmə linkləri."
   },
   "ar": {
     "Видео": "فيديو",
@@ -29507,7 +29563,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "متابعة الحوار مع الاستراتيجي",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "بدأ الحوار — تم حفظ الإجابات. يمكنك البدء من جديد من الداخل.",
     "Своими словами": "بكلماتك الخاصة",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "لم يُفهم الرد. اختر خيارًا أو اكتب بالكلمات، مثلًا: «الوصول إلى 30 ألف ₽ شهريًا من الإعلانات»."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "لم يُفهم الرد. اختر خيارًا أو اكتب بالكلمات، مثلًا: «الوصول إلى 30 ألف ₽ شهريًا من الإعلانات».",
+    "с {date}": "اعتبارًا من {date}",
+    "постов в неделю:": "منشورات في الأسبوع:",
+    "дни и рубрики выбрал стратег": "الأيام والأقسام اختارها الاستراتيجي",
+    "Стратег сверит план с фактом и предложит правки сетки.": "سيقارن الاستراتيجي الخطة بالوقائع ويقترح تعديلات على الشبكة.",
+    "Собираю ролики из постов недели": "أُجهّز المقاطع من منشورات الأسبوع",
+    "Готовые ролики из постов недели:": "مقاطع جاهزة من منشورات الأسبوع:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "شراء ترافيك مدفوع مع الحساب، قنوات مانحة من رادار، روابط تتبع.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "مقاطع للمنصات من منشورات الأسبوع، شراء ترافيك مدفوع مع الحساب، قنوات مانحة من رادار، روابط تتبع."
   },
   "fa": {
     "Видео": "ویدیو",
@@ -33196,7 +33260,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "ادامه گفتگو با استراتژیست",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "گفتگو آغاز شده — پاسخ‌ها ذخیره شده‌اند. شروع دوباره از داخل امکان‌پذیر است.",
     "Своими словами": "با کلمات خودت",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "پاسخ نامفهوم است. یک گزینه را انتخاب کن یا با کلمات بنویس، برای مثال: «رسیدن به ۳۰ هزار ₽ در ماه از تبلیغات»."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "پاسخ نامفهوم است. یک گزینه را انتخاب کن یا با کلمات بنویس، برای مثال: «رسیدن به ۳۰ هزار ₽ در ماه از تبلیغات».",
+    "с {date}": "از {date}",
+    "постов в неделю:": "پست در هفته:",
+    "дни и рубрики выбрал стратег": "روزها و روبریک‌ها را استراتژیست انتخاب کرده",
+    "Стратег сверит план с фактом и предложит правки сетки.": "استراتژیست برنامه را با واقعیت مقایسه می‌کند و اصلاح شبکه را پیشنهاد می‌دهد.",
+    "Собираю ролики из постов недели": "در حال ساخت ویدیوها از پست‌های هفته",
+    "Готовые ролики из постов недели:": "ویدیوهای آماده از پست‌های هفته:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "خرید ترافیک پولی با محاسبه، کانال‌های دونور از رادار، لینک‌های ردیابی.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ویدیوها برای پلتفرم‌ها از پست‌های هفته، خرید ترافیک پولی با محاسبه، کانال‌های دونور از رادار، لینک‌های ردیابی."
   },
   "tr": {
     "Видео": "Video",
@@ -36885,7 +36957,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Stratejistle konuşmaya devam et",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Konuşma başlatıldı — yanıtlar kaydedildi. İçeriden yeniden başlatabilirsin.",
     "Своими словами": "Kendi sözlerinle",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Anlaşılmadı. Bir seçenek seç veya sözlerle yaz, örneğin: “reklamdan ayda 30 bin ₽ gelire ulaşmak”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Anlaşılmadı. Bir seçenek seç veya sözlerle yaz, örneğin: “reklamdan ayda 30 bin ₽ gelire ulaşmak”.",
+    "с {date}": "{date} itibarıyla",
+    "постов в неделю:": "haftalık gönderi:",
+    "дни и рубрики выбрал стратег": "günleri ve rubrikleri strateji uzmanı seçti",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Strateji uzmanı planı gerçek verilerle karşılaştırıp ızgara düzeltmeleri önerecek.",
+    "Собираю ролики из постов недели": "Haftanın gönderilerinden klipler hazırlanıyor",
+    "Готовые ролики из постов недели:": "Haftanın gönderilerinden hazır klipler:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hesaplamalı ücretli trafik alımı, Radar'dan donör kanallar, takip bağlantıları.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Haftanın gönderilerinden platform klipleri, hesaplamalı ücretli trafik alımı, Radar'dan donör kanallar, takip bağlantıları."
   },
   "hi": {
     "Видео": "वीडियो",
@@ -40574,7 +40654,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "स्ट्रैटेजिस्ट के साथ बातचीत जारी रखें",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "बातचीत शुरू हो चुकी है — उत्तर सहेजे गए हैं। अंदर से फिर से शुरू किया जा सकता है।",
     "Своими словами": "अपने शब्दों में",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "समझ नहीं आया। कोई विकल्प चुनो या शब्दों में लिखो, उदाहरण: “विज्ञापन से प्रति माह 30 हज़ार ₽ तक पहुँचना”।"
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "समझ नहीं आया। कोई विकल्प चुनो या शब्दों में लिखो, उदाहरण: “विज्ञापन से प्रति माह 30 हज़ार ₽ तक पहुँचना”।",
+    "с {date}": "{date} से",
+    "постов в неделю:": "प्रति सप्ताह पोस्ट:",
+    "дни и рубрики выбрал стратег": "दिन और रूब्रिक स्ट्रैटेजिस्ट ने चुने",
+    "Стратег сверит план с фактом и предложит правки сетки.": "स्ट्रैटेजिस्ट योजना की तथ्यों से तुलना करेगा और ग्रिड में बदलाव सुझाएगा।",
+    "Собираю ролики из постов недели": "सप्ताह की पोस्ट से क्लिप बन रहे हैं",
+    "Готовые ролики из постов недели:": "सप्ताह की पोस्ट से तैयार क्लिप:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "गणना के साथ पेड ट्रैफ़िक खरीद, Радар से डोनर चैनल, ट्रैकिंग लिंक।",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "सप्ताह की पोस्ट से प्लेटफ़ॉर्म क्लिप, गणना के साथ पेड ट्रैफ़िक खरीद, Радар से डोनर चैनल, ट्रैकिंग लिंक।"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -44263,7 +44351,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "স্ট্র্যাটেজিস্টের সাথে কথোপকথন চালিয়ে যাও",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "কথোপকথন শুরু হয়েছে — উত্তরগুলো সংরক্ষিত। ভেতরে গিয়ে নতুন করে শুরু করা যাবে।",
     "Своими словами": "নিজের ভাষায়",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "বোঝা যায়নি। একটি বিকল্প বেছে নাও বা কথায় লেখো, যেমন: “বিজ্ঞাপন থেকে মাসে ৩০ হাজার ₽ আয়ে পৌঁছানো”।"
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "বোঝা যায়নি। একটি বিকল্প বেছে নাও বা কথায় লেখো, যেমন: “বিজ্ঞাপন থেকে মাসে ৩০ হাজার ₽ আয়ে পৌঁছানো”।",
+    "с {date}": "{date} থেকে",
+    "постов в неделю:": "প্রতি সপ্তাহে পোস্ট:",
+    "дни и рубрики выбрал стратег": "দিন ও রুব্রিক স্ট্র্যাটেজিস্ট বেছে নিয়েছেন",
+    "Стратег сверит план с фактом и предложит правки сетки.": "স্ট্র্যাটেজিস্ট পরিকল্পনাকে বাস্তবের সঙ্গে মিলিয়ে গ্রিডে সংশোধন প্রস্তাব করবে।",
+    "Собираю ролики из постов недели": "সপ্তাহের পোস্ট থেকে ক্লিপ তৈরি হচ্ছে",
+    "Готовые ролики из постов недели:": "সপ্তাহের পোস্ট থেকে প্রস্তুত ক্লিপ:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "হিসাবসহ পেইড ট্রাফিক কেনা, Радар থেকে ডোনার চ্যানেল, ট্র্যাকিং লিংক।",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "সপ্তাহের পোস্ট থেকে প্ল্যাটফর্মের জন্য ক্লিপ, হিসাবসহ পেইড ট্রাফিক কেনা, Радар থেকে ডোনার চ্যানেল, ট্র্যাকিং লিংক।"
   },
   "id": {
     "Видео": "Video",
@@ -47952,7 +48048,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Lanjutkan percakapan dengan strategis",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Percakapan sudah dimulai — jawaban tersimpan. Bisa dimulai ulang dari dalam.",
     "Своими словами": "Dengan kata-katamu sendiri",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Tidak dipahami. Pilih salah satu opsi atau tulis dengan kata-kata, misalnya: “mencapai 30 ribu ₽ per bulan dari iklan”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Tidak dipahami. Pilih salah satu opsi atau tulis dengan kata-kata, misalnya: “mencapai 30 ribu ₽ per bulan dari iklan”.",
+    "с {date}": "mulai {date}",
+    "постов в неделю:": "postingan per minggu:",
+    "дни и рубрики выбрал стратег": "hari dan rubrik dipilih oleh strategist",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Strategist akan membandingkan rencana dengan fakta dan mengusulkan perubahan grid.",
+    "Собираю ролики из постов недели": "Menyusun klip dari postingan minggu ini",
+    "Готовые ролики из постов недели:": "Klip siap dari postingan minggu ini:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "pembelian trafik berbayar dengan perhitungan, channel donor dari Radar, tautan pelacakan.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Klip untuk platform dari postingan minggu ini, pembelian trafik berbayar dengan perhitungan, channel donor dari Radar, tautan pelacakan."
   },
   "vi": {
     "Видео": "Video",
@@ -51641,7 +51745,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Tiếp tục trò chuyện với chiến lược gia",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Cuộc trò chuyện đã bắt đầu — câu trả lời đã được lưu. Có thể bắt đầu lại ở bên trong.",
     "Своими словами": "Bằng lời của bạn",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Chưa hiểu. Hãy chọn một phương án hoặc viết bằng lời, ví dụ: “đạt 30 nghìn ₽ mỗi tháng từ quảng cáo”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Chưa hiểu. Hãy chọn một phương án hoặc viết bằng lời, ví dụ: “đạt 30 nghìn ₽ mỗi tháng từ quảng cáo”.",
+    "с {date}": "từ {date}",
+    "постов в неделю:": "bài đăng mỗi tuần:",
+    "дни и рубрики выбрал стратег": "ngày và chuyên mục do strategist chọn",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Strategist sẽ đối chiếu kế hoạch với thực tế và đề xuất chỉnh lưới.",
+    "Собираю ролики из постов недели": "Đang dựng clip từ bài đăng trong tuần",
+    "Готовые ролики из постов недели:": "Clip đã sẵn sàng từ bài đăng trong tuần:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "mua traffic trả phí có tính toán, kênh donor từ Radar, liên kết theo dõi.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip cho các nền tảng từ bài đăng trong tuần, mua traffic trả phí có tính toán, kênh donor từ Radar, liên kết theo dõi."
   },
   "pt": {
     "Видео": "Vídeo",
@@ -55330,7 +55442,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Continuar a conversa com o estrategista",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "A conversa já foi iniciada — as respostas estão salvas. É possível recomeçar lá dentro.",
     "Своими словами": "Com suas próprias palavras",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Não foi possível entender. Escolha uma opção ou descreva com palavras, por exemplo: “chegar a 30 mil ₽ por mês com publicidade”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Não foi possível entender. Escolha uma opção ou descreva com palavras, por exemplo: “chegar a 30 mil ₽ por mês com publicidade”.",
+    "с {date}": "a partir de {date}",
+    "постов в неделю:": "posts por semana:",
+    "дни и рубрики выбрал стратег": "dias e rubricas escolhidos pelo estrategista",
+    "Стратег сверит план с фактом и предложит правки сетки.": "O estrategista vai comparar o plano com os fatos e propor mudanças na grade.",
+    "Собираю ролики из постов недели": "Montando os clipes dos posts da semana",
+    "Готовые ролики из постов недели:": "Clipes prontos dos posts da semana:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "compra de tráfego pago com cálculo, doadores do Radar, links de rastreamento.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clipes para plataformas a partir dos posts da semana, compra de tráfego pago com cálculo, doadores do Radar, links de rastreamento."
   },
   "fr": {
     "Видео": "Vidéo",
@@ -59019,7 +59139,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Poursuivre la conversation avec le stratège",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "La conversation est engagée — les réponses sont enregistrées. Tu peux recommencer depuis l’intérieur.",
     "Своими словами": "Avec tes propres mots",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Réponse incomprise. Choisis une option ou décris-le avec des mots, par exemple : « atteindre 30 000 ₽ par mois grâce à la publicité »."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Réponse incomprise. Choisis une option ou décris-le avec des mots, par exemple : « atteindre 30 000 ₽ par mois grâce à la publicité ».",
+    "с {date}": "à partir du {date}",
+    "постов в неделю:": "posts par semaine :",
+    "дни и рубрики выбрал стратег": "jours et rubriques choisis par le stratège",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Le stratège comparera le plan aux faits et proposera des ajustements de la grille.",
+    "Собираю ролики из постов недели": "Montage des clips à partir des posts de la semaine",
+    "Готовые ролики из постов недели:": "Clips prêts à partir des posts de la semaine :",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "achat de trafic payant avec calcul, chaînes donneuses du Radar, liens de suivi.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips pour les plateformes à partir des posts de la semaine, achat de trafic payant avec calcul, chaînes donneuses du Radar, liens de suivi."
   },
   "it": {
     "Видео": "Video",
@@ -62708,7 +62836,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Continua la conversazione con lo stratega",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "La conversazione è avviata — le risposte sono salvate. Puoi ricominciare dall’interno.",
     "Своими словами": "Con parole tue",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Non compreso. Scegli un’opzione o descrivilo a parole, ad esempio: “raggiungere 30 mila ₽ al mese dalla pubblicità”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Non compreso. Scegli un’opzione o descrivilo a parole, ad esempio: “raggiungere 30 mila ₽ al mese dalla pubblicità”.",
+    "с {date}": "dal {date}",
+    "постов в неделю:": "post a settimana:",
+    "дни и рубрики выбрал стратег": "giorni e rubriche scelti dallo stratega",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Lo stratega confronterà il piano con i fatti e proporrà modifiche alla griglia.",
+    "Собираю ролики из постов недели": "Montaggio dei clip dai post della settimana",
+    "Готовые ролики из постов недели:": "Clip pronti dai post della settimana:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "traffico a pagamento con calcolo, canali donatori da Radar, link di tracciamento.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip per le piattaforme dai post della settimana, traffico a pagamento con calcolo, canali donatori da Radar, link di tracciamento."
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -66397,7 +66533,15 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "ከስትራቴጂስቱ ጋር ውይይቱን ቀጥል",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "ውይይቱ ተጀምሯል — መልሶቹ ተቀምጠዋል። ከውስጥ እንደገና መጀመር ይቻላል።",
     "Своими словами": "በራስህ ቃላት",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "አልገባኝም። አማራጭ ምረጥ ወይም በቃላት ጻፍ፣ ለምሳሌ፦ «ከማስታወቂያ በወር 30 ሺህ ₽ ላይ መድረስ»።"
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "አልገባኝም። አማራጭ ምረጥ ወይም በቃላት ጻፍ፣ ለምሳሌ፦ «ከማስታወቂያ በወር 30 ሺህ ₽ ላይ መድረስ»።",
+    "с {date}": "ከ{date} ጀምሮ",
+    "постов в неделю:": "በሳምንት ልጥፎች፦",
+    "дни и рубрики выбрал стратег": "ቀናትና ርዕሶች በስትራቴጂስቱ ተመርጠዋል",
+    "Стратег сверит план с фактом и предложит правки сетки.": "ስትራቴጂስቱ እቅዱን ከእውነታው ጋር አመሳክሮ የፍርግርግ ማስተካከያ ያቀርባል።",
+    "Собираю ролики из постов недели": "ከሳምንቱ ልጥፎች ቪዲዮዎችን በመስራት ላይ",
+    "Готовые ролики из постов недели:": "ከሳምንቱ ልጥፎች ዝግጁ ቪዲዮዎች፦",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "በስሌት የክፍያ ትራፊክ ግዢ፣ ከራዳር ለጋሾች፣ የክትትል አገናኞች።",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ከሳምንቱ ልጥፎች ለመድረኮች ቪዲዮዎች፣ በስሌት የክፍያ ትራፊክ ግዢ፣ ከራዳር ለጋሾች፣ የክትትል አገናኞች።"
   },
   "sw": {
     "Видео": "Video",
@@ -70086,6 +70230,14 @@ window.__I18N_DICT = {
     "Продолжить разговор со стратегом": "Endelea na mazungumzo na mwanamikakati",
     "Разговор начат — ответы сохранены. Начать заново можно внутри.": "Mazungumzo yameanza — majibu yamehifadhiwa. Unaweza kuanza upya ndani.",
     "Своими словами": "Kwa maneno yako mwenyewe",
-    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Haikueleweka. Chagua chaguo au andika kwa maneno, kwa mfano: “kufikia ₽ elfu 30 kwa mwezi kutoka kwa matangazo”."
+    "Не понял. Выбери вариант или напиши словами — например: «выйти на 30 тыс. ₽ в месяц с рекламы».": "Haikueleweka. Chagua chaguo au andika kwa maneno, kwa mfano: “kufikia ₽ elfu 30 kwa mwezi kutoka kwa matangazo”.",
+    "с {date}": "kuanzia {date}",
+    "постов в неделю:": "machapisho kwa wiki:",
+    "дни и рубрики выбрал стратег": "siku na rubriki zimechaguliwa na mtaalamu wa mkakati",
+    "Стратег сверит план с фактом и предложит правки сетки.": "Mtaalamu wa mkakati atalinganisha mpango na uhalisia na kupendekeza marekebisho ya gridi.",
+    "Собираю ролики из постов недели": "Ninaunda video kutoka machapisho ya wiki",
+    "Готовые ролики из постов недели:": "Video tayari kutoka machapisho ya wiki:",
+    "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ununuzi wa trafiki ya kulipia kwa hesabu, chaneli wafadhili kutoka Radar, viungo vya ufuatiliaji.",
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Video za majukwaa kutoka machapisho ya wiki, ununuzi wa trafiki ya kulipia kwa hesabu, chaneli wafadhili kutoka Radar, viungo vya ufuatiliaji."
   }
 };

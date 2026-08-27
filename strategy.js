@@ -538,9 +538,20 @@
         var mark = (s.checkable === false)
             ? '<span class="stg-dot"></span>'
             : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
-        return '<div class="stg-step" data-step="' + esc(s.key) + '">' + mark +
+        return '<div class="stg-step' + (done && s.checkable !== false ? ' done' : '') + '" data-step="' + esc(s.key) + '">' + mark +
             '<div class="t"><b>' + esc(fixDays(s.title)) + '</b>' + (s.body ? bodyHtml(fixDays(s.body)) : '') + '</div>' + (extra || '') + how +
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
+    }
+    function secTotals(key) {
+        var sec = docSection(key) || {};
+        var prog = _state.progress || {};
+        var total = 0, done = 0;
+        (sec.steps || []).forEach(function (s) {
+            if (s.checkable === false) return;
+            total++;
+            if (prog[s.key]) done++;
+        });
+        return { total: total, done: done };
     }
 
     function shortCost(c) {
@@ -583,19 +594,34 @@
             return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
         } catch (e) { return String(iso).slice(0, 10); }
     }
+    function gridMonday() {
+        var ap = (_state && _state.apply) || null;
+        if (!ap || !ap.from) return null;
+        var iso = String(ap.from).slice(0, 10);
+        if (ap.mode === 'partial' && _state.plan && _state.plan.week_start) {
+            iso = String(_state.plan.week_start).slice(0, 10);
+        }
+        var d = new Date(iso + 'T12:00:00');
+        return isNaN(d.getTime()) ? null : d;
+    }
     function weekGridHtml() {
         var sec = docSection('content') || {};
         var grid = sec.grid || [];
         if (!grid.length) return '';
         var byDay = {};
         grid.forEach(function (g) { byDay[g.day_index] = g; });
+        var monday = gridMonday();
         var cells = TR_DAYS.map(function (d, i) {
             var g = byDay[i];
-            return '<div class="stg-wd' + (g ? ' on' : '') + '"><span class="d">' + esc(T(d)) + '</span><span class="n">' + (g ? '1' : '—') + '</span><span class="r">' + esc(g ? g.rubric : '') + '</span></div>';
+            var dt = '';
+            if (monday) dt = '<i>' + new Date(monday.getTime() + i * 86400000).getDate() + '</i>';
+            return '<div class="stg-wd' + (g ? ' on' : '') + '"><span class="d">' + esc(T(d)) + dt + '</span>' +
+                '<span class="r' + (g ? '' : ' off') + '">' + (g ? esc(g.rubric) : '—') + '</span></div>';
         }).join('');
         var per = sec.per_week || grid.length;
+        var start = monday ? '<b>' + esc(T('с {date}').replace('{date}', fmtDate(monday.toISOString().slice(0, 10) + 'T12:00:00'))) + '</b> · ' : '';
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-circle-check"></i></span> ' + esc(T('Стратегия применена к контент-плану')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сетка недели:')) + ' ' + per + ' ' + esc(T('пост(ов), рубрики по дням')) + '</div>' +
+            '<div class="stg-note" style="margin-top:8px;">' + start + esc(T('постов в неделю:')) + ' <b>' + per + '</b> · ' + esc(T('дни и рубрики выбрал стратег')) + '</div>' +
             '<div class="stg-week">' + cells + '</div></div>';
     }
     function applyTail(ap) {
@@ -666,7 +692,7 @@
             ? T('каждую неделю, день — {weekday}. Следующая — {date}, {time}').replace('{weekday}', fmtWeekday(iso)).replace('{date}', fmtDate(iso)).replace('{time}', fmtTime(iso))
             : T('дата появится после сборки стратегии');
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-clock"></i></span> ' + esc(T('Месяц ведения')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом за свои 7 дней по данным контент-плана и трафика и предложит правки сетки.')) + '</div></div>';
+            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом и предложит правки сетки.')) + '</div></div>';
     }
     var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
     function renderDoc() {
@@ -691,19 +717,37 @@
             var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
                 (sec.chart && sec.chart.bars && sec.chart.bars.length);
             if (!hasContent) return;
-            var inner = '<div class="stg-eyebrow"><span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span> ' + esc(T(sec.title || sec.key)) + '</div>';
-            if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
-                inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
+            var open = !!_secOpen[key];
+            var st = secTotals(key);
+            var cnt = st.total
+                ? '<span class="stg-acc-cnt' + (st.done === st.total ? ' all' : '') + '" data-cnt="' + esc(key) + '">' + st.done + ' / ' + st.total + '</span>'
+                : '';
+            var head = '<div class="stg-acc-head" data-act="secacc" data-sec="' + esc(key) + '">' +
+                '<span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span>' +
+                '<b>' + esc(T(sec.title || sec.key)) + '</b>' + cnt +
+                '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + '"></i></div>';
+            var inner = '';
+            if (open) {
+                if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
+                    inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
+                }
+                if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
+                inner += chartHtml(sec.chart);
+                if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
             }
-            if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
-            inner += chartHtml(sec.chart);
-            if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
-            html += '<div class="stg-sec" data-sec="' + esc(sec.key) + '">' + inner + '</div>';
+            html += '<div class="stg-sec stg-acc' + (open ? ' open' : '') + '" data-sec="' + esc(sec.key) + '">' + head +
+                (inner ? '<div class="stg-acc-body">' + inner + '</div>' : '') + '</div>';
         });
         html += reviewHtml();
         html += '<div data-sec="chat">' + chatHtml() + '</div>';
         html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
+        var chatDraftEl = document.getElementById('stg-chat-inp');
+        var chatDraft = chatDraftEl ? chatDraftEl.value : '';
         var host = setView(html);
+        if (chatDraft) {
+            var ndr = document.getElementById('stg-chat-inp');
+            if (ndr) ndr.value = chatDraft;
+        }
         unclampSmall(host);
         var chatBox = document.getElementById('stg-chat-msgs');
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
@@ -713,7 +757,8 @@
     function docPoll() {
         if (_docTimer) clearTimeout(_docTimer);
         var p = _state && _state.plan;
-        var live = p && (p.status === 'generating' || p.with_text < p.posts);
+        var tb = _state && _state.traffic_brief;
+        var live = (p && (p.status === 'generating' || p.with_text < p.posts)) || (tb && tb.building);
         if (!live) return;
         _docTimer = setTimeout(function () {
             _docTimer = null;
@@ -737,6 +782,7 @@
 
 
     var _rvOpen = {};
+    var _secOpen = {};
     function tx(o, tplKey, paramsKey, textKey) {
         if (!o) return '';
         var tpl = o[tplKey];
@@ -950,6 +996,8 @@
         var done = !cb.classList.contains('done');
         haptic('light');
         cb.classList.toggle('done', done);
+        var row = cb.closest ? cb.closest('.stg-step') : null;
+        if (row) row.classList.toggle('done', done);
         if (!_state.progress) _state.progress = {};
         _state.progress[key] = done;
         var t = docTotals();
@@ -959,12 +1007,13 @@
             ring.querySelector('span').textContent = t.pct + '%';
         }
         var sub = document.getElementById('stg-doc-sub');
-        if (sub) {
-            var week = _state.week || 1;
-            var iv = _state.interview || {};
-            sub.textContent = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено') +
-                ' · ' + T('неделя') + ' ' + week + (week <= 4 ? ' ' + T('из') + ' 4' : '') +
-                (iv.audience_geo ? ' · ' + T(iv.audience_geo) : '');
+        if (sub) sub.textContent = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
+        var secKey = (key.indexOf(':') > 0) ? key.split(':')[0] : '';
+        var cnt = secKey ? document.querySelector('#strategy-screen .stg-acc-cnt[data-cnt="' + secKey + '"]') : null;
+        if (cnt) {
+            var st = secTotals(secKey);
+            cnt.textContent = st.done + ' / ' + st.total;
+            cnt.classList.toggle('all', st.total > 0 && st.done === st.total);
         }
         apiRequest('/api/v1/strategy/step', { method: 'POST', body: JSON.stringify({ key: key, done: done }) }).catch(function () {});
     }
@@ -1005,8 +1054,18 @@
         return ((typeof window.getLang === 'function' ? window.getLang() : 'ru') === 'en') ? s : s.replace('.', ',');
     }
     function trafficCard() {
+        var tb = (_state && _state.traffic_brief) || null;
+        var line;
+        if (tb && tb.building) {
+            line = '<span class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю ролики из постов недели')) + ' · ' + tb.ready + ' / ' + tb.posts + '</span>';
+        } else if (tb && tb.posts) {
+            line = esc(T('Готовые ролики из постов недели:')) + ' <b>' + tb.ready + ' / ' + tb.posts + '</b> · ' +
+                esc(T('платный перелив с расчётом, доноры из Радара, ссылки отслеживания.'));
+        } else {
+            line = esc(T('Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.'));
+        }
         return '<div class="stg-sec stg-trcard" data-act="traffic"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-rocket"></i></span> ' + esc(T('Трафик — двигатель роста')) + '</div>' +
-            '<div class="stg-note" style="margin-top:9px;">' + esc(T('Креативы для площадок из постов недели, платный перелив с расчётом по CPM ниши, доноры из Радара, ссылки отслеживания и сверка — что дало приток.')) + '</div>' +
+            '<div class="stg-note" style="margin-top:9px;">' + line + '</div>' +
             '<div class="stg-trgo">' + esc(T('Открыть модуль')) + ' <i class="ti ti-chevron-right"></i></div></div>';
     }
     function trHead() {
@@ -1306,6 +1365,19 @@
         }
         if (act === 'cb') { toggleStep(actEl); return; }
         if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; renderDoc(); return; }
+        if (act === 'secacc') {
+            haptic('light');
+            var sk = actEl.getAttribute('data-sec');
+            _secOpen[sk] = !_secOpen[sk];
+            renderDoc();
+            if (_secOpen[sk]) {
+                requestAnimationFrame(function () {
+                    var el = document.querySelector('#strategy-screen .stg-acc[data-sec="' + sk + '"]');
+                    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+            return;
+        }
         if (act === 'trmod') { haptic('light'); openTraffic(); return; }
         if (act === 'market') { haptic('light'); closeStrategy(); if (typeof window.__openMarket === 'function') window.__openMarket(); return; }
         if (act === 'how') { openGuide(actEl); return; }
