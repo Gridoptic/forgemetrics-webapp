@@ -490,7 +490,7 @@
     }
 
     function ringHtml(t) {
-        return '<div class="stg-ring" style="background:conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)"><span>' + t.pct + '%</span></div>';
+        return '<div class="stg-ring" style="background:conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)"><span>' + t.done + '/' + t.total + '</span></div>';
     }
 
     function _isWordChar(ch) { return ch != null && /[0-9A-Za-z\u00C0-\u024F\u0400-\u04FF]/.test(ch); }
@@ -531,17 +531,72 @@
             (long ? '<span class="stg-more" data-act="more">' + esc(T('развернуть')) + '</span>' : '');
     }
 
-    function stepHtml(s, extra) {
-        var done = (_state.progress || {})[s.key];
-        var how = (s.has_guide && _state.access === 'full')
-            ? '<button class="stg-how" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Как сделать')) + '</button>' : '';
+    var _taskOpen = {};
+    function taskStruct(s) {
+        if (s.do && s.do.length) {
+            return { do: s.do.slice(), why: s.why || '', avoid: s.avoid || '' };
+        }
+        var t = String(s.body || '').trim();
+        if (!t) return { do: [], why: '', avoid: '' };
+        var marks = [];
+        [['do', /(?:Что делать|Сделай|What to do)\s*:\s*/g],
+         ['why', /(?:Зачем|Почему|Why)\s*:\s*/g],
+         ['avoid', /(?:Чего избегать|Не делай|Избегай|Avoid|What to avoid)\s*:\s*/g]].forEach(function (m) {
+            var x;
+            while ((x = m[1].exec(t))) marks.push({ k: m[0], i: x.index, e: x.index + x[0].length });
+        });
+        if (!marks.length) return { do: t, why: '', avoid: '' };
+        marks.sort(function (a, b) { return a.i - b.i; });
+        var out = { do: '', why: '', avoid: '' };
+        marks.forEach(function (m, j) {
+            var end = j + 1 < marks.length ? marks[j + 1].i : t.length;
+            var seg = t.slice(m.e, end).trim();
+            if (seg && !out[m.k]) out[m.k] = seg.charAt(0).toUpperCase() + seg.slice(1);
+        });
+        var head = t.slice(0, marks[0].i).trim();
+        if (head) out.do = (head + (out.do ? ' ' + out.do : ''));
+        return out;
+    }
+    function taskSub(st) {
+        var d = Array.isArray(st.do) ? st.do.join(' · ') : String(st.do || '');
+        return d || String(st.why || '');
+    }
+    function taskCard(s, chip) {
+        var done = !!(_state.progress || {})[s.key];
+        var open = !!_taskOpen[s.key];
+        var st = taskStruct(s);
         var mark = (s.checkable === false)
             ? '<span class="stg-dot"></span>'
             : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
-        return '<div class="stg-step' + (done && s.checkable !== false ? ' done' : '') + '" data-step="' + esc(s.key) + '">' + mark +
-            '<div class="t"><b>' + esc(fixDays(s.title)) + '</b>' + (s.body ? bodyHtml(fixDays(s.body)) : '') + '</div>' + (extra || '') + how +
+        var min = s.minutes ? '<span class="stg-tkmin">◔ ' + s.minutes + ' ' + esc(T('мин')) + '</span>' : '';
+        var row = '<div class="row">' + mark +
+            '<span class="t"><b>' + esc(fixDays(s.title)) + '</b>' +
+            (open ? '' : '<em>' + esc(fixDays(taskSub(st))) + '</em>') + '</span>' +
+            (chip || '') + min +
+            '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + ' chev"></i></div>';
+        var body = '';
+        if (open) {
+            var kv = '';
+            if (Array.isArray(st.do) && st.do.length) {
+                kv += '<div class="k do"><i>1</i>' + esc(T('Сделай')) + '</div><ul>' +
+                    st.do.map(function (x) { return '<li>' + esc(fixDays(x)) + '</li>'; }).join('') + '</ul>';
+            } else if (st.do) {
+                kv += '<div class="k do"><i>1</i>' + esc(T('Сделай')) + '</div><p>' + termWrap(fixDays(st.do)) + '</p>';
+            }
+            if (st.why) kv += '<div class="k why"><i>?</i>' + esc(T('Зачем')) + '</div><p>' + termWrap(fixDays(st.why)) + '</p>';
+            if (st.avoid) kv += '<div class="k no"><i>✕</i>' + esc(T('Не делай')) + '</div><p>' + termWrap(fixDays(st.avoid)) + '</p>';
+            var acts = '';
+            if (s.has_guide && _state.access === 'full') {
+                acts += '<button class="stg-tkbtn pri" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Пошаговый план')) + '</button>';
+            }
+            acts += '<button class="stg-tkbtn" data-act="ask" data-t="' + esc(s.title || '') + '">' + esc(T('Спросить стратега')) + '</button>';
+            body = '<div class="stg-tkv">' + kv + '<div class="acts">' + acts + '</div></div>';
+        }
+        return '<div class="stg-tk' + (open ? ' open' : '') + (done && s.checkable !== false ? ' on' : '') +
+            '" data-act="tkopen" data-key="' + esc(s.key) + '">' + row + body +
             '</div><div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
     }
+    function stepHtml(s) { return taskCard(s, ''); }
     function secTotals(key) {
         var sec = docSection(key) || {};
         var prog = _state.progress || {};
@@ -659,14 +714,54 @@
         if (!sec || !(sec.steps || []).length) return '';
         var days = sec.days || [];
         var t = docTotals();
-        var rows = sec.steps.map(function (st, i) {
-            var d = days[i];
-            var chip = (d !== null && d !== undefined && TR_DAYS[d]) ? '<span class="stg-dayc">' + esc(T(TR_DAYS[d])) + '</span>' : '';
-            return stepHtml(st, chip);
+        var ap = _state && _state.apply;
+        var start = null;
+        if (ap && ap.at) {
+            var sd = new Date(String(ap.at).slice(0, 10) + 'T12:00:00');
+            if (!isNaN(sd.getTime())) start = sd;
+        }
+        var known = days.filter(function (d) { return d !== null && d !== undefined; });
+        var minDay = known.length ? Math.min.apply(null, known) : 0;
+        var groups = [], byKey = {};
+        sec.steps.forEach(function (s, i) {
+            var d = (days[i] !== null && days[i] !== undefined) ? days[i] : null;
+            var date = (start && d !== null) ? new Date(start.getTime() + (d - minDay) * 86400000) : null;
+            var gk = date ? date.toISOString().slice(0, 10) : 'd' + (d === null ? 'x' + i : d);
+            if (!byKey[gk]) { byKey[gk] = { key: gk, date: date, day: d, items: [] }; groups.push(byKey[gk]); }
+            byKey[gk].items.push(s);
+        });
+        var tn = new Date(); tn.setHours(12, 0, 0, 0);
+        var todayKey = tn.toISOString().slice(0, 10);
+        var prog = _state.progress || {};
+        var rows = groups.map(function (g) {
+            var allDone = g.items.every(function (s) { return s.checkable === false || prog[s.key]; });
+            var gk = g.date ? g.key : '';
+            var cls = '', chip = '';
+            if (allDone && g.items.some(function (s) { return s.checkable !== false; })) cls = ' done';
+            else if (gk && gk === todayKey) { cls = ' today'; chip = '<span class="now">' + esc(T('Сегодня')) + '</span>'; }
+            else if (gk && gk < todayKey) { cls = ' past'; chip = '<span class="move">' + esc(T('не сделано → сегодня')) + '</span>'; }
+            var cap = '';
+            if (g.date) {
+                var iso = gk + 'T12:00:00';
+                cap = '<div class="stg-dcap"><b>' + esc(fmtWeekday(iso)) + '</b><span>' + esc(fmtDate(iso)) + '</span>' + chip + '</div>';
+            } else if (g.day !== null && TR_DAYS[g.day]) {
+                cap = '<div class="stg-dcap"><b>' + esc(T(TR_DAYS[g.day])) + '</b></div>';
+            }
+            return '<div class="stg-tday' + cls + '" data-day-group="' + gk + '">' + cap +
+                g.items.map(function (s) { return taskCard(s, ''); }).join('') + '</div>';
         }).join('');
+        var range, counted = 0;
+        if (start && groups.length && groups[0].date && groups[groups.length - 1].date) {
+            range = esc(T('идут от старта стратегии')) + ' · ' +
+                esc(fmtDate(groups[0].key + 'T12:00:00')) + ' — ' +
+                esc(fmtDate(groups[groups.length - 1].key + 'T12:00:00'));
+        } else {
+            range = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
+            counted = 1;
+        }
         return '<div class="stg-sec" data-sec="week1"><div class="stg-dochead">' + ringHtml(t) +
-            '<div class="t"><b>' + esc(T('Задачи первой недели')) + '</b><span id="stg-doc-sub">' + t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено') + '</span></div></div>' +
-            '<div style="margin-top:6px;">' + rows + '</div></div>';
+            '<div class="t"><b>' + esc(T('Задачи первой недели')) + '</b><span id="stg-doc-sub" data-count="' + counted + '">' + range + '</span></div></div>' +
+            '<div class="stg-tl">' + rows + '</div></div>';
     }
     function fmtWeekday(iso) {
         if (!iso) return '';
@@ -996,18 +1091,36 @@
         var done = !cb.classList.contains('done');
         haptic('light');
         cb.classList.toggle('done', done);
-        var row = cb.closest ? cb.closest('.stg-step') : null;
-        if (row) row.classList.toggle('done', done);
+        var row = cb.closest ? cb.closest('.stg-tk') : null;
+        if (row) row.classList.toggle('on', done);
         if (!_state.progress) _state.progress = {};
         _state.progress[key] = done;
         var t = docTotals();
         var ring = document.querySelector('#strategy-screen .stg-ring');
         if (ring) {
             ring.style.background = 'conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)';
-            ring.querySelector('span').textContent = t.pct + '%';
+            ring.querySelector('span').textContent = t.done + '/' + t.total;
         }
         var sub = document.getElementById('stg-doc-sub');
-        if (sub) sub.textContent = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
+        if (sub && sub.getAttribute('data-count') === '1') {
+            sub.textContent = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
+        }
+        var dayEl = cb.closest ? cb.closest('.stg-tday') : null;
+        if (dayEl) {
+            var cbs = dayEl.querySelectorAll('.stg-cb');
+            var all = cbs.length && Array.prototype.every.call(cbs, function (x) { return x.classList.contains('done'); });
+            var gk = dayEl.getAttribute('data-day-group') || '';
+            var tn2 = new Date(); tn2.setHours(12, 0, 0, 0);
+            var tk2 = tn2.toISOString().slice(0, 10);
+            var isDate = /^\d{4}-/.test(gk);
+            dayEl.classList.toggle('done', !!all);
+            dayEl.classList.toggle('today', !all && isDate && gk === tk2);
+            dayEl.classList.toggle('past', !all && isDate && gk < tk2);
+            var mv = dayEl.querySelector('.stg-dcap .move');
+            if (mv) mv.style.display = (!all && isDate && gk < tk2) ? '' : 'none';
+            var nw = dayEl.querySelector('.stg-dcap .now');
+            if (nw) nw.style.display = (!all && isDate && gk === tk2) ? '' : 'none';
+        }
         var secKey = (key.indexOf(':') > 0) ? key.split(':')[0] : '';
         var cnt = secKey ? document.querySelector('#strategy-screen .stg-acc-cnt[data-cnt="' + secKey + '"]') : null;
         if (cnt) {
@@ -1364,6 +1477,18 @@
             return;
         }
         if (act === 'cb') { toggleStep(actEl); return; }
+        if (act === 'tkopen') {
+            if (t.closest && t.closest('.stg-tkv')) return;
+            haptic('light');
+            var tkk = actEl.getAttribute('data-key');
+            _taskOpen[tkk] = !_taskOpen[tkk];
+            renderDoc();
+            requestAnimationFrame(function () {
+                var el = document.querySelector('#strategy-screen .stg-tk[data-key="' + tkk + '"]');
+                if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+            });
+            return;
+        }
         if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; renderDoc(); return; }
         if (act === 'secacc') {
             haptic('light');
@@ -1393,7 +1518,7 @@
             if (inp) {
                 inp.value = T('Вопрос по шагу') + ' «' + (actEl.getAttribute('data-t') || '') + '»: ';
                 inp.focus();
-                inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (inp.scrollIntoView) inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
             return;
         }

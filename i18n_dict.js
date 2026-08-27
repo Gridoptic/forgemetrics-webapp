@@ -3694,7 +3694,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Building clips from the week's posts",
     "Готовые ролики из постов недели:": "Ready clips from the week's posts:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "paid traffic buying with estimates, donor channels from Radar, tracking links.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Platform clips from the week's posts, paid traffic buying with estimates, donor channels from Radar, tracking links."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Platform clips from the week's posts, paid traffic buying with estimates, donor channels from Radar, tracking links.",
+    "не сделано → сегодня": "not done → today",
+    "идут от старта стратегии": "counted from the strategy start",
+    "Сделай": "Do",
+    "Зачем": "Why",
+    "Не делай": "Don't",
+    "Пошаговый план": "Step-by-step plan"
   },
   "es": {
     "Видео": "Vídeo",
@@ -7391,7 +7397,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Montando los vídeos de los posts de la semana",
     "Готовые ролики из постов недели:": "Vídeos listos de los posts de la semana:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "compra de tráfico de pago con cálculo, donantes de Radar, enlaces de seguimiento.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Vídeos para plataformas a partir de los posts de la semana, compra de tráfico de pago con cálculo, donantes de Radar, enlaces de seguimiento."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Vídeos para plataformas a partir de los posts de la semana, compra de tráfico de pago con cálculo, donantes de Radar, enlaces de seguimiento.",
+    "не сделано → сегодня": "pendiente → hoy",
+    "идут от старта стратегии": "cuentan desde el inicio de la estrategia",
+    "Сделай": "Haz",
+    "Зачем": "Por qué",
+    "Не делай": "Evita",
+    "Пошаговый план": "Plan paso a paso"
   },
   "de": {
     "Видео": "Video",
@@ -11088,7 +11100,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Clips aus den Posts der Woche werden gebaut",
     "Готовые ролики из постов недели:": "Fertige Clips aus den Posts der Woche:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "bezahlter Traffic-Einkauf mit Berechnung, Donor-Kanäle aus Radar, Tracking-Links.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips für Plattformen aus den Posts der Woche, bezahlter Traffic-Einkauf mit Berechnung, Donor-Kanäle aus Radar, Tracking-Links."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips für Plattformen aus den Posts der Woche, bezahlter Traffic-Einkauf mit Berechnung, Donor-Kanäle aus Radar, Tracking-Links.",
+    "не сделано → сегодня": "offen → heute",
+    "идут от старта стратегии": "laufen ab Strategie-Start",
+    "Сделай": "Mach",
+    "Зачем": "Warum",
+    "Не делай": "Vermeide",
+    "Пошаговый план": "Schritt-für-Schritt-Plan"
   },
   "kk": {
     "Видео": "Видео",
@@ -14784,7 +14802,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Апта посттарынан роликтер құрастырылуда",
     "Готовые ролики из постов недели:": "Апта посттарынан дайын роликтер:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "есеппен ақылы трафик сатып алу, Радардан донорлар, бақылау сілтемелері.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Апта посттарынан алаңдарға арналған роликтер, есеппен ақылы трафик сатып алу, Радардан донорлар, бақылау сілтемелері."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Апта посттарынан алаңдарға арналған роликтер, есеппен ақылы трафик сатып алу, Радардан донорлар, бақылау сілтемелері.",
+    "не сделано → сегодня": "орындалмады → бүгін",
+    "идут от старта стратегии": "стратегия басталған күннен есептеледі",
+    "Сделай": "Орында",
+    "Зачем": "Неге",
+    "Не делай": "Жасама",
+    "Пошаговый план": "Қадамдық жоспар"
   },
   "uz": {
     "Видео": "Video",
@@ -18481,7 +18505,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Hafta postlaridan roliklar tayyorlanmoqda",
     "Готовые ролики из постов недели:": "Hafta postlaridan tayyor roliklar:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hisob-kitobli pullik trafik sotib olish, Radardan donorlar, kuzatuv havolalari.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Hafta postlaridan platformalar uchun roliklar, hisob-kitobli pullik trafik sotib olish, Radardan donorlar, kuzatuv havolalari."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Hafta postlaridan platformalar uchun roliklar, hisob-kitobli pullik trafik sotib olish, Radardan donorlar, kuzatuv havolalari.",
+    "не сделано → сегодня": "bajarilmadi → bugun",
+    "идут от старта стратегии": "strategiya boshlangan kundan hisoblanadi",
+    "Сделай": "Bajar",
+    "Зачем": "Nega",
+    "Не делай": "Qilma",
+    "Пошаговый план": "Bosqichma-bosqich reja"
   },
   "be": {
     "Видео": "Відэа",
@@ -22177,7 +22207,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Збіраю ролікі з пастоў тыдня",
     "Готовые ролики из постов недели:": "Гатовыя ролікі з пастоў тыдня:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "платны пераліў з разлікам, донары з Радара, спасылкі адсочвання.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Ролікі для пляцовак з пастоў тыдня, платны пераліў з разлікам, донары з Радара, спасылкі адсочвання."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Ролікі для пляцовак з пастоў тыдня, платны пераліў з разлікам, донары з Радара, спасылкі адсочвання.",
+    "не сделано → сегодня": "не зроблена → сёння",
+    "идут от старта стратегии": "ідуць ад старту стратэгіі",
+    "Сделай": "Зрабі",
+    "Зачем": "Навошта",
+    "Не делай": "Не рабі",
+    "Пошаговый план": "Пакрокавы план"
   },
   "az": {
     "Видео": "Video",
@@ -25874,7 +25910,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Həftənin postlarından kliplər hazırlanır",
     "Готовые ролики из постов недели:": "Həftənin postlarından hazır kliplər:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hesablamalı ödənişli trafik alışı, Radardan donorlar, izləmə linkləri.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Həftənin postlarından platformalar üçün kliplər, hesablamalı ödənişli trafik alışı, Radardan donorlar, izləmə linkləri."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Həftənin postlarından platformalar üçün kliplər, hesablamalı ödənişli trafik alışı, Radardan donorlar, izləmə linkləri.",
+    "не сделано → сегодня": "edilməyib → bu gün",
+    "идут от старта стратегии": "strategiyanın başlanğıcından sayılır",
+    "Сделай": "Et",
+    "Зачем": "Niyə",
+    "Не делай": "Etmə",
+    "Пошаговый план": "Addım-addım plan"
   },
   "ar": {
     "Видео": "فيديو",
@@ -29571,7 +29613,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "أُجهّز المقاطع من منشورات الأسبوع",
     "Готовые ролики из постов недели:": "مقاطع جاهزة من منشورات الأسبوع:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "شراء ترافيك مدفوع مع الحساب، قنوات مانحة من رادار، روابط تتبع.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "مقاطع للمنصات من منشورات الأسبوع، شراء ترافيك مدفوع مع الحساب، قنوات مانحة من رادار، روابط تتبع."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "مقاطع للمنصات من منشورات الأسبوع، شراء ترافيك مدفوع مع الحساب، قنوات مانحة من رادار، روابط تتبع.",
+    "не сделано → сегодня": "لم يُنجز → اليوم",
+    "идут от старта стратегии": "تُحسب من بداية الاستراتيجية",
+    "Сделай": "افعل",
+    "Зачем": "لماذا",
+    "Не делай": "تجنّب",
+    "Пошаговый план": "خطة خطوة بخطوة"
   },
   "fa": {
     "Видео": "ویدیو",
@@ -33268,7 +33316,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "در حال ساخت ویدیوها از پست‌های هفته",
     "Готовые ролики из постов недели:": "ویدیوهای آماده از پست‌های هفته:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "خرید ترافیک پولی با محاسبه، کانال‌های دونور از رادار، لینک‌های ردیابی.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ویدیوها برای پلتفرم‌ها از پست‌های هفته، خرید ترافیک پولی با محاسبه، کانال‌های دونور از رادار، لینک‌های ردیابی."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ویدیوها برای پلتفرم‌ها از پست‌های هفته، خرید ترافیک پولی با محاسبه، کانال‌های دونور از رادار، لینک‌های ردیابی.",
+    "не сделано → сегодня": "انجام نشده → امروز",
+    "идут от старта стратегии": "از شروع استراتژی حساب می‌شود",
+    "Сделай": "انجام بده",
+    "Зачем": "چرا",
+    "Не делай": "پرهیز کن",
+    "Пошаговый план": "برنامه گام‌به‌گام"
   },
   "tr": {
     "Видео": "Video",
@@ -36965,7 +37019,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Haftanın gönderilerinden klipler hazırlanıyor",
     "Готовые ролики из постов недели:": "Haftanın gönderilerinden hazır klipler:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "hesaplamalı ücretli trafik alımı, Radar'dan donör kanallar, takip bağlantıları.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Haftanın gönderilerinden platform klipleri, hesaplamalı ücretli trafik alımı, Radar'dan donör kanallar, takip bağlantıları."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Haftanın gönderilerinden platform klipleri, hesaplamalı ücretli trafik alımı, Radar'dan donör kanallar, takip bağlantıları.",
+    "не сделано → сегодня": "yapılmadı → bugün",
+    "идут от старта стратегии": "strateji başlangıcından sayılır",
+    "Сделай": "Yap",
+    "Зачем": "Neden",
+    "Не делай": "Yapma",
+    "Пошаговый план": "Adım adım plan"
   },
   "hi": {
     "Видео": "वीडियो",
@@ -40662,7 +40722,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "सप्ताह की पोस्ट से क्लिप बन रहे हैं",
     "Готовые ролики из постов недели:": "सप्ताह की पोस्ट से तैयार क्लिप:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "गणना के साथ पेड ट्रैफ़िक खरीद, Радар से डोनर चैनल, ट्रैकिंग लिंक।",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "सप्ताह की पोस्ट से प्लेटफ़ॉर्म क्लिप, गणना के साथ पेड ट्रैफ़िक खरीद, Радар से डोनर चैनल, ट्रैकिंग लिंक।"
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "सप्ताह की पोस्ट से प्लेटफ़ॉर्म क्लिप, गणना के साथ पेड ट्रैफ़िक खरीद, Радар से डोनर चैनल, ट्रैकिंग लिंक।",
+    "не сделано → сегодня": "अधूरा → आज",
+    "идут от старта стратегии": "स्ट्रैटेजी शुरू होने के दिन से गिने जाते हैं",
+    "Сделай": "करें",
+    "Зачем": "क्यों",
+    "Не делай": "न करें",
+    "Пошаговый план": "चरण-दर-चरण योजना"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -44359,7 +44425,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "সপ্তাহের পোস্ট থেকে ক্লিপ তৈরি হচ্ছে",
     "Готовые ролики из постов недели:": "সপ্তাহের পোস্ট থেকে প্রস্তুত ক্লিপ:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "হিসাবসহ পেইড ট্রাফিক কেনা, Радар থেকে ডোনার চ্যানেল, ট্র্যাকিং লিংক।",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "সপ্তাহের পোস্ট থেকে প্ল্যাটফর্মের জন্য ক্লিপ, হিসাবসহ পেইড ট্রাফিক কেনা, Радар থেকে ডোনার চ্যানেল, ট্র্যাকিং লিংক।"
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "সপ্তাহের পোস্ট থেকে প্ল্যাটফর্মের জন্য ক্লিপ, হিসাবসহ পেইড ট্রাফিক কেনা, Радар থেকে ডোনার চ্যানেল, ট্র্যাকিং লিংক।",
+    "не сделано → сегодня": "অসম্পন্ন → আজ",
+    "идут от старта стратегии": "স্ট্র্যাটেজি শুরুর দিন থেকে গণনা হয়",
+    "Сделай": "করুন",
+    "Зачем": "কেন",
+    "Не делай": "করবেন না",
+    "Пошаговый план": "ধাপে ধাপে পরিকল্পনা"
   },
   "id": {
     "Видео": "Video",
@@ -48056,7 +48128,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Menyusun klip dari postingan minggu ini",
     "Готовые ролики из постов недели:": "Klip siap dari postingan minggu ini:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "pembelian trafik berbayar dengan perhitungan, channel donor dari Radar, tautan pelacakan.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Klip untuk platform dari postingan minggu ini, pembelian trafik berbayar dengan perhitungan, channel donor dari Radar, tautan pelacakan."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Klip untuk platform dari postingan minggu ini, pembelian trafik berbayar dengan perhitungan, channel donor dari Radar, tautan pelacakan.",
+    "не сделано → сегодня": "belum selesai → hari ini",
+    "идут от старта стратегии": "dihitung dari awal strategi",
+    "Сделай": "Lakukan",
+    "Зачем": "Mengapa",
+    "Не делай": "Hindari",
+    "Пошаговый план": "Rencana langkah demi langkah"
   },
   "vi": {
     "Видео": "Video",
@@ -51753,7 +51831,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Đang dựng clip từ bài đăng trong tuần",
     "Готовые ролики из постов недели:": "Clip đã sẵn sàng từ bài đăng trong tuần:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "mua traffic trả phí có tính toán, kênh donor từ Radar, liên kết theo dõi.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip cho các nền tảng từ bài đăng trong tuần, mua traffic trả phí có tính toán, kênh donor từ Radar, liên kết theo dõi."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip cho các nền tảng từ bài đăng trong tuần, mua traffic trả phí có tính toán, kênh donor từ Radar, liên kết theo dõi.",
+    "не сделано → сегодня": "chưa xong → hôm nay",
+    "идут от старта стратегии": "tính từ ngày bắt đầu chiến lược",
+    "Сделай": "Hãy làm",
+    "Зачем": "Vì sao",
+    "Не делай": "Đừng làm",
+    "Пошаговый план": "Kế hoạch từng bước"
   },
   "pt": {
     "Видео": "Vídeo",
@@ -55450,7 +55534,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Montando os clipes dos posts da semana",
     "Готовые ролики из постов недели:": "Clipes prontos dos posts da semana:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "compra de tráfego pago com cálculo, doadores do Radar, links de rastreamento.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clipes para plataformas a partir dos posts da semana, compra de tráfego pago com cálculo, doadores do Radar, links de rastreamento."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clipes para plataformas a partir dos posts da semana, compra de tráfego pago com cálculo, doadores do Radar, links de rastreamento.",
+    "не сделано → сегодня": "pendente → hoje",
+    "идут от старта стратегии": "contam desde o início da estratégia",
+    "Сделай": "Faça",
+    "Зачем": "Por quê",
+    "Не делай": "Evite",
+    "Пошаговый план": "Plano passo a passo"
   },
   "fr": {
     "Видео": "Vidéo",
@@ -59147,7 +59237,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Montage des clips à partir des posts de la semaine",
     "Готовые ролики из постов недели:": "Clips prêts à partir des posts de la semaine :",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "achat de trafic payant avec calcul, chaînes donneuses du Radar, liens de suivi.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips pour les plateformes à partir des posts de la semaine, achat de trafic payant avec calcul, chaînes donneuses du Radar, liens de suivi."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clips pour les plateformes à partir des posts de la semaine, achat de trafic payant avec calcul, chaînes donneuses du Radar, liens de suivi.",
+    "не сделано → сегодня": "à faire → aujourd'hui",
+    "идут от старта стратегии": "comptés depuis le début de la stratégie",
+    "Сделай": "À faire",
+    "Зачем": "Pourquoi",
+    "Не делай": "À éviter",
+    "Пошаговый план": "Plan pas à pas"
   },
   "it": {
     "Видео": "Video",
@@ -62844,7 +62940,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Montaggio dei clip dai post della settimana",
     "Готовые ролики из постов недели:": "Clip pronti dai post della settimana:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "traffico a pagamento con calcolo, canali donatori da Radar, link di tracciamento.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip per le piattaforme dai post della settimana, traffico a pagamento con calcolo, canali donatori da Radar, link di tracciamento."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Clip per le piattaforme dai post della settimana, traffico a pagamento con calcolo, canali donatori da Radar, link di tracciamento.",
+    "не сделано → сегодня": "da fare → oggi",
+    "идут от старта стратегии": "contati dall'avvio della strategia",
+    "Сделай": "Fai",
+    "Зачем": "Perché",
+    "Не делай": "Evita",
+    "Пошаговый план": "Piano passo dopo passo"
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -66541,7 +66643,13 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "ከሳምንቱ ልጥፎች ቪዲዮዎችን በመስራት ላይ",
     "Готовые ролики из постов недели:": "ከሳምንቱ ልጥፎች ዝግጁ ቪዲዮዎች፦",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "በስሌት የክፍያ ትራፊክ ግዢ፣ ከራዳር ለጋሾች፣ የክትትል አገናኞች።",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ከሳምንቱ ልጥፎች ለመድረኮች ቪዲዮዎች፣ በስሌት የክፍያ ትራፊክ ግዢ፣ ከራዳር ለጋሾች፣ የክትትል አገናኞች።"
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ከሳምንቱ ልጥፎች ለመድረኮች ቪዲዮዎች፣ በስሌት የክፍያ ትራፊክ ግዢ፣ ከራዳር ለጋሾች፣ የክትትል አገናኞች።",
+    "не сделано → сегодня": "አልተሠራም → ዛሬ",
+    "идут от старта стратегии": "ከስትራቴጂው መጀመሪያ ጀምሮ ይቆጠራሉ",
+    "Сделай": "አድርግ",
+    "Зачем": "ለምን",
+    "Не делай": "አታድርግ",
+    "Пошаговый план": "ደረጃ በደረጃ እቅድ"
   },
   "sw": {
     "Видео": "Video",
@@ -70238,6 +70346,12 @@ window.__I18N_DICT = {
     "Собираю ролики из постов недели": "Ninaunda video kutoka machapisho ya wiki",
     "Готовые ролики из постов недели:": "Video tayari kutoka machapisho ya wiki:",
     "платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "ununuzi wa trafiki ya kulipia kwa hesabu, chaneli wafadhili kutoka Radar, viungo vya ufuatiliaji.",
-    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Video za majukwaa kutoka machapisho ya wiki, ununuzi wa trafiki ya kulipia kwa hesabu, chaneli wafadhili kutoka Radar, viungo vya ufuatiliaji."
+    "Ролики для площадок из постов недели, платный перелив с расчётом, доноры из Радара, ссылки отслеживания.": "Video za majukwaa kutoka machapisho ya wiki, ununuzi wa trafiki ya kulipia kwa hesabu, chaneli wafadhili kutoka Radar, viungo vya ufuatiliaji.",
+    "не сделано → сегодня": "haijafanyika → leo",
+    "идут от старта стратегии": "zinahesabiwa tangu mwanzo wa mkakati",
+    "Сделай": "Fanya",
+    "Зачем": "Kwa nini",
+    "Не делай": "Usifanye",
+    "Пошаговый план": "Mpango wa hatua kwa hatua"
   }
 };
