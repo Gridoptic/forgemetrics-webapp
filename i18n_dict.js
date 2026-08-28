@@ -3707,7 +3707,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Copy text",
     "Открыть Радар": "Open Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Generation took longer than usual and the connection dropped. Try again",
-    "Пост в очереди: выйдет {when}": "Post queued: goes out {when}"
+    "Пост в очереди: выйдет {when}": "Post queued: goes out {when}",
+    "Только просмотр": "View only",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "The channel strategy is run by the owner and the trusted admin. You can see the plan, tasks, reviews and the Traffic module.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "The channel strategy is run by the owner and the trusted admin — you have view access",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Questions to the strategist are asked by whoever runs the channel strategy."
   },
   "es": {
     "Видео": "Vídeo",
@@ -7417,7 +7421,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Copiar texto",
     "Открыть Радар": "Abrir Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "La generación tardó más de lo habitual y se cortó la conexión. Inténtalo de nuevo",
-    "Пост в очереди: выйдет {when}": "Publicación en cola: saldrá {when}"
+    "Пост в очереди: выйдет {when}": "Publicación en cola: saldrá {when}",
+    "Только просмотр": "Solo lectura",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "La estrategia del canal la lleva el propietario y el administrador de confianza. Puedes ver el plan, las tareas, las revisiones y el módulo «Tráfico».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "La estrategia del canal la lleva el propietario y el administrador de confianza: tú tienes acceso de lectura",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Las preguntas al estratega las hace quien lleva la estrategia del canal."
   },
   "de": {
     "Видео": "Video",
@@ -11127,7 +11135,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Text kopieren",
     "Открыть Радар": "Radar öffnen",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Die Generierung dauerte länger als üblich und die Verbindung brach ab. Versuch es erneut",
-    "Пост в очереди: выйдет {when}": "Post in der Warteschlange: erscheint {when}"
+    "Пост в очереди: выйдет {when}": "Post in der Warteschlange: erscheint {when}",
+    "Только просмотр": "Nur Ansicht",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Die Kanalstrategie führen der Eigentümer und der vertraute Admin. Für dich sind Plan, Aufgaben, Abgleiche und das Modul «Traffic» sichtbar.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Die Kanalstrategie führen Eigentümer und vertrauter Admin — du hast Lesezugriff",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Fragen an den Strategen stellt, wer die Kanalstrategie führt."
   },
   "kk": {
     "Видео": "Видео",
@@ -14836,7 +14848,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Мәтінді көшіру",
     "Открыть Радар": "Радарды ашу",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Генерация әдеттегіден ұзаққа созылып, байланыс үзілді. Қайталап көр",
-    "Пост в очереди: выйдет {when}": "Пост кезекте: {when} шығады"
+    "Пост в очереди: выйдет {when}": "Пост кезекте: {when} шығады",
+    "Только просмотр": "Тек қарау",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Арна стратегиясын иесі мен сенімді әкімші жүргізеді. Саған жоспар, тапсырмалар, салыстырулар және «Трафик» модулі қолжетімді.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Арна стратегиясын иесі мен сенімді әкімші жүргізеді — саған қарау қолжетімді",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Стратегке сұрақты арна стратегиясын жүргізуші қояды."
   },
   "uz": {
     "Видео": "Video",
@@ -18546,7 +18562,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Matnni nusxalash",
     "Открыть Радар": "Radarni ochish",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Generatsiya odatdagidan uzoq davom etdi va aloqa uzildi. Yana urinib ko‘r",
-    "Пост в очереди: выйдет {when}": "Post navbatda: {when} chiqadi"
+    "Пост в очереди: выйдет {when}": "Post navbatda: {when} chiqadi",
+    "Только просмотр": "Faqat ko‘rish",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Kanal strategiyasini egasi va ishonchli administrator olib boradi. Senga reja, vazifalar, solishtiruvlar va «Trafik» moduli ochiq.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Kanal strategiyasini egasi va ishonchli administrator olib boradi — senda ko‘rish huquqi bor",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Strategga savollarni kanal strategiyasini olib boruvchi beradi."
   },
   "be": {
     "Видео": "Відэа",
@@ -22255,7 +22275,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Скапіраваць тэкст",
     "Открыть Радар": "Адкрыць Радар",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Генерацыя ішла даўжэй звычайнага і сувязь абарвалася. Паспрабуй яшчэ раз",
-    "Пост в очереди: выйдет {when}": "Пост у чарзе: выйдзе {when}"
+    "Пост в очереди: выйдет {when}": "Пост у чарзе: выйдзе {when}",
+    "Только просмотр": "Толькі прагляд",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Стратэгію канала вядзе ўладальнік і давераны адміністратар. Табе даступныя план, задачы, зверкі і модуль «Трафік».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Стратэгію канала вядзе ўладальнік і давераны адміністратар — табе даступны прагляд",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Пытанні стратэгу задае той, хто вядзе стратэгію канала."
   },
   "az": {
     "Видео": "Video",
@@ -25965,7 +25989,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Mətni kopyala",
     "Открыть Радар": "Radarı aç",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Generasiya adi haldan uzun çəkdi və bağlantı kəsildi. Yenidən cəhd et",
-    "Пост в очереди: выйдет {when}": "Post növbədə: {when} yayımlanacaq"
+    "Пост в очереди: выйдет {when}": "Post növbədə: {when} yayımlanacaq",
+    "Только просмотр": "Yalnız baxış",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Kanal strategiyasını sahibi və etibarlı administrator aparır. Sənə plan, tapşırıqlar, yoxlamalar və «Trafik» modulu açıqdır.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Kanal strategiyasını sahibi və etibarlı administrator aparır — sənin baxış girişin var",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Stratejə sualları kanal strategiyasını aparan verir."
   },
   "ar": {
     "Видео": "فيديو",
@@ -29675,7 +29703,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "نسخ النص",
     "Открыть Радар": "فتح الرادار",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "استغرق التوليد وقتًا أطول من المعتاد وانقطع الاتصال. حاول مرة أخرى",
-    "Пост в очереди: выйдет {when}": "المنشور في قائمة الانتظار: سيُنشر {when}"
+    "Пост в очереди: выйдет {when}": "المنشور في قائمة الانتظار: سيُنشر {when}",
+    "Только просмотр": "عرض فقط",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "استراتيجية القناة يديرها المالك والمشرف الموثوق. يمكنك رؤية الخطة والمهام والمراجعات ووحدة «الترافيك».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "استراتيجية القناة يديرها المالك والمشرف الموثوق — لديك صلاحية العرض",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "الأسئلة للاستراتيجي يطرحها من يدير استراتيجية القناة."
   },
   "fa": {
     "Видео": "ویدیو",
@@ -33385,7 +33417,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "کپی متن",
     "Открыть Радар": "باز کردن رادار",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "تولید بیش از حد معمول طول کشید و ارتباط قطع شد. دوباره امتحان کن",
-    "Пост в очереди: выйдет {when}": "پست در صف: {when} منتشر می‌شود"
+    "Пост в очереди: выйдет {when}": "پست در صف: {when} منتشر می‌شود",
+    "Только просмотр": "فقط مشاهده",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "استراتژی کانال را مالک و ادمین مورد اعتماد پیش می‌برند. تو می‌توانی برنامه، وظایف، بررسی‌ها و ماژول «ترافیک» را ببینی.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "استراتژی کانال را مالک و ادمین مورد اعتماد پیش می‌برند — دسترسی تو فقط مشاهده است",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "پرسش از استراتژیست را کسی می‌پرسد که استراتژی کانال را پیش می‌برد."
   },
   "tr": {
     "Видео": "Video",
@@ -37095,7 +37131,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Metni kopyala",
     "Открыть Радар": "Radar'ı aç",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Üretim normalden uzun sürdü ve bağlantı koptu. Tekrar dene",
-    "Пост в очереди: выйдет {when}": "Gönderi sırada: {when} yayınlanacak"
+    "Пост в очереди: выйдет {when}": "Gönderi sırada: {when} yayınlanacak",
+    "Только просмотр": "Yalnızca görüntüleme",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Kanal stratejisini sahibi ve güvenilir yönetici yürütür. Sen planı, görevleri, kontrolleri ve «Trafik» modülünü görebilirsin.",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Kanal stratejisini sahibi ve güvenilir yönetici yürütür — sende görüntüleme erişimi var",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Stratejiste soruları kanal stratejisini yürüten kişi sorar."
   },
   "hi": {
     "Видео": "वीडियो",
@@ -40805,7 +40845,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "टेक्स्ट कॉपी करें",
     "Открыть Радар": "Радар खोलें",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "जनरेशन में सामान्य से अधिक समय लगा और कनेक्शन टूट गया। फिर से आज़माएँ",
-    "Пост в очереди: выйдет {when}": "पोस्ट कतार में: {when} प्रकाशित होगी"
+    "Пост в очереди: выйдет {when}": "पोस्ट कतार में: {when} प्रकाशित होगी",
+    "Только просмотр": "केवल देखें",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "चैनल की स्ट्रैटेजी मालिक और भरोसेमंद एडमिन चलाते हैं। आपको प्लान, कार्य, समीक्षाएँ और «ट्रैफ़िक» मॉड्यूल दिखते हैं।",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "चैनल की स्ट्रैटेजी मालिक और भरोसेमंद एडमिन चलाते हैं — आपके पास देखने की पहुँच है",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "स्ट्रैटेजिस्ट से सवाल वही पूछता है जो चैनल की स्ट्रैटेजी चलाता है।"
   },
   "bn": {
     "Видео": "ভিডিও",
@@ -44515,7 +44559,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "টেক্সট কপি করুন",
     "Открыть Радар": "Радар খুলুন",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "জেনারেশনে স্বাভাবিকের চেয়ে বেশি সময় লেগেছে এবং সংযোগ বিচ্ছিন্ন হয়েছে। আবার চেষ্টা করুন",
-    "Пост в очереди: выйдет {when}": "পোস্ট সারিতে: {when} প্রকাশিত হবে"
+    "Пост в очереди: выйдет {when}": "পোস্ট সারিতে: {when} প্রকাশিত হবে",
+    "Только просмотр": "শুধু দেখা",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "চ্যানেলের স্ট্র্যাটেজি মালিক ও বিশ্বস্ত অ্যাডমিন পরিচালনা করেন। আপনি প্ল্যান, কাজ, রিভিউ এবং «ট্রাফিক» মডিউল দেখতে পারেন।",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "চ্যানেলের স্ট্র্যাটেজি মালিক ও বিশ্বস্ত অ্যাডমিন পরিচালনা করেন — আপনার দেখার অ্যাক্সেস আছে",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "স্ট্র্যাটেজিস্টকে প্রশ্ন করেন যিনি চ্যানেলের স্ট্র্যাটেজি চালান।"
   },
   "id": {
     "Видео": "Video",
@@ -48225,7 +48273,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Salin teks",
     "Открыть Радар": "Buka Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Pembuatan memakan waktu lebih lama dari biasanya dan koneksi terputus. Coba lagi",
-    "Пост в очереди: выйдет {when}": "Postingan dalam antrean: terbit {when}"
+    "Пост в очереди: выйдет {when}": "Postingan dalam antrean: terbit {when}",
+    "Только просмотр": "Hanya lihat",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Strategi channel dijalankan oleh pemilik dan admin tepercaya. Kamu bisa melihat rencana, tugas, rekonsiliasi, dan modul «Trafik».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Strategi channel dijalankan oleh pemilik dan admin tepercaya — kamu punya akses lihat",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Pertanyaan ke strategist diajukan oleh yang menjalankan strategi channel."
   },
   "vi": {
     "Видео": "Video",
@@ -51935,7 +51987,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Sao chép văn bản",
     "Открыть Радар": "Mở Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Quá trình tạo mất nhiều thời gian hơn bình thường và kết nối bị ngắt. Hãy thử lại",
-    "Пост в очереди: выйдет {when}": "Bài đăng trong hàng đợi: sẽ đăng {when}"
+    "Пост в очереди: выйдет {when}": "Bài đăng trong hàng đợi: sẽ đăng {when}",
+    "Только просмотр": "Chỉ xem",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Chiến lược kênh do chủ sở hữu và quản trị viên tin cậy điều hành. Bạn xem được kế hoạch, nhiệm vụ, đối soát và module «Traffic».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Chiến lược kênh do chủ sở hữu và quản trị viên tin cậy điều hành — bạn có quyền xem",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Câu hỏi cho chiến lược gia do người điều hành chiến lược kênh đặt."
   },
   "pt": {
     "Видео": "Vídeo",
@@ -55645,7 +55701,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Copiar texto",
     "Открыть Радар": "Abrir Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "A geração demorou mais que o normal e a conexão caiu. Tente novamente",
-    "Пост в очереди: выйдет {when}": "Post na fila: sai {when}"
+    "Пост в очереди: выйдет {when}": "Post na fila: sai {when}",
+    "Только просмотр": "Somente leitura",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "A estratégia do canal é conduzida pelo proprietário e pelo administrador de confiança. Você vê o plano, as tarefas, as revisões e o módulo «Tráfego».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "A estratégia do canal é conduzida pelo proprietário e pelo administrador de confiança — você tem acesso de leitura",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "As perguntas ao estrategista são feitas por quem conduz a estratégia do canal."
   },
   "fr": {
     "Видео": "Vidéo",
@@ -59355,7 +59415,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Copier le texte",
     "Открыть Радар": "Ouvrir le Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "La génération a pris plus de temps que d'habitude et la connexion a été interrompue. Réessaie",
-    "Пост в очереди: выйдет {when}": "Post en file d'attente : publication {when}"
+    "Пост в очереди: выйдет {when}": "Post en file d'attente : publication {when}",
+    "Только просмотр": "Lecture seule",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "La stratégie de la chaîne est gérée par le propriétaire et l'administrateur de confiance. Tu peux voir le plan, les tâches, les bilans et le module « Trafic ».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "La stratégie de la chaîne est gérée par le propriétaire et l'administrateur de confiance — tu as un accès en lecture",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Les questions au stratège sont posées par celui qui gère la stratégie de la chaîne."
   },
   "it": {
     "Видео": "Video",
@@ -63065,7 +63129,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "Copia testo",
     "Открыть Радар": "Apri Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "La generazione ha richiesto più tempo del solito e la connessione si è interrotta. Riprova",
-    "Пост в очереди: выйдет {when}": "Post in coda: uscirà {when}"
+    "Пост в очереди: выйдет {when}": "Post in coda: uscirà {when}",
+    "Только просмотр": "Sola lettura",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "La strategia del canale è gestita dal proprietario e dall'amministratore fidato. Puoi vedere il piano, le attività, i controlli e il modulo «Traffico».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "La strategia del canale è gestita dal proprietario e dall'amministratore fidato: tu hai accesso in lettura",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Le domande allo stratega le pone chi gestisce la strategia del canale."
   },
   "am": {
     "Видео": "ቪዲዮ",
@@ -66775,7 +66843,11 @@ window.__I18N_DICT = {
     "Скопировать текст": "ጽሑፉን ቅዳ",
     "Открыть Радар": "ራዳርን ክፈት",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "ማመንጨቱ ከወትሮው በላይ ቆይቶ ግንኙነቱ ተቋረጠ። እንደገና ሞክር",
-    "Пост в очереди: выйдет {when}": "ልጥፉ በሰልፍ ላይ፦ {when} ይወጣል"
+    "Пост в очереди: выйдет {when}": "ልጥፉ በሰልፍ ላይ፦ {when} ይወጣል",
+    "Только просмотр": "ማየት ብቻ",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "የቻናሉን ስትራቴጂ ባለቤቱና የታመነው አስተዳዳሪ ይመራሉ። አንተ እቅዱን፣ ተግባራትን፣ ማመሳከሪያዎችንና «ትራፊክ» ሞጁሉን ማየት ትችላለህ።",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "የቻናሉን ስትራቴጂ ባለቤቱና የታመነው አስተዳዳሪ ይመራሉ — ላንተ የማየት መዳረሻ አለ",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "ለስትራቴጂስቱ ጥያቄ የሚያቀርበው የቻናሉን ስትራቴጂ የሚመራው ነው።"
   },
   "sw": {
     "Видео": "Video",
@@ -70485,6 +70557,10 @@ window.__I18N_DICT = {
     "Скопировать текст": "Nakili maandishi",
     "Открыть Радар": "Fungua Radar",
     "Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз": "Utengenezaji ulichukua muda mrefu kuliko kawaida na muunganisho ulikatika. Jaribu tena",
-    "Пост в очереди: выйдет {when}": "Chapisho limepangwa: litatoka {when}"
+    "Пост в очереди: выйдет {when}": "Chapisho limepangwa: litatoka {when}",
+    "Только просмотр": "Kutazama tu",
+    "Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».": "Mkakati wa chaneli unaendeshwa na mmiliki na msimamizi anayeaminika. Unaweza kuona mpango, kazi, ulinganisho na moduli ya «Trafiki».",
+    "Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр": "Mkakati wa chaneli unaendeshwa na mmiliki na msimamizi anayeaminika — wewe una ufikiaji wa kutazama",
+    "Вопросы стратегу задаёт тот, кто ведёт стратегию канала.": "Maswali kwa mtaalamu wa mkakati huulizwa na anayeendesha mkakati wa chaneli."
   }
 };

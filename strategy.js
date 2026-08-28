@@ -278,7 +278,12 @@
     function startWith(chId) {
         renderCenter('<div class="stg-spin"></div>', T('Секунду...'));
         apiRequest('/api/v1/strategy/start', { method: 'POST', body: JSON.stringify({ channel_id: chId }) }).then(function (r) {
-            if (!r || !r.ok) { toast(T('Доступ к стратегии не открыт.')); renderShowcase(); return; }
+            if (!r || !r.ok) {
+                toast((r && r.message) || T('Доступ к стратегии не открыт.'));
+                if (r && (r.error === 'channel_has_strategy' || r.error === 'not_owner')) load();
+                else renderShowcase();
+                return;
+            }
             _started = true;
             openTalk();
         }).catch(function () { toast(T('Не удалось начать. Попробуй ещё раз')); renderShowcase(); });
@@ -565,9 +570,10 @@
         var done = !!(_state.progress || {})[s.key];
         var open = !!_taskOpen[s.key];
         var st = taskStruct(s);
-        var mark = (s.checkable === false)
-            ? '<span class="stg-dot"></span>'
+        var mark = (s.checkable === false || !canManage())
+            ? '<span class="stg-cb' + (done ? ' done' : '') + ' ro"></span>'
             : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
+        if (s.checkable === false && !done) mark = '<span class="stg-dot"></span>';
         var min = s.minutes ? '<span class="stg-tkmin">◔ ' + s.minutes + ' ' + esc(T('мин')) + '</span>' : '';
         var row = '<div class="row">' + mark +
             '<span class="t"><b>' + esc(fixDays(s.title)) + '</b>' +
@@ -597,10 +603,12 @@
             } else if (s.link === 'traffic') {
                 acts += '<button class="stg-tkbtn' + (s.ready ? '' : ' pri') + '" data-act="trmod">' + esc(T('Открыть модуль')) + '</button>';
             }
-            if (s.has_guide && _state.access === 'full') {
+            if (s.has_guide && _state.access === 'full' && canManage()) {
                 acts += '<button class="stg-tkbtn' + (s.ready || s.link ? '' : ' pri') + '" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Пошаговый план')) + '</button>';
             }
-            acts += '<button class="stg-tkbtn" data-act="ask" data-t="' + esc(s.title || '') + '">' + esc(T('Спросить стратега')) + '</button>';
+            if (canManage()) {
+                acts += '<button class="stg-tkbtn" data-act="ask" data-t="' + esc(s.title || '') + '">' + esc(T('Спросить стратега')) + '</button>';
+            }
             body = '<div class="stg-tkv">' + kv + '<div class="acts">' + acts + '</div></div>';
         }
         return '<div class="stg-tk' + (open ? ' open' : '') + (done && s.checkable !== false ? ' on' : '') +
@@ -848,6 +856,10 @@
         var html = '<div class="stg-sec stg-dochead-sec"><div class="stg-dochead"><div class="stg-fic" style="width:44px;height:44px;">' + STG_ICON + '</div>' +
             '<div class="t"><b>' + esc(T('Стратегия:')) + ' «' + esc(doc.niche || '—') + '»</b>' +
             '<span>' + (channelLine() ? esc(channelLine()) + ' · ' : '') + esc(T('неделя')) + ' ' + week + (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '') + '</span></div></div></div>';
+        if (!canManage()) {
+            html += '<div class="stg-sec stg-ro"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-eye"></i></span> ' + esc(T('Только просмотр')) + '</div>' +
+                '<div class="stg-note" style="margin-top:8px;">' + esc(T('Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».')) + '</div></div>';
+        }
         html += weekGridHtml();
         html += firstWeekHtml();
         html += tasksHtml();
@@ -859,7 +871,9 @@
         DOC_ORDER.forEach(function (key) { html += accSecHtml(key); });
         html += reviewHtml();
         html += '<div data-sec="chat">' + chatHtml() + '</div>';
-        html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
+        if (canManage()) {
+            html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
+        }
         var host0 = document.getElementById('strategy-screen');
         var keepScroll = (host0 && host0.querySelector('.stg-dochead-sec')) ? host0.scrollTop : null;
         var chatDraftEl = document.getElementById('stg-chat-inp');
@@ -919,6 +933,8 @@
 
     var _rvOpen = {};
     var _secOpen = {};
+    function canManage() { return !_state || _state.can_manage !== false; }
+    function denyManage() { toast(T('Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр')); }
     function tx(o, tplKey, paramsKey, textKey) {
         if (!o) return '';
         var tpl = o[tplKey];
@@ -1008,11 +1024,13 @@
         }).join('');
         var used = (_state.chat && _state.chat.used) || 0;
         var quota = (_state.chat && _state.chat.quota) || 30;
+        var tail = canManage()
+            ? '<div class="stg-chatrow"><input class="stg-inp" id="stg-chat-inp" maxlength="1000" placeholder="' + esc(T('Спроси о своём канале, нише или шаге плана')) + '">' +
+              '<button class="stg-send" data-act="send"><i class="ti ti-send"></i></button></div>' +
+              '<div class="stg-quota" id="stg-quota">' + esc(T('Осталось')) + ' ' + Math.max(0, quota - used) + ' ' + esc(T('из')) + ' ' + quota + ' ' + esc(T('вопросов на этой неделе')) + '</div>'
+            : '<div class="stg-note" style="margin-top:8px;">' + esc(T('Вопросы стратегу задаёт тот, кто ведёт стратегию канала.')) + '</div>';
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Вопрос стратегу')) + '</div>' +
-            '<div id="stg-chat-msgs" style="max-height:300px;overflow-y:auto;">' + rows + '</div>' +
-            '<div class="stg-chatrow"><input class="stg-inp" id="stg-chat-inp" maxlength="1000" placeholder="' + esc(T('Спроси о своём канале, нише или шаге плана')) + '">' +
-            '<button class="stg-send" data-act="send"><i class="ti ti-send"></i></button></div>' +
-            '<div class="stg-quota" id="stg-quota">' + esc(T('Осталось')) + ' ' + Math.max(0, quota - used) + ' ' + esc(T('из')) + ' ' + quota + ' ' + esc(T('вопросов на этой неделе')) + '</div></div>';
+            '<div id="stg-chat-msgs" style="max-height:300px;overflow-y:auto;">' + rows + '</div>' + tail + '</div>';
     }
 
     var _chatBusy = false;
@@ -1497,12 +1515,19 @@
     window.__stgRouteForCheck = function (data) { ensureScreen(); route(data); };
     window.__stgDocForCheck = function (state) { _state = state; ensureScreen(); renderDoc(); };
 
+    var MANAGE_ACTS = {
+        cb: 1, how: 1, send: 1, ask: 1, restart: 1, regen: 1, tnext: 1, tbuild: 1, start: 1,
+        continue: 1, buy: 1, renew: 1, trbuild: 1, trplink: 1, trpick: 1, trgoal: 1,
+        trgoalsave: 1, trbudget: 1,
+    };
+
     function onScreenClick(ev) {
         var t = ev.target;
         var actEl = t.closest ? t.closest('[data-act]') : null;
         if (t.closest && t.closest('.stg-term')) { toggleTerm(t.closest('.stg-term')); return; }
         if (!actEl) return;
         var act = actEl.getAttribute('data-act');
+        if (MANAGE_ACTS[act] && !canManage()) { denyManage(); return; }
         if (trAction(act, actEl)) return;
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
         if (act === 'start') { startFlow(); return; }

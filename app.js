@@ -1466,6 +1466,7 @@ const TM_ACTS = [
     { k: 'pub', t: 'Публиковать · замораживать', ic: 'rocket' },
     { k: 'links', t: 'Ссылки отслеживания и кампании', ic: 'link' },
     { k: 'content', t: 'Контент-план канала', ic: 'calendar' },
+    { k: 'strategy', t: 'AI-стратегия канала', ic: 'target-arrow' },
     { k: 'del', t: 'Удалить оффер', ic: 'trash' },
     { k: 'team', t: 'Управлять командой', ic: 'users', lock: 'owner' },
 ];
@@ -1627,7 +1628,7 @@ function _tmOwnerView(d) {
     let editMode = false;
     const drawMatrix = () => {
         const cols = [['owner', 'Влад.'], ['trustee', 'Дов.'], ['manager', 'Упр.'], ['editor', 'Ред.'], ['viewer', 'Набл.']];
-        const ownerP = { view: true, edit: true, pub: true, links: true, del: true, team: true, content: true };
+        const ownerP = { view: true, edit: true, pub: true, links: true, del: true, team: true, content: true, strategy: true };
         let h = '<div class="tm-mxhead"><div class="a">Действие</div>' +
             cols.map(c => `<div class="tm-mxh h-${c[0]}"><span class="d"></span>${c[1]}</div>`).join('') + '</div>';
         TM_ACTS.forEach(a => {
