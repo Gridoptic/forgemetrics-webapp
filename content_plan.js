@@ -2932,6 +2932,17 @@
         } catch (e) { return ''; }
     }
 
+    function whenLabel(iso) {
+        if (!iso) return '';
+        try {
+            var lang = (window.getLang ? window.getLang() : 'ru') || 'ru';
+            var d = new Date(iso);
+            if (isNaN(d.getTime())) return '';
+            return d.toLocaleDateString(lang, { day: 'numeric', month: 'long' }) + ', ' +
+                d.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+        } catch (e) { return ''; }
+    }
+
     function posts() {
         return (_state.posts || []).slice().sort(function (a, b) {
             var da = a.date_iso || '', db = b.date_iso || '';
@@ -4490,7 +4501,12 @@
         apiRequest('/api/v1/content-plan/approve', { method: 'POST', body: JSON.stringify({ post_id: id }) })
             .then(function (r) {
                 _apprBusy[id] = false;
-                if (!r || !r.ok) { p.status = was; renderWeek(); } else { p.status = r.status; }
+                if (!r || !r.ok) { p.status = was; renderWeek(); return; }
+                p.status = r.status;
+                if (r.queued) {
+                    toast(T('Пост в очереди: выйдет {when}').replace('{when}', whenLabel(r.queued_at)));
+                    refreshState();
+                } else renderWeek();
             })
             .catch(function () {
                 _apprBusy[id] = false;
