@@ -1323,7 +1323,13 @@
 
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-movie"></i></span> ' + esc(T('Конвейер креативов из постов недели')) +
             (cv.per_week ? '<span class="stg-trchip">' + num(cv.ready || 0) + ' / ' + num(cv.per_week) + '</span>' : '') + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Каждый пост недели → ролик 9:16 с озвучкой и музыкой: хук, тезисы, число, призыв в канал. Готовый файл примерно через 5 минут.')) + '</div>';
+            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Каждый пост недели → ролик 9:16 с озвучкой и музыкой: хук, тезисы, число, призыв в канал. Готовый файл примерно через 5 минут.')) + '</div>' +
+            '<div class="stg-vrow"><span class="l">' + esc(T('Голос диктора')) + '</span>' +
+            '<div class="stg-seg">' +
+            '<button class="stg-segb' + (cv.voice !== 'male' ? ' on' : '') + '" data-act="trvoice" data-v="female">' + esc(T('Женский')) + '</button>' +
+            '<button class="stg-segb' + (cv.voice === 'male' ? ' on' : '') + '" data-act="trvoice" data-v="male">' + esc(T('Мужской')) + '</button>' +
+            '</div></div>' +
+            '<div class="stg-note mut" style="margin-top:4px;">' + esc(T('Применится к новым роликам — уже собранные не меняются.')) + '</div>';
         if (!cv.has_plan) {
             html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Недели в контент-плане нет — собери её, и посты появятся здесь.')) + '</div>' +
                 '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>';
@@ -1499,6 +1505,14 @@
         }
         if (act === 'trgoalsave') { trSave({ target_add: parseInt((document.getElementById('stg-trgoal-inp') || {}).value, 10) }); return true; }
         if (act === 'trbudget') { trSave({ budget: parseInt((document.getElementById('stg-trbudget-inp') || {}).value, 10) }); return true; }
+        if (act === 'trvoice') {
+            var g = el.getAttribute('data-v');
+            if (_tr && _tr.conveyor && _tr.conveyor.voice === g) return true;
+            if (_tr && _tr.conveyor) _tr.conveyor.voice = g;
+            renderTraffic();
+            trSave({ voice: g });
+            return true;
+        }
         if (act === 'trbuild') { trBuild(parseInt(el.getAttribute('data-id'), 10)); return true; }
         if (act === 'tropen') { haptic('light'); trOpenUrl(el.getAttribute('data-url')); return true; }
         if (act === 'trdesc') { trDescription(parseInt(el.getAttribute('data-id'), 10)); return true; }
