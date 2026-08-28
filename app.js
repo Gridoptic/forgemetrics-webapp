@@ -380,7 +380,7 @@ async function apiRequest(path, options = {}) {
     const url = `${API_BASE_URL}${path}`;
 
     const _ctrl = new AbortController();
-    const _to = setTimeout(() => _ctrl.abort(), 60000);
+    const _to = setTimeout(() => _ctrl.abort(), options.timeoutMs || 60000);
     try {
         const response = await fetch(url, {
             ...options,
@@ -6284,6 +6284,7 @@ async function runGenerate() {
     try {
         const result = await apiRequest('/api/v1/post/generate', {
             method: 'POST',
+            timeoutMs: 240000,
             body: JSON.stringify({
                 topic: state.post.topic,
                 use_profanity: state.post.useProfanity,
@@ -6964,6 +6965,12 @@ function handlePostApiError(err) {
 
 
     const msg = err?.message || '';
+
+    if (err?.name === 'AbortError' || msg.toLowerCase().includes('abort')) {
+        showToast((typeof t === 'function' ? t('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз') : 'Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз'), 'alert-triangle');
+        showScreen('postCreate');
+        return;
+    }
 
     if (msg.includes('404') && msg.includes('User not found')) {
         showStartBotScreen();

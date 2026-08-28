@@ -281,7 +281,7 @@
         if (goBtn) goBtn.disabled = true;
         if (res) res.innerHTML = '<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div><div class="m">' + esc(T('Переписываю в стиле твоего канала...')) + '</div></div></div>';
 
-        apiRequest('/api/v1/post/rewrite', { method: 'POST', body: JSON.stringify(body) })
+        apiRequest('/api/v1/post/rewrite', { method: 'POST', timeoutMs: 240000, body: JSON.stringify(body) })
             .then(function (r) {
                 _busy = false; if (goBtn) goBtn.disabled = false;
                 if (!r || !r.text) { if (res) res.innerHTML = ''; toast((r && r.detail) || T('Не получилось переписать — попробуй ещё раз')); return; }

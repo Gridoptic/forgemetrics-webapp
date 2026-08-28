@@ -4407,7 +4407,7 @@
         _selId = id;
         renderWeek();
         haptic('light');
-        apiRequest('/api/v1/content-plan/generate-day', { method: 'POST', body: JSON.stringify({ post_id: id }) })
+        apiRequest('/api/v1/content-plan/generate-day', { method: 'POST', timeoutMs: 240000, body: JSON.stringify({ post_id: id }) })
             .then(function (r) {
                 _dayBusy[id] = false;
                 if (r && r.ok) {
