@@ -941,7 +941,8 @@
             '<div class="pl-srow"><div class="pl-sic ' + pl.c + '">' + pl.svg + '</div>' +
             '<div class="pl-snm"><b data-act="src-rename" data-id="' + x.id + '" style="cursor:pointer;"><u>' + esc(x.name || pl.n) + '</u><i class="ti ti-pencil"></i></b>' +
             '<em>' + esc(pl.n) + '</em></div>' +
-            '<div class="pl-scpf">' + right + '</div></div>' +
+            '<div class="pl-scpf">' + right + '</div>' +
+            '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;align-self:flex-start;"><i class="ti ti-trash"></i></span></div>' +
             '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc(srcTmeShort(x.invite_link)) + '</code>' +
             '<b data-act="src-copy" data-link="' + esc(x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
             '<div class="pl-sdet">' +
@@ -949,8 +950,7 @@
             '<div class="m"><b>' + (x.joined_7d ? '+' + num(x.joined_7d) : '0') + '</b><span>' + esc(T('за 7 дней')) + '</span></div>' +
             '<span class="sv"><u>' + (x.price_rub ? num(x.price_rub) + ' \u20bd' : '0 \u20bd') + '</u>' +
             '<em data-act="src-spend" data-id="' + x.id + '">' + esc(T(x.price_rub ? 'изменить' : 'указать расход')) + '</em></span>' +
-            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span>' +
-            '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;"><i class="ti ti-trash"></i></span></div>' +
+            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span></div>' +
             (_srcHint[x.id] ? '<div class="pl-shint"><b>' + esc(T('Расход на продвижение.')) + '</b> ' +
                 esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.')) + '</div>' : '') +
             '</div>';
