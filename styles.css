@@ -4606,6 +4606,7 @@ html.cs-modal-open {
 .pw-mrows{display:flex;flex-direction:column;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:11px;padding:2px 11px;}
 .pw-r{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);min-width:0;}
 .pw-r:last-child{border-bottom:none;}
+.pw-r.pw-nline{border-bottom:none;}
 .pw-r .n{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);flex-shrink:1;min-width:0;overflow:hidden;white-space:nowrap;}
 .pw-hintq{position:relative;display:inline-flex;align-items:center;justify-content:center;
   width:16px;height:16px;border-radius:5px;margin:-3px 0;

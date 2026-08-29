@@ -893,7 +893,7 @@ function pwRenderMetrics(pulse) {
         var nameTx = escapeHtml(m.label) +
             (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '') +
             (_pfm ? ` <i class="ti ti-chevron-down pw-pch${pwPriceOpen ? ' up' : ''}"></i>` : '');
-        var rowTx = `<div class="pw-r${_pfm ? ' pw-tap' : ''}"${_pfm ? ' id="pw-price-row"' : ''}><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
+        var rowTx = `<div class="pw-r${_pfm ? ' pw-tap' : ''}${id === 'cpf' ? ' pw-nline' : ''}"${_pfm ? ' id="pw-price-row"' : ''}><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
         if (_pfm) rowTx += pwPricePanel(pulse);
         if (id === 'cpf') {
             var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
