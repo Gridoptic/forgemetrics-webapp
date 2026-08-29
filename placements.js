@@ -949,7 +949,8 @@
             '<div class="m"><b>' + (x.joined_7d ? '+' + num(x.joined_7d) : '0') + '</b><span>' + esc(T('за 7 дней')) + '</span></div>' +
             '<span class="sv"><u>' + (x.price_rub ? num(x.price_rub) + ' \u20bd' : '0 \u20bd') + '</u>' +
             '<em data-act="src-spend" data-id="' + x.id + '">' + esc(T(x.price_rub ? 'изменить' : 'указать расход')) + '</em></span>' +
-            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span></div>' +
+            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span>' +
+            '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;"><i class="ti ti-trash"></i></span></div>' +
             (_srcHint[x.id] ? '<div class="pl-shint"><b>' + esc(T('Расход на продвижение.')) + '</b> ' +
                 esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.')) + '</div>' : '') +
             '</div>';
@@ -989,8 +990,7 @@
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Название источника')) + '</div>' +
             '<input class="pl-inp" id="pl-src-name" maxlength="80" autocomplete="off" value="' + esc((l && l.name) || '') + '">' +
-            '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>' +
-            '<button class="pl-revoke danger" data-act="src-del" data-id="' + id + '" style="margin-top:8px;width:100%;">' + esc(T('Удалить источник')) + '</button>';
+            '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
         sh.classList.add('on'); bg.classList.add('on');
     }
 
@@ -1515,7 +1515,7 @@
                 if (!ok) return;
                 apiRequest('/api/v1/placements/links/' + sdid + '/delete', { method: 'POST', body: '{}' })
                     .then(function (r) {
-                        if (r && r.ok) { haptic('medium'); closeSheet(); load(); }
+                        if (r && r.ok) { haptic('medium'); load(); }
                         else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                     }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             });
