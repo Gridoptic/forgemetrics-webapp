@@ -3742,7 +3742,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Link copied — place it in the video or profile description",
   "Источник создан, ссылка скопирована — размести её на площадке": "Source created, link copied — place it on the platform",
   "Укажи название источника.": "Enter a source name.",
-  "Размещения в Telegram": "Telegram placements"
+  "Размещения в Telegram": "Telegram placements",
+  "Удалить источник": "Delete source",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "The source link will be revoked in Telegram and its statistics deleted. Continue?"
  },
  "es": {
   "Видео": "Vídeo",
@@ -7487,7 +7489,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Enlace copiado — colócalo en la descripción del vídeo o del perfil",
   "Источник создан, ссылка скопирована — размести её на площадке": "Fuente creada, enlace copiado — colócalo en la plataforma",
   "Укажи название источника.": "Indica el nombre de la fuente.",
-  "Размещения в Telegram": "Colocaciones en Telegram"
+  "Размещения в Telegram": "Colocaciones en Telegram",
+  "Удалить источник": "Eliminar fuente",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "El enlace de la fuente se revocará en Telegram y sus estadísticas se eliminarán. ¿Continuar?"
  },
  "de": {
   "Видео": "Video",
@@ -11232,7 +11236,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Link kopiert — platziere ihn in der Video- oder Profilbeschreibung",
   "Источник создан, ссылка скопирована — размести её на площадке": "Quelle erstellt, Link kopiert — platziere ihn auf der Plattform",
   "Укажи название источника.": "Gib einen Quellennamen an.",
-  "Размещения в Telegram": "Telegram-Platzierungen"
+  "Размещения в Telegram": "Telegram-Platzierungen",
+  "Удалить источник": "Quelle löschen",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Der Quell-Link wird in Telegram widerrufen und die Statistik gelöscht. Fortfahren?"
  },
  "kk": {
   "Видео": "Видео",
@@ -14976,7 +14982,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Сілтеме көшірілді — бейне не профиль сипаттамасына қой",
   "Источник создан, ссылка скопирована — размести её на площадке": "Көз жасалды, сілтеме көшірілді — алаңға орналастыр",
   "Укажи название источника.": "Көз атауын көрсет.",
-  "Размещения в Telegram": "Telegram орналастырулары"
+  "Размещения в Telegram": "Telegram орналастырулары",
+  "Удалить источник": "Көзді жою",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Көз сілтемесі Telegram-да кері қайтарылып, статистикасы жойылады. Жалғастыру керек пе?"
  },
  "uz": {
   "Видео": "Video",
@@ -18721,7 +18729,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Havola nusxalandi — video yoki profil tavsifiga joylashtir",
   "Источник создан, ссылка скопирована — размести её на площадке": "Manba yaratildi, havola nusxalandi — maydonga joylashtir",
   "Укажи название источника.": "Manba nomini kirit.",
-  "Размещения в Telegram": "Telegram joylashuvlari"
+  "Размещения в Telegram": "Telegram joylashuvlari",
+  "Удалить источник": "Manbani o‘chirish",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Manba havolasi Telegram’da bekor qilinadi va statistikasi o‘chiriladi. Davom ettirilsinmi?"
  },
  "be": {
   "Видео": "Відэа",
@@ -22465,7 +22475,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Спасылка скапіравана — размясці яе ў апісанні роліка або профілю",
   "Источник создан, ссылка скопирована — размести её на площадке": "Крыніца створана, спасылка скапіравана — размясці яе на пляцоўцы",
   "Укажи название источника.": "Пазнач назву крыніцы.",
-  "Размещения в Telegram": "Размяшчэнні ў Telegram"
+  "Размещения в Telegram": "Размяшчэнні ў Telegram",
+  "Удалить источник": "Выдаліць крыніцу",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Спасылка крыніцы будзе адклікана ў Telegram, статыстыка выдалена. Працягнуць?"
  },
  "az": {
   "Видео": "Video",
@@ -26210,7 +26222,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Keçid kopyalandı — video və ya profil təsvirinə yerləşdir",
   "Источник создан, ссылка скопирована — размести её на площадке": "Mənbə yaradıldı, keçid kopyalandı — platformaya yerləşdir",
   "Укажи название источника.": "Mənbə adını qeyd et.",
-  "Размещения в Telegram": "Telegram yerləşdirmələri"
+  "Размещения в Telegram": "Telegram yerləşdirmələri",
+  "Удалить источник": "Mənbəni sil",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Mənbə keçidi Telegram-da ləğv ediləcək və statistikası silinəcək. Davam edilsin?"
  },
  "ar": {
   "Видео": "فيديو",
@@ -29955,7 +29969,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "نُسخ الرابط — ضعه في وصف الفيديو أو الملف الشخصي",
   "Источник создан, ссылка скопирована — размести её на площадке": "أُنشئ المصدر ونُسخ الرابط — ضعه على المنصة",
   "Укажи название источника.": "أدخل اسم المصدر.",
-  "Размещения в Telegram": "مواضع تيليغرام"
+  "Размещения в Telegram": "مواضع تيليغرام",
+  "Удалить источник": "حذف المصدر",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "سيُلغى رابط المصدر في تيليغرام وتُحذف إحصاءاته. متابعة؟"
  },
  "fa": {
   "Видео": "ویدیو",
@@ -33700,7 +33716,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "لینک کپی شد — در توضیحات ویدیو یا پروفایل قرار بده",
   "Источник создан, ссылка скопирована — размести её на площадке": "منبع ساخته و لینک کپی شد — در پلتفرم قرار بده",
   "Укажи название источника.": "نام منبع را وارد کن.",
-  "Размещения в Telegram": "جایگذاری‌های تلگرام"
+  "Размещения в Telegram": "جایگذاری‌های تلگرام",
+  "Удалить источник": "حذف منبع",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "لینک منبع در تلگرام لغو و آمار آن حذف می‌شود. ادامه می‌دهید؟"
  },
  "tr": {
   "Видео": "Video",
@@ -37445,7 +37463,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Bağlantı kopyalandı — video veya profil açıklamasına yerleştir",
   "Источник создан, ссылка скопирована — размести её на площадке": "Kaynak oluşturuldu, bağlantı kopyalandı — platforma yerleştir",
   "Укажи название источника.": "Kaynak adını gir.",
-  "Размещения в Telegram": "Telegram yerleşimleri"
+  "Размещения в Telegram": "Telegram yerleşimleri",
+  "Удалить источник": "Kaynağı sil",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Kaynak bağlantısı Telegram’da iptal edilecek ve istatistikleri silinecek. Devam edilsin mi?"
  },
  "hi": {
   "Видео": "वीडियो",
@@ -41190,7 +41210,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "लिंक कॉपी हुआ — वीडियो या प्रोफ़ाइल विवरण में लगाएँ",
   "Источник создан, ссылка скопирована — размести её на площадке": "स्रोत बना, लिंक कॉपी हुआ — प्लेटफ़ॉर्म पर लगाएँ",
   "Укажи название источника.": "स्रोत का नाम दर्ज करें.",
-  "Размещения в Telegram": "Telegram प्लेसमेंट"
+  "Размещения в Telegram": "Telegram प्लेसमेंट",
+  "Удалить источник": "स्रोत हटाएँ",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "स्रोत लिंक Telegram में रद्द होगा और उसके आँकड़े हटेंगे। जारी रखें?"
  },
  "bn": {
   "Видео": "ভিডিও",
@@ -44935,7 +44957,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "লিংক কপি হয়েছে — ভিডিও বা প্রোফাইল বিবরণে বসান",
   "Источник создан, ссылка скопирована — размести её на площадке": "উৎস তৈরি, লিংক কপি হয়েছে — প্ল্যাটফর্মে বসান",
   "Укажи название источника.": "উৎসের নাম লিখুন.",
-  "Размещения в Telegram": "Telegram প্লেসমেন্ট"
+  "Размещения в Telegram": "Telegram প্লেসমেন্ট",
+  "Удалить источник": "উৎস মুছুন",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "উৎস লিংক Telegram-এ বাতিল হবে এবং এর পরিসংখ্যান মুছে যাবে। চালিয়ে যাবেন?"
  },
  "id": {
   "Видео": "Video",
@@ -48680,7 +48704,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Tautan disalin — letakkan di deskripsi video atau profil",
   "Источник создан, ссылка скопирована — размести её на площадке": "Sumber dibuat, tautan disalin — letakkan di platform",
   "Укажи название источника.": "Masukkan nama sumber.",
-  "Размещения в Telegram": "Penempatan Telegram"
+  "Размещения в Telegram": "Penempatan Telegram",
+  "Удалить источник": "Hapus sumber",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Tautan sumber akan dicabut di Telegram dan statistiknya dihapus. Lanjutkan?"
  },
  "vi": {
   "Видео": "Video",
@@ -52425,7 +52451,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Đã sao chép liên kết — đặt vào mô tả video hoặc hồ sơ",
   "Источник создан, ссылка скопирована — размести её на площадке": "Đã tạo nguồn, liên kết đã sao chép — đặt lên nền tảng",
   "Укажи название источника.": "Nhập tên nguồn.",
-  "Размещения в Telegram": "Vị trí Telegram"
+  "Размещения в Telegram": "Vị trí Telegram",
+  "Удалить источник": "Xoá nguồn",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Liên kết nguồn sẽ bị thu hồi trên Telegram và thống kê bị xoá. Tiếp tục?"
  },
  "pt": {
   "Видео": "Vídeo",
@@ -56170,7 +56198,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Link copiado — coloque na descrição do vídeo ou do perfil",
   "Источник создан, ссылка скопирована — размести её на площадке": "Fonte criada, link copiado — coloque na plataforma",
   "Укажи название источника.": "Informe o nome da fonte.",
-  "Размещения в Telegram": "Colocações no Telegram"
+  "Размещения в Telegram": "Colocações no Telegram",
+  "Удалить источник": "Excluir fonte",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "O link da fonte será revogado no Telegram e as estatísticas excluídas. Continuar?"
  },
  "fr": {
   "Видео": "Vidéo",
@@ -59915,7 +59945,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Lien copié — place-le dans la description de la vidéo ou du profil",
   "Источник создан, ссылка скопирована — размести её на площадке": "Source créée, lien copié — place-le sur la plateforme",
   "Укажи название источника.": "Indique le nom de la source.",
-  "Размещения в Telegram": "Placements Telegram"
+  "Размещения в Telegram": "Placements Telegram",
+  "Удалить источник": "Supprimer la source",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Le lien de la source sera révoqué dans Telegram et ses statistiques supprimées. Continuer ?"
  },
  "it": {
   "Видео": "Video",
@@ -63660,7 +63692,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Link copiato — inseriscilo nella descrizione del video o del profilo",
   "Источник создан, ссылка скопирована — размести её на площадке": "Fonte creata, link copiato — inseriscilo sulla piattaforma",
   "Укажи название источника.": "Indica il nome della fonte.",
-  "Размещения в Telegram": "Posizionamenti Telegram"
+  "Размещения в Telegram": "Posizionamenti Telegram",
+  "Удалить источник": "Elimina fonte",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Il link della fonte sarà revocato su Telegram e le statistiche eliminate. Continuare?"
  },
  "am": {
   "Видео": "ቪዲዮ",
@@ -67405,7 +67439,9 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "ማገናኛው ተቀድቷል — በቪዲዮ ወይም መገለጫ መግለጫ ውስጥ አስቀምጠው",
   "Источник создан, ссылка скопирована — размести её на площадке": "ምንጭ ተፈጥሯል፣ ማገናኛው ተቀድቷል — በመድረኩ ላይ አስቀምጠው",
   "Укажи название источника.": "የምንጭ ስም አስገባ.",
-  "Размещения в Telegram": "የTelegram ማስቀመጫዎች"
+  "Размещения в Telegram": "የTelegram ማስቀመጫዎች",
+  "Удалить источник": "ምንጭ ሰርዝ",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "የምንጩ ማገናኛ በTelegram ይሰረዛል፣ ስታቲስቲክሱም ይጠፋል። ይቀጥሉ?"
  },
  "sw": {
   "Видео": "Video",
@@ -71150,6 +71186,8 @@ window.__I18N_DICT = {
   "Ссылка скопирована — размести её в описании ролика или профиля": "Kiungo kimenakiliwa — kiweke kwenye maelezo ya video au wasifu",
   "Источник создан, ссылка скопирована — размести её на площадке": "Chanzo kimeundwa, kiungo kimenakiliwa — kiweke kwenye jukwaa",
   "Укажи название источника.": "Weka jina la chanzo.",
-  "Размещения в Telegram": "Nafasi za Telegram"
+  "Размещения в Telegram": "Nafasi za Telegram",
+  "Удалить источник": "Futa chanzo",
+  "Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?": "Kiungo cha chanzo kitabatilishwa kwenye Telegram na takwimu zake kufutwa. Endelea?"
  }
 };

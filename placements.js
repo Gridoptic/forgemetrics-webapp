@@ -989,7 +989,8 @@
         sh.innerHTML = '<div class="pl-grip"></div>' +
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Название источника')) + '</div>' +
             '<input class="pl-inp" id="pl-src-name" maxlength="80" autocomplete="off" value="' + esc((l && l.name) || '') + '">' +
-            '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
+            '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>' +
+            '<button class="pl-revoke danger" data-act="src-del" data-id="' + id + '" style="margin-top:8px;width:100%;">' + esc(T('Удалить источник')) + '</button>';
         sh.classList.add('on'); bg.classList.add('on');
     }
 
@@ -1506,6 +1507,18 @@
                     if (r && r.ok) { haptic('light'); closeSheet(); load(); }
                     else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'src-del') {
+            var sdid = parseInt(b.getAttribute('data-id'), 10);
+            domConfirm(T('Ссылка источника будет отозвана в Telegram, статистика по нему удалена. Продолжить?'), T('Удалить источник'), true).then(function (ok) {
+                if (!ok) return;
+                apiRequest('/api/v1/placements/links/' + sdid + '/delete', { method: 'POST', body: '{}' })
+                    .then(function (r) {
+                        if (r && r.ok) { haptic('medium'); closeSheet(); load(); }
+                        else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                    }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            });
             return;
         }
         if (act === 'src-add') { haptic('light'); openSrcAddSheet(); return; }
