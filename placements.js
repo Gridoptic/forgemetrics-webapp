@@ -176,22 +176,22 @@
             '.pl-snm b u{text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-snm b i{color:#565b73;font-size:12px;flex:0 0 auto;}',
             '.pl-snm em{display:block;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:0.05em;color:#8990a8;text-transform:uppercase;margin-top:1px;}',
-            '.pl-scpf{text-align:right;flex:0 0 auto;}',
-            '.pl-scpf b{display:block;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;}',
-            '.pl-scpf span{display:block;font-size:11px;color:#8990a8;}',
-            '.pl-scpf b.g{color:#4ade80;}.pl-scpf b.w{color:#fbbf24;}.pl-scpf b.r{color:#f87171;}',
             '.pl-schip{display:flex;align-items:center;gap:8px;margin:0 14px 4px;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);}',
             '.pl-schip s{text-decoration:none;color:#565b73;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;font-size:9.5px;flex:0 0 auto;}',
             '.pl-schip code{flex:1;min-width:0;font-family:ui-monospace,monospace;font-size:11.5px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-schip b{color:#818cf8;font-weight:700;font-size:11px;flex:0 0 auto;cursor:pointer;}',
-            '.pl-sdet{border-top:1px solid rgba(255,255,255,0.07);padding:10px 14px 12px;display:flex;gap:16px;align-items:center;}',
-            '.pl-sdet .m{flex:1;}.pl-sdet .m b{display:block;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;}',
-            '.pl-sdet .m span{display:block;font-size:10.5px;color:#8990a8;margin-top:1px;}',
-            '.pl-sdet .sv{font-size:12px;color:#8990a8;}.pl-sdet .sv u{color:#e8e8ed;text-decoration:none;font-weight:700;}.pl-sdet .sv em{font-style:normal;color:#818cf8;font-weight:600;margin-left:6px;cursor:pointer;}',
             '.pl-sq{width:26px;height:26px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:13px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;font-weight:700;cursor:pointer;}',
             '.pl-sq.on{color:#818cf8;border-color:rgba(129,140,248,0.6);}',
             '.pl-shint{border-top:1px solid rgba(255,255,255,0.07);background:rgba(129,140,248,0.06);padding:11px 14px;font-size:12.5px;line-height:1.55;color:#8990a8;}',
             '.pl-shint b{color:#e8e8ed;}',
+            '.pl-tiles{display:flex;gap:8px;padding:0 14px 14px;}',
+            '.pl-tile{flex:1;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.07);border-radius:12px;padding:9px 10px 8px;min-width:0;}',
+            '.pl-tile b{display:block;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-tile b small{font-size:11px;font-weight:700;}',
+            '.pl-tile span{display:block;font-size:10px;color:#8990a8;margin-top:1px;line-height:1.35;}',
+            '.pl-tile.act{border-style:dashed;border-color:rgba(129,140,248,0.45);cursor:pointer;}',
+            '.pl-tile.act b{color:#818cf8;font-size:12.5px;padding-top:3px;}',
+            '.pl-tile b.g{color:#4ade80;}.pl-tile b.w{color:#fbbf24;}.pl-tile b.r{color:#f87171;}.pl-tile b.m{color:#8990a8;font-size:12.5px;padding-top:3px;}',
             '.pl-sadd{display:flex;align-items:center;justify-content:center;gap:8px;border:1px dashed rgba(255,255,255,0.14);border-radius:14px;padding:11px;color:#8990a8;font-size:12.5px;font-weight:600;margin-bottom:10px;cursor:pointer;width:100%;background:transparent;}',
             '.pl-sbest{position:relative;overflow:visible;}',
             '.pl-sbest:before{content:\"\";position:absolute;inset:0;border-radius:18px;pointer-events:none;border:1px solid rgba(74,222,128,0.45);}',
@@ -932,25 +932,29 @@
         var pl = SRC_PLATS[x.platform_key] || { n: x.platform_key, c: 'dz', svg: '' };
         var cpf = null;
         if (x.price_rub && x.joined) cpf = Math.round(x.price_rub / x.joined);
-        var right;
-        if (!x.joined) right = '<span style="display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(141,147,168,0.12);color:#8990a8;border:1px solid rgba(141,147,168,0.25);">' + esc(T('нет данных')) + '</span>';
-        else if (!x.price_rub) right = '<b class="g">' + esc(T('органика')) + '</b><span>' + esc(T('расход')) + ' 0 \u20bd</span>';
-        else right = '<b class="' + (cpf <= 80 ? 'g' : cpf <= 150 ? 'w' : 'r') + '">' + num(cpf) + ' \u20bd</b><span>' + esc(T('за подписчика')) + '</span>';
+        var priceTile;
+        if (!x.joined) priceTile = '<b class="m">' + esc(T('нет данных')) + '</b>';
+        else if (!x.price_rub) priceTile = '<b class="g">' + esc(T('органика')) + '</b>';
+        else priceTile = '<b class="' + (cpf <= 80 ? 'g' : cpf <= 150 ? 'w' : 'r') + '">' + num(cpf) + ' \u20bd</b>';
+        var spendTile = x.price_rub
+            ? '<b>' + num(x.price_rub) + ' \u20bd</b><span>' + esc(T('изменить')) + '</span>'
+            : '<b>+ ' + esc(T('расход')) + '</b><span>' + esc(T('не указан')) + '</span>';
         var h = '<div class="pl-src' + (best ? ' pl-sbest' : '') + '">' +
             (best ? '<span class="pl-sbestlab">' + esc(T('МИНИМАЛЬНАЯ ЦЕНА')) + '</span>' : '') +
             '<div class="pl-srow"><div class="pl-sic ' + pl.c + '">' + pl.svg + '</div>' +
             '<div class="pl-snm"><b data-act="src-rename" data-id="' + x.id + '" style="cursor:pointer;"><u>' + esc(x.name || pl.n) + '</u><i class="ti ti-pencil"></i></b>' +
             '<em>' + esc(pl.n) + '</em></div>' +
-            '<div class="pl-scpf">' + right + '</div>' +
-            '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;align-self:flex-start;"><i class="ti ti-trash"></i></span></div>' +
+            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span>' +
+            '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;"><i class="ti ti-trash"></i></span></div>' +
             '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc(srcTmeShort(x.invite_link)) + '</code>' +
             '<b data-act="src-copy" data-link="' + esc(x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
-            '<div class="pl-sdet">' +
-            '<div class="m"><b>' + num(x.joined || 0) + '</b><span>' + esc(T('вступило всего')) + '</span></div>' +
-            '<div class="m"><b>' + (x.joined_7d ? '+' + num(x.joined_7d) : '0') + '</b><span>' + esc(T('за 7 дней')) + '</span></div>' +
-            '<span class="sv"><u>' + (x.price_rub ? num(x.price_rub) + ' \u20bd' : '0 \u20bd') + '</u>' +
-            '<em data-act="src-spend" data-id="' + x.id + '">' + esc(T(x.price_rub ? 'изменить' : 'указать расход')) + '</em></span>' +
-            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span></div>' +
+            '<div class="pl-tiles">' +
+            '<div class="pl-tile"><b>' + num(x.joined || 0) +
+            (x.joined_7d ? ' <small style="color:#4ade80;">+' + num(x.joined_7d) + '</small>' : '') +
+            '</b><span>' + esc(T('вступило · за 7 дней')) + '</span></div>' +
+            '<div class="pl-tile">' + priceTile + '<span>' + esc(T('цена подписчика')) + '</span></div>' +
+            '<div class="pl-tile act" data-act="src-spend" data-id="' + x.id + '">' + spendTile + '</div>' +
+            '</div>' +
             (_srcHint[x.id] ? '<div class="pl-shint"><b>' + esc(T('Расход на продвижение.')) + '</b> ' +
                 esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.')) + '</div>' : '') +
             '</div>';
