@@ -192,6 +192,23 @@
             '.pl-tile.act{border-style:dashed;border-color:rgba(129,140,248,0.45);cursor:pointer;}',
             '.pl-tile.act b{color:#818cf8;font-size:12.5px;padding-top:3px;}',
             '.pl-tile b.g{color:#4ade80;}.pl-tile b.w{color:#fbbf24;}.pl-tile b.r{color:#f87171;}.pl-tile b.m{color:#8990a8;font-size:12.5px;padding-top:3px;}',
+            '.pl-skind{display:inline-flex;align-items:center;gap:6px;margin:0 14px 8px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;}',
+            '.pl-skind i{font-size:12px;}',
+            '.pl-skind.cl{background:rgba(74,222,128,0.12);color:#4ade80;border:0.5px solid rgba(74,222,128,0.28);}',
+            '.pl-skind.op{background:rgba(240,163,94,0.10);color:#f0a35e;border:0.5px solid rgba(240,163,94,0.32);}',
+            '.pl-skind.nm{background:rgba(141,147,168,0.10);color:#8990a8;border:0.5px solid rgba(141,147,168,0.25);}',
+            '.pl-schip.fmtr{border-color:rgba(240,163,94,0.32);background:rgba(240,163,94,0.08);}',
+            '.pl-vsb{border:0.5px solid rgba(255,255,255,0.09);background:rgba(10,13,24,0.35);border-radius:10px;padding:9px 11px;margin:7px 0;}',
+            '.pl-vsb h5{margin:0 0 5px;font-size:11.5px;font-weight:800;color:#e8e8ed;font-family:ui-monospace,monospace;}',
+            '.pl-vsb p{margin:0 0 4px;display:flex;gap:7px;font-size:11.5px;line-height:1.5;}',
+            '.pl-vsb p:last-child{margin:0;}',
+            '.pl-vsb p i{font-style:normal;font-weight:800;flex:0 0 auto;width:10px;}',
+            '.pl-vsb p.g i{color:#4ade80;}.pl-vsb p.r i{color:#f87171;}',
+            '.pl-mopt{border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:12px 13px;margin-bottom:9px;cursor:pointer;position:relative;}',
+            '.pl-mopt b{display:block;font-size:13.5px;font-weight:700;margin-bottom:3px;padding-right:92px;}',
+            '.pl-mopt span{display:block;font-size:11.5px;color:#8990a8;line-height:1.5;}',
+            '.pl-mtag{position:absolute;top:12px;right:13px;font-size:9px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;}',
+            '.pl-mtag.g{background:rgba(74,222,128,0.14);color:#4ade80;}.pl-mtag.o{background:rgba(240,163,94,0.10);color:#f0a35e;}',
             '.pl-sadd{display:flex;align-items:center;justify-content:center;gap:8px;border:1px dashed rgba(255,255,255,0.14);border-radius:14px;padding:11px;color:#8990a8;font-size:12.5px;font-weight:600;margin-bottom:10px;cursor:pointer;width:100%;background:transparent;}',
             '.pl-sbest{position:relative;overflow:visible;}',
             '.pl-sbest:before{content:\"\";position:absolute;inset:0;border-radius:18px;pointer-events:none;border:1px solid rgba(74,222,128,0.45);}',
@@ -924,8 +941,37 @@
     };
     var _srcHint = {};
 
+    function isChPrivate() {
+        var c = curChannel();
+        return !!(c && c.is_private);
+    }
+
+    function srcHintInner() {
+        var h = '';
+        if (!isChPrivate()) {
+            h += '<b>' + esc(T('Два вида ссылки — в чём разница')) + '</b>' +
+                '<div class="pl-vsb"><h5>t.me — ' + esc(T('прямая')) + '</h5>' +
+                '<p class="g"><i>+</i><span>' + esc(T('Максимальная конверсия: человек попадает в Telegram сразу, без промежуточных шагов.')) + '</span></p>' +
+                '<p class="g"><i>+</i><span>' + esc(T('На закрытом канале работает без компромиссов: каждое вступление приходит с меткой — точный учёт подписчиков по каждому источнику.')) + '</span></p>' +
+                '<p class="r"><i>\u2212</i><span>' + esc(T('На публичном канале замер не работает: Telegram не сообщает, по какой ссылке человек вступил, — карточка источника останется без данных.')) + '</span></p></div>' +
+                '<div class="pl-vsb"><h5>fmtr.click — ' + esc(T('со счётчиком')) + '</h5>' +
+                '<p class="g"><i>+</i><span>' + esc(T('Единственный способ замера на публичном канале: каждый переход фиксируется, подписчики привязываются к источнику.')) + '</span></p>' +
+                '<p class="g"><i>+</i><span>' + esc(T('Видно и переходы, и подписчиков — по ним считается цена подписчика с площадки.')) + '</span></p>' +
+                '<p class="r"><i>\u2212</i><span>' + esc(T('Один промежуточный шаг в доли секунды: часть аудитории может отсеяться, конверсия перехода немного ниже, чем у прямой ссылки.')) + '</span></p></div>';
+        }
+        h += '<b>' + esc(T('Расход на продвижение.')) + '</b> ' +
+            esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.'));
+        return h;
+    }
+
+    function srcLink(x) {
+        return x.click_code ? (CLICK_BASE + '/r/' + x.click_code) : (x.invite_link || '');
+    }
+
     function srcCard(x, best) {
         var pl = SRC_PLATS[x.platform_key] || { n: x.platform_key, c: 'dz', svg: '' };
+        var pub = !isChPrivate();
+        var slink = srcLink(x);
         var cpf = null;
         if (x.price_rub && x.joined) cpf = Math.round(x.price_rub / x.joined);
         var priceTile;
@@ -935,6 +981,20 @@
         var spendTile = x.price_rub
             ? '<b>' + num(x.price_rub) + ' \u20bd</b><span>' + esc(T('изменить')) + '</span>'
             : '<b>+ ' + esc(T('расход')) + '</b><span>' + esc(T('не указан')) + '</span>';
+        var kind;
+        if (!pub) kind = '<span class="pl-skind cl"><i class="ti ti-lock"></i>' + esc(T('Закрытый канал · точный учёт')) + '</span>';
+        else if (x.click_code) kind = '<span class="pl-skind op"><i class="ti ti-click"></i>' + esc(T('Публичный канал · замер по переходу')) + '</span>';
+        else kind = '<span class="pl-skind nm"><i class="ti ti-unlink"></i>' + esc(T('Публичный канал · без замера')) + '</span>';
+        var tile1;
+        if (x.click_code) {
+            tile1 = '<div class="pl-tile"><b>' + num(x.clicks || 0) +
+                (x.clicks_7d ? ' <small style="color:#4ade80;">+' + num(x.clicks_7d) + '</small>' : '') +
+                '</b><span>' + esc(T('перешло · за 7 дней')) + '</span></div>';
+        } else {
+            tile1 = '<div class="pl-tile"><b>' + num(x.joined || 0) +
+                (x.joined_7d ? ' <small style="color:#4ade80;">+' + num(x.joined_7d) + '</small>' : '') +
+                '</b><span>' + esc(T('вступило · за 7 дней')) + '</span></div>';
+        }
         var h = '<div class="pl-src' + (best ? ' pl-sbest' : '') + '">' +
             (best ? '<span class="pl-sbestlab">' + esc(T('МИНИМАЛЬНАЯ ЦЕНА')) + '</span>' : '') +
             '<div class="pl-srow"><div class="pl-sic ' + pl.c + '">' + pl.svg + '</div>' +
@@ -942,17 +1002,15 @@
             '<em>' + esc(pl.n) + '</em></div>' +
             '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span>' +
             '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;"><i class="ti ti-trash"></i></span></div>' +
-            '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc((x.invite_link || '').replace('https://', '')) + '</code>' +
-            '<b data-act="src-copy" data-link="' + esc(x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
+            kind +
+            '<div class="pl-schip' + (x.click_code ? ' fmtr' : '') + '"><s>' + esc(T('метка источника')) + '</s><code>' + esc(slink.replace('https://', '')) + '</code>' +
+            '<b data-act="src-copy" data-link="' + esc(slink) + '">' + esc(T('копировать')) + '</b></div>' +
             '<div class="pl-tiles">' +
-            '<div class="pl-tile"><b>' + num(x.joined || 0) +
-            (x.joined_7d ? ' <small style="color:#4ade80;">+' + num(x.joined_7d) + '</small>' : '') +
-            '</b><span>' + esc(T('вступило · за 7 дней')) + '</span></div>' +
+            tile1 +
             '<div class="pl-tile">' + priceTile + '<span>' + esc(T('цена подписчика')) + '</span></div>' +
             '<div class="pl-tile act" data-act="src-spend" data-id="' + x.id + '">' + spendTile + '</div>' +
             '</div>' +
-            (_srcHint[x.id] ? '<div class="pl-shint"><b>' + esc(T('Расход на продвижение.')) + '</b> ' +
-                esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.')) + '</div>' : '') +
+            (_srcHint[x.id] ? '<div class="pl-shint">' + srcHintInner() + '</div>' : '') +
             '</div>';
         return h;
     }
@@ -965,8 +1023,8 @@
         h += '<div class="pl-how"><div class="pl-howt" data-act="src-how"><i class="ti ti-help"></i> ' + esc(T('Как это работает')) +
             '<span id="pl-srchowarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (guideOpen ? '\u25b2' : '\u25bc') + '</span></div>' +
             '<div id="pl-srchowbody" style="display:' + (guideOpen ? 'block' : 'none') + ';padding:4px 2px 8px;font-size:12.5px;line-height:1.55;color:#8990a8;">' +
-            '<b style="color:#e8e8ed;">' + esc(T('Как устроена ссылка.')) + '</b> ' + esc(T('Для каждого источника создаётся отдельная пригласительная ссылка Telegram (t.me/+…). Она отображается в карточке источника — скопируй её и размести в описании ролика или профиля на площадке. Заходить в настройки канала не требуется. Название источника меняется по значку карандаша — удобно, когда на одной площадке несколько аккаунтов.')) + '<br><br>' +
-            '<b style="color:#e8e8ed;">' + esc(T('Как считается.')) + '</b> ' + esc(T('Пользователь переходит по ссылке напрямую в Telegram, канал открывается, заявка подтверждается автоматически — подписчик относится к этому источнику.')) + '</div></div>';
+            '<b style="color:#e8e8ed;">' + esc(T('Как устроена ссылка.')) + '</b> ' + esc(T('Для каждого источника создаётся отдельная ссылка-метка. На закрытом канале это прямая пригласительная Telegram (t.me/+…), на публичном — ссылка со счётчиком переходов. Скопируй её из карточки источника и размести в описании ролика или профиля на площадке. Название источника меняется по значку карандаша — удобно, когда на одной площадке несколько аккаунтов.')) + '<br><br>' +
+            '<b style="color:#e8e8ed;">' + esc(T('Как считается.')) + '</b> ' + esc(T('На закрытом канале подписчик привязывается к источнику при вступлении по пригласительной ссылке. На публичном канале фиксируется каждый переход по ссылке-метке, а вступления сразу после перехода относятся к этому источнику.')) + '</div></div>';
         if (srcs.length) {
             var scored = srcs.slice().sort(function (a, b) { return (b.joined || 0) - (a.joined || 0); });
             var bestId = null, bestCpf = null;
@@ -991,6 +1049,35 @@
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Название источника')) + '</div>' +
             '<input class="pl-inp" id="pl-src-name" maxlength="80" autocomplete="off" value="' + esc((l && l.name) || '') + '">' +
             '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
+        sh.classList.add('on'); bg.classList.add('on');
+    }
+
+    function srcCreate(spk, meas) {
+        apiRequest('/api/v1/placements/sources',
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId, platform_key: spk, measure: !!meas }) })
+            .then(function (r) {
+                if (r && r.ok) {
+                    haptic('light'); closeSheet(); load();
+                    var su = srcLink(r.item || {});
+                    if (su) copyText(su, T('Источник создан, ссылка скопирована — размести её на площадке'));
+                } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+            }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+    }
+
+    function openSrcMeasureSheet(key) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Как замерять источник')) + '</div>' +
+            '<div style="font-size:12.5px;color:#8990a8;margin:4px 0 10px;">' + esc(T('Канал публичный. Выбери, что важнее.')) + '</div>' +
+            '<div class="pl-mopt" data-act="src-add-go" data-key="' + esc(key) + '" data-meas="1">' +
+            '<span class="pl-mtag g">' + esc(T('точный замер')) + '</span>' +
+            '<b>' + esc(T('Ссылка со счётчиком fmtr')) + '</b>' +
+            '<span>' + esc(T('Видно, сколько подписчиков дал источник. Переход занимает долю секунды; часть аудитории на нём может отсеяться.')) + '</span></div>' +
+            '<div class="pl-mopt" data-act="src-add-go" data-key="' + esc(key) + '" data-meas="0">' +
+            '<span class="pl-mtag o">' + esc(T('без замера')) + '</span>' +
+            '<b>' + esc(T('Прямая ссылка t.me')) + '</b>' +
+            '<span>' + esc(T('Максимальная конверсия перехода, но подписчики этого источника учитываться не будут — карточка останется без данных.')) + '</span></div>';
         sh.classList.add('on'); bg.classList.add('on');
     }
 
@@ -1482,8 +1569,7 @@
             } else {
                 var hd = document.createElement('div');
                 hd.className = 'pl-shint';
-                hd.innerHTML = '<b>' + esc(T('Расход на продвижение.')) + '</b> ' +
-                    esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.'));
+                hd.innerHTML = srcHintInner();
                 hcard.appendChild(hd);
                 b.classList.add('on');
                 _srcHint[hid] = true;
@@ -1524,15 +1610,12 @@
         if (act === 'src-add') { haptic('light'); openSrcAddSheet(); return; }
         if (act === 'src-add-pick') {
             var spk = b.getAttribute('data-key');
-            apiRequest('/api/v1/placements/sources',
-                       { method: 'POST', body: JSON.stringify({ channel_id: _chId, platform_key: spk }) })
-                .then(function (r) {
-                    if (r && r.ok) {
-                        haptic('light'); closeSheet(); load();
-                        var su = ((r.item || {}).invite_link) || '';
-                        if (su) copyText(su, T('Источник создан, ссылка скопирована — размести её на площадке'));
-                    } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
-                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            if (!isChPrivate()) { haptic('light'); openSrcMeasureSheet(spk); return; }
+            srcCreate(spk, true);
+            return;
+        }
+        if (act === 'src-add-go') {
+            srcCreate(b.getAttribute('data-key'), b.getAttribute('data-meas') === '1');
             return;
         }
         if (act === 'price') { haptic('light'); openPriceSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
