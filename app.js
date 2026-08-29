@@ -1074,11 +1074,14 @@ function renderPulseHook(trendPct, planMeasured, planActive) {
 async function loadReachSeries() {
     const host = document.getElementById('pw-chart');
     if (!host) return;
+    const ep = ++_reachEpoch;
     try {
         const r = await apiRequest('/api/v1/user/reach-series');
+        if (ep !== _reachEpoch) return;
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
-            _reachLast = { series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
+            _reachLast = { chId: (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null,
+                           series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
                            fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [],
                            freshLeft: r.fresh_left_h || [] };
             drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
@@ -1102,6 +1105,7 @@ async function loadReachSeries() {
                 renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
         } else {
+            _reachLast = null;
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
             const chIdE = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             if (r && r.stale === false) {
@@ -1115,6 +1119,8 @@ async function loadReachSeries() {
             }
         }
     } catch (e) {
+        if (ep !== _reachEpoch) return;
+        _reachLast = null;
         host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
     }
 }
@@ -1128,11 +1134,12 @@ function markPulseStale(days, lastDate) {
     badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
 }
 
-var _reachLast = null, _reachRedrawT = null;
+var _reachLast = null, _reachRedrawT = null, _reachEpoch = 0;
 function _reachRedraw() {
     try {
         var host = document.getElementById('pw-chart');
-        if (!host || !_reachLast || !host.clientWidth) return;
+        var curCh = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+        if (!host || !_reachLast || _reachLast.chId !== curCh || !host.clientWidth) return;
         drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
     } catch (e) {}
 }
