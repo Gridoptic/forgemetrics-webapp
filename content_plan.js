@@ -1467,6 +1467,8 @@
                         renderWeek();
                     } else if (r && r.error === 'already_out') {
                         toast(T('Пост уже в очереди — сначала сними неделю с выхода'));
+                    } else if (r && r.error === 'already_published') {
+                        toast(T('Пост уже опубликован — менять его поздно.'));
                     } else toast(T('Не удалось изменить время'));
                 })
                 .catch(function () { toast(T('Не удалось изменить время')); });
@@ -1626,6 +1628,7 @@
             empty: 'Пустой текст не сохраняю',
             no_content_perm: 'Создатель канала не выдал тебе право менять контент-план',
             already_out: 'Пост уже в очереди — сначала сними его с очереди',
+            already_published: 'Пост уже опубликован — менять его поздно.',
             upload: 'Файл не загрузился — пост сохранён черновиком без вложения.',
         };
         return T(M[code] || 'Не удалось сохранить пост');
@@ -1644,7 +1647,7 @@
                     if (pp) { pp.media_kind = 'photo'; pp.media_url = r.url; }
                     toast(T('Обложка готова'));
                     refreshState();
-                } else { toast(r && r.error === 'no_text' ? T('Сначала вставь текст — фраза на обложку берётся из него') : cap(r)); rerender(); }
+                } else { toast(r && r.error === 'no_text' ? T('Сначала вставь текст — фраза на обложку берётся из него') : (r && r.error && r.error !== 'error' ? ownErr(r.error) : cap(r))); rerender(); }
             })
             .catch(function (err) { delete _mediaBusy[id]; toast(apiErrText(err, 'Не удалось нарисовать обложку')); rerender(); });
     }
@@ -4175,6 +4178,12 @@
             '<i class="ti ti-photo-plus"></i>' + esc(T('Добавить картинку')) + '</button>';
     }
     function ownMediaRow(p, isCover) {
+        if (p.publish_status === 'published' || p.publish_status === 'publishing')
+            return '<div class="cp-mfoot"><i class="ti ti-lock"></i> ' +
+                esc(T('Пост опубликован — вложение и обложка закрыты')) + '</div>';
+        if (p.publish_status === 'queued')
+            return '<div class="cp-mfoot"><i class="ti ti-clock"></i> ' +
+                esc(T('Пост в очереди — чтобы менять, сними его с очереди')) + '</div>';
         return '<div class="cp-mrow">' +
             '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '"><i class="ti ti-upload"></i>' +
             esc(T(p.media_url ? 'Заменить файлом' : 'Файл с устройства')) + '</button>' +
@@ -4228,6 +4237,9 @@
                     rerender();
                 } else if (r && r.error === 'bad_type') {
                     toast(T('Такой формат не подойдёт: нужна картинка, GIF или видео'));
+                    rerender();
+                } else if (r && (r.error === 'already_out' || r.error === 'already_published')) {
+                    toast(ownErr(r.error));
                     rerender();
                 } else {
                     toast(T('Файл не загрузился'));
@@ -5006,6 +5018,8 @@
                     refreshState();
                 } else if (r && r.error === 'already_out') {
                     toast(T('Пост уже в очереди — сначала сними неделю с выхода'));
+                } else if (r && r.error === 'already_published') {
+                    toast(T('Пост уже опубликован — менять его поздно.'));
                 } else toast(cap(r));
             })
             .catch(function (err) {
