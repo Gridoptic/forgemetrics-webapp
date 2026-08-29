@@ -162,6 +162,40 @@
             '.pl-pausebox b{display:block;font-size:13px;color:#fbbf5f;margin-bottom:3px;}',
             '.pl-pausebox span{font-size:11.5px;color:#8990a8;line-height:1.45;}',
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
+            '.pl-src{background:rgba(23,29,48,0.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.10);border-radius:18px;margin-bottom:10px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 10px 30px rgba(0,0,0,0.35);}',
+            '.pl-srow{display:flex;align-items:center;gap:12px;padding:13px 14px;}',
+            '.pl-sic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.14);}',
+            '.pl-sic svg{width:22px;height:22px;display:block;}',
+            '.pl-sic.yt{background:linear-gradient(140deg,rgba(255,0,0,0.28),rgba(255,0,0,0.10));}',
+            '.pl-sic.vk{background:linear-gradient(140deg,rgba(0,119,255,0.30),rgba(0,119,255,0.10));}',
+            '.pl-sic.dz{background:linear-gradient(140deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06));}',
+            '.pl-sic.tt{background:linear-gradient(140deg,rgba(37,244,238,0.16),rgba(254,44,85,0.16));}',
+            '.pl-sic.ig{background:linear-gradient(140deg,rgba(221,42,123,0.26),rgba(129,52,175,0.16));}',
+            '.pl-snm{flex:1;min-width:0;}',
+            '.pl-snm b{display:flex;align-items:center;gap:6px;font-size:14.5px;font-weight:700;min-width:0;}',
+            '.pl-snm b u{text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-snm b i{color:#565b73;font-size:12px;flex:0 0 auto;}',
+            '.pl-snm em{display:block;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:0.05em;color:#8990a8;text-transform:uppercase;margin-top:1px;}',
+            '.pl-scpf{text-align:right;flex:0 0 auto;}',
+            '.pl-scpf b{display:block;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;}',
+            '.pl-scpf span{display:block;font-size:11px;color:#8990a8;}',
+            '.pl-scpf b.g{color:#4ade80;}.pl-scpf b.w{color:#fbbf24;}.pl-scpf b.r{color:#f87171;}',
+            '.pl-schip{display:flex;align-items:center;gap:8px;margin:0 14px 4px;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);}',
+            '.pl-schip s{text-decoration:none;color:#565b73;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;font-size:9.5px;flex:0 0 auto;}',
+            '.pl-schip code{flex:1;min-width:0;font-family:ui-monospace,monospace;font-size:11.5px;color:#8990a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+            '.pl-schip b{color:#818cf8;font-weight:700;font-size:11px;flex:0 0 auto;cursor:pointer;}',
+            '.pl-sdet{border-top:1px solid rgba(255,255,255,0.07);padding:10px 14px 12px;display:flex;gap:16px;align-items:center;}',
+            '.pl-sdet .m{flex:1;}.pl-sdet .m b{display:block;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;}',
+            '.pl-sdet .m span{display:block;font-size:10.5px;color:#8990a8;margin-top:1px;}',
+            '.pl-sdet .sv{font-size:12px;color:#8990a8;}.pl-sdet .sv u{color:#e8e8ed;text-decoration:none;font-weight:700;}.pl-sdet .sv em{font-style:normal;color:#818cf8;font-weight:600;margin-left:6px;cursor:pointer;}',
+            '.pl-sq{width:26px;height:26px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:13px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;font-weight:700;cursor:pointer;}',
+            '.pl-sq.on{color:#818cf8;border-color:rgba(129,140,248,0.6);}',
+            '.pl-shint{border-top:1px solid rgba(255,255,255,0.07);background:rgba(129,140,248,0.06);padding:11px 14px;font-size:12.5px;line-height:1.55;color:#8990a8;}',
+            '.pl-shint b{color:#e8e8ed;}',
+            '.pl-sadd{display:flex;align-items:center;justify-content:center;gap:8px;border:1px dashed rgba(255,255,255,0.14);border-radius:14px;padding:11px;color:#8990a8;font-size:12.5px;font-weight:600;margin-bottom:10px;cursor:pointer;width:100%;background:transparent;}',
+            '.pl-sbest{position:relative;overflow:visible;}',
+            '.pl-sbest:before{content:\"\";position:absolute;inset:0;border-radius:18px;pointer-events:none;border:1px solid rgba(74,222,128,0.45);}',
+            '.pl-sbestlab{position:absolute;top:-9px;left:14px;z-index:2;background:#0a0d18;padding:0 8px;font-size:10.5px;font-weight:800;color:#4ade80;letter-spacing:0.06em;line-height:1.4;}',
             '.pl-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch;}',
             '.pl-chip{flex:0 0 auto;font-size:11px;font-weight:700;padding:7px 13px;border-radius:99px;border:0.5px solid rgba(255,255,255,0.14);color:#8990a8;cursor:pointer;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;}',
             '.pl-chip.on{border-color:rgba(129,140,248,0.7);background:rgba(129,140,248,0.12);color:#c7cdfb;}',
@@ -881,13 +915,106 @@
         }
     }
 
+    var SRC_PLATS = {
+        shorts: { n: 'YouTube Shorts', c: 'yt', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path d="M10 9l6 3-6 3z" fill="#fff"/></svg>' },
+        vk: { n: 'VK Клипы', c: 'vk', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#0077FF"/><path d="M6.5 8h2.1c.2 2.4 1.1 4.3 2.4 4.9V8h2v3.1c1.2-.3 2.2-1.7 2.6-3.1h2c-.4 1.9-1.5 3.3-2.6 3.9 1.3.6 2.6 2 3 4.1h-2.2c-.4-1.6-1.5-2.9-2.8-3.2V16h-.3C9.5 16 6.8 12.7 6.5 8z" fill="#fff"/></svg>' },
+        dzen: { n: 'Дзен', c: 'dz', svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 2c.2 5.5 4.3 9.6 9.8 9.8v.4c-5.5.2-9.6 4.3-9.8 9.8h-.4c-.2-5.5-4.3-9.6-9.8-9.8v-.4C7.3 11.6 11.4 7.5 11.6 2z" fill="#0a0d18"/></svg>' },
+        tiktok: { n: 'TikTok', c: 'tt', svg: '<svg viewBox="0 0 24 24"><path d="M16 3c.4 2.3 1.9 3.8 4 4v3c-1.6 0-3-.5-4-1.3V15a5.5 5.5 0 1 1-5.5-5.5c.3 0 .7 0 1 .1v3.1a2.5 2.5 0 1 0 1.5 2.3V3z" fill="#25F4EE"/><path d="M17 4c.4 2.3 1.9 3.8 4 4v2c-1.6 0-3-.5-4-1.3z" fill="#FE2C55"/></svg>' },
+        reels: { n: 'Instagram Reels', c: 'ig', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.4" fill="#E1306C"/></svg>' }
+    };
+    var _srcHint = {};
+
+    function srcTmeShort(u) {
+        return String(u || '').replace(/^https?:\/\//, '');
+    }
+
+    function srcCard(x, best) {
+        var pl = SRC_PLATS[x.platform_key] || { n: x.platform_key, c: 'dz', svg: '' };
+        var cpf = null;
+        if (x.price_rub && x.joined) cpf = Math.round(x.price_rub / x.joined);
+        var right;
+        if (!x.joined) right = '<span style="display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(141,147,168,0.12);color:#8990a8;border:1px solid rgba(141,147,168,0.25);">' + esc(T('нет данных')) + '</span>';
+        else if (!x.price_rub) right = '<b class="g">' + esc(T('органика')) + '</b><span>' + esc(T('расход')) + ' 0 \u20bd</span>';
+        else right = '<b class="' + (cpf <= 80 ? 'g' : cpf <= 150 ? 'w' : 'r') + '">' + num(cpf) + ' \u20bd</b><span>' + esc(T('за подписчика')) + '</span>';
+        var h = '<div class="pl-src' + (best ? ' pl-sbest' : '') + '">' +
+            (best ? '<span class="pl-sbestlab">' + esc(T('МИНИМАЛЬНАЯ ЦЕНА')) + '</span>' : '') +
+            '<div class="pl-srow"><div class="pl-sic ' + pl.c + '">' + pl.svg + '</div>' +
+            '<div class="pl-snm"><b data-act="src-rename" data-id="' + x.id + '" style="cursor:pointer;"><u>' + esc(x.name || pl.n) + '</u><i class="ti ti-pencil"></i></b>' +
+            '<em>' + esc(pl.n) + '</em></div>' +
+            '<div class="pl-scpf">' + right + '</div></div>' +
+            '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc(srcTmeShort(x.invite_link)) + '</code>' +
+            '<b data-act="src-copy" data-link="' + esc(x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
+            '<div class="pl-sdet">' +
+            '<div class="m"><b>' + num(x.joined || 0) + '</b><span>' + esc(T('вступило всего')) + '</span></div>' +
+            '<div class="m"><b>' + (x.joined_7d ? '+' + num(x.joined_7d) : '0') + '</b><span>' + esc(T('за 7 дней')) + '</span></div>' +
+            '<span class="sv"><u>' + (x.price_rub ? num(x.price_rub) + ' \u20bd' : '0 \u20bd') + '</u>' +
+            '<em data-act="src-spend" data-id="' + x.id + '">' + esc(T(x.price_rub ? 'изменить' : 'указать расход')) + '</em></span>' +
+            '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span></div>' +
+            (_srcHint[x.id] ? '<div class="pl-shint"><b>' + esc(T('Расход на продвижение.')) + '</b> ' +
+                esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.')) + '</div>' : '') +
+            '</div>';
+        return h;
+    }
+
+    function srcBlock() {
+        var srcs = _items.filter(function (x) { return x.platform_key && x.status === 'active'; });
+        var guideOpen = false;
+        try { guideOpen = localStorage.getItem('fm_pl_src_how') !== '0'; } catch (e) {}
+        var h = '<div class="pl-fcap" style="margin:2px 0 6px;">' + esc(T('Источники подписчиков')) + '</div>';
+        h += '<div class="pl-how"><div class="pl-howt" data-act="src-how"><i class="ti ti-help"></i> ' + esc(T('Как это работает')) +
+            '<span id="pl-srchowarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (guideOpen ? '\u25b2' : '\u25bc') + '</span></div>' +
+            '<div id="pl-srchowbody" style="display:' + (guideOpen ? 'block' : 'none') + ';padding:4px 2px 8px;font-size:12.5px;line-height:1.55;color:#8990a8;">' +
+            '<b style="color:#e8e8ed;">' + esc(T('Как устроена ссылка.')) + '</b> ' + esc(T('Для каждого источника создаётся отдельная пригласительная ссылка Telegram (t.me/+…). Она отображается в карточке источника — скопируй её и размести в описании ролика или профиля на площадке. Заходить в настройки канала не требуется. Название источника меняется по значку карандаша — удобно, когда на одной площадке несколько аккаунтов.')) + '<br><br>' +
+            '<b style="color:#e8e8ed;">' + esc(T('Как считается.')) + '</b> ' + esc(T('Пользователь переходит по ссылке, Telegram открывает канал, заявка подтверждается автоматически — подписчик относится к этому источнику. Сторонние домены в переходе не участвуют.')) + '</div></div>';
+        if (srcs.length) {
+            var scored = srcs.slice().sort(function (a, b) { return (b.joined || 0) - (a.joined || 0); });
+            var bestId = null, bestCpf = null;
+            srcs.forEach(function (x) {
+                if (x.joined) {
+                    var c = x.price_rub ? Math.round(x.price_rub / x.joined) : 0;
+                    if (bestCpf == null || c < bestCpf) { bestCpf = c; bestId = x.id; }
+                }
+            });
+            h += scored.map(function (x) { return srcCard(x, srcs.length > 1 && x.id === bestId); }).join('');
+        }
+        h += '<button class="pl-sadd" data-act="src-add"><i class="ti ti-plus"></i> ' + esc(T('Добавить источник: аккаунт или площадка')) + '</button>';
+        return h;
+    }
+
+    function openSrcRenameSheet(id) {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        var l = null;
+        _items.forEach(function (x) { if (x.id === id) l = x; });
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Название источника')) + '</div>' +
+            '<input class="pl-inp" id="pl-src-name" maxlength="80" autocomplete="off" value="' + esc((l && l.name) || '') + '">' +
+            '<button class="pl-cta" data-act="src-rename-save" data-id="' + id + '">' + esc(T('Сохранить')) + '</button>';
+        sh.classList.add('on'); bg.classList.add('on');
+    }
+
+    function openSrcAddSheet() {
+        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
+        if (!sh || !bg) return;
+        var opts = Object.keys(SRC_PLATS).map(function (k) {
+            return '<div class="pl-src" style="margin-bottom:8px;cursor:pointer;" data-act="src-add-pick" data-key="' + k + '">' +
+                '<div class="pl-srow"><div class="pl-sic ' + SRC_PLATS[k].c + '">' + SRC_PLATS[k].svg + '</div>' +
+                '<div class="pl-snm"><b><u>' + esc(SRC_PLATS[k].n) + '</u></b></div>' +
+                '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div></div>';
+        }).join('');
+        sh.innerHTML = '<div class="pl-grip"></div>' +
+            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новый источник')) + '</div>' +
+            '<div style="font-size:12.5px;color:#8990a8;margin:4px 0 10px;">' + esc(T('Выбери площадку — для неё будет создана отдельная ссылка. Название можно изменить после создания.')) + '</div>' + opts;
+        sh.classList.add('on'); bg.classList.add('on');
+    }
+
     function render() {
         var host = ensureScreen();
         var body;
         if (_right === false) {
             body = permCard();
         } else {
-            var view = _campId == null ? _items : _items.filter(function (x) { return x.campaign_id === _campId; });
+            var view = _campId == null ? _items.filter(function (x) { return !x.platform_key; }) : _items.filter(function (x) { return x.campaign_id === _campId; });
             var wRank = function (x) {
                 if (x.status !== 'active') return 2;
                 return (x.attribution_until && new Date(x.attribution_until) <= new Date()) ? 1 : 0;
@@ -900,6 +1027,8 @@
             var _howOpen = false;
             try { _howOpen = localStorage.getItem('fm_pl_how') === '1'; } catch (e) {}
             if (_campId == null) {
+            body += srcBlock();
+            body += '<div class="pl-fcap" style="margin:10px 0 6px;">' + esc(T('Размещения в Telegram')) + '</div>';
             body += '<div class="pl-how"><div class="pl-howt" data-act="how"><i class="ti ti-target"></i> ' + esc(T('Как отследить размещение')) + '<span id="pl-howarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (_howOpen ? '▲' : '▼') + '</span></div>' +
                 '<div id="pl-howbody" style="display:' + (_howOpen ? 'block' : 'none') + ';">' +
                 [[T('Купи размещение'), T('Найди канал на Площадке или договорись с админом напрямую.')],
@@ -1328,6 +1457,55 @@
                         : T('Показы сохранены. Укажи цену размещения, чтобы увидеть CPM'));
                 } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
             }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'src-how') {
+            haptic('light');
+            var sb = document.getElementById('pl-srchowbody'), sa = document.getElementById('pl-srchowarr');
+            var vis = sb && sb.style.display !== 'none';
+            if (sb) sb.style.display = vis ? 'none' : 'block';
+            if (sa) sa.textContent = vis ? '\u25bc' : '\u25b2';
+            try { localStorage.setItem('fm_pl_src_how', vis ? '0' : '1'); } catch (e2) {}
+            return;
+        }
+        if (act === 'src-help') {
+            haptic('light');
+            var hid = parseInt(b.getAttribute('data-id'), 10);
+            _srcHint[hid] = !_srcHint[hid];
+            render();
+            return;
+        }
+        if (act === 'src-copy') {
+            haptic('light');
+            copyText(b.getAttribute('data-link') || '', T('Ссылка скопирована — размести её в описании ролика или профиля'));
+            return;
+        }
+        if (act === 'src-spend') { haptic('light'); openPriceSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'src-rename') { haptic('light'); openSrcRenameSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
+        if (act === 'src-rename-save') {
+            var rnid = parseInt(b.getAttribute('data-id'), 10);
+            var rnv = ((document.getElementById('pl-src-name') || {}).value || '').trim();
+            if (!rnv) { toast(T('Укажи название источника.')); return; }
+            apiRequest('/api/v1/placements/links/' + rnid + '/rename',
+                       { method: 'POST', body: JSON.stringify({ name: rnv }) })
+                .then(function (r) {
+                    if (r && r.ok) { haptic('light'); closeSheet(); load(); }
+                    else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
+            return;
+        }
+        if (act === 'src-add') { haptic('light'); openSrcAddSheet(); return; }
+        if (act === 'src-add-pick') {
+            var spk = b.getAttribute('data-key');
+            apiRequest('/api/v1/placements/sources',
+                       { method: 'POST', body: JSON.stringify({ channel_id: _chId, platform_key: spk }) })
+                .then(function (r) {
+                    if (r && r.ok) {
+                        haptic('light'); closeSheet(); load();
+                        var su = ((r.item || {}).invite_link) || '';
+                        if (su) copyText(su, T('Источник создан, ссылка скопирована — размести её на площадке'));
+                    } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
+                }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
             return;
         }
         if (act === 'price') { haptic('light'); openPriceSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
