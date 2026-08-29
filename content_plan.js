@@ -3576,6 +3576,11 @@
         return (w.prices && w.prices[op]) || COVER_PRICE[op] || 1;
     }
 
+    function creativePrice() {
+        var w = wallet();
+        return (w.prices && w.prices.creative_build) || 70;
+    }
+
     var LAY_INFO = [
         ['auto', 'ti-sparkles', 'На выбор системы', 'по признакам в тексте поста'],
         ['thesis', 'ti-quote', 'Тезис', 'главная мысль крупно'],
@@ -4059,7 +4064,7 @@
                 (dur ? '<span class="cp-crv-dur">' + esc(dur) + '</span>' : '') + '</button>' +
                 '<div class="cp-crv-acts">' +
                 '<button class="cp-act ok" data-act="crvopen" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i> ' + esc(T('Скачать MP4')) + '</button>' +
-                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + '</button>' +
+                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
                 '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '</div></div>' +
                 '<div class="cp-note">' + esc(T('9:16, 1080×1920 — под YouTube Shorts, Дзен и VK Клипы. Описание для публикации — по кнопке.')) + '</div></div>';
@@ -4071,7 +4076,7 @@
         }
         return '<div class="cp-crv">' + head +
             '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-sparkles"></i>' +
-            '<span class="tx"><b>' + esc(T('Собрать креатив')) + '</b><em>' +
+            '<span class="tx"><b>' + esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
             esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button></div>';
     }
     function crvBuild(pid) {
