@@ -924,10 +924,6 @@
     };
     var _srcHint = {};
 
-    function srcTmeShort(u) {
-        return String(u || '').replace(/^https?:\/\//, '');
-    }
-
     function srcCard(x, best) {
         var pl = SRC_PLATS[x.platform_key] || { n: x.platform_key, c: 'dz', svg: '' };
         var cpf = null;
@@ -946,8 +942,8 @@
             '<em>' + esc(pl.n) + '</em></div>' +
             '<span class="pl-sq' + (_srcHint[x.id] ? ' on' : '') + '" data-act="src-help" data-id="' + x.id + '">?</span>' +
             '<span class="pl-sq" data-act="src-del" data-id="' + x.id + '" style="color:#a86868;"><i class="ti ti-trash"></i></span></div>' +
-            '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc(srcTmeShort(x.invite_link)) + '</code>' +
-            '<b data-act="src-copy" data-link="' + esc(x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
+            '<div class="pl-schip"><s>' + esc(T('метка источника')) + '</s><code>' + esc(((x.bot_link || x.invite_link) || '').replace('https://', '')) + '</code>' +
+            '<b data-act="src-copy" data-link="' + esc(x.bot_link || x.invite_link || '') + '">' + esc(T('копировать')) + '</b></div>' +
             '<div class="pl-tiles">' +
             '<div class="pl-tile"><b>' + num(x.joined || 0) +
             (x.joined_7d ? ' <small style="color:#4ade80;">+' + num(x.joined_7d) + '</small>' : '') +
@@ -969,8 +965,8 @@
         h += '<div class="pl-how"><div class="pl-howt" data-act="src-how"><i class="ti ti-help"></i> ' + esc(T('Как это работает')) +
             '<span id="pl-srchowarr" style="margin-left:auto;color:#565b73;font-size:11px;">' + (guideOpen ? '\u25b2' : '\u25bc') + '</span></div>' +
             '<div id="pl-srchowbody" style="display:' + (guideOpen ? 'block' : 'none') + ';padding:4px 2px 8px;font-size:12.5px;line-height:1.55;color:#8990a8;">' +
-            '<b style="color:#e8e8ed;">' + esc(T('Как устроена ссылка.')) + '</b> ' + esc(T('Для каждого источника создаётся отдельная пригласительная ссылка Telegram (t.me/+…). Она отображается в карточке источника — скопируй её и размести в описании ролика или профиля на площадке. Заходить в настройки канала не требуется. Название источника меняется по значку карандаша — удобно, когда на одной площадке несколько аккаунтов.')) + '<br><br>' +
-            '<b style="color:#e8e8ed;">' + esc(T('Как считается.')) + '</b> ' + esc(T('Пользователь переходит по ссылке напрямую в Telegram, канал открывается, заявка подтверждается автоматически — подписчик относится к этому источнику.')) + '</div></div>';
+            '<b style="color:#e8e8ed;">' + esc(T('Как устроена ссылка.')) + '</b> ' + esc(T('Для каждого источника создаётся отдельная ссылка. Переход по ней открывает Telegram: диалог ForgeMetrics с кнопкой вступления в канал. Скопируй ссылку из карточки источника и размести в описании ролика или профиля на площадке. Название источника меняется по значку карандаша — удобно, когда на одной площадке несколько аккаунтов.')) + '<br><br>' +
+            '<b style="color:#e8e8ed;">' + esc(T('Как считается.')) + '</b> ' + esc(T('Переход по ссылке фиксируется. Подписчик привязывается к источнику при вступлении по кнопке, а также при вступлении в канал в течение 48 часов после перехода.')) + '</div></div>';
         if (srcs.length) {
             var scored = srcs.slice().sort(function (a, b) { return (b.joined || 0) - (a.joined || 0); });
             var bestId = null, bestCpf = null;
@@ -1533,7 +1529,7 @@
                 .then(function (r) {
                     if (r && r.ok) {
                         haptic('light'); closeSheet(); load();
-                        var su = ((r.item || {}).invite_link) || '';
+                        var su = ((r.item || {}).bot_link) || ((r.item || {}).invite_link) || '';
                         if (su) copyText(su, T('Источник создан, ссылка скопирована — размести её на площадке'));
                     } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
                 }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
