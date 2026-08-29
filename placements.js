@@ -1471,8 +1471,22 @@
         if (act === 'src-help') {
             haptic('light');
             var hid = parseInt(b.getAttribute('data-id'), 10);
-            _srcHint[hid] = !_srcHint[hid];
-            render();
+            var hcard = b.closest ? b.closest('.pl-src') : null;
+            if (!hcard) return;
+            var hpanel = hcard.querySelector('.pl-shint');
+            if (hpanel) {
+                hpanel.remove();
+                b.classList.remove('on');
+                _srcHint[hid] = false;
+            } else {
+                var hd = document.createElement('div');
+                hd.className = 'pl-shint';
+                hd.innerHTML = '<b>' + esc(T('Расход на продвижение.')) + '</b> ' +
+                    esc(T('Укажи сумму, фактически оплаченную площадке за продвижение в этом источнике. Публикации без оплаты учитываются как органический трафик — значение 0. Цена подписчика рассчитывается как расход, делённый на число вступивших по ссылке источника.'));
+                hcard.appendChild(hd);
+                b.classList.add('on');
+                _srcHint[hid] = true;
+            }
             return;
         }
         if (act === 'src-copy') {
