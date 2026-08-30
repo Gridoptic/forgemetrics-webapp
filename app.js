@@ -463,6 +463,7 @@ async function loadDashboard() {
             if (window.applyServerLang && window.applyServerLang(data.lang)) { location.reload(); return; }
         } catch (e) {}
         state.dashboard = data;
+        _dashSig = JSON.stringify(data);
         renderDashboard(data);
         showScreen('dashboard');
         maybeShowTermsGate(data);
@@ -484,9 +485,15 @@ async function refreshDashboardSilent() {
     try {
         const data = await apiRequest('/api/v1/user/dashboard');
         state.dashboard = data;
-        const sy = window.scrollY;
-        renderDashboard(data);
-        window.scrollTo(0, sy);
+        const sig = JSON.stringify(data);
+        if (sig !== _dashSig) {
+            _dashSig = sig;
+            const sy = window.scrollY;
+            renderDashboard(data);
+            window.scrollTo(0, sy);
+        } else {
+            loadReachSeries();
+        }
         if (window.FMLive) window.FMLive.touch('dashboard');
     } catch (e) {
     }
@@ -677,6 +684,10 @@ function renderChannelSelector(data) {
     if (!host) return;
     const ch = data.channel;
     try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
+    const csig = JSON.stringify([ch && ch.id, ch && ch.title, ch && ch.username, ch && ch.is_paused,
+        data.pulse && data.pulse.niche, data.total_channels]);
+    if (csig === _chselSig && host.firstChild) return;
+    _chselSig = csig;
     if (ch) {
         const title = ch.title || ch.username || 'Канал';
         const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
@@ -711,9 +722,11 @@ function pwCountUp(root) {
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     (root || document).querySelectorAll('.pw-num[data-to]').forEach((el) => {
         const to = parseFloat(el.dataset.to) || 0;
-        if (reduce) { el.textContent = pwFmt(to, el); return; }
+        const from = parseFloat(el.dataset.from) || 0;
+        if (reduce || from === to) { el.textContent = pwFmt(to, el); return; }
+        const dur = from ? 550 : 900;
         let t0 = null;
-        function step(t) { if (!t0) t0 = t; const p = Math.min(1, (t - t0) / 900); el.textContent = pwFmt(to * (1 - Math.pow(1 - p, 3)), el); if (p < 1) requestAnimationFrame(step); }
+        function step(t) { if (!t0) t0 = t; const p = Math.min(1, (t - t0) / dur); el.textContent = pwFmt(from + (to - from) * (1 - Math.pow(1 - p, 3)), el); if (p < 1) requestAnimationFrame(step); }
         requestAnimationFrame(step);
     });
 }
@@ -886,7 +899,9 @@ function pwRenderMetrics(pulse) {
                 valTx = '—';
             }
         } else {
-            valTx = `<span class="pw-num" data-to="${v}"${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
+            var _mp = _pwNumPrev[id + ':' + _dch];
+            _pwNumPrev[id + ':' + _dch] = v;
+            valTx = `<span class="pw-num" data-to="${v}"${_mp != null && _mp !== v ? ` data-from="${_mp}"` : ''}${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
         var _pfm = (id === 'price' && pulse.price_kind === 'estimate' &&
                     pulse.formats && pulse.formats.length) ? pulse.formats : null;
@@ -1091,10 +1106,17 @@ function markPulseHealthy(pulse) {
 function renderPulse(pulse) {
     const host = document.getElementById('pulse-widget');
     if (!host) return;
-    if (!pulse) { host.innerHTML = ''; return; }
+    if (!pulse) { host.innerHTML = ''; _pwSig = null; return; }
+    const chKey = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : 0;
+    const psig = chKey + '|' + JSON.stringify(pulse);
+    if (psig === _pwSig && host.querySelector('.pw-pulse')) { loadReachSeries(); return; }
+    _pwSig = psig;
+    _reachSigDom = null;
     const h = pwHealthState(pulse);
+    const _hPrev = _pwNumPrev['hero:' + chKey];
+    if (pulse.avg_views != null) _pwNumPrev['hero:' + chKey] = pulse.avg_views;
     const heroNum = (pulse.avg_views != null)
-        ? `<span class="v pw-num" data-to="${pulse.avg_views}" data-sep="1">0</span>`
+        ? `<span class="v pw-num" data-to="${pulse.avg_views}"${_hPrev != null && _hPrev !== pulse.avg_views ? ` data-from="${_hPrev}"` : ''} data-sep="1">0</span>`
         : '<span class="v">—</span>';
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
@@ -1117,7 +1139,7 @@ function renderPulse(pulse) {
     </div>`;
     pwCountUp(host);
     pwRenderMetrics(pulse);
-    host.addEventListener('click', (e) => {
+    host.onclick = (e) => {
         const dd = e.target.closest ? e.target.closest('.pw-hdelta') : null;
         if (!dd) return;
         hapticLight();
@@ -1126,7 +1148,7 @@ function renderPulse(pulse) {
         const _tt = (typeof window.t === 'function') ? window.t : (x) => x;
         showToast(_tt('Отклонение охвата от нижней планки нормы. Норма для канала этого размера') +
             ': ' + pl.norm_lo.toLocaleString('ru-RU') + '\u2013' + pl.norm_hi.toLocaleString('ru-RU') + ' ' + _tt('на пост'), 'info-circle');
-    });
+    };
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
     try {
@@ -1221,19 +1243,23 @@ async function loadReachSeries() {
     try {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (ep !== _reachEpoch) return;
+        const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+        const rSig = chIdD + '|' + JSON.stringify(r);
+        if (rSig === _reachSigDom) return;
+        _reachSigDom = rSig;
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
-            _reachLast = { chId: (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null,
+            const anim = !_reachLast || _reachLast.chId !== chIdD;
+            _reachLast = { chId: chIdD,
                            series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
                            fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [],
                            freshLeft: r.fresh_left_h || [],
                            normLo: r.norm_lo || null, normHi: r.norm_hi || null };
-            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi);
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi, anim);
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
             }, 300);
-            const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             pwRenderMM(r);
             if (r.stale) {
                 const lab = document.querySelector('.pw-hlab');
@@ -1249,20 +1275,20 @@ async function loadReachSeries() {
         } else {
             _reachLast = null;
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
-            const chIdE = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
             if (r && r.stale === false) {
-                pwDormantSet(chIdE, null);
+                pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
                 pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
             } else if (r && r.stale === true) {
                 markPulseStale(r.stale_days, r.last_date);
-                pwDormantSet(chIdE, { d: r.stale_days, ld: r.last_date });
+                pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
                 pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
             }
         }
     } catch (e) {
         if (ep !== _reachEpoch) return;
         _reachLast = null;
+        _reachSigDom = null;
         host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
     }
 }
@@ -1276,20 +1302,21 @@ function markPulseStale(days, lastDate) {
     badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span><span class="pw-htx">' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '') + '</span>';
 }
 
-var _reachLast = null, _reachRedrawT = null, _reachEpoch = 0;
+var _reachLast = null, _reachRedrawT = null, _reachEpoch = 0, _reachSigDom = null;
+var _dashSig = null, _pwSig = null, _chselSig = null, _actSig = null, _pwNumPrev = {};
 function _reachRedraw() {
     try {
         var host = document.getElementById('pw-chart');
         var curCh = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         if (!host || !_reachLast || _reachLast.chId !== curCh || !host.clientWidth) return;
-        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi);
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi, false);
     } catch (e) {}
 }
 function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
 window.addEventListener('resize', _reachRedrawSoon);
 try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
-function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, normLo, normHi) {
+function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, normLo, normHi, animate) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     FR = Array.isArray(FR) ? FR.filter(Number.isFinite) : [];
     FRD = Array.isArray(FRD) ? FRD : [];
@@ -1358,7 +1385,7 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
     host.innerHTML = svg + '<div class="pw-tip"></div>';
 
     const cl = host.querySelector('.pw-cl'), ar = host.querySelector('.pw-area');
-    if (!reduce && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
+    if (!reduce && animate && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
 
     const tip = host.querySelector('.pw-tip'), cx = host.querySelector('.pw-cx'), cd = host.querySelector('.pw-cd'), ep = host.querySelector('.pw-ep');
     function at(clientX) {
@@ -1396,6 +1423,9 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
 
 
 function renderActions(actions) {
+    var _asig = JSON.stringify(actions || []);
+    if (_asig === _actSig && els.actionsList.firstChild) return;
+    _actSig = _asig;
     els.actionsList.innerHTML = '';
 
     actions.forEach(action => {
