@@ -1083,8 +1083,9 @@ async function loadReachSeries() {
             _reachLast = { chId: (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null,
                            series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
                            fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [],
-                           freshLeft: r.fresh_left_h || [] };
-            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
+                           freshLeft: r.fresh_left_h || [],
+                           normLo: r.norm_lo || null, normHi: r.norm_hi || null };
+            drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi);
             setTimeout(function () {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
@@ -1140,25 +1141,27 @@ function _reachRedraw() {
         var host = document.getElementById('pw-chart');
         var curCh = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         if (!host || !_reachLast || _reachLast.chId !== curCh || !host.clientWidth) return;
-        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft);
+        drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi);
     } catch (e) {}
 }
 function _reachRedrawSoon() { clearTimeout(_reachRedrawT); _reachRedrawT = setTimeout(_reachRedraw, 180); }
 window.addEventListener('resize', _reachRedrawSoon);
 try { if (tg && tg.onEvent) tg.onEvent('viewportChanged', _reachRedrawSoon); } catch (e) {}
 
-function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL) {
+function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, normLo, normHi) {
     if (!Array.isArray(DATA) || DATA.length < 2) { host.innerHTML = ''; return; }
     FR = Array.isArray(FR) ? FR.filter(Number.isFinite) : [];
     FRD = Array.isArray(FRD) ? FRD : [];
     FRL = Array.isArray(FRL) ? FRL : [];
+    const hasNorm = Number.isFinite(normLo) && Number.isFinite(normHi) && normHi > normLo;
     const PC = muted
         ? { area: 'rgba(107,112,136,0.08)', ln: '#6b7088', ep: '#e2e4ee', eps: '#8990a8' }
         : { area: 'rgba(93,202,165,0.10)', ln: '#5DCAA5', ep: '#eafff6', eps: '#5DCAA5' };
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const W = Math.max(260, host.clientWidth || 320), Hh = 84, padT = 10, padB = 18, padL = 6, padR = 6;
     const ALL = DATA.concat(FR);
-    const min = Math.min.apply(null, ALL), max = Math.max.apply(null, ALL);
+    const SCALED = hasNorm ? ALL.concat([normLo, normHi]) : ALL;
+    const min = Math.min.apply(null, SCALED), max = Math.max.apply(null, SCALED);
     const lo = min - (max - min) * 0.15, hi = max + (max - min) * 0.12, rng = (hi - lo) || 1, last = DATA.length - 1;
     const lastIdx = last + FR.length;
     const X = (i) => padL + i * (W - padL - padR) / (lastIdx || 1);
@@ -1178,7 +1181,22 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL) 
         return out.length ? out.slice(-3) : [max, min];
     })();
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
-    grids.forEach((v) => { const y = Y(v).toFixed(1); svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(Y(v) - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`; });
+    const normTop = hasNorm ? Y(normHi) : null, normBot = hasNorm ? Y(normLo) : null;
+    grids.forEach((v) => {
+        const yv = Y(v);
+        if (hasNorm && Math.abs(yv - normTop) < 10) return;
+        const y = yv.toFixed(1);
+        svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(yv - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`;
+    });
+    if (hasNorm) {
+        const nc = muted ? 'rgba(141,147,168,' : 'rgba(93,202,165,';
+        svg += `<rect x="${padL}" y="${normTop.toFixed(1)}" width="${W - padL - padR}" height="${Math.max(1, normBot - normTop).toFixed(1)}" fill="${nc}0.06)"/>`;
+        svg += `<line x1="${padL}" y1="${normTop.toFixed(1)}" x2="${W - padR}" y2="${normTop.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
+        svg += `<line x1="${padL}" y1="${normBot.toFixed(1)}" x2="${W - padR}" y2="${normBot.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
+        const nl = (typeof window.t === 'function' ? window.t('норма') : 'норма').toUpperCase();
+        const ny = (normBot - normTop >= 16) ? (normTop + normBot) / 2 + 3 : normTop - 4;
+        svg += `<text x="${W - padR}" y="${ny.toFixed(1)}" text-anchor="end" style="font-size:8px;font-weight:700;letter-spacing:0.06em;fill:${nc}0.9)">${nl} ${short(normLo)}–${short(normHi)}</text>`;
+    }
     svg += `<path class="pw-area" d="${area}" fill="${PC.area}"/>`;
     svg += `<path class="pw-cl" d="${line}" fill="none" stroke="${PC.ln}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     if (FR.length) {
