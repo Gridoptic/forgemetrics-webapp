@@ -5394,9 +5394,9 @@ function renderVoicePickSection(data) {
     };
     return `
         <div class="cs-section" id="cs-voice-sec">
-            <div class="cs-section-title">Озвучка роликов <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'участвуют все'}</span></div>
+            <div class="cs-section-title">Озвучка роликов <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
             <div class="cs-vcols">${col('male', 'Мужские')}${col('female', 'Женские')}</div>
-            <div class="cs-vfoot">Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — участвуют все.</div>
+            <div class="cs-vfoot">Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.</div>
         </div>`;
 }
 
@@ -5427,7 +5427,7 @@ function toggleVoiceSample(btn) {
 async function saveVoicePick(sec) {
     const names = [...sec.querySelectorAll('.cs-vrow.on')].map(r => r.getAttribute('data-vname'));
     const sum = document.getElementById('cs-vsum');
-    if (sum) sum.textContent = names.length ? ('выбрано ' + names.length) : 'участвуют все';
+    if (sum) sum.textContent = names.length ? ('выбрано ' + names.length) : 'по рассказчику поста';
     if (_settingsState.data) _settingsState.data.creative_voices = names;
     try {
         await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
