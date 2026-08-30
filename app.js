@@ -993,11 +993,13 @@ function pwNormDelta(pulse, cls) {
     if (cls === 'grey' || !pulse) return '';
     const lo = pulse.norm_lo, av = pulse.avg_views;
     if (!Number.isFinite(lo) || lo <= 0 || !Number.isFinite(av)) return '';
-    let d = Math.round((av - lo) / lo * 100);
+    let d = (av - lo) / lo * 100;
     d = Math.max(-99, Math.min(999, d));
-    const sign = d >= 0 ? '+' : '\u2212';
+    const abs = Math.abs(d);
+    const rounded = abs < 10 ? Math.round(abs * 10) / 10 : Math.round(abs);
+    const sign = rounded === 0 ? '' : (d < 0 ? '\u2212' : '+');
     const tt = (typeof window.t === 'function') ? window.t('к норме') : 'к норме';
-    return '<span class="pw-hdelta">' + sign + Math.abs(d) + '%<small>' + tt + '</small></span>';
+    return '<span class="pw-hdelta">' + sign + String(rounded).replace('.', ',') + '%<small>' + tt + '</small></span>';
 }
 
 function pwHealthHtml(pulse, h) {
