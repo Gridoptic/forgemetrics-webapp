@@ -922,7 +922,77 @@ function pwRenderMetrics(pulse) {
         if (ch) ch.classList.toggle('up', pwPriceOpen);
     };
     var gear = document.getElementById('pw-mgear');
-    if (gear) gear.onclick = () => { hapticLight(); pwOpenPicker(pulse); };
+    if (gear) gear.onclick = (e) => { e.stopPropagation(); hapticLight(); pwOpenPicker(pulse); };
+    pwRenderMini(pulse);
+    pwApplyCollapse(false);
+    var mh = document.getElementById('pw-mhead');
+    if (mh) mh.onclick = (e) => {
+        if (e.target.closest && e.target.closest('#pw-mgear')) return;
+        hapticLight();
+        var chId = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : 0;
+        var key = 'fm_pw_mclps_' + chId;
+        var clps = false;
+        try { clps = localStorage.getItem(key) === '1'; } catch (er) {}
+        try { localStorage.setItem(key, clps ? '0' : '1'); } catch (er) {}
+        pwApplyCollapse(true);
+    };
+}
+
+function pwMSecCollapsed() {
+    var chId = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : 0;
+    try { return localStorage.getItem('fm_pw_mclps_' + chId) === '1'; } catch (e) { return false; }
+}
+
+function pwApplyCollapse(animate) {
+    var wrap = document.getElementById('pw-mwrap');
+    var mini = document.getElementById('pw-mmini');
+    var chev = document.getElementById('pw-mchev');
+    if (!wrap) return;
+    var clps = pwMSecCollapsed();
+    if (chev) chev.classList.toggle('up', !clps);
+    if (mini) mini.hidden = !clps;
+    if (!animate) {
+        wrap.style.transition = 'none';
+        wrap.style.maxHeight = clps ? '0px' : 'none';
+        wrap.style.opacity = clps ? '0' : '1';
+        requestAnimationFrame(() => { wrap.style.transition = ''; });
+        return;
+    }
+    if (clps) {
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        wrap.getBoundingClientRect();
+        wrap.style.maxHeight = '0px';
+        wrap.style.opacity = '0';
+    } else {
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        wrap.style.opacity = '1';
+        setTimeout(() => { if (!pwMSecCollapsed()) wrap.style.maxHeight = 'none'; }, 320);
+    }
+}
+
+function pwRenderMini(pulse) {
+    var mini = document.getElementById('pw-mmini');
+    if (!mini || !pulse) return;
+    var _tm = (typeof window.t === 'function') ? window.t : (x) => x;
+    var chips = [];
+    if (pulse.reach_rate != null) {
+        var rst = pulse.rr_status || '';
+        var col = rst === 'норма' ? '#5DCAA5' : (rst ? '#f0938d' : '#e8eaf1');
+        chips.push('<span class="chip"><b class="num" style="color:' + col + ';">' + pulse.reach_rate + '%</b>' +
+            '<span>ERR' + (rst ? ' \u00b7 ' + escapeHtml(_tm(rst)) : '') + '</span></span>');
+    }
+    if (pulse.cpm != null) {
+        chips.push('<span class="chip"><b class="num">' + pwRub(pulse.cpm) + ' \u20bd</b><span>CPM</span></span>');
+    }
+    if (pulse.cpf_fact != null) {
+        chips.push('<span class="chip"><b class="num">\u2248' + pwRub(pulse.cpf_fact) + ' \u20bd</b><span>CPF</span></span>');
+    } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
+        chips.push('<span class="chip"><b class="num">\u2248' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' \u20bd</b><span>CPF</span></span>');
+    }
+    if (!chips.length && pulse.subscribers != null) {
+        chips.push('<span class="chip"><b class="num">' + pulse.subscribers.toLocaleString('ru-RU') + '</b><span>' + escapeHtml(_tm('Подписчики')) + '</span></span>');
+    }
+    mini.innerHTML = chips.join('');
 }
 
 function pwOpenPicker(pulse) {
@@ -1039,8 +1109,9 @@ function renderPulse(pulse) {
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
-        <div class="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button></div>
-        <div class="pw-mrows" id="pw-mgrid"></div>
+        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="pw-mmini" id="pw-mmini" hidden></div>
+        <div class="pw-mwrap" id="pw-mwrap"><div class="pw-mrows" id="pw-mgrid"></div></div>
       </div>
       <div id="pw-aihook"></div>
     </div>`;
