@@ -4752,6 +4752,17 @@ async function openChannelSettingsScreen(channelId) {
         const data = await apiRequest(`/api/v1/channels/${channelId}/details`);
         _settingsState.data = data;
         renderChannelSettingsScreen(data);
+        if (window.__csFocusVoices) {
+            window.__csFocusVoices = false;
+            setTimeout(() => {
+                const sv = document.getElementById('cs-voice-sec');
+                if (sv) {
+                    sv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    sv.classList.add('cs-vflash');
+                    setTimeout(() => sv.classList.remove('cs-vflash'), 1900);
+                }
+            }, 350);
+        }
     } catch (e) {
         host.innerHTML = `
             <div class="channel-settings-loading">
@@ -4765,6 +4776,7 @@ async function openChannelSettingsScreen(channelId) {
 
 
 function closeChannelSettings() {
+    stopVoiceSample();
     const host = document.getElementById('channel-settings-screen');
     if (host) host.style.display = 'none';
     document.documentElement.classList.remove('cs-modal-open');
@@ -5362,8 +5374,96 @@ function renderSettingsBehaviorSection(data) {
                 </button>
             </div>
         </div>
+        ${renderVoicePickSection(data)}
         ${renderTzSection(data)}
     `;
+}
+
+function renderVoicePickSection(data) {
+    const cat = data.voice_catalog || [];
+    if (!cat.length) return '';
+    const sel = new Set(data.creative_voices || []);
+    const col = (g, label) => {
+        const rows = cat.filter(v => v.gender === g).map(v => `
+            <div class="cs-vrow ${sel.has(v.name) ? 'on' : ''}" data-vname="${v.name}">
+                <button class="cs-vplay" data-vplay="1" data-src="${v.sample_url}" aria-label="Пример голоса"><i class="ti ti-player-play-filled"></i></button>
+                <span class="cs-vnm"><b>${escapeHtml(v.label)}</b><span>${escapeHtml(v.note)}</span></span>
+                <span class="cs-vchk"><i class="ti ti-check"></i></span>
+            </div>`).join('');
+        return `<div class="cs-vcol"><div class="cs-vcolh"><s>${label}</s><u data-vall="${g}">все</u></div>${rows}</div>`;
+    };
+    return `
+        <div class="cs-section" id="cs-voice-sec">
+            <div class="cs-section-title">Озвучка роликов <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'участвуют все'}</span></div>
+            <div class="cs-vcols">${col('male', 'Мужские')}${col('female', 'Женские')}</div>
+            <div class="cs-vfoot">Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — участвуют все.</div>
+        </div>`;
+}
+
+let _voiceAudio = null, _voiceAudioBtn = null;
+
+function stopVoiceSample() {
+    if (_voiceAudio) { try { _voiceAudio.pause(); } catch (e) {} _voiceAudio = null; }
+    if (_voiceAudioBtn) {
+        _voiceAudioBtn.innerHTML = '<i class="ti ti-player-play-filled"></i>';
+        _voiceAudioBtn.classList.remove('act');
+        _voiceAudioBtn = null;
+    }
+}
+
+function toggleVoiceSample(btn) {
+    if (_voiceAudioBtn === btn) { stopVoiceSample(); return; }
+    stopVoiceSample();
+    const a = new Audio(btn.getAttribute('data-src'));
+    _voiceAudio = a;
+    _voiceAudioBtn = btn;
+    btn.innerHTML = '<i class="ti ti-player-stop-filled"></i>';
+    btn.classList.add('act');
+    a.onended = stopVoiceSample;
+    a.onerror = stopVoiceSample;
+    a.play().catch(stopVoiceSample);
+}
+
+async function saveVoicePick(sec) {
+    const names = [...sec.querySelectorAll('.cs-vrow.on')].map(r => r.getAttribute('data-vname'));
+    const sum = document.getElementById('cs-vsum');
+    if (sum) sum.textContent = names.length ? ('выбрано ' + names.length) : 'участвуют все';
+    if (_settingsState.data) _settingsState.data.creative_voices = names;
+    try {
+        await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ creative_voices: names }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
+    } catch (e) {
+        showToast('Не удалось сохранить голоса', 'alert-triangle');
+    }
+}
+
+function bindVoicePick() {
+    const sec = document.getElementById('cs-voice-sec');
+    if (!sec) return;
+    sec.querySelectorAll('.cs-vrow').forEach(row => {
+        row.addEventListener('click', async (e) => {
+            if (e.target.closest('[data-vplay]')) return;
+            row.classList.toggle('on');
+            await saveVoicePick(sec);
+        });
+    });
+    sec.querySelectorAll('[data-vall]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const g = btn.getAttribute('data-vall');
+            const rows = [...sec.querySelectorAll('.cs-vcol')].filter(c => c.contains(btn))[0].querySelectorAll('.cs-vrow');
+            const allOn = [...rows].every(r => r.classList.contains('on'));
+            rows.forEach(r => r.classList.toggle('on', !allOn));
+            await saveVoicePick(sec);
+        });
+    });
+    sec.querySelectorAll('[data-vplay]').forEach(btn => {
+        btn.addEventListener('click', (e) => { e.stopPropagation(); toggleVoiceSample(btn); });
+    });
 }
 
 const TZ_ZONES = [
@@ -5640,6 +5740,7 @@ function attachSettingsHandlers() {
             await handleToggleSwitch(target, !isOn);
         });
     });
+    bindVoicePick();
     const tzRow = document.querySelector('[data-tz-open]');
     if (tzRow) { tzRow.addEventListener('click', openTzSheet); tzStartTick(); }
 
