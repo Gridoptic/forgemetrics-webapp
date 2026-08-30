@@ -1033,9 +1033,9 @@ function renderPulse(pulse) {
       </div>
       <div class="pw-hlab">Охват · 30 дней</div>
       <div class="pw-hbig pw-was">
-        <span class="pw-wcell" id="pw-was-cell" hidden><span class="pw-wn was num" id="pw-was-n"></span><span class="pw-wl">месяц назад</span></span>
+        <span class="pw-wcell" id="pw-was-cell" hidden><span class="pw-wn was num" id="pw-was-n"></span><span class="pw-wl" id="pw-was-l"></span></span>
         <span class="pw-warr" id="pw-was-arr" hidden><i>\u2192</i><small class="tr num" id="pw-trend"></small></span>
-        <span class="pw-wcell now">${heroNum}<span class="pw-wl">сейчас · на пост</span></span>
+        <span class="pw-wcell now">${heroNum}<span class="pw-wl" id="pw-now-l">сейчас · на пост</span></span>
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
@@ -1128,15 +1128,20 @@ async function loadReachSeries() {
             const wasCell = document.getElementById('pw-was-cell');
             const wasArr = document.getElementById('pw-was-arr');
             const wasN = document.getElementById('pw-was-n');
-            const showWas = !r.stale && Array.isArray(r.series) && r.series.length >= 2 && r.trend_pct != null;
+            const showWas = !r.stale && typeof r.mm_prev === 'number' && r.mm_prev > 0;
             if (wasCell) wasCell.hidden = !showWas;
             if (wasArr) wasArr.hidden = !showWas;
             if (showWas && wasN) {
-                const wv = r.series[0];
-                wasN.textContent = (typeof wv === 'number') ? wv.toLocaleString('ru-RU') : '';
+                const _tm = (typeof window.t === 'function') ? window.t : (x) => x;
+                const MN = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль',
+                            'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+                wasN.textContent = r.mm_prev.toLocaleString('ru-RU');
+                const wasL = document.getElementById('pw-was-l');
+                if (wasL) wasL.textContent = _tm(MN[(r.mm_prev_month || 1) - 1]) + ' \u00b7 ' + _tm('медиана');
                 const nowEl = document.querySelector('.pw-was .pw-wcell.now .v');
-                const nv = r.series[r.series.length - 1];
-                if (nowEl && typeof nv === 'number') nowEl.textContent = nv.toLocaleString('ru-RU');
+                if (nowEl) nowEl.textContent = (typeof r.mm_cur === 'number') ? r.mm_cur.toLocaleString('ru-RU') : '\u2014';
+                const nowL = document.getElementById('pw-now-l');
+                if (nowL) nowL.textContent = _tm(MN[(r.mm_cur_month || 1) - 1]) + ' \u00b7 ' + _tm('на пост');
             }
             if (r.stale) {
                 if (tr) { tr.textContent = ''; tr.className = 'tr num'; }
@@ -1148,12 +1153,12 @@ async function loadReachSeries() {
             } else {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
-                if (tr && r.trend_pct != null) {
-                    const up = r.trend_pct >= 0;
-                    tr.textContent = (up ? '+' : '\u2212') + Math.abs(r.trend_pct) + '%';
-                    tr.className = 'tr num' + (up ? '' : ' dn');
+                if (tr && typeof r.mm_pct === 'number') {
+                    const up = r.mm_pct >= 0;
+                    tr.textContent = (r.mm_pct === 0 ? '0%' : (up ? '+' : '\u2212') + Math.abs(r.mm_pct) + '%');
+                    tr.className = 'tr num' + (r.mm_pct === 0 ? '' : (up ? '' : ' dn'));
                     const wa = document.getElementById('pw-was-arr');
-                    if (wa) wa.className = 'pw-warr' + (up ? ' up' : ' dn');
+                    if (wa) wa.className = 'pw-warr' + (r.mm_pct === 0 ? '' : (up ? ' up' : ' dn'));
                 }
                 renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
