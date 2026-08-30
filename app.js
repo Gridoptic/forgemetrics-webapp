@@ -1032,7 +1032,11 @@ function renderPulse(pulse) {
         <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
       </div>
       <div class="pw-hlab">Охват · 30 дней</div>
-      <div class="pw-hbig">${heroNum}<span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
+      <div class="pw-hbig pw-was">
+        <span class="pw-wcell" id="pw-was-cell" hidden><span class="pw-wn was num" id="pw-was-n"></span><span class="pw-wl">месяц назад</span></span>
+        <span class="pw-warr" id="pw-was-arr" hidden><i>\u2192</i><small class="tr num" id="pw-trend"></small></span>
+        <span class="pw-wcell now">${heroNum}<span class="pw-wl">сейчас · на пост</span></span>
+      </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
         <div class="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button></div>
@@ -1121,8 +1125,18 @@ async function loadReachSeries() {
             }, 300);
             const tr = document.getElementById('pw-trend');
             const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+            const wasCell = document.getElementById('pw-was-cell');
+            const wasArr = document.getElementById('pw-was-arr');
+            const wasN = document.getElementById('pw-was-n');
+            const showWas = !r.stale && Array.isArray(r.series) && r.series.length >= 2 && r.trend_pct != null;
+            if (wasCell) wasCell.hidden = !showWas;
+            if (wasArr) wasArr.hidden = !showWas;
+            if (showWas && wasN) {
+                const wv = r.series[0];
+                wasN.textContent = (typeof wv === 'number') ? wv.toLocaleString('ru-RU') : '';
+            }
             if (r.stale) {
-                if (tr) { tr.textContent = ''; tr.className = 'tr'; }
+                if (tr) { tr.textContent = ''; tr.className = 'tr num'; }
                 const lab = document.querySelector('.pw-hlab');
                 if (lab) lab.textContent = 'Охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
@@ -1131,7 +1145,13 @@ async function loadReachSeries() {
             } else {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
-                if (tr && r.trend_pct != null) { const up = r.trend_pct >= 0; tr.textContent = (up ? '↗ +' : '↘ ') + Math.abs(r.trend_pct) + '%'; tr.className = 'tr' + (up ? '' : ' dn'); }
+                if (tr && r.trend_pct != null) {
+                    const up = r.trend_pct >= 0;
+                    tr.textContent = (up ? '+' : '\u2212') + Math.abs(r.trend_pct) + '%';
+                    tr.className = 'tr num' + (up ? '' : ' dn');
+                    const wa = document.getElementById('pw-was-arr');
+                    if (wa) wa.className = 'pw-warr' + (up ? ' up' : ' dn');
+                }
                 renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
         } else {
