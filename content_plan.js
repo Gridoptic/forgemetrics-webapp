@@ -4075,7 +4075,7 @@
                 '<button class="cp-act" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Собрать заново')) + '</button></div>';
         }
         return '<div class="cp-crv">' + head +
-            '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-sparkles"></i>' +
+            '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-movie"></i>' +
             '<span class="tx"><b>' + esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
             esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button></div>';
     }

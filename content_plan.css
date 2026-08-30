@@ -25,9 +25,10 @@
 .cp-genwho i { font-size: 13px; }
 .cp-center .s { color: #656b83; font-size: 11.5px; max-width: 300px; line-height: 1.45; }
 @keyframes cpSpin { to { transform: rotate(360deg); } }
-.cp-spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(129,140,248,0.2);
-    border-top-color: #818cf8; animation: cpSpin 0.9s linear infinite; }
-.cp-spin.sm { width: 20px; height: 20px; border-width: 2.5px; }
+.cp-spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(129,140,248,0.16);
+    border-top-color: #818cf8; animation: cpSpin 0.9s linear infinite;
+    flex: 0 0 auto; box-sizing: border-box; }
+.cp-spin.sm { width: 20px; height: 20px; border-width: 2px; }
 .cp-genic, .cp-introic { width: 60px; height: 60px; border-radius: 17px; display: flex; align-items: center; justify-content: center;
     font-size: 27px; color: #818cf8; border: 1px solid rgba(129,140,248,0.4);
     background: linear-gradient(160deg,rgba(129,140,248,0.2),rgba(129,140,248,0.04)); }
