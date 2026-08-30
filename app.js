@@ -979,7 +979,7 @@ function pwRenderMini(pulse) {
         var rst = pulse.rr_status || '';
         var col = rst === 'норма' ? '#5DCAA5' : (rst ? '#f0938d' : '#e8eaf1');
         chips.push('<span class="chip"><b class="num" style="color:' + col + ';">' + pulse.reach_rate + '%</b>' +
-            '<span>ERR' + (rst ? ' \u00b7 ' + escapeHtml(_tm(rst)) : '') + '</span></span>');
+            '<span>ERR</span></span>');
     }
     if (pulse.cpm != null) {
         chips.push('<span class="chip"><b class="num">' + pwRub(pulse.cpm) + ' \u20bd</b><span>CPM</span></span>');
