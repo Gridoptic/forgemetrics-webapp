@@ -1134,6 +1134,9 @@ async function loadReachSeries() {
             if (showWas && wasN) {
                 const wv = r.series[0];
                 wasN.textContent = (typeof wv === 'number') ? wv.toLocaleString('ru-RU') : '';
+                const nowEl = document.querySelector('.pw-was .pw-wcell.now .v');
+                const nv = r.series[r.series.length - 1];
+                if (nowEl && typeof nv === 'number') nowEl.textContent = nv.toLocaleString('ru-RU');
             }
             if (r.stale) {
                 if (tr) { tr.textContent = ''; tr.className = 'tr num'; }
