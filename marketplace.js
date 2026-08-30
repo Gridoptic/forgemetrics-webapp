@@ -10056,10 +10056,19 @@
         } else if (l.curve_flag === 'late') {
             note = '<div class="fmr-cvwarn">Публикации продолжают набирать просмотры спустя сутки после выхода. У живой аудитории охват к этому времени выходит на плато.</div>';
         }
+        var concl = '';
+        var lead = null;
+        ['6', '12'].some(function (m) { if (c[m] != null && c[m] >= 80) { lead = m; return true; } return false; });
+        if (lead) {
+            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>Пост отрабатывает за первые</span> ' + lead +
+                ' <span>часов: к этой отметке набрано</span> ' + Math.round(c[lead]) + '% <span>суточного охвата</span></div>';
+        } else if (c['24'] != null) {
+            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>Охват набирается равномерно в течение суток</span></div>';
+        }
         return head +
             '<div class="fmr-cvwrap">' + bars + '</div>' +
             '<div class="fmr-gsrc"><span>За 100% принят охват за первые сутки</span>' +
-            (c.posts ? ' · <span>публикаций</span>: ' + c.posts : '') + '</div>' + note;
+            (c.posts ? ' · <span>публикаций</span>: ' + c.posts : '') + '</div>' + concl + note;
     }
     function _subsChart(l) {
         var uname = (l && (l.username || l.channel_username) || '').replace('@', '');
