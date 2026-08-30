@@ -989,12 +989,29 @@ function pwHealthState(pulse) {
     return h;
 }
 
+function pwNormDelta(pulse, cls) {
+    if (cls === 'grey' || !pulse) return '';
+    const lo = pulse.norm_lo, av = pulse.avg_views;
+    if (!Number.isFinite(lo) || lo <= 0 || !Number.isFinite(av)) return '';
+    let d = Math.round((av - lo) / lo * 100);
+    d = Math.max(-99, Math.min(999, d));
+    const sign = d >= 0 ? '+' : '\u2212';
+    const tt = (typeof window.t === 'function') ? window.t('к норме') : 'к норме';
+    return '<span class="pw-hdelta">' + sign + Math.abs(d) + '%<small>' + tt + '</small></span>';
+}
+
+function pwHealthHtml(pulse, h) {
+    return '<span class="pw-hsq"></span><span class="pw-htx">' + h.t +
+        (h.s ? ' <span class="pw-hs">· ' + h.s + '</span>' : '') + '</span>' +
+        pwNormDelta(pulse, h.c);
+}
+
 function markPulseHealthy(pulse) {
     const badge = document.querySelector('.pw-health');
     if (!badge || !pulse) return;
     const h = pwHealthState(pulse);
     badge.className = 'pw-health ' + h.c;
-    badge.innerHTML = '<span class="pw-dot"></span> ' + h.t + (h.s ? ' <span class="pw-hs">· ' + h.s + '</span>' : '');
+    badge.innerHTML = pwHealthHtml(pulse, h);
     const lab = document.querySelector('.pw-hlab');
     if (lab) lab.textContent = 'Средний охват · 30 дней';
 }
@@ -1009,7 +1026,7 @@ function renderPulse(pulse) {
         : '<span class="v">—</span>';
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
-        <span class="pw-health ${h.c}"><span class="pw-dot"></span> ${h.t}${h.s ? ` <span class="pw-hs">· ${h.s}</span>` : ''}</span>
+        <span class="pw-health ${h.c}">${pwHealthHtml(pulse, h)}</span>
         <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
       </div>
       <div class="pw-hlab">Средний охват · 30 дней</div>
@@ -1132,7 +1149,7 @@ function markPulseStale(days, lastDate) {
     const word = (days != null && days > 60) ? 'Неактивен' : 'Редкая активность';
     const sub = lastDate ? ('последний пост ' + lastDate) : ((days != null ? days : '') + ' дн без постов');
     badge.className = 'pw-health dormant';
-    badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span> ' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '');
+    badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span><span class="pw-htx">' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '') + '</span>';
 }
 
 var _reachLast = null, _reachRedrawT = null, _reachEpoch = 0;
