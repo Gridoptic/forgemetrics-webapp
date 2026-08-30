@@ -1033,9 +1033,9 @@ function renderPulse(pulse) {
       </div>
       <div class="pw-hlab">Охват · 30 дней</div>
       <div class="pw-hbig pw-was">
-        <span class="pw-wcell" id="pw-was-cell" hidden><span class="pw-wn was num" id="pw-was-n"></span><span class="pw-wl" id="pw-was-l"></span></span>
-        <span class="pw-warr" id="pw-was-arr" hidden><i>\u2192</i><small class="tr num" id="pw-trend"></small></span>
-        <span class="pw-wcell now">${heroNum}<span class="pw-wl" id="pw-now-l">сейчас · на пост</span></span>
+        <span class="pw-wcell" id="pw-was-cell" hidden></span>
+        <span class="pw-warr" id="pw-was-arr" hidden></span>
+        <span class="pw-wcell now" id="pw-now-cell">${heroNum}<span class="pw-wl">сейчас · на пост</span></span>
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
@@ -1104,6 +1104,45 @@ function renderPulseHook(trendPct, planMeasured, planActive) {
     });
 }
 
+function pwRenderMM(r) {
+    const wasCell = document.getElementById('pw-was-cell');
+    const arr = document.getElementById('pw-was-arr');
+    const nowCell = document.getElementById('pw-now-cell');
+    if (!wasCell || !arr || !nowCell) return;
+    const _tm = (typeof window.t === 'function') ? window.t : (x) => x;
+    const hasPrev = typeof r.mm_prev === 'number' && r.mm_prev > 0;
+    const hasCur = typeof r.mm_cur === 'number';
+    if (r.stale || (!hasPrev && !hasCur)) { wasCell.hidden = true; arr.hidden = true; return; }
+    wasCell.hidden = false;
+    arr.hidden = false;
+    if (hasPrev) {
+        wasCell.innerHTML = '<span class="pw-wn was num">' + r.mm_prev.toLocaleString('ru-RU') + '</span>' +
+            '<span class="pw-wl num">' + (r.mm_prev_ym || '') + ' \u00b7 ' + _tm('медиана') + '</span>';
+    } else {
+        wasCell.innerHTML = '<span class="pw-wn none">' + _tm('нет замера') + '</span>' +
+            '<span class="pw-wl num">' + (r.mm_prev_ym || '') + '</span>';
+    }
+    if (hasPrev && hasCur) {
+        const pct = r.mm_pct || 0;
+        const up = pct >= 0;
+        arr.className = 'pw-warr' + (pct === 0 ? '' : (up ? ' up' : ' dn'));
+        arr.innerHTML = '<i>\u2192</i><small class="num">' + (pct === 0 ? '0%' : (up ? '+' : '\u2212') + Math.abs(pct) + '%') + '</small>';
+    } else if (!hasPrev) {
+        arr.className = 'pw-warr na';
+        arr.innerHTML = '<span class="dash"><span></span><span></span><span></span><i>\u203a</i></span><small>\u2014</small>';
+    } else {
+        arr.className = 'pw-warr';
+        arr.innerHTML = '<i>\u2192</i><small class="num">0%</small>';
+    }
+    if (hasCur) {
+        nowCell.innerHTML = '<span class="v num">' + r.mm_cur.toLocaleString('ru-RU') + '</span>' +
+            '<span class="pw-wl num">' + (r.mm_cur_ym || '') + ' \u00b7 ' + _tm('на пост') + '</span>';
+    } else {
+        nowCell.innerHTML = '<span class="pw-wn none">' + _tm('пока нет постов') + '</span>' +
+            '<span class="pw-wl num">' + (r.mm_cur_ym || '') + '</span>';
+    }
+}
+
 async function loadReachSeries() {
     const host = document.getElementById('pw-chart');
     if (!host) return;
@@ -1123,28 +1162,9 @@ async function loadReachSeries() {
                 var svg = host.querySelector('svg');
                 if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
             }, 300);
-            const tr = document.getElementById('pw-trend');
             const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
-            const wasCell = document.getElementById('pw-was-cell');
-            const wasArr = document.getElementById('pw-was-arr');
-            const wasN = document.getElementById('pw-was-n');
-            const showWas = !r.stale && typeof r.mm_prev === 'number' && r.mm_prev > 0;
-            if (wasCell) wasCell.hidden = !showWas;
-            if (wasArr) wasArr.hidden = !showWas;
-            if (showWas && wasN) {
-                const _tm = (typeof window.t === 'function') ? window.t : (x) => x;
-                const MN = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль',
-                            'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
-                wasN.textContent = r.mm_prev.toLocaleString('ru-RU');
-                const wasL = document.getElementById('pw-was-l');
-                if (wasL) wasL.textContent = _tm(MN[(r.mm_prev_month || 1) - 1]) + ' \u00b7 ' + _tm('медиана');
-                const nowEl = document.querySelector('.pw-was .pw-wcell.now .v');
-                if (nowEl) nowEl.textContent = (typeof r.mm_cur === 'number') ? r.mm_cur.toLocaleString('ru-RU') : '\u2014';
-                const nowL = document.getElementById('pw-now-l');
-                if (nowL) nowL.textContent = _tm(MN[(r.mm_cur_month || 1) - 1]) + ' \u00b7 ' + _tm('на пост');
-            }
+            pwRenderMM(r);
             if (r.stale) {
-                if (tr) { tr.textContent = ''; tr.className = 'tr num'; }
                 const lab = document.querySelector('.pw-hlab');
                 if (lab) lab.textContent = 'Охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
@@ -1153,13 +1173,6 @@ async function loadReachSeries() {
             } else {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
-                if (tr && typeof r.mm_pct === 'number') {
-                    const up = r.mm_pct >= 0;
-                    tr.textContent = (r.mm_pct === 0 ? '0%' : (up ? '+' : '\u2212') + Math.abs(r.mm_pct) + '%');
-                    tr.className = 'tr num' + (r.mm_pct === 0 ? '' : (up ? '' : ' dn'));
-                    const wa = document.getElementById('pw-was-arr');
-                    if (wa) wa.className = 'pw-warr' + (r.mm_pct === 0 ? '' : (up ? ' up' : ' dn'));
-                }
                 renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
         } else {

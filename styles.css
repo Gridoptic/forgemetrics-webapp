@@ -4568,6 +4568,12 @@ html.cs-modal-open {
 .pw-warr i{font-style:normal;font-size:14px;line-height:1;}
 .pw-warr.dn{color:#ef8080;}.pw-warr.up{color:#5DCAA5;}
 .pw-warr .tr{font-size:10.5px;}
+.pw-wn.none{display:block;font-size:13px;font-weight:700;color:var(--text-tertiary);line-height:1.15;}
+.pw-warr.na{color:var(--text-tertiary);}
+.pw-warr.na .dash{display:flex;align-items:center;}
+.pw-warr.na .dash span{width:4px;height:1.5px;background:currentColor;margin-right:3px;border-radius:1px;}
+.pw-warr.na .dash i{font-style:normal;font-size:11px;line-height:1;margin-left:1px;}
+.pw-warr.na small{font-size:10px;font-weight:700;}
 .pw-warr.dn .tr{color:#ef8080;}.pw-warr.up .tr{color:#5DCAA5;}
 .pw-chart{position:relative;width:100%;margin-top:5px;min-height:42px;touch-action:pan-y;}
 .pw-chart::before{content:"";position:absolute;inset:-2px -2px 4px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.022),rgba(255,255,255,0.015) 58%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);pointer-events:none;z-index:0;}
