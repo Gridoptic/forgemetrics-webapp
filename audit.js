@@ -777,12 +777,21 @@
 
     function confirmRerun() {
         var doRun = function () { startAudit(); };
-        if (typeof confirmDialog === 'function') {
-            confirmDialog('Запустить новый аудит канала? Это потратит 1 аудит из месячного лимита.')
-                .then(function (ok) { if (ok) doRun(); });
-        } else {
-            doRun();
-        }
+        var T = function (x) { return (typeof window.t === 'function') ? window.t(x) : x; };
+        var ask = function (price) {
+            var coin = (typeof window.forgeAmount === 'function') ? window.forgeAmount(price, 12) : String(price);
+            if (typeof window.confirmDialogHtml === 'function') {
+                window.confirmDialogHtml(T('Новый аудит канала'),
+                    _esc(T('Текущий отчёт будет заменён свежим. Спишется')) + ' ' + coin + '.',
+                    T('Списать и запустить'))
+                    .then(function (ok) { if (ok) doRun(); });
+            } else {
+                doRun();
+            }
+        };
+        apiRequest('/api/v1/audits/limits')
+            .then(function (l) { ask((l && l.price) || 300); })
+            .catch(function () { ask(300); });
     }
 
     function loadRerunNote() {

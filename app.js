@@ -4435,9 +4435,19 @@ async function doPurgeChannel(channelId) {
 }
 
 
+function _voicePriceCoin() {
+    const p = (_settingsState.data && _settingsState.data.voice_refresh_limits
+               && _settingsState.data.voice_refresh_limits.price)
+        || (state.channels && state.channels.voice_refresh_limits && state.channels.voice_refresh_limits.price)
+        || 15;
+    return (typeof window.forgeAmount === 'function') ? window.forgeAmount(p, 12) : String(p);
+}
+
 window.__refreshVoice = async function (channelId, title) {
-    const confirmed = await confirmDialog(
-        `Пересобрать стиль канала «${title}»?\n\nСписание — 15 Forge с баланса.`
+    const confirmed = await confirmDialogHtml(
+        'Пересобрать стиль',
+        `Стиль канала «${escapeHtml(title || '')}» будет заменён свежим. Спишется ${_voicePriceCoin()}.`,
+        'Списать и пересобрать'
     );
     if (!confirmed) return;
     try {
@@ -5777,8 +5787,10 @@ async function handleApplyExamples() {
         return;
     }
 
-    const confirmed = await confirmDialog(
-        `Применить примеры стиля?\n\nЭто заменит текущий стиль канала. Списание — 15 Forge.`
+    const confirmed = await confirmDialogHtml(
+        'Применить примеры стиля',
+        `Текущий стиль канала будет заменён стилем из примеров. Спишется ${_voicePriceCoin()}.`,
+        'Списать и применить'
     );
     if (!confirmed) return;
 
@@ -5895,8 +5907,10 @@ function showVoiceEditorModal(currentText) {
 
 
 async function handleRefreshVoiceFromSettings() {
-    const confirmed = await confirmDialog(
-        `Пересобрать стиль из последних постов канала?\n\nЭто заменит текущий стиль. Списание — 15 Forge.`
+    const confirmed = await confirmDialogHtml(
+        'Пересобрать стиль',
+        `Стиль будет собран заново из последних постов канала. Спишется ${_voicePriceCoin()}.`,
+        'Списать и пересобрать'
     );
     if (!confirmed) return;
 
