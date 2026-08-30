@@ -436,6 +436,7 @@ function showScreen(screenName) {
     if (screens[screenName]) {
         screens[screenName].style.display = '';
     }
+    if (screenName === 'dashboard') _reachRedrawSoon();
 }
 
 
@@ -684,7 +685,7 @@ function renderChannelSelector(data) {
     if (!host) return;
     const ch = data.channel;
     try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
-    const csig = JSON.stringify([ch && ch.id, ch && ch.title, ch && ch.username, ch && ch.is_paused,
+    const csig = JSON.stringify([ch && ch.id, ch && ch.title, ch && ch.username, ch && ch.is_paused, ch && ch.has_avatar,
         data.pulse && data.pulse.niche, data.total_channels]);
     if (csig === _chselSig && host.firstChild) return;
     _chselSig = csig;
@@ -901,7 +902,7 @@ function pwRenderMetrics(pulse) {
         } else {
             var _mp = _pwNumPrev[id + ':' + _dch];
             _pwNumPrev[id + ':' + _dch] = v;
-            valTx = `<span class="pw-num" data-to="${v}"${_mp != null && _mp !== v ? ` data-from="${_mp}"` : ''}${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
+            valTx = `<span class="pw-num" data-to="${v}"${_mp != null ? ` data-from="${_mp}"` : ''}${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
         var _pfm = (id === 'price' && pulse.price_kind === 'estimate' &&
                     pulse.formats && pulse.formats.length) ? pulse.formats : null;
@@ -989,10 +990,13 @@ function pwRenderMini(pulse) {
     var mini = document.getElementById('pw-mmini');
     if (!mini || !pulse) return;
     var _tm = (typeof window.t === 'function') ? window.t : (x) => x;
+    var _mdch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
+    var _mdorm = pwDormantGet(_mdch);
+    var _mhide = _mdorm && !(_mdorm.d != null && _mdorm.d <= 30);
     var chips = [];
-    if (pulse.reach_rate != null) {
+    if (!_mhide && pulse.reach_rate != null) {
         var rst = pulse.rr_status || '';
-        var col = rst === 'норма' ? '#5DCAA5' : (rst ? '#f0938d' : '#e8eaf1');
+        var col = rst === 'норма' ? '#5DCAA5' : (rst === 'выше нормы' ? '#f5bf4f' : (rst ? '#ef8080' : '#e8eaf1'));
         chips.push('<span class="chip"><b class="num" style="color:' + col + ';">' + pulse.reach_rate + '%</b>' +
             '<span>ERR</span></span>');
     }
@@ -1063,7 +1067,7 @@ function pwOpenPicker(pulse) {
         try { localStorage.setItem(PW_LS, JSON.stringify(arr)); } catch (e) { }
         hapticLight();
         close();
-        pwRenderMetrics(pulse);
+        pwRenderMetrics((state.dashboard && state.dashboard.pulse) || pulse);
     });
 }
 
@@ -1079,6 +1083,7 @@ function pwNormDelta(pulse, cls) {
     const lo = pulse.norm_lo, av = pulse.avg_views;
     if (!Number.isFinite(lo) || lo <= 0 || !Number.isFinite(av)) return '';
     let d = (av - lo) / lo * 100;
+    if (pulse.rr_status === 'норма' && d < 0) d = 0;
     d = Math.max(-99, Math.min(999, d));
     const abs = Math.abs(d);
     const rounded = abs < 10 ? Math.round(abs * 10) / 10 : Math.round(abs);
@@ -1116,7 +1121,7 @@ function renderPulse(pulse) {
     const _hPrev = _pwNumPrev['hero:' + chKey];
     if (pulse.avg_views != null) _pwNumPrev['hero:' + chKey] = pulse.avg_views;
     const heroNum = (pulse.avg_views != null)
-        ? `<span class="v pw-num" data-to="${pulse.avg_views}"${_hPrev != null && _hPrev !== pulse.avg_views ? ` data-from="${_hPrev}"` : ''} data-sep="1">0</span>`
+        ? `<span class="v pw-num" data-to="${pulse.avg_views}"${_hPrev != null ? ` data-from="${_hPrev}"` : ''} data-sep="1">0</span>`
         : '<span class="v">—</span>';
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
@@ -1205,7 +1210,13 @@ function pwRenderMM(r) {
     const _tm = (typeof window.t === 'function') ? window.t : (x) => x;
     const hasPrev = typeof r.mm_prev === 'number' && r.mm_prev > 0;
     const hasCur = typeof r.mm_cur === 'number';
-    if (r.stale || (!hasPrev && !hasCur)) { wasCell.hidden = true; arr.hidden = true; return; }
+    if (r.stale || (!hasPrev && !hasCur)) {
+        wasCell.hidden = true; arr.hidden = true;
+        var pu = state.dashboard && state.dashboard.pulse;
+        if (pu && pu.avg_views != null) nowCell.innerHTML = '<span class="v num">' + pu.avg_views.toLocaleString('ru-RU') + '</span>' +
+            '<span class="pw-wl">' + _tm('сейчас') + ' \u00b7 ' + _tm('на пост') + '</span>';
+        return;
+    }
     wasCell.hidden = false;
     arr.hidden = false;
     if (hasPrev) {
@@ -1245,7 +1256,7 @@ async function loadReachSeries() {
         if (ep !== _reachEpoch) return;
         const chIdD = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         const rSig = chIdD + '|' + JSON.stringify(r);
-        if (rSig === _reachSigDom) return;
+        if (rSig === _reachSigDom) { _reachRedraw(); return; }
         _reachSigDom = rSig;
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
             const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
@@ -1256,10 +1267,7 @@ async function loadReachSeries() {
                            freshLeft: r.fresh_left_h || [],
                            normLo: r.norm_lo || null, normHi: r.norm_hi || null };
             drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi, anim);
-            setTimeout(function () {
-                var svg = host.querySelector('svg');
-                if (svg && Math.abs(host.clientWidth - (+svg.getAttribute('width') || 0)) > 8) _reachRedraw();
-            }, 300);
+            setTimeout(_reachRedraw, 300);
             pwRenderMM(r);
             if (r.stale) {
                 const lab = document.querySelector('.pw-hlab');
@@ -1267,14 +1275,19 @@ async function loadReachSeries() {
                 markPulseStale(r.stale_days, r.last_date);
                 pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
                 pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
+                renderPulseHook(null);
             } else {
+                var wasDorm = !!pwDormantGet(chIdD);
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
+                if (wasDorm) pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
                 renderPulseHook(r.trend_pct, r.plan_measured, !!r.plan_active);
             }
         } else {
             _reachLast = null;
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
+            pwRenderMM(r || {});
+            renderPulseHook(null);
             if (r && r.stale === false) {
                 pwDormantSet(chIdD, null);
                 markPulseHealthy(state.dashboard && state.dashboard.pulse);
@@ -1290,6 +1303,8 @@ async function loadReachSeries() {
         _reachLast = null;
         _reachSigDom = null;
         host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
+        pwRenderMM({});
+        renderPulseHook(null);
     }
 }
 
@@ -1309,6 +1324,8 @@ function _reachRedraw() {
         var host = document.getElementById('pw-chart');
         var curCh = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         if (!host || !_reachLast || _reachLast.chId !== curCh || !host.clientWidth) return;
+        var svgEl = host.querySelector('svg');
+        if (svgEl && Math.abs(host.clientWidth - (+svgEl.getAttribute('width') || 0)) <= 8) return;
         drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi, false);
     } catch (e) {}
 }
@@ -1330,7 +1347,10 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
     const ALL = DATA.concat(FR);
     const SCALED = hasNorm ? ALL.concat([normLo, normHi]) : ALL;
     const min = Math.min.apply(null, SCALED), max = Math.max.apply(null, SCALED);
-    const lo = min - (max - min) * 0.15, hi = max + (max - min) * 0.12, rng = (hi - lo) || 1, last = DATA.length - 1;
+    const spread = max - min;
+    const lo = spread ? min - spread * 0.15 : min - Math.max(1, min * 0.15);
+    const hi = spread ? max + spread * 0.12 : max + Math.max(1, max * 0.12);
+    const rng = (hi - lo) || 1, last = DATA.length - 1;
     const lastIdx = last + FR.length;
     const X = (i) => padL + i * (W - padL - padR) / (lastIdx || 1);
     const Y = (v) => padT + (1 - (v - lo) / rng) * (Hh - padT - padB);
@@ -1345,18 +1365,28 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         let step = pow * 10;
         for (const m of [1, 2, 2.5, 5, 10]) { if (raw <= m * pow) { step = m * pow; break; } }
         const out = [];
-        for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) { if (v > 0) out.push(Math.round(v)); }
-        return out.length ? out.slice(-3) : [max, min];
+        for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) { const rv = Math.round(v); if (rv > 0 && out.indexOf(rv) < 0) out.push(rv); }
+        return out.length ? out.slice(-3) : [Math.round(max)];
     })();
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
     const normTop = hasNorm ? Y(normHi) : null, normBot = hasNorm ? Y(normLo) : null;
     const normLblY = hasNorm ? ((normBot - normTop >= 16) ? (normTop + normBot) / 2 + 3 : normTop - 4) : null;
+    const gKeep = {};
+    grids.forEach((v) => {
+        const lb = short(v);
+        const err = Math.abs(v - (v >= 1000 ? Math.round(v / 100) * 100 : v));
+        if (!(lb in gKeep) || err < gKeep[lb].err) gKeep[lb] = { v: v, err: err };
+    });
+    const epY = Y(DATA[last]);
     grids.forEach((v) => {
         const yv = Y(v);
         const y = yv.toFixed(1);
         svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/>`;
+        const lb = short(v);
+        if (gKeep[lb].v !== v) return;
         if (hasNorm && Math.abs((yv - 3) - normLblY) < 11) return;
-        svg += `<text class="pw-gt" x="${W - padR}" y="${(yv - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`;
+        if (!FR.length && Math.abs(yv - epY) < 9) return;
+        svg += `<text class="pw-gt" x="${W - padR}" y="${(yv - 3).toFixed(1)}" text-anchor="end">${lb}</text>`;
     });
     if (hasNorm) {
         const nc = muted ? 'rgba(141,147,168,' : 'rgba(93,202,165,';
@@ -1385,7 +1415,7 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
     host.innerHTML = svg + '<div class="pw-tip"></div>';
 
     const cl = host.querySelector('.pw-cl'), ar = host.querySelector('.pw-area');
-    if (!reduce && animate && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
+    if (!reduce && animate !== false && cl.getTotalLength) { const L = cl.getTotalLength(); cl.style.strokeDasharray = L; cl.style.strokeDashoffset = L; cl.getBoundingClientRect(); cl.style.transition = 'stroke-dashoffset 1.25s cubic-bezier(.3,.7,.3,1)'; if (ar) { ar.style.opacity = 0; ar.style.transition = 'opacity .85s ease-out .3s'; } requestAnimationFrame(() => { cl.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; }); }
 
     const tip = host.querySelector('.pw-tip'), cx = host.querySelector('.pw-cx'), cd = host.querySelector('.pw-cd'), ep = host.querySelector('.pw-ep');
     function at(clientX) {
@@ -1412,11 +1442,11 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         tip.style.transform = 'translate(-50%,-128%)';
     }
     function off() { cx.style.opacity = 0; cd.style.opacity = 0; ep.style.opacity = 1; tip.style.opacity = 0; }
-    host.addEventListener('pointermove', (e) => at(e.clientX));
-    host.addEventListener('pointerdown', (e) => at(e.clientX));
-    host.addEventListener('pointerleave', off);
-    host.addEventListener('pointerup', off);
-    host.addEventListener('pointercancel', off);
+    host.onpointermove = (e) => at(e.clientX);
+    host.onpointerdown = (e) => at(e.clientX);
+    host.onpointerleave = off;
+    host.onpointerup = off;
+    host.onpointercancel = off;
 }
 
 
