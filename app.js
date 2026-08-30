@@ -1201,11 +1201,13 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
     })();
     let svg = `<svg viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}">`;
     const normTop = hasNorm ? Y(normHi) : null, normBot = hasNorm ? Y(normLo) : null;
+    const normLblY = hasNorm ? ((normBot - normTop >= 16) ? (normTop + normBot) / 2 + 3 : normTop - 4) : null;
     grids.forEach((v) => {
         const yv = Y(v);
-        if (hasNorm && Math.abs(yv - normTop) < 10) return;
         const y = yv.toFixed(1);
-        svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/><text class="pw-gt" x="${W - padR}" y="${(yv - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`;
+        svg += `<line class="pw-gl" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/>`;
+        if (hasNorm && Math.abs((yv - 3) - normLblY) < 11) return;
+        svg += `<text class="pw-gt" x="${W - padR}" y="${(yv - 3).toFixed(1)}" text-anchor="end">${short(v)}</text>`;
     });
     if (hasNorm) {
         const nc = muted ? 'rgba(141,147,168,' : 'rgba(93,202,165,';
@@ -1213,8 +1215,7 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         svg += `<line x1="${padL}" y1="${normTop.toFixed(1)}" x2="${W - padR}" y2="${normTop.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
         svg += `<line x1="${padL}" y1="${normBot.toFixed(1)}" x2="${W - padR}" y2="${normBot.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
         const nl = (typeof window.t === 'function' ? window.t('норма') : 'норма').toUpperCase();
-        const ny = (normBot - normTop >= 16) ? (normTop + normBot) / 2 + 3 : normTop - 4;
-        svg += `<text x="${W - padR}" y="${ny.toFixed(1)}" text-anchor="end" style="font-size:8px;font-weight:700;letter-spacing:0.06em;fill:${nc}0.9)">${nl} ${short(normLo)}–${short(normHi)}</text>`;
+        svg += `<text x="${W - padR}" y="${normLblY.toFixed(1)}" text-anchor="end" style="font-size:8px;font-weight:700;letter-spacing:0.06em;fill:${nc}0.9)">${nl} ${short(normLo)}–${short(normHi)}</text>`;
     }
     svg += `<path class="pw-area" d="${area}" fill="${PC.area}"/>`;
     svg += `<path class="pw-cl" d="${line}" fill="none" stroke="${PC.ln}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
