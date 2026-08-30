@@ -78,7 +78,7 @@ const FORGE_SHEET_ITEMS = [
     { key: 'deep_audit', one: 'коммерческий аудит', few: 'коммерческих аудита', many: 'коммерческих аудитов',
       short: 'Коммерческий аудит', icon: 'briefcase' },
     { key: 'competitors', one: 'анализ конкурентов', few: 'анализа конкурентов', many: 'анализов конкурентов',
-      short: 'Анализ конкурентов', icon: 'binoculars' },
+      short: 'Анализ конкурентов', icon: 'search' },
     { key: 'promo_burst24', one: 'всплеск продвижения на сутки', few: 'всплеска продвижения на сутки', many: 'всплесков продвижения на сутки',
       short: 'Всплеск продвижения 24 ч', icon: 'bolt' },
     { key: 'promo_week', one: 'неделя продвижения в ленте', few: 'недели продвижения в ленте', many: 'недель продвижения в ленте',
@@ -5669,7 +5669,7 @@ function renderSettingsAuditSection(data) {
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
             <button class="cs-btn-audit cs-btn-competitors" data-competitors-channel="${data.id}">
-                <span class="cs-btn-audit-icon"><i class="ti ti-binoculars"></i></span>
+                <span class="cs-btn-audit-icon"><i class="ti ti-search"></i></span>
                 <span class="cs-btn-audit-body">
                     <span class="cs-btn-audit-title">Анализ конкурентов</span>
                     <span class="cs-btn-audit-sub">Карта ниши, их приёмы, план обгона</span>

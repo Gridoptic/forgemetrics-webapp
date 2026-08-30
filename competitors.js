@@ -341,7 +341,7 @@
         return '' +
             '<div class="comp-limit-bar ' + (enough ? '' : 'comp-limit-exhausted') + '">' +
                 '<div class="comp-limit-head">' +
-                    '<span class="comp-limit-icon"><i class="ti ti-binoculars"></i></span>' +
+                    '<span class="comp-limit-icon"><i class="ti ti-search"></i></span>' +
                     '<span class="comp-limit-label">Анализ конкурентов</span>' +
                     '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>' +
                 '</div>' +
@@ -384,7 +384,7 @@
             headerHtml() +
             '<div class="comp-body">' +
                 '<div class="comp-intro-hero">' +
-                    '<div class="comp-intro-icon"><i class="ti ti-binoculars"></i></div>' +
+                    '<div class="comp-intro-icon"><i class="ti ti-search"></i></div>' +
                     '<div class="comp-intro-title">Разведка конкурентов</div>' +
                     '<div class="comp-intro-sub">ИИ найдёт каналы в твоей нише, проверит, что они существуют, и покажет — что у них набирает охват, где они тебя обходят и как их обогнать.</div>' +
                 '</div>' +
@@ -530,7 +530,7 @@
                 '<div class="comp-cand-list" id="comp-cand-list">' + cards + '</div>' +
                 manualInputHtml() +
                 '<div class="comp-select-footer">' +
-                    '<button class="comp-primary-btn" id="comp-analyze-btn" disabled><i class="ti ti-binoculars"></i><span>Анализировать (0)</span></button>' +
+                    '<button class="comp-primary-btn" id="comp-analyze-btn" disabled><i class="ti ti-search"></i><span>Анализировать (0)</span></button>' +
                 '</div>' +
             '</div>'
         );
