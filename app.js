@@ -983,7 +983,7 @@ function pwOpenPicker(pulse) {
 }
 
 function pwHealthState(pulse) {
-    const H = { green: { c: 'green', t: 'Живой канал', s: 'охват в норме' }, amber: { c: 'amber', t: 'Средний охват', s: 'ниже нормы' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
+    const H = { green: { c: 'green', t: 'Живой канал', s: '' }, amber: { c: 'amber', t: 'Средний охват', s: '' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
     let h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
     if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: 'Охват выше базы', s: 'репосты или накрутка — проверь' };
     return h;
@@ -1015,7 +1015,7 @@ function markPulseHealthy(pulse) {
     badge.className = 'pw-health ' + h.c;
     badge.innerHTML = pwHealthHtml(pulse, h);
     const lab = document.querySelector('.pw-hlab');
-    if (lab) lab.textContent = 'Средний охват · 30 дней';
+    if (lab) lab.textContent = 'Охват · 30 дней';
 }
 
 function renderPulse(pulse) {
@@ -1031,7 +1031,7 @@ function renderPulse(pulse) {
         <span class="pw-health ${h.c}">${pwHealthHtml(pulse, h)}</span>
         <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
       </div>
-      <div class="pw-hlab">Средний охват · 30 дней</div>
+      <div class="pw-hlab">Охват · 30 дней</div>
       <div class="pw-hbig">${heroNum}<span class="tr" id="pw-trend"></span><span class="u">на пост</span></div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
@@ -1042,6 +1042,16 @@ function renderPulse(pulse) {
     </div>`;
     pwCountUp(host);
     pwRenderMetrics(pulse);
+    host.addEventListener('click', (e) => {
+        const dd = e.target.closest ? e.target.closest('.pw-hdelta') : null;
+        if (!dd) return;
+        hapticLight();
+        const pl = (state.dashboard && state.dashboard.pulse) || {};
+        if (!pl.norm_lo || !pl.norm_hi) return;
+        const _tt = (typeof window.t === 'function') ? window.t : (x) => x;
+        showToast(_tt('Отклонение охвата от нижней планки нормы. Норма для канала этого размера') +
+            ': ' + pl.norm_lo.toLocaleString('ru-RU') + '\u2013' + pl.norm_hi.toLocaleString('ru-RU') + ' ' + _tt('на пост'), 'info-circle');
+    });
     const an = document.getElementById('pw-analyze');
     if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
     try {
@@ -1050,7 +1060,7 @@ function renderPulse(pulse) {
         if (_dorm) {
             markPulseStale(_dorm.d, _dorm.ld);
             var _lab2 = host.querySelector('.pw-hlab');
-            if (_lab2) _lab2.textContent = 'Средний охват · последние посты';
+            if (_lab2) _lab2.textContent = 'Охват · последние посты';
         }
     } catch (e) {}
     loadReachSeries();
@@ -1114,7 +1124,7 @@ async function loadReachSeries() {
             if (r.stale) {
                 if (tr) { tr.textContent = ''; tr.className = 'tr'; }
                 const lab = document.querySelector('.pw-hlab');
-                if (lab) lab.textContent = 'Средний охват · последние посты';
+                if (lab) lab.textContent = 'Охват · последние посты';
                 markPulseStale(r.stale_days, r.last_date);
                 pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
                 pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});

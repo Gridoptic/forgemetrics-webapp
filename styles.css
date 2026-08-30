@@ -4547,7 +4547,7 @@ html.cs-modal-open {
 .pw-health.red .pw-hsq{background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.55);}
 .pw-health.grey{color:var(--text-secondary);}
 .pw-health.grey .pw-hsq{background:#6b7088;box-shadow:none;}
-.pw-hdelta{margin-left:auto;flex:0 0 auto;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;text-align:right;line-height:1.15;}
+.pw-hdelta{margin-left:auto;flex:0 0 auto;cursor:pointer;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;text-align:right;line-height:1.15;}
 .pw-hdelta small{display:block;font-size:8.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;opacity:0.6;}
 .pw-hs{font-weight:600;font-size:11px;opacity:.82;}
 .pw-plink{display:flex;align-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--text-secondary);white-space:nowrap;cursor:pointer;}
