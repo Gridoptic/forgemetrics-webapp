@@ -3998,7 +3998,7 @@
             }
             if (t.closest && t.closest('[data-csave]')) {
                 haptic('medium');
-                saveCover({ mode: (_cover && _cover.mode) === 'cover' ? 'cover' : 'cover_auto',
+                saveCover({ mode: (_cover && _cover.mode) || 'cover_auto',
                             palette: c.palette, shape: c.shape,
                             sign: c.sign, variant: c.variant });
                 toast(T('Стиль сохранён — применяю к обложкам'));
@@ -4287,6 +4287,8 @@
             ['cover', 'ti-photo', 'Обложка — композицию выберу сам', 'тезис, число, сравнение...'],
             ['cover_auto', 'ti-sparkles', 'Обложка — композицию выберет система',
              'по признакам в тексте поста'],
+            ['photo', 'ti-camera', 'Фото по теме поста',
+             'эффектный кадр из фотобанка и подпись'],
         ];
         host.innerHTML = '<div class="cp-dsheet">' +
             '<div class="cp-dsgrab"></div>' +
