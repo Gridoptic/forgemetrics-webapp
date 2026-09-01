@@ -547,6 +547,22 @@ window.FMLive.register('dashboard', 90000, function () {
 });
 
 
+function openModuleSafe(file, fnName, label) {
+    // модуль мог не доехать до устройства (кэш Telegram, обрыв связи) — тогда кнопка
+    // молчала без единого слова; догружаем на лету и говорим, если не вышло
+    if (typeof window[fnName] === 'function') { window[fnName](); return; }
+    const _t = (typeof t === 'function') ? t : (x) => x;
+    showToast(_t('Загружаю модуль') + ': ' + _t(label), 'loader');
+    const s = document.createElement('script');
+    s.src = file + '?v=' + Date.now();
+    s.onload = () => {
+        if (typeof window[fnName] === 'function') window[fnName]();
+        else showToast(_t('Модуль не запустился — закрой и открой приложение'), 'alert-triangle');
+    };
+    s.onerror = () => showToast(_t('Модуль не загрузился — проверь связь и открой заново'), 'alert-triangle');
+    document.head.appendChild(s);
+}
+
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
@@ -2337,7 +2353,7 @@ function handleAction(actionId) {
 
     if (actionId === 'rewrite_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        if (typeof window.__openRewrite === 'function') { window.__openRewrite(); }
+        openModuleSafe('rewrite.js', '__openRewrite', 'Рерайт');
         return;
     }
 
