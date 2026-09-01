@@ -3576,7 +3576,7 @@
 
     var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
                    ask: 'вопрос' };
-    var COVER_PRICE = { cover_variant: 1, cover_own: 5 };
+    var COVER_PRICE = { cover_own: 5 };
 
     function coverPrice(op) {
         var w = wallet();
@@ -4072,7 +4072,7 @@
                 ? '<div class="cp-mrow">' +
                   '<button class="cp-mrepl" data-act="coverdraw" data-id="' + p.id +
                   '"><i class="ti ti-palette"></i>' +
-                  esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_variant')) + '</button>' +
+                  esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
                   '<button class="cp-mrepl" data-act="coverphoto" data-id="' + p.id +
                   '"><i class="ti ti-camera"></i>' + esc(T('Фото-обложка')) + ' ' +
                   forgeTag(coverPrice('cover_own')) + '</button></div>'
