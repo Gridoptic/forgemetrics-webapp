@@ -4180,7 +4180,7 @@
                   esc(T('Стиль')) + '</button></div>' +
                   '<div class="cp-mrow"><button class="cp-mrepl" data-act="coverphoto" data-id="' + p.id +
                   '"><i class="ti ti-camera"></i>' + esc(T('Фото по теме')) + ' ' +
-                  forgeTag(coverPrice('cover_variant')) + '</button></div>'
+                  forgeTag(coverPrice('cover_own')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
             if (p.is_own) row = ownMediaRow(p, isCover);
