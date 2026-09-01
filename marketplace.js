@@ -9475,9 +9475,9 @@
         if (pp) {
             ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <span class="fmr-i push" data-fi="ad">?</span></div>' +
                 '<div class="fmr-line">Пост <b class="fmr-big">от ' + _num(pp) + ' ₽</b></div>' +
+                _mktLine(l) +
                 '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
                 (!dead && cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
-                _estLine(l, pp) +
                 ((l.formats && l.formats.length) ? '<div class="fmx-fchips" style="margin:7px 0 0;">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
                 '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.</div>';
         }
@@ -9536,24 +9536,13 @@
         else if (col === '#f59e0b' || col === '#f5bf4f') { bg = 'rgba(245,191,79,0.08)'; bd = 'rgba(245,191,79,0.3)'; }
         return '<span class="fmx-kmp" style="color:' + (col || '#8d93a8') + ';background:' + bg + ';border:1px solid ' + bd + ';">' + tx + '</span>';
     }
-    function _estLine(l, pp) {
-        if (!l.est_low) return '';
-        var lo = l.est_low, hi = (l.est_high && l.est_high > l.est_low) ? l.est_high : null;
-        var band = hi ? (_num(lo) + '–' + _num(hi) + ' ₽') : ('≈' + _num(lo) + ' ₽');
-        var verdict = '', col = '#8990a8';
-        if (pp) {
-            if (hi && pp > hi) {
-                verdict = 'цена выше оценки на ' + Math.round((pp / hi - 1) * 100) + '%';
-                col = '#E8B04B';
-            } else if (pp < lo) {
-                verdict = 'цена ниже оценки на ' + Math.round((1 - pp / lo) * 100) + '%';
-                col = '#5DCAA5';
-            } else {
-                verdict = 'цена в пределах оценки';
-            }
-        }
-        return '<div class="fmr-sub">Оценка размещения <b style="color:#c2c6d2;">' + band + '</b>' +
-            (verdict ? ' · <span style="color:' + col + ';">' + verdict + '</span>' : '') + '</div>';
+    function _mktLine(l) {
+        if (!l.mkt_low) return '';
+        return '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка ' +
+            '<b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> ' +
+            '<span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);' +
+            'border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">' +
+            '≈ оценка ниши</span></div>';
     }
     function _kmRow(name, right, val, valCol, isPrice) {
         return '<div class="fmx-kmr"><span class="n">' + name + '</span><span class="rv">' + (right || '') +
@@ -9618,13 +9607,7 @@
             _kmRow('CPM, ₽',
                 _kmSub(dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), ''),
                 (!dead && cpm != null && !l.price_floored) ? _num(cpm) : '—', '#e8e8ed') +
-            _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true) +
-            ((mode === 'market' && l.est_low)
-                ? _kmRow('Оценка, ₽', _kmSub('расчёт по нише и охвату', ''),
-                         ((l.est_high && l.est_high > l.est_low)
-                             ? _exactRange(l.est_low, l.est_high) : _exact(l.est_low)),
-                         '#e8e8ed')
-                : '');
+            _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true);
         return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + rows + '</div>';
     }
