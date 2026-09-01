@@ -2027,7 +2027,9 @@
             if (wpx >= 74 && hpx >= 40 && n.median_cpm != null) {
                 body = '<span class="n">' + _esc(n.niche) + '</span>' +
                     '<div class="b"><span class="m">' + _num(n.median_cpm) + ' ₽</span>' +
-                    '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
+                    '<span class="p">' + (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin)
+                        : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка'
+                            : ((n.spark || []).length < 7 ? 'новая' : '·')) + '</span>') + '</span></div>';
             } else if (wpx >= 50 && hpx >= 24) {
                 body = '<span class="n">' + _esc(n.niche) + '</span>' +
                     (n.delta7 != null ? '<div class="b"><span class="p">' + _tFmtDelta(n.delta7, n.thin) + '</span></div>' : '');
@@ -2231,7 +2233,7 @@
                 html += '<div class="fmx-t2hotline" data-tniche="' + _esc(hotN.niche) + '"><i class="ti ti-flame"></i> Сильнейшее движение недели: <b>' + _esc(hotN.niche) + '</b> ' + _tFmtDelta(hotN.delta7) + '</div>';
             }
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Крупнейшие ниши с реальной медианой цены (от 3 каналов) · размер — суммарный охват каналов ниши · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг, синеватый — без изменений</div>';
+            html += '<div class="fmx-t2hint">Крупнейшие ниши с реальной медианой цены (от 3 каналов) · размер — суммарный охват каналов ниши · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг, синеватый — без изменений. Пометка «новая» — ниша в каталоге меньше недели, сравнивать пока не с чем</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null && !n.thin; });
