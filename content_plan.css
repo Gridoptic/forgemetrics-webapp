@@ -452,19 +452,7 @@
     color: #8d93a8; cursor: pointer; flex-shrink: 0;
 }
 
-.cp-ap-stopped {
-    display: flex; align-items: center; gap: 7px; padding: 9px 11px; border-radius: 11px;
-    background: rgba(239, 68, 68, 0.09); border: 1px solid rgba(239, 68, 68, 0.25);
-    font-size: 11px; line-height: 1.35; color: #e8b0b0; margin-bottom: 7px;
-}
-.cp-ap-stopped i { font-size: 14px; color: #ef8080; flex-shrink: 0; }
 
-.cp-ap-stop {
-    width: 100%; min-height: 40px; border-radius: 11px; font-family: inherit;
-    font-size: 12px; font-weight: 650; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.32); color: #f0a0a0;
-}
 
 .cp-fmts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .cp-fm {
@@ -1124,18 +1112,7 @@
     line-height: 1.35;
 }
 
-.cp-ap-pause {
-    display: flex; align-items: center; gap: 9px; margin-top: 10px;
-    padding: 10px 11px; border-radius: 12px; font-size: 11.5px; line-height: 1.4;
-    background: rgba(56, 189, 248, .08); border: 1px solid rgba(56, 189, 248, .26); color: #a5cfe4;
-}
-.cp-ap-pause i { font-size: 15px; flex-shrink: 0; color: #38bdf8; }
-.cp-ap-pause span { flex: 1; min-width: 0; }
 
-.cp-ap-mini.wide {
-    display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
-    margin-top: 10px; padding: 11px; min-height: 44px; border-radius: 12px;
-}
 
 .cp-rev {
     display: block; width: 100%; text-align: left; font-family: inherit; cursor: pointer;

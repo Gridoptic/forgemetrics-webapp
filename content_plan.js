@@ -3104,36 +3104,6 @@
             .catch(function () { _apBusy = false; toast(T('Не удалось изменить настройки')); });
     }
 
-    function askPause() {
-        haptic('light');
-        var host = document.getElementById('cp-capbox');
-        if (host) host.remove();
-        host = document.createElement('div');
-        host.id = 'cp-capbox';
-        host.className = 'cp-capbox';
-        var opts = [1, 2, 4, 8].map(function (w) {
-            return '<button class="cp-capopt" data-pausew="' + w + '">' + w + ' ' +
-                esc(T(plural3(w, 'неделя', 'недели', 'недель'))) + '</button>';
-        }).join('');
-        host.innerHTML = '<div class="cp-capin"><div class="cp-caph">' +
-            esc(T('Пауза на отпуск')) + '</div>' +
-            '<div class="cp-caps">' + esc(T('Сборка не запустится указанный срок. ' +
-                'Ступень и накопленные недели без правок сохраняются.')) + '</div>' +
-            '<div class="cp-capopts">' + opts + '</div>' +
-            '<button class="cp-capclose">' + esc(T('Закрыть')) + '</button></div>';
-        (document.getElementById('content-plan-screen') || document.body).appendChild(host);
-        host.addEventListener('click', function (e) {
-            var b = e.target.closest ? e.target.closest('[data-pausew]') : null;
-            if (b) {
-                haptic('light');
-                apSave({ pause_weeks: +b.getAttribute('data-pausew') });
-                host.remove();
-                return;
-            }
-            if (e.target === host || (e.target.closest && e.target.closest('.cp-capclose'))) host.remove();
-        });
-    }
-
     function askCap() {
         var cur = (_ap && _ap.weekly_forge_cap) || 100;
         var week = priceDay() * totalPosts();
@@ -3299,30 +3269,10 @@
                 '<b>' + (_ap.veto_hours || 6) + ' ' + esc(T(hoursWord(_ap.veto_hours || 6))) + '</b></div>';
         }
 
-        if (_ap.paused_until) {
-            var till = '';
-            try {
-                var lg = (window.getLang ? window.getLang() : 'ru') || 'ru';
-                till = new Date(_ap.paused_until).toLocaleDateString(lg, { day: 'numeric', month: 'long' });
-            } catch (e) {}
-            body += '<div class="cp-ap-pause"><i class="ti ti-beach"></i><span>' +
-                esc(T('Пауза до') + ' ' + till + ' — ' +
-                    T('ступень и недели без правок сохранены.')) + '</span>' +
-                '<button class="cp-ap-mini" data-act="apresume">' + esc(T('вернуть')) + '</button></div>';
-        }
         if (_ap.stopped_reason) {
             body += '<div class="cp-ap-stopped"><i class="ti ti-alert-triangle"></i>' +
                 esc(T('Остановлен: ') + _ap.stopped_reason) + '</div>';
         }
-        if (on) {
-            if (!_ap.paused_until) {
-                body += '<button class="cp-ap-mini wide" data-act="appause">' +
-                    '<i class="ti ti-beach"></i> ' + esc(T('Пауза на отпуск')) + '</button>';
-            }
-            body += '<button class="cp-ap-stop" data-act="apstop">' +
-                '<i class="ti ti-player-stop"></i> ' + esc(T('Остановить автопилот')) + '</button>';
-        }
-
         return '<div class="cp-ap' + cls + '">' + head +
             '<div class="cp-ap-body">' + steps + stepsNote + body + '</div></div>';
     }
@@ -4540,7 +4490,6 @@
             apSave({ level: actEl.getAttribute('data-v') });
             return;
         }
-        if (act === 'apstop') { apStop(); return; }
         if (act === 'pickchan') { pickChannel(); return; }
         if (act === 'pickday') { pickDay(+actEl.getAttribute('data-day')); return; }
         if (act === 'tipmove') {
@@ -4673,8 +4622,6 @@
             return;
         }
         if (act === 'apcap') { askCap(); return; }
-        if (act === 'apresume') { haptic('light'); apSave({ pause_weeks: 0 }); return; }
-        if (act === 'appause') { askPause(); return; }
         if (act === 'mchoice') {
             var mv = actEl.getAttribute('data-m') === 'standard' ? 'standard' : 'premium';
             _modelTouched = true;
