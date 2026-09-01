@@ -3682,12 +3682,13 @@
             });
     }
 
-    function regenCover(id, what) {
+    function regenCover(id, what, kind) {
         if (_mediaBusy[id]) return;
-        _mediaBusy[id] = what === 'phrase' ? T('Подбираю фразу...') : T('Рисую вариант...');
+        _mediaBusy[id] = kind === 'photo' ? T('Подбираю фото...')
+            : (what === 'phrase' ? T('Подбираю фразу...') : T('Рисую вариант...'));
         rerender();
         apiRequest('/api/v1/content-plan/cover/regen',
-                   { method: 'POST', body: JSON.stringify({ post_id: id, what: what }) })
+                   { method: 'POST', body: JSON.stringify({ post_id: id, what: what, kind: kind || null }) })
             .then(function (r) {
                 delete _mediaBusy[id];
                 if (r && r.ok) {
@@ -4176,7 +4177,10 @@
                   '"><i class="ti ti-layout-grid"></i>' + esc(T('Композиция')) + '</button>' +
                   '<button class="cp-mrepl" data-act="coverstyle" data-id="' + p.id +
                   '"><i class="ti ti-palette"></i>' +
-                  esc(T('Стиль')) + '</button></div>'
+                  esc(T('Стиль')) + '</button></div>' +
+                  '<div class="cp-mrow"><button class="cp-mrepl" data-act="coverphoto" data-id="' + p.id +
+                  '"><i class="ti ti-camera"></i>' + esc(T('Фото по теме')) + ' ' +
+                  forgeTag(coverPrice('cover_variant')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
             if (p.is_own) row = ownMediaRow(p, isCover);
@@ -4740,6 +4744,11 @@
             return;
         }
         if (act === 'coverlay') { askLayout(+actEl.getAttribute('data-id')); return; }
+        if (act === 'coverphoto') {
+            haptic('medium');
+            regenCover(+actEl.getAttribute('data-id'), 'variant', 'photo');
+            return;
+        }
         if (act === 'coverregen') {
             haptic('medium');
             regenCover(+actEl.getAttribute('data-id'), actEl.getAttribute('data-what'));
