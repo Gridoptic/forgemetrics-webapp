@@ -3266,9 +3266,12 @@
         var steps = '<div class="cp-ap-steps">' + AP_LEVELS.map(function (L) {
             var idx = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(L[0]);
             var cur = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(lvl);
+            var eIdx = AP_LEVELS.map(function (x) { return x[0]; }).indexOf(_ap.earned_level || 'manual');
+            if (eIdx < 0) eIdx = 0;
+            if (eIdx < cur) eIdx = cur;
             var k = idx < cur ? ' done' : (idx === cur ? ' now' : '');
             var sub = L[2];
-            if (idx === cur + 1) {
+            if (idx === eIdx + 1) {
                 sub = (_ap.weeks_clean || 0) + ' ' + T('из') + ' ' + (_ap.weeks_to_promote || 2) + ' ' + T('недель');
             }
             return '<button class="cp-ap-step' + k + '" data-act="aplevel" data-v="' + L[0] + '">' +
@@ -3333,6 +3336,7 @@
         if (_ap.stopped_reason) return 'Остановлен';
         if (_ap.level === 'auto') return 'Ведёт канал сам';
         if (_ap.level === 'batch') return 'Собирает неделю, ждёт утверждения';
+        if ((_ap.earned_level || 'manual') !== 'manual') return 'Можно включить';
         var need = (_ap.weeks_to_promote || 2) - (_ap.weeks_clean || 0);
         return need > 0 ? ('Откроется после ' + need + ' ' + plural3(need, 'недели', 'недель', 'недель') + ' без правок')
                         : 'Можно включить';
@@ -4522,7 +4526,7 @@
             haptic('medium');
             if (!_ap) return;
             if (_ap.level !== 'manual') { apStop(); return; }
-            if (!_ap.can_promote) {
+            if (!_ap.can_enable) {
                 var need = (_ap.weeks_to_promote || 2) - (_ap.weeks_clean || 0);
                 toast(T('Автопилот откроется после ' + need + ' ' +
                         plural3(need, 'недели', 'недель', 'недель') + ' без правок'));
