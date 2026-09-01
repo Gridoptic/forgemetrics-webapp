@@ -1637,7 +1637,7 @@
     function ownCoverFor(id, kind) {
         if (_mediaBusy[id]) return;
         haptic('light');
-        _mediaBusy[id] = T(kind === 'photo' ? 'Фото по теме' : 'Обложка в стиле канала');
+        _mediaBusy[id] = T(kind === 'photo' ? 'Подбираю фото...' : 'Рисую обложку...');
         rerender();
         apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: id, kind: kind || null }) })
             .then(function (r) {
@@ -1702,7 +1702,7 @@
                 var thumb = _own.coverUrl
                     ? '<img src="' + esc(_own.coverUrl) + '" alt="">'
                     : (isVid ? '<i class="ti ti-player-play"></i>' : '<img src="' + esc(_own.fileUrl) + '" alt="">');
-                var name = _own.coverUrl ? T('Обложка в стиле канала')
+                var name = _own.coverUrl ? T('Рисованная обложка')
                     : (_own.file.name || '') ;
                 var kind = _own.coverUrl ? T('фраза из текста, палитра канала')
                     : (_own.fileKind === 'animation' ? 'GIF' : (isVid ? T('видео') : T('фото'))) +
@@ -1713,19 +1713,19 @@
                     '<div class="cp-own-acts">' +
                     '<button class="cp-mrepl" data-oact="file" type="button"><i class="ti ti-upload"></i>' + esc(T('Заменить файлом')) + '</button>' +
                     '<button class="cp-mrepl" data-oact="cover" type="button"><i class="ti ti-photo"></i>' +
-                    esc(T(_own.coverUrl ? 'Другая обложка' : 'Обложка в стиле канала')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
+                    esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
                     '<button class="cp-mrepl" data-oa="cover_photo" type="button"><i class="ti ti-camera"></i>' +
-                    esc(T('Фото по теме')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button></div>';
+                    esc(T('Фото-обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button></div>';
                 return;
             }
             el.innerHTML = '<div class="cp-addcol" style="margin-top:0">' +
                 '<button class="cp-add2" data-oact="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
                 esc(T('Файл с устройства')) + '</b><em>' + esc(lim) + '</em></span><span class="pr">' + forgeTag(0) + '</span></button>' +
                 '<button class="cp-add2" data-oact="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
-                esc(T('Обложка в стиле канала')) + '</b><em>' + esc(T('Если своей картинки нет: фраза из текста, палитра канала')) +
+                esc(T('Рисованная обложка')) + '</b><em>' + esc(T('Если своей картинки нет: фраза из текста, палитра канала')) +
                 '</em></span><span class="pr">' + forgeTag(coverPrice('cover_own')) + '</span></button>' +
                 '<button class="cp-add2 own" data-oa="cover_photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
-                esc(T('Фото по теме')) + '</b><em>' + esc(T('Эффектный кадр из фотобанка и заголовок')) +
+                esc(T('Фото-обложка')) + '</b><em>' + esc(T('Эффектный кадр из фотобанка и заголовок')) +
                 '</em></span><span class="pr">' + forgeTag(coverPrice('cover_own')) + '</span></button></div>';
         };
         var drawTime = function () {
@@ -3576,7 +3576,7 @@
 
     var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
                    ask: 'вопрос' };
-    var COVER_PRICE = { cover_variant: 1, cover_phrase: 2, cover_own: 5 };
+    var COVER_PRICE = { cover_variant: 1, cover_own: 5 };
 
     function coverPrice(op) {
         var w = wallet();
@@ -3588,107 +3588,12 @@
         return (w.prices && w.prices.creative_build) || 70;
     }
 
-    var LAY_INFO = [
-        ['auto', 'ti-sparkles', 'На выбор системы', 'по признакам в тексте поста'],
-        ['thesis', 'ti-quote', 'Тезис', 'главная мысль крупно'],
-        ['num', 'ti-number-123', 'Число', 'цифра, ради которой читают'],
-        ['vs', 'ti-arrows-left-right', 'Сравнение', 'два средства бок о бок'],
-        ['list', 'ti-list-numbers', 'Список', 'три пункта из подборки'],
-        ['ask', 'ti-help-circle', 'Вопрос', 'заход на обсуждение'],
-    ];
-    var LAY_WHY = {
-        num: 'в тексте нет числа с единицей измерения',
-        vs: 'в заголовке нет двух коротких названий через «против»',
-        list: 'в тексте нет трёх пунктов списком',
-        ask: 'нет заголовка',
-    };
-
-    function askLayout(id) {
-        haptic('light');
-        var host = document.getElementById('cp-daybox');
-        if (host) host.remove();
-        host = document.createElement('div');
-        host.id = 'cp-daybox';
-        host.className = 'cp-dsov';
-        host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
-            '<div class="cp-dsh2"><b>' + esc(T('Композиция обложки')) + '</b></div>' +
-            '<div class="cp-dss"><div class="cp-spin sm"></div></div></div>';
-        document.body.appendChild(host);
-        requestAnimationFrame(function () { host.classList.add('vis'); });
-
-        apiRequest('/api/v1/content-plan/cover/options?post_id=' + id)
-            .then(function (r) {
-                if (!r || !r.ok) { host.remove(); toast(T('Не удалось открыть выбор')); return; }
-                var rows = LAY_INFO.map(function (l) {
-                    var can = l[0] === 'auto' || r.available[l[0]];
-                    var on = (r.current || 'auto') === l[0];
-                    return '<button class="cp-dsr wide' + (on ? ' on' : '') +
-                        (can ? '' : ' mut') + '"' + (can ? ' data-clay="' + l[0] + '"' : '') +
-                        '><i class="ti ' + l[1] + '"></i><span class="tx"><b>' +
-                        esc(T(l[2])) + '</b><em>' +
-                        esc(can ? T(l[3]) : T(LAY_WHY[l[0]] || '')) + '</em></span>' +
-                        (on ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
-                }).join('');
-                host.innerHTML = '<div class="cp-dsheet"><div class="cp-dsgrab"></div>' +
-                    '<div class="cp-dsh2"><b>' + esc(T('Композиция обложки')) + '</b></div>' +
-                    '<div class="cp-dss">' +
-                    esc(T('Недоступные не подходят этому тексту — под ними написано почему.')) +
-                    '</div>' + rows +
-                    '<div class="cp-dshint">' +
-                    (r.has_cover
-                        ? esc(T('Смена композиции перерисует обложку —')) + ' ' + forgeTag(coverPrice('cover_variant')) + '.'
-                        : esc(T('Первая обложка поста рисуется бесплатно.'))) +
-                    '</div></div>';
-            })
-            .catch(function () { host.remove(); toast(T('Не удалось открыть выбор')); });
-
-        host.addEventListener('click', function (e) {
-            var b = e.target.closest ? e.target.closest('[data-clay]') : null;
-            if (b) {
-                var lay = b.getAttribute('data-clay');
-                host.remove();
-                applyLayout(id, lay);
-                return;
-            }
-            if (e.target === host) host.remove();
-        });
-    }
-
-    function applyLayout(id, layout) {
+    function regenCover(id, kind) {
         if (_mediaBusy[id]) return;
-        _mediaBusy[id] = T('Рисую вариант...');
-        rerender();
-        apiRequest('/api/v1/content-plan/cover/layout',
-                   { method: 'POST', body: JSON.stringify({ post_id: id, layout: layout }) })
-            .then(function (r) {
-                delete _mediaBusy[id];
-                if (r && r.ok) {
-                    var p = post(id);
-                    if (p) { p.media_kind = 'photo'; p.media_url = r.url; p.cover_layout = r.layout; }
-                    haptic('light');
-                } else if (r && r.error === 'not_available') {
-                    toast(T('Эта композиция не подходит тексту поста'));
-                } else if (r && r.error === 'not_cover_mode') {
-                    toast(T('У поста своя картинка — обложка не рисуется'));
-                } else {
-                    toast(T('Обложка не обновилась'));
-                }
-                rerender();
-            })
-            .catch(function () {
-                delete _mediaBusy[id];
-                toast(T('Обложка не обновилась'));
-                rerender();
-            });
-    }
-
-    function regenCover(id, what, kind) {
-        if (_mediaBusy[id]) return;
-        _mediaBusy[id] = kind === 'photo' ? T('Подбираю фото...')
-            : (what === 'phrase' ? T('Подбираю фразу...') : T('Рисую вариант...'));
+        _mediaBusy[id] = kind === 'photo' ? T('Подбираю фото...') : T('Рисую обложку...');
         rerender();
         apiRequest('/api/v1/content-plan/cover/regen',
-                   { method: 'POST', body: JSON.stringify({ post_id: id, what: what, kind: kind || null }) })
+                   { method: 'POST', body: JSON.stringify({ post_id: id, kind: kind || 'draw' }) })
             .then(function (r) {
                 delete _mediaBusy[id];
                 if (r && r.ok) {
@@ -4165,21 +4070,11 @@
                 : '';
             var row = isCover
                 ? '<div class="cp-mrow">' +
-                  '<button class="cp-mrepl" data-act="coverregen" data-id="' + p.id +
-                  '" data-what="variant"><i class="ti ti-refresh"></i>' +
-                  esc(T('Другой вариант')) + ' ' + forgeTag(coverPrice('cover_variant')) + '</button>' +
-                  '<button class="cp-mrepl" data-act="coverregen" data-id="' + p.id +
-                  '" data-what="phrase"><i class="ti ti-quote"></i>' +
-                  esc(T('Другая фраза')) + ' ' + forgeTag(coverPrice('cover_phrase')) + '</button>' +
-                  '</div>' +
-                  '<div class="cp-mrow">' +
-                  '<button class="cp-mrepl" data-act="coverlay" data-id="' + p.id +
-                  '"><i class="ti ti-layout-grid"></i>' + esc(T('Композиция')) + '</button>' +
-                  '<button class="cp-mrepl" data-act="coverstyle" data-id="' + p.id +
+                  '<button class="cp-mrepl" data-act="coverdraw" data-id="' + p.id +
                   '"><i class="ti ti-palette"></i>' +
-                  esc(T('Стиль')) + '</button></div>' +
-                  '<div class="cp-mrow"><button class="cp-mrepl" data-act="coverphoto" data-id="' + p.id +
-                  '"><i class="ti ti-camera"></i>' + esc(T('Фото по теме')) + ' ' +
+                  esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_variant')) + '</button>' +
+                  '<button class="cp-mrepl" data-act="coverphoto" data-id="' + p.id +
+                  '"><i class="ti ti-camera"></i>' + esc(T('Фото-обложка')) + ' ' +
                   forgeTag(coverPrice('cover_own')) + '</button></div>'
                 : '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '">' +
                   esc(T('Заменить файл')) + '</button>';
@@ -4204,9 +4099,9 @@
             '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '"><i class="ti ti-upload"></i>' +
             esc(T(p.media_url ? 'Заменить файлом' : 'Файл с устройства')) + '</button>' +
             '<button class="cp-mrepl" data-act="owncover" data-id="' + p.id + '"><i class="ti ti-photo"></i>' +
-            esc(T(isCover ? 'Другая обложка' : 'Обложка в стиле канала')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
+            esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
             '<button class="cp-mrepl" data-act="photocover" data-id="' + p.id + '"><i class="ti ti-camera"></i>' +
-            esc(T('Фото по теме')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
+            esc(T('Фото-обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
             '</div>';
     }
 
@@ -4294,13 +4189,13 @@
         host.className = 'cp-dsov';
         var p = post(id) || {};
         var mode = (_cover && _cover.mode) || 'none';
+        if (mode === 'cover') mode = 'cover_auto';
         var opts = [
             ['none', 'ti-minus', 'Без картинки', 'уйдёт только текст'],
             ['own', 'ti-upload', 'Своя картинка, GIF или видео', 'загрузить файл с телефона'],
-            ['cover', 'ti-photo', 'Обложка — композицию выберу сам', 'тезис, число, сравнение...'],
-            ['cover_auto', 'ti-sparkles', 'Обложка — композицию выберет система',
-             'по признакам в тексте поста'],
-            ['photo', 'ti-camera', 'Фото по теме поста',
+            ['cover_auto', 'ti-palette', 'Рисованная обложка',
+             'фраза из текста, палитра и орнамент канала'],
+            ['photo', 'ti-camera', 'Фото-обложка',
              'эффектный кадр из фотобанка и подпись'],
         ];
         host.innerHTML = '<div class="cp-dsheet">' +
@@ -4315,7 +4210,7 @@
                     '<em>' + esc(T(o[3])) + '</em></span>' +
                     (mode === o[0] ? '<i class="ti ti-check ck"></i>' : '') + '</button>';
             }).join('') +
-            ((mode === 'cover' || mode === 'cover_auto')
+            (mode === 'cover_auto'
                 ? '<button class="cp-dsr wide" data-mstyle="1"><i class="ti ti-palette"></i>' +
                   '<span class="tx"><b>' + esc(T('Стиль этой картинки')) + '</b>' +
                   '<em>' + esc(T('палитра и орнамент — только для этого поста')) + '</em></span>' +
@@ -4743,15 +4638,14 @@
                 });
             return;
         }
-        if (act === 'coverlay') { askLayout(+actEl.getAttribute('data-id')); return; }
         if (act === 'coverphoto') {
             haptic('medium');
-            regenCover(+actEl.getAttribute('data-id'), 'variant', 'photo');
+            regenCover(+actEl.getAttribute('data-id'), 'photo');
             return;
         }
-        if (act === 'coverregen') {
+        if (act === 'coverdraw') {
             haptic('medium');
-            regenCover(+actEl.getAttribute('data-id'), actEl.getAttribute('data-what'));
+            regenCover(+actEl.getAttribute('data-id'), 'draw');
             return;
         }
         if (act === 'openstyle') {

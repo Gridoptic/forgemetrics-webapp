@@ -6811,7 +6811,7 @@ function rsCoverRender(host, ctx) {
     if (m) {
         const isVid = m.kind === 'video';
         const thumb = isVid ? '<i class="ti ti-player-play"></i>' : '<img src="' + escapeHtml(m.url) + '" alt="">';
-        const name = m.cover ? t('Обложка в стиле канала') : (m.name || t('Файл'));
+        const name = m.cover ? t('Рисованная обложка') : (m.name || t('Файл'));
         const kind = m.cover ? t('фраза из текста, палитра канала')
             : (m.kind === 'animation' ? 'GIF' : (isVid ? t('видео') : t('фото')));
         host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
@@ -6820,9 +6820,9 @@ function rsCoverRender(host, ctx) {
             '<div class="cp-own-acts">' +
             '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + t('Заменить файлом') + '</button>' +
             '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
-            t(m.cover ? 'Другая обложка' : 'Обложка в стиле канала') + ' ' + price + '</button>' +
+            t('Рисованная обложка') + ' ' + price + '</button>' +
             '<button class="cp-mrepl" data-rc="photo" type="button"><i class="ti ti-camera"></i>' +
-            t('Фото по теме') + ' ' + price + '</button></div>';
+            t('Фото-обложка') + ' ' + price + '</button></div>';
         return;
     }
     const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
@@ -6830,9 +6830,9 @@ function rsCoverRender(host, ctx) {
         '<button class="cp-add2" data-rc="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
         t('Файл с устройства') + '</b><em>' + t('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ') + '</em></span><span class="pr">' + zero + '</span></button>' +
         '<button class="cp-add2 own" data-rc="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
-        t('Обложка в стиле канала') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
+        t('Рисованная обложка') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
         '<button class="cp-add2 own" data-rc="photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
-        t('Фото по теме') + '</b><em>' + t('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
+        t('Фото-обложка') + '</b><em>' + t('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
 }
 
 function rsSetBusy(ctx, host, text) {
