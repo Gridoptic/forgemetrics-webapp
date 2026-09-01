@@ -1580,6 +1580,8 @@
             '.tbg-waves{background:repeating-linear-gradient(115deg, rgba(93,202,165,0.07) 0 2px, transparent 2px 26px),linear-gradient(180deg,#0c1322,#0a0d18);}',
             '.tbg-amber{background:radial-gradient(110% 90% at 78% -10%, rgba(245,191,79,0.45), transparent 55%),radial-gradient(120% 100% at 8% 112%, rgba(217,119,6,0.3), transparent 55%),#140f06;}',
             '.fmx-tab .el{position:absolute;overflow:hidden;}',
+            '.fmx-tab .el.gone{display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;border:1px dashed rgba(255,255,255,0.20);border-radius:10px;background:rgba(255,255,255,0.03);}',
+            '.fmx-tedgone{font-size:9.5px;line-height:1.4;color:#8d93a8;font-weight:600;}',
             '.fmx-tab .el.ttl{font-weight:800;line-height:1.28;letter-spacing:-0.2px;color:#e8e8ed;overflow:visible;}',
             '.fmx-tab .el.txt{color:#b9c1d9;line-height:1.5;overflow:visible;}',
             '.fmx-tab .el.med{border-radius:12px;box-shadow:0 10px 26px rgba(0,0,0,0.45);}',
@@ -6084,6 +6086,7 @@
                 if (sm) h += '<div class="el stkm' + md + '" style="' + st + 'height:' + e.h + '%;">' + sm + '</div>';
                 else h += '<div class="el stk' + md + '" style="' + st + 'font-size:' + Math.round((e.fs || 12) * 2.6) + 'px;">' + _esc(e.s) + '</div>';
             }
+            else if (e.missing) return;
             else if (e.t === 'img') h += '<div class="el med' + md + '" style="' + st + 'height:' + e.h + '%;"><img loading="lazy" decoding="async" src="' + _esc(mediaAbs(e.u)) + '" alt=""></div>';
             else if (e.t === 'video') h += '<div class="el med' + md + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted autoplay loop playsinline preload="metadata"></video></div>';
         });
@@ -6470,6 +6473,11 @@
             var st = 'left:' + e.x + '%;top:' + e.y + '%;width:' + e.w + '%;' +
                 (e.rot ? 'transform:rotate(' + e.rot + 'deg);' : '');
             var sel = (i === _ted.sel ? ' sel' : '') + _elMode(e);
+            if (e.missing) {
+                h += '<div class="el med' + sel + ' gone" data-i="' + i + '" style="' + st + 'height:' + (e.h || 18) + '%;">' +
+                    '<span class="fmx-tedgone">Файл недоступен — удали элемент и загрузи заново</span>' + _tedHnd(i) + '</div>';
+                return;
+            }
             if (e.t === 'title') h += '<div class="el ttl' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
             else if (e.t === 'text') h += '<div class="el txt' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 11) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
             else if (e.t === 'stk') {
