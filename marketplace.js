@@ -1425,8 +1425,6 @@
             '.fmx-avail{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(255,255,255,0.06);font-size:11px;}',
             '.fmx-avail .fr{color:#5DCAA5;font-weight:600;}.fmx-avail .bs{color:#ef8080;font-weight:600;}.fmx-avail .nd{color:#565b73;}',
             '.fmx-avail .new{margin-left:auto;color:#565b73;white-space:nowrap;}',
-            '.fmx-dpill{display:inline-flex;align-items:center;border-radius:99px;padding:2px 7px;font-size:9.5px;font-weight:700;margin-left:5px;vertical-align:2px;white-space:nowrap;}',
-            '.fmx-dpill.gr{background:rgba(93,202,165,0.15);color:#5DCAA5;}.fmx-dpill.am{background:rgba(245,191,79,0.15);color:#f5bf4f;}',
             '.fmx-calhead{display:flex;align-items:center;gap:8px;margin-bottom:9px;}',
             '.fmx-calhead b{flex:1;text-align:center;font-size:13px;}',
             '.fmx-calnav{min-height:30px;min-width:44px;padding:4px 12px;flex:0 0 auto;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;border-radius:99px;cursor:pointer;font-family:inherit;font-size:13px;}',
@@ -1534,13 +1532,6 @@
             '.pw-spark svg text{font-family:inherit;}',
             '.pw-sphead{display:flex;align-items:center;justify-content:space-between;font-size:9.5px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:4px;}',
             '.pw-sphead b{font-size:11px;letter-spacing:0;}',
-            '.fmx-pwc .pw-mrow{display:flex;align-items:stretch;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);position:relative;}',
-            '.fmx-pwc .pw-mcell{flex:1;min-width:0;}',
-            '.fmx-pwc .pw-ml{font-size:9px;color:#565b73;text-transform:uppercase;letter-spacing:0.1px;font-weight:600;line-height:1.15;min-height:2.2em;display:flex;align-items:flex-end;}',
-            '.fmx-pwc .pw-mv{font-size:15px;font-weight:800;margin-top:3px;letter-spacing:-0.4px;display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;color:#e8e8ed;}',
-            '.fmx-pwc .pw-mn{font-size:9.5px;color:#8990a8;margin-top:2px;line-height:1.25;overflow-wrap:anywhere;}',
-            '.fmx-pwc .fmx-mdim .pw-mn{opacity:1;}',
-            '.fmx-pwc .pw-mdiv{width:1px;background:rgba(255,255,255,0.07);margin:1px 7px;flex-shrink:0;}',
             '.fmx-trust .row{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;}',
             '.fmx-trust .row:last-child{border-bottom:none;}',
             '.fmx-trust .t{flex:1;font-size:11.5px;line-height:1.45;color:#e8e8ed;}',
@@ -1579,6 +1570,26 @@
             '.tbg-space{background:radial-gradient(3.2px 3.2px at 432px 88px, rgba(255,255,255,1) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(2.6px 2.6px at 96px 236px, rgba(255,255,255,0.93) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(2.2px 2.2px at 268px 484px, rgba(255,255,255,0.96) 18%, rgba(186,196,255,0.45) 48%, transparent 72%),radial-gradient(1.4px 1.4px at 10px 20px, rgba(255,255,255,0.96), transparent),radial-gradient(1.1px 1.1px at 60px 150px, rgba(255,255,255,0.68), transparent),radial-gradient(1.7px 1.7px at 120px 40px, rgba(255,255,255,0.96), transparent),radial-gradient(1.1px 1.1px at 170px 110px, rgba(255,255,255,0.72), transparent),radial-gradient(1.3px 1.3px at 200px 180px, rgba(255,255,255,0.93), transparent),radial-gradient(1.0px 1.0px at 90px 90px, rgba(255,255,255,0.78), transparent),radial-gradient(1.2px 1.2px at 150px 15px, rgba(255,255,255,0.78), transparent),radial-gradient(1.2px 1.2px at 30px 220px, rgba(255,255,255,0.78), transparent),radial-gradient(1.5px 1.5px at 100px 60px, rgba(255,255,255,0.93), transparent),radial-gradient(1.1px 1.1px at 180px 190px, rgba(255,255,255,0.68), transparent),radial-gradient(1.8px 1.8px at 250px 90px, rgba(255,255,255,0.96), transparent),radial-gradient(1.2px 1.2px at 290px 240px, rgba(255,255,255,0.72), transparent),radial-gradient(1.0px 1.0px at 210px 30px, rgba(255,255,255,0.68), transparent),radial-gradient(1.6px 1.6px at 50px 300px, rgba(255,255,255,0.88), transparent),radial-gradient(1.1px 1.1px at 140px 120px, rgba(255,255,255,0.68), transparent),radial-gradient(1.3px 1.3px at 260px 330px, rgba(255,255,255,0.96), transparent),radial-gradient(2.0px 2.0px at 350px 60px, rgba(255,255,255,1), transparent),radial-gradient(1.2px 1.2px at 410px 180px, rgba(255,255,255,0.68), transparent),radial-gradient(1.4px 1.4px at 320px 260px, rgba(255,255,255,0.78), transparent),radial-gradient(1.1px 1.1px at 80px 30px, rgba(255,255,255,0.78), transparent),radial-gradient(70% 45% at 78% 18%, rgba(124,58,237,0.42), transparent 65%),radial-gradient(55% 40% at 15% 45%, rgba(56,189,248,0.20), transparent 65%),radial-gradient(65% 45% at 60% 85%, rgba(217,70,239,0.22), transparent 65%),linear-gradient(115deg, transparent 28%, rgba(148,163,255,0.12) 42%, rgba(226,232,255,0.16) 50%, rgba(148,163,255,0.12) 58%, transparent 72%),radial-gradient(130% 100% at 50% 120%, #16204a 0%, #070b1a 55%, #030512 100%);background-size:100% 100%,100% 100%,100% 100%,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,233px 197px,317px 263px,317px 263px,317px 263px,317px 263px,317px 263px,317px 263px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,439px 353px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%;background-repeat:no-repeat,no-repeat,no-repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;}',
             '.tbg-waves{background:repeating-linear-gradient(115deg, rgba(93,202,165,0.07) 0 2px, transparent 2px 26px),linear-gradient(180deg,#0c1322,#0a0d18);}',
             '.tbg-amber{background:radial-gradient(110% 90% at 78% -10%, rgba(245,191,79,0.45), transparent 55%),radial-gradient(120% 100% at 8% 112%, rgba(217,119,6,0.3), transparent 55%),#140f06;}',
+            '.fmx-chmduo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px;}',
+            '.fmx-chmbig{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:11px 12px;min-width:0;}',
+            '.fmx-chml{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#6f748c;}',
+            '.fmx-chmv{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-top:3px;color:#e8e8ed;line-height:1.15;}',
+            '.fmx-chmn{font-size:9.5px;color:#8990a8;margin-top:5px;line-height:1.4;overflow-wrap:anywhere;}',
+            '.fmx-chmrows{margin-top:2px;}',
+            '.fmx-chmrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.055);}',
+            '.fmx-chmrow:first-child{border-top:none;}',
+            '.fmx-chmn1{flex:1;min-width:0;}',
+            '.fmx-chmn1 b{display:block;font-size:12px;font-weight:700;color:#cdd0de;}',
+            '.fmx-chmn1 span{display:block;font-size:9.5px;color:#6f748c;margin-top:1px;line-height:1.35;overflow-wrap:anywhere;}',
+            '.fmx-chmr{text-align:right;flex:0 0 auto;max-width:46%;}',
+            '.fmx-chmp{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:7px;border:1px solid;line-height:1.35;}',
+            '.fmx-chmaud{margin-top:9px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:10px 11px;}',
+            '.fmx-chmauh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}',
+            '.fmx-chmauh b{font-size:12.5px;font-weight:700;color:#e8e8ed;white-space:nowrap;}',
+            '.fmx-chmbar{height:6px;border-radius:4px;margin-top:7px;overflow:hidden;display:flex;}',
+            '.fmx-chmbar i{display:block;height:100%;}',
+            '.fmx-chmbl{display:flex;justify-content:space-between;gap:8px;font-size:9.5px;color:#6f748c;margin-top:4px;}',
+            '.fmx-chmdead{font-size:11px;color:#f06978;margin-top:8px;line-height:1.45;}',
             '.fmx-tab .el{position:absolute;overflow:hidden;}',
             '.fmx-tab .el.gone{display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;border:1px dashed rgba(255,255,255,0.20);border-radius:10px;background:rgba(255,255,255,0.03);}',
             '.fmx-tedgone{font-size:9.5px;line-height:1.4;color:#8d93a8;font-weight:600;}',
@@ -9334,12 +9345,6 @@
         if (!a) return '';
         return '<span class="fmx-bdg fmx-bp ' + a[0] + '">' + _PULSE_SVG + a[2] + '</span>';
     }
-    function _deltaPill(l) {
-        var d = l.niche_delta_pct;
-        if (d == null || !isFinite(d)) return '';
-        var neg = d < 0;
-        return '<span class="fmx-dpill ' + (neg ? 'gr' : 'am') + '">' + (neg ? '−' : '+') + Math.abs(Math.round(d)) + '% к нише</span>';
-    }
 
         var MON_RD = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
     var MON_IM = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
@@ -11237,78 +11242,99 @@
             '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
             '</div>';
     }
+    function _chmRow(name, note, right) {
+        return '<div class="fmx-chmrow"><div class="fmx-chmn1"><b>' + name + '</b>' +
+            (note ? '<span>' + note + '</span>' : '') + '</div>' +
+            '<div class="fmx-chmr">' + (right || '') + '</div></div>';
+    }
+    function _chmPill(txt, col) {
+        if (!txt) return '';
+        return '<span class="fmx-chmp" style="color:' + col + ';background:' + col + '1a;border-color:' + col + '4d;">' + txt + '</span>';
+    }
+    function _growPill(l) {
+        if (typeof l.subs_growth_30d !== 'number') return '';
+        var g = l.subs_growth_30d;
+        if (!g) return _chmPill('без изменений', '#8990a8');
+        return _chmPill((g > 0 ? '+' : '−') + _num(Math.abs(g)) + ' за 30 дн', g > 0 ? '#5DCAA5' : '#f06978');
+    }
+    function _errPill(l) {
+        if (l.er == null || !l.reach_status) return '';
+        var c = (l.reach_status === 'норма') ? '#5DCAA5'
+            : ((l.reach_status === 'очень низкий' || l.reach_status === 'аномальный') ? '#f06978' : '#E8B04B');
+        return _chmPill(_esc(l.reach_status), c);
+    }
+    function _errNote(l) {
+        if (l.er == null) return 'нет свежих постов';
+        return (l.reach_norm && l.reach_norm.length === 2)
+            ? 'охват к подписчикам · норма для ' + _esc(l.reach_tier || '') + ' ' + l.reach_norm[0] + '–' + l.reach_norm[1] + '%'
+            : 'охват к подписчикам';
+    }
+    function _erPill(l) {
+        var v = l.engagement_percent;
+        if (v == null) return _chmPill((l.react_count || l.comment_count) ? 'сигнала мало' : 'не измеряется', '#8990a8');
+        return _chmPill(v >= 3.5 ? 'высокая' : (v >= 1 ? 'норма' : 'низкая'),
+                        v >= 3.5 ? '#5DCAA5' : (v >= 1 ? '#818cf8' : '#E8B04B'));
+    }
+    function _erNote(l) {
+        var b = [];
+        if (l.react_count) b.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
+        if (l.comment_count) b.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
+        return b.length ? 'вовлечённость · по ' + b.join(', ') + ' на пост' : 'вовлечённость на пост';
+    }
+    function _idxPill(l) {
+        var c = l.health_class === 'green' ? '#5DCAA5' : (l.health_class === 'red' ? '#f06978' : '#E8B04B');
+        var t = l.health_class === 'green' ? 'высокий' : (l.health_class === 'red' ? 'низкий' : 'средний');
+        return _chmPill(t, c);
+    }
+    function _nicheBand(l) {
+        if (!l.niche_median_cpm) return '';
+        var rv = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : l.avg_views;
+        if (!rv) return '';
+        var lo = Math.max(50, Math.round(l.niche_median_cpm * 0.85 * rv / 1000 / 50) * 50);
+        var hi = Math.max(lo, Math.round(l.niche_median_cpm * 1.15 * rv / 1000 / 50) * 50);
+        var d = l.niche_delta_pct, tail;
+        if (d == null || Math.abs(d) <= 15) tail = ' · в рынке';
+        else tail = d > 0 ? ' · выше рынка на ' + Math.round(d) + '%' : ' · ниже рынка на ' + Math.abs(Math.round(d)) + '%';
+        return 'ниша ' + _num(lo) + '–' + _num(hi) + ' ₽' + tail;
+    }
+    function _audBar(l) {
+        var a = _audLabel(l);
+        if (!a || l.female_pct == null) return '';
+        var f = Math.max(0, Math.min(100, l.female_pct)), m = 100 - f;
+        return '<div class="fmx-chmaud"><div class="fmx-chmauh"><span class="fmx-chml">Аудитория</span>' +
+            '<b>' + _esc(a.short.replace('муж', 'мужчины').replace('жен', 'женщины')) + '</b></div>' +
+            '<div class="fmx-chmbar"><i style="width:' + m.toFixed(0) + '%;background:#5b9dff;"></i>' +
+            '<i style="width:' + f.toFixed(0) + '%;background:#ff6fae;"></i></div>' +
+            '<div class="fmx-chmbl"><span>' + _esc(a.note) + '</span><span>женщины ' + f.toFixed(0) + '%</span></div></div>';
+    }
     function _pwMetrics(l) {
         var dead = l.activity === 'none';
         var cpm = dead ? null : _cpm(l);
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
-        function cell(label, val, dim, note) {
-            return '<div class="pw-mcell' + (dim ? ' fmx-mdim' : '') + '"><div class="pw-ml">' + label + '</div>' +
-                '<div class="pw-mv num">' + val + '</div>' +
-                (note ? '<div class="pw-mn">' + note + '</div>' : '') + '</div>';
-        }
-        var _al = _audLabel(l), audTx = _al ? _al.text : null;
-        var _ring = '';
-        if (l.health_score != null) {
-            var _hcol = l.health_class === 'green' ? '#5DCAA5' : (l.health_class === 'red' ? '#ef4444' : '#f59e0b');
-            var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
-            _ring = '<svg width="42" height="42" viewBox="0 0 42 42" style="flex:0 0 auto;"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + _hcol + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>';
-        }
-        var _xtra = '';
-        if (dead) {
-            _xtra += '<div style="font-size:11px;color:#ef4444;margin-top:6px;"><span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
-        }
-        if (!dead && l.er != null && l.reach_status) {
-            var _rc = (l.reach_status === 'норма') ? '#5DCAA5' : ((l.reach_status === 'очень низкий' || l.reach_status === 'аномальный') ? '#ef4444' : '#f59e0b');
-            var _nrm = (l.reach_norm && l.reach_norm.length === 2) ? ' <span style="color:#565b73;">· норма для ' + _esc(l.reach_tier || '') + ' ' + l.reach_norm[0] + '–' + l.reach_norm[1] + '%</span>' : '';
-            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:6px;">ERR — <b style="color:' + _rc + ';">' + _esc(l.reach_status) + '</b>' + _nrm + '</div>';
-        }
-        if (!dead && l.engagement_percent != null) {
-            var _eb = [];
-            if (l.react_count) _eb.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
-            if (l.forward_count) _eb.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
-            if (l.comment_count) _eb.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
-            var _ev = l.engagement_percent;
-            var _es = (_ev == null) ? 'не измеряется' : (_ev >= 3.5 ? 'высокая' : (_ev >= 1 ? 'норма' : 'низкая'));
-            var _ec = _ev >= 3.5 ? '#5DCAA5' : (_ev >= 1 ? '#818cf8' : '#f59e0b');
-            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;">ER — <b style="color:' + _ec + ';">' + _es + '</b>' + (_eb.length ? ' <span style="color:#565b73;">— по ' + _eb.join(', ') + ' на пост</span>' : '') + '</div>';
-        }
-        if (!dead && l.niche_median_cpm && (ad || l.avg_views)) {
-            var _mrv = ad || l.avg_views;
-            var _mlo = Math.max(50, Math.round(l.niche_median_cpm * 0.85 * _mrv / 1000 / 50) * 50);
-            var _mhi = Math.max(_mlo, Math.round(l.niche_median_cpm * 1.15 * _mrv / 1000 / 50) * 50);
-            var _md = l.niche_delta_pct, _mv, _mc;
-            if (_md == null || Math.abs(_md) <= 15) { _mv = '<span>в рынке</span>'; _mc = '#5DCAA5'; }
-            else if (_md > 0) { _mv = '<span>выше рынка на</span> <span class="num">' + Math.round(_md) + '%</span>'; _mc = '#f59e0b'; }
-            else { _mv = '<span>ниже рынка на</span> <span class="num">' + Math.abs(Math.round(_md)) + '%</span>'; _mc = '#818cf8'; }
-            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;"><span>Похожие каналы ниши</span>: <b class="num" style="color:#cdd0de;">' + _num(_mlo) + '–' + _num(_mhi) + ' ₽</b> <span>за 1/24</span> — <b style="color:' + _mc + ';">' + _mv + '</b></div>';
-        }
-        if (typeof l.subs_growth_30d === 'number') {
-            var _sg = l.subs_growth_30d;
-            var _sgc = _sg > 0 ? '#5DCAA5' : (_sg < 0 ? '#ef4444' : '#8990a8');
-            var _sgs = (_sg > 0 ? '+' : (_sg < 0 ? '−' : '')) + _num(Math.abs(_sg));
-            _xtra += '<div style="font-size:11px;color:#9aa0b8;margin-top:4px;"><span>Прирост за 30 дней</span> — <b class="num" style="color:' + _sgc + ';">' + _sgs + '</b> <span style="color:#565b73;">подписчиков</span></div>';
-        }
         return '<div class="fmx-pwc">' +
-            '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">' +
-            '<div style="min-width:0;"><div class="pw-hlab">Охват поста</div>' +
-            '<div class="pw-hbig num"><span class="v">' + ((!dead && l.avg_views != null) ? _num(l.avg_views) : '—') + '</span><span class="u"' + (dead ? ' style="color:#ef4444;"' : '') + '>' + (dead ? 'не публикует' : 'на пост') + '</span></div></div>' +
-            _ring + '</div>' +
+            '<div class="fmx-chmduo">' +
+            '<div class="fmx-chmbig"><div class="fmx-chml">Охват поста</div>' +
+            '<div class="fmx-chmv num" style="color:' + (dead ? '#f06978' : '#5DCAA5') + ';">' +
+            ((!dead && l.avg_views != null) ? _num(l.avg_views) : '—') + '</div>' +
+            '<div class="fmx-chmn">' + (dead ? 'канал не публикует' : (ad ? 'замер рекламных постов' : 'медиана за 30 дней')) + '</div></div>' +
+            '<div class="fmx-chmbig"><div class="fmx-chml">CPM</div>' +
+            '<div class="fmx-chmv num">' + (cpm != null ? _num(cpm) + ' ₽' : '—') + '</div>' +
+            '<div class="fmx-chmn">' + (cpm == null ? (dead ? 'нет охвата' : 'цена не указана') : (_nicheBand(l) || 'за 1000 просмотров')) + '</div></div>' +
+            '</div>' +
             '<div class="pw-spark" id="fmx-pwspark"></div>' +
-            (_chAge(l.channel_created_ts) ? '<div style="font-size:11px;color:#8990a8;margin:-2px 0 8px;"><i class="ti ti-calendar" style="font-size:11px;"></i> На рынке ' + _chAge(l.channel_created_ts) + '</div>' : '') +
-            '<div class="pw-mrow num">' +
-            cell('Подписчики', l.subscribers != null ? _num(l.subscribers) : '—', l.subscribers == null) +
-            '<div class="pw-mdiv"></div>' +
-            cell('ERR', (!dead && l.er != null) ? (l.er > 100 ? _warnTri(13) + ' ' : '') + String(l.er).replace('.', ',') + '%' : '—', dead || l.er == null, dead ? 'нет свежих постов' : '') +
-            '<div class="pw-mdiv"></div>' +
-            cell('CPM' + (ad ? ' · ERR24' : ''), cpm != null ? _num(cpm) + ' ₽' + _deltaPill(l) : '—', cpm == null, dead ? 'нет охвата' : '') +
+            '<div class="fmx-chmrows">' +
+            _chmRow('Подписчики', (l.subscribers != null ? _num(l.subscribers) : '—') +
+                    (_chAge(l.channel_created_ts) ? ' · на рынке ' + _chAge(l.channel_created_ts) : ''),
+                    _growPill(l)) +
+            (dead ? '' : _chmRow('ERR' + (l.er != null ? ' ' + (l.er > 100 ? _warnTri(12) + ' ' : '') + String(l.er).replace('.', ',') + '%' : ''),
+                    _errNote(l), _errPill(l))) +
+            (dead ? '' : _chmRow('ER' + (l.engagement_percent != null ? ' ' + String(l.engagement_percent).replace('.', ',') + '%' : ''),
+                    _erNote(l), _erPill(l))) +
+            (l.health_score != null ? _chmRow('Индекс канала ' + l.health_score, 'сводная оценка качества', _idxPill(l)) : '') +
+            (ad ? _chmRow('Рекламный охват', 'замер за 24 часа после выхода', '<b class="num" style="color:#cdd0de;">~' + _num(ad) + '</b>') : '') +
             '</div>' +
-            '<div class="pw-mrow num" style="border-top:none;padding-top:4px;margin-top:4px;">' +
-            cell('Аудитория', audTx || '—', !audTx) +
-            '<div class="pw-mdiv"></div>' +
-            (ad ? cell('Рекл. охват 24ч', '~' + _num(ad), false)
-                : ((!dead && l.engagement_percent != null) ? cell('Вовлечённость (ER)', String(l.engagement_percent).replace('.', ',') + '%', false) : cell('Вовлечённость (ER)', '—', true, dead ? 'нет свежих постов' : ((l.react_count || l.comment_count) ? 'сигнала мало для оценки' : 'не измеряется')))) +
-            '</div>' +
-            _xtra +
+            _audBar(l) +
+            (dead ? '<div class="fmx-chmdead">Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</div>' : '') +
             (l.er != null && l.er > 100 ?
                 '<div class="fmx-anom"><span class="fmx-anom-i">' + _warnTri(17) + '</span>' +
                 '<div><b>ERR ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
