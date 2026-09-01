@@ -6652,6 +6652,10 @@
     }
     function _tedAdd(t) {
         if (_ted.els.length >= 12) { uiAlert('На витрине помещается до 12 элементов — удали лишний.'); return; }
+        if (t === 'video' && (_ted.els || []).some(function (e) { return e.t === 'video'; })) {
+            uiAlert('На витрине допускается одно видео — удали текущее, чтобы загрузить другое.');
+            return;
+        }
         if (t === 'img' || t === 'video') { _tedUpload(t); return; }
         if (t === 'stk') { _tedPickStk(null); return; }
         var e;
