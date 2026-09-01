@@ -490,10 +490,17 @@
 .cp-caps { font-size: 11.5px; color: #8d93a8; margin-bottom: 14px; line-height: 1.4; }
 .cp-capopts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .cp-capopt {
-    min-height: 46px; border-radius: 12px; font-family: inherit; font-size: 13px; font-weight: 650;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    min-height: 52px; padding: 8px 10px; border-radius: 12px; font-family: inherit;
+    font-size: 13px; font-weight: 650;
     background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
     color: #8d93a8; cursor: pointer;
 }
+.cp-capopt .forge-price {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 18px; font-weight: 700; color: #e8eaf1; line-height: 1.1;
+}
+.cp-capopt.on .forge-price { color: #fff; }
 .cp-capopt.on { background: rgba(99, 102, 241, 0.16); border-color: rgba(99, 102, 241, 0.5); color: #c7cbff; }
 .cp-capclose {
     width: 100%; min-height: 44px; border-radius: 12px; font-family: inherit; font-size: 12.5px;
@@ -1075,7 +1082,7 @@
 .cp-onechan .av { overflow: hidden; }
 
 .cp-capopt.thin { opacity: .6; }
-.cp-capopt span {
+.cp-capopt .cp-capnote {
     display: block; font-size: 9px; color: #fbbf24; margin-top: 2px; font-weight: 600;
 }
 .cp-capwarn {

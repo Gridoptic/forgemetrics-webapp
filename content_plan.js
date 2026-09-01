@@ -3113,8 +3113,8 @@
         var html = opts.map(function (v) {
             var thin = week > 0 && v < week;
             return '<button class="cp-capopt' + (v === cur ? ' on' : '') + (thin ? ' thin' : '') +
-                '" data-capv="' + v + '">' + forgeTag(v) +
-                (thin ? '<span>' + esc(T('меньше недели')) + '</span>' : '') + '</button>';
+                '" data-capv="' + v + '">' + forgeTag(v, 16) +
+                (thin ? '<span class="cp-capnote">' + esc(T('меньше недели')) + '</span>' : '') + '</button>';
         }).join('');
         var warn = (week > 0 && cur < week)
             ? '<div class="cp-capwarn">' + esc(T('Неделя по текущим настройкам стоит')) + ' ' +
