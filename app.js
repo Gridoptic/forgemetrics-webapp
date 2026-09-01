@@ -6820,7 +6820,9 @@ function rsCoverRender(host, ctx) {
             '<div class="cp-own-acts">' +
             '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + t('Заменить файлом') + '</button>' +
             '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
-            t(m.cover ? 'Другая обложка' : 'Обложка в стиле канала') + ' ' + price + '</button></div>';
+            t(m.cover ? 'Другая обложка' : 'Обложка в стиле канала') + ' ' + price + '</button>' +
+            '<button class="cp-mrepl" data-rc="photo" type="button"><i class="ti ti-camera"></i>' +
+            t('Фото по теме') + ' ' + price + '</button></div>';
         return;
     }
     const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
@@ -6828,7 +6830,9 @@ function rsCoverRender(host, ctx) {
         '<button class="cp-add2" data-rc="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
         t('Файл с устройства') + '</b><em>' + t('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ') + '</em></span><span class="pr">' + zero + '</span></button>' +
         '<button class="cp-add2 own" data-rc="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
-        t('Обложка в стиле канала') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button></div>';
+        t('Обложка в стиле канала') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
+        '<button class="cp-add2 own" data-rc="photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
+        t('Фото по теме') + '</b><em>' + t('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
 }
 
 function rsSetBusy(ctx, host, text) {
@@ -6844,7 +6848,8 @@ function rsBindCover(host, ctx) {
         if (!b || ctx.mediaBusy) return;
         const a = b.dataset.rc;
         if (a === 'file') { hapticLight(); rsPickFile(ctx, host); }
-        else if (a === 'cover') rsMakeCover(ctx, host);
+        else if (a === 'cover') rsMakeCover(ctx, host, 'draw');
+        else if (a === 'photo') rsMakeCover(ctx, host, 'photo');
         else if (a === 'clear') { hapticLight(); rsClearCover(ctx, host); }
     });
 }
@@ -6884,13 +6889,13 @@ function rsPickFile(ctx, host) {
     inp.click();
 }
 
-async function rsMakeCover(ctx, host) {
+async function rsMakeCover(ctx, host, kind) {
     const pid = ctx.currentPostId;
     if (!pid) return;
     hapticLight();
-    rsSetBusy(ctx, host, t('Рисую обложку...'));
+    rsSetBusy(ctx, host, t(kind === 'photo' ? 'Подбираю фото...' : 'Рисую обложку...'));
     try {
-        const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid }) });
+        const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid, kind: kind || null }) });
         if (r && r.ok) {
             ctx.media = { kind: 'photo', url: r.url, cover: true };
             showToast(t('Обложка готова'), 'check');
