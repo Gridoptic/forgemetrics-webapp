@@ -4586,6 +4586,10 @@ html.cs-modal-open {
 .pw-cx{stroke:rgba(93,202,165,0.5);stroke-width:1;stroke-dasharray:3 3;transition:opacity .12s;}
 .pw-cd{fill:#fff;stroke:#5DCAA5;stroke-width:2.5;transition:opacity .12s;}
 .pw-empty{font-size:11.5px;color:var(--text-tertiary);text-align:center;padding:20px 8px;line-height:1.5;}
+.pw-nodata .pw-hlab,.pw-nodata .pw-hbig{display:none;}
+.pw-nodata .pw-chart{min-height:0;margin-top:2px;}
+.pw-nodata .pw-chart::before{display:none;}
+.pw-nodata .pw-empty{padding:2px 0 4px;text-align:left;font-size:11px;}
 .pw-aihook{display:flex;align-items:center;gap:10px;margin-top:12px;padding:11px 12px;border-radius:13px;
   background:linear-gradient(135deg,rgba(129,140,248,0.16),rgba(129,140,248,0.05));border:1px solid rgba(129,140,248,0.34);}
 .pw-aih-ic{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;

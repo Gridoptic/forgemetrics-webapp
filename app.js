@@ -1263,10 +1263,16 @@ function pwRenderMM(r) {
     }
 }
 
+function pwNoData(host, on) {
+    const box = host && host.closest ? host.closest('.pw-pulse') : null;
+    if (box) box.classList.toggle('pw-nodata', !!on);
+}
+
 async function loadReachSeries() {
     const host = document.getElementById('pw-chart');
     if (!host) return;
     const ep = ++_reachEpoch;
+    /* без ряда прятать шапку графика: пустая область на пол-экрана бесполезна */
     try {
         const r = await apiRequest('/api/v1/user/reach-series');
         if (ep !== _reachEpoch) return;
@@ -1282,6 +1288,7 @@ async function loadReachSeries() {
                            fresh: Array.isArray(r.fresh) ? r.fresh : [], freshDates: r.fresh_dates || [],
                            freshLeft: r.fresh_left_h || [],
                            normLo: r.norm_lo || null, normHi: r.norm_hi || null };
+            pwNoData(host, false);
             drawReachChart(host, _reachLast.series, _reachLast.dates, _reachLast.days, _reachLast.endLabel, _reachLast.muted, _reachLast.fresh, _reachLast.freshDates, _reachLast.freshLeft, _reachLast.normLo, _reachLast.normHi, anim);
             setTimeout(_reachRedraw, 300);
             pwRenderMM(r);
@@ -1301,6 +1308,7 @@ async function loadReachSeries() {
             }
         } else {
             _reachLast = null;
+            pwNoData(host, true);
             host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
             pwRenderMM(r || {});
             renderPulseHook(null);
