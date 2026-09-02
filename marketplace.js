@@ -1833,7 +1833,12 @@
         var host = el('fmx-main');
         var _sc = el('fmx-scrollEl'); if (_sc) _sc.classList.remove('fmx-noscrollbar');
         host.classList.remove('fmx-fade'); void host.offsetWidth; host.classList.add('fmx-fade');
-        if (t === 'catalog') { _sort = 'all'; _nicheSel = null; renderCatalog(); }
+        if (t === 'catalog') {
+            var _hadNiche = !!_nicheSel;
+            _sort = 'all'; _nicheSel = null;
+            if (_hadNiche) loadCatalog();
+            renderCatalog();
+        }
         else if (t === 'market') { _subTab = 'buy'; _sort = 'match'; _nicheSel = null; renderMarket(); }
         else if (t === 'pulse') renderPulse();
         else if (t === 'mod') renderMod();
@@ -3417,14 +3422,16 @@
 
     var _CAT_PAGE = 1500;
     var _catTotal = null, _catMoreState = 'idle', _catSrvQ = '', _catSegOn = false;
-    var _nicheSrv = null;
+    var _nicheSrv = null, _nicheSrvG = null;
     function loadCatalog() {
         _catState = 'loading';
         var url = '/api/v1/marketplace/base?limit=' + _CAT_PAGE;
         if (_catSrvQ) url += '&q=' + encodeURIComponent(_catSrvQ);
+        if (_sort === 'niche' && _nicheSel) url += '&niche=' + encodeURIComponent(_nicheSel);
         apiGet(url).then(function (r) {
             _catalog = (r && r.channels) ? r.channels : []; _catState = 'ready';
             _nicheSrv = (r && r.niche_counts && Object.keys(r.niche_counts).length) ? r.niche_counts : null;
+            _nicheSrvG = (r && r.niche_groups) ? r.niche_groups : null;
             _adultOk = !!(r && r.adult_ok);
             _catTotal = (r && r.total != null) ? r.total : _catalog.length;
             _rvSeen = {}; _rvQueue = [];
@@ -3485,6 +3492,7 @@
         if (_catMoreState === 'loading' || _catTotal == null || !_catalog || _catalog.length >= _catTotal) { if (cb) cb(false, []); return; }
         _catMoreState = 'loading';
         var url = '/api/v1/marketplace/base?limit=' + _CAT_PAGE + '&offset=' + _catalog.length;
+        if (_sort === 'niche' && _nicheSel) url += '&niche=' + encodeURIComponent(_nicheSel);
         if (_catSrvQ) url += '&q=' + encodeURIComponent(_catSrvQ);
         apiGet(url).then(function (r) {
             _catMoreState = 'idle';
@@ -3753,7 +3761,7 @@
         var seen = {}, niches = [];
         arr.forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
         if (!niches.length) { toast(L('В ленте пока нет каналов с указанной нишей')); return; }
-        openNichePick(niches);
+        openNichePick();
     }
     function openBuyFilters() {
         var old = el('fmx-bfBg'); if (old) old.remove();
@@ -3847,7 +3855,11 @@
                         qsa(el('fmx-buysort'), '[data-bsort]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-bsort') === 'smart'); });
                         toast(L('Включена умная сортировка — подбор под твою нишу работает в ней'));
                     }
-                } else if (nv === 'all') { _sort = 'all'; _nicheSel = null; }
+                } else if (nv === 'all') {
+                    var _wasNiche = !!_nicheSel;
+                    _sort = 'all'; _nicheSel = null;
+                    if (_wasNiche && _mainTab === 'catalog') loadCatalog();
+                }
             }
             done(); _haptic('light'); _refreshFilterChip(); loadFeed(false);
         }
@@ -4960,7 +4972,16 @@
         var uniq = {};
         if (srv) {
             var keysS = Object.keys(srv);
+            var byKey = {};
+            keysS.forEach(function (k) { byKey[String(k).toLowerCase().replace(/ё/g, 'е')] = srv[k]; });
+            var byGroup = {};
+            Object.keys(_nicheSrvG || {}).forEach(function (k) {
+                byGroup[String(k).toLowerCase().replace(/ё/g, 'е')] = _nicheSrvG[k];
+            });
             return function countForSrv(match) {
+                var mk = String(match || '').toLowerCase().replace(/ё/g, 'е');
+                if (byGroup[mk] != null) return byGroup[mk];
+                if (byKey[mk] != null) return byKey[mk];
                 var t = 0;
                 for (var i = 0; i < keysS.length; i++) if (_nicheHit(match, keysS[i])) t += srv[keysS[i]];
                 return t;
@@ -5008,7 +5029,8 @@
             done(); _haptic('light');
             if (onPick) { onPick(m); return; }
             _nicheSel = m; _sort = 'niche';
-            if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
+            if (_mainTab === 'catalog') { loadCatalog(); renderCatalog(); }
+            else if (_subTab === 'buy') renderBuy();
         }
         function draw(q) {
             q = (q || '').toLowerCase().replace(/ё/g, 'е').trim();
