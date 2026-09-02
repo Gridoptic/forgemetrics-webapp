@@ -39,6 +39,7 @@ const screens = {
     postThinking: document.getElementById('post-thinking-screen'),
     postQuestion: document.getElementById('post-question-screen'),
     postResult: document.getElementById('post-result-screen'),
+    postsArchive: document.getElementById('posts-archive-screen'),
 };
 
 const FORGE_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">'
@@ -2340,6 +2341,12 @@ function handleAction(actionId) {
         return;
     }
 
+    if (actionId === 'posts_archive') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        openPostsArchive();
+        return;
+    }
+
     if (actionId === 'add_channel' || actionId === 'my_channels') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         openChannels();
@@ -3628,6 +3635,8 @@ function resetPostState() {
     state.post.emojiMode = 'auto';
     state.post.styleUserChoice = null;
     state.post.lastStyleApplied = false;
+    state.post.publishStatus = 'draft';
+    state.post.fromArchive = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
     if (els.postStyleInput) els.postStyleInput.value = '';
@@ -3651,39 +3660,183 @@ function resetPostState() {
 }
 
 
-function rsRecentRender(items) {
-    const host = document.getElementById('post-recent');
-    if (!host) return;
-    if (!items || !items.length) { host.innerHTML = ''; return; }
-    const rows = items.map((it) => {
-        const c = it.creative;
-        let pill = '';
-        if (c && (c.status === 'queued' || c.status === 'generating')) {
-            pill = '<span class="prc-pill work"><i class="ti ti-movie"></i>' + TR('Ролик собирается') + '</span>';
-        } else if (c && c.status === 'ready') {
-            pill = '<span class="prc-pill ok"><i class="ti ti-movie"></i>' + TR('Ролик готов') + '</span>';
-        } else if (c && c.status === 'error') {
-            pill = '<span class="prc-pill bad"><i class="ti ti-movie"></i>' + TR('Ролик не собрался') + '</span>';
+const ARCHIVE_PAGE = 20;
+const _arch = { items: [], total: 0, loading: false };
+
+function openPostsArchive() {
+    hapticLight();
+    _arch.items = [];
+    _arch.total = 0;
+    showScreen('postsArchive');
+    _archSet('loading');
+    archiveLoad(true);
+}
+
+function _archSet(state) {
+    const map = { loading: 'archive-loading', empty: 'archive-empty', list: 'archive-list' };
+    Object.keys(map).forEach((k) => {
+        const el = document.getElementById(map[k]);
+        if (el) el.style.display = (k === state) ? '' : 'none';
+    });
+}
+
+async function archiveLoad(reset) {
+    if (_arch.loading) return;
+    _arch.loading = true;
+    const offset = reset ? 0 : _arch.items.length;
+    try {
+        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + ARCHIVE_PAGE + '&offset=' + offset);
+        const items = (r && r.items) || [];
+        _arch.total = (r && r.total) || 0;
+        _arch.items = reset ? items : _arch.items.concat(items);
+    } catch (e) {
+        _arch.loading = false;
+        if (reset) {
+            _archSet('empty');
+            showToast(TR('Не удалось загрузить архив'), 'alert-triangle');
         }
-        const when = rsRecentWhen(it.created_at);
-        return '<button type="button" class="prc-row" data-open="' + it.id + '">' +
-            (it.media && it.media.url ? '<span class="prc-th"><img src="' + escapeHtml(it.media.url) + '" alt=""></span>'
-                : '<span class="prc-th empty"><i class="ti ti-file-text"></i></span>') +
-            '<span class="prc-tx"><b>' + escapeHtml(it.preview || '') + '</b>' +
-            '<em>' + escapeHtml(when) + (pill ? '</em>' + pill : '</em>') + '</span>' +
-            '<i class="ti ti-chevron-right prc-go"></i></button>';
-    }).join('');
-    host.innerHTML = '<div class="prc-head"><i class="ti ti-history"></i><b>' +
-        escapeHtml(TR('Готовые посты')) + '</b></div>' + rows;
-    if (!host.dataset.bound) {
-        host.dataset.bound = '1';
-        host.addEventListener('click', (e) => {
-            const b = e.target.closest ? e.target.closest('[data-open]') : null;
-            if (!b) return;
-            hapticLight();
-            rsRecentOpen(+b.getAttribute('data-open'));
-        });
+        return;
     }
+    _arch.loading = false;
+    archiveRender();
+}
+
+function archiveRender() {
+    if (!_arch.items.length) { _archSet('empty'); return; }
+    _archSet('list');
+    const host = document.getElementById('archive-rows');
+    if (host) {
+        const groups = [];
+        _arch.items.forEach((it) => {
+            const label = archiveGroupLabel(it.created_at);
+            const last = groups[groups.length - 1];
+            if (last && last.label === label) last.items.push(it);
+            else groups.push({ label: label, items: [it] });
+        });
+        host.innerHTML = groups.map((g) =>
+            '<div class="ap-qsec">' + escapeHtml(g.label) + ' · ' + g.items.length + '</div>' +
+            '<div class="post-recent">' + g.items.map(archiveRow).join('') + '</div>').join('');
+        if (!host.dataset.bound) {
+            host.dataset.bound = '1';
+            host.addEventListener('click', (e) => {
+                const b = e.target.closest ? e.target.closest('[data-open]') : null;
+                if (!b) return;
+                hapticLight();
+                archiveOpen(+b.getAttribute('data-open'));
+            });
+        }
+    }
+    const more = document.getElementById('archive-more');
+    const end = document.getElementById('archive-end');
+    const left = Math.max(0, _arch.total - _arch.items.length);
+    if (more) {
+        more.style.display = left ? '' : 'none';
+        const tx = document.getElementById('archive-more-text');
+        if (tx) tx.textContent = TR('Показать ещё') + ' (' + left + ')';
+    }
+    if (end) {
+        end.style.display = left ? 'none' : '';
+        end.textContent = TR('Показаны все посты') + ' · ' + _arch.total;
+    }
+}
+
+function archiveGroupLabel(iso) {
+    if (!iso) return TR('Ранее');
+    const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+    try {
+        const d = new Date(iso);
+        const now = new Date();
+        const day = 86400000;
+        const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const ts = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+        if (ts === midnight) return TR('Сегодня');
+        if (ts === midnight - day) return TR('Вчера');
+        if (ts > midnight - 7 * day) return TR('На этой неделе');
+        return d.toLocaleDateString(lang, { month: 'long', year: 'numeric' }).replace(/\s*г\.?$/i, '');
+    } catch (e) { return TR('Ранее'); }
+}
+
+function archiveStatusText(it) {
+    const st = it.publish_status || 'draft';
+    if (st === 'published') return TR('опубликован');
+    if (st === 'queued' || st === 'publishing') {
+        const when = it.scheduled_at ? rsRecentWhen(it.scheduled_at) : '';
+        return when ? TR('в очереди на') + ' ' + when : TR('в очереди');
+    }
+    if (st === 'failed') return TR('не отправился');
+    return it.in_plan ? TR('в контент-плане') : TR('черновик');
+}
+
+function archiveRow(it) {
+    const c = it.creative;
+    let pill = '';
+    if (c && (c.status === 'queued' || c.status === 'generating')) {
+        pill = '<span class="prc-pill work"><i class="ti ti-movie"></i>' + TR('Ролик собирается') + '</span>';
+    } else if (c && c.status === 'ready') {
+        pill = '<span class="prc-pill ok"><i class="ti ti-movie"></i>' + TR('Ролик готов') + '</span>';
+    } else if (c && c.status === 'error') {
+        pill = '<span class="prc-pill bad"><i class="ti ti-movie"></i>' + TR('Ролик не собрался') + '</span>';
+    }
+    const icon = it.is_rewrite ? 'ti-pencil' : 'ti-file-text';
+    const meta = rsRecentWhen(it.created_at) + ' · ' + archiveStatusText(it);
+    return '<button type="button" class="prc-row" data-open="' + it.id + '">' +
+        (it.media && it.media.url
+            ? '<span class="prc-th"><img src="' + escapeHtml(it.media.url) + '" alt=""></span>'
+            : '<span class="prc-th empty"><i class="ti ' + icon + '"></i></span>') +
+        '<span class="prc-tx"><b>' + escapeHtml(it.preview || '') + '</b>' +
+        '<em>' + escapeHtml(meta) + '</em>' + pill + '</span>' +
+        '<i class="ti ti-chevron-right prc-go"></i></button>';
+}
+
+async function archiveOpen(pid) {
+    const it = _arch.items.find((x) => x.id === pid);
+    if (!it) return;
+    if (!state.post.limits) {
+        try {
+            state.post.limits = await apiRequest('/api/v1/post/limits');
+        } catch (e) { state.post.limits = null; }
+    }
+    resetPostState();
+    state.post.currentPostId = it.id;
+    state.post.currentPostText = it.text || '';
+    state.post.creative = it.creative || null;
+    state.post.crvLoadedFor = it.id;
+    state.post.crvBusy = false;
+    state.post.publishStatus = it.publish_status || 'draft';
+    state.post.fromArchive = true;
+    renderResult({ text: it.text || '', post_id: it.id });
+    state.post.media = it.media || null;
+    const host = document.getElementById('post-cover-block');
+    rsCoverRender(host, state.post);
+    rsCrvPoll(state.post, host);
+}
+
+function _archVisible() {
+    const s = screens.postsArchive;
+    return !!(s && s.style.display !== 'none' && s.offsetParent !== null);
+}
+
+window.FMLive.register('postsArchive', 45000, function () {
+    if (!_archVisible() || _arch.loading) return false;
+    const live = _arch.items.some((x) => (x.creative && (x.creative.status === 'queued' || x.creative.status === 'generating'))
+        || x.publish_status === 'queued' || x.publish_status === 'publishing');
+    if (!live) return false;
+    archiveRefreshSilent();
+    return true;
+});
+
+async function archiveRefreshSilent() {
+    const want = Math.min(_arch.items.length || ARCHIVE_PAGE, 50);
+    try {
+        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + want + '&offset=0');
+        const fresh = (r && r.items) || [];
+        if (!fresh.length) return;
+        const byId = {};
+        fresh.forEach((x) => { byId[x.id] = x; });
+        _arch.items = _arch.items.map((x) => byId[x.id] || x);
+        _arch.total = (r && r.total) || _arch.total;
+        archiveRender();
+    } catch (e) { /* тихо: следующий тик повторит */ }
 }
 
 function rsRecentWhen(iso) {
@@ -3699,36 +3852,9 @@ function rsRecentWhen(iso) {
     } catch (e) { return ''; }
 }
 
-function rsRecentOpen(pid) {
-    const it = (state.post.recent || []).find((x) => x.id === pid);
-    if (!it) return;
-    state.post.currentPostId = it.id;
-    state.post.currentPostText = it.text || '';
-    state.post.suggestions = [];
-    state.post.isGood = false;
-    state.post.contextHistory = [];
-    state.post.creative = it.creative || null;
-    state.post.crvLoadedFor = it.id;
-    state.post.crvBusy = false;
-    renderResult({ text: it.text || '', post_id: it.id });
-    state.post.media = it.media || null;
-    rsCoverRender(document.getElementById('post-cover-block'), state.post);
-    rsCrvPoll(state.post, document.getElementById('post-cover-block'));
-}
-
-function rsRecentLoad() {
-    apiRequest('/api/v1/post/recent?limit=5')
-        .then((r) => {
-            state.post.recent = (r && r.items) || [];
-            rsRecentRender(state.post.recent);
-        })
-        .catch(() => {});
-}
-
 async function openPostCreate() {
     resetPostState();
     showScreen('postCreate');
-    rsRecentLoad();
 
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
@@ -7559,6 +7685,19 @@ function formatRemainingTime(seconds) {
 }
 
 
+function postAlreadyOut() {
+    const st = state.post && state.post.publishStatus;
+    if (st === 'published') {
+        showToast(TR('Пост уже опубликован — повторно отправить нельзя.'), 'circle-check');
+        return true;
+    }
+    if (st === 'queued' || st === 'publishing') {
+        showToast(TR('Пост уже в очереди на публикацию.'), 'clock');
+        return true;
+    }
+    return false;
+}
+
 function showToast(text, icon) {
     if (!els.toast) return;
     if (els.toastText) els.toastText.textContent = text;
@@ -7731,6 +7870,15 @@ function setupPostEventListeners() {
         els.postQuestionCustomSubmit.addEventListener('click', submitQuestionCustom);
     }
 
+    const _archBack = document.getElementById('archive-back');
+    if (_archBack) _archBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
+
+    const _archMore = document.getElementById('archive-more');
+    if (_archMore) _archMore.addEventListener('click', () => { hapticLight(); archiveLoad(false); });
+
+    const _archWrite = document.getElementById('archive-write');
+    if (_archWrite) _archWrite.addEventListener('click', () => { openPostCreate(); });
+
     if (els.postResultBack) {
         els.postResultBack.addEventListener('click', () => {
             showScreen('postCreate');
@@ -7751,6 +7899,7 @@ function setupPostEventListeners() {
 
     if (els.postSendChannelBtn) {
         els.postSendChannelBtn.addEventListener('click', () => {
+            if (postAlreadyOut()) return;
             const locked = els.postSendChannelBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('channel');
             else publishPostNow(state.post);
@@ -7759,6 +7908,7 @@ function setupPostEventListeners() {
 
     if (els.postPlanBtn) {
         els.postPlanBtn.addEventListener('click', () => {
+            if (postAlreadyOut()) return;
             const locked = els.postPlanBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('schedule');
             else if (state.post.placed) showToast(TR('Пост уже в плане:') + ' ' + rsDateLabel(state.post.placed.date_iso, true) + ' ' + state.post.placed.hm, 'check');
