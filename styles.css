@@ -6191,3 +6191,135 @@ html.cs-modal-open {
 .cs-vfoot{margin-top:4px;font-size:11px;color:#8d93a8;line-height:1.5;}
 @keyframes csVFlash{0%,100%{box-shadow:none;}30%{box-shadow:0 0 0 2px rgba(129,140,248,0.7);}}
 .cs-vflash{animation:csVFlash 1.8s ease;border-radius:14px;}
+
+.post-recent {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.post-recent:empty {
+    display: none;
+}
+
+.prc-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 2px 2px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.prc-head i {
+    font-size: 14px;
+}
+
+.prc-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+}
+
+.prc-row:active {
+    background: rgba(255, 255, 255, 0.075);
+}
+
+.prc-th {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.prc-th img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.prc-th.empty i {
+    font-size: 16px;
+    color: var(--text-tertiary);
+}
+
+.prc-tx {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.prc-tx b {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
+}
+
+.prc-tx em {
+    font-size: 11px;
+    font-style: normal;
+    color: var(--text-secondary);
+}
+
+.prc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    max-width: 100%;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.prc-pill i {
+    font-size: 11px;
+}
+
+.prc-pill.work {
+    background: rgba(139, 122, 255, 0.16);
+    color: #b3a6ff;
+}
+
+.prc-pill.ok {
+    background: rgba(16, 185, 129, 0.16);
+    color: var(--color-success);
+}
+
+.prc-pill.bad {
+    background: rgba(245, 158, 11, 0.16);
+    color: var(--color-warning);
+}
+
+.prc-go {
+    flex: 0 0 auto;
+    font-size: 16px;
+    color: var(--text-tertiary);
+}

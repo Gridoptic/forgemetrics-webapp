@@ -3629,7 +3629,6 @@ function resetPostState() {
     state.post.emojiMode = 'auto';
     state.post.styleUserChoice = null;
     state.post.lastStyleApplied = false;
-    state.post.leftResult = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
     if (els.postStyleInput) els.postStyleInput.value = '';
@@ -3653,14 +3652,84 @@ function resetPostState() {
 }
 
 
-async function openPostCreate() {
-    if (state.post && state.post.currentPostId && state.post.currentPostText
-        && !state.post.leftResult) {
-        showScreen('postResult');
-        return;
+function rsRecentRender(items) {
+    const host = document.getElementById('post-recent');
+    if (!host) return;
+    if (!items || !items.length) { host.innerHTML = ''; return; }
+    const rows = items.map((it) => {
+        const c = it.creative;
+        let pill = '';
+        if (c && (c.status === 'queued' || c.status === 'generating')) {
+            pill = '<span class="prc-pill work"><i class="ti ti-movie"></i>' + TR('Ролик собирается') + '</span>';
+        } else if (c && c.status === 'ready') {
+            pill = '<span class="prc-pill ok"><i class="ti ti-movie"></i>' + TR('Ролик готов') + '</span>';
+        } else if (c && c.status === 'error') {
+            pill = '<span class="prc-pill bad"><i class="ti ti-movie"></i>' + TR('Ролик не собрался') + '</span>';
+        }
+        const when = rsRecentWhen(it.created_at);
+        return '<button type="button" class="prc-row" data-open="' + it.id + '">' +
+            (it.media && it.media.url ? '<span class="prc-th"><img src="' + escapeHtml(it.media.url) + '" alt=""></span>'
+                : '<span class="prc-th empty"><i class="ti ti-file-text"></i></span>') +
+            '<span class="prc-tx"><b>' + escapeHtml(it.preview || '') + '</b>' +
+            '<em>' + escapeHtml(when) + (pill ? '</em>' + pill : '</em>') + '</span>' +
+            '<i class="ti ti-chevron-right prc-go"></i></button>';
+    }).join('');
+    host.innerHTML = '<div class="prc-head"><i class="ti ti-history"></i><b>' +
+        escapeHtml(TR('Готовые посты')) + '</b></div>' + rows;
+    if (!host.dataset.bound) {
+        host.dataset.bound = '1';
+        host.addEventListener('click', (e) => {
+            const b = e.target.closest ? e.target.closest('[data-open]') : null;
+            if (!b) return;
+            hapticLight();
+            rsRecentOpen(+b.getAttribute('data-open'));
+        });
     }
+}
+
+function rsRecentWhen(iso) {
+    if (!iso) return '';
+    try {
+        const d = new Date(iso);
+        const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
+        const today = new Date();
+        const sameDay = d.toDateString() === today.toDateString();
+        return sameDay
+            ? d.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })
+            : d.toLocaleDateString(lang, { day: 'numeric', month: 'short' });
+    } catch (e) { return ''; }
+}
+
+function rsRecentOpen(pid) {
+    const it = (state.post.recent || []).find((x) => x.id === pid);
+    if (!it) return;
+    state.post.currentPostId = it.id;
+    state.post.currentPostText = it.text || '';
+    state.post.suggestions = [];
+    state.post.isGood = false;
+    state.post.contextHistory = [];
+    state.post.creative = it.creative || null;
+    state.post.crvLoadedFor = it.id;
+    state.post.crvBusy = false;
+    renderResult({ text: it.text || '', post_id: it.id, model_used: it.model_used });
+    state.post.media = it.media || null;
+    rsCoverRender(document.getElementById('post-cover-block'), state.post);
+    rsCrvPoll(state.post, document.getElementById('post-cover-block'));
+}
+
+function rsRecentLoad() {
+    apiRequest('/api/v1/post/recent?limit=5')
+        .then((r) => {
+            state.post.recent = (r && r.items) || [];
+            rsRecentRender(state.post.recent);
+        })
+        .catch(() => {});
+}
+
+async function openPostCreate() {
     resetPostState();
     showScreen('postCreate');
+    rsRecentLoad();
 
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
@@ -6714,7 +6783,6 @@ function renderResult(result) {
     renderResultHints();
     if (hasChannel && result.post_id) loadPlaceInfo(state.post);
 
-    state.post.leftResult = false;
     showScreen('postResult');
 }
 
@@ -7666,7 +7734,6 @@ function setupPostEventListeners() {
 
     if (els.postResultBack) {
         els.postResultBack.addEventListener('click', () => {
-            state.post.leftResult = true;
             showScreen('postCreate');
         });
     }
