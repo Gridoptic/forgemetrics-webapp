@@ -701,7 +701,7 @@
         var open = _openId === l.id;
         var winClosed = !!(l.attribution_until && new Date(l.attribution_until) <= new Date());
         var dot = active ? ((_chPaused || winClosed) ? 'p' : 'g') : 'o';
-        var _fmtMap = { post: 'пост', pin: 'закреп', story: 'сторис', circle: 'кружок', repost: 'репост', other: 'другое' };
+        var _fmtMap = { post: PL('пост'), pin: PL('закреп'), story: PL('сторис'), circle: PL('кружок'), repost: PL('репост'), other: PL('другое') };
         var joinedN = l.joined || 0;
         var impB = effImp(l);
         var numK = function (v) {
@@ -745,7 +745,7 @@
             var pos = Math.max(0, Math.min(1, (l.cpf - band.lo) / (band.hi - band.lo)));
             h += '<div class="pl-btrack"><div class="pl-bmark" style="left:' + (3 + Math.round(pos * 94)) + '%;"></div></div>' +
                 '<div class="pl-blabs"><span>' + num(band.lo) + ' ₽ · ' + esc(T('дешевле нормы')) + '</span>' +
-                '<span>' + esc(T(band.hasBand ? 'вилка ниши' : 'рыночный ориентир')) + '</span>' +
+                '<span>' + esc(T(band.hasBand ? PL('вилка ниши') : PL('рыночный ориентир'))) + '</span>' +
                 '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
         }
         var impEff = effImp(l);
@@ -1127,7 +1127,7 @@
                     if (x.price_rub) { sumSpend += x.price_rub; sumJoinPriced += x.joined || 0; }
                 });
                 var blended = (sumSpend > 0 && sumJoinPriced > 0) ? Math.round(sumSpend / sumJoinPriced) : null;
-                body += '<div class="pl-fcap" style="margin:2px 0 6px;">' + esc(T(_campId == null ? 'Сводка по размещениям' : 'Сводка по кампании')) + '</div>' +
+                body += '<div class="pl-fcap" style="margin:2px 0 6px;">' + esc(T(_campId == null ? PL('Сводка по размещениям') : PL('Сводка по кампании'))) + '</div>' +
                     '<div class="pl-tape">' +
                     '<div class="pl-tq"><div class="k">' + esc(T('Расход')) + '</div><div class="v">' + (sumSpend ? num(sumSpend) + ' ₽' : '—') + '</div></div>' +
                     '<div class="pl-tq"><div class="k">' + esc(T('Подписались')) + '</div><div class="v" style="color:#5DCAA5;">' + (sumJoin ? '+' + num(sumJoin) : '0') + '</div></div>' +

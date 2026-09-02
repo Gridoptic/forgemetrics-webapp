@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  var PG = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
   var API = '';
   function abs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; return API + u; }
   function el(id) { return document.getElementById(id); }
@@ -126,14 +127,14 @@
       var t = pv.getAttribute('data-fmx-src') || cur;
       ruVal = t;
       if (t === 'Цена по договорённости') pv.textContent = (_psLang === 'ru') ? t : P.prneg;
-      else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice(('Реклама от').length));
+      else if (t.indexOf('Реклама от') === 0) pv.textContent = (_psLang === 'ru') ? t : (P.prpref + t.slice((PG('Реклама от')).length));
       var nt = pv.textContent || '';
       pv.style.fontSize = nt.length > 16 ? '21px' : '';
     }
     var ps = el('prSub');
     var fmtv = el('prFmtInp') ? String(el('prFmtInp').value || '').trim() : '';
     if (ps) {
-      if (!fmtv) ps.textContent = (_psLang === 'ru') ? 'минимальный формат размещения' : P.prsub;
+      if (!fmtv) ps.textContent = (_psLang === 'ru') ? PG('минимальный формат размещения') : P.prsub;
     }
     if (box && pv) {
       if (_psLang === 'ru') {
@@ -144,7 +145,7 @@
         var trSub = ps ? ps.textContent : null;
         pv.textContent = ruVal || trVal;
         pv.style.fontSize = (ruVal && ruVal.length > 16) ? '21px' : '';
-        if (ps && !fmtv) ps.textContent = 'минимальный формат размещения';
+        if (ps && !fmtv) ps.textContent = PG('минимальный формат размещения');
         box.style.width = '';
         var ruW = box.offsetWidth;
         pv.textContent = trVal; pv.style.fontSize = trValFs;
@@ -182,8 +183,8 @@
     if (document.getElementById('fmxPsLang')) return;
     var panel = document.querySelector('.panel'); if (!panel) return;
     var anchor = panel.querySelector('.sub') || panel.querySelector('h2'); if (!anchor) return;
-    var codes = [['ru', 'RU'], ['en', 'EN'], ['ar', 'AR'], ['hi', 'HI'], ['id', 'ID'], ['pt', 'PT'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], ['it', 'IT'], ['tr', 'TR'], ['fa', 'FA'], ['vi', 'VI'], ['bn', 'BN'], ['kk', 'KK'], ['uz', 'UZ'], ['be', 'BE'], ['az', 'AZ'], ['am', 'AM'], ['sw', 'SW']];
-    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Язык постера';
+    var codes = [['ru', 'RU'], ['en', 'EN'], ['ar', 'AR'], ['hi', 'HI'], ['id', 'ID'], ['pt', 'PT'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], [PG('it'), 'IT'], ['tr', 'TR'], ['fa', 'FA'], ['vi', 'VI'], ['bn', 'BN'], ['kk', 'KK'], ['uz', 'UZ'], ['be', 'BE'], ['az', 'AZ'], ['am', 'AM'], ['sw', 'SW']];
+    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = PG('Язык постера');
     var chips = document.createElement('div'); chips.className = 'chips'; chips.id = 'fmxPsLang';
     codes.forEach(function (c) {
       var b = document.createElement('button'); b.className = 'chip' + (c[0] === _psLang ? ' on' : '');
@@ -226,8 +227,8 @@
     var h = el('fmx-bg-hint'); if (h) h.style.display = on ? 'block' : 'none';
     var btn = el('fmx-ed-bgcrop'); if (btn) {
       btn.innerHTML = on
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span>Готово</span>'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>Кадрировать фон</span>';
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span>' + PG('Готово') + '</span>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>' + PG('Кадрировать фон') + '</span>';
       btn.classList.toggle('on', on);
     }
     if (on && typeof window.selectStk === 'function') { try { window.selectStk(null); } catch (e) {} }
@@ -302,7 +303,7 @@
       else { var pct = Math.round((data[data.length - 1] - data[0]) / data[0] * 100); pctEl.textContent = (pct >= 0 ? '▲ +' : '▼ ') + pct + '%'; }
     }
     var days = (chart && chart.days) || 30;
-    var ct = document.querySelector('#chart .ct span'); if (ct) ct.textContent = (_psPack().chart || 'Просмотры · 30 дней').replace(/30/, String(days));
+    var ct = document.querySelector('#chart .ct span'); if (ct) ct.textContent = (_psPack().chart || PG('Просмотры · 30 дней')).replace(/30/, String(days));
     var svg = document.querySelector('#chart svg');
     if (svg && !el('psGrid')) {
       var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -422,7 +423,7 @@
       var qrLbl = qrRow.previousElementSibling;
       if (qrLbl && qrLbl.classList && qrLbl.classList.contains('lbl')) qrLbl.style.display = 'none';
     }
-    var titleTxt = data.title || data.username || 'Канал';
+    var titleTxt = data.title || data.username || PG('Канал');
     if (el('titEl')) el('titEl').textContent = titleTxt;
     var meta = document.querySelector('.meta');
     if (meta && meta.firstChild) meta.firstChild.nodeValue = data.username ? '@' + String(data.username).replace(/^@/, '') : '';
@@ -556,10 +557,10 @@
         'z-index:9;pointer-events:none;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 20px rgba(0,0,0,0.5);}';
       document.head.appendChild(st);
     }
-    var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = 'Редактор макета';
+    var h2 = document.querySelector('.panel h2'); if (h2) h2.textContent = PG('Редактор макета');
     if (h2 && !el('fmx-ed-why')) {
       var why = document.createElement('div'); why.id = 'fmx-ed-why';
-      why.textContent = 'Баннер — готовый рекламный креатив твоего канала. Рассылай и размещай его там, где есть рекламодатели: админ-чаты и биржи размещений, форумы, каталоги каналов, сторис соцсетей, личные предложения. QR ведёт на живую карточку канала — рекламодатель сканирует, проверяет метрики и бронирует размещение без лишней переписки. В QR вшита твоя реферальная ссылка: все, кто пришёл с баннера, закрепляются за тобой.';
+      why.textContent = PG('Баннер — готовый рекламный креатив твоего канала. Рассылай и размещай его там, где есть рекламодатели: админ-чаты и биржи размещений, форумы, каталоги каналов, сторис соцсетей, личные предложения. QR ведёт на живую карточку канала — рекламодатель сканирует, проверяет метрики и бронирует размещение без лишней переписки. В QR вшита твоя реферальная ссылка: все, кто пришёл с баннера, закрепляются за тобой.');
       why.style.cssText = 'margin:8px 0 14px;padding:11px 13px;border-radius:12px;' +
         'background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));' +
         'border:1px solid rgba(93,202,165,0.35);font-size:11.5px;line-height:1.5;color:#c6cdde;';
@@ -569,7 +570,7 @@
       var poster = el('poster');
       var rb = document.createElement('button');
       rb.id = 'fmx-ed-reset'; rb.type = 'button';
-      rb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg><span>Сбросить настройки</span>';
+      rb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg><span>' + PG('Сбросить настройки') + '</span>';
       rb.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;width:540px;max-width:540px;margin:0 auto;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#c9cede;font-weight:600;cursor:pointer;font-family:inherit;';
       rb.addEventListener('click', function () { window.__fmxPosterReset(opts.defaultState); });
       if (poster && poster.parentNode) poster.parentNode.insertBefore(rb, poster.nextSibling);
@@ -786,17 +787,17 @@
   function _uploadCustomBg(f) {
     if (!f || typeof window.__fmxPosterUploader !== 'function') return null;
     var drop = el('drop'), orig = drop ? drop.innerHTML : '';
-    if (drop) drop.textContent = 'Загружаю фон на сервер…';
+    if (drop) drop.textContent = PG('Загружаю фон на сервер…');
     _bgUploadError = null;
     var p = Promise.resolve(window.__fmxPosterUploader(f)).then(function (res) {
       if (res && res.url) { _customBg = { url: res.url, kind: res.kind || 'img' }; _bgUploadError = null; }
-      else { _customBg = null; _bgUploadError = 'Не удалось загрузить фон'; }
-      if (drop) drop.textContent = (res && res.url) ? 'Фон загружен ✓ — нажмите, чтобы заменить' : 'Не удалось загрузить фон';
+      else { _customBg = null; _bgUploadError = PG('Не удалось загрузить фон'); }
+      if (drop) drop.textContent = (res && res.url) ? PG('Фон загружен ✓ — нажмите, чтобы заменить') : PG('Не удалось загрузить фон');
       return res;
     }).catch(function (e) {
       _customBg = null;
-      _bgUploadError = (e && e.message) ? String(e.message) : 'Не удалось загрузить фон';
-      if (drop) { drop.textContent = 'Не удалось загрузить фон — попробуйте ещё раз'; setTimeout(function () { if (drop) drop.innerHTML = orig; }, 2600); }
+      _bgUploadError = (e && e.message) ? String(e.message) : PG('Не удалось загрузить фон');
+      if (drop) { drop.textContent = PG('Не удалось загрузить фон — попробуйте ещё раз'); setTimeout(function () { if (drop) drop.innerHTML = orig; }, 2600); }
       throw e;
     });
     _bgUploadPending = p;
@@ -804,13 +805,13 @@
   }
   window.__fmxPosterBgPending = function () { return _bgUploadPending; };
   window.__fmxPosterBgError = function () {
-    return (bgName() === 'photo' && !(_customBg && _customBg.url)) ? (_bgUploadError || 'Фон не загрузился') : null;
+    return (bgName() === 'photo' && !(_customBg && _customBg.url)) ? (_bgUploadError || PG('Фон не загрузился')) : null;
   };
 
   function _setupCustomBg() {
     var drop0 = el('drop');
     if (drop0 && drop0.innerHTML.indexOf('до 64 МБ') < 0) {
-      drop0.innerHTML += '<br><span style="opacity:.65;font-size:11px;">Файл до 64 МБ · для видео берётся первый отрезок 20 сек</span>';
+      drop0.innerHTML += '<br><span style="opacity:.65;font-size:11px;">' + PG('Файл до 64 МБ · для видео берётся первый отрезок 20 сек') + '</span>';
     }
     if (!window.__fmxBgWrapped && typeof window.setOwnBg === 'function') {
       window.__fmxBgWrapped = true;
@@ -819,14 +820,14 @@
         var _t = (f && f.type || '').toLowerCase();
         var _ok = _t.indexOf('image/') === 0 || _t === 'video/mp4' || _t === 'video/quicktime';
         if (f && !_ok) {
-          var em = 'Можно только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит';
+          var em = PG('Можно только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит');
           var de = el('drop');
           if (de) { var oo = de.innerHTML; de.textContent = em; setTimeout(function () { if (de) de.innerHTML = oo; }, 3200); }
           try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(em); } catch (e) {}
           return;
         }
         if (f && f.size > 64 * 1024 * 1024) {
-          var msg = 'Файл ' + Math.round(f.size / 1048576) + ' МБ — превышен лимит 64 МБ. Выберите файл меньшего размера';
+          var msg = PG('Файл ') + Math.round(f.size / 1048576) + ' МБ — превышен лимит 64 МБ. Выберите файл меньшего размера';
           var d = el('drop');
           if (d) { var o = d.innerHTML; d.textContent = msg; setTimeout(function () { if (d) d.innerHTML = o; }, 3200); }
           try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(msg); } catch (e) {}
@@ -843,7 +844,7 @@
       var anchor = el('fmx-ed-reset') || el('drop');
       if (anchor && anchor.parentNode) {
         var b = document.createElement('button'); b.id = 'fmx-ed-bgcrop'; b.type = 'button';
-        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>Кадрировать фон</span>';
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v10a1 1 0 0 0 1 1h10M5 8h10a1 1 0 0 1 1 1v10"/></svg><span>' + PG('Кадрировать фон') + '</span>';
         b.style.cssText = 'display:none;align-items:center;justify-content:center;gap:8px;width:540px;max-width:540px;margin:0 auto 2px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(93,202,165,0.45);color:#5DCAA5;font-weight:600;cursor:pointer;font-family:inherit;';
         b.addEventListener('click', function () { _setBgCrop(!_bgCrop); });
         anchor.parentNode.insertBefore(b, anchor);
@@ -859,7 +860,7 @@
     var poster = el('poster'); if (!poster) return;
     if (!el('fmx-bg-hint')) {
       var h = document.createElement('div'); h.id = 'fmx-bg-hint';
-      h.textContent = 'Перетащите или масштабируйте фон';
+      h.textContent = PG('Перетащите или масштабируйте фон');
       h.style.display = 'none'; poster.appendChild(h);
     }
     if (el('fmx-bg-catch')) return;

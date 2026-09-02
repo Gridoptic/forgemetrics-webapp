@@ -241,8 +241,8 @@
     function lenSizeText() {
         var inp = document.getElementById('rw-input');
         var v = inp ? (inp.value || '').trim() : '';
-        if (!v) return T('Размер посчитаю по вставленному тексту');
-        if (/t\.me\/[^\s]+/.test(v) && v.length < 200) return T('Размер — от длины поста по ссылке');
+        if (!v) return T(RW('Размер посчитаю по вставленному тексту'));
+        if (/t\.me\/[^\s]+/.test(v) && v.length < 200) return T(RW('Размер — от длины поста по ссылке'));
         var n = Math.round(v.length * (LEN_MULT[_length] || 1));
         var how = _length === 'shorter' ? T('на 40% короче оригинала')
             : _length === 'longer' ? T('в полтора-два раза длиннее оригинала') : T('как оригинал');
@@ -315,7 +315,7 @@
         }
         if (r.chars != null) {
             badges += '<span class="rw-badge mut">' + num(r.chars) + ' ' + esc(T('символов')) +
-                (_caption || r.chars <= 1024 ? ' · ' + esc(T(r.chars <= 1024 ? 'влезет под фото' : 'не влезет под фото')) : '') + '</span>';
+                (_caption || r.chars <= 1024 ? ' · ' + esc(T(r.chars <= 1024 ? RW('влезет под фото') : RW('не влезет под фото'))) : '') + '</span>';
         }
         var hooks = '';
         if (_lastHooks && _lastHooks.length) {
@@ -361,14 +361,14 @@
     function planHint() {
         var p = _ctx && _ctx.placed;
         if (p && window.FMPostTools) {
-            return T('В плане:') + ' ' + window.FMPostTools.dateLabel(p.date_iso, true) + ' ' + p.hm + ' · ' + T(p.queued ? 'выйдет сам' : 'черновик');
+            return T(RW('В плане:')) + ' ' + window.FMPostTools.dateLabel(p.date_iso, true) + ' ' + p.hm + ' · ' + T(p.queued ? RW('выйдет сам') : RW('черновик'));
         }
-        return T('Выбрать день и время — пост встанет в неделю и выйдет сам');
+        return T(RW('Выбрать день и время — пост встанет в неделю и выйдет сам'));
     }
     function sendHint() {
         var r = _lastMeta || {};
         var where = r.channel && r.channel.username ? '@' + r.channel.username : T('подключённый канал');
-        return T('Бот выложит в') + ' ' + where + ' ' + T('в течение минуты. Перед отправкой спросит подтверждение');
+        return T(RW('Бот выложит в')) + ' ' + where + ' ' + T('в течение минуты. Перед отправкой спросит подтверждение');
     }
 
     function onClick(ev) {

@@ -13,7 +13,7 @@
     var _backHandlerBound = false;
 
     var THINKING_TEXTS = [
-        'Собираю последние посты канала...',
+        AD('Собираю последние посты канала...'),
         'Считаю охват и динамику...',
         'Смотрю что заходит, а что нет...',
         'Ищу главный инсайт...',
@@ -55,7 +55,7 @@
     function _num(n) {
         if (n == null || isNaN(n)) return '—';
         n = Number(n);
-        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'М';
+        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + AD('М');
         if (n >= 10000) return Math.floor(n / 1000) + 'к';
         if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'к';
         return String(Math.round(n));
@@ -72,15 +72,15 @@
 
     function _zone(score) {
         if (score == null) {
-            return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: 'Средняя зона' };
+            return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: AD('Средняя зона') };
         }
         score = Number(score);
         if (isNaN(score)) {
-            return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: 'Средняя зона' };
+            return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: AD('Средняя зона') };
         }
-        if (score >= 70) return { key: 'green', color: '#1D9E75', light: '#5DCAA5', label: 'Сильная зона' };
-        if (score >= 45) return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: 'Средняя зона' };
-        return { key: 'coral', color: '#D85A30', light: '#F0997B', label: 'Слабая зона' };
+        if (score >= 70) return { key: 'green', color: '#1D9E75', light: '#5DCAA5', label: AD('Сильная зона') };
+        if (score >= 45) return { key: 'amber', color: '#f59e0b', light: '#fcd34d', label: AD('Средняя зона') };
+        return { key: 'coral', color: '#D85A30', light: '#F0997B', label: AD('Слабая зона') };
     }
 
     function _priorityBadge(priority) {
@@ -167,7 +167,7 @@
     }
 
     function headerHtml(title) {
-        var t = title || (_entryMode === 'deep' ? 'Коммерческий аудит' : 'AI-аудит канала');
+        var t = title || (_entryMode === 'deep' ? AD('Коммерческий аудит') : AD('AI-аудит канала'));
         return '' +
             '<div class="audit-header">' +
                 '<button class="audit-back" id="audit-back-btn"><i class="ti ti-arrow-left"></i></button>' +
@@ -186,7 +186,7 @@
         host.innerHTML = headerHtml() +
             '<div class="audit-center">' +
                 '<div class="loading-spinner"></div>' +
-                '<div class="audit-center-text">' + _esc(text || 'Загружаю...') + '</div>' +
+                '<div class="audit-center-text">' + _esc(text || AD('Загружаю...')) + '</div>' +
             '</div>';
         attachBack(host);
     }
@@ -337,7 +337,7 @@
             ctaHtml = '<div class="ca-ctarow"><span class="l">' + AD('Списывается с баланса · отчёт сохраняется') + '</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
                 '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>' + AD('Пополнить баланс') + '</span></button>';
         }
-        host.innerHTML = headerHtml('Коммерческий аудит') +
+        host.innerHTML = headerHtml(AD('Коммерческий аудит')) +
             '<div class="audit-body">' +
                 '<div class="ca-hero">' +
                     '<div class="ca-htop">' +
@@ -354,11 +354,11 @@
                 '<div class="ca-secl">' + AD('Чего нет больше нигде') + '</div>' +
                 '<div class="ca-diff">' +
                     _caDiff('chart-bar', 'g', 'Позиция канала на рынке ниши',
-                        'Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.') +
+                        AD('Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.')) +
                     _caDiff('wallet', 'a', 'Аудит прайса и упущенный доход',
-                        'Рыночная вилка стоимости размещения под фактический охват, рекомендованная цена каждого формата и оценка недополученного дохода за месяц при текущем прайсе.') +
+                        AD('Рыночная вилка стоимости размещения под фактический охват, рекомендованная цена каждого формата и оценка недополученного дохода за месяц при текущем прайсе.')) +
                     _caDiff('shield-check', 'v', 'Верификация качества трафика',
-                        'Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.') +
+                        AD('Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.')) +
                 '</div>' +
                 '<div class="ca-inc">' +
                     '<div class="t">' + AD('Также в отчёте') + '</div>' +
@@ -403,7 +403,7 @@
                 _currentAuditId = res && res.audit_id;
                 if (!_currentAuditId) {
                     stopThinking();
-                    showFatalError('Не удалось запустить аудит. Попробуй ещё раз.', { retry: true });
+                    showFatalError(AD('Не удалось запустить аудит. Попробуй ещё раз.'), { retry: true });
                     return;
                 }
                 startPolling(_currentAuditId);
@@ -432,18 +432,18 @@
             return;
         }
         if (m.indexOf('403') !== -1) {
-            showFatalError(detailFrom(m) || 'Доступ к аудиту ограничен.', { icon: 'ti-lock' });
+            showFatalError(detailFrom(m) || AD('Доступ к аудиту ограничен.'), { icon: 'ti-lock' });
             return;
         }
         if (m.indexOf('400') !== -1) {
-            showFatalError(detailFrom(m) || 'Этот канал нельзя проанализировать.', { icon: 'ti-alert-triangle' });
+            showFatalError(detailFrom(m) || AD('Этот канал нельзя проанализировать.'), { icon: 'ti-alert-triangle' });
             return;
         }
         if (m.indexOf('401') !== -1) {
-            showFatalError('Сессия истекла. Переоткрой приложение.', { icon: 'ti-alert-triangle' });
+            showFatalError(AD('Сессия истекла. Переоткрой приложение.'), { icon: 'ti-alert-triangle' });
             return;
         }
-        showFatalError('Что-то пошло не так. Попробуй ещё раз.', { retry: true });
+        showFatalError(AD('Что-то пошло не так. Попробуй ещё раз.'), { retry: true });
     }
 
     function startPollingExisting() {
@@ -454,7 +454,7 @@
                 pollByChannel();
             })
             .catch(function () {
-                showFatalError('Аудит этого канала уже выполняется. Загляни чуть позже.', { icon: 'ti-clock' });
+                showFatalError(AD('Аудит этого канала уже выполняется. Загляни чуть позже.'), { icon: 'ti-clock' });
             });
     }
 
@@ -465,7 +465,7 @@
             _pollAttempts++;
             if (_pollAttempts > 70) {
                 stopPolling(); stopThinking();
-                showFatalError('Аудит занимает дольше обычного. Открой его позже из меню.', { icon: 'ti-clock' });
+                showFatalError(AD('Аудит занимает дольше обычного. Открой его позже из меню.'), { icon: 'ti-clock' });
                 return;
             }
             apiRequest('/api/v1/channels/' + _channelId + '/audit/latest')
@@ -486,7 +486,7 @@
             _pollAttempts++;
             if (_pollAttempts > 70) {
                 stopPolling(); stopThinking();
-                showFatalError('Аудит занимает дольше обычного. Открой его позже из меню.', { icon: 'ti-clock' });
+                showFatalError(AD('Аудит занимает дольше обычного. Открой его позже из меню.'), { icon: 'ti-clock' });
                 return;
             }
             apiRequest('/api/v1/audits/' + auditId)
@@ -500,7 +500,7 @@
                         stopPolling(); stopThinking();
                         _haptic('error');
                         showFatalError(
-                            _hasText(a.error_message) ? a.error_message : 'Не удалось завершить аудит. Лимит возвращён — попробуй ещё раз.',
+                            _hasText(a.error_message) ? a.error_message : AD('Не удалось завершить аудит. Лимит возвращён — попробуй ещё раз.'),
                             { retry: true }
                         );
                     }
@@ -603,9 +603,9 @@
         var pct = d.pct || {};
         var price = d.price || {};
         var inner = '';
-        inner += _daPctRow('Охват поста', pct.reach, pct.reach != null && pct.reach >= 70);
-        inner += _daPctRow('Вовлечённость (ER)', pct.er, pct.er != null && pct.er >= 70);
-        inner += _daPctRow('Частота выхода постов', pct.freq, pct.freq != null && pct.freq >= 70);
+        inner += _daPctRow(AD('Охват поста'), pct.reach, pct.reach != null && pct.reach >= 70);
+        inner += _daPctRow(AD('Вовлечённость (ER)'), pct.er, pct.er != null && pct.er >= 70);
+        inner += _daPctRow(AD('Частота выхода постов'), pct.freq, pct.freq != null && pct.freq >= 70);
         if (!inner) inner = '<div class="da-empty">' + AD('Недостаточно данных ниши для сравнения') + '</div>';
         if (price.lo && price.hi) {
             var lo = price.min || Math.round(price.lo * 0.7);
@@ -747,7 +747,7 @@
     function renderDeepPlan(r) {
         var plan = _g(r, 'plan', []) || [];
         if (!plan.length) return '';
-        var pmap = { critical: ['критично', 'da-pri-c'], important: ['важно', 'da-pri-i'], minor: ['не срочно', 'da-pri-m'] };
+        var pmap = { critical: [AD('критично'), 'da-pri-c'], important: [AD('важно'), 'da-pri-i'], minor: [AD('не срочно'), 'da-pri-m'] };
         var rows = '';
         plan.slice(0, 7).forEach(function (p, i) {
             var pri = pmap[p.pri] || null;
@@ -761,7 +761,7 @@
         var host = ensureScreen();
         var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
         var dq = _g(r, 'data_quality', {}) || {};
-        var html = headerHtml('Коммерческий аудит') +
+        var html = headerHtml(AD('Коммерческий аудит')) +
             '<div class="audit-body" id="audit-report-body">' +
                 renderDeepHero(r, score) +
                 renderDeepPosition(r) +
@@ -815,7 +815,7 @@
         var benchHtml = '';
         var reachVerdict = _g(r, 'metrics_snapshot.reach_verdict', null);
         if (reachVerdict) {
-            var bm = { below_norm: 'Охват ниже нормы ниши', normal: 'Охват в норме ниши', strong: 'Охват сильнее ниши' };
+            var bm = { below_norm: AD('Охват ниже нормы ниши'), normal: AD('Охват в норме ниши'), strong: AD('Охват сильнее ниши') };
             if (bm[reachVerdict]) {
                 benchHtml = '<div class="audit-bench" id="audit-bench">' +
                     '<i class="ti ti-flame"></i><span>' + _esc(bm[reachVerdict]) + '</span></div>';
@@ -825,10 +825,10 @@
         var barsHtml = '';
         if (bd) {
             var defs = [
-                { key: 'content', label: 'Контент', color: '#5DCAA5' },
-                { key: 'reach', label: 'Охват', color: '#f59e0b' },
-                { key: 'consistency', label: 'Регулярность', color: '#F0997B' },
-                { key: 'monetization', label: 'Монетизация', color: '#818cf8' },
+                { key: 'content', label: AD('Контент'), color: '#5DCAA5' },
+                { key: 'reach', label: AD('Охват'), color: '#f59e0b' },
+                { key: 'consistency', label: AD('Регулярность'), color: '#F0997B' },
+                { key: 'monetization', label: AD('Монетизация'), color: '#818cf8' },
             ];
             var rows = '';
             for (var i = 0; i < defs.length; i++) {
@@ -887,19 +887,19 @@
         if (!m) return '';
         var cells = [];
 
-        if (m.subscribers != null) cells.push({ val: _num(m.subscribers), label: 'подписчиков' });
+        if (m.subscribers != null) cells.push({ val: _num(m.subscribers), label: AD('подписчиков') });
         if (m.reach_percent != null && !isNaN(Number(m.reach_percent))) {
-            cells.push({ val: Number(m.reach_percent).toFixed(1).replace('.0', '') + '%', label: 'охват' });
+            cells.push({ val: Number(m.reach_percent).toFixed(1).replace('.0', '') + '%', label: AD('охват') });
         }
         if (m.posts_per_week != null && !isNaN(Number(m.posts_per_week))) {
-            cells.push({ val: Number(m.posts_per_week).toFixed(1).replace('.0', ''), label: 'постов/нед' });
+            cells.push({ val: Number(m.posts_per_week).toFixed(1).replace('.0', ''), label: AD('постов/нед') });
         }
         if (m.trend_percent != null && !isNaN(Number(m.trend_percent))) {
             var tp = Number(m.trend_percent);
             var dir = m.trend_direction;
             var cls = (dir === 'declining' || tp < 0) ? 'down' : ((dir === 'growing' || tp > 0) ? 'up' : '');
             var sign = tp > 0 ? '+' : '';
-            cells.push({ val: sign + tp.toFixed(1).replace('.0', '') + '%', label: 'тренд', cls: cls });
+            cells.push({ val: sign + tp.toFixed(1).replace('.0', '') + '%', label: AD('тренд'), cls: cls });
         }
 
         if (cells.length === 0) return '';
@@ -926,10 +926,10 @@
             var isGrowth = s.type === 'growth';
             var cls = isGrowth ? 'audit-scen-grow' : 'audit-scen-stag';
             var icon = isGrowth ? 'ti-trending-up' : 'ti-trending-down';
-            var title = _hasText(s.title) ? s.title : (isGrowth ? 'Если выполнить план' : 'Если ничего не менять');
+            var title = _hasText(s.title) ? s.title : (isGrowth ? AD('Если выполнить план') : AD('Если ничего не менять'));
             var confHtml = '';
             if (isGrowth && _hasText(s.confidence)) {
-                var cmap = { high: 'высокая', medium: 'средняя', low: 'низкая' };
+                var cmap = { high: AD('высокая'), medium: AD('средняя'), low: AD('низкая') };
                 confHtml = '<div class="audit-scen-conf">' + AD('уверенность:') + ' ' + _esc(cmap[s.confidence] || s.confidence) + '</div>';
             }
             return '' +
@@ -1050,8 +1050,8 @@
     }
 
     function sectionFallbackTitle(id) {
-        var m = { strengths: 'Сильные стороны', weaknesses: 'Что тормозит', monetization: 'Готовность к деньгам', action_plan: 'План действий' };
-        return m[id] || 'Раздел';
+        var m = { strengths: AD('Сильные стороны'), weaknesses: AD('Что тормозит'), monetization: AD('Готовность к деньгам'), action_plan: AD('План действий') };
+        return m[id] || AD('Раздел');
     }
 
     function sectionBody(sec) {
@@ -1088,7 +1088,7 @@
     }
 
     function monetizationBody(sec) {
-        var readyMap = { ready: { t: 'Готов к рекламе', c: 'green' }, partial: { t: 'Частично готов', c: 'amber' }, not_ready: { t: 'Пока не готов', c: 'coral' } };
+        var readyMap = { ready: { t: AD('Готов к рекламе'), c: 'green' }, partial: { t: AD('Частично готов'), c: 'amber' }, not_ready: { t: AD('Пока не готов'), c: 'coral' } };
         var rd = readyMap[sec.ready];
         var readyHtml = rd ? '<div class="audit-money-ready audit-money-' + rd.c + '">' + _esc(rd.t) + '</div>' : '';
         var reason = _hasText(sec.reason) ? '<div class="audit-item-ev">' + _esc(sec.reason) + '</div>' : '';
@@ -1243,24 +1243,24 @@
         _entryMode = mode || null;
         if (channelId != null) {
             _channelId = channelId;
-            showLoading('Загружаю аудит...');
+            showLoading(AD('Загружаю аудит...'));
             loadEntry(_channelId, mode);
             return;
         }
-        showLoading('Загружаю аудит...');
+        showLoading(AD('Загружаю аудит...'));
         resolveChannel()
             .then(function (id) {
                 if (id == null) {
                     closeAudit();
                     if (typeof openChannels === 'function') openChannels();
-                    else if (typeof alertDialog === 'function') alertDialog('Сначала подключи канал.');
+                    else if (typeof alertDialog === 'function') alertDialog(AD('Сначала подключи канал.'));
                     return;
                 }
                 _channelId = id;
                 loadEntry(id, mode);
             })
             .catch(function () {
-                showFatalError('Не удалось определить канал. Попробуй из «Мои каналы».', { icon: 'ti-alert-triangle' });
+                showFatalError(AD('Не удалось определить канал. Попробуй из «Мои каналы».'), { icon: 'ti-alert-triangle' });
             });
     };
 
