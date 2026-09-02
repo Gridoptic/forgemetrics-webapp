@@ -933,8 +933,8 @@
 
     var SRC_PLATS = {
         shorts: { n: 'YouTube Shorts', c: 'yt', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path d="M10 9l6 3-6 3z" fill="#fff"/></svg>' },
-        vk: { n: 'VK Клипы', c: 'vk', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#0077FF"/><path d="M6.5 8h2.1c.2 2.4 1.1 4.3 2.4 4.9V8h2v3.1c1.2-.3 2.2-1.7 2.6-3.1h2c-.4 1.9-1.5 3.3-2.6 3.9 1.3.6 2.6 2 3 4.1h-2.2c-.4-1.6-1.5-2.9-2.8-3.2V16h-.3C9.5 16 6.8 12.7 6.5 8z" fill="#fff"/></svg>' },
-        dzen: { n: 'Дзен', c: 'dz', svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 2c.2 5.5 4.3 9.6 9.8 9.8v.4c-5.5.2-9.6 4.3-9.8 9.8h-.4c-.2-5.5-4.3-9.6-9.8-9.8v-.4C7.3 11.6 11.4 7.5 11.6 2z" fill="#0a0d18"/></svg>' },
+        vk: { n: PL('VK Клипы'), c: 'vk', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#0077FF"/><path d="M6.5 8h2.1c.2 2.4 1.1 4.3 2.4 4.9V8h2v3.1c1.2-.3 2.2-1.7 2.6-3.1h2c-.4 1.9-1.5 3.3-2.6 3.9 1.3.6 2.6 2 3 4.1h-2.2c-.4-1.6-1.5-2.9-2.8-3.2V16h-.3C9.5 16 6.8 12.7 6.5 8z" fill="#fff"/></svg>' },
+        dzen: { n: PL('Дзен'), c: 'dz', svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 2c.2 5.5 4.3 9.6 9.8 9.8v.4c-5.5.2-9.6 4.3-9.8 9.8h-.4c-.2-5.5-4.3-9.6-9.8-9.8v-.4C7.3 11.6 11.4 7.5 11.6 2z" fill="#0a0d18"/></svg>' },
         tiktok: { n: 'TikTok', c: 'tt', svg: '<svg viewBox="0 0 24 24"><path d="M16 3c.4 2.3 1.9 3.8 4 4v3c-1.6 0-3-.5-4-1.3V15a5.5 5.5 0 1 1-5.5-5.5c.3 0 .7 0 1 .1v3.1a2.5 2.5 0 1 0 1.5 2.3V3z" fill="#25F4EE"/><path d="M17 4c.4 2.3 1.9 3.8 4 4v2c-1.6 0-3-.5-4-1.3z" fill="#FE2C55"/></svg>' },
         reels: { n: 'Instagram Reels', c: 'ig', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.4" fill="#E1306C"/></svg>' }
     };
@@ -1841,8 +1841,8 @@
             var ch = q.churn || {};
             if ((q.left || 0) > 0) {
                 head += '<div class="pl-qnote">' + esc(T('Отписки по времени жизни:')) + ' ' +
-                    (ch.h1 ? '&lt;1 ч — ' + ch.h1 + ' · ' : '') + (ch.d1 ? '&lt;1 дн — ' + ch.d1 + ' · ' : '') +
-                    (ch.d7 ? '&lt;7 дн — ' + ch.d7 + ' · ' : '') + (ch.later ? esc(T('позже')) + ' — ' + ch.later : '') + '</div>';
+                    (ch.h1 ? PL('&lt;1 ч — ') + ch.h1 + ' · ' : '') + (ch.d1 ? PL('&lt;1 дн — ') + ch.d1 + ' · ' : '') +
+                    (ch.d7 ? PL('&lt;7 дн — ') + ch.d7 + ' · ' : '') + (ch.later ? esc(T('позже')) + ' — ' + ch.later : '') + '</div>';
             }
             var flags = [];
             if (q.fresh_2024) flags.push(esc(T('свежие аккаунты (2024+)')) + ': ' + q.fresh_2024);

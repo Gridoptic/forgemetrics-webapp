@@ -256,7 +256,7 @@
         var right = '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
         var note = enough
             ? '<div class="fwb-note">' + AD('Запуск спишет') + ' ' + fa(price, 12) + '</div>'
-            : '<div class="fwb-note fwb-low">' + AD('Недостаточно средств: нужно') + ' ' + fa(price, 12) + ', на балансе ' + fa(balance, 12) + '</div>';
+            : '<div class="fwb-note fwb-low">' + AD('Недостаточно средств: нужно') + ' ' + fa(price, 12) + AD(', на балансе ') + fa(balance, 12) + '</div>';
 
         return '' +
             '<div class="limit-row limit-row-purple' + (enough ? '' : ' limit-row-exhausted') + '">' +
@@ -428,7 +428,7 @@
             return;
         }
         if (m.indexOf('429') !== -1) {
-            showFatalError(detailFrom(m) || 'Не хватает Forge на запуск аудита.', { icon: 'ti-clock' });
+            showFatalError(detailFrom(m) || AD('Не хватает Forge на запуск аудита.'), { icon: 'ti-clock' });
             return;
         }
         if (m.indexOf('403') !== -1) {
@@ -628,7 +628,7 @@
         } else if (_hasText(r.position_note)) {
             inner += '<div class="da-note" style="margin-top:10px">' + _esc(r.position_note) + '</div>';
         }
-        var pool = d.pool ? ((d.pool_wide ? 'вся база · ' : '') + d.pool + ' каналов') : '';
+        var pool = d.pool ? ((d.pool_wide ? AD('вся база · ') : '') + d.pool + AD(' каналов')) : '';
         return _daSection('▦', 'Позиция в нише', pool, inner);
     }
 
@@ -735,7 +735,7 @@
             fc = '<div class="da-fc"><div class="t">' + AD('Потенциал дохода') + '</div>' +
                 '<div class="v">' + _daNum(m.monthly_lo_rub) + ' – ' + _daNum(m.monthly_hi_rub) + ' ' + AD('₽/мес') + '</div>' +
                 ((_hasText(m.note) || _hasText(m.stage))
-                    ? '<div class="s">' + _esc(m.note || '') + (_hasText(m.stage) ? ' Стадия: ' + _esc(m.stage) + '.' : '') + '</div>'
+                    ? '<div class="s">' + _esc(m.note || '') + (_hasText(m.stage) ? AD(' Стадия: ') + _esc(m.stage) + '.' : '') + '</div>'
                     : '') + '</div>';
         } else if (_hasText(m.note)) {
             fc = '<div class="da-note" style="margin-top:9px">' + _esc(m.note) + '</div>';
@@ -801,8 +801,8 @@
             .then(function (limits) {
                 var note = document.getElementById('audit-rerun-note');
                 if (!note || !limits) return;
-                note.textContent = 'На балансе ' + Number(limits.balance || 0).toLocaleString('ru-RU')
-                    + ' Forge · аудит стоит ' + Number(limits.price || 0);
+                note.textContent = AD('На балансе ') + Number(limits.balance || 0).toLocaleString('ru-RU')
+                    + AD(' Forge · аудит стоит ') + Number(limits.price || 0);
             })
             .catch(function () {});
     }
@@ -967,7 +967,7 @@
 
     function postCard(kind, p, why, label) {
         var meta = label;
-        if (p.views != null && !isNaN(Number(p.views))) meta += ' · ' + _num(p.views) + ' просм.';
+        if (p.views != null && !isNaN(Number(p.views))) meta += ' · ' + _num(p.views) + AD(' просм.');
         if (_hasText(p.vs_median)) meta += ' · ' + _esc(p.vs_median);
         return '' +
             '<div class="audit-post audit-post-' + kind + '">' +
@@ -1015,7 +1015,7 @@
         var rows = arr.map(function (t) {
             if (!t) return '';
             if (!_hasText(t.theme) && !_hasText(t.note)) return '';
-            var views = (t.avg_views != null && !isNaN(Number(t.avg_views))) ? ' · ' + _num(t.avg_views) + ' просм.' : '';
+            var views = (t.avg_views != null && !isNaN(Number(t.avg_views))) ? ' · ' + _num(t.avg_views) + AD(' просм.') : '';
             var note = _hasText(t.note) ? '<span class="audit-theme-note">' + _esc(t.note) + '</span>' : '';
             return '<div class="audit-theme audit-theme-' + kind + '">' +
                 '<span class="audit-theme-name">' + _esc(t.theme || '—') + views + '</span>' + note + '</div>';
@@ -1143,7 +1143,7 @@
         if (!dq) return '';
         var parts = [];
         if (dq.posts_analyzed != null && !isNaN(Number(dq.posts_analyzed))) {
-            parts.push('Проанализировано постов: ' + Math.round(Number(dq.posts_analyzed)));
+            parts.push(AD('Проанализировано постов: ') + Math.round(Number(dq.posts_analyzed)));
         }
         if (_hasText(dq.confidence_note)) parts.push(dq.confidence_note);
         if (parts.length === 0) return '';

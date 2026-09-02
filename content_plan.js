@@ -50,8 +50,8 @@
     function haptic(k) { try { if (typeof tg !== 'undefined' && tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(k || 'light'); } catch (e) {} }
     function toast(m, icon) { try { if (typeof showToast === 'function') return showToast(m, icon); } catch (e) {} try { if (typeof alertDialog === 'function') alertDialog(m); } catch (e) {} }
 
-    var WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    var WD_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+    var WD = [T('Пн'), 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    var WD_FULL = [T('Понедельник'), 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
     var MIN_POSTS = 3;
     var MAX_PER_DAY = 10;
     var MAX_WEEK = 70;
@@ -63,14 +63,14 @@
         ['retention', 'Удержание', 'Регулярная ценность — аудитория остаётся и возвращается'],
     ];
     // на каких форматах держится каждая цель — по ним ставится полоса и считается конфликт
-    var GOAL_MAP = { growth: 'Рост подписчиков', engagement: 'Вовлечённость', sales: 'Продажи', warmup: 'Прогрев к запуску', retention: 'Удержание' };
+    var GOAL_MAP = { growth: T('Рост подписчиков'), engagement: T('Вовлечённость'), sales: T('Продажи'), warmup: T('Прогрев к запуску'), retention: T('Удержание') };
     var GOAL_ICON = { growth: 'ti-users-plus', engagement: 'ti-heart-handshake', sales: 'ti-building-store',
         warmup: 'ti-flame', retention: 'ti-anchor' };
     var FMT = {
-        news: ['Новость', 'ti-news'], analysis: ['Разбор', 'ti-microscope'], case: ['Кейс', 'ti-trophy'],
-        listicle: ['Подборка', 'ti-list-check'], offer: ['Продающий', 'ti-building-store'],
-        poll: ['Опрос', 'ti-chart-bar'], story: ['История', 'ti-book'], engagement: ['Вопрос читателям', 'ti-message-circle'],
-        own: ['Свой пост', 'ti-pencil'], ready: ['Готовый пост', 'ti-file-check'],
+        news: [T('Новость'), 'ti-news'], analysis: [T('Разбор'), 'ti-microscope'], case: [T('Кейс'), 'ti-trophy'],
+        listicle: [T('Подборка'), 'ti-list-check'], offer: [T('Продающий'), 'ti-building-store'],
+        poll: [T('Опрос'), 'ti-chart-bar'], story: [T('История'), 'ti-book'], engagement: [T('Вопрос читателям'), 'ti-message-circle'],
+        own: [T('Свой пост'), 'ti-pencil'], ready: [T('Готовый пост'), 'ti-file-check'],
     };
     var SG = {
         niche: '<path d="M10.2 3.5H5.4a1.9 1.9 0 0 0-1.9 1.9v4.4h.9a2.1 2.1 0 0 1 0 4.2h-.9v4.6a1.9 1.9 0 0 0 1.9 1.9h4.4v-1.1a2.1 2.1 0 0 1 4.2 0v1.1h4.6a1.9 1.9 0 0 0 1.9-1.9v-4.4h-1.1a2.1 2.1 0 0 1 0-4.2h1.1V5.4a1.9 1.9 0 0 0-1.9-1.9h-4.4v.9a2.1 2.1 0 0 1-4.2 0z"/>',
@@ -108,7 +108,7 @@
         ['auto', 'Автономно', 'сам публикует'],
     ];
     var GEN_TEXTS = [
-        'Смотрю ритм и тему канала...',
+        T('Смотрю ритм и тему канала...'),
         'Подбираю форматы под цель недели...',
         'Развожу идеи, чтобы не повторяться...',
         'Складываю неделю в единый сюжет...',
@@ -756,7 +756,7 @@
                 '</linearGradient></defs></svg>' +
                 '<span class="in"><b>' + have + '/' + need + '</b><span>' + esc(T('замеров')) + '</span></span></span>' +
                 '<span class="cp-rv2-tx"><b>' +
-                esc(T(pct >= 0.5 ? 'Вердикт почти готов' : 'Собираю замеры')) + '</b>' +
+                esc(T(pct >= 0.5 ? T('Вердикт почти готов') : T('Собираю замеры'))) + '</b>' +
                 '<em>' + esc(T('Ещё %1 — и покажу, что менять в контенте.').replace('%1',
                     left + ' ' + T(plural3(left, 'замеренный пост', 'замеренных поста', 'замеренных постов')))) +
                 '</em></span>' + big + '</span>' + goRow + '</button>';
@@ -1044,8 +1044,8 @@
 
     function adRow(b) {
         return '<div class="cp-slot ad"><span class="tm">' + esc(b.at) + '</span>' +
-            '<span class="tx"><b>' + esc(T(b.kind === 'deal' ? 'Оплаченная реклама'
-                                                            : 'Пост в очереди')) + '</b>' +
+            '<span class="tx"><b>' + esc(T(b.kind === 'deal' ? T('Оплаченная реклама')
+                                                            : T('Пост в очереди'))) + '</b>' +
             '<em>' + esc(T('время занято')) + '</em></span>' +
             '<i class="ti ' + (b.kind === 'deal' ? 'ti-ad-2' : 'ti-clock') + ' ch"></i></div>';
     }
@@ -1564,7 +1564,7 @@
     }
 
 
-    var WD_IN = ['в понедельник', 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу', 'в воскресенье'];
+    var WD_IN = [T('в понедельник'), 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу', 'в воскресенье'];
     var OWN_LIMITS = { 'image/jpeg': 8, 'image/png': 8, 'image/webp': 8, 'image/gif': 12, 'video/mp4': 40, 'video/quicktime': 40 };
     var _own = null;
     var _ownWeekBusy = false;
@@ -1619,25 +1619,25 @@
 
     function ownErr(code) {
         var M = {
-            past_time: 'Это время уже прошло — выбери позже.',
-            day_full: 'В этом дне уже максимум постов',
-            too_long: 'Длиннее 4096 знаков Telegram не примет — сократи.',
-            no_bot_rights: 'Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.',
-            paused: 'Канал на паузе — публикация не проходит.',
-            no_plan: 'Неделя не найдена — открой контент-план заново',
-            empty: 'Пустой текст не сохраняю',
-            no_content_perm: 'Создатель канала не выдал тебе право менять контент-план',
-            already_out: 'Пост уже в очереди — сначала сними его с очереди',
-            already_published: 'Пост уже опубликован — менять его поздно.',
-            upload: 'Файл не загрузился — пост сохранён черновиком без вложения.',
+            past_time: T('Это время уже прошло — выбери позже.'),
+            day_full: T('В этом дне уже максимум постов'),
+            too_long: T('Длиннее 4096 знаков Telegram не примет — сократи.'),
+            no_bot_rights: T('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'),
+            paused: T('Канал на паузе — публикация не проходит.'),
+            no_plan: T('Неделя не найдена — открой контент-план заново'),
+            empty: T('Пустой текст не сохраняю'),
+            no_content_perm: T('Создатель канала не выдал тебе право менять контент-план'),
+            already_out: T('Пост уже в очереди — сначала сними его с очереди'),
+            already_published: T('Пост уже опубликован — менять его поздно.'),
+            upload: T('Файл не загрузился — пост сохранён черновиком без вложения.'),
         };
-        return T(M[code] || 'Не удалось сохранить пост');
+        return T(M[code] || T('Не удалось сохранить пост'));
     }
 
     function ownCoverFor(id, kind) {
         if (_mediaBusy[id]) return;
         haptic('light');
-        _mediaBusy[id] = T(kind === 'photo' ? 'Подбираю фото...' : 'Рисую обложку...');
+        _mediaBusy[id] = T(kind === 'photo' ? T('Подбираю фото...') : T('Рисую обложку...'));
         rerender();
         apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: id, kind: kind || null }) })
             .then(function (r) {
@@ -1736,7 +1736,7 @@
             var sub2 = (ownIsToday(i) ? T('Сегодня') : T(WD_FULL[i])) + ' · ' + T('время канала') + ' (' + tzLabel() + ')';
             var html = '<button class="cp-own-row" data-oact="time" type="button"><span class="ic"><i class="ti ti-clock"></i></span>' +
                 '<span class="tx"><b>' + esc(hm || T('выбери время')) + '</b><em>' + esc(sub2) + '</em></span>' +
-                '<span class="act">' + esc(T(_own.timeOpen ? 'Свернуть' : 'Изменить')) + '</span></button>';
+                '<span class="act">' + esc(T(_own.timeOpen ? T('Свернуть') : T('Изменить'))) + '</span></button>';
             if (_own.timeOpen) {
                 var hours = '';
                 for (var h = 8; h <= 22; h++) {
@@ -1820,7 +1820,7 @@
         var makeCover = function (kind) {
             if (!_own.text.trim()) { toast(T('Сначала вставь текст — фраза на обложку берётся из него')); return; }
             if (!_own.hm) { toast(T('Сначала выбери время выхода')); return; }
-            var _busyTx = T(kind === 'photo' ? 'Подбираю фото...' : 'Рисую обложку...');
+            var _busyTx = T(kind === 'photo' ? T('Подбираю фото...') : T('Рисую обложку...'));
             setBusy(_busyTx, _busyTx);
             upsert(false)
                 .then(function () {
@@ -1935,7 +1935,7 @@
         }
         var cur = _channels.filter(function (c) { return c.id === _chId; })[0] || _channels[0];
         _chId = cur.id;
-        var styleNote = cur.voice_status === 'done' ? 'стиль настроен' : 'стиль не настроен';
+        var styleNote = cur.voice_status === 'done' ? T('стиль настроен') : T('стиль не настроен');
         return '<button class="cp-chanpick" data-act="pickchan">' +
             '<span class="av" data-chav="' + cur.id + '">' +
             esc((cur.title || cur.username || '?').charAt(0).toUpperCase()) + '</span>' +
@@ -1955,29 +1955,29 @@
 
     var GOAL_INFO = {
         growth: {
-            posts: 'Неделя работает на пересылку и сохранение. Два поста собираю так, чтобы их хотелось отправить другу: разобранный миф, сравнение, которое переворачивает привычное, ошибка, которую делают почти все в твоей нише. Ещё один пишу для человека, который видит канал впервые, — чтобы он понял, зачем подписываться, не читая ничего до этого.',
-            time: 'Часы беру из замеров канала. Пока замеров нет — обычные часы ниши.',
-            when: 'Когда идёт трафик со стороны — реклама, взаимопиар, упоминания — и новых людей надо удержать первым же постом. Постоянные читатели неделю потерпят: для них это повтор пройденного.',
+            posts: T('Неделя работает на пересылку и сохранение. Два поста собираю так, чтобы их хотелось отправить другу: разобранный миф, сравнение, которое переворачивает привычное, ошибка, которую делают почти все в твоей нише. Ещё один пишу для человека, который видит канал впервые, — чтобы он понял, зачем подписываться, не читая ничего до этого.'),
+            time: T('Часы беру из замеров канала. Пока замеров нет — обычные часы ниши.'),
+            when: T('Когда идёт трафик со стороны — реклама, взаимопиар, упоминания — и новых людей надо удержать первым же постом. Постоянные читатели неделю потерпят: для них это повтор пройденного.'),
         },
         engagement: {
-            posts: 'Посты заканчиваются не выводом, а вопросом, на который есть что ответить из своего опыта — не «а вы как думаете?», а конкретно. Один пост занимает позицию в споре, который в твоей аудитории идёт давно. Тон располагает возразить.',
-            time: 'День, 11:00–16:00: в это время отвечают, а не только читают.',
-            when: 'Когда под постами тихо и нужны комментарии и реакции — например, перед продажей рекламы. Учти: занятая позиция вызовет несогласие части аудитории. Если канал не готов к спорам в комментариях, это не та неделя.',
+            posts: T('Посты заканчиваются не выводом, а вопросом, на который есть что ответить из своего опыта — не «а вы как думаете?», а конкретно. Один пост занимает позицию в споре, который в твоей аудитории идёт давно. Тон располагает возразить.'),
+            time: T('День, 11:00–16:00: в это время отвечают, а не только читают.'),
+            when: T('Когда под постами тихо и нужны комментарии и реакции — например, перед продажей рекламы. Учти: занятая позиция вызовет несогласие части аудитории. Если канал не готов к спорам в комментариях, это не та неделя.'),
         },
         sales: {
-            posts: 'Продаёт один пост, ближе к концу недели. До него — снятие возражений: дорого, не сработает, сделаю не так. Первый пост недели не продаёт вообще — он зарабатывает право продать позже. Цен, скидок и «только до пятницы» я не придумываю: если оффер в канале не описан, пост зовёт написать тебе в личные сообщения.',
-            time: 'Вечер, 17:00–22:00: покупают после работы.',
-            when: 'Когда есть что продавать и это описано в канале. Если продукта нет — неделя пройдёт впустую, лучше взять другую цель.',
+            posts: T('Продаёт один пост, ближе к концу недели. До него — снятие возражений: дорого, не сработает, сделаю не так. Первый пост недели не продаёт вообще — он зарабатывает право продать позже. Цен, скидок и «только до пятницы» я не придумываю: если оффер в канале не описан, пост зовёт написать тебе в личные сообщения.'),
+            time: T('Вечер, 17:00–22:00: покупают после работы.'),
+            when: T('Когда есть что продавать и это описано в канале. Если продукта нет — неделя пройдёт впустую, лучше взять другую цель.'),
         },
         warmup: {
-            posts: 'Неделя идёт к событию, которого ещё не было. Каждый пост поднимает цену проблемы, которую твой запуск решит; последний обрывается на «продолжение на следующей неделе». Ничего не продаётся — только готовится почва.',
-            time: 'Вечер, 17:00–22:00.',
-            when: 'За неделю до запуска, анонса или открытия продаж. Если запуска потом не будет, аудитория запомнит обман — не бери эту цель «на всякий случай».',
+            posts: T('Неделя идёт к событию, которого ещё не было. Каждый пост поднимает цену проблемы, которую твой запуск решит; последний обрывается на «продолжение на следующей неделе». Ничего не продаётся — только готовится почва.'),
+            time: T('Вечер, 17:00–22:00.'),
+            when: T('За неделю до запуска, анонса или открытия продаж. Если запуска потом не будет, аудитория запомнит обман — не бери эту цель «на всякий случай».'),
         },
         retention: {
-            posts: 'Один пост возвращается к теме, которую канал уже поднимал, — с тем, что изменилось с тех пор. Один — для тех, кто уже сделал по совету канала первый шаг: что дальше. Азы не повторяю: постоянный читатель их знает.',
-            time: 'День, 11:00–16:00.',
-            when: 'Когда отписок больше, чем подписок, или посты перестали дочитывать. Это неделя для своих; новичку часть постов будет непонятна — и это нормально.',
+            posts: T('Один пост возвращается к теме, которую канал уже поднимал, — с тем, что изменилось с тех пор. Один — для тех, кто уже сделал по совету канала первый шаг: что дальше. Азы не повторяю: постоянный читатель их знает.'),
+            time: T('День, 11:00–16:00.'),
+            when: T('Когда отписок больше, чем подписок, или посты перестали дочитывать. Это неделя для своих; новичку часть постов будет непонятна — и это нормально.'),
         },
     };
     var _goalInfo = null;
@@ -2022,8 +2022,8 @@
         return '<div class="cp-bfoot"><i class="ti ti-anchor"></i><span>−' + rec.left + ' ' +
             esc(T(plural3(rec.left, 'подписчик', 'подписчика', 'подписчиков')) + ' ' +
                 T(_goalAuto
-                    ? 'за неделю — по замерам выставлена цель «Удержание». Сменить можно нажатием.'
-                    : 'за неделю — по замерам рекомендована цель «Удержание». Цель не переключается сама — выбор за тобой.')) +
+                    ? T('за неделю — по замерам выставлена цель «Удержание». Сменить можно нажатием.')
+                    : T('за неделю — по замерам рекомендована цель «Удержание». Цель не переключается сама — выбор за тобой.'))) +
             '</span></div>';
     }
 
@@ -2031,11 +2031,11 @@
         var H = _state && _state.learning && _state.learning.hours;
         if (H && (H.windows || []).length) {
             var ws = (H.windows || []).slice(0, 2).map(lrnWin).join(' · ');
-            return T(H.mode === 'measured' ? 'Окна недели по замерам' : 'Окна недели на пробу') + ': ' + ws;
+            return T(H.mode === 'measured' ? T('Окна недели по замерам') : T('Окна недели на пробу')) + ': ' + ws;
         }
         var bh = bestHours();
         if (!bh.length) return '';
-        return T('Лучшие часы канала') + ': ' +
+        return T(T('Лучшие часы канала')) + ': ' +
             bh.map(function (h) { return (h < 10 ? '0' : '') + h + ':00'; }).join(', ');
     }
     function lrnWin(w) {
@@ -2145,7 +2145,7 @@
             var w2 = H.windows[1] ? lrnWin(H.windows[1]) : '';
             if (H.mode === 'probe') {
                 rows += lrnRow('vio', 'ti-clock',
-                    esc(T(w2 ? 'Два окна времени — на пробу' : 'Окно времени — на пробу')),
+                    esc(T(w2 ? T('Два окна времени — на пробу') : T('Окно времени — на пробу'))),
                     esc(T('Замеров по часам пока мало — сравнить окна не по чему. Новая неделя разложит посты по окнам') +
                         ' ' + w1 + (w2 ? ' ' + T('и') + ' ' + w2 : '') + ' — ' +
                         T('к следующей неделе появится замер.')),
@@ -2165,7 +2165,7 @@
                 esc(T('Медиана сильных зрелых постов канала. Передаётся в задание каждому посту недели.')),
                 'teal', 'замер');
         }
-        var OPN = { question: 'вопрос', number: 'цифра', quote: 'цитата', short: 'короткая фраза' };
+        var OPN = { question: T('вопрос'), number: T('цифра'), quote: T('цитата'), short: T('короткая фраза') };
         if (L.opener && OPN[L.opener.kind]) {
             rows += lrnRow('teal', 'ti-quote',
                 esc(T('Первая строка —') + ' ' + T(OPN[L.opener.kind])),
@@ -2237,8 +2237,8 @@
         return (_rubrics || []).filter(function (r) { return r.title === t; })[0] || null;
     }
     function cpwReason(r, brief) {
-        if (!r) return T('тема будет из включённых рубрик');
-        if (rubRecentOnce(r)) return T('уже выходила') + ' ' + dateLabel(String(r.last_at).slice(0, 10));
+        if (!r) return T(T('тема будет из включённых рубрик'));
+        if (rubRecentOnce(r)) return T(T('уже выходила')) + ' ' + dateLabel(String(r.last_at).slice(0, 10));
         if ((r.post_count || 0) >= 3 && (r.avg_views || 0) > 0) {
             var top = 0;
             (_rubrics || []).forEach(function (x) {
@@ -2247,10 +2247,10 @@
             return (r.avg_views === top ? T('сильная рубрика') : T('рубрика канала')) +
                 (brief ? '' : ' · ' + T('типичный охват') + ' ' + numExact(r.avg_views));
         }
-        if (r.source === 'user') return T('твоя рубрика');
-        if (r.source === 'suggest') return T('предложение под нишу');
-        if (!(r.post_count || 0)) return T('стартовая рубрика');
-        return T('рубрика канала') + ' · ' + r.post_count + ' ' +
+        if (r.source === 'user') return T(T('твоя рубрика'));
+        if (r.source === 'suggest') return T(T('предложение под нишу'));
+        if (!(r.post_count || 0)) return T(T('стартовая рубрика'));
+        return T(T('рубрика канала')) + ' · ' + r.post_count + ' ' +
             T(plural3(r.post_count, 'пост', 'поста', 'постов'));
     }
     function cpwWhy(i, k) {
@@ -2310,8 +2310,8 @@
                 why0 = T('Разведочные замеры прошли: лучший день') + ' ' + T(WD[bi0]) + ' ' +
                     numExact(mx0) + ', ' + T('худший') + ' ' + T(WD[wi0]) + ' ' + numExact(mn0) +
                     ' — ' + T('разница') + ' ' + spread0 + '%. ' +
-                    T(spread0 < 10 ? 'Дни практически одинаковы.'
-                                   : 'Сильным день считается от 50% отрыва — пока не дотягивает.');
+                    T(spread0 < 10 ? T('Дни практически одинаковы.')
+                                   : T('Сильным день считается от 50% отрыва — пока не дотягивает.'));
             } else if (hstat.total || hstat.archive) {
                 why0 = T('Свежих замеров у канала мало — сильные дни по ним не определить.');
             } else {
@@ -2331,7 +2331,7 @@
             var hasTp0 = days().some(function (d) { return (d.topics || []).some(Boolean); });
             var real0 = (_rubrics || []).some(function (r) { return (r.post_count || 0) > 0; });
             var tp0 = !hasTp0 ? '' : ' ' +
-                T(real0 ? 'Темы — из рубрик канала.' : 'Темы взял из базовых рубрик.');
+                T(real0 ? T('Темы — из рубрик канала.') : T('Темы взял из базовых рубрик.'));
             return '<div class="cpw-ed"><i class="av ti ti-calendar"></i><div class="bub">' +
                 esc(why0 + ' ' + plan0 + tp0) +
                 '<div class="sub">' + esc(T('Меняй дни, темы и время как считаешь нужным. ' +
@@ -2387,10 +2387,10 @@
         return { at: sl.at || '', mine: false, conf: sl.conf || 'low' };
     }
     function confLabel(conf) {
-        if (conf === 'measured') return T('по замерам канала');
-        if (conf === 'probe') return T('проба окна');
-        if (conf === 'high') return T('по данным канала');
-        return T('время по нише');
+        if (conf === 'measured') return T(T('по замерам канала'));
+        if (conf === 'probe') return T(T('проба окна'));
+        if (conf === 'high') return T(T('по данным канала'));
+        return T(T('время по нише'));
     }
     function cpwFocus() {
         var i = _cpwDay || 0;
@@ -2475,7 +2475,7 @@
     }
     function apSum() {
         if (!_ap) return '';
-        return esc(T((_ap.level || 'manual') !== 'manual' ? 'включён' : 'выключен'));
+        return esc(T((_ap.level || 'manual') !== 'manual' ? T('включён') : T('выключен')));
     }
     function whoChip() {
         var b = _state && _state.built_by;
@@ -2486,7 +2486,7 @@
         if (!_ap) return '';
         var on = (_ap.level || 'manual') !== 'manual';
         return '<span class="cpg-chip' + (on ? ' g' : ' y') + '">' +
-            esc(T('автопилот') + ' ' + T(on ? 'вкл' : 'выкл')) + '</span>';
+            esc(T('автопилот') + ' ' + T(on ? T('вкл') : T('выкл'))) + '</span>';
     }
     function weekRangeLabel() {
         var lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
@@ -2497,7 +2497,7 @@
             var end = sun.toLocaleDateString(lang, { day: 'numeric', month: 'long' });
             var start = mon.getMonth() === sun.getMonth() ? String(mon.getDate()) : mon.toLocaleDateString(lang, { day: 'numeric', month: 'long' });
             return start + (mon.getMonth() === sun.getMonth() ? '–' : ' – ') + end;
-        } catch (e) { return T('Неделя') + ' ' + isoWeek(now); }
+        } catch (e) { return T(T('Неделя')) + ' ' + isoWeek(now); }
     }
     function gHeroBase(title, chips) {
         var cc = (_channels || []).filter(function (c) { return c.id === _chId; })[0];
@@ -2511,8 +2511,8 @@
         var total = totalPosts();
         var chips = '<span class="cpg-chip g">' + esc(total + ' ' + T(plural3(total, 'пост', 'поста', 'постов'))) + '</span>' +
             '<span class="cpg-chip">' + esc(goalTitle(_goal)) + '</span>' +
-            '<span class="cpg-chip">' + esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум')) + '</span>' + apChip();
-        return gHeroBase('Сборка недели', chips);
+            '<span class="cpg-chip">' + esc(T(_model === 'standard' ? T('Стандарт') : T('Премиум'))) + '</span>' + apChip();
+        return gHeroBase(T('Сборка недели'), chips);
     }
     function chanSec() {
         return '<div class="cpg-chan">' + buildChanBlock() + '</div>';
@@ -2584,7 +2584,7 @@
         var sugs = cpwCandidates().filter(function (r) { return !used[r.title]; }).slice(0, 8);
         return '<div class="cpw-sw" data-act="cpwx"><div class="cpw-sheet">' +
             '<div class="sh">' + esc(T(WD_FULL[i]) + ' · ' +
-                T(fresh ? 'новый пост' : 'тема поста')) + '</div>' +
+                T(fresh ? T('новый пост') : T('тема поста'))) + '</div>' +
             sugs.map(function (r) {
                 var isCur = r.title === cur;
                 return '<button class="cpw-pick' + (r.source === 'user' ? ' own' : '') +
@@ -2611,7 +2611,7 @@
                   '<button class="cpw-drop" data-act="cpwdrop" data-v="' + i + '" data-k="' + k + '">' +
                   '<i class="ti ti-trash"></i> ' + esc(T('Убрать этот пост')) + '</button>') +
             '<button class="cpw-close" data-act="cpwx">' +
-            esc(T(fresh ? 'Отмена' : 'Закрыть')) + '</button>' +
+            esc(T(fresh ? T('Отмена') : T('Закрыть'))) + '</button>' +
             '</div></div>';
     }
     function cpwTimeBlock(i, k) {
@@ -2721,7 +2721,7 @@
             gSec('rev', 'chart-bar', 'Статистика', statsSum(), statsBlock(), false, true) +
             gSec('ap', 'plane', 'Автопилот', apSum(), apPanel(), false) +
             gSec('model', 'diamond', 'Модель текстов',
-                esc(T(_model === 'standard' ? 'Стандарт' : 'Премиум') + ' · ' + priceDay()), modelBody, false) +
+                esc(T(_model === 'standard' ? T('Стандарт') : T('Премиум')) + ' · ' + priceDay()), modelBody, false) +
             strategyWrap() + archRow() + cpwSheetHtml() +
             (blocked ? '' : lowNote) +
             '<div class="cpg-cta' + (rdyBlock ? ' flow' : '') + '"><button class="cp-go' +
@@ -2774,8 +2774,8 @@
         return '<button class="cp-mopt' + (_model === m ? ' on' : '') +
             '" data-act="mchoice" data-m="' + m + '">' +
             '<i class="ti ti-' + (prem ? 'diamond' : 'edit') + '"></i>' +
-            '<span><b>' + esc(T(prem ? 'Премиум' : 'Стандарт')) + '</b>' +
-            '<em>' + esc(T(prem ? 'Точнее, глубже' : 'Быстрее, легче')) + '</em></span>' +
+            '<span><b>' + esc(T(prem ? T('Премиум') : T('Стандарт'))) + '</b>' +
+            '<em>' + esc(T(prem ? T('Точнее, глубже') : T('Быстрее, легче'))) + '</em></span>' +
             '<span class="cp-mpx">' + forgeTag(price) + '<u>' + esc(T('за пост')) + '</u></span></button>';
     }
 
@@ -2808,7 +2808,7 @@
     }
     function cap(r) {
         if (r && r.detail && r.detail.message) return r.detail.message;
-        return T('Не получилось — попробуй ещё раз.');
+        return T(T('Не получилось — попробуй ещё раз.'));
     }
     function apiErrText(err, fb) {
         try {
@@ -2840,7 +2840,7 @@
         return T(prefix) + ' ' + b.name + when;
     }
     function renderGenerating() {
-        var who = builtByLine('Неделю собирает');
+        var who = builtByLine(T('Неделю собирает'));
         setView('<div class="cp-center"><div class="cp-genic"><i class="ti ti-calendar-week"></i></div>' +
             '<div class="cp-spin"></div>' +
             '<div class="m" id="cp-gen-text">' + esc(T(GEN_TEXTS[0])) + '</div>' +
@@ -2858,9 +2858,9 @@
         if (!ps.length) return null;
         var withText = ps.filter(function (p) { return p.text; }).length;
         if (withText < ps.length) {
-            return T('Пишу тексты') + ' · ' + withText + ' ' + T('из') + ' ' + ps.length;
+            return T(T('Пишу тексты')) + ' · ' + withText + ' ' + T('из') + ' ' + ps.length;
         }
-        return T('Рисую обложки...');
+        return T(T('Рисую обложки...'));
     }
     function startPoll() {
         if (_pollTimer) clearInterval(_pollTimer);
@@ -2922,7 +2922,7 @@
                 return [_rubrics[i].title, _rubrics[i].needs_fact ? 'ti-camera' : 'ti-file-text'];
             }
         }
-        return FMT[f] || ['Пост', 'ti-file-text'];
+        return FMT[f] || [T('Пост'), 'ti-file-text'];
     }
     function statusOf(p) {
         var ps = p.publish_status;
@@ -3025,9 +3025,9 @@
             var archBody = header + ribbon + detailPanel();
             var pubN = ps.filter(function (p) { return p.publish_status === 'published'; }).length;
             setView(viewBan + chanSec() +
-                gHeroBase('Неделя вышла',
+                gHeroBase(T('Неделя вышла'),
                     '<span class="cpg-chip g">' + esc(pubN + ' ' + T(plural3(pubN, 'пост', 'поста', 'постов')) +
-                        ' · ' + T(pubN < n ? 'в канале' : 'все в канале')) + '</span>' +
+                        ' · ' + T(pubN < n ? T('в канале') : T('все в канале'))) + '</span>' +
                     (_state.manual ? '' : '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>') + apChip()) +
                 gSec('ohv', 'chart-bar', 'Охват по дням', ohvSum(), ohvBody, true) +
                 gSec('lrn', 'sparkles', 'Калибровка', lrnSum(), learningBlock(true), false) +
@@ -3050,7 +3050,7 @@
                 (resetBtn ? ' ' + esc(T('Сброс удалит план и невышедшие посты — вышедшие останутся в канале.')) : '') +
                 '</div><div class="cpg-cta">' + allBtn + schedBtn + resetBtn + '</div>';
             setView(viewBan + chanSec() +
-                gHeroBase('Неделя в работе',
+                gHeroBase(T('Неделя в работе'),
                     '<span class="cpg-chip g">' + esc(appr + '/' + n + ' ' + T('утверждено')) + '</span>' +
                     (_state.manual ? '' : '<span class="cpg-chip">' + esc(goalTitle(_state.goal)) + '</span>') +
                     (scheduled ? '<span class="cpg-chip g">' + esc(T('в очереди')) + '</span>' : '') +
@@ -3341,7 +3341,7 @@
                 'Контент-план дальше исполняет этот план.')) + '</div>' +
             '<div class="cp-sgwrap' + (_sgOpen ? ' open' : '') + '">' +
             '<button class="cp-sgtog" data-act="sgtog">' +
-            esc(T(_sgOpen ? 'Свернуть' : 'Что стратегия разберёт')) +
+            esc(T(_sgOpen ? T('Свернуть') : T('Что стратегия разберёт'))) +
             '<i class="ti ti-chevron-' + (_sgOpen ? 'up' : 'down') + '"></i></button>' +
             (_sgOpen ? strategyParts() : '') + '</div>' +
             '<button class="cp-ready-b pk" data-act="openstrategy">' +
@@ -3467,10 +3467,10 @@
         var fi = fmtInfo(p.format);
         var st = statusOf(p);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = p.is_own ? ['своё время', 'hi']
-            : (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
-            : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
-            : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
+        var conf = p.is_own ? [T('своё время'), 'hi']
+            : (p.slot_conf === 'measured') ? [T('по замерам канала'), 'hi']
+            : (p.slot_conf === 'probe') ? [T('проба окна'), 'hi']
+            : (p.slot_conf === 'high') ? [T('по данным канала'), 'hi'] : [T('время по нише'), 'lo'];
         var slot = p.slot_hm
             ? '<div class="cp-slot"><span class="tm"><i class="ti ti-clock"></i>' + esc(p.slot_hm + slotHint(p.slot_hm)) + '</span>' +
               '<span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>'
@@ -3528,8 +3528,8 @@
             .catch(function () { _editSaveBusy[id] = false; toast(T('Не удалось сохранить текст')); });
     }
 
-    var LAY_RU = { thesis: 'тезис', num: 'число', vs: 'сравнение', list: 'подборка',
-                   ask: 'вопрос' };
+    var LAY_RU = { thesis: T('тезис'), num: T('число'), vs: T('сравнение'), list: T('подборка'),
+                   ask: T('вопрос') };
     var COVER_PRICE = { cover_own: 5 };
 
     function coverPrice(op) {
@@ -3606,12 +3606,12 @@
         ['wine', '#12070c', '#e11d48', '#c084fc', 'Бордо']
     ];
     var SHAPE_GROUP_TITLES = {
-        neutral: 'Универсальные', med: 'Медицина и здоровье', travel: 'Путешествия',
-        auto: 'Авто и мастерские', food: 'Еда и рестораны', fin: 'Финансы и крипта',
-        sport: 'Спорт', beauty: 'Красота и мода', tech: 'IT и технологии',
-        edu: 'Образование', psy: 'Психология', estate: 'Недвижимость', kids: 'Дети',
-        music: 'Музыка', games: 'Игры', law: 'Право', mkt: 'Маркетинг',
-        vlog: 'Влоги и медиа', fun: 'Юмор'
+        neutral: T('Универсальные'), med: T('Медицина и здоровье'), travel: T('Путешествия'),
+        auto: T('Авто и мастерские'), food: T('Еда и рестораны'), fin: T('Финансы и крипта'),
+        sport: T('Спорт'), beauty: T('Красота и мода'), tech: T('IT и технологии'),
+        edu: T('Образование'), psy: T('Психология'), estate: T('Недвижимость'), kids: T('Дети'),
+        music: T('Музыка'), games: T('Игры'), law: T('Право'), mkt: T('Маркетинг'),
+        vlog: T('Влоги и медиа'), fun: T('Юмор')
     };
 
     function shapeGroups() {
@@ -3715,7 +3715,7 @@
         var previewSpec = function () {
             var p = p0 || ((_state && _state.posts) || []).filter(function (x) { return x.title; })[0];
             var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
-            var title = (p && p.title) || 'Заголовок поста появится здесь';
+            var title = (p && p.title) || T('Заголовок поста появится здесь');
             var parts = thesisSplit(title);
             return {
                 pal: c.palette || 'indigo',
@@ -3804,10 +3804,10 @@
             }
             host.innerHTML = '<div class="cp-dsheet">' +
                 '<div class="cp-dsgrab"></div>' +
-                '<div class="cp-dsh2"><b>' + esc(T(p0 ? 'Стиль этой картинки' : 'Стиль обложек')) + '</b></div>' +
+                '<div class="cp-dsh2"><b>' + esc(T(p0 ? T('Стиль этой картинки') : T('Стиль обложек'))) + '</b></div>' +
                 '<div class="cp-dss">' +
-                esc(T(p0 ? 'Меняется только картинка этого поста'
-                         : 'Применится к обложкам постов канала')) + '</div>' + prev +
+                esc(T(p0 ? T('Меняется только картинка этого поста')
+                         : T('Применится к обложкам постов канала'))) + '</div>' + prev +
                 (!p0 && ((c.shape || 'auto') !== 'auto' && c.shape !== 'none')
                     ? '<div class="cp-clbl">' + esc(T('Вид орнамента')) + '</div>' +
                       '<div class="cp-vstep">' +
@@ -4014,8 +4014,8 @@
             var warn = (p.text && p.text.length > 1024)
                 ? '<div class="cp-mwarn"><i class="ti ti-alert-triangle"></i><span>' +
                   esc(T(isVideo
-                      ? 'Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.'
-                      : 'Текст длиннее 1024 знаков — картинка станет превью над полным текстом.')) +
+                      ? T('Текст длиннее 1024 знаков — видео уйдёт отдельным сообщением перед постом.')
+                      : T('Текст длиннее 1024 знаков — картинка станет превью над полным текстом.'))) +
                   '</span></div>' +
                   (p.is_own ? '' :
                   '<button class="cp-mrepl" data-act="shrink" data-id="' + p.id + '">' +
@@ -4051,7 +4051,7 @@
                 esc(T('Пост в очереди — чтобы менять, сними его с очереди')) + '</div>';
         return '<div class="cp-mrow">' +
             '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '"><i class="ti ti-upload"></i>' +
-            esc(T(p.media_url ? 'Заменить файлом' : 'Файл с устройства')) + '</button>' +
+            esc(T(p.media_url ? T('Заменить файлом') : T('Файл с устройства'))) + '</button>' +
             '<button class="cp-mrepl" data-act="owncover" data-id="' + p.id + '"><i class="ti ti-photo"></i>' +
             esc(T('Рисованная обложка')) + ' ' + forgeTag(coverPrice('cover_own')) + '</button>' +
             '<button class="cp-mrepl" data-act="photocover" data-id="' + p.id + '"><i class="ti ti-camera"></i>' +
@@ -4208,16 +4208,16 @@
         if (!p) return '';
         var fi = fmtInfo(p.format);
         var wd = WD[(p.day_index || 0) % 7];
-        var conf = p.is_own ? ['своё время', 'hi']
-            : (p.slot_conf === 'measured') ? ['по замерам канала', 'hi']
-            : (p.slot_conf === 'probe') ? ['проба окна', 'hi']
-            : (p.slot_conf === 'high') ? ['по данным канала', 'hi'] : ['время по нише', 'lo'];
+        var conf = p.is_own ? [T('своё время'), 'hi']
+            : (p.slot_conf === 'measured') ? [T('по замерам канала'), 'hi']
+            : (p.slot_conf === 'probe') ? [T('проба окна'), 'hi']
+            : (p.slot_conf === 'high') ? [T('по данным канала'), 'hi'] : [T('время по нише'), 'lo'];
         var slot = p.slot_hm ? '<div class="cp-dslot2"><i class="ti ti-clock"></i>' + esc(p.slot_hm + slotHint(p.slot_hm)) +
             ' <span class="cp-conf ' + conf[1] + '">' + esc(T(conf[0])) + '</span></div>' : '';
         var adRow = '<button class="cp-adrow' + (p.is_ad ? ' on' : '') +
             '" data-act="admark" data-id="' + p.id + '">' +
             '<i class="ti ' + (p.is_ad ? 'ti-ad-2' : 'ti-ad-off') + '"></i>' +
-            '<span class="tx"><b>' + esc(T(p.is_ad ? 'Рекламный пост' : 'Обычный пост')) + '</b>' +
+            '<span class="tx"><b>' + esc(T(p.is_ad ? T('Рекламный пост') : T('Обычный пост'))) + '</b>' +
             '<em>' + esc(p.is_ad
                 ? (p.ad_erid ? (T('пометка и erid добавятся при выходе') + ' · ' + p.ad_erid)
                              : T('пометка добавится при выходе · нажми, чтобы указать erid'))
@@ -4264,7 +4264,7 @@
                 '<div class="cp-dacts">' +
                 '<button class="cp-act ' + (p.status === 'approved' ? 'okon' : 'ok') + '" data-act="approve" data-id="' + p.id + '">' +
                 '<i class="ti ti-' + (p.status === 'approved' ? 'circle-check-filled' : 'circle-check') + '"></i> ' +
-                esc(T(p.status === 'approved' ? 'Утверждён' : 'Утвердить')) + '</button>' +
+                esc(T(p.status === 'approved' ? T('Утверждён') : T('Утвердить'))) + '</button>' +
                 nowBtn + queueBtn +
                 (p.is_own ? '' :
                 '<button class="cp-act" data-act="variant" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Ещё вариант')) + ' ' +

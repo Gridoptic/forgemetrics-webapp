@@ -50,7 +50,7 @@
         'white-space:nowrap;pointer-events:none;';
       poster.appendChild(c);
     }
-    c.textContent = Pk.callout || 'Реклама в канале';
+    c.textContent = Pk.callout || PG('Реклама в канале');
     c.style.display = '';
     c.style.fontSize = '12px'; c.style.padding = '7px 14px'; c.style.letterSpacing = '1.1px';
     var t = el('titEl');
@@ -78,7 +78,7 @@
     }
     var dt = _psAsof;
     if (!dt) { var nn = new Date(); dt = ('0' + nn.getDate()).slice(-2) + '.' + ('0' + (nn.getMonth() + 1)).slice(-2) + '.' + nn.getFullYear(); }
-    var trust = Pk.trust || 'Метрики подтверждены @ForgeMetricsBot · актуальная карточка канала — по QR-коду';
+    var trust = Pk.trust || PG('Метрики подтверждены @ForgeMetricsBot · актуальная карточка канала — по QR-коду');
     d.style.fontSize = '9.5px';
     d.textContent = trust + ' · ' + dt;
     if (d.scrollWidth > d.clientWidth + 1) d.style.fontSize = '8.5px';
@@ -342,7 +342,7 @@
     if (key === 'cpm') return (d.min_price && d.avg_views) ? fmt(d.min_price * 1000 / d.avg_views) + ' ₽' : null;
     if (key === 'err') { var rr = (d.reach_rate != null) ? d.reach_rate : (d.er != null ? d.er : null); if (rr == null || !isFinite(rr)) return null; return (rr > 100 ? '⚠ ' : '') + Math.round(rr) + '%'; }
     if (key === 'grow') return (d.grow != null && isFinite(d.grow)) ? (d.grow >= 0 ? '+' : '') + fmt(d.grow) : null;
-    if (key === 'freq') return (d.freq != null && isFinite(d.freq)) ? (Math.round(d.freq * 10) / 10) + (_psU().wk || '/нед') : null;
+    if (key === 'freq') return (d.freq != null && isFinite(d.freq)) ? (Math.round(d.freq * 10) / 10) + (_psU().wk || PG('/нед')) : null;
     if (key === 'age') return (d.age_year != null && isFinite(d.age_year)) ? String(d.age_year) : null;
     return null;
   }
@@ -362,7 +362,7 @@
         chip.style.display = '';
         chip.style.opacity = _no ? '0.4' : '';
         chip.style.pointerEvents = _no ? 'none' : '';
-        chip.title = _no ? 'Нет данных по этой метрике' : '';
+        chip.title = _no ? PG('Нет данных по этой метрике') : '';
         if (_no) chip.classList.remove('on');
       }
     });
@@ -617,14 +617,14 @@
           if (genPool.length) { genPut(genPool.shift()); return; }
           genBusy = true;
           var old = gb.textContent;
-          gb.textContent = 'Генерирую…';
+          gb.textContent = PG('Генерирую…');
           Promise.resolve(gen.fetch(_psLang)).then(function (r) {
             genBusy = false; gb.textContent = old;
             var hooks = (r && r.hooks) || [];
             if (!r || r.ok === false || !hooks.length) {
               var msg = (r && r.error === 'limit')
-                ? 'Дневной лимит генераций исчерпан — попробуй завтра'
-                : 'Не удалось сгенерировать текст. Повтори попытку';
+                ? PG('Дневной лимит генераций исчерпан — попробуй завтра')
+                : PG('Не удалось сгенерировать текст. Повтори попытку');
               if (window.__fmxPosterNotify) window.__fmxPosterNotify(msg);
               return;
             }
@@ -632,7 +632,7 @@
             genPut(genPool.shift());
           }).catch(function () {
             genBusy = false; gb.textContent = old;
-            if (window.__fmxPosterNotify) window.__fmxPosterNotify('Не удалось сгенерировать текст. Повтори попытку');
+            if (window.__fmxPosterNotify) window.__fmxPosterNotify(PG('Не удалось сгенерировать текст. Повтори попытку'));
           });
         });
       }
@@ -827,7 +827,7 @@
           return;
         }
         if (f && f.size > 64 * 1024 * 1024) {
-          var msg = PG('Файл ') + Math.round(f.size / 1048576) + ' МБ — превышен лимит 64 МБ. Выберите файл меньшего размера';
+          var msg = PG('Файл ') + Math.round(f.size / 1048576) + PG(' МБ — превышен лимит 64 МБ. Выберите файл меньшего размера');
           var d = el('drop');
           if (d) { var o = d.innerHTML; d.textContent = msg; setTimeout(function () { if (d) d.innerHTML = o; }, 3200); }
           try { if (typeof window.__fmxPosterNotify === 'function') window.__fmxPosterNotify(msg); } catch (e) {}
