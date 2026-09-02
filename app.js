@@ -3375,11 +3375,7 @@ function openCheckout(opts) {
           <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
           <div class="co-row co-total"><span>${TR('К оплате')}</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
-        <div class="co-methods" style="display:flex;gap:8px;margin:10px 0 2px;">
-          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> ${TR('СБП')}</button>
-          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> ${TR('Карта')}</button>
-        </div>
-        <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> Оплатить ${cabNum(price)} ₽</button>
+        <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> ${TR('Оплатить')} ${cabNum(price)} ₽</button>
         <button class="co-close">${TR('Закрыть')}</button>
     `;
     document.body.appendChild(overlay);
@@ -3387,20 +3383,9 @@ function openCheckout(opts) {
     document.documentElement.classList.add('cs-modal-open');
     document.body.classList.add('cs-modal-open');
     requestAnimationFrame(() => { overlay.classList.add('visible'); sheet.classList.add('visible'); });
-    _coCtx = { overlay, sheet, opts, method: 'sbp' };
+    _coCtx = { overlay, sheet, opts };
     overlay.addEventListener('click', closeCheckout);
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
-    sheet.querySelectorAll('.co-met').forEach((mb) => mb.addEventListener('click', () => {
-        if (!_coCtx || _coCtx.sheet !== sheet) return;
-        hapticLight();
-        _coCtx.method = mb.getAttribute('data-met');
-        sheet.querySelectorAll('.co-met').forEach((b) => {
-            const on = b === mb;
-            b.style.border = on ? '0.5px solid rgba(93,202,165,0.55)' : '0.5px solid rgba(255,255,255,0.14)';
-            b.style.background = on ? 'rgba(93,202,165,0.10)' : 'transparent';
-            b.style.color = on ? '#e8eaf6' : '#a9aec0';
-        });
-    }));
     const payBtn = sheet.querySelector('[data-copay]');
     if (payBtn) payBtn.addEventListener('click', () => { hapticMed(); coPay(opts); });
 }
@@ -3470,24 +3455,14 @@ async function coPay(opts) {
         const btn = sheet.querySelector('[data-copay]');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + TR('Готовим оплату…'); }
 
-        const payMethod = (_coCtx && _coCtx.method) || 'sbp';
         let res = null;
         try {
             res = await apiRequest('/api/v1/payment/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...opts.pay, method: payMethod }),
+                body: JSON.stringify(opts.pay),
             });
         } catch (e) { res = null; }
-        if (res && res.ok === false && res.error === 'payment_create_failed') {
-            try {
-                res = await apiRequest('/api/v1/payment/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(opts.pay),
-                });
-            } catch (e) { res = null; }
-        }
         if (!_coCtx || _coCtx.sheet !== sheet) return;
         if (res && res.ok && res.confirmation_url) {
             const paid = [];
@@ -3506,7 +3481,7 @@ async function coPay(opts) {
         if (err === 'billing_not_ready') {
             coPayPending(sheet, 'Приём платежей подключается', 'Оплата станет доступна в ближайшее время.');
         } else {
-            if (btn) { btn.disabled = false; btn.innerHTML = `<i class="ti ti-credit-card"></i> Оплатить ${cabNum(opts.price)} ₽`; }
+            if (btn) { btn.disabled = false; btn.innerHTML = `<i class="ti ti-credit-card"></i> ${TR('Оплатить')} ${cabNum(opts.price)} ₽`; }
             cabToast(err === 'amount_too_small' ? 'Сумма слишком мала для оплаты' : 'Не удалось открыть оплату');
         }
         return;

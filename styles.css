@@ -3585,7 +3585,7 @@ html.cs-modal-open {
 .co-row > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .co-total { font-size: 15px; font-weight: 700; color: #fff; }
 .co-sum { color: #fff; }
-.co-pay { width: 100%; min-height: 50px; border: none; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 22px rgba(99, 102, 241, 0.35); }
+.co-pay { width: 100%; min-height: 50px; margin-top: 14px; border: none; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 22px rgba(99, 102, 241, 0.35); }
 .co-pay:active { transform: translateY(1px); }
 .co-pay:disabled { opacity: 0.6; }
 .co-secure { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: rgba(255, 255, 255, 0.4); margin: 12px 0 4px; }
