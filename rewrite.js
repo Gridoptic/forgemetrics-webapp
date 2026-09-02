@@ -340,7 +340,7 @@
             actRow('pubnow', 'ti-send', RW('Опубликовать сейчас'), sendHint(), 'w', actLocked(), '') +
             actRow('more', 'ti-refresh', RW('Ещё вариант'), T('Переписать заново, другая подача'), '', false, price() != null ? fa(price()) : '') +
             '</div>' +
-            (r.model_used ? '<div class="rw-modelnote">' + esc(T('Модель')) + ': ' + esc(r.model_used) + (r.style_applied ? ' · ' + esc(T('в стиле канала')) : '') + '</div>' : '') +
+            (r.style_applied ? '<div class="rw-modelnote">' + esc(T('В стиле канала')) + '</div>' : '') +
             '</div>';
         var cov = document.getElementById('rw-cover');
         if (cov && window.FMPostTools) { window.FMPostTools.coverRender(cov, _ctx); window.FMPostTools.coverBind(cov, _ctx); }

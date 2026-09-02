@@ -310,7 +310,6 @@ const els = {
     postResultBack: document.getElementById('post-result-back'),
     postResultMenuBtn: document.getElementById('post-result-menu-btn'),
     postResultText: document.getElementById('post-result-text'),
-    postResultModel: document.getElementById('post-result-model'),
     postResultSuggestions: document.getElementById('post-result-suggestions'),
     postResultSuggestionsList: document.getElementById('post-result-suggestions-list'),
     postResultCustomInput: document.getElementById('post-result-custom-input'),
@@ -3711,7 +3710,7 @@ function rsRecentOpen(pid) {
     state.post.creative = it.creative || null;
     state.post.crvLoadedFor = it.id;
     state.post.crvBusy = false;
-    renderResult({ text: it.text || '', post_id: it.id, model_used: it.model_used });
+    renderResult({ text: it.text || '', post_id: it.id });
     state.post.media = it.media || null;
     rsCoverRender(document.getElementById('post-cover-block'), state.post);
     rsCrvPoll(state.post, document.getElementById('post-cover-block'));
@@ -6750,7 +6749,6 @@ async function runGenerate() {
 
 function renderResult(result) {
     els.postResultText.textContent = result.text;
-    els.postResultModel.textContent = result.model_used || TR('Модель');
 
 
     const styleBadge = document.getElementById('post-result-style');
@@ -6759,6 +6757,8 @@ function renderResult(result) {
             ? !!result.style_applied
             : !!state.post.lastStyleApplied;
         styleBadge.style.display = applied ? '' : 'none';
+        const meta = styleBadge.parentElement;
+        if (meta) meta.style.display = applied ? '' : 'none';
     }
 
     els.postResultSuggestions.style.display = 'none';
@@ -7444,7 +7444,6 @@ async function applyEdit(instruction, preferredModel) {
         stopThinkingAnimation();
         renderResult({
             text: result.text,
-            model_used: result.model_used,
             post_id: result.post_id,
         });
 

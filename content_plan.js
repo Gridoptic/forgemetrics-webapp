@@ -4314,7 +4314,7 @@
             .then(function (r) {
                 _dayBusy[id] = false;
                 if (r && r.ok) {
-                    p.text = r.text; p.status = r.status || 'draft'; p.model_used = r.model_used;
+                    p.text = r.text; p.status = r.status || 'draft';
                     if (isVariant) toast(T('Готов новый вариант'));
                     refreshState();
                 } else { toast(cap(r)); renderWeek(); }
