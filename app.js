@@ -3027,7 +3027,6 @@ const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
     adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20,
     promo_burst24: 30, promo_burst48: 30, promo_week: 20, promo_month: 12,
     ai_strategy: 3, strategy_renewal: 12 };
-const TFC_STEP = { generate: 5, generate_std: 5, rewrite: 5, modify: 5 };
 const TFC_PRESETS = [
     { t: 'Один канал', ic: 'user', color: 'bl',
       v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
@@ -3096,7 +3095,7 @@ function tfcRow(d, o) {
         + '<span class="tfc-v' + (val ? '' : ' zero') + '">' + cabNum(val) + '</span></div>'
         + '<div class="tfc-ctl">'
         + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="-1"' + (val <= 0 ? ' disabled' : '') + '>−</button>'
-        + '<input type="range" min="0" max="' + Math.max(cap, 1) + '" step="' + (TFC_STEP[o.key] || 1) + '"'
+        + '<input type="range" min="0" max="' + Math.max(cap, 1) + '" step="1"'
         + ' value="' + val + '" data-tfcsl="' + o.key + '">'
         + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="1"' + (add <= 0 ? ' disabled' : '') + '>+</button>'
         + '</div><div class="tfc-can">' + tfcHint(d, o) + '</div></div>';
