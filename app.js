@@ -3637,6 +3637,14 @@ function resetPostState() {
     state.post.lastStyleApplied = false;
     state.post.publishStatus = 'draft';
     state.post.fromArchive = false;
+    state.post.creative = null;
+    state.post.crvLoadedFor = null;
+    state.post.crvBusy = false;
+    if (state.post._crvTimer) {
+        clearTimeout(state.post._crvTimer);
+        state.post._crvTimer = null;
+    }
+    state.post._crvTicks = 0;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
     if (els.postStyleInput) els.postStyleInput.value = '';
@@ -3661,7 +3669,7 @@ function resetPostState() {
 
 
 const ARCHIVE_PAGE = 20;
-const _arch = { items: [], total: 0, loading: false, back: 'dashboard' };
+const _arch = { items: [], total: 0, loading: false, back: 'dashboard', gen: 0 };
 
 function archiveChannelParam() {
     const ch = state.post && state.post.activeChannel;
@@ -3672,6 +3680,8 @@ async function openPostsArchive(from) {
     hapticLight();
     _arch.items = [];
     _arch.total = 0;
+    _arch.loading = false;
+    _arch.gen += 1;
     _arch.back = from || 'dashboard';
     showScreen('postsArchive');
     _archSet('loading');
@@ -3697,7 +3707,8 @@ function archiveTitle() {
 }
 
 function _archSet(state) {
-    const map = { loading: 'archive-loading', empty: 'archive-empty', list: 'archive-list' };
+    const map = { loading: 'archive-loading', empty: 'archive-empty', list: 'archive-list',
+                  error: 'archive-error' };
     Object.keys(map).forEach((k) => {
         const el = document.getElementById(map[k]);
         if (el) el.style.display = (k === state) ? '' : 'none';
@@ -3707,22 +3718,30 @@ function _archSet(state) {
 async function archiveLoad(reset) {
     if (_arch.loading) return;
     _arch.loading = true;
+    const gen = _arch.gen;
     const offset = reset ? 0 : _arch.items.length;
+    const more = document.getElementById('archive-more');
+    const moreTx = document.getElementById('archive-more-text');
+    if (!reset && moreTx) moreTx.textContent = TR('Загружаю…');
     try {
         const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + ARCHIVE_PAGE
             + '&offset=' + offset + archiveChannelParam());
+        if (gen !== _arch.gen) return;
         const items = (r && r.items) || [];
         _arch.total = (r && r.total) || 0;
         _arch.items = reset ? items : _arch.items.concat(items);
     } catch (e) {
+        if (gen !== _arch.gen) return;
         _arch.loading = false;
-        if (reset) {
-            _archSet('empty');
-            showToast(TR('Не удалось загрузить архив'), 'alert-triangle');
+        if (reset) _archSet('error');
+        else {
+            showToast(TR('Не удалось загрузить — проверь связь и попробуй ещё раз'), 'alert-triangle');
+            archiveRender();
         }
         return;
+    } finally {
+        if (gen === _arch.gen) _arch.loading = false;
     }
-    _arch.loading = false;
     archiveRender();
 }
 
@@ -3739,7 +3758,7 @@ function archiveRender() {
             else groups.push({ label: label, items: [it] });
         });
         host.innerHTML = groups.map((g) =>
-            '<div class="ap-qsec">' + escapeHtml(g.label) + ' · ' + g.items.length + '</div>' +
+            '<div class="ap-qsec">' + escapeHtml(g.label) + '</div>' +
             '<div class="post-recent">' + g.items.map(archiveRow).join('') + '</div>').join('');
         if (!host.dataset.bound) {
             host.dataset.bound = '1';
@@ -3776,7 +3795,7 @@ function archiveGroupLabel(iso) {
         const ts = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
         if (ts === midnight) return TR('Сегодня');
         if (ts === midnight - day) return TR('Вчера');
-        if (ts > midnight - 7 * day) return TR('На этой неделе');
+        if (ts > midnight - 7 * day) return TR('За последние 7 дней');
         return d.toLocaleDateString(lang, { month: 'long', year: 'numeric' }).replace(/\s*г\.?$/i, '');
     } catch (e) { return TR('Ранее'); }
 }
@@ -3784,7 +3803,10 @@ function archiveGroupLabel(iso) {
 function archiveStatusText(it) {
     const st = it.publish_status || 'draft';
     if (st === 'published') return TR('опубликован');
-    if (st === 'queued' || st === 'publishing') {
+    if (st === 'publishing') return TR('публикуется');
+    if (st === 'needs_check') return TR('проверяем доставку');
+    if (st === 'rolled_back') return TR('снят с публикации');
+    if (st === 'queued' || st === 'approved') {
         const when = it.scheduled_at ? rsRecentWhen(it.scheduled_at) : '';
         return when ? TR('в очереди на') + ' ' + when : TR('в очереди');
     }
@@ -3804,10 +3826,13 @@ function archiveRow(it) {
     }
     const icon = it.is_rewrite ? 'ti-pencil' : 'ti-file-text';
     const meta = rsRecentWhen(it.created_at) + ' · ' + archiveStatusText(it);
+    const isPhoto = it.media && it.media.url && (it.media.kind || 'photo') === 'photo';
+    const isVideo = it.media && (it.media.kind === 'video' || it.media.kind === 'animation');
     return '<button type="button" class="prc-row" data-open="' + it.id + '">' +
-        (it.media && it.media.url
+        (isPhoto
             ? '<span class="prc-th"><img src="' + escapeHtml(it.media.url) + '" alt=""></span>'
-            : '<span class="prc-th empty"><i class="ti ' + icon + '"></i></span>') +
+            : '<span class="prc-th empty"><i class="ti ' +
+              (isVideo ? 'ti-movie' : icon) + '"></i></span>') +
         '<span class="prc-tx"><b>' + escapeHtml(it.preview || '') + '</b>' +
         '<em>' + escapeHtml(meta) + '</em>' + pill + '</span>' +
         '<i class="ti ti-chevron-right prc-go"></i></button>';
@@ -3821,7 +3846,18 @@ async function archiveOpen(pid) {
             state.post.limits = await apiRequest('/api/v1/post/limits');
         } catch (e) { state.post.limits = null; }
     }
-    resetPostState();
+    state.post.suggestions = [];
+    state.post.isGood = false;
+    state.post.contextHistory = [];
+    state.post.pendingInstruction = null;
+    state.post.placed = null;
+    state.post.placeInfo = null;
+    state.post.mediaBusy = '';
+    if (state.post._crvTimer) {
+        clearTimeout(state.post._crvTimer);
+        state.post._crvTimer = null;
+    }
+    state.post._crvTicks = 0;
     state.post.currentPostId = it.id;
     state.post.currentPostText = it.text || '';
     state.post.creative = it.creative || null;
@@ -6881,6 +6917,10 @@ async function runGenerate() {
 
         state.post.currentPostId = result.post_id;
         state.post.currentPostText = result.text;
+        state.post.publishStatus = 'draft';
+        state.post.creative = null;
+        state.post.crvLoadedFor = null;
+        state.post.crvBusy = false;
         state.post.lastStyleApplied = !!(result.style_applied ?? result.has_voice);
 
         stopThinkingAnimation();
@@ -7586,6 +7626,10 @@ async function applyEdit(instruction, preferredModel) {
 
         state.post.currentPostId = result.post_id;
         state.post.currentPostText = result.text;
+        state.post.publishStatus = 'draft';
+        state.post.creative = null;
+        state.post.crvLoadedFor = null;
+        state.post.crvBusy = false;
         state.post.pendingInstruction = null;
 
         try {
@@ -7717,7 +7761,11 @@ function postAlreadyOut() {
         showToast(TR('Пост уже опубликован — повторно отправить нельзя.'), 'circle-check');
         return true;
     }
-    if (st === 'queued' || st === 'publishing') {
+    if (st === 'needs_check') {
+        showToast(TR('Проверяем, дошёл ли пост до канала — подожди результата.'), 'clock');
+        return true;
+    }
+    if (st === 'queued' || st === 'publishing' || st === 'approved') {
         showToast(TR('Пост уже в очереди на публикацию.'), 'clock');
         return true;
     }
@@ -7905,6 +7953,13 @@ function setupPostEventListeners() {
         showScreen(_arch.back === 'postCreate' ? 'postCreate' : 'dashboard');
     });
 
+    const _archRetry = document.getElementById('archive-retry');
+    if (_archRetry) _archRetry.addEventListener('click', () => {
+        hapticLight();
+        _archSet('loading');
+        archiveLoad(true);
+    });
+
     const _archMore = document.getElementById('archive-more');
     if (_archMore) _archMore.addEventListener('click', () => { hapticLight(); archiveLoad(false); });
 
@@ -7913,6 +7968,11 @@ function setupPostEventListeners() {
 
     if (els.postResultBack) {
         els.postResultBack.addEventListener('click', () => {
+            if (state.post.fromArchive) {
+                state.post.fromArchive = false;
+                showScreen('postsArchive');
+                return;
+            }
             showScreen('postCreate');
         });
     }

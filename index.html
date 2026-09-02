@@ -359,6 +359,18 @@
             </button>
         </div>
 
+        <div class="channels-state-empty" id="archive-error" style="display: none;">
+            <div class="channels-empty-icon">
+                <i class="ti ti-wifi-off"></i>
+            </div>
+            <div class="channels-empty-title">Архив не загрузился</div>
+            <div class="channels-empty-sub">Проверь связь и попробуй ещё раз.</div>
+            <button class="channels-add-more" id="archive-retry" type="button">
+                <i class="ti ti-refresh"></i>
+                Повторить
+            </button>
+        </div>
+
         <div id="archive-list" style="display: none;">
             <div id="archive-rows"></div>
             <button class="channels-add-more" id="archive-more" type="button" style="display: none;">
@@ -676,12 +688,12 @@
     try {
         var l = window.getLang ? window.getLang() : 'ru';
         if (l && l !== 'ru') {
-            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=423"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt src="i18n/' + l + '.js?v=424"></scr' + 'ipt>');
         }
     } catch (e) {}
 })();
 </script>
-<script src="app.js?v=20260902s"></script>
+<script src="app.js?v=20260902t"></script>
 <script src="audit.js?v=20260902b"></script>
 <script src="strategy.js?v=20260902a"></script>
 <script src="rewrite.js?v=20260902b"></script>
