@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var CT = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var _channelId = null;
     var _screen = null;
     var _pollTimer = null;
@@ -185,7 +187,7 @@
         showCenter(
             '<div class="comp-spinner"></div>' +
             '<div class="comp-thinking-text" id="comp-thinking-text">' + _esc(texts[0]) + '</div>' +
-            '<div class="comp-thinking-hint">Это может занять до минуты. Не закрывай экран.</div>'
+            '<div class="comp-thinking-hint">' + CT('Это может занять до минуты. Не закрывай экран.') + '</div>'
         );
         startThinking(texts);
     }
@@ -228,9 +230,9 @@
         stopThinking();
         stopPolling();
         var retryBtn = opts.onRetry
-            ? '<button class="comp-primary-btn" id="comp-retry-btn"><i class="ti ti-refresh"></i><span>Попробовать снова</span></button>'
+            ? '<button class="comp-primary-btn" id="comp-retry-btn"><i class="ti ti-refresh"></i><span>' + CT('Попробовать снова') + '</span></button>'
             : '';
-        var backBtn = '<button class="comp-secondary-btn" id="comp-error-back"><i class="ti ti-arrow-left"></i><span>Назад</span></button>';
+        var backBtn = '<button class="comp-secondary-btn" id="comp-error-back"><i class="ti ti-arrow-left"></i><span>' + CT('Назад') + '</span></button>';
         showCenter(
             '<div class="comp-error-icon"><i class="ti ' + _esc(opts.icon || 'ti-alert-triangle') + '"></i></div>' +
             '<div class="comp-error-text">' + _esc(text) + '</div>' +
@@ -300,7 +302,7 @@
         ensureScreen();
         document.documentElement.classList.add('comp-modal-open');
         document.body.classList.add('comp-modal-open');
-        showCenter('<div class="comp-spinner"></div><div class="comp-thinking-text">Загружаю...</div>');
+        showCenter('<div class="comp-spinner"></div><div class="comp-thinking-text">' + CT('Загружаю...') + '</div>');
 
         resolveChannelId(explicitChannelId).then(function (id) {
             if (_closed) return;
@@ -342,7 +344,7 @@
             '<div class="comp-limit-bar ' + (enough ? '' : 'comp-limit-exhausted') + '">' +
                 '<div class="comp-limit-head">' +
                     '<span class="comp-limit-icon"><i class="ti ti-search"></i></span>' +
-                    '<span class="comp-limit-label">Анализ конкурентов</span>' +
+                    '<span class="comp-limit-label">' + CT('Анализ конкурентов') + '</span>' +
                     '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>' +
                 '</div>' +
                 '<div class="fwb-note' + (enough ? '' : ' fwb-low') + '">' +
@@ -375,9 +377,9 @@
         var btnHtml;
         if (runnable) {
             var pr = ' · ' + (window.forgeAmount || function (n) { return String(n); })(Number((_limits && _limits.price) || 0), 12);
-            btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>Найти конкурентов' + pr + '</span></button>';
+            btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>' + CT('Найти конкурентов') + pr + '</span></button>';
         } else {
-            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
+            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>' + CT('Пополнить баланс') + '</span></button>';
         }
 
         setBody(
@@ -385,8 +387,8 @@
             '<div class="comp-body">' +
                 '<div class="comp-intro-hero">' +
                     '<div class="comp-intro-icon"><i class="ti ti-search"></i></div>' +
-                    '<div class="comp-intro-title">Разведка конкурентов</div>' +
-                    '<div class="comp-intro-sub">ИИ найдёт каналы в твоей нише, проверит, что они существуют, и покажет — что у них набирает охват, где они тебя обходят и как их обогнать.</div>' +
+                    '<div class="comp-intro-title">' + CT('Разведка конкурентов') + '</div>' +
+                    '<div class="comp-intro-sub">' + CT('ИИ найдёт каналы в твоей нише, проверит, что они существуют, и покажет — что у них набирает охват, где они тебя обходят и как их обогнать.') + '</div>' +
                 '</div>' +
                 '<div class="comp-intro-feats">' +
                     introFeat('map-pin', 'Карта ниши', 'Твоя позиция среди конкурентов') +
@@ -396,7 +398,7 @@
                 '</div>' +
                 limitBarHtml() +
                 btnHtml +
-                '<div class="comp-intro-foot">AI предлагает каналы, но каждый мы проверяем парсером — в списке только реальные живые.</div>' +
+                '<div class="comp-intro-foot">' + CT('AI предлагает каналы, но каждый мы проверяем парсером — в списке только реальные живые.') + '</div>' +
             '</div>'
         );
 
@@ -511,7 +513,7 @@
         stopThinking();
         var cards = '';
         if (_candidates.length === 0) {
-            cards = '<div class="comp-empty-note">AI не нашёл проверяемых каналов. Добавь конкурента вручную по @username ниже.</div>';
+            cards = '<div class="comp-empty-note">' + CT('AI не нашёл проверяемых каналов. Добавь конкурента вручную по @username ниже.') + '</div>';
         } else {
             for (var i = 0; i < _candidates.length; i++) {
                 cards += candidateCard(_candidates[i], i);
@@ -525,12 +527,12 @@
                     ? '<div class="comp-niche-summary"><i class="ti ti-bulb"></i><span>' + _esc(_nicheSummary) + '</span></div>'
                     : '') +
                 (_candidates.length > 0
-                    ? '<div class="comp-select-hint">Отмечай до <b>' + _maxSelectable + '</b> каналов. Все проверены — подтверждённые каналы.</div>'
+                    ? '<div class="comp-select-hint">' + CT('Отмечай до') + ' <b>' + _maxSelectable + '</b> ' + CT('каналов. Все проверены — подтверждённые каналы.') + '</div>'
                     : '') +
                 '<div class="comp-cand-list" id="comp-cand-list">' + cards + '</div>' +
                 manualInputHtml() +
                 '<div class="comp-select-footer">' +
-                    '<button class="comp-primary-btn" id="comp-analyze-btn" disabled><i class="ti ti-search"></i><span>Анализировать (0)</span></button>' +
+                    '<button class="comp-primary-btn" id="comp-analyze-btn" disabled><i class="ti ti-search"></i><span>' + CT('Анализировать (0)') + '</span></button>' +
                 '</div>' +
             '</div>'
         );
@@ -547,9 +549,9 @@
         if (c.reach_percent != null) metrics.push('<span class="comp-cand-metric"><i class="ti ti-eye"></i>' + _pct(c.reach_percent) + '</span>');
         if (c.posts_per_week != null) metrics.push('<span class="comp-cand-metric"><i class="ti ti-calendar"></i>' + _ppw(c.posts_per_week) + '</span>');
         var conf = '';
-        if (c.confidence === 'high') conf = '<span class="comp-cand-conf comp-conf-high">точно в нише</span>';
-        else if (c.confidence === 'low') conf = '<span class="comp-cand-conf comp-conf-low">возможно</span>';
-        else if (c.confidence === 'manual') conf = '<span class="comp-cand-conf comp-conf-manual">вручную</span>';
+        if (c.confidence === 'high') conf = '<span class="comp-cand-conf comp-conf-high">' + CT('точно в нише') + '</span>';
+        else if (c.confidence === 'low') conf = '<span class="comp-cand-conf comp-conf-low">' + CT('возможно') + '</span>';
+        else if (c.confidence === 'manual') conf = '<span class="comp-cand-conf comp-conf-manual">' + CT('вручную') + '</span>';
 
         return '' +
             '<button class="comp-cand-card ' + (checked ? 'selected' : '') + '" data-cand-key="' + _esc(key) + '" data-cand-idx="' + idx + '">' +
@@ -569,7 +571,7 @@
     function manualInputHtml() {
         return '' +
             '<div class="comp-manual">' +
-                '<div class="comp-manual-label">Добавить своего конкурента</div>' +
+                '<div class="comp-manual-label">' + CT('Добавить своего конкурента') + '</div>' +
                 '<div class="comp-manual-row">' +
                     '<input type="text" class="comp-manual-input" id="comp-manual-input" placeholder="@username канала" autocapitalize="off" autocorrect="off">' +
                     '<button class="comp-manual-add" id="comp-manual-add"><i class="ti ti-plus"></i></button>' +
@@ -842,7 +844,7 @@
         if (!_hasText(pos)) return '';
         return '' +
             '<div class="comp-position">' +
-                '<div class="comp-position-lbl"><i class="ti ti-flag"></i>Твоя позиция</div>' +
+                '<div class="comp-position-lbl"><i class="ti ti-flag"></i>' + CT('Твоя позиция') + '</div>' +
                 '<div class="comp-position-text">' + _esc(pos) + '</div>' +
             '</div>';
     }
@@ -889,36 +891,36 @@
         var pts = _mapPoints(report);
         if (pts.length < 2) {
             return '' +
-                '<div class="comp-block-label">Рейтинг ниши</div>' +
+                '<div class="comp-block-label">' + CT('Рейтинг ниши') + '</div>' +
                 '<div class="comp-rank" id="comp-rank-block">' +
                     '<div class="comp-rank-sort" id="comp-rank-sort">' +
-                        '<button class="comp-srt comp-srt-on" data-sort="subs">Подписчики</button>' +
-                        '<button class="comp-srt" data-sort="reach">Охват</button>' +
-                        '<button class="comp-srt" data-sort="ppw">Частота</button>' +
+                        '<button class="comp-srt comp-srt-on" data-sort="subs">' + CT('Подписчики') + '</button>' +
+                        '<button class="comp-srt" data-sort="reach">' + CT('Охват') + '</button>' +
+                        '<button class="comp-srt" data-sort="ppw">' + CT('Частота') + '</button>' +
                     '</div>' +
                     '<div class="comp-rank-rows" id="comp-rank-rows"></div>' +
                 '</div>';
         }
 
         return '' +
-            '<div class="comp-block-label">Карта ниши \u00b7 охват \u00d7 частота</div>' +
+            '<div class="comp-block-label">' + CT('Карта ниши \\u00b7 охват \\u00d7 частота') + '</div>' +
             '<div class="comp-map-card">' +
                 '<div class="comp-map-legend">' +
-                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#F0997B;"></span>флагман</span>' +
-                    '<span class="comp-lg"><span class="comp-lg-dot comp-lg-you"></span>ты</span>' +
-                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#5DCAA5;"></span>конкуренты</span>' +
-                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#fbbf24;"></span>ракета</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#F0997B;"></span>' + CT('флагман') + '</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot comp-lg-you"></span>' + CT('ты') + '</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#5DCAA5;"></span>' + CT('конкуренты') + '</span>' +
+                    '<span class="comp-lg"><span class="comp-lg-dot" style="background:#fbbf24;"></span>' + CT('ракета') + '</span>' +
                 '</div>' +
                 '<div class="comp-map-stage" id="comp-map-stage"></div>' +
-                '<div class="comp-map-tip" id="comp-map-tip">Нажми на точку — открою канал. Скрывай каналы кнопками ниже.</div>' +
+                '<div class="comp-map-tip" id="comp-map-tip">' + CT('Нажми на точку — открою канал. Скрывай каналы кнопками ниже.') + '</div>' +
                 '<div class="comp-map-chips" id="comp-map-chips"></div>' +
             '</div>' +
-            '<div class="comp-block-label" style="margin-top:16px;">Рейтинг ниши</div>' +
+            '<div class="comp-block-label" style="margin-top:16px;">' + CT('Рейтинг ниши') + '</div>' +
             '<div class="comp-rank" id="comp-rank-block">' +
                 '<div class="comp-rank-sort" id="comp-rank-sort">' +
-                    '<button class="comp-srt comp-srt-on" data-sort="subs">Подписчики</button>' +
-                    '<button class="comp-srt" data-sort="reach">Охват</button>' +
-                    '<button class="comp-srt" data-sort="ppw">Частота</button>' +
+                    '<button class="comp-srt comp-srt-on" data-sort="subs">' + CT('Подписчики') + '</button>' +
+                    '<button class="comp-srt" data-sort="reach">' + CT('Охват') + '</button>' +
+                    '<button class="comp-srt" data-sort="ppw">' + CT('Частота') + '</button>' +
                 '</div>' +
                 '<div class="comp-rank-rows" id="comp-rank-rows"></div>' +
             '</div>';
@@ -1116,7 +1118,7 @@
         if (p.ppw != null) metrics += '<span class="comp-tipc-m"><i class="ti ti-calendar"></i>' + _ppw(p.ppw) + '</span>';
 
         var btn = (!p.is_you && _hasText(p.username))
-            ? '<button class="comp-tipc-btn" data-tip-open="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>'
+            ? '<button class="comp-tipc-btn" data-tip-open="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i>' + CT('Открыть канал') + '</button>'
             : '';
 
         tip.classList.add('comp-map-tip-card');
@@ -1230,7 +1232,7 @@
             blocks += headToHeadCard(h);
         }
         if (!blocks) return '';
-        return '<div class="comp-block-label">Лоб в лоб</div>' + blocks;
+        return '<div class="comp-block-label">' + CT('Лоб в лоб') + '</div>' + blocks;
     }
 
     function headToHeadCard(h) {
@@ -1245,14 +1247,14 @@
         var theyWin = Array.isArray(h.they_win) ? h.they_win : [];
         var youWin = Array.isArray(h.you_win) ? h.you_win : [];
         if (theyWin.length) {
-            wins += '<div class="comp-h2h-wins"><div class="comp-h2h-wins-lbl comp-wins-them">Обходят тебя</div>';
+            wins += '<div class="comp-h2h-wins"><div class="comp-h2h-wins-lbl comp-wins-them">' + CT('Обходят тебя') + '</div>';
             for (var i = 0; i < theyWin.length; i++) {
                 if (_hasText(theyWin[i])) wins += '<div class="comp-h2h-win-item"><i class="ti ti-arrow-up-right"></i>' + _esc(theyWin[i]) + '</div>';
             }
             wins += '</div>';
         }
         if (youWin.length) {
-            wins += '<div class="comp-h2h-wins"><div class="comp-h2h-wins-lbl comp-wins-you">Ты впереди</div>';
+            wins += '<div class="comp-h2h-wins"><div class="comp-h2h-wins-lbl comp-wins-you">' + CT('Ты впереди') + '</div>';
             for (var j = 0; j < youWin.length; j++) {
                 if (_hasText(youWin[j])) wins += '<div class="comp-h2h-win-item comp-win-you"><i class="ti ti-arrow-up-right"></i>' + _esc(youWin[j]) + '</div>';
             }
@@ -1261,13 +1263,13 @@
 
         var verdict = _hasText(h.verdict) ? '<div class="comp-h2h-verdict">' + _esc(h.verdict) + '</div>' : '';
         var edge = _hasText(h.your_edge)
-            ? '<div class="comp-h2h-edge"><span class="comp-h2h-edge-lbl">Твой козырь:</span> ' + _esc(h.your_edge) + '</div>'
+            ? '<div class="comp-h2h-edge"><span class="comp-h2h-edge-lbl">' + CT('Твой козырь:') + '</span> ' + _esc(h.your_edge) + '</div>'
             : '';
 
         return '' +
             '<div class="comp-h2h-card">' +
                 '<div class="comp-h2h-head">' +
-                    '<span class="comp-h2h-you">ТЫ</span>' +
+                    '<span class="comp-h2h-you">' + CT('ТЫ') + '</span>' +
                     '<span class="comp-h2h-vs">vs</span>' +
                     '<span class="comp-h2h-them"' + (_hasText(h.username) ? ' data-open-ch="' + _esc(h.username) + '"' : '') + '>' + _esc(title) + '</span>' +
                 '</div>' +
@@ -1307,8 +1309,8 @@
             if (!mv || typeof mv !== 'object' || !_hasText(mv.move)) continue;
             var youDo = mv.you_do_this === true;
             var badge = youDo
-                ? '<span class="comp-move-badge comp-move-have">у тебя есть</span>'
-                : '<span class="comp-move-badge comp-move-gap">у тебя нет</span>';
+                ? '<span class="comp-move-badge comp-move-have">' + CT('у тебя есть') + '</span>'
+                : '<span class="comp-move-badge comp-move-gap">' + CT('у тебя нет') + '</span>';
             var who = _hasText(mv.who_uses_it) ? '<div class="comp-move-who"><i class="ti ti-user"></i>' + _esc(mv.who_uses_it) + '</div>' : '';
             var ev = _hasText(mv.evidence) ? '<div class="comp-move-ev">' + _esc(mv.evidence) + '</div>' : '';
             items += '' +
@@ -1319,7 +1321,7 @@
         }
         if (!items) return '';
         return '' +
-            '<div class="comp-block-label">Что у них набирает охват</div>' +
+            '<div class="comp-block-label">' + CT('Что у них набирает охват') + '</div>' +
             '<div class="comp-moves">' + items + '</div>';
     }
 
@@ -1339,7 +1341,7 @@
         }
         if (!items) return '';
         return '' +
-            '<div class="comp-block-label">Твои окна возможностей</div>' +
+            '<div class="comp-block-label">' + CT('Твои окна возможностей') + '</div>' +
             '<div class="comp-gaps">' + items + '</div>';
     }
 
@@ -1353,7 +1355,7 @@
             if (!p || typeof p !== 'object' || !_hasText(p.step)) continue;
             var why = _hasText(p.why) ? '<div class="comp-step-why">' + _esc(p.why) + '</div>' : '';
             var effect = _hasText(p.expected_effect) ? '<div class="comp-step-effect"><i class="ti ti-trending-up"></i>' + _esc(p.expected_effect) + '</div>' : '';
-            var dd = (p.deadline_days != null && !isNaN(p.deadline_days)) ? '<span class="comp-step-dd">' + Math.round(p.deadline_days) + ' дн</span>' : '';
+            var dd = (p.deadline_days != null && !isNaN(p.deadline_days)) ? '<span class="comp-step-dd">' + Math.round(p.deadline_days) + ' ' + CT('дн') + '</span>' : '';
             items += '' +
                 '<div class="comp-step">' +
                     '<div class="comp-step-num">' + num + '</div>' +
@@ -1366,7 +1368,7 @@
         }
         if (!items) return '';
         return '' +
-            '<div class="comp-block-label">План обгона</div>' +
+            '<div class="comp-block-label">' + CT('План обгона') + '</div>' +
             '<div class="comp-plan">' + items + '</div>';
     }
 
@@ -1385,7 +1387,7 @@
     function renderRerun() {
         return '' +
             '<button class="comp-secondary-btn comp-rerun" id="comp-rerun-btn">' +
-                '<i class="ti ti-refresh"></i><span>Новый анализ</span>' +
+                '<i class="ti ti-refresh"></i><span>' + CT('Новый анализ') + '</span>' +
             '</button>';
     }
 
