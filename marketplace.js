@@ -9006,7 +9006,7 @@
         var defaultState = {
             bg: 'blur', niche: true, chart: true,
             metrics: { subs: true, reach: true, er: true, cpm: true, err: true, grow: true, freq: true, age: true },
-            price: { on: true, val: minPrice || 0 }, qr: 'both', hook: '',
+            price: { on: true, val: minPrice || 0 }, qr: 'both', hook: '', hook_on: true,
             order: ['hook', 'chart', 'mgrid'], colors: { cells: {} }, stickers: []
         };
         var hasSaved = saved && Object.keys(saved).length > 0;

@@ -42,6 +42,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .meta b{color:#5DCAA5;font-weight:600;}
 .meta .hide{display:none;}
 
+.hook.hide{display:none;}
 .hook{margin-top:14px;font-size:19px;line-height:1.3;font-weight:600;color:#f2f3f8;overflow-wrap:anywhere;word-break:break-word;flex-shrink:0;order:1;}
 .chart{margin-top:12px;background:rgba(9,12,22,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 14px 8px;flex-shrink:0;order:2;}
 .chart .ct{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;font-weight:600;letter-spacing:1.1px;color:#8990a8;text-transform:uppercase;}
@@ -211,7 +212,7 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
 
     <div class="chart" id="chart" data-c="chart">
       <div class="ct"><span>Просмотры · 30 дней</span><b id="chartPct">▲ +18%</b></div>
-      <svg viewBox="0 0 452 96" preserveAspectRatio="none">
+      <svg id="chartSvg" viewBox="0 0 452 96" preserveAspectRatio="none">
         <defs>
           <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
             <stop id="ga1" offset="0" stop-color="#5DCAA5" stop-opacity="0.36"/>
@@ -221,13 +222,13 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
             <stop id="gl1" offset="0" stop-color="#3fae88"/><stop id="gl2" offset="1" stop-color="#7be3c0"/>
           </linearGradient>
         </defs>
-        <g stroke="rgba(255,255,255,0.07)" stroke-width="1">
+        <g id="chartGrid" stroke="rgba(255,255,255,0.07)" stroke-width="1" shape-rendering="crispEdges">
           <line x1="0" y1="24" x2="452" y2="24"/><line x1="0" y1="48" x2="452" y2="48"/><line x1="0" y1="72" x2="452" y2="72"/>
         </g>
         <path id="area" fill="url(#gArea)"/>
         <path id="line" fill="none" stroke="url(#gLine)" stroke-width="2.5" stroke-linecap="round"/>
-        <circle id="dot" r="4.5" fill="#7be3c0"/>
-        <circle id="dotHalo" r="9" fill="#7be3c0" opacity="0.25"/>
+        <circle id="dotHalo" r="6" fill="#7be3c0" opacity="0.18"/>
+        <circle id="dot" r="3.2" fill="#7be3c0" stroke="#0d1420" stroke-width="1.2"/>
       </svg>
       <div class="cx"><span>2 913</span><span>4 407</span></div>
     </div>
@@ -299,6 +300,9 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
   </div>
   <div class="drop" id="drop">Собственный фон: нажмите, чтобы выбрать файл<br>Фото, GIF или MP4 · на компьютере можно перетащить</div>
   <input type="file" id="file" accept="image/*,video/mp4" style="display:none;">
+
+  <div class="lbl">Подпись</div>
+  <div class="chips"><button class="chip on" id="hookChip">Показывать подпись</button></div>
 
   <div class="lbl">График</div>
   <div class="chips"><button class="chip on" id="chartChip">Просмотры · 30 дней</button></div>
@@ -2678,21 +2682,59 @@ if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
 (function () {
   var data = [2913, 3050, 2980, 3220, 3140, 3400, 3310, 3560, 3480, 3700, 3620, 3826, 3760, 3950, 3880, 4100, 4020, 4180, 4090, 4260, 4160, 4310, 4230, 4380, 4300, 4407];
   if (data.length < 2) { document.getElementById('chart').classList.add('hide'); return; }
-  var W = 452, H = 88, min = Math.min.apply(null, data), max = Math.max.apply(null, data);
-  var range = max - min, denom = (data.length - 1) || 1;
-  /* защита от деления на ноль: плоская серия — горизонтальная линия посередине */
-  var pts = data.map(function (v, i) { return [i * W / denom, range ? 6 + (H - 12) * (1 - (v - min) / range) : 48]; });
-  var d = 'M' + pts[0][0] + ',' + pts[0][1];
-  for (var i = 1; i < pts.length; i++) {
-    var p0 = pts[i - 1], p1 = pts[i], cx = (p0[0] + p1[0]) / 2;
-    d += ' C' + cx + ',' + p0[1] + ' ' + cx + ',' + p1[1] + ' ' + p1[0] + ',' + p1[1];
+  function drawChart() {
+    var svg = document.getElementById('chartSvg');
+    if (!svg) return;
+    var box = svg.getBoundingClientRect();
+    var W = Math.max(120, Math.round(box.width || 452));
+    var H = Math.max(48, Math.round(box.height || 96));
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    var pad = Math.max(5, Math.round(H * 0.09));
+    var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
+    var range = max - min, denom = (data.length - 1) || 1;
+    /* защита от деления на ноль: плоская серия — горизонтальная линия посередине */
+    var pts = data.map(function (v, i) {
+      return [i * W / denom, range ? pad + (H - pad * 2) * (1 - (v - min) / range) : H / 2];
+    });
+    var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    for (var i = 1; i < pts.length; i++) {
+      var p0 = pts[i - 1], p1 = pts[i], cx = (p0[0] + p1[0]) / 2;
+      d += ' C' + cx.toFixed(1) + ',' + p0[1].toFixed(1) + ' ' + cx.toFixed(1) + ',' + p1[1].toFixed(1)
+        + ' ' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1);
+    }
+    document.getElementById('line').setAttribute('d', d);
+    document.getElementById('area').setAttribute('d', d + ' L' + W + ',' + H + ' L0,' + H + ' Z');
+    var grid = document.getElementById('chartGrid');
+    if (grid) {
+      var gl = '';
+      for (var g = 1; g <= 3; g++) {
+        var gy = (H * g / 4).toFixed(1);
+        gl += '<line x1="0" y1="' + gy + '" x2="' + W + '" y2="' + gy + '"/>';
+      }
+      grid.innerHTML = gl;
+    }
+    /* точка тем мельче, чем ниже карточка: на маленьких постерах крупный кружок забивает линию */
+    var rDot = Math.max(2.2, Math.min(3.6, H / 26));
+    var dotEl = document.getElementById('dot'), haloEl = document.getElementById('dotHalo');
+    var last = pts[pts.length - 1];
+    dotEl.setAttribute('r', rDot.toFixed(2));
+    haloEl.setAttribute('r', (rDot * 1.9).toFixed(2));
+    /* точка на самом краю обрезалась половиной — держим её внутри поля */
+    var edge = rDot * 1.9 + 1;
+    var dx = Math.min(Math.max(last[0], edge), W - edge);
+    var dy = Math.min(Math.max(last[1], edge), H - edge);
+    [dotEl, haloEl].forEach(function (e) {
+      e.setAttribute('cx', dx.toFixed(1));
+      e.setAttribute('cy', dy.toFixed(1));
+    });
+    var lineEl = document.getElementById('line');
+    lineEl.setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
   }
-  document.getElementById('line').setAttribute('d', d);
-  document.getElementById('area').setAttribute('d', d + ' L' + W + ',96 L0,96 Z');
-  var last = pts[pts.length - 1];
-  ['dot', 'dotHalo'].forEach(function (id) {
-    var e = document.getElementById(id); e.setAttribute('cx', last[0]); e.setAttribute('cy', last[1]);
-  });
+  window.__psDrawChart = drawChart;
+  drawChart();
+  if (window.ResizeObserver) {
+    try { new ResizeObserver(drawChart).observe(document.getElementById('chartSvg')); } catch (e) {}
+  }
   /* процент и подписи осей вычисляются из данных, а не зашиты в HTML */
   var pct = data[0] ? Math.round((data[data.length - 1] - data[0]) / data[0] * 100) : 0;
   document.getElementById('chartPct').textContent = (pct >= 0 ? '▲ +' : '▼ ') + pct + '%';
@@ -2781,6 +2823,13 @@ function renderOrd() {
   });
 }
 renderOrd();
+
+on('hookChip', 'click', function () {
+  this.classList.toggle('on');
+  var hk = document.getElementById('hookText');
+  if (hk) hk.classList.toggle('hide', !this.classList.contains('on'));
+  relayout();
+});
 
 on('nicheChip', 'click', function () {
   this.classList.toggle('on');

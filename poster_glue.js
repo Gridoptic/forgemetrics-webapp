@@ -271,32 +271,52 @@
     return c.toDataURL();
   }
 
+  var _lastChart = null;
   function drawChart(chart) {
+    if (chart) _lastChart = chart;
     var box = el('chart');
     var series = (chart && chart.series) || [];
     var dates = (chart && chart.dates) || [];
     var data = series.filter(function (v) { return typeof v === 'number' && isFinite(v); });
     var flat = data.length < 2;
-    var W = 452, H = 88;
+    var svgEl = document.querySelector('#chart svg');
+    var sBox = svgEl ? svgEl.getBoundingClientRect() : null;
+    var W = Math.max(160, Math.round((sBox && sBox.width) || 452));
+    var H = Math.max(44, Math.round((sBox && sBox.height) || 96));
+    if (svgEl) {
+      svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    }
+    var pad = Math.max(4, Math.round(H * 0.08));
     var min = flat ? 0 : Math.min.apply(null, data), max = flat ? 1 : Math.max.apply(null, data);
     var range = max - min, denom = flat ? 1 : ((data.length - 1) || 1);
     var pts = flat
-      ? [[0, H - 22], [W, H - 22]]
-      : data.map(function (v, i) { return [i * W / denom, range ? 6 + (H - 12) * (1 - (v - min) / range) : 48]; });
-    var d = 'M' + pts[0][0] + ',' + pts[0][1];
+      ? [[0, H - pad * 2], [W, H - pad * 2]]
+      : data.map(function (v, i) {
+          return [i * W / denom, range ? pad + (H - pad * 2) * (1 - (v - min) / range) : H / 2];
+        });
+    var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
     for (var i = 1; i < pts.length; i++) {
       var p0 = pts[i - 1], p1 = pts[i], cx = (p0[0] + p1[0]) / 2;
-      d += ' C' + cx + ',' + p0[1] + ' ' + cx + ',' + p1[1] + ' ' + p1[0] + ',' + p1[1];
+      d += ' C' + cx.toFixed(1) + ',' + p0[1].toFixed(1) + ' ' + cx.toFixed(1) + ',' + p1[1].toFixed(1)
+        + ' ' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1);
     }
-    if (el('line')) el('line').setAttribute('d', d);
-    if (el('area')) el('area').setAttribute('d', d + ' L' + W + ',96 L0,96 Z');
+    if (el('line')) {
+      el('line').setAttribute('d', d);
+      /* тонкая линия на низкой карточке и обычная на высокой — иначе график заплывает */
+      el('line').setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
+    }
+    if (el('area')) el('area').setAttribute('d', d + ' L' + W + ',' + H + ' L0,' + H + ' Z');
     var last = pts[pts.length - 1];
+    var rDot = Math.max(2.2, Math.min(3.6, H / 26));
+    var edge = rDot * 1.9 + 1;
     ['dot', 'dotHalo'].forEach(function (id) {
       var e = el(id); if (!e) return;
       e.style.display = flat ? 'none' : '';
-      e.setAttribute('cx', String(Math.min(last[0], W - 7)));
-      e.setAttribute('cy', String(last[1]));
+      e.setAttribute('r', (id === 'dot' ? rDot : rDot * 1.9).toFixed(2));
+      e.setAttribute('cx', Math.min(Math.max(last[0], edge), W - edge).toFixed(1));
+      e.setAttribute('cy', Math.min(Math.max(last[1], edge), H - edge).toFixed(1));
     });
+    _watchChartSize();
     var pctEl = el('chartPct');
     if (pctEl) {
       if (flat || !data[0]) pctEl.textContent = '';
@@ -304,18 +324,23 @@
     }
     var days = (chart && chart.days) || 30;
     var ct = document.querySelector('#chart .ct span'); if (ct) ct.textContent = (_psPack().chart || PG('Просмотры · 30 дней')).replace(/30/, String(days));
-    var svg = document.querySelector('#chart svg');
-    if (svg && !el('psGrid')) {
-      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.id = 'psGrid';
+    var svg = svgEl;
+    if (svg) {
+      var g = el('psGrid');
+      if (!g) {
+        g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.id = 'psGrid';
+        svg.insertBefore(g, svg.firstChild);
+      }
+      while (g.firstChild) g.removeChild(g.firstChild);
       [0.25, 0.5, 0.75].forEach(function (f) {
         var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ln.setAttribute('x1', String(W * f)); ln.setAttribute('x2', String(W * f));
-        ln.setAttribute('y1', '4'); ln.setAttribute('y2', '92');
+        ln.setAttribute('x1', (W * f).toFixed(1)); ln.setAttribute('x2', (W * f).toFixed(1));
+        ln.setAttribute('y1', '2'); ln.setAttribute('y2', String(H - 2));
         ln.setAttribute('stroke', 'rgba(255,255,255,0.06)'); ln.setAttribute('stroke-width', '1');
+        ln.setAttribute('shape-rendering', 'crispEdges');
         g.appendChild(ln);
       });
-      svg.insertBefore(g, svg.firstChild);
     }
     var dFrom = (dates.length ? dates[0] : (chart && chart.from) || '');
     var dTo = (dates.length ? dates[dates.length - 1] : (chart && chart.to) || '');
@@ -334,6 +359,17 @@
     if (box) box.classList.remove('hide');
     return true;
   }
+  var _chartRO = null;
+  function _watchChartSize() {
+    if (_chartRO || !window.ResizeObserver) return;
+    var svg = document.querySelector('#chart svg');
+    if (!svg) return;
+    try {
+      _chartRO = new ResizeObserver(function () { if (_lastChart) drawChart(_lastChart); });
+      _chartRO.observe(svg);
+    } catch (e) { _chartRO = null; }
+  }
+
 
   function metricValue(key, d) {
     if (key === 'subs') return d.subscribers ? fmt(d.subscribers) : null;
@@ -655,7 +691,7 @@
         var vis = Array.prototype.some.call(sc.children, function (ch) { return ch.style.display !== 'none' && getComputedStyle(ch).display !== 'none'; });
         if (!vis) sc.style.display = 'none';
       });
-      [['fmxPsLang', '🌐'], ['ordBox', '≡'], ['nicheChip', '◉'], ['bgChips', '◐'], ['chartChip', '▲'],
+      [['fmxPsLang', '🌐'], ['ordBox', '≡'], ['nicheChip', '◉'], ['hookChip', '“”'], ['bgChips', '◐'], ['chartChip', '▲'],
        ['mChips', '▦'], ['prInp', 'card'], ['eChips', '✦'], ['hookInp', '✎']].forEach(function (mp) {
         var t = document.getElementById(mp[0]); if (!t) return;
         var sc = t.closest ? t.closest('.fmx-sec') : null; if (!sc) return;
@@ -738,6 +774,9 @@
     var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', showN);
     if (el('chart') && state.chart != null) el('chart').classList.toggle('hide', !state.chart || window.__psHasChart === false);
     var cch = el('chartChip'); if (cch) cch.classList.toggle('on', state.chart !== false);
+    var showHook = state.hook_on !== false;
+    if (el('hookText')) el('hookText').classList.toggle('hide', !showHook);
+    var hch = el('hookChip'); if (hch) hch.classList.toggle('on', showHook);
     if (state.metrics) METRIC_KEYS.forEach(function (k) {
       if (!(k in state.metrics)) return;
       var cell = document.querySelector('.mcell[data-m="' + k + '"]');
