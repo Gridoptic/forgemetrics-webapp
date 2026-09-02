@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var L = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var MEDIA_MAX_BYTES = 64 * 1024 * 1024;
     var _root = null, _opened = false;
     var _mainTab = 'market';
@@ -186,7 +188,7 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t">' + _esc(String(msg)) + '</div>' +
-            '<div class="fmx-cfm-r"><button class="fmx-btn" data-no>Отмена</button><button class="fmx-btn" data-yes style="background:#818cf8;color:#fff;border-color:transparent;">Да</button></div></div>';
+            '<div class="fmx-cfm-r"><button class="fmx-btn" data-no>' + L('Отмена') + '</button><button class="fmx-btn" data-yes style="background:#818cf8;color:#fff;border-color:transparent;">' + L('Да') + '</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
         bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
@@ -1699,7 +1701,7 @@
         d.id = 'fmx-screen';
         d.innerHTML =
             '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
-            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рынок рекламы</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
+            '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + L('Рынок рекламы') + '</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
             '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
@@ -1914,11 +1916,11 @@
             (flat ? '' : '<path d="' + area + '" fill="url(#' + gid + ')"/>') +
             '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' + (flat ? ' stroke-opacity="0.55"' : '') + '/>' +
             '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2.5" fill="' + color + '" stroke="rgba(10,13,24,0.9)" stroke-width="1.5"/></svg>' +
-            '<span class="fmx-t2spd">' + _termSpark + 'д</span></span>';
+            '<span class="fmx-t2spd">' + _termSpark + L('д') + '</span></span>';
     }
     var _MON_S = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     function _tArea(series, color, gid) {
-        if (!series || series.length < 3) return '<div class="fmx-t2nochart">График появится с накоплением данных</div>';
+        if (!series || series.length < 3) return '<div class="fmx-t2nochart">' + L('График появится с накоплением данных') + '</div>';
         var w = 340, h = 84, x0 = 3, x1 = 334, yTop = 8, yBase = 79;
         var vals = series.map(function (p) { return p.v != null ? p.v : p.cpm; });
         var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
@@ -2078,26 +2080,26 @@
         var niche = e.niche ? '«' + _esc(e.niche) + '»' : '';
         var txt = '';
         if (e.type === 'spike') {
-            txt = '<b>Всплеск подписчиков</b> в нише ' + niche + (e.pct ? ': +' + e.pct + '%' + (e.days ? ' за ' + e.days + ' дн' : '') : '') +
+            txt = '<b>' + L('Всплеск подписчиков') + '</b> ' + L('в нише') + ' ' + niche + (e.pct ? ': +' + e.pct + '%' + (e.days ? ' за ' + e.days + ' дн' : '') : '') +
                 (e.verdict === 'ok' ? ' — охват растёт вместе с базой' : (e.verdict === 'bad' ? ' — охват не растёт, возможна накрутка' : ' — стоит проверить охват'));
         } else if (e.type === 'offer') {
-            txt = '<b>Новый оффер</b> в нише ' + niche + (e.price ? ' — от ' + _num(e.price) + ' ₽' : '');
+            txt = '<b>' + L('Новый оффер') + '</b> ' + L('в нише') + ' ' + niche + (e.price ? ' — от ' + _num(e.price) + ' ₽' : '');
         } else if (e.type === 'hot') {
-            txt = '<b>Горящая скидка −' + e.pct + '%</b> на размещение в нише ' + niche;
+            txt = '<b>' + L('Горящая скидка −') + e.pct + '%</b> ' + L('на размещение в нише') + ' ' + niche;
         } else if (e.type === 'suspect') {
-            txt = '<b>Антифрод-метка</b>: канал в нише ' + niche + ' — подозрительная кривая просмотров';
+            txt = '<b>' + L('Антифрод-метка') + '</b>' + L(': канал в нише') + ' ' + niche + ' — подозрительная кривая просмотров';
         } else if (e.type === 'interest') {
-            txt = '<b>Интерес к нише ' + niche + ' ×' + String(e.ratio).replace('.', ',') + '</b> за неделю — по просмотрам офферов';
+            txt = '<b>' + L('Интерес к нише') + ' ' + niche + ' ×' + String(e.ratio).replace('.', ',') + '</b> ' + L('за неделю — по просмотрам офферов');
         } else if (e.type === 'suspect_sum') {
             var nl = (e.niches || []).map(function (x) { return '«' + _esc(x) + '»'; }).join(', ');
-            txt = '<b>Антифрод за неделю</b>: помечено ' + e.count + ' ' + _plural(e.count, 'канал', 'канала', 'каналов') +
+            txt = '<b>' + L('Антифрод за неделю') + '</b>' + L(': помечено') + ' ' + e.count + ' ' + _plural(e.count, 'канал', 'канала', 'каналов') +
                 ' — ' + nl + (e.more ? ' и ещё ' + e.more : '');
         } else if (e.type === 'new_channel') {
-            txt = '<b>Новый канал в Радаре</b> в нише ' + niche + ' — ' + _short(e.subs) + ' подписчиков';
+            txt = '<b>' + L('Новый канал в Радаре') + '</b> ' + L('в нише') + ' ' + niche + ' — ' + _short(e.subs) + ' подписчиков';
         } else if (e.type === 'price_change') {
-            txt = '<b>Оффер изменил цену</b> в нише ' + niche + ': ' + _num(e.old) + ' → ' + _num(e.new) + ' ₽';
+            txt = '<b>' + L('Оффер изменил цену') + '</b> ' + L('в нише') + ' ' + niche + ': ' + _num(e.old) + ' → ' + _num(e.new) + ' ₽';
         } else if (e.type === 'niche_move') {
-            txt = '<b>CPM в нише ' + niche + '</b> ' + _tFmtDelta(e.delta) + ' за неделю';
+            txt = '<b>' + L('CPM в нише') + ' ' + niche + '</b> ' + _tFmtDelta(e.delta) + ' за неделю';
         }
         return '<div class="fmx-t2ev' + (isFirst ? ' fresh' : '') + '" data-evi="' + e.__i + '"><span class="fmx-t2ic ' + m.cls + '"><i class="ti ' + m.ic + '"></i></span>' +
             '<div style="flex:1;min-width:0;">' + txt + '<div class="fmx-t2tm">' + _ago(e.at) + '</div></div>' +
@@ -2123,9 +2125,9 @@
             var ov = document.createElement('div'); ov.id = 'fmx-evBg'; ov.className = 'fmx-apk-ov';
             ov.innerHTML = '<div class="fmx-apk-in">' +
                 '<div class="fmx-apk-hd"><div class="fmx-apk-tile" style="background:rgba(240,105,120,0.12);border-color:rgba(240,105,120,0.3);color:#f06978;"><i class="ti ti-shield-search"></i></div>' +
-                '<b>Антифрод за неделю</b>' +
+                '<b>' + L('Антифрод за неделю') + '</b>' +
                 '<button class="fmx-apk-x" id="fmx-evX"><i class="ti ti-x"></i></button></div>' +
-                '<div style="font-size:11px;color:#8d93a8;line-height:1.5;margin-bottom:10px;">Каналы с подозрительной кривой просмотров. Нажми на канал — откроется его карточка в Радаре с графиком и разбором.</div>' +
+                '<div style="font-size:11px;color:#8d93a8;line-height:1.5;margin-bottom:10px;">' + L('Каналы с подозрительной кривой просмотров. Нажми на канал — откроется его карточка в Радаре с графиком и разбором.') + '</div>' +
                 e.items.map(function (it) {
                     return '<div class="fmx-t2top" data-evgo="' + _esc(it.username) + '" style="cursor:pointer;">' +
                         '<span class="av">' + _esc(_apkInitials(it.title)) + '</span>' +
@@ -2152,7 +2154,7 @@
         if (t.listings) bits.push('<b>' + t.listings + '</b> ' + _plural(t.listings, 'новый оффер', 'новых оффера', 'новых офферов'));
         if (t.requests) bits.push('<b>' + t.requests + '</b> ' + _plural(t.requests, 'заявка', 'заявки', 'заявок'));
         if (t.contacts) bits.push('<b>' + t.contacts + '</b> ' + _plural(t.contacts, 'отклик', 'отклика', 'откликов'));
-        return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-discount-2" style="color:#f59e0b;"></i> Сегодня на Площадке: ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
+        return '<div class="fmx-pday" style="position:relative;padding-right:30px;"><i class="ti ti-discount-2" style="color:#f59e0b;"></i> ' + L('Сегодня на Площадке:') + ' ' + bits.join(' · ') + '<button data-phide style="position:absolute;top:50%;right:7px;transform:translateY(-50%);width:20px;height:20px;border-radius:6px;background:transparent;border:none;color:#8990a8;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button></div>';
     }
     function _tBaseNiches() {
         var seen = {}, out = [];
@@ -2216,22 +2218,22 @@
         if (series.length > _termRange) series = series.slice(-_termRange);
         html += '<div class="fmx-t2hero">' +
             '<div style="display:flex;align-items:flex-start;">' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">Индекс CPM рынка</div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-t2hl">' + L('Индекс CPM рынка') + '</div>' +
             '<div class="fmx-t2hv"><b>' + (idx.value != null ? _num(idx.value) + ' ₽' : '—') + '</b>' +
             (function () {
                 var d = _tSeriesDelta(series, _termRange);
                 return d ? '<span class="fmx-t2hd">' + _tFmtDelta(d.pct) + ' ' + d.label + '</span>' : '';
             })() + '</div></div>' +
             '<div class="fmx-t2rng">' + [7, 30, 90].map(function (r) {
-                return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + 'д</span>';
+                return '<span data-trange="' + r + '"' + (r === _termRange ? ' class="on"' : '') + '>' + r + L('д') + '</span>';
             }).join('') + '</div></div>' +
             '<div style="margin-top:8px;">' + _tArea(series, '#818cf8', 'fmxTgIdx') + '</div></div>';
 
         html += '<div class="fmx-t2trow">' +
-            '<div class="fmx-t2tc"><div class="v">' + _num(t.base_total || 0) + '</div><div class="l">каналов</div>' + (t.base_new_week ? '<div class="d fmx-tup">+' + t.base_new_week + ' нед</div>' : '') + '</div>' +
-            '<div class="fmx-t2tc"><div class="v">' + _num(t.market_total || 0) + '</div><div class="l">офферов</div>' + (t.offers_new_week ? '<div class="d fmx-tup">+' + t.offers_new_week + ' нед</div>' : '') + '</div>' +
-            '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">охват базы · пост</div></div>' +
-            '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">событий 24ч</div></div></div>';
+            '<div class="fmx-t2tc"><div class="v">' + _num(t.base_total || 0) + '</div><div class="l">' + L('каналов') + '</div>' + (t.base_new_week ? '<div class="d fmx-tup">+' + t.base_new_week + ' ' + L('нед') + '</div>' : '') + '</div>' +
+            '<div class="fmx-t2tc"><div class="v">' + _num(t.market_total || 0) + '</div><div class="l">' + L('офферов') + '</div>' + (t.offers_new_week ? '<div class="d fmx-tup">+' + t.offers_new_week + ' ' + L('нед') + '</div>' : '') + '</div>' +
+            '<div class="fmx-t2tc"><div class="v">' + _short(t.reach_total || 0) + '</div><div class="l">' + L('охват базы · пост') + '</div></div>' +
+            '<div class="fmx-t2tc"><div class="v">' + (t.events_24h || 0) + '</div><div class="l">' + L('событий 24ч') + '</div></div></div>';
 
         var hm = baseN;
         if (hm.length >= 4) {
@@ -2241,12 +2243,12 @@
                 if (hottest == null || n.delta7 > hottest) hottest = n.delta7;
                 if (n.cpm_own !== false && (hotN == null || Math.abs(n.delta7) > Math.abs(hotN.delta7))) hotN = n;
             });
-            html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> Теплокарта рынка · Δ CPM за 7 дней</div>';
+            html += '<div class="fmx-psec"><i class="ti ti-layout-grid" style="color:#818cf8;"></i> ' + L('Теплокарта рынка · Δ CPM за 7 дней') + '</div>';
             if (hotN && hotN.delta7) {
-                html += '<div class="fmx-t2hotline" data-tniche="' + _esc(hotN.niche) + '"><i class="ti ti-flame"></i> Сильнейшее движение недели: <b>' + _esc(hotN.niche) + '</b> ' + _tFmtDelta(hotN.delta7) + '</div>';
+                html += '<div class="fmx-t2hotline" data-tniche="' + _esc(hotN.niche) + '"><i class="ti ti-flame"></i> ' + L('Сильнейшее движение недели:') + ' <b>' + _esc(hotN.niche) + '</b> ' + _tFmtDelta(hotN.delta7) + '</div>';
             }
             html += _tFoldOpen(_tTreemap(hm, hottest), 'map', 290);
-            html += '<div class="fmx-t2hint">Крупнейшие ниши с реальной медианой цены (от 3 каналов) · размер — суммарный охват каналов ниши · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг, синеватый — без изменений. Пометка «новая» — ниша в каталоге меньше недели, сравнивать пока не с чем</div>';
+            html += '<div class="fmx-t2hint">' + L('Крупнейшие ниши с реальной медианой цены (от 3 каналов) · размер — суммарный охват каналов ниши · цвет — движение медианы CPM за 7 дней: зелёный — рост, красный — снижение, ярче цвет — сильнее сдвиг, синеватый — без изменений. Пометка «новая» — ниша в каталоге меньше недели, сравнивать пока не с чем') + '</div>';
         }
 
         var movers = baseN.filter(function (n) { return n.delta7 != null && !n.thin; });
@@ -2254,21 +2256,21 @@
             var up = movers.slice().sort(function (a, b) { return b.delta7 - a.delta7; }).filter(function (n) { return n.delta7 > 0; });
             var dn = movers.slice().sort(function (a, b) { return a.delta7 - b.delta7; }).filter(function (n) { return n.delta7 < 0; });
             if (up.length || dn.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> Движение за неделю</div>';
+                html += '<div class="fmx-psec"><i class="ti ti-arrows-up-down" style="color:#5DCAA5;"></i> ' + L('Движение за неделю') + '</div>';
                 var _mvHtml = '<div class="fmx-t2mv">';
-                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tup">▲ Растут</div>' + (up.length ? up.map(function (n) {
+                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tup">' + L('▲ Растут') + '</div>' + (up.length ? up.map(function (n) {
                     return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
-                }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div>';
-                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tdn">▼ Остывают</div>' + (dn.length ? dn.map(function (n) {
+                }).join('') : '<div class="r"><span class="nm fmx-tfl">' + L('пока тихо') + '</span></div>') + '</div>';
+                _mvHtml += '<div class="fmx-t2mvc"><div class="h fmx-tdn">' + L('▼ Остывают') + '</div>' + (dn.length ? dn.map(function (n) {
                     return '<div class="r" data-tniche="' + _esc(n.niche) + '"><span class="nm">' + _esc(n.niche) + '</span>' + _tFmtDelta(n.delta7) + '</div>';
-                }).join('') : '<div class="r"><span class="nm fmx-tfl">пока тихо</span></div>') + '</div></div>';
+                }).join('') : '<div class="r"><span class="nm fmx-tfl">' + L('пока тихо') + '</span></div>') + '</div></div>';
                 html += _tFoldOpen(_mvHtml, 'mv', 148);
             }
         }
 
-        html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> Ниши' +
+        html += '<div class="fmx-psec"><i class="ti ti-list-details" style="color:#818cf8;"></i> ' + L('Ниши') +
             '<span class="fmx-t2rng" style="margin-left:auto;">' + [7, 30, 90].map(function (r) {
-                return '<span data-tsprange="' + r + '"' + (r === _termSpark ? ' class="on"' : '') + '>' + r + 'д</span>';
+                return '<span data-tsprange="' + r + '"' + (r === _termSpark ? ' class="on"' : '') + '>' + r + L('д') + '</span>';
             }).join('') + '</span></div>';
         html += '<div class="fmx-t2chips">' + [
             ['all', 'Все источники'], ['market', 'Площадка · точные'], ['base', 'Радар · публичные']
@@ -2295,7 +2297,7 @@
             var kind = n.source === 'market' ? _plural(n.count, 'оффер', 'оффера', 'офферов') : (_plural(n.count, 'канал', 'канала', 'каналов'));
             return '<div class="lr" data-tniche="' + _esc(n.niche) + '"><span class="dot" style="background:' + col + ';"></span>' +
                 '<span class="nm"><b>' + _esc(n.niche) + '</b><span>' + n.count + ' ' + kind + (n.median_er != null ? ' · ER ' + String(n.median_er).replace('.', ',') + '%' : '') + '</span>' +
-                (n.thin ? '<span class="fmx-t2thin">Мало данных</span>' : '') + '</span>' +
+                (n.thin ? '<span class="fmx-t2thin">' + L('Мало данных') + '</span>' : '') + '</span>' +
                 _tSpark((n.spark || []).slice(-_termSpark), col) +
                 '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
                 (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : 'новая') + '</span>') + '</span></div>';
@@ -2304,11 +2306,11 @@
 
         var evs = _term.events || [];
         if (evs.length) {
-            html += '<div class="fmx-psec"><i class="ti ti-bolt" style="color:#f5bf4f;"></i> События рынка</div>';
+            html += '<div class="fmx-psec"><i class="ti ti-bolt" style="color:#f5bf4f;"></i> ' + L('События рынка') + '</div>';
             html += evs.slice(0, 12).map(function (e, i) { e.__i = i; return _tEventHtml(e, i === 0); }).join('');
         }
 
-        html += '<div class="fmx-t2hint" style="margin-top:14px;">Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.</div>';
+        html += '<div class="fmx-t2hint" style="margin-top:14px;">' + L('Площадка — реальные цены владельцев офферов. Радар — расчёт цены по нише и охвату, ориентир, а не сделки. Стрелки и графики — только по фактическим медианам; «оценка» — рыночный ориентир без динамики.') + '</div>';
 
         host.innerHTML = html;
         _tBindFolds(host);
@@ -2361,14 +2363,14 @@
                 (nd ? '<span style="font-size:12px;font-weight:800;white-space:nowrap;">' + _tFmtDelta(nd.pct) + ' ' + nd.label + '</span>' : '') + '</div>' +
                 '<div style="margin-top:8px;">' + _tArea(shown, '#5DCAA5', 'fmxTgN') + '</div>' +
                 '<div class="fmx-t2kv">' +
-                '<div class="k"><div class="a">Вилка цен</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
-                '<div class="k"><div class="a">Медиана ER</div><div class="b">' + (r.median_er != null ? String(r.median_er).replace('.', ',') + '%' : '—') + '</div></div>' +
-                '<div class="k"><div class="a">Каналов · офферов</div><div class="b">' + (r.channels || 0) + ' · ' + (r.offers || 0) + '</div></div></div></div>';
+                '<div class="k"><div class="a">' + L('Вилка цен') + '</div><div class="b">' + (r.price_low ? _shortRange(r.price_low, r.price_high || r.price_low) + ' ₽' : '—') + '</div></div>' +
+                '<div class="k"><div class="a">' + L('Медиана ER') + '</div><div class="b">' + (r.median_er != null ? String(r.median_er).replace('.', ',') + '%' : '—') + '</div></div>' +
+                '<div class="k"><div class="a">' + L('Каналов · офферов') + '</div><div class="b">' + (r.channels || 0) + ' · ' + (r.offers || 0) + '</div></div></div></div>';
             if (r.hours && r.hours.length) {
                 var byd = {};
                 r.hours.forEach(function (x) { byd[x.dow + '_' + x.h2] = x.v; });
                 var DW = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-                html += '<div class="fmx-psec"><i class="ti ti-clock" style="color:#818cf8;"></i> Когда читает аудитория ниши</div>';
+                html += '<div class="fmx-psec"><i class="ti ti-clock" style="color:#818cf8;"></i> ' + L('Когда читает аудитория ниши') + '</div>';
                 html += '<div class="fmx-t2hm">';
                 for (var dw = 1; dw <= 7; dw++) {
                     html += '<span class="hl">' + DW[dw - 1] + '</span>';
@@ -2378,10 +2380,10 @@
                         html += '<span class="hm h' + lvl + '"></span>';
                     }
                 }
-                html += '</div><div class="fmx-t2hint">По просмотрам постов офферов ниши · часы 0–24</div>';
+                html += '</div><div class="fmx-t2hint">' + L('По просмотрам постов офферов ниши · часы 0–24') + '</div>';
             }
             if (r.top_channels && r.top_channels.length) {
-                html += '<div class="fmx-psec"><i class="ti ti-trophy" style="color:#f5bf4f;"></i> Топ каналов ниши</div>';
+                html += '<div class="fmx-psec"><i class="ti ti-trophy" style="color:#f5bf4f;"></i> ' + L('Топ каналов ниши') + '</div>';
                 html += r.top_channels.map(function (c) {
                     return '<div class="fmx-t2top" data-tngo="' + _esc(c.username) + '" data-tnmk="' + (c.on_market ? '1' : '0') + '" style="cursor:pointer;"><span class="av">' + _esc(_apkInitials(c.title)) + '</span>' +
                         '<span class="nm">' + _esc(c.title) + '</span>' +
@@ -2389,8 +2391,8 @@
                         '<i class="ti ti-chevron-right" style="color:#3f4358;font-size:13px;flex:0 0 auto;"></i></div>';
                 }).join('');
             }
-            html += '<button class="fmx-tnbtn" id="fmx-tnRadar" style="margin-top:14px;"><span class="ic" style="background:rgba(129,140,248,0.12);color:#818cf8;"><i class="ti ti-radar-2"></i></span>Каналы ниши в Радаре</button>' +
-                '<button class="fmx-tnbtn" id="fmx-tnBell" style="margin-top:8px;"><span class="ic" style="background:rgba(56,189,248,0.12);color:#38bdf8;"><i class="ti ti-bell"></i></span>Следить за нишей</button>';
+            html += '<button class="fmx-tnbtn" id="fmx-tnRadar" style="margin-top:14px;"><span class="ic" style="background:rgba(129,140,248,0.12);color:#818cf8;"><i class="ti ti-radar-2"></i></span>' + L('Каналы ниши в Радаре') + '</button>' +
+                '<button class="fmx-tnbtn" id="fmx-tnBell" style="margin-top:8px;"><span class="ic" style="background:rgba(56,189,248,0.12);color:#38bdf8;"><i class="ti ti-bell"></i></span>' + L('Следить за нишей') + '</button>';
             b.innerHTML = html;
             var rb = el('fmx-tnRadar');
             if (rb) rb.addEventListener('click', function () {
@@ -2429,24 +2431,24 @@
         var host = el('fmx-main');
         var sc = el('fmx-scrollEl'); if (sc) sc.classList.add('fmx-noscrollbar');
         host.innerHTML =
-            '<div class="fmx-entq">Выбери, где искать:</div>' +
+            '<div class="fmx-entq">' + L('Выбери, где искать:') + '</div>' +
             '<div class="fmx-ent" data-go="catalog"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.32);color:#818cf8;"><i class="ti ti-radar-2"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Радар каналов <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">внешние каналы</span></div>' +
-            '<div class="fmx-entd">Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.</div></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Радар каналов') + ' <span class="fmx-enttag" style="background:rgba(99,102,241,0.18);color:#818cf8;">' + L('внешние каналы') + '</span></div>' +
+            '<div class="fmx-entd">' + L('Каталог площадок под закуп — включая каналы, не разместившие оффер на Площадке. По каждому: подписчики, охват, ER, индекс здоровья, рыночная оценка цены. Фильтры по нишам, контакт владельца — напрямую.') + '</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="market"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(93,202,165,0.15),rgba(93,202,165,0.05));border:1px solid rgba(93,202,165,0.32);color:#5DCAA5;"><i class="ti ti-arrows-exchange"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Площадка ForgeMetrics <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">живые офферы</span></div>' +
-            '<div class="fmx-entd">Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.</div></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Площадка ForgeMetrics') + ' <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">' + L('живые офферы') + '</span></div>' +
+            '<div class="fmx-entd">' + L('Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.') + '</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>' +
             '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05));border:1px solid rgba(56,189,248,0.32);color:#38bdf8;"><i class="ti ti-chart-histogram"></i></div>' +
-            '<div style="flex:1;min-width:0;"><div class="fmx-entn">Рыночный терминал <span class="fmx-enttag" style="background:rgba(56,189,248,0.18);color:#38bdf8;">пульс рынка</span></div>' +
-            '<div class="fmx-entd">Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.</div></div>' +
+            '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Рыночный терминал') + ' <span class="fmx-enttag" style="background:rgba(56,189,248,0.18);color:#38bdf8;">' + L('пульс рынка') + '</span></div>' +
+            '<div class="fmx-entd">' + L('Биржевой дашборд рынка: индекс CPM, теплокарта и динамика цен по нишам, лента событий — всплески аудитории, новые офферы, горящие скидки.') + '</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div>';
         if (_isMod()) {
             host.insertAdjacentHTML('beforeend',
                 '<div class="fmx-ent" data-go="mod"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.32);color:#f87171;"><i class="ti ti-shield-check"></i></div>' +
-                '<div style="flex:1;min-width:0;"><div class="fmx-entn">Модерация <span class="fmx-enttag" style="background:rgba(239,68,68,0.18);color:#f87171;">только владелец</span></div>' +
-                '<div class="fmx-entd">Очередь офферов и заявок на проверке и с жалобами: одобрение и отклонение, сводная статистика по продукту, карточка пользователя.</div></div>' +
+                '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Модерация') + ' <span class="fmx-enttag" style="background:rgba(239,68,68,0.18);color:#f87171;">' + L('только владелец') + '</span></div>' +
+                '<div class="fmx-entd">' + L('Очередь офферов и заявок на проверке и с жалобами: одобрение и отклонение, сводная статистика по продукту, карточка пользователя.') + '</div></div>' +
                 '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>');
         }
         qsa(host, '.fmx-ent').forEach(function (c) { c.addEventListener('click', function () { _haptic('light'); setMainTab(c.getAttribute('data-go')); }); });
@@ -2463,7 +2465,7 @@
             '<div id="fmx-mverd"></div>' +
             '<div id="fmx-mtasks">' + loadHtml() + '</div>' +
             '<div id="fmx-msecs"></div>' +
-            '<div class="fmx-modfoot">Обновляется автоматически</div>';
+            '<div class="fmx-modfoot">' + L('Обновляется автоматически') + '</div>';
         _modPaintLamps();
         _modPaintSections();
         _modLoad();
@@ -2520,31 +2522,31 @@
     function _modPaintLamps() {
         var box = el('fmx-mlamps'); if (!box) return;
         var h = '';
-        if (_mod.err.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Очередь</div><div class="n">нет связи</div></div>';
-        else if (!_mod.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Очередь</div><div class="n">…</div></div>';
+        if (_mod.err.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Очередь') + '</div><div class="n">' + L('нет связи') + '</div></div>';
+        else if (!_mod.q) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Очередь') + '</div><div class="n">…</div></div>';
         else {
             var n = _modTasks().length;
-            h += '<button class="fmx-lamp ' + _modLampCls(n) + '" data-lamp="tasks"><span class="dot"></span><div class="k">Очередь</div>' +
+            h += '<button class="fmx-lamp ' + _modLampCls(n) + '" data-lamp="tasks"><span class="dot"></span><div class="k">' + L('Очередь') + '</div>' +
                 '<div class="n">' + (n === 0 ? 'пусто' : n + ' ' + _plural(n, 'задача', 'задачи', 'задач')) + '</div></button>';
         }
 
-        if (_mod.err.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Расход ИИ</div><div class="n">нет связи</div></div>';
-        else if (!_mod.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Расход ИИ</div><div class="n">…</div></div>';
+        if (_mod.err.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Расход ИИ') + '</div><div class="n">' + L('нет связи') + '</div></div>';
+        else if (!_mod.ov) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Расход ИИ') + '</div><div class="n">…</div></div>';
         else {
             var s = _mod.ov.spend || {}, bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
             var pct = bud > 0 ? (sp / bud * 100) : 0;
             var cls = pct >= 80 ? 'bad' : (pct >= 60 ? 'warn' : 'ok');
             h += '<button class="fmx-lamp ' + cls + '" data-lamp="money"><span class="dot"></span>' +
-                '<div class="k">Расход ИИ</div>' +
+                '<div class="k">' + L('Расход ИИ') + '</div>' +
                 '<div class="n">$' + (sp >= 100 ? Math.round(sp) : sp.toFixed(2)) + '</div></button>';
         }
 
         if (_isOwner()) {
-            if (_mod.err.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Проверка</div><div class="n">нет связи</div></div>';
-            else if (!_mod.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">Проверка</div><div class="n">…</div></div>';
+            if (_mod.err.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Проверка') + '</div><div class="n">' + L('нет связи') + '</div></div>';
+            else if (!_mod.ctrl) h += '<div class="fmx-lamp"><span class="dot"></span><div class="k">' + L('Проверка') + '</div><div class="n">…</div></div>';
             else {
                 var on = !!_mod.ctrl.moderation_enabled;
-                h += '<button class="fmx-lamp ' + (on ? 'ok' : 'bad') + '" data-lamp="access"><span class="dot"></span><div class="k">Проверка</div>' +
+                h += '<button class="fmx-lamp ' + (on ? 'ok' : 'bad') + '" data-lamp="access"><span class="dot"></span><div class="k">' + L('Проверка') + '</div>' +
                     '<div class="n">' + (on ? 'включена' : 'выключена') + '</div></button>';
             }
         }
@@ -2562,15 +2564,15 @@
     function _modPaintVerdict() {
         var box = el('fmx-mverd'); if (!box) return;
         if (_mod.err.q) {
-            box.innerHTML = '<div class="fmx-verd mute"><div class="big">Нет связи с очередью</div>' +
-                '<div class="cap">Пока связь не восстановится, о задачах судить нельзя.</div></div>';
+            box.innerHTML = '<div class="fmx-verd mute"><div class="big">' + L('Нет связи с очередью') + '</div>' +
+                '<div class="cap">' + L('Пока связь не восстановится, о задачах судить нельзя.') + '</div></div>';
             return;
         }
         if (!_mod.q) { box.innerHTML = ''; return; }
         var list = _modTasks();
         if (!list.length) {
-            box.innerHTML = '<div class="fmx-verd calm"><div class="big">Всё разобрано</div>' +
-                '<div class="cap">Офферов на проверке и открытых жалоб нет.</div></div>';
+            box.innerHTML = '<div class="fmx-verd calm"><div class="big">' + L('Всё разобрано') + '</div>' +
+                '<div class="cap">' + L('Офферов на проверке и открытых жалоб нет.') + '</div></div>';
             return;
         }
         var c = { complaint: 0, stalled: 0, adult: 0, review: 0, request: 0 };
@@ -2578,11 +2580,11 @@
         var chips = '';
         if (c.complaint) chips += '<span class="fmx-vchip bad">' + c.complaint + ' ' + _plural(c.complaint, 'жалоба', 'жалобы', 'жалоб') + '</span>';
         if (c.stalled) chips += '<span class="fmx-vchip warn">' + c.stalled + ' ' + _plural(c.stalled, 'зависла', 'зависли', 'зависло') + '</span>';
-        if (c.adult) chips += '<span class="fmx-vchip">' + c.adult + ' на раздел 18+</span>';
-        if (c.review) chips += '<span class="fmx-vchip">' + c.review + ' на проверке</span>';
+        if (c.adult) chips += '<span class="fmx-vchip">' + c.adult + ' ' + L('на раздел 18+') + '</span>';
+        if (c.review) chips += '<span class="fmx-vchip">' + c.review + ' ' + L('на проверке') + '</span>';
         if (c.request) chips += '<span class="fmx-vchip">' + c.request + ' ' + _plural(c.request, 'заявка', 'заявки', 'заявок') + '</span>';
-        box.innerHTML = '<div class="fmx-verd"><div class="big">Требует решения: ' + list.length + '</div>' +
-            '<div class="cap">Самое срочное — сверху</div>' +
+        box.innerHTML = '<div class="fmx-verd"><div class="big">' + L('Требует решения:') + ' ' + list.length + '</div>' +
+            '<div class="cap">' + L('Самое срочное — сверху') + '</div>' +
             '<div class="split">' + chips + '</div></div>';
     }
 
@@ -2601,7 +2603,7 @@
         _mod.sigTasks = sig;
         var over0 = (_mod.q.listings_overflow || 0) + (_mod.q.requests_overflow || 0);
         if (!list.length) {
-            box.innerHTML = over0 ? '<div class="fmx-mmeta" style="text-align:center;margin:2px 0 10px;">…и ещё ' + over0 + ' с жалобами — подтянутся при обновлении</div>' : '';
+            box.innerHTML = over0 ? '<div class="fmx-mmeta" style="text-align:center;margin:2px 0 10px;">' + L('…и ещё') + ' ' + over0 + ' ' + L('с жалобами — подтянутся при обновлении') + '</div>' : '';
             return;
         }
         var h = '';
@@ -2610,8 +2612,8 @@
             if (x.t === 'r') {
                 var q = x.d;
                 h += '<div class="fmx-task s-complaint" data-task="r' + q.id + '">' +
-                    '<div class="fmx-tkrow"><span class="fmx-tkind bad">Заявка · жалоб: ' + (q.complaints || 0) + '</span></div>' +
-                    '<div class="fmx-mtitle">Заявка R' + q.id + '</div>' +
+                    '<div class="fmx-tkrow"><span class="fmx-tkind bad">' + L('Заявка · жалоб:') + ' ' + (q.complaints || 0) + '</span></div>' +
+                    '<div class="fmx-mtitle">' + L('Заявка R') + q.id + '</div>' +
                     '<div class="fmx-msub">«' + _esc(q.text) + '»</div>' +
                     '<div class="fmx-mmeta">' + _esc(q.note) + '</div>' +
                     '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-rest="' + q.id + '">Вернуть</button>' +
@@ -2621,7 +2623,7 @@
             var l = x.d, ai = '';
             if (l.ai_category || l.ai_confidence != null) {
                 var bits = [];
-                if (l.ai_category) bits.push('<b>' + _esc(_CATRU[l.ai_category] || l.ai_category) + ' список</b>');
+                if (l.ai_category) bits.push('<b>' + _esc(_CATRU[l.ai_category] || l.ai_category) + ' ' + L('список') + '</b>');
                 if (l.ai_confidence != null) bits.push('уверенность ' + l.ai_confidence + '%');
                 ai = 'Автопроверка: ' + bits.join(' · ');
             }
@@ -2637,11 +2639,11 @@
                 '<div class="fmx-mrow"><button class="fmx-mbtn ok" data-appr="' + l.id + '">Одобрить</button>' +
                 '<button class="fmx-mbtn no" data-rej="' + l.id + '">Отклонить</button>' +
                 (l.is_adult ? '<button class="fmx-mbtn" data-adoff="' + l.id + '">Снять 18+</button>' : '') + '</div>' +
-                (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> Открыть канал</button>' : '') +
+                (l.link ? '<button class="fmx-mopen" data-open="' + _esc(l.link) + '"><i class="ti ti-external-link"></i> ' + L('Открыть канал') + '</button>' : '') +
                 '</div>';
         });
         var ov = (_mod.q.listings_overflow || 0) + (_mod.q.requests_overflow || 0);
-        if (ov) h += '<div class="fmx-mmeta" style="text-align:center;margin:6px 0 10px;">…и ещё ' + ov + ' с жалобами — появятся после разбора текущих</div>';
+        if (ov) h += '<div class="fmx-mmeta" style="text-align:center;margin:6px 0 10px;">' + L('…и ещё') + ' ' + ov + ' ' + L('с жалобами — появятся после разбора текущих') + '</div>';
         box.innerHTML = h;
         qsa(box, '[data-appr]').forEach(function (b) { b.addEventListener('click', function () { modApprove(+b.getAttribute('data-appr')); }); });
         qsa(box, '[data-rej]').forEach(function (b) { b.addEventListener('click', function () { modReject(+b.getAttribute('data-rej')); }); });
@@ -2675,50 +2677,50 @@
     }
 
     function _modMoneyBody() {
-        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">' + L('Не загрузилось — панель повторит попытку.') + '</div>';
         if (!_mod.ov) return loadHtml();
         var s = _mod.ov.spend || {}, rf = _mod.ov.referrals || {};
         var bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
         var pct = bud > 0 ? Math.min(100, Math.round(sp / bud * 100)) : 0;
-        return '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>Оплачено за месяц</span><b>' + _num(_mod.ov.revenue_month_rub) + ' ₽</b></div>' +
-            '<div class="fmx-mstatrow"><span>Расход на ИИ</span><b>$' + sp.toFixed(2) + ' из $' + bud + '</b></div>' +
+        return '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>' + L('Оплачено за месяц') + '</span><b>' + _num(_mod.ov.revenue_month_rub) + ' ₽</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Расход на ИИ') + '</span><b>$' + sp.toFixed(2) + ' из $' + bud + '</b></div>' +
             '<div class="fmx-bar' + (pct >= 80 ? ' warn' : '') + '"><i style="width:' + Math.max(2, pct) + '%"></i></div>' +
-            '<div class="fmx-mstatrow"><span>За сегодня</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div>' +
-            '<div class="fmx-mstatrow"><span>Приглашено по ссылкам</span><b>' + _num(rf.total) + '</b></div>' +
-            '<div class="fmx-mstatrow"><span>Из них оплатили</span><b>' + _num(rf.paid) + '</b></div>';
+            '<div class="fmx-mstatrow"><span>' + L('За сегодня') + '</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Приглашено по ссылкам') + '</span><b>' + _num(rf.total) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Из них оплатили') + '</span><b>' + _num(rf.paid) + '</b></div>';
     }
 
     function _modPeopleBody() {
-        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">' + L('Не загрузилось — панель повторит попытку.') + '</div>';
         if (!_mod.ov) return loadHtml();
         var u = _mod.ov.users || {}, h = '';
-        h += '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>Всего</span><b>' + _num(u.total) + '</b></div>' +
-            '<div class="fmx-mstatrow"><span>С покупками</span><b>' + _num(u.paid) + '</b></div>';
+        h += '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>' + L('Всего') + '</span><b>' + _num(u.total) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('С покупками') + '</span><b>' + _num(u.paid) + '</b></div>';
         if ((_mod.ov.top_spenders || []).length) {
-            h += '<div class="fmx-meyebrow" style="margin-top:13px;">Кто тратит больше всех<em>за месяц</em></div><div class="fmx-plist">';
+            h += '<div class="fmx-meyebrow" style="margin-top:13px;">' + L('Кто тратит больше всех') + '<em>' + L('за месяц') + '</em></div><div class="fmx-plist">';
             _mod.ov.top_spenders.forEach(function (t) {
                 h += _pRow({ id: t.user_id, name: 'ID ' + t.user_id, meta: t.calls + ' ' + _plural(t.calls, 'обращение', 'обращения', 'обращений') + ' к ИИ', val: '$' + t.spent_usd.toFixed(2) });
             });
             h += '</div>';
         }
-        h += '<div class="fmx-meyebrow" style="margin-top:13px;">Найти по Telegram ID</div>' +
+        h += '<div class="fmx-meyebrow" style="margin-top:13px;">' + L('Найти по Telegram ID') + '</div>' +
             '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например 100000000" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:7px;">Нажатие на любого человека в списках открывает его карточку.</div>';
+            '<div class="fmx-mdsub" style="margin-top:7px;">' + L('Нажатие на любого человека в списках открывает его карточку.') + '</div>';
         h += '<div id="fmx-modact" style="margin-top:13px;">' +
             (_mod.actState === 'loading' ? loadHtml() : '') +
             (_mod.actState === 'error'
                 ? '<div class="fmx-mmeta" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">' +
-                  '<span>Списки активности не загрузились</span>' +
-                  '<button class="fmx-btn" id="fmx-actretry" style="flex:0 0 auto;padding:8px 12px;min-height:40px;">Повторить</button></div>'
+                  '<span>' + L('Списки активности не загрузились') + '</span>' +
+                  '<button class="fmx-btn" id="fmx-actretry" style="flex:0 0 auto;padding:8px 12px;min-height:40px;">' + L('Повторить') + '</button></div>'
                 : '') + '</div>';
         return h;
     }
 
     function _modBoostCard() {
         return '<div class="fmx-ctrlcard">' +
-            '<div class="fmx-ctrlt">Ручное продвижение оффера</div>' +
-            '<div class="fmx-ctrls" style="margin-bottom:10px;">Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней. Работает только со своим оффером — ID виден в задачах очереди.</div>' +
+            '<div class="fmx-ctrlt">' + L('Ручное продвижение оффера') + '</div>' +
+            '<div class="fmx-ctrls" style="margin-bottom:10px;">' + L('Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней. Работает только со своим оффером — ID виден в задачах очереди.') + '</div>' +
             '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
             '</div>';
@@ -2726,14 +2728,14 @@
 
     function _modAccessBody() {
         if (!_isOwner()) return '<div class="fmx-ctrl" style="margin-top:12px;">' + _modBoostCard() + '</div>';
-        if (_mod.err.ctrl) return '<div class="fmx-mmeta" style="padding-top:11px;">Не загрузилось — панель повторит попытку.</div>';
+        if (_mod.err.ctrl) return '<div class="fmx-mmeta" style="padding-top:11px;">' + L('Не загрузилось — панель повторит попытку.') + '</div>';
         if (!_mod.ctrl) return loadHtml();
         var r = _mod.ctrl, on = !!r.moderation_enabled;
         var rows = (r.moderators || []).map(function (m) {
             var who = _esc(m.name || ('ID ' + m.user_id));
             var un = m.username ? '@' + _esc(m.username) : 'ID ' + m.user_id;
-            var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">владелец</span>'
-                : (m.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '');
+            var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">' + L('владелец') + '</span>'
+                : (m.source === 'env' ? '<span class="fmx-mdtag">' + L('из настроек сервера') + '</span>' : '');
             var del = (m.source === 'db')
                 ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="Снять права"><i class="ti ti-x"></i></button>' : '';
             return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
@@ -2741,7 +2743,7 @@
         }).join('');
         return '<div class="fmx-ctrl" style="margin-top:12px;">' +
             '<div class="fmx-ctrlcard">' +
-            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Проверка офферов</div>' +
+            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">' + L('Проверка офферов') + '</div>' +
             '<div class="fmx-ctrls">' + (on
                 ? 'Каждый новый оффер проходит проверку перед публикацией.'
                 : 'ВЫКЛЮЧЕНА: офферы публикуются сразу, без проверки.') + '</div></div>' +
@@ -2749,15 +2751,15 @@
             '</div>' +
             (on ? '' : '<div class="fmx-ctrlwarn"><i class="ti ti-alert-triangle"></i>' +
                 'Пока выключено, на витрину может попасть запрещённый контент — ответственность за площадку на тебе. ' +
-                'Включай обратно после разбора очереди.</div>') +
+                L('Включай обратно после разбора очереди.') + '</div>') +
             '</div>' +
             '<div class="fmx-ctrlcard">' +
-            '<div class="fmx-ctrlt">Модераторы</div>' +
-            '<div class="fmx-ctrls" style="margin-bottom:10px;">Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.</div>' +
-            '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
+            '<div class="fmx-ctrlt">' + L('Модераторы') + '</div>' +
+            '<div class="fmx-ctrls" style="margin-bottom:10px;">' + L('Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.') + '</div>' +
+            '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">' + L('Пока никого') + '</div>') + '</div>' +
             '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
-            '<button class="fmx-mdbtn" id="fmx-mdadd">Выдать права</button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:8px;">Человек должен хотя бы раз открыть приложение — иначе его не найти.</div>' +
+            '<button class="fmx-mdbtn" id="fmx-mdadd">' + L('Выдать права') + '</button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">' + L('Человек должен хотя бы раз открыть приложение — иначе его не найти.') + '</div>' +
             '</div>' +
             _ctrlTestersHtml(r) +
             _modBoostCard() + '</div>';
@@ -2804,7 +2806,7 @@
         var find = function () {
             var inp = el('fmx-muid'); if (!inp) return;
             var v = (inp.value || '').trim();
-            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой Telegram ID'); return; }
+            if (!/^\d+$/.test(v)) { uiAlert(L('Введи числовой Telegram ID')); return; }
             _modUserSheet(v);
         };
         var fb = el('fmx-mufind');
@@ -2821,8 +2823,8 @@
             var who = _esc(t.name || ('ID ' + t.user_id));
             var un = t.username ? '@' + _esc(t.username) : 'ID ' + t.user_id;
             var act = t.enabled !== false;
-            var tag = t.source === 'env' ? '<span class="fmx-mdtag">из настроек сервера</span>' : '';
-            if (!act) tag += '<span class="fmx-mdtag off">на паузе</span>';
+            var tag = t.source === 'env' ? '<span class="fmx-mdtag">' + L('из настроек сервера') + '</span>' : '';
+            if (!act) tag += '<span class="fmx-mdtag off">' + L('на паузе') + '</span>';
             var sw = '<button class="fmx-sw sm' + (act ? ' on' : '') + '" data-tstg="' + t.user_id + '" data-on="' + act + '" role="switch" aria-checked="' + act + '" aria-label="Тестовый доступ"><span></span></button>';
             var del = t.source === 'db'
                 ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="Удалить из списка"><i class="ti ti-x"></i></button>' : '';
@@ -2830,16 +2832,16 @@
                 '<div class="fmx-mdsub">' + un + '</div></div>' + sw + del + '</div>';
         }).join('');
         return '<div class="fmx-ctrlcard">' +
-            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">Тестовый доступ</div>' +
+            '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">' + L('Тестовый доступ') + '</div>' +
             '<div class="fmx-ctrls">' + (on
                 ? 'Для перечисленных ограничения не применяются — функции работают без ограничений.'
                 : 'ВЫКЛЮЧЕН: все, включая тестеров, работают в обычном режиме.') + '</div></div>' +
             '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-tssw" role="switch" aria-checked="' + on + '"><span></span></button>' +
             '</div>' +
-            '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">Пока никого</div>') + '</div>' +
+            '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">' + L('Пока никого') + '</div>') + '</div>' +
             '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
-            '<button class="fmx-mdbtn" id="fmx-tsadd">Выдать доступ</button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:8px;">Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен — держи список коротким.</div>' +
+            '<button class="fmx-mdbtn" id="fmx-tsadd">' + L('Выдать доступ') + '</button></div>' +
+            '<div class="fmx-mdsub" style="margin-top:8px;">' + L('Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен — держи список коротким.') + '</div>' +
             '</div>';
     }
 
@@ -2849,17 +2851,17 @@
             var next = !sw.classList.contains('on');
             uiConfirm(next ? 'Включить тестовый доступ?' : 'Выключить тестовый доступ? Тестеры вернутся в обычный режим.', function () {
                 apiPost('/api/v1/admin/controls/tester-mode', { enabled: next }).then(function (res) {
-                    if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
+                    if (!res || res.ok === false) { uiAlert(L('Не удалось изменить')); return; }
                     _haptic('success'); toast(next ? 'Тестовый доступ включён' : 'Тестовый доступ выключен');
                     _modReloadCtrl();
-                }).catch(function () { uiAlert('Не удалось изменить'); });
+                }).catch(function () { uiAlert(L('Не удалось изменить')); });
             });
         });
         var addBtn = el('fmx-tsadd');
         if (addBtn) addBtn.addEventListener('click', function () {
             var inp = el('fmx-tsq'); if (!inp) return;
             var q = (inp.value || '').trim();
-            if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
+            if (q.length < 2) { uiAlert(L('Укажи @username или числовой ID')); return; }
             addBtn.disabled = true;
             apiPost('/api/v1/admin/testers', { query: q }).then(function (res) {
                 addBtn.disabled = false;
@@ -2867,7 +2869,7 @@
                 _haptic('success'); toast(res.message || 'Доступ выдан');
                 inp.value = '';
                 _modReloadCtrl();
-            }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
+            }).catch(function () { addBtn.disabled = false; uiAlert(L('Не удалось')); });
         });
         qsa(box, '[data-tstg]').forEach(function (b) {
             b.addEventListener('click', function () {
@@ -2875,21 +2877,21 @@
                 var next = !b.classList.contains('on');
                 b.disabled = true;
                 apiPost('/api/v1/admin/testers/' + uid + '/toggle', { enabled: next }).then(function (res) {
-                    if (!res || res.ok === false) { b.disabled = false; uiAlert('Не удалось изменить'); return; }
+                    if (!res || res.ok === false) { b.disabled = false; uiAlert(L('Не удалось изменить')); return; }
                     _haptic('light'); toast(res.message || (next ? 'Доступ включён' : 'Доступ на паузе'));
                     _modReloadCtrl();
-                }).catch(function () { b.disabled = false; uiAlert('Не удалось изменить'); });
+                }).catch(function () { b.disabled = false; uiAlert(L('Не удалось изменить')); });
             });
         });
         qsa(box, '[data-tsrm]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var uid = b.getAttribute('data-tsrm');
-                uiConfirm('Удалить из списка тестеров? Чтобы временно отключить, используй тумблер.', function () {
+                uiConfirm(L('Удалить из списка тестеров? Чтобы временно отключить, используй тумблер.'), function () {
                     apiRequest('/api/v1/admin/testers/' + uid, { method: 'DELETE' }).then(function (res) {
                         if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
                         _haptic('success'); toast(res.message || 'Доступ снят');
                         _modReloadCtrl();
-                    }).catch(function () { uiAlert('Не удалось'); });
+                    }).catch(function () { uiAlert(L('Не удалось')); });
                 });
             });
         });
@@ -2902,18 +2904,18 @@
             var act = next ? 'Включить проверку офферов?' : 'Выключить проверку? Офферы будут публиковаться без модерации.';
             uiConfirm(act, function () {
                 apiPost('/api/v1/admin/controls/moderation', { enabled: next }).then(function (res) {
-                    if (!res || res.ok === false) { uiAlert('Не удалось изменить'); return; }
+                    if (!res || res.ok === false) { uiAlert(L('Не удалось изменить')); return; }
                     _haptic('success');
                     toast(next ? 'Проверка офферов включена' : 'Проверка офферов выключена');
                     _modReloadCtrl();
-                }).catch(function () { uiAlert('Не удалось изменить'); });
+                }).catch(function () { uiAlert(L('Не удалось изменить')); });
             });
         });
         var addBtn = el('fmx-mdadd');
         if (addBtn) addBtn.addEventListener('click', function () {
             var inp = el('fmx-mdq'); if (!inp) return;
             var q = (inp.value || '').trim();
-            if (q.length < 2) { uiAlert('Укажи @username или числовой ID'); return; }
+            if (q.length < 2) { uiAlert(L('Укажи @username или числовой ID')); return; }
             addBtn.disabled = true;
             apiPost('/api/v1/admin/moderators', { query: q }).then(function (res) {
                 addBtn.disabled = false;
@@ -2921,17 +2923,17 @@
                 _haptic('success'); toast(res.message || 'Права выданы');
                 inp.value = '';
                 _modReloadCtrl();
-            }).catch(function () { addBtn.disabled = false; uiAlert('Не удалось'); });
+            }).catch(function () { addBtn.disabled = false; uiAlert(L('Не удалось')); });
         });
         qsa(box, '[data-modrm]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var uid = b.getAttribute('data-modrm');
-                uiConfirm('Снять права модератора?', function () {
+                uiConfirm(L('Снять права модератора?'), function () {
                     apiRequest('/api/v1/admin/moderators/' + uid, { method: 'DELETE' }).then(function (res) {
                         if (!res || res.ok === false) { uiAlert((res && res.message) || 'Не удалось'); return; }
                         _haptic('success'); toast(res.message || 'Права сняты');
                         _modReloadCtrl();
-                    }).catch(function () { uiAlert('Не удалось'); });
+                    }).catch(function () { uiAlert(L('Не удалось')); });
                 });
             });
         });
@@ -2939,13 +2941,13 @@
         if (boost) boost.addEventListener('click', function () {
             var f = el('fmx-mboostid'); if (!f) return;
             var v = (f.value || '').trim();
-            if (!/^\d+$/.test(v)) { uiAlert('Введи числовой ID оффера'); return; }
+            if (!/^\d+$/.test(v)) { uiAlert(L('Введи числовой ID оффера')); return; }
             boost.disabled = true;
             apiPost('/api/v1/marketplace/mod/boost', { listing_id: +v }).then(function (r) {
                 boost.disabled = false;
-                if (r && r.ok) { _haptic('success'); toast('Продвижение включено на 30 дней'); f.value = ''; }
+                if (r && r.ok) { _haptic('success'); toast(L('Продвижение включено на 30 дней')); f.value = ''; }
                 else { uiAlert((r && r.error) || 'Не удалось'); }
-            }).catch(function () { boost.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+            }).catch(function () { boost.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
         });
         _bindTesterControls(box);
     }
@@ -3023,10 +3025,10 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-tpBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box fmx-tpbox">' +
-            '<div class="fmx-cfm-t" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-clipboard-text" style="color:#818cf8;"></i><span>Как работает Площадка</span><span class="fmx-tpx"><i class="ti ti-x"></i></span></div>' +
-            '<div class="fmx-tptabs"><div class="fmx-tptab" data-tt="b">Покупателю рекламы</div><div class="fmx-tptab" data-tt="s">Владельцу канала</div></div>' +
+            '<div class="fmx-cfm-t" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-clipboard-text" style="color:#818cf8;"></i><span>' + L('Как работает Площадка') + '</span><span class="fmx-tpx"><i class="ti ti-x"></i></span></div>' +
+            '<div class="fmx-tptabs"><div class="fmx-tptab" data-tt="b">' + L('Покупателю рекламы') + '</div><div class="fmx-tptab" data-tt="s">' + L('Владельцу канала') + '</div></div>' +
             '<div class="fmx-tpbody" id="fmx-tpbody"></div>' +
-            '<div class="fmx-tpfoot">Условия описывают действующие механики Площадки и обновляются вместе с ними.</div></div>';
+            '<div class="fmx-tpfoot">' + L('Условия описывают действующие механики Площадки и обновляются вместе с ними.') + '</div></div>';
         document.body.appendChild(bg);
         function show(t) {
             qsa(bg, '.fmx-tptab').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-tt') === t); });
@@ -3046,7 +3048,7 @@
         bg.id = 'fmx-cfmBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t">' + _esc(opts.title) + '</div>' +
             '<textarea class="fmx-inp" id="fmx-mpr" rows="3" maxlength="500" placeholder="' + _esc(opts.placeholder || '') + '" style="margin-top:10px;"></textarea>' +
-            '<div class="fmx-cfm-r" style="margin-top:12px;"><button class="fmx-btn" data-no>Отмена</button>' +
+            '<div class="fmx-cfm-r" style="margin-top:12px;"><button class="fmx-btn" data-no>' + L('Отмена') + '</button>' +
             '<button class="fmx-btn" data-yes style="background:#818cf8;color:#fff;border-color:transparent;">' + _esc(opts.btn || 'ОК') + '</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
@@ -3060,18 +3062,18 @@
         setTimeout(function () { try { el('fmx-mpr').focus(); } catch (e) {} }, 50);
     }
     function modApprove(id) {
-        uiConfirm('Одобрить оффер #' + id + ' и опубликовать?', function () {
-            apiPost('/api/v1/admin/listing/' + id + '/approve').then(function (r) { _modAfter(r, 'l' + id, 'Одобрено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        uiConfirm(L('Одобрить оффер #') + id + ' и опубликовать?', function () {
+            apiPost('/api/v1/admin/listing/' + id + '/approve').then(function (r) { _modAfter(r, 'l' + id, 'Одобрено'); }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         });
     }
     function modAdultOff(id) {
-        uiConfirm('Снять метку 18+ с оффера #' + id + '? Если оффер уже одобрен, он сразу выйдет в общую ленту.', function () {
-            apiPost('/api/v1/admin/listing/' + id + '/adult', { adult: false }).then(function (r) { _modAfter(r, 'l' + id, 'Метка 18+ снята', true); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        uiConfirm(L('Снять метку 18+ с оффера #') + id + '? Если оффер уже одобрен, он сразу выйдет в общую ленту.', function () {
+            apiPost('/api/v1/admin/listing/' + id + '/adult', { adult: false }).then(function (r) { _modAfter(r, 'l' + id, 'Метка 18+ снята', true); }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         });
     }
     function modReject(id) {
         modPrompt({ title: 'Отклонить оффер #' + id, placeholder: 'Причина (необязательно) — автор увидит и сможет исправить', btn: 'Отклонить', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(function (r) { _modAfter(r, 'l' + id, 'Отклонено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/listing/' + id + '/reject', { reason: reason }).then(function (r) { _modAfter(r, 'l' + id, 'Отклонено'); }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         });
     }
     var _CATRU = { white: 'белый', grey: 'серый', black: 'чёрный' };
@@ -3082,13 +3084,13 @@
         try { window.open(url, '_blank'); } catch (e) {}
     }
     function modRestore(id) {
-        uiConfirm('Вернуть заявку R' + id + ' и снять жалобы?', function () {
-            apiPost('/api/v1/admin/request/' + id + '/restore').then(function (r) { _modAfter(r, 'r' + id, 'Возвращено'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        uiConfirm(L('Вернуть заявку R') + id + ' и снять жалобы?', function () {
+            apiPost('/api/v1/admin/request/' + id + '/restore').then(function (r) { _modAfter(r, 'r' + id, 'Возвращено'); }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         });
     }
     function modRemove(id) {
         modPrompt({ title: 'Снять заявку R' + id, placeholder: 'Причина (необязательно)', btn: 'Снять', optional: true }, function (reason) {
-            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(function (r) { _modAfter(r, 'r' + id, 'Снято'); }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            apiPost('/api/v1/admin/request/' + id + '/remove', { reason: reason }).then(function (r) { _modAfter(r, 'r' + id, 'Снято'); }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         });
     }
 
@@ -3162,7 +3164,7 @@
         if (box && a) {
             var h = '';
             if (a.visitors_7d && a.visitors_7d.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Активные<em>за 7 дней</em></div><div class="fmx-plist">';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Активные') + '<em>' + L('за 7 дней') + '</em></div><div class="fmx-plist">';
                 a.visitors_7d.forEach(function (v) {
                     h += _userRow(v, _num(v.events) + ' действ.');
                 });
@@ -3170,7 +3172,7 @@
             }
             if (a.all_users && a.all_users.length) {
                 var total = a.all_users.length;
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Все пользователи<em>' + _num(total) + '</em></div>' +
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Все пользователи') + '<em>' + _num(total) + '</em></div>' +
                     '<div class="fmx-plist" data-list="users">';
                 a.all_users.forEach(function (v, i) {
                     var row = _userRow(v);
@@ -3178,11 +3180,11 @@
                     h += row;
                 });
                 h += '</div>';
-                if (total > 6) h += '<button class="fmx-pmore" data-more="users">Показать всех · ' + _num(total) + '</button>';
+                if (total > 6) h += '<button class="fmx-pmore" data-more="users">' + L('Показать всех ·') + ' ' + _num(total) + '</button>';
                 h += '</div>';
             }
             if (a.paid_users && a.paid_users.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Платящие<em>' + _num(a.paid_users.length) + '</em></div><div class="fmx-plist">';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Платящие') + '<em>' + _num(a.paid_users.length) + '</em></div><div class="fmx-plist">';
                 a.paid_users.forEach(function (p) {
                     h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: _num(p.forge || 0) + ' Forge' });
                 });
@@ -3192,7 +3194,7 @@
             var ops = (a.ai_ops_7d || []).map(function (x) { return { l: _OPN[x.op] || x.op, c: x.count }; });
             if (evs.length) {
                 var emax = evs.reduce(function (m, x) { return Math.max(m, x.c); }, 0);
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Что открывают<em>за 7 дней</em></div>';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Что открывают') + '<em>' + L('за 7 дней') + '</em></div>';
                 evs.slice(0, 12).forEach(function (x) {
                     var w = emax ? Math.max(3, Math.round(x.c / emax * 100)) : 0;
                     h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(x.l) + '</span>' +
@@ -3203,7 +3205,7 @@
             }
             if (ops.length) {
                 var omax = ops.reduce(function (m, x) { return Math.max(m, x.c); }, 0);
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Обращения к ИИ<em>за 7 дней</em></div>';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Обращения к ИИ') + '<em>' + L('за 7 дней') + '</em></div>';
                 ops.slice(0, 12).forEach(function (x) {
                     var w = omax ? Math.max(3, Math.round(x.c / omax * 100)) : 0;
                     h += '<div class="fmx-frow"><span class="fmx-fname">' + _esc(x.l) + '</span>' +
@@ -3213,7 +3215,7 @@
                 h += '</div>';
             }
             if (a.purchases && a.purchases.length) {
-                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">Покупки<em>оплачено</em></div><div class="fmx-plist">';
+                h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Покупки') + '<em>' + L('оплачено') + '</em></div><div class="fmx-plist">';
                 a.purchases.forEach(function (p) {
                     h += _pRow({ id: p.user_id, name: _esc(p.product || 'Покупка'), meta: 'ID ' + p.user_id,
                         val: _num(p.amount) + ' ₽', date: p.at });
@@ -3240,7 +3242,7 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-muBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box"><div class="fmx-cfm-t" style="display:flex;align-items:center;gap:8px;">' +
-            '<i class="ti ti-user" style="color:#818cf8;"></i><span style="flex:1;">Карточка пользователя</span>' +
+            '<i class="ti ti-user" style="color:#818cf8;"></i><span style="flex:1;">' + L('Карточка пользователя') + '</span>' +
             '<button class="fmx-ibtn" data-mux style="width:30px;height:30px;"><i class="ti ti-x"></i></button></div>' +
             '<div id="fmx-mubody" style="margin-top:11px;">' + loadHtml() + '</div></div>';
         document.body.appendChild(bg);
@@ -3257,16 +3259,16 @@
                 '<div style="flex:1;min-width:0;"><div class="fmx-mtitle">' + _esc(u.first_name || ('ID ' + u.id)) + '</div>' +
                 '<div class="fmx-pmeta">' + (u.username && u.username !== '—' ? '@' + _esc(u.username) : 'без @username') + '</div></div></div>' +
                 '<div class="fmx-mstatrow"><span>ID</span><b>' + u.id + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Промокод</span><b>' + _esc(u.promo_code) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Уровень партнёрки</span><b>' + _esc(u.referral_level) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Платных рефералов</span><b>' + _num(u.paid_referrals) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Баланс Forge</span><b>' + _num(u.forge_balance) + '</b></div>' +
-                '<div class="fmx-mstatrow"><span>Расход за месяц</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' выз.</b></div>' +
-                '<div class="fmx-mstatrow"><span>Регистрация</span><b>' + _esc(u.created_at) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Промокод') + '</span><b>' + _esc(u.promo_code) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Уровень партнёрки') + '</span><b>' + _esc(u.referral_level) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Платных рефералов') + '</span><b>' + _num(u.paid_referrals) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Баланс Forge') + '</span><b>' + _num(u.forge_balance) + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Расход за месяц') + '</span><b>$' + (u.spend_month_usd || 0).toFixed(4) + ' · ' + u.calls_month + ' ' + L('выз.') + '</b></div>' +
+                '<div class="fmx-mstatrow"><span>' + L('Регистрация') + '</span><b>' + _esc(u.created_at) + '</b></div>' +
                 (u.username && u.username !== '—'
-                    ? '<button class="fmx-btn" data-muopen="' + _esc(u.username) + '" style="width:100%;margin-top:12px;"><i class="ti ti-brand-telegram"></i> Написать @' + _esc(u.username) + '</button>'
-                    : '<button class="fmx-btn" data-mucopy="' + u.id + '" style="width:100%;margin-top:12px;"><i class="ti ti-copy"></i> Скопировать ID</button>' +
-                      '<div class="fmx-mdsub" style="margin-top:7px;text-align:center;">У пользователя нет @username — открыть профиль напрямую нельзя. Найди его по ID в поиске Telegram или через его оффер.</div>');
+                    ? '<button class="fmx-btn" data-muopen="' + _esc(u.username) + '" style="width:100%;margin-top:12px;"><i class="ti ti-brand-telegram"></i> ' + L('Написать @') + _esc(u.username) + '</button>'
+                    : '<button class="fmx-btn" data-mucopy="' + u.id + '" style="width:100%;margin-top:12px;"><i class="ti ti-copy"></i> ' + L('Скопировать ID') + '</button>' +
+                      '<div class="fmx-mdsub" style="margin-top:7px;text-align:center;">' + L('У пользователя нет @username — открыть профиль напрямую нельзя. Найди его по ID в поиске Telegram или через его оффер.') + '</div>');
             qsa(body, '[data-muopen]').forEach(function (b) {
                 b.addEventListener('click', function () { _openChannel('https://t.me/' + b.getAttribute('data-muopen')); });
             });
@@ -3276,8 +3278,8 @@
                     try {
                         if (navigator.clipboard) navigator.clipboard.writeText(v);
                         else { var ta = document.createElement('textarea'); ta.value = v; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-                        _haptic('success'); toast('ID скопирован');
-                    } catch (e) { uiAlert('Не удалось скопировать. ID: ' + v); }
+                        _haptic('success'); toast(L('ID скопирован'));
+                    } catch (e) { uiAlert(L('Не удалось скопировать. ID: ') + v); }
                 });
             });
         }).catch(function () {
@@ -3376,7 +3378,7 @@
             if (more) {
                 _feedOffset = Math.max(0, _feedOffset - _FEED_PAGE);
                 _feedState = 'ready';
-                toast('Не удалось загрузить продолжение. Повтори попытку.');
+                toast(L('Не удалось загрузить продолжение. Повтори попытку.'));
                 if (_mainTab === 'market' && _subTab === 'buy') paintBuyBody();
                 return;
             }
@@ -3509,7 +3511,7 @@
                 if (mine && mine.status === 'published') {
                     clearInterval(_pubPollT); _pubPollT = null;
                     _feed = null; _feedState = 'idle';
-                    toast('Оффер прошёл проверку и опубликован — уже в ленте');
+                    toast(L('Оффер прошёл проверку и опубликован — уже в ленте'));
                     if (_subTab === 'buy') { try { renderBuy(); } catch (e) {} }
                 }
             }).catch(function () {});
@@ -3576,10 +3578,10 @@
             var pendingSrv = _catTotal != null && _catalog.length < _catTotal;
             if (loading || mounted < list.length || pendingSrv) {
                 var known = pendingSrv ? (list.length === _catalog.length ? _catTotal : null) : list.length;
-                t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">Показано ' + mounted + (known ? ' из ' + known : '') + ' — дальше подгружается при прокрутке' + (loading ? '…' : '') + '</div>';
+                t.innerHTML = '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + L('Показано') + ' ' + mounted + (known ? ' из ' + known : '') + ' — дальше подгружается при прокрутке' + (loading ? '…' : '') + '</div>';
                 return;
             }
-            t.innerHTML = list.length > FIRST ? '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' — показаны все, что нашлись по фильтру</div>' : '';
+            t.innerHTML = list.length > FIRST ? '<div style="text-align:center;color:#565b73;font-size:11.5px;padding:12px 8px 2px;">' + list.length + ' ' + _plural(list.length, 'канал', 'канала', 'каналов') + ' ' + L('— показаны все, что нашлись по фильтру') + '</div>' : '';
         }
         function mountNext() {
             if (box._paintToken !== token || !grid || !grid.isConnected) return;
@@ -3629,7 +3631,7 @@
         var host = el('fmx-main');
         if (_catalog == null && _catState === 'idle') loadCatalog();
         var bar = sortBarHtml() + '<div class="fmx-catsrow">' + searchHtml('Поиск канала по теме…') + vtogHtml() + '</div>';
-        host.innerHTML = '<div class="fmx-slimnote"><span class="fmx-slimdot"></span><span>Проверенные метрики, антифрод и контакты. Сделки — напрямую с владельцем канала.</span></div>' + bar + '<div id="fmx-catBody"></div>';
+        host.innerHTML = '<div class="fmx-slimnote"><span class="fmx-slimdot"></span><span>' + L('Проверенные метрики, антифрод и контакты. Сделки — напрямую с владельцем канала.') + '</span></div>' + bar + '<div id="fmx-catBody"></div>';
         bindSort(); bindView();
         var _rfb = el('fmx-rfbtn'); if (_rfb) _rfb.addEventListener('click', openRadarFilters);
         _bindRegionChip(host, paintCatalogBody);
@@ -3715,13 +3717,13 @@
         return '<div class="fmx-sortbar" id="fmx-buysort" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">' +
             _regionChipHtml() +
             opts.map(function (o) { return '<button class="fmx-seg' + (_sortBuy === o[0] ? ' on' : '') + '" data-bsort="' + o[0] + '" style="flex:0 0 auto;">' + o[1] + '</button>'; }).join('') +
-            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '') + '</button></div>';
+            '<button class="fmx-seg' + (nf ? ' on' : '') + '" id="fmx-bfilters" style="flex:0 0 auto;"><i class="ti ti-adjustments-horizontal"></i> ' + L('Фильтры') + (nf ? ' · ' + nf : '') + '</button></div>';
     }
     function _refreshFilterChip() {
         var bf = el('fmx-bfilters'); if (!bf) return;
         var nf = _buyFiltersCount();
         bf.classList.toggle('on', nf > 0);
-        bf.innerHTML = '<i class="ti ti-adjustments-horizontal"></i> Фильтры' + (nf ? ' · ' + nf : '');
+        bf.innerHTML = '<i class="ti ti-adjustments-horizontal"></i> ' + L('Фильтры') + (nf ? ' · ' + nf : '');
     }
     var _qTimer = null;
     function bindBuyControls() {
@@ -3734,7 +3736,7 @@
                 _sortBuy = v; _haptic('light');
                 if (v !== 'smart' && _sort === 'match') {
                     _sort = 'all';
-                    toast('Подбор «Под мою нишу» работает только в умной сортировке — снят');
+                    toast(L('Подбор «Под мою нишу» работает только в умной сортировке — снят'));
                 }
                 qsa(el('fmx-buysort'), '[data-bsort]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-bsort') === v); });
                 loadFeed(false);
@@ -3748,7 +3750,7 @@
         var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
         var seen = {}, niches = [];
         arr.forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
-        if (!niches.length) { toast('В ленте пока нет каналов с указанной нишей'); return; }
+        if (!niches.length) { toast(L('В ленте пока нет каналов с указанной нишей')); return; }
         openNichePick(niches);
     }
     function openBuyFilters() {
@@ -3761,11 +3763,11 @@
                 '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="от" value="' + (v1 != null ? v1 : '') + '">' +
                 '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="до" value="' + (v2 != null ? v2 : '') + '"></div></div>';
         };
-        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
+        bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> ' + L('Фильтры') +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
-            '<span class="fmx-lbl" style="margin-top:2px;">Быстро</span>' +
+            '<span class="fmx-lbl" style="margin-top:2px;">' + L('Быстро') + '</span>' +
             '<div class="fmx-fxw" id="fmx-bf-pre" style="margin-bottom:10px;"><button class="fmx-fx' + ((_fSubsMin != null && _fSubsMin >= 100000) ? ' on' : '') + '" data-pre="large">Только крупные 100k+</button><button class="fmx-fx' + (_fDeals ? ' on' : '') + '" data-pre="deals">Со сделками</button><button class="fmx-fx' + (_fClean ? ' on' : '') + '" data-pre="clean">Прошли фрод-контроль</button><button class="fmx-fx' + (_fVerified ? ' on' : '') + '" data-pre="verified">Проверенный владелец</button></div>' +
-            '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Точная настройка — от / до') + '</span>' +
             '<div class="fmx-bfgrid">' +
             _bfPair('Подписчики', 'fmx-bf-smin', _fSubsMin, 'fmx-bf-smax', _fSubsMax) +
             _bfPair('Цена, ₽', 'fmx-bf-pmin', _fPriceMin, 'fmx-bf-pmax', _fPriceMax) +
@@ -3776,17 +3778,17 @@
             _bfPair('Индекс', 'fmx-bf-hmin', _fHealthMin, 'fmx-bf-hmax', _fHealthMax) +
             _bfPair('Возраст, мес', 'fmx-bf-agmin', _fAgeMin, 'fmx-bf-agmax', _fAgeMax) +
             _bfPair('Реклама, %', 'fmx-bf-admin', _fAdpMin, 'fmx-bf-admax', _fAdpMax) +
-            '<div class="fmx-bfcell"><span class="fmx-lbl">Свободно · с / по</span>' +
+            '<div class="fmx-bfcell"><span class="fmx-lbl">' + L('Свободно · с / по') + '</span>' +
             '<div class="fmx-bfrow"><input class="fmx-inp" id="fmx-bf-df" type="date" value="' + (_fFreeFrom || '') + '">' +
             '<input class="fmx-inp" id="fmx-bf-dt" type="date" value="' + (_fFreeTo || '') + '"></div></div>' +
             '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Ниша</span>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Ниша') + '</span>' +
             '<div class="fmx-fxw" id="fmx-bf-niche">' +
             '<button class="fmx-fx' + ((_sort !== 'match' && _sort !== 'niche') ? ' on' : '') + '" data-nf="all">Все каналы</button>' +
             '<button class="fmx-fx' + (_sort === 'match' ? ' on' : '') + '" data-nf="match">Под мою нишу</button>' +
             '<button class="fmx-fx' + (_sort === 'niche' && _nicheSel ? ' on' : '') + '" data-nf="pick">' + (_sort === 'niche' && _nicheSel ? 'Ниша: ' + _esc(_nicheSel) : 'Выбрать нишу…') + '</button>' +
             '</div>' +
-            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
+            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>' + L('Сбросить') + '</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">' + L('Применить') + '</button></div></div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
         bg.addEventListener('click', function (e) { if (e.target === bg) applyClose(); });
@@ -3841,7 +3843,7 @@
                     if (_sortBuy !== 'smart') {
                         _sortBuy = 'smart';
                         qsa(el('fmx-buysort'), '[data-bsort]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-bsort') === 'smart'); });
-                        toast('Включена умная сортировка — подбор под твою нишу работает в ней');
+                        toast(L('Включена умная сортировка — подбор под твою нишу работает в ней'));
                     }
                 } else if (nv === 'all') { _sort = 'all'; _nicheSel = null; }
             }
@@ -3871,7 +3873,7 @@
         var nicheOn = _sort === 'niche' && _nicheSel;
         var loadingMore = _feedState === 'loading' && _feedMore && _feed && _feed.length;
         var moreBtn = '';
-        if (loadingMore) moreBtn = '<button class="fmx-btn" id="fmx-more" disabled style="width:100%;margin-top:12px;min-height:40px;"><i class="ti ti-loader-2"></i> Загружаю…</button>';
+        if (loadingMore) moreBtn = '<button class="fmx-btn" id="fmx-more" disabled style="width:100%;margin-top:12px;min-height:40px;"><i class="ti ti-loader-2"></i> ' + L('Загружаю…') + '</button>';
         else if (left > 0) moreBtn = '<button class="fmx-btn" id="fmx-more" style="width:100%;margin-top:12px;min-height:40px;"><i class="ti ti-chevron-down"></i> ' + (nicheOn ? 'Показать ещё — искать нишу дальше' : 'Показать ещё (' + left + ')') + '</button>';
         if (_feedState === 'loading' && !loadingMore) body = loadHtml();
         else if (_feedState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
@@ -3890,7 +3892,7 @@
         bindPeek(host);
         var more = el('fmx-more');
         if (more) more.addEventListener('click', function () {
-            more.disabled = true; more.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю…';
+            more.disabled = true; more.innerHTML = '<i class="ti ti-loader-2"></i> ' + L('Загружаю…');
             _feedOffset += _FEED_PAGE;
             loadFeed(true);
         });
@@ -3903,7 +3905,7 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
-            '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>Кампания</span></button>' +
+            '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>' + L('Кампания') + '</span></button>' +
             _nicheBtnHtml(true) + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
@@ -3938,7 +3940,7 @@
         var cts = r.contacts ? ' · <span style="color:#f59e0b;">' + r.contacts + ' ' + _plural(r.contacts, 'отклик', 'отклика', 'откликов') + '</span>' : '';
         var leads = '';
         if (r.mine && r.leads && r.leads.length) {
-            leads = '<div class="fmx-leads"><div class="fmx-leads-t"><i class="ti ti-users-group"></i> Заинтересовались:</div>' +
+            leads = '<div class="fmx-leads"><div class="fmx-leads-t"><i class="ti ti-users-group"></i> ' + L('Заинтересовались:') + '</div>' +
                 r.leads.map(function (ld) {
                     return '<a class="fmx-lead" href="https://t.me/' + _esc(ld.username) + '" target="_blank" rel="noopener noreferrer"><b>' + _esc(ld.title || '@' + ld.username) + '</b><span>@' + _esc(ld.username) + (ld.subscribers ? ' · ' + _short(ld.subscribers) + ' подп' : '') + '</span></a>';
                 }).join('') + '</div>';
@@ -3948,8 +3950,8 @@
             '<div class="fmx-reqt">' + _esc(r.text) + '</div>' + leads +
             '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? ' · твоя заявка' : '') + cts + '</span>' +
             (r.mine
-                ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>Закрыть</button>'
-                : '<span style="display:flex;gap:6px;align-items:center;"><button class="fmx-btn" data-rrep="' + r.id + '" title="Пожаловаться" style="padding:7px 9px;"><i class="ti ti-flag"></i></button><button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>Написать</button></span>') +
+                ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>' + L('Закрыть') + '</button>'
+                : '<span style="display:flex;gap:6px;align-items:center;"><button class="fmx-btn" data-rrep="' + r.id + '" title="Пожаловаться" style="padding:7px 9px;"><i class="ti ti-flag"></i></button><button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>' + L('Написать') + '</button></span>') +
             '</div></div>';
     }
     function renderSell() {
@@ -3960,9 +3962,9 @@
         else if (_reqState === 'error') body = emptyHtml('ti-cloud-off', 'Не удалось загрузить', 'Проверь связь и повтори попытку.');
         else if (!_reqs || !_reqs.length) body = emptyHtml('ti-speakerphone', 'Заявок пока нет', 'Размести заявку — владельцы подходящих каналов напишут сами.');
         else body = '<div style="display:flex;flex-direction:column;gap:9px;">' + _reqs.map(function (r) { return zw(reqCard(r)); }).join('') + '</div>';
-        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> Заявки рекламодателей: здесь ищут каналы для размещения. Твоя ниша подошла — пиши первым.</div>' +
-            '<div style="display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;min-width:170px;"><i class="ti ti-plus"></i> Разместить заявку</button>' +
-            '<button class="fmx-btn" id="fmx-nbell" style="flex:0 0 auto;padding:0 13px;min-height:40px;"><i class="ti ti-bell"></i> Следить за нишей</button></div>' + body;
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-speakerphone"></i> ' + L('Заявки рекламодателей: здесь ищут каналы для размещения. Твоя ниша подошла — пиши первым.') + '</div>' +
+            '<div style="display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap;"><button class="fmx-save" id="fmx-newreq" style="margin:0;flex:1;min-width:170px;"><i class="ti ti-plus"></i> ' + L('Разместить заявку') + '</button>' +
+            '<button class="fmx-btn" id="fmx-nbell" style="flex:0 0 auto;padding:0 13px;min-height:40px;"><i class="ti ti-bell"></i> ' + L('Следить за нишей') + '</button></div>' + body;
         scaleCards(sub);
         el('fmx-newreq').addEventListener('click', openReqForm);
         el('fmx-nbell').addEventListener('click', openNicheSubs);
@@ -3981,11 +3983,11 @@
         });
         qsa(sub, '[data-rclose]').forEach(function (b) {
             b.addEventListener('click', function () {
-                uiConfirm('Закрыть заявку? Она исчезнет из ленты.', function () {
+                uiConfirm(L('Закрыть заявку? Она исчезнет из ленты.'), function () {
                     apiPost('/api/v1/marketplace/requests/' + b.getAttribute('data-rclose') + '/close', {}).then(function (r) {
                         if (r && r.ok === false) { uiAlert(r.error || 'Не удалось закрыть'); return; }
-                        toast('Заявка закрыта'); _reqs = null; _reqState = 'idle'; renderSell();
-                    }).catch(function () { uiAlert('Не удалось закрыть. Повтори попытку.'); });
+                        toast(L('Заявка закрыта')); _reqs = null; _reqState = 'idle'; renderSell();
+                    }).catch(function () { uiAlert(L('Не удалось закрыть. Повтори попытку.')); });
                 });
             });
         });
@@ -4030,28 +4032,28 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-minenm">' + _esc(t) + roleChip + '</div>' +
             '<div class="fmx-mineu">@' + _esc(l.username || '') + '</div></div>' + _mineStatus(l) + '</div>' +
             (l.status === 'rejected' && l.reject_reason
-                ? '<div class="fmx-minerej">Причина: ' + _esc(l.reject_reason) + ' — исправь и сохрани, оффер уйдёт на повторную проверку.</div>' : '') +
+                ? '<div class="fmx-minerej">' + L('Причина:') + ' ' + _esc(l.reject_reason) + ' ' + L('— исправь и сохрани, оффер уйдёт на повторную проверку.') + '</div>' : '') +
             '<div class="fmx-minemet" id="fmx-mst-' + l.id + '">За 7 дней: считаем…</div>' +
             (can('edit') ? '<div style="margin-top:11px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);">' +
-            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">Календарь занятости · 45 дней</div>' +
+            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">' + L('Календарь занятости · 45 дней') + '</div>' +
             '<div class="fmx-d14 num" id="fmx-strip-' + l.id + '"></div>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
-            '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">Тап по дню — занято/свободно. Точка — спрос на дату</span>' +
+            '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">' + L('Тап по дню — занято/свободно. Точка — спрос на дату') + '</span>' +
             '<button class="fmx-seg" data-mcal="' + l.id + '" style="flex:0 0 auto;min-height:30px;padding:5px 12px;">Весь календарь</button></div>' +
             '<button class="fmx-hotbtn" data-mhotadv="' + l.id + '">' +
             '<span class="fmx-hott"><i class="ti ti-discount-2"></i></span>' +
-            '<span class="fmx-hotx"><span class="t1">Точечные скидки</span><span class="t2">свои даты, время и процент</span></span>' +
-            (l.hot_manual ? '<span class="fmx-hoton">вкл</span>' : '') +
+            '<span class="fmx-hotx"><span class="t1">' + L('Точечные скидки') + '</span><span class="t2">' + L('свои даты, время и процент') + '</span></span>' +
+            (l.hot_manual ? '<span class="fmx-hoton">' + L('вкл') + '</span>' : '') +
             '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            (can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>Редактировать</button>' : '') +
-            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>Статистика</button>' +
-            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>Витрина</button>' : '') +
-            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share" style="color:#5DCAA5;"></i>Поделиться</button>' +
-            (can('edit') ? '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>Постер</button>' : '') +
-            (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>Продвинуть</button>' : '') +
-            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>Возобновить' : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>Заморозить') + '</button>' : '') +
-            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>Удалить оффер</button>' : '') +
+            (can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>' + L('Редактировать') + '</button>' : '') +
+            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>' + L('Статистика') + '</button>' +
+            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>' + L('Витрина') + '</button>' : '') +
+            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share" style="color:#5DCAA5;"></i>' + L('Поделиться') + '</button>' +
+            (can('edit') ? '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>' + L('Постер') + '</button>' : '') +
+            (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>' + L('Продвинуть') + '</button>' : '') +
+            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>' + L('Возобновить') : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>' + L('Заморозить')) + '</button>' : '') +
+            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>' + L('Удалить оффер') + '</button>' : '') +
             '</div></div>';
     }
 
@@ -4081,17 +4083,17 @@
             qsa(box, '[data-sd]').forEach(function (dd) {
                 dd.addEventListener('click', function () {
                     var iso = dd.getAttribute('data-sd');
-                    if (dd.getAttribute('data-off')) { _haptic('light'); toast('Месяц закрыт для рекламы — открой его в «Весь календарь»'); return; }
+                    if (dd.getAttribute('data-off')) { _haptic('light'); toast(L('Месяц закрыт для рекламы — открой его в «Весь календарь»')); return; }
                     apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/toggle', { day: iso }).then(function (rr) {
-                        if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить день'); return; }
+                        if (!rr || !rr.ok) { _haptic('error'); uiAlert(L('Не удалось изменить день')); return; }
                         _haptic('light');
                         if (rr.busy) r.busy.push(iso); else r.busy = r.busy.filter(function (x) { return x !== iso; });
                         r.slots_updated_at = new Date().toISOString();
                         _calData[l.id] = r;
                         draw(r);
                         var _jd = box.querySelector('[data-sd="' + iso + '"]'); if (_jd) _jd.classList.add('just');
-                        toast('Календарь обновлён — закупщики уже видят новые даты');
-                    }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+                        toast(L('Календарь обновлён — закупщики уже видят новые даты'));
+                    }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
                 });
             });
         }
@@ -4107,32 +4109,32 @@
         var sub = el('fmx-sub'); if (!sub) return;
         var lim = _myLimit, used = _myUsed != null ? _myUsed : _myListings.length;
         var avail = (lim != null) ? Math.max(0, lim - used) : null;
-        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-briefcase"></i> Кабинет продавца: статус, статистика и управление офферами. Занятые даты отмечай в календаре — покупатели видят свободные.</div>' +
+        sub.innerHTML = '<div class="fmx-note"><i class="ti ti-briefcase"></i> ' + L('Кабинет продавца: статус, статистика и управление офферами. Занятые даты отмечай в календаре — покупатели видят свободные.') + '</div>' +
             (lim != null ? '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;padding:12px 13px;margin-bottom:10px;">' +
-                '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12.5px;font-weight:700;">Мои офферы</span>' +
-                '<span class="num" style="margin-left:auto;font-size:11px;color:#8990a8;">размещено: ' + used + ' из ' + lim + '</span></div>' +
+                '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12.5px;font-weight:700;">' + L('Мои офферы') + '</span>' +
+                '<span class="num" style="margin-left:auto;font-size:11px;color:#8990a8;">' + L('размещено:') + ' ' + used + ' из ' + lim + '</span></div>' +
                 '<div class="fmx-limbar"><i style="width:' + Math.min(100, Math.round(used / lim * 100)) + '%;"></i></div></div>' : '') +
             (_channels.length >= 2 ?
                 '<button id="fmx-netOpen" style="width:100%;display:flex;align-items:center;gap:10px;background:rgba(16,185,129,0.08);border:0.5px solid rgba(52,211,153,0.25);border-radius:14px;padding:12px 13px;margin-bottom:10px;cursor:pointer;color:#e8e8ed;font-family:inherit;text-align:left;">' +
                 '<i class="ti ti-sitemap" style="font-size:18px;color:#34d399;flex:0 0 auto;"></i>' +
-                '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">Сетка</span><span style="display:block;font-size:10.5px;color:#8990a8;">Все каналы: сводка, пакетные цены и пауза</span></span>' +
+                '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">' + L('Сетка') + '</span><span style="display:block;font-size:10.5px;color:#8990a8;">' + L('Все каналы: сводка, пакетные цены и пауза') + '</span></span>' +
                 '<span class="num" style="font-size:11px;color:#8990a8;flex:0 0 auto;">' + _channels.length + '</span><i class="ti ti-chevron-right" style="color:#565b73;flex:0 0 auto;"></i></button>' : '') +
             '<div id="fmx-dealsPend"></div>' +
             _myListings.map(mineCard).join('') +
-            '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"' + (avail === 0 ? ' disabled style="margin-top:14px;opacity:0.5;"' : '') + '><i class="ti ti-plus"></i> Разместить ещё оффер' + (avail != null ? ' · ' + (avail > 0 ? 'доступен ещё ' + avail : 'лимит исчерпан') : '') + '</button>' +
-            '<div style="font-size:10px;color:#565b73;margin-top:7px;text-align:center;">Один канал — один оффер</div>';
+            '<button class="fmx-save" id="fmx-mineNew" style="margin-top:14px;"' + (avail === 0 ? ' disabled style="margin-top:14px;opacity:0.5;"' : '') + '><i class="ti ti-plus"></i> ' + L('Разместить ещё оффер') + (avail != null ? ' · ' + (avail > 0 ? 'доступен ещё ' + avail : 'лимит исчерпан') : '') + '</button>' +
+            '<div style="font-size:10px;color:#565b73;margin-top:7px;text-align:center;">' + L('Один канал — один оффер') + '</div>';
         loadPendingDeals();
         var netBtn = el('fmx-netOpen');
         if (netBtn) netBtn.addEventListener('click', function () { netOpen(); });
         el('fmx-mineNew').addEventListener('click', function () {
-            if (avail === 0) { _haptic('error'); uiAlert('Лимит исчерпан. Удали один из офферов, чтобы создать новый.'); return; }
+            if (avail === 0) { _haptic('error'); uiAlert(L('Лимит исчерпан. Удали один из офферов, чтобы создать новый.')); return; }
             _haptic('light'); _backTo = 'mine'; _mineEditCh = null; setSubTab('create');
         });
         qsa(sub, '[data-medit]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-medit')); if (!l) return;
                 var ch = _mineChannelOf(l);
-                if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении — проверь список каналов.'); return; }
+                if (!ch) { _haptic('error'); uiAlert(L('Канал этого оффера не найден в приложении — проверь список каналов.')); return; }
                 _haptic('light'); _mineEditCh = ch.id; _backTo = 'mine'; setSubTab('create');
             });
         });
@@ -4177,7 +4179,7 @@
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-mposter')); if (!l) return;
                 var ch = _mineChannelOf(l);
-                if (!ch) { _haptic('error'); uiAlert('Канал этого оффера не найден в приложении.'); return; }
+                if (!ch) { _haptic('error'); uiAlert(L('Канал этого оффера не найден в приложении.')); return; }
                 if (!_ss) { _ss = defaultState(); _sfmts = defaultFmts(); _ss.sticker = null; _ss.showDeals = true; }
                 _haptic('light'); _ss.channelId = ch.id;
                 openPosterStudio();
@@ -4197,24 +4199,24 @@
                     toast(act === 'pause' ? 'Оффер заморожен — с Площадки убран, вернёшь в любой момент' : 'Оффер снова на Площадке');
                     _feed = null; _feedState = 'idle';
                     if (_subTab === 'mine') paintMine();
-                }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                }).catch(function () { b.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
             });
         });
         qsa(sub, '[data-mdel]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var l = _mineById(+b.getAttribute('data-mdel')); if (!l) return;
-                uiConfirm('Удалить оффер «' + (l.title || l.username || '') + '» с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
+                uiConfirm(L('Удалить оффер «') + (l.title || l.username || '') + '» с Площадки навсегда? Оформление и продвижение не сохранятся.', function () {
                     b.disabled = true;
                     apiRequest('/api/v1/marketplace/listings/' + l.id, { method: 'DELETE' }).then(function (r) {
                         b.disabled = false;
                         if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось удалить'); return; }
-                        _haptic('success'); toast('Оффер удалён');
+                        _haptic('success'); toast(L('Оффер удалён'));
                         _myListings = _myListings.filter(function (x) { return x.id !== l.id; });
                         if (_ss && _ss.listingId === l.id) { _ss.listingId = null; _ss._status = null; }
                         _feed = null; _feedState = 'idle';
                         if (!_myListings.length) { setSubTab('buy', true); return; }
                         if (_subTab === 'mine') paintMine();
-                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                    }).catch(function () { b.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
                 });
             });
         });
@@ -4223,7 +4225,7 @@
                 var n = el('fmx-mst-' + l.id); if (!n) return;
                 if (!r || !r.ok) { n.textContent = 'За 7 дней: статистика недоступна'; return; }
                 var t = r.totals || {};
-                n.innerHTML = 'За 7 дней: <b>' + (t.views || 0) + '</b> показов · <b>' + (t.expands || 0) + '</b> разворотов · <b>' + (t.writes || 0) + '</b> перешли в чат';
+                n.innerHTML = L('За 7 дней:') + ' <b>' + (t.views || 0) + '</b> ' + L('показов ·') + ' <b>' + (t.expands || 0) + '</b> ' + L('разворотов ·') + ' <b>' + (t.writes || 0) + '</b> ' + L('перешли в чат');
             }).catch(function () { var n = el('fmx-mst-' + l.id); if (n) n.textContent = 'За 7 дней: статистика недоступна'; });
         });
     }
@@ -4263,9 +4265,9 @@
         _net.mode = false; _net.sel = {}; _net.filter = 'all'; _net.busy = false;
         var bg = document.createElement('div'); bg.id = 'fmx-netBg'; bg.className = 'fmx-mbg fmx-show';
         bg.innerHTML = '<div class="fmx-modal">' +
-            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-sitemap" style="color:#34d399;"></i> <span>Сетка</span></h2><p id="fmx-netSub"><span>Каналы, офферы и пакетные операции</span></p></div>' +
+            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-sitemap" style="color:#34d399;"></i> <span>' + L('Сетка') + '</span></h2><p id="fmx-netSub"><span>' + L('Каналы, офферы и пакетные операции') + '</span></p></div>' +
             '<button id="fmx-netAll" style="display:none;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#a9aec0;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;"></button>' +
-            '<button id="fmx-netSel" style="background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);color:#818cf8;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;"><span>Выбрать</span></button>' +
+            '<button id="fmx-netSel" style="background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);color:#818cf8;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;flex:0 0 auto;"><span>' + L('Выбрать') + '</span></button>' +
             '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody" id="fmx-netBody"><div class="fmx-empty" style="padding:36px 0;"><i class="ti ti-loader-2" style="animation:fmxSpin 0.9s linear infinite;"></i></div></div>' +
             '<div id="fmx-netBar" style="display:none;gap:8px;padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));border-top:0.5px solid rgba(255,255,255,0.08);"></div></div>';
@@ -4342,7 +4344,7 @@
             tile('ti-eye', '#60a5fa', 'rgba(59,130,246,0.15)', 'Суммарный охват', netShort(reach), '') +
             tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', 'Средний ERR', err != null ? String(err).replace('.', ',') + '%' : '—', '') +
             tile('ti-briefcase', '#f5bf4f', 'rgba(245,191,79,0.15)', 'Офферы', _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.lim) + '</span>' : ''),
-                pend ? '<span>На модерации:</span> <b class="num">' + pend + '</b>' : '') +
+                pend ? '<span>' + L('На модерации:') + '</span> <b class="num">' + pend + '</b>' : '') +
             '</div>';
         var chipDefs = [
             { k: 'all', t: 'Все', n: rows.length },
@@ -4384,12 +4386,12 @@
                     '<span class="num" style="display:block;font-size:10.5px;color:#8990a8;">' + netShort(reachV) + (cpm != null ? ' · CPM ' + _num(cpm) : '') + '</span></span>';
             } else if (ch.username && ch.is_paused) {
                 right = '<span style="flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
-                    '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе</span>' +
+                    '<span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>' + L('На паузе') + '</span>' +
                     '';
             } else if (ch.username) {
-                right = '<button data-netmk="' + ch.id + '" style="flex:0 0 auto;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;color:#818cf8;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);border-radius:999px;padding:6px 12px;"><span>Создать</span></button>';
+                right = '<button data-netmk="' + ch.id + '" style="flex:0 0 auto;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;color:#818cf8;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.3);border-radius:999px;padding:6px 12px;"><span>' + L('Создать') + '</span></button>';
             } else {
-                right = '<span style="font-size:10px;color:#565b73;flex:0 0 auto;max-width:92px;text-align:right;"><span>Нужен публичный @username</span></span>';
+                right = '<span style="font-size:10px;color:#565b73;flex:0 0 auto;max-width:92px;text-align:right;"><span>' + L('Нужен публичный @username') + '</span></span>';
             }
             var dotC = !l ? '#60a5fa' : l.status === 'published' ? '#5DCAA5' : l.status === 'paused' ? '#565b73' : (l.status === 'rejected' || l.status === 'banned') ? '#ef4444' : '#f5bf4f';
             return '<div data-netrow="' + (l ? l.id : '') + '" data-netch="' + ch.id + '" style="display:flex;align-items:center;gap:10px;min-height:44px;background:' + (checked ? 'rgba(129,140,248,0.1)' : 'rgba(255,255,255,0.03)') + ';border:0.5px solid ' + (checked ? 'rgba(129,140,248,0.4)' : a ? (a.lvl === 'r' ? 'rgba(239,68,68,0.35)' : 'rgba(245,158,11,0.3)') : 'rgba(255,255,255,0.07)') + ';border-radius:14px;padding:9px 12px;margin-bottom:8px;' + (_net.mode && !live ? 'opacity:0.4;' : 'cursor:pointer;') + '">' +
@@ -4401,21 +4403,21 @@
                 '</span>' + right +
                 '<span style="width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:' + dotC + ';box-shadow:0 0 8px ' + dotC + '55;"></span></div>';
         }).join('');
-        if (!html) html = '<div class="fmx-empty" style="padding:26px 0;"><i class="ti ti-inbox"></i><div><span>Здесь пока пусто</span></div></div>';
+        if (!html) html = '<div class="fmx-empty" style="padding:26px 0;"><i class="ti ti-inbox"></i><div><span>' + L('Здесь пока пусто') + '</span></div></div>';
         var batchRunning = !!(_net.ov && _net.ov.batch && _net.ov.batch.status === 'running');
         var plate = '';
         if (batchRunning) {
             var bb = _net.ov.batch;
             plate = '<div id="fmx-nbPlate" style="display:flex;align-items:center;gap:10px;background:rgba(129,140,248,0.08);border:0.5px solid rgba(129,140,248,0.3);border-radius:14px;padding:11px 13px;margin-bottom:10px;cursor:pointer;">' +
                 '<i class="ti ti-loader-2" style="color:#818cf8;font-size:16px;animation:fmxSpin 0.9s linear infinite;flex:0 0 auto;"></i>' +
-                '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">Создание офферов</span>' +
+                '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;">' + L('Создание офферов') + '</span>' +
                 '<span style="display:block;height:5px;border-radius:99px;background:rgba(255,255,255,0.06);margin-top:6px;overflow:hidden;"><i style="display:block;height:100%;width:' + Math.round(bb.done / Math.max(1, bb.total) * 100) + '%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;"></i></span></span>' +
                 '<span class="num" style="font-size:12px;color:#8990a8;flex:0 0 auto;">' + bb.done + ' / ' + bb.total + '</span></div>';
         }
         var elig = netEligible();
         var mkBtn = '';
         if (!_net.mode && elig.length && !batchRunning) {
-            mkBtn = '<button id="fmx-nbStart" class="fmx-save" style="margin-top:4px;"><i class="ti ti-stack-2"></i> <span>Создать офферы</span> <span class="num">· ' + elig.length + '</span></button>';
+            mkBtn = '<button id="fmx-nbStart" class="fmx-save" style="margin-top:4px;"><i class="ti ti-stack-2"></i> <span>' + L('Создать офферы') + '</span> <span class="num">· ' + elig.length + '</span></button>';
         }
         body.innerHTML = plate + tiles + chips + html + mkBtn;
         var plEl = el('fmx-nbPlate');
@@ -4457,14 +4459,14 @@
             chRow.addEventListener('click', function (e) { if (drag.moved) { e.stopPropagation(); e.preventDefault(); } }, true);
         }
         var sub = el('fmx-netSub');
-        if (sub) sub.innerHTML = _net.mode ? '<span>Выбрано:</span> <b class="num">' + netSelIds().length + '</b>' : '<span>Каналы, офферы и пакетные операции</span>';
+        if (sub) sub.innerHTML = _net.mode ? '<span>' + L('Выбрано:') + '</span> <b class="num">' + netSelIds().length + '</b>' : '<span>' + L('Каналы, офферы и пакетные операции') + '</span>';
         var ab = el('fmx-netAll');
         if (ab) {
             if (_net.mode) {
                 var selectable = list.filter(function (r) { return r.l && (r.l.status === 'published' || r.l.status === 'paused'); });
                 var allSel = selectable.length > 0 && selectable.every(function (r) { return _net.sel[r.l.id]; });
                 ab.style.display = '';
-                ab.innerHTML = allSel ? '<span>Сброс</span>' : '<span>Все</span>' + (selectable.length ? ' <b class="num" style="font-weight:800;">' + selectable.length + '</b>' : '');
+                ab.innerHTML = allSel ? '<span>' + L('Сброс') + '</span>' : '<span>' + L('Все') + '</span>' + (selectable.length ? ' <b class="num" style="font-weight:800;">' + selectable.length + '</b>' : '');
                 ab.onclick = function () {
                     _haptic('light');
                     if (allSel) _net.sel = {};
@@ -4509,9 +4511,9 @@
                 var dis = n === 0 ? 'opacity:0.45;pointer-events:none;' : '';
                 bar.style.display = 'flex';
                 bar.innerHTML =
-                    '<button data-netact="price" style="' + dis + 'flex:1.3;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:#6366f1;border:0.5px solid #6366f1;color:#fff;"><i class="ti ti-tag"></i> <span>Цены</span></button>' +
-                    '<button data-netact="pause" style="' + dis + 'flex:1;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;"><i class="ti ti-player-pause"></i> <span>Пауза</span></button>' +
-                    '<button data-netact="resume" style="' + dis + 'flex:1;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;"><i class="ti ti-player-play"></i> <span>Возобновить</span></button>';
+                    '<button data-netact="price" style="' + dis + 'flex:1.3;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:#6366f1;border:0.5px solid #6366f1;color:#fff;"><i class="ti ti-tag"></i> <span>' + L('Цены') + '</span></button>' +
+                    '<button data-netact="pause" style="' + dis + 'flex:1;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;"><i class="ti ti-player-pause"></i> <span>' + L('Пауза') + '</span></button>' +
+                    '<button data-netact="resume" style="' + dis + 'flex:1;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;border-radius:12px;padding:11px 4px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);color:#e8e8ed;"><i class="ti ti-player-play"></i> <span>' + L('Возобновить') + '</span></button>';
                 qsa(bar, '[data-netact]').forEach(function (b) {
                     b.addEventListener('click', function () {
                         var ids = netSelIds(); if (!ids.length) return;
@@ -4539,7 +4541,7 @@
     function netAfterApply() {
         _feed = null; _feedState = 'idle';
         _net.mode = false; _net.sel = {};
-        var sb = el('fmx-netSel'); if (sb) sb.innerHTML = '<span>Выбрать</span>';
+        var sb = el('fmx-netSel'); if (sb) sb.innerHTML = '<span>' + L('Выбрать') + '</span>';
         var ab = el('fmx-netAll'); if (ab) ab.style.display = 'none';
         netReload();
         loadMyListings().then(function () { if (_subTab === 'mine') paintMine(); }).catch(function () {});
@@ -4550,13 +4552,13 @@
         _net.busy = true;
         apiPost('/api/v1/marketplace/network/state', { ids: ids, action: action }).then(function (r) {
             _net.busy = false;
-            if (!r || r.ok === false) { _haptic('error'); toast('Не удалось. Повтори попытку.', true); return; }
+            if (!r || r.ok === false) { _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); return; }
             _haptic('success');
             var m = (action === 'pause' ? 'Пауза: ' : 'Возобновлено: ') + r.applied;
             if (r.skipped && r.skipped.length) m += ' · ' + 'Пропущено: ' + r.skipped.length;
             toast(m);
             netAfterApply();
-        }).catch(function () { _net.busy = false; _haptic('error'); toast('Не удалось. Повтори попытку.', true); });
+        }).catch(function () { _net.busy = false; _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); });
     }
 
     function netPriceSheet(ids) {
@@ -4564,24 +4566,24 @@
         var st = { op: 'plus', val: 10, ready: 0 };
         var bg = document.createElement('div'); bg.id = 'fmx-netPr'; bg.className = 'fmx-mbg fmx-show';
         bg.innerHTML = '<div class="fmx-modal">' +
-            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-tag" style="color:#5DCAA5;"></i> <span>Пакетные цены</span></h2><p><span>Выбрано:</span> <b class="num">' + ids.length + '</b></p></div>' +
+            '<div class="fmx-mhead"><div style="flex:1;min-width:0;"><h2><i class="ti ti-tag" style="color:#5DCAA5;"></i> <span>' + L('Пакетные цены') + '</span></h2><p><span>' + L('Выбрано:') + '</span> <b class="num">' + ids.length + '</b></p></div>' +
             '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody">' +
             '<div style="display:flex;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:3px;margin-bottom:10px;">' +
-            '<button data-netop="plus" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>Повысить</span></button>' +
-            '<button data-netop="minus" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>Снизить</span></button>' +
-            '<button data-netop="suggested" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>К рекомендованной</span></button>' +
+            '<button data-netop="plus" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>' + L('Повысить') + '</span></button>' +
+            '<button data-netop="minus" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>' + L('Снизить') + '</span></button>' +
+            '<button data-netop="suggested" style="flex:1;font-family:inherit;cursor:pointer;font-size:12px;padding:9px 4px;border-radius:9px;border:0;background:transparent;color:#8990a8;"><span>' + L('К рекомендованной') + '</span></button>' +
             '</div>' +
             '<div id="fmx-netPrVal" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
-            '<span style="font-size:12px;color:#8990a8;"><span>Изменение, %</span></span>' +
+            '<span style="font-size:12px;color:#8990a8;"><span>' + L('Изменение, %') + '</span></span>' +
             '<input id="fmx-netPct" type="number" min="1" max="50" value="10" inputmode="numeric" style="width:76px;font-family:inherit;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:10px;color:#e8e8ed;font-size:14px;font-weight:700;padding:8px 10px;text-align:center;">' +
             '<span style="display:flex;gap:5px;">' + [5, 10, 15, 25].map(function (p) { return '<button data-netpct="' + p + '" class="num" style="font-family:inherit;cursor:pointer;font-size:11.5px;color:#a9aec0;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:999px;padding:6px 10px;">' + p + '%</button>'; }).join('') + '</span>' +
             '</div>' +
-            '<div style="font-size:11px;color:#5DCAA5;background:rgba(93,202,165,0.08);border:0.5px solid rgba(93,202,165,0.22);border-radius:11px;padding:9px 11px;margin-bottom:10px;"><i class="ti ti-circle-check"></i> <span>Смена цены применяется сразу и не требует повторной модерации</span></div>' +
+            '<div style="font-size:11px;color:#5DCAA5;background:rgba(93,202,165,0.08);border:0.5px solid rgba(93,202,165,0.22);border-radius:11px;padding:9px 11px;margin-bottom:10px;"><i class="ti ti-circle-check"></i> <span>' + L('Смена цены применяется сразу и не требует повторной модерации') + '</span></div>' +
             '<div id="fmx-netPrev"></div>' +
             '</div>' +
             '<div style="padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));border-top:0.5px solid rgba(255,255,255,0.08);display:grid;gap:8px;">' +
-            '<button class="fmx-save" id="fmx-netCalc"><i class="ti ti-calculator"></i> <span>Показать расчёт</span></button>' +
+            '<button class="fmx-save" id="fmx-netCalc"><i class="ti ti-calculator"></i> <span>' + L('Показать расчёт') + '</span></button>' +
             '<button class="fmx-save" id="fmx-netGo" style="display:none;"></button>' +
             '</div></div>';
         document.body.appendChild(bg);
@@ -4621,12 +4623,12 @@
         el('fmx-netCalc').addEventListener('click', function () {
             if (_net.busy) return;
             var b = reqBody(true);
-            if (b.op === 'pct' && !b.value) { toast('Укажи процент от 1 до 50', true); return; }
+            if (b.op === 'pct' && !b.value) { toast(L('Укажи процент от 1 до 50'), true); return; }
             _net.busy = true;
             apiPost('/api/v1/marketplace/network/prices', b).then(function (r) {
                 _net.busy = false;
                 var pv = el('fmx-netPrev'); if (!pv) return;
-                if (!r || r.ok === false) { _haptic('error'); toast('Не удалось. Повтори попытку.', true); return; }
+                if (!r || r.ok === false) { _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); return; }
                 var items = r.items || [], skipped = r.skipped || [];
                 var hot = items.filter(function (it) { return it.hot_cleared; }).length;
                 var html = items.map(function (it) {
@@ -4635,16 +4637,16 @@
                         '<span class="num" style="font-size:12px;flex:0 0 auto;white-space:nowrap;"><s style="color:#565b73;">' + _num(it.old) + '</s> → <b style="color:#5DCAA5;">' + _num(it.new) + ' ₽</b></span></div>';
                 }).join('');
                 if (skipped.length) {
-                    html += '<div style="font-size:11px;color:#8990a8;margin-top:8px;"><span>Пропущено:</span> <b class="num">' + skipped.length + '</b></div>' +
+                    html += '<div style="font-size:11px;color:#8990a8;margin-top:8px;"><span>' + L('Пропущено:') + '</span> <b class="num">' + skipped.length + '</b></div>' +
                         skipped.map(function (s) {
                             return '<div style="font-size:11px;color:#565b73;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(s.title || ('#' + s.id)) + ' — <span>' + (_NET_REASONS[s.reason] || s.reason) + '</span></div>';
                         }).join('');
                 }
                 if (hot) {
-                    html = '<div style="font-size:11px;color:#f5bf4f;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.25);border-radius:11px;padding:9px 11px;margin-bottom:8px;"><i class="ti ti-alert-triangle"></i> <span>У части офферов действует горящая скидка — при смене цены она будет снята</span></div>' + html;
+                    html = '<div style="font-size:11px;color:#f5bf4f;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.25);border-radius:11px;padding:9px 11px;margin-bottom:8px;"><i class="ti ti-alert-triangle"></i> <span>' + L('У части офферов действует горящая скидка — при смене цены она будет снята') + '</span></div>' + html;
                 }
                 if (!items.length) {
-                    html += '<div style="font-size:12px;color:#8990a8;text-align:center;padding:10px 0;"><span>Ничего не рассчитано — офферы пропущены</span></div>';
+                    html += '<div style="font-size:12px;color:#8990a8;text-align:center;padding:10px 0;"><span>' + L('Ничего не рассчитано — офферы пропущены') + '</span></div>';
                 }
                 pv.innerHTML = html;
                 st.ready = items.length;
@@ -4653,19 +4655,19 @@
                     go.style.display = items.length ? '' : 'none';
                     go.innerHTML = '<i class="ti ti-check"></i> <span>' + 'Применить к ' + items.length + '</span>';
                 }
-            }).catch(function () { _net.busy = false; _haptic('error'); toast('Не удалось. Повтори попытку.', true); });
+            }).catch(function () { _net.busy = false; _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); });
         });
         el('fmx-netGo').addEventListener('click', function () {
             if (_net.busy || !st.ready) return;
             _net.busy = true;
             apiPost('/api/v1/marketplace/network/prices', reqBody(false)).then(function (r) {
                 _net.busy = false;
-                if (!r || r.ok === false) { _haptic('error'); toast('Не удалось. Повтори попытку.', true); return; }
+                if (!r || r.ok === false) { _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); return; }
                 _haptic('success');
-                toast('Цены обновлены: ' + (r.applied || 0));
+                toast(L('Цены обновлены: ') + (r.applied || 0));
                 bg.remove();
                 netAfterApply();
-            }).catch(function () { _net.busy = false; _haptic('error'); toast('Не удалось. Повтори попытку.', true); });
+            }).catch(function () { _net.busy = false; _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true); });
         });
     }
 
@@ -4756,13 +4758,13 @@
                     '<span style="display:block;font-size:10.5px;color:#565b73;"><span>' + why + '</span></span></span></div>';
             }).join('');
             body.innerHTML = nbBar(1) +
-                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-bottom:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span><span>Офферов свободно:</span> <b class="num">' + lim.listings + '</b> · <span>Показаны каналы без оффера</span></span></div>' +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-bottom:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span><span>' + L('Офферов свободно:') + '</span> <b class="num">' + lim.listings + '</b> · <span>' + L('Показаны каналы без оффера') + '</span></span></div>' +
                 '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
-                '<span style="font-size:12px;color:#8990a8;"><span>Выбрано:</span> <b class="num" style="color:#e8e8ed;">' + n + '</b><span class="num"> / ' + elig.length + '</span></span>' +
+                '<span style="font-size:12px;color:#8990a8;"><span>' + L('Выбрано:') + '</span> <b class="num" style="color:#e8e8ed;">' + n + '</b><span class="num"> / ' + elig.length + '</span></span>' +
                 '<button id="fmx-nbAll" style="font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;color:#a9aec0;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:999px;padding:6px 12px;"><span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? 'Сброс' : 'Все') + '</span>' + (n >= Math.min(elig.length, lim.max) && n > 0 ? '' : ' <b class="num">' + Math.min(elig.length, lim.max) + '</b>') + '</button></div>' +
                 rows +
-                (over ? '<div style="display:flex;gap:8px;font-size:12px;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.25);border-radius:11px;padding:9px 11px;color:#f5bf4f;"><i class="ti ti-alert-triangle"></i> <span><span>Доступно сейчас:</span> <b class="num">' + lim.max + '</b> · <span>сними лишние отметки</span></span></div>' : '');
-            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"' + (!n || over ? ' disabled style="opacity:0.5;"' : '') + '><span>Дальше</span>' + (n ? ' <span class="num">· ' + n + '</span>' : '') + '</button>';
+                (over ? '<div style="display:flex;gap:8px;font-size:12px;background:rgba(245,158,11,0.08);border:0.5px solid rgba(245,158,11,0.25);border-radius:11px;padding:9px 11px;color:#f5bf4f;"><i class="ti ti-alert-triangle"></i> <span><span>' + L('Доступно сейчас:') + '</span> <b class="num">' + lim.max + '</b> · <span>' + L('сними лишние отметки') + '</span></span></div>' : '');
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"' + (!n || over ? ' disabled style="opacity:0.5;"' : '') + '><span>' + L('Дальше') + '</span>' + (n ? ' <span class="num">· ' + n + '</span>' : '') + '</button>';
             qsa(body, '[data-nbrow]').forEach(function (r) {
                 r.addEventListener('click', function () {
                     var id = +r.getAttribute('data-nbrow');
@@ -4783,12 +4785,12 @@
             if (nx) nx.addEventListener('click', function () { if (!nbSelIds().length) return; _haptic('light'); _nb.step = 2; nbPaint(); });
         } else if (_nb.step === 2) {
             body.innerHTML = nbBar(2) +
-                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(93,202,165,0.08);border:0.5px solid rgba(93,202,165,0.22);border-radius:11px;padding:9px 11px;margin-bottom:12px;color:#5DCAA5;"><i class="ti ti-circle-check"></i> <span>Цены рассчитаются автоматически для каждого канала: охват и CPM ниши. После создания любую цену можно поменять на экране «Сетка» или в карточке.</span></div>' +
-                '<div style="font-size:11px;color:#8990a8;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;"><span>Текст оффера · один на все каналы</span></div>' +
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(93,202,165,0.08);border:0.5px solid rgba(93,202,165,0.22);border-radius:11px;padding:9px 11px;margin-bottom:12px;color:#5DCAA5;"><i class="ti ti-circle-check"></i> <span>' + L('Цены рассчитаются автоматически для каждого канала: охват и CPM ниши. После создания любую цену можно поменять на экране «Сетка» или в карточке.') + '</span></div>' +
+                '<div style="font-size:11px;color:#8990a8;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px;"><span>' + L('Текст оффера · один на все каналы') + '</span></div>' +
                 '<textarea id="fmx-nbText" maxlength="400" style="width:100%;min-height:96px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#e8e8ed;font-family:inherit;font-size:13px;padding:11px 12px;resize:vertical;">' + _esc(_nb.text) + '</textarea>' +
-                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-top:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Можно оставить пустым — текст возьмётся стандартный. Оформление у всех будет базовое: доведёшь позже в карточке любого оффера.</span></div>';
-            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"><span>Дальше</span></button>' +
-                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>Назад</span></button>';
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;margin-top:10px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>' + L('Можно оставить пустым — текст возьмётся стандартный. Оформление у всех будет базовое: доведёшь позже в карточке любого оффера.') + '</span></div>';
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbNext"><span>' + L('Дальше') + '</span></button>' +
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>' + L('Назад') + '</span></button>';
             el('fmx-nbNext').addEventListener('click', function () {
                 _nb.text = (el('fmx-nbText') || {}).value || '';
                 _haptic('light'); _nb.step = 3; nbPaint();
@@ -4801,14 +4803,14 @@
             var cnt = nbSelIds().length;
             body.innerHTML = nbBar(3) +
                 '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 14px;display:grid;gap:8px;margin-bottom:10px;">' +
-                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>Каналов</span></span><b class="num">' + cnt + '</b></div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:13px;gap:12px;"><span style="color:#8990a8;"><span>Цены</span></span><b style="text-align:right;"><span>автоматически · охват и CPM ниши</span></b></div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>Текст</span></span><b><span>' + (_nb.text.trim() ? 'свой, один на все' : 'стандартный') + '</span></b></div>' +
-                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>На модерацию сегодня</span></span><b class="num">' + cnt + ' / ' + lim.mod + '</b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>' + L('Каналов') + '</span></span><b class="num">' + cnt + '</b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;gap:12px;"><span style="color:#8990a8;"><span>' + L('Цены') + '</span></span><b style="text-align:right;"><span>' + L('автоматически · охват и CPM ниши') + '</span></b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>' + L('Текст') + '</span></span><b><span>' + (_nb.text.trim() ? 'свой, один на все' : 'стандартный') + '</span></b></div>' +
+                '<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#8990a8;"><span>' + L('На модерацию сегодня') + '</span></span><b class="num">' + cnt + ' / ' + lim.mod + '</b></div>' +
                 '</div>' +
-                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>Офферы создадутся сразу и уйдут на модерацию по очереди в фоне. Приложение можно закрыть — бот пришлёт итог.</span></div>';
-            foot.innerHTML = '<button class="fmx-save" id="fmx-nbGo"><i class="ti ti-rocket"></i> <span>Создать офферы</span> <span class="num">· ' + cnt + '</span></button>' +
-                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>Назад</span></button>';
+                '<div style="display:flex;gap:8px;font-size:12px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:11px;padding:9px 11px;color:#60a5fa;"><i class="ti ti-info-circle"></i> <span>' + L('Офферы создадутся сразу и уйдут на модерацию по очереди в фоне. Приложение можно закрыть — бот пришлёт итог.') + '</span></div>';
+            foot.innerHTML = '<button class="fmx-save" id="fmx-nbGo"><i class="ti ti-rocket"></i> <span>' + L('Создать офферы') + '</span> <span class="num">· ' + cnt + '</span></button>' +
+                '<button class="fmx-btn" id="fmx-nbBack" style="width:100%;color:#8990a8;"><i class="ti ti-arrow-left"></i> <span>' + L('Назад') + '</span></button>';
             el('fmx-nbBack').addEventListener('click', function () { _haptic('light'); _nb.step = 2; nbPaint(); });
             el('fmx-nbGo').addEventListener('click', function () {
                 var ids = nbSelIds(); if (!ids.length) return;
@@ -4825,7 +4827,7 @@
                     nbPoll();
                 }).catch(function () {
                     btn.disabled = false; btn.style.opacity = '';
-                    _haptic('error'); toast('Не удалось. Повтори попытку.', true);
+                    _haptic('error'); toast(L('Не удалось. Повтори попытку.'), true);
                 });
             });
         }
@@ -4873,16 +4875,16 @@
             html += group('✓', { bg: 'rgba(16,185,129,0.15)', c: '#34d399', br: 'rgba(16,185,129,0.3)' }, 'Опубликовано', pubItems.length, names);
         }
         if (revItems.length) {
-            html += group('👁', { bg: 'rgba(245,158,11,0.15)', c: '#fbbf24', br: 'rgba(245,158,11,0.3)' }, 'На ручной проверке', revItems.length, '<span>Проверим и опубликуем — обычно до суток</span>');
+            html += group('👁', { bg: 'rgba(245,158,11,0.15)', c: '#fbbf24', br: 'rgba(245,158,11,0.3)' }, 'На ручной проверке', revItems.length, '<span>' + L('Проверим и опубликуем — обычно до суток') + '</span>');
         }
         badItems.forEach(function (it) {
             html += group('✕', { bg: 'rgba(239,68,68,0.15)', c: '#f87171', br: 'rgba(239,68,68,0.35)' }, _esc(it.title || 'Канал'), 1,
-                (it.reason ? _esc(it.reason) + ' · ' : '') + '<span>Открыть и исправить</span>', 'data-nbfix="' + it.channel_id + '"');
+                (it.reason ? _esc(it.reason) + ' · ' : '') + '<span>' + L('Открыть и исправить') + '</span>', 'data-nbfix="' + it.channel_id + '"');
         });
         if (qN) {
             html += group('…', { bg: 'rgba(59,130,246,0.15)', c: '#60a5fa', br: 'rgba(59,130,246,0.3)' }, 'В очереди', qN, '');
         }
-        html += '<div style="display:flex;gap:9px;align-items:flex-start;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:12px;padding:10px 12px;font-size:12px;color:#60a5fa;margin-top:2px;">🤖 <span>Можно закрыть приложение — по завершении бот пришлёт итог: сколько опубликовано и что требует правок.</span></div>';
+        html += '<div style="display:flex;gap:9px;align-items:flex-start;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.25);border-radius:12px;padding:10px 12px;font-size:12px;color:#60a5fa;margin-top:2px;">🤖 <span>' + L('Можно закрыть приложение — по завершении бот пришлёт итог: сколько опубликовано и что требует правок.') + '</span></div>';
         body.innerHTML = html;
         qsa(body, '[data-nbfix]').forEach(function (r) {
             r.addEventListener('click', function () {
@@ -4893,7 +4895,7 @@
                 _haptic('light'); _mineEditCh = cid; _backTo = 'mine'; setSubTab('create');
             });
         });
-        foot.innerHTML = '<button class="fmx-btn" id="fmx-nbToNet" style="width:100%;color:#a9aec0;"><i class="ti ti-sitemap"></i> <span>К экрану «Сетка»</span></button>';
+        foot.innerHTML = '<button class="fmx-btn" id="fmx-nbToNet" style="width:100%;color:#a9aec0;"><i class="ti ti-sitemap"></i> <span>' + L('К экрану «Сетка»') + '</span></button>';
         el('fmx-nbToNet').addEventListener('click', function () { _haptic('light'); nbClose(); });
     }
 
@@ -4980,12 +4982,12 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-npBg'; bg.className = 'fmx-mbg fmx-show';
         bg.innerHTML = '<div class="fmx-modal">' +
-            '<div class="fmx-mhead"><h2><i class="ti ti-list-search" style="color:#818cf8;"></i> Ниши</h2>' +
+            '<div class="fmx-mhead"><h2><i class="ti ti-list-search" style="color:#818cf8;"></i> ' + L('Ниши') + '</h2>' +
             '<button class="fmx-mclose" data-no><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody">' +
             '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
             '<div id="fmx-nlist"></div></div>' +
-            ((_nicheSel && !onPick) ? '<div class="fmx-mfoot"><button class="fmx-btn" data-clear>Сбросить фильтр</button></div>' : '') +
+            ((_nicheSel && !onPick) ? '<div class="fmx-mfoot"><button class="fmx-btn" data-clear>' + L('Сбросить фильтр') + '</button></div>' : '') +
             '</div>';
         document.body.appendChild(bg);
         function done() { bg.remove(); }
@@ -5010,12 +5012,12 @@
             var _ex = _extraNiches.filter(function (nm) { return !q || nm.toLowerCase().replace(/ё/g, 'е').indexOf(q) >= 0; });
             if (_ex.length) {
                 hits += _ex.length;
-                html += '<div class="fmx-npg">Найдено в каталоге</div><div class="fmx-fxw">' + _ex.map(function (nm) {
+                html += '<div class="fmx-npg">' + L('Найдено в каталоге') + '</div><div class="fmx-fxw">' + _ex.map(function (nm) {
                     var n = countFor(nm), sel = (!onPick && _nicheSel && String(_nicheSel).toLowerCase() === String(nm).toLowerCase());
                     return '<button class="fmx-fx' + (sel ? ' on' : '') + '" data-m="' + _esc(nm) + '">' + _esc(nm) + (n ? '<span class="fmx-npn">' + n + '</span>' : '') + '</button>';
                 }).join('') + '</div>';
             }
-            var box = el('fmx-nlist'); if (box) box.innerHTML = hits ? html : '<div style="color:#565b73;font-size:12.5px;text-align:center;padding:22px 4px;">Ничего не нашлось. Попробуй другое слово.</div>';
+            var box = el('fmx-nlist'); if (box) box.innerHTML = hits ? html : '<div style="color:#565b73;font-size:12.5px;text-align:center;padding:22px 4px;">' + L('Ничего не нашлось. Попробуй другое слово.') + '</div>';
             qsa(bg, '[data-m]').forEach(function (b) { b.addEventListener('click', function () { pick(b.getAttribute('data-m')); }); });
         }
         bg.addEventListener('click', function (e) { if (e.target === bg) done(); });
@@ -5032,7 +5034,7 @@
     function _uiSeg() { try { return _CIS_UI[window.getLang ? getLang() : 'ru'] ? 'cis' : 'intl'; } catch (e) { return 'cis'; } }
     function _segPass(l) { var lc = l.lang_code || null; return _uiSeg() === 'cis' ? (lc == null || !!_CIS_LANGS[lc]) : (lc != null && !_CIS_LANGS[lc]); }
     function _regionChipHtml() { return '<button class="fmx-seg' + (_regionAll ? '' : ' on') + '" data-region style="flex:0 0 auto;"><i class="ti ti-world"></i> <span>' + (_regionAll ? 'Все регионы' : 'Мой регион') + '</span></button>'; }
-    function _regionNoteHtml() { return '<div class="fmx-note"><i class="ti ti-world"></i> <span>В твоём регионе площадок пока немного — показаны все регионы.</span></div>'; }
+    function _regionNoteHtml() { return '<div class="fmx-note"><i class="ti ti-world"></i> <span>' + L('В твоём регионе площадок пока немного — показаны все регионы.') + '</span></div>'; }
     function _bindRegionChip(scope, after) {
         var rc = scope.querySelector('[data-region]');
         if (!rc) return;
@@ -5122,7 +5124,7 @@
     function _rfBtnLabel() {
         var b = el('fmx-rfbtn'); if (!b) return;
         var n = _rfCount();
-        b.innerHTML = '<i class="ti ti-adjustments-horizontal"></i> Фильтры' + (n ? ' · ' + n : '');
+        b.innerHTML = '<i class="ti ti-adjustments-horizontal"></i> ' + L('Фильтры') + (n ? ' · ' + n : '');
         b.classList.toggle('on', n > 0);
     }
     function openRadarFilters() {
@@ -5135,9 +5137,9 @@
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="от" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
         }).join('');
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
-            '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> Фильтры' +
+            '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> ' + L('Фильтры') +
             '<button id="fmx-rf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
-            '<span class="fmx-lbl">Быстро</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
+            '<span class="fmx-lbl">' + L('Быстро') + '</span><div class="fmx-fxw" id="fmx-rf-pre">' + _RF_PRESETS.map(function (p) { return '<button class="fmx-fx' + (_rf.presets[p[0]] ? ' on' : '') + '" data-p="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div>' +
             (function () {
                 var selN = 0;
                 for (var gk in (_rf.geo || {})) { if (_rf.geo[gk]) selN++; }
@@ -5149,13 +5151,13 @@
                         '<span class="gn">' + g[1] + '</span>' +
                         '<span class="gk"><i class="ti ti-check"></i></span></div>';
                 }).join('');
-                return '<details class="fmr-more" style="margin-top:12px;"' + (selN ? ' open' : '') + '><summary><i class="ti ti-world" style="color:#818cf8;"></i> <span>Страна аудитории</span>' +
+                return '<details class="fmr-more" style="margin-top:12px;"' + (selN ? ' open' : '') + '><summary><i class="ti ti-world" style="color:#818cf8;"></i> <span>' + L('Страна аудитории') + '</span>' +
                     (selN ? ' <b class="num" style="color:#818cf8;">· ' + selN + '</b>' : '') +
                     '<i class="ti ti-chevron-down chev"></i></summary>' +
                     '<div class="fmr-morebody" id="fmx-rf-geo" style="display:grid;gap:6px;">' + rows + '</div></details>';
             })() +
-            '<span class="fmx-lbl fmx-mt2">Точная настройка — от / до</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
-            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>Сбросить</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">Применить</button></div></div>';
+            '<span class="fmx-lbl fmx-mt2">' + L('Точная настройка — от / до') + '</span><div class="fmx-bfgrid" style="margin-top:6px;">' + rows + '</div>' +
+            '<div class="fmx-cfm-r" style="margin-top:14px;"><button class="fmx-btn" data-reset>' + L('Сбросить') + '</button><button class="fmx-btn" data-apply style="background:#818cf8;color:#0a0d18;border-color:transparent;font-weight:700;">' + L('Применить') + '</button></div></div>';
         document.body.appendChild(bg);
         function upd() { var c = el('fmx-rf-cnt'); if (c) c.textContent = 'Показать ' + (_catalog || []).filter(_rfPass).length; }
         function done() { bg.remove(); _rfBtnLabel(); paintCatalogBody(); }
@@ -5175,11 +5177,11 @@
     function openComplaint(target) {
         var chips = REP_REASONS.map(function (r, i) { return '<button class="fmx-fx' + (i === 0 ? ' on' : '') + '" data-rr="' + r[0] + '">' + r[1] + '</button>'; }).join('');
         el('fmx-repBody').innerHTML =
-            '<span class="fmx-lbl">Причина</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Комментарий <span style="color:#565b73;text-transform:none;">(для «Другое» — обязателен)</span></span>' +
+            '<span class="fmx-lbl">' + L('Причина') + '</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Комментарий') + ' <span style="color:#565b73;text-transform:none;">' + L('(для «Другое» — обязателен)') + '</span></span>' +
             '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="Опиши проблему. Чем конкретнее — тем быстрее разберём."></textarea>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">Жалобы анонимны для владельца. Несколько жалоб от разных людей скрывают цель до ручной проверки.</div>' +
-            '<button class="fmx-save" id="fmx-rep-send" style="margin-top:14px;"><i class="ti ti-flag"></i> Отправить жалобу</button>';
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + L('Жалобы анонимны для владельца. Несколько жалоб от разных людей скрывают цель до ручной проверки.') + '</div>' +
+            '<button class="fmx-save" id="fmx-rep-send" style="margin-top:14px;"><i class="ti ti-flag"></i> ' + L('Отправить жалобу') + '</button>';
         var sel = { v: 'scam' };
         qsa(el('fmx-rep-r'), '[data-rr]').forEach(function (b) { b.addEventListener('click', function () { sel.v = b.getAttribute('data-rr'); qsa(el('fmx-rep-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
         el('fmx-rep-send').addEventListener('click', function () {
@@ -5195,7 +5197,7 @@
                     if (target.listing_id) { _feed = null; _feedState = 'idle'; if (_subTab === 'buy') renderBuy(); }
                     else { _reqs = null; _reqState = 'idle'; if (_subTab === 'sell') renderSell(); }
                 }
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось отправить. Повтори попытку.'); });
+            }).catch(function () { btn.disabled = false; uiAlert(L('Не удалось отправить. Повтори попытку.')); });
         });
         showModal('fmx-repBg');
     }
@@ -5204,7 +5206,7 @@
         var m = _nsMetrics ? _nsMetrics[n] : null;
         var right;
         if (!m) {
-            right = '<span class="fmx-nsna">данных мало</span>';
+            right = '<span class="fmx-nsna">' + L('данных мало') + '</span>';
         } else {
             var d = '';
             if (m.pct != null && Math.abs(m.pct) >= 0.1) {
@@ -5222,12 +5224,12 @@
         var box = el('fmx-nsBody'); if (!box) return;
         var chips = (_nsubs && _nsubs.length)
             ? '<div class="fmx-nslist">' + _nsubs.map(_nsRow).join('') + '</div>'
-            : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">Подписок пока нет. Ниша твоего оффера подписывается автоматически при публикации.</div>';
+            : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">' + L('Подписок пока нет. Ниша твоего оффера подписывается автоматически при публикации.') + '</div>';
         box.innerHTML = chips +
-            '<span class="fmx-lbl fmx-mt2">Добавить нишу</span>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Добавить нишу') + '</span>' +
             '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="например, Криптовалюты" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-ns-add" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-plus"></i></button></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">CPM — медиана по нише за сегодня. Сообщим в @ForgeMetricsBot, когда он сдвинется больше чем на ' + Math.round(_nsThr) + '% за неделю, и когда рекламодатель будет искать каналы этой ниши.</div>';
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">' + L('CPM — медиана по нише за сегодня. Сообщим в @ForgeMetricsBot, когда он сдвинется больше чем на') + ' ' + Math.round(_nsThr) + L('% за неделю, и когда рекламодатель будет искать каналы этой ниши.') + '</div>';
         var addFn = function () {
             var v = el('fmx-ns-inp').value.trim();
             if (!v) return;
@@ -5241,7 +5243,7 @@
                     _nsubs = rr.niches; _nsMetrics = rr.metrics || {};
                     renderNsBody();
                 }).catch(function () {});
-            }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
         };
         el('fmx-ns-add').addEventListener('click', addFn);
         el('fmx-ns-inp').addEventListener('keydown', function (e) { if (e.key === 'Enter') addFn(); });
@@ -5287,20 +5289,20 @@
         var mx = f.mx || {}, mn = f.mn || {};
         if (mx.p != null) out.push('<span class="fmx-alc">≤ ' + _num(mx.p) + ' ₽</span>');
         if (mx.cpm != null) out.push('<span class="fmx-alc">CPM ≤ ' + _num(mx.cpm) + '</span>');
-        if (mn.s != null) out.push('<span class="fmx-alc">' + _short(mn.s) + '+ подп</span>');
-        if (mn.r != null) out.push('<span class="fmx-alc">охват ' + _short(mn.r) + '+</span>');
+        if (mn.s != null) out.push('<span class="fmx-alc">' + _short(mn.s) + L('+ подп') + '</span>');
+        if (mn.r != null) out.push('<span class="fmx-alc">' + L('охват') + ' ' + _short(mn.r) + '+</span>');
         if (mn.err != null) out.push('<span class="fmx-alc">ERR ≥ ' + mn.err + '%</span>');
         if (mn.er != null) out.push('<span class="fmx-alc">ER ≥ ' + mn.er + '%</span>');
-        if (mn.h != null) out.push('<span class="fmx-alc">индекс ≥ ' + mn.h + '</span>');
-        if (mn.age != null) out.push('<span class="fmx-alc">от ' + mn.age + ' мес</span>');
-        if (mx.adp != null) out.push('<span class="fmx-alc">рекламы ≤ ' + mx.adp + '%</span>');
+        if (mn.h != null) out.push('<span class="fmx-alc">' + L('индекс ≥') + ' ' + mn.h + '</span>');
+        if (mn.age != null) out.push('<span class="fmx-alc">' + L('от') + ' ' + mn.age + ' ' + L('мес') + '</span>');
+        if (mx.adp != null) out.push('<span class="fmx-alc">' + L('рекламы ≤') + ' ' + mx.adp + '%</span>');
         var P = f.presets || {};
-        if (P.clean) out.push('<span class="fmx-alc g">без накрутки</span>');
-        if (P.grow) out.push('<span class="fmx-alc">растут</span>');
+        if (P.clean) out.push('<span class="fmx-alc g">' + L('без накрутки') + '</span>');
+        if (P.grow) out.push('<span class="fmx-alc">' + L('растут') + '</span>');
         if (P.large) out.push('<span class="fmx-alc">100k+</span>');
         var aud = Object.keys(f.aud || {}).filter(function (k) { return f.aud[k]; });
         if (aud.length) out.push('<span class="fmx-alc">' + aud.map(function (a) { return { male: 'муж', female: 'жен', mixed: 'смеш' }[a] || a; }).join('/') + '</span>');
-        return out.length ? out.join('') : '<span class="fmx-alc mut">любые каналы</span>';
+        return out.length ? out.join('') : '<span class="fmx-alc mut">' + L('любые каналы') + '</span>';
     }
     function _alertFilterFromRf() {
         var f = { niches: [], presets: {}, aud: {}, mn: {}, mx: {} };
@@ -5377,8 +5379,8 @@
         var body = el('fmx-al-body'); if (!body) return;
         var alerts = r.alerts || [], lim = r.limit || 1, used = r.used != null ? r.used : alerts.length;
         var canAdd = used < lim;
-        var h = '<button class="fmx-alnew" id="fmx-al-new"' + (canAdd ? '' : ' disabled') + '><i class="ti ti-plus"></i> Новое уведомление</button>' +
-            '<div class="fmx-allim">Активно ' + used + ' из ' + lim + (canAdd ? '' : ' · достигнут предел') + '</div>';
+        var h = '<button class="fmx-alnew" id="fmx-al-new"' + (canAdd ? '' : ' disabled') + '><i class="ti ti-plus"></i> ' + L('Новое уведомление') + '</button>' +
+            '<div class="fmx-allim">' + L('Активно') + ' ' + used + ' из ' + lim + (canAdd ? '' : ' · достигнут предел') + '</div>';
         if (!alerts.length) {
             h += emptyHtml('ti-bell-plus', 'Пока нет уведомлений', 'Задай нишу, потолок цены и качество — подходящие каналы придут сами.');
         } else {
@@ -5389,7 +5391,7 @@
                     '<span class="fmx-al-scope ' + sc + '">' + _SCOPE_LBL[sc] + '</span>' +
                     '<span class="fmx-tgl' + (a.enabled ? '' : ' off') + '" data-tgl="' + a.id + '"></span></div>' +
                     '<div class="fmx-al-chips">' + _alertChips(a.filter) + '</div>' +
-                    '<div class="fmx-al-match">' + (a.enabled ? '<span style="color:' + (a.mode === 'digest' ? '#f5bf4f' : '#5DCAA5') + ';">●</span> ' + (a.seen_count ? a.seen_count + ' найдено · ' : '') + (a.mode === 'digest' ? 'сводка раз в день' : 'мгновенно') : '<span style="color:#565b73;">выключено</span>') + '</div>' +
+                    '<div class="fmx-al-match">' + (a.enabled ? '<span style="color:' + (a.mode === 'digest' ? '#f5bf4f' : '#5DCAA5') + ';">●</span> ' + (a.seen_count ? a.seen_count + ' найдено · ' : '') + (a.mode === 'digest' ? 'сводка раз в день' : 'мгновенно') : '<span style="color:#565b73;">' + L('выключено') + '</span>') + '</div>' +
                     '<div class="fmx-al-acts"><button class="fmx-al-b pr" data-edit="' + a.id + '">Изменить</button>' +
                     '<button class="fmx-al-b" data-mts="' + a.id + '" data-msc="' + sc + '">Совпадения</button>' +
                     '<button class="fmx-al-b dz" data-del="' + a.id + '"><i class="ti ti-trash"></i></button></div></div>';
@@ -5402,11 +5404,11 @@
         qsa(body, '[data-del]').forEach(function (x) {
             x.addEventListener('click', function () {
                 var id = x.getAttribute('data-del');
-                uiConfirm('Удалить это уведомление?', function () {
+                uiConfirm(L('Удалить это уведомление?'), function () {
                     apiDelete('/api/v1/marketplace/alerts/' + id).then(function (rr) {
                         if (rr && rr.ok === false) { uiAlert(rr.error || 'Не удалось удалить'); return; }
                         _haptic('success'); loadAlerts();
-                    }).catch(function () { uiAlert('Не удалось удалить. Повтори попытку.'); });
+                    }).catch(function () { uiAlert(L('Не удалось удалить. Повтори попытку.')); });
                 });
             });
         });
@@ -5425,16 +5427,16 @@
                 '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="не важно" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
         }).join('');
         var sh = _alSheet(_alHead((_aEdit.id ? 'Изменить уведомление' : 'Новое уведомление'), 'Условия закупки', true) +
-            '<div class="fmx-ae-sec">Название</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
-            '<div class="fmx-ae-sec">Где искать</div><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
-            '<div class="fmx-ae-sec">Ниши <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">— пусто = любые</span></div><div class="fmx-fxw" id="fmx-ae-nw">' +
+            '<div class="fmx-ae-sec">' + L('Название') + '</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
+            '<div class="fmx-ae-sec">' + L('Где искать') + '</div><div class="fmx-segw" id="fmx-ae-scope">' + seg(_aEdit.scope, [['both', 'Обе'], ['radar', 'Радар'], ['market', 'Площадка']]) + '</div>' +
+            '<div class="fmx-ae-sec">' + L('Ниши') + ' <span style="text-transform:none;letter-spacing:0;color:#565b73;font-weight:500;">' + L('— пусто = любые') + '</span></div><div class="fmx-fxw" id="fmx-ae-nw">' +
             (f.niches || []).map(function (n) { return '<button class="fmx-fx on" data-nrm="' + _esc(n) + '">' + _esc(n) + ' <i class="ti ti-x" style="font-size:11px;opacity:0.7;"></i></button>'; }).join('') +
-            '<button class="fmx-fx" id="fmx-ae-nadd"><i class="ti ti-plus" style="font-size:11px;"></i> Добавить нишу</button></div>' +
-            '<div class="fmx-ae-sec">Параметры канала</div><div class="fmx-algrid">' + rangesHtml + '</div>' +
-            '<div class="fmx-ae-sec">Пол аудитории</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
-            '<div class="fmx-ae-sec">Только</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Прошли фрод-контроль</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
-            '<div class="fmx-ae-sec">Как часто уведомлять</div><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Сводка раз в день']]) + '</div>' +
-            '<button class="fmx-alnew" id="fmx-ae-save" style="margin-top:20px;"><i class="ti ti-bell"></i> Сохранить уведомление</button>');
+            '<button class="fmx-fx" id="fmx-ae-nadd"><i class="ti ti-plus" style="font-size:11px;"></i> ' + L('Добавить нишу') + '</button></div>' +
+            '<div class="fmx-ae-sec">' + L('Параметры канала') + '</div><div class="fmx-algrid">' + rangesHtml + '</div>' +
+            '<div class="fmx-ae-sec">' + L('Пол аудитории') + '</div><div class="fmx-segw" id="fmx-ae-aud">' + seg((f.aud.male ? 'male' : f.aud.female ? 'female' : ''), [['male', 'Муж'], ['female', 'Жен'], ['', 'Любой']]) + '</div>' +
+            '<div class="fmx-ae-sec">' + L('Только') + '</div><div class="fmx-fxw" id="fmx-ae-pre"><button class="fmx-fx' + (f.presets.clean ? ' on' : '') + '" data-pp="clean">Прошли фрод-контроль</button><button class="fmx-fx' + (f.presets.grow ? ' on' : '') + '" data-pp="grow">Растут</button><button class="fmx-fx' + (f.presets.large ? ' on' : '') + '" data-pp="large">100k+</button></div>' +
+            '<div class="fmx-ae-sec">' + L('Как часто уведомлять') + '</div><div class="fmx-segw" id="fmx-ae-mode">' + seg(_aEdit.mode, [['instant', 'Мгновенно'], ['digest', 'Сводка раз в день']]) + '</div>' +
+            '<button class="fmx-alnew" id="fmx-ae-save" style="margin-top:20px;"><i class="ti ti-bell"></i> ' + L('Сохранить уведомление') + '</button>');
         _alBindHead(openAlerts);
         qsa(el('fmx-ae-scope'), '[data-seg]').forEach(function (b) { b.addEventListener('click', function () { _aEdit.scope = b.getAttribute('data-seg'); qsa(el('fmx-ae-scope'), '[data-seg]').forEach(function (z) { z.classList.remove('on'); }); b.classList.add('on'); }); });
         qsa(el('fmx-ae-mode'), '[data-seg]').forEach(function (b) { b.addEventListener('click', function () { _aEdit.mode = b.getAttribute('data-seg'); qsa(el('fmx-ae-mode'), '[data-seg]').forEach(function (z) { z.classList.remove('on'); }); b.classList.add('on'); }); });
@@ -5479,7 +5481,7 @@
             apiPost('/api/v1/marketplace/alerts', payload).then(function (r) {
                 if (r && r.ok === false) { uiAlert(r.message || r.error || 'Не удалось'); sv.disabled = false; return; }
                 _haptic('success'); openAlerts();
-            }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); sv.disabled = false; });
+            }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); sv.disabled = false; });
         });
     }
     var _amSeq = 0;
@@ -5502,10 +5504,10 @@
                 var b = el('fmx-am-body'); if (!b || _req !== _amSeq) return;
                 var items = (r && r.items) || [];
                 if (!items.length) { b.innerHTML = emptyHtml('ti-search', 'Пока пусто', 'Здесь нет каналов под фильтр. Уведомление придёт, как только появится.'); return; }
-                var h = '<div class="fmx-allim" style="margin:0 0 10px;">Подходит ' + (r.count || items.length) + ' ' + _plural(r.count || items.length, 'канал', 'канала', 'каналов') + ' — нажми, чтобы открыть в Telegram</div>';
+                var h = '<div class="fmx-allim" style="margin:0 0 10px;">' + L('Подходит') + ' ' + (r.count || items.length) + ' ' + _plural(r.count || items.length, 'канал', 'канала', 'каналов') + ' ' + L('— нажми, чтобы открыть в Telegram') + '</div>';
                 items.forEach(function (it) {
                     var av = it.avatar_url ? '<img class="fmx-am-av" src="' + _esc(mediaAbs(it.avatar_url)) + '" alt="">' : '<div class="fmx-am-av">' + _esc((it.title || it.username || '?').charAt(0).toUpperCase()) + '</div>';
-                    var src = it.source === 'market' ? '<span class="fmx-al-scope market">Площадка</span>' : '<span class="fmx-al-scope radar">Радар</span>';
+                    var src = it.source === 'market' ? '<span class="fmx-al-scope market">' + L('Площадка') + '</span>' : '<span class="fmx-al-scope radar">' + L('Радар') + '</span>';
                     h += '<a href="https://t.me/' + _esc(it.username) + '" target="_blank" rel="noopener" class="fmx-am-it">' + av +
                         '<div style="min-width:0;flex:1;"><div style="font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(it.title || ('@' + it.username)) + '</div>' +
                         '<div style="font-size:11.5px;color:#9aa0b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">' + src + ' @' + _esc(it.username) + (it.niche ? ' · ' + _esc(it.niche) : '') + '</div></div>' +
@@ -5519,13 +5521,13 @@
     function _proofHtml(r) {
         if (!r || !r.post_url) return '';
         var lines = '';
-        if (r.reach_12h != null) lines += '<div>Охват за 12 ч: <b style="color:#5ab0e6;">' + _num(r.reach_12h) + '</b></div>';
-        if (r.reach_24h != null) lines += '<div>Охват за 24 ч: <b style="color:#5ab0e6;">' + _num(r.reach_24h) + '</b></div>';
-        if (r.reach_48h != null) lines += '<div>Охват за 48 ч: <b style="color:#5ab0e6;">' + _num(r.reach_48h) + '</b></div>';
+        if (r.reach_12h != null) lines += '<div>' + L('Охват за 12 ч:') + ' <b style="color:#5ab0e6;">' + _num(r.reach_12h) + '</b></div>';
+        if (r.reach_24h != null) lines += '<div>' + L('Охват за 24 ч:') + ' <b style="color:#5ab0e6;">' + _num(r.reach_24h) + '</b></div>';
+        if (r.reach_48h != null) lines += '<div>' + L('Охват за 48 ч:') + ' <b style="color:#5ab0e6;">' + _num(r.reach_48h) + '</b></div>';
         var note;
-        if (r.proof_status === 'measured') note = (r.reach_12h == null && r.reach_24h == null && r.reach_48h == null) ? '<div style="color:#8990a8;">Охват замерить не удалось — пост не в публичной ленте.</div>' : '';
-        else note = '<div style="color:#8990a8;">Замеряем охват — отчёт придёт через 12, 24 и 48 часов.</div>';
-        return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> Доказательство размещения</div>' +
+        if (r.proof_status === 'measured') note = (r.reach_12h == null && r.reach_24h == null && r.reach_48h == null) ? '<div style="color:#8990a8;">' + L('Охват замерить не удалось — пост не в публичной ленте.') + '</div>' : '';
+        else note = '<div style="color:#8990a8;">' + L('Замеряем охват — отчёт придёт через 12, 24 и 48 часов.') + '</div>';
+        return '<div class="fmx-proof"><div class="fmx-proof-t"><i class="ti ti-chart-line"></i> ' + L('Доказательство размещения') + '</div>' +
             '<div style="font-size:11.5px;margin-top:3px;">Пост: <a href="' + _esc(r.post_url) + '" target="_blank" rel="noopener">открыть</a></div>' + lines + note + '</div>';
     }
 
@@ -5555,7 +5557,7 @@
             '<button class="fmx-calnav" data-nav="-1"' + (navPrevOff ? ' disabled' : '') + '>‹</button>' +
             '<b>' + MON_IM[m] + ' ' + y + '</b>' +
             '<button class="fmx-calnav" data-nav="1"' + (navNextOff ? ' disabled' : '') + '>›</button></div>' +
-            (mode === 'edit' && inHorizon ? '<div class="fmx-tglrow' + (monthOpen ? ' on' : '') + '" id="fmx-mopen" style="margin:2px 0 8px;"><span class="sw"></span><span style="flex:1;">Месяц открыт для рекламы</span></div>' : '') +
+            (mode === 'edit' && inHorizon ? '<div class="fmx-tglrow' + (monthOpen ? ' on' : '') + '" id="fmx-mopen" style="margin:2px 0 8px;"><span class="sw"></span><span style="flex:1;">' + L('Месяц открыт для рекламы') + '</span></div>' : '') +
             '<div class="fmx-slgrid">' + ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(function (w) { return '<span class="fmx-slw">' + w + '</span>'; }).join('');
         for (var i = 0; i < off; i++) h += '<span></span>';
         var freeCount = 0;
@@ -5577,14 +5579,14 @@
                 '<span class="fmx-sdn">' + d + '</span>' + ((demand[iso] && !offD) ? '<i class="dm"></i>' : '') + ((past || isBusy || offD) ? '' : _dayDots(r, iso)) + '</button>';
         }
         h += '</div>' +
-            '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>свободно</span>' +
-            '<span><i style="background:rgba(239,128,128,0.5);"></i>занято</span>' +
-            (r.hot ? '<span><i style="background:rgba(245,191,79,0.6);"></i>горящие ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
-            '<span style="margin-left:auto;">' + freeCount + ' своб.</span></div>' +
-            (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>Календарь ведётся на ' + (r.horizon_days || 180) + ' дней вперёд</span></div>'
-                : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>Владелец не открыл этот месяц для продажи</span></div>' : '')) +
-            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>Точечные скидки: ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%</span></div>' : '') +
-            (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">Обновлён ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
+            '<div class="fmx-sleg"><span><i style="background:rgba(93,202,165,0.5);"></i>' + L('свободно') + '</span>' +
+            '<span><i style="background:rgba(239,128,128,0.5);"></i>' + L('занято') + '</span>' +
+            (r.hot ? '<span><i style="background:rgba(245,191,79,0.6);"></i>' + L('горящие') + ' ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
+            '<span style="margin-left:auto;">' + freeCount + ' ' + L('своб.') + '</span></div>' +
+            (!inHorizon ? '<div class="fmx-slnote"><i class="ti ti-calendar-off"></i><span>' + L('Календарь ведётся на') + ' ' + (r.horizon_days || 180) + ' ' + L('дней вперёд') + '</span></div>'
+                : (!monthOpen && mode === 'view' ? '<div class="fmx-slnote"><i class="ti ti-lock"></i><span>' + L('Владелец не открыл этот месяц для продажи') + '</span></div>' : '')) +
+            (r.hot && r.hot.days && r.hot.days.length ? '<div class="fmx-slnote" style="color:#f5bf4f;"><i class="ti ti-discount-2"></i><span>' + L('Точечные скидки:') + ' ' + r.hot.days.length + ' ' + _plural(r.hot.days.length, 'дата', 'даты', 'дат') + ' · до −' + r.hot.pct + '%</span></div>' : '') +
+            (r.slots_updated_at ? '<div style="font-size:10px;color:#565b73;margin-top:6px;">' + L('Обновлён') + ' ' + _agoDay(r.slots_updated_at) + '</div>' : '') +
             (mode === 'edit' ? '<div id="fmx-ownerExtra">' + _calModeHtml() + (_ownerCalHot ? _ownerHotHtml(l, r) : _ownerSlotsHtml(l, r)) + '</div>' : '');
         box.innerHTML = h;
         if (mode === 'edit') {
@@ -5597,7 +5599,7 @@
                     var rd = _calData[l.id]; if (rd) rd.open_months = rr.open_months;
                     toast(!monthOpen ? 'Месяц открыт — покупатели видят свободные дни' : ('Месяц закрыт — покупатели его не видят' + (rr.removed_hot_days ? '. Сняты точечные скидки: ' + rr.removed_hot_days : '')));
                     calDraw(box, l, 'edit');
-                }).catch(function () { _haptic('error'); uiAlert('Не удалось изменить месяц'); });
+                }).catch(function () { _haptic('error'); uiAlert(L('Не удалось изменить месяц')); });
             });
             qsa(box, '#fmx-calMode [data-cm]').forEach(function (b) {
                 b.addEventListener('click', function () {
@@ -5624,9 +5626,9 @@
                 if (mode === 'edit') {
                     if (_ownerCalHot) {
                         var _hmap = (r.hot && r.hot.map) || {};
-                        if (busy[iso] && !_hmap[iso]) { _haptic('error'); uiAlert('День занят — на занятые даты скидка не ставится'); return; }
+                        if (busy[iso] && !_hmap[iso]) { _haptic('error'); uiAlert(L('День занят — на занятые даты скидка не ставится')); return; }
                         var _lim = new Date(); _lim.setDate(_lim.getDate() + (r.horizon_days || 180));
-                        if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert('Скидку можно назначить максимум на ' + (r.horizon_days || 180) + ' дней вперёд'); return; }
+                        if (iso > _isoOf(_lim)) { _haptic('error'); uiAlert(L('Скидку можно назначить максимум на ') + (r.horizon_days || 180) + ' дней вперёд'); return; }
                         _ownerHotDay = (_ownerHotDay === iso) ? null : iso;
                         _ownerHotPct = null; _ownerHotTimes = null;
                         _haptic('light'); calDraw(box, l, 'edit');
@@ -5639,7 +5641,7 @@
                 if (busy[iso]) { _calWatchDay(box, l, iso); return; }
                 if (_lsSel.day !== iso) _lsSel.time = null;
                 if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
-                    _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light');
+                    _lsSel.day = null; toast(L('Эта дата уже в заявке')); _haptic('light');
                     calDraw(box, l, 'view');
                     var host0 = box.closest ? box.closest('#fmx-slotsBox') : null;
                     if (host0) { _refreshBuyerExtra(host0, l); _redrawFullIfOpen(host0, l); }
@@ -5674,15 +5676,15 @@
             r.slots_updated_at = new Date().toISOString();
             calDraw(box, l, 'edit');
             var _jc = box.querySelector('[data-cd="' + iso + '"]'); if (_jc) _jc.classList.add('just');
-            toast('Календарь обновлён — закупщики уже видят новые даты');
-        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+            toast(L('Календарь обновлён — закупщики уже видят новые даты'));
+        }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
     }
     function _calWatchDay(box, l, iso) {
         apiPost('/api/v1/marketplace/listings/' + l.id + '/date_watch', { day: iso }).then(function (rr) {
-            if (!rr || !rr.ok) { if (rr && rr.error === 'self') toast('Это твой оффер — даты меняются в кабинете', true); return; }
+            if (!rr || !rr.ok) { if (rr && rr.error === 'self') toast(L('Это твой оффер — даты меняются в кабинете'), true); return; }
             var r = _calData[l.id];
-            if (rr.on) { (r.watch = r.watch || []).push(iso); toast('Сообщим в бота, когда владелец освободит эту дату'); }
-            else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast('Слежение за датой снято'); }
+            if (rr.on) { (r.watch = r.watch || []).push(iso); toast(L('Сообщим в бота, когда владелец освободит эту дату')); }
+            else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast(L('Слежение за датой снято')); }
             _haptic('light');
             calDraw(box, l, 'view');
         }).catch(function () {});
@@ -5712,7 +5714,7 @@
     function _peakWin(l) { return (l && l.peak_hours && typeof l.peak_hours.from === 'number') ? l.peak_hours : null; }
     function _peakLabel(l) { var p = _peakWin(l); return p ? (String(p.from).padStart(2, '0') + ':00–' + String(p.to).padStart(2, '0') + ':00') : ''; }
     function _inPeak(l, tmin) { var p = _peakWin(l); if (!p) return false; var h = Math.floor(tmin / 60); return p.from <= p.to ? (h >= p.from && h < p.to) : (h >= p.from || h < p.to); }
-    function _peakBlock(l) { var lab = _peakLabel(l); if (!lab) return ''; return '<div class="fmx-peak"><i class="ti ti-chart-line"></i><span>Час пик просмотров · <b>' + lab + '</b></span></div>'; }
+    function _peakBlock(l) { var lab = _peakLabel(l); if (!lab) return ''; return '<div class="fmx-peak"><i class="ti ti-chart-line"></i><span>' + L('Час пик просмотров ·') + ' <b>' + lab + '</b></span></div>'; }
     function _termsBlock(l) {
         var em = { advertiser: 'ставит рекламодатель', channel: 'ставит канал', discuss: 'обсуждается' };
         var lines = [];
@@ -5722,7 +5724,7 @@
             : 'Канал зарегистрирован в перечне РКН — ссылка на запись в значке на карточке');
         lines.push('Оплата напрямую с владельцем канала');
         lines.push('Сделка и отзыв фиксируются в приложении после подтверждения сторонами');
-        return '<div class="fmx-lssect">Условия размещения</div><div class="fmx-terms">' +
+        return '<div class="fmx-lssect">' + L('Условия размещения') + '</div><div class="fmx-terms">' +
             lines.map(function (t) { return '<div class="fmx-tline"><i class="ti ti-point-filled"></i>' + _esc(t) + '</div>'; }).join('') + '</div>';
     }
 
@@ -5734,14 +5736,14 @@
             var hp = isBusy ? null : _hotPct(l, day, tm);
             return '<div class="fmx-tsl' + (isBusy ? ' bs' : (sel ? ' sel' : '')) + (pk ? ' peak' : '') + (hp ? ' hot' : '') + '"' + (isBusy ? '' : ' data-ts="' + tm + '"') + '>' +
                 '<span class="tm">' + _esc(t.t) + '</span>' +
-                (pk ? '<span class="fmx-peaktag">час пик</span>' : '') +
+                (pk ? '<span class="fmx-peaktag">' + L('час пик') + '</span>' : '') +
                 (hp ? '<span class="fmx-hottag">−' + hp + '%</span>' : '') +
                 '<span class="st">' + (isBusy ? 'Занято' : (sel ? 'Выбрано ✓' : 'Свободно')) + '</span></div>';
         }).join('');
         var _he = (_calData[l.id] && _calData[l.id].hot && _calData[l.id].hot.map) ? _calData[l.id].hot.map[day] : null;
         var hotHint = (_he && _he.times && _he.times.length)
-            ? '<div style="font-size:10px;color:#f5bf4f;margin-bottom:6px;line-height:1.45;"><i class="ti ti-discount-2" style="font-size:11px;"></i> Скидка −' + _he.pct + '% действует на отдельное время — выбери жёлтый слот</div>' : '';
-        return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> Время выхода · ' + _fmtDayRu(day) + '</div>' + hotHint + rows + '</div>';
+            ? '<div style="font-size:10px;color:#f5bf4f;margin-bottom:6px;line-height:1.45;"><i class="ti ti-discount-2" style="font-size:11px;"></i> ' + L('Скидка −') + _he.pct + L('% действует на отдельное время — выбери жёлтый слот') + '</div>' : '';
+        return '<div class="fmx-tslots"><div class="fmx-tslh"><i class="ti ti-clock"></i> ' + L('Время выхода ·') + ' ' + _fmtDayRu(day) + '</div>' + hotHint + rows + '</div>';
     }
     function _bindBuyerSlots(box, l) {
         qsa(box, '.fmx-tsl[data-ts]').forEach(function (b) {
@@ -5765,21 +5767,21 @@
 
     function _calModeHtml() {
         return '<div class="fmx-fxw" id="fmx-calMode" style="margin-top:10px;">' +
-            '<button class="fmx-fx' + (!_ownerCalHot ? ' on' : '') + '" data-cm="busy"><i class="ti ti-calendar-x"></i> Занятость</button>' +
-            '<button class="fmx-fx' + (_ownerCalHot ? ' on' : '') + '" data-cm="hot"><i class="ti ti-discount-2"></i> Скидки</button></div>';
+            '<button class="fmx-fx' + (!_ownerCalHot ? ' on' : '') + '" data-cm="busy"><i class="ti ti-calendar-x"></i> ' + L('Занятость') + '</button>' +
+            '<button class="fmx-fx' + (_ownerCalHot ? ' on' : '') + '" data-cm="hot"><i class="ti ti-discount-2"></i> ' + L('Скидки') + '</button></div>';
     }
     function _ownerHotHtml(l, r) {
         var map = (r.hot && r.hot.map) || {};
         var h = '';
         if (!_ownerHotDay) {
-            if (!((r.open_months || []).length)) return h + '<div style="font-size:11px;color:#f5bf4f;line-height:1.5;margin-top:9px;">Сначала открой месяц для рекламы в режиме «Занятость» — скидки назначаются в открытых месяцах.</div>';
-            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт — ' + ((r && r.horizon_days) || 180) + ' дней вперёд.</div>';
+            if (!((r.open_months || []).length)) return h + '<div style="font-size:11px;color:#f5bf4f;line-height:1.5;margin-top:9px;">' + L('Сначала открой месяц для рекламы в режиме «Занятость» — скидки назначаются в открытых месяцах.') + '</div>';
+            h += '<div style="font-size:11px;color:#8990a8;line-height:1.5;margin-top:9px;">' + L('Выбери свободный день в календаре — назначь скидку на дату и, при желании, на конкретное время. Дни и времена со скидкой покупатель видит жёлтыми, цена в его заявке считается со скидкой автоматически. Горизонт —') + ' ' + ((r && r.horizon_days) || 180) + ' ' + L('дней вперёд.') + '</div>';
             var keys = Object.keys(map).sort();
             if (keys.length) {
-                h += '<span class="fmx-lbl fmx-mt2">Назначено</span><div style="display:flex;flex-direction:column;gap:5px;">' + keys.map(function (d) {
+                h += '<span class="fmx-lbl fmx-mt2">' + L('Назначено') + '</span><div style="display:flex;flex-direction:column;gap:5px;">' + keys.map(function (d) {
                     var e = map[d];
                     return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:#f5bf4f;font-weight:800;flex:0 0 44px;">−' + e.pct + '%</span><span>' + _fmtDayRu(d) + '</span>' +
-                        (e.times && e.times.length ? '<span style="color:#8990a8;font-size:10.5px;">' + e.times.map(_fmtT).join(', ') + '</span>' : '<span style="color:#565b73;font-size:10.5px;">весь день</span>') + '</div>';
+                        (e.times && e.times.length ? '<span style="color:#8990a8;font-size:10.5px;">' + e.times.map(_fmtT).join(', ') + '</span>' : '<span style="color:#565b73;font-size:10.5px;">' + L('весь день') + '</span>') + '</div>';
                 }).join('') + '</div>';
             }
             return h;
@@ -5788,21 +5790,21 @@
         if (_ownerHotPct == null) _ownerHotPct = cur ? cur.pct : 15;
         if (_ownerHotTimes == null) _ownerHotTimes = (cur && cur.times) ? cur.times.slice() : [];
         var pcts = [5, 10, 15, 20, 25, 30, 40, 50];
-        h += '<div style="font-size:12.5px;font-weight:700;margin-top:10px;">' + _fmtDayRu(_ownerHotDay) + (cur ? ' <span style="color:#f5bf4f;font-weight:600;font-size:11px;">· сейчас −' + cur.pct + '%</span>' : '') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Размер скидки</span><div class="fmx-fxw" id="fmx-hotPcts">' + pcts.map(function (p) {
+        h += '<div style="font-size:12.5px;font-weight:700;margin-top:10px;">' + _fmtDayRu(_ownerHotDay) + (cur ? ' <span style="color:#f5bf4f;font-weight:600;font-size:11px;">' + L('· сейчас −') + cur.pct + '%</span>' : '') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Размер скидки') + '</span><div class="fmx-fxw" id="fmx-hotPcts">' + pcts.map(function (p) {
                 return '<button class="fmx-fx' + (p === _ownerHotPct ? ' on' : '') + '" data-hp="' + p + '">−' + p + '%</button>';
             }).join('') + '</div>';
         var cfg = _slotCfg(r);
         if (cfg && cfg.times && cfg.times.length) {
-            h += '<span class="fmx-lbl fmx-mt2">Время со скидкой</span><div class="fmx-fxw" id="fmx-hotTimes">' + cfg.times.map(function (t) {
+            h += '<span class="fmx-lbl fmx-mt2">' + L('Время со скидкой') + '</span><div class="fmx-fxw" id="fmx-hotTimes">' + cfg.times.map(function (t) {
                 var tm = _tmin(t.t);
                 return '<button class="fmx-fx' + (_ownerHotTimes.indexOf(tm) >= 0 ? ' on' : '') + '" data-ht="' + tm + '">' + _esc(t.t) + '</button>';
             }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:4px;">Не выбрано время — скидка на весь день</div>';
+                '<div style="font-size:10px;color:#565b73;margin-top:4px;">' + L('Не выбрано время — скидка на весь день') + '</div>';
         }
         h += '<div style="display:flex;gap:8px;margin-top:12px;">' +
-            (cur ? '<button class="fmx-btn" id="fmx-hotDel" style="color:#f7a58c;border-color:rgba(247,165,140,0.3);">Убрать скидку</button>' : '') +
-            '<button class="fmx-btn" id="fmx-hotSave" style="flex:1;background:#f5bf4f;color:#1c1503;border-color:transparent;font-weight:800;">Сохранить −' + _ownerHotPct + '%</button></div>';
+            (cur ? '<button class="fmx-btn" id="fmx-hotDel" style="color:#f7a58c;border-color:rgba(247,165,140,0.3);">' + L('Убрать скидку') + '</button>' : '') +
+            '<button class="fmx-btn" id="fmx-hotSave" style="flex:1;background:#f5bf4f;color:#1c1503;border-color:transparent;font-weight:800;">' + L('Сохранить −') + _ownerHotPct + '%</button></div>';
         return h;
     }
     function _bindOwnerHot(box, l) {
@@ -5845,7 +5847,7 @@
             if (l.hot_manual) { l.hot_discount_pct = Math.max.apply(null, Object.keys(ds).map(function (k) { return ds[k].pct || 0; })); }
             loadCal(box, l, 'edit');
             if (_subTab === 'mine') { try { paintMine(); } catch (e) { } }
-        }).catch(function () { _haptic('error'); uiAlert('Не удалось сохранить'); });
+        }).catch(function () { _haptic('error'); uiAlert(L('Не удалось сохранить')); });
     }
     function _ownerSlotsHtml(l, r) {
         var cfg = r.slot_config || null;
@@ -5856,32 +5858,32 @@
         var chips = presets.map(function (t) {
             return '<button type="button" class="fmx-tchip' + (onSet[t] ? ' on' : '') + '" data-tc="' + t + '">' + t + '</button>';
         }).join('');
-        var h = '<details class="fmx-calguide"><summary><i class="ti ti-help-circle"></i> Как пользоваться календарём<i class="ti ti-chevron-down chev"></i></summary><ol>' +
-            '<li><b>Открытые месяцы.</b> Покупатели бронируют размещения только в открытых месяцах — включи те, что готов продавать.</li>' +
-            '<li><b>Слоты по времени.</b> Отметь времена выхода, которые продаёшь, и сохрани — покупатель выберет свободный слот.</li>' +
-            '<li><b>Занятость.</b> Выбери день в календаре и отметь занятые слоты — их нельзя будет забронировать.</li>' +
-            '<li><b>Скидка на дату.</b> Задай процент на конкретный день — дата подсветится, а оффер получит бейдж «Горящие даты».</li>' +
-            '<li><b>Час пик</b> — подсказка по часам максимальной активности твоей аудитории.</li>' +
+        var h = '<details class="fmx-calguide"><summary><i class="ti ti-help-circle"></i> ' + L('Как пользоваться календарём') + '<i class="ti ti-chevron-down chev"></i></summary><ol>' +
+            '<li><b>' + L('Открытые месяцы.') + '</b> ' + L('Покупатели бронируют размещения только в открытых месяцах — включи те, что готов продавать.') + '</li>' +
+            '<li><b>' + L('Слоты по времени.') + '</b> ' + L('Отметь времена выхода, которые продаёшь, и сохрани — покупатель выберет свободный слот.') + '</li>' +
+            '<li><b>' + L('Занятость.') + '</b> ' + L('Выбери день в календаре и отметь занятые слоты — их нельзя будет забронировать.') + '</li>' +
+            '<li><b>' + L('Скидка на дату.') + '</b> ' + L('Задай процент на конкретный день — дата подсветится, а оффер получит бейдж «Горящие даты».') + '</li>' +
+            '<li><b>' + L('Час пик') + '</b> ' + L('— подсказка по часам максимальной активности твоей аудитории.') + '</li>' +
             '</ol></details>' +
-            '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> Слоты по времени</div>' +
-            '<div class="fmx-tshint">Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот.</div>' +
+            '<div class="fmx-tsetup"><div class="fmx-tsh"><i class="ti ti-clock"></i> ' + L('Слоты по времени') + '</div>' +
+            '<div class="fmx-tshint">' + L('Отметь времена, в которые продаёшь размещения — покупатель выберет свободный слот.') + '</div>' +
             '<div class="fmx-tchips">' + chips + '</div>' +
-            '<div class="fmx-tswrow"><span>Только 1 выход в сутки<i>эксклюзив для премиум-каналов</i></span><div class="fmx-tsw2' + (cfg && cfg.one_per_day ? ' on' : '') + '" id="fmx-oneDay"></div></div>';
+            '<div class="fmx-tswrow"><span>' + L('Только 1 выход в сутки') + '<i>' + L('эксклюзив для премиум-каналов') + '</i></span><div class="fmx-tsw2' + (cfg && cfg.one_per_day ? ' on' : '') + '" id="fmx-oneDay"></div></div>';
         if (Object.keys(onSet).length) {
-            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-check"></i> Сохранить слоты</button>';
+            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-check"></i> ' + L('Сохранить слоты') + '</button>';
             if (_ownerSelDay) {
                 var bt = _busyTimes(r);
                 var rows = cfg.times.map(function (t) {
                     var tm = _tmin(t.t), isBusy = !!bt[_ownerSelDay + '|' + tm], pk = _inPeak(l, tm);
                     return '<div class="fmx-tsl' + (pk ? ' peak' : '') + '" data-otog="' + tm + '"><span class="tm">' + t.t + '</span>' +
-                        (pk ? '<span class="fmx-peaktag">час пик</span>' : '') +
+                        (pk ? '<span class="fmx-peaktag">' + L('час пик') + '</span>' : '') +
                         '<span class="st">' + (isBusy ? 'Занято' : 'Свободно') + '</span>' +
                         '<div class="fmx-osw' + (isBusy ? ' busy' : '') + '"></div></div>';
                 }).join('');
-                h += '<div class="fmx-tslots" style="margin-top:10px;"><div class="fmx-tslh"><i class="ti ti-calendar"></i> Занятость · ' + _fmtDayRu(_ownerSelDay) + '</div>' + rows + '</div>';
+                h += '<div class="fmx-tslots" style="margin-top:10px;"><div class="fmx-tslh"><i class="ti ti-calendar"></i> ' + L('Занятость ·') + ' ' + _fmtDayRu(_ownerSelDay) + '</div>' + rows + '</div>';
             }
         } else {
-            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-plus"></i> Включить слоты по времени</button>';
+            h += '<button class="fmx-btn fmx-tsave" id="fmx-slotSave"><i class="ti ti-plus"></i> ' + L('Включить слоты по времени') + '</button>';
         }
         return h + '</div>';
     }
@@ -5890,12 +5892,12 @@
         var od = box.querySelector('#fmx-oneDay');
         var oneDay = !!(od && od.classList.contains('on'));
         apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/config', { times: times, one_per_day: oneDay, prime_pct: 0 }).then(function (rr) {
-            if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось сохранить слоты'); return; }
+            if (!rr || !rr.ok) { _haptic('error'); uiAlert(L('Не удалось сохранить слоты')); return; }
             _calData[l.id].slot_config = rr.slot_config;
             if (!rr.slot_config) _ownerSelDay = null;
             _haptic('light'); toast(rr.slot_config ? 'Слоты по времени сохранены' : 'Слоты по времени выключены');
             calDraw(box, l, 'edit');
-        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
     }
     function _bindOwnerSlots(box, l) {
         qsa(box, '.fmx-tchip').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); _haptic('light'); }); });
@@ -5905,13 +5907,13 @@
             b.addEventListener('click', function () {
                 var tm = +b.getAttribute('data-otog');
                 apiPost('/api/v1/marketplace/listings/' + l.id + '/slots/time-toggle', { day: _ownerSelDay, tmin: tm }).then(function (rr) {
-                    if (!rr || !rr.ok) { _haptic('error'); uiAlert('Не удалось изменить слот'); return; }
+                    if (!rr || !rr.ok) { _haptic('error'); uiAlert(L('Не удалось изменить слот')); return; }
                     var r = _calData[l.id]; r.busy_times = r.busy_times || [];
                     var key = _ownerSelDay + '|' + tm;
                     if (rr.busy) { if (r.busy_times.indexOf(key) < 0) r.busy_times.push(key); }
                     else { r.busy_times = r.busy_times.filter(function (x) { return x !== key; }); }
                     _haptic('light'); _refreshOwnerExtra(box, l);
-                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+                }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
             });
         });
     }
@@ -5943,7 +5945,7 @@
         if (!kept) {
             box.innerHTML = '<div style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:#8990a8;line-height:1.5;">' +
                 '<i class="ti ti-calendar-question" style="color:#565b73;flex:0 0 auto;margin-top:1px;"></i>' +
-                '<span>Владелец не заполнил календарь — уточни даты в сообщении.</span></div>';
+                '<span>' + L('Владелец не заполнил календарь — уточни даты в сообщении.') + '</span></div>';
             return;
         }
         var busy = {}; (r.busy || []).forEach(function (x) { busy[x] = 1; });
@@ -5958,8 +5960,8 @@
         for (var k = 0; k < _hz; k++) { var isoK = _isoOf(dd); if (!busy[isoK] && _dOpen(isoK)) { freeFrom = isoK; break; } dd.setDate(dd.getDate() + 1); }
         var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         var h = '<div style="display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:9px;">' +
-            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span id="fmx-freeFrom" style="color:#5DCAA5;font-weight:600;cursor:pointer;text-decoration:underline dotted rgba(93,202,165,0.5);">Свободно с ' + _fmtDayRu(freeFrom) + ' ›</span>' : (!om.length ? '<span style="color:#8990a8;">●</span><span style="color:#8990a8;font-weight:600;">Владелец пока не открыл даты для продажи</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">Открытые даты заняты</span>')) +
-            (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">Обновлён ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
+            (freeFrom ? '<span style="color:#5DCAA5;">●</span><span id="fmx-freeFrom" style="color:#5DCAA5;font-weight:600;cursor:pointer;text-decoration:underline dotted rgba(93,202,165,0.5);">' + L('Свободно с') + ' ' + _fmtDayRu(freeFrom) + ' ›</span>' : (!om.length ? '<span style="color:#8990a8;">●</span><span style="color:#8990a8;font-weight:600;">' + L('Владелец пока не открыл даты для продажи') + '</span>' : '<span style="color:#ef8080;">●</span><span style="color:#ef8080;font-weight:600;">' + L('Открытые даты заняты') + '</span>')) +
+            (r.slots_updated_at ? '<span style="margin-left:auto;font-size:10px;color:#565b73;">' + L('Обновлён') + ' ' + _agoDay(r.slots_updated_at) + '</span>' : '') + '</div>';
         h += '<div class="fmx-d14 num">';
         var MO = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
         var d = new Date(d0);
@@ -5978,12 +5980,12 @@
         }
         h += '</div>' +
             '<div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:#8990a8;flex-wrap:wrap;">' +
-            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(93,202,165,0.5);"></i> свободно</span>' +
-            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(239,128,128,0.5);"></i> занято</span>' +
-            (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> горящие ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
-            '<span style="margin-left:auto;">тап по дню → дата в сообщении</span></div>' +
+            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(93,202,165,0.5);"></i> ' + L('свободно') + '</span>' +
+            '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(239,128,128,0.5);"></i> ' + L('занято') + '</span>' +
+            (r.hot ? '<span><i style="display:inline-block;width:8px;height:8px;border-radius:3px;background:rgba(245,191,79,0.6);"></i> ' + L('горящие') + ' ' + (r.hot.map ? 'до ' : '') + '−' + r.hot.pct + '%</span>' : '') +
+            '<span style="margin-left:auto;">' + L('тап по дню → дата в сообщении') + '</span></div>' +
             '<div id="fmx-buyerExtra">' + _buyerSlotsHtml(l, r) + _basketHtml(l) + '</div>' +
-            '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> Весь месяц</button>' +
+            '<button class="fmx-btn fmx-slmore" id="fmx-calMonth"><i class="ti ti-calendar-month"></i> ' + L('Весь месяц') + '</button>' +
             '<div id="fmx-calFull" style="display:none;margin-top:10px;"></div>';
         var prevStrip = box.querySelector('.fmx-d14');
         var prevScroll = prevStrip ? prevStrip.scrollLeft : 0;
@@ -6001,7 +6003,7 @@
                 if (busy[iso]) { _calWatchBuyer(box, l, iso); return; }
                 if (_lsSel.day !== iso) _lsSel.time = null;
                 if ((_lsSel.basket || []).some(function (x) { return x.day === iso; })) {
-                    _lsSel.day = null; toast('Эта дата уже в заявке'); _haptic('light'); _refreshBuyerExtra(box, l); _redrawFullIfOpen(box, l); return;
+                    _lsSel.day = null; toast(L('Эта дата уже в заявке')); _haptic('light'); _refreshBuyerExtra(box, l); _redrawFullIfOpen(box, l); return;
                 }
                 _lsSel.day = iso;
                 _haptic('light');
@@ -6016,11 +6018,11 @@
         if (mBtn) mBtn.addEventListener('click', function () {
             var full = box.querySelector('#fmx-calFull');
             var open = full.style.display !== 'none';
-            if (open) { full.style.display = 'none'; mBtn.innerHTML = '<i class="ti ti-calendar-month"></i> Весь месяц'; }
+            if (open) { full.style.display = 'none'; mBtn.innerHTML = '<i class="ti ti-calendar-month"></i> ' + L('Весь месяц'); }
             else {
                 if (!full._ym && freeFrom) full._ym = { y: +freeFrom.slice(0, 4), m: +freeFrom.slice(5, 7) - 1 };
                 full.style.display = 'block';
-                mBtn.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц';
+                mBtn.innerHTML = '<i class="ti ti-chevron-up"></i> ' + L('Свернуть месяц');
                 calDraw(full, l, 'view');
             }
             _haptic('light');
@@ -6030,7 +6032,7 @@
             var full = box.querySelector('#fmx-calFull'); if (!full || !freeFrom) return;
             full._ym = { y: +freeFrom.slice(0, 4), m: +freeFrom.slice(5, 7) - 1 };
             full.style.display = 'block';
-            var mb = box.querySelector('#fmx-calMonth'); if (mb) mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц';
+            var mb = box.querySelector('#fmx-calMonth'); if (mb) mb.innerHTML = '<i class="ti ti-chevron-up"></i> ' + L('Свернуть месяц');
             calDraw(full, l, 'view');
             _haptic('light');
         });
@@ -6041,14 +6043,14 @@
     }
     function _calWatchBuyer(box, l, iso) {
         apiPost('/api/v1/marketplace/listings/' + l.id + '/date_watch', { day: iso }).then(function (rr) {
-            if (!rr || !rr.ok) { if (rr && rr.error === 'self') toast('Это твой оффер — даты меняются в кабинете', true); return; }
+            if (!rr || !rr.ok) { if (rr && rr.error === 'self') toast(L('Это твой оффер — даты меняются в кабинете'), true); return; }
             var r = _calData[l.id];
-            if (rr.on) { (r.watch = r.watch || []).push(iso); toast('Сообщим в бота, когда владелец освободит эту дату'); }
-            else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast('Слежение за датой снято'); }
+            if (rr.on) { (r.watch = r.watch || []).push(iso); toast(L('Сообщим в бота, когда владелец освободит эту дату')); }
+            else { r.watch = (r.watch || []).filter(function (x) { return x !== iso; }); toast(L('Слежение за датой снято')); }
             _haptic('light');
             var _wasOpen = (function () { var f = box.querySelector('#fmx-calFull'); return f && f.style.display !== 'none'; })();
             drawBuyerSlots(box, l);
-            if (_wasOpen) { var _f2 = box.querySelector('#fmx-calFull'); if (_f2) _f2.style.display = 'block'; var _mb = box.querySelector('#fmx-calMonth'); if (_mb) _mb.innerHTML = '<i class="ti ti-chevron-up"></i> Свернуть месяц'; }
+            if (_wasOpen) { var _f2 = box.querySelector('#fmx-calFull'); if (_f2) _f2.style.display = 'block'; var _mb = box.querySelector('#fmx-calMonth'); if (_mb) _mb.innerHTML = '<i class="ti ti-chevron-up"></i> ' + L('Свернуть месяц'); }
             _redrawFullIfOpen(box, l);
         }).catch(function () {});
     }
@@ -6102,8 +6104,8 @@
             else if (e.t === 'video') h += '<div class="el med' + md + '" style="' + st + 'height:' + e.h + '%;"><video src="' + _esc(mediaAbs(e.u)) + '" muted autoplay loop playsinline preload="metadata"></video></div>';
         });
         h += '<div class="fmx-tabfade"></div></div></div>';
-        if (opts.cut !== false) h += '<div class="fmx-tabmw"><button class="fmx-tabmore">Развернуть</button></div>' +
-            '<button class="fmx-btn fmx-tabless" style="display:none;margin:8px auto 0;"><i class="ti ti-chevron-up"></i> Свернуть витрину</button>';
+        if (opts.cut !== false) h += '<div class="fmx-tabmw"><button class="fmx-tabmore">' + L('Развернуть') + '</button></div>' +
+            '<button class="fmx-btn fmx-tabless" style="display:none;margin:8px auto 0;"><i class="ti ti-chevron-up"></i> ' + L('Свернуть витрину') + '</button>';
         mount.innerHTML = h;
         try { hydrateTgs(mount); } catch (e9) {}
         _forcePlay(mount);
@@ -6136,7 +6138,7 @@
                     var l = findListing(c.getAttribute('data-u'));
                     if (!l) return;
                     var ok = renderTablo(l.expand_content_json, el('fmx-peekIn'), { cut: false });
-                    if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">Владелец пока не оформил витрину оффера</div></div>';
+                    if (!ok) el('fmx-peekIn').innerHTML = '<div style="padding:28px 20px;text-align:center;background:#10131f;"><div style="font-size:22px;">🎬</div><div style="font-size:12px;color:#8990a8;margin-top:8px;line-height:1.5;">' + L('Владелец пока не оформил витрину оффера') + '</div></div>';
                     el('fmx-peek').style.display = 'flex';
                     c.__peeked = true;
                     _haptic('light');
@@ -6196,9 +6198,9 @@
         var f = _lsSel, chips = (f.basket || []).map(function (x, i) {
             return '<span class="fmx-bchip" data-bi="' + i + '">' + _slotLabel(x) + ' <i class="ti ti-x"></i></span>';
         }).join('');
-        var addBtn = f.day ? '<button class="fmx-baddbtn" id="fmx-badd"><i class="ti ti-plus"></i> Добавить ещё дату к заявке</button>' : '';
+        var addBtn = f.day ? '<button class="fmx-baddbtn" id="fmx-badd"><i class="ti ti-plus"></i> ' + L('Добавить ещё дату к заявке') + '</button>' : '';
         if (!chips && !addBtn) return '';
-        return '<div class="fmx-basket">' + (chips ? '<div class="fmx-bchips"><span class="fmx-blbl">Заявка на ' + ((f.basket || []).length + (f.day ? 1 : 0)) + ':</span>' + chips + '</div>' : '') + addBtn + '</div>';
+        return '<div class="fmx-basket">' + (chips ? '<div class="fmx-bchips"><span class="fmx-blbl">' + L('Заявка на') + ' ' + ((f.basket || []).length + (f.day ? 1 : 0)) + ':</span>' + chips + '</div>' : '') + addBtn + '</div>';
     }
     function _bindBasket(box, l) {
         var addB = box.querySelector('#fmx-badd');
@@ -6210,7 +6212,7 @@
                 _lsSel.basket.push({ day: _lsSel.day, time: _lsSel.time });
             _lsSel.day = null; _lsSel.time = null;
             _haptic('light'); _refreshBuyerExtra(box, l);
-            toast('Дата добавлена в заявку — выбери ещё или нажми «Написать»');
+            toast(L('Дата добавлена в заявку — выбери ещё или нажми «Написать»'));
         });
         qsa(box, '.fmx-bchip').forEach(function (c) {
             c.addEventListener('click', function () {
@@ -6242,11 +6244,11 @@
             if (now == null) return '';
             if (full != null && now < full) {
                 var _pp = _hotPct(l, f.day, f.time);
-                return 'По прайсу: <s style="color:#565b73;">' + _num(full) + '</s> <b style="color:#f5bf4f;">' + _num(now) + ' ₽</b>' + (_pp ? ' <span style="color:#f5bf4f;font-size:10px;">−' + _pp + '%</span>' : '');
+                return L('По прайсу:') + ' <s style="color:#565b73;">' + _num(full) + '</s> <b style="color:#f5bf4f;">' + _num(now) + ' ₽</b>' + (_pp ? ' <span style="color:#f5bf4f;font-size:10px;">−' + _pp + '%</span>' : '');
             }
-            return 'По прайсу: <b>' + _num(now) + ' ₽</b>';
+            return L('По прайсу:') + ' <b>' + _num(now) + ' ₽</b>';
         };
-        sh.innerHTML = '<div class="grip"></div><h3>Сообщение владельцу канала</h3>' +
+        sh.innerHTML = '<div class="grip"></div><h3>' + L('Сообщение владельцу канала') + '</h3>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:700;">' + _esc(l.title || l.username) +
             '<span style="font-size:10px;color:#8990a8;font-weight:500;">@' + _esc(l.username) + '</span></div>' +
             (fmts.length ? '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;" id="fmx-wf">' + fmts.map(function (x) {
@@ -6254,13 +6256,13 @@
                 return '<button class="fmx-seg' + ((lb === f.fmt) ? ' on' : '') + '" data-f="' + _esc(lb) + '" data-p="' + x.price + '">' + _esc(lb) + ' · ' + _num(x.price) + ' ₽</button>';
             }).join('') + '</div>' : '') +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;" class="num">' +
-            '<span>Дата: <b id="fmx-wd">' + ((f.basket && f.basket.length) ? (f.basket.length + (f.day ? 1 : 0)) + ' ' + _plural(f.basket.length + (f.day ? 1 : 0), 'дата', 'даты', 'дат') : (f.day ? _fmtDayRu(f.day) + (f.time != null ? ' ' + _fmtT(f.time) : '') : 'уточню в чате')) + '</b></span>' +
-            '<button class="fmx-seg" id="fmx-wchg" style="min-height:28px;padding:4px 10px;">Изменить</button>' +
+            '<span>' + L('Дата:') + ' <b id="fmx-wd">' + ((f.basket && f.basket.length) ? (f.basket.length + (f.day ? 1 : 0)) + ' ' + _plural(f.basket.length + (f.day ? 1 : 0), 'дата', 'даты', 'дат') : (f.day ? _fmtDayRu(f.day) + (f.time != null ? ' ' + _fmtT(f.time) : '') : 'уточню в чате')) + '</b></span>' +
+            '<button class="fmx-seg" id="fmx-wchg" style="min-height:28px;padding:4px 10px;">' + L('Изменить') + '</button>' +
             '<span style="margin-left:auto;" id="fmx-wp">' + _wpHtml(f.price, priceNow) + '</span></div>' +
             '<textarea class="fmx-inp" id="fmx-wtext" rows="4" style="margin-top:10px;width:100%;line-height:1.55;resize:none;"></textarea>' +
-            '<button class="fmx-save" id="fmx-wgo" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i> Скопировать и открыть чат</button>' +
-            '<button class="fmx-btn" id="fmx-wcopy" style="width:100%;margin-top:8px;">Скопировать текст</button>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin-top:8px;line-height:1.5;">Текст скопируется — вставь его в чате. Оффер добавится в закладки со статусом «Написал»</div>';
+            '<button class="fmx-save" id="fmx-wgo" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i> ' + L('Скопировать и открыть чат') + '</button>' +
+            '<button class="fmx-btn" id="fmx-wcopy" style="width:100%;margin-top:8px;">' + L('Скопировать текст') + '</button>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin-top:8px;line-height:1.5;">' + L('Текст скопируется — вставь его в чате. Оффер добавится в закладки со статусом «Написал»') + '</div>';
         el('fmx-wtext').value = _writeText();
         el('fmx-wtext').addEventListener('input', function () { _lsSel.edited = true; });
         qsa(sh, '#fmx-wf .fmx-seg').forEach(function (b) {
@@ -6278,7 +6280,7 @@
             closeSheet();
             var cb = el('fmx-slotsBox');
             if (cb) cb.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            toast('Выбери свободный день в календаре');
+            toast(L('Выбери свободный день в календаре'));
         });
         function _send(openChat) {
             var txt = el('fmx-wtext').value;
@@ -6289,7 +6291,7 @@
                 _bookmarks[l.username] = true; updateBmCount();
             }).catch(function () {});
             if (openChat) { closeSheet(); openTg(l.username); }
-            else toast('Текст скопирован');
+            else toast(L('Текст скопирован'));
         }
         el('fmx-wgo').addEventListener('click', function () { _send(true); });
         el('fmx-wcopy').addEventListener('click', function () { _send(false); });
@@ -6344,8 +6346,8 @@
         if (!el('fmx-tedBg')) {
             var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-tedBg';
             bg.innerHTML = '<div class="fmx-modal" style="max-width:440px;">' +
-                '<div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-layout-collage" style="color:#f5bf4f;"></i> Витрина оффера</h2>' +
-                '<p>Свободный холст: перетаскивай, растягивай за угол, поворачивай за верхнюю точку, крестик — удалить</p></div>' +
+                '<div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-layout-collage" style="color:#f5bf4f;"></i> ' + L('Витрина оффера') + '</h2>' +
+                '<p>' + L('Свободный холст: перетаскивай, растягивай за угол, поворачивай за верхнюю точку, крестик — удалить') + '</p></div>' +
                 '<button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
                 '<div class="fmx-mbody" id="fmx-tedBody"></div></div>';
             document.body.appendChild(bg);
@@ -6358,38 +6360,38 @@
     function _tedPaint() {
         var body = el('fmx-tedBody'); if (!body) return;
         body.innerHTML =
-            '<div class="fmx-tedhelp fmx-tedwhy" style="margin:0 0 12px;"><div class="th"><i class="ti ti-sparkles" style="color:#818cf8;"></i> Витрина — презентация твоего оффера</div>' +
-            '<div style="font-size:10.5px;line-height:1.6;color:#c9cbe0;">Закупщик видит её в развороте сразу после метрик. Это твоё рекламное пространство: покажи, почему размещение у тебя окупится.</div>' +
+            '<div class="fmx-tedhelp fmx-tedwhy" style="margin:0 0 12px;"><div class="th"><i class="ti ti-sparkles" style="color:#818cf8;"></i> ' + L('Витрина — презентация твоего оффера') + '</div>' +
+            '<div style="font-size:10.5px;line-height:1.6;color:#c9cbe0;">' + L('Закупщик видит её в развороте сразу после метрик. Это твоё рекламное пространство: покажи, почему размещение у тебя окупится.') + '</div>' +
             '<ul>' +
-            '<li>скриншоты статистики: охваты, прирост, вовлечённость;</li>' +
-            '<li>примеры интеграций и их результаты в цифрах;</li>' +
-            '<li>сильные стороны аудитории: гео, платёжеспособность, ниша;</li>' +
-            '<li>форматы, условия, бонус при заказе серии размещений;</li>' +
-            '<li>короткое видео-знакомство с каналом.</li>' +
+            '<li>' + L('скриншоты статистики: охваты, прирост, вовлечённость;') + '</li>' +
+            '<li>' + L('примеры интеграций и их результаты в цифрах;') + '</li>' +
+            '<li>' + L('сильные стороны аудитории: гео, платёжеспособность, ниша;') + '</li>' +
+            '<li>' + L('форматы, условия, бонус при заказе серии размещений;') + '</li>' +
+            '<li>' + L('короткое видео-знакомство с каналом.') + '</li>' +
             '</ul></div>' +
             '<div class="fmx-tedbar">' +
-            '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> Фон</button>' +
-            '<button class="fmx-seg" data-tadd="title"><i class="ti ti-h-1"></i> Заголовок</button>' +
-            '<button class="fmx-seg" data-tadd="text"><i class="ti ti-text-caption"></i> Текст</button>' +
-            '<button class="fmx-seg" data-tadd="img"><i class="ti ti-photo"></i> Фото/гиф</button>' +
-            '<button class="fmx-seg" data-tadd="video"><i class="ti ti-video"></i> Видео</button>' +
-            '<button class="fmx-seg" data-tadd="stk"><i class="ti ti-sticker"></i> Стикер</button>' +
+            '<button class="fmx-seg" id="fmx-tedBgBtn"><i class="ti ti-palette"></i> ' + L('Фон') + '</button>' +
+            '<button class="fmx-seg" data-tadd="title"><i class="ti ti-h-1"></i> ' + L('Заголовок') + '</button>' +
+            '<button class="fmx-seg" data-tadd="text"><i class="ti ti-text-caption"></i> ' + L('Текст') + '</button>' +
+            '<button class="fmx-seg" data-tadd="img"><i class="ti ti-photo"></i> ' + L('Фото/гиф') + '</button>' +
+            '<button class="fmx-seg" data-tadd="video"><i class="ti ti-video"></i> ' + L('Видео') + '</button>' +
+            '<button class="fmx-seg" data-tadd="stk"><i class="ti ti-sticker"></i> ' + L('Стикер') + '</button>' +
             '</div>' +
             '<div class="fmx-tabvp noext" style="margin-top:10px;"><div class="fmx-tab fmx-tabed" id="fmx-tedCv"></div></div>' +
             '<div id="fmx-tedRow" style="display:flex;gap:7px;margin-top:10px;align-items:center;flex-wrap:wrap;"></div>' +
-            '<button class="fmx-save" id="fmx-tedSave" style="margin-top:12px;"><i class="ti ti-device-floppy"></i> Сохранить витрину</button>' +
-            '<div style="font-size:10px;color:#565b73;margin-top:7px;line-height:1.5;">До 12 элементов. Закупщик видит верхнюю половину, остальное — по «Развернуть»</div>' +
-            '<div class="fmx-tedhelp"><div class="th"><i class="ti ti-info-circle" style="color:#818cf8;"></i> Как оформить витрину</div><ol>' +
-            '<li><b>Фон</b> — первая кнопка: 14 готовых градиентов или свой цвет через палитру.</li>' +
-            '<li><b>Добавь элемент</b>: заголовок, текст, фото/гиф, видео или стикер.</li>' +
-            '<li><b>Стикеры</b> — твоя коллекция из бота: отправь боту стикер в личные сообщения, и он появится в списке. Плюс набор эмодзи.</li>' +
-            '<li><b>Тап по элементу</b> — выбрать. Перетаскивай прямо пальцем: фон затемнится и появится сетка для ровной расстановки.</li>' +
-            '<li><b>Угловая ручка</b> — размер, <b>верхняя точка</b> — поворот, <b>красный крестик</b> — удалить. Щипок двумя пальцами: размер и поворот одновременно.</li>' +
-            '<li><b>Три точки под рамкой</b> — режим отображения: обычный, «Слияние» (полупрозрачный, вписывается в фон) и «Поверх» (выше всех элементов).</li>' +
-            '<li><b>Повторный тап по выбранному тексту</b> — правка надписи; то же делает кнопка «Изменить текст» под холстом.</li>' +
-            '<li><b>Зажми текст на секунду</b> — откроется передвижное окно цвета: спектр, оттенок, HEX и RGB; цветовые точки есть и под холстом.</li>' +
-            '<li>Закупщик видит верхнюю половину витрины сразу, остальное — по кнопке «Развернуть». Самое важное размещай сверху.</li>' +
-            '<li>Нажми <b>«Сохранить витрину»</b> — изменения сразу видны в развороте оффера.</li>' +
+            '<button class="fmx-save" id="fmx-tedSave" style="margin-top:12px;"><i class="ti ti-device-floppy"></i> ' + L('Сохранить витрину') + '</button>' +
+            '<div style="font-size:10px;color:#565b73;margin-top:7px;line-height:1.5;">' + L('До 12 элементов. Закупщик видит верхнюю половину, остальное — по «Развернуть»') + '</div>' +
+            '<div class="fmx-tedhelp"><div class="th"><i class="ti ti-info-circle" style="color:#818cf8;"></i> ' + L('Как оформить витрину') + '</div><ol>' +
+            '<li><b>' + L('Фон') + '</b> ' + L('— первая кнопка: 14 готовых градиентов или свой цвет через палитру.') + '</li>' +
+            '<li><b>' + L('Добавь элемент') + '</b>' + L(': заголовок, текст, фото/гиф, видео или стикер.') + '</li>' +
+            '<li><b>' + L('Стикеры') + '</b> ' + L('— твоя коллекция из бота: отправь боту стикер в личные сообщения, и он появится в списке. Плюс набор эмодзи.') + '</li>' +
+            '<li><b>' + L('Тап по элементу') + '</b> ' + L('— выбрать. Перетаскивай прямо пальцем: фон затемнится и появится сетка для ровной расстановки.') + '</li>' +
+            '<li><b>' + L('Угловая ручка') + '</b> ' + L('— размер,') + ' <b>' + L('верхняя точка') + '</b> ' + L('— поворот,') + ' <b>' + L('красный крестик') + '</b> ' + L('— удалить. Щипок двумя пальцами: размер и поворот одновременно.') + '</li>' +
+            '<li><b>' + L('Три точки под рамкой') + '</b> ' + L('— режим отображения: обычный, «Слияние» (полупрозрачный, вписывается в фон) и «Поверх» (выше всех элементов).') + '</li>' +
+            '<li><b>' + L('Повторный тап по выбранному тексту') + '</b> ' + L('— правка надписи; то же делает кнопка «Изменить текст» под холстом.') + '</li>' +
+            '<li><b>' + L('Зажми текст на секунду') + '</b> ' + L('— откроется передвижное окно цвета: спектр, оттенок, HEX и RGB; цветовые точки есть и под холстом.') + '</li>' +
+            '<li>' + L('Закупщик видит верхнюю половину витрины сразу, остальное — по кнопке «Развернуть». Самое важное размещай сверху.') + '</li>' +
+            '<li>' + L('Нажми') + ' <b>' + L('«Сохранить витрину»') + '</b> ' + L('— изменения сразу видны в развороте оффера.') + '</li>' +
             '</ol></div>' +
             '<input type="file" id="fmx-tedFile" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime" style="display:none;">';
         _tedDrawCanvas();
@@ -6486,7 +6488,7 @@
             var sel = (i === _ted.sel ? ' sel' : '') + _elMode(e);
             if (e.missing) {
                 h += '<div class="el med' + sel + ' gone" data-i="' + i + '" style="' + st + 'height:' + (e.h || 18) + '%;">' +
-                    '<span class="fmx-tedgone">Файл недоступен — удали элемент и загрузи заново</span>' + _tedHnd(i) + '</div>';
+                    '<span class="fmx-tedgone">' + L('Файл недоступен — удали элемент и загрузи заново') + '</span>' + _tedHnd(i) + '</div>';
                 return;
             }
             if (e.t === 'title') h += '<div class="el ttl' + sel + '" data-i="' + i + '" style="' + st + _elColor(e) + 'font-size:' + (e.fs || 16) + 'px;">' + _esc(e.s) + _tedHnd(i) + '</div>';
@@ -6545,8 +6547,8 @@
         if (!e) { row.innerHTML = ''; return; }
         var isTxt = (e.t === 'title' || e.t === 'text');
         row.innerHTML =
-            (isTxt ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;min-width:150px;"><i class="ti ti-pencil"></i> Изменить текст</button>' : '') +
-            (e.t === 'stk' ? '<button class="fmx-btn" id="fmx-tedStk" style="flex:1;"><i class="ti ti-sticker"></i> Сменить стикер</button>' : '') +
+            (isTxt ? '<button class="fmx-btn" id="fmx-tedTxt" style="flex:1;min-width:150px;"><i class="ti ti-pencil"></i> ' + L('Изменить текст') + '</button>' : '') +
+            (e.t === 'stk' ? '<button class="fmx-btn" id="fmx-tedStk" style="flex:1;"><i class="ti ti-sticker"></i> ' + L('Сменить стикер') + '</button>' : '') +
             (isTxt ? '<div style="flex-basis:100%;">' + colorPick('fmx-tedc', e.c || (e.t === 'title' ? '#e8e8ed' : '#b9c1d9'), 22) + '</div>' : '');
         var tb = el('fmx-tedTxt');
         if (tb) tb.addEventListener('click', function () { _tedEditText(e); });
@@ -6562,9 +6564,9 @@
     function _tedEditText(e) {
         _ensureSheets();
         var sh = el('fmx-writeSheet');
-        sh.innerHTML = '<div class="grip"></div><h3>' + (e.t === 'title' ? 'Заголовок' : 'Текст') + ' витрины</h3>' +
+        sh.innerHTML = '<div class="grip"></div><h3>' + (e.t === 'title' ? 'Заголовок' : 'Текст') + ' ' + L('витрины') + '</h3>' +
             '<textarea class="fmx-inp" id="fmx-tedTa" rows="3" maxlength="' + (e.t === 'title' ? 200 : 600) + '" style="margin-top:10px;width:100%;line-height:1.5;resize:none;"></textarea>' +
-            '<button class="fmx-save" id="fmx-tedTaOk" style="margin-top:10px;">Готово</button>';
+            '<button class="fmx-save" id="fmx-tedTaOk" style="margin-top:10px;">' + L('Готово') + '</button>';
         el('fmx-tedTa').value = e.s || '';
         el('fmx-tedTaOk').addEventListener('click', function () {
             var v = el('fmx-tedTa').value.trim();
@@ -6579,13 +6581,13 @@
         var sh = el('fmx-writeSheet');
         var curP = (_ted.bg && _ted.bg.k === 'p') ? _ted.bg.id : null;
         var curC = (_ted.bg && _ted.bg.k === 'c') ? _ted.bg.c : null;
-        sh.innerHTML = '<div class="grip"></div><h3>Фон витрины</h3>' +
+        sh.innerHTML = '<div class="grip"></div><h3>' + L('Фон витрины') + '</h3>' +
             '<div class="fmx-tbgw">' +
-            '<button class="fmx-tbgc' + (!_ted.bg ? ' on' : '') + '" data-tbg=""><span class="fmx-tbgt"><span class="mini" style="background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);"></span></span><em>Стандарт</em></button>' +
+            '<button class="fmx-tbgc' + (!_ted.bg ? ' on' : '') + '" data-tbg=""><span class="fmx-tbgt"><span class="mini" style="background:linear-gradient(150deg,#131a30,#0c1020 45%,#0e1526 70%,#101a2c);"></span></span><em>' + L('Стандарт') + '</em></button>' +
             _TED_BG.map(function (p) { return '<button class="fmx-tbgc' + (curP === p.id ? ' on' : '') + '" data-tbg="' + p.id + '"><span class="fmx-tbgt"><span class="mini tbg-' + p.id + '"></span></span><em>' + p.n + '</em></button>'; }).join('') +
             '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Свой цвет фона</span>' + colorPick('fmx-tedbgc', curC || '#0a0d18', 22) +
-            '<button class="fmx-save" id="fmx-tedBgOk" style="margin-top:12px;">Готово</button>';
+            '<span class="fmx-lbl fmx-mt2">' + L('Свой цвет фона') + '</span>' + colorPick('fmx-tedbgc', curC || '#0a0d18', 22) +
+            '<button class="fmx-save" id="fmx-tedBgOk" style="margin-top:12px;">' + L('Готово') + '</button>';
         qsa(sh, '[data-tbg]').forEach(function (b) {
             b.addEventListener('click', function () {
                 var id = b.getAttribute('data-tbg');
@@ -6621,16 +6623,16 @@
             if (!_sheetIs('sticker')) return;
             var lst = _stickers || [];
             _sheetOwn('sticker');
-            sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3>' +
-                '<span class="fmx-lbl fmx-mt2">Твоя коллекция из бота</span>' +
+            sh.innerHTML = '<div class="grip"></div><h3>' + L('Стикер') + '</h3>' +
+                '<span class="fmx-lbl fmx-mt2">' + L('Твоя коллекция из бота') + '</span>' +
                 (lst.length ? '<div class="fmx-stkgrid" style="margin-top:8px;">' +
                     lst.map(function (st, j) { return '<button class="fmx-stkcell" data-stm="' + j + '">' + stkMedia(st, true) + '</button>'; }).join('') + '</div>'
-                    : '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;margin-top:4px;">Коллекция пуста: отправь боту стикер в личные сообщения — он появится здесь.</div>') +
-                '<span class="fmx-lbl fmx-mt2">Эмодзи</span>' +
+                    : '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;margin-top:4px;">' + L('Коллекция пуста: отправь боту стикер в личные сообщения — он появится здесь.') + '</div>') +
+                '<span class="fmx-lbl fmx-mt2">' + L('Эмодзи') + '</span>' +
                 '<div class="fmx-emwrap" id="fmx-emw"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">' +
                 _TED_STK.map(function (x) { return '<button class="fmx-seg" data-stx="' + x + '" style="font-size:20px;min-width:46px;">' + x + '</button>'; }).join('') + '</div></div>' +
                 '<div style="display:flex;justify-content:center;margin-top:-26px;position:relative;z-index:2;">' +
-                '<button class="fmx-tabmore" id="fmx-emMore" style="min-height:32px;padding:6px 16px;font-size:10.5px;">Развернуть</button></div>';
+                '<button class="fmx-tabmore" id="fmx-emMore" style="min-height:32px;padding:6px 16px;font-size:10.5px;">' + L('Развернуть') + '</button></div>';
             qsa(sh, '[data-stx]').forEach(function (b) {
                 b.addEventListener('click', function () { put(b.getAttribute('data-stx'), null); });
             });
@@ -6653,7 +6655,7 @@
         if (_stickers) paint();
         else {
             _sheetOwn('sticker');
-            sh.innerHTML = '<div class="grip"></div><h3>Стикер</h3><div style="font-size:11px;color:#8990a8;padding:14px 0;">Загружаю коллекцию…</div>';
+            sh.innerHTML = '<div class="grip"></div><h3>' + L('Стикер') + '</h3><div style="font-size:11px;color:#8990a8;padding:14px 0;">' + L('Загружаю коллекцию…') + '</div>';
             apiGet('/api/v1/marketplace/stickers').then(function (r) {
                 _stickers = (r && r.stickers) ? r.stickers : [];
                 paint();
@@ -6662,9 +6664,9 @@
         el('fmx-shbg').classList.add('on'); sh.classList.add('on');
     }
     function _tedAdd(t) {
-        if (_ted.els.length >= 12) { uiAlert('На витрине помещается до 12 элементов — удали лишний.'); return; }
+        if (_ted.els.length >= 12) { uiAlert(L('На витрине помещается до 12 элементов — удали лишний.')); return; }
         if (t === 'video' && (_ted.els || []).some(function (e) { return e.t === 'video'; })) {
-            uiAlert('На витрине допускается одно видео — удали текущее, чтобы загрузить другое.');
+            uiAlert(L('На витрине допускается одно видео — удали текущее, чтобы загрузить другое.'));
             return;
         }
         if (t === 'img' || t === 'video') { _tedUpload(t); return; }
@@ -6682,13 +6684,13 @@
         inp.onchange = function () {
             var f = inp.files && inp.files[0]; inp.value = '';
             if (!f) return;
-            if (f.size > MEDIA_MAX_BYTES) { uiAlert('Файл ' + Math.round(f.size / 1048576) + ' МБ — больше лимита. Выбери файл меньше.'); return; }
+            if (f.size > MEDIA_MAX_BYTES) { uiAlert(L('Файл ') + Math.round(f.size / 1048576) + ' МБ — больше лимита. Выбери файл меньше.'); return; }
             var fd = new FormData();
             fd.append('file', f); fd.append('target', 'tablo');
             var base = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : '';
             var headers = {};
             try { if (typeof tg !== 'undefined' && tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData; } catch (e2) {}
-            toast('Загружаю файл…');
+            toast(L('Загружаю файл…'));
             fetch(base + '/api/v1/marketplace/upload', { method: 'POST', headers: headers, body: fd })
                 .then(function (r) { if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) { throw new Error(j.detail || ('код ' + r.status)); }); return r.json(); })
                 .then(function (j) {
@@ -6697,7 +6699,7 @@
                     _ted.sel = _ted.els.length - 1;
                     _haptic('success'); _tedDrawCanvas();
                 })
-                .catch(function (e3) { uiAlert('Не удалось загрузить: ' + e3.message); });
+                .catch(function (e3) { uiAlert(L('Не удалось загрузить: ') + e3.message); });
         };
         inp.click();
     }
@@ -6873,7 +6875,7 @@
             toast(r.resubmitted ? 'Витрина отправлена на проверку — оффер вернётся на Площадку после модерации'
                 : 'Витрина сохранена — закупщики видят её в развороте оффера');
             hideModal('fmx-tedBg');
-        }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+        }).catch(function () { btn.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
     }
 
     function openCampaign() {
@@ -6883,15 +6885,15 @@
         var seen = {};
         (_feed || []).forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
         _sheetOwn('campaign');
-        sh.innerHTML = '<div class="grip"></div><h3>Собрать кампанию под бюджет</h3>' +
-            '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;">Готовый медиаплан из офферов со свободными датами — без ручного перебора</div>' +
-            '<span class="fmx-lbl fmx-mt2">Бюджет, ₽</span>' +
+        sh.innerHTML = '<div class="grip"></div><h3>' + L('Собрать кампанию под бюджет') + '</h3>' +
+            '<div style="font-size:10.5px;color:#8990a8;line-height:1.5;">' + L('Готовый медиаплан из офферов со свободными датами — без ручного перебора') + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Бюджет, ₽') + '</span>' +
             '<input class="fmx-inp" id="fmx-cbud" type="number" min="500" inputmode="numeric" value="50000" style="width:100%;">' +
-            '<span class="fmx-lbl fmx-mt2">Ниша</span>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Ниша') + '</span>' +
             '<div style="display:flex;gap:7px;flex-wrap:wrap;" id="fmx-cnich">' +
-            '<button class="fmx-seg on" data-n="">Все ниши</button>' +
+            '<button class="fmx-seg on" data-n="">' + L('Все ниши') + '</button>' +
             niches.slice(0, 6).map(function (n) { return '<button class="fmx-seg" data-n="' + _esc(n) + '">' + _esc(n) + '</button>'; }).join('') + '</div>' +
-            '<button class="fmx-save" id="fmx-cgo" style="margin-top:14px;"><i class="ti ti-calculator"></i> Собрать медиаплан</button>' +
+            '<button class="fmx-save" id="fmx-cgo" style="margin-top:14px;"><i class="ti ti-calculator"></i> ' + L('Собрать медиаплан') + '</button>' +
             '<div id="fmx-cres"></div>';
         var selN = '';
         qsa(sh, '#fmx-cnich .fmx-seg').forEach(function (b) {
@@ -6902,7 +6904,7 @@
         });
         el('fmx-cgo').addEventListener('click', function () {
             var bud = parseInt(el('fmx-cbud').value, 10);
-            if (!bud || bud < 500) { uiAlert('Укажи бюджет от 500 ₽'); return; }
+            if (!bud || bud < 500) { uiAlert(L('Укажи бюджет от 500 ₽')); return; }
             var btn = el('fmx-cgo'); btn.disabled = true;
             apiPost('/api/v1/marketplace/campaign', { budget: Math.min(bud, 100000000), niche: selN || null }).then(function (r) {
                 if (!_sheetIs('campaign')) return;
@@ -6911,15 +6913,15 @@
                 _haptic('success');
                 var t = r.totals || {};
                 if (!r.items || !r.items.length) {
-                    el('fmx-cres').innerHTML = '<div class="fmx-empty" style="padding:22px 10px;"><i class="ti ti-filter-off"></i><h3>Под этот бюджет и нишу офферов нет</h3><p>Попробуй другую нишу или измени бюджет.</p></div>';
+                    el('fmx-cres').innerHTML = '<div class="fmx-empty" style="padding:22px 10px;"><i class="ti ti-filter-off"></i><h3>' + L('Под этот бюджет и нишу офферов нет') + '</h3><p>' + L('Попробуй другую нишу или измени бюджет.') + '</p></div>';
                     return;
                 }
                 el('fmx-cres').innerHTML =
                     '<div class="fmx-glassbox fmx-sumrow num" style="margin-top:14px;background:rgba(255,255,255,0.035);border:0.5px solid rgba(255,255,255,0.09);border-radius:14px;">' +
-                    '<div><div class="l">Офферов</div><div class="v">' + t.count + '</div></div>' +
-                    '<div><div class="l">Сумма</div><div class="v">' + _num(t.sum) + ' ₽</div></div>' +
-                    '<div><div class="l">Показы</div><div class="v">~' + _num(t.impressions != null ? t.impressions : t.reach) + '</div></div>' +
-                    '<div><div class="l">Ср. CPM</div><div class="v" style="color:#5DCAA5;">' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—') + '</div></div></div>' +
+                    '<div><div class="l">' + L('Офферов') + '</div><div class="v">' + t.count + '</div></div>' +
+                    '<div><div class="l">' + L('Сумма') + '</div><div class="v">' + _num(t.sum) + ' ₽</div></div>' +
+                    '<div><div class="l">' + L('Показы') + '</div><div class="v">~' + _num(t.impressions != null ? t.impressions : t.reach) + '</div></div>' +
+                    '<div><div class="l">' + L('Ср. CPM') + '</div><div class="v" style="color:#5DCAA5;">' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—') + '</div></div></div>' +
                     '<div style="margin-top:8px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:4px 12px;">' +
                     r.items.map(function (it) {
                         return '<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);font-size:11.5px;" class="num">' +
@@ -6928,11 +6930,11 @@
                             (it.hot_pct ? ' <span style="color:#f5bf4f;">−' + it.hot_pct + '%</span>' : '') + '</div>' +
                             '<b style="white-space:nowrap;">' + _num(it.price_final) + ' ₽</b></div>';
                     }).join('') + '</div>' +
-                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.45;">Остаток бюджета ' + _num(t.rest) + ' ₽<br>' +
-                    'Показы — сумма просмотров всех размещений. Уникальных людей будет меньше: аудитории каналов одной ниши пересекаются.</div>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.45;">' + L('Остаток бюджета') + ' ' + _num(t.rest) + ' ₽<br>' +
+                    L('Показы — сумма просмотров всех размещений. Уникальных людей будет меньше: аудитории каналов одной ниши пересекаются.') + '</div>' +
                     '<div style="display:flex;gap:8px;margin-top:12px;">' +
-                    '<button class="fmx-btn" id="fmx-cbm" style="flex:1;">В закладки весь план</button>' +
-                    '<button class="fmx-btn" id="fmx-ccopy" style="flex:1;">Скопировать план</button></div>';
+                    '<button class="fmx-btn" id="fmx-cbm" style="flex:1;">' + L('В закладки весь план') + '</button>' +
+                    '<button class="fmx-btn" id="fmx-ccopy" style="flex:1;">' + L('Скопировать план') + '</button></div>';
                 el('fmx-cbm').addEventListener('click', function () {
                     var chain = Promise.resolve();
                     r.items.forEach(function (it) {
@@ -6943,7 +6945,7 @@
                     chain.then(function () {
                         r.items.forEach(function (it) { _bookmarks[it.username] = true; });
                         updateBmCount(); _haptic('success');
-                        toast('Все офферы плана добавлены в закладки');
+                        toast(L('Все офферы плана добавлены в закладки'));
                     });
                 });
                 el('fmx-ccopy').addEventListener('click', function () {
@@ -6954,9 +6956,9 @@
                     lines.push('Итого: ' + _num(t.sum) + ' ₽ · показы ~' + _num(t.impressions != null ? t.impressions : t.reach) + ' · средний CPM ' + (t.avg_cpm != null ? _num(t.avg_cpm) + ' ₽' : '—'));
                     lines.push('Показы — сумма просмотров; уникальный охват меньше из-за пересечения аудиторий.');
                     copyText(lines.join('\n'));
-                    toast('Скопировано: план кампании');
+                    toast(L('Скопировано: план кампании'));
                 });
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+            }).catch(function () { btn.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
         });
         el('fmx-shbg').classList.add('on');
         sh.classList.add('on');
@@ -6970,8 +6972,8 @@
         var l = findListing(u);
         if (_cmp[u]) { delete _cmp[u]; }
         else {
-            if (_cmpCount() >= CMP_MAX) { _haptic('error'); toast('Можно сравнить не больше ' + CMP_MAX + ' каналов — сними лишний.'); return; }
-            if (!l) { _haptic('error'); toast('Не удалось добавить канал к сравнению.'); return; }
+            if (_cmpCount() >= CMP_MAX) { _haptic('error'); toast(L('Можно сравнить не больше ') + CMP_MAX + ' каналов — сними лишний.'); return; }
+            if (!l) { _haptic('error'); toast(L('Не удалось добавить канал к сравнению.')); return; }
             _cmp[u] = l;
         }
         _haptic('light');
@@ -6985,8 +6987,8 @@
         var n = _cmpCount();
         bar.classList.toggle('on', n > 0 && _mainTab === 'market');
         if (!n) return;
-        bar.innerHTML = '<span class="fmx-cmpn">Выбрано ' + n + ' из ' + CMP_MAX + '</span>' +
-            '<button class="fmx-cmpclr" id="fmx-cmpClr">Сбросить</button>' +
+        bar.innerHTML = '<span class="fmx-cmpn">' + L('Выбрано') + ' ' + n + ' из ' + CMP_MAX + '</span>' +
+            '<button class="fmx-cmpclr" id="fmx-cmpClr">' + L('Сбросить') + '</button>' +
             '<button class="fmx-cmpgo" id="fmx-cmpGo"' + (n < 2 ? ' disabled' : '') + '><i class="ti ti-columns-3"></i> ' +
             (n < 2 ? 'Выбери ещё один' : 'Сравнить') + '</button>';
         el('fmx-cmpClr').addEventListener('click', function () {
@@ -7035,7 +7037,7 @@
             }).join('') + '</tr>';
         });
         h += '</tbody></table></div>' +
-            '<div class="fmx-cmpleg"><i class="ti ti-check"></i> Лучшее в строке. Подписчиков не отмечаем: размер канала сам по себе не говорит о качестве.</div>' +
+            '<div class="fmx-cmpleg"><i class="ti ti-check"></i> ' + L('Лучшее в строке. Подписчиков не отмечаем: размер канала сам по себе не говорит о качестве.') + '</div>' +
             '<div class="fmx-acts" style="margin-top:12px;">' + items.map(function (l) {
                 return '<button class="fmx-btn" data-cmpw="' + _esc(l.username) + '"><i class="ti ti-brand-telegram"></i>' + _esc((l.title || l.username || '').slice(0, 14)) + '</button>';
             }).join('') + '</div>';
@@ -7047,7 +7049,7 @@
     }
 
     function _dealTrackHtml() {
-        return '<div id="fmx-dealTrk"><button class="fmx-btn" id="fmx-dealTrkGo" style="width:100%;margin-top:8px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> <span>Ссылка отслеживания в рекламный пост</span></button></div>';
+        return '<div id="fmx-dealTrk"><button class="fmx-btn" id="fmx-dealTrkGo" style="width:100%;margin-top:8px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> <span>' + L('Ссылка отслеживания в рекламный пост') + '</span></button></div>';
     }
     function _dealTrackBind(dealId) {
         var go = el('fmx-dealTrkGo');
@@ -7062,7 +7064,7 @@
             _trkBusy = false;
             if (!r || r.ok === false) { _haptic('error'); uiAlert((r && r.message) || 'Не удалось. Повтори попытку.'); return; }
             if (r.need_channel) {
-                boxT.innerHTML = '<div class="fmx-dealline" style="justify-content:flex-start;margin-top:8px;"><i class="ti ti-route"></i> <span>В какой канал вести подписчиков?</span></div>' +
+                boxT.innerHTML = '<div class="fmx-dealline" style="justify-content:flex-start;margin-top:8px;"><i class="ti ti-route"></i> <span>' + L('В какой канал вести подписчиков?') + '</span></div>' +
                     r.need_channel.map(function (c) { return '<button class="fmx-btn" data-trkch="' + c.id + '" style="width:100%;margin-top:6px;">' + _esc(c.title || ('@' + (c.username || ''))) + '</button>'; }).join('');
                 qsa(boxT, '[data-trkch]').forEach(function (b) { b.addEventListener('click', function () { _dealTrackCreate(dealId, +b.getAttribute('data-trkch')); }); });
                 return;
@@ -7070,71 +7072,71 @@
             var it = r.item || {};
             var url = it.click_code ? ('https://fmtr.click/r/' + it.click_code) : (it.invite_link || '');
             _haptic('success');
-            boxT.innerHTML = '<div class="fmx-proof" style="margin-top:8px;"><div class="fmx-proof-t"><i class="ti ti-route"></i> <span>Отслеживание готово — запись уже в Трекере</span></div>' +
-                '<div style="font-size:11px;color:#8990a8;margin-top:4px;"><span>Эта ссылка — в рекламный пост: подписки, показы и цена подписчика посчитаются автоматически</span></div>' +
+            boxT.innerHTML = '<div class="fmx-proof" style="margin-top:8px;"><div class="fmx-proof-t"><i class="ti ti-route"></i> <span>' + L('Отслеживание готово — запись уже в Трекере') + '</span></div>' +
+                '<div style="font-size:11px;color:#8990a8;margin-top:4px;"><span>' + L('Эта ссылка — в рекламный пост: подписки, показы и цена подписчика посчитаются автоматически') + '</span></div>' +
                 '<div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><code style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;">' + _esc(url) + '</code>' +
-                '<button class="fmx-btn" id="fmx-trkCopy" style="flex:0 0 auto;padding:6px 10px;"><span>Скопировать</span></button></div></div>';
+                '<button class="fmx-btn" id="fmx-trkCopy" style="flex:0 0 auto;padding:6px 10px;"><span>' + L('Скопировать') + '</span></button></div></div>';
             var cp = el('fmx-trkCopy');
             if (cp) cp.addEventListener('click', function () {
                 try { navigator.clipboard.writeText(url); } catch (e) {}
-                _haptic('light'); toast('Ссылка скопирована — вставь её в рекламный пост');
+                _haptic('light'); toast(L('Ссылка скопирована — вставь её в рекламный пост'));
             });
-        }).catch(function () { _trkBusy = false; uiAlert('Не удалось. Повтори попытку.'); });
+        }).catch(function () { _trkBusy = false; uiAlert(L('Не удалось. Повтори попытку.')); });
     }
     function _cardDealMark(lid) {
         if (!lid) return;
         _haptic('light');
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + lid).then(function (r) {
             var st = r && r.ok ? r.state : null;
-            if (st === 'pending') { toast('Сделка уже отмечена — ждём подтверждения владельца'); return; }
-            if (st === 'confirmed' || st === 'reviewed') { toast('Сделка по этому офферу уже есть — статус в развороте карточки'); return; }
-            uiConfirm('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».', function () {
+            if (st === 'pending') { toast(L('Сделка уже отмечена — ждём подтверждения владельца')); return; }
+            if (st === 'confirmed' || st === 'reviewed') { toast(L('Сделка по этому офферу уже есть — статус в развороте карточки')); return; }
+            uiConfirm(L('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».'), function () {
                 apiPost('/api/v1/marketplace/deals', { listing_id: lid }).then(function (rr) {
                     if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
-                    _haptic('success'); toast('Отправлено владельцу на подтверждение');
-                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+                    _haptic('success'); toast(L('Отправлено владельцу на подтверждение'));
+                }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
             });
-        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+        }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
     }
     function renderDealBox(l) {
         var box = el('fmx-dealBox'); if (!box) return;
         apiGet('/api/v1/marketplace/deals/state?listing_id=' + l.id).then(function (r) {
             if (!r || !r.ok) return;
             if (r.state === 'pending') {
-                box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> Сделка отмечена — ждём подтверждения владельца.</div>' + _dealTrackHtml();
+                box.innerHTML = '<div class="fmx-dealline"><i class="ti ti-hourglass"></i> ' + L('Сделка отмечена — ждём подтверждения владельца.') + '</div>' + _dealTrackHtml();
                 _dealTrackBind(r.deal_id);
             } else if (r.state === 'confirmed' && r.can_complete) {
-                box.innerHTML = _proofHtml(r) + '<button class="fmx-save" id="fmx-dealDone" style="margin-top:10px;background:linear-gradient(135deg,#34d399,#5DCAA5);color:#052012;"><i class="ti ti-heart-handshake"></i> Мы провели сделку</button>' +
-                    '<div style="font-size:10px;color:#565b73;margin-top:6px;line-height:1.5;">Автозамеры завершены, пост дожил до контрольного срока. Нажатие засчитает сделку в рейтинг оффера и откроет отзыв.</div>';
+                box.innerHTML = _proofHtml(r) + '<button class="fmx-save" id="fmx-dealDone" style="margin-top:10px;background:linear-gradient(135deg,#34d399,#5DCAA5);color:#052012;"><i class="ti ti-heart-handshake"></i> ' + L('Мы провели сделку') + '</button>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:6px;line-height:1.5;">' + L('Автозамеры завершены, пост дожил до контрольного срока. Нажатие засчитает сделку в рейтинг оффера и откроет отзыв.') + '</div>';
                 el('fmx-dealDone').addEventListener('click', function () {
                     var b = this; b.disabled = true;
                     apiPost('/api/v1/marketplace/deals/' + r.deal_id + '/complete', {}).then(function (rr) {
                         b.disabled = false;
                         if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
-                        _haptic('success'); toast('Сделка засчитана — рейтинг оффера обновлён');
+                        _haptic('success'); toast(L('Сделка засчитана — рейтинг оффера обновлён'));
                         _feed = null; _feedState = 'idle';
                         renderDealBox(l);
-                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                    }).catch(function () { b.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
                 });
             } else if (r.state === 'confirmed') {
                 box.innerHTML = _proofHtml(r) + _dealTrackHtml() +
-                    '<div class="fmx-dealline"><i class="ti ti-radar-2"></i> Идёт отслеживание размещения. Зачёт сделки в рейтинг и отзыв откроются после автозамеров — 48 часов после выхода поста.</div>';
+                    '<div class="fmx-dealline"><i class="ti ti-radar-2"></i> ' + L('Идёт отслеживание размещения. Зачёт сделки в рейтинг и отзыв откроются после автозамеров — 48 часов после выхода поста.') + '</div>';
                 _dealTrackBind(r.deal_id);
             } else if (r.state === 'completed') {
-                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка проведена — подтверждена автозамерами.</div>' +
-                    '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> Оставить отзыв о сделке</button>';
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> ' + L('Сделка проведена — подтверждена автозамерами.') + '</div>' +
+                    '<button class="fmx-btn" id="fmx-dealRev" style="width:100%;margin-top:10px;color:#f59e0b;border-color:rgba(245,158,11,0.35);"><i class="ti ti-star"></i> ' + L('Оставить отзыв о сделке') + '</button>';
                 el('fmx-dealRev').addEventListener('click', function () { hideModal('fmx-listBg'); openReviewForm(r.deal_id); });
             } else if (r.state === 'reviewed') {
-                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> Сделка проведена, отзыв оставлен.</div>';
+                box.innerHTML = _proofHtml(r) + '<div class="fmx-dealline" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i> ' + L('Сделка проведена, отзыв оставлен.') + '</div>';
             } else {
-                box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-heart-handshake"></i> Отметить сделку</button>';
+                box.innerHTML = '<button class="fmx-btn" id="fmx-dealGo" style="width:100%;margin-top:10px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-heart-handshake"></i> ' + L('Отметить сделку') + '</button>';
                 el('fmx-dealGo').addEventListener('click', function () {
-                    uiConfirm('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».', function () {
+                    uiConfirm(L('Отмечай только реальную сделку. Появится ссылка отслеживания для рекламного поста, владелец подтвердит сделку, пройдут автозамеры охвата — и после их завершения засчитаешь сделку в рейтинг кнопкой «Мы провели сделку».'), function () {
                         apiPost('/api/v1/marketplace/deals', { listing_id: l.id }).then(function (rr) {
                             if (rr && rr.ok === false) { _haptic('error'); uiAlert(rr.error || 'Не удалось'); return; }
-                            _haptic('success'); toast('Отправлено владельцу на подтверждение');
+                            _haptic('success'); toast(L('Отправлено владельцу на подтверждение'));
                             renderDealBox(l);
-                        }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+                        }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
                     });
                 });
             }
@@ -7147,26 +7149,26 @@
             box.innerHTML = '<div class="fmx-revs"><div class="fmx-revs-t"><i class="ti ti-star-filled" style="color:#f59e0b;"></i> ' + (l.rating_avg || '') + ' · ' + l.reviews_count + ' ' + _plural(l.reviews_count, 'отзыв', 'отзыва', 'отзывов') + '</div>' +
                 r.reviews.map(function (rv) {
                     var stars = '★★★★★'.slice(0, rv.rating) + '☆☆☆☆☆'.slice(0, 5 - rv.rating);
-                    return '<div class="fmx-rev"><span class="fmx-rev-s">' + stars + '</span> <span style="font-size:9px;font-weight:700;border-radius:99px;padding:2px 7px;background:rgba(93,202,165,0.15);color:#5DCAA5;white-space:nowrap;">Сделка подтверждена</span>' + (rv.text ? '<span class="fmx-rev-x">' + _esc(rv.text) + '</span>' : '') + '<span class="fmx-rev-a">' + _ago(rv.created_at) + '</span></div>';
+                    return '<div class="fmx-rev"><span class="fmx-rev-s">' + stars + '</span> <span style="font-size:9px;font-weight:700;border-radius:99px;padding:2px 7px;background:rgba(93,202,165,0.15);color:#5DCAA5;white-space:nowrap;">' + L('Сделка подтверждена') + '</span>' + (rv.text ? '<span class="fmx-rev-x">' + _esc(rv.text) + '</span>' : '') + '<span class="fmx-rev-a">' + _ago(rv.created_at) + '</span></div>';
                 }).join('') + '</div>';
         }).catch(function () {});
     }
     function openReviewForm(dealId) {
         var sel = { v: 0 };
         el('fmx-revBody').innerHTML =
-            '<span class="fmx-lbl">Оценка</span><div class="fmx-fxw" id="fmx-rev-r">' +
+            '<span class="fmx-lbl">' + L('Оценка') + '</span><div class="fmx-fxw" id="fmx-rev-r">' +
             [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Пара слов (необязательно)</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="Как прошла сделка? Вышел ли пост вовремя, честные ли охваты."></textarea>' +
-            '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;opacity:0.5;" disabled><i class="ti ti-send"></i> Поставь оценку</button>';
-        qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var sb = el('fmx-rev-send'); if (sb) { sb.disabled = false; sb.style.opacity = '1'; sb.innerHTML = '<i class="ti ti-send"></i> Отправить отзыв'; } }); });
+            '<span class="fmx-lbl fmx-mt2">' + L('Пара слов (необязательно)') + '</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="Как прошла сделка? Вышел ли пост вовремя, честные ли охваты."></textarea>' +
+            '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;opacity:0.5;" disabled><i class="ti ti-send"></i> ' + L('Поставь оценку') + '</button>';
+        qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var sb = el('fmx-rev-send'); if (sb) { sb.disabled = false; sb.style.opacity = '1'; sb.innerHTML = '<i class="ti ti-send"></i> ' + L('Отправить отзыв'); } }); });
         el('fmx-rev-send').addEventListener('click', function () {
             var btn = this; if (!sel.v) return; btn.disabled = true;
             apiPost('/api/v1/marketplace/deals/' + dealId + '/review', { rating: sel.v, text: el('fmx-rev-t').value }).then(function (r) {
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось'); return; }
-                _haptic('success'); hideModal('fmx-revBg'); toast('Отзыв отправлен');
+                _haptic('success'); hideModal('fmx-revBg'); toast(L('Отзыв отправлен'));
                 _feed = null; _feedState = 'idle';
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+            }).catch(function () { btn.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
         });
         showModal('fmx-revBg');
     }
@@ -7175,13 +7177,13 @@
         try { uname = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) || ''; } catch (e) {}
         var fchips = Object.keys(REQ_FMT).map(function (k) { return '<button class="fmx-fx' + (k === 'any' ? ' on' : '') + '" data-rf="' + k + '">' + REQ_FMT[k] + '</button>'; }).join('');
         el('fmx-reqBody').innerHTML =
-            '<span class="fmx-lbl">Ниша каналов</span><input class="fmx-inp" id="fmx-rq-niche" maxlength="64" placeholder="например, Биохакинг">' +
-            '<span class="fmx-lbl fmx-mt2">Бюджет, ₽ (необязательно)</span><input class="fmx-inp" id="fmx-rq-budget" type="number" min="0" step="500" placeholder="например, 15000">' +
-            '<span class="fmx-lbl fmx-mt2">Формат размещения</span><div class="fmx-fxw" id="fmx-rq-fmt">' + fchips + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Что рекламируем и требования</span><textarea class="fmx-inp" id="fmx-rq-text" rows="4" maxlength="500" placeholder="Продукт, гео аудитории, пожелания к каналам. Минимум 20 символов."></textarea>' +
-            '<span class="fmx-lbl fmx-mt2">Контакт для связи</span><div class="fmx-chbtn" style="cursor:text;"><span style="color:#8990a8;">@</span><input class="fmx-inp" id="fmx-rq-contact" style="border:none;background:transparent;padding:0 0 0 4px;flex:1;" maxlength="64" value="' + _esc(uname) + '" placeholder="username"></div>' +
-            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">Заявка видна всем владельцам каналов — они напишут на указанный контакт. Максимум 3 активных заявки. Правила площадки действуют и здесь.</div>' +
-            '<button class="fmx-save" id="fmx-rq-send" style="margin-top:14px;"><i class="ti ti-send"></i> Опубликовать заявку</button>';
+            '<span class="fmx-lbl">' + L('Ниша каналов') + '</span><input class="fmx-inp" id="fmx-rq-niche" maxlength="64" placeholder="например, Биохакинг">' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Бюджет, ₽ (необязательно)') + '</span><input class="fmx-inp" id="fmx-rq-budget" type="number" min="0" step="500" placeholder="например, 15000">' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Формат размещения') + '</span><div class="fmx-fxw" id="fmx-rq-fmt">' + fchips + '</div>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Что рекламируем и требования') + '</span><textarea class="fmx-inp" id="fmx-rq-text" rows="4" maxlength="500" placeholder="Продукт, гео аудитории, пожелания к каналам. Минимум 20 символов."></textarea>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Контакт для связи') + '</span><div class="fmx-chbtn" style="cursor:text;"><span style="color:#8990a8;">@</span><input class="fmx-inp" id="fmx-rq-contact" style="border:none;background:transparent;padding:0 0 0 4px;flex:1;" maxlength="64" value="' + _esc(uname) + '" placeholder="username"></div>' +
+            '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + L('Заявка видна всем владельцам каналов — они напишут на указанный контакт. Максимум 3 активных заявки. Правила площадки действуют и здесь.') + '</div>' +
+            '<button class="fmx-save" id="fmx-rq-send" style="margin-top:14px;"><i class="ti ti-send"></i> ' + L('Опубликовать заявку') + '</button>';
         var fsel = { v: 'any' };
         qsa(el('fmx-rq-fmt'), '[data-rf]').forEach(function (b) { b.addEventListener('click', function () { fsel.v = b.getAttribute('data-rf'); qsa(el('fmx-rq-fmt'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }); });
         el('fmx-rq-send').addEventListener('click', function () {
@@ -7208,16 +7210,16 @@
             }).then(function (r) {
                 btn.disabled = false;
                 if (r && r.ok === false) { _haptic('error'); uiAlert(r.error || 'Не удалось опубликовать'); return; }
-                _haptic('success'); hideModal('fmx-reqBg'); toast('Заявка размещена');
+                _haptic('success'); hideModal('fmx-reqBg'); toast(L('Заявка размещена'));
                 _reqs = null; _reqState = 'idle'; renderSell();
-            }).catch(function () { btn.disabled = false; uiAlert('Не удалось опубликовать. Повтори попытку.'); });
+            }).catch(function () { btn.disabled = false; uiAlert(L('Не удалось опубликовать. Повтори попытку.')); });
         });
         showModal('fmx-reqBg');
     }
 
     function renderCreate() {
         var sub = el('fmx-sub'); if (!sub) return;
-        sub.innerHTML = '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю конструктор…</div></div>';
+        sub.innerHTML = '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">' + L('Загружаю конструктор…') + '</div></div>';
         Promise.all([loadChannels(), loadMyListings()]).then(function () {
             var pubs = _channels.filter(function (c) { return c.username; });
             if (!pubs.length) { sub.innerHTML = emptyHtml('ti-plus', 'Нет подходящих каналов', 'Чтобы выставить канал на Площадку, у него должен быть публичный @username. Добавь или настрой канал в приложении.'); return; }
@@ -7348,27 +7350,27 @@
             var paused = !!c.is_paused;
             var ok = pub && !paused;
             var sub2 = !pub
-                ? '<div class="fmx-chuu">приватный — нужен публичный @username</div>'
+                ? '<div class="fmx-chuu">' + L('приватный — нужен публичный @username') + '</div>'
                 : (paused
-                    ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>На паузе</span></div>'
+                    ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#f5bf4f;background:rgba(245,191,79,0.1);border:0.5px solid rgba(245,191,79,0.35);border-radius:99px;padding:2px 8px;white-space:nowrap;"><i class="ti ti-player-pause" style="font-size:10px;"></i>' + L('На паузе') + '</span></div>'
                     : '<div class="fmx-chuu">@' + _esc(c.username) + '</div>');
             return '<div class="fmx-chrow' + (c.id === _ss.channelId ? ' sel' : '') + (ok ? '' : ' dis') + '" data-cid="' + c.id + '" data-pub="' + (pub ? 1 : 0) + '" data-paused="' + (paused ? 1 : 0) + '"><div class="fmx-chav"' + (ok ? '' : ' style="background:rgba(255,255,255,0.08);color:#8990a8;"') + '>' + (c.avatar_url ? '<img src="' + mediaAbs(c.avatar_url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">' : _esc((c.title || c.username || '?').charAt(0))) + '</div><div style="flex:1;min-width:0;"><div class="fmx-chtt">' + _esc(c.title || (pub ? '@' + c.username : 'Канал')) + '</div>' + sub2 + '</div>' + (ok ? (listingForChannel(c.id) ? '<i class="ti ti-circle-check-filled" style="color:#5DCAA5;flex-shrink:0;"></i>' : '') : (paused ? '' : '<i class="ti ti-lock" style="color:#565b73;flex-shrink:0;"></i>')) + '</div>';
         }).join('');
         sub.innerHTML =
             '<div class="fmx-hero" id="fmx-hero"></div>' +
-            '<div style="font-size:10px;color:#565b73;text-align:center;margin:8px 0 10px;line-height:1.35;"><i class="ti ti-hand-click"></i> Нажми на часть оффера, чтобы изменить его</div>' +
-            '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> Сброс настроек</button>' +
+            '<div style="font-size:10px;color:#565b73;text-align:center;margin:8px 0 10px;line-height:1.35;"><i class="ti ti-hand-click"></i> ' + L('Нажми на часть оффера, чтобы изменить его') + '</div>' +
+            '<button class="fmx-btn" id="fmx-resetAll" style="width:100%;margin:0 0 12px;color:#8990a8;"><i class="ti ti-restore"></i> ' + L('Сброс настроек') + '</button>' +
             '<div id="fmx-hlist" style="margin:-4px 0 16px;"></div>' +
             '<div class="fmx-chdd" id="fmx-chdd"><button class="fmx-chbtn" id="fmx-chbtn" type="button"><i class="ti ti-broadcast lead"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + _esc(cur ? ('@' + cur.username + (cur.title ? ' · ' + cur.title : '')) : 'Выбери канал') + '</span><i class="ti ti-chevron-down chev"></i></button><div class="fmx-chlist">' + rows + '</div></div>' +
             (function () {
-                if (!existing) return '<div class="fmx-chnote">Новое размещение для этого канала</div>';
+                if (!existing) return '<div class="fmx-chnote">' + L('Новое размещение для этого канала') + '</div>';
                 var ms = existing.moderation_status || '';
-                if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">Оффер отклонён' + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>Исправь и нажми «Сохранить оффер» — он уйдёт на повторную проверку.</div>';
-                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;"><span>Оффер на ручной проверке — это не блокировка</span>' + (existing.reject_reason ? '. <span>' + _esc(existing.reject_reason) + '</span>' : '') + '<br>Проверим и опубликуем — обычно до суток.</div>';
-                if (existing.status === 'published') return '<div class="fmx-chnote">Оффер опубликован на Площадке. Правки после сохранения пройдут быструю проверку и обновят карточку.</div>';
-                if (existing.status === 'paused') return '<div class="fmx-chnote">Оффер заморожен и скрыт с Площадки. Правки сохранятся — вернуть его можно в «Мои офферы».</div>';
-                if (ms === 'pending' || existing.status === 'review') return '<div class="fmx-chnote">Оффер на проверке. Правки добавятся к текущей заявке.</div>';
-                return '<div class="fmx-chnote">Редактируешь существующий оффер этого канала.</div>';
+                if (existing.status === 'rejected') return '<div class="fmx-chnote" style="color:#ef8080;border:0.5px solid rgba(239,68,68,0.3);border-radius:10px;padding:9px 12px;">' + L('Оффер отклонён') + (existing.reject_reason ? ': ' + _esc(existing.reject_reason) : '') + '<br>' + L('Исправь и нажми «Сохранить оффер» — он уйдёт на повторную проверку.') + '</div>';
+                if (existing.status === 'pending' && (ms === 'needs_review' || ms === 'complaints_hold')) return '<div class="fmx-chnote" style="color:#f5bf4f;border:0.5px solid rgba(245,191,79,0.3);border-radius:10px;padding:9px 12px;"><span>' + L('Оффер на ручной проверке — это не блокировка') + '</span>' + (existing.reject_reason ? '. <span>' + _esc(existing.reject_reason) + '</span>' : '') + '<br>' + L('Проверим и опубликуем — обычно до суток.') + '</div>';
+                if (existing.status === 'published') return '<div class="fmx-chnote">' + L('Оффер опубликован на Площадке. Правки после сохранения пройдут быструю проверку и обновят карточку.') + '</div>';
+                if (existing.status === 'paused') return '<div class="fmx-chnote">' + L('Оффер заморожен и скрыт с Площадки. Правки сохранятся — вернуть его можно в «Мои офферы».') + '</div>';
+                if (ms === 'pending' || existing.status === 'review') return '<div class="fmx-chnote">' + L('Оффер на проверке. Правки добавятся к текущей заявке.') + '</div>';
+                return '<div class="fmx-chnote">' + L('Редактируешь существующий оффер этого канала.') + '</div>';
             })() +
             accSec('cover', 'ti-photo', 'Обложка', paneCover()) +
             accSec('fx', 'ti-sparkles', 'Эффекты и анимация', paneFx()) +
@@ -7377,23 +7379,23 @@
             accSec('price', 'ti-cash', 'Форматы и цены', panePrice()) +
             accSec('text', 'ti-text-caption', 'Текст', paneText()) +
             '<button class="fmx-save" id="fmx-save" style="margin-top:18px;"><i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке') + '</button>' +
-            '<div class="fmx-tplink" data-terms="s"><i class="ti ti-clipboard-text"></i> <span>Условия размещения</span></div>' +
-            (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> Кабинет «Мои офферы»</button>' : '') +
+            '<div class="fmx-tplink" data-terms="s"><i class="ti ti-clipboard-text"></i> <span>' + L('Условия размещения') + '</span></div>' +
+            (_ss.listingId ? '<button class="fmx-btn" id="fmx-toMine" style="width:100%;margin-top:10px;"><i class="ti ti-briefcase"></i> ' + L('Кабинет «Мои офферы»') + '</button>' : '') +
             '<label class="fmx-dealtgl"><input type="checkbox" id="fmx-showdeals"' + (_ss.showDeals !== false ? ' checked' : '') + '> Показывать сделки и рейтинг на оффере</label>' +
-            '<div class="fmx-savenote">После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.</div>';
+            '<div class="fmx-savenote">' + L('После публикации оффер пройдёт проверку по смыслу. Опции с замком применяются при активном продвижении на 30 дней.') + '</div>';
         var dd = el('fmx-chdd');
         el('fmx-chbtn').addEventListener('click', function (e) { e.stopPropagation(); dd.classList.toggle('on'); });
-        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast('Нужен публичный @username — включи его в настройках канала в Telegram'); return; } if (r.getAttribute('data-paused') === '1') { toast('Канал на паузе. Сними паузу в настройках канала, чтобы разместить оффер.'); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
+        qsa(dd, '.fmx-chrow').forEach(function (r) { r.addEventListener('click', function () { if (r.getAttribute('data-pub') !== '1') { toast(L('Нужен публичный @username — включи его в настройках канала в Telegram')); return; } if (r.getAttribute('data-paused') === '1') { toast(L('Канал на паузе. Сними паузу в настройках канала, чтобы разместить оффер.')); return; } dd.classList.remove('on'); _haptic('light'); selectChannel(+r.getAttribute('data-cid')); }); });
         qsa(sub, '.fmx-acc .fmx-acch').forEach(function (h) { h.addEventListener('click', function () { var id = h.parentNode.getAttribute('data-ac'); openAcc(_secCreate === id ? null : id, false); }); });
         el('fmx-save').addEventListener('click', saveStudio);
         var ra = el('fmx-resetAll');
         if (ra) ra.addEventListener('click', function () {
-            uiConfirm('Сбросить все настройки оформления к стандартным? На Площадке изменения появятся после сохранения оффера.', function () {
+            uiConfirm(L('Сбросить все настройки оформления к стандартным? На Площадке изменения появятся после сохранения оффера.'), function () {
                 var keepCh = _ss.channelId, keepId = _ss.listingId, keepSt = _ss._status;
                 _ss = defaultState(); _sfmts = defaultFmts();
                 _ss.channelId = keepCh; _ss.listingId = keepId; _ss._status = keepSt;
                 _ss.sticker = null; _ss.showDeals = true;
-                _haptic('success'); toast('Настройки сброшены к стандартным');
+                _haptic('success'); toast(L('Настройки сброшены к стандартным'));
                 paintCreate();
             });
         });
@@ -7446,10 +7448,10 @@
         var m = _ss._media && _ss._media[target];
         var row = m
             ? '<div class="fmx-note fmx-gr" style="margin-bottom:9px;"><i class="ti ' + (m.kind === 'video' ? 'ti-video' : 'ti-photo-check') + '"></i> ' + _esc(m.name || 'файл выбран') + '</div>' +
-              '<div class="fmx-uplrow"><button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-refresh"></i> Заменить</button>' +
-              '<button class="fmx-upl sec" data-me="' + target + '"><i class="ti ti-crop"></i> Кадрирование</button>' +
+              '<div class="fmx-uplrow"><button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-refresh"></i> ' + L('Заменить') + '</button>' +
+              '<button class="fmx-upl sec" data-me="' + target + '"><i class="ti ti-crop"></i> ' + L('Кадрирование') + '</button>' +
               '<button class="fmx-upl sec" data-md="' + target + '"><i class="ti ti-trash"></i></button></div>'
-            : '<button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-cloud-upload"></i> Выбрать файл</button>';
+            : '<button class="fmx-upl" data-mp="' + target + '"><i class="ti ti-cloud-upload"></i> ' + L('Выбрать файл') + '</button>';
         return row + '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + hint + '</div>';
     }
     function bindMediaBox(scope) {
@@ -7459,17 +7461,17 @@
     }
     function paneCover() {
         var seg = '<div class="fmx-mtabs" id="fmx-covtype">' +
-            '<button class="fmx-mt' + (_ss.covType === 'grad' ? ' on' : '') + '" data-ct="grad"><i class="ti ti-color-swatch"></i> Градиент</button>' +
-            '<button class="fmx-mt' + (_ss.covType !== 'grad' ? ' on' : '') + '" data-ct="img"><i class="ti ti-cloud-upload"></i> Загрузить</button></div>';
+            '<button class="fmx-mt' + (_ss.covType === 'grad' ? ' on' : '') + '" data-ct="grad"><i class="ti ti-color-swatch"></i> ' + L('Градиент') + '</button>' +
+            '<button class="fmx-mt' + (_ss.covType !== 'grad' ? ' on' : '') + '" data-ct="img"><i class="ti ti-cloud-upload"></i> ' + L('Загрузить') + '</button></div>';
         var custom = !!_ss.coverGrad;
-        var grads = '<div id="fmx-gradbox" style="' + (_ss.covType === 'grad' ? '' : 'display:none;') + '"><span class="fmx-lbl">Фон обложки</span><div class="fmx-grads" id="fmx-grads">' +
+        var grads = '<div id="fmx-gradbox" style="' + (_ss.covType === 'grad' ? '' : 'display:none;') + '"><span class="fmx-lbl">' + L('Фон обложки') + '</span><div class="fmx-grads" id="fmx-grads">' +
             COVERS.map(function (g, i) { return '<div class="fmx-gd' + (!custom && i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') +
             '<div class="fmx-gd fmx-dot-rb' + (custom ? ' on' : '') + '" data-grb="1" title="Свой градиент"></div></div>' +
             '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
             mediaBoxHtml('cover', 'Картинка, GIF или видео до 30 секунд, до 64 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».') + '</div>';
-        var noHead = '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">Карточка без шапки</span></div>' +
-            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.</div>';
+        var noHead = '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">' + L('Карточка без шапки') + '</span></div>' +
+            '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">' + L('Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.') + '</div>';
         return seg + grads + upl + noHead;
     }
     function bindCover() {
@@ -7487,14 +7489,14 @@
     }
 
     function paneFx() {
-        return '<div class="fmx-fxg"><div class="fmx-fxl vipc">Свечение оффера <i class="ti ti-lock"></i></div>' +
-            '<div class="fmx-fxlock">Золотое свечение карточки в ленте. Доступно при любом продвижении — с замком можно примерить в предпросмотре.</div>' +
+        return '<div class="fmx-fxg"><div class="fmx-fxl vipc">' + L('Свечение оффера') + ' <i class="ti ti-lock"></i></div>' +
+            '<div class="fmx-fxlock">' + L('Золотое свечение карточки в ленте. Доступно при любом продвижении — с замком можно примерить в предпросмотре.') + '</div>' +
             '<div class="fmx-fxw" id="fmx-glowcard">' +
             '<button class="fmx-fx' + (!_ss.glowCard ? ' on' : '') + '" data-gc="off">Выключено</button>' +
-            '<button class="fmx-fx vip' + (_ss.glowCard ? ' on' : '') + '" data-gc="on"><i class="ti ti-lock"></i>Золотое свечение</button>' +
+            '<button class="fmx-fx vip' + (_ss.glowCard ? ' on' : '') + '" data-gc="on"><i class="ti ti-lock"></i>' + L('Золотое свечение') + '</button>' +
             '</div></div>' +
-            '<div class="fmx-fxg"><div class="fmx-fxl vipc">Кнопки карточки <i class="ti ti-lock"></i></div>' +
-            '<div class="fmx-fxlock">Стекло — при продвижении от недели. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.</div>' +
+            '<div class="fmx-fxg"><div class="fmx-fxl vipc">' + L('Кнопки карточки') + ' <i class="ti ti-lock"></i></div>' +
+            '<div class="fmx-fxlock">' + L('Стекло — при продвижении от недели. «Все — в цвет» красит три кнопки выбранным цветом, доступно всем.') + '</div>' +
             '<div class="fmx-fxw" id="fmx-btnstyle">' +
             (function () {
                 var cur = _ss.glass !== 'none' ? _ss.glass : (_ss.btns === 'accent' ? 'accent' : 'std');
@@ -7504,24 +7506,24 @@
             })() +
             '</div></div>' +
             '<div style="margin-top:10px;">' +
-            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">Бейдж «Продвигается» <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
-            '<div class="fmx-fxlock" style="margin:0 0 6px;">Только при продвижении «Месяц в ленте»</div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin-bottom:2px;">' + L('Бейдж «Продвигается»') + ' <i class="ti ti-lock" style="font-size:10px;color:#f5bf4f;"></i></div>' +
+            '<div class="fmx-fxlock" style="margin:0 0 6px;">' + L('Только при продвижении «Месяц в ленте»') + '</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTag">' +
             '<button class="fmx-fx' + (_ss.topTag === 'on' ? ' on' : '') + '" data-v="on">Видна</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'ghost' ? ' on' : '') + '" data-v="ghost">Прозрачная</button>' +
             '<button class="fmx-fx' + (_ss.topTag === 'off' ? ' on' : '') + '" data-v="off">Скрыта</button>' +
             '</div>' +
-            '<div style="font-size:10.5px;color:#8990a8;margin:8px 0 2px;">Расположение бейджа</div>' +
+            '<div style="font-size:10.5px;color:#8990a8;margin:8px 0 2px;">' + L('Расположение бейджа') + '</div>' +
             '<div style="display:flex;gap:6px;" data-fxg="topTagPos">' +
             '<button class="fmx-fx' + (_ss.topTagPos !== 'body' ? ' on' : '') + '" data-v="cover">В шапке</button>' +
             '<button class="fmx-fx' + (_ss.topTagPos === 'body' ? ' on' : '') + '" data-v="body">В карточке</button>' +
             '</div></div>';
     }
     function paneStyleMin() {
-        return '<span class="fmx-lbl">Цвет кнопки</span>' + colorPick('fmx-colors', _ss.color) +
-            '<span class="fmx-lbl fmx-mt2">Шрифт заголовка</span><div class="fmx-mtabs" id="fmx-font">' +
+        return '<span class="fmx-lbl">' + L('Цвет кнопки') + '</span>' + colorPick('fmx-colors', _ss.color) +
+            '<span class="fmx-lbl fmx-mt2">' + L('Шрифт заголовка') + '</span><div class="fmx-mtabs" id="fmx-font">' +
             FONTS.map(function (f) { return '<button class="fmx-mt' + (f[0] === _ss.font ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">Фон оффера</span>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Фон оффера') + '</span>' +
             '<div id="fmx-bodybox">' + mediaBoxHtml('cardbg', 'Картинка-фон — доступна всем. GIF и MP4-анимация — только при продвижении «Месяц в ленте». Подложка под цифрами затемняется автоматически, читаемость не страдает.') + '</div>';
     }
     function hslHex(h) {
@@ -7620,10 +7622,10 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-cpBg'; bg.className = 'fmx-cfm';
         bg.innerHTML = '<div class="fmx-cfm-box" id="fmx-cp-box">' +
-            '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-pt">Цвет: <b>' + (title || 'Свой') + '</b></div>' +
+            '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-pt">' + L('Цвет:') + ' <b>' + (title || 'Свой') + '</b></div>' +
             '<div style="display:flex;gap:6px;"><button class="fmx-cp-x" id="fmx-cp-mode" title="Стиль палитры">⇄</button><button class="fmx-cp-x" id="fmx-cp-close" aria-label="Закрыть">✕</button></div></div>' +
             '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="252" height="130"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
-            '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">Оттенок</div>' +
+            '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">' + L('Оттенок') + '</div>' +
             '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1" style="margin-top:0;">' +
             '<div class="fmx-cp-row">' +
             '<div class="fmx-cp-fld hexf"><span class="fmx-cp-cap">HEX</span><input type="text" id="fmx-cp-hex" maxlength="7" autocomplete="off" autocapitalize="off" spellcheck="false"></div>' +
@@ -7813,36 +7815,36 @@
         var title = _isCode(f.n)
             ? '<span class="fmx-ftcode">' + _esc(f.n) + '</span>'
             : '<span class="fmx-ftnm">' + _esc(f.n) + '</span>';
-        if (f.base) title += '<span class="fmx-ftbase">база</span>';
+        if (f.base) title += '<span class="fmx-ftbase">' + L('база') + '</span>';
         return '<div class="fmx-ft' + (f.on ? ' on' : '') + '" data-fi="' + i + '">' +
             '<div class="fmx-fsw"></div>' +
             '<div class="fmx-ftm"><div class="fmx-ftt">' + title + '</div>' +
             (f.sub ? '<div class="fmx-fts">' + _esc(f.sub) + '</div>' : '') + '</div>' +
             '<div class="fmx-ftr"><div class="fmx-ftpr"><input class="fmx-ftp" type="number" data-pi="' + i + '" value="' + f.p + '" step="100" min="0" max="999999" inputmode="numeric"><span class="cur">₽</span></div>' +
-            '<div class="fmx-ftc">' + (reco != null ? '<span>по CPM</span> ≈' + _num(reco) + ' ₽' : (c != null ? 'CPM ' + _num(c) + ' ₽' : (f.on ? '' : 'выкл'))) + '</div></div></div>';
+            '<div class="fmx-ftc">' + (reco != null ? '<span>' + L('по CPM') + '</span> ≈' + _num(reco) + ' ₽' : (c != null ? 'CPM ' + _num(c) + ' ₽' : (f.on ? '' : 'выкл'))) + '</div></div></div>';
     }
     function fmtRows() {
         var av = (curChannel() || {}).avg_views || 0, core = [], sec = [];
         _sfmts.forEach(function (f) { if (f.auto || !f.p) { var r = _fmtReco(f.format); if (r) f.p = r; } });
         _sfmts.forEach(function (f, i) { (f.core ? core : sec).push(_fmtTile(f, i, av)); });
-        var h = '<div class="fmx-fgrp"><div class="fmx-fghd">Основные форматы</div>' + core.join('') + '</div>';
-        if (sec.length) h += '<div class="fmx-fgrp"><div class="fmx-fghd">Доп-опции</div>' + sec.join('') + '</div>';
+        var h = '<div class="fmx-fgrp"><div class="fmx-fghd">' + L('Основные форматы') + '</div>' + core.join('') + '</div>';
+        if (sec.length) h += '<div class="fmx-fgrp"><div class="fmx-fghd">' + L('Доп-опции') + '</div>' + sec.join('') + '</div>';
         return h;
     }
     function panePrice() {
-        var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i><span>Нотация <b>X/Y</b> — часов в топе / часов в ленте. Цену задаёшь сам, <b>CPM</b> считается от охвата канала; верхний CPM оффера — по формату 1/24.</span></div>';
+        var note = '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-bulb"></i><span>' + L('Нотация') + ' <b>X/Y</b> ' + L('— часов в топе / часов в ленте. Цену задаёшь сам,') + ' <b>CPM</b> ' + L('считается от охвата канала; верхний CPM оффера — по формату 1/24.') + '</span></div>';
         var eridOpts = [['advertiser', 'Ставит рекламодатель'], ['channel', 'Ставит канал'], ['discuss', 'Обсуждается']];
-        var erid = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-tag"></i> Маркировка рекламы (erid)</span>' +
+        var erid = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-tag"></i> ' + L('Маркировка рекламы (erid)') + '</span>' +
             '<div class="fmx-eridseg" id="fmx-erid">' + eridOpts.map(function (o) {
                 return '<button type="button" class="fmx-eridb' + (_ss._erid === o[0] ? ' on' : '') + '" data-erid="' + o[0] + '">' + o[1] + '</button>';
             }).join('') + '</div>' +
-            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.</span></div>';
-        var rkn = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-shield-check"></i> Перечень РКН</span>' +
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>' + L('Выбор — чья сторона регистрирует креатив в ОРД и получает erid. Токен выдаётся на каждое размещение отдельно и вносится при маркировке поста; постоянного erid у канала не существует.') + '</span></div>';
+        var rkn = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-shield-check"></i> ' + L('Перечень РКН') + '</span>' +
             '<input type="url" class="fmx-inp" id="fmx-rkn" maxlength="200" placeholder="https://knd.gov.ru/license?id=…" value="' + _esc(_ss._rkn || '') + '">' +
-            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.</span></div>';
-        var ins = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-chart-line"></i> Аналитика в витрине</span>' +
-            '<div class="fmx-htog" id="fmx-hideIns"><div class="fmx-htl">Показывать час пик и рекл. охват<i>' + (_ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала') + '</i></div><div class="fmx-hsw' + (_ss._hideInsights ? '' : ' on') + '"></div></div>';
-        return '<span class="fmx-lbl">Что продаёшь и почём</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + erid + rkn + ins;
+            '<div class="fmx-note" style="margin-top:6px;"><i class="ti ti-info-circle"></i><span>' + L('Для каналов от 10 000 подписчиков. Вставь ссылку на запись канала в перечне РКН (knd.gov.ru) — на оффере появится значок «Зарегистрирован в РКН» со ссылкой для проверки закупщиком.') + '</span></div>';
+        var ins = '<span class="fmx-lbl fmx-mt2"><i class="ti ti-chart-line"></i> ' + L('Аналитика в витрине') + '</span>' +
+            '<div class="fmx-htog" id="fmx-hideIns"><div class="fmx-htl">' + L('Показывать час пик и рекл. охват') + '<i>' + (_ss._hideInsights ? 'Скрыто · видно только тебе' : 'Считает площадка по метрикам канала') + '</i></div><div class="fmx-hsw' + (_ss._hideInsights ? '' : ' on') + '"></div></div>';
+        return '<span class="fmx-lbl">' + L('Что продаёшь и почём') + '</span><div id="fmx-fmts">' + fmtRows() + '</div>' + note + erid + rkn + ins;
     }
     function bindFmtRows() {
         qsa(el('fmx-fmts'), '.fmx-ft').forEach(function (c) {
@@ -7890,15 +7892,15 @@
             rk.addEventListener('blur', function () {
                 var v = (rk.value || '').trim();
                 if (v && v.indexOf('https://knd.gov.ru/') !== 0 && !/^(?:app:|№)?\s*\d{8,12}$/.test(v)) {
-                    toast('Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки');
+                    toast(L('Укажи ссылку на запись в перечне РКН (knd.gov.ru) или номер заявки'));
                 }
             });
         }
     }
 
     function paneText() {
-        return '<span class="fmx-lbl">О канале (видно при «Развернуть»)</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="Чем хорош канал и какая аудитория…">' + _esc(_ss._desc || '') + '</textarea>' +
-            '<span class="fmx-lbl fmx-mt2">Теги (через запятую)</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="ниша, тема, аудитория">';
+        return '<span class="fmx-lbl">' + L('О канале (видно при «Развернуть»)') + '</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="Чем хорош канал и какая аудитория…">' + _esc(_ss._desc || '') + '</textarea>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Теги (через запятую)') + '</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="ниша, тема, аудитория">';
     }
     function bindText() {
         el('fmx-desc').addEventListener('input', function () { _ss._desc = this.value; _heroDebounced(); });
@@ -7920,19 +7922,19 @@
             var t = (fl.type || '').toLowerCase();
             var isImg = t.indexOf('image/') === 0;
             var isVid = t === 'video/mp4' || t === 'video/quicktime';
-            if (target === 'avatar' && !isImg) { uiAlert('Для аватара подойдёт только фото или GIF.'); return; }
-            if (!isImg && !isVid) { uiAlert('Можно загрузить только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит.'); return; }
-            if (fl.size > MEDIA_MAX_BYTES) { uiAlert('Файл больше 64 МБ — сожми его или выбери другой.'); return; }
+            if (target === 'avatar' && !isImg) { uiAlert(L('Для аватара подойдёт только фото или GIF.')); return; }
+            if (!isImg && !isVid) { uiAlert(L('Можно загрузить только фото (JPG, PNG, WebP, GIF) или видео (MP4, MOV). Этот файл не подходит.')); return; }
+            if (fl.size > MEDIA_MAX_BYTES) { uiAlert(L('Файл больше 64 МБ — сожми его или выбери другой.')); return; }
             var kind = isVid ? 'video' : (t === 'image/gif' ? 'gif' : 'img');
             var url = URL.createObjectURL(fl);
             if (kind === 'video') {
                 var v = document.createElement('video');
                 v.preload = 'metadata';
                 v.onloadedmetadata = function () {
-                    if (v.duration > 30.5) { uiAlert('Видео длиннее 30 секунд — сократи ролик до 30 сек.'); URL.revokeObjectURL(url); return; }
+                    if (v.duration > 30.5) { uiAlert(L('Видео длиннее 30 секунд — сократи ролик до 30 сек.')); URL.revokeObjectURL(url); return; }
                     startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
                 };
-                v.onerror = function () { uiAlert('Не удалось прочитать видео.'); URL.revokeObjectURL(url); };
+                v.onerror = function () { uiAlert(L('Не удалось прочитать видео.')); URL.revokeObjectURL(url); };
                 v.src = url;
             } else startCrop(target, url, kind, fl.name, 50, 50, 1, fl);
         });
@@ -7956,8 +7958,8 @@
         var box = el('fmx-cropBox');
         box.style.aspectRatio = target === 'avatar' ? '1 / 1' : (target === 'cardbg' ? '4 / 5' : '2 / 1');
         box.innerHTML = (kind === 'video' ? '<video src="' + url + '" autoplay muted loop playsinline></video>' : '<img src="' + url + '">') +
-            (target === 'cover' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона шапки — видна на 100%</span></div>' : '') +
-            (target === 'cardbg' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>Зона оффера — видна на 100%</span></div>' : '') +
+            (target === 'cover' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>' + L('Зона шапки — видна на 100%') + '</span></div>' : '') +
+            (target === 'cardbg' ? '<div class="fmx-safeT"></div><div class="fmx-safeB"></div><div class="fmx-safeF"><span>' + L('Зона оффера — видна на 100%') + '</span></div>' : '') +
             (target === 'avatar' ? '<div class="fmx-safeR"></div>' : '');
         el('fmx-cropHint').textContent = target === 'avatar' ? 'Пунктирный контур — видимая зона аватара, углы срежутся скруглением.' : (target === 'cardbg' ? 'Пунктирная полоса — видимая часть тела оффера. Цифры затемняются подложкой автоматически.' : 'Пунктирная полоса — то, что видно в шапке оффера. Затемнённое сверху и снизу в шапку не попадает.');
         el('fmx-cropZoom').value = s;
@@ -8112,16 +8114,16 @@
             var who = function (d) { return d.buyer_username ? '@' + _esc(d.buyer_username) : 'Рекламодатель'; };
             var html = '<div class="fmx-pend">';
             if (pend.length) {
-                html += '<div class="fmx-pend-t"><i class="ti ti-heart-handshake" style="color:#f59e0b;"></i> Подтверждение сделок</div>' +
+                html += '<div class="fmx-pend-t"><i class="ti ti-heart-handshake" style="color:#f59e0b;"></i> ' + L('Подтверждение сделок') + '</div>' +
                     pend.map(function (d) {
                         return '<div class="fmx-pend-r" data-did="' + d.deal_id + '"><span>' + who(d) + ' · ' + _ago(d.created_at) + '</span>' +
-                            '<span style="display:flex;gap:6px;"><button class="fmx-btn" data-dacc="' + d.deal_id + '" style="padding:6px 11px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-check"></i>Да</button>' +
-                            '<button class="fmx-btn" data-ddec="' + d.deal_id + '" style="padding:6px 11px;"><i class="ti ti-x"></i>Нет</button></span></div>';
+                            '<span style="display:flex;gap:6px;"><button class="fmx-btn" data-dacc="' + d.deal_id + '" style="padding:6px 11px;color:#5DCAA5;border-color:rgba(93,202,165,0.35);"><i class="ti ti-check"></i>' + L('Да') + '</button>' +
+                            '<button class="fmx-btn" data-ddec="' + d.deal_id + '" style="padding:6px 11px;"><i class="ti ti-x"></i>' + L('Нет') + '</button></span></div>';
                     }).join('') +
-                    '<div style="font-size:10px;color:#565b73;margin:6px 0;">Подтверждай только реальные сделки: счётчик — твоя репутация.</div>';
+                    '<div style="font-size:10px;color:#565b73;margin:6px 0;">' + L('Подтверждай только реальные сделки: счётчик — твоя репутация.') + '</div>';
             }
             if (conf.length) {
-                html += '<div class="fmx-pend-t" style="margin-top:' + (pend.length ? '12px' : '0') + ';"><i class="ti ti-chart-line" style="color:#5ab0e6;"></i> Размещение и охват</div>' +
+                html += '<div class="fmx-pend-t" style="margin-top:' + (pend.length ? '12px' : '0') + ';"><i class="ti ti-chart-line" style="color:#5ab0e6;"></i> ' + L('Размещение и охват') + '</div>' +
                     conf.map(function (d) {
                         if (!d.proof_status) {
                             return '<div class="fmx-plc"><div style="font-size:11.5px;color:#c9cbe0;">' + who(d) + ' ' + (window.t ? window.t('— отметь вышедший рекламный пост') : '— отметь вышедший рекламный пост') + '</div>' +
@@ -8141,7 +8143,7 @@
                         }
                         return '<div class="fmx-plc"><div style="font-size:11.5px;color:#8990a8;"><i class="ti ti-circle-check" style="color:#5DCAA5;"></i> ' + who(d) + ' ' + _lt('— замеряем охват') + rr + '</div></div>';
                     }).join('') +
-                    '<div style="font-size:10px;color:#565b73;margin-top:6px;">Пришли ссылку на пост — платформа сама замерит охват через 12, 24 и 48 часов и подготовит отчёт обеим сторонам.</div>';
+                    '<div style="font-size:10px;color:#565b73;margin-top:6px;">' + L('Пришли ссылку на пост — платформа сама замерит охват через 12, 24 и 48 часов и подготовит отчёт обеим сторонам.') + '</div>';
             }
             html += '</div>';
             box.innerHTML = html;
@@ -8152,21 +8154,21 @@
                     toast(acc ? 'Сделка подтверждена — счётчик вырос' : 'Отклонено');
                     if (acc) { _feed = null; _feedState = 'idle'; }
                     loadPendingDeals();
-                }).catch(function () { uiAlert('Не удалось. Повтори попытку.'); });
+                }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
             }
             qsa(box, '[data-dacc]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-dacc'), true); }); });
             qsa(box, '[data-ddec]').forEach(function (b) { b.addEventListener('click', function () { respond(+b.getAttribute('data-ddec'), false); }); });
             qsa(box, '.fmx-plc-go').forEach(function (b) {
                 b.addEventListener('click', function () {
                     var wrap = b.parentNode, inp = wrap ? wrap.querySelector('.fmx-plc-in') : null, url = inp ? inp.value.trim() : '';
-                    if (!url) { uiAlert('Вставь ссылку на вышедший пост.'); return; }
+                    if (!url) { uiAlert(L('Вставь ссылку на вышедший пост.')); return; }
                     b.disabled = true;
                     apiPost('/api/v1/marketplace/deals/' + b.getAttribute('data-pdid') + '/placement', { post_url: url }).then(function (r2) {
                         if (r2 && r2.ok === false) { b.disabled = false; _haptic('error'); uiAlert(r2.error || 'Не удалось'); return; }
                         _haptic('success');
-                        toast('Размещение отмечено — замерим охват и подготовим отчёт обеим сторонам');
+                        toast(L('Размещение отмечено — замерим охват и подготовим отчёт обеим сторонам'));
                         loadPendingDeals();
-                    }).catch(function () { b.disabled = false; uiAlert('Не удалось. Повтори попытку.'); });
+                    }).catch(function () { b.disabled = false; uiAlert(L('Не удалось. Повтори попытку.')); });
                 });
             });
             qsa(box, '[data-repopen]').forEach(function (b) {
@@ -8179,7 +8181,7 @@
             qsa(box, '[data-repcopy]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     _haptic('light');
-                    try { navigator.clipboard.writeText(b.getAttribute('data-repcopy')); toast('Ссылка скопирована'); } catch (e) { uiAlert(b.getAttribute('data-repcopy')); }
+                    try { navigator.clipboard.writeText(b.getAttribute('data-repcopy')); toast(L('Ссылка скопирована')); } catch (e) { uiAlert(b.getAttribute('data-repcopy')); }
                 });
             });
         }).catch(function () {});
@@ -8197,21 +8199,21 @@
         var s = _ss.sticker;
         var html = '';
         if (!_stickers.length) {
-            html = '<div style="font-size:11.5px;color:#8990a8;line-height:1.6;">Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.</div>' +
-                '<button class="fmx-btn" id="fmx-stk-bot" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i>Открыть бота</button>';
+            html = '<div style="font-size:11.5px;color:#8990a8;line-height:1.6;">' + L('Коллекция пуста. Отправь боту в личных сообщениях любой стикер или премиум-эмодзи — он появится здесь.') + '</div>' +
+                '<button class="fmx-btn" id="fmx-stk-bot" style="margin-top:10px;"><i class="ti ti-brand-telegram"></i>' + L('Открыть бота') + '</button>';
         } else {
             html = '<div class="fmx-stkgrid">' + _stickers.map(function (st) {
                 var sel = s && s.sticker_id === st.id;
                 return '<div class="fmx-stkcell' + (sel ? ' on' : '') + '" data-sid="' + st.id + '">' + stkMedia(st, true) +
-                    (st.kind === 'tgs' ? '<span class="fmx-stk-anim">аним.</span>' : '') +
+                    (st.kind === 'tgs' ? '<span class="fmx-stk-anim">' + L('аним.') + '</span>' : '') +
                     '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
             }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:8px;">Пополнение — отправкой стикера боту в личных сообщениях.<span> ' + _stickers.length + '/30</span></div>';
+                '<div style="font-size:10px;color:#565b73;margin-top:8px;">' + L('Пополнение — отправкой стикера боту в личных сообщениях.') + '<span> ' + _stickers.length + '/30</span></div>';
             if (s) {
                 html += '<div class="fmx-fxw" style="margin-top:12px;">' +
-                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">Убрать стикер</button></div>' +
-                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (слияние · задний фон).</div>';
-                if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.</div>';
+                    '<button class="fmx-fx" data-sclear="1" style="margin-left:auto;color:#ef4444;">' + L('Убрать стикер') + '</button></div>' +
+                    '<div style="font-size:10px;color:#565b73;margin-top:8px;line-height:1.6;"><i class="ti ti-hand-move"></i> ' + L('Всё управление — на оффере-превью: касание стикера — рамка; верхняя точка — поворот, угол — размер, крестик — удалить, три точки под рамкой — режим (слияние · задний фон).') + '</div>';
+                if (s.kind !== 'webp') html += '<div style="font-size:10px;color:#f59e0b;margin-top:8px;"><i class="ti ti-lock"></i> ' + L('Анимация в публичной ленте — при продвижении. Без него покажем стоп-кадр.') + '</div>';
             }
         }
         box.innerHTML = html;
@@ -8232,12 +8234,12 @@
             onTap(b, function (e) {
                 e.stopPropagation();
                 var id = +b.getAttribute('data-sdel');
-                uiConfirm('Удалить стикер из коллекции?', function () {
+                uiConfirm(L('Удалить стикер из коллекции?'), function () {
                     apiRequest('/api/v1/marketplace/stickers/' + id, { method: 'DELETE' }).then(function () {
                         _stickers = _stickers.filter(function (x) { return x.id !== id; });
                         if (_ss.sticker && _ss.sticker.sticker_id === id) { _ss.sticker = null; renderHero(); }
                         renderStickerPane();
-                    }).catch(function () { uiAlert('Не удалось удалить. Повтори попытку.'); });
+                    }).catch(function () { uiAlert(L('Не удалось удалить. Повтори попытку.')); });
                 });
             });
         });
@@ -8273,7 +8275,7 @@
             var ghost = null, dragging = false, sx = 0, sy = 0, zs = null, homeEl = null;
             function begin(cx, cy) {
                 dragging = true; bd.style.opacity = '0.25'; zs = zones();
-                cardEl.insertAdjacentHTML('beforeend', '<div class="fmx-bslot" style="left:' + zs.home.x1 + 'px;top:' + zs.home.y1 + 'px;width:' + (zs.home.x2 - zs.home.x1) + 'px;height:' + (zs.home.y2 - zs.home.y1) + 'px;"><i>вернуть в ряд</i></div>');
+                cardEl.insertAdjacentHTML('beforeend', '<div class="fmx-bslot" style="left:' + zs.home.x1 + 'px;top:' + zs.home.y1 + 'px;width:' + (zs.home.x2 - zs.home.x1) + 'px;height:' + (zs.home.y2 - zs.home.y1) + 'px;"><i>' + L('вернуть в ряд') + '</i></div>');
                 homeEl = cardEl.querySelector('.fmx-bslot');
                 ghost = bd.cloneNode(true);
                 ghost.style.cssText = 'position:absolute;z-index:99;pointer-events:none;margin:0;opacity:0.95;';
@@ -8304,7 +8306,7 @@
                     if (_ss.badgeFree) { delete _ss.badgeFree[key]; if (!Object.keys(_ss.badgeFree).length) _ss.badgeFree = null; }
                     _haptic('light'); renderHero(); return;
                 }
-                if (p.bad) { toast('Сюда нельзя: имя, аватар и низ оффера — запретная зона'); return; }
+                if (p.bad) { toast(L('Сюда нельзя: имя, аватар и низ оффера — запретная зона')); return; }
                 if (!_ss.badgeFree) _ss.badgeFree = {};
                 _ss.badgeFree[key] = { x: p.x, y: p.y };
                 _haptic('light');
@@ -8323,7 +8325,7 @@
                     document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', up);
                     document.removeEventListener('touchmove', mm); document.removeEventListener('touchend', up);
                     if (dragging) { var p = (ev.changedTouches && ev.changedTouches[0]) || ev; finish(p.clientX, p.clientY); }
-                    else if (!vip) { toast('Свободное перемещение блоков — опция продвижения на 30 дней'); }
+                    else if (!vip) { toast(L('Свободное перемещение блоков — опция продвижения на 30 дней')); }
                 };
                 document.addEventListener('mousemove', mm); document.addEventListener('mouseup', up);
                 document.addEventListener('touchmove', mm, { passive: false }); document.addEventListener('touchend', up);
@@ -8564,7 +8566,7 @@
         bindBadgeDrag(card);
         var hl = el('fmx-hlist');
         if (hl) {
-            hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">ВИД В СПИСКЕ</div>' + zw(listItem(pl));
+            hl.innerHTML = '<div style="font-size:10px;font-weight:700;color:#565b73;letter-spacing:0.6px;margin:0 0 7px;">' + L('ВИД В СПИСКЕ') + '</div>' + zw(listItem(pl));
             scaleCards(hl);
         }
         hydrateTgs(hero);
@@ -8609,11 +8611,11 @@
             var prev = el('fmx-fmtpick'); if (prev) prev.remove();
             var m = document.createElement('div'); m.id = 'fmx-fmtpick';
             m.innerHTML = '<div class="fmx-fmtcard">' +
-                '<div class="fmx-fmttitle">Как прислать постер?</div>' +
-                '<button class="fmx-fmtrow" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>Живой постер (MP4)</b><i>Анимация играет прямо в чате · пришлю через минуту</i></span></button>' +
-                '<button class="fmx-fmtrow" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>Живой постер (GIF)</b><i>Анимация без звука · для площадок, где MP4 неудобен</i></span></button>' +
-                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>Картинка (PNG)</b><i>Статичный постер · мгновенно</i></span></button>' +
-                '<button class="fmx-fmtcancel" data-f="">Отмена</button></div>';
+                '<div class="fmx-fmttitle">' + L('Как прислать постер?') + '</div>' +
+                '<button class="fmx-fmtrow" data-f="mp4"><span class="ic"><i class="ti ti-player-play"></i></span><span class="tx"><b>' + L('Живой постер (MP4)') + '</b><i>' + L('Анимация играет прямо в чате · пришлю через минуту') + '</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="gif"><span class="ic"><i class="ti ti-gif"></i></span><span class="tx"><b>' + L('Живой постер (GIF)') + '</b><i>' + L('Анимация без звука · для площадок, где MP4 неудобен') + '</i></span></button>' +
+                '<button class="fmx-fmtrow" data-f="png"><span class="ic"><i class="ti ti-photo"></i></span><span class="tx"><b>' + L('Картинка (PNG)') + '</b><i>' + L('Статичный постер · мгновенно') + '</i></span></button>' +
+                '<button class="fmx-fmtcancel" data-f="">' + L('Отмена') + '</button></div>';
             document.body.appendChild(m);
             function done(f) { m.remove(); resolve(f || null); }
             m.addEventListener('click', function (e) {
@@ -8956,7 +8958,7 @@
     }
     function openPosterStudio() {
         var base = listingForChannel(_ss.channelId);
-        if (!base || !base.id) { toast('Сначала сохрани оффер — постер строится по нему'); return; }
+        if (!base || !base.id) { toast(L('Сначала сохрани оффер — постер строится по нему')); return; }
         var chan = channelById(_ss.channelId) || {};
         var realAvatar = chan.avatar_url || null;
         var realNiche = base.niche || chan.niche || '';
@@ -8979,12 +8981,12 @@
         var bg = document.createElement('div');
         bg.id = 'fmx-psBg'; bg.className = 'fmx-psFull';
         bg.innerHTML =
-            '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> Промо-постер</div>' +
+            '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> ' + L('Промо-постер') + '</div>' +
             '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">Открываю редактор…</div></div>' +
+            '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">' + L('Открываю редактор…') + '</div></div>' +
             '<div id="fmx-psWrap" style="width:100%;max-width:540px;margin:0 auto;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" scrolling="no" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;overflow:hidden;"></iframe></div></div>' +
-            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0 auto;max-width:540px;"><i class="ti ti-send"></i> Прислать постер в чат с ботом</button></div>';
+            '<div class="fmx-psBottom"><button class="fmx-save" id="fmx-ps-send" style="margin:0 auto;max-width:540px;"><i class="ti ti-send"></i> ' + L('Прислать постер в чат с ботом') + '</button></div>';
         document.body.appendChild(bg);
         var frame = el('fmx-psFrame'), wrap = el('fmx-psWrap');
         var LW = 540, glueReady = false, chartDone = false, extra = {};
@@ -9071,10 +9073,10 @@
                 var idoc = frame.contentDocument;
                 var g = idoc.createElement('script'); g.src = 'poster_glue.js?v=' + PS_GLUE_V;
                 g.onload = function () { glueReady = true; maybeInit(); };
-                g.onerror = function () { toast('Не удалось загрузить редактор постера'); };
+                g.onerror = function () { toast(L('Не удалось загрузить редактор постера')); };
                 idoc.head.appendChild(g);
                 idoc.addEventListener('click', function () { setTimeout(fitFrame, 60); });
-            } catch (e) { toast('Редактор недоступен'); }
+            } catch (e) { toast(L('Редактор недоступен')); }
         });
         apiGet('/api/v1/marketplace/poster/chart?listing_id=' + base.id).then(function (r) {
             if (r && r.ok) extra = { chart: r.chart, grow: r.grow, freq: r.freq, age_year: r.age_year, fresh: r.fresh || {}, niche: r.niche, niche_tr: r.niche_tr || null, live_ok: r.live_ok, gen_ok: r.gen_ok, ref_code: r.ref_code || null };
@@ -9107,7 +9109,7 @@
             else finish();
         }
         el('fmx-ps-x').addEventListener('click', close);
-        var SEND_LABEL = '<i class="ti ti-send"></i> Прислать постер в чат с ботом';
+        var SEND_LABEL = '<i class="ti ti-send"></i> ' + L('Прислать постер в чат с ботом');
         function sendBtn() { return el('fmx-ps-send'); }
         function restoreSend() { clearTimeout(bg.__fmxSendCd); var b = sendBtn(); if (b) { b.disabled = false; b.innerHTML = SEND_LABEL; } }
         function waitSend(sec) {
@@ -9116,7 +9118,7 @@
             b.disabled = true;
             (function tick() {
                 if (sec <= 0) { restoreSend(); return; }
-                b.innerHTML = '<i class="ti ti-clock"></i> Можно через ' + sec + ' с';
+                b.innerHTML = '<i class="ti ti-clock"></i> ' + L('Можно через') + ' ' + sec + ' с';
                 sec--;
                 bg.__fmxSendCd = setTimeout(tick, 1000);
             })();
@@ -9131,7 +9133,7 @@
             b.innerHTML = '<span class="fmx-ring"><svg viewBox="0 0 36 36">' +
                 '<circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="4"></circle>' +
                 '<circle class="fg" id="fmx-ring-fg" cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + C + '" stroke-dashoffset="' + C + '" transform="rotate(-90 18 18)"></circle>' +
-                '</svg></span> Готовлю живой постер… <b id="fmx-pct">0%</b>';
+                '</svg></span> ' + L('Готовлю живой постер…') + ' <b id="fmx-pct">0%</b>';
             function setPct(p) {
                 p = Math.max(pct, Math.min(100, p)); pct = p;
                 var fg = el('fmx-ring-fg'); if (fg) fg.style.strokeDashoffset = (C * (1 - p / 100)).toFixed(1);
@@ -9153,7 +9155,7 @@
                         done = true; clearInterval(bg.__fmxProgIv); clearTimeout(bg.__fmxProgPoll); clearTimeout(bg.__fmxProgTo2);
                         setPct(100); _haptic('success');
                         delete window.__fmxPosterJob[base.id];
-                        var msg = r.sent ? '<i class="ti ti-circle-check"></i> Готово — постер в чате' : '<i class="ti ti-photo"></i> Прислал картинкой';
+                        var msg = r.sent ? '<i class="ti ti-circle-check"></i> ' + L('Готово — постер в чате') : '<i class="ti ti-photo"></i> ' + L('Прислал картинкой');
                         bg.__fmxProgDone = setTimeout(function () { var b2 = sendBtn(); if (b2) b2.innerHTML = msg; }, 650);
                         toast(r.sent ? 'Живой постер в чате с ботом, можно переслать' : 'Живой постер не удалось создать — отправлен изображением');
                         bg.__fmxProgTo = setTimeout(restoreSend, 5300);
@@ -9171,19 +9173,19 @@
             var btn = this, win = frame.contentWindow;
             function send(fmt) {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { restoreSend(); toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restoreSend(); toast(L('Редактор ещё загружается — секунду')); return; }
                 var live = (fmt === 'mp4' || fmt === 'gif');
                 btn.disabled = true;
-                btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> Отправляю…' : '<i class="ti ti-loader-2"></i> Рисую постер… ~10 сек';
+                btn.innerHTML = live ? '<i class="ti ti-loader-2"></i> ' + L('Отправляю…') : '<i class="ti ti-loader-2"></i> ' + L('Рисую постер… ~10 сек');
                 apiPost('/api/v1/marketplace/poster', { listing_id: base.id, poster: state, format: fmt || 'png' }).then(function (r) {
                     if (r && r.ok) {
                         _haptic('success');
                         if (r.queued && r.job) {
                             _startPosterProgress(r.job, fmt);
                         } else if (r.queued) {
-                            btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> Идёт обработка…';
+                            btn.disabled = true; btn.innerHTML = '<i class="ti ti-clock"></i> ' + L('Идёт обработка…');
                         } else {
-                            toast('Постер в чате с ботом, можно переслать'); restoreSend();
+                            toast(L('Постер в чате с ботом, можно переслать')); restoreSend();
                         }
                         if (_myListings) for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === base.id) _myListings[i].poster_json = r.poster || state;
                     } else {
@@ -9192,11 +9194,11 @@
                         if (wait) waitSend(parseInt(wait[1], 10)); else restoreSend();
                         toast(msg, true);
                     }
-                }).catch(function () { restoreSend(); toast('Сервер не ответил', true); });
+                }).catch(function () { restoreSend(); toast(L('Сервер не ответил'), true); });
             }
             function proceed() {
                 var state = (win && win.__fmxPosterState) ? win.__fmxPosterState() : null;
-                if (!state) { restoreSend(); toast('Редактор ещё загружается — секунду'); return; }
+                if (!state) { restoreSend(); toast(L('Редактор ещё загружается — секунду')); return; }
                 var bgErr = null;
                 try { bgErr = win.__fmxPosterBgError ? win.__fmxPosterBgError() : null; } catch (e) {}
                 if (bgErr) {
@@ -9213,7 +9215,7 @@
             }
             var pend = null;
             try { pend = (win && win.__fmxPosterBgPending) ? win.__fmxPosterBgPending() : null; } catch (e) {}
-            if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю фон…'; pend.then(proceed, proceed); }
+            if (pend && pend.then) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + L('Загружаю фон…'); pend.then(proceed, proceed); }
             else proceed();
         });
         if (window.__fmxPosterJob[base.id]) _startPosterProgress(window.__fmxPosterJob[base.id], null);
@@ -9249,11 +9251,11 @@
     function saveStudio() {
         var btn = el('fmx-save'); btn.disabled = true;
         var hasFiles = ['cover', 'avatar', 'cardbg'].some(function (t) { return _ss._media && _ss._media[t] && _ss._media[t].file; });
-        if (hasFiles) btn.innerHTML = '<i class="ti ti-loader-2"></i> Загружаю файлы…';
+        if (hasFiles) btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + L('Загружаю файлы…');
         uploadPending().then(function () { _saveListing(btn); }).catch(function (e) {
             _haptic('error'); btn.disabled = false;
             btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (_ss.listingId ? 'Сохранить оффер' : 'Опубликовать на Площадке');
-            uiAlert('Не удалось загрузить файл: ' + (e && e.message ? e.message : 'ошибка'));
+            uiAlert(L('Не удалось загрузить файл: ') + (e && e.message ? e.message : 'ошибка'));
         });
     }
     function _saveListing(btn) {
@@ -9286,10 +9288,10 @@
         var wasCreate = !_ss.listingId, p;
         var savingCh = _ss.channelId, savingId = _ss.listingId;
         if (savingId) p = apiPatch('/api/v1/marketplace/listings/' + savingId, body);
-        else { if (!savingCh) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> Опубликовать на Площадке'; uiAlert('Сначала выбери канал.'); return; } body.channel_id = savingCh; p = apiPost('/api/v1/marketplace/listings', body); }
+        else { if (!savingCh) { btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + L('Опубликовать на Площадке'); uiAlert(L('Сначала выбери канал.')); return; } body.channel_id = savingCh; p = apiPost('/api/v1/marketplace/listings', body); }
         p.then(function (r) {
             var sameCtx = !!(_ss && _ss.channelId === savingCh);
-            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (savingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert('Не удалось сохранить: ' + (r.error || 'ошибка')); return; }
+            if (r && r.ok === false) { _haptic('error'); btn.disabled = false; btn.innerHTML = '<i class="ti ti-rocket"></i> ' + (savingId ? 'Сохранить оффер' : 'Опубликовать на Площадке'); uiAlert(L('Не удалось сохранить: ') + (r.error || 'ошибка')); return; }
             _haptic('success');
             var savedId = (r && r.listing_id) || savingId;
             if (r && r.listing_id) { if (sameCtx) _ss.listingId = r.listing_id; if (wasCreate) { var ch = channelById(savingCh); _myListings.push({ id: r.listing_id, username: ch ? ch.username : null, status: 'pending', status_human: 'На модерации' }); } loadMyListings(); }
@@ -9303,16 +9305,16 @@
                     if (!nm) _myListings[ri].reject_reason = null;
                 }
             }
-            btn.innerHTML = '<i class="ti ti-check"></i> Сохранено';
+            btn.innerHTML = '<i class="ti ti-check"></i> ' + L('Сохранено');
             toast(r && r.needs_review ? 'Оффер ушёл на ручную проверку — проверим и вернём' : (r && r.resubmitted ? 'Оффер отправлен на повторную проверку' : 'Оффер сохранён'));
             _feed = null; _feedState = 'idle';
             if (wasCreate && r && r.listing_id) _pollPublish(r.listing_id);
             setTimeout(function () {
                 if (!(_ss && _ss.channelId === savingCh)) return;
                 if (wasCreate) { paintCreate(); }
-                else { btn.innerHTML = '<i class="ti ti-rocket"></i> Сохранить оффер'; btn.disabled = false; }
+                else { btn.innerHTML = '<i class="ti ti-rocket"></i> ' + L('Сохранить оффер'); btn.disabled = false; }
             }, 1600);
-        }).catch(function (e) { _haptic('error'); btn.disabled = false; uiAlert('Не удалось сохранить: ' + (e && e.message ? e.message : 'ошибка')); });
+        }).catch(function (e) { _haptic('error'); btn.disabled = false; uiAlert(L('Не удалось сохранить: ') + (e && e.message ? e.message : 'ошибка')); });
     }
 
     function _bk(k, h) { return h.replace('<span', '<span data-bkey="' + k + '"'); }
@@ -9366,13 +9368,13 @@
         var items = [];
         items.push({ k: 'tl', h: _bk('tl', trafficLight(l)) });
         if (l.niche) items.push({ k: 'niche', h: _bk('niche', '<span class="fmx-bdg" style="color:#c7ccf7;border-color:rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><i class="ti ti-tag" style="color:#818cf8;"></i>' + _esc(l.niche) + '</span>') });
-        if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>') });
-        if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Фрод-контроль пройден</span>') });
+        if (l.owner_verified) items.push({ k: 'owner', h: _bk('owner', '<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>' + L('Владелец') + '</span>') });
+        if (l.antifraud === 'clean') items.push({ k: 'nofraud', h: _bk('nofraud', '<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>' + L('Фрод-контроль пройден') + '</span>') });
         if (l.rkn_url) items.push({ k: 'rkn', h: _bk('rkn', rknPill(l.rkn_url)) });
         var dealN = l.deals_count || 0;
         if (l.show_deals !== false && dealN >= 1) items.push({ k: 'deal', h: _bk('deal', '<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + (l.rating_avg ? '★ ' + l.rating_avg + ' · ' : '') + dealN + ' ' + _plural(dealN, 'сделка', 'сделки', 'сделок') + '</span>') });
-        if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>') });
-        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты до −' + l.hot_discount_pct + '%</span>') });
+        if (_nicheMatch(l)) items.push({ k: 'match', h: _bk('match', '<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>' + L('В нише') + '</span>') });
+        if (l.hot_discount_pct) items.push({ k: 'hot', h: _bk('hot', '<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>' + L('Горящие даты до −') + l.hot_discount_pct + '%</span>') });
         var _ab = _actBadge(l);
         if (_ab) items.push({ k: 'live', h: _bk('live', _ab) });
         if (l.badges && l.badges.length) {
@@ -9382,7 +9384,7 @@
                 var x = m[b]; if (x) items.push({ k: b, h: _bk(b, '<span class="fmx-bdg ' + x[0] + '"><i class="ti ' + x[1] + '"></i>' + x[2] + '</span>') });
             });
         } else if (l.subscribers && l.subscribers >= 100000) {
-            items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>') });
+            items.push({ k: 'big', h: _bk('big', '<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>' + L('Крупный') + '</span>') });
         }
         return items;
     }
@@ -9390,13 +9392,13 @@
         if (!l.niche) return '';
         var m = _nicheMatch(l);
         return '<div class="fmr-nline"' + (fts ? ' style="' + fts + '"' : '') + '><i class="ti ti-tag"></i>' + _esc(l.niche) +
-            (m ? '<span class="mt"><i class="ti ti-target-arrow"></i>в твоей нише</span>' : '') + '</div>';
+            (m ? '<span class="mt"><i class="ti ti-target-arrow"></i>' + L('в твоей нише') + '</span>' : '') + '</div>';
     }
     function _alertsRow(l, promoHtml) {
         var out = [];
         if (l.activity === 'rare' || l.activity === 'low' || l.activity === 'none') out.push(_actBadge(l));
-        if ((l.badges || []).indexOf('risk') >= 0 || l.antifraud === 'suspect') out.push('<span class="fmx-bdg fmx-b-dead"><i class="ti ti-alert-triangle"></i>Требует проверки</span>');
-        if (l.hot_discount_pct) out.push('<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты до −' + l.hot_discount_pct + '%</span>');
+        if ((l.badges || []).indexOf('risk') >= 0 || l.antifraud === 'suspect') out.push('<span class="fmx-bdg fmx-b-dead"><i class="ti ti-alert-triangle"></i>' + L('Требует проверки') + '</span>');
+        if (l.hot_discount_pct) out.push('<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>' + L('Горящие даты до −') + l.hot_discount_pct + '%</span>');
         if (promoHtml) out.push(promoHtml);
         return out.length ? '<div class="fmr-pulse">' + out.join('') + '</div>' : '';
     }
@@ -9406,12 +9408,12 @@
         if (h.cls !== 'none') out.push('<span class="fmr-pill" style="color:' + h.color + ';"><i style="width:6px;height:6px;border-radius:50%;background:' + h.color + ';display:inline-block;"></i><span style="color:#c2c6d2;">' + h.word + '</span></span>');
         var a = _actInfo(l);
         if (a && (l.activity === 'high' || l.activity === 'mid')) out.push('<span class="fmr-pill" style="color:' + a[1] + ';">' + _pulseSvg(13, a[1]) + '<span style="color:#c2c6d2;">' + a[2] + '</span></span>');
-        if (l.antifraud === 'clean') out.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">Фрод-контроль пройден</span></span>');
+        if (l.antifraud === 'clean') out.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">' + L('Фрод-контроль пройден') + '</span></span>');
         if (l.rkn_url) out.push(rknPill(l.rkn_url, 'radar'));
-        if (l.owner_verified) out.push('<span class="fmr-pill" style="color:#5ab0e6;"><i class="ti ti-user-check"></i><span style="color:#c2c6d2;">Владелец</span></span>');
+        if (l.owner_verified) out.push('<span class="fmr-pill" style="color:#5ab0e6;"><i class="ti ti-user-check"></i><span style="color:#c2c6d2;">' + L('Владелец') + '</span></span>');
         var bl = l.badges || [];
-        if (bl.indexOf('big') >= 0 || (!bl.length && l.subscribers && l.subscribers >= 100000)) out.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">Крупный канал</span></span>');
-        if (bl.indexOf('safe') >= 0) out.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i><span style="color:#c2c6d2;">Безопасный</span></span>');
+        if (bl.indexOf('big') >= 0 || (!bl.length && l.subscribers && l.subscribers >= 100000)) out.push('<span class="fmr-pill" style="color:#f5bf4f;"><i class="ti ti-crown"></i><span style="color:#c2c6d2;">' + L('Крупный канал') + '</span></span>');
+        if (bl.indexOf('safe') >= 0) out.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-circle-check"></i><span style="color:#c2c6d2;">' + L('Безопасный') + '</span></span>');
         var al = _audLabel(l);
         if (al) out.push('<span class="fmr-pill" style="color:' + al.color + ';"><i class="ti ' + al.icon + '"></i><span style="color:#c2c6d2;">' + al.text + '</span></span>');
         var dealN = l.deals_count || 0;
@@ -9433,14 +9435,14 @@
         var conv = 0.5, _grw = av ? av * conv / 100 : 0, gained = Math.round(_grw), cps = (pp && _grw > 0) ? Math.round(pp / _grw) : null;
         var rrHtml = '';
         if (dead) {
-            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>' + L('Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.') + '</span></div>';
         } else if (rr != null && rstat) {
             var rrCol = (rstat === 'норма') ? '#5DCAA5' : ((rstat === 'очень низкий' || rstat === 'аномальный') ? '#ef4444' : '#f59e0b');
-            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">' + L('норма для этого размера') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
             rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<span class="fmr-i push" data-fi="rr">?</span></div>' +
-                '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
+                '<div class="fmr-info" data-finfo="rr">' + L('ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.') + rrAnom + '</div>';
         }
         var erHtml = '';
         if (!dead) {
@@ -9448,8 +9450,8 @@
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
-            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
-            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
+            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + erBits.join(', ') + ' ' + L('на пост') + '</span>' : '';
+            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">' + L('— только реакции, репосты и комментарии недоступны') + '</span>';
             var _erv = l.engagement_percent;
             var _erNo = (_erv == null);
             var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
@@ -9457,13 +9459,13 @@
             var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
             if (_erNo) {
                 var _hasSig = !!(l.react_count || l.comment_count);
-                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '') +
+                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + erBits.join(', ') + ' ' + L('на пост') + '</span>' : '') +
                     ' <span style="font-size:11px;color:#565b73;">— ' + (_hasSig
                         ? 'сигнала мало для честной оценки; цена считается по охвату'
                         : 'в канале не видно реакций и комментариев; цена считается по охвату') + '</span>';
             }
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
+                '<div class="fmr-info" data-finfo="er">' + L('ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.') + '</div>';
         }
         var adHtml = '';
         if (!dead && l.ad_er_posts != null) {
@@ -9476,29 +9478,29 @@
                 else if (_adr != null && _adr >= 0.6) { _adCol = '#818cf8'; _adTag = 'немного ниже обычного'; }
                 else if (_adr != null && _adr > 0) { _adCol = '#f87171'; _adTag = 'в ' + String(Math.round(10 / _adr) / 10).replace('.', ',') + ' раза ниже обычного'; }
                 else { _adCol = '#818cf8'; }
-                _adSub = ' <span style="font-size:11px;color:#565b73;">— по ' + _adn + ' ' + _plural(_adn, 'рекламному посту', 'рекламным постам', 'рекламным постам') + '</span>';
+                _adSub = ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + _adn + ' ' + _plural(_adn, 'рекламному посту', 'рекламным постам', 'рекламным постам') + '</span>';
             } else if (_adn > 0) {
                 _adTag = 'мало рекламных постов';
-                _adSub = ' <span style="font-size:11px;color:#565b73;">— найдено ' + _adn + ', нужно от 3</span>';
+                _adSub = ' <span style="font-size:11px;color:#565b73;">' + L('— найдено') + ' ' + _adn + L(', нужно от 3') + '</span>';
             } else {
                 _adTag = 'рекламных постов не найдено';
             }
             adHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Отклик на рекламе <b style="color:' + _adCol + ';">' + _adVal + '</b>' +
                 (_adTag ? ' <span style="font-size:11px;color:' + _adCol + ';font-weight:600;">' + _adTag + '</span>' : '') + _adSub +
                 '<span class="fmr-i push" data-fi="ader">?</span></div>' +
-                '<div class="fmr-info" data-finfo="ader">Отклик на рекламе = (реакции ÷ охват) на рекламных постах канала. Сам по себе процент мало о чём говорит — смысл в сравнении с обычными постами того же канала: если реклама собирает заметно меньше, аудитория её пролистывает, и вы получите охват, но не действие. Рекламные посты определяются по маркировке (erid, «на правах рекламы», рекламные хештеги) и по структуре: метки отслеживания, промокод, внешняя ссылка с призывом. Показываем только при трёх и более рекламных постах — по одному-двум вывод делать нельзя. На цену канала метрика не влияет.</div>';
+                '<div class="fmr-info" data-finfo="ader">' + L('Отклик на рекламе = (реакции ÷ охват) на рекламных постах канала. Сам по себе процент мало о чём говорит — смысл в сравнении с обычными постами того же канала: если реклама собирает заметно меньше, аудитория её пролистывает, и вы получите охват, но не действие. Рекламные посты определяются по маркировке (erid, «на правах рекламы», рекламные хештеги) и по структуре: метки отслеживания, промокод, внешняя ссылка с призывом. Показываем только при трёх и более рекламных постах — по одному-двум вывод делать нельзя. На цену канала метрика не влияет.') + '</div>';
         }
         var facts = rrHtml + erHtml + adHtml + _spikeLine(l) +
-            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> ' + L('На рынке') + ' <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">' + L('— возраст канала') + '</span></div>' : '');
         var ad = '';
         if (pp) {
-            ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <span class="fmr-i push" data-fi="ad">?</span></div>' +
-                '<div class="fmr-line">Пост <b class="fmr-big">от ' + _num(pp) + ' ₽</b></div>' +
+            ad = '<div class="fmr-sec num"><span class="kn">1</span>' + L('Стоимость размещения') + ' <span class="fmr-i push" data-fi="ad">?</span></div>' +
+                '<div class="fmr-line">' + L('Пост') + ' <b class="fmr-big">' + L('от') + ' ' + _num(pp) + ' ₽</b></div>' +
                 _mktLine(l) +
-                '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
-                (!dead && cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ₽ за 1000 просмотров</div>' : '') +
+                '<div class="fmr-sub"><b>' + L('1 час в топе') + '</b> ' + L('канала, потом') + ' <b>' + L('сутки в ленте') + '</b> ' + L('· формат 1/24') + '</div>' +
+                (!dead && cpm != null ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + ' ' + L('₽ за 1000 просмотров') + '</div>' : '') +
                 ((l.formats && l.formats.length) ? '<div class="fmx-fchips" style="margin:7px 0 0;">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
-                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.</div>';
+                '<div class="fmr-info" data-finfo="ad">' + L('Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.') + '</div>';
         }
         var flow = '';
         if (pp && av && !dead) {
@@ -9508,19 +9510,19 @@
                 _grw = av * conv / 100;
                 cps = _grw > 0 ? Math.round(pp / _grw) : cps;
                 cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> ' +
-                    '<span style="font-size:11px;color:#5DCAA5;">по замерам ' + (l.cpf_deals || 1) + ' ' +
+                    '<span style="font-size:11px;color:#5DCAA5;">' + L('по замерам') + ' ' + (l.cpf_deals || 1) + ' ' +
                     _plural(l.cpf_deals || 1, 'сделки', 'сделок', 'сделок') + '</span></div>';
             } else {
                 var cpfLo = Math.round(pp / (av * 0.015));
                 var cpfHi = Math.round(pp / (av * 0.003));
-                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>';
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">' + L('оценка при конверсии 0,3–1,5%') + '</span></div>';
             }
-            flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <span class="fmr-i push" data-fi="flow">?</span></div>' +
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>' + L('Перелив · набрать подписчиков') + ' <span class="fmr-i push" data-fi="flow">?</span></div>' +
                 cpfHead +
-                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
-                '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
-                '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
-                '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Не знаешь свою — оставь 0,5%: это медиана рынка для первых закупов. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. После размещений со ссылкой отслеживания сюда подставляется фактическая конверсия канала по замерам сделок. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
+                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">' + L('CPF · цена подписчика') + '</span></div>' +
+                '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> ' + L('за') + ' <b>≈' + _num(pp) + ' ₽</b> ' + L('(цена формата 1/24)') + '</div>' +
+                '<div class="fmr-warn">' + L('Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.') + '</div>' +
+                '<div class="fmr-info" data-finfo="flow">' + L('Конверсия — какая доля увидевших пост подпишется именно к тебе. Не знаешь свою — оставь 0,5%: это медиана рынка для первых закупов. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. После размещений со ссылкой отслеживания сюда подставляется фактическая конверсия канала по замерам сделок. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.') + '</div>';
         }
         var struct = '';
         (function () {
@@ -9539,7 +9541,7 @@
             }
             if (sr.length) struct = sr.join('');
         })();
-        var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '';
+        var qualHdr = (facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>' + L('Качество аудитории') + '</div>' : '';
         return _blk(1, ad) + _blk(2, qualHdr + facts + struct) + _blk(3, flow);
     }
     function _shareBtn(l, style) {
@@ -9557,11 +9559,11 @@
     }
     function _mktLine(l) {
         if (!l.mkt_low) return '';
-        return '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка ' +
+        return '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">' + L('Рыночная оценка') + ' ' +
             '<b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> ' +
             '<span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);' +
             'border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">' +
-            '≈ оценка ниши</span></div>';
+            L('≈ оценка ниши') + '</span></div>';
     }
     function _kmRow(name, right, val, valCol, isPrice) {
         return '<div class="fmx-kmr"><span class="n">' + name + '</span><span class="rv">' + (right || '') +
@@ -9627,7 +9629,7 @@
                 _kmSub(dead ? 'нет охвата' : (l.price_floored ? 'охват мал' : (isOwner ? 'от цены владельца' : 'ориентир ниши')), ''),
                 (!dead && cpm != null && !l.price_floored) ? _num(cpm) : '—', '#e8e8ed') +
             _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true);
-        return '<div class="fmx-kmh"><span>Ключевые метрики</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
+        return '<div class="fmx-kmh"><span>' + L('Ключевые метрики') + '</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? 'цена владельца' : 'оценка') + '</span></div>' +
             '<div class="fmx-kmg">' + rows + '</div>';
     }
     function fullCard(l) {
@@ -9680,10 +9682,10 @@
             var _r0 = 17, _circ = Math.round(2 * Math.PI * _r0 * 100) / 100, _off = Math.round(_circ * (1 - l.health_score / 100) * 100) / 100;
             return '<div class="fmr-score" style="margin-left:auto;">' + (noHead ? starFlow : '') +
                 '<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/><circle cx="21" cy="21" r="' + _r0 + '" fill="none" stroke="' + hc + '" stroke-width="4" stroke-linecap="round" stroke-dasharray="' + _circ + '" stroke-dashoffset="' + _off + '" transform="rotate(-90 21 21)"/><text x="21" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8ed">' + l.health_score + '</text></svg>' +
-                '<div class="fmr-scorelbl">индекс <span class="fmr-i" data-fi="health">?</span></div></div>';
+                '<div class="fmr-scorelbl">' + L('индекс') + ' <span class="fmr-i" data-fi="health">?</span></div></div>';
         })();
         var tagInBody = noHead || ((l.effects_json || {}).topTagPos === 'body');
-        var promoBdg = (realTop && topTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (topTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
+        var promoBdg = (realTop && topTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (topTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>' + L('Продвигается') + '</span>' : '';
         var tagAsBadge = tagInBody && !!promoBdg;
         var headHtml;
         if (noHead) {
@@ -9692,25 +9694,25 @@
                 : '<div class="fmr-av" style="background:' + _esc(accent) + ';">' + _esc(t.charAt(0).toUpperCase()) + '</div>';
             headHtml = '<div class="fmr-head">' + _rAv +
                 '<div class="fmr-id"><div class="fmr-name" style="' + fontStyle(l.title_style) + '">' + _esc(t) + '</div>' +
-                (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' : '') +
+                (l.username ? '<div class="fmr-user">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' ' + L('подп.') + '</div>' : '') +
                 _nicheLine(l, '') + '</div>' + scoreHtml + '</div>';
         } else {
             headHtml = '<div class="fmx-crow">' + avHtml +
-                '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' подп.</div>' + _nicheLine(l, fts) + '</div>' +
+                '<div style="min-width:0;"><div class="fmx-nm" style="' + fts + fontStyle(l.title_style) + '">' + _esc(t) + '</div><div class="fmx-meta" style="' + fts + '">@' + _esc(l.username) + ' · ' + _num(l.subscribers) + ' ' + L('подп.') + '</div>' + _nicheLine(l, fts) + '</div>' +
                 scoreHtml + '</div>';
         }
         var alertsHtml = _alertsRow(l, tagAsBadge ? promoBdg : '');
         var _tagPos = tagInBody ? 'position:static;display:inline-flex;margin:2px 0 9px;' : '';
         var tagHtml = realTop
-            ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" data-promoproof="1" style="cursor:pointer;' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> Продвигается</span>')
-            : '<span class="fmx-tag" style="' + _tagPos + '"><i class="ti ti-circle-check-filled"></i> на продаже</span>';
+            ? (topTag === 'off' ? '' : '<span class="fmx-tag gold" data-promoproof="1" style="cursor:pointer;' + _tagPos + (topTag === 'ghost' ? 'background:rgba(10,13,24,0.22);color:#f5d78a;border:0.5px solid rgba(245,191,79,0.4);' : '') + '"><i class="ti ti-speakerphone"></i> ' + L('Продвигается') + '</span>')
+            : '<span class="fmx-tag" style="' + _tagPos + '"><i class="ti ti-circle-check-filled"></i> ' + L('на продаже') + '</span>';
         return '<div class="fmx-cwrap' + (glowOn ? ' fmx-goldw' : '') + '"><div class="fmx-card' + (glowOn ? ' fmx-prem' : '') + (fullBg ? ' fmx-fullbg' : '') + (noHead ? ' fmx-nohead' : '') + '" data-u="' + _esc(l.username) + '">' + cbgHtml + stkHtml +
             ((fullBg || noHead) ? '' : '<div class="fmx-cov' + (cb ? ' fmx-cov-sep' : '') + '">' + covHtml + '</div>') +
             (tagInBody ? '' : tagHtml) +
             (noHead ? '' : '<button class="fmx-star' + star + '" data-bm="' + _esc(l.username) + '" style="bottom:auto;top:8px;z-index:7;"><i class="ti ti-star"></i></button>' +
                 _shareBtn(l, 'bottom:auto;top:8px;right:47px;z-index:7;')) +
             '<div class="fmx-cb">' + headHtml +
-            (l.health_score != null ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
+            (l.health_score != null ? '<div class="fmr-info" data-finfo="health">' + L('Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.') + '</div>' : '') +
             alertsHtml +
             ((tagInBody && !tagAsBadge) ? tagHtml : '') +
             (l.custom_text ? '<div class="fmx-desc" style="' + fts + '">' + _esc(l.custom_text) + '</div>' : '') +
@@ -9719,25 +9721,25 @@
             _ctcLinesHtml(l) +
             _moreBlock(l) +
             _trustRow(l) +
-            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
-            '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
-            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
-            (!l.id ? '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>'
-                : '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="deal" data-lid="' + l.id + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>') +
+            '<div class="fmx-acts"><button class="fmx-btn" style="' + gs.s + '" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>' + L('Разбор') + ' ' + anFee(30) + '</button>' +
+            '<button class="fmx-btn" style="' + gs.s + '" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-arrow-up-right"></i>' + L('Развернуть') + '</button>' +
+            '<button class="fmx-btn fmx-btn-p" style="' + gs.p + '" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>' + L('Открыть канал') + '</button></div>' +
+            (!l.id ? '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>' + L('Ссылка отслеживания в рекламный пост') + '</button></div>'
+                : '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="' + gs.s + 'flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="deal" data-lid="' + l.id + '"><i class="ti ti-route"></i>' + L('Ссылка отслеживания в рекламный пост') + '</button></div>') +
             '</div></div></div>';
     }
     function _ageTile() {
         return '<div class="fmx-scard fmx-agel" data-agegate="1" style="cursor:pointer;text-align:center;padding:22px 14px;">' +
             '<div style="font-size:24px;line-height:1;color:#f5bf4f;"><i class="ti ti-eye-off"></i></div>' +
-            '<div style="font-weight:650;margin-top:7px;">Канал 18+</div>' +
-            '<div style="font-size:11.5px;color:#8990a8;margin-top:3px;">Нажми, чтобы подтвердить возраст и открыть</div></div>';
+            '<div style="font-weight:650;margin-top:7px;">' + L('Канал 18+') + '</div>' +
+            '<div style="font-size:11.5px;color:#8990a8;margin-top:3px;">' + L('Нажми, чтобы подтвердить возраст и открыть') + '</div></div>';
     }
     function _askAge() {
-        uiConfirm('В этом разделе есть каналы с контентом 18+. Подтвердите, что вам исполнилось 18 лет.', function () {
+        uiConfirm(L('В этом разделе есть каналы с контентом 18+. Подтвердите, что вам исполнилось 18 лет.'), function () {
             apiPost('/api/v1/marketplace/confirm-age', {}).then(function () {
                 _adultOk = true;
                 if (_mainTab === 'catalog') renderCatalog(); else if (_subTab === 'buy') renderBuy();
-            }).catch(function () { toast('Не удалось. Повтори попытку.'); });
+            }).catch(function () { toast(L('Не удалось. Повтори попытку.')); });
         });
     }
     function _bindAgeGate(scope) {
@@ -9831,13 +9833,13 @@
         var dead = l.activity === 'none';
         var rrHtml = '';
         if (dead) {
-            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</span></div>';
+            rrHtml = '<div class="fmr-line" style="margin-top:5px;color:#ef4444;">' + _warnTri(14) + ' <span>' + L('Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.') + '</span></div>';
         } else if (rr != null && rstat) {
-            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">норма для этого размера ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
+            var normTxt = (rnorm && rnorm.length === 2) ? (' <span style="font-size:10px;color:#565b73;">' + L('норма для этого размера') + ' ' + rnorm[0] + '–' + rnorm[1] + '%</span>') : '';
             var rrWarn = (rstat === 'аномальный') ? (_warnTri(14) + ' ') : '';
             var rrAnom = (rstat === 'аномальный') ? ' Когда охват стабильно выше подписчиков (за 100%) почти на каждом посте без явной причины — цифру стоит перепроверить: обычно это докрученные просмотры (имитация активности под продажу рекламы) либо закуп в непрофильных каналах с ботовым трафиком. Опровергнуть или подтвердить помогает вовлечённость (реакции): заметные реакции при большом охвате — просмотры живые; почти полное их отсутствие — охват докручен, боты реакций не ставят.' : '';
             rrHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' + rrWarn + 'ERR <b style="color:' + rrCol + ';">' + rr + '%</b> <span style="font-size:11px;color:' + rrCol + ';font-weight:600;">' + _esc(rstat) + '</span>' + normTxt + '<span class="fmr-i push" data-fi="rr">?</span></div>' +
-                '<div class="fmr-info" data-finfo="rr">ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.' + rrAnom + '</div>';
+                '<div class="fmr-info" data-finfo="rr">' + L('ERR = охват ÷ подписчики — какой процент подписчиков видит пост. Норму смотрим по размеру канала (у больших она ниже — это нормально): микро до 5к 25–50%, малый 5–10к 18–35%, средний 10к–100к 7–22%, крупный 100к–1М 6–16%, миллионник 3–10%. Нормы выведены из реальной базы каналов. Слишком низко для своего размера — признак мёртвой базы; в разы выше нормы — повод проверить источник охвата.') + rrAnom + '</div>';
         }
         var erHtml = '';
         if (!dead) {
@@ -9845,8 +9847,8 @@
             if (l.react_count) erBits.push('~' + _num(l.react_count) + ' ' + _plural(l.react_count, 'реакция', 'реакции', 'реакций'));
             if (l.forward_count) erBits.push(_num(l.forward_count) + ' ' + _plural(l.forward_count, 'репост', 'репоста', 'репостов'));
             if (l.comment_count) erBits.push(_num(l.comment_count) + ' ' + _plural(l.comment_count, 'комментарий', 'комментария', 'комментариев'));
-            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '';
-            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">— только реакции, репосты и комментарии недоступны</span>';
+            var erSub = erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + erBits.join(', ') + ' ' + L('на пост') + '</span>' : '';
+            if (l.data_source === 'scrape') erSub += ' <span style="font-size:11px;color:#f59e0b;">' + L('— только реакции, репосты и комментарии недоступны') + '</span>';
             var _erv = l.engagement_percent;
             var _erNo = (_erv == null);
             var _erStat = _erNo ? 'не измеряется' : (_erv >= 3.5 ? 'высокая' : (_erv >= 1 ? 'норма' : 'низкая'));
@@ -9854,15 +9856,15 @@
             var _ervTxt = _erNo ? '—' : (((_erv === 0 && (l.react_count || l.forward_count || l.comment_count)) ? '<0,1' : String(_erv).replace('.', ',')) + '%');
             if (_erNo) {
                 var _hasSig = !!(l.react_count || l.comment_count);
-                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">— по ' + erBits.join(', ') + ' на пост</span>' : '') +
+                erSub = (erBits.length ? ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + erBits.join(', ') + ' ' + L('на пост') + '</span>' : '') +
                     ' <span style="font-size:11px;color:#565b73;">— ' + (_hasSig
                         ? 'сигнала мало для честной оценки; цена считается по охвату'
                         : 'в канале не видно реакций и комментариев; цена считается по охвату') + '</span>';
             }
             erHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Вовлечённость (ER) <b style="color:' + _erCol + ';">' + _ervTxt + '</b> <span style="font-size:11px;color:' + _erCol + ';font-weight:600;">' + _erStat + '</span>' + erSub + '<span class="fmr-i push" data-fi="er">?</span></div>' +
-                '<div class="fmr-info" data-finfo="er">ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.</div>';
+                '<div class="fmr-info" data-finfo="er">' + L('ER (вовлечённость по охвату) = (реакции + репосты + комментарии) ÷ охват — какая доля увидевших пост взаимодействует с ним. Считаем от тех, кто действительно увидел пост (от охвата), а не от всех подписчиков. Живой сигнал: просмотры накрутить дёшево, взаимодействия — нет. Ориентир: до 1% — низкая, 1–3.5% — норма, выше 3.5% — высокая (у новостных ниже, они живут репостами). Если в канале отключены реакции и комментарии, показываем «не измеряется»: цена такого канала считается по охвату и индексу, а не штрафуется за отсутствие данных.') + '</div>';
         }
-        var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> · оценка</span>' : '';
+        var reachEst = (l.reach_preliminary || (l.reach_posts != null && l.reach_posts < 8)) ? '<span style="font-size:10px;color:#565b73;"> ' + L('· оценка') + '</span>' : '';
         var adHtml = '';
         if (!dead && l.ad_er_posts != null) {
             var _adv = l.ad_er_percent, _adn = l.ad_er_posts, _adr = l.ad_er_ratio;
@@ -9874,33 +9876,33 @@
                 else if (_adr != null && _adr >= 0.6) { _adCol = '#818cf8'; _adTag = 'немного ниже обычного'; }
                 else if (_adr != null && _adr > 0) { _adCol = '#f87171'; _adTag = 'в ' + String(Math.round(10 / _adr) / 10).replace('.', ',') + ' раза ниже обычного'; }
                 else { _adCol = '#818cf8'; }
-                _adSub = ' <span style="font-size:11px;color:#565b73;">— по ' + _adn + ' ' + _plural(_adn, 'рекламному посту', 'рекламным постам', 'рекламным постам') + '</span>';
+                _adSub = ' <span style="font-size:11px;color:#565b73;">' + L('— по') + ' ' + _adn + ' ' + _plural(_adn, 'рекламному посту', 'рекламным постам', 'рекламным постам') + '</span>';
             } else if (_adn > 0) {
                 _adTag = 'мало рекламных постов';
-                _adSub = ' <span style="font-size:11px;color:#565b73;">— найдено ' + _adn + ', нужно от 3</span>';
+                _adSub = ' <span style="font-size:11px;color:#565b73;">' + L('— найдено') + ' ' + _adn + L(', нужно от 3') + '</span>';
             } else {
                 _adTag = 'рекламных постов не найдено';
             }
             adHtml = '<div class="fmr-line" style="margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Отклик на рекламе <b style="color:' + _adCol + ';">' + _adVal + '</b>' +
                 (_adTag ? ' <span style="font-size:11px;color:' + _adCol + ';font-weight:600;">' + _adTag + '</span>' : '') + _adSub +
                 '<span class="fmr-i push" data-fi="ader">?</span></div>' +
-                '<div class="fmr-info" data-finfo="ader">Отклик на рекламе = (реакции ÷ охват) на рекламных постах канала. Сам по себе процент мало о чём говорит — смысл в сравнении с обычными постами того же канала: если реклама собирает заметно меньше, аудитория её пролистывает, и вы получите охват, но не действие. Рекламные посты определяются по маркировке (erid, «на правах рекламы», рекламные хештеги) и по структуре: метки отслеживания, промокод, внешняя ссылка с призывом. Показываем только при трёх и более рекламных постах — по одному-двум вывод делать нельзя. На цену канала метрика не влияет.</div>';
+                '<div class="fmr-info" data-finfo="ader">' + L('Отклик на рекламе = (реакции ÷ охват) на рекламных постах канала. Сам по себе процент мало о чём говорит — смысл в сравнении с обычными постами того же канала: если реклама собирает заметно меньше, аудитория её пролистывает, и вы получите охват, но не действие. Рекламные посты определяются по маркировке (erid, «на правах рекламы», рекламные хештеги) и по структуре: метки отслеживания, промокод, внешняя ссылка с призывом. Показываем только при трёх и более рекламных постах — по одному-двум вывод делать нельзя. На цену канала метрика не влияет.') + '</div>';
         }
         var facts = rrHtml + erHtml + adHtml + _spikeLine(l) +
-            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> На рынке <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">— возраст канала</span></div>' : '');
+            (_chAge(l.channel_created_ts) ? '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ti-calendar" style="font-size:12px;color:#818cf8;"></i> ' + L('На рынке') + ' <b style="color:#c2c6d2;">' + _chAge(l.channel_created_ts) + '</b> <span style="font-size:11px;color:#565b73;">' + L('— возраст канала') + '</span></div>' : '');
         var ad = '';
         if (pp) {
-            var priceTag = (est || l.price_negotiable) ? '' : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">цена владельца</span>';
-            ad = '<div class="fmr-sec num"><span class="kn">1</span>Стоимость размещения <span style="font-size:10px;color:#565b73;text-transform:none;letter-spacing:0;font-weight:600;">' + (est ? '· оценка ниши' : '· цена владельца') + '</span> <span class="fmr-i push" data-fi="ad">?</span></div>' +
-                '<div class="fmr-line">Пост <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
-                (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">Рыночная оценка <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">≈ оценка ниши</span></div>' : '') +
-                '<div class="fmr-sub"><b>1 час в топе</b> канала, потом <b>сутки в ленте</b> · формат 1/24</div>' +
+            var priceTag = (est || l.price_negotiable) ? '' : ' <span style="font-size:10px;color:#5DCAA5;background:rgba(93,202,165,.12);border:1px solid rgba(93,202,165,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">' + L('цена владельца') + '</span>';
+            ad = '<div class="fmr-sec num"><span class="kn">1</span>' + L('Стоимость размещения') + ' <span style="font-size:10px;color:#565b73;text-transform:none;letter-spacing:0;font-weight:600;">' + (est ? '· оценка ниши' : '· цена владельца') + '</span> <span class="fmr-i push" data-fi="ad">?</span></div>' +
+                '<div class="fmr-line">' + L('Пост') + ' <b class="fmr-big">' + (l.price_negotiable ? 'от ≈' + _num(pp) + ' ₽ · договорная' : (ph ? '≈' + _num(pp) + '–' + _num(ph) + ' ₽' : (est ? 'от ≈' + _num(pp) + ' ₽' : 'от ' + _num(pp) + ' ₽'))) + '</b>' + priceTag + '</div>' +
+                (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">' + L('Рыночная оценка') + ' <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">' + L('≈ оценка ниши') + '</span></div>' : '') +
+                '<div class="fmr-sub"><b>' + L('1 час в топе') + '</b> ' + L('канала, потом') + ' <b>' + L('сутки в ленте') + '</b> ' + L('· формат 1/24') + '</div>' +
                 (l.price_floored
-                    ? '<div class="fmr-sub" style="color:#f59e0b;">Это минимальный чек ниши, а не расчёт от охвата: при ' + _num(av) + ' просмотрах размещение по нише дешевле не продают. CPM здесь неинформативен.</div>'
+                    ? '<div class="fmr-sub" style="color:#f59e0b;">' + L('Это минимальный чек ниши, а не расчёт от охвата: при') + ' ' + _num(av) + ' ' + L('просмотрах размещение по нише дешевле не продают. CPM здесь неинформативен.') + '</div>'
                     : (!dead && cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + ' ₽ за 1000 просмотров' + (est ? ' · ориентир ниши' : '') + '</div>' : '') +
                       '') +
                 ((l.formats && l.formats.length) ? '<div class="fmx-fchips" style="margin:7px 0 0;">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
-                '<div class="fmr-info" data-finfo="ad">Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов.' + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM посчитан от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
+                '<div class="fmr-info" data-finfo="ad">' + L('Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов.') + (est ? ' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.' : ' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM посчитан от этой реальной цены.') + (l.price_negotiable ? ' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.' : '') + '</div>';
         }
         var flow = '';
         if (pp && av && !dead) {
@@ -9910,19 +9912,19 @@
                 _grw = av * conv / 100;
                 cps = _grw > 0 ? Math.round(pp / _grw) : cps;
                 cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> ' +
-                    '<span style="font-size:11px;color:#5DCAA5;">по замерам ' + (l.cpf_deals || 1) + ' ' +
+                    '<span style="font-size:11px;color:#5DCAA5;">' + L('по замерам') + ' ' + (l.cpf_deals || 1) + ' ' +
                     _plural(l.cpf_deals || 1, 'сделки', 'сделок', 'сделок') + '</span></div>';
             } else {
                 var cpfLo = Math.round(pp / (av * 0.015));
                 var cpfHi = Math.round(pp / (av * 0.003));
-                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">оценка при конверсии 0,3–1,5%</span></div>';
+                cpfHead = '<div class="fmr-line">CPF <b class="fmr-big" style="color:#5DCAA5;">≈' + _num(cpfLo) + '–' + _num(cpfHi) + ' ₽</b> <span style="font-size:11px;color:#565b73;">' + L('оценка при конверсии 0,3–1,5%') + '</span></div>';
             }
-            flow = '<div class="fmr-sec num"><span class="kn">3</span>Перелив · набрать подписчиков <span class="fmr-i push" data-fi="flow">?</span></div>' +
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>' + L('Перелив · набрать подписчиков') + ' <span class="fmr-i push" data-fi="flow">?</span></div>' +
                 cpfHead +
-                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
-                '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
-                '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
-                '<div class="fmr-info" data-finfo="flow">Конверсия — какая доля увидевших пост подпишется именно к тебе. Не знаешь свою — оставь 0,5%: это медиана рынка для первых закупов. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. После размещений со ссылкой отслеживания сюда подставляется фактическая конверсия канала по замерам сделок. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.</div>';
+                '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '">Своя конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="' + conv + '"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">' + L('CPF · цена подписчика') + '</span></div>' +
+                '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> ' + L('за') + ' <b>≈' + _num(pp) + ' ₽</b> (' + (est ? 'нижняя граница цены' : 'минимальная цена') + ')</div>' +
+                '<div class="fmr-warn">' + L('Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.') + '</div>' +
+                '<div class="fmr-info" data-finfo="flow">' + L('Конверсия — какая доля увидевших пост подпишется именно к тебе. Не знаешь свою — оставь 0,5%: это медиана рынка для первых закупов. Её задают прогрев аудитории, прелендинг (прокладка) и ниша: холодный трафик — единицы процентов, прогретая тёплая аудитория — десятки. После размещений со ссылкой отслеживания сюда подставляется фактическая конверсия канала по замерам сделок. Прогноз, не гарантия: точную цену подписчика видно только по итогам размещения.') + '</div>';
         }
         var struct = '';
         (function () {
@@ -9941,7 +9943,7 @@
             }
             if (sr.length) struct = sr.join('');
         })();
-        var _promoB = (_rGold && _rTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>Продвигается</span>' : '';
+        var _promoB = (_rGold && _rTag !== 'off') ? '<span class="fmx-bdg" data-promoproof="1" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);cursor:pointer;' + (_rTag === 'ghost' ? 'opacity:0.62;' : '') + '"><i class="ti ti-speakerphone"></i>' + L('Продвигается') + '</span>' : '';
         var _t = l.title || l.username || 'Канал', _acc = _accent(l);
         var avHtml = l.avatar_url
             ? '<div class="fmr-av"><img src="' + _esc(mediaAbs(l.avatar_url)) + '" alt=""></div>'
@@ -9951,27 +9953,27 @@
             '<button class="fmx-star fmx-ic27' + (_bookmarks[l.username] ? ' on' : '') + '" data-bm="' + _esc(l.username) + '" style="' + _rIcoSt + '"><i class="ti ti-star"></i></button>' +
             _shareBtn(l, _rIcoSt) + '</div>';
         var scoreHtml = '<div class="fmr-score">' + _rIcons +
-            (ring ? ring + '<div class="fmr-scorelbl">индекс <span class="fmr-i" data-fi="health">?</span></div>' : '') + '</div>';
+            (ring ? ring + '<div class="fmr-scorelbl">' + L('индекс') + ' <span class="fmr-i" data-fi="health">?</span></div>' : '') + '</div>';
         var headHtml = '<div class="fmr-head">' + avHtml +
             '<div class="fmr-id"><div class="fmr-name">' + _esc(_t) + '</div>' +
             (l.username ? '<div class="fmr-user">@' + _esc(l.username) + '</div>' : '') +
             _nicheLine(l, '') + '</div>' + scoreHtml + '</div>' +
             _alertsRow(l, _promoB);
         var actsHtml = l.id
-            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
-              '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>Развернуть</button>' +
-              '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button></div>' +
-              '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button>' +
+            ? '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>' + L('Разбор') + ' ' + anFee(30) + '</button>' +
+              '<button class="fmx-btn" data-act="expand" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-arrow-up-right"></i>' + L('Развернуть') + '</button>' +
+              '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + l.id + '"><i class="ti ti-brand-telegram"></i>' + L('Открыть канал') + '</button></div>' +
+              '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>' + L('Ссылка отслеживания в рекламный пост') + '</button>' +
               '</div>'
-            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>Разбор ' + anFee(30) + '</button>' +
-              '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>Открыть канал</button>' +
+            : '<div class="fmx-acts"><button class="fmx-btn" data-act="analyze" data-u="' + _esc(l.username) + '"><span class="fmxan-mi">' + AN_ICO + '</span>' + L('Разбор') + ' ' + anFee(30) + '</button>' +
+              '<button class="fmx-btn fmx-btn-p" style="background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;" data-act="write" data-u="' + _esc(l.username) + '" data-lid="' + (l.id || '') + '"><i class="ti ti-brand-telegram"></i>' + L('Открыть канал') + '</button>' +
               '</div>' +
-              '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>Ссылка отслеживания в рекламный пост</button></div>';
+              '<div class="fmx-acts" style="margin-top:6px;"><button class="fmx-btn" style="flex:1;color:#5ab0e6;border-color:rgba(90,176,230,0.35);" data-act="track" data-u="' + _esc(l.username) + '"><i class="ti ti-route"></i>' + L('Ссылка отслеживания в рекламный пост') + '</button></div>';
         return '<div class="fmx-scard' + (_rGlow ? ' fmx-prem' : '') + (_rCbg ? ' fmr-hasbg' : '') + '" data-u="' + _esc(l.username) + '">' + _rCbg + _rStkHtml +
             headHtml +
-            (ring ? '<div class="fmr-info" data-finfo="health">Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.</div>' : '') +
+            (ring ? '<div class="fmr-info" data-finfo="health">' + L('Индекс здоровья канала (0–100): насколько канал живой и качественный как площадка — вовлечённость, ERR, стабильность охватов, нет ли накрутки. Считается из тех же метрик, что видны выше, поэтому не противоречит им. Зелёный — хорошо, жёлтый — средне, красный — с осторожностью.') + '</div>' : '') +
             _heroTiles(l, 'radar') + _blk(1, ad) +
-            _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>Качество аудитории</div>' : '') + facts + struct) +
+            _blk(2, ((facts || struct) ? '<div class="fmr-sec num"><span class="kn">2</span>' + L('Качество аудитории') + '</div>' : '') + facts + struct) +
             _blk(3, flow) + '<div style="height:11px;"></div>' +
             _ctcLinesHtml(l) +
             _moreBlock(l) +
@@ -9982,14 +9984,14 @@
         return html ? '<div class="fmr-blk b' + n + '">' + html + '</div>' : '';
     }
     var _DASH = '<span style="color:#565b73;">—</span>';
-    var _COLLECT = ' <span style="color:#565b73;">· <span>данные копятся</span></span>';
+    var _COLLECT = ' <span style="color:#565b73;">· <span>' + L('данные копятся') + '</span></span>';
     function _audBlock(l) {
         var out = '';
         if (l.geo && _GEO_NAMES[l.geo]) {
-            out += '<div class="fmr-agerow"><span>Страна аудитории</span>: <b>' + _esc(_GEO_NAMES[l.geo]) + '</b>' +
-                (l.lang_code && l.lang_code !== 'ru' ? ' <span style="color:#565b73;">· язык: ' + _esc(l.lang_code) + '</span>' : '') + '</div>';
+            out += '<div class="fmr-agerow"><span>' + L('Страна аудитории') + '</span>: <b>' + _esc(_GEO_NAMES[l.geo]) + '</b>' +
+                (l.lang_code && l.lang_code !== 'ru' ? ' <span style="color:#565b73;">' + L('· язык:') + ' ' + _esc(l.lang_code) + '</span>' : '') + '</div>';
         } else {
-            out += '<div class="fmr-agerow"><span>Страна аудитории</span>: ' + _DASH + '</div>';
+            out += '<div class="fmr-agerow"><span>' + L('Страна аудитории') + '</span>: ' + _DASH + '</div>';
         }
         var female = null, male = null, approx = false;
         if (l.female_pct != null) { female = Math.max(0, Math.min(100, l.female_pct)); male = 100 - female; }
@@ -9998,14 +10000,14 @@
         else if (l.audience === 'mixed') { female = 50; male = 50; approx = true; }
         if (male != null) {
             var src = (l.audience_source === 'commenters' && !approx)
-                ? ('<span>по комментаторам</span>' + (l.gender_sample ? ' · <span>выборка</span> ' + l.gender_sample : ''))
-                : '<span>оценка по нише</span>';
-            out += '<div class="fmr-gline"><span class="gl m">М ' + (approx ? '≈' : '') + male + '%</span>' +
+                ? ('<span>' + L('по комментаторам') + '</span>' + (l.gender_sample ? ' · <span>' + L('выборка') + '</span> ' + l.gender_sample : ''))
+                : '<span>' + L('оценка по нише') + '</span>';
+            out += '<div class="fmr-gline"><span class="gl m">' + L('М') + ' ' + (approx ? '≈' : '') + male + '%</span>' +
                 '<div class="fmr-gbar"><div class="gm" style="width:' + male + '%;"></div><div class="gf" style="width:' + female + '%;"></div></div>' +
-                '<span class="gl f">Ж ' + (approx ? '≈' : '') + female + '%</span></div>' +
+                '<span class="gl f">' + L('Ж') + ' ' + (approx ? '≈' : '') + female + '%</span></div>' +
                 '<div class="fmr-gsrc">' + src + '</div>';
         } else {
-            out += '<div class="fmr-agerow"><span>Пол аудитории</span>: ' + _DASH + _COLLECT + '</div>';
+            out += '<div class="fmr-agerow"><span>' + L('Пол аудитории') + '</span>: ' + _DASH + _COLLECT + '</div>';
         }
         var gv = function (v) {
             if (v == null) return _DASH;
@@ -10014,41 +10016,41 @@
             return '<span style="color:' + c + ';font-weight:750;font-variant-numeric:tabular-nums;">' + ap + (v > 0 ? '+' : '') + _num(v) + '</span>';
         };
         out += '<div class="fmr-gtab">' +
-            '<div class="r"><span class="l">Сегодня</span>' + gv(l.subs_d1) + '</div>' +
-            '<div class="r"><span class="l">Неделя</span>' + gv(l.subs_d7) + '</div>' +
-            '<div class="r"><span class="l">Месяц</span>' + gv(l.subs_d30) + '</div></div>';
+            '<div class="r"><span class="l">' + L('Сегодня') + '</span>' + gv(l.subs_d1) + '</div>' +
+            '<div class="r"><span class="l">' + L('Неделя') + '</span>' + gv(l.subs_d7) + '</div>' +
+            '<div class="r"><span class="l">' + L('Месяц') + '</span>' + gv(l.subs_d30) + '</div></div>';
         if (l.channel_created_ts) {
             var months = Math.floor((Date.now() / 1000 - l.channel_created_ts) / 2629800);
             var yrs = Math.floor(months / 12), rm = months % 12;
             var age = yrs > 0 ? (yrs + ' г' + (rm ? ' ' + rm + ' мес' : '')) : (months >= 1 ? (months + ' мес') : 'меньше месяца');
             var d = new Date(l.channel_created_ts * 1000);
-            out += '<div class="fmr-agerow"><span>Возраст канала</span>: <b>' + age + '</b> · <span>создан</span> ' +
+            out += '<div class="fmr-agerow"><span>' + L('Возраст канала') + '</span>: <b>' + age + '</b> · <span>' + L('создан') + '</span> ' +
                 ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear() + '</div>';
         } else {
-            out += '<div class="fmr-agerow"><span>Возраст канала</span>: ' + _DASH + '</div>';
+            out += '<div class="fmr-agerow"><span>' + L('Возраст канала') + '</span>: ' + _DASH + '</div>';
         }
         var p24ok = false;
         if (l.reach_24h_median && l.subscribers) {
             var p24 = Math.round(l.reach_24h_median / l.subscribers * 1000) / 10;
             if (p24 > 0 && p24 <= 100) {
                 p24ok = true;
-                out += '<div class="fmr-agerow"><span>Читают за сутки</span>: <b>' + String(p24).replace('.', ',') +
+                out += '<div class="fmr-agerow"><span>' + L('Читают за сутки') + '</span>: <b>' + String(p24).replace('.', ',') +
                     '%</b> <span style="color:#565b73;">(' + _num(l.reach_24h_median) + ' из ' + _num(l.subscribers) + ')</span></div>';
             }
         }
         if (!p24ok) {
-            out += '<div class="fmr-agerow"><span>Читают за сутки</span>: ' + _DASH + _COLLECT + '</div>';
+            out += '<div class="fmr-agerow"><span>' + L('Читают за сутки') + '</span>: ' + _DASH + _COLLECT + '</div>';
         }
         out += _reachWinRows(l);
-        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>Аудитория и динамика</div>' + out;
+        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-users" style="font-size:11px;"></i></span>' + L('Аудитория и динамика') + '</div>' + out;
     }
     function _reachWinRows(l) {
         var w = [['12 часов', l.reach_12h_median], ['24 часа', l.reach_24h_median], ['48 часов', l.reach_48h_median]];
         var have = w.filter(function (x) { return x[1]; });
         if (!have.length) {
-            return '<div class="fmr-agerow" style="margin-top:8px;"><span>Сколько наберёт рекламная публикация</span>: ' + _DASH + _COLLECT + '</div>';
+            return '<div class="fmr-agerow" style="margin-top:8px;"><span>' + L('Сколько наберёт рекламная публикация') + '</span>: ' + _DASH + _COLLECT + '</div>';
         }
-        return '<div class="fmr-agerow" style="margin-top:8px;"><span>Сколько наберёт рекламная публикация</span></div>' +
+        return '<div class="fmr-agerow" style="margin-top:8px;"><span>' + L('Сколько наберёт рекламная публикация') + '</span></div>' +
             '<div class="fmr-gtab">' + w.map(function (x) {
                 return '<div class="r"><span class="l">' + x[0] + '</span>' +
                     (x[1] ? '<span style="font-weight:750;font-variant-numeric:tabular-nums;">' + _num(x[1]) + '</span>'
@@ -10056,53 +10058,53 @@
             }).join('') + '</div>';
     }
     function _curveBlock(l) {
-        var head = '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>Как набирается охват</div>';
+        var head = '<div class="fmr-sec num"><span class="kn"><i class="ti ti-chart-histogram" style="font-size:11px;"></i></span>' + L('Как набирается охват') + '</div>';
         var c = l && l.view_curve;
         var marks = ['1', '3', '6', '12', '24', '48'];
         var pts = c ? marks.filter(function (m) { return c[m] != null; }) : [];
         if (pts.length < 4) {
             if (l && l.days_since_last_post != null && l.days_since_last_post > 2) {
-                return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>Кривая строится по свежим публикациям — появится после новых постов канала</span></div>';
+                return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>' + L('Кривая строится по свежим публикациям — появится после новых постов канала') + '</span></div>';
             }
-            return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>Данные копятся: замеров пока мало для графика</span></div>';
+            return head + '<div class="fmr-gsrc" style="margin-top:0;"><span>' + L('Данные копятся: замеров пока мало для графика') + '</span></div>';
         }
         var mx = Math.max(100, Math.max.apply(null, pts.map(function (m) { return c[m]; })));
         var bars = marks.map(function (m) {
             if (c[m] == null) {
-                return '<div class="fmr-cvcol"><span class="fmr-cvlb">' + m + ' ч</span><span class="fmr-cvvl" style="color:#565b73;">—</span></div>';
+                return '<div class="fmr-cvcol"><span class="fmr-cvlb">' + m + ' ' + L('ч') + '</span><span class="fmr-cvvl" style="color:#565b73;">—</span></div>';
             }
             var h = Math.max(4, Math.round(c[m] / mx * 100));
             var col = (m === '48' && c[m] > 130) ? '#ef4444' : '#5ab0e6';
             return '<div class="fmr-cvcol"><div class="fmr-cvbar" style="height:' + h + '%;background:' + col + ';"></div>' +
-                '<span class="fmr-cvlb">' + m + ' ч</span><span class="fmr-cvvl">' + Math.round(c[m]) + '%</span></div>';
+                '<span class="fmr-cvlb">' + m + ' ' + L('ч') + '</span><span class="fmr-cvvl">' + Math.round(c[m]) + '%</span></div>';
         }).join('');
         var note = '';
-        var noteTail = ' <span>Показатель пересчитывается автоматически по свежим публикациям.</span>';
+        var noteTail = ' <span>' + L('Показатель пересчитывается автоматически по свежим публикациям.') + '</span>';
         if (l.curve_flag === 'step') {
-            note = '<div class="fmr-cvwarn"><span>Просмотры прибавляются заметными ступенями на нескольких публикациях — динамика отличается от типичной для живой аудитории.</span>' + noteTail + '</div>';
+            note = '<div class="fmr-cvwarn"><span>' + L('Просмотры прибавляются заметными ступенями на нескольких публикациях — динамика отличается от типичной для живой аудитории.') + '</span>' + noteTail + '</div>';
         } else if (l.curve_flag === 'night') {
-            note = '<div class="fmr-cvwarn"><span>Просмотры прибавляются преимущественно ночью — динамика отличается от типичной для живой аудитории.</span>' + noteTail + '</div>';
+            note = '<div class="fmr-cvwarn"><span>' + L('Просмотры прибавляются преимущественно ночью — динамика отличается от типичной для живой аудитории.') + '</span>' + noteTail + '</div>';
         } else if (l.curve_flag === 'late') {
-            note = '<div class="fmr-cvwarn"><span>Публикации продолжают набирать просмотры спустя сутки после выхода — у живой аудитории охват к этому времени обычно выходит на плато.</span>' + noteTail + '</div>';
+            note = '<div class="fmr-cvwarn"><span>' + L('Публикации продолжают набирать просмотры спустя сутки после выхода — у живой аудитории охват к этому времени обычно выходит на плато.') + '</span>' + noteTail + '</div>';
         }
         var concl = '';
         var lead = null;
         ['6', '12'].some(function (m) { if (c[m] != null && c[m] >= 80) { lead = m; return true; } return false; });
         if (lead) {
-            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>Пост отрабатывает за первые</span> ' + lead +
-                ' <span>часов: к этой отметке набрано</span> ' + Math.round(c[lead]) + '% <span>суточного охвата</span></div>';
+            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>' + L('Пост отрабатывает за первые') + '</span> ' + lead +
+                ' <span>' + L('часов: к этой отметке набрано') + '</span> ' + Math.round(c[lead]) + '% <span>' + L('суточного охвата') + '</span></div>';
         } else if (c['24'] != null) {
-            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>Охват набирается равномерно в течение суток</span></div>';
+            concl = '<div class="fmr-gsrc" style="margin-top:3px;"><span>' + L('Охват набирается равномерно в течение суток') + '</span></div>';
         }
         return head +
             '<div class="fmr-cvwrap">' + bars + '</div>' +
-            '<div class="fmr-gsrc"><span>За 100% принят охват за первые сутки</span>' +
-            (c.posts ? ' · <span>публикаций</span>: ' + c.posts : '') + '</div>' + concl + note;
+            '<div class="fmr-gsrc"><span>' + L('За 100% принят охват за первые сутки') + '</span>' +
+            (c.posts ? ' · <span>' + L('публикаций') + '</span>: ' + c.posts : '') + '</div>' + concl + note;
     }
     function _subsChart(l) {
         var uname = (l && (l.username || l.channel_username) || '').replace('@', '');
         if (!uname) return '';
-        return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>Прирост подписчиков</div>' +
+        return '<div class="fmr-sec num fmr-sbsec"><span class="kn"><i class="ti ti-chart-bar" style="font-size:11px;"></i></span>' + L('Прирост подписчиков') + '</div>' +
             '<div class="fmr-sbwrap" data-u="' + _esc(uname) + '"></div>';
     }
     var _sbCache = {};
@@ -10152,18 +10154,18 @@
                 if (pts.length >= 3 && !g.length) {
                     var emsg;
                     if (r.span) {
-                        emsg = '<span>За месяц</span>: ≈' + (r.span > 0 ? '+' : '−') + _num(Math.abs(r.span)) +
-                            (r.noise ? ' · <span>колебания по дням меньше</span> ±' + _num(r.noise) : '');
+                        emsg = '<span>' + L('За месяц') + '</span>: ≈' + (r.span > 0 ? '+' : '−') + _num(Math.abs(r.span)) +
+                            (r.noise ? ' · <span>' + L('колебания по дням меньше') + '</span> ±' + _num(r.noise) : '');
                     } else if (r.noise) {
-                        emsg = '<span>Колебания за месяц меньше</span> ±' + _num(r.noise);
+                        emsg = '<span>' + L('Колебания за месяц меньше') + '</span> ±' + _num(r.noise);
                     } else {
-                        emsg = '<span>За месяц число подписчиков не менялось</span>';
+                        emsg = '<span>' + L('За месяц число подписчиков не менялось') + '</span>';
                     }
                     box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' + emsg + '</div>';
                     return;
                 }
                 box.innerHTML = '<div class="fmr-gsrc" style="margin-top:0;">' +
-                    '<span>Данные копятся: замеров пока мало для графика</span></div>';
+                    '<span>' + L('Данные копятся: замеров пока мало для графика') + '</span></div>';
                 return;
             }
             var hasEv = g.some(function (p) { return p.j != null || p.l != null; });
@@ -10200,12 +10202,12 @@
             }).join('');
             var tot = r.total;
             var cap = hasEv
-                ? '<span>зелёное — подписались, красное — отписались</span>' +
+                ? '<span>' + L('зелёное — подписались, красное — отписались') + '</span>' +
                   (r.joins != null ? ' · <b style="color:#5DCAA5;">+' + _num(r.joins) + '</b> / <b style="color:#ef4444;">−' + _num(r.leaves || 0) + '</b>' : '')
-                : '<span>чистый прирост за месяц: подписки минус отписки</span>' +
-                  (tot != null ? ' · <span>итог</span>: ' + (r.approx ? '≈ ' : '') + (tot > 0 ? '+' : '') + _num(tot) : '') +
-                  (r.best != null && r.best > 0 ? ' · <span>лучший день</span>: ' + (r.approx ? '≈ ' : '') + '+' + _num(r.best) : '') +
-                  (r.approx ? ' · <span>мелкие колебания могут не отображаться</span>' : '');
+                : '<span>' + L('чистый прирост за месяц: подписки минус отписки') + '</span>' +
+                  (tot != null ? ' · <span>' + L('итог') + '</span>: ' + (r.approx ? '≈ ' : '') + (tot > 0 ? '+' : '') + _num(tot) : '') +
+                  (r.best != null && r.best > 0 ? ' · <span>' + L('лучший день') + '</span>: ' + (r.approx ? '≈ ' : '') + '+' + _num(r.best) : '') +
+                  (r.approx ? ' · <span>' + L('мелкие колебания могут не отображаться') + '</span>' : '');
             box.innerHTML = '<div class="fmr-sbchart"><div class="fmr-sbaxis" style="top:' + upH + '%;"></div>' + bars + '</div>' +
                 '<div class="fmr-gsrc">' + cap + '</div>';
             _sbTipBind(box);
@@ -10277,13 +10279,13 @@
                 '<span class="v">' + _kmNum(p.views) + '</span>' +
                 '<span class="d"' + (ds ? '' : ' style="color:#3c3f52;"') + '>' + (ds || '—') + '</span></div>';
         }).join('');
-        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>Топ публикаций</div>' +
-            rows + '<div class="fmr-gsrc"><span>топ последних публикаций по просмотрам</span> · <span>нажми, чтобы открыть пост</span></div>';
+        return '<div class="fmr-sec num"><span class="kn"><i class="ti ti-flame" style="font-size:11px;"></i></span>' + L('Топ публикаций') + '</div>' +
+            rows + '<div class="fmr-gsrc"><span>' + L('топ последних публикаций по просмотрам') + '</span> · <span>' + L('нажми, чтобы открыть пост') + '</span></div>';
     }
     function _moreBlock(l) {
         var inner = _blk(2, _audBlock(l)) + _blk(2, _subsChart(l)) + _blk(2, _curveBlock(l)) + _blk(2, _topPostsBlock(l));
         if (!inner) return '';
-        return '<details class="fmr-more"><summary><i class="ti ti-chart-dots" style="color:#818cf8;"></i> <span>Подробная статистика</span>' +
+        return '<details class="fmr-more"><summary><i class="ti ti-chart-dots" style="color:#818cf8;"></i> <span>' + L('Подробная статистика') + '</span>' +
             '<i class="ti ti-chevron-down chev"></i></summary>' +
             '<div class="fmr-morebody">' + inner + '</div></details>';
     }
@@ -10295,7 +10297,7 @@
         var when = sp.days <= 1.5 ? 'за сутки' : ('за ' + Math.round(sp.days) + ' дн');
         var head = sp.level === 'ok' ? 'Резкий рост подписчиков' : 'Скачок подписчиков';
         var reach = (sp.reach_pct == null) ? '' :
-            ' · <span style="color:#9aa0b8;">охват</span> <b style="color:' + (sp.reach_pct >= 0 ? '#c2c6d2' : '#ef4444') + ';">' +
+            ' · <span style="color:#9aa0b8;">' + L('охват') + '</span> <b style="color:' + (sp.reach_pct >= 0 ? '#c2c6d2' : '#ef4444') + ';">' +
             (sp.reach_pct >= 0 ? '+' : '−') + Math.abs(Math.round(sp.reach_pct * 10) / 10) + '%</b>';
         return '<div class="fmr-line" style="color:#9aa0b8;"><i class="ti ' + ic + '" style="font-size:12px;color:' + col + ';"></i> ' +
             head + ' <b style="color:' + col + ';">+' + (Math.round(sp.pct * 10) / 10) + '%</b> ' + when + reach + '</div>' +
@@ -10339,7 +10341,7 @@
         var rr = _reachRate(l), rrc = _rrColor(l), warn = (l.reach_status === 'аномальный') ? '⚠ ' : '';
         var mets = '<span class="fmx-lm"><i class="ti ti-users"></i><b>' + _short(l.subscribers) + '</b></span>';
         if (dead) {
-            mets += '<s></s><span class="fmx-lm" style="color:#ef4444;"><i class="ti ti-eye-off"></i><span>не публикует</span></span>';
+            mets += '<s></s><span class="fmx-lm" style="color:#ef4444;"><i class="ti ti-eye-off"></i><span>' + L('не публикует') + '</span></span>';
         } else if (l.avg_views) {
             mets += '<s></s><span class="fmx-lm"><i class="ti ti-eye"></i><b>~' + _short(l.avg_views) + '</b>' +
                 (rr != null ? ' <b style="color:' + rrc + ';">(' + warn + rr + '%)</b>' : '') + '</span>';
@@ -10389,7 +10391,7 @@
         if (_ppT) { clearTimeout(_ppT); _ppT = null; }
         var d = document.createElement('div');
         d.id = 'fmx-promoProof';
-        d.innerHTML = '<div class="fmx-ppcard"><div class="fmx-ppic"><i class="ti ti-shield-check"></i></div><div class="fmx-ppt">Продвижение подтверждено платформой</div><div class="fmx-pps">Настоящий бейдж открывает эту проверку по нажатию — имитация в оформлении не открывает.</div></div>';
+        d.innerHTML = '<div class="fmx-ppcard"><div class="fmx-ppic"><i class="ti ti-shield-check"></i></div><div class="fmx-ppt">' + L('Продвижение подтверждено платформой') + '</div><div class="fmx-pps">' + L('Настоящий бейдж открывает эту проверку по нажатию — имитация в оформлении не открывает.') + '</div></div>';
         d.addEventListener('click', function () { d.remove(); });
         document.body.appendChild(d);
         _ppT = setTimeout(function () { try { d.remove(); } catch (e2) {} _ppT = null; }, 4200);
@@ -10476,7 +10478,7 @@
             e.stopPropagation();
             var ru = rknB.getAttribute('data-rknlink');
             if (ru && ru.indexOf('app:') === 0) {
-                toast('Заявка в перечне РКН № ' + ru.slice(4));
+                toast(L('Заявка в перечне РКН № ') + ru.slice(4));
                 return;
             }
             if (ru && ru.indexOf('https://knd.gov.ru/') === 0) {
@@ -10502,13 +10504,13 @@
             if (_row) _row.remove();
             var _box = el('fmx-bmBody');
             if (_box && !_box.querySelector('.fmx-bmrow')) {
-                _box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Отмечай ★ на офферах, чтобы сохранить канал.</p></div>';
+                _box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>' + L('Пусто') + '</h3><p>' + L('Отмечай ★ на офферах, чтобы сохранить канал.') + '</p></div>';
             }
             return;
         }
         var row = t.closest('#fmx-bmBody .fmx-bmrow');
         if (row && row.classList.contains('frz') && !t.closest('.fmx-lbox')) {
-            toast('Оффер в заморозке — владелец приостановил продажу');
+            toast(L('Оффер в заморозке — владелец приостановил продажу'));
         }
     });
     var _rsT = null;
@@ -10606,9 +10608,9 @@
     function sortBarHtml() {
         return '<div class="fmx-picks">' + _nicheBtnHtml() + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             '<div class="fmx-sortbar">' +
-            '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> Все каналы</button>' +
-            '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> Под мою нишу</button>' +
-            '<button class="fmx-seg' + (_rfCount() ? ' on' : '') + '" id="fmx-rfbtn"><i class="ti ti-adjustments-horizontal"></i> Фильтры' + (_rfCount() ? ' · ' + _rfCount() : '') + '</button>' +
+            '<button class="fmx-seg' + (_sort === 'all' ? ' on' : '') + '" data-sort="all"><i class="ti ti-layout-grid"></i> ' + L('Все каналы') + '</button>' +
+            '<button class="fmx-seg' + (_sort === 'match' ? ' on' : '') + '" data-sort="match"><i class="ti ti-target-arrow"></i> ' + L('Под мою нишу') + '</button>' +
+            '<button class="fmx-seg' + (_rfCount() ? ' on' : '') + '" id="fmx-rfbtn"><i class="ti ti-adjustments-horizontal"></i> ' + L('Фильтры') + (_rfCount() ? ' · ' + _rfCount() : '') + '</button>' +
             _regionChipHtml() +
             '</div>';
     }
@@ -10618,10 +10620,10 @@
             '<button class="fmx-vt' + (_curView() === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
     }
     function topRowHtml() {
-        return '<div class="fmx-divrow"><span class="fmx-divlbl">Каналы, где можно купить рекламу</span><span class="fmx-divline"></span>' + vtogHtml() + '</div>';
+        return '<div class="fmx-divrow"><span class="fmx-divlbl">' + L('Каналы, где можно купить рекламу') + '</span><span class="fmx-divline"></span>' + vtogHtml() + '</div>';
     }
     function emptyHtml(icon, title, sub) { return '<div class="fmx-empty"><i class="ti ' + icon + '"></i><h3>' + _esc(title) + '</h3><p>' + _esc(sub) + '</p></div>'; }
-    function loadHtml() { return '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">Загружаю…</div></div>'; }
+    function loadHtml() { return '<div class="fmx-load"><i class="ti ti-loader-2"></i><div style="font-size:12px;margin-top:10px;">' + L('Загружаю…') + '</div></div>'; }
 
     function findListing(u) { var arr = (_feed || []).concat(_catalog || []); for (var i = 0; i < arr.length; i++) if (arr[i].username === u) return arr[i]; return _bmMap && _bmMap[u] ? _bmMap[u] : null; }
     var _trackedWrite = {};
@@ -10651,12 +10653,12 @@
         });
     }
     function openListingStats(lid) {
-        lid = parseInt(lid, 10); if (!lid) { toast('Сначала сохрани оффер'); return; }
+        lid = parseInt(lid, 10); if (!lid) { toast(L('Сначала сохрани оффер')); return; }
         var old = el('fmx-statsBg'); if (old) old.remove();
         var bg = document.createElement('div'); bg.id = 'fmx-statsBg'; bg.className = 'fmx-cfm solid';
         bg.innerHTML = '<div class="fmx-cfm-box" style="max-width:440px;">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">' +
-            '<div style="font-size:15px;font-weight:800;"><i class="ti ti-chart-bar" style="color:#5DCAA5;"></i> Статистика за 7 дней</div>' +
+            '<div style="font-size:15px;font-weight:800;"><i class="ti ti-chart-bar" style="color:#5DCAA5;"></i> ' + L('Статистика за 7 дней') + '</div>' +
             '<button class="fmx-mclose" id="fmx-stx" style="position:static;"><i class="ti ti-x"></i></button></div>' +
             '<div id="fmx-statsBody"><div class="fmx-empty" style="padding:30px 0;"><i class="ti ti-loader-2" style="animation:fmxSpin 0.9s linear infinite;"></i></div></div></div>';
         document.body.appendChild(bg);
@@ -10682,16 +10684,16 @@
             body.innerHTML =
                 '<div style="display:flex;gap:8px;margin-bottom:16px;">' +
                 '<div style="flex:1;background:rgba(245,191,79,0.08);border:1px solid rgba(245,191,79,0.22);border-radius:12px;padding:12px 8px;text-align:center;">' +
-                '<div style="font-size:24px;font-weight:800;color:#f5bf4f;">' + (t.views || 0) + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Показы в ленте</div></div>' +
+                '<div style="font-size:24px;font-weight:800;color:#f5bf4f;">' + (t.views || 0) + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">' + L('Показы в ленте') + '</div></div>' +
                 '<div style="flex:1;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);border-radius:12px;padding:12px 8px;text-align:center;">' +
-                '<div style="font-size:24px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Развернули</div></div>' +
+                '<div style="font-size:24px;font-weight:800;color:#5DCAA5;">' + t.expands + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">' + L('Развернули') + '</div></div>' +
                 '<div style="flex:1;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);border-radius:12px;padding:12px 8px;text-align:center;">' +
-                '<div style="font-size:24px;font-weight:800;color:#818cf8;">' + t.writes + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">Написали</div></div></div>' +
+                '<div style="font-size:24px;font-weight:800;color:#818cf8;">' + t.writes + '</div><div style="font-size:10.5px;color:#a9aec0;margin-top:2px;">' + L('Написали') + '</div></div></div>' +
                 '<div style="display:flex;align-items:flex-end;gap:3px;padding:6px 2px;">' + bars + '</div>' +
                 '<div style="display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:11px;color:#8990a8;">' +
-                '<span><span style="display:inline-block;width:8px;height:8px;background:#5DCAA5;border-radius:2px;margin-right:4px;"></span>Развороты</span>' +
-                '<span><span style="display:inline-block;width:8px;height:8px;background:#818cf8;border-radius:2px;margin-right:4px;"></span>Написать</span></div>' +
-                (t.expands + t.writes === 0 ? '<div style="font-size:12px;color:#8990a8;text-align:center;margin-top:14px;">Пока данных нет. Как только оффер начнут смотреть на Площадке — здесь появятся цифры.</div>' : '');
+                '<span><span style="display:inline-block;width:8px;height:8px;background:#5DCAA5;border-radius:2px;margin-right:4px;"></span>' + L('Развороты') + '</span>' +
+                '<span><span style="display:inline-block;width:8px;height:8px;background:#818cf8;border-radius:2px;margin-right:4px;"></span>' + L('Написать') + '</span></div>' +
+                (t.expands + t.writes === 0 ? '<div style="font-size:12px;color:#8990a8;text-align:center;margin-top:14px;">' + L('Пока данных нет. Как только оффер начнут смотреть на Площадке — здесь появятся цифры.') + '</div>' : '');
         }).catch(function () { var b = el('fmx-statsBody'); if (b) b.innerHTML = emptyHtml('ti-cloud-off', 'Ошибка', 'Проверь связь.'); });
     }
     function openTg(u) { _haptic('light'); var url = 'https://t.me/' + u; try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); } }
@@ -10728,7 +10730,7 @@
             if (prev) _bookmarks[u] = true; else delete _bookmarks[u];
             updateBmCount();
             _bmPaint(u, prev);
-            toast('Не удалось обновить закладку. Повтори попытку.');
+            toast(L('Не удалось обновить закладку. Повтори попытку.'));
         }
         if (_bookmarks[u]) { on = false; delete _bookmarks[u]; apiDelete('/api/v1/marketplace/bookmarks/' + encodeURIComponent(u)).catch(function () { _revert(true); }); }
         else { on = true; _bookmarks[u] = true; apiPost('/api/v1/marketplace/bookmarks', { username: u, source: _mainTab === 'catalog' ? 'base' : 'market' }).catch(function () { _revert(false); }); }
@@ -10739,7 +10741,7 @@
     function _ensureFaqModal() {
         if (el('fmx-faqBg')) return;
         var faq = document.createElement('div'); faq.className = 'fmx-mbg'; faq.id = 'fmx-faqBg';
-        faq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-help-circle" style="color:#818cf8;"></i> Справка</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-faqBody"></div></div>';
+        faq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-help-circle" style="color:#818cf8;"></i> ' + L('Справка') + '</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-faqBody"></div></div>';
         document.body.appendChild(faq);
         faq.addEventListener('click', function (e) { if (e.target === faq) hideModal('fmx-faqBg'); });
         faq.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-faqBg'); });
@@ -10748,7 +10750,7 @@
     function buildModals() {
         _ensureFaqModal();
         var promo = document.createElement('div'); promo.className = 'fmx-mbg'; promo.id = 'fmx-promoBg';
-        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> Продвинуть оффер</h2><p>Поднимает оффер выше в умной сортировке — его видит больше рекламодателей. Топ смешанный: платные и обычные офферы чередуются.</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
+        promo.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-rocket" style="color:#f5bf4f;"></i> ' + L('Продвинуть оффер') + '</h2><p>' + L('Поднимает оффер выше в умной сортировке — его видит больше рекламодателей. Топ смешанный: платные и обычные офферы чередуются.') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-promoBody"></div></div>';
         document.body.appendChild(promo);
         promo.addEventListener('click', function (e) { if (e.target === promo) hideModal('fmx-promoBg'); });
         promo.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-promoBg'); });
@@ -10760,13 +10762,13 @@
         lst.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-listBg'); });
 
         var cal = document.createElement('div'); cal.className = 'fmx-mbg'; cal.id = 'fmx-calBg';
-        cal.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-calendar-check" style="color:#5DCAA5;"></i> Календарь занятости</h2><p id="fmx-calSub"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-calBox"></div></div></div>';
+        cal.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-calendar-check" style="color:#5DCAA5;"></i> ' + L('Календарь занятости') + '</h2><p id="fmx-calSub"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-calBox"></div></div></div>';
         document.body.appendChild(cal);
         cal.addEventListener('click', function (e) { if (e.target === cal) hideModal('fmx-calBg'); });
         qsa(cal, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-calBg'); }); });
 
         var cmp = document.createElement('div'); cmp.className = 'fmx-mbg'; cmp.id = 'fmx-cmpBg';
-        cmp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-columns-3" style="color:#5DCAA5;"></i> Сравнение каналов</h2><p>Метрики бок о бок — лучшее в строке подсвечено</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-cmpBody"></div></div>';
+        cmp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-columns-3" style="color:#5DCAA5;"></i> ' + L('Сравнение каналов') + '</h2><p>' + L('Метрики бок о бок — лучшее в строке подсвечено') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-cmpBody"></div></div>';
         document.body.appendChild(cmp);
         cmp.addEventListener('click', function (e) { if (e.target === cmp) hideModal('fmx-cmpBg'); });
         qsa(cmp, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-cmpBg'); }); });
@@ -10775,37 +10777,37 @@
         _root.appendChild(cbar);
 
         var an = document.createElement('div'); an.className = 'fmx-mbg'; an.id = 'fmx-anBg';
-        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><span class="fmxan-hi">' + AN_ICO + '</span> AI-разбор канала</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-anBody"></div></div>';
+        an.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><span class="fmxan-hi">' + AN_ICO + '</span> ' + L('AI-разбор канала') + '</h2><p id="fmx-anName"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-anBody"></div></div>';
         document.body.appendChild(an);
         an.addEventListener('click', function (e) { if (e.target === an) hideModal('fmx-anBg'); });
         an.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-anBg'); });
 
         var rv = document.createElement('div'); rv.className = 'fmx-mbg'; rv.id = 'fmx-revBg';
-        rv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Отзыв о сделке</h2><p>Виден всем в развороте оффера</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-revBody"></div></div>';
+        rv.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> ' + L('Отзыв о сделке') + '</h2><p>' + L('Виден всем в развороте оффера') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-revBody"></div></div>';
         document.body.appendChild(rv);
         rv.addEventListener('click', function (e) { if (e.target === rv) hideModal('fmx-revBg'); });
         qsa(rv, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-revBg'); }); });
 
         var ns = document.createElement('div'); ns.className = 'fmx-mbg'; ns.id = 'fmx-nsBg';
-        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> Отслеживание ниш</h2><p>CPM ниши и заявки рекламодателей — в бота</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
+        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> ' + L('Отслеживание ниш') + '</h2><p>' + L('CPM ниши и заявки рекламодателей — в бота') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
         document.body.appendChild(ns);
         ns.addEventListener('click', function (e) { if (e.target === ns) hideModal('fmx-nsBg'); });
         qsa(ns, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-nsBg'); }); });
 
         var rp = document.createElement('div'); rp.className = 'fmx-mbg'; rp.id = 'fmx-repBg';
-        rp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-flag" style="color:#ef4444;"></i> Пожаловаться</h2><p>Разберём вручную, автор жалобу не увидит</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-repBody"></div></div>';
+        rp.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-flag" style="color:#ef4444;"></i> ' + L('Пожаловаться') + '</h2><p>' + L('Разберём вручную, автор жалобу не увидит') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-repBody"></div></div>';
         document.body.appendChild(rp);
         rp.addEventListener('click', function (e) { if (e.target === rp) hideModal('fmx-repBg'); });
         qsa(rp, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-repBg'); }); });
 
         var rq = document.createElement('div'); rq.className = 'fmx-mbg'; rq.id = 'fmx-reqBg';
-        rq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-speakerphone" style="color:#818cf8;"></i> Заявка на покупку рекламы</h2><p>Владельцы подходящих каналов напишут тебе сами</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-reqBody"></div></div>';
+        rq.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-speakerphone" style="color:#818cf8;"></i> ' + L('Заявка на покупку рекламы') + '</h2><p>' + L('Владельцы подходящих каналов напишут тебе сами') + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-reqBody"></div></div>';
         document.body.appendChild(rq);
         rq.addEventListener('click', function (e) { if (e.target === rq) hideModal('fmx-reqBg'); });
         qsa(rq, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-reqBg'); }); });
 
         var cr = document.createElement('div'); cr.className = 'fmx-mbg'; cr.id = 'fmx-cropBg';
-        cr.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-crop" style="color:#818cf8;"></i> Кадрирование</h2><p id="fmx-cropHint"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-cropBox"></div><div class="fmx-zoomrow"><i class="ti ti-zoom-out" style="color:#8990a8;"></i><input type="range" id="fmx-cropZoom" min="1" max="3" step="0.01" value="1"><i class="ti ti-zoom-in" style="color:#8990a8;"></i></div><div class="fmx-acts" style="margin-top:14px;"><button class="fmx-btn" data-c>Отмена</button><button class="fmx-btn fmx-btn-p" id="fmx-cropOk" style="background:#5DCAA5;color:#04342c;"><i class="ti ti-check"></i>Готово</button></div></div></div>';
+        cr.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-crop" style="color:#818cf8;"></i> ' + L('Кадрирование') + '</h2><p id="fmx-cropHint"></p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody"><div id="fmx-cropBox"></div><div class="fmx-zoomrow"><i class="ti ti-zoom-out" style="color:#8990a8;"></i><input type="range" id="fmx-cropZoom" min="1" max="3" step="0.01" value="1"><i class="ti ti-zoom-in" style="color:#8990a8;"></i></div><div class="fmx-acts" style="margin-top:14px;"><button class="fmx-btn" data-c>' + L('Отмена') + '</button><button class="fmx-btn fmx-btn-p" id="fmx-cropOk" style="background:#5DCAA5;color:#04342c;"><i class="ti ti-check"></i>' + L('Готово') + '</button></div></div></div>';
         document.body.appendChild(cr);
         cr.addEventListener('click', function (e) { if (e.target === cr) { _cancelCrop(); } });
         qsa(cr, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { _cancelCrop(); }); });
@@ -10818,7 +10820,7 @@
         cbx.addEventListener('pointercancel', function () { if (_crop) _crop.drag = null; });
 
         var bm = document.createElement('div'); bm.className = 'fmx-mbg'; bm.id = 'fmx-bmBg';
-        bm.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> Закладки</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmBody"></div></div>';
+        bm.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-star" style="color:#f59e0b;"></i> ' + L('Закладки') + '</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-bmBody"></div></div>';
         document.body.appendChild(bm);
         bm.addEventListener('click', function (e) { if (e.target === bm) hideModal('fmx-bmBg'); });
         bm.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bmBg'); });
@@ -10928,52 +10930,52 @@
                 '<div class="fmx-tldesc"><b style="color:' + hex + ';">' + name + '</b> — ' + text + '</div></div>';
         };
         var healthCard = '<div class="fmx-bgd-card fmx-bgd-health">' +
-            '<div class="fmx-bgd-title">Здоровье канала · светофор</div>' +
-            '<div class="fmx-bgd-desc">Сводная оценка канала как площадки: охват относительно подписчиков с поправкой на размер, ровность просмотров по постам, регулярность и свежесть публикаций, тренд охвата, рекламная нагрузка ленты и динамика подписчиков.</div>' +
+            '<div class="fmx-bgd-title">' + L('Здоровье канала · светофор') + '</div>' +
+            '<div class="fmx-bgd-desc">' + L('Сводная оценка канала как площадки: охват относительно подписчиков с поправкой на размер, ровность просмотров по постам, регулярность и свежесть публикаций, тренд охвата, рекламная нагрузка ленты и динамика подписчиков.') + '</div>' +
             tlRow('green', 'Зелёный', '#5DCAA5', 'метрики в норме для своего размера, следов накрутки проверки не нашли.') +
             tlRow('amber', 'Жёлтый', '#f59e0b', 'что-то ниже нормы для своего размера или данных не хватило для уверенного вывода.') +
             tlRow('red', 'Красный', '#ef4444', 'охват сильно ниже нормы для такого размера либо просмотры ведут себя аномально — проверь вручную.') +
-            '<div class="fmx-bgd-desc" style="margin-top:9px;">Жёлтый и красный — не приговор: открой «Развернуть» и проверь охват, ER и динамику вручную.</div>' +
+            '<div class="fmx-bgd-desc" style="margin-top:9px;">' + L('Жёлтый и красный — не приговор: открой «Развернуть» и проверь охват, ER и динамику вручную.') + '</div>' +
             '</div>';
         var body =
             healthCard +
-            card('<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>Владелец</span>', 'Владелец подтверждён',
+            card('<span class="fmx-bdg fmx-b-owner"><i class="ti ti-user-check"></i>' + L('Владелец') + '</span>', 'Владелец подтверждён',
                 'Наш бот — администратор этого канала: продавец действительно управляет размещением и может опубликовать твою рекламу. Это техническая проверка доступа, а не самоназвание — без бейджа доступ не подтверждён.') +
-            card('<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>Фрод-контроль пройден</span>', 'Фрод-контроль пройден',
+            card('<span class="fmx-bdg fmx-b-nofraud"><i class="ti ti-shield-check"></i>' + L('Фрод-контроль пройден') + '</span>', 'Фрод-контроль пройден',
                 'Наш фрод-контроль отработал и ничего не нашёл: охват в норме относительно подписчиков, просмотры по постам не прыгают, резкого наплыва подписчиков во времени нет. Выдаётся только когда проверки выполнены — не меньше 8 зрелых постов в выборке и есть данные о реакциях. Если данных мало, бейджа нет вовсе: это отсутствие вердикта, а не подтверждение чистоты. Полностью исключить накрутку по публичным данным невозможно.') +
-            card('<span class="fmx-bdg" style="color:#c7ccf7;border:0.5px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><span class="fmx-rknic">' + RKN_SVG + '</span>Зарегистрирован в РКН</span>', 'Зарегистрирован в РКН',
+            card('<span class="fmx-bdg" style="color:#c7ccf7;border:0.5px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.12);"><span class="fmx-rknic">' + RKN_SVG + '</span>' + L('Зарегистрирован в РКН') + '</span>', 'Зарегистрирован в РКН',
                 'Актуально для России: каналы от 10 000 подписчиков обязаны состоять в перечне РКН, чтобы легально размещать рекламу. Бейдж означает, что продавец указал ссылку на запись перечня — нажатие на бейдж в оффере открывает её для сверки. Вариант «Заявка в перечне РКН» — заявка подана и ожидает решения. Данные указывает продавец. Для каналов с аудиторией вне России регистрация не требуется.') +
-            card('<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>Безопасный</span>', 'Безопасный',
+            card('<span class="fmx-bdg fmx-b-safe"><i class="ti ti-shield-check"></i>' + L('Безопасный') + '</span>', 'Безопасный',
                 'Тематика канала — «белая»: без контента 18+, лицензируемых и серых ниш. Размещению не нужны возрастные ограничения и дополнительные проверки — подходит рекламодателям с жёсткими требованиями к окружению бренда.') +
-            card('<span class="fmx-bdg fmx-b-dead"><i class="ti ti-alert-triangle"></i>Требует проверки</span>', 'Требует проверки',
+            card('<span class="fmx-bdg fmx-b-dead"><i class="ti ti-alert-triangle"></i>' + L('Требует проверки') + '</span>', 'Требует проверки',
                 'Предупреждение, а не приговор: индекс здоровья красный либо охват аномален для размера канала — слишком низкий или выше числа подписчиков. Перед сделкой открой разворот, изучи график просмотров и запроси у продавца свежую статистику.') +
             '<div class="fmx-bgd-card fmx-bgd-health">' +
-            '<div class="fmx-bgd-title">Пульс канала · как часто выходят посты</div>' +
-            '<div class="fmx-bgd-desc">Считается по датам публикаций: когда был последний пост и сколько постов в неделю выходит в среднем.</div>' +
+            '<div class="fmx-bgd-title">' + L('Пульс канала · как часто выходят посты') + '</div>' +
+            '<div class="fmx-bgd-desc">' + L('Считается по датам публикаций: когда был последний пост и сколько постов в неделю выходит в среднем.') + '</div>' +
             pulseRow('high', 'Активный', 'публикует ежедневно — от 7 постов в неделю, последний не старше недели.') +
             pulseRow('mid', 'Регулярный', 'от 3 до 7 постов в неделю — несколько раз в неделю, без больших пауз.') +
             pulseRow('rare', 'Редкие посты', 'от 1 до 3 постов в неделю либо пауза дольше недели.') +
             pulseRow('low', 'Единичные посты', 'публикует реже раза в неделю либо пауза дольше двух недель. Канал живой, но выходит редко.') +
             pulseRow('none', 'Не публикует', 'последний пост вышел больше месяца назад — размещение здесь охвата не даст.') +
-            '<div class="fmx-bgd-desc" style="margin-top:9px;">Редкие посты — не приговор: у нишевых и авторских каналов такой ритм нормален. Но размещение в молчащем канале охвата почти не даст.</div>' +
+            '<div class="fmx-bgd-desc" style="margin-top:9px;">' + L('Редкие посты — не приговор: у нишевых и авторских каналов такой ритм нормален. Но размещение в молчащем канале охвата почти не даст.') + '</div>' +
             '</div>' +
-            card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>Крупный</span>', 'Крупный',
+            card('<span class="fmx-bdg fmx-b-big"><i class="ti ti-crown"></i>' + L('Крупный') + '</span>', 'Крупный',
                 'В канале от 100 000 подписчиков. Большой охват за размещение — подходит для масштабных запусков и широких проливов.') +
-            card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>В нише</span>', 'В нише',
+            card('<span class="fmx-bdg fmx-b-match"><i class="ti ti-target-arrow"></i>' + L('В нише') + '</span>', 'В нише',
                 'Ниша канала совпадает с нишей твоего канала. Аудитории близки — реклама попадёт точнее, конверсия выше. Показывается только тебе, под твой канал.') +
-            card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>★ 4,8 · 3 сделки</span>', 'Сделки и рейтинг',
+            card('<span class="fmx-bdg fmx-b-deal"><i class="ti ti-heart-handshake"></i>' + L('★ 4,8 · 3 сделки') + '</span>', 'Сделки и рейтинг',
                 'Число подтверждённых сделок через Площадку и средний рейтинг от рекламодателей. Обе стороны подтверждают сделку вручную — цифры не накручиваются. Прямой показатель репутации канала.') +
-            card('<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>Горящие даты до −15%</span>', 'Горящие даты',
+            card('<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>' + L('Горящие даты до −15%') + '</span>', 'Горящие даты',
                 'Скидка продавца на близкие свободные даты — до 50% от прайса. Размер и дни продавец задаёт в календаре оффера; в развороте видно, на какие даты действует сниженная цена. Для закупщика это возможность взять размещение дешевле обычного.') +
-            card('<span class="fmx-aud" style="color:#5b9dff;border:0.5px solid #5b9dff55;background:#5b9dff1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-male"></i> Мужская</span>', 'Аудитория: мужская',
+            card('<span class="fmx-aud" style="color:#5b9dff;border:0.5px solid #5b9dff55;background:#5b9dff1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-male"></i> ' + L('Мужская') + '</span>', 'Аудитория: мужская',
                 'Больше половины читателей канала — мужчины. Подходит под офферы с мужской целевой аудиторией: трейдинг, авто, спорт, техника, беттинг.') +
-            card('<span class="fmx-aud" style="color:#ff6fae;border:0.5px solid #ff6fae55;background:#ff6fae1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-female"></i> Женская</span>', 'Аудитория: женская',
+            card('<span class="fmx-aud" style="color:#ff6fae;border:0.5px solid #ff6fae55;background:#ff6fae1a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-gender-female"></i> ' + L('Женская') + '</span>', 'Аудитория: женская',
                 'Больше половины читателей — женщины. Подходит под офферы с женской целевой аудиторией: красота, мода, дети, дом, маркетплейсы.') +
-            card('<span class="fmx-aud" style="color:#9aa0b5;border:0.5px solid #9aa0b555;background:#9aa0b51a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-users-group"></i> Смешанная</span>', 'Аудитория: смешанная',
+            card('<span class="fmx-aud" style="color:#9aa0b5;border:0.5px solid #9aa0b555;background:#9aa0b51a;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;"><i class="ti ti-users-group"></i> ' + L('Смешанная') + '</span>', 'Аудитория: смешанная',
                 'Заметного перекоса по полу нет — канал читают и мужчины, и женщины. Универсальный вариант под широкие офферы: финансы, новости, развлечения.');
         var bg = document.createElement('div'); bg.className = 'fmx-mbg'; bg.id = 'fmx-bgdBg';
-        bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> Что значат бейджи</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
-            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">Бейджи в оффере помогают быстро оценить канал ещё до разворота.</div>' + body + '</div></div>';
+        bg.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><h2><i class="ti ti-rosette-discount-check" style="color:#818cf8;"></i> ' + L('Что значат бейджи') + '</h2><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div>' +
+            '<div class="fmx-mbody"><div style="font-size:12px;color:#8990a8;margin-bottom:6px;">' + L('Бейджи в оффере помогают быстро оценить канал ещё до разворота.') + '</div>' + body + '</div></div>';
         document.body.appendChild(bg);
         bg.addEventListener('click', function (e) { if (e.target === bg) hideModal('fmx-bgdBg'); });
         bg.querySelector('[data-c]').addEventListener('click', function () { hideModal('fmx-bgdBg'); });
@@ -10984,8 +10986,8 @@
         _ensureFaqModal();
         var body;
         if (_faqTab === 'terms') body = TERMS.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
-        else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> Единые правила Площадки. За контент отвечает разместивший; дополнительно действуют законы страны, на аудиторию которой направлена реклама.</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
-        else body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-bulb"></i> Практический разбор для обеих сторон: как закупать рекламу и как продавать размещения в своём канале.</div>' + TIPS.map(function (t) { return '<div class="fmx-term"><h4><i class="ti ti-circle-check" style="color:#5DCAA5;margin-right:5px;"></i>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
+        else if (_faqTab === 'rules') body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-scale"></i> ' + L('Единые правила Площадки. За контент отвечает разместивший; дополнительно действуют законы страны, на аудиторию которой направлена реклама.') + '</div>' + RULES.map(function (t) { return '<div class="fmx-term"><h4>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
+        else body = '<div class="fmx-note" style="margin-bottom:6px;"><i class="ti ti-bulb"></i> ' + L('Практический разбор для обеих сторон: как закупать рекламу и как продавать размещения в своём канале.') + '</div>' + TIPS.map(function (t) { return '<div class="fmx-term"><h4><i class="ti ti-circle-check" style="color:#5DCAA5;margin-right:5px;"></i>' + _esc(t[0]) + '</h4><p>' + _esc(t[1]) + '</p></div>'; }).join('');
         el('fmx-faqBody').innerHTML = '<div class="fmx-ftabs"><button class="fmx-ftab' + (_faqTab === 'rules' ? ' on' : '') + '" data-t="rules">Правила</button><button class="fmx-ftab' + (_faqTab === 'terms' ? ' on' : '') + '" data-t="terms">Метрики</button><button class="fmx-ftab' + (_faqTab === 'tips' ? ' on' : '') + '" data-t="tips">Советы</button></div>' + body;
         qsa(el('fmx-faqBody'), '[data-t]').forEach(function (b) { b.addEventListener('click', function () { _faqTab = b.getAttribute('data-t'); openFaq(); }); });
         showModal('fmx-faqBg');
@@ -11010,24 +11012,24 @@
             if (res && res.ok) {
                 _haptic('medium');
                 hideModal('fmx-promoBg');
-                toast('Продвижение запущено — списано ' + _num(res.spent) + ' Forge');
+                toast(L('Продвижение запущено — списано ') + _num(res.spent) + ' Forge');
                 loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
                 return;
             }
             btn.disabled = false; btn.innerHTML = old;
             uiAlert((res && res.message) || 'Не удалось запустить продвижение.');
-        }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast('Не удалось запустить продвижение'); });
+        }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast(L('Не удалось запустить продвижение')); });
     }
 
     function openPromo(listingId) {
         _promoListingId = listingId || null;
         var body = el('fmx-promoBody');
-        body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Загрузка…</div>';
+        body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Загрузка…') + '</div>';
         showModal('fmx-promoBg');
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
-            if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; return; }
+            if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Не удалось загрузить.') + '</div>'; return; }
             var opts = r.options || [], html = '';
-            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;"><i class="ti ti-bolt"></i> На балансе: ' + _num(r.balance || 0) + ' Forge — списание с баланса, без кассы</div>';
+            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;"><i class="ti ti-bolt"></i> ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса, без кассы') + '</div>';
             opts.forEach(function (o) {
                 var ic = o.in_burst_cap ? 'ti-bolt' : 'ti-rocket';
                 var pr = '<b>' + _num(o.price) + '</b> <i class="ti ti-bolt" style="color:#f5bf4f;font-size:12px;"></i>';
@@ -11035,16 +11037,16 @@
                     '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> ' + _esc(_PROMO_DESC[o.product] || '') + '</div>' +
                     '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">Запустить — ' + _num(o.price) + ' Forge</button></div>';
             });
-            html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> Всплески 24 и 48 ч вместе — не больше ' + (r.burst_cap || 3) + ' раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.</div>';
+            html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> ' + L('Всплески 24 и 48 ч вместе — не больше') + ' ' + (r.burst_cap || 3) + ' ' + L('раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.') + '</div>';
             body.innerHTML = html;
             qsa(body, '[data-buy]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     _haptic('light');
-                    if (!_promoListingId) { uiAlert('Открой продвижение из своего оффера: «Мои офферы» → «Продвинуть».'); return; }
+                    if (!_promoListingId) { uiAlert(L('Открой продвижение из своего оффера: «Мои офферы» → «Продвинуть».')); return; }
                     _buyPromo(b, b.getAttribute('data-buy'));
                 });
             });
-        }).catch(function () { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">Не удалось загрузить.</div>'; });
+        }).catch(function () { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Не удалось загрузить.') + '</div>'; });
     }
     var _anBusy = false;
     var _AN_PRICE = 30;
@@ -11083,9 +11085,9 @@
         var body = el('fmx-anBody');
         if (!body) return;
         body.innerHTML =
-            '<div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.</div>' +
-            '<button class="fmxan-go" id="fmx-anGo"><span class="fmxan-mi">' + AN_ICO + '</span> Разобрать канал <span class="fz">' + AN_BOLT + _AN_PRICE + '</span></button>' +
-            '<div class="fmxan-hint">Готовый разбор хранится 7 дней — повторное открытие бесплатно.</div>';
+            '<div class="fmx-note fmx-gr"><i class="ti ti-sparkles"></i> ' + L('Нейросеть изучит канал целиком: реальный охват и его динамику, вовлечённость, признаки накрутки и качество аудитории — и честно скажет, стоит ли покупать здесь рекламу.') + '</div>' +
+            '<button class="fmxan-go" id="fmx-anGo"><span class="fmxan-mi">' + AN_ICO + '</span> ' + L('Разобрать канал') + ' <span class="fz">' + AN_BOLT + _AN_PRICE + '</span></button>' +
+            '<div class="fmxan-hint">' + L('Готовый разбор хранится 7 дней — повторное открытие бесплатно.') + '</div>';
         var go = el('fmx-anGo');
         if (go) go.addEventListener('click', function () { _anStart(u); });
     }
@@ -11098,7 +11100,7 @@
         body.innerHTML = '<div class="fmxan-scan"><div class="beam"></div>' +
             '<span class="fmxan-hi big">' + AN_ICO + '</span>' +
             '<div class="st" id="fmx-anStep">' + _AN_STEPS[0] + '</div>' +
-            '<div class="sub">Глубокий разбор — обычно одна-две минуты. Окно можно не закрывать.</div></div>';
+            '<div class="sub">' + L('Глубокий разбор — обычно одна-две минуты. Окно можно не закрывать.') + '</div></div>';
         var i = 0;
         _anStepT = setInterval(function () {
             var s = el('fmx-anStep');
@@ -11116,9 +11118,9 @@
             }
             if (r && r.ok && r.analysis) { _haptic('light'); _anRender(u, r.analysis); }
             else if (r && r.error === 'no_data') {
-                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-database-off"></i><h3>Мало данных</h3><p>По этому каналу ещё не накоплены замеры — разбор недоступен. Forge не списаны.</p></div>';
+                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-database-off"></i><h3>' + L('Мало данных') + '</h3><p>' + L('По этому каналу ещё не накоплены замеры — разбор недоступен. Forge не списаны.') + '</p></div>';
             } else {
-                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>Не получилось</h3><p>Разбор не собрался — попробуй ещё раз. Forge за неудачную попытку возвращены.</p></div>';
+                body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>' + L('Не получилось') + '</h3><p>' + L('Разбор не собрался — попробуй ещё раз. Forge за неудачную попытку возвращены.') + '</p></div>';
             }
         }).catch(function (err) {
             _anBusy = false;
@@ -11129,7 +11131,7 @@
                 var d = JSON.parse(s.slice(s.indexOf(': ') + 2));
                 if (d && d.detail) msg = (typeof d.detail === 'string') ? d.detail : (d.detail.message || msg);
             } catch (e) {}
-            body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>Не получилось</h3><p>' + _esc(msg) + '</p></div>';
+            body.innerHTML = '<div class="fmx-empty" style="padding:24px 20px;"><i class="ti ti-alert-triangle"></i><h3>' + L('Не получилось') + '</h3><p>' + _esc(msg) + '</p></div>';
         });
     }
 
@@ -11147,28 +11149,28 @@
         var h = '';
         if (a._cached_at) {
             var dt = new Date(a._cached_at);
-            h += '<div class="fmxan-cache">Разбор от ' + dt.toLocaleDateString('ru-RU') +
-                ' · <a id="fmx-anRe">обновить ' + anFee(_AN_PRICE) + '</a></div>';
+            h += '<div class="fmxan-cache">' + L('Разбор от') + ' ' + dt.toLocaleDateString('ru-RU') +
+                ' · <a id="fmx-anRe">' + L('обновить') + ' ' + anFee(_AN_PRICE) + '</a></div>';
         }
         h += '<div class="fmxan-verd"><div class="ring">' +
             '<svg width="104" height="104" viewBox="0 0 108 108">' +
             '<circle cx="54" cy="54" r="46" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="9"/>' +
             '<circle cx="54" cy="54" r="46" fill="none" stroke="' + v[0] + '" stroke-width="9" stroke-linecap="round" ' +
             'stroke-dasharray="289" stroke-dashoffset="' + dash + '" transform="rotate(-90 54 54)" class="fg"/></svg>' +
-            '<div class="val"><b style="color:' + v[0] + ';">' + score + '</b><span>из 100</span></div></div>' +
+            '<div class="val"><b style="color:' + v[0] + ';">' + score + '</b><span>' + L('из 100') + '</span></div></div>' +
             '<div class="vt"><b style="color:' + v[0] + ';">' + _esc(a.verdict_title || '') + '</b>' +
             '<em>' + _esc(a.summary || '') + '</em>' +
-            '<span class="conf" style="color:' + v[0] + ';border-color:' + v[0] + '4d;background:' + v[0] + '1a;"><i class="ti ' + v[1] + '"></i> уверенность ' + (+a.confidence || 0) + '%</span></div></div>';
+            '<span class="conf" style="color:' + v[0] + ';border-color:' + v[0] + '4d;background:' + v[0] + '1a;"><i class="ti ' + v[1] + '"></i> ' + L('уверенность') + ' ' + (+a.confidence || 0) + '%</span></div></div>';
 
         if (a.reach_real) {
-            h += '<div class="fmxan-lbl">Реальный охват рекламного поста</div><div class="fmxan-card">' +
+            h += '<div class="fmxan-lbl">' + L('Реальный охват рекламного поста') + '</div><div class="fmxan-card">' +
                 '<div class="reach">' +
-                (a.reach_claimed ? '<div class="was"><b>' + _num(+a.reach_claimed) + '</b><span>заявлено</span></div><div class="arr">→</div>' : '') +
-                '<div class="now"><b>' + _esc(String(a.reach_real)) + '</b><span>честный прогноз</span></div></div>' +
+                (a.reach_claimed ? '<div class="was"><b>' + _num(+a.reach_claimed) + '</b><span>' + L('заявлено') + '</span></div><div class="arr">→</div>' : '') +
+                '<div class="now"><b>' + _esc(String(a.reach_real)) + '</b><span>' + L('честный прогноз') + '</span></div></div>' +
                 (a.reach_note ? '<div class="note">' + _esc(a.reach_note) + '</div>' : '') + '</div>';
         }
         if (a.audience && a.audience.length) {
-            h += '<div class="fmxan-lbl">Качество аудитории</div><div class="fmxan-grid">' +
+            h += '<div class="fmxan-lbl">' + L('Качество аудитории') + '</div><div class="fmxan-grid">' +
                 a.audience.slice(0, 4).map(function (m) {
                     return '<div class="mt"><div class="k">' + _esc(m.k || '') + '</div>' +
                         '<div class="v" style="color:' + _anTone(m.tone) + ';">' + _esc(m.v || '') + '</div>' +
@@ -11176,34 +11178,34 @@
                 }).join('') + '</div>';
         }
         if (a.flags && a.flags.length) {
-            h += '<div class="fmxan-lbl">Красные флаги · ' + a.flags.length + '</div><div class="fmxan-card">' +
+            h += '<div class="fmxan-lbl">' + L('Красные флаги ·') + ' ' + a.flags.length + '</div><div class="fmxan-card">' +
                 a.flags.slice(0, 6).map(function (f) {
                     return '<div class="flag"><span class="fi"><i class="ti ti-flag-3"></i></span>' +
                         '<div><b>' + _esc(f.title || '') + '</b><em>' + _esc(f.why || '') + '</em></div></div>';
                 }).join('') + '</div>';
         }
         if (a.price_fair) {
-            h += '<div class="fmxan-lbl">Цена размещения</div><div class="fmxan-card">' +
-                '<div class="cpm"><div class="col fair"><b>' + _esc(String(a.price_fair)) + '</b><span>справедливая</span></div>' +
-                (a.price_asked ? '<div class="cbar"><i></i></div><div class="col bad"><b>' + _num(+a.price_asked) + ' ₽</b><span>запрошено</span></div>' : '') +
+            h += '<div class="fmxan-lbl">' + L('Цена размещения') + '</div><div class="fmxan-card">' +
+                '<div class="cpm"><div class="col fair"><b>' + _esc(String(a.price_fair)) + '</b><span>' + L('справедливая') + '</span></div>' +
+                (a.price_asked ? '<div class="cbar"><i></i></div><div class="col bad"><b>' + _num(+a.price_asked) + ' ₽</b><span>' + L('запрошено') + '</span></div>' : '') +
                 '</div>' + (a.price_note ? '<div class="note">' + _esc(a.price_note) + '</div>' : '') + '</div>';
         }
         if (a.forecast && a.forecast.length) {
-            h += '<div class="fmxan-lbl">Прогноз результата</div><div class="fmxan-fore">' +
+            h += '<div class="fmxan-lbl">' + L('Прогноз результата') + '</div><div class="fmxan-fore">' +
                 a.forecast.slice(0, 3).map(function (f) {
                     return '<div class="f"><b>' + _esc(f.v || '') + '</b><span>' + _esc(f.k || '') + '</span></div>';
                 }).join('') + '</div>';
         }
         if (a.checklist && a.checklist.length) {
-            h += '<div class="fmxan-lbl">Проверь руками перед сделкой</div><div class="fmxan-card">' +
+            h += '<div class="fmxan-lbl">' + L('Проверь руками перед сделкой') + '</div><div class="fmxan-card">' +
                 a.checklist.slice(0, 5).map(function (c) {
                     return '<div class="check"><span class="cb"></span><p>' + _esc(c) + '</p></div>';
                 }).join('') + '</div>';
         }
         if (a.deal_advice) {
-            h += '<div class="fmxan-deal"><b>Позиция для сделки</b><p>' + _esc(a.deal_advice) + '</p></div>';
+            h += '<div class="fmxan-deal"><b>' + L('Позиция для сделки') + '</b><p>' + _esc(a.deal_advice) + '</p></div>';
         }
-        h += '<div class="fmxan-foot">Разбор строится на замерах и открытых данных канала.<br>Это аналитика для решения, а не гарантия результата.</div>';
+        h += '<div class="fmxan-foot">' + L('Разбор строится на замерах и открытых данных канала.') + '<br>' + L('Это аналитика для решения, а не гарантия результата.') + '</div>';
         body.innerHTML = h;
         var re = el('fmx-anRe');
         if (re) re.addEventListener('click', function () { _anStart(u); });
@@ -11229,17 +11231,17 @@
             rows.push('<div class="fmx-tline" style="color:' + (ad >= 0.35 ? '#f59e0b' : (ad < 0.05 ? '#5DCAA5' : '#c2c6d2')) + ';"><i class="ti ti-ad"></i>' + apct + '% рекламных · ' + l.struct_posts + ' ' + _plural(l.struct_posts, 'пост', 'поста', 'постов') + (ad >= 0.35 ? ' — лента подвыжжена, охват твоей рекламы ниже' : '') + '</div>');
         }
         if (!rows.length) return '';
-        return '<div class="fmx-lssect">Структура охвата</div><div class="fmx-terms">' + rows.join('') + '</div>';
+        return '<div class="fmx-lssect">' + L('Структура охвата') + '</div><div class="fmx-terms">' + rows.join('') + '</div>';
     }
     function _flowBlock(l) {
         var pp = _basePrice(l), av = l.avg_views;
         if (!pp || !av || l.activity === 'none') return '';
         var conv = 0.5, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
-        return '<div class="fmx-lssect">Перелив · набрать подписчиков</div>' +
+        return '<div class="fmx-lssect">' + L('Перелив · набрать подписчиков') + '</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
-            '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="0.5"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">CPF · цена подписчика</span></div>' +
-            '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> за <b>≈' + _num(pp) + ' ₽</b> (цена формата 1/24)</div>' +
-            '<div class="fmr-warn">Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.</div>' +
+            '<div class="fmr-line" data-flow="1" data-pp="' + pp + '" data-av="' + av + '" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">Конверсия <input class="fmr-conv" type="number" min="0.1" max="100" step="0.5" value="0.5"> % → <b class="fmr-cps" style="color:#5DCAA5;">≈' + _num(cps) + ' ₽</b> <span style="font-size:11px;color:#565b73;">' + L('CPF · цена подписчика') + '</span></div>' +
+            '<div class="fmr-sub"><span class="fmr-gained">' + _gainTxt(_grw) + '</span> ' + L('за') + ' <b>≈' + _num(pp) + ' ₽</b> ' + L('(цена формата 1/24)') + '</div>' +
+            '<div class="fmr-warn">' + L('Ниже 0.3% — стоимость подписчика непропорционально высока. Для холодного трафика норма 0.3–1.5%, для прогретой аудитории — выше.') + '</div>' +
             '</div>';
     }
     function _chmRow(name, note, right) {
@@ -11301,11 +11303,11 @@
         var a = _audLabel(l);
         if (!a || l.female_pct == null) return '';
         var f = Math.max(0, Math.min(100, l.female_pct)), m = 100 - f;
-        return '<div class="fmx-chmaud"><div class="fmx-chmauh"><span class="fmx-chml">Аудитория</span>' +
+        return '<div class="fmx-chmaud"><div class="fmx-chmauh"><span class="fmx-chml">' + L('Аудитория') + '</span>' +
             '<b>' + _esc(a.short.replace('муж', 'мужчины').replace('жен', 'женщины')) + '</b></div>' +
             '<div class="fmx-chmbar"><i style="width:' + m.toFixed(0) + '%;background:#5b9dff;"></i>' +
             '<i style="width:' + f.toFixed(0) + '%;background:#ff6fae;"></i></div>' +
-            '<div class="fmx-chmbl"><span>' + _esc(a.note) + '</span><span>женщины ' + f.toFixed(0) + '%</span></div></div>';
+            '<div class="fmx-chmbl"><span>' + _esc(a.note) + '</span><span>' + L('женщины') + ' ' + f.toFixed(0) + '%</span></div></div>';
     }
     function _pwMetrics(l) {
         var dead = l.activity === 'none';
@@ -11313,7 +11315,7 @@
         var ad = (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : null;
         return '<div class="fmx-pwc">' +
             '<div class="fmx-chmduo">' +
-            '<div class="fmx-chmbig"><div class="fmx-chml">Охват поста</div>' +
+            '<div class="fmx-chmbig"><div class="fmx-chml">' + L('Охват поста') + '</div>' +
             '<div class="fmx-chmv num" style="color:' + (dead ? '#f06978' : '#5DCAA5') + ';">' +
             ((!dead && l.avg_views != null) ? _num(l.avg_views) : '—') + '</div>' +
             '<div class="fmx-chmn">' + (dead ? 'канал не публикует' : (ad ? 'замер рекламных постов' : 'медиана за 30 дней')) + '</div></div>' +
@@ -11334,10 +11336,10 @@
             (ad ? _chmRow('Рекламный охват', 'замер за 24 часа после выхода', '<b class="num" style="color:#cdd0de;">~' + _num(ad) + '</b>') : '') +
             '</div>' +
             _audBar(l) +
-            (dead ? '<div class="fmx-chmdead">Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.</div>' : '') +
+            (dead ? '<div class="fmx-chmdead">' + L('Охват не считается: канал не публикует больше месяца — рекламный пост охвата не получит, старые цифры просмотров непоказательны.') + '</div>' : '') +
             (l.er != null && l.er > 100 ?
                 '<div class="fmx-anom"><span class="fmx-anom-i">' + _warnTri(17) + '</span>' +
-                '<div><b>ERR ' + String(l.er).replace('.', ',') + '%</b> — просмотров у постов больше, чем подписчиков в канале. ' +
+                '<div><b>ERR ' + String(l.er).replace('.', ',') + '%</b> ' + L('— просмотров у постов больше, чем подписчиков в канале.') + ' ' +
                 'Разовый вирусный пост — не беда, но когда так почти всегда и без явной причины, цифру стоит перепроверить. ' +
                 'Обычно за этим стоят докрученные просмотры (канал изображает активность, чтобы дороже продавать рекламу) ' +
                 'либо закуп размещений в непрофильных каналах, куда стекается ботовый трафик. ' +
@@ -11346,7 +11348,7 @@
     }
     function _erCheckTxt(l) {
         if (l.engagement_percent != null) {
-            return 'Проверить помогает вовлечённость: сейчас ER <b>' + String(l.engagement_percent).replace('.', ',') + '%</b>. ' +
+            return L('Проверить помогает вовлечённость: сейчас ER') + ' <b>' + String(l.engagement_percent).replace('.', ',') + '%</b>. ' +
                 'Заметные реакции при таком охвате — знак, что просмотры живые; почти полное их отсутствие — что охват докручен ' +
                 '(боты просмотр открывают, а реакцию не ставят).';
         }
@@ -11372,14 +11374,14 @@
         var dealN = l.deals_count || 0;
         var rows = [];
         rows.push({ i: 'ti-heart-handshake', c: '#f5bf4f',
-            t: dealN ? 'Подтверждённых сделок: <b>' + dealN + '</b>' + (l.ad_reach_24h ? ' · охват замерен' : '')
+            t: dealN ? L('Подтверждённых сделок:') + ' <b>' + dealN + '</b>' + (l.ad_reach_24h ? ' · охват замерен' : '')
                      : 'Сделок пока нет. Отзывы появятся после первой подтверждённой сделки',
             e: 'Обе стороны подтверждают сделку вручную. Ссылку на рекламный пост даёт продавец, дальше охват этого поста мы замеряем сами через 24 и 48 часов. Счётчик растёт только по сделкам, подтверждённым обеими сторонами через Площадку. Оплата идёт напрямую между вами: сервис не держит деньги и не выступает гарантом расчётов.' });
         rows.push({ i: 'ti-target-arrow', c: '#5DCAA5', id: 'fmx-tr-acc',
-            t: 'Точность заявленного охвата: <b id="fmx-tr-accv">…</b>',
+            t: L('Точность заявленного охвата:') + ' <b id="fmx-tr-accv">…</b>',
             e: 'Сравниваем заявленный охват оффера с фактическим охватом рекламных постов из подтверждённых сделок. Чем ближе к нулю — тем честнее заявка.' });
         rows.push({ i: 'ti-calendar-check', c: '#818cf8',
-            t: 'Календарь обновлён: <b id="fmx-tr-cal">…</b>',
+            t: L('Календарь обновлён:') + ' <b id="fmx-tr-cal">…</b>',
             e: 'Свежий календарь — признак живого канала: датам на оффере можно доверять.' });
         rows.push({ i: 'ti-activity', c: '#5ab0e6',
             t: 'Метрики обновляются автоматически',
@@ -11406,7 +11408,7 @@
         if (l.formats && l.formats.length) {
             var bestCpm = null, _rv = (l.activity === 'none') ? null : _reach(l);
             l.formats.forEach(function (f) { if (f.price && _rv) { var c = f.price / _rv * 1000; if (bestCpm == null || c < bestCpm) bestCpm = c; } });
-            fmtsHtml = '<div class="fmx-lssect">Форматы и цены</div>' +
+            fmtsHtml = '<div class="fmx-lssect">' + L('Форматы и цены') + '</div>' +
                 '<div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;" id="fmx-fmtl" class="num">' +
                 l.formats.map(function (f) {
                     var lb = _esc(f.label || f.format);
@@ -11419,35 +11421,35 @@
                         '<span class="pr">' + (f.price ? _num(f.price) + ' ₽' : 'по договорённости') + '</span>' +
                         '<span class="cp">' + (c != null ? 'CPM ' + _num(c) + ' ₽' : '') + '</span></div>';
                 }).join('') + '</div>' +
-                '<div style="font-size:10px;color:#565b73;margin-top:5px;">Зелёная точка — лучший CPM. ' + (l.ad_reach_24h ? 'CPM по <b style="color:#5DCAA5;">охвату рекламного поста за первые 24 часа (ERR24)</b> — по фактическим замерам сделок.' : 'Тап по строке подставит формат в сообщение') + '</div>' +
+                '<div style="font-size:10px;color:#565b73;margin-top:5px;">' + L('Зелёная точка — лучший CPM.') + ' ' + (l.ad_reach_24h ? L('CPM по') + ' <b style="color:#5DCAA5;">' + L('охвату рекламного поста за первые 24 часа (ERR24)') + '</b> ' + L('— по фактическим замерам сделок.') : 'Тап по строке подставит формат в сообщение') + '</div>' +
                 _termsBlock(l);
         }
         el('fmx-listTitle').innerHTML = '<span style="display:flex;align-items:center;gap:7px;">' + _esc(l.title || u) + '</span>';
         el('fmx-listBody').innerHTML =
             '<div style="font-size:12px;color:#8990a8;margin-bottom:12px;">@' + _esc(u) + ' · ' + _num(l.subscribers) + ' подп.' + (l.niche ? ' · ' + _esc(l.niche) : '') + '</div>' +
             '<div class="fmx-badges">' + badges(l) + '</div>' +
-            '<div class="fmx-lssect">Метрики канала</div>' +
+            '<div class="fmx-lssect">' + L('Метрики канала') + '</div>' +
             _pwMetrics(l) +
             _reachStructBlock(l) +
             _flowBlock(l) +
             _peakBlock(l) +
             (l.id ? '<div id="fmx-tabloBox"></div>' : '') +
-            (l.id ? '<div class="fmx-lssect">Доверие</div>' + _trustRows(l) +
-                '<div class="fmx-tplink" data-terms="b"><i class="ti ti-clipboard-text"></i> <span>Как проходит сделка</span></div>' : '') +
+            (l.id ? '<div class="fmx-lssect">' + L('Доверие') + '</div>' + _trustRows(l) +
+                '<div class="fmx-tplink" data-terms="b"><i class="ti ti-clipboard-text"></i> <span>' + L('Как проходит сделка') + '</span></div>' : '') +
             (l.custom_text ? '<div style="font-size:13px;color:#cdd0de;line-height:1.55;margin:14px 0 0;overflow-wrap:anywhere;word-break:break-word;">' + _esc(l.custom_text) + '</div>' : '') +
             fmtsHtml +
-            (l.id ? '<div class="fmx-lssect">Свободные даты</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
+            (l.id ? '<div class="fmx-lssect">' + L('Свободные даты') + '</div><div id="fmx-slotsBox" style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;"></div>' : '') +
             (l.id ? '<div id="fmx-lsRev"></div><div id="fmx-dealBox"></div>' : '') +
             (l.id ? '<div style="display:flex;gap:8px;margin-top:14px;">' +
-                '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share"></i> Поделиться оффером</button>' +
-                '<button class="fmx-btn" id="fmx-ls-rep" style="flex:1;color:#8990a8;"><i class="ti ti-flag"></i> Пожаловаться</button></div>' : '') +
-            (!l.id ? '<button class="fmx-btn" id="fmx-lsTrack" style="width:100%;margin-top:14px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> Ссылка отслеживания в рекламный пост</button>' : '') +
+                '<button class="fmx-btn" id="fmx-lsShare" style="flex:1;color:#5DCAA5;border-color:rgba(93,202,165,0.3);"><i class="ti ti-share"></i> ' + L('Поделиться оффером') + '</button>' +
+                '<button class="fmx-btn" id="fmx-ls-rep" style="flex:1;color:#8990a8;"><i class="ti ti-flag"></i> ' + L('Пожаловаться') + '</button></div>' : '') +
+            (!l.id ? '<button class="fmx-btn" id="fmx-lsTrack" style="width:100%;margin-top:14px;color:#5ab0e6;border-color:rgba(90,176,230,0.35);"><i class="ti ti-route"></i> ' + L('Ссылка отслеживания в рекламный пост') + '</button>' : '') +
             '<div class="fmx-lsfoot">' +
             '<button class="fmx-btn bm" id="fmx-lsBm" data-bm="' + _esc(u) + '"' + (_bookmarks[u] ? ' style="color:#f59e0b;border-color:rgba(245,158,11,0.4);"' : '') + '><i class="ti ti-star"></i></button>' +
-            '<button class="fmx-btn fmx-btn-p go" id="fmx-lsGo" style="background:' + accent + ';color:#fff;"><i class="ti ti-brand-telegram"></i> Написать</button></div>';
+            '<button class="fmx-btn fmx-btn-p go" id="fmx-lsGo" style="background:' + accent + ';color:#fff;"><i class="ti ti-brand-telegram"></i> ' + L('Написать') + '</button></div>';
         if (l.id && l.expand_content_json && l.expand_content_json.els && l.expand_content_json.els.length) {
             var tb = el('fmx-tabloBox');
-            tb.innerHTML = '<div class="fmx-lssect">Витрина</div><div id="fmx-tabloIn"></div>';
+            tb.innerHTML = '<div class="fmx-lssect">' + L('Витрина') + '</div><div id="fmx-tabloIn"></div>';
             renderTablo(l.expand_content_json, el('fmx-tabloIn'), { cut: true });
         }
         qsa(el('fmx-listBody'), '[data-tr]').forEach(function (r) {
@@ -11539,21 +11541,21 @@
             items.forEach(function (it) { _bookmarks[it.listing.username] = true; _bmMap[it.listing.username] = it.listing; });
             updateBmCount();
             if (!items.length) {
-                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>Пусто</h3><p>Отмечай ★ на офферах, чтобы сохранить канал.</p></div>';
+                box.innerHTML = '<div class="fmx-empty"><i class="ti ti-star"></i><h3>' + L('Пусто') + '</h3><p>' + L('Отмечай ★ на офферах, чтобы сохранить канал.') + '</p></div>';
                 return;
             }
             box.innerHTML = items.map(function (it) {
                 var l = it.listing, u = l.username;
                 return '<div class="fmx-bmrow' + (it.frozen ? ' frz' : '') + '" data-open="' + _esc(u) + '" data-src="' + it.source + '" data-frz="' + (it.frozen ? 1 : 0) + '">' +
                     zw(listItem(l, false, it.source === 'base')) +
-                    (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> Заморожена</span>' : '') +
+                    (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> ' + L('Заморожена') + '</span>' : '') +
                     '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Удалить из закладок (два нажатия)"><i class="ti ti-trash"></i></button></div>';
             }).join('');
             bindList(box);
             scaleCards(box);
             hydrateTgs(box);
         }).catch(function () {
-            box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>Не загрузилось</h3><p>Попробуй открыть закладки ещё раз.</p></div>';
+            box.innerHTML = '<div class="fmx-empty"><i class="ti ti-cloud-off"></i><h3>' + L('Не загрузилось') + '</h3><p>' + L('Попробуй открыть закладки ещё раз.') + '</p></div>';
         });
     }
 
@@ -11587,14 +11589,14 @@
         var ov = document.createElement('div'); ov.id = 'fmx-apkBg'; ov.className = 'fmx-apk-ov';
         ov.innerHTML = '<div class="fmx-apk-in">' +
             '<div class="fmx-apk-hd"><div class="fmx-apk-tile"><i class="ti ti-target-arrow"></i></div>' +
-            '<b>Подбор каналов для рекламы</b>' +
+            '<b>' + L('Подбор каналов для рекламы') + '</b>' +
             '<button class="fmx-apk-x" id="fmx-apkX"><i class="ti ti-x"></i></button></div>' +
             '<div id="fmx-apkBody">' + loadHtml() + '</div></div>';
         document.body.appendChild(ov);
         el('fmx-apkX').addEventListener('click', function () { _haptic('light'); _apkClose(); });
         _apkChId = _apkChannelId();
         if (_apkChId == null) {
-            _apkBody().innerHTML = '<div class="fmx-apk-err"><i class="ti ti-plug" style="color:#f5bf4f;"></i><span><b style="color:#e8e8ed;">Сначала подключи канал.</b> Подбор строится под аудиторию твоего канала — добавь его на главном экране.</span></div>';
+            _apkBody().innerHTML = '<div class="fmx-apk-err"><i class="ti ti-plug" style="color:#f5bf4f;"></i><span><b style="color:#e8e8ed;">' + L('Сначала подключи канал.') + '</b> ' + L('Подбор строится под аудиторию твоего канала — добавь его на главном экране.') + '</span></div>';
             return;
         }
         _apkLoadState();
@@ -11611,7 +11613,7 @@
             }
             _apkRenderIntro();
         }).catch(function () {
-            var b = _apkBody(); if (b) b.innerHTML = '<div class="fmx-apk-err"><i class="ti ti-cloud-off" style="color:#f06978;"></i><span>Не удалось загрузить. Проверь связь и открой экран ещё раз.</span></div>';
+            var b = _apkBody(); if (b) b.innerHTML = '<div class="fmx-apk-err"><i class="ti ti-cloud-off" style="color:#f06978;"></i><span>' + L('Не удалось загрузить. Проверь связь и открой экран ещё раз.') + '</span></div>';
         });
     }
     function _apkLimitLine() {
@@ -11630,7 +11632,7 @@
             var n = (r.report && r.report.picks) ? r.report.picks.length : 0;
             return '<button class="fmx-apk-pill" data-apkrun="' + r.id + '">' + _apkDate(r.created_at) + ' · ' + n + ' ' + _plural(n, 'канал', 'канала', 'каналов') + '</button>';
         }).join('');
-        return '<div style="margin-top:14px;"><div style="font-size:11px;color:#6b7088;margin-bottom:8px;">История подборов</div>' +
+        return '<div style="margin-top:14px;"><div style="font-size:11px;color:#6b7088;margin-bottom:8px;">' + L('История подборов') + '</div>' +
             '<div style="display:flex;gap:7px;flex-wrap:wrap;">' + pills + '</div></div>';
     }
     function _apkBindHistory() {
@@ -11653,15 +11655,15 @@
         } catch (e) {}
         b.innerHTML =
             '<div class="fmx-apk-hero">' +
-            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;">Куда закупать рекламу' + (chName ? ' каналу <b style="color:#c2c6d2;">' + _esc(chName) + '</b>' : ' твоему каналу') + '. Система отбирает площадки, где реклама может сработать:</div>' +
+            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;">' + L('Куда закупать рекламу') + (chName ? ' ' + L('каналу') + ' <b style="color:#c2c6d2;">' + _esc(chName) + '</b>' : ' твоему каналу') + L('. Система отбирает площадки, где реклама может сработать:') + '</div>' +
             '<div style="margin-top:12px;display:flex;flex-direction:column;gap:7px;">' +
-            '<div class="fmx-apk-chk"><i>✓</i><span>Аудитория совпадает с твоей — по нише и смежным нишам</span></div>' +
-            '<div class="fmx-apk-chk"><i>✓</i><span>Лента не выгорела рекламой — доля рекламных постов низкая</span></div>' +
-            '<div class="fmx-apk-chk"><i>✓</i><span>Честный охват — ERR в норме для размера, антифрод чистый</span></div></div>' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>' + L('Аудитория совпадает с твоей — по нише и смежным нишам') + '</span></div>' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>' + L('Лента не выгорела рекламой — доля рекламных постов низкая') + '</span></div>' +
+            '<div class="fmx-apk-chk"><i>✓</i><span>' + L('Честный охват — ERR в норме для размера, антифрод чистый') + '</span></div></div>' +
             '<div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;">' +
-            '<div class="fmx-apk-step"><div class="fmx-apk-snum">1</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">Поиск по базе</b> <span class="fmx-apk-tag free">не списывает запуск</span><br>Если подходящих каналов нет — лимит не сгорит.</div></div>' +
-            '<div class="fmx-apk-step"><div class="fmx-apk-snum">2</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">ИИ-анализ найденных</b> <span class="fmx-apk-tag paid">списывает 1 запуск</span><br>Ранжирует кандидатов и объясняет, почему реклама может сработать.</div></div></div>' +
-            '<button class="fmx-apk-go" id="fmx-apkGo"' + (st.can_run ? '' : ' disabled') + '><i class="ti ti-target-arrow"></i> Подобрать каналы</button>' +
+            '<div class="fmx-apk-step"><div class="fmx-apk-snum">1</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">' + L('Поиск по базе') + '</b> <span class="fmx-apk-tag free">' + L('не списывает запуск') + '</span><br>' + L('Если подходящих каналов нет — лимит не сгорит.') + '</div></div>' +
+            '<div class="fmx-apk-step"><div class="fmx-apk-snum">2</div><div style="font-size:11.5px;color:#a7aec6;line-height:1.45;"><b style="color:#e8e8ed;">' + L('ИИ-анализ найденных') + '</b> <span class="fmx-apk-tag paid">' + L('списывает 1 запуск') + '</span><br>' + L('Ранжирует кандидатов и объясняет, почему реклама может сработать.') + '</div></div></div>' +
+            '<button class="fmx-apk-go" id="fmx-apkGo"' + (st.can_run ? '' : ' disabled') + '><i class="ti ti-target-arrow"></i> ' + L('Подобрать каналы') + '</button>' +
             '<div style="margin-top:8px;text-align:center;font-size:10.5px;color:rgba(255,255,255,0.42);line-height:1.45;">' + _apkLimitLine() + '</div>' +
             '</div>' + _apkHistoryHtml();
         var go = el('fmx-apkGo');
@@ -11671,7 +11673,7 @@
     function _apkStart() {
         var go = el('fmx-apkGo'); if (go) go.disabled = true;
         apiPost('/api/v1/adpick/start', { channel_id: _apkChId }).then(function (r) {
-            if (!r || !r.ok) { toast('Не удалось запустить подбор'); if (go) go.disabled = false; return; }
+            if (!r || !r.ok) { toast(L('Не удалось запустить подбор')); if (go) go.disabled = false; return; }
             _apkRenderProgress('running');
             _apkPoll(r.run_id);
         }).catch(function (e) {
@@ -11712,7 +11714,7 @@
         }).catch(function () { _apkRenderResult(run); });
     }
     function _apkBackBtn() {
-        return '<button class="fmx-apk-pill" id="fmx-apkBack" style="margin-top:14px;"><i class="ti ti-arrow-left"></i> К запуску подбора</button>';
+        return '<button class="fmx-apk-pill" id="fmx-apkBack" style="margin-top:14px;"><i class="ti ti-arrow-left"></i> ' + L('К запуску подбора') + '</button>';
     }
     function _apkBindBack() {
         var bb = el('fmx-apkBack');
@@ -11720,7 +11722,7 @@
     }
     function _apkRenderEmpty() {
         var b = _apkBody(); if (!b) return;
-        b.innerHTML = '<div class="fmx-apk-empty"><i>✓</i><span><b style="color:#e8e8ed;">Подходящих каналов в базе пока нет.</b> Запуск не списан. База пополняется — попробуй позже.</span></div>' + _apkBackBtn();
+        b.innerHTML = '<div class="fmx-apk-empty"><i>✓</i><span><b style="color:#e8e8ed;">' + L('Подходящих каналов в базе пока нет.') + '</b> ' + L('Запуск не списан. База пополняется — попробуй позже.') + '</span></div>' + _apkBackBtn();
         _apkBindBack();
     }
     function _apkRenderError(msg) {
@@ -11735,19 +11737,19 @@
     }
     function _apkMetricLine(p) {
         var a = [];
-        if (p.subscribers != null) a.push('<b>' + _num(p.subscribers) + '</b> подписчиков');
-        if (p.avg_views != null) a.push('охват <b>' + _num(p.avg_views) + '</b>');
+        if (p.subscribers != null) a.push('<b>' + _num(p.subscribers) + '</b> ' + L('подписчиков'));
+        if (p.avg_views != null) a.push(L('охват') + ' <b>' + _num(p.avg_views) + '</b>');
         if (p.err != null) a.push('ERR <b>' + p.err + '%</b>');
         if (p.er != null) a.push('ER <b>' + p.er + '%</b>');
         var b2 = [];
-        if (p.ad_density_pct != null) b2.push('рекламных постов <b>' + p.ad_density_pct + '%</b>');
-        if (p.posts_per_week != null) b2.push('<b>' + p.posts_per_week + '</b> постов/нед');
-        if (p.subs_d30 != null) b2.push('за 30 дн <b>' + (p.subs_d30 > 0 ? '+' : '') + _num(p.subs_d30) + '</b>');
+        if (p.ad_density_pct != null) b2.push(L('рекламных постов') + ' <b>' + p.ad_density_pct + '%</b>');
+        if (p.posts_per_week != null) b2.push('<b>' + p.posts_per_week + '</b> ' + L('постов/нед'));
+        if (p.subs_d30 != null) b2.push(L('за 30 дн') + ' <b>' + (p.subs_d30 > 0 ? '+' : '') + _num(p.subs_d30) + '</b>');
         if (p.owner_price) {
-            b2.push('цена от <b>' + _num(p.owner_price) + ' ₽</b>');
+            b2.push(L('цена от') + ' <b>' + _num(p.owner_price) + ' ₽</b>');
             if (p.cpm) b2.push('CPM ≈ <b>' + _num(p.cpm) + ' ₽</b>');
         } else if (p.price_low && p.price_high) {
-            b2.push('рыночная цена <b>' + _num(p.price_low) + '–' + _num(p.price_high) + ' ₽</b>');
+            b2.push(L('рыночная цена') + ' <b>' + _num(p.price_low) + '–' + _num(p.price_high) + ' ₽</b>');
         }
         return '<div class="fmx-apk-line">' + a.join(' · ') + '</div>' +
             (b2.length ? '<div class="fmx-apk-line" style="margin-top:2px;">' + b2.join(' · ') + '</div>' : '');
@@ -11768,22 +11770,22 @@
                 (p.rkn_url ? '<div style="margin-top:7px;">' + rknPill(p.rkn_url) + '</div>' : '') +
                 (p.why ? '<div class="fmx-apk-why">' + _esc(p.why) + '</div>' : '') +
                 '<div style="margin-top:9px;display:flex;gap:7px;">' +
-                '<button class="fmx-apk-abtn" data-apkopen="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i> Открыть канал</button>' +
-                (p.on_market ? '<button class="fmx-apk-abtn" data-apkoffer="' + _esc(p.username) + '" style="color:#9fe3cc;border-color:rgba(93,202,165,0.3);"><i class="ti ti-file-description"></i> Смотреть оффер</button>' : '') +
+                '<button class="fmx-apk-abtn" data-apkopen="' + _esc(p.username) + '"><i class="ti ti-brand-telegram"></i> ' + L('Открыть канал') + '</button>' +
+                (p.on_market ? '<button class="fmx-apk-abtn" data-apkoffer="' + _esc(p.username) + '" style="color:#9fe3cc;border-color:rgba(93,202,165,0.3);"><i class="ti ti-file-description"></i> ' + L('Смотреть оффер') + '</button>' : '') +
                 '</div></div>';
         }).join('');
         var n = picks.length;
         b.innerHTML =
-            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;margin-bottom:4px;">Готово: <b style="color:#e8e8ed;">' + n + ' ' + _plural(n, 'канал', 'канала', 'каналов') + '</b> под твою аудиторию' + (run.created_at ? ' · ' + _apkDate(run.created_at) : '') + '. Отранжированы по шансу, что реклама сработает.</div>' +
+            '<div style="font-size:12px;color:#8d93a8;line-height:1.5;margin-bottom:4px;">' + L('Готово:') + ' <b style="color:#e8e8ed;">' + n + ' ' + _plural(n, 'канал', 'канала', 'каналов') + '</b> ' + L('под твою аудиторию') + (run.created_at ? ' · ' + _apkDate(run.created_at) : '') + L('. Отранжированы по шансу, что реклама сработает.') + '</div>' +
             cards +
             '<div style="display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;">' +
-            '<button class="fmx-apk-pill on" id="fmx-apkRerun"><i class="ti ti-refresh"></i> Перезапустить подбор</button>' +
-            '<button class="fmx-apk-pill" id="fmx-apkBack"><i class="ti ti-arrow-left"></i> К запуску</button></div>';
+            '<button class="fmx-apk-pill on" id="fmx-apkRerun"><i class="ti ti-refresh"></i> ' + L('Перезапустить подбор') + '</button>' +
+            '<button class="fmx-apk-pill" id="fmx-apkBack"><i class="ti ti-arrow-left"></i> ' + L('К запуску') + '</button></div>';
         _apkBindBack();
         var rr = el('fmx-apkRerun');
         if (rr) rr.addEventListener('click', function () {
             _haptic('medium');
-            if (_apkState && !_apkState.can_run) { toast('Лимит подборов исчерпан'); return; }
+            if (_apkState && !_apkState.can_run) { toast(L('Лимит подборов исчерпан')); return; }
             _apkStart();
         });
         qsa(b, '[data-apkopen]').forEach(function (btn) {

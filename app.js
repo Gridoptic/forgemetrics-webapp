@@ -152,10 +152,10 @@ function openForgeSheet() {
           <div class="fs-bal">${forgeAmount(balance, 26)}</div>
           ${sub ? `<div class="fs-sub">${sub}</div>` : ''}
         </div>
-        <div class="fs-sec">Хватит на</div>
+        <div class="fs-sec">${t('Хватит на')}</div>
         <div class="fs-rows">${rows}</div>
         ${packs ? `<div class="fs-sec">Пополнить</div><div class="fw-packs">${packs}</div>` : ''}
-        <button class="fs-more" id="fs-more">История операций и все цены <i class="ti ti-chevron-right"></i></button>`;
+        <button class="fs-more" id="fs-more">${t('История операций и все цены')} <i class="ti ti-chevron-right"></i></button>`;
 
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -206,16 +206,16 @@ function openHelpSheet() {
     const sheet = document.createElement('div');
     sheet.className = 'bs-sheet fs-sheet';
     sheet.innerHTML = `<div class="bs-handle"></div>
-        <div class="hs-title">Справка и поддержка</div>
+        <div class="hs-title">${t('Справка и поддержка')}</div>
         <div class="hs-links">
-            <button class="hs-link" id="hs-terms"><i class="ti ti-book-2"></i><span>Метрики и термины</span><i class="ti ti-chevron-right ch"></i></button>
-            <button class="hs-link" id="hs-rules"><i class="ti ti-scale"></i><span>Правила и советы</span><i class="ti ti-chevron-right ch"></i></button>
-            <button class="hs-link" id="hs-badges"><i class="ti ti-rosette-discount-check"></i><span>Бейджи и статусы</span><i class="ti ti-chevron-right ch"></i></button>
+            <button class="hs-link" id="hs-terms"><i class="ti ti-book-2"></i><span>${t('Метрики и термины')}</span><i class="ti ti-chevron-right ch"></i></button>
+            <button class="hs-link" id="hs-rules"><i class="ti ti-scale"></i><span>${t('Правила и советы')}</span><i class="ti ti-chevron-right ch"></i></button>
+            <button class="hs-link" id="hs-badges"><i class="ti ti-rosette-discount-check"></i><span>${t('Бейджи и статусы')}</span><i class="ti ti-chevron-right ch"></i></button>
         </div>
         <div class="fs-sec">Forge</div>
-        <div class="hs-note">Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».</div>
-        <div class="fs-sec">Поддержка</div>
-        <div class="hs-note">Вопросы, проблемы и предложения — на почту <a class="hs-mail" href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></div>
+        <div class="hs-note">${t('Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».')}</div>
+        <div class="fs-sec">${t('Поддержка')}</div>
+        <div class="hs-note">${t('Вопросы, проблемы и предложения — на почту')} <a class="hs-mail" href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></div>
         <div class="hs-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -421,8 +421,8 @@ function fmShowFrozen() {
     d.style.cssText = 'position:fixed;inset:0;z-index:99990;background:#0d1017;display:flex;align-items:center;justify-content:center;padding:24px;';
     d.innerHTML = '<div style="max-width:340px;text-align:center;">'
         + '<div style="font-size:34px;margin-bottom:14px;">🔒</div>'
-        + '<div style="font-size:17px;font-weight:700;color:#e8eaf6;margin-bottom:10px;">Доступ приостановлен</div>'
-        + '<div style="font-size:13.5px;line-height:1.55;color:#8990a8;">По платежу зафиксирован возврат средств. Доступ к приложению приостановлен до завершения проверки.</div>'
+        + '<div style="font-size:17px;font-weight:700;color:#e8eaf6;margin-bottom:10px;">' + t('Доступ приостановлен') + '</div>'
+        + '<div style="font-size:13.5px;line-height:1.55;color:#8990a8;">' + t('По платежу зафиксирован возврат средств. Доступ к приложению приостановлен до завершения проверки.') + '</div>'
         + '<div style="font-size:13px;margin-top:14px;"><a href="mailto:support@fmtr.click" style="color:#7aa2ff;">support@fmtr.click</a></div>'
         + '</div>';
     document.body.appendChild(d);
@@ -566,7 +566,7 @@ function openModuleSafe(file, fnName, label) {
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
-            Сначала запусти бота — он покажет возможности. За подключение живого канала начислится стартовый запас 300 Forge.
+            ${t('Сначала запусти бота — он покажет возможности. За подключение живого канала начислится стартовый запас 300 Forge.')}
         </div>
     `;
 
@@ -722,7 +722,7 @@ function renderChannelSelector(data) {
         const avEl = document.getElementById('pw-chav-el');
         if (avEl && ch.id) loadBottomSheetAvatar(ch.id, avEl);
     } else {
-        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav"><i class="ti ti-plus"></i></div><div class="pw-chinfo"><div class="pw-chn">Подключить канал</div><div class="pw-chnb">Метрики, публикация и оффер на Площадке</div></div><div class="pw-chchev"><i class="ti ti-chevron-right"></i></div></button>`;
+        host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav"><i class="ti ti-plus"></i></div><div class="pw-chinfo"><div class="pw-chn">${t('Подключить канал')}</div><div class="pw-chnb">${t('Метрики, публикация и оффер на Площадке')}</div></div><div class="pw-chchev"><i class="ti ti-chevron-right"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); if (typeof openChannels === 'function') openChannels(); });
     }
@@ -864,7 +864,7 @@ function pwRenderMetrics(pulse) {
         var vcls = '';
         var sub = m.sub ? `<span class="s">${escapeHtml(m.sub)}</span>` : '';
         if (id === 'subs' && pulse.subs_join_today != null) {
-            sub = `<span class="s"><span class="up">+${pulse.subs_join_today}</span> · <span class="dn">−${pulse.subs_left_today || 0}</span> сегодня</span>`;
+            sub = `<span class="s"><span class="up">+${pulse.subs_join_today}</span> · <span class="dn">−${pulse.subs_left_today || 0}</span> ${t('сегодня')}</span>`;
         }
         if (id === 'rr' && v != null) {
             var st = pulse.rr_status;
@@ -906,7 +906,7 @@ function pwRenderMetrics(pulse) {
         } else if (id === 'cpf') {
             if (pulse.cpf_fact != null) {
                 valTx = escapeHtml('≈' + pwRub(pulse.cpf_fact) + ' ₽');
-                sub = '<span class="s" style="color:#5DCAA5;">по замерам сделок</span>';
+                sub = '<span class="s" style="color:#5DCAA5;">' + t('по замерам сделок') + '</span>';
             } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
                 valTx = escapeHtml('≈' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' ₽');
                 var _tpR = (typeof window.t === 'function') ? window.t : function (x) { return x; };
@@ -1036,8 +1036,8 @@ function pwOpenPicker(pulse) {
     ov.className = 'pw-sheet-ov';
     ov.innerHTML = '<div class="pw-sheet" role="dialog" aria-label="Показатели канала">'
         + '<div class="pw-sheet-grip"></div>'
-        + '<div class="pw-sheet-h">Показатели канала</div>'
-        + '<div class="pw-sheet-sub">Выбери до ' + PW_MAX + ' показателей для главной</div>'
+        + '<div class="pw-sheet-h">' + t('Показатели канала') + '</div>'
+        + '<div class="pw-sheet-sub">' + t('Выбери до') + ' ' + PW_MAX + ' ' + t('показателей для главной') + '</div>'
         + '<div class="pw-sheet-list">'
         + PW_CATALOG.map(m => {
             var v = m.get(pulse), has = v != null, on = sel.has(m.id);
@@ -1053,7 +1053,7 @@ function pwOpenPicker(pulse) {
                 + '<span class="pw-opt-ck"><i class="ti ti-check"></i></span></button>';
         }).join('')
         + '</div>'
-        + '<button class="pw-sheet-done" id="pw-sheet-done" type="button">Готово</button>'
+        + '<button class="pw-sheet-done" id="pw-sheet-done" type="button">' + t('Готово') + '</button>'
         + '</div>';
     document.body.appendChild(ov);
     document.documentElement.classList.add('cs-modal-open');
@@ -1142,17 +1142,17 @@ function renderPulse(pulse) {
     host.innerHTML = `<div class="pw-pulse">
       <div class="pw-prow">
         <span class="pw-health ${h.c}">${pwHealthHtml(pulse, h)}</span>
-        <span class="pw-plink" id="pw-analyze">Разбор <i class="ti ti-chevron-right"></i></span>
+        <span class="pw-plink" id="pw-analyze">${t('Разбор')} <i class="ti ti-chevron-right"></i></span>
       </div>
-      <div class="pw-hlab">Охват · 30 дней</div>
+      <div class="pw-hlab">${t('Охват · 30 дней')}</div>
       <div class="pw-hbig pw-was">
         <span class="pw-wcell" id="pw-was-cell" hidden></span>
         <span class="pw-warr" id="pw-was-arr" hidden></span>
-        <span class="pw-wcell now" id="pw-now-cell">${heroNum}<span class="pw-wl">сейчас · на пост</span></span>
+        <span class="pw-wcell now" id="pw-now-cell">${heroNum}<span class="pw-wl">${t('сейчас · на пост')}</span></span>
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
-        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">Показатели канала</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">${t('Показатели канала')}</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
         <div class="pw-mmini" id="pw-mmini" hidden></div>
         <div class="pw-mwrap" id="pw-mwrap"><div class="pw-mrows" id="pw-mgrid"></div></div>
       </div>
@@ -1194,8 +1194,8 @@ function renderPulseHook(trendPct, planMeasured, planActive) {
     try { if ((+localStorage.getItem(hideKey) || 0) > Date.now()) { hook.innerHTML = ''; return; } } catch (e) {}
     const drop = Math.abs(trendPct);
     const tx = calibrated
-        ? `Калибровка завершена: замеры недели собраны. Новая неделя соберётся с их учётом.`
-        : `Охват снизился на <b>${drop}%</b> за 30 дней. Собери неделю постов по замерам канала.`;
+        ? `${t('Калибровка завершена: замеры недели собраны. Новая неделя соберётся с их учётом.')}`
+        : `${t('Охват снизился на')} <b>${drop}%</b> ${t('за 30 дней. Собери неделю постов по замерам канала.')}`;
     hook.innerHTML = `<div class="pw-aihook">`
         + `<span class="pw-aih-ic"><i class="ti ti-calendar"></i></span>`
         + `<div class="pw-aih-tx">${tx}</div>`
@@ -1258,7 +1258,8 @@ function pwRenderMM(r) {
         nowCell.innerHTML = '<span class="v num">' + r.mm_cur.toLocaleString('ru-RU') + '</span>' +
             '<span class="pw-wl num">' + (r.mm_cur_ym || '') + ' \u00b7 ' + _tm('на пост') + '</span>';
     } else {
-        nowCell.innerHTML = '<span class="pw-wn none">' + _tm('пока нет постов') + '</span>' +
+        nowCell.innerHTML = '<span class="pw-wn none">' +
+            _tm(r.mm_cur_fresh ? 'охват набирается' : 'пока нет постов') + '</span>' +
             '<span class="pw-wl num">' + (r.mm_cur_ym || '') + '</span>';
     }
 }
@@ -1309,7 +1310,7 @@ async function loadReachSeries() {
         } else {
             _reachLast = null;
             pwNoData(host, true);
-            host.innerHTML = '<div class="pw-empty">Динамика охвата накапливается — данные появятся позже</div>';
+            host.innerHTML = '<div class="pw-empty">' + t('Динамика охвата накапливается — данные появятся позже') + '</div>';
             pwRenderMM(r || {});
             renderPulseHook(null);
             if (r && r.stale === false) {
@@ -1326,7 +1327,7 @@ async function loadReachSeries() {
         if (ep !== _reachEpoch) return;
         _reachLast = null;
         _reachSigDom = null;
-        host.innerHTML = '<div class="pw-empty">Не удалось загрузить динамику</div>';
+        host.innerHTML = '<div class="pw-empty">' + t('Не удалось загрузить динамику') + '</div>';
         pwRenderMM({});
         renderPulseHook(null);
     }
@@ -1552,11 +1553,11 @@ function openHomeConfig() {
     }).join('');
     sheet.innerHTML = `
         <div class="bs-handle"></div>
-        <div class="hc-title">Главный экран</div>
-        <div class="hc-hint">Включай нужные функции и расставляй в своём порядке — перетаскивай за ручку.</div>
+        <div class="hc-title">${t('Главный экран')}</div>
+        <div class="hc-hint">${t('Включай нужные функции и расставляй в своём порядке — перетаскивай за ручку.')}</div>
         <div class="hc-list" id="hc-list">${rowsHtml}</div>
-        <button class="co-pay" id="hc-save"><i class="ti ti-check"></i> Сохранить</button>
-        <button class="co-close" id="hc-reset">Вернуть стандартный набор</button>
+        <button class="co-pay" id="hc-save"><i class="ti ti-check"></i> ${t('Сохранить')}</button>
+        <button class="co-close" id="hc-reset">${t('Вернуть стандартный набор')}</button>
     `;
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -1692,13 +1693,13 @@ async function hcSave(reset) {
     try {
         const r = await apiRequest('/api/v1/user/home-actions', { method: 'POST', body: JSON.stringify(body) });
         if (r && r.ok) {
-            showToast('Сохранено', 'check');
+            showToast(t('Сохранено'), 'check');
             closeHomeConfig();
             loadDashboard();
             return;
         }
     } catch (e) {}
-    showToast('Не удалось сохранить. Повтори попытку', 'alert-triangle');
+    showToast(t('Не удалось сохранить. Повтори попытку'), 'alert-triangle');
 }
 
 
@@ -1772,7 +1773,7 @@ function _tmFill(html) {
 }
 function _tmLoadingHtml() {
     return `<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
-        <div><h3>Команда канала</h3><div class="tm-sub">Роли и права админов на оффер</div></div></div>
+        <div><h3>${t('Команда канала')}</h3><div class="tm-sub">${t('Роли и права админов на оффер')}</div></div></div>
         <div style="padding:36px 0 28px;text-align:center;color:#565b73;"><i class="ti ti-loader-2" style="font-size:22px;display:inline-block;animation:spin .9s linear infinite;"></i></div>`;
 }
 function _tmRenderList(chs) {
@@ -1785,7 +1786,7 @@ function _tmRenderList(chs) {
             <i class="ti ti-chevron-right tm-chev"></i></div>`;
     }).join('');
     const sheet = _tmFill(`<div class="tm-title"><span class="tm-tile"><i class="ti ti-users"></i></span>
-        <div><h3>Команда канала</h3><div class="tm-sub">Роли и права — отдельно для каждого канала</div></div></div>
+        <div><h3>${t('Команда канала')}</h3><div class="tm-sub">${t('Роли и права — отдельно для каждого канала')}</div></div></div>
         <div class="tm-list">${rows}</div>`);
     sheet.querySelectorAll('[data-tmch]').forEach(el => {
         el.addEventListener('click', () => { hapticLight(); openTeamChannel(+el.dataset.tmch); });
@@ -1816,7 +1817,7 @@ async function openTeamChannel(chId) {
 function _tmHead(d) {
     const c = d.channel;
     return `<div class="tm-title">${_tmMulti ? '<button class="tm-back" id="tm-back"><i class="ti ti-arrow-left"></i></button>' : ''}<span class="tm-tile"><i class="ti ti-users"></i></span>
-        <div><h3>Команда канала</h3><div class="tm-sub">Кто и что может делать с оффером на Площадке</div></div></div>
+        <div><h3>${t('Команда канала')}</h3><div class="tm-sub">${t('Кто и что может делать с оффером на Площадке')}</div></div></div>
         <div class="tm-hero">${_tmAv(c.avatar_url, c.title, 'tm-av-hero')}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
         <div class="tm-tg">@${escapeHtml(c.username || '')}</div>
@@ -1830,11 +1831,11 @@ function _tmOwnerView(d) {
         const tgLab = m.tg_status === 'creator' ? 'Создатель канала'
             : (m.tg_status === 'administrator' ? 'Администратор' : 'Владелец в приложении');
         if (m.is_owner) {
-            const inApp = m.in_app === false ? ' · <span>ещё не заходил в приложение</span>' : '';
+            const inApp = m.in_app === false ? ' · <span>' + t('ещё не заходил в приложение') + '</span>' : '';
             return `<div class="tm-mem">${_tmAv(m.avatar_url, m.name, 'tm-av-own tm-avr-owner')}
                 <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
                 <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${tgLab}</span>${inApp}</div></div>
-                <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> Владелец</span></div>`;
+                <span class="tm-chip tm-r-owner"><i class="ti ti-crown"></i> ${t('Владелец')}</span></div>`;
         }
         return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${_tmAv(m.avatar_url, m.name, 'tm-avr-' + (m.role || 'none'))}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
@@ -1845,20 +1846,20 @@ function _tmOwnerView(d) {
     }).join('');
     const sheet = _tmFill(`${_tmHead(d)}
         <div class="tm-info">
-        <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.</p></div>
-        <div class="row"><span class="ic"><i class="ti ti-key"></i></span><p>Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.</p></div></div>
-        <div class="tm-sect"><span>Участники</span><span class="num"> · ${members.length}</span></div>
+        <div class="row"><span class="ic"><i class="ti ti-shield-check"></i></span><p>${t('Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.')}</p></div>
+        <div class="row"><span class="ic"><i class="ti ti-key"></i></span><p>${t('Каждый админ сразу — Управляющий. Удаление оффера и роли — только у создателя канала.')}</p></div></div>
+        <div class="tm-sect"><span>${t('Участники')}</span><span class="num"> · ${members.length}</span></div>
         <div class="tm-list" id="tm-mems">${memRows}</div>
-        <div class="tm-sect">Что может каждая роль</div>
+        <div class="tm-sect">${t('Что может каждая роль')}</div>
         <div class="tm-mtog" id="tm-mtog"><span class="ic"><i class="ti ti-adjustments-horizontal"></i></span>
-            <div class="t"><b>Настроить права вручную</b><span>галочками по каждой роли · пресеты — быстрый старт</span></div>
+            <div class="t"><b>${t('Настроить права вручную')}</b><span>${t('галочками по каждой роли · пресеты — быстрый старт')}</span></div>
             <span class="tm-sw${d.custom ? ' on' : ''}"></span></div>
         <div class="tm-matrix" id="tm-matrix"></div>
-        <div class="tm-mhint" id="tm-mhint" style="display:none;">Нажми на галочку, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.</div>
+        <div class="tm-mhint" id="tm-mhint" style="display:none;">${t('Нажми на галочку, чтобы дать или снять право у роли. Замочки — фиксированные права владельца и доверенного.')}</div>
         <div class="tm-savebar" id="tm-save" style="display:none;">
-            <button class="tm-btn" id="tm-reset">Сбросить к пресетам</button>
-            <button class="tm-btn tm-primary" id="tm-apply">Сохранить права</button></div>
-        <button class="tm-refresh" id="tm-refresh"><i class="ti ti-refresh"></i> Обновить из Telegram</button>`);
+            <button class="tm-btn" id="tm-reset">${t('Сбросить к пресетам')}</button>
+            <button class="tm-btn tm-primary" id="tm-apply">${t('Сохранить права')}</button></div>
+        <button class="tm-refresh" id="tm-refresh"><i class="ti ti-refresh"></i> ${t('Обновить из Telegram')}</button>`);
 
     const chId = d.channel.id;
     const isOwner = d.my_role === 'owner';
@@ -1880,7 +1881,7 @@ function _tmOwnerView(d) {
     const drawMatrix = () => {
         const cols = [['owner', 'Влад.'], ['trustee', 'Дов.'], ['manager', 'Упр.'], ['editor', 'Ред.'], ['viewer', 'Набл.']];
         const ownerP = { view: true, edit: true, pub: true, links: true, del: true, team: true, content: true, strategy: true };
-        let h = '<div class="tm-mxhead"><div class="a">Действие</div>' +
+        let h = '<div class="tm-mxhead"><div class="a">' + t('Действие') + '</div>' +
             cols.map(c => `<div class="tm-mxh h-${c[0]}"><span class="d"></span>${c[1]}</div>`).join('') + '</div>';
         TM_ACTS.forEach(a => {
             h += `<div class="tm-mxrow"><div class="tm-mxact"><span class="ic"><i class="ti ti-${a.ic}"></i></span><span>${a.t}</span></div>`;
@@ -1929,16 +1930,16 @@ function _tmOwnerView(d) {
         });
         try {
             const rr = await apiRequest('/api/v1/team/' + chId + '/perms', { method: 'POST', body: JSON.stringify({ perms }) });
-            if (rr && rr.ok) { showToast('Права сохранены', 'check'); openTeamChannel(chId); return; }
+            if (rr && rr.ok) { showToast(t('Права сохранены'), 'check'); openTeamChannel(chId); return; }
         } catch (e) {}
-        showToast('Не удалось сохранить права', 'alert-triangle');
+        showToast(t('Не удалось сохранить права'), 'alert-triangle');
     });
     sheet.querySelector('#tm-reset').addEventListener('click', async () => {
         try {
             const rr = await apiRequest('/api/v1/team/' + chId + '/perms', { method: 'POST', body: JSON.stringify({ reset: true }) });
-            if (rr && rr.ok) { showToast('Права сброшены к пресетам', 'check'); openTeamChannel(chId); return; }
+            if (rr && rr.ok) { showToast(t('Права сброшены к пресетам'), 'check'); openTeamChannel(chId); return; }
         } catch (e) {}
-        showToast('Не удалось сбросить', 'alert-triangle');
+        showToast(t('Не удалось сбросить'), 'alert-triangle');
     });
     sheet.querySelector('#tm-refresh').addEventListener('click', () => { hapticLight(); openTeamChannel(chId); });
     const bk = sheet.querySelector('#tm-back');
@@ -1961,7 +1962,7 @@ function _tmTogglePick(sheet, chId, m, isOwner) {
             <div class="tm-rw"><div class="tm-rn">${r.nm}</div><div class="tm-rd">${r.d}</div></div>
             <span class="tm-rk"><i class="ti ti-check"></i></span></div>`;
     }).join('');
-    box.innerHTML = `<div class="tm-rph"><span>Роль на Площадке</span> · <b>${escapeHtml(m.name || '')}</b></div>` + opts;
+    box.innerHTML = `<div class="tm-rph"><span>${t('Роль на Площадке')}</span> · <b>${escapeHtml(m.name || '')}</b></div>` + opts;
     box.style.display = 'block';
     localizeTree(box);
     box.querySelectorAll('[data-rset]').forEach(o => {
@@ -1982,7 +1983,7 @@ function _tmTogglePick(sheet, chId, m, isOwner) {
                     return;
                 }
                 showToast((rr && rr.error) || 'Не удалось назначить роль', 'alert-triangle');
-            } catch (e) { showToast('Не удалось назначить роль', 'alert-triangle'); }
+            } catch (e) { showToast(t('Не удалось назначить роль'), 'alert-triangle'); }
         });
     });
 }
@@ -2001,14 +2002,14 @@ function _tmMemberView(d) {
         return `<div class="tm-abtn${ok ? ' ok' : ''}"><i class="ti ti-${a[1]}"></i> ${a[2]}${ok ? '' : ' <span class="tm-lk"><i class="ti ti-lock"></i></span>'}</div>`;
     }).join('');
     const sheet = _tmFill(`${_tmHead(d)}
-        <div class="tm-sect">Твой доступ к офферу</div>
+        <div class="tm-sect">${t('Твой доступ к офферу')}</div>
         <div class="tm-mem tm-head"><span class="tm-rt ${role.cls} tm-rt-big"><i class="ti ti-${role.ic}"></i></span>
         <div class="tm-col"><div class="tm-nm">Ты — ${role.nm}</div><div class="tm-desc">${role.d || ''}</div></div></div>
-        <div class="tm-denied"><div class="dh"><i class="ti ti-lock"></i> Часть действий закрыта</div>
-        <p>Операции с замком доступны только ролям выше. Доступ выдаёт владелец канала в разделе «Команда».</p></div>
-        <div class="tm-sect">Доступные действия</div>
+        <div class="tm-denied"><div class="dh"><i class="ti ti-lock"></i> ${t('Часть действий закрыта')}</div>
+        <p>${t('Операции с замком доступны только ролям выше. Доступ выдаёт владелец канала в разделе «Команда».')}</p></div>
+        <div class="tm-sect">${t('Доступные действия')}</div>
         <div class="tm-actions">${btns}</div>
-        <div class="tm-mhint" style="display:block;">Оффер этого канала доступен в «Площадка → Мои офферы» с учётом твоей роли.</div>`);
+        <div class="tm-mhint" style="display:block;">${t('Оффер этого канала доступен в «Площадка → Мои офферы» с учётом твоей роли.')}</div>`);
     const bk = sheet.querySelector('#tm-back');
     if (bk) bk.addEventListener('click', () => { hapticLight(); openTeam(true); });
 }
@@ -2029,8 +2030,8 @@ function apConfirm(text, onYes) {
     const box = document.createElement('div');
     box.className = 'ap-confirm';
     box.innerHTML = `<div class="ap-cf-tx">${escapeHtml(text)}</div>
-        <div class="ap-cf-row"><button class="ap-cf-btn" id="ap-cf-no">Отмена</button>
-        <button class="ap-cf-btn yes" id="ap-cf-yes">Да, опубликовать</button></div>`;
+        <div class="ap-cf-row"><button class="ap-cf-btn" id="ap-cf-no">${t('Отмена')}</button>
+        <button class="ap-cf-btn yes" id="ap-cf-yes">${t('Да, опубликовать')}</button></div>`;
     document.body.appendChild(ov);
     document.body.appendChild(box);
     const close = () => { ov.remove(); box.remove(); };
@@ -2081,8 +2082,8 @@ async function openQueueSheet(channelId) {
     const sh = document.createElement('div');
     sh.className = 'bs-sheet ap-sheet';
     sh.innerHTML = `<div class="bs-handle"></div>
-        <div class="ap-title">Очередь публикаций</div>
-        <div class="ap-sub">Контент-план и отдельные посты — одна очередь</div>
+        <div class="ap-title">${t('Очередь публикаций')}</div>
+        <div class="ap-sub">${t('Контент-план и отдельные посты — одна очередь')}</div>
         <div id="ap-qbody" style="padding:26px 0;text-align:center;color:#565b73;"><i class="ti ti-loader-2" style="font-size:20px;display:inline-block;animation:spin .9s linear infinite;"></i></div>`;
     document.body.appendChild(ov);
     document.body.appendChild(sh);
@@ -2099,17 +2100,17 @@ async function openQueueSheet(channelId) {
         const body = sh.querySelector('#ap-qbody');
         if (!body) return;
         if (!d || !d.ok) {
-            body.innerHTML = `<div style="padding:8px 0;color:#8990a8;font-size:12px;"><span>Не удалось загрузить очередь</span></div>`;
+            body.innerHTML = `<div style="padding:8px 0;color:#8990a8;font-size:12px;"><span>${t('Не удалось загрузить очередь')}</span></div>`;
             localizeTree(body); return;
         }
         const row = (p) => {
             const src = p.from_plan ? '📋' : '✍️';
             const when = p.status === 'published' ? (p.published_at || p.scheduled_at) : p.scheduled_at;
             const st = p.status === 'queued' || p.status === 'publishing'
-                ? `<span class="ap-st q"><span>в очереди</span></span>`
+                ? `<span class="ap-st q"><span>${t('в очереди')}</span></span>`
                 : (p.status === 'published'
-                    ? `<span class="ap-st ok"><span>опубликован</span></span>`
-                    : `<span class="ap-st er"><span>ошибка</span></span>`);
+                    ? `<span class="ap-st ok"><span>${t('опубликован')}</span></span>`
+                    : `<span class="ap-st er"><span>${t('ошибка')}</span></span>`);
             const acts = p.status === 'queued'
                 ? `<button class="ap-qa" data-apmv="${p.id}" title="Перенести"><i class="ti ti-clock-edit"></i></button><button class="ap-qa" data-aprm="${p.id}" title="Убрать"><i class="ti ti-x"></i></button>`
                 : (p.status === 'failed'
@@ -2123,11 +2124,11 @@ async function openQueueSheet(channelId) {
         const hi = (d.history || []).map(row).join('');
         body.style.cssText = '';
         body.innerHTML =
-            (d.paused ? `<div class="ap-qerr" style="margin-bottom:8px;"><span>Канал на паузе — очередь остановлена, посты не выходят</span></div>` : '') +
-            `<div class="ap-qsec"><span>В очереди</span></div>` +
-            (up || `<div class="ap-qempty"><span>Запланированных постов нет</span></div>`) +
-            `<div class="ap-qsec"><span>История</span></div>` +
-            (hi || `<div class="ap-qempty"><span>Публикаций ещё не было</span></div>`);
+            (d.paused ? `<div class="ap-qerr" style="margin-bottom:8px;"><span>${t('Канал на паузе — очередь остановлена, посты не выходят')}</span></div>` : '') +
+            `<div class="ap-qsec"><span>${t('В очереди')}</span></div>` +
+            (up || `<div class="ap-qempty"><span>${t('Запланированных постов нет')}</span></div>`) +
+            `<div class="ap-qsec"><span>${t('История')}</span></div>` +
+            (hi || `<div class="ap-qempty"><span>${t('Публикаций ещё не было')}</span></div>`);
         localizeTree(body);
         body.querySelectorAll('[data-aprm]').forEach(b => b.addEventListener('click', async () => {
             hapticLight();
@@ -2488,7 +2489,7 @@ async function openCabinet(scrollTo) {
     showScreen('cabinet');
     const body = document.getElementById('cabinet-body');
     if (body && !cabinetData) {
-        body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Загрузка…</div>';
+        body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Загрузка…') + '</div>';
     }
     try {
         const data = await apiRequest('/api/v1/user/cabinet');
@@ -2499,7 +2500,7 @@ async function openCabinet(scrollTo) {
             if (sec) setTimeout(() => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
         }
     } catch (e) {
-        if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить кабинет.<br>Попробуй позже.</div>';
+        if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Не удалось загрузить кабинет.') + '<br>' + t('Попробуй позже.') + '</div>';
     }
 }
 
@@ -2524,7 +2525,7 @@ function cabRefLadder(r) {
     if (ci < 0) ci = 0;
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
-        const here = (i === ci && curKey === 'starter') ? '<span class="rf-here">ты здесь</span>' : '';
+        const here = (i === ci && curKey === 'starter') ? '<span class="rf-here">' + t('ты здесь') + '</span>' : '';
         const need = x.need > 0 ? `от ${cabNum(x.need)} ${plural3(x.need, 'оплатившего', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm" style="display:flex;align-items:center;gap:8px;"><span style="flex:1;min-width:0;">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}</span>${here}</span><b style="flex:0 0 auto;min-width:42px;text-align:right;font-size:13px;color:#c7cdff;font-variant-numeric:tabular-nums;">${x.rate_pct}%</b></div>${perks ? `<div class="perk">${escapeHtml(perks)}</div>` : ''}</div></div>`;
@@ -2539,17 +2540,17 @@ function refCardHtml(r) {
     const fBonus = r.friend_welcome_bonus || 100;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
-        ? `до <b>${escapeHtml(r.next_level_display)}</b> · ещё <b>${cabNum(r.needed_for_next)}</b> оплативших`
+        ? `${t('до')} <b>${escapeHtml(r.next_level_display)}</b> ${t('· ещё')} <b>${cabNum(r.needed_for_next)}</b> ${t('оплативших')}`
         : 'высший уровень';
     return `<div class="rf">
   <div class="rf-card">
-    <span class="rf-eyebrow">Приглашено по твоей ссылке</span>
+    <span class="rf-eyebrow">${t('Приглашено по твоей ссылке')}</span>
     <div class="rf-stats">
-      <div class="rf-stat"><div class="n">${cabNum(r.total_invited)}</div><div class="l">перешло</div></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.total_invited)}</div><div class="l">${t('перешло')}</div></div>
       <div class="rf-divx"></div>
-      <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">оплатили</div></div>
+      <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">${t('оплатили')}</div></div>
       <div class="rf-divx"></div>
-      <div class="rf-stat"><div class="n">${cabNum(r.forge_earned_total)}</div><div class="l">получено Forge</div></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.forge_earned_total)}</div><div class="l">${t('получено Forge')}</div></div>
     </div>
   </div>
 
@@ -2557,46 +2558,46 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей</span></div>
+        <div class="rf-rate"><b>${rate}%</b><span>${t('с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей')}</span></div>
         <div style="margin:9px 0 2px;border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;overflow:hidden;font-size:11.5px;">
-          <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>Приглашённый пополнил</span><span>Твоё начисление</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${t('Приглашённый пополнил')}</span><span>${t('Твоё начисление')}</span></div>
           ${[300, 900, 2500, 6000].map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${cabNum(v)} Forge</span><b class="num" style="color:#5DCAA5;">+${cabNum(Math.round(v * rate / 100))} Forge</b></div>`).join('')}
         </div>
         <p style="margin-top:8px;">Начисление автоматически после оплаты. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
       </div>
     </div>
     <div class="rf-bal">
-      <span class="k">Баланс</span>
+      <span class="k">${t('Баланс')}</span>
       <span class="v">${forgeAmount(r.forge_balance, 20)}</span>
-      <span class="e">на генерацию, аудиты и анализ</span>
+      <span class="e">${t('на генерацию, аудиты и анализ')}</span>
     </div>
   </div>
 
   <div class="rf-card">
     <div class="rf-lvltop">
-      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">твой уровень</div></div></div>
+      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">${t('твой уровень')}</div></div></div>
       <div class="rf-lvlnext">${nextLine}</div>
     </div>
     ${cabRefLadder(r)}
   </div>
 
   <div class="rf-card rf-glow">
-    <div class="rf-lbl" style="margin-top:0">Твоя ссылка</div>
+    <div class="rf-lbl" style="margin-top:0">${t('Твоя ссылка')}</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
     </div>
 
-    <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> Поделиться ссылкой</button>
-    <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> Скопировать текст приглашения</button>
+    <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> ${t('Поделиться ссылкой')}</button>
+    <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> ${t('Скопировать текст приглашения')}</button>
   </div>
 
   <div class="rf-how">
-    <span class="rf-eyebrow">Как это работает</span>
-    <div class="rf-hrow"><span class="rf-hnum">1</span><p>Передай ссылку админам каналов — лично или в своих постах.</p></div>
+    <span class="rf-eyebrow">${t('Как это работает')}</span>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>${t('Передай ссылку админам каналов — лично или в своих постах.')}</p></div>
     <div class="rf-hrow"><span class="rf-hnum">2</span><p>Приглашённый регистрируется по ней и получает −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">4</span><p>Достигнутый уровень фиксируется навсегда — ставка не снижается.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>${t('С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.')}</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">4</span><p>${t('Достигнутый уровень фиксируется навсегда — ставка не снижается.')}</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
@@ -2616,7 +2617,7 @@ async function openReferral() {
     hapticLight();
     showScreen('referral');
     const body = document.getElementById('referral-body');
-    if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Загрузка…</div>';
+    if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Загрузка…') + '</div>';
     else if (body && cabinetData) renderReferral(cabinetData);
     try {
         const data = await apiRequest('/api/v1/user/cabinet');
@@ -2624,7 +2625,7 @@ async function openReferral() {
         renderReferral(data);
         loadRefLeaderboard();
     } catch (e) {
-        if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">Не удалось загрузить.<br>Попробуй позже.</div>';
+        if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Не удалось загрузить.') + '<br>' + t('Попробуй позже.') + '</div>';
     }
 }
 
@@ -2638,7 +2639,7 @@ async function loadRefLeaderboard() {
         const me = r.me ? `<p class="rf-lbme">Твоя позиция: ${r.me}</p>` : '';
         const block = document.createElement('div');
         block.className = 'rf-how rf-lb';
-        block.innerHTML = `<span class="rf-eyebrow">Лидерборд недели</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Считаются приглашённые, подключившие живой канал за 7 дней.</p>`;
+        block.innerHTML = `<span class="rf-eyebrow">${t('Лидерборд недели')}</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">${t('Считаются приглашённые, подключившие живой канал за 7 дней.')}</p>`;
         const foot = host.querySelector('.rf-foot');
         if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
         localizeTree(block);
@@ -2741,7 +2742,7 @@ function renderCabinet(d) {
         const chActive = (u.channels_active != null) ? u.channels_active : chN;
         const chLim = (u.channels_limit && u.channels_limit < 999999) ? u.channels_limit : null;
         const chMain = chPaused > 0 ? chActive : chN;
-        const chOf = chLim ? ` <s><span>из</span> ${cabNum(chLim)}</s>` : '';
+        const chOf = chLim ? ` <s><span>${t('из')}</span> ${cabNum(chLim)}</s>` : '';
         const chLabel = chPaused > 0
             ? `${plural3(chMain, 'канал', 'канала', 'каналов')} · ${cabNum(chPaused)} на паузе`
             : plural3(chMain, 'канал', 'канала', 'каналов');
@@ -2756,10 +2757,10 @@ function renderCabinet(d) {
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">Команда канала</div><div class="cab-sd">Роли и права админов на оффер</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">Уведомления</div><div class="cab-sd">Заявки в нише, отклики, статусы офферов</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">Тема оформления</div><div class="cab-sd">Тёмная фирменная · выбор тем</div></div><span class="cab-soon">Скоро</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">Справка и поддержка</div><div class="cab-sd">Метрики, Forge, связь с нами</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">Пользовательское соглашение</div><div class="cab-sd">Условия использования сервиса</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">${t('Команда канала')}</div><div class="cab-sd">${t('Роли и права админов на оффер')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">${t('Уведомления')}</div><div class="cab-sd">${t('Заявки в нише, отклики, статусы офферов')}</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">${t('Тема оформления')}</div><div class="cab-sd">${t('Тёмная фирменная · выбор тем')}</div></div><span class="cab-soon">${t('Скоро')}</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">${t('Справка и поддержка')}</div><div class="cab-sd">${t('Метрики, Forge, связь с нами')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">${t('Пользовательское соглашение')}</div><div class="cab-sd">${t('Условия использования сервиса')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
-    html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>На информационном ресурсе применяются рекомендательные технологии</span></div>`;
+    html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>${t('На информационном ресурсе применяются рекомендательные технологии')}</span></div>`;
 
     body.innerHTML = html;
     wireCabinet(d);
@@ -2776,13 +2777,13 @@ function maybeShowTermsGate(data) {
     bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;padding:0 12px;';
     bg.innerHTML = '<div style="background:#11141f;border:0;border-top:1.5px solid rgba(255,255,255,0.38);border-radius:22px 22px 0 0;box-shadow:0 -26px 64px rgba(0,0,0,0.75),0 1px 0 rgba(255,255,255,0.08) inset;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
         '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
-        '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>Пользовательское соглашение</span></div>' +
-        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>Перед началом работы подтвердите согласие с условиями использования сервиса.</span></div>' +
-        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>Читать пользовательское соглашение</span></button>' +
+        '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>' + t('Пользовательское соглашение') + '</span></div>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>' + t('Перед началом работы подтвердите согласие с условиями использования сервиса.') + '</span></div>' +
+        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>' + t('Читать пользовательское соглашение') + '</span></button>' +
         '<div id="fm-tgChk" style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;margin-bottom:12px;">' +
         '<span id="fm-tgBox" style="flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;color:transparent;font-size:13px;margin-top:1px;transition:all 140ms;"><i class="ti ti-check"></i></span>' +
-        '<span style="font-size:12px;line-height:1.45;color:#c2c6d2;"><span>Я ознакомился с условиями и принимаю их</span></span></div>' +
-        '<button id="fm-tgOk" disabled style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;opacity:0.38;pointer-events:none;transition:opacity 160ms;"><span>Принимаю условия</span></button></div>';
+        '<span style="font-size:12px;line-height:1.45;color:#c2c6d2;"><span>' + t('Я ознакомился с условиями и принимаю их') + '</span></span></div>' +
+        '<button id="fm-tgOk" disabled style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;opacity:0.38;pointer-events:none;transition:opacity 160ms;"><span>' + t('Принимаю условия') + '</span></button></div>';
     document.body.appendChild(bg);
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
@@ -2826,8 +2827,8 @@ function openUserTerms() {
     bg.addEventListener('touchmove', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
     bg.addEventListener('wheel', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
     bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;">' +
-        '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>Пользовательское соглашение</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
-        '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>Загружаю…</span></div></div>';
+        '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>' + t('Пользовательское соглашение') + '</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
+        '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>' + t('Загружаю…') + '</span></div></div>';
     document.body.appendChild(bg);
     const closeTerms = () => {
         document.body.style.overflow = prevBodyOv;
@@ -2844,7 +2845,7 @@ function openUserTerms() {
     const s = document.createElement('script');
     s.src = 'terms.js?v=20260812a';
     s.onload = paint;
-    s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>Не удалось загрузить документ. Проверь связь и повтори попытку.</span>'; };
+    s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>' + t('Не удалось загрузить документ. Проверь связь и повтори попытку.') + '</span>'; };
     document.head.appendChild(s);
 }
 
@@ -2937,13 +2938,13 @@ async function openTariffs() {
     fmTrack('tariffs');
     showScreen('tariffs');
     const body = document.getElementById('tariffs-body');
-    if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Загрузка…</div>';
+    if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' + t('Загрузка…') + '</div>';
     try {
         const data = await apiRequest('/api/v1/user/tariffs');
         tariffsData = data;
         renderTariffs(data);
     } catch (e) {
-        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">Не удалось загрузить витрину Forge.</div>';
+        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' + t('Не удалось загрузить витрину Forge.') + '</div>';
     }
 }
 
@@ -3077,7 +3078,7 @@ function tfcRow(d, o) {
     return '<div class="tfc-op ' + cls + '" data-tfcrow="' + o.key + '" style="--p:' + pct + '%">'
         + '<div class="tfc-top"><span class="tfc-nm">'
         + escapeHtml(TFC_SHORT[o.key] || o.label)
-        + ' <i>· ' + forgeAmount(o.price, 11) + '/шт</i></span>'
+        + ' <i>· ' + forgeAmount(o.price, 11) + t('/шт') + '</i></span>'
         + '<span class="tfc-v' + (val ? '' : ' zero') + '">' + cabNum(val) + '</span></div>'
         + '<div class="tfc-ctl">'
         + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="-1"' + (val <= 0 ? ' disabled' : '') + '>−</button>'
@@ -3114,15 +3115,15 @@ function tfCalculatorHtml(d) {
 
     const head = '<button class="tfc-head" id="tfc-toggle">'
         + '<span class="et">' + forgeIco(17) + '</span>'
-        + '<span class="tfc-htxt"><b>Калькулятор Forge</b>'
-        + '<i>Посчитай, на что хватит пакета</i></span>'
+        + '<span class="tfc-htxt"><b>' + t('Калькулятор Forge') + '</b>'
+        + '<i>' + t('Посчитай, на что хватит пакета') + '</i></span>'
         + '<i class="ti ti-chevron-' + (tfCalc.shown ? 'up' : 'down') + ' tfc-chev"></i></button>';
 
     if (!tfCalc.shown) return '<div class="tf-extras tfc collapsed">' + head + '</div>';
 
     return '<div class="tf-extras tfc">'
         + head
-        + '<div class="tfc-sub">Ползунок остановится, когда Forge закончатся</div>'
+        + '<div class="tfc-sub">' + t('Ползунок остановится, когда Forge закончатся') + '</div>'
         + '<div class="tfc-presets">' + TFC_PRESETS.map((p, i) =>
             '<button class="tfc-chip tp-' + (p.color || 'pu')
             + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
@@ -3138,7 +3139,7 @@ function tfCalculatorHtml(d) {
         + '<span class="tfc-bt"><small>'
         + (rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить') + '</small>'
         + '<b>' + forgeAmount(rest, 15) + '</b>'
-        + '<i>из пакета ' + escapeHtml(t.name)
+        + '<i>' + t('из пакета') + ' ' + escapeHtml(t.name)
         + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '')
         + '</i></span></div>'
         + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
@@ -3271,12 +3272,12 @@ function renderTariffs(d) {
     const grantH = Number(d.forge_grant || 0);
     const lowH = grantH > 0 && balH < grantH * 0.15;
     let html = `<div class="cab-card" style="margin-bottom:10px;">` +
-        `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> Баланс Forge</h3></div>` +
+        `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> ${t('Баланс Forge')}</h3></div>` +
         `<div class="fw-balrow${lowH ? ' low' : ''}">` +
             `<div class="fw-bal">${forgeAmount(balH, 22)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
         `</div></div>`;
-    html += '<div class="tf-note"><b>Без тарифов и подписок</b> — <span>Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.</span></div>';
+    html += '<div class="tf-note"><b>' + t('Без тарифов и подписок') + '</b> — <span>' + t('Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.') + '</span></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -3284,17 +3285,17 @@ function renderTariffs(d) {
         (p.discount_pct > 0 ? `<span class="fw-pack-d">−${p.discount_pct}%</span>` : '') +
         `</button>`).join('');
     if (packs) {
-        html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> Пополнить баланс Forge</div>` +
-            `<div class="tf-sub" style="margin:-2px 0 10px;">Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов</div>` +
+        html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> ${t('Пополнить баланс Forge')}</div>` +
+            `<div class="tf-sub" style="margin:-2px 0 10px;">${t('Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов')}</div>` +
             `<div class="fw-packs">${packs}</div>`;
         const prices = fwPriceRows(d.forge_prices);
-        if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">Сколько стоят действия <i class="ti ti-chevron-down"></i></div>` +
+        if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">${t('Сколько стоят действия')} <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-prices" id="tf-prices" hidden>${prices}</div>`;
         const histRows = (d.forge_history || []).slice(0, 12).map(tx =>
             `<div class="fw-trow"><div class="fw-ti"><span>${escapeHtml(forgeTxLabel(tx))}</span>` +
             `<i>${escapeHtml(forgeTxDate(tx.created_at))}</i></div>` +
             `<b class="${tx.amount > 0 ? 'pos' : ''}">${tx.amount > 0 ? '+' : '−'}${cabNum(Math.abs(tx.amount))}</b></div>`).join('');
-        if (histRows) html += `<div class="fw-sec fw-toggle" id="tf-hist-t">История операций <i class="ti ti-chevron-down"></i></div>` +
+        if (histRows) html += `<div class="fw-sec fw-toggle" id="tf-hist-t">${t('История операций')} <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-hist" id="tf-hist" hidden>${histRows}</div>`;
         html += `</div>`;
     }
@@ -3348,7 +3349,7 @@ function openCheckout(opts) {
     sheet.className = 'bs-sheet co-sheet';
     sheet.innerHTML = `
         <div class="bs-handle"></div>
-        <div class="co-title">Оформление заказа</div>
+        <div class="co-title">${t('Оформление заказа')}</div>
         <div class="co-plan">
           <div class="co-tile co-t-${opts.color || 'pu'}"><i class="ti ti-${opts.icon || 'package'}"></i></div>
           <div class="co-plan-info">
@@ -3359,14 +3360,14 @@ function openCheckout(opts) {
         </div>
         <div class="co-rows">
           <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
-          <div class="co-row co-total"><span>К оплате</span><span class="co-sum">${cabNum(price)} ₽</span></div>
+          <div class="co-row co-total"><span>${t('К оплате')}</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
         <div class="co-methods" style="display:flex;gap:8px;margin:10px 0 2px;">
-          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> СБП</button>
-          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> Карта</button>
+          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> ${t('СБП')}</button>
+          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> ${t('Карта')}</button>
         </div>
         <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> Оплатить ${cabNum(price)} ₽</button>
-        <button class="co-close">Закрыть</button>
+        <button class="co-close">${t('Закрыть')}</button>
     `;
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -3398,7 +3399,7 @@ function coPayPending(sheet, title, sub) {
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
           <div class="co-pend-t">${escapeHtml(title)}</div>
           <div class="co-pend-s">${escapeHtml(sub)}</div>
-          <button class="co-close">Закрыть</button>
+          <button class="co-close">${t('Закрыть')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
@@ -3409,9 +3410,9 @@ function coPayDone(sheet, name) {
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic ok"><i class="ti ti-circle-check"></i></div>
-          <div class="co-pend-t">Оплачено</div>
+          <div class="co-pend-t">${t('Оплачено')}</div>
           <div class="co-pend-s">${escapeHtml(name)} — доступ уже открыт.</div>
-          <button class="co-close">Отлично</button>
+          <button class="co-close">${t('Отлично')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', () => {
@@ -3454,7 +3455,7 @@ async function coPay(opts) {
 
     if (opts.pay) {
         const btn = sheet.querySelector('[data-copay]');
-        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> Готовим оплату…'; }
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + t('Готовим оплату…'); }
 
         const payMethod = (_coCtx && _coCtx.method) || 'sbp';
         let res = null;
@@ -3502,9 +3503,9 @@ async function coPay(opts) {
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
-          <div class="co-pend-t">Приём платежей подключается</div>
-          <div class="co-pend-s">Оплата станет доступна в ближайшее время. Мы уведомим, когда оплата откроется.</div>
-          <button class="co-close">Закрыть</button>
+          <div class="co-pend-t">${t('Приём платежей подключается')}</div>
+          <div class="co-pend-s">${t('Оплата станет доступна в ближайшее время. Мы уведомим, когда оплата откроется.')}</div>
+          <button class="co-close">${t('Закрыть')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
@@ -3670,7 +3671,7 @@ async function openPostCreate() {
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
         els.postLimitBanner.classList.add('plain');
-        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Загружаю баланс...</span>';
+        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + t('Загружаю баланс...') + '</span>';
     }
 
     state.post.useChannelStyle = true;
@@ -3699,7 +3700,7 @@ async function openPostCreate() {
     } catch (err) {
         console.error('Failed to load limits/channel:', err);
         if (els.postLimitBanner) {
-            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>Не удалось загрузить баланс</span>';
+            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + t('Не удалось загрузить баланс') + '</span>';
             els.postLimitBanner.classList.add('exhausted', 'plain');
         }
     }
@@ -3849,7 +3850,7 @@ async function loadTopicIdeas() {
         renderTopicIdeas(result.ideas || []);
     } catch (err) {
         console.warn('Ideas failed:', err);
-        showToast('Не удалось получить идеи — попробуй ещё раз', 'alert-triangle');
+        showToast(t('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
     } finally {
         btn.classList.remove('loading');
         if (iconEl) iconEl.className = 'ti ti-bulb';
@@ -3860,7 +3861,7 @@ function renderTopicIdeas(ideas) {
     const list = document.getElementById('post-ideas-list');
     if (!list) return;
     if (!ideas.length) {
-        showToast('Не удалось получить идеи — попробуй ещё раз', 'alert-triangle');
+        showToast(t('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
         return;
     }
     list.innerHTML = '';
@@ -3905,8 +3906,8 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector empty">
                 <div class="post-channel-selector-avatar"><i class="ti ti-plus"></i></div>
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">Канал не выбран</div>
-                    <div class="post-channel-selector-title">Подключи канал</div>
+                    <div class="post-channel-selector-eyebrow">${t('Канал не выбран')}</div>
+                    <div class="post-channel-selector-title">${t('Подключи канал')}</div>
                 </div>
                 <i class="ti ti-chevron-right post-channel-selector-chev"></i>
             </div>
@@ -3934,7 +3935,7 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector has-style">
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">Пишу в стиле</div>
+                    <div class="post-channel-selector-eyebrow">${t('Пишу в стиле')}</div>
                     <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
                 </div>
                 <i class="ti ti-chevron-down post-channel-selector-chev"></i>
@@ -3945,10 +3946,10 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector no-style">
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">Активный канал</div>
+                    <div class="post-channel-selector-eyebrow">${t('Активный канал')}</div>
                     <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-alert-triangle post-channel-selector-warn"></i></div>
                     <div class="post-channel-selector-hint">
-                        Стиль не настроен — пишу нейтрально. <a href="#" data-pcs-upload="${channel.id}">Загрузить примеры →</a>
+                        ${t('Стиль не настроен — пишу нейтрально.')} <a href="#" data-pcs-upload="${channel.id}">${t('Загрузить примеры →')}</a>
                     </div>
                 </div>
                 <i class="ti ti-chevron-down post-channel-selector-chev"></i>
@@ -4022,7 +4023,7 @@ function renderStyleToggle(canEnable, defaultOn) {
 
     const lim = (state.post && state.post.limits) || {};
     const pausedNote = (!canEnable && lim.channel_paused)
-        ? '<span class="post-style-why">канал на паузе — стиль недоступен</span>' : '';
+        ? '<span class="post-style-why">' + t('канал на паузе — стиль недоступен') + '</span>' : '';
 
     toggle.innerHTML = `
         <div class="post-style-toggle ${canEnable ? '' : 'disabled'}">
@@ -4536,16 +4537,16 @@ function renderDeletedChannels(deleted, intoEmpty) {
                     <div class="channels-deleted-timer">Будет стёрт из системы через ${countdown}</div>
                 </div>
                 <div class="channels-deleted-actions">
-                    <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">Вернуть</button>
-                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">Удалить полностью</button>
+                    <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">${t('Вернуть')}</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">${t('Удалить полностью')}</button>
                 </div>
             </div>
         `;
     }).join('');
 
     box.innerHTML = `
-        <div class="channels-deleted-label">Недавно удалённые</div>
-        <div class="channels-deleted-hint">Каналы хранятся 7 дней, потом стираются из системы. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.</div>
+        <div class="channels-deleted-label">${t('Недавно удалённые')}</div>
+        <div class="channels-deleted-hint">${t('Каналы хранятся 7 дней, потом стираются из системы. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.')}</div>
         ${items}
     `;
     box.style.display = '';
@@ -4735,7 +4736,7 @@ function renderAddMoreOrLimit(data) {
     limitBox.innerHTML = `
         <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
         <div class="channels-limit-title">Каналов подключено: ${used} из ${limit}</div>
-        <div class="channels-limit-sub">Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.</div>
+        <div class="channels-limit-sub">${t('Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.')}</div>
     `;
     limitBox.style.display = '';
 }
@@ -4747,42 +4748,42 @@ function renderVoiceStatus(ch) {
     const n = ch.voice_posts_analyzed || 0;
 
     if (status === 'collecting') {
-        return `<span class="channel-card-feat-val voice-collecting"><span class="voice-pulse-dot"></span>Настраивается...</span>`;
+        return `<span class="channel-card-feat-val voice-collecting"><span class="voice-pulse-dot"></span>${t('Настраивается...')}</span>`;
     }
 
     if (status === 'done' && quality === 'full') {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Настроен</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Настроен')}</span>`;
     }
 
     if (status === 'done' && quality === 'weak') {
-        return `<span class="channel-card-feat-val warn">Слабый — мало материала</span>`;
+        return `<span class="channel-card-feat-val warn">${t('Слабый — мало материала')}</span>`;
     }
 
     if (status === 'done' && quality === 'strategy') {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Задан стратегом</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Задан стратегом')}</span>`;
     }
 
     if (status === 'failed' && quality === 'private') {
-        return `<span class="channel-card-feat-val warn">Приватный — загрузи примеры</span>`;
+        return `<span class="channel-card-feat-val warn">${t('Приватный — загрузи примеры')}</span>`;
     }
 
     if (status === 'failed' && quality === 'no_text') {
-        return `<span class="channel-card-feat-val warn">Нет текста в постах</span>`;
+        return `<span class="channel-card-feat-val warn">${t('Нет текста в постах')}</span>`;
     }
 
     if (status === 'failed' && quality === 'no_posts') {
-        return `<span class="channel-card-feat-val warn">Постов пока нет</span>`;
+        return `<span class="channel-card-feat-val warn">${t('Постов пока нет')}</span>`;
     }
 
     if (status === 'pending') {
-        return `<span class="channel-card-feat-val warn">Соберём при пополнении баланса</span>`;
+        return `<span class="channel-card-feat-val warn">${t('Соберём при пополнении баланса')}</span>`;
     }
 
     if (ch.has_voice) {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> Настроен</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Настроен')}</span>`;
     }
 
-    return `<span class="channel-card-feat-val warn">Не настроен</span>`;
+    return `<span class="channel-card-feat-val warn">${t('Не настроен')}</span>`;
 }
 
 
@@ -4892,32 +4893,32 @@ function renderChannelCard(ch) {
 
     let badge;
     if (paused) {
-        badge = `<div class="channel-card-badge paused"><i class="ti ti-player-pause"></i><span>На паузе</span></div>`;
+        badge = `<div class="channel-card-badge paused"><i class="ti ti-player-pause"></i><span>${t('На паузе')}</span></div>`;
     } else if (connected) {
-        badge = `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>Подключён</span></div>`;
+        badge = `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>${t('Подключён')}</span></div>`;
     } else {
-        badge = `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>Только анализ</span></div>`;
+        badge = `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>${t('Только анализ')}</span></div>`;
     }
 
-    const okIcon = `<i class="ti ti-check"></i> Доступно`;
-    const lockTxt = `<i class="ti ti-lock"></i> Нужен бот-админ`;
+    const okIcon = `<i class="ti ti-check"></i> ${t('Доступно')}`;
+    const lockTxt = `<i class="ti ti-lock"></i> ${t('Нужен бот-админ')}`;
 
     let feats = '';
     if (connected) {
         const pub = ch.bot_can_post
             ? `<span class="channel-card-feat-val ok">${okIcon}</span>`
-            : `<span class="channel-card-feat-val warn">Нет прав на публикацию</span>`;
+            : `<span class="channel-card-feat-val warn">${t('Нет прав на публикацию')}</span>`;
         const voice = renderVoiceStatus(ch);
         feats = `
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span>${pub}</div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok ap-qlink" onclick="event.stopPropagation();window.__openQueue&&window.__openQueue(${ch.id})">Очередь публикаций <i class="ti ti-chevron-right"></i></span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Стиль письма</span>${voice}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Публикация постов')}</span>${pub}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Автопостинг')}</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok ap-qlink" onclick="event.stopPropagation();window.__openQueue&&window.__openQueue(${ch.id})">Очередь публикаций <i class="ti ti-chevron-right"></i></span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Стиль письма')}</span>${voice}</div>
         `;
     } else {
         feats = `
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Анализ и стиль</span><span class="channel-card-feat-val ok">${okIcon}</span></div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Публикация постов</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">Автопостинг</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Анализ и стиль')}</span><span class="channel-card-feat-val ok">${okIcon}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Публикация постов')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Автопостинг')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
         `;
     }
 
@@ -4925,15 +4926,15 @@ function renderChannelCard(ch) {
         <div class="channels-demo-warning">
             <i class="ti ti-flask"></i>
             <div>
-                <div class="channels-demo-warning-title">Демо-режим</div>
-                <div class="channels-demo-warning-text">Анализ и стиль работают. Для публикации и автопостинга добавь бота админом.</div>
+                <div class="channels-demo-warning-title">${t('Демо-режим')}</div>
+                <div class="channels-demo-warning-text">${t('Анализ и стиль работают. Для публикации и автопостинга добавь бота админом.')}</div>
             </div>
         </div>`;
 
     const cta = connected ? '' : `
         <div class="channels-cta">
-            <div class="channels-cta-text">Хочешь публиковать и автопостить?</div>
-            <button class="channels-cta-btn" onclick="window.__toggleListInstruction&&window.__toggleListInstruction()">Как подключить полностью →</button>
+            <div class="channels-cta-text">${t('Хочешь публиковать и автопостить?')}</div>
+            <button class="channels-cta-btn" onclick="window.__toggleListInstruction&&window.__toggleListInstruction()">${t('Как подключить полностью →')}</button>
         </div>`;
 
     return `
@@ -4987,7 +4988,7 @@ async function openChannelSettingsScreen(channelId) {
     host.innerHTML = `
         <div class="channel-settings-loading">
             <div class="spinner"></div>
-            <div>Загружаю настройки канала...</div>
+            <div>${t('Загружаю настройки канала...')}</div>
         </div>
     `;
     host.style.display = 'flex';
@@ -5021,8 +5022,8 @@ async function openChannelSettingsScreen(channelId) {
         host.innerHTML = `
             <div class="channel-settings-loading">
                 <i class="ti ti-alert-triangle" style="font-size: 28px; color: #F0997B;"></i>
-                <div>Не удалось загрузить настройки</div>
-                <button class="cs-errback" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i><span>Назад</span></button>
+                <div>${t('Не удалось загрузить настройки')}</div>
+                <button class="cs-errback" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i><span>${t('Назад')}</span></button>
             </div>
         `;
     }
@@ -5079,7 +5080,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
         itemsHtml = `
             <div class="bs-empty">
                 <div class="bs-empty-icon"><i class="ti ti-broadcast-off"></i></div>
-                <div>Нет каналов для выбора</div>
+                <div>${t('Нет каналов для выбора')}</div>
             </div>
         `;
     } else {
@@ -5100,7 +5101,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 : `<i class="ti ti-chevron-right bs-item-icon-right"></i>`;
 
             const pausedChip = it.paused
-                ? `<span class="bs-item-chip"><i class="ti ti-player-pause"></i>Пауза</span>`
+                ? `<span class="bs-item-chip"><i class="ti ti-player-pause"></i>${t('Пауза')}</span>`
                 : '';
 
             return `
@@ -5345,12 +5346,12 @@ async function openActiveChannelSelector(opts) {
                         await loadDashboard();
                     }
                 } catch (e) {
-                    showToast('Не удалось переключить канал', 'alert-triangle');
+                    showToast(t('Не удалось переключить канал'), 'alert-triangle');
                 }
             },
         });
     } catch (e) {
-        showToast('Не удалось загрузить каналы', 'alert-triangle');
+        showToast(t('Не удалось загрузить каналы'), 'alert-triangle');
     } finally {
         _chSelectorBusy = false;
         if (selector) selector.classList.remove('loading');
@@ -5415,7 +5416,7 @@ function renderSettingsLimitsBar(limits) {
         <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">Обновление стиля<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
+                <span class="limit-row-label">${t('Обновление стиля')}<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
                 <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
             <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
@@ -5442,7 +5443,7 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-ok">
                 <i class="ti ti-circle-check"></i>
-                <span>Стиль настроен</span>
+                <span>${t('Стиль настроен')}</span>
                 <span class="cs-status-meta">${qualityLabel}</span>
             </div>
         `;
@@ -5450,8 +5451,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-voice-card">
                 <div class="cs-voice-text" id="cs-voice-text">${escapeHtml(data.voice_summary)}</div>
                 <div class="cs-voice-actions">
-                    <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> Изменить</button>
-                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> Пересобрать</button>
+                    <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> ${t('Изменить')}</button>
+                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${t('Пересобрать')}</button>
                 </div>
             </div>
         `;
@@ -5459,7 +5460,7 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-collecting">
                 <span class="voice-pulse-dot"></span>
-                <span>Стиль собирается...</span>
+                <span>${t('Стиль собирается...')}</span>
             </div>
         `;
     } else if (status === 'failed' && quality === 'private') {
@@ -5467,8 +5468,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">Стиль не настроен</div>
-                    <div class="cs-status-warn-text">Канал приватный — я не могу прочитать историю. Загрузи 3-5 примеров постов чтобы AI понял твой стиль.</div>
+                    <div class="cs-status-warn-title">${t('Стиль не настроен')}</div>
+                    <div class="cs-status-warn-text">${t('Канал приватный — я не могу прочитать историю. Загрузи 3-5 примеров постов чтобы AI понял твой стиль.')}</div>
                 </div>
             </div>
         `;
@@ -5477,8 +5478,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">Постов пока нет</div>
-                    <div class="cs-status-warn-text">В канале нет постов для анализа. Опубликуй несколько постов и нажми «Пересобрать», или загрузи примеры вручную.</div>
+                    <div class="cs-status-warn-title">${t('Постов пока нет')}</div>
+                    <div class="cs-status-warn-text">${t('В канале нет постов для анализа. Опубликуй несколько постов и нажми «Пересобрать», или загрузи примеры вручную.')}</div>
                 </div>
             </div>
         `;
@@ -5487,8 +5488,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">Не удалось настроить стиль</div>
-                    <div class="cs-status-warn-text">Попробуй загрузить примеры вручную.</div>
+                    <div class="cs-status-warn-title">${t('Не удалось настроить стиль')}</div>
+                    <div class="cs-status-warn-text">${t('Попробуй загрузить примеры вручную.')}</div>
                 </div>
             </div>
         `;
@@ -5496,14 +5497,14 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-neutral">
                 <i class="ti ti-clock"></i>
-                <span>Стиль ещё не настроен</span>
+                <span>${t('Стиль ещё не настроен')}</span>
             </div>
         `;
     }
 
     return `
         <div class="cs-section">
-            <div class="cs-section-title">Стиль письма</div>
+            <div class="cs-section-title">${t('Стиль письма')}</div>
             ${statusBadge}
             ${bodyHtml}
         </div>
@@ -5533,8 +5534,8 @@ function renderSettingsExamplesSection(data) {
                     maxlength="5000"
                 ></textarea>
                 <div class="cs-examples-footer">
-                    <span class="cs-examples-count" id="cs-examples-count">0 / 5000 символов</span>
-                    <button class="cs-btn-primary" id="cs-examples-apply" disabled>Применить</button>
+                    <span class="cs-examples-count" id="cs-examples-count">${t('0 / 5000 символов')}</span>
+                    <button class="cs-btn-primary" id="cs-examples-apply" disabled>${t('Применить')}</button>
                 </div>
             </div>
         </div>
@@ -5550,7 +5551,7 @@ function renderSettingsBehaviorSection(data) {
 
     return `
         <div class="cs-section">
-            <div class="cs-section-title">Поведение</div>
+            <div class="cs-section-title">${t('Поведение')}</div>
 
             <div class="cs-toggle-row" data-toggle="paused">
                 <div class="cs-toggle-icon-wrap">
@@ -5563,7 +5564,7 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                     <div class="cs-toggle-sub">${paused ? 'Генерация постов отключена' : 'Можно генерировать посты'}</div>
                     <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
-                        Когда канал на паузе, контент-план ничего не публикует автоматически. Бот остаётся подключённым, настройки и стиль сохраняются.
+                        ${t('Когда канал на паузе, контент-план ничего не публикует автоматически. Бот остаётся подключённым, настройки и стиль сохраняются.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${!paused ? 'on' : ''}" data-toggle-target="paused">
@@ -5577,12 +5578,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">Нецензурная лексика</span>
+                        <span class="cs-toggle-title">${t('Нецензурная лексика')}</span>
                         <button class="cs-info-btn" data-info="profanity" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${profanity ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию'}</div>
                     <div class="cs-info-popup" id="cs-info-profanity" style="display:none;">
-                        Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.
+                        ${t('Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${profanity ? 'on' : ''}" data-toggle-target="profanity">
@@ -5596,12 +5597,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">Открытые опросы</span>
+                        <span class="cs-toggle-title">${t('Открытые опросы')}</span>
                         <button class="cs-info-btn" data-info="polls" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${openPolls ? 'Разрешены вопросы в комментарии' : 'Только анонимные опросы реакциями'}</div>
                     <div class="cs-info-popup" id="cs-info-polls" style="display:none;">
-                        Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.
+                        ${t('Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${openPolls ? 'on' : ''}" data-toggle-target="polls">
@@ -5615,12 +5616,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">Ссылки на исследования</span>
+                        <span class="cs-toggle-title">${t('Ссылки на исследования')}</span>
                         <button class="cs-info-btn" data-info="research" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${research ? 'Включены — исследования добавляют 20 Forge к цене поста' : 'Выключены — обычная цена поста'}</div>
                     <div class="cs-info-popup" id="cs-info-research" style="display:none;">
-                        Подходит каналам, где посты опираются на проверяемые факты: наука и научпоп, медицина, биохакинг, психология, космос, биология и животные, IT, инженерия, авто (масла, топливо, узлы), строительство и материалы. Система живым поиском находит 1-3 первоисточника в авторитетных научных изданиях и базах, проверяет каждую ссылку и оформляет в манере канала; если подтверждённых работ не нашлось — разница возвращается за вычетом сбора за поиск. Юмору, влогам и анонсам не подойдёт: научных утверждений там нет.
+                        ${t('Подходит каналам, где посты опираются на проверяемые факты: наука и научпоп, медицина, биохакинг, психология, космос, биология и животные, IT, инженерия, авто (масла, топливо, узлы), строительство и материалы. Система живым поиском находит 1-3 первоисточника в авторитетных научных изданиях и базах, проверяет каждую ссылку и оформляет в манере канала; если подтверждённых работ не нашлось — разница возвращается за вычетом сбора за поиск. Юмору, влогам и анонсам не подойдёт: научных утверждений там нет.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${research ? 'on' : ''}" data-toggle-target="research">
@@ -5644,13 +5645,13 @@ function renderVoicePickSection(data) {
                 <span class="cs-vnm"><b>${escapeHtml(v.label)}</b><span>${escapeHtml(v.note)}</span></span>
                 <span class="cs-vchk"><i class="ti ti-check"></i></span>
             </div>`).join('');
-        return `<div class="cs-vcol"><div class="cs-vcolh"><s>${label}</s><u data-vall="${g}">все</u></div>${rows}</div>`;
+        return `<div class="cs-vcol"><div class="cs-vcolh"><s>${label}</s><u data-vall="${g}">${t('все')}</u></div>${rows}</div>`;
     };
     return `
         <div class="cs-section" id="cs-voice-sec">
-            <div class="cs-section-title">Озвучка роликов <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
+            <div class="cs-section-title">${t('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
             <div class="cs-vcols">${col('male', 'Мужские')}${col('female', 'Женские')}</div>
-            <div class="cs-vfoot">Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.</div>
+            <div class="cs-vfoot">${t('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}</div>
         </div>`;
 }
 
@@ -5691,7 +5692,7 @@ async function saveVoicePick(sec) {
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
     } catch (e) {
-        showToast('Не удалось сохранить голоса', 'alert-triangle');
+        showToast(t('Не удалось сохранить голоса'), 'alert-triangle');
     }
 }
 
@@ -5769,12 +5770,12 @@ function renderTzSection(data) {
     const cur = tzCurrent(data);
     return `
         <div class="cs-section">
-            <div class="cs-section-title">Время</div>
+            <div class="cs-section-title">${t('Время')}</div>
             <button class="cs-toggle-row cs-tz-row" data-tz-open="1" type="button">
                 <div class="cs-toggle-icon-wrap"><i class="ti ti-clock" style="color: #818cf8;"></i></div>
                 <div class="cs-toggle-info">
-                    <div class="cs-toggle-title-row"><span class="cs-toggle-title">Часовой пояс канала</span></div>
-                    <div class="cs-toggle-sub">По нему выходят посты и считаются замеры. Общий для всех админов канала</div>
+                    <div class="cs-toggle-title-row"><span class="cs-toggle-title">${t('Часовой пояс канала')}</span></div>
+                    <div class="cs-toggle-sub">${t('По нему выходят посты и считаются замеры. Общий для всех админов канала')}</div>
                     <div class="cs-tz-now" id="cs-tz-now">${escapeHtml(tzNowLine(cur))}</div>
                 </div>
                 <span class="cs-tz-val" id="cs-tz-val">${escapeHtml(tzLabel(cur))}</span>
@@ -5874,7 +5875,7 @@ function renderSettingsHistorySection(data) {
             <div class="cs-section">
                 <div class="cs-history-empty">
                     <i class="ti ti-history"></i>
-                    <span>История пуста</span>
+                    <span>${t('История пуста')}</span>
                 </div>
             </div>
         `;
@@ -5899,7 +5900,7 @@ function renderSettingsHistorySection(data) {
             <div class="cs-history-toggle" id="cs-history-toggle">
                 <div class="cs-history-toggle-left">
                     <i class="ti ti-history"></i>
-                    <span class="cs-history-toggle-title">История действий</span>
+                    <span class="cs-history-toggle-title">${t('История действий')}</span>
                     <span class="cs-history-toggle-count">${events.length} ${pluralize(events.length, 'событие','события','событий')}</span>
                 </div>
                 <i class="ti ti-chevron-${expanded ? 'up' : 'down'}"></i>
@@ -5917,16 +5918,16 @@ function renderSettingsAuditSection(data) {
             <button class="cs-btn-audit" data-audit-channel="${data.id}">
                 <span class="cs-btn-audit-icon"><i class="ti ti-chart-dots"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">AI-аудит канала</span>
-                    <span class="cs-btn-audit-sub">Разбор, прогноз и план роста</span>
+                    <span class="cs-btn-audit-title">${t('AI-аудит канала')}</span>
+                    <span class="cs-btn-audit-sub">${t('Разбор, прогноз и план роста')}</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
             <button class="cs-btn-audit cs-btn-competitors" data-competitors-channel="${data.id}">
                 <span class="cs-btn-audit-icon"><i class="ti ti-search"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">Анализ конкурентов</span>
-                    <span class="cs-btn-audit-sub">Карта ниши, их приёмы, план обгона</span>
+                    <span class="cs-btn-audit-title">${t('Анализ конкурентов')}</span>
+                    <span class="cs-btn-audit-sub">${t('Карта ниши, их приёмы, план обгона')}</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
@@ -5938,7 +5939,7 @@ function renderSettingsDangerZone(data) {
     return `
         <div class="cs-section cs-danger-zone">
             <button class="cs-btn-danger" id="cs-delete-channel">
-                <i class="ti ti-trash"></i> Удалить канал
+                <i class="ti ti-trash"></i> ${t('Удалить канал')}
             </button>
         </div>
     `;
@@ -6105,7 +6106,7 @@ function showVoiceEditorModal(currentText) {
         modal.innerHTML = `
             <div class="cs-modal">
                 <div class="cs-modal-header">
-                    <span class="cs-modal-title">Редактировать стиль</span>
+                    <span class="cs-modal-title">${t('Редактировать стиль')}</span>
                     <button class="cs-modal-close" data-action="close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="cs-modal-body">
@@ -6113,8 +6114,8 @@ function showVoiceEditorModal(currentText) {
                     <div class="cs-modal-counter" id="cs-modal-counter">${currentText.length} / 2000</div>
                 </div>
                 <div class="cs-modal-actions">
-                    <button class="cs-btn-ghost" data-action="cancel">Отмена</button>
-                    <button class="cs-btn-primary" data-action="save">Сохранить</button>
+                    <button class="cs-btn-ghost" data-action="cancel">${t('Отмена')}</button>
+                    <button class="cs-btn-primary" data-action="save">${t('Сохранить')}</button>
                 </div>
             </div>
         `;
@@ -6165,7 +6166,7 @@ async function handleRefreshVoiceFromSettings() {
         const statusEl = document.querySelector('.cs-status-line');
         if (statusEl) {
             statusEl.className = 'cs-status-line cs-status-collecting';
-            statusEl.innerHTML = '<span class="voice-pulse-dot"></span><span>Стиль собирается...</span>';
+            statusEl.innerHTML = '<span class="voice-pulse-dot"></span><span>' + t('Стиль собирается...') + '</span>';
         }
 
         startSettingsVoicePolling();
@@ -6461,7 +6462,7 @@ function renderDemoPreview(data) {
                     <div class="channels-preview-sub">@${escapeHtml(data.username)} · ${subLine}</div>
                 </div>
             </div>
-            ${posts || '<div class="channels-preview-sub">Постов для превью не нашлось</div>'}
+            ${posts || '<div class="channels-preview-sub">' + t('Постов для превью не нашлось') + '</div>'}
         </div>
     `;
     els.channelsDemoResult.style.display = '';
@@ -6562,7 +6563,7 @@ async function handleAnalyzeResult(result) {
     if (result.off_topic) {
         stopThinkingAnimation();
         showScreen('postCreate');
-        showToast('Это генератор постов, а не чат-ассистент. Опиши тему поста для канала', 'info-circle');
+        showToast(t('Это генератор постов, а не чат-ассистент. Опиши тему поста для канала'), 'info-circle');
         return;
     }
 
@@ -7255,10 +7256,10 @@ async function copyPostToClipboard() {
     }
 
     if (copied) {
-        showToast('Скопировано', 'check');
+        showToast(t('Скопировано'), 'check');
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
     } else {
-        showToast('Не удалось скопировать', 'alert-triangle');
+        showToast(t('Не удалось скопировать'), 'alert-triangle');
     }
 }
 
@@ -7351,13 +7352,13 @@ function handlePostApiError(err) {
     }
 
     if (msg.includes('429')) {
-        showToast('Слишком часто. Повторите через несколько секунд', 'alert-triangle');
+        showToast(t('Слишком часто. Повторите через несколько секунд'), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
 
     if (msg.includes('401')) {
-        showToast('Сессия истекла, переоткрой Mini App', 'alert-triangle');
+        showToast(t('Сессия истекла, переоткрой Mini App'), 'alert-triangle');
         return;
     }
 
@@ -7370,7 +7371,7 @@ function handlePostApiError(err) {
     }
 
     if (msg.includes('500')) {
-        showToast('Что-то пошло не так. Попробуй ещё раз', 'alert-triangle');
+        showToast(t('Что-то пошло не так. Попробуй ещё раз'), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
@@ -7622,7 +7623,7 @@ function _fmApply() {
         sessionStorage.setItem('fm_upd_n', n);
         if (n > 3) return;
     } catch (e) {}
-    try { showToast('Обновляю до новой версии…', 'refresh'); } catch (e) {}
+    try { showToast(t('Обновляю до новой версии…'), 'refresh'); } catch (e) {}
 
 
 
