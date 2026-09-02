@@ -14,11 +14,11 @@
 
     var THINKING_TEXTS = [
         AD('Собираю последние посты канала...'),
-        'Считаю охват и динамику...',
-        'Смотрю что заходит, а что нет...',
-        'Ищу главный инсайт...',
-        'Считаю деньги и потенциал...',
-        'Формулирую план роста...',
+        AD('Считаю охват и динамику...'),
+        AD('Смотрю что заходит, а что нет...'),
+        AD('Ищу главный инсайт...'),
+        AD('Считаю деньги и потенциал...'),
+        AD('Формулирую план роста...'),
     ];
 
     function _esc(s) {
@@ -56,8 +56,8 @@
         if (n == null || isNaN(n)) return '—';
         n = Number(n);
         if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + AD('М');
-        if (n >= 10000) return Math.floor(n / 1000) + 'к';
-        if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'к';
+        if (n >= 10000) return Math.floor(n / 1000) + AD('к');
+        if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + AD('к');
         return String(Math.round(n));
     }
 
@@ -298,11 +298,11 @@
                     '<div class="audit-intro-sub">' + AD('AI проанализирует последние посты, охваты и динамику — и выдаст честную оценку, главный инсайт, прогноз роста и план действий.') + '</div>' +
                 '</div>' +
                 '<div class="audit-intro-feats">' +
-                    introFeat('chart-arcs', 'Оценка и разбивка', 'Где сильно, где проседает') +
-                    introFeat('bulb', 'Главный инсайт', 'То, что ты сам не видишь') +
-                    introFeat('trending-up', 'Прогноз на 90 дней', 'Что будет, если менять и если нет') +
-                    introFeat('coin', 'Деньги', 'Цена рекламы и потенциал') +
-                    introFeat('list-check', 'План роста', 'Конкретные шаги с дедлайнами') +
+                    introFeat('chart-arcs', AD('Оценка и разбивка'), AD('Где сильно, где проседает')) +
+                    introFeat('bulb', AD('Главный инсайт'), AD('То, что ты сам не видишь')) +
+                    introFeat('trending-up', AD('Прогноз на 90 дней'), AD('Что будет, если менять и если нет')) +
+                    introFeat('coin', AD('Деньги'), AD('Цена рекламы и потенциал')) +
+                    introFeat('list-check', AD('План роста'), AD('Конкретные шаги с дедлайнами')) +
                 '</div>' +
                 limitBarHtml(limits) +
                 btnHtml +
@@ -353,11 +353,11 @@
                 '</div>' +
                 '<div class="ca-secl">' + AD('Чего нет больше нигде') + '</div>' +
                 '<div class="ca-diff">' +
-                    _caDiff('chart-bar', 'g', 'Позиция канала на рынке ниши',
+                    _caDiff('chart-bar', 'g', AD('Позиция канала на рынке ниши'),
                         AD('Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.')) +
-                    _caDiff('wallet', 'a', 'Аудит прайса и упущенный доход',
+                    _caDiff('wallet', 'a', AD('Аудит прайса и упущенный доход'),
                         AD('Рыночная вилка стоимости размещения под фактический охват, рекомендованная цена каждого формата и оценка недополученного дохода за месяц при текущем прайсе.')) +
-                    _caDiff('shield-check', 'v', 'Верификация качества трафика',
+                    _caDiff('shield-check', 'v', AD('Верификация качества трафика'),
                         AD('Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.')) +
                 '</div>' +
                 '<div class="ca-inc">' +
@@ -576,9 +576,9 @@
         var pctFill = (score != null) ? Math.max(0, Math.min(100, score)) : 0;
         var rows = '';
         var defs = [
-            ['#5DCAA5', 'Сильное', v.strong],
-            ['#ef4444', 'Слабое', v.weak],
-            ['#f0b45a', 'Главное действие', v.action],
+            ['#5DCAA5', AD('Сильное'), v.strong],
+            ['#ef4444', AD('Слабое'), v.weak],
+            ['#f0b45a', AD('Главное действие'), v.action],
         ];
         defs.forEach(function (d) {
             if (!_hasText(d[2])) return;
@@ -629,7 +629,7 @@
             inner += '<div class="da-note" style="margin-top:10px">' + _esc(r.position_note) + '</div>';
         }
         var pool = d.pool ? ((d.pool_wide ? AD('вся база · ') : '') + d.pool + AD(' каналов')) : '';
-        return _daSection('▦', 'Позиция в нише', pool, inner);
+        return _daSection('▦', AD('Позиция в нише'), pool, inner);
     }
 
     function renderDeepTraffic(r) {
@@ -671,7 +671,7 @@
             '<div class="da-fraudtxt">' + pill +
             (_hasText(r.traffic_note) ? '<div class="da-note" style="margin-top:6px">' + _esc(r.traffic_note) + '</div>' : '') +
             '</div></div>';
-        return _daSection('✓', 'Проверка трафика', 'кривая набора просмотров', inner);
+        return _daSection('✓', AD('Проверка трафика'), AD('кривая набора просмотров'), inner);
     }
 
     function renderDeepAudience(r) {
@@ -681,13 +681,13 @@
         if (a.geo) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.geo).toUpperCase()) + '</div><div class="l">' + AD('ОСНОВНОЕ ГЕО') + '</div></div>';
         if (a.female_pct != null) {
             var male = 100 - a.female_pct;
-            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? 'М ' + male : 'Ж ' + a.female_pct) + '%</div><div class="l">' + AD('ПОЛ АУДИТОРИИ') + '</div></div>';
+            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? AD('М ') + male : AD('Ж ') + a.female_pct) + '%</div><div class="l">' + AD('ПОЛ АУДИТОРИИ') + '</div></div>';
         }
         if (a.lang) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.lang).toUpperCase()) + '</div><div class="l">' + AD('ЯЗЫК') + '</div></div>';
         if (!tiles && !_hasText(r.audience_note)) return '';
         var inner = (tiles ? '<div class="da-demrow">' + tiles + '</div>' : '<div class="da-empty">' + AD('Портрет аудитории ещё собирается') + '</div>') +
             (_hasText(r.audience_note) ? '<div class="da-insight">' + _esc(r.audience_note) + '</div>' : '');
-        return _daSection('◉', 'Аудитория', 'гео · пол · язык', inner);
+        return _daSection('◉', AD('Аудитория'), AD('гео · пол · язык'), inner);
     }
 
     function renderDeepContent(r) {
@@ -719,7 +719,7 @@
             hoursHtml = '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>';
         }
         if (!rows && !hoursHtml) return '';
-        return _daSection('▤', 'Контент: что работает', 'по последним постам', rows + hoursHtml);
+        return _daSection('▤', AD('Контент: что работает'), AD('по последним постам'), rows + hoursHtml);
     }
 
     function renderDeepMonetize(r) {
@@ -741,7 +741,7 @@
             fc = '<div class="da-note" style="margin-top:9px">' + _esc(m.note) + '</div>';
         }
         if (!rows && !fc) return '';
-        return _daSection('₽', 'Монетизация', 'честные цены форматов', rows + fc);
+        return _daSection('₽', AD('Монетизация'), AD('честные цены форматов'), rows + fc);
     }
 
     function renderDeepPlan(r) {
@@ -754,7 +754,7 @@
             rows += '<div class="da-plan"><span class="da-plann">' + (i + 1) + '</span><span>' + _esc(p.text || '') +
                 (pri ? '<span class="da-pri ' + pri[1] + '">' + pri[0] + '</span>' : '') + '</span></div>';
         });
-        return _daSection('➤', 'План на 30 дней', '', rows);
+        return _daSection('➤', AD('План на 30 дней'), '', rows);
     }
 
     function renderDeepReport(audit, r) {
@@ -956,10 +956,10 @@
         var html = '';
 
         if (best && (_hasText(best.excerpt) || _hasText(best.why_it_worked))) {
-            html += postCard('best', best, best.why_it_worked, 'Лучший пост');
+            html += postCard('best', best, best.why_it_worked, AD('Лучший пост'));
         }
         if (worst && (_hasText(worst.excerpt) || _hasText(worst.why_it_failed))) {
-            html += postCard('worst', worst, worst.why_it_failed, 'Худший пост');
+            html += postCard('worst', worst, worst.why_it_failed, AD('Худший пост'));
         }
         if (!html) return '';
         return '<div class="audit-posts">' + html + '</div>';

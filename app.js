@@ -59,34 +59,34 @@ const ANALYZE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
     + '<path d="M14.6 4.6l1.9 1.9 3.3-3.3" stroke-width="2"/></svg>';
 
 const FORGE_SHEET_ITEMS = [
-    { key: 'generate', one: 'премиум-пост', few: 'премиум-поста', many: 'премиум-постов',
-      short: 'Премиум-пост', icon: 'sparkles' },
-    { key: 'generate_std', one: 'стандартный пост', few: 'стандартных поста', many: 'стандартных постов',
-      short: 'Стандартный пост', icon: 'file-text' },
-    { key: 'generate_proofs', one: 'пост с исследованиями', few: 'поста с исследованиями', many: 'постов с исследованиями',
-      short: 'Пост с исследованиями', icon: 'file-search' },
-    { key: 'rewrite', one: 'рерайт чужого поста', few: 'рерайта чужого поста', many: 'рерайтов чужого поста',
-      short: 'Рерайт чужого поста', icon: 'pencil' },
-    { key: 'voice', one: 'настройка стиля канала', few: 'настройки стиля канала', many: 'настроек стиля канала',
-      short: 'Настройка стиля канала', icon: 'wand' },
-    { key: 'adpick', one: 'подбор каналов для рекламы', few: 'подбора каналов для рекламы', many: 'подборов каналов для рекламы',
-      short: 'Подбор каналов для рекламы', icon: 'target-arrow' },
-    { key: 'channel_analyze', one: 'AI-разбор канала', few: 'AI-разбора канала', many: 'AI-разборов канала',
-      short: 'AI-разбор канала', svg: ANALYZE_SVG },
-    { key: 'audit', one: 'AI-аудит канала', few: 'AI-аудита канала', many: 'AI-аудитов канала',
-      short: 'AI-аудит канала', icon: 'chart-dots' },
-    { key: 'deep_audit', one: 'коммерческий аудит', few: 'коммерческих аудита', many: 'коммерческих аудитов',
-      short: 'Коммерческий аудит', icon: 'briefcase' },
-    { key: 'competitors', one: 'анализ конкурентов', few: 'анализа конкурентов', many: 'анализов конкурентов',
-      short: 'Анализ конкурентов', icon: 'search' },
-    { key: 'promo_burst24', one: 'всплеск продвижения на сутки', few: 'всплеска продвижения на сутки', many: 'всплесков продвижения на сутки',
-      short: 'Всплеск продвижения 24 ч', icon: 'bolt' },
-    { key: 'promo_week', one: 'неделя продвижения в ленте', few: 'недели продвижения в ленте', many: 'недель продвижения в ленте',
-      short: 'Неделя продвижения в ленте', icon: 'speakerphone' },
-    { key: 'promo_month', one: 'месяц продвижения в ленте', few: 'месяца продвижения в ленте', many: 'месяцев продвижения в ленте',
-      short: 'Месяц продвижения в ленте', icon: 'rocket' },
-    { key: 'ai_strategy', one: 'AI-стратегия канала', few: 'AI-стратегии канала', many: 'AI-стратегий канала',
-      short: 'AI-стратегия канала', icon: 'compass' },
+    { key: 'generate', one: TR('премиум-пост'), few: TR('премиум-поста'), many: TR('премиум-постов'),
+      short: TR('Премиум-пост'), icon: 'sparkles' },
+    { key: 'generate_std', one: TR('стандартный пост'), few: TR('стандартных поста'), many: TR('стандартных постов'),
+      short: TR('Стандартный пост'), icon: 'file-text' },
+    { key: 'generate_proofs', one: TR('пост с исследованиями'), few: TR('поста с исследованиями'), many: TR('постов с исследованиями'),
+      short: TR('Пост с исследованиями'), icon: 'file-search' },
+    { key: 'rewrite', one: TR('рерайт чужого поста'), few: TR('рерайта чужого поста'), many: TR('рерайтов чужого поста'),
+      short: TR('Рерайт чужого поста'), icon: 'pencil' },
+    { key: 'voice', one: TR('настройка стиля канала'), few: TR('настройки стиля канала'), many: TR('настроек стиля канала'),
+      short: TR('Настройка стиля канала'), icon: 'wand' },
+    { key: 'adpick', one: TR('подбор каналов для рекламы'), few: TR('подбора каналов для рекламы'), many: TR('подборов каналов для рекламы'),
+      short: TR('Подбор каналов для рекламы'), icon: 'target-arrow' },
+    { key: 'channel_analyze', one: TR('AI-разбор канала'), few: TR('AI-разбора канала'), many: TR('AI-разборов канала'),
+      short: TR('AI-разбор канала'), svg: ANALYZE_SVG },
+    { key: 'audit', one: TR('AI-аудит канала'), few: TR('AI-аудита канала'), many: TR('AI-аудитов канала'),
+      short: TR('AI-аудит канала'), icon: 'chart-dots' },
+    { key: 'deep_audit', one: TR('коммерческий аудит'), few: TR('коммерческих аудита'), many: TR('коммерческих аудитов'),
+      short: TR('Коммерческий аудит'), icon: 'briefcase' },
+    { key: 'competitors', one: TR('анализ конкурентов'), few: TR('анализа конкурентов'), many: TR('анализов конкурентов'),
+      short: TR('Анализ конкурентов'), icon: 'search' },
+    { key: 'promo_burst24', one: TR('всплеск продвижения на сутки'), few: TR('всплеска продвижения на сутки'), many: TR('всплесков продвижения на сутки'),
+      short: TR('Всплеск продвижения 24 ч'), icon: 'bolt' },
+    { key: 'promo_week', one: TR('неделя продвижения в ленте'), few: TR('недели продвижения в ленте'), many: TR('недель продвижения в ленте'),
+      short: TR('Неделя продвижения в ленте'), icon: 'speakerphone' },
+    { key: 'promo_month', one: TR('месяц продвижения в ленте'), few: TR('месяца продвижения в ленте'), many: TR('месяцев продвижения в ленте'),
+      short: TR('Месяц продвижения в ленте'), icon: 'rocket' },
+    { key: 'ai_strategy', one: TR('AI-стратегия канала'), few: TR('AI-стратегии канала'), many: TR('AI-стратегий канала'),
+      short: TR('AI-стратегия канала'), icon: 'compass' },
 ];
 
 let _fsCtx = null;
@@ -479,7 +479,7 @@ async function loadDashboard() {
             return;
         }
 
-        const detail = message || 'Не удалось подключиться к серверу';
+        const detail = message || TR('Не удалось подключиться к серверу');
         showError(detail);
     }
 }
@@ -555,14 +555,14 @@ function openModuleSafe(file, fnName, label) {
     // молчала без единого слова; догружаем на лету и говорим, если не вышло
     if (typeof window[fnName] === 'function') { window[fnName](); return; }
     const _t = (typeof t === 'function') ? t : (x) => x;
-    showToast(_t('Загружаю модуль') + ': ' + _t(label), 'loader');
+    showToast(_t(TR('Загружаю модуль')) + ': ' + _t(label), 'loader');
     const s = document.createElement('script');
     s.src = file + '?v=' + Date.now();
     s.onload = () => {
         if (typeof window[fnName] === 'function') window[fnName]();
-        else showToast(_t('Модуль не запустился — закрой и открой приложение'), 'alert-triangle');
+        else showToast(_t(TR('Модуль не запустился — закрой и открой приложение')), 'alert-triangle');
     };
-    s.onerror = () => showToast(_t('Модуль не загрузился — проверь связь и открой заново'), 'alert-triangle');
+    s.onerror = () => showToast(_t(TR('Модуль не загрузился — проверь связь и открой заново')), 'alert-triangle');
     document.head.appendChild(s);
 }
 
@@ -583,8 +583,8 @@ function showStartBotScreen() {
     errorIcon.style.borderColor = 'var(--color-purple-border)';
     errorIcon.querySelector('i').style.color = 'var(--color-purple-400)';
 
-    errorTitle.textContent = 'Сначала запусти бота';
-    errorBtn.textContent = 'Открыть @ForgeMetricsBot';
+    errorTitle.textContent = TR('Сначала запусти бота');
+    errorBtn.textContent = TR('Открыть @ForgeMetricsBot');
 
     errorBtn.onclick = () => {
         if (tg?.openTelegramLink) {
@@ -709,16 +709,16 @@ function renderChannelSelector(data) {
     if (csig === _chselSig && host.firstChild) return;
     _chselSig = csig;
     if (ch) {
-        const title = ch.title || ch.username || 'Канал';
+        const title = ch.title || ch.username || TR('Канал');
         const initial = escapeHtml((title || 'K').trim().charAt(0).toUpperCase() || 'K');
         const niche = (data.pulse && data.pulse.niche) ? data.pulse.niche : '';
         const multi = (data.total_channels || 1) > 1;
         const idn = `${ch.username ? '@' + escapeHtml(ch.username) : ''}${niche ? (ch.username ? ' · ' : '') + escapeHtml(niche) : ''}`;
-        const sub = idn || (multi ? 'нажми, чтобы сменить канал' : 'нажми для управления');
+        const sub = idn || (multi ? TR('нажми, чтобы сменить канал') : TR('нажми для управления'));
         const _tt = (typeof window.t === 'function') ? window.t : function (x) { return x; };
         const chBadge = ch.is_paused
-            ? '<span class="pw-badge paused"><i class="ti ti-player-pause"></i>' + _tt('пауза') + '</span>'
-            : '<span class="pw-badge">' + _tt('активный') + '</span>';
+            ? '<span class="pw-badge paused"><i class="ti ti-player-pause"></i>' + _tt(TR('пауза')) + '</span>'
+            : '<span class="pw-badge">' + _tt(TR('активный')) + '</span>';
         host.innerHTML = `<button class="pw-chansel" id="pw-chansel-btn"><div class="pw-chav" id="pw-chav-el">${initial}</div><div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">${escapeHtml(title)}</span>${chBadge}</div><div class="pw-chnb">${sub}</div></div><div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>`;
         const btn = document.getElementById('pw-chansel-btn');
         if (btn) btn.addEventListener('click', () => { hapticLight(); openActiveChannelSelector({ onChanged: async () => { await loadDashboard(); } }); });
@@ -751,14 +751,14 @@ function pwCountUp(root) {
     });
 }
 var PW_CATALOG = [
-    { id: 'subs', label: 'Подписчики', sub: '', get: p => p.subscribers, o: { sep: true } },
-    { id: 'reach', label: 'Охват / пост', sub: 'за 30 дней', get: p => p.avg_views, o: { k: true } },
+    { id: 'subs', label: TR('Подписчики'), sub: '', get: p => p.subscribers, o: { sep: true } },
+    { id: 'reach', label: TR('Охват / пост'), sub: TR('за 30 дней'), get: p => p.avg_views, o: { k: true } },
     { id: 'rr', label: 'ERR', sub: '', get: p => p.reach_rate, o: { suf: '%' } },
-    { id: 'err24', label: 'ERR24', sub: 'за первые сутки', get: p => p.err24, o: { suf: '%', dec: 1 } },
-    { id: 'er', label: 'ER', sub: 'реакции к охвату', get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
-    { id: 'price', label: 'Цена поста', sub: '', get: p => p.price_low, o: {} },
-    { id: 'cpm', label: 'CPM', sub: 'за 1000 просмотров', get: p => p.cpm, o: { sep: true, suf: ' ₽' } },
-    { id: 'cpf', label: 'CPF', sub: 'при конверсии 0,3–1,5%', get: p => p.cpf_low, o: {} },
+    { id: 'err24', label: 'ERR24', sub: TR('за первые сутки'), get: p => p.err24, o: { suf: '%', dec: 1 } },
+    { id: 'er', label: 'ER', sub: TR('реакции к охвату'), get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
+    { id: 'price', label: TR('Цена поста'), sub: '', get: p => p.price_low, o: {} },
+    { id: 'cpm', label: 'CPM', sub: TR('за 1000 просмотров'), get: p => p.cpm, o: { sep: true, suf: ' ₽' } },
+    { id: 'cpf', label: 'CPF', sub: TR('при конверсии 0,3–1,5%'), get: p => p.cpf_low, o: {} },
 ];
 var PW_MAX = 8;
 
@@ -807,22 +807,22 @@ var pwCpfHintOpen = false;
 var pwPriceOpen = false;
 
 var PW_FMT_META = {
-    h1_24: ['1/24', '1 ч в топе · 24 ч в ленте'],
-    h2_48: ['2/48', '2 ч в топе · 48 ч в ленте'],
-    h3_72: ['3/72', '3 ч в топе · 72 ч в ленте'],
-    d7: ['7 дней', '3 ч в топе · 7 дней в ленте'],
-    perm: ['Без удаления', 'остаётся 30 дней или навсегда'],
-    native: ['Нативный', 'автор пишет сам по ТЗ'],
-    repost: ['Репост', 'пересылка вашего поста'],
-    circle: ['Кружок', 'видеосообщение внутри поста'],
-    stories: ['Сторис', 'формат сторис канала'],
+    h1_24: ['1/24', TR('1 ч в топе · 24 ч в ленте')],
+    h2_48: ['2/48', TR('2 ч в топе · 48 ч в ленте')],
+    h3_72: ['3/72', TR('3 ч в топе · 72 ч в ленте')],
+    d7: [TR('7 дней'), TR('3 ч в топе · 7 дней в ленте')],
+    perm: [TR('Без удаления'), TR('остаётся 30 дней или навсегда')],
+    native: [TR('Нативный'), TR('автор пишет сам по ТЗ')],
+    repost: [TR('Репост'), TR('пересылка вашего поста')],
+    circle: [TR('Кружок'), TR('видеосообщение внутри поста')],
+    stories: [TR('Сторис'), TR('формат сторис канала')],
 };
 
 function pwPricePanel(pulse) {
     var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
     var hasOwn = pulse.formats.some(f => f.price != null);
-    var PW_PST = { market: [_tp('в рынке'), '#5DCAA5'], above: [_tp('выше рынка'), '#f5bf4f'],
-                   below: [_tp('ниже рынка'), '#f5bf4f'], out: [_tp('вне рынка'), '#ef8080'] };
+    var PW_PST = { market: [_tp(TR('в рынке')), '#5DCAA5'], above: [_tp(TR('выше рынка')), '#f5bf4f'],
+                   below: [_tp(TR('ниже рынка')), '#f5bf4f'], out: [_tp(TR('вне рынка')), '#ef8080'] };
     var rows = pulse.formats.map(f => {
         var meta = PW_FMT_META[f.k];
         if (!meta) return '';
@@ -836,18 +836,18 @@ function pwPricePanel(pulse) {
                 tail = ' · <i style="color:' + st[1] + ';">' + escapeHtml(st[0] + pctTx) + '</i>';
             }
             right = '<b>' + escapeHtml(pwRub(f.price) + ' ₽') + '</b><em>' +
-                escapeHtml(_tp('оценка') + ' ' + pwRub(f.est) + ' ₽') + tail + '</em>';
+                escapeHtml(_tp(TR('оценка')) + ' ' + pwRub(f.est) + ' ₽') + tail + '</em>';
         } else {
             right = '<b>' + escapeHtml('≈' + pwRub(f.est) + ' ₽') + '</b><em>' +
-                escapeHtml(_tp('оценка')) + '</em>';
+                escapeHtml(_tp(TR('оценка'))) + '</em>';
         }
         return '<div class="pw-fr"><span class="ft"><b>' + escapeHtml(_tp(meta[0])) + '</b>' +
             '<em>' + escapeHtml(_tp(meta[1])) + '</em></span>' +
             '<span class="fp">' + right + '</span></div>';
     }).join('');
     var foot = hasOwn
-        ? _tp('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.')
-        : _tp('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.');
+        ? _tp(TR('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.'))
+        : _tp(TR('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.'));
     return '<div class="pw-hintbox big' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
         rows + '<div class="pw-pfoot">' + escapeHtml(foot) + '</div></div></div>';
 }
@@ -882,8 +882,8 @@ function pwRenderMetrics(pulse) {
             if (pulse.price_kind === 'estimate') {
                 var pill = '';
                 if (pulse.own_price) {
-                    var PW_PST = { market: [_tp('в рынке'), ''], above: [_tp('выше рынка'), 'warn'],
-                                   below: [_tp('ниже рынка'), 'warn'], out: [_tp('вне рынка'), 'bad'] };
+                    var PW_PST = { market: [_tp(TR('в рынке')), ''], above: [_tp(TR('выше рынка')), 'warn'],
+                                   below: [_tp(TR('ниже рынка')), 'warn'], out: [_tp(TR('вне рынка')), 'bad'] };
                     var _ps = PW_PST[pulse.own_status];
                     if (_ps) {
                         var _pctTx = (pulse.own_status === 'above' || pulse.own_status === 'below')
@@ -892,10 +892,10 @@ function pwRenderMetrics(pulse) {
                     }
                     sub = pill + `<span class="s fx">1/24</span>`;
                 } else {
-                    sub = `<span class="pw-rpill mut">${escapeHtml(_tp('цена не задана'))}</span>`;
+                    sub = `<span class="pw-rpill mut">${escapeHtml(_tp(TR('цена не задана')))}</span>`;
                 }
             } else {
-                sub = `<span class="s">${escapeHtml(_tp('твоя цена') + ' · 1/24')}</span>`;
+                sub = `<span class="s">${escapeHtml(_tp(TR('твоя цена')) + ' · 1/24')}</span>`;
             }
         }
         var o = m.o;
@@ -904,7 +904,7 @@ function pwRenderMetrics(pulse) {
             valTx = '—';
         } else if (id === 'price') {
             valTx = escapeHtml(pulse.price_kind === 'owner'
-                ? 'от ' + pwRub(pulse.price_low) + ' ₽'
+                ? TR('от ') + pwRub(pulse.price_low) + ' ₽'
                 : (pwRangeTx(pulse.price_low, pulse.price_high) || '—'));
         } else if (id === 'cpf') {
             if (pulse.cpf_fact != null) {
@@ -913,7 +913,7 @@ function pwRenderMetrics(pulse) {
             } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
                 valTx = escapeHtml('≈' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' ₽');
                 var _tpR = (typeof window.t === 'function') ? window.t : function (x) { return x; };
-                sub = '<span class="s">' + escapeHtml(_tpR('разброс') + ' ' +
+                sub = '<span class="s">' + escapeHtml(_tpR(TR('разброс')) + ' ' +
                     pwRub(pulse.cpf_low) + '–' + pwRub(pulse.cpf_high) + ' ₽') + '</span>';
             } else {
                 valTx = '—';
@@ -933,7 +933,7 @@ function pwRenderMetrics(pulse) {
         if (id === 'cpf') {
             var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
             rowTx += `<div class="pw-hintbox${pwCpfHintOpen ? ' open' : ''}" id="pw-cpf-hint"><div class="in">` +
-                escapeHtml(_th('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.')) +
+                escapeHtml(_th(TR('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.'))) +
                 `</div></div>`;
         }
         return rowTx;
@@ -1028,7 +1028,7 @@ function pwRenderMini(pulse) {
         chips.push('<span class="chip"><b class="num">\u2248' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' \u20bd</b><span>CPF</span></span>');
     }
     if (!chips.length && pulse.subscribers != null) {
-        chips.push('<span class="chip"><b class="num">' + pulse.subscribers.toLocaleString('ru-RU') + '</b><span>' + escapeHtml(_tm('Подписчики')) + '</span></span>');
+        chips.push('<span class="chip"><b class="num">' + pulse.subscribers.toLocaleString('ru-RU') + '</b><span>' + escapeHtml(_tm(TR('Подписчики'))) + '</span></span>');
     }
     mini.innerHTML = chips.join('');
 }
@@ -1052,7 +1052,7 @@ function pwOpenPicker(pulse) {
             }
             return '<button class="pw-opt' + (on ? ' on' : '') + (has ? '' : ' nodata') + '" data-id="' + m.id + '" type="button">'
                 + '<span class="pw-opt-tx"><span class="pw-opt-l">' + escapeHtml(m.label) + '</span>'
-                + '<span class="pw-opt-v">' + (has ? escapeHtml(prev) : 'нет данных') + '</span></span>'
+                + '<span class="pw-opt-v">' + (has ? escapeHtml(prev) : TR('нет данных')) + '</span></span>'
                 + '<span class="pw-opt-ck"><i class="ti ti-check"></i></span></button>';
         }).join('')
         + '</div>'
@@ -1091,9 +1091,9 @@ function pwOpenPicker(pulse) {
 }
 
 function pwHealthState(pulse) {
-    const H = { green: { c: 'green', t: 'Живой канал', s: '' }, amber: { c: 'amber', t: 'Средний охват', s: '' }, red: { c: 'red', t: 'Слабый охват', s: 'проверь канал' } };
-    let h = H[pulse.health_class] || { c: 'grey', t: 'Метрики собираются', s: '' };
-    if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: 'Охват выше базы', s: 'репосты или накрутка — проверь' };
+    const H = { green: { c: 'green', t: TR('Живой канал'), s: '' }, amber: { c: 'amber', t: TR('Средний охват'), s: '' }, red: { c: 'red', t: TR('Слабый охват'), s: TR('проверь канал') } };
+    let h = H[pulse.health_class] || { c: 'grey', t: TR('Метрики собираются'), s: '' };
+    if (pulse.rr_status === 'аномальный') h = { c: 'amber', t: TR('Охват выше базы'), s: TR('репосты или накрутка — проверь') };
     return h;
 }
 
@@ -1107,7 +1107,7 @@ function pwNormDelta(pulse, cls) {
     const abs = Math.abs(d);
     const rounded = abs < 10 ? Math.round(abs * 10) / 10 : Math.round(abs);
     const sign = rounded === 0 ? '' : (d < 0 ? '\u2212' : '+');
-    const tt = (typeof window.t === 'function') ? window.t('к норме') : 'к норме';
+    const tt = (typeof window.t === 'function') ? window.t('к норме') : TR('к норме');
     return '<span class="pw-hdelta">' + sign + String(rounded).replace('.', ',') + '%<small>' + tt + '</small></span>';
 }
 
@@ -1124,7 +1124,7 @@ function markPulseHealthy(pulse) {
     badge.className = 'pw-health ' + h.c;
     badge.innerHTML = pwHealthHtml(pulse, h);
     const lab = document.querySelector('.pw-hlab');
-    if (lab) lab.textContent = 'Охват · 30 дней';
+    if (lab) lab.textContent = TR('Охват · 30 дней');
 }
 
 function renderPulse(pulse) {
@@ -1170,18 +1170,18 @@ function renderPulse(pulse) {
         const pl = (state.dashboard && state.dashboard.pulse) || {};
         if (!pl.norm_lo || !pl.norm_hi) return;
         const _tt = (typeof window.t === 'function') ? window.t : (x) => x;
-        showToast(_tt('Отклонение охвата от нижней планки нормы. Норма для канала этого размера') +
-            ': ' + pl.norm_lo.toLocaleString('ru-RU') + '\u2013' + pl.norm_hi.toLocaleString('ru-RU') + ' ' + _tt('на пост'), 'info-circle');
+        showToast(_tt(TR('Отклонение охвата от нижней планки нормы. Норма для канала этого размера')) +
+            ': ' + pl.norm_lo.toLocaleString('ru-RU') + '\u2013' + pl.norm_hi.toLocaleString('ru-RU') + ' ' + _tt(TR('на пост')), 'info-circle');
     };
     const an = document.getElementById('pw-analyze');
-    if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast('Разбор канала — скоро'); });
+    if (an) an.addEventListener('click', () => { hapticLight(); if (typeof window.__openAudit === 'function') window.__openAudit(); else cabToast(TR('Разбор канала — скоро')); });
     try {
         var _dch = (state.dashboard && state.dashboard.channel) ? state.dashboard.channel.id : null;
         var _dorm = pwDormantGet(_dch);
         if (_dorm) {
             markPulseStale(_dorm.d, _dorm.ld);
             var _lab2 = host.querySelector('.pw-hlab');
-            if (_lab2) _lab2.textContent = 'Охват · последние посты';
+            if (_lab2) _lab2.textContent = TR('Охват · последние посты');
         }
     } catch (e) {}
     loadReachSeries();
@@ -1204,7 +1204,7 @@ function renderPulseHook(trendPct, planMeasured, planActive) {
         + `<div class="pw-aih-tx">${tx}</div>`
         + `<div class="pw-aih-col">`
         + `<button class="pw-aih-x" type="button" aria-label="Скрыть"><i class="ti ti-x"></i></button>`
-        + `<button class="pw-aih-go" type="button">${calibrated ? 'К сборке' : 'Собрать'} <i class="ti ti-arrow-right"></i></button>`
+        + `<button class="pw-aih-go" type="button">${calibrated ? TR('К сборке') : TR('Собрать')} <i class="ti ti-arrow-right"></i></button>`
         + `</div></div>`;
     const go = hook.querySelector('.pw-aih-go');
     if (go) go.addEventListener('click', () => {
@@ -1233,16 +1233,16 @@ function pwRenderMM(r) {
         wasCell.hidden = true; arr.hidden = true;
         var pu = state.dashboard && state.dashboard.pulse;
         if (pu && pu.avg_views != null) nowCell.innerHTML = '<span class="v num">' + pu.avg_views.toLocaleString('ru-RU') + '</span>' +
-            '<span class="pw-wl">' + _tm('сейчас') + ' \u00b7 ' + _tm('на пост') + '</span>';
+            '<span class="pw-wl">' + _tm(TR('сейчас')) + ' \u00b7 ' + _tm(TR('на пост')) + '</span>';
         return;
     }
     wasCell.hidden = false;
     arr.hidden = false;
     if (hasPrev) {
         wasCell.innerHTML = '<span class="pw-wn was num">' + r.mm_prev.toLocaleString('ru-RU') + '</span>' +
-            '<span class="pw-wl num">' + (r.mm_prev_ym || '') + ' \u00b7 ' + _tm('медиана') + '</span>';
+            '<span class="pw-wl num">' + (r.mm_prev_ym || '') + ' \u00b7 ' + _tm(TR('медиана')) + '</span>';
     } else {
-        wasCell.innerHTML = '<span class="pw-wn none">' + _tm('нет замера') + '</span>' +
+        wasCell.innerHTML = '<span class="pw-wn none">' + _tm(TR('нет замера')) + '</span>' +
             '<span class="pw-wl num">' + (r.mm_prev_ym || '') + '</span>';
     }
     if (hasPrev && hasCur) {
@@ -1259,10 +1259,10 @@ function pwRenderMM(r) {
     }
     if (hasCur) {
         nowCell.innerHTML = '<span class="v num">' + r.mm_cur.toLocaleString('ru-RU') + '</span>' +
-            '<span class="pw-wl num">' + (r.mm_cur_ym || '') + ' \u00b7 ' + _tm('на пост') + '</span>';
+            '<span class="pw-wl num">' + (r.mm_cur_ym || '') + ' \u00b7 ' + _tm(TR('на пост')) + '</span>';
     } else {
         nowCell.innerHTML = '<span class="pw-wn none">' +
-            _tm(r.mm_cur_fresh ? 'охват набирается' : 'пока нет постов') + '</span>' +
+            _tm(r.mm_cur_fresh ? TR('охват набирается') : TR('пока нет постов')) + '</span>' +
             '<span class="pw-wl num">' + (r.mm_cur_ym || '') + '</span>';
     }
 }
@@ -1285,7 +1285,7 @@ async function loadReachSeries() {
         if (rSig === _reachSigDom) { _reachRedraw(); return; }
         _reachSigDom = rSig;
         if (r && Array.isArray(r.series) && r.series.length >= 2 && r.series.every((v) => Number.isFinite(v))) {
-            const endLabel = r.stale ? (r.last_date || '') : 'сегодня';
+            const endLabel = r.stale ? (r.last_date || '') : TR('сегодня');
             const anim = !_reachLast || _reachLast.chId !== chIdD;
             _reachLast = { chId: chIdD,
                            series: r.series, dates: r.dates || [], days: r.days || 30, endLabel: endLabel, muted: !!r.stale,
@@ -1298,7 +1298,7 @@ async function loadReachSeries() {
             pwRenderMM(r);
             if (r.stale) {
                 const lab = document.querySelector('.pw-hlab');
-                if (lab) lab.textContent = 'Охват · последние посты';
+                if (lab) lab.textContent = TR('Охват · последние посты');
                 markPulseStale(r.stale_days, r.last_date);
                 pwDormantSet(chIdD, { d: r.stale_days, ld: r.last_date });
                 pwRenderMetrics((state.dashboard && state.dashboard.pulse) || {});
@@ -1339,8 +1339,8 @@ async function loadReachSeries() {
 function markPulseStale(days, lastDate) {
     const badge = document.querySelector('.pw-health');
     if (!badge) return;
-    const word = (days != null && days > 60) ? 'Неактивен' : 'Редкая активность';
-    const sub = lastDate ? ('последний пост ' + lastDate) : ((days != null ? days : '') + ' дн без постов');
+    const word = (days != null && days > 60) ? TR('Неактивен') : TR('Редкая активность');
+    const sub = lastDate ? (TR('последний пост ') + lastDate) : ((days != null ? days : '') + TR(' дн без постов'));
     badge.className = 'pw-health dormant';
     badge.innerHTML = '<span class="pw-moon"><i class="ti ti-moon"></i></span><span class="pw-htx">' + word + (sub ? ' <span class="pw-hs">' + sub + '</span>' : '') + '</span>';
 }
@@ -1385,7 +1385,7 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
     const pts = DATA.map((v, i) => [X(i), Y(v)]);
     const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
     const area = line + ' L' + X(last).toFixed(1) + ',' + (Hh - padB) + ' L' + X(0).toFixed(1) + ',' + (Hh - padB) + ' Z';
-    const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + 'К') : String(Math.round(v));
+    const short = (v) => v >= 1000 ? ((Math.round(v / 100) / 10 + '').replace('.', ',') + TR('К')) : String(Math.round(v));
     const grids = (() => {
         const raw = (hi - lo) / 3;
         if (!(raw > 0)) return [max, min];
@@ -1421,7 +1421,7 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         svg += `<rect x="${padL}" y="${normTop.toFixed(1)}" width="${W - padL - padR}" height="${Math.max(1, normBot - normTop).toFixed(1)}" fill="${nc}0.06)"/>`;
         svg += `<line x1="${padL}" y1="${normTop.toFixed(1)}" x2="${W - padR}" y2="${normTop.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
         svg += `<line x1="${padL}" y1="${normBot.toFixed(1)}" x2="${W - padR}" y2="${normBot.toFixed(1)}" stroke="${nc}0.35)" stroke-width="1" stroke-dasharray="4 4"/>`;
-        const nl = (typeof window.t === 'function' ? window.t('норма') : 'норма').toUpperCase();
+        const nl = (typeof window.t === 'function' ? window.t('норма') : TR('норма')).toUpperCase();
         svg += `<text x="${W - padR}" y="${normLblY.toFixed(1)}" text-anchor="end" style="font-size:8px;font-weight:700;letter-spacing:0.06em;fill:${nc}0.9)">${nl} ${short(normLo)}–${short(normHi)}</text>`;
     }
     svg += `<path class="pw-area" d="${area}" fill="${PC.area}"/>`;
@@ -1435,9 +1435,9 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         });
     }
     svg += `<circle class="pw-ep" cx="${X(last).toFixed(1)}" cy="${Y(DATA[last]).toFixed(1)}" r="3.4" fill="${PC.ep}" stroke="${PC.eps}" stroke-width="2"/>`;
-    const lbl0 = (dates && dates[0]) ? dates[0] : (days + ' дн назад');
+    const lbl0 = (dates && dates[0]) ? dates[0] : (days + TR(' дн назад'));
     svg += `<text class="pw-xt" x="${X(0)}" y="${Hh - 5}" text-anchor="start">${lbl0}</text>`;
-    svg += `<text class="pw-xt" x="${X(lastIdx)}" y="${Hh - 5}" text-anchor="end">${endLabel || 'сегодня'}</text>`;
+    svg += `<text class="pw-xt" x="${X(lastIdx)}" y="${Hh - 5}" text-anchor="end">${endLabel || TR('сегодня')}</text>`;
     svg += `<line class="pw-cx" x1="0" y1="${padT}" x2="0" y2="${Hh - padB}" style="opacity:0"/>`;
     svg += `<circle class="pw-cd" r="4.3" style="opacity:0"/></svg>`;
     host.innerHTML = svg + '<div class="pw-tip"></div>';
@@ -1455,11 +1455,11 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
         cd.setAttribute('cx', x); cd.setAttribute('cy', y); cd.style.opacity = 1; ep.style.opacity = 0;
         const dlab = isFresh
             ? (FRD[i - last - 1] || '')
-            : ((dates && dates[i]) ? dates[i] : ((last - i) + ' дн назад'));
+            : ((dates && dates[i]) ? dates[i] : ((last - i) + TR(' дн назад')));
         let freshTx = '';
         if (isFresh) {
             const lh = FRL[i - last - 1];
-            freshTx = ' · набирает' + (lh ? (lh >= 24 ? ', в линии через ' + Math.ceil(lh / 24) + ' дн' : ', в линии через ' + lh + ' ч') : '');
+            freshTx = TR(' · набирает') + (lh ? (lh >= 24 ? TR(', в линии через ') + Math.ceil(lh / 24) + TR(' дн') : TR(', в линии через ') + lh + TR(' ч')) : '');
         }
         tip.innerHTML = `<div class="d">${dlab}</div>${val.toLocaleString('ru-RU')} охват${freshTx}`;
         tip.style.opacity = 1;
@@ -1708,22 +1708,22 @@ async function hcSave(reset) {
 
 let _tmCtx = null;
 const TM_ROLES = {
-    owner: { nm: 'Владелец', ic: 'crown', cls: 'tm-r-owner' },
-    trustee: { nm: 'Доверенный', ic: 'key', cls: 'tm-r-trustee', d: 'Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.' },
-    manager: { nm: 'Управляющий', ic: 'shield-check', cls: 'tm-r-manager', d: 'Редактирует, публикует, замораживает, ведёт календарь. Не удаляет оффер и не меняет команду.' },
-    editor: { nm: 'Редактор', ic: 'pencil', cls: 'tm-r-editor', d: 'Меняет оформление, тексты и календарь. Не публикует, не замораживает, не удаляет.' },
-    viewer: { nm: 'Наблюдатель', ic: 'eye', cls: 'tm-r-viewer', d: 'Видит оффер, метрики и сделки. Ничего не меняет.' },
-    none: { nm: 'Нет доступа', ic: 'x', cls: 'tm-r-none', d: 'Полностью закрыть доступ к офферу этому админу.' },
+    owner: { nm: TR('Владелец'), ic: 'crown', cls: 'tm-r-owner' },
+    trustee: { nm: TR('Доверенный'), ic: 'key', cls: 'tm-r-trustee', d: TR('Как Управляющий, плюс удаляет оффер и раздаёт роли админам. Не меняет владельца, себя и других доверенных.') },
+    manager: { nm: TR('Управляющий'), ic: 'shield-check', cls: 'tm-r-manager', d: TR('Редактирует, публикует, замораживает, ведёт календарь. Не удаляет оффер и не меняет команду.') },
+    editor: { nm: TR('Редактор'), ic: 'pencil', cls: 'tm-r-editor', d: TR('Меняет оформление, тексты и календарь. Не публикует, не замораживает, не удаляет.') },
+    viewer: { nm: TR('Наблюдатель'), ic: 'eye', cls: 'tm-r-viewer', d: TR('Видит оффер, метрики и сделки. Ничего не меняет.') },
+    none: { nm: TR('Нет доступа'), ic: 'x', cls: 'tm-r-none', d: TR('Полностью закрыть доступ к офферу этому админу.') },
 };
 const TM_ACTS = [
-    { k: 'view', t: 'Метрики и статистика', ic: 'chart-bar', lock: 'base' },
-    { k: 'edit', t: 'Редактировать оффер и календарь', ic: 'pencil' },
-    { k: 'pub', t: 'Публиковать · замораживать', ic: 'rocket' },
-    { k: 'links', t: 'Ссылки отслеживания и кампании', ic: 'link' },
-    { k: 'content', t: 'Контент-план канала', ic: 'calendar' },
-    { k: 'strategy', t: 'AI-стратегия канала', ic: 'target-arrow' },
-    { k: 'del', t: 'Удалить оффер', ic: 'trash' },
-    { k: 'team', t: 'Управлять командой', ic: 'users', lock: 'owner' },
+    { k: 'view', t: TR('Метрики и статистика'), ic: 'chart-bar', lock: 'base' },
+    { k: 'edit', t: TR('Редактировать оффер и календарь'), ic: 'pencil' },
+    { k: 'pub', t: TR('Публиковать · замораживать'), ic: 'rocket' },
+    { k: 'links', t: TR('Ссылки отслеживания и кампании'), ic: 'link' },
+    { k: 'content', t: TR('Контент-план канала'), ic: 'calendar' },
+    { k: 'strategy', t: TR('AI-стратегия канала'), ic: 'target-arrow' },
+    { k: 'del', t: TR('Удалить оффер'), ic: 'trash' },
+    { k: 'team', t: TR('Управлять командой'), ic: 'users', lock: 'owner' },
 ];
 
 function closeTeam() {
@@ -1802,7 +1802,7 @@ async function openTeam(fromBack) {
     let r = null;
     try { r = await apiRequest('/api/v1/team/overview'); } catch (e) {}
     const chs = (r && r.channels) || [];
-    if (!chs.length) { closeTeam(); cabToast('Сначала подключи канал — роли настраиваются для подключённых каналов'); return; }
+    if (!chs.length) { closeTeam(); cabToast(TR('Сначала подключи канал — роли настраиваются для подключённых каналов')); return; }
     _tmChsCache = chs;
     _tmMulti = chs.length > 1;
     if (chs.length === 1) { openTeamChannel(chs[0].id); return; }
@@ -1813,7 +1813,7 @@ async function openTeamChannel(chId) {
     _tmFill(_tmLoadingHtml());
     let d = null;
     try { d = await apiRequest('/api/v1/team/' + chId + '?sync=1'); } catch (e) {}
-    if (!d || !d.ok) { closeTeam(); cabToast('Не удалось загрузить команду канала'); return; }
+    if (!d || !d.ok) { closeTeam(); cabToast(TR('Не удалось загрузить команду канала')); return; }
     if (d.my_role === 'owner' || d.my_role === 'trustee') _tmOwnerView(d); else _tmMemberView(d);
 }
 
@@ -1824,15 +1824,15 @@ function _tmHead(d) {
         <div class="tm-hero">${_tmAv(c.avatar_url, c.title, 'tm-av-hero')}
         <div class="tm-col"><div class="tm-nm">${escapeHtml(c.title || '')}</div>
         <div class="tm-tg">@${escapeHtml(c.username || '')}</div>
-        <div class="tm-hst${c.connected ? '' : ' warn'}"><span class="dot"></span> <span>${c.connected ? 'подключён · бот — администратор' : 'бот не администратор — список может быть неполным'}</span></div></div></div>`;
+        <div class="tm-hst${c.connected ? '' : ' warn'}"><span class="dot"></span> <span>${c.connected ? TR('подключён · бот — администратор') : TR('бот не администратор — список может быть неполным')}</span></div></div></div>`;
 }
 
 function _tmOwnerView(d) {
     const members = d.members || [];
     const memRows = members.map(m => {
         const role = TM_ROLES[m.role] || TM_ROLES.none;
-        const tgLab = m.tg_status === 'creator' ? 'Создатель канала'
-            : (m.tg_status === 'administrator' ? 'Администратор' : 'Владелец в приложении');
+        const tgLab = m.tg_status === 'creator' ? TR('Создатель канала')
+            : (m.tg_status === 'administrator' ? TR('Администратор') : TR('Владелец в приложении'));
         if (m.is_owner) {
             const inApp = m.in_app === false ? ' · <span>' + t('ещё не заходил в приложение') + '</span>' : '';
             return `<div class="tm-mem">${_tmAv(m.avatar_url, m.name, 'tm-av-own tm-avr-owner')}
@@ -1842,7 +1842,7 @@ function _tmOwnerView(d) {
         }
         return `<div class="tm-mem tm-pick" data-tmu="${m.user_id}">${_tmAv(m.avatar_url, m.name, 'tm-avr-' + (m.role || 'none'))}
             <div class="tm-col"><div class="tm-nm">${escapeHtml(m.name || '')}</div>
-            <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? 'Создатель канала' : 'Администратор'}</span></div></div>
+            <div class="tm-tg"><i class="ti ti-brand-telegram"></i> <span>${m.tg_status === 'creator' ? TR('Создатель канала') : TR('Администратор')}</span></div></div>
             <span class="tm-chip ${role.cls}" id="tm-role-${m.user_id}"><i class="ti ti-${role.ic}"></i> ${role.nm}</span>
             <i class="ti ti-chevron-down tm-chev"></i></div>
             <div class="tm-rolepick" id="tm-pick-${m.user_id}" style="display:none;"></div>`;
@@ -1882,7 +1882,7 @@ function _tmOwnerView(d) {
     let matrix = JSON.parse(JSON.stringify(d.matrix || {}));
     let editMode = false;
     const drawMatrix = () => {
-        const cols = [['owner', 'Влад.'], ['trustee', 'Дов.'], ['manager', 'Упр.'], ['editor', 'Ред.'], ['viewer', 'Набл.']];
+        const cols = [['owner', TR('Влад.')], ['trustee', TR('Дов.')], ['manager', TR('Упр.')], ['editor', TR('Ред.')], ['viewer', TR('Набл.')]];
         const ownerP = { view: true, edit: true, pub: true, links: true, del: true, team: true, content: true, strategy: true };
         let h = '<div class="tm-mxhead"><div class="a">' + t('Действие') + '</div>' +
             cols.map(c => `<div class="tm-mxh h-${c[0]}"><span class="d"></span>${c[1]}</div>`).join('') + '</div>';
@@ -1982,10 +1982,10 @@ function _tmTogglePick(sheet, chId, m, isOwner) {
                     if (rowAv) rowAv.className = 'tm-av tm-avr-' + role;
                     box.style.display = 'none';
                     hapticMed();
-                    showToast(role === 'none' ? 'Доступ закрыт' : 'Роль назначена', 'check');
+                    showToast(role === 'none' ? TR('Доступ закрыт') : TR('Роль назначена'), 'check');
                     return;
                 }
-                showToast((rr && rr.error) || 'Не удалось назначить роль', 'alert-triangle');
+                showToast((rr && rr.error) || TR('Не удалось назначить роль'), 'alert-triangle');
             } catch (e) { showToast(t('Не удалось назначить роль'), 'alert-triangle'); }
         });
     });
@@ -1995,10 +1995,10 @@ function _tmMemberView(d) {
     const role = TM_ROLES[d.my_role] || TM_ROLES.viewer;
     const p = d.my_perms || {};
     const acts = [
-        ['edit', 'pencil', 'Редактировать'],
-        ['pub', 'rocket', 'Опубликовать · заморозить'],
-        ['del', 'trash', 'Удалить оффер'],
-        ['team', 'users', 'Команда'],
+        ['edit', 'pencil', TR('Редактировать')],
+        ['pub', 'rocket', TR('Опубликовать · заморозить')],
+        ['del', 'trash', TR('Удалить оффер')],
+        ['team', 'users', TR('Команда')],
     ];
     const btns = acts.map(a => {
         const ok = !!p[a[0]];
@@ -2156,9 +2156,9 @@ async function openQueueSheet(channelId) {
 
 function formatNumber(num) {
     if (num === null || num === undefined) return '—';
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'М';
-    if (num >= 10_000) return Math.floor(num / 1000) + 'к';
-    if (num >= 1_000) return (num / 1000).toFixed(1) + 'к';
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + TR('М');
+    if (num >= 10_000) return Math.floor(num / 1000) + TR('к');
+    if (num >= 1_000) return (num / 1000).toFixed(1) + TR('к');
     return String(num);
 }
 
@@ -2318,16 +2318,16 @@ function closeDrawer() {
 
 
 const PLACEHOLDER_CONFIG = {
-    create_post: { title: 'Создание поста', text: 'AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.', icon: 'sparkles' },
-    rewrite_post: { title: 'Рерайт поста', text: 'Перепишем чужой пост в твоём стиле. Скоро будет готово.', icon: 'pencil' },
-    content_plan: { title: 'Контент-план', text: 'AI составит план постов на неделю. Скоро запустим.', icon: 'calendar' },
-    ai_audit: { title: 'AI-аудит канала', text: 'Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.', icon: 'target' },
-    competitor_analysis: { title: 'Анализ конкурентов', text: 'Что у них набирает охват и почему. Функция готовится к запуску.', icon: 'search' },
-    post_price: { title: 'Цена поста', text: 'Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.', icon: 'calculator' },
-    negotiation_templates: { title: 'Шаблоны переговоров', text: '3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.', icon: 'message-circle' },
-    profile: { title: 'Forge и покупки', text: 'Баланс Forge, пакеты пополнения, история. Скоро запустим.', icon: 'user-circle' },
-    voice_settings: { title: 'Стиль канала', text: 'Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.', icon: 'microphone' },
-    add_channel: { title: 'Подключение канала', text: 'Подключи свой Telegram-канал чтобы я видел метрики и подстраивался под твой стиль. Скоро.', icon: 'plus' },
+    create_post: { title: TR('Создание поста'), text: TR('AI напишет пост в стиле твоего канала. Эта функция уже в разработке — скоро запустим.'), icon: 'sparkles' },
+    rewrite_post: { title: TR('Рерайт поста'), text: TR('Перепишем чужой пост в твоём стиле. Скоро будет готово.'), icon: 'pencil' },
+    content_plan: { title: TR('Контент-план'), text: TR('AI составит план постов на неделю. Скоро запустим.'), icon: 'calendar' },
+    ai_audit: { title: TR('AI-аудит канала'), text: TR('Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.'), icon: 'target' },
+    competitor_analysis: { title: TR('Анализ конкурентов'), text: TR('Что у них набирает охват и почему. Функция готовится к запуску.'), icon: 'search' },
+    post_price: { title: TR('Цена поста'), text: TR('Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.'), icon: 'calculator' },
+    negotiation_templates: { title: TR('Шаблоны переговоров'), text: TR('3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.'), icon: 'message-circle' },
+    profile: { title: TR('Forge и покупки'), text: TR('Баланс Forge, пакеты пополнения, история. Скоро запустим.'), icon: 'user-circle' },
+    voice_settings: { title: TR('Стиль канала'), text: TR('Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.'), icon: 'microphone' },
+    add_channel: { title: TR('Подключение канала'), text: TR('Подключи свой Telegram-канал чтобы я видел метрики и подстраивался под твой стиль. Скоро.'), icon: 'plus' },
 };
 
 
@@ -2365,7 +2365,7 @@ function handleAction(actionId) {
 
     if (actionId === 'rewrite_post') {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        openModuleSafe('rewrite.js', '__openRewrite', 'Рерайт');
+        openModuleSafe('rewrite.js', '__openRewrite', TR('Рерайт'));
         return;
     }
 
@@ -2439,8 +2439,8 @@ function handleAction(actionId) {
     if (actionId === 'tariffs') { openTariffs(); return; }
 
     const config = PLACEHOLDER_CONFIG[actionId] || {
-        title: 'Скоро будет готово',
-        text: 'Эта функция в разработке.',
+        title: TR('Скоро будет готово'),
+        text: TR('Эта функция в разработке.'),
         icon: 'rocket',
     };
 
@@ -2509,16 +2509,16 @@ async function openCabinet(scrollTo) {
 
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', stakeholder: 'Stakeholder', shareholder: 'Shareholder', majority_holder: 'Majority Holder' };
 const RF_PERK_TEXT = {
-    forge_200: 'ежемесячное начисление 200 Forge',
-    forge_550: 'ежемесячное начисление 550 Forge',
-    forge_900: 'ежемесячное начисление 900 Forge',
-    forge_1300: 'ежемесячное начисление 1 300 Forge',
-    forge_2000: 'ежемесячное начисление 2 000 Forge',
-    forge_3000: 'ежемесячное начисление 3 000 Forge',
-    forge_5000: 'ежемесячное начисление 5 000 Forge',
-    anim_sticker: 'анимированные стикеры на оффере',
-    fx_glow: 'оформление оффера «Свечение»',
-    fx_glass: 'оформление «Стекло»',
+    forge_200: TR('ежемесячное начисление 200 Forge'),
+    forge_550: TR('ежемесячное начисление 550 Forge'),
+    forge_900: TR('ежемесячное начисление 900 Forge'),
+    forge_1300: TR('ежемесячное начисление 1 300 Forge'),
+    forge_2000: TR('ежемесячное начисление 2 000 Forge'),
+    forge_3000: TR('ежемесячное начисление 3 000 Forge'),
+    forge_5000: TR('ежемесячное начисление 5 000 Forge'),
+    anim_sticker: TR('анимированные стикеры на оффере'),
+    fx_glow: TR('оформление оффера «Свечение»'),
+    fx_glass: TR('оформление «Стекло»'),
 };
 
 function cabRefLadder(r) {
@@ -2529,7 +2529,7 @@ function cabRefLadder(r) {
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
         const here = (i === ci && curKey === 'starter') ? '<span class="rf-here">' + TR('ты здесь') + '</span>' : '';
-        const need = x.need > 0 ? `от ${cabNum(x.need)} ${plural3(x.need, 'оплатившего', 'оплативших', 'оплативших')}` : 'старт';
+        const need = x.need > 0 ? `от ${cabNum(x.need)} ${plural3(x.need, TR('оплатившего'), TR('оплативших'), TR('оплативших'))}` : TR('старт');
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm" style="display:flex;align-items:center;gap:8px;"><span style="flex:1;min-width:0;">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}</span>${here}</span><b style="flex:0 0 auto;min-width:42px;text-align:right;font-size:13px;color:#c7cdff;font-variant-numeric:tabular-nums;">${x.rate_pct}%</b></div>${perks ? `<div class="perk">${escapeHtml(perks)}</div>` : ''}</div></div>`;
     }).join('');
@@ -2544,7 +2544,7 @@ function refCardHtml(r) {
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
         ? `${TR('до')} <b>${escapeHtml(r.next_level_display)}</b> ${TR('· ещё')} <b>${cabNum(r.needed_for_next)}</b> ${TR('оплативших')}`
-        : 'высший уровень';
+        : TR('высший уровень');
     return `<div class="rf">
   <div class="rf-card">
     <span class="rf-eyebrow">${TR('Приглашено по твоей ссылке')}</span>
@@ -2650,30 +2650,30 @@ async function loadRefLeaderboard() {
 }
 
 const FORGE_OP_LABEL = {
-    promo_burst24: 'Продвижение · всплеск 24 ч', promo_burst48: 'Продвижение · всплеск 48 ч',
-    promo_week: 'Продвижение · неделя в ленте', promo_month: 'Продвижение · месяц в ленте',
-    ai_strategy: 'AI-стратегия канала', strategy_renewal: 'Продление AI-стратегии',
-    welcome: 'Стартовый запас',
-    generate: 'Пост · премиум', generate_std: 'Пост · стандарт',
-    modify: 'Правка · премиум', modify_std: 'Правка · стандарт',
-    rewrite: 'Рерайт', rewrite_std: 'Рерайт · стандарт',
-    voice: 'Настройка стиля', content_plan: 'Контент-план недели',
-    content_plan_day: 'День контент-плана', adpick: 'Подбор каналов',
-    audit: 'AI-аудит канала', deep_audit: 'Коммерческий аудит',
-    competitors: 'Анализ конкурентов', intent: 'Анализ темы',
-    suggest: 'Подсказки правок', ideas: 'Идеи постов', niche: 'Определение ниши',
+    promo_burst24: TR('Продвижение · всплеск 24 ч'), promo_burst48: TR('Продвижение · всплеск 48 ч'),
+    promo_week: TR('Продвижение · неделя в ленте'), promo_month: TR('Продвижение · месяц в ленте'),
+    ai_strategy: TR('AI-стратегия канала'), strategy_renewal: TR('Продление AI-стратегии'),
+    welcome: TR('Стартовый запас'),
+    generate: TR('Пост · премиум'), generate_std: TR('Пост · стандарт'),
+    modify: TR('Правка · премиум'), modify_std: TR('Правка · стандарт'),
+    rewrite: TR('Рерайт'), rewrite_std: TR('Рерайт · стандарт'),
+    voice: TR('Настройка стиля'), content_plan: TR('Контент-план недели'),
+    content_plan_day: TR('День контент-плана'), adpick: TR('Подбор каналов'),
+    audit: TR('AI-аудит канала'), deep_audit: TR('Коммерческий аудит'),
+    competitors: TR('Анализ конкурентов'), intent: TR('Анализ темы'),
+    suggest: TR('Подсказки правок'), ideas: TR('Идеи постов'), niche: TR('Определение ниши'),
 };
 
 const FORGE_KIND_LABEL = {
-    tier: 'Начисление', topup: 'Пополнение баланса',
-    welcome: 'Стартовый запас',
-    referral: 'Партнёрское вознаграждение', referral_perk: 'Бонус уровня',
-    free: 'Ежемесячное начисление', refund: 'Возврат', spend: 'Списание',
+    tier: TR('Начисление'), topup: TR('Пополнение баланса'),
+    welcome: TR('Стартовый запас'),
+    referral: TR('Партнёрское вознаграждение'), referral_perk: TR('Бонус уровня'),
+    free: TR('Ежемесячное начисление'), refund: TR('Возврат'), spend: TR('Списание'),
 };
 
 function forgeTxLabel(tx) {
-    if (tx.amount > 0) return FORGE_KIND_LABEL[tx.kind] || 'Начисление';
-    return FORGE_OP_LABEL[tx.operation] || FORGE_KIND_LABEL[tx.kind] || 'Списание';
+    if (tx.amount > 0) return FORGE_KIND_LABEL[tx.kind] || TR('Начисление');
+    return FORGE_OP_LABEL[tx.operation] || FORGE_KIND_LABEL[tx.kind] || TR('Списание');
 }
 
 function forgeTxDate(iso) {
@@ -2685,25 +2685,25 @@ function forgeTxDate(iso) {
 }
 
 const FW_PRICE_EXPLAIN = {
-    generate: 'Готовый пост по заданию с учётом профиля стиля канала. Премиум-модель точнее держит тему, глубже прорабатывает аргументацию и требует меньше правок.',
-    generate_std: 'Готовый пост по заданию стандартной моделью. Рабочий вариант для регулярного контента: анонсы, подборки, короткие форматы.',
-    generate_proofs: 'Пост премиум-моделью плюс живой поиск первоисточников: система находит 1-3 исследования в авторитетных научных источниках, проверяет каждую ссылку и вставляет их в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается за вычетом сбора за поиск.',
-    generate_std_proofs: 'Пост стандартной моделью с поиском первоисточников: 1-3 проверенные ссылки на исследования, оформленные в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается за вычетом сбора за поиск.',
-    research_attach: 'Живой поиск первоисточников для уже написанного поста контент-плана: 1-3 проверенные ссылки вставляются в манере канала. Если подтверждённых работ не нашлось — возврат за вычетом сбора за поиск.',
-    modify: 'Точечная доработка готового поста по инструкции: сменить тон, сократить, расширить, переписать фрагмент. Пост не пересобирается с нуля — правится только указанное.',
-    rewrite: 'Переработка чужого поста в уникальный текст под стиль твоего канала: смысл и факты сохраняются, структура и формулировки — новые.',
-    voice: 'Анализ опубликованных постов канала и настройка профиля стиля: тон, лексика, структура, оформление. Профиль применяется ко всем последующим генерациям.',
-    channel_analyze: 'Оценка чужого канала перед покупкой рекламы: вердикт с баллом доверия, реальный охват против заявленного, портрет аудитории, красные флаги, справедливая цена размещения и прогноз отдачи. Готовая позиция для переговоров с продавцом.',
-    adpick: 'Подбор площадок под закуп рекламы: сбор кандидатов с проверенными метриками — охват, вовлечённость, доля рекламы в ленте, динамика подписчиков — и ранжирование лучших с оценкой совпадения аудитории и обоснованием по цифрам.',
-    audit: 'Полный аудит твоего канала: балл по контенту, охвату, регулярности и монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места с оценкой потерь, прогноз развития и пошаговый план с дедлайнами.',
-    deep_audit: 'Коммерческий аудит канала как рекламной площадки: позиция среди каналов ниши, цена размещения против рыночной вилки, качество трафика с проверкой на накрутку, аудитория как аргумент в продаже, рекомендованные цены форматов и потенциал дохода в месяц.',
-    competitors: 'Поиск и разбор каналов-конкурентов: карта ниши, сравнение с каждым по охвату, частоте и подписчикам, приёмы, которые приносят им результат, твои пробелы и план действий, чтобы их закрыть.',
-    promo_burst24: 'Кратковременный подъём твоего оффера в платной полосе ленты Площадки на сутки. Открывает стиль «Свечение» на время продвижения. Покупается на оффере: Площадка → Мои офферы → «Продвинуть».',
-    promo_burst48: 'Подъём оффера в платной полосе ленты на двое суток. Открывает стиль «Свечение» на время продвижения. Всплесков 24 и 48 ч вместе — не больше 3 в месяц.',
-    promo_week: 'Присутствие оффера в платной полосе ленты 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры. Платные офферы занимают не более 20% ленты — органику не топит.',
-    promo_month: 'Присутствие оффера в платной полосе 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается».',
-    ai_strategy: 'Личный стратег: интервью, выбор ниши, контент-план с первыми 10 постами, гайды трафика и месяц ведения — еженедельные разборы и чат. Покупается на экране «AI-стратегия».',
-    strategy_renewal: 'Ещё 30 дней ведения стратегии: еженедельные разборы плана с фактом, гайды шагов и чат со стратегом.',
+    generate: TR('Готовый пост по заданию с учётом профиля стиля канала. Премиум-модель точнее держит тему, глубже прорабатывает аргументацию и требует меньше правок.'),
+    generate_std: TR('Готовый пост по заданию стандартной моделью. Рабочий вариант для регулярного контента: анонсы, подборки, короткие форматы.'),
+    generate_proofs: TR('Пост премиум-моделью плюс живой поиск первоисточников: система находит 1-3 исследования в авторитетных научных источниках, проверяет каждую ссылку и вставляет их в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается за вычетом сбора за поиск.'),
+    generate_std_proofs: TR('Пост стандартной моделью с поиском первоисточников: 1-3 проверенные ссылки на исследования, оформленные в манере канала. Если подтверждённых работ не нашлось — разница в цене возвращается за вычетом сбора за поиск.'),
+    research_attach: TR('Живой поиск первоисточников для уже написанного поста контент-плана: 1-3 проверенные ссылки вставляются в манере канала. Если подтверждённых работ не нашлось — возврат за вычетом сбора за поиск.'),
+    modify: TR('Точечная доработка готового поста по инструкции: сменить тон, сократить, расширить, переписать фрагмент. Пост не пересобирается с нуля — правится только указанное.'),
+    rewrite: TR('Переработка чужого поста в уникальный текст под стиль твоего канала: смысл и факты сохраняются, структура и формулировки — новые.'),
+    voice: TR('Анализ опубликованных постов канала и настройка профиля стиля: тон, лексика, структура, оформление. Профиль применяется ко всем последующим генерациям.'),
+    channel_analyze: TR('Оценка чужого канала перед покупкой рекламы: вердикт с баллом доверия, реальный охват против заявленного, портрет аудитории, красные флаги, справедливая цена размещения и прогноз отдачи. Готовая позиция для переговоров с продавцом.'),
+    adpick: TR('Подбор площадок под закуп рекламы: сбор кандидатов с проверенными метриками — охват, вовлечённость, доля рекламы в ленте, динамика подписчиков — и ранжирование лучших с оценкой совпадения аудитории и обоснованием по цифрам.'),
+    audit: TR('Полный аудит твоего канала: балл по контенту, охвату, регулярности и монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места с оценкой потерь, прогноз развития и пошаговый план с дедлайнами.'),
+    deep_audit: TR('Коммерческий аудит канала как рекламной площадки: позиция среди каналов ниши, цена размещения против рыночной вилки, качество трафика с проверкой на накрутку, аудитория как аргумент в продаже, рекомендованные цены форматов и потенциал дохода в месяц.'),
+    competitors: TR('Поиск и разбор каналов-конкурентов: карта ниши, сравнение с каждым по охвату, частоте и подписчикам, приёмы, которые приносят им результат, твои пробелы и план действий, чтобы их закрыть.'),
+    promo_burst24: TR('Кратковременный подъём твоего оффера в платной полосе ленты Площадки на сутки. Открывает стиль «Свечение» на время продвижения. Покупается на оффере: Площадка → Мои офферы → «Продвинуть».'),
+    promo_burst48: TR('Подъём оффера в платной полосе ленты на двое суток. Открывает стиль «Свечение» на время продвижения. Всплесков 24 и 48 ч вместе — не больше 3 в месяц.'),
+    promo_week: TR('Присутствие оффера в платной полосе ленты 7 дней. Открывает «Свечение», «Стекло» и анимированные стикеры. Платные офферы занимают не более 20% ленты — органику не топит.'),
+    promo_month: TR('Присутствие оффера в платной полосе 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается».'),
+    ai_strategy: TR('Личный стратег: интервью, выбор ниши, контент-план с первыми 10 постами, гайды трафика и месяц ведения — еженедельные разборы и чат. Покупается на экране «AI-стратегия».'),
+    strategy_renewal: TR('Ещё 30 дней ведения стратегии: еженедельные разборы плана с фактом, гайды шагов и чат со стратегом.'),
 };
 
 function fwPriceRows(list) {
@@ -2747,20 +2747,20 @@ function renderCabinet(d) {
         const chMain = chPaused > 0 ? chActive : chN;
         const chOf = chLim ? ` <s><span>${TR('из')}</span> ${cabNum(chLim)}</s>` : '';
         const chLabel = chPaused > 0
-            ? `${plural3(chMain, 'канал', 'канала', 'каналов')} · ${cabNum(chPaused)} на паузе`
-            : plural3(chMain, 'канал', 'канала', 'каналов');
+            ? `${plural3(chMain, TR('канал'), TR('канала'), TR('каналов'))} · ${cabNum(chPaused)} на паузе`
+            : plural3(chMain, TR('канал'), TR('канала'), TR('каналов'));
         return `<div class="cab-pstats num">` +
             `<div class="cab-ps"><div class="v">${cabNum(chMain)}${chOf}</div><div class="l">${chLabel}</div></div>` +
-            `<div class="cab-ps"><div class="v">${cabNum(liN)}</div><div class="l">${plural3(liN, 'оффер', 'оффера', 'офферов')}</div></div>` +
-            (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, 'день с нами', 'дня с нами', 'дней с нами')}</div></div>` : '') +
+            `<div class="cab-ps"><div class="v">${cabNum(liN)}</div><div class="l">${plural3(liN, TR('оффер'), TR('оффера'), TR('офферов'))}</div></div>` +
+            (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, TR('день с нами'), TR('дня с нами'), TR('дней с нами'))}</div></div>` : '') +
             `</div>`;
     })() : '';
     const _fbal = Number(((d || {}).forge || {}).balance || 0);
-    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || 'Профиль')}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? 'в ForgeMetrics с ' + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><button class="forge-chip" id="cab-tarpill" type="button" style="margin-left:auto;align-self:flex-start;"><span class="forge-chip-ico">${FORGE_SVG}</span><span class="forge-chip-val">${cabNum(_fbal)}</span></button></div>${_hstats}</div>`;
+    let html = `<div class="cab-card cab-hero"><div class="cab-hrow"><div class="cab-av">${photo ? `<img src="${escapeHtml(photo)}" alt="">` : initial}</div><div class="cab-hi"><div class="cab-nm">${escapeHtml(u.first_name || TR('Профиль'))}</div><div class="cab-hsub"><i class="ti ti-calendar-event"></i> ${u.member_since ? TR('в ForgeMetrics с ') + escapeHtml(u.member_since) : 'ForgeMetrics'}</div></div><button class="forge-chip" id="cab-tarpill" type="button" style="margin-left:auto;align-self:flex-start;"><span class="forge-chip-ico">${FORGE_SVG}</span><span class="forge-chip-val">${cabNum(_fbal)}</span></button></div>${_hstats}</div>`;
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">${TR('Команда канала')}</div><div class="cab-sd">${TR('Роли и права админов на оффер')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">${TR('Уведомления')}</div><div class="cab-sd">${TR('Заявки в нише, отклики, статусы офферов')}</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">${TR('Тема оформления')}</div><div class="cab-sd">${TR('Тёмная фирменная · выбор тем')}</div></div><span class="cab-soon">${TR('Скоро')}</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${TR('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">${TR('Справка и поддержка')}</div><div class="cab-sd">${TR('Метрики, Forge, связь с нами')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">${TR('Пользовательское соглашение')}</div><div class="cab-sd">${TR('Условия использования сервиса')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">${TR('Команда канала')}</div><div class="cab-sd">${TR('Роли и права админов на оффер')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">${TR('Уведомления')}</div><div class="cab-sd">${TR('Заявки в нише, отклики, статусы офферов')}</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">${TR('Тема оформления')}</div><div class="cab-sd">${TR('Тёмная фирменная · выбор тем')}</div></div><span class="cab-soon">${TR('Скоро')}</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${TR('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : TR('RU Русский')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">${TR('Справка и поддержка')}</div><div class="cab-sd">${TR('Метрики, Forge, связь с нами')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">${TR('Пользовательское соглашение')}</div><div class="cab-sd">${TR('Условия использования сервиса')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
     html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>${TR('На информационном ресурсе применяются рекомендательные технологии')}</span></div>`;
@@ -2858,14 +2858,14 @@ function wireCabinet(d) {
     on('cab-team', () => { openTeam(); });
     on('cab-about', () => { openHelpSheet(); });
     on('cab-terms', openUserTerms);
-    on('cab-theme', () => cabToast('Темы оформления — скоро'));
+    on('cab-theme', () => cabToast(TR('Темы оформления — скоро')));
     on('cab-lang', () => openLangPicker());
     on('cab-notif', () => {
         const tog = document.getElementById('cab-notif-tog');
         if (!tog) return;
         const now = tog.classList.toggle('on');
         try { localStorage.setItem('fm_notif', now ? '1' : '0'); } catch (e) {}
-        cabToast(now ? 'Уведомления включены' : 'Уведомления выключены');
+        cabToast(now ? TR('Уведомления включены') : TR('Уведомления выключены'));
     });
 
 }
@@ -2883,14 +2883,14 @@ function wireReferral(d) {
     on('cab-linkcopy', () => {
         const link = (d.referral && d.referral.referral_link) || '';
         const b = document.getElementById('cab-linkcopy');
-        copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast('Ссылка скопирована'); });
+        copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast(TR('Ссылка скопирована')); });
     });
     on('cab-invite-copy', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
         const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:') + '\n' + link;
         const b = document.getElementById('cab-invite-copy');
-        copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
+        copyText(text).then(() => { cabToast(TR('Текст приглашения скопирован')); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
 }
 
@@ -3011,16 +3011,16 @@ function flipToggle(owner, toggle, open, fadeSel) {
 const TFC_MAIN = ['generate', 'generate_std', 'audit', 'adpick'];
 // короткие подписи: полные названия из прайса рвутся на две строки и отрывают цену
 const TFC_SHORT = {
-    generate: 'Премиум-пост', generate_std: 'Стандартный пост',
-    promo_burst24: 'Всплеск продвижения 24 ч', promo_burst48: 'Всплеск продвижения 48 ч',
-    promo_week: 'Неделя продвижения', promo_month: 'Месяц продвижения',
-    ai_strategy: 'AI-стратегия', strategy_renewal: 'Продление стратегии',
-    generate_proofs: 'Пост с исследованиями', generate_std_proofs: 'Стандарт с исследованиями',
-    research_attach: 'Исследования к посту',
-    modify: 'Правка поста', rewrite: 'Рерайт поста',
-    voice: 'Настройка стиля', adpick: 'Подбор каналов',
-    channel_analyze: 'AI-разбор', audit: 'AI-аудит', deep_audit: 'Коммерческий аудит',
-    competitors: 'Анализ конкурентов',
+    generate: TR('Премиум-пост'), generate_std: TR('Стандартный пост'),
+    promo_burst24: TR('Всплеск продвижения 24 ч'), promo_burst48: TR('Всплеск продвижения 48 ч'),
+    promo_week: TR('Неделя продвижения'), promo_month: TR('Месяц продвижения'),
+    ai_strategy: TR('AI-стратегия'), strategy_renewal: TR('Продление стратегии'),
+    generate_proofs: TR('Пост с исследованиями'), generate_std_proofs: TR('Стандарт с исследованиями'),
+    research_attach: TR('Исследования к посту'),
+    modify: TR('Правка поста'), rewrite: TR('Рерайт поста'),
+    voice: TR('Настройка стиля'), adpick: TR('Подбор каналов'),
+    channel_analyze: TR('AI-разбор'), audit: TR('AI-аудит'), deep_audit: TR('Коммерческий аудит'),
+    competitors: TR('Анализ конкурентов'),
 };
 const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
     generate_std_proofs: 100, research_attach: 100, rewrite: 100, modify: 200, voice: 20,
@@ -3028,11 +3028,11 @@ const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
     promo_burst24: 30, promo_burst48: 30, promo_week: 20, promo_month: 12,
     ai_strategy: 3, strategy_renewal: 12 };
 const TFC_PRESETS = [
-    { t: 'Один канал', ic: 'user', color: 'bl',
+    { t: TR('Один канал'), ic: 'user', color: 'bl',
       v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
-    { t: 'Продаю рекламу', ic: 'coin', color: 'pu',
+    { t: TR('Продаю рекламу'), ic: 'coin', color: 'pu',
       v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
-    { t: 'Сетка', ic: 'sitemap', color: 'gr',
+    { t: TR('Сетка'), ic: 'sitemap', color: 'gr',
       v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
         audit: 3, adpick: 4, competitors: 2 } },
 ];
@@ -3077,9 +3077,9 @@ function tfcClamp(d) {
 function tfcHint(d, o) {
     const val = tfCalc.v[o.key] || 0;
     const add = Math.floor(tfcLeft(d) / o.price);
-    if (add > 0) return 'можно добрать ещё ' + cabNum(add);
-    if (val > 0) return 'предел запаса · освободи ' + cabNum(o.price - tfcLeft(d)) + ', чтобы добавить ещё';
-    return 'нужно ещё ' + cabNum(o.price - tfcLeft(d)) + ' Forge, чтобы взять одну';
+    if (add > 0) return TR('можно добрать ещё ') + cabNum(add);
+    if (val > 0) return TR('предел запаса · освободи ') + cabNum(o.price - tfcLeft(d)) + TR(', чтобы добавить ещё');
+    return TR('нужно ещё ') + cabNum(o.price - tfcLeft(d)) + TR(' Forge, чтобы взять одну');
 }
 
 function tfcRow(d, o) {
@@ -3150,16 +3150,16 @@ function tfCalculatorHtml(d) {
         + '<div class="tfc-budget' + (rest === 0 ? ' full' : '') + '">'
         + '<span class="tfc-bic"><i class="ti ti-circle-check"></i></span>'
         + '<span class="tfc-bt"><small>'
-        + (rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить') + '</small>'
+        + (rest === 0 ? TR('Запас распределён полностью') : TR('Осталось распределить')) + '</small>'
         + '<b>' + forgeAmount(rest, 15) + '</b>'
         + '<i>' + TR('из пакета') + ' ' + escapeHtml(t.name)
-        + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '')
+        + (next && next.forge ? TR(' · следующий пакет даст ') + cabNum(next.forge) : '')
         + '</i></span></div>'
         + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
         + '<button class="tfc-more" id="tfc-more"><i class="ti ti-'
         + (tfCalc.open ? 'chevron-up' : 'adjustments-alt') + '"></i>'
-        + (tfCalc.open ? 'Свернуть остальное'
-            : 'Ещё ' + more.length + ' ' + plural(more.length, 'операция', 'операции', 'операций'))
+        + (tfCalc.open ? TR('Свернуть остальное')
+            : TR('Ещё ') + more.length + ' ' + plural(more.length, TR('операция'), TR('операции'), TR('операций')))
         + '</button>'
         + '<div id="tfc-more-rows">' + (tfCalc.open ? more.map((o) => tfcRow(d, o)).join('') : '') + '</div>'
         + '</div>';
@@ -3203,13 +3203,13 @@ function tfcRefresh(d) {
     box.classList.toggle('full', rest === 0);
     // строго внутри текстовой части: тег i снаружи — это иконка галочки
     const sm = box.querySelector('.tfc-bt small');
-    if (sm) sm.textContent = rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить';
+    if (sm) sm.textContent = rest === 0 ? TR('Запас распределён полностью') : TR('Осталось распределить');
     const b = box.querySelector('.tfc-bt b');
     if (b) b.innerHTML = forgeAmount(rest, 15);
     const note = box.querySelector('.tfc-bt i');
     if (note) {
-        note.textContent = 'из пакета ' + t.name
-            + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '');
+        note.textContent = TR('из пакета ') + t.name
+            + (next && next.forge ? TR(' · следующий пакет даст ') + cabNum(next.forge) : '');
     }
 }
 
@@ -3354,7 +3354,7 @@ function openCheckout(opts) {
     if (!opts || !opts.price) return;
     closeCheckout();
     const price = opts.price;
-    const subline = opts.sub ? `Подписка · ${opts.periodWord || 'Месяц'}` : 'Разовый пакет';
+    const subline = opts.sub ? `Подписка · ${opts.periodWord || TR('Месяц')}` : TR('Разовый пакет');
     const perHtml = opts.per ? `<span>${opts.per}</span>` : '';
     const overlay = document.createElement('div');
     overlay.className = 'bs-overlay';
@@ -3435,7 +3435,7 @@ async function coWaitPayment(sheet, paymentId, name) {
             return;
         }
         if (res && (res.status === 'canceled' || res.status === 'refunded')) {
-            coPayPending(sheet, 'Платёж не прошёл', 'Оплата отменена. Кредиты, если списывались, вернулись на баланс.');
+            coPayPending(sheet, TR('Платёж не прошёл'), TR('Оплата отменена. Кредиты, если списывались, вернулись на баланс.'));
             return;
         }
     }
@@ -3469,7 +3469,7 @@ async function coPay(opts) {
             if (res.discount_rub) paid.push(`скидка −${cabNum(res.discount_rub)} ₽`);
             if (res.credits_used_rub) paid.push(`кредиты −${cabNum(res.credits_used_rub)} ₽`);
             const note = paid.length ? ` Учтено: ${paid.join(', ')}.` : '';
-            coPayPending(sheet, 'Ожидаем оплату',
+            coPayPending(sheet, TR('Ожидаем оплату'),
                 `Открыли страницу оплаты на ${cabNum(res.amount_rub)} ₽.${note} Доступ откроется сразу после платежа.`);
             coWaitPayment(sheet, res.payment_id, opts.name);
             try {
@@ -3479,10 +3479,10 @@ async function coPay(opts) {
         }
         const err = (res && res.error) || '';
         if (err === 'billing_not_ready') {
-            coPayPending(sheet, 'Приём платежей подключается', 'Оплата станет доступна в ближайшее время.');
+            coPayPending(sheet, TR('Приём платежей подключается'), TR('Оплата станет доступна в ближайшее время.'));
         } else {
             if (btn) { btn.disabled = false; btn.innerHTML = `<i class="ti ti-credit-card"></i> ${TR('Оплатить')} ${cabNum(opts.price)} ₽`; }
-            cabToast(err === 'amount_too_small' ? 'Сумма слишком мала для оплаты' : 'Не удалось открыть оплату');
+            cabToast(err === 'amount_too_small' ? TR('Сумма слишком мала для оплаты') : TR('Не удалось открыть оплату'));
         }
         return;
     }
@@ -3536,7 +3536,7 @@ function setupEventListeners() {
             var r = els.drawer.getBoundingClientRect();
             var inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
             if (!inside) {
-                if (e.target !== els.drawerOverlay) fmClientLog('drawer-emergency-close, клик съел: ' + _fmElDesc(e.target || {}));
+                if (e.target !== els.drawerOverlay) fmClientLog(TR('drawer-emergency-close, клик съел: ') + _fmElDesc(e.target || {}));
                 closeDrawer();
             }
         } catch (err) {}
@@ -3646,7 +3646,7 @@ function resetPostState() {
     if (els.postQuestionCustomInput) els.postQuestionCustomInput.value = '';
     if (els.postResultCustomInput) els.postResultCustomInput.value = '';
     if (els.postStyleApply) {
-        els.postStyleApply.textContent = 'Применить';
+        els.postStyleApply.textContent = TR('Применить');
         els.postStyleApply.classList.remove('applied');
     }
 }
@@ -3697,9 +3697,9 @@ async function openPostCreate() {
 
 
 const POST_LENGTH_NOTES = {
-    short: '≈ 300 знаков',
-    medium: '≈ 650 знаков',
-    long: '≈ 1300 знаков',
+    short: TR('≈ 300 знаков'),
+    medium: TR('≈ 650 знаков'),
+    long: TR('≈ 1300 знаков'),
 };
 
 function updateLengthAutoNote(styleProfile) {
@@ -3915,7 +3915,7 @@ function renderPostChannelSelector(channel) {
     } else if (isPrivate) {
         avatarHtml = `<div class="post-channel-selector-avatar private"><i class="ti ti-lock"></i></div>`;
     } else {
-        avatarHtml = `<div class="post-channel-selector-avatar">${escapeHtml(String(channel.title || 'К').trim().charAt(0).toUpperCase())}</div>`;
+        avatarHtml = `<div class="post-channel-selector-avatar">${escapeHtml(String(channel.title || TR('К')).trim().charAt(0).toUpperCase())}</div>`;
     }
 
     if (hasVoice) {
@@ -3924,7 +3924,7 @@ function renderPostChannelSelector(channel) {
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
                     <div class="post-channel-selector-eyebrow">${TR('Пишу в стиле')}</div>
-                    <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
+                    <div class="post-channel-selector-title">${escapeHtml(channel.title || TR('Канал'))} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
                 </div>
                 <i class="ti ti-chevron-down post-channel-selector-chev"></i>
             </div>
@@ -3935,7 +3935,7 @@ function renderPostChannelSelector(channel) {
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
                     <div class="post-channel-selector-eyebrow">${TR('Активный канал')}</div>
-                    <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-alert-triangle post-channel-selector-warn"></i></div>
+                    <div class="post-channel-selector-title">${escapeHtml(channel.title || TR('Канал'))} <i class="ti ti-alert-triangle post-channel-selector-warn"></i></div>
                     <div class="post-channel-selector-hint">
                         ${TR('Стиль не настроен — пишу нейтрально.')} <a href="#" data-pcs-upload="${channel.id}">${TR('Загрузить примеры →')}</a>
                     </div>
@@ -4090,12 +4090,12 @@ function renderLimitBanner(limits) {
                 + `<i class="ti ti-${ico}"></i><span>${label}</span>`
                 + `<em>${forgeAmount(p, 11)}</em></button>`;
         };
-        head = `<div class="pm-segs">${seg('premium', 'diamond', 'Премиум')}`
-            + `${seg('standard', 'edit', 'Стандарт')}</div>`;
+        head = `<div class="pm-segs">${seg('premium', 'diamond', TR('Премиум'))}`
+            + `${seg('standard', 'edit', TR('Стандарт'))}</div>`;
     } else {
         head = `<div class="limit-row-head">`
             + `<span class="limit-row-icon"><i class="ti ti-${premium ? 'diamond' : 'edit'}"></i></span>`
-            + `<span class="limit-row-label">${premium ? 'Премиум-модель' : 'Стандартная модель'}</span>`
+            + `<span class="limit-row-label">${premium ? TR('Премиум-модель') : TR('Стандартная модель')}</span>`
             + `${right}</div>`;
     }
 
@@ -4106,8 +4106,8 @@ function renderLimitBanner(limits) {
     } else {
         const left = price > 0 ? Math.floor(balance / price) : 0;
         const word = premium
-            ? plural3(left, 'премиум-пост', 'премиум-поста', 'премиум-постов')
-            : plural3(left, 'стандартный пост', 'стандартных поста', 'стандартных постов');
+            ? plural3(left, TR('премиум-пост'), TR('премиум-поста'), TR('премиум-постов'))
+            : plural3(left, TR('стандартный пост'), TR('стандартных поста'), TR('стандартных постов'));
         note = `<div class="fwb-note">Баланса хватит на ${left} ${word}</div>`;
     }
 
@@ -4153,14 +4153,14 @@ function updateStyleHint(limits) {
     els.postStyleHint.style.display = 'flex';
 
     if (hasChannel && !hasVoice) {
-        els.postStyleHintTitle.textContent = 'Стиль письма не настроен';
-        els.postStyleHintText.textContent = 'Я буду писать нейтрально. Настрой стиль чтобы я писал именно как ты в канале';
-        els.postStyleLoadBtn.querySelector('span').textContent = 'Настроить стиль';
+        els.postStyleHintTitle.textContent = TR('Стиль письма не настроен');
+        els.postStyleHintText.textContent = TR('Я буду писать нейтрально. Настрой стиль чтобы я писал именно как ты в канале');
+        els.postStyleLoadBtn.querySelector('span').textContent = TR('Настроить стиль');
         els.postStyleConnectBtn.style.display = 'none';
     } else {
-        els.postStyleHintTitle.textContent = 'Я буду писать в нейтральном стиле';
-        els.postStyleHintText.textContent = 'Загрузи пример — научусь писать как ты';
-        els.postStyleLoadBtn.querySelector('span').textContent = 'Загрузить пример';
+        els.postStyleHintTitle.textContent = TR('Я буду писать в нейтральном стиле');
+        els.postStyleHintText.textContent = TR('Загрузи пример — научусь писать как ты');
+        els.postStyleLoadBtn.querySelector('span').textContent = TR('Загрузить пример');
         els.postStyleConnectBtn.style.display = '';
     }
 }
@@ -4197,8 +4197,8 @@ function applyStyleInput() {
     state.post.styleReferenceText = val;
 
     if (els.postStyleApply) {
-        const original = 'Применить';
-        els.postStyleApply.textContent = val ? 'Сохранено ✓' : 'Пусто';
+        const original = TR('Применить');
+        els.postStyleApply.textContent = val ? TR('Сохранено ✓') : TR('Пусто');
         els.postStyleApply.classList.toggle('applied', !!val);
         setTimeout(() => {
             if (els.postStyleApply) {
@@ -4227,11 +4227,11 @@ function updateStyleLoadBtnLabel() {
     const span = els.postStyleLoadBtn.querySelector('span');
     if (!span) return;
     if (state.post.styleReferenceText) {
-        span.textContent = 'Пример загружен ✓';
+        span.textContent = TR('Пример загружен ✓');
     } else {
         const hasChannel = !!state.post.limits?.has_channel;
         const hasVoice = !!state.post.limits?.has_voice;
-        span.textContent = (hasChannel && !hasVoice) ? 'Настроить стиль' : 'Загрузить пример';
+        span.textContent = (hasChannel && !hasVoice) ? TR('Настроить стиль') : TR('Загрузить пример');
     }
 }
 
@@ -4270,9 +4270,9 @@ function confirmDialog(message, okText) {
         title: t.title,
         message: t.body,
         actions: [
-            { id: 'ok', text: _trDialog(okText || 'Подтвердить'), icon: danger ? 'trash' : 'check',
+            { id: 'ok', text: _trDialog(okText || TR('Подтвердить')), icon: danger ? 'trash' : 'check',
               style: danger ? 'danger' : 'default' },
-            { id: 'cancel', text: _trDialog('Отмена'), style: 'cancel' },
+            { id: 'cancel', text: _trDialog(TR('Отмена')), style: 'cancel' },
         ],
     }).then((r) => r === 'ok');
 }
@@ -4284,14 +4284,14 @@ function alertDialog(message) {
     return actionSheet({
         title: t.title,
         message: t.body,
-        actions: [{ id: 'ok', text: _trDialog('Понятно'), style: 'cancel' }],
+        actions: [{ id: 'ok', text: _trDialog(TR('Понятно')), style: 'cancel' }],
     }).then(() => undefined);
 }
 
 function alertDialogHtml(title, bodyHtml) {
     return actionSheet({
         title: _trDialog(title), message: bodyHtml, html: true,
-        actions: [{ id: 'ok', text: _trDialog('Понятно'), style: 'cancel' }],
+        actions: [{ id: 'ok', text: _trDialog(TR('Понятно')), style: 'cancel' }],
     }).then(() => undefined);
 }
 
@@ -4299,8 +4299,8 @@ function confirmDialogHtml(title, bodyHtml, okText) {
     return actionSheet({
         title: _trDialog(title), message: bodyHtml, html: true,
         actions: [
-            { id: 'ok', text: _trDialog(okText || 'Подтвердить'), icon: 'check', style: 'default' },
-            { id: 'cancel', text: _trDialog('Отмена'), style: 'cancel' },
+            { id: 'ok', text: _trDialog(okText || TR('Подтвердить')), icon: 'check', style: 'default' },
+            { id: 'cancel', text: _trDialog(TR('Отмена')), style: 'cancel' },
         ],
     }).then((r) => r === 'ok');
 }
@@ -4316,7 +4316,7 @@ function copyBotNameToClipboard(el) {
         if (tg?.HapticFeedback) {
             tg.HapticFeedback.notificationOccurred?.(ok ? 'success' : 'error');
         }
-        showCopyToast(ok ? 'Скопировано: ' + text : 'Не удалось скопировать');
+        showCopyToast(ok ? TR('Скопировано: ') + text : TR('Не удалось скопировать'));
         if (ok) {
             el.classList.add('channels-bot-name--copied');
             setTimeout(() => el.classList.remove('channels-bot-name--copied'), 600);
@@ -4484,7 +4484,7 @@ async function _loadOneChannelAvatar(chId, attempt) {
 
 
 function formatCountdown(seconds) {
-    if (seconds <= 0) return 'удаляется...';
+    if (seconds <= 0) return TR('удаляется...');
     const d = Math.floor(seconds / 86400);
     const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -4516,7 +4516,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
     }
 
     const items = deleted.map(ch => {
-        const title = escapeHtml(ch.title || 'Канал');
+        const title = escapeHtml(ch.title || TR('Канал'));
         const countdown = formatCountdown(ch.seconds_until_purge);
         return `
             <div class="channels-deleted-item">
@@ -4526,7 +4526,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
                 </div>
                 <div class="channels-deleted-actions">
                     <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">${TR('Вернуть')}</button>
-                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">${TR('Удалить полностью')}</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || TR('Канал')))})">${TR('Удалить полностью')}</button>
                 </div>
             </div>
         `;
@@ -4610,13 +4610,13 @@ function actionSheet(opts) {
 function showChannelMenuPopup(title) {
     return actionSheet({
         title: title,
-        message: 'Что сделать с каналом?',
+        message: TR('Что сделать с каналом?'),
         actions: [
-            { id: 'refresh_voice', text: 'Обновить стиль письма', icon: 'refresh',
-              sub: 'Перечитать последние посты и обновить манеру' },
-            { id: 'delete', text: 'Удалить канал', icon: 'trash', style: 'danger',
-              sub: 'Переедет в «Недавно удалённые» на 7 дней' },
-            { id: 'cancel', text: 'Отмена', style: 'cancel' },
+            { id: 'refresh_voice', text: TR('Обновить стиль письма'), icon: 'refresh',
+              sub: TR('Перечитать последние посты и обновить манеру') },
+            { id: 'delete', text: TR('Удалить канал'), icon: 'trash', style: 'danger',
+              sub: TR('Переедет в «Недавно удалённые» на 7 дней') },
+            { id: 'cancel', text: TR('Отмена'), style: 'cancel' },
         ],
     });
 }
@@ -4629,7 +4629,7 @@ async function doSoftDeleteChannel(channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        await alertDialog('Не удалось удалить канал. Попробуй ещё раз.');
+        await alertDialog(TR('Не удалось удалить канал. Попробуй ещё раз.'));
     }
 }
 
@@ -4641,7 +4641,7 @@ window.__restoreChannel = async function (channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        await alertDialog('Не удалось восстановить канал.');
+        await alertDialog(TR('Не удалось восстановить канал.'));
     }
 };
 
@@ -4663,7 +4663,7 @@ async function doPurgeChannel(channelId) {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        await alertDialog('Не удалось удалить канал навсегда.');
+        await alertDialog(TR('Не удалось удалить канал навсегда.'));
     }
 }
 
@@ -4678,9 +4678,9 @@ function _voicePriceCoin() {
 
 window.__refreshVoice = async function (channelId, title) {
     const confirmed = await confirmDialogHtml(
-        'Пересобрать стиль',
+        TR('Пересобрать стиль'),
         `Стиль канала «${escapeHtml(title || '')}» будет заменён свежим. Спишется ${_voicePriceCoin()}.`,
-        'Списать и пересобрать'
+        TR('Списать и пересобрать')
     );
     if (!confirmed) return;
     try {
@@ -4690,8 +4690,8 @@ window.__refreshVoice = async function (channelId, title) {
         startVoicePollingIfNeeded();
     } catch (e) {
         const msg = (e?.message || '').includes('429')
-            ? 'Не хватает Forge на обновление стиля. Пополни баланс в кабинете.'
-            : 'Не удалось обновить стиль. Попробуй позже.';
+            ? TR('Не хватает Forge на обновление стиля. Пополни баланс в кабинете.')
+            : TR('Не удалось обновить стиль. Попробуй позже.');
         await alertDialog(msg);
     }
 };
@@ -4877,7 +4877,7 @@ function initChannelsAutoRefresh() {
 function renderChannelCard(ch) {
     const connected = ch.bot_status === 'connected';
     const paused = !!ch.is_paused;
-    const title = escapeHtml(ch.title || 'Канал');
+    const title = escapeHtml(ch.title || TR('Канал'));
 
     let badge;
     if (paused) {
@@ -4936,7 +4936,7 @@ function renderChannelCard(ch) {
                     <div class="channel-card-name">${title}</div>
                     ${badge}
                 </div>
-                <button class="channel-card-menu" onclick="event.stopPropagation();window.__channelMenu&&window.__channelMenu(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">
+                <button class="channel-card-menu" onclick="event.stopPropagation();window.__channelMenu&&window.__channelMenu(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || TR('Канал')))})">
                     <i class="ti ti-dots-vertical"></i>
                 </button>
             </div>
@@ -5078,7 +5078,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 ? `<div class="bs-item-avatar" data-avatar-bs="${it.id}"><i class="ti ti-brand-telegram"></i></div>`
                 : (it.is_private
                     ? `<div class="bs-item-avatar private"><i class="ti ti-lock"></i></div>`
-                    : `<div class="bs-item-avatar">${escapeHtml(String(it.title || 'К').trim().charAt(0).toUpperCase())}</div>`);
+                    : `<div class="bs-item-avatar">${escapeHtml(String(it.title || TR('К')).trim().charAt(0).toUpperCase())}</div>`);
 
             const sub = it.subtitle_warn
                 ? `<div class="bs-item-subtitle warn">${escapeHtml(it.subtitle || '')}</div>`
@@ -5096,7 +5096,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 <div class="bs-item ${isActive ? 'active' : ''}${it.paused ? ' paused' : ''}" data-bs-item-id="${it.id}">
                     ${avatarHtml}
                     <div class="bs-item-info">
-                        <div class="bs-item-title">${escapeHtml(it.title || 'Канал')}${pausedChip}</div>
+                        <div class="bs-item-title">${escapeHtml(it.title || TR('Канал'))}${pausedChip}</div>
                         ${sub}
                     </div>
                     ${rightIcon}
@@ -5108,14 +5108,14 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
     const needSearch = !!(items && items.length > 6);
     const searchHtml = needSearch
         ? `<div class="bs-search"><i class="ti ti-search"></i>
-             <input type="text" id="bs-search-input" placeholder="${escapeHtml('Найти канал')}"
+             <input type="text" id="bs-search-input" placeholder="${escapeHtml(TR('Найти канал'))}"
                     autocomplete="off" spellcheck="false">
              <span class="bs-search-count" id="bs-search-count">${items.length}</span></div>`
         : '';
 
     sheet.innerHTML = `
         <div class="bs-handle"></div>
-        <div class="bs-title">${escapeHtml(title || 'Выбери канал')}</div>
+        <div class="bs-title">${escapeHtml(title || TR('Выбери канал'))}</div>
         ${subtitle ? `<div class="bs-subtitle">${escapeHtml(subtitle)}</div>` : ''}
         ${searchHtml}
         ${itemsHtml}
@@ -5156,7 +5156,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 if (!shown && !empty) {
                     const d = document.createElement('div');
                     d.className = 'bs-noresult';
-                    d.textContent = 'Ничего не нашлось';
+                    d.textContent = TR('Ничего не нашлось');
                     sheet.querySelector('.bs-list').appendChild(d);
                 } else if (shown && empty) {
                     empty.remove();
@@ -5282,25 +5282,25 @@ async function openActiveChannelSelector(opts) {
             let subtitle = '';
             let warn = false;
             if (ch.is_paused) {
-                subtitle = 'На паузе';
+                subtitle = TR('На паузе');
                 warn = true;
             } else if (ch.voice_status === 'done' && ch.voice_preview) {
                 subtitle = ch.voice_preview;
             } else if (ch.voice_status === 'done') {
-                subtitle = 'Стиль настроен';
+                subtitle = TR('Стиль настроен');
             } else if (ch.voice_status === 'collecting') {
-                subtitle = 'Стиль собирается...';
+                subtitle = TR('Стиль собирается...');
             } else if (ch.is_private) {
-                subtitle = 'Приватный · стиль не настроен';
+                subtitle = TR('Приватный · стиль не настроен');
                 warn = true;
             } else {
-                subtitle = 'Стиль не настроен';
+                subtitle = TR('Стиль не настроен');
                 warn = true;
             }
 
             return {
                 id: ch.id,
-                title: ch.title || (ch.username ? '@' + ch.username : 'Канал'),
+                title: ch.title || (ch.username ? '@' + ch.username : TR('Канал')),
                 subtitle,
                 subtitle_warn: warn,
                 has_avatar: ch.has_avatar,
@@ -5310,8 +5310,8 @@ async function openActiveChannelSelector(opts) {
         });
 
         showBottomSheet({
-            title: 'В каком канале работаешь?',
-            subtitle: 'Метрики, стиль и аналитика — этого канала',
+            title: TR('В каком канале работаешь?'),
+            subtitle: TR('Метрики, стиль и аналитика — этого канала'),
             items,
             activeId: data.active_channel_id,
             onSelect: async (channelId) => {
@@ -5351,9 +5351,9 @@ function renderChannelSettingsScreen(data) {
     const host = document.getElementById('channel-settings-screen');
     if (!host) return;
 
-    const title = escapeHtml(data.title || 'Канал');
+    const title = escapeHtml(data.title || TR('Канал'));
     const usernameLine = data.is_private
-        ? 'приватный'
+        ? TR('приватный')
         : (data.username ? `@${escapeHtml(data.username)}` : '');
     const connectedDate = data.connected_at ? formatConnectedDate(data.connected_at) : '';
     const subline = [usernameLine, connectedDate].filter(Boolean).join(' · ');
@@ -5362,7 +5362,7 @@ function renderChannelSettingsScreen(data) {
         ? `<div class="cs-avatar" data-avatar-for-cs="${data.id}"><i class="ti ti-brand-telegram"></i></div>`
         : (data.is_private
             ? `<div class="cs-avatar cs-avatar-private"><i class="ti ti-lock"></i></div>`
-            : `<div class="cs-avatar cs-avatar-letters">${escapeHtml(String(data.title || 'К').trim().charAt(0).toUpperCase())}</div>`);
+            : `<div class="cs-avatar cs-avatar-letters">${escapeHtml(String(data.title || TR('К')).trim().charAt(0).toUpperCase())}</div>`);
 
     host.innerHTML = `
         <div class="cs-header">
@@ -5397,7 +5397,7 @@ function renderSettingsLimitsBar(limits) {
     const enough = balance >= price;
     const left = Math.floor(balance / price);
     const note = enough
-        ? `Баланса хватит на ${left} ${plural3(left, 'обновление', 'обновления', 'обновлений')}`
+        ? `Баланса хватит на ${left} ${plural3(left, TR('обновление'), TR('обновления'), TR('обновлений'))}`
         : `Не хватает Forge: нужно ${price}, на балансе ${balance}`;
 
     return `
@@ -5426,7 +5426,7 @@ function renderSettingsVoiceSection(data) {
         const qualityLabel = quality === 'full'
             ? `${postsAnalyzed} постов · качественно`
             : (quality === 'strategy'
-                ? 'задан стратегом · пересоберётся по постам'
+                ? TR('задан стратегом · пересоберётся по постам')
                 : `${postsAnalyzed} постов · слабый стиль`);
         statusBadge = `
             <div class="cs-status-line cs-status-ok">
@@ -5502,7 +5502,7 @@ function renderSettingsVoiceSection(data) {
 
 function renderSettingsExamplesSection(data) {
     const hasVoice = !!data.voice_summary && data.voice_status === 'done';
-    const headerLabel = hasVoice ? 'Загрузить примеры вручную' : 'Настроить стиль';
+    const headerLabel = hasVoice ? TR('Загрузить примеры вручную') : TR('Настроить стиль');
     const accent = !hasVoice;
     const headerIcon = accent ? '<i class="ti ti-sparkles"></i> ' : '';
     const price = Number((data.voice_refresh_limits || {}).price || 0);
@@ -5547,10 +5547,10 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">Канал ${paused ? 'на паузе' : 'активен'}</span>
+                        <span class="cs-toggle-title">Канал ${paused ? TR('на паузе') : TR('активен')}</span>
                         <button class="cs-info-btn" data-info="paused" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
-                    <div class="cs-toggle-sub">${paused ? 'Генерация постов отключена' : 'Можно генерировать посты'}</div>
+                    <div class="cs-toggle-sub">${paused ? TR('Генерация постов отключена') : TR('Можно генерировать посты')}</div>
                     <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
                         ${TR('Когда канал на паузе, контент-план ничего не публикует автоматически. Бот остаётся подключённым, настройки и стиль сохраняются.')}
                     </div>
@@ -5569,7 +5569,7 @@ function renderSettingsBehaviorSection(data) {
                         <span class="cs-toggle-title">${TR('Нецензурная лексика')}</span>
                         <button class="cs-info-btn" data-info="profanity" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
-                    <div class="cs-toggle-sub">${profanity ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию'}</div>
+                    <div class="cs-toggle-sub">${profanity ? TR('Разрешена по умолчанию') : TR('Запрещена по умолчанию')}</div>
                     <div class="cs-info-popup" id="cs-info-profanity" style="display:none;">
                         ${TR('Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.')}
                     </div>
@@ -5588,7 +5588,7 @@ function renderSettingsBehaviorSection(data) {
                         <span class="cs-toggle-title">${TR('Открытые опросы')}</span>
                         <button class="cs-info-btn" data-info="polls" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
-                    <div class="cs-toggle-sub">${openPolls ? 'Разрешены вопросы в комментарии' : 'Только анонимные опросы реакциями'}</div>
+                    <div class="cs-toggle-sub">${openPolls ? TR('Разрешены вопросы в комментарии') : TR('Только анонимные опросы реакциями')}</div>
                     <div class="cs-info-popup" id="cs-info-polls" style="display:none;">
                         ${TR('Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.')}
                     </div>
@@ -5607,7 +5607,7 @@ function renderSettingsBehaviorSection(data) {
                         <span class="cs-toggle-title">${TR('Ссылки на исследования')}</span>
                         <button class="cs-info-btn" data-info="research" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
-                    <div class="cs-toggle-sub">${research ? 'Включены — исследования добавляют 20 Forge к цене поста' : 'Выключены — обычная цена поста'}</div>
+                    <div class="cs-toggle-sub">${research ? TR('Включены — исследования добавляют 20 Forge к цене поста') : TR('Выключены — обычная цена поста')}</div>
                     <div class="cs-info-popup" id="cs-info-research" style="display:none;">
                         ${TR('Подходит каналам, где посты опираются на проверяемые факты: наука и научпоп, медицина, биохакинг, психология, космос, биология и животные, IT, инженерия, авто (масла, топливо, узлы), строительство и материалы. Система живым поиском находит 1-3 первоисточника в авторитетных научных изданиях и базах, проверяет каждую ссылку и оформляет в манере канала; если подтверждённых работ не нашлось — разница возвращается за вычетом сбора за поиск. Юмору, влогам и анонсам не подойдёт: научных утверждений там нет.')}
                     </div>
@@ -5637,8 +5637,8 @@ function renderVoicePickSection(data) {
     };
     return `
         <div class="cs-section" id="cs-voice-sec">
-            <div class="cs-section-title">${TR('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
-            <div class="cs-vcols">${col('male', 'Мужские')}${col('female', 'Женские')}</div>
+            <div class="cs-section-title">${TR('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? TR('выбрано ') + sel.size : TR('по рассказчику поста')}</span></div>
+            <div class="cs-vcols">${col('male', TR('Мужские'))}${col('female', TR('Женские'))}</div>
             <div class="cs-vfoot">${TR('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}</div>
         </div>`;
 }
@@ -5670,7 +5670,7 @@ function toggleVoiceSample(btn) {
 async function saveVoicePick(sec) {
     const names = [...sec.querySelectorAll('.cs-vrow.on')].map(r => r.getAttribute('data-vname'));
     const sum = document.getElementById('cs-vsum');
-    if (sum) sum.textContent = names.length ? ('выбрано ' + names.length) : 'по рассказчику поста';
+    if (sum) sum.textContent = names.length ? (TR('выбрано ') + names.length) : TR('по рассказчику поста');
     if (_settingsState.data) _settingsState.data.creative_voices = names;
     try {
         await apiRequest(`/api/v1/channels/${_settingsState.channelId}`, {
@@ -5710,12 +5710,12 @@ function bindVoicePick() {
 }
 
 const TZ_ZONES = [
-    [120, 'Калининград'], [180, 'Москва'], [180, 'Минск'], [180, 'Киев'], [180, 'Стамбул'],
-    [240, 'Самара'], [240, 'Баку · Тбилиси · Ереван'], [240, 'Дубай'],
-    [300, 'Екатеринбург'], [300, 'Ташкент · Алматы'], [330, 'Дели · Мумбаи'],
-    [360, 'Омск · Бишкек'], [360, 'Дакка'], [420, 'Новосибирск · Красноярск'], [420, 'Бангкок · Джакарта · Ханой'],
-    [480, 'Иркутск'], [480, 'Пекин · Сингапур · Куала-Лумпур'], [540, 'Якутск'], [540, 'Токио · Сеул'],
-    [600, 'Владивосток'], [660, 'Магадан'], [720, 'Камчатка'],
+    [120, TR('Калининград')], [180, TR('Москва')], [180, TR('Минск')], [180, TR('Киев')], [180, TR('Стамбул')],
+    [240, TR('Самара')], [240, TR('Баку · Тбилиси · Ереван')], [240, TR('Дубай')],
+    [300, TR('Екатеринбург')], [300, TR('Ташкент · Алматы')], [330, TR('Дели · Мумбаи')],
+    [360, TR('Омск · Бишкек')], [360, TR('Дакка')], [420, TR('Новосибирск · Красноярск')], [420, TR('Бангкок · Джакарта · Ханой')],
+    [480, TR('Иркутск')], [480, TR('Пекин · Сингапур · Куала-Лумпур')], [540, TR('Якутск')], [540, TR('Токио · Сеул')],
+    [600, TR('Владивосток')], [660, TR('Магадан')], [720, TR('Камчатка')],
 ];
 const TZ_OTHER = [-720, -660, -600, -540, -480, -420, -360, -300, -240, -180, -120, -60, 0, 60, 120, 180, 240, 300, 330, 345, 360, 420, 480, 540, 570, 600, 630, 660, 720, 780, 840];
 let _tzCtx = null;
@@ -5889,7 +5889,7 @@ function renderSettingsHistorySection(data) {
                 <div class="cs-history-toggle-left">
                     <i class="ti ti-history"></i>
                     <span class="cs-history-toggle-title">${TR('История действий')}</span>
-                    <span class="cs-history-toggle-count">${events.length} ${pluralize(events.length, 'событие','события','событий')}</span>
+                    <span class="cs-history-toggle-count">${events.length} ${pluralize(events.length, TR('событие'),TR('события'),TR('событий'))}</span>
                 </div>
                 <i class="ti ti-chevron-${expanded ? 'up' : 'down'}"></i>
             </div>
@@ -6016,19 +6016,19 @@ async function handleApplyExamples() {
 
     const text = textarea.value.trim();
     if (text.length < 30) {
-        await alertDialog('Слишком короткий текст. Загрузи 3-5 постов от 30 символов каждый.');
+        await alertDialog(TR('Слишком короткий текст. Загрузи 3-5 постов от 30 символов каждый.'));
         return;
     }
 
     const confirmed = await confirmDialogHtml(
-        'Применить примеры стиля',
+        TR('Применить примеры стиля'),
         `Текущий стиль канала будет заменён стилем из примеров. Спишется ${_voicePriceCoin()}.`,
-        'Списать и применить'
+        TR('Списать и применить')
     );
     if (!confirmed) return;
 
     applyBtn.disabled = true;
-    applyBtn.textContent = 'Применяю...';
+    applyBtn.textContent = TR('Применяю...');
 
     try {
         const result = await apiRequest(`/api/v1/channels/${_settingsState.channelId}/upload-examples`, {
@@ -6037,17 +6037,17 @@ async function handleApplyExamples() {
             headers: { 'Content-Type': 'application/json' },
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
-        await alertDialog(`Стиль обновлён! Проанализировано ${result.examples_processed} ${pluralize(result.examples_processed, 'пример', 'примера', 'примеров')}.`);
+        await alertDialog(`Стиль обновлён! Проанализировано ${result.examples_processed} ${pluralize(result.examples_processed, TR('пример'), TR('примера'), TR('примеров'))}.`);
         await openChannelSettingsScreen(_settingsState.channelId);
     } catch (e) {
         const msg = (e?.message || '').includes('429')
-            ? 'Не хватает Forge на обновление стиля.'
+            ? TR('Не хватает Forge на обновление стиля.')
             : (e?.message || '').includes('400')
-                ? 'Не нашёл осмысленных примеров. Каждый пример должен быть от 30 символов.'
-                : 'Не удалось применить примеры. Попробуй позже.';
+                ? TR('Не нашёл осмысленных примеров. Каждый пример должен быть от 30 символов.')
+                : TR('Не удалось применить примеры. Попробуй позже.');
         await alertDialog(msg);
         applyBtn.disabled = false;
-        applyBtn.textContent = 'Применить';
+        applyBtn.textContent = TR('Применить');
     }
 }
 
@@ -6059,11 +6059,11 @@ async function handleEditVoiceSummary() {
 
     const trimmed = newText.trim();
     if (trimmed.length < 10) {
-        await alertDialog('Текст должен быть от 10 символов.');
+        await alertDialog(TR('Текст должен быть от 10 символов.'));
         return;
     }
     if (trimmed.length > 2000) {
-        await alertDialog('Текст слишком длинный (макс 2000 символов).');
+        await alertDialog(TR('Текст слишком длинный (макс 2000 символов).'));
         return;
     }
 
@@ -6082,7 +6082,7 @@ async function handleEditVoiceSummary() {
         }
         refreshSettingsHistory();
     } catch (e) {
-        await alertDialog('Не удалось сохранить изменения.');
+        await alertDialog(TR('Не удалось сохранить изменения.'));
     }
 }
 
@@ -6141,9 +6141,9 @@ function showVoiceEditorModal(currentText) {
 
 async function handleRefreshVoiceFromSettings() {
     const confirmed = await confirmDialogHtml(
-        'Пересобрать стиль',
+        TR('Пересобрать стиль'),
         `Стиль будет собран заново из последних постов канала. Спишется ${_voicePriceCoin()}.`,
-        'Списать и пересобрать'
+        TR('Списать и пересобрать')
     );
     if (!confirmed) return;
 
@@ -6160,8 +6160,8 @@ async function handleRefreshVoiceFromSettings() {
         startSettingsVoicePolling();
     } catch (e) {
         const msg = (e?.message || '').includes('429')
-            ? 'Не хватает Forge на обновление стиля.'
-            : 'Не удалось запустить пересборку.';
+            ? TR('Не хватает Forge на обновление стиля.')
+            : TR('Не удалось запустить пересборку.');
         await alertDialog(msg);
     }
 }
@@ -6229,7 +6229,7 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'research') _settingsState.data.research_links = !newValue;
             updateToggleVisual(target, !newValue);
         }
-        await alertDialog('Не удалось сохранить изменение.');
+        await alertDialog(TR('Не удалось сохранить изменение.'));
     }
 }
 
@@ -6275,15 +6275,15 @@ function updateToggleVisual(target, isOn) {
         const subEl = document.querySelector('[data-toggle="paused"] .cs-toggle-sub');
         const paused = !isOn;
         if (iconWrap) iconWrap.style.color = paused ? 'rgba(255,255,255,0.4)' : '#5DCAA5';
-        if (titleEl) titleEl.textContent = `Канал ${paused ? 'на паузе' : 'активен'}`;
-        if (subEl) subEl.textContent = paused ? 'Генерация постов отключена' : 'Можно генерировать посты';
+        if (titleEl) titleEl.textContent = `Канал ${paused ? TR('на паузе') : TR('активен')}`;
+        if (subEl) subEl.textContent = paused ? TR('Генерация постов отключена') : TR('Можно генерировать посты');
     }
 
     if (target === 'profanity') {
         const iconWrap = document.querySelector('[data-toggle="profanity"] .cs-toggle-icon-wrap i');
         const subEl = document.querySelector('[data-toggle="profanity"] .cs-toggle-sub');
         if (iconWrap) iconWrap.style.color = isOn ? '#F0997B' : 'rgba(255,255,255,0.4)';
-        if (subEl) subEl.textContent = isOn ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию';
+        if (subEl) subEl.textContent = isOn ? TR('Разрешена по умолчанию') : TR('Запрещена по умолчанию');
     }
 }
 
@@ -6291,7 +6291,7 @@ function updateToggleVisual(target, isOn) {
 async function handleDeleteFromSettings() {
     const data = _settingsState.data;
     if (!data) return;
-    const title = data.title || 'Канал';
+    const title = data.title || TR('Канал');
     const confirmed = await confirmDialog(
         `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», данные сохранятся 7 дней. Переподключить можно в любой момент.`
     );
@@ -6303,7 +6303,7 @@ async function handleDeleteFromSettings() {
         await openChannels();
         refreshDashboardSilent();
     } catch (e) {
-        await alertDialog('Не удалось удалить канал.');
+        await alertDialog(TR('Не удалось удалить канал.'));
     }
 }
 
@@ -6323,7 +6323,7 @@ async function loadChannelSettingsAvatar(channelId) {
 
 
 function getInitials(text) {
-    if (!text) return 'К';
+    if (!text) return TR('К');
     const parts = text.trim().split(/\s+/).filter(Boolean);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -6335,10 +6335,10 @@ function formatConnectedDate(iso) {
         const d = new Date(iso);
         const now = new Date();
         const isToday = d.toDateString() === now.toDateString();
-        if (isToday) return 'подключён сегодня';
+        if (isToday) return TR('подключён сегодня');
         const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
-        if (d.toDateString() === yesterday.toDateString()) return 'подключён вчера';
-        const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+        if (d.toDateString() === yesterday.toDateString()) return TR('подключён вчера');
+        const months = [TR('янв'),TR('фев'),TR('мар'),TR('апр'),TR('мая'),TR('июн'),TR('июл'),TR('авг'),TR('сен'),TR('окт'),TR('ноя'),TR('дек')];
         return `подключён ${d.getDate()} ${months[d.getMonth()]}`;
     } catch (e) {
         return '';
@@ -6351,13 +6351,13 @@ function formatEventDate(iso) {
         const d = new Date(iso);
         const now = new Date();
         const diffMin = Math.floor((now - d) / 60000);
-        if (diffMin < 1) return 'только что';
+        if (diffMin < 1) return TR('только что');
         if (diffMin < 60) return `${diffMin} мин назад`;
         const diffHr = Math.floor(diffMin / 60);
         if (diffHr < 24) return `${diffHr} ч назад`;
         const diffDay = Math.floor(diffHr / 24);
-        if (diffDay < 7) return `${diffDay} ${pluralize(diffDay, 'день','дня','дней')} назад`;
-        const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+        if (diffDay < 7) return `${diffDay} ${pluralize(diffDay, TR('день'),TR('дня'),TR('дней'))} назад`;
+        const months = [TR('янв'),TR('фев'),TR('мар'),TR('апр'),TR('мая'),TR('июн'),TR('июл'),TR('авг'),TR('сен'),TR('окт'),TR('ноя'),TR('дек')];
         return `${d.getDate()} ${months[d.getMonth()]} в ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     } catch (e) {
         return '';
@@ -6385,7 +6385,7 @@ async function runDemoPreview() {
     }
 
     if (!raw) {
-        showDemoError('Введи @username канала');
+        showDemoError(TR('Введи @username канала'));
         return;
     }
 
@@ -6402,22 +6402,22 @@ async function runDemoPreview() {
 
         if (!data.ok) {
             const map = {
-                invalid_username: 'Не похоже на @username канала. Пример: @durov',
-                not_found: 'Канал не найден или закрыт',
-                private_or_empty: 'Это приватный канал или в нём нет постов. Демо работает только с публичными.',
-                fetch_error: 'Не удалось получить канал. Попробуй позже.',
+                invalid_username: TR('Не похоже на @username канала. Пример: @durov'),
+                not_found: TR('Канал не найден или закрыт'),
+                private_or_empty: TR('Это приватный канал или в нём нет постов. Демо работает только с публичными.'),
+                fetch_error: TR('Не удалось получить канал. Попробуй позже.'),
             };
-            showDemoError(map[data.error] || 'Не удалось загрузить канал');
+            showDemoError(map[data.error] || TR('Не удалось загрузить канал'));
             return;
         }
 
         renderDemoPreview(data);
     } catch (err) {
-        showDemoError('Ошибка соединения. Попробуй ещё раз.');
+        showDemoError(TR('Ошибка соединения. Попробуй ещё раз.'));
     } finally {
         if (els.channelsDemoBtn) {
             els.channelsDemoBtn.disabled = false;
-            els.channelsDemoBtn.textContent = 'Анализ';
+            els.channelsDemoBtn.textContent = TR('Анализ');
         }
     }
 }
@@ -6434,7 +6434,7 @@ function renderDemoPreview(data) {
     if (!els.channelsDemoResult) return;
 
     const subs = formatSubscribers(data.subscribers);
-    const subLine = subs ? `${subs} подписчиков` : 'Публичный канал';
+    const subLine = subs ? `${subs} подписчиков` : TR('Публичный канал');
 
     const posts = (data.posts || []).slice(0, 3).map(p => {
         const txt = escapeHtml(p.slice(0, 220));
@@ -6467,23 +6467,23 @@ window.__toggleListInstruction = function () {
 
 
 const THINKING_TEXTS_ANALYZE = [
-    'Анализирую тему...',
-    'Понимаю что ты хочешь...',
-    'Думаю...',
+    TR('Анализирую тему...'),
+    TR('Понимаю что ты хочешь...'),
+    TR('Думаю...'),
 ];
 
 const THINKING_TEXTS_GENERATE = [
-    'Пишу пост...',
-    'Подбираю слова...',
-    'Шлифую формулировки...',
-    'Почти готово...',
+    TR('Пишу пост...'),
+    TR('Подбираю слова...'),
+    TR('Шлифую формулировки...'),
+    TR('Почти готово...'),
 ];
 
 
 const THINKING_TEXTS_MODIFY = [
-    'Применяю правку...',
-    'Переписываю...',
-    'Шлифую...',
+    TR('Применяю правку...'),
+    TR('Переписываю...'),
+    TR('Шлифую...'),
 ];
 
 
@@ -6566,7 +6566,7 @@ async function handleAnalyzeResult(result) {
 
 
 function renderQuestion(result) {
-    els.postQuestionText.textContent = result.question || 'Уточни мысль';
+    els.postQuestionText.textContent = result.question || TR('Уточни мысль');
     els.postStepBadge.textContent = String(result.step || (state.post.contextHistory.length + 1));
 
     els.postQuestionOptions.innerHTML = '';
@@ -6675,7 +6675,7 @@ async function runGenerate() {
 
 function renderResult(result) {
     els.postResultText.textContent = result.text;
-    els.postResultModel.textContent = result.model_used || 'Модель';
+    els.postResultModel.textContent = result.model_used || TR('Модель');
 
 
     const styleBadge = document.getElementById('post-result-style');
@@ -6712,25 +6712,25 @@ function renderResult(result) {
 }
 
 const RS_LIMITS = { 'image/jpeg': 8, 'image/png': 8, 'image/webp': 8, 'image/gif': 12, 'video/mp4': 40, 'video/quicktime': 40 };
-const RS_REC_SRC = { peak: 'час пик аудитории канала', niche: 'лучшее время для ниши', auto: 'ближайшее свободное время' };
-const RS_WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+const RS_REC_SRC = { peak: TR('час пик аудитории канала'), niche: TR('лучшее время для ниши'), auto: TR('ближайшее свободное время') };
+const RS_WD = [TR('Пн'), TR('Вт'), TR('Ср'), TR('Чт'), TR('Пт'), TR('Сб'), TR('Вс')];
 
 function rsErr(code) {
     const M = {
-        past_time: 'Это время уже прошло — выбери позже.',
-        day_full: 'В этом дне уже максимум постов',
-        too_long: 'Длиннее 4096 знаков Telegram не примет — сократи.',
-        no_bot_rights: 'Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.',
-        paused: 'Канал на паузе — публикация не проходит.',
-        plan_busy: 'Неделя сейчас собирается — подожди, пока сборка закончится.',
-        already_out: 'Пост уже в очереди — сначала сними его с очереди',
-        already_published: 'Пост уже опубликован — менять его поздно.',
-        no_content_perm: 'Создатель канала не выдал тебе право менять контент-план',
-        no_channel: 'Сначала подключи канал — публиковать некуда',
-        no_text: 'Сначала нужен текст — фраза на обложку берётся из него',
-        bad_type: 'Такой формат не подойдёт: нужна картинка, GIF или видео',
+        past_time: TR('Это время уже прошло — выбери позже.'),
+        day_full: TR('В этом дне уже максимум постов'),
+        too_long: TR('Длиннее 4096 знаков Telegram не примет — сократи.'),
+        no_bot_rights: TR('Добавь @ForgeMetricsBot администратором канала с правом публикации — тогда посты смогут выходить сами.'),
+        paused: TR('Канал на паузе — публикация не проходит.'),
+        plan_busy: TR('Неделя сейчас собирается — подожди, пока сборка закончится.'),
+        already_out: TR('Пост уже в очереди — сначала сними его с очереди'),
+        already_published: TR('Пост уже опубликован — менять его поздно.'),
+        no_content_perm: TR('Создатель канала не выдал тебе право менять контент-план'),
+        no_channel: TR('Сначала подключи канал — публиковать некуда'),
+        no_text: TR('Сначала нужен текст — фраза на обложку берётся из него'),
+        bad_type: TR('Такой формат не подойдёт: нужна картинка, GIF или видео'),
     };
-    return t(M[code] || 'Не получилось — попробуй ещё раз');
+    return t(M[code] || TR('Не получилось — попробуй ещё раз'));
 }
 
 function rsDateLabel(iso, withWeekday) {
@@ -6890,7 +6890,7 @@ async function rsMakeCover(ctx, host, kind) {
     const pid = ctx.currentPostId;
     if (!pid) return;
     hapticLight();
-    rsSetBusy(ctx, host, t(kind === 'photo' ? 'Подбираю фото...' : 'Рисую обложку...'));
+    rsSetBusy(ctx, host, t(kind === 'photo' ? TR('Подбираю фото...') : TR('Рисую обложку...')));
     try {
         const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid, kind: kind || null }) });
         if (r && r.ok) {
@@ -7094,7 +7094,7 @@ function renderSuggestions() {
             <div class="suggestion-icon">
                 <i class="ti ti-wand"></i>
             </div>
-            <span class="suggestion-text">${escapeHtml(s.label || 'Доработать')}</span>
+            <span class="suggestion-text">${escapeHtml(s.label || TR('Доработать'))}</span>
             <i class="ti ti-chevron-right suggestion-chevron"></i>
         `;
         btn.addEventListener('click', () => requestEdit(s.instruction || s.label));
@@ -7134,7 +7134,7 @@ function requestEdit(instruction) {
 
 function addEmojiToPost() {
     if (!state.post.currentPostId) return;
-    const instruction = 'Расставь по тексту уместные эмодзи так, как это делает живой человек в Telegram: не в каждое предложение, а точечно — для усиления эмоции или акцента. Не меняй сам текст, только добавь эмодзи. Не используй эмодзи-списки и не лепи их подряд.';
+    const instruction = TR('Расставь по тексту уместные эмодзи так, как это делает живой человек в Telegram: не в каждое предложение, а точечно — для усиления эмоции или акцента. Не меняй сам текст, только добавь эмодзи. Не используй эмодзи-списки и не лепи их подряд.');
     requestEdit(instruction);
 }
 
@@ -7256,14 +7256,14 @@ function showLockedFeatureModal(kind) {
     if (!els.lockedFeatureModal) return;
 
     if (kind === 'channel') {
-        els.lockedFeatureTitle.textContent = 'Подключи канал';
-        els.lockedFeatureText.textContent = 'Чтобы опубликовать пост в канал — сначала подключи свой Telegram-канал к боту';
+        els.lockedFeatureTitle.textContent = TR('Подключи канал');
+        els.lockedFeatureText.textContent = TR('Чтобы опубликовать пост в канал — сначала подключи свой Telegram-канал к боту');
     } else if (kind === 'schedule') {
-        els.lockedFeatureTitle.textContent = 'Подключи канал';
-        els.lockedFeatureText.textContent = 'Чтобы планировать посты — сначала подключи свой Telegram-канал к боту';
+        els.lockedFeatureTitle.textContent = TR('Подключи канал');
+        els.lockedFeatureText.textContent = TR('Чтобы планировать посты — сначала подключи свой Telegram-канал к боту');
     } else {
-        els.lockedFeatureTitle.textContent = 'Скоро';
-        els.lockedFeatureText.textContent = 'Функция в разработке';
+        els.lockedFeatureTitle.textContent = TR('Скоро');
+        els.lockedFeatureText.textContent = TR('Функция в разработке');
     }
 
     els.lockedFeatureModal.style.display = '';
@@ -7283,27 +7283,27 @@ function closeAllModals() {
 
 function formatRemainingTime(seconds) {
     if (seconds === null || seconds === undefined) return '';
-    if (seconds <= 0) return 'сейчас';
+    if (seconds <= 0) return TR('сейчас');
 
     if (seconds >= 86400) {
         const days = Math.ceil(seconds / 86400);
-        const word = days === 1 ? 'день' : (days >= 2 && days <= 4 ? 'дня' : 'дней');
+        const word = days === 1 ? TR('день') : (days >= 2 && days <= 4 ? TR('дня') : TR('дней'));
         return `через ${days} ${word}`;
     }
 
     if (seconds >= 3600) {
         const hours = Math.ceil(seconds / 3600);
-        const word = hours === 1 ? 'час' : (hours >= 2 && hours <= 4 ? 'часа' : 'часов');
+        const word = hours === 1 ? TR('час') : (hours >= 2 && hours <= 4 ? TR('часа') : TR('часов'));
         return `через ${hours} ${word}`;
     }
 
     if (seconds >= 60) {
         const minutes = Math.ceil(seconds / 60);
-        const word = minutes === 1 ? 'минуту' : (minutes >= 2 && minutes <= 4 ? 'минуты' : 'минут');
+        const word = minutes === 1 ? TR('минуту') : (minutes >= 2 && minutes <= 4 ? TR('минуты') : TR('минут'));
         return `через ${minutes} ${word}`;
     }
 
-    return 'через минуту';
+    return TR('через минуту');
 }
 
 
@@ -7329,7 +7329,7 @@ function handlePostApiError(err) {
     const msg = err?.message || '';
 
     if (err?.name === 'AbortError' || msg.toLowerCase().includes('abort')) {
-        showToast((typeof t === 'function' ? TR('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз') : 'Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз'), 'alert-triangle');
+        showToast((typeof t === 'function' ? TR('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз') : TR('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз')), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
@@ -7353,7 +7353,7 @@ function handlePostApiError(err) {
     if (msg.includes('403')) {
         var _d = '';
         try { _d = (JSON.parse(msg.slice(msg.indexOf('{'))) || {}).detail || ''; } catch (e) { _d = ''; }
-        showToast(_d || 'Недостаточно прав в команде канала', 'lock');
+        showToast(_d || TR('Недостаточно прав в команде канала'), 'lock');
         showScreen('postCreate');
         return;
     }
@@ -7364,7 +7364,7 @@ function handlePostApiError(err) {
         return;
     }
 
-    showToast(msg.slice(0, 80) || 'Ошибка', 'alert-triangle');
+    showToast(msg.slice(0, 80) || TR('Ошибка'), 'alert-triangle');
     showScreen('postCreate');
 }
 
@@ -7699,7 +7699,7 @@ async function main() {
     const tgReady = initTelegram();
 
     if (!tgReady) {
-        showError('Открой Mini App через Telegram');
+        showError(TR('Открой Mini App через Telegram'));
         return;
     }
 

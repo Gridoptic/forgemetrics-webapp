@@ -21,20 +21,20 @@
     var _pollAttempts = 0;
 
     var THINKING_SEARCH = [
-        'Изучаю твою нишу...',
-        'Подбираю похожие каналы...',
-        'Проверяю, какие из них реальны...',
-        'Отсеиваю мёртвые и приватные...',
-        'Почти готово...',
+        CT('Изучаю твою нишу...'),
+        CT('Подбираю похожие каналы...'),
+        CT('Проверяю, какие из них реальны...'),
+        CT('Отсеиваю мёртвые и приватные...'),
+        CT('Почти готово...'),
     ];
 
     var THINKING_ANALYZE = [
-        'Собираю метрики конкурентов...',
-        'Сравниваю охваты и частоту...',
-        'Ищу, что у них набирает охват…',
-        'Нахожу твои окна возможностей...',
-        'Собираю план обгона...',
-        'Почти готово...',
+        CT('Собираю метрики конкурентов...'),
+        CT('Сравниваю охваты и частоту...'),
+        CT('Ищу, что у них набирает охват…'),
+        CT('Нахожу твои окна возможностей...'),
+        CT('Собираю план обгона...'),
+        CT('Почти готово...'),
     ];
 
     function _esc(s) {
@@ -71,8 +71,8 @@
     function _num(n) {
         if (n == null || isNaN(n)) return '—';
         n = Number(n);
-        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'М';
-        if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'к';
+        if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + CT('М');
+        if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + CT('к');
         return String(Math.round(n));
     }
 
@@ -83,7 +83,7 @@
 
     function _ppw(n) {
         if (n == null || isNaN(n)) return '—';
-        return Number(n).toFixed(1).replace('.0', '') + '/нед';
+        return Number(n).toFixed(1).replace('.0', '') + CT('/нед');
     }
 
     function _haptic(kind) {
@@ -100,9 +100,9 @@
 
     function _priorityBadge(priority) {
         var map = {
-            critical: { cls: 'comp-pri-critical', txt: 'критично' },
-            important: { cls: 'comp-pri-important', txt: 'важно' },
-            minor: { cls: 'comp-pri-minor', txt: 'на потом' },
+            critical: { cls: 'comp-pri-critical', txt: CT('критично') },
+            important: { cls: 'comp-pri-important', txt: CT('важно') },
+            minor: { cls: 'comp-pri-minor', txt: CT('на потом') },
         };
         var p = map[priority];
         if (!p) return '';
@@ -160,7 +160,7 @@
         return '' +
             '<div class="comp-header">' +
                 '<button class="comp-back" id="comp-back-btn"><i class="ti ti-arrow-left"></i></button>' +
-                '<div class="comp-header-title">' + _esc(title || 'Анализ конкурентов') + '</div>' +
+                '<div class="comp-header-title">' + _esc(title || CT('Анализ конкурентов')) + '</div>' +
                 '<div class="comp-header-spacer"></div>' +
             '</div>';
     }
@@ -307,7 +307,7 @@
         resolveChannelId(explicitChannelId).then(function (id) {
             if (_closed) return;
             if (id == null) {
-                showFatalError('Сначала подключи канал, чтобы анализировать конкурентов.', { icon: 'ti-broadcast-off' });
+                showFatalError(CT('Сначала подключи канал, чтобы анализировать конкурентов.'), { icon: 'ti-broadcast-off' });
                 return;
             }
             _channelId = id;
@@ -348,8 +348,8 @@
                     '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>' +
                 '</div>' +
                 '<div class="fwb-note' + (enough ? '' : ' fwb-low') + '">' +
-                    (enough ? 'Запуск спишет ' + fa(price, 12)
-                            : 'Недостаточно средств: нужно ' + fa(price, 12) + ', на балансе ' + fa(balance, 12)) +
+                    (enough ? CT('Запуск спишет ') + fa(price, 12)
+                            : CT('Недостаточно средств: нужно ') + fa(price, 12) + CT(', на балансе ') + fa(balance, 12)) +
                 '</div>' +
             '</div>';
     }
@@ -391,10 +391,10 @@
                     '<div class="comp-intro-sub">' + CT('ИИ найдёт каналы в твоей нише, проверит, что они существуют, и покажет — что у них набирает охват, где они тебя обходят и как их обогнать.') + '</div>' +
                 '</div>' +
                 '<div class="comp-intro-feats">' +
-                    introFeat('map-pin', 'Карта ниши', 'Твоя позиция среди конкурентов') +
-                    introFeat('swords', 'Лоб в лоб', 'Где обходят, где твой козырь') +
-                    introFeat('bulb', 'Их приёмы', 'Что у них работает, а у тебя нет') +
-                    introFeat('route', 'План обгона', 'Конкретные шаги отстройки') +
+                    introFeat('map-pin', CT('Карта ниши'), CT('Твоя позиция среди конкурентов')) +
+                    introFeat('swords', CT('Лоб в лоб'), CT('Где обходят, где твой козырь')) +
+                    introFeat('bulb', CT('Их приёмы'), CT('Что у них работает, а у тебя нет')) +
+                    introFeat('route', CT('План обгона'), CT('Конкретные шаги отстройки')) +
                 '</div>' +
                 limitBarHtml() +
                 btnHtml +
@@ -449,7 +449,7 @@
             _searchPollAttempts++;
             if (_searchPollAttempts > SEARCH_POLL_MAX) {
                 stopSearchPolling();
-                showFatalError('Поиск занимает дольше обычного. Попробуй ещё раз.', { icon: 'ti-clock', onRetry: renderIntro });
+                showFatalError(CT('Поиск занимает дольше обычного. Попробуй ещё раз.'), { icon: 'ti-clock', onRetry: renderIntro });
                 return;
             }
             apiGet('/api/v1/competitors/search/' + searchId)
@@ -466,7 +466,7 @@
                         stopSearchPolling();
                         stopThinking();
                         showFatalError(
-                            data.error || 'Не удалось подобрать конкурентов. Добавь канал вручную.',
+                            data.error || CT('Не удалось подобрать конкурентов. Добавь канал вручную.'),
                             { icon: 'ti-mood-empty', onRetry: renderIntro }
                         );
                     }
@@ -476,7 +476,7 @@
                     if (msg.indexOf('404') !== -1) {
                         stopSearchPolling();
                         stopThinking();
-                        showFatalError('Поиск не найден. Попробуй ещё раз.', { icon: 'ti-alert-triangle', onRetry: renderIntro });
+                        showFatalError(CT('Поиск не найден. Попробуй ещё раз.'), { icon: 'ti-alert-triangle', onRetry: renderIntro });
                     }
                 });
         }, POLL_INTERVAL_MS);
@@ -490,15 +490,15 @@
             return;
         }
         if (msg.indexOf('429') !== -1) {
-            showFatalError(detail || 'Лимит анализов исчерпан.', { icon: 'ti-clock' });
+            showFatalError(detail || CT('Лимит анализов исчерпан.'), { icon: 'ti-clock' });
             return;
         }
         if (msg.indexOf('400') !== -1) {
-            showFatalError(detail || 'Канал недоступен для анализа.', { icon: 'ti-broadcast-off' });
+            showFatalError(detail || CT('Канал недоступен для анализа.'), { icon: 'ti-broadcast-off' });
             return;
         }
         showFatalError(
-            'Не удалось подобрать конкурентов. Можно попробовать снова или добавить канал вручную.',
+            CT('Не удалось подобрать конкурентов. Можно попробовать снова или добавить канал вручную.'),
             { icon: 'ti-mood-empty', onRetry: function () { renderSelect(); } }
         );
     }
@@ -521,7 +521,7 @@
         }
 
         setBody(
-            headerHtml('Выбери конкурентов') +
+            headerHtml(CT('Выбери конкурентов')) +
             '<div class="comp-body">' +
                 (_hasText(_nicheSummary)
                     ? '<div class="comp-niche-summary"><i class="ti ti-bulb"></i><span>' + _esc(_nicheSummary) + '</span></div>'
@@ -646,7 +646,7 @@
         if (errEl) errEl.style.display = 'none';
         if (!clean) {
             if (errEl) {
-                errEl.textContent = 'Не похоже на @username канала. Пример: @durov';
+                errEl.textContent = CT('Не похоже на @username канала. Пример: @durov');
                 errEl.style.display = '';
             }
             _haptic('error');
@@ -664,7 +664,7 @@
                 subscribers: null,
                 reach_percent: null,
                 posts_per_week: null,
-                why_relevant: 'Добавлен вручную',
+                why_relevant: CT('Добавлен вручную'),
                 confidence: 'manual',
             });
         }
@@ -680,7 +680,7 @@
         if (!btn) return;
         var n = selectedCount();
         var span = btn.querySelector('span');
-        if (span) span.textContent = 'Анализировать (' + n + ')';
+        if (span) span.textContent = CT('Анализировать (') + n + ')';
         btn.disabled = (n === 0);
     }
 
@@ -704,7 +704,7 @@
                 if (_closed) return;
                 _analysisId = res && res.analysis_id;
                 if (_analysisId == null) {
-                    showFatalError('Не удалось запустить анализ. Попробуй ещё раз.', { icon: 'ti-alert-triangle', onRetry: renderSelect });
+                    showFatalError(CT('Не удалось запустить анализ. Попробуй ещё раз.'), { icon: 'ti-alert-triangle', onRetry: renderSelect });
                     return;
                 }
                 startPolling(_analysisId);
@@ -723,14 +723,14 @@
             return;
         }
         if (msg.indexOf('403') !== -1 || msg.indexOf('429') !== -1) {
-            showFatalError(detail || 'Лимит анализов исчерпан.', { icon: 'ti-clock' });
+            showFatalError(detail || CT('Лимит анализов исчерпан.'), { icon: 'ti-clock' });
             return;
         }
         if (msg.indexOf('400') !== -1) {
-            showFatalError(detail || 'Не удалось распознать конкурентов.', { icon: 'ti-alert-triangle', onRetry: renderSelect });
+            showFatalError(detail || CT('Не удалось распознать конкурентов.'), { icon: 'ti-alert-triangle', onRetry: renderSelect });
             return;
         }
-        showFatalError('Не удалось запустить анализ. Попробуй ещё раз.', { icon: 'ti-alert-triangle', onRetry: renderSelect });
+        showFatalError(CT('Не удалось запустить анализ. Попробуй ещё раз.'), { icon: 'ti-alert-triangle', onRetry: renderSelect });
     }
 
     function startPolling(analysisId) {
@@ -740,7 +740,7 @@
             _pollAttempts++;
             if (_pollAttempts > POLL_MAX_ATTEMPTS) {
                 stopPolling();
-                showFatalError('Анализ занимает дольше обычного. Загляни позже — он сохранится.', { icon: 'ti-clock' });
+                showFatalError(CT('Анализ занимает дольше обычного. Загляни позже — он сохранится.'), { icon: 'ti-clock' });
                 return;
             }
             apiGet('/api/v1/competitors/' + analysisId)
@@ -768,7 +768,7 @@
             _pollAttempts++;
             if (_pollAttempts > POLL_MAX_ATTEMPTS) {
                 stopPolling();
-                showFatalError('Анализ занимает дольше обычного. Загляни позже — он сохранится.', { icon: 'ti-clock' });
+                showFatalError(CT('Анализ занимает дольше обычного. Загляни позже — он сохранится.'), { icon: 'ti-clock' });
                 return;
             }
             apiGet('/api/v1/channels/' + _channelId + '/competitors/latest')
@@ -785,14 +785,14 @@
     }
 
     function showAnalysisFailed(errCode) {
-        var human = 'Не удалось завершить анализ. Попробуй ещё раз.';
+        var human = CT('Не удалось завершить анализ. Попробуй ещё раз.');
         var c = String(errCode || '');
         if (c.indexOf('all_competitors_unreachable') !== -1) {
-            human = 'Выбранные каналы оказались недоступны для анализа. Выбери других.';
+            human = CT('Выбранные каналы оказались недоступны для анализа. Выбери других.');
         } else if (c.indexOf('own_fetch') !== -1) {
-            human = 'Не удалось прочитать твой канал. Убедись, что он публичный.';
+            human = CT('Не удалось прочитать твой канал. Убедись, что он публичный.');
         } else if (c.indexOf('claude_empty') !== -1 || c.indexOf('invalid_json') !== -1) {
-            human = 'AI не справился с разбором. Попробуй ещё раз.';
+            human = CT('AI не справился с разбором. Попробуй ещё раз.');
         }
         showFatalError(human, { icon: 'ti-mood-empty', onRetry: renderSelect });
     }
@@ -801,11 +801,11 @@
         stopThinking();
         stopPolling();
         if (!report || typeof report !== 'object') {
-            showFatalError('Отчёт пуст. Попробуй запустить анализ заново.', { icon: 'ti-mood-empty', onRetry: renderSelect });
+            showFatalError(CT('Отчёт пуст. Попробуй запустить анализ заново.'), { icon: 'ti-mood-empty', onRetry: renderSelect });
             return;
         }
 
-        var html = headerHtml('Конкуренты') +
+        var html = headerHtml(CT('Конкуренты')) +
             '<div class="comp-body comp-report" id="comp-report-body">' +
                 renderPositioning(report) +
                 renderNicheMap(report) +
@@ -881,9 +881,9 @@
     }
 
     function _roleTag(role, isYou) {
-        if (isYou) return { txt: 'ТЫ', cls: 'comp-rt-you' };
-        if (role === 'flagship' || role === 'leader') return { txt: 'ФЛАГМАН', cls: 'comp-rt-flag' };
-        if (role === 'rocket') return { txt: 'РАКЕТА', cls: 'comp-rt-rocket' };
+        if (isYou) return { txt: CT('ТЫ'), cls: 'comp-rt-you' };
+        if (role === 'flagship' || role === 'leader') return { txt: CT('ФЛАГМАН'), cls: 'comp-rt-flag' };
+        if (role === 'rocket') return { txt: CT('РАКЕТА'), cls: 'comp-rt-rocket' };
         return null;
     }
 
@@ -1106,11 +1106,11 @@
     function _showMapTip(p) {
         var tip = document.getElementById('comp-map-tip');
         if (!tip) return;
-        var nm = p.is_you ? 'Твой канал' : ('@' + p.username);
+        var nm = p.is_you ? CT('Твой канал') : ('@' + p.username);
         var color = _roleColor(p.role, p.is_you);
-        var role = (p.role === 'flagship' || p.role === 'leader') ? 'Лидер ниши'
-            : (p.role === 'rocket') ? 'Аномальный рост'
-            : (p.is_you) ? 'Ты здесь' : 'Конкурент';
+        var role = (p.role === 'flagship' || p.role === 'leader') ? CT('Лидер ниши')
+            : (p.role === 'rocket') ? CT('Аномальный рост')
+            : (p.is_you) ? CT('Ты здесь') : CT('Конкурент');
 
         var metrics = '';
         if (p.subs != null) metrics += '<span class="comp-tipc-m"><i class="ti ti-users"></i>' + _num(p.subs) + '</span>';
@@ -1160,7 +1160,7 @@
             return _ppw(p.ppw);
         }
         function ini(p) {
-            if (p.is_you) return 'Я';
+            if (p.is_you) return CT('Я');
             var u = (p.username || '?').replace('@', '');
             return u.slice(0, 2).toUpperCase();
         }
@@ -1179,7 +1179,7 @@
                     '<span class="comp-rank-ava" style="color:' + c + ';border-color:' + c + ';background:' + hexToRgba(c, 0.13) + ';">' + _esc(ini(p)) + '</span>' +
                     '<div class="comp-rank-main">' +
                         '<div class="comp-rank-name-row">' +
-                            '<span class="comp-rank-name"' + (p.is_you ? '' : ' data-open-ch="' + _esc(p.username) + '"') + '>' + _esc(p.is_you ? 'Твой канал' : ('@' + p.username)) + '</span>' +
+                            '<span class="comp-rank-name"' + (p.is_you ? '' : ' data-open-ch="' + _esc(p.username) + '"') + '>' + _esc(p.is_you ? CT('Твой канал') : ('@' + p.username)) + '</span>' +
                             (tag ? '<span class="comp-rt ' + tag.cls + '">' + tag.txt + '</span>' : '') +
                         '</div>' +
                         '<div class="comp-rank-track"><div class="comp-rank-fill" style="width:0%;background:linear-gradient(90deg,' + hexToRgba(c, 0.5) + ',' + c + ');" data-w="' + pct + '"></div></div>' +
@@ -1239,9 +1239,9 @@
         var title = _hasText(h.title) ? h.title : ('@' + (h.username || ''));
         var bars = '';
         var m = h.metrics || {};
-        bars += compareBar('Охват', m.your_reach, m.their_reach, _pct);
-        bars += compareBar('Постов/нед', m.your_ppw, m.their_ppw, function (v) { return _ppw(v); });
-        bars += compareBar('Подписчиков', m.your_subscribers, m.their_subscribers, _num);
+        bars += compareBar(CT('Охват'), m.your_reach, m.their_reach, _pct);
+        bars += compareBar(CT('Постов/нед'), m.your_ppw, m.their_ppw, function (v) { return _ppw(v); });
+        bars += compareBar(CT('Подписчиков'), m.your_subscribers, m.their_subscribers, _num);
 
         var wins = '';
         var theyWin = Array.isArray(h.they_win) ? h.they_win : [];
@@ -1378,7 +1378,7 @@
         if (analyzed == null && meta) analyzed = meta.competitors_analyzed;
         var note = _g(dq || {}, 'confidence_note', '');
         var parts = [];
-        if (analyzed != null) parts.push('проанализировано конкурентов: ' + analyzed);
+        if (analyzed != null) parts.push(CT('проанализировано конкурентов: ') + analyzed);
         if (_hasText(note)) parts.push(note);
         if (parts.length === 0) return '';
         return '<div class="comp-dq">' + _esc(parts.join(' \u00b7 ')) + '</div>';

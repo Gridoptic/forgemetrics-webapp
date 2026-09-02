@@ -689,7 +689,7 @@
             leftTx = T('осталось меньше суток');
         } else {
             var dl = Math.ceil(leftMs / 86400000);
-            leftTx = (dl === 1 ? T('остался') : T('осталось')) + ' ' + dl + ' ' + T(plural3(dl, 'день', 'дня', 'дней'));
+            leftTx = (dl === 1 ? T('остался') : T('осталось')) + ' ' + dl + ' ' + T(plural3(dl, PL('день'), PL('дня'), PL('дней')));
         }
         return '<div class="pl-awin"><span class="tr"><i style="width:' + pct + '%;"></i></span>' +
             '<span class="tx">' + esc(T('окно атрибуции до') + ' ' + fmtDay(l.attribution_until) + ' · ' + leftTx) +
@@ -854,7 +854,7 @@
         ledger += '</div>';
         h += ledger;
         if (l.scan_status && l.post_deleted_at) {
-            var aliveDel = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + ' ч');
+            var aliveDel = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + PL(' ч'));
             h += '<div class="pl-qwarn">' + esc(T('Пост удалён')) + ' ' + esc(fmtTime(l.post_deleted_at)) + ' · ' + esc(T('Срок в ленте')) + ': ' + esc(aliveDel) + ' — ' +
                 esc(l.alive_verdict === 'violated' ? T('нарушено') : T('выполнено')) + '</div>';
         }
@@ -876,7 +876,7 @@
             '</div>';
         var notes = '';
         if (l.scan_status && !l.post_deleted_at) {
-            var aliveLbl = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + ' ч');
+            var aliveLbl = (l.min_alive_hours === 0) ? T('без удаления') : T(String(l.min_alive_hours || 24) + PL(' ч'));
             if (l.alive_verdict === 'ok') {
                 notes += '<div class="pl-note" style="color:#5DCAA5;">✓ ' + esc(T('Срок в ленте')) + ': ' + esc(aliveLbl) + ' — ' + esc(T('выполнено')) + '</div>';
             } else if (l.scan_status === 'track') {
@@ -1231,12 +1231,12 @@
             '<div class="pl-ltopt" data-act="ltype" data-track="1"><b>' + esc(T('Ссылка с учётом переходов')) + '</b>' +
             '<span>' + esc(T('Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.')) + '</span></div>' +
             '<div class="pl-flabel">' + esc(T('Формат размещения')) + '</div>' +
-            '<div class="pl-fmtrow">' + [['post','пост'],['pin','закреп'],['story','сторис'],['circle','кружок'],['repost','репост'],['other','другое']].map(function (f, i) {
+            '<div class="pl-fmtrow">' + [['post',PL('пост')],['pin',PL('закреп')],['story',PL('сторис')],['circle',PL('кружок')],['repost',PL('репост')],['other',PL('другое')]].map(function (f, i) {
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="fmt" data-fmt="' + f[0] + '">' + esc(T(f[1])) + '</span>';
             }).join('') + '</div>' +
             '<div id="pl-fmt-hint" class="pl-note" style="display:none;margin-top:8px;"></div>' +
             '<div class="pl-flabel">' + esc(T('Срок в ленте')) + '</div>' +
-            '<div class="pl-fmtrow">' + [['24', '24 ч'], ['48', '48 ч'], ['72', '72 ч'], ['0', 'без удаления']].map(function (a, i) {
+            '<div class="pl-fmtrow">' + [['24', PL('24 ч')], ['48', PL('48 ч')], ['72', PL('72 ч')], ['0', PL('без удаления')]].map(function (a, i) {
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="alv" data-alv="' + a[0] + '">' + esc(T(a[1])) + '</span>';
             }).join('') + '</div>' +
             '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +

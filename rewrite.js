@@ -10,10 +10,10 @@
     var _avCache = {};
 
     var TONE_ROWS = [
-        ['channel', 'Как в канале', 'Интонация и манера твоих постов: читатель не отличит от родного контента'],
-        ['expert', 'Экспертно', 'Сдержанно и по делу: факты, цифры, выводы, без эмоций и кликбейта'],
-        ['provocative', 'Провокационно', 'Дерзкий заход и спорный тезис: выжимает реакции и комментарии'],
-        ['selling', 'Продажно', 'Выгода читателя с первых строк, аргументы и чёткий призыв в конце']
+        ['channel', RW('Как в канале'), RW('Интонация и манера твоих постов: читатель не отличит от родного контента')],
+        ['expert', RW('Экспертно'), RW('Сдержанно и по делу: факты, цифры, выводы, без эмоций и кликбейта')],
+        ['provocative', RW('Провокационно'), RW('Дерзкий заход и спорный тезис: выжимает реакции и комментарии')],
+        ['selling', RW('Продажно'), RW('Выгода читателя с первых строк, аргументы и чёткий призыв в конце')]
     ];
     function toneRows() {
         return '<div class="rw-tone" data-seg="tone">' + TONE_ROWS.map(function (o) {
@@ -179,8 +179,8 @@
         var pp = _limits.price_rewrite_premium, ps = _limits.price_rewrite_standard;
         return '<div class="rw-lbl">' + esc(T('Модель')) + '</div>' +
             seg('model', curModel(), [
-                ['premium', 'Премиум', esc(T('точнее')) + ' · ' + fa(pp, 11), 'html'],
-                ['standard', 'Стандарт', esc(T('быстрее')) + ' · ' + fa(ps, 11), 'html'],
+                ['premium', RW('Премиум'), esc(T('точнее')) + ' · ' + fa(pp, 11), 'html'],
+                ['standard', RW('Стандарт'), esc(T('быстрее')) + ' · ' + fa(ps, 11), 'html'],
             ]);
     }
 
@@ -208,15 +208,15 @@
 
             '<div class="rw-sec"><div class="rw-eyebrow"><span class="tile"><i class="ti ti-adjustments"></i></span> ' + esc(T('Подача')) + '</div>' +
             '<div class="rw-lbl">' + esc(T('В стиле канала')) + '</div>' + chBlock +
-            '<div class="rw-lbl">' + esc(T('Эмодзи')) + '</div>' + seg('emoji', _emoji, [['none', 'Без'], ['few', 'Умеренно'], ['many', 'Живо']]) +
-            '<div class="rw-lbl">' + esc(T('Длина')) + '</div>' + seg('length', _length, [['shorter', 'Короче'], ['same', 'Так же'], ['longer', 'Длиннее']], _caption ? ' dis' : '') +
+            '<div class="rw-lbl">' + esc(T('Эмодзи')) + '</div>' + seg('emoji', _emoji, [['none', RW('Без')], ['few', RW('Умеренно')], ['many', RW('Живо')]]) +
+            '<div class="rw-lbl">' + esc(T('Длина')) + '</div>' + seg('length', _length, [['shorter', RW('Короче')], ['same', RW('Так же')], ['longer', RW('Длиннее')]], _caption ? ' dis' : '') +
             '<div class="rw-disnote" id="rw-lennote" style="display:' + (_caption ? 'block' : 'none') + ';">' + esc(T('Выключено: длину задаёт «Уложиться в подпись к фото»')) + '</div>' +
             '<div class="rw-lensize" id="rw-lensize" style="display:' + (_caption ? 'none' : 'block') + ';">' + esc(lenSizeText()) + '</div>' +
             '<div class="rw-lbl">' + esc(T('Тон')) + '</div>' + toneRows() +
             modelBlock() +
-            tgl('improve', _improve, 'Усилить пост', 'цепляющий хук, без воды, призыв в конце, формат под Telegram — версия соберёт не хуже') +
-            tgl('strip', _strip, 'Вычистить чужие ссылки и @упоминания', 'чужие каналы, приглашения и призывы из оригинала не попадут в твой пост') +
-            tgl('caption', _caption, 'Уложиться в подпись к фото', 'не длиннее 1 024 символов — влезет под картинку без обрезания') +
+            tgl('improve', _improve, RW('Усилить пост'), RW('цепляющий хук, без воды, призыв в конце, формат под Telegram — версия соберёт не хуже')) +
+            tgl('strip', _strip, RW('Вычистить чужие ссылки и @упоминания'), RW('чужие каналы, приглашения и призывы из оригинала не попадут в твой пост')) +
+            tgl('caption', _caption, RW('Уложиться в подпись к фото'), RW('не длиннее 1 024 символов — влезет под картинку без обрезания')) +
             '</div>' +
 
             '<button class="rw-go" data-act="go">' + esc(T('Переписать в моём стиле')) + priceChip() + '</button>' +
@@ -335,10 +335,10 @@
             (_ctx && _ctx.currentPostId ? '<div class="rw-lbl" style="margin-top:12px;">' + esc(T('Обложка')) + '</div><div id="rw-cover"></div>' : '') +
             '<div class="rw-lbl" style="margin-top:12px;">' + esc(T('Что сделать с постом')) + '</div>' +
             '<div class="rs-acts">' +
-            actRow('copy', 'ti-copy', 'Скопировать', T('Текст в буфер обмена — для ручной публикации'), '', false, '') +
-            actRow('toplan', 'ti-calendar-plus', 'В контент-план', planHint(), 'g' + (_ctx && _ctx.placed ? ' done' : ''), actLocked(), '') +
-            actRow('pubnow', 'ti-send', 'Опубликовать сейчас', sendHint(), 'w', actLocked(), '') +
-            actRow('more', 'ti-refresh', 'Ещё вариант', T('Переписать заново, другая подача'), '', false, price() != null ? fa(price()) : '') +
+            actRow('copy', 'ti-copy', RW('Скопировать'), T('Текст в буфер обмена — для ручной публикации'), '', false, '') +
+            actRow('toplan', 'ti-calendar-plus', RW('В контент-план'), planHint(), 'g' + (_ctx && _ctx.placed ? ' done' : ''), actLocked(), '') +
+            actRow('pubnow', 'ti-send', RW('Опубликовать сейчас'), sendHint(), 'w', actLocked(), '') +
+            actRow('more', 'ti-refresh', RW('Ещё вариант'), T('Переписать заново, другая подача'), '', false, price() != null ? fa(price()) : '') +
             '</div>' +
             (r.model_used ? '<div class="rw-modelnote">' + esc(T('Модель')) + ': ' + esc(r.model_used) + (r.style_applied ? ' · ' + esc(T('в стиле канала')) : '') + '</div>' : '') +
             '</div>';

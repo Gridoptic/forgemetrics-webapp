@@ -519,7 +519,7 @@
   function _spawnSticker(it, opts) {
     var poster = el('poster');
     var mode = (!it.mode || it.mode === 'm-top') ? 'm-blend' : it.mode;
-    var MODES = (window.MODES || [['m-top', 'Поверх'], ['m-blend', 'Слияние'], ['m-bg', 'Задний фон']])
+    var MODES = (window.MODES || [['m-top', PG('Поверх')], ['m-blend', PG('Слияние')], ['m-bg', PG('Задний фон')]])
       .filter(function (mm) { return mm[0] !== 'm-top'; });
     var s = document.createElement('div');
     s.className = 'stk ' + mode;
