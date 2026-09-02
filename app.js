@@ -6824,7 +6824,8 @@ function rsCoverRender(host, ctx) {
             '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
             TR('Рисованная обложка') + ' ' + price + '</button>' +
             '<button class="cp-mrepl" data-rc="photo" type="button"><i class="ti ti-camera"></i>' +
-            TR('Фото-обложка') + ' ' + price + '</button></div>' + rsCreativeBtn(ctx);
+            TR('Фото-обложка') + ' ' + price + '</button></div>';
+        rsAppendCreative(host, ctx);
         return;
     }
     const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
@@ -6835,6 +6836,12 @@ function rsCoverRender(host, ctx) {
         TR('Рисованная обложка') + '</b><em>' + TR('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
         '<button class="cp-add2 own" data-rc="photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
         TR('Фото-обложка') + '</b><em>' + TR('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
+    rsAppendCreative(host, ctx);
+}
+
+function rsAppendCreative(host, ctx) {
+    const html = rsCreativeBtn(ctx);
+    if (html) host.insertAdjacentHTML('beforeend', html);
 }
 
 function rsSetBusy(ctx, host, text) {
