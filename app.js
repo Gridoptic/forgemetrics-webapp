@@ -440,6 +440,9 @@ function showScreen(screenName) {
 }
 
 
+function TR(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
+
+
 function showError(message) {
     const stale = /API 401/.test(String(message)) && /init data/i.test(String(message));
     els.errorMessage.textContent = stale
@@ -2047,22 +2050,22 @@ function apErr(e) {
     if (j >= 0) {
         try { m = (JSON.parse(m.slice(j)) || {}).detail || m; } catch (err) {}
     }
-    showToast(m || t('Не получилось — попробуй ещё раз'), 'alert-triangle');
+    showToast(m || TR('Не получилось — попробуй ещё раз'), 'alert-triangle');
 }
 
 function publishPostNow(ctx) {
     const pid = ctx && ctx.currentPostId;
-    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
+    if (!pid) { showToast(TR('Сначала сгенерируй пост'), 'alert-triangle'); return; }
     hapticLight();
     const _pi = ctx.placeInfo;
-    const _where = _pi && _pi.channel_username ? '@' + _pi.channel_username : (_pi && _pi.channel_title) || t('канал');
-    apConfirm(t('Опубликовать пост в') + ' ' + _where + ' ' + t('прямо сейчас?'), async () => {
+    const _where = _pi && _pi.channel_username ? '@' + _pi.channel_username : (_pi && _pi.channel_title) || TR('канал');
+    apConfirm(TR('Опубликовать пост в') + ' ' + _where + ' ' + TR('прямо сейчас?'), async () => {
         try {
             await apiRequest('/api/v1/post/schedule', {
                 method: 'POST',
                 body: JSON.stringify({ post_id: pid, mode: 'now' }),
             });
-            showToast(t('Пост уходит в канал — бот опубликует его в течение минуты'), 'check');
+            showToast(TR('Пост уходит в канал — бот опубликует его в течение минуты'), 'check');
         } catch (e) { apErr(e); }
     });
 }
@@ -2082,8 +2085,8 @@ async function openQueueSheet(channelId) {
     const sh = document.createElement('div');
     sh.className = 'bs-sheet ap-sheet';
     sh.innerHTML = `<div class="bs-handle"></div>
-        <div class="ap-title">${t('Очередь публикаций')}</div>
-        <div class="ap-sub">${t('Контент-план и отдельные посты — одна очередь')}</div>
+        <div class="ap-title">${TR('Очередь публикаций')}</div>
+        <div class="ap-sub">${TR('Контент-план и отдельные посты — одна очередь')}</div>
         <div id="ap-qbody" style="padding:26px 0;text-align:center;color:#565b73;"><i class="ti ti-loader-2" style="font-size:20px;display:inline-block;animation:spin .9s linear infinite;"></i></div>`;
     document.body.appendChild(ov);
     document.body.appendChild(sh);
@@ -2100,17 +2103,17 @@ async function openQueueSheet(channelId) {
         const body = sh.querySelector('#ap-qbody');
         if (!body) return;
         if (!d || !d.ok) {
-            body.innerHTML = `<div style="padding:8px 0;color:#8990a8;font-size:12px;"><span>${t('Не удалось загрузить очередь')}</span></div>`;
+            body.innerHTML = `<div style="padding:8px 0;color:#8990a8;font-size:12px;"><span>${TR('Не удалось загрузить очередь')}</span></div>`;
             localizeTree(body); return;
         }
         const row = (p) => {
             const src = p.from_plan ? '📋' : '✍️';
             const when = p.status === 'published' ? (p.published_at || p.scheduled_at) : p.scheduled_at;
             const st = p.status === 'queued' || p.status === 'publishing'
-                ? `<span class="ap-st q"><span>${t('в очереди')}</span></span>`
+                ? `<span class="ap-st q"><span>${TR('в очереди')}</span></span>`
                 : (p.status === 'published'
-                    ? `<span class="ap-st ok"><span>${t('опубликован')}</span></span>`
-                    : `<span class="ap-st er"><span>${t('ошибка')}</span></span>`);
+                    ? `<span class="ap-st ok"><span>${TR('опубликован')}</span></span>`
+                    : `<span class="ap-st er"><span>${TR('ошибка')}</span></span>`);
             const acts = p.status === 'queued'
                 ? `<button class="ap-qa" data-apmv="${p.id}" title="Перенести"><i class="ti ti-clock-edit"></i></button><button class="ap-qa" data-aprm="${p.id}" title="Убрать"><i class="ti ti-x"></i></button>`
                 : (p.status === 'failed'
@@ -2124,11 +2127,11 @@ async function openQueueSheet(channelId) {
         const hi = (d.history || []).map(row).join('');
         body.style.cssText = '';
         body.innerHTML =
-            (d.paused ? `<div class="ap-qerr" style="margin-bottom:8px;"><span>${t('Канал на паузе — очередь остановлена, посты не выходят')}</span></div>` : '') +
-            `<div class="ap-qsec"><span>${t('В очереди')}</span></div>` +
-            (up || `<div class="ap-qempty"><span>${t('Запланированных постов нет')}</span></div>`) +
-            `<div class="ap-qsec"><span>${t('История')}</span></div>` +
-            (hi || `<div class="ap-qempty"><span>${t('Публикаций ещё не было')}</span></div>`);
+            (d.paused ? `<div class="ap-qerr" style="margin-bottom:8px;"><span>${TR('Канал на паузе — очередь остановлена, посты не выходят')}</span></div>` : '') +
+            `<div class="ap-qsec"><span>${TR('В очереди')}</span></div>` +
+            (up || `<div class="ap-qempty"><span>${TR('Запланированных постов нет')}</span></div>`) +
+            `<div class="ap-qsec"><span>${TR('История')}</span></div>` +
+            (hi || `<div class="ap-qempty"><span>${TR('Публикаций ещё не было')}</span></div>`);
         localizeTree(body);
         body.querySelectorAll('[data-aprm]').forEach(b => b.addEventListener('click', async () => {
             hapticLight();
@@ -2489,7 +2492,7 @@ async function openCabinet(scrollTo) {
     showScreen('cabinet');
     const body = document.getElementById('cabinet-body');
     if (body && !cabinetData) {
-        body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Загрузка…') + '</div>';
+        body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + TR('Загрузка…') + '</div>';
     }
     try {
         const data = await apiRequest('/api/v1/user/cabinet');
@@ -2500,7 +2503,7 @@ async function openCabinet(scrollTo) {
             if (sec) setTimeout(() => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
         }
     } catch (e) {
-        if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Не удалось загрузить кабинет.') + '<br>' + t('Попробуй позже.') + '</div>';
+        if (body) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + TR('Не удалось загрузить кабинет.') + '<br>' + TR('Попробуй позже.') + '</div>';
     }
 }
 
@@ -2525,7 +2528,7 @@ function cabRefLadder(r) {
     if (ci < 0) ci = 0;
     const rows = ladder.map((x, i) => {
         const st = i < ci ? 'done' : (i === ci ? 'cur' : 'fut');
-        const here = (i === ci && curKey === 'starter') ? '<span class="rf-here">' + t('ты здесь') + '</span>' : '';
+        const here = (i === ci && curKey === 'starter') ? '<span class="rf-here">' + TR('ты здесь') + '</span>' : '';
         const need = x.need > 0 ? `от ${cabNum(x.need)} ${plural3(x.need, 'оплатившего', 'оплативших', 'оплативших')}` : 'старт';
         const perks = (x.perks || []).map((p) => RF_PERK_TEXT[p] || p).join(' · ');
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm" style="display:flex;align-items:center;gap:8px;"><span style="flex:1;min-width:0;">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}</span>${here}</span><b style="flex:0 0 auto;min-width:42px;text-align:right;font-size:13px;color:#c7cdff;font-variant-numeric:tabular-nums;">${x.rate_pct}%</b></div>${perks ? `<div class="perk">${escapeHtml(perks)}</div>` : ''}</div></div>`;
@@ -2540,17 +2543,17 @@ function refCardHtml(r) {
     const fBonus = r.friend_welcome_bonus || 100;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
-        ? `${t('до')} <b>${escapeHtml(r.next_level_display)}</b> ${t('· ещё')} <b>${cabNum(r.needed_for_next)}</b> ${t('оплативших')}`
+        ? `${TR('до')} <b>${escapeHtml(r.next_level_display)}</b> ${TR('· ещё')} <b>${cabNum(r.needed_for_next)}</b> ${TR('оплативших')}`
         : 'высший уровень';
     return `<div class="rf">
   <div class="rf-card">
-    <span class="rf-eyebrow">${t('Приглашено по твоей ссылке')}</span>
+    <span class="rf-eyebrow">${TR('Приглашено по твоей ссылке')}</span>
     <div class="rf-stats">
-      <div class="rf-stat"><div class="n">${cabNum(r.total_invited)}</div><div class="l">${t('перешло')}</div></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.total_invited)}</div><div class="l">${TR('перешло')}</div></div>
       <div class="rf-divx"></div>
-      <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">${t('оплатили')}</div></div>
+      <div class="rf-stat acc"><div class="n">${cabNum(r.paid_referrals)}</div><div class="l">${TR('оплатили')}</div></div>
       <div class="rf-divx"></div>
-      <div class="rf-stat"><div class="n">${cabNum(r.forge_earned_total)}</div><div class="l">${t('получено Forge')}</div></div>
+      <div class="rf-stat"><div class="n">${cabNum(r.forge_earned_total)}</div><div class="l">${TR('получено Forge')}</div></div>
     </div>
   </div>
 
@@ -2558,46 +2561,46 @@ function refCardHtml(r) {
     <div class="rf-body">
       <div class="rf-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
       <div>
-        <div class="rf-rate"><b>${rate}%</b><span>${t('с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей')}</span></div>
+        <div class="rf-rate"><b>${rate}%</b><span>${TR('с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей')}</span></div>
         <div style="margin:9px 0 2px;border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;overflow:hidden;font-size:11.5px;">
-          <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${t('Приглашённый пополнил')}</span><span>${t('Твоё начисление')}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${TR('Приглашённый пополнил')}</span><span>${TR('Твоё начисление')}</span></div>
           ${[300, 900, 2500, 6000].map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${cabNum(v)} Forge</span><b class="num" style="color:#5DCAA5;">+${cabNum(Math.round(v * rate / 100))} Forge</b></div>`).join('')}
         </div>
         <p style="margin-top:8px;">Начисление автоматически после оплаты. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
       </div>
     </div>
     <div class="rf-bal">
-      <span class="k">${t('Баланс')}</span>
+      <span class="k">${TR('Баланс')}</span>
       <span class="v">${forgeAmount(r.forge_balance, 20)}</span>
-      <span class="e">${t('на генерацию, аудиты и анализ')}</span>
+      <span class="e">${TR('на генерацию, аудиты и анализ')}</span>
     </div>
   </div>
 
   <div class="rf-card">
     <div class="rf-lvltop">
-      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">${t('твой уровень')}</div></div></div>
+      <div class="rf-lvlnow"><span class="rf-tierbig"></span><div><div class="nm">${escapeHtml(r.level_display || 'Starter')}</div><div class="sub">${TR('твой уровень')}</div></div></div>
       <div class="rf-lvlnext">${nextLine}</div>
     </div>
     ${cabRefLadder(r)}
   </div>
 
   <div class="rf-card rf-glow">
-    <div class="rf-lbl" style="margin-top:0">${t('Твоя ссылка')}</div>
+    <div class="rf-lbl" style="margin-top:0">${TR('Твоя ссылка')}</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
     </div>
 
-    <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> ${t('Поделиться ссылкой')}</button>
-    <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> ${t('Скопировать текст приглашения')}</button>
+    <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> ${TR('Поделиться ссылкой')}</button>
+    <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> ${TR('Скопировать текст приглашения')}</button>
   </div>
 
   <div class="rf-how">
-    <span class="rf-eyebrow">${t('Как это работает')}</span>
-    <div class="rf-hrow"><span class="rf-hnum">1</span><p>${t('Передай ссылку админам каналов — лично или в своих постах.')}</p></div>
+    <span class="rf-eyebrow">${TR('Как это работает')}</span>
+    <div class="rf-hrow"><span class="rf-hnum">1</span><p>${TR('Передай ссылку админам каналов — лично или в своих постах.')}</p></div>
     <div class="rf-hrow"><span class="rf-hnum">2</span><p>Приглашённый регистрируется по ней и получает −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">3</span><p>${t('С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.')}</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">4</span><p>${t('Достигнутый уровень фиксируется навсегда — ставка не снижается.')}</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">3</span><p>${TR('С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.')}</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">4</span><p>${TR('Достигнутый уровень фиксируется навсегда — ставка не снижается.')}</p></div>
   </div>
 
   <div class="rf-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>
@@ -2617,7 +2620,7 @@ async function openReferral() {
     hapticLight();
     showScreen('referral');
     const body = document.getElementById('referral-body');
-    if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Загрузка…') + '</div>';
+    if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + TR('Загрузка…') + '</div>';
     else if (body && cabinetData) renderReferral(cabinetData);
     try {
         const data = await apiRequest('/api/v1/user/cabinet');
@@ -2625,7 +2628,7 @@ async function openReferral() {
         renderReferral(data);
         loadRefLeaderboard();
     } catch (e) {
-        if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + t('Не удалось загрузить.') + '<br>' + t('Попробуй позже.') + '</div>';
+        if (body && !cabinetData) body.innerHTML = '<div class="cab-card" style="text-align:center;color:var(--text-secondary);padding:44px 16px;">' + TR('Не удалось загрузить.') + '<br>' + TR('Попробуй позже.') + '</div>';
     }
 }
 
@@ -2639,7 +2642,7 @@ async function loadRefLeaderboard() {
         const me = r.me ? `<p class="rf-lbme">Твоя позиция: ${r.me}</p>` : '';
         const block = document.createElement('div');
         block.className = 'rf-how rf-lb';
-        block.innerHTML = `<span class="rf-eyebrow">${t('Лидерборд недели')}</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">${t('Считаются приглашённые, подключившие живой канал за 7 дней.')}</p>`;
+        block.innerHTML = `<span class="rf-eyebrow">${TR('Лидерборд недели')}</span>${rows}${me}<p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">${TR('Считаются приглашённые, подключившие живой канал за 7 дней.')}</p>`;
         const foot = host.querySelector('.rf-foot');
         if (foot) foot.parentNode.insertBefore(block, foot); else host.appendChild(block);
         localizeTree(block);
@@ -2742,7 +2745,7 @@ function renderCabinet(d) {
         const chActive = (u.channels_active != null) ? u.channels_active : chN;
         const chLim = (u.channels_limit && u.channels_limit < 999999) ? u.channels_limit : null;
         const chMain = chPaused > 0 ? chActive : chN;
-        const chOf = chLim ? ` <s><span>${t('из')}</span> ${cabNum(chLim)}</s>` : '';
+        const chOf = chLim ? ` <s><span>${TR('из')}</span> ${cabNum(chLim)}</s>` : '';
         const chLabel = chPaused > 0
             ? `${plural3(chMain, 'канал', 'канала', 'каналов')} · ${cabNum(chPaused)} на паузе`
             : plural3(chMain, 'канал', 'канала', 'каналов');
@@ -2757,10 +2760,10 @@ function renderCabinet(d) {
 
 
     const notifOn = (function () { try { return localStorage.getItem('fm_notif') !== '0'; } catch (e) { return true; } })();
-    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">${t('Команда канала')}</div><div class="cab-sd">${t('Роли и права админов на оффер')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">${t('Уведомления')}</div><div class="cab-sd">${t('Заявки в нише, отклики, статусы офферов')}</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">${t('Тема оформления')}</div><div class="cab-sd">${t('Тёмная фирменная · выбор тем')}</div></div><span class="cab-soon">${t('Скоро')}</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${t('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">${t('Справка и поддержка')}</div><div class="cab-sd">${t('Метрики, Forge, связь с нами')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">${t('Пользовательское соглашение')}</div><div class="cab-sd">${t('Условия использования сервиса')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
+    html += `<div class="cab-card" id="cab-sec-settings"><div class="cab-stt"><h3>${cabTile('bl', 'settings', 'sm')} Настройки</h3></div><div class="cab-set" id="cab-team"><div class="cab-tile md cab-t-gr"><i class="ti ti-users"></i></div><div class="cab-si"><div class="cab-snm">${TR('Команда канала')}</div><div class="cab-sd">${TR('Роли и права админов на оффер')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-notif"><div class="cab-tile md cab-t-am"><i class="ti ti-bell"></i></div><div class="cab-si"><div class="cab-snm">${TR('Уведомления')}</div><div class="cab-sd">${TR('Заявки в нише, отклики, статусы офферов')}</div></div><div class="cab-tog${notifOn ? ' on' : ''}" id="cab-notif-tog"></div></div><div class="cab-set" id="cab-theme"><div class="cab-tile md cab-t-pu"><i class="ti ti-palette"></i></div><div class="cab-si"><div class="cab-snm">${TR('Тема оформления')}</div><div class="cab-sd">${TR('Тёмная фирменная · выбор тем')}</div></div><span class="cab-soon">${TR('Скоро')}</span></div><div class="cab-set" id="cab-lang"><div class="cab-tile md cab-t-gr"><i class="ti ti-world"></i></div><div class="cab-si"><div class="cab-snm">${TR('Язык интерфейса')}</div><div class="cab-sd">${window.I18N ? (getLang().toUpperCase() + ' <span class="cab-flag">' + ((I18N.flagSvg && I18N.flagSvg[getLang()]) || '') + '</span> ' + escapeHtml(I18N.names[getLang()])) : 'RU Русский'}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-about"><div class="cab-tile md cab-t-bl"><i class="ti ti-lifebuoy"></i></div><div class="cab-si"><div class="cab-snm">${TR('Справка и поддержка')}</div><div class="cab-sd">${TR('Метрики, Forge, связь с нами')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div><div class="cab-set" id="cab-terms"><div class="cab-tile md cab-t-pu"><i class="ti ti-file-text"></i></div><div class="cab-si"><div class="cab-snm">${TR('Пользовательское соглашение')}</div><div class="cab-sd">${TR('Условия использования сервиса')}</div></div><i class="ti ti-chevron-right cab-chev"></i></div></div>`;
 
     html += `<div class="cab-foot"><b>ForgeMetrics</b> · @ForgeMetricsBot</div>`;
-    html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>${t('На информационном ресурсе применяются рекомендательные технологии')}</span></div>`;
+    html += `<div class="cab-foot" style="margin-top:2px;font-size:9.5px;opacity:0.7;"><span>${TR('На информационном ресурсе применяются рекомендательные технологии')}</span></div>`;
 
     body.innerHTML = html;
     wireCabinet(d);
@@ -2777,13 +2780,13 @@ function maybeShowTermsGate(data) {
     bg.style.cssText = 'position:fixed;inset:0;z-index:100055;background:rgba(5,7,14,0.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;padding:0 12px;';
     bg.innerHTML = '<div style="background:#11141f;border:0;border-top:1.5px solid rgba(255,255,255,0.38);border-radius:22px 22px 0 0;box-shadow:0 -26px 64px rgba(0,0,0,0.75),0 1px 0 rgba(255,255,255,0.08) inset;max-width:430px;width:100%;padding:20px 18px calc(18px + env(safe-area-inset-bottom));">' +
         '<div style="width:44px;height:44px;border-radius:12px;margin:0 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.3);color:#818cf8;font-size:22px;"><i class="ti ti-file-text"></i></div>' +
-        '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>' + t('Пользовательское соглашение') + '</span></div>' +
-        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>' + t('Перед началом работы подтвердите согласие с условиями использования сервиса.') + '</span></div>' +
-        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>' + t('Читать пользовательское соглашение') + '</span></button>' +
+        '<div style="font-size:15px;font-weight:800;color:#e8e8ed;margin-bottom:5px;"><span>' + TR('Пользовательское соглашение') + '</span></div>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:#9aa0b8;margin-bottom:14px;"><span>' + TR('Перед началом работы подтвердите согласие с условиями использования сервиса.') + '</span></div>' +
+        '<button id="fm-tgRead" style="display:block;width:100%;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#c2c6d2;border-radius:11px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:11px;"><span>' + TR('Читать пользовательское соглашение') + '</span></button>' +
         '<div id="fm-tgChk" style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;margin-bottom:12px;">' +
         '<span id="fm-tgBox" style="flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;color:transparent;font-size:13px;margin-top:1px;transition:all 140ms;"><i class="ti ti-check"></i></span>' +
-        '<span style="font-size:12px;line-height:1.45;color:#c2c6d2;"><span>' + t('Я ознакомился с условиями и принимаю их') + '</span></span></div>' +
-        '<button id="fm-tgOk" disabled style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;opacity:0.38;pointer-events:none;transition:opacity 160ms;"><span>' + t('Принимаю условия') + '</span></button></div>';
+        '<span style="font-size:12px;line-height:1.45;color:#c2c6d2;"><span>' + TR('Я ознакомился с условиями и принимаю их') + '</span></span></div>' +
+        '<button id="fm-tgOk" disabled style="display:block;width:100%;border:none;background:linear-gradient(145deg,#818cf8,#6366f1);color:#0b0c16;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;opacity:0.38;pointer-events:none;transition:opacity 160ms;"><span>' + TR('Принимаю условия') + '</span></button></div>';
     document.body.appendChild(bg);
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
@@ -2827,8 +2830,8 @@ function openUserTerms() {
     bg.addEventListener('touchmove', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
     bg.addEventListener('wheel', e => { if (!e.target.closest('#fm-termsBody')) e.preventDefault(); }, { passive: false });
     bg.innerHTML = '<div style="background:#11141f;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;">' +
-        '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>' + t('Пользовательское соглашение') + '</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
-        '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>' + t('Загружаю…') + '</span></div></div>';
+        '<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,0.08);font-weight:800;font-size:14.5px;color:#e8e8ed;"><i class="ti ti-file-text" style="color:#818cf8;font-size:17px;"></i><span>' + TR('Пользовательское соглашение') + '</span><span id="fm-termsX" style="margin-left:auto;cursor:pointer;color:#8990a8;padding:4px 6px;"><i class="ti ti-x"></i></span></div>' +
+        '<div id="fm-termsBody" style="overflow-y:auto;padding:4px 16px 16px;font-size:12.5px;line-height:1.55;color:#c2c6d2;"><span>' + TR('Загружаю…') + '</span></div></div>';
     document.body.appendChild(bg);
     const closeTerms = () => {
         document.body.style.overflow = prevBodyOv;
@@ -2845,7 +2848,7 @@ function openUserTerms() {
     const s = document.createElement('script');
     s.src = 'terms.js?v=20260812a';
     s.onload = paint;
-    s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>' + t('Не удалось загрузить документ. Проверь связь и повтори попытку.') + '</span>'; };
+    s.onerror = () => { const b = document.getElementById('fm-termsBody'); if (b) b.innerHTML = '<span>' + TR('Не удалось загрузить документ. Проверь связь и повтори попытку.') + '</span>'; };
     document.head.appendChild(s);
 }
 
@@ -2873,7 +2876,7 @@ function wireReferral(d) {
     on('cab-share', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = t('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:');
+        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:');
         const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
         if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
     });
@@ -2885,7 +2888,7 @@ function wireReferral(d) {
     on('cab-invite-copy', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = t('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:') + '\n' + link;
+        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:') + '\n' + link;
         const b = document.getElementById('cab-invite-copy');
         copyText(text).then(() => { cabToast('Текст приглашения скопирован'); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
@@ -2907,7 +2910,7 @@ function openLangPicker() {
     const ov = document.createElement('div');
     ov.id = 'lang-ov';
     ov.className = 'lang-ov';
-    ov.innerHTML = `<div class="lang-sheet"><div class="lang-h">${t('Язык интерфейса')}</div><div class="lang-list">${rows}</div></div>`;
+    ov.innerHTML = `<div class="lang-sheet"><div class="lang-h">${TR('Язык интерфейса')}</div><div class="lang-list">${rows}</div></div>`;
     document.body.appendChild(ov);
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
@@ -2938,13 +2941,24 @@ async function openTariffs() {
     fmTrack('tariffs');
     showScreen('tariffs');
     const body = document.getElementById('tariffs-body');
-    if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' + t('Загрузка…') + '</div>';
+    if (body && !tariffsData) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' + TR('Загрузка…') + '</div>';
     try {
         const data = await apiRequest('/api/v1/user/tariffs');
         tariffsData = data;
         renderTariffs(data);
     } catch (e) {
-        if (body) body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' + t('Не удалось загрузить витрину Forge.') + '</div>';
+        if (!body) return;
+        var _stale = /401/.test(String((e && e.message) || e));
+        body.innerHTML = '<div class="tf-plan" style="text-align:center;color:var(--text-secondary);padding:42px 16px;">' +
+            (_stale
+                ? TR('Данные входа Telegram устарели. Закрой мини-приложение и открой его заново.') +
+                  '<button class="fs-more" id="tf-reopen" style="margin-top:14px;">' +
+                  TR('Закрыть и открыть заново') + '</button>'
+                : TR('Не удалось загрузить витрину Forge.')) + '</div>';
+        var _btn = document.getElementById('tf-reopen');
+        if (_btn) _btn.onclick = function () {
+            try { window.Telegram.WebApp.close(); } catch (e2) { location.reload(); }
+        };
     }
 }
 
@@ -3078,7 +3092,7 @@ function tfcRow(d, o) {
     return '<div class="tfc-op ' + cls + '" data-tfcrow="' + o.key + '" style="--p:' + pct + '%">'
         + '<div class="tfc-top"><span class="tfc-nm">'
         + escapeHtml(TFC_SHORT[o.key] || o.label)
-        + ' <i>· ' + forgeAmount(o.price, 11) + t('/шт') + '</i></span>'
+        + ' <i>· ' + forgeAmount(o.price, 11) + TR('/шт') + '</i></span>'
         + '<span class="tfc-v' + (val ? '' : ' zero') + '">' + cabNum(val) + '</span></div>'
         + '<div class="tfc-ctl">'
         + '<button class="tfc-b" data-tfcop="' + o.key + '" data-d="-1"' + (val <= 0 ? ' disabled' : '') + '>−</button>'
@@ -3115,15 +3129,15 @@ function tfCalculatorHtml(d) {
 
     const head = '<button class="tfc-head" id="tfc-toggle">'
         + '<span class="et">' + forgeIco(17) + '</span>'
-        + '<span class="tfc-htxt"><b>' + t('Калькулятор Forge') + '</b>'
-        + '<i>' + t('Посчитай, на что хватит пакета') + '</i></span>'
+        + '<span class="tfc-htxt"><b>' + TR('Калькулятор Forge') + '</b>'
+        + '<i>' + TR('Посчитай, на что хватит пакета') + '</i></span>'
         + '<i class="ti ti-chevron-' + (tfCalc.shown ? 'up' : 'down') + ' tfc-chev"></i></button>';
 
     if (!tfCalc.shown) return '<div class="tf-extras tfc collapsed">' + head + '</div>';
 
     return '<div class="tf-extras tfc">'
         + head
-        + '<div class="tfc-sub">' + t('Ползунок остановится, когда Forge закончатся') + '</div>'
+        + '<div class="tfc-sub">' + TR('Ползунок остановится, когда Forge закончатся') + '</div>'
         + '<div class="tfc-presets">' + TFC_PRESETS.map((p, i) =>
             '<button class="tfc-chip tp-' + (p.color || 'pu')
             + (i === tfCalc.preset ? ' on' : '') + '" data-tfcpre="' + i + '">'
@@ -3139,7 +3153,7 @@ function tfCalculatorHtml(d) {
         + '<span class="tfc-bt"><small>'
         + (rest === 0 ? 'Запас распределён полностью' : 'Осталось распределить') + '</small>'
         + '<b>' + forgeAmount(rest, 15) + '</b>'
-        + '<i>' + t('из пакета') + ' ' + escapeHtml(t.name)
+        + '<i>' + TR('из пакета') + ' ' + escapeHtml(t.name)
         + (next && next.forge ? ' · следующий пакет даст ' + cabNum(next.forge) : '')
         + '</i></span></div>'
         + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
@@ -3272,12 +3286,12 @@ function renderTariffs(d) {
     const grantH = Number(d.forge_grant || 0);
     const lowH = grantH > 0 && balH < grantH * 0.15;
     let html = `<div class="cab-card" style="margin-bottom:10px;">` +
-        `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> ${t('Баланс Forge')}</h3></div>` +
+        `<div class="cab-stt"><h3><div class="cab-tile sm cab-t-am">${FORGE_SVG}</div> ${TR('Баланс Forge')}</h3></div>` +
         `<div class="fw-balrow${lowH ? ' low' : ''}">` +
             `<div class="fw-bal">${forgeAmount(balH, 22)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
         `</div></div>`;
-    html += '<div class="tf-note"><b>' + t('Без тарифов и подписок') + '</b> — <span>' + t('Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.') + '</span></div>';
+    html += '<div class="tf-note"><b>' + TR('Без тарифов и подписок') + '</b> — <span>' + TR('Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.') + '</span></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -3285,17 +3299,17 @@ function renderTariffs(d) {
         (p.discount_pct > 0 ? `<span class="fw-pack-d">−${p.discount_pct}%</span>` : '') +
         `</button>`).join('');
     if (packs) {
-        html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> ${t('Пополнить баланс Forge')}</div>` +
-            `<div class="tf-sub" style="margin:-2px 0 10px;">${t('Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов')}</div>` +
+        html += `<div class="tf-extras"><div class="tf-eh"><span class="et">${forgeIco(13)}</span> ${TR('Пополнить баланс Forge')}</div>` +
+            `<div class="tf-sub" style="margin:-2px 0 10px;">${TR('Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов')}</div>` +
             `<div class="fw-packs">${packs}</div>`;
         const prices = fwPriceRows(d.forge_prices);
-        if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">${t('Сколько стоят действия')} <i class="ti ti-chevron-down"></i></div>` +
+        if (prices) html += `<div class="fw-sec fw-toggle" id="tf-prices-t">${TR('Сколько стоят действия')} <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-prices" id="tf-prices" hidden>${prices}</div>`;
         const histRows = (d.forge_history || []).slice(0, 12).map(tx =>
             `<div class="fw-trow"><div class="fw-ti"><span>${escapeHtml(forgeTxLabel(tx))}</span>` +
             `<i>${escapeHtml(forgeTxDate(tx.created_at))}</i></div>` +
             `<b class="${tx.amount > 0 ? 'pos' : ''}">${tx.amount > 0 ? '+' : '−'}${cabNum(Math.abs(tx.amount))}</b></div>`).join('');
-        if (histRows) html += `<div class="fw-sec fw-toggle" id="tf-hist-t">${t('История операций')} <i class="ti ti-chevron-down"></i></div>` +
+        if (histRows) html += `<div class="fw-sec fw-toggle" id="tf-hist-t">${TR('История операций')} <i class="ti ti-chevron-down"></i></div>` +
             `<div class="fw-hist" id="tf-hist" hidden>${histRows}</div>`;
         html += `</div>`;
     }
@@ -3349,7 +3363,7 @@ function openCheckout(opts) {
     sheet.className = 'bs-sheet co-sheet';
     sheet.innerHTML = `
         <div class="bs-handle"></div>
-        <div class="co-title">${t('Оформление заказа')}</div>
+        <div class="co-title">${TR('Оформление заказа')}</div>
         <div class="co-plan">
           <div class="co-tile co-t-${opts.color || 'pu'}"><i class="ti ti-${opts.icon || 'package'}"></i></div>
           <div class="co-plan-info">
@@ -3360,14 +3374,14 @@ function openCheckout(opts) {
         </div>
         <div class="co-rows">
           <div class="co-row"><span>${escapeHtml(opts.rowLabel || opts.name)}</span><span>${cabNum(price)} ₽</span></div>
-          <div class="co-row co-total"><span>${t('К оплате')}</span><span class="co-sum">${cabNum(price)} ₽</span></div>
+          <div class="co-row co-total"><span>${TR('К оплате')}</span><span class="co-sum">${cabNum(price)} ₽</span></div>
         </div>
         <div class="co-methods" style="display:flex;gap:8px;margin:10px 0 2px;">
-          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> ${t('СБП')}</button>
-          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> ${t('Карта')}</button>
+          <button type="button" class="co-met" data-met="sbp" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(93,202,165,0.55);background:rgba(93,202,165,0.10);color:#e8eaf6;font-size:13px;font-weight:600;"><i class="ti ti-bolt"></i> ${TR('СБП')}</button>
+          <button type="button" class="co-met" data-met="bank_card" style="flex:1;min-height:42px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:#a9aec0;font-size:13px;font-weight:600;"><i class="ti ti-credit-card"></i> ${TR('Карта')}</button>
         </div>
         <button class="co-pay" data-copay="1"><i class="ti ti-credit-card"></i> Оплатить ${cabNum(price)} ₽</button>
-        <button class="co-close">${t('Закрыть')}</button>
+        <button class="co-close">${TR('Закрыть')}</button>
     `;
     document.body.appendChild(overlay);
     document.body.appendChild(sheet);
@@ -3399,7 +3413,7 @@ function coPayPending(sheet, title, sub) {
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
           <div class="co-pend-t">${escapeHtml(title)}</div>
           <div class="co-pend-s">${escapeHtml(sub)}</div>
-          <button class="co-close">${t('Закрыть')}</button>
+          <button class="co-close">${TR('Закрыть')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
@@ -3410,9 +3424,9 @@ function coPayDone(sheet, name) {
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic ok"><i class="ti ti-circle-check"></i></div>
-          <div class="co-pend-t">${t('Оплачено')}</div>
+          <div class="co-pend-t">${TR('Оплачено')}</div>
           <div class="co-pend-s">${escapeHtml(name)} — доступ уже открыт.</div>
-          <button class="co-close">${t('Отлично')}</button>
+          <button class="co-close">${TR('Отлично')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', () => {
@@ -3455,7 +3469,7 @@ async function coPay(opts) {
 
     if (opts.pay) {
         const btn = sheet.querySelector('[data-copay]');
-        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + t('Готовим оплату…'); }
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> ' + TR('Готовим оплату…'); }
 
         const payMethod = (_coCtx && _coCtx.method) || 'sbp';
         let res = null;
@@ -3503,9 +3517,9 @@ async function coPay(opts) {
         <div class="bs-handle"></div>
         <div class="co-pend">
           <div class="co-pend-ic"><i class="ti ti-clock-hour-4"></i></div>
-          <div class="co-pend-t">${t('Приём платежей подключается')}</div>
-          <div class="co-pend-s">${t('Оплата станет доступна в ближайшее время. Мы уведомим, когда оплата откроется.')}</div>
-          <button class="co-close">${t('Закрыть')}</button>
+          <div class="co-pend-t">${TR('Приём платежей подключается')}</div>
+          <div class="co-pend-s">${TR('Оплата станет доступна в ближайшее время. Мы уведомим, когда оплата откроется.')}</div>
+          <button class="co-close">${TR('Закрыть')}</button>
         </div>
     `;
     sheet.querySelector('.co-close').addEventListener('click', closeCheckout);
@@ -3671,7 +3685,7 @@ async function openPostCreate() {
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
         els.postLimitBanner.classList.add('plain');
-        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + t('Загружаю баланс...') + '</span>';
+        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + TR('Загружаю баланс...') + '</span>';
     }
 
     state.post.useChannelStyle = true;
@@ -3700,7 +3714,7 @@ async function openPostCreate() {
     } catch (err) {
         console.error('Failed to load limits/channel:', err);
         if (els.postLimitBanner) {
-            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + t('Не удалось загрузить баланс') + '</span>';
+            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + TR('Не удалось загрузить баланс') + '</span>';
             els.postLimitBanner.classList.add('exhausted', 'plain');
         }
     }
@@ -3850,7 +3864,7 @@ async function loadTopicIdeas() {
         renderTopicIdeas(result.ideas || []);
     } catch (err) {
         console.warn('Ideas failed:', err);
-        showToast(t('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
+        showToast(TR('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
     } finally {
         btn.classList.remove('loading');
         if (iconEl) iconEl.className = 'ti ti-bulb';
@@ -3861,7 +3875,7 @@ function renderTopicIdeas(ideas) {
     const list = document.getElementById('post-ideas-list');
     if (!list) return;
     if (!ideas.length) {
-        showToast(t('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
+        showToast(TR('Не удалось получить идеи — попробуй ещё раз'), 'alert-triangle');
         return;
     }
     list.innerHTML = '';
@@ -3906,8 +3920,8 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector empty">
                 <div class="post-channel-selector-avatar"><i class="ti ti-plus"></i></div>
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">${t('Канал не выбран')}</div>
-                    <div class="post-channel-selector-title">${t('Подключи канал')}</div>
+                    <div class="post-channel-selector-eyebrow">${TR('Канал не выбран')}</div>
+                    <div class="post-channel-selector-title">${TR('Подключи канал')}</div>
                 </div>
                 <i class="ti ti-chevron-right post-channel-selector-chev"></i>
             </div>
@@ -3935,7 +3949,7 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector has-style">
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">${t('Пишу в стиле')}</div>
+                    <div class="post-channel-selector-eyebrow">${TR('Пишу в стиле')}</div>
                     <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-circle-check post-channel-selector-check"></i></div>
                 </div>
                 <i class="ti ti-chevron-down post-channel-selector-chev"></i>
@@ -3946,10 +3960,10 @@ function renderPostChannelSelector(channel) {
             <div class="post-channel-selector no-style">
                 ${avatarHtml}
                 <div class="post-channel-selector-info">
-                    <div class="post-channel-selector-eyebrow">${t('Активный канал')}</div>
+                    <div class="post-channel-selector-eyebrow">${TR('Активный канал')}</div>
                     <div class="post-channel-selector-title">${escapeHtml(channel.title || 'Канал')} <i class="ti ti-alert-triangle post-channel-selector-warn"></i></div>
                     <div class="post-channel-selector-hint">
-                        ${t('Стиль не настроен — пишу нейтрально.')} <a href="#" data-pcs-upload="${channel.id}">${t('Загрузить примеры →')}</a>
+                        ${TR('Стиль не настроен — пишу нейтрально.')} <a href="#" data-pcs-upload="${channel.id}">${TR('Загрузить примеры →')}</a>
                     </div>
                 </div>
                 <i class="ti ti-chevron-down post-channel-selector-chev"></i>
@@ -4023,7 +4037,7 @@ function renderStyleToggle(canEnable, defaultOn) {
 
     const lim = (state.post && state.post.limits) || {};
     const pausedNote = (!canEnable && lim.channel_paused)
-        ? '<span class="post-style-why">' + t('канал на паузе — стиль недоступен') + '</span>' : '';
+        ? '<span class="post-style-why">' + TR('канал на паузе — стиль недоступен') + '</span>' : '';
 
     toggle.innerHTML = `
         <div class="post-style-toggle ${canEnable ? '' : 'disabled'}">
@@ -4537,16 +4551,16 @@ function renderDeletedChannels(deleted, intoEmpty) {
                     <div class="channels-deleted-timer">Будет стёрт из системы через ${countdown}</div>
                 </div>
                 <div class="channels-deleted-actions">
-                    <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">${t('Вернуть')}</button>
-                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">${t('Удалить полностью')}</button>
+                    <button class="channels-deleted-restore" onclick="window.__restoreChannel&&window.__restoreChannel(${ch.id})">${TR('Вернуть')}</button>
+                    <button class="channels-deleted-purge" onclick="window.__purgeChannel&&window.__purgeChannel(${ch.id}, ${escapeHtml(JSON.stringify(ch.title || 'Канал'))})">${TR('Удалить полностью')}</button>
                 </div>
             </div>
         `;
     }).join('');
 
     box.innerHTML = `
-        <div class="channels-deleted-label">${t('Недавно удалённые')}</div>
-        <div class="channels-deleted-hint">${t('Каналы хранятся 7 дней, потом стираются из системы. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.')}</div>
+        <div class="channels-deleted-label">${TR('Недавно удалённые')}</div>
+        <div class="channels-deleted-hint">${TR('Каналы хранятся 7 дней, потом стираются из системы. Переподключить можно в любой момент, добавив бота админом — настройки соберутся заново.')}</div>
         ${items}
     `;
     box.style.display = '';
@@ -4736,7 +4750,7 @@ function renderAddMoreOrLimit(data) {
     limitBox.innerHTML = `
         <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
         <div class="channels-limit-title">Каналов подключено: ${used} из ${limit}</div>
-        <div class="channels-limit-sub">${t('Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.')}</div>
+        <div class="channels-limit-sub">${TR('Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.')}</div>
     `;
     limitBox.style.display = '';
 }
@@ -4748,42 +4762,42 @@ function renderVoiceStatus(ch) {
     const n = ch.voice_posts_analyzed || 0;
 
     if (status === 'collecting') {
-        return `<span class="channel-card-feat-val voice-collecting"><span class="voice-pulse-dot"></span>${t('Настраивается...')}</span>`;
+        return `<span class="channel-card-feat-val voice-collecting"><span class="voice-pulse-dot"></span>${TR('Настраивается...')}</span>`;
     }
 
     if (status === 'done' && quality === 'full') {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Настроен')}</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${TR('Настроен')}</span>`;
     }
 
     if (status === 'done' && quality === 'weak') {
-        return `<span class="channel-card-feat-val warn">${t('Слабый — мало материала')}</span>`;
+        return `<span class="channel-card-feat-val warn">${TR('Слабый — мало материала')}</span>`;
     }
 
     if (status === 'done' && quality === 'strategy') {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Задан стратегом')}</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${TR('Задан стратегом')}</span>`;
     }
 
     if (status === 'failed' && quality === 'private') {
-        return `<span class="channel-card-feat-val warn">${t('Приватный — загрузи примеры')}</span>`;
+        return `<span class="channel-card-feat-val warn">${TR('Приватный — загрузи примеры')}</span>`;
     }
 
     if (status === 'failed' && quality === 'no_text') {
-        return `<span class="channel-card-feat-val warn">${t('Нет текста в постах')}</span>`;
+        return `<span class="channel-card-feat-val warn">${TR('Нет текста в постах')}</span>`;
     }
 
     if (status === 'failed' && quality === 'no_posts') {
-        return `<span class="channel-card-feat-val warn">${t('Постов пока нет')}</span>`;
+        return `<span class="channel-card-feat-val warn">${TR('Постов пока нет')}</span>`;
     }
 
     if (status === 'pending') {
-        return `<span class="channel-card-feat-val warn">${t('Соберём при пополнении баланса')}</span>`;
+        return `<span class="channel-card-feat-val warn">${TR('Соберём при пополнении баланса')}</span>`;
     }
 
     if (ch.has_voice) {
-        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${t('Настроен')}</span>`;
+        return `<span class="channel-card-feat-val ok"><i class="ti ti-check"></i> ${TR('Настроен')}</span>`;
     }
 
-    return `<span class="channel-card-feat-val warn">${t('Не настроен')}</span>`;
+    return `<span class="channel-card-feat-val warn">${TR('Не настроен')}</span>`;
 }
 
 
@@ -4893,32 +4907,32 @@ function renderChannelCard(ch) {
 
     let badge;
     if (paused) {
-        badge = `<div class="channel-card-badge paused"><i class="ti ti-player-pause"></i><span>${t('На паузе')}</span></div>`;
+        badge = `<div class="channel-card-badge paused"><i class="ti ti-player-pause"></i><span>${TR('На паузе')}</span></div>`;
     } else if (connected) {
-        badge = `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>${t('Подключён')}</span></div>`;
+        badge = `<div class="channel-card-badge connected"><i class="ti ti-circle-check"></i><span>${TR('Подключён')}</span></div>`;
     } else {
-        badge = `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>${t('Только анализ')}</span></div>`;
+        badge = `<div class="channel-card-badge demo"><i class="ti ti-eye"></i><span>${TR('Только анализ')}</span></div>`;
     }
 
-    const okIcon = `<i class="ti ti-check"></i> ${t('Доступно')}`;
-    const lockTxt = `<i class="ti ti-lock"></i> ${t('Нужен бот-админ')}`;
+    const okIcon = `<i class="ti ti-check"></i> ${TR('Доступно')}`;
+    const lockTxt = `<i class="ti ti-lock"></i> ${TR('Нужен бот-админ')}`;
 
     let feats = '';
     if (connected) {
         const pub = ch.bot_can_post
             ? `<span class="channel-card-feat-val ok">${okIcon}</span>`
-            : `<span class="channel-card-feat-val warn">${t('Нет прав на публикацию')}</span>`;
+            : `<span class="channel-card-feat-val warn">${TR('Нет прав на публикацию')}</span>`;
         const voice = renderVoiceStatus(ch);
         feats = `
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Публикация постов')}</span>${pub}</div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Автопостинг')}</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok ap-qlink" onclick="event.stopPropagation();window.__openQueue&&window.__openQueue(${ch.id})">Очередь публикаций <i class="ti ti-chevron-right"></i></span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Стиль письма')}</span>${voice}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Публикация постов')}</span>${pub}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Автопостинг')}</span>${ch.bot_can_post ? `<span class="channel-card-feat-val ok ap-qlink" onclick="event.stopPropagation();window.__openQueue&&window.__openQueue(${ch.id})">Очередь публикаций <i class="ti ti-chevron-right"></i></span>` : `<span class="channel-card-feat-val locked">${lockTxt}</span>`}</div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Стиль письма')}</span>${voice}</div>
         `;
     } else {
         feats = `
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Анализ и стиль')}</span><span class="channel-card-feat-val ok">${okIcon}</span></div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Публикация постов')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
-            <div class="channel-card-feat"><span class="channel-card-feat-label">${t('Автопостинг')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Анализ и стиль')}</span><span class="channel-card-feat-val ok">${okIcon}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Публикация постов')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
+            <div class="channel-card-feat"><span class="channel-card-feat-label">${TR('Автопостинг')}</span><span class="channel-card-feat-val locked">${lockTxt}</span></div>
         `;
     }
 
@@ -4926,15 +4940,15 @@ function renderChannelCard(ch) {
         <div class="channels-demo-warning">
             <i class="ti ti-flask"></i>
             <div>
-                <div class="channels-demo-warning-title">${t('Демо-режим')}</div>
-                <div class="channels-demo-warning-text">${t('Анализ и стиль работают. Для публикации и автопостинга добавь бота админом.')}</div>
+                <div class="channels-demo-warning-title">${TR('Демо-режим')}</div>
+                <div class="channels-demo-warning-text">${TR('Анализ и стиль работают. Для публикации и автопостинга добавь бота админом.')}</div>
             </div>
         </div>`;
 
     const cta = connected ? '' : `
         <div class="channels-cta">
-            <div class="channels-cta-text">${t('Хочешь публиковать и автопостить?')}</div>
-            <button class="channels-cta-btn" onclick="window.__toggleListInstruction&&window.__toggleListInstruction()">${t('Как подключить полностью →')}</button>
+            <div class="channels-cta-text">${TR('Хочешь публиковать и автопостить?')}</div>
+            <button class="channels-cta-btn" onclick="window.__toggleListInstruction&&window.__toggleListInstruction()">${TR('Как подключить полностью →')}</button>
         </div>`;
 
     return `
@@ -4988,7 +5002,7 @@ async function openChannelSettingsScreen(channelId) {
     host.innerHTML = `
         <div class="channel-settings-loading">
             <div class="spinner"></div>
-            <div>${t('Загружаю настройки канала...')}</div>
+            <div>${TR('Загружаю настройки канала...')}</div>
         </div>
     `;
     host.style.display = 'flex';
@@ -5022,8 +5036,8 @@ async function openChannelSettingsScreen(channelId) {
         host.innerHTML = `
             <div class="channel-settings-loading">
                 <i class="ti ti-alert-triangle" style="font-size: 28px; color: #F0997B;"></i>
-                <div>${t('Не удалось загрузить настройки')}</div>
-                <button class="cs-errback" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i><span>${t('Назад')}</span></button>
+                <div>${TR('Не удалось загрузить настройки')}</div>
+                <button class="cs-errback" onclick="closeChannelSettings()"><i class="ti ti-arrow-left"></i><span>${TR('Назад')}</span></button>
             </div>
         `;
     }
@@ -5080,7 +5094,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
         itemsHtml = `
             <div class="bs-empty">
                 <div class="bs-empty-icon"><i class="ti ti-broadcast-off"></i></div>
-                <div>${t('Нет каналов для выбора')}</div>
+                <div>${TR('Нет каналов для выбора')}</div>
             </div>
         `;
     } else {
@@ -5101,7 +5115,7 @@ function showBottomSheet({ title, subtitle, items, activeId, onSelect }) {
                 : `<i class="ti ti-chevron-right bs-item-icon-right"></i>`;
 
             const pausedChip = it.paused
-                ? `<span class="bs-item-chip"><i class="ti ti-player-pause"></i>${t('Пауза')}</span>`
+                ? `<span class="bs-item-chip"><i class="ti ti-player-pause"></i>${TR('Пауза')}</span>`
                 : '';
 
             return `
@@ -5346,12 +5360,12 @@ async function openActiveChannelSelector(opts) {
                         await loadDashboard();
                     }
                 } catch (e) {
-                    showToast(t('Не удалось переключить канал'), 'alert-triangle');
+                    showToast(TR('Не удалось переключить канал'), 'alert-triangle');
                 }
             },
         });
     } catch (e) {
-        showToast(t('Не удалось загрузить каналы'), 'alert-triangle');
+        showToast(TR('Не удалось загрузить каналы'), 'alert-triangle');
     } finally {
         _chSelectorBusy = false;
         if (selector) selector.classList.remove('loading');
@@ -5416,7 +5430,7 @@ function renderSettingsLimitsBar(limits) {
         <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
             <div class="limit-row-head">
                 <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">${t('Обновление стиля')}<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
+                <span class="limit-row-label">${TR('Обновление стиля')}<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
                 <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
             <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
@@ -5443,7 +5457,7 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-ok">
                 <i class="ti ti-circle-check"></i>
-                <span>${t('Стиль настроен')}</span>
+                <span>${TR('Стиль настроен')}</span>
                 <span class="cs-status-meta">${qualityLabel}</span>
             </div>
         `;
@@ -5451,8 +5465,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-voice-card">
                 <div class="cs-voice-text" id="cs-voice-text">${escapeHtml(data.voice_summary)}</div>
                 <div class="cs-voice-actions">
-                    <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> ${t('Изменить')}</button>
-                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${t('Пересобрать')}</button>
+                    <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> ${TR('Изменить')}</button>
+                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Пересобрать')}</button>
                 </div>
             </div>
         `;
@@ -5460,7 +5474,7 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-collecting">
                 <span class="voice-pulse-dot"></span>
-                <span>${t('Стиль собирается...')}</span>
+                <span>${TR('Стиль собирается...')}</span>
             </div>
         `;
     } else if (status === 'failed' && quality === 'private') {
@@ -5468,8 +5482,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">${t('Стиль не настроен')}</div>
-                    <div class="cs-status-warn-text">${t('Канал приватный — я не могу прочитать историю. Загрузи 3-5 примеров постов чтобы AI понял твой стиль.')}</div>
+                    <div class="cs-status-warn-title">${TR('Стиль не настроен')}</div>
+                    <div class="cs-status-warn-text">${TR('Канал приватный — я не могу прочитать историю. Загрузи 3-5 примеров постов чтобы AI понял твой стиль.')}</div>
                 </div>
             </div>
         `;
@@ -5478,8 +5492,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">${t('Постов пока нет')}</div>
-                    <div class="cs-status-warn-text">${t('В канале нет постов для анализа. Опубликуй несколько постов и нажми «Пересобрать», или загрузи примеры вручную.')}</div>
+                    <div class="cs-status-warn-title">${TR('Постов пока нет')}</div>
+                    <div class="cs-status-warn-text">${TR('В канале нет постов для анализа. Опубликуй несколько постов и нажми «Пересобрать», или загрузи примеры вручную.')}</div>
                 </div>
             </div>
         `;
@@ -5488,8 +5502,8 @@ function renderSettingsVoiceSection(data) {
             <div class="cs-status-line cs-status-warn">
                 <i class="ti ti-alert-triangle"></i>
                 <div>
-                    <div class="cs-status-warn-title">${t('Не удалось настроить стиль')}</div>
-                    <div class="cs-status-warn-text">${t('Попробуй загрузить примеры вручную.')}</div>
+                    <div class="cs-status-warn-title">${TR('Не удалось настроить стиль')}</div>
+                    <div class="cs-status-warn-text">${TR('Попробуй загрузить примеры вручную.')}</div>
                 </div>
             </div>
         `;
@@ -5497,14 +5511,14 @@ function renderSettingsVoiceSection(data) {
         statusBadge = `
             <div class="cs-status-line cs-status-neutral">
                 <i class="ti ti-clock"></i>
-                <span>${t('Стиль ещё не настроен')}</span>
+                <span>${TR('Стиль ещё не настроен')}</span>
             </div>
         `;
     }
 
     return `
         <div class="cs-section">
-            <div class="cs-section-title">${t('Стиль письма')}</div>
+            <div class="cs-section-title">${TR('Стиль письма')}</div>
             ${statusBadge}
             ${bodyHtml}
         </div>
@@ -5534,8 +5548,8 @@ function renderSettingsExamplesSection(data) {
                     maxlength="5000"
                 ></textarea>
                 <div class="cs-examples-footer">
-                    <span class="cs-examples-count" id="cs-examples-count">${t('0 / 5000 символов')}</span>
-                    <button class="cs-btn-primary" id="cs-examples-apply" disabled>${t('Применить')}</button>
+                    <span class="cs-examples-count" id="cs-examples-count">${TR('0 / 5000 символов')}</span>
+                    <button class="cs-btn-primary" id="cs-examples-apply" disabled>${TR('Применить')}</button>
                 </div>
             </div>
         </div>
@@ -5551,7 +5565,7 @@ function renderSettingsBehaviorSection(data) {
 
     return `
         <div class="cs-section">
-            <div class="cs-section-title">${t('Поведение')}</div>
+            <div class="cs-section-title">${TR('Поведение')}</div>
 
             <div class="cs-toggle-row" data-toggle="paused">
                 <div class="cs-toggle-icon-wrap">
@@ -5564,7 +5578,7 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                     <div class="cs-toggle-sub">${paused ? 'Генерация постов отключена' : 'Можно генерировать посты'}</div>
                     <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
-                        ${t('Когда канал на паузе, контент-план ничего не публикует автоматически. Бот остаётся подключённым, настройки и стиль сохраняются.')}
+                        ${TR('Когда канал на паузе, контент-план ничего не публикует автоматически. Бот остаётся подключённым, настройки и стиль сохраняются.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${!paused ? 'on' : ''}" data-toggle-target="paused">
@@ -5578,12 +5592,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">${t('Нецензурная лексика')}</span>
+                        <span class="cs-toggle-title">${TR('Нецензурная лексика')}</span>
                         <button class="cs-info-btn" data-info="profanity" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${profanity ? 'Разрешена по умолчанию' : 'Запрещена по умолчанию'}</div>
                     <div class="cs-info-popup" id="cs-info-profanity" style="display:none;">
-                        ${t('Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.')}
+                        ${TR('Если включено, AI будет использовать ненормативную лексику в постах по умолчанию. Можно отдельно переопределить для конкретного поста на экране генерации. Подходит для каналов с резким разговорным стилем.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${profanity ? 'on' : ''}" data-toggle-target="profanity">
@@ -5597,12 +5611,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">${t('Открытые опросы')}</span>
+                        <span class="cs-toggle-title">${TR('Открытые опросы')}</span>
                         <button class="cs-info-btn" data-info="polls" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${openPolls ? 'Разрешены вопросы в комментарии' : 'Только анонимные опросы реакциями'}</div>
                     <div class="cs-info-popup" id="cs-info-polls" style="display:none;">
-                        ${t('Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.')}
+                        ${TR('Открытый опрос — вопрос с ответами в комментариях: он раскрывает анонимность и обычно собирает меньше откликов. По умолчанию AI завершает посты анонимными опросами через реакции. Включай, если аудитория канала активно пишет в комментариях.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${openPolls ? 'on' : ''}" data-toggle-target="polls">
@@ -5616,12 +5630,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">${t('Ссылки на исследования')}</span>
+                        <span class="cs-toggle-title">${TR('Ссылки на исследования')}</span>
                         <button class="cs-info-btn" data-info="research" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${research ? 'Включены — исследования добавляют 20 Forge к цене поста' : 'Выключены — обычная цена поста'}</div>
                     <div class="cs-info-popup" id="cs-info-research" style="display:none;">
-                        ${t('Подходит каналам, где посты опираются на проверяемые факты: наука и научпоп, медицина, биохакинг, психология, космос, биология и животные, IT, инженерия, авто (масла, топливо, узлы), строительство и материалы. Система живым поиском находит 1-3 первоисточника в авторитетных научных изданиях и базах, проверяет каждую ссылку и оформляет в манере канала; если подтверждённых работ не нашлось — разница возвращается за вычетом сбора за поиск. Юмору, влогам и анонсам не подойдёт: научных утверждений там нет.')}
+                        ${TR('Подходит каналам, где посты опираются на проверяемые факты: наука и научпоп, медицина, биохакинг, психология, космос, биология и животные, IT, инженерия, авто (масла, топливо, узлы), строительство и материалы. Система живым поиском находит 1-3 первоисточника в авторитетных научных изданиях и базах, проверяет каждую ссылку и оформляет в манере канала; если подтверждённых работ не нашлось — разница возвращается за вычетом сбора за поиск. Юмору, влогам и анонсам не подойдёт: научных утверждений там нет.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${research ? 'on' : ''}" data-toggle-target="research">
@@ -5645,13 +5659,13 @@ function renderVoicePickSection(data) {
                 <span class="cs-vnm"><b>${escapeHtml(v.label)}</b><span>${escapeHtml(v.note)}</span></span>
                 <span class="cs-vchk"><i class="ti ti-check"></i></span>
             </div>`).join('');
-        return `<div class="cs-vcol"><div class="cs-vcolh"><s>${label}</s><u data-vall="${g}">${t('все')}</u></div>${rows}</div>`;
+        return `<div class="cs-vcol"><div class="cs-vcolh"><s>${label}</s><u data-vall="${g}">${TR('все')}</u></div>${rows}</div>`;
     };
     return `
         <div class="cs-section" id="cs-voice-sec">
-            <div class="cs-section-title">${t('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
+            <div class="cs-section-title">${TR('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? 'выбрано ' + sel.size : 'по рассказчику поста'}</span></div>
             <div class="cs-vcols">${col('male', 'Мужские')}${col('female', 'Женские')}</div>
-            <div class="cs-vfoot">${t('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}</div>
+            <div class="cs-vfoot">${TR('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}</div>
         </div>`;
 }
 
@@ -5692,7 +5706,7 @@ async function saveVoicePick(sec) {
         });
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred?.('light');
     } catch (e) {
-        showToast(t('Не удалось сохранить голоса'), 'alert-triangle');
+        showToast(TR('Не удалось сохранить голоса'), 'alert-triangle');
     }
 }
 
@@ -5759,8 +5773,8 @@ function tzClock(min) {
 }
 function tzNowLine(min) {
     const dev = tzDevice();
-    let line = t('Сейчас по каналу') + ' ' + tzClock(min);
-    if (dev !== min) line += ' · ' + t('на твоём устройстве') + ' ' + tzClock(dev) + ' (' + tzFmt(dev) + ')';
+    let line = TR('Сейчас по каналу') + ' ' + tzClock(min);
+    if (dev !== min) line += ' · ' + TR('на твоём устройстве') + ' ' + tzClock(dev) + ' (' + tzFmt(dev) + ')';
     return line;
 }
 function tzCurrent(data) {
@@ -5770,12 +5784,12 @@ function renderTzSection(data) {
     const cur = tzCurrent(data);
     return `
         <div class="cs-section">
-            <div class="cs-section-title">${t('Время')}</div>
+            <div class="cs-section-title">${TR('Время')}</div>
             <button class="cs-toggle-row cs-tz-row" data-tz-open="1" type="button">
                 <div class="cs-toggle-icon-wrap"><i class="ti ti-clock" style="color: #818cf8;"></i></div>
                 <div class="cs-toggle-info">
-                    <div class="cs-toggle-title-row"><span class="cs-toggle-title">${t('Часовой пояс канала')}</span></div>
-                    <div class="cs-toggle-sub">${t('По нему выходят посты и считаются замеры. Общий для всех админов канала')}</div>
+                    <div class="cs-toggle-title-row"><span class="cs-toggle-title">${TR('Часовой пояс канала')}</span></div>
+                    <div class="cs-toggle-sub">${TR('По нему выходят посты и считаются замеры. Общий для всех админов канала')}</div>
                     <div class="cs-tz-now" id="cs-tz-now">${escapeHtml(tzNowLine(cur))}</div>
                 </div>
                 <span class="cs-tz-val" id="cs-tz-val">${escapeHtml(tzLabel(cur))}</span>
@@ -5793,7 +5807,7 @@ function tzRefreshRow() {
     const n = document.getElementById('cs-tz-now');
     if (n) n.textContent = tzNowLine(cur);
     const sn = document.getElementById('tz-now');
-    if (sn) sn.textContent = t('сейчас по каналу') + ' ' + tzClock(cur);
+    if (sn) sn.textContent = TR('сейчас по каналу') + ' ' + tzClock(cur);
 }
 function tzStartTick() {
     if (_tzTick) clearInterval(_tzTick);
@@ -5819,9 +5833,9 @@ function openTzSheet() {
     const sh = document.createElement('div');
     sh.className = 'bs-sheet ap-sheet tz-sheet';
     sh.innerHTML = '<div class="bs-handle"></div>' +
-        '<div class="rs-h2"><b>' + t('Часовой пояс канала') + '</b><span id="tz-now">' + t('сейчас по каналу') + ' ' + tzClock(cur == null ? dev : cur) + '</span></div>' +
-        '<div class="ap-sub">' + t('Один пояс на канал для всей команды. Расписание постов и замеры считаются по нему; уже запланированные посты сохраняют своё локальное время.') + '</div>' +
-        '<div class="tz-search"><i class="ti ti-search"></i><input id="tz-q" type="text" placeholder="' + t('Город или UTC+…') + '" autocomplete="off"></div>' +
+        '<div class="rs-h2"><b>' + TR('Часовой пояс канала') + '</b><span id="tz-now">' + TR('сейчас по каналу') + ' ' + tzClock(cur == null ? dev : cur) + '</span></div>' +
+        '<div class="ap-sub">' + TR('Один пояс на канал для всей команды. Расписание постов и замеры считаются по нему; уже запланированные посты сохраняют своё локальное время.') + '</div>' +
+        '<div class="tz-search"><i class="ti ti-search"></i><input id="tz-q" type="text" placeholder="' + TR('Город или UTC+…') + '" autocomplete="off"></div>' +
         '<div class="tz-list" id="tz-list"></div>';
     document.body.appendChild(ov);
     document.body.appendChild(sh);
@@ -5830,9 +5844,9 @@ function openTzSheet() {
     requestAnimationFrame(() => { ov.classList.add('visible'); sh.classList.add('visible'); });
     ov.addEventListener('click', tzClose);
     _tzCtx = { ov, sh };
-    const items = [{ min: dev, label: t('Твоё устройство'), sub: tzLabel(dev), dev: true }]
+    const items = [{ min: dev, label: TR('Твоё устройство'), sub: tzLabel(dev), dev: true }]
         .concat(TZ_ZONES.map(z => ({ min: z[0], label: t(z[1]), sub: tzFmt(z[0]) })))
-        .concat(TZ_OTHER.filter(m => !TZ_ZONES.some(z => z[0] === m)).map(m => ({ min: m, label: tzFmt(m), sub: t('другое смещение') })));
+        .concat(TZ_OTHER.filter(m => !TZ_ZONES.some(z => z[0] === m)).map(m => ({ min: m, label: tzFmt(m), sub: TR('другое смещение') })));
     const draw = (q) => {
         const qq = (q || '').trim().toLowerCase().replace('utc', '').replace(/\s+/g, '');
         const list = sh.querySelector('#tz-list');
@@ -5840,7 +5854,7 @@ function openTzSheet() {
         list.innerHTML = items.filter(it => !qq || (it.label + ' ' + it.sub).toLowerCase().replace(/\s+/g, '').indexOf(qq) >= 0)
             .map(it => { const on = items.indexOf(it) === onIdx; return '<button type="button" class="tz-it' + (on ? ' on' : '') + (it.dev ? ' dev' : '') + '" data-tzv="' + it.min + '">' +
                 '<b>' + escapeHtml(it.label) + '</b><span>' + escapeHtml(it.sub) + '</span>' + (on ? '<i class="ti ti-check"></i>' : '') + '</button>'; }).join('') ||
-            '<div class="ap-sub">' + t('Ничего не найдено') + '</div>';
+            '<div class="ap-sub">' + TR('Ничего не найдено') + '</div>';
     };
     draw('');
     sh.querySelector('#tz-q').addEventListener('input', (e) => draw(e.target.value));
@@ -5862,7 +5876,7 @@ async function saveTz(min) {
         tzClose();
         hapticMed();
         tzRefreshRow();
-        showToast(t('Пояс канала:') + ' ' + tzLabel(min), 'check');
+        showToast(TR('Пояс канала:') + ' ' + tzLabel(min), 'check');
         refreshSettingsHistory();
     } catch (e) { apErr(e); }
 }
@@ -5875,7 +5889,7 @@ function renderSettingsHistorySection(data) {
             <div class="cs-section">
                 <div class="cs-history-empty">
                     <i class="ti ti-history"></i>
-                    <span>${t('История пуста')}</span>
+                    <span>${TR('История пуста')}</span>
                 </div>
             </div>
         `;
@@ -5900,7 +5914,7 @@ function renderSettingsHistorySection(data) {
             <div class="cs-history-toggle" id="cs-history-toggle">
                 <div class="cs-history-toggle-left">
                     <i class="ti ti-history"></i>
-                    <span class="cs-history-toggle-title">${t('История действий')}</span>
+                    <span class="cs-history-toggle-title">${TR('История действий')}</span>
                     <span class="cs-history-toggle-count">${events.length} ${pluralize(events.length, 'событие','события','событий')}</span>
                 </div>
                 <i class="ti ti-chevron-${expanded ? 'up' : 'down'}"></i>
@@ -5918,16 +5932,16 @@ function renderSettingsAuditSection(data) {
             <button class="cs-btn-audit" data-audit-channel="${data.id}">
                 <span class="cs-btn-audit-icon"><i class="ti ti-chart-dots"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">${t('AI-аудит канала')}</span>
-                    <span class="cs-btn-audit-sub">${t('Разбор, прогноз и план роста')}</span>
+                    <span class="cs-btn-audit-title">${TR('AI-аудит канала')}</span>
+                    <span class="cs-btn-audit-sub">${TR('Разбор, прогноз и план роста')}</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
             <button class="cs-btn-audit cs-btn-competitors" data-competitors-channel="${data.id}">
                 <span class="cs-btn-audit-icon"><i class="ti ti-search"></i></span>
                 <span class="cs-btn-audit-body">
-                    <span class="cs-btn-audit-title">${t('Анализ конкурентов')}</span>
-                    <span class="cs-btn-audit-sub">${t('Карта ниши, их приёмы, план обгона')}</span>
+                    <span class="cs-btn-audit-title">${TR('Анализ конкурентов')}</span>
+                    <span class="cs-btn-audit-sub">${TR('Карта ниши, их приёмы, план обгона')}</span>
                 </span>
                 <i class="ti ti-chevron-right cs-btn-audit-chev"></i>
             </button>
@@ -5939,7 +5953,7 @@ function renderSettingsDangerZone(data) {
     return `
         <div class="cs-section cs-danger-zone">
             <button class="cs-btn-danger" id="cs-delete-channel">
-                <i class="ti ti-trash"></i> ${t('Удалить канал')}
+                <i class="ti ti-trash"></i> ${TR('Удалить канал')}
             </button>
         </div>
     `;
@@ -6106,7 +6120,7 @@ function showVoiceEditorModal(currentText) {
         modal.innerHTML = `
             <div class="cs-modal">
                 <div class="cs-modal-header">
-                    <span class="cs-modal-title">${t('Редактировать стиль')}</span>
+                    <span class="cs-modal-title">${TR('Редактировать стиль')}</span>
                     <button class="cs-modal-close" data-action="close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="cs-modal-body">
@@ -6114,8 +6128,8 @@ function showVoiceEditorModal(currentText) {
                     <div class="cs-modal-counter" id="cs-modal-counter">${currentText.length} / 2000</div>
                 </div>
                 <div class="cs-modal-actions">
-                    <button class="cs-btn-ghost" data-action="cancel">${t('Отмена')}</button>
-                    <button class="cs-btn-primary" data-action="save">${t('Сохранить')}</button>
+                    <button class="cs-btn-ghost" data-action="cancel">${TR('Отмена')}</button>
+                    <button class="cs-btn-primary" data-action="save">${TR('Сохранить')}</button>
                 </div>
             </div>
         `;
@@ -6166,7 +6180,7 @@ async function handleRefreshVoiceFromSettings() {
         const statusEl = document.querySelector('.cs-status-line');
         if (statusEl) {
             statusEl.className = 'cs-status-line cs-status-collecting';
-            statusEl.innerHTML = '<span class="voice-pulse-dot"></span><span>' + t('Стиль собирается...') + '</span>';
+            statusEl.innerHTML = '<span class="voice-pulse-dot"></span><span>' + TR('Стиль собирается...') + '</span>';
         }
 
         startSettingsVoicePolling();
@@ -6462,7 +6476,7 @@ function renderDemoPreview(data) {
                     <div class="channels-preview-sub">@${escapeHtml(data.username)} · ${subLine}</div>
                 </div>
             </div>
-            ${posts || '<div class="channels-preview-sub">' + t('Постов для превью не нашлось') + '</div>'}
+            ${posts || '<div class="channels-preview-sub">' + TR('Постов для превью не нашлось') + '</div>'}
         </div>
     `;
     els.channelsDemoResult.style.display = '';
@@ -6563,7 +6577,7 @@ async function handleAnalyzeResult(result) {
     if (result.off_topic) {
         stopThinkingAnimation();
         showScreen('postCreate');
-        showToast(t('Это генератор постов, а не чат-ассистент. Опиши тему поста для канала'), 'info-circle');
+        showToast(TR('Это генератор постов, а не чат-ассистент. Опиши тему поста для канала'), 'info-circle');
         return;
     }
 
@@ -6794,15 +6808,15 @@ async function loadPlaceInfo(ctx) {
 
 function renderResultHints() {
     const pi = state.post.placeInfo;
-    const where = pi && pi.channel_username ? '@' + pi.channel_username : (pi && pi.channel_title) || t('подключённый канал');
+    const where = pi && pi.channel_username ? '@' + pi.channel_username : (pi && pi.channel_title) || TR('подключённый канал');
     const sendHint = document.getElementById('post-send-hint');
-    if (sendHint) sendHint.textContent = t('Бот выложит в') + ' ' + where + ' ' + t('в течение минуты. Перед отправкой спросит подтверждение');
+    if (sendHint) sendHint.textContent = TR('Бот выложит в') + ' ' + where + ' ' + TR('в течение минуты. Перед отправкой спросит подтверждение');
     const planHint = document.getElementById('post-plan-hint');
     const placed = state.post.placed;
     if (planHint) {
         planHint.textContent = placed
-            ? t('В плане:') + ' ' + rsDateLabel(placed.date_iso, true) + ' ' + placed.hm + (placed.queued ? ' · ' + t('выйдет сам') : ' · ' + t('черновик'))
-            : t('Выбрать день и время — пост встанет в неделю и выйдет сам');
+            ? TR('В плане:') + ' ' + rsDateLabel(placed.date_iso, true) + ' ' + placed.hm + (placed.queued ? ' · ' + TR('выйдет сам') : ' · ' + TR('черновик'))
+            : TR('Выбрать день и время — пост встанет в неделю и выйдет сам');
     }
     if (els.postPlanBtn) els.postPlanBtn.classList.toggle('done', !!placed);
 }
@@ -6820,28 +6834,28 @@ function rsCoverRender(host, ctx) {
     if (m) {
         const isVid = m.kind === 'video';
         const thumb = isVid ? '<i class="ti ti-player-play"></i>' : '<img src="' + escapeHtml(m.url) + '" alt="">';
-        const name = m.cover ? t('Рисованная обложка') : (m.name || t('Файл'));
-        const kind = m.cover ? t('фраза из текста, палитра канала')
-            : (m.kind === 'animation' ? 'GIF' : (isVid ? t('видео') : t('фото')));
+        const name = m.cover ? TR('Рисованная обложка') : (m.name || TR('Файл'));
+        const kind = m.cover ? TR('фраза из текста, палитра канала')
+            : (m.kind === 'animation' ? 'GIF' : (isVid ? TR('видео') : TR('фото')));
         host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
             '<span class="tx"><b>' + escapeHtml(name) + '</b><em>' + escapeHtml(kind) + '</em></span>' +
-            '<button class="act" data-rc="clear" type="button">' + t('Убрать') + '</button></div>' +
+            '<button class="act" data-rc="clear" type="button">' + TR('Убрать') + '</button></div>' +
             '<div class="cp-own-acts">' +
-            '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + t('Заменить файлом') + '</button>' +
+            '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + TR('Заменить файлом') + '</button>' +
             '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
-            t('Рисованная обложка') + ' ' + price + '</button>' +
+            TR('Рисованная обложка') + ' ' + price + '</button>' +
             '<button class="cp-mrepl" data-rc="photo" type="button"><i class="ti ti-camera"></i>' +
-            t('Фото-обложка') + ' ' + price + '</button></div>';
+            TR('Фото-обложка') + ' ' + price + '</button></div>';
         return;
     }
     const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
     host.innerHTML = '<div class="cp-addcol" style="margin-top:0">' +
         '<button class="cp-add2" data-rc="file" type="button"><i class="ti ti-upload"></i><span class="tx"><b>' +
-        t('Файл с устройства') + '</b><em>' + t('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ') + '</em></span><span class="pr">' + zero + '</span></button>' +
+        TR('Файл с устройства') + '</b><em>' + TR('Фото до 8 МБ, GIF до 12 МБ, видео до 40 МБ') + '</em></span><span class="pr">' + zero + '</span></button>' +
         '<button class="cp-add2 own" data-rc="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
-        t('Рисованная обложка') + '</b><em>' + t('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
+        TR('Рисованная обложка') + '</b><em>' + TR('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
         '<button class="cp-add2 own" data-rc="photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
-        t('Фото-обложка') + '</b><em>' + t('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
+        TR('Фото-обложка') + '</b><em>' + TR('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
 }
 
 function rsSetBusy(ctx, host, text) {
@@ -6881,8 +6895,8 @@ function rsPickFile(ctx, host) {
         const lim = RS_LIMITS[f.type];
         if (!lim) { showToast(rsErr('bad_type'), 'alert-triangle'); return; }
         const mb = f.size / 1048576;
-        if (mb > lim) { showToast(t('Файл') + ' ' + mb.toFixed(1) + ' ' + t('МБ — это больше предела в') + ' ' + lim + ' ' + t('МБ'), 'alert-triangle'); return; }
-        rsSetBusy(ctx, host, t('Загружаю файл...'));
+        if (mb > lim) { showToast(TR('Файл') + ' ' + mb.toFixed(1) + ' ' + TR('МБ — это больше предела в') + ' ' + lim + ' ' + TR('МБ'), 'alert-triangle'); return; }
+        rsSetBusy(ctx, host, TR('Загружаю файл...'));
         try {
             const fd = new FormData();
             fd.append('post_id', pid);
@@ -6892,7 +6906,7 @@ function rsPickFile(ctx, host) {
                 ctx.media = { kind: r.kind, url: r.url, cover: false, name: f.name };
                 hapticLight();
             } else showToast(rsErr(r && r.error), 'alert-triangle');
-        } catch (e) { showToast(t('Файл не загрузился'), 'alert-triangle'); }
+        } catch (e) { showToast(TR('Файл не загрузился'), 'alert-triangle'); }
         rsSetBusy(ctx, host, '');
     };
     inp.click();
@@ -6907,7 +6921,7 @@ async function rsMakeCover(ctx, host, kind) {
         const r = await apiRequest('/api/v1/content-plan/own-cover', { method: 'POST', body: JSON.stringify({ post_id: pid, kind: kind || null }) });
         if (r && r.ok) {
             ctx.media = { kind: 'photo', url: r.url, cover: true };
-            showToast(t('Обложка готова'), 'check');
+            showToast(TR('Обложка готова'), 'check');
             apiRequest('/api/v1/post/limits').then((fresh) => { state.post.limits = fresh; renderLimitBanner(fresh); }).catch(() => {});
         } else showToast(rsErr(r && r.error), 'alert-triangle');
     } catch (e) { apErr(e); }
@@ -6930,7 +6944,7 @@ function rsClose() {
 
 async function openPlanSheet(ctx) {
     const pid = ctx && ctx.currentPostId;
-    if (!pid) { showToast(t('Сначала сгенерируй пост'), 'alert-triangle'); return; }
+    if (!pid) { showToast(TR('Сначала сгенерируй пост'), 'alert-triangle'); return; }
     hapticLight();
     apClose();
     rsClose();
@@ -6954,8 +6968,8 @@ async function openPlanSheet(ctx) {
     const where = pi.channel_title || (pi.channel_username ? '@' + pi.channel_username : '');
     const tzLab = 'UTC' + (pi.tz_min >= 0 ? '+' : '−') + Math.abs(Math.round(pi.tz_min / 60));
     sh.innerHTML = '<div class="bs-handle"></div>' +
-        '<div class="rs-h2"><b>' + t('В контент-план') + '</b><span>' + escapeHtml(where) + ' · ' + t('время канала') + ' (' + tzLab + ')</span></div>' +
-        '<div class="ap-sub">' + t('Выбери день недели — неделя скользящая, прошедших дней нет') + '</div>' +
+        '<div class="rs-h2"><b>' + TR('В контент-план') + '</b><span>' + escapeHtml(where) + ' · ' + TR('время канала') + ' (' + tzLab + ')</span></div>' +
+        '<div class="ap-sub">' + TR('Выбери день недели — неделя скользящая, прошедших дней нет') + '</div>' +
         '<div class="rs-week" id="rs-week"></div>' +
         '<div id="rs-rec"></div>' +
         '<div id="rs-time"></div>' +
@@ -6975,7 +6989,7 @@ async function openPlanSheet(ctx) {
             const full = (pi.counts && pi.counts[String(i)] || 0) >= (pi.max_per_day || 3);
             const d = iso ? new Date(iso + 'T00:00:00') : null;
             const lang = (typeof getLang === 'function' ? getLang() : 'ru') || 'ru';
-            const sub = i === pi.today_index ? t('сегодня') : (d ? d.toLocaleDateString(lang, { month: 'short' }).replace('.', '') : '');
+            const sub = i === pi.today_index ? TR('сегодня') : (d ? d.toLocaleDateString(lang, { month: 'short' }).replace('.', '') : '');
             return '<button type="button" class="rs-wd' + (i === sel.day ? ' on' : '') + (i === pi.today_index ? ' today' : '') + (full ? ' off' : '') +
                 '" data-rd="' + i + '"' + (full ? ' disabled' : '') + '><s>' + t(wd) + '</s><b>' + (d ? d.getDate() : '') + '</b><i>' + escapeHtml(sub) + '</i></button>';
         }).join('');
@@ -6985,8 +6999,8 @@ async function openPlanSheet(ctx) {
         if (!rec) { el.innerHTML = ''; return; }
         const iso = (pi.week_dates || [])[rec.day_index] || '';
         el.innerHTML = '<button type="button" class="rs-rec" data-rrec="1"><span class="ic"><i class="ti ti-sparkles"></i></span>' +
-            '<span class="tx"><b>' + t('Рекомендуемое:') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ', ' + rec.hm + '</b>' +
-            '<em>' + t(RS_REC_SRC[rec.source] || RS_REC_SRC.auto) + ' · ' + t('нажми, чтобы подставить') + '</em></span></button>';
+            '<span class="tx"><b>' + TR('Рекомендуемое:') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ', ' + rec.hm + '</b>' +
+            '<em>' + t(RS_REC_SRC[rec.source] || RS_REC_SRC.auto) + ' · ' + TR('нажми, чтобы подставить') + '</em></span></button>';
     };
     const drawTime = () => {
         const now = pi.today_index === sel.day ? rsChanNow() : null;
@@ -7001,7 +7015,7 @@ async function openPlanSheet(ctx) {
             return '<button type="button" class="cp-tm' + ((sel.hm || '').slice(3) === m ? ' on' : '') + (offm ? ' off' : '') + '" data-rm="' + m + '">:' + m + '</button>';
         }).join('');
         q('rs-time').innerHTML = '<div class="cp-tgrid">' + hours + '</div><div class="cp-trow">' + mins + '</div>' +
-            (!sel.hm ? '<div class="cp-own-note">' + t('На сегодня время вышло — выбери другой день.') + '</div>' : '');
+            (!sel.hm ? '<div class="cp-own-note">' + TR('На сегодня время вышло — выбери другой день.') + '</div>' : '');
     };
     const drawGo = () => {
         const go = q('rs-go');
@@ -7009,12 +7023,12 @@ async function openPlanSheet(ctx) {
         const ready = !!sel.hm && !rsPast(sel.day, sel.hm) && !sel.busy;
         go.className = 'cp-go' + (pi.can_post ? ' grn' : '');
         go.disabled = !ready;
-        go.innerHTML = sel.busy ? '<div class="cp-spin sm"></div> ' + t('Сохраняю...') :
+        go.innerHTML = sel.busy ? '<div class="cp-spin sm"></div> ' + TR('Сохраняю...') :
             '<i class="ti ti-' + (pi.can_post ? 'calendar-up' : 'device-floppy') + '"></i> ' +
-            (pi.can_post ? t('Запланировать на') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ' ' + (sel.hm || '') : t('Сохранить в план'));
+            (pi.can_post ? TR('Запланировать на') + ' ' + escapeHtml(rsDateLabel(iso, true)) + ' ' + (sel.hm || '') : TR('Сохранить в план'));
         q('rs-note').textContent = pi.can_post
-            ? t('Пост появится в неделе контент-плана и выйдет сам. До выхода его можно править или снять.') + (pi.has_plan ? '' : ' ' + t('Недели ещё нет — она создастся.'))
-            : t('Бот не подключён к каналу с правом публикации — пост сохранится в план без автовыхода.');
+            ? TR('Пост появится в неделе контент-плана и выйдет сам. До выхода его можно править или снять.') + (pi.has_plan ? '' : ' ' + TR('Недели ещё нет — она создастся.'))
+            : TR('Бот не подключён к каналу с правом публикации — пост сохранится в план без автовыхода.');
     };
     const drawAll = () => { drawWeek(); drawRec(); drawTime(); drawGo(); };
     drawAll();
@@ -7060,7 +7074,7 @@ async function openPlanSheet(ctx) {
                     pi.counts[String(sel.day)] = (pi.counts[String(sel.day)] || 0) + 1;
                     rsClose();
                     if (typeof ctx.onPlaced === 'function') ctx.onPlaced();
-                    showToast((r.queued ? t('В контент-плане, выйдет сам:') : t('Сохранён в план:')) + ' ' + rsDateLabel(r.date_iso, true) + ' ' + r.slot_hm, 'check');
+                    showToast((r.queued ? TR('В контент-плане, выйдет сам:') : TR('Сохранён в план:')) + ' ' + rsDateLabel(r.date_iso, true) + ' ' + r.slot_hm, 'check');
                 } else {
                     sel.busy = false; drawGo();
                     showToast(rsErr(r && r.error), 'alert-triangle');
@@ -7256,10 +7270,10 @@ async function copyPostToClipboard() {
     }
 
     if (copied) {
-        showToast(t('Скопировано'), 'check');
+        showToast(TR('Скопировано'), 'check');
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
     } else {
-        showToast(t('Не удалось скопировать'), 'alert-triangle');
+        showToast(TR('Не удалось скопировать'), 'alert-triangle');
     }
 }
 
@@ -7341,7 +7355,7 @@ function handlePostApiError(err) {
     const msg = err?.message || '';
 
     if (err?.name === 'AbortError' || msg.toLowerCase().includes('abort')) {
-        showToast((typeof t === 'function' ? t('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз') : 'Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз'), 'alert-triangle');
+        showToast((typeof t === 'function' ? TR('Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз') : 'Генерация шла дольше обычного и связь оборвалась. Попробуй ещё раз'), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
@@ -7352,13 +7366,13 @@ function handlePostApiError(err) {
     }
 
     if (msg.includes('429')) {
-        showToast(t('Слишком часто. Повторите через несколько секунд'), 'alert-triangle');
+        showToast(TR('Слишком часто. Повторите через несколько секунд'), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
 
     if (msg.includes('401')) {
-        showToast(t('Сессия истекла, переоткрой Mini App'), 'alert-triangle');
+        showToast(TR('Сессия истекла, переоткрой Mini App'), 'alert-triangle');
         return;
     }
 
@@ -7371,7 +7385,7 @@ function handlePostApiError(err) {
     }
 
     if (msg.includes('500')) {
-        showToast(t('Что-то пошло не так. Попробуй ещё раз'), 'alert-triangle');
+        showToast(TR('Что-то пошло не так. Попробуй ещё раз'), 'alert-triangle');
         showScreen('postCreate');
         return;
     }
@@ -7521,7 +7535,7 @@ function setupPostEventListeners() {
         els.postPlanBtn.addEventListener('click', () => {
             const locked = els.postPlanBtn.dataset.locked === 'true';
             if (locked) showLockedFeatureModal('schedule');
-            else if (state.post.placed) showToast(t('Пост уже в плане:') + ' ' + rsDateLabel(state.post.placed.date_iso, true) + ' ' + state.post.placed.hm, 'check');
+            else if (state.post.placed) showToast(TR('Пост уже в плане:') + ' ' + rsDateLabel(state.post.placed.date_iso, true) + ' ' + state.post.placed.hm, 'check');
             else openPlanSheet(state.post);
         });
     }
@@ -7623,7 +7637,7 @@ function _fmApply() {
         sessionStorage.setItem('fm_upd_n', n);
         if (n > 3) return;
     } catch (e) {}
-    try { showToast(t('Обновляю до новой версии…'), 'refresh'); } catch (e) {}
+    try { showToast(TR('Обновляю до новой версии…'), 'refresh'); } catch (e) {}
 
 
 
