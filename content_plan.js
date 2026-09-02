@@ -1707,9 +1707,14 @@
                 var kind = _own.coverUrl ? T('фраза из текста, палитра канала')
                     : (_own.fileKind === 'animation' ? 'GIF' : (isVid ? T('видео') : T('фото'))) +
                       ' · ' + (_own.file.size / 1048576).toFixed(1) + ' ' + T('МБ');
-                el.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
-                    '<span class="tx"><b>' + esc(name) + '</b><em>' + esc(kind) + '</em></span>' +
-                    '<button class="act" data-oact="clear" type="button">' + esc(T('Убрать')) + '</button></div>' +
+                var bigSrc = _own.coverUrl || (!isVid && _own.fileUrl ? _own.fileUrl : '');
+                el.innerHTML = (bigSrc
+                        ? '<div class="cp-media"><div class="cp-mthumb"><img src="' + esc(bigSrc) + '" alt="">' +
+                          '<button class="cp-mx" data-oact="clear" type="button"><i class="ti ti-x"></i></button></div>' +
+                          '<div class="cp-mfoot">' + esc(name) + '</div></div>'
+                        : '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
+                          '<span class="tx"><b>' + esc(name) + '</b><em>' + esc(kind) + '</em></span>' +
+                          '<button class="act" data-oact="clear" type="button">' + esc(T('Убрать')) + '</button></div>') +
                     '<div class="cp-own-acts">' +
                     '<button class="cp-mrepl" data-oact="file" type="button"><i class="ti ti-upload"></i>' + esc(T('Заменить файлом')) + '</button>' +
                     '<button class="cp-mrepl" data-oact="cover" type="button"><i class="ti ti-photo"></i>' +
@@ -1766,7 +1771,13 @@
                 : T('Бот не подключён к каналу с правом публикации — пост сохранится в план без автовыхода.');
             el.innerHTML = '<button type="button" class="cp-go' + (canQueue ? ' grn' : '') + '" data-oact="save"' +
                 (ready ? '' : ' disabled') + '>' + (_own.busy ? '<div class="cp-spin sm"></div> ' : '<i class="ti ti-' + (canQueue ? 'calendar-up' : 'device-floppy') + '"></i> ') +
-                esc(label) + '</button><div class="cp-own-note">' + esc(note) + '</div>';
+                esc(label) + '</button><div class="cp-own-note">' + esc(note) + '</div>' +
+                (_own.postId
+                    ? '<button type="button" class="cp-crv-go" style="margin-top:10px;" data-act="crvbuild" data-id="' +
+                      _own.postId + '"><i class="ti ti-movie"></i><span class="tx"><b>' +
+                      esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
+                      esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button>'
+                    : '');
         };
         var setBusy = function (text, media) {
             _own.busy = text ? { text: text, media: media || '' } : '';
