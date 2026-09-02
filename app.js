@@ -3629,6 +3629,7 @@ function resetPostState() {
     state.post.emojiMode = 'auto';
     state.post.styleUserChoice = null;
     state.post.lastStyleApplied = false;
+    state.post.leftResult = false;
 
     if (els.postTopicInput) els.postTopicInput.value = '';
     if (els.postStyleInput) els.postStyleInput.value = '';
@@ -3653,6 +3654,11 @@ function resetPostState() {
 
 
 async function openPostCreate() {
+    if (state.post && state.post.currentPostId && state.post.currentPostText
+        && !state.post.leftResult) {
+        showScreen('postResult');
+        return;
+    }
     resetPostState();
     showScreen('postCreate');
 
@@ -6708,6 +6714,7 @@ function renderResult(result) {
     renderResultHints();
     if (hasChannel && result.post_id) loadPlaceInfo(state.post);
 
+    state.post.leftResult = false;
     showScreen('postResult');
 }
 
@@ -7532,6 +7539,7 @@ function setupPostEventListeners() {
 
     if (els.postResultBack) {
         els.postResultBack.addEventListener('click', () => {
+            state.post.leftResult = true;
             showScreen('postCreate');
         });
     }
