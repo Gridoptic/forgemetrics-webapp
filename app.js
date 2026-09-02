@@ -6736,6 +6736,8 @@ function rsErr(code) {
         no_channel: TR('Сначала подключи канал — публиковать некуда'),
         no_text: TR('Сначала нужен текст — фраза на обложку берётся из него'),
         bad_type: TR('Такой формат не подойдёт: нужна картинка, GIF или видео'),
+        crv_failed: TR('Ролик не собрался — попробуй ещё раз.'),
+        crv_start: TR('Не удалось запустить сборку'),
     };
     return t(M[code] || TR('Не получилось — попробуй ещё раз'));
 }
@@ -6849,6 +6851,7 @@ function rsCoverRender(host, ctx) {
 function rsAppendCreative(host, ctx) {
     const html = rsCreativeBtn(ctx);
     if (html) host.insertAdjacentHTML('beforeend', html);
+    rsCrvLoad(ctx, host);
 }
 
 function rsSetBusy(ctx, host, text) {
@@ -6867,6 +6870,9 @@ function rsBindCover(host, ctx) {
         else if (a === 'cover') rsMakeCover(ctx, host, 'draw');
         else if (a === 'photo') rsMakeCover(ctx, host, 'photo');
         else if (a === 'creative') rsCreativeBuild(ctx, host);
+        else if (a === 'crvopen') rsCrvOpen(b.getAttribute('data-url'));
+        else if (a === 'crvvariant') rsCrvVariant(ctx, host, +b.getAttribute('data-id'));
+        else if (a === 'crvdesc') rsCrvDesc(+b.getAttribute('data-id'));
         else if (a === 'clear') { hapticLight(); rsClearCover(ctx, host); }
     });
 }
@@ -6909,11 +6915,124 @@ function rsPickFile(ctx, host) {
 function rsCreativeBtn(ctx) {
     const pid = ctx && ctx.currentPostId;
     if (!pid) return '';
+    const c = ctx.creative;
+    const head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' +
+        escapeHtml(TR('Креатив для Shorts, Дзена и VK Клипов')) + '</b></div>';
+    if (ctx.crvBusy || (c && (c.status === 'queued' || c.status === 'generating'))) {
+        return '<div class="cp-crv">' + head +
+            '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
+            escapeHtml(TR('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) +
+            '</span></div></div>';
+    }
+    if (c && c.status === 'ready' && c.url) {
+        const dur = c.duration_s ? Math.round(c.duration_s) + ' ' + TR('с') : '';
+        return '<div class="cp-crv">' + head +
+            '<div class="cp-crv-card">' +
+            '<button class="cp-crv-prev" type="button" data-rc="crvopen" data-url="' + escapeHtml(c.url) + '">' +
+            (c.preview_url ? '<img src="' + escapeHtml(c.preview_url) + '" alt="">' : '') +
+            '<span class="cp-crv-play"><i class="ti ti-player-play-filled"></i></span>' +
+            (dur ? '<span class="cp-crv-dur">' + escapeHtml(dur) + '</span>' : '') + '</button>' +
+            '<div class="cp-crv-acts">' +
+            '<button class="cp-act ok" type="button" data-rc="crvopen" data-url="' + escapeHtml(c.url) +
+            '"><i class="ti ti-download"></i> ' + escapeHtml(TR('Скачать MP4')) + '</button>' +
+            '<button class="cp-act" type="button" data-rc="crvvariant" data-id="' + c.id +
+            '"><i class="ti ti-refresh"></i> ' + escapeHtml(TR('Другой вариант')) + '</button>' +
+            '<button class="cp-act" type="button" data-rc="crvdesc" data-id="' + c.id +
+            '"><i class="ti ti-copy"></i> ' + escapeHtml(TR('Описание для ролика')) + '</button>' +
+            '</div></div></div>';
+    }
     const cost = (typeof forgeAmount === 'function') ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice();
-    return '<button type="button" class="cp-crv-go" style="margin-top:10px;" data-rc="creative">' +
-        '<i class="ti ti-movie"></i><span class="tx"><b>' + TR('Собрать креатив') + ' ' + cost + '</b><em>' +
-        TR('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут') +
-        '</em></span></button>';
+    const again = (c && c.status === 'error');
+    return '<div class="cp-crv">' + head +
+        (again ? '<div class="cp-note fail">' + escapeHtml(TR('Ролик не собрался — попробуй ещё раз.')) + '</div>' : '') +
+        '<button type="button" class="cp-crv-go" data-rc="creative">' +
+        '<i class="ti ti-movie"></i><span class="tx"><b>' + escapeHtml(TR('Собрать креатив')) + ' ' + cost +
+        '</b><em>' + escapeHtml(TR('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) +
+        '</em></span></button></div>';
+}
+
+function rsCrvLoad(ctx, host) {
+    const pid = ctx && ctx.currentPostId;
+    if (!pid || ctx.crvLoadedFor === pid) return;
+    ctx.crvLoadedFor = pid;
+    apiRequest('/api/v1/creative?post_id=' + pid)
+        .then((r) => {
+            const items = (r && r.items) || [];
+            if (!items.length || ctx.currentPostId !== pid) return;
+            ctx.creative = items[0];
+            rsCoverRender(host, ctx);
+            rsCrvPoll(ctx, host);
+        })
+        .catch(() => {});
+}
+
+function rsCrvPoll(ctx, host) {
+    if (ctx._crvTimer) clearTimeout(ctx._crvTimer);
+    const c = ctx.creative;
+    if (!(ctx.crvBusy || (c && (c.status === 'queued' || c.status === 'generating')))) {
+        ctx._crvTicks = 0;
+        return;
+    }
+    ctx._crvTicks = (ctx._crvTicks || 0) + 1;
+    if (ctx._crvTicks > 80) return;
+    ctx._crvTimer = setTimeout(() => {
+        ctx._crvTimer = null;
+        const cur = ctx.creative;
+        if (!cur || !cur.id) return;
+        apiRequest('/api/v1/creative/' + cur.id)
+            .then((r) => {
+                if (r && r.creative) ctx.creative = r.creative;
+                rsCoverRender(host, ctx);
+                rsCrvPoll(ctx, host);
+            })
+            .catch(() => { rsCrvPoll(ctx, host); });
+    }, 15000);
+}
+
+function rsCrvOpen(url) {
+    hapticLight();
+    try {
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+            window.Telegram.WebApp.openLink(url);
+            return;
+        }
+    } catch (e) {}
+    window.open(url, '_blank');
+}
+
+async function rsCrvVariant(ctx, host, cid) {
+    hapticMed();
+    try {
+        const r = await apiRequest('/api/v1/creative/variant', {
+            method: 'POST', body: JSON.stringify({ id: cid }),
+        });
+        if (r && r.ok) {
+            ctx.creative = r.creative;
+            showToast(TR('Собираю другой вариант'), 'movie');
+            rsCoverRender(host, ctx);
+            rsCrvPoll(ctx, host);
+        } else showToast(rsErr((r && r.error) || 'crv_start'), 'alert-triangle');
+    } catch (e) {
+        showToast(rsErr('crv_start'), 'alert-triangle');
+    }
+}
+
+async function rsCrvDesc(cid) {
+    try {
+        const r = await apiRequest('/api/v1/creative/' + cid);
+        const c = r && r.creative;
+        if (!c) { showToast(TR('Не удалось получить описание'), 'alert-triangle'); return; }
+        const lines = [];
+        if (c.cta_text) lines.push(c.cta_text);
+        const pi = state.post && state.post.placeInfo;
+        if (pi && pi.channel_username) lines.push('https://t.me/' + pi.channel_username);
+        if (c.credits && c.credits.length) lines.push(TR('Видео') + ': Pexels — ' + c.credits.join(', '));
+        if (c.music_credit) lines.push(TR('Музыка') + ': ' + c.music_credit);
+        await copyText(lines.join('\n'));
+        showToast(TR('Описание скопировано'), 'copy');
+    } catch (e) {
+        showToast(TR('Не удалось получить описание'), 'alert-triangle');
+    }
 }
 
 function rsCreativePrice() {
@@ -6927,20 +7046,28 @@ function rsCreativePrice() {
 
 async function rsCreativeBuild(ctx, host) {
     const pid = ctx && ctx.currentPostId;
-    if (!pid) return;
+    if (!pid || ctx.crvBusy) return;
     hapticMed();
-    ctx.mediaBusy = TR('Собираю ролик — сообщу, когда будет готов');
+    ctx.crvBusy = true;
     rsCoverRender(host, ctx);
     try {
         const r = await apiRequest('/api/v1/creative/build', {
-            method: 'POST', body: JSON.stringify({ post_id: pid }),
+            method: 'POST',
+            body: JSON.stringify({ post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' }),
         });
-        if (r && r.ok) showToast(TR('Собираю ролик — сообщу, когда будет готов'), 'movie');
-        else showToast(apiErrText(null, 'Ролик не собрался — попробуй ещё раз.'), 'alert-triangle');
+        ctx.crvBusy = false;
+        if (r && r.ok) {
+            ctx.creative = r.creative;
+            showToast(TR('Собираю ролик — сообщу, когда будет готов'), 'movie');
+            rsCoverRender(host, ctx);
+            rsCrvPoll(ctx, host);
+            return;
+        }
+        showToast(rsErr((r && r.error) || 'crv_failed'), 'alert-triangle');
     } catch (e) {
-        showToast(apiErrText(e, 'Ролик не собрался — попробуй ещё раз.'), 'alert-triangle');
+        ctx.crvBusy = false;
+        showToast(rsErr('crv_failed'), 'alert-triangle');
     }
-    ctx.mediaBusy = '';
     rsCoverRender(host, ctx);
 }
 
