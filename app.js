@@ -3808,7 +3808,7 @@ function archiveStatusText(it) {
     if (st === 'rolled_back') return TR('снят с публикации');
     if (st === 'queued' || st === 'approved') {
         const when = it.scheduled_at ? rsRecentWhen(it.scheduled_at) : '';
-        return when ? TR('в очереди на') + ' ' + when : TR('в очереди');
+        return when ? TR('в очереди на {when}').replace('{when}', when) : TR('в очереди');
     }
     if (st === 'failed') return TR('не отправился');
     return it.in_plan ? TR('в контент-плане') : TR('черновик');
