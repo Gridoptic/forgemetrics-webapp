@@ -5071,7 +5071,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "ስርጭቱን እንጂ",
   "публикуется": "ወደ ታህትሩ ይገባል",
   "снят с публикации": "ከታህትር ተወግዷል",
-  "в очереди на {when}": "በ {when} ውስጥ በወረፈት ላይ"
+  "в очереди на {when}": "በ {when} ውስጥ በወረፈት ላይ",
+  "Не удалось отправить ролик": "ቪዲዮ መላክ አልተቻለም",
+  "Отправить в Telegram": "ወደ Telegram ላክ",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "ቪዲዮ ወደ ቦት ቻት እየላከ ነው — በደቂቃ ውስጥ ይደርሳል"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10145,7 +10148,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "التحقق من التسليم",
   "публикуется": "قيد النشر",
   "снят с публикации": "تم سحب من النشر",
-  "в очереди на {when}": "في الانتظار حتى {when}"
+  "в очереди на {when}": "في الانتظار حتى {when}",
+  "Не удалось отправить ролик": "فشل إرسال الفيديو",
+  "Отправить в Telegram": "إرسال إلى Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "جاري إرسال الفيديو إلى محادثة البوت — سيصل خلال دقيقة"
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15219,7 +15225,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "çatdırılmaya yoxlanılır",
   "публикуется": "dərc olunur",
   "снят с публикации": "dərcndən çıxarıldı",
-  "в очереди на {when}": "sıraya alındı {when}"
+  "в очереди на {when}": "sıraya alındı {when}",
+  "Не удалось отправить ролик": "Videoyu göndərmək olmadı",
+  "Отправить в Telegram": "Telegramda göndər",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Videoyu bot söhbətinə göndərirəm — bir dəqiqə ərzində gələcək"
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -20250,7 +20259,10 @@ window.__I18N_DICT = {
   "публикуется": "публікуецца",
   "снят с публикации": "зняты з публікацыі",
   "ч": "г",
-  "в очереди на {when}": "ў чарзе на {when}"
+  "в очереди на {when}": "ў чарзе на {when}",
+  "Не удалось отправить ролик": "Не удалося адправіць відэо",
+  "Отправить в Telegram": "Адправіць у Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Адпраўляю відэо ў чат з ботам — прыйдзе праз хвіліну"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -25324,7 +25336,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "ডেলিভারি পরীক্ষা করা হচ্ছে",
   "публикуется": "প্রকাশিত হচ্ছে",
   "снят с публикации": "প্রকাশনা থেকে সরিয়ে নেওয়া হয়েছে",
-  "в очереди на {when}": "{when} এ সারিতে"
+  "в очереди на {when}": "{when} এ সারিতে",
+  "Не удалось отправить ролик": "ভিডিও পাঠানো যায়নি",
+  "Отправить в Telegram": "Telegram-এ পাঠান",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "বটের সাথে চ্যাটে ভিডিও পাঠাচ্ছি — এক মিনিটের মধ্যে আসবে"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -30398,7 +30413,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "Lieferung wird geprüft",
   "публикуется": "wird veröffentlicht",
   "снят с публикации": "aus der Veröffentlichung entfernt",
-  "в очереди на {when}": "in der Warteschlange auf {when}"
+  "в очереди на {when}": "in der Warteschlange auf {when}",
+  "Не удалось отправить ролик": "Video konnte nicht gesendet werden",
+  "Отправить в Telegram": "An Telegram senden",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Sende Video an Bot-Chat — kommt in einer Minute an"
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -35472,7 +35490,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "checking delivery",
   "публикуется": "publishing",
   "снят с публикации": "unpublished",
-  "в очереди на {when}": "queued for {when}"
+  "в очереди на {when}": "queued for {when}",
+  "Не удалось отправить ролик": "Failed to send video",
+  "Отправить в Telegram": "Send to Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Sending video to bot chat — it will arrive in a minute"
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -40546,7 +40567,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "verificando entrega",
   "публикуется": "en publicación",
   "снят с публикации": "retirado de publicación",
-  "в очереди на {when}": "en cola para {when}"
+  "в очереди на {when}": "en cola para {when}",
+  "Не удалось отправить ролик": "No se pudo enviar el vídeo",
+  "Отправить в Telegram": "Enviar a Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Enviando el vídeo al chat del bot — llegará en un minuto"
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -45620,7 +45644,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "بررسی تحویل",
   "публикуется": "در حال انتشار",
   "снят с публикации": "از انتشار حذف شد",
-  "в очереди на {when}": "در صف برای {when}"
+  "в очереди на {when}": "در صف برای {when}",
+  "Не удалось отправить ролик": "ارسال ویدیو ناموفق بود",
+  "Отправить в Telegram": "ارسال به تلگرام",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "ارسال ویدیو به چت ربات — در حدود یک دقیقه دریافت خواهید کرد"
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -50694,7 +50721,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "vérification de la livraison",
   "публикуется": "en cours de publication",
   "снят с публикации": "retiré de la publication",
-  "в очереди на {when}": "en attente pour {when}"
+  "в очереди на {when}": "en attente pour {when}",
+  "Не удалось отправить ролик": "Impossible d'envoyer la vidéo",
+  "Отправить в Telegram": "Envoyer sur Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Envoi de la vidéo au chat avec le bot — arrivera dans une minute"
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -55768,7 +55798,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "डिलीवरी जाँच रहे हैं",
   "публикуется": "प्रकाशित हो रहा है",
   "снят с публикации": "प्रकाशन से हटाया गया",
-  "в очереди на {when}": "{when} पर कतार में"
+  "в очереди на {when}": "{when} पर कतार में",
+  "Не удалось отправить ролик": "वीडियो भेजना विफल रहा",
+  "Отправить в Telegram": "Telegram में भेजें",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "मैं चैट में वीडियो भेज रहा हूँ — यह एक मिनट में आ जाएगा"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -60842,7 +60875,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "memeriksa pengiriman",
   "публикуется": "sedang dipublikasikan",
   "снят с публикации": "ditarik dari publikasi",
-  "в очереди на {when}": "dalam antrian untuk {when}"
+  "в очереди на {when}": "dalam antrian untuk {when}",
+  "Не удалось отправить ролик": "Gagal mengirim video",
+  "Отправить в Telegram": "Kirim ke Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Mengirim video ke chat bot — akan tiba dalam semenit"
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -65916,7 +65952,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "verifica della consegna",
   "публикуется": "in pubblicazione",
   "снят с публикации": "rimosso dalla pubblicazione",
-  "в очереди на {when}": "in coda per {when}"
+  "в очереди на {when}": "in coda per {when}",
+  "Не удалось отправить ролик": "Impossibile inviare il video",
+  "Отправить в Telegram": "Invia a Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Invio del video alla chat con il bot — arriverà tra un minuto"
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -70971,7 +71010,11 @@ window.__I18N_DICT = {
   "проверяем доставку": "доставкасы тесіліп жатыр",
   "публикуется": "жарияланып жатыр",
   "снят с публикации": "жарияудан шығарылды",
-  "в очереди на {when}": "куәліктеу кезегінде {when}"
+  "в очереди на {when}": "куәліктеу кезегінде {when}",
+  "Админ-панель": "Админ-тақта",
+  "Не удалось отправить ролик": "Видеоны жібере алмады",
+  "Отправить в Telegram": "Telegram-ға жібер",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Видеоны бот чатына жібердім — бір минутта келеді"
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -76045,7 +76088,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "verificando entrega",
   "публикуется": "em publicação",
   "снят с публикации": "removido da publicação",
-  "в очереди на {when}": "na fila para {when}"
+  "в очереди на {when}": "na fila para {when}",
+  "Не удалось отправить ролик": "Falha ao enviar o vídeo",
+  "Отправить в Telegram": "Enviar para o Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Enviando o vídeo para o chat com o bot — chegará em um minuto"
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -81119,7 +81165,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "tunakagua uwasilishaji",
   "публикуется": "inachapishwa",
   "снят с публикации": "ilizuiliwa kutoka kuchapishwa",
-  "в очереди на {when}": "katika foleni kwa {when}"
+  "в очереди на {when}": "katika foleni kwa {when}",
+  "Не удалось отправить ролик": "Haiwezi kutuma video",
+  "Отправить в Telegram": "Tuma kwenye Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Ninatuma video kwenye chat ya bot — itakuja baada ya dakika moja"
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -86193,7 +86242,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "teslimat kontrol ediliyor",
   "публикуется": "yayınlanıyor",
   "снят с публикации": "yayından kaldırıldı",
-  "в очереди на {when}": "sıraya alındı {when}"
+  "в очереди на {when}": "sıraya alındı {when}",
+  "Не удалось отправить ролик": "Video gönderilemedi",
+  "Отправить в Telegram": "Telegram'a gönder",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Video bot sohbetine gönderiliyor — bir dakika içinde gelecek"
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -91267,7 +91319,10 @@ window.__I18N_DICT = {
   "проверяем доставку": "yetkazilishni tekshiryapmiz",
   "публикуется": "nashr qilinmoqda",
   "снят с публикации": "nashrdan olib tashlandi",
-  "в очереди на {when}": "navbatda {when} ga"
+  "в очереди на {when}": "navbatda {when} ga",
+  "Не удалось отправить ролик": "Rolikni yuborish muvaffaqiyatsiz bo'ldi",
+  "Отправить в Telegram": "Telegramga yuborish",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Rolikni bot chatiga yuboryapman — bir minutdan keyin keladi"
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -96341,6 +96396,9 @@ window.__I18N_DICT = {
   "проверяем доставку": "đang kiểm tra gửi",
   "публикуется": "đang xuất bản",
   "снят с публикации": "đã dừng xuất bản",
-  "в очереди на {when}": "trong hàng đợi vào {when}"
+  "в очереди на {when}": "trong hàng đợi vào {when}",
+  "Не удалось отправить ролик": "Không thể gửi video",
+  "Отправить в Telegram": "Gửi sang Telegram",
+  "Отправляю ролик в чат с ботом — придёт через минуту": "Đang gửi video sang chat với bot — sẽ đến trong một phút"
  }
 };

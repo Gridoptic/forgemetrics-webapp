@@ -3942,6 +3942,7 @@
                 (dur ? '<span class="cp-crv-dur">' + esc(dur) + '</span>' : '') + '</button>' +
                 '<div class="cp-crv-acts">' +
                 '<button class="cp-act ok" data-act="crvopen" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i> ' + esc(T('Скачать MP4')) + '</button>' +
+                '<button class="cp-act" data-act="crvsend" data-id="' + c.id + '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' +
                 '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
                 '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '</div></div>' +
@@ -3975,6 +3976,12 @@
                 } else { toast(cap(r)); renderWeek(); }
             })
             .catch(function (err) { delete _crvBusy[pid]; toast(apiErrText(err, T('Не удалось запустить сборку'))); renderWeek(); });
+    }
+    function crvSend(cid) {
+        toast(T('Отправляю ролик в чат с ботом — придёт через минуту'));
+        apiRequest('/api/v1/creative/' + cid + '/send', { method: 'POST' })
+            .then(function (r) { if (!r || !r.ok) toast(T('Не удалось отправить ролик')); })
+            .catch(function () { toast(T('Не удалось отправить ролик')); });
     }
     function crvVariant(cid) {
         haptic('medium');
@@ -4552,6 +4559,7 @@
         if (act === 'crvbuild') { crvBuild(+actEl.getAttribute('data-id')); return; }
         if (act === 'crvvariant') { crvVariant(+actEl.getAttribute('data-id')); return; }
         if (act === 'crvdesc') { crvDescription(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvsend') { crvSend(+actEl.getAttribute('data-id')); return; }
         if (act === 'crvopen') {
             haptic('light');
             var _u = actEl.getAttribute('data-url');
