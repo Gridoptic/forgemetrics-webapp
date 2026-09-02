@@ -6811,15 +6811,20 @@ function rsCoverRender(host, ctx) {
         const name = m.cover ? TR('Рисованная обложка') : (m.name || TR('Файл'));
         const kind = m.cover ? TR('фраза из текста, палитра канала')
             : (m.kind === 'animation' ? 'GIF' : (isVid ? TR('видео') : TR('фото')));
-        host.innerHTML = '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
-            '<span class="tx"><b>' + escapeHtml(name) + '</b><em>' + escapeHtml(kind) + '</em></span>' +
-            '<button class="act" data-rc="clear" type="button">' + TR('Убрать') + '</button></div>' +
+        const bigSrc = isVid ? '' : m.url;
+        host.innerHTML = (bigSrc
+                ? '<div class="cp-media"><div class="cp-mthumb"><img src="' + escapeHtml(bigSrc) + '" alt="">' +
+                  '<button class="cp-mx" data-rc="clear" type="button"><i class="ti ti-x"></i></button></div>' +
+                  '<div class="cp-mfoot">' + escapeHtml(name) + '</div></div>'
+                : '<div class="cp-own-row"><span class="cp-own-thumb">' + thumb + '</span>' +
+                  '<span class="tx"><b>' + escapeHtml(name) + '</b><em>' + escapeHtml(kind) + '</em></span>' +
+                  '<button class="act" data-rc="clear" type="button">' + TR('Убрать') + '</button></div>') +
             '<div class="cp-own-acts">' +
             '<button class="cp-mrepl" data-rc="file" type="button"><i class="ti ti-upload"></i>' + TR('Заменить файлом') + '</button>' +
             '<button class="cp-mrepl" data-rc="cover" type="button"><i class="ti ti-photo"></i>' +
             TR('Рисованная обложка') + ' ' + price + '</button>' +
             '<button class="cp-mrepl" data-rc="photo" type="button"><i class="ti ti-camera"></i>' +
-            TR('Фото-обложка') + ' ' + price + '</button></div>';
+            TR('Фото-обложка') + ' ' + price + '</button></div>' + rsCreativeBtn(ctx);
         return;
     }
     const zero = (typeof forgeAmount === 'function') ? forgeAmount(0, 12) : '0';
@@ -6847,6 +6852,7 @@ function rsBindCover(host, ctx) {
         if (a === 'file') { hapticLight(); rsPickFile(ctx, host); }
         else if (a === 'cover') rsMakeCover(ctx, host, 'draw');
         else if (a === 'photo') rsMakeCover(ctx, host, 'photo');
+        else if (a === 'creative') rsCreativeBuild(ctx, host);
         else if (a === 'clear') { hapticLight(); rsClearCover(ctx, host); }
     });
 }
@@ -6884,6 +6890,44 @@ function rsPickFile(ctx, host) {
         rsSetBusy(ctx, host, '');
     };
     inp.click();
+}
+
+function rsCreativeBtn(ctx) {
+    const pid = ctx && ctx.currentPostId;
+    if (!pid) return '';
+    const cost = (typeof forgeAmount === 'function') ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice();
+    return '<button type="button" class="cp-crv-go" style="margin-top:10px;" data-rc="creative">' +
+        '<i class="ti ti-movie"></i><span class="tx"><b>' + TR('Собрать креатив') + ' ' + cost + '</b><em>' +
+        TR('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут') +
+        '</em></span></button>';
+}
+
+function rsCreativePrice() {
+    const p = (state.dashboard && state.dashboard.forge_prices) || null;
+    if (Array.isArray(p)) {
+        const row = p.find((x) => x && x.key === 'creative_build');
+        if (row && row.price) return row.price;
+    }
+    return 70;
+}
+
+async function rsCreativeBuild(ctx, host) {
+    const pid = ctx && ctx.currentPostId;
+    if (!pid) return;
+    hapticMed();
+    ctx.mediaBusy = TR('Собираю ролик — сообщу, когда будет готов');
+    rsCoverRender(host, ctx);
+    try {
+        const r = await apiRequest('/api/v1/creative/build', {
+            method: 'POST', body: JSON.stringify({ post_id: pid }),
+        });
+        if (r && r.ok) showToast(TR('Собираю ролик — сообщу, когда будет готов'), 'movie');
+        else showToast(apiErrText(null, 'Ролик не собрался — попробуй ещё раз.'), 'alert-triangle');
+    } catch (e) {
+        showToast(apiErrText(e, 'Ролик не собрался — попробуй ещё раз.'), 'alert-triangle');
+    }
+    ctx.mediaBusy = '';
+    rsCoverRender(host, ctx);
 }
 
 async function rsMakeCover(ctx, host, kind) {
