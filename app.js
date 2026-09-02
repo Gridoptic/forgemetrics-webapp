@@ -7871,7 +7871,7 @@ function setupPostEventListeners() {
         els.postQuestionCustomSubmit.addEventListener('click', submitQuestionCustom);
     }
 
-    const _archOpen = document.getElementById('post-archive-btn');
+    const _archOpen = document.getElementById('post-archive-link');
     if (_archOpen) _archOpen.addEventListener('click', () => { openPostsArchive('postCreate'); });
 
     const _archBack = document.getElementById('archive-back');

@@ -6323,3 +6323,52 @@ html.cs-modal-open {
     font-size: 16px;
     color: var(--text-tertiary);
 }
+
+.pa-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px 8px 8px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+}
+
+.pa-link:active {
+    background: rgba(255, 255, 255, 0.075);
+}
+
+.pa-link-ic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--color-purple-bg, rgba(139, 122, 255, 0.16));
+    color: #b3a6ff;
+}
+
+.pa-link-ic i {
+    font-size: 15px;
+}
+
+.pa-link-tx {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.pa-link-go {
+    flex: 0 0 auto;
+    font-size: 16px;
+    color: var(--text-tertiary);
+}
