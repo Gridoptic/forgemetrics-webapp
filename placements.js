@@ -461,7 +461,7 @@
             '<div class="pl-flabel">' + esc(T('Каналы из закладок')) + '</div>' +
             '<div id="pl-camp-bms"><div class="pl-center">' + esc(T('Загружаю...')) + '</div></div>' +
             '<div class="pl-flabel">' + esc(T('Или вставь ссылку на канал')) + '</div>' +
-            '<input class="pl-inp" id="pl-camp-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал">' +
+            '<input class="pl-inp" id="pl-camp-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="' + PL('https://t.me/канал') + '">' +
             '<div id="pl-camp-chinfo" style="display:none;font-size:10.5px;margin:8px 0 0;line-height:1.45;"></div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="camp-save" data-mode="' + (isNew ? 'new' : campId) + '">' + esc(isNew ? T('Создать кампанию') : T('Добавить')) + '</button>';
         bg.classList.add('on');
@@ -1215,7 +1215,7 @@
             '<div class="pl-ht" style="font-size:15px;">' + esc(T('Новая ссылка под размещение')) + '</div>' +
             '<div id="pl-src-deals" style="display:none;"></div>' +
             '<div class="pl-flabel" id="pl-chan-label">' + esc(T('Канал, где размещаешься — вставь ссылку или @имя')) + '</div>' +
-            '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://t.me/канал" value="">' +
+            '<input class="pl-inp" id="pl-chan" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="' + PL('https://t.me/канал') + '" value="">' +
             '<div style="font-size:10px;color:#565b73;margin:6px 0 2px;line-height:1.4;">' +
             esc(T('Укажи @имя канала — показы рекламного поста замерятся автоматически.')) + '</div>' +
             '<div id="pl-chinfo" style="display:none;font-size:10.5px;margin:8px 0 4px;line-height:1.45;"></div>' +

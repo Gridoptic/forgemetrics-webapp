@@ -350,7 +350,7 @@
     function _hlInfo(l) {
         var m = { green: ['#5DCAA5', L('Здоровый')], amber: ['#f59e0b', L('Средний')], yellow: ['#f59e0b', L('Средний')], red: ['#ef4444', L('Риск')] };
         var cls = l.health_class && m[l.health_class] ? (l.health_class === 'yellow' ? 'amber' : l.health_class) : null;
-        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма' || st === 'выше нормы') ? 'green' : (st === 'низковат' || st === 'ниже нормы') ? 'amber' : 'red'; }
+        if (!cls && l.reach_status) { var st = l.reach_status; cls = (st === 'норма' || st === 'выше нормы') ? 'green' : (st === 'ниже нормы') ? 'amber' : 'red'; }
         if (!cls) return { cls: 'none', color: '#565b73', word: L('Нет данных') };
         return { cls: cls, color: m[cls][0], word: m[cls][1] };
     }
@@ -361,7 +361,7 @@
         }).join('');
         return '<span class="fmx-tl">' + dots + '<b style="color:' + h.color + ';">' + h.word + '</b></span>';
     }
-    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'низковат' || st === 'ниже нормы') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
+    function _healthColor(l) { var m = { green: '#5DCAA5', amber: '#f59e0b', yellow: '#f59e0b', red: '#ef4444' }; if (l.health_class && m[l.health_class]) return m[l.health_class]; if (l.reach_status) { var st = l.reach_status; return (st === 'норма' || st === 'выше нормы') ? '#5DCAA5' : (st === 'ниже нормы') ? '#f59e0b' : '#ef4444'; } return '#565b73'; }
     function _warnTri(sz) { sz = sz || 14; return '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" style="vertical-align:-2px;flex:0 0 auto;"><path d="M12 3.4 L21.7 20.2 A1.35 1.35 0 0 1 20.55 22.2 L3.45 22.2 A1.35 1.35 0 0 1 2.3 20.2 Z" fill="#f5b23d" stroke="#0a0d18" stroke-width="1.4" stroke-linejoin="round"/><rect x="10.9" y="8.4" width="2.2" height="6.2" rx="1.1" fill="#0a0d18"/><circle cx="12" cy="17.8" r="1.3" fill="#0a0d18"/></svg>'; }
     function mediaAbs(u) { if (!u) return u; if (/^(https?:|blob:|data:)/.test(u)) return u; var b = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : ''; return b + u; }
     function _posStyle(a) { if (!a || typeof a !== 'object') return 'object-position:center;'; return 'object-position:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;transform:scale(' + (a.s || 1) + ');transform-origin:' + (a.x != null ? a.x : 50) + '% ' + (a.y != null ? a.y : 50) + '%;'; }
@@ -1700,10 +1700,10 @@
         var d = document.createElement('div');
         d.id = 'fmx-screen';
         d.innerHTML =
-            '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="Назад" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
+            '<div class="fmx-head"><button class="fmx-ibtn" id="fmx-back" title="' + L('Назад') + '" style="margin-right:2px;"><i class="ti ti-arrow-left"></i></button>' +
             '<div style="flex:1;min-width:0;overflow:hidden;"><h1 id="fmx-htitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + L('Рынок рекламы') + '</h1><p id="fmx-hsub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p></div>' +
-            '<button class="fmx-ibtn" id="fmx-faq" title="Справка"><i class="ti ti-help"></i></button>' +
-            '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="Что значат бейджи"><i class="ti ti-rosette-discount-check"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-faq" title="' + L('Справка') + '"><i class="ti ti-help"></i></button>' +
+            '<button class="fmx-ibtn" id="fmx-bhelp" style="margin-left:7px;" title="' + L('Что значат бейджи') + '"><i class="ti ti-rosette-discount-check"></i></button>' +
             '<button class="fmx-ibtn" id="fmx-bm" style="margin-left:7px;"><i class="ti ti-star"></i><span class="fmx-bmc" id="fmx-bmc" style="display:none;">0</span></button></div>' +
             '<div class="fmx-scroll" id="fmx-scrollEl"><div class="fmx-pad" id="fmx-main"></div></div>';
         document.body.appendChild(d);
@@ -2202,7 +2202,7 @@
         }
         var html = '<div class="fmx-thead"><span class="fmx-tlive"><span class="fmx-tdot"></span>live</span>' +
             (ago ? '<span class="fmx-tstamp"><i class="ti ti-refresh"></i>' + ago + '</span>' : '') +
-            '<button class="fmx-bellbtn" id="fmx-pbell" title="Следить за нишей — сообщим о сдвиге CPM" style="margin-left:auto;width:34px;height:34px;font-size:14px;"><i class="ti ti-bell"></i></button></div>';
+            '<button class="fmx-bellbtn" id="fmx-pbell" title="' + L('Следить за нишей — сообщим о сдвиге CPM') + '" style="margin-left:auto;width:34px;height:34px;font-size:14px;"><i class="ti ti-bell"></i></button></div>';
 
         var tickerN = baseN.slice().filter(function (n) { return n.median_cpm != null; })
             .sort(function (a, b) { return Math.abs(b.delta7 || 0) - Math.abs(a.delta7 || 0) || (b.median_cpm || 0) - (a.median_cpm || 0); })
@@ -2704,7 +2704,7 @@
             h += '</div>';
         }
         h += '<div class="fmx-meyebrow" style="margin-top:13px;">' + L('Найти по Telegram ID') + '</div>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="например 100000000" style="flex:1;">' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-muid" inputmode="numeric" placeholder="' + L('например 100000000') + '" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mufind" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-search"></i></button></div>' +
             '<div class="fmx-mdsub" style="margin-top:7px;">' + L('Нажатие на любого человека в списках открывает его карточку.') + '</div>';
         h += '<div id="fmx-modact" style="margin-top:13px;">' +
@@ -2721,7 +2721,7 @@
         return '<div class="fmx-ctrlcard">' +
             '<div class="fmx-ctrlt">' + L('Ручное продвижение оффера') + '</div>' +
             '<div class="fmx-ctrls" style="margin-bottom:10px;">' + L('Включает офферу бейдж «Продвигается» и золотое оформление на 30 дней. Работает только со своим оффером — ID виден в задачах очереди.') + '</div>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="ID оффера" style="flex:1;">' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-mboostid" inputmode="numeric" placeholder="' + L('ID оффера') + '" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-mboostgo" style="flex:0 0 auto;padding:0 16px;border-color:rgba(245,191,79,0.5);color:#f5bf4f;"><i class="ti ti-crown"></i></button></div>' +
             '</div>';
     }
@@ -2737,7 +2737,7 @@
             var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">' + L('владелец') + '</span>'
                 : (m.source === 'env' ? '<span class="fmx-mdtag">' + L('из настроек сервера') + '</span>' : '');
             var del = (m.source === 'db')
-                ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="Снять права"><i class="ti ti-x"></i></button>' : '';
+                ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="' + L('Снять права') + '"><i class="ti ti-x"></i></button>' : '';
             return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
                 '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
         }).join('');
@@ -2757,7 +2757,7 @@
             '<div class="fmx-ctrlt">' + L('Модераторы') + '</div>' +
             '<div class="fmx-ctrls" style="margin-bottom:10px;">' + L('Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.') + '</div>' +
             '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">' + L('Пока никого') + '</div>') + '</div>' +
-            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
+            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="' + L('@username или ID') + '" autocomplete="off" spellcheck="false">' +
             '<button class="fmx-mdbtn" id="fmx-mdadd">' + L('Выдать права') + '</button></div>' +
             '<div class="fmx-mdsub" style="margin-top:8px;">' + L('Человек должен хотя бы раз открыть приложение — иначе его не найти.') + '</div>' +
             '</div>' +
@@ -2825,9 +2825,9 @@
             var act = t.enabled !== false;
             var tag = t.source === 'env' ? '<span class="fmx-mdtag">' + L('из настроек сервера') + '</span>' : '';
             if (!act) tag += '<span class="fmx-mdtag off">' + L('на паузе') + '</span>';
-            var sw = '<button class="fmx-sw sm' + (act ? ' on' : '') + '" data-tstg="' + t.user_id + '" data-on="' + act + '" role="switch" aria-checked="' + act + '" aria-label="Тестовый доступ"><span></span></button>';
+            var sw = '<button class="fmx-sw sm' + (act ? ' on' : '') + '" data-tstg="' + t.user_id + '" data-on="' + act + '" role="switch" aria-checked="' + act + '" aria-label="' + L('Тестовый доступ') + '"><span></span></button>';
             var del = t.source === 'db'
-                ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="Удалить из списка"><i class="ti ti-x"></i></button>' : '';
+                ? '<button class="fmx-mdel" data-tsrm="' + t.user_id + '" aria-label="' + L('Удалить из списка') + '"><i class="ti ti-x"></i></button>' : '';
             return '<div class="fmx-mdrow' + (act ? '' : ' dim') + '"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
                 '<div class="fmx-mdsub">' + un + '</div></div>' + sw + del + '</div>';
         }).join('');
@@ -2839,7 +2839,7 @@
             '<button class="fmx-sw' + (on ? ' on' : '') + '" id="fmx-tssw" role="switch" aria-checked="' + on + '"><span></span></button>' +
             '</div>' +
             '<div class="fmx-mdlist" style="margin-top:12px;">' + (rows || '<div class="fmx-mdsub">' + L('Пока никого') + '</div>') + '</div>' +
-            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="@username или ID" autocomplete="off" spellcheck="false">' +
+            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-tsq" placeholder="' + L('@username или ID') + '" autocomplete="off" spellcheck="false">' +
             '<button class="fmx-mdbtn" id="fmx-tsadd">' + L('Выдать доступ') + '</button></div>' +
             '<div class="fmx-mdsub" style="margin-top:8px;">' + L('Тумблер ставит доступ на паузу, не удаляя из списка. Крестик удаляет совсем. Расход на ИИ у тестеров не ограничен — держи список коротким.') + '</div>' +
             '</div>';
@@ -3760,8 +3760,8 @@
         var _bfPair = function (lbl, id1, v1, id2, v2, step) {
             var st = step ? ' step="0.1" inputmode="decimal"' : ' inputmode="numeric"';
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + lbl + '</span>' +
-                '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="от" value="' + (v1 != null ? v1 : '') + '">' +
-                '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="до" value="' + (v2 != null ? v2 : '') + '"></div></div>';
+                '<div class="fmx-bfrow"><input class="fmx-inp" id="' + id1 + '" type="number" min="0"' + st + ' placeholder="' + L('от') + '" value="' + (v1 != null ? v1 : '') + '">' +
+                '<input class="fmx-inp" id="' + id2 + '" type="number" min="0"' + st + ' placeholder="' + L('до') + '" value="' + (v2 != null ? v2 : '') + '"></div></div>';
         };
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;"><div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> ' + L('Фильтры') +
             '<button id="fmx-bf-x" style="margin-left:auto;width:40px;height:40px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:#8990a8;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;"><i class="ti ti-x"></i></button></div>' +
@@ -3905,7 +3905,7 @@
         }
         sub.innerHTML =
             '<div id="fmx-todayLine">' + todayLine() + '</div>' +
-            '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="Собрать кампанию под бюджет"><i class="ti ti-calculator"></i><span>' + L('Кампания') + '</span></button>' +
+            '<div class="fmx-picks"><button class="fmx-campbtn" id="fmx-campCta" title="' + L('Собрать кампанию под бюджет') + '"><i class="ti ti-calculator"></i><span>' + L('Кампания') + '</span></button>' +
             _nicheBtnHtml(true) + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
             topRowHtml() + buySortRowHtml() +
             '<div id="fmx-buyBody"></div>';
@@ -3951,7 +3951,7 @@
             '<div class="fmx-reqft"><span>' + _ago(r.created_at) + (r.mine ? L(' · твоя заявка') : '') + cts + '</span>' +
             (r.mine
                 ? '<button class="fmx-btn" data-rclose="' + r.id + '" style="padding:7px 12px;"><i class="ti ti-x"></i>' + L('Закрыть') + '</button>'
-                : '<span style="display:flex;gap:6px;align-items:center;"><button class="fmx-btn" data-rrep="' + r.id + '" title="Пожаловаться" style="padding:7px 9px;"><i class="ti ti-flag"></i></button><button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>' + L('Написать') + '</button></span>') +
+                : '<span style="display:flex;gap:6px;align-items:center;"><button class="fmx-btn" data-rrep="' + r.id + '" title="' + L('Пожаловаться') + '" style="padding:7px 9px;"><i class="ti ti-flag"></i></button><button class="fmx-btn fmx-btn-p" data-rwrite="' + _esc(r.contact_username) + '" data-rid="' + r.id + '" style="padding:7px 14px;background:#818cf8;color:#fff;"><i class="ti ti-brand-telegram"></i>' + L('Написать') + '</button></span>') +
             '</div></div>';
     }
     function renderSell() {
@@ -4985,7 +4985,7 @@
             '<div class="fmx-mhead"><h2><i class="ti ti-list-search" style="color:#818cf8;"></i> ' + L('Ниши') + '</h2>' +
             '<button class="fmx-mclose" data-no><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody">' +
-            '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="Найти нишу — «нутра», «тендер», «казино»…"></div>' +
+            '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="' + L('Найти нишу — «нутра», «тендер», «казино»…') + '"></div>' +
             '<div id="fmx-nlist"></div></div>' +
             ((_nicheSel && !onPick) ? '<div class="fmx-mfoot"><button class="fmx-btn" data-clear>' + L('Сбросить фильтр') + '</button></div>' : '') +
             '</div>';
@@ -5133,8 +5133,8 @@
         var bg = document.createElement('div'); bg.id = 'fmx-rfBg'; bg.className = 'fmx-cfm solid';
         var rows = _RF_RANGES.map(function (r) {
             var mn = _rf.mn[r[0]] != null ? _rf.mn[r[0]] : '', mx = _rf.mx[r[0]] != null ? _rf.mx[r[0]] : '';
-            var i2 = '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="до" value="' + mx + '" data-mx="' + r[0] + '">';
-            return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="от" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
+            var i2 = '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="' + L('до') + '" value="' + mx + '" data-mx="' + r[0] + '">';
+            return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span><div class="fmx-bfrow"><input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="' + L('от') + '" value="' + mn + '" data-mn="' + r[0] + '">' + i2 + '</div></div>';
         }).join('');
         bg.innerHTML = '<div class="fmx-cfm-box fmx-bf-compact" style="left:50%;transform:translateX(-50%);margin-left:0;width:calc(100vw - 20px);max-width:480px;bottom:12px;">' +
             '<div class="fmx-cfm-t" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-horizontal" style="color:#818cf8;"></i> ' + L('Фильтры') +
@@ -5179,7 +5179,7 @@
         el('fmx-repBody').innerHTML =
             '<span class="fmx-lbl">' + L('Причина') + '</span><div class="fmx-fxw" id="fmx-rep-r">' + chips + '</div>' +
             '<span class="fmx-lbl fmx-mt2">' + L('Комментарий') + ' <span style="color:#565b73;text-transform:none;">' + L('(для «Другое» — обязателен)') + '</span></span>' +
-            '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="Опиши проблему. Чем конкретнее — тем быстрее разберём."></textarea>' +
+            '<textarea class="fmx-inp" id="fmx-rep-c" rows="3" maxlength="300" placeholder="' + L('Опиши проблему. Чем конкретнее — тем быстрее разберём.') + '"></textarea>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + L('Жалобы анонимны для владельца. Несколько жалоб от разных людей скрывают цель до ручной проверки.') + '</div>' +
             '<button class="fmx-save" id="fmx-rep-send" style="margin-top:14px;"><i class="ti ti-flag"></i> ' + L('Отправить жалобу') + '</button>';
         var sel = { v: 'scam' };
@@ -5217,7 +5217,7 @@
             right = '<span class="fmx-nscpm">' + _num(m.cpm) + ' ₽</span>' + d;
         }
         return '<div class="fmx-nsrow"><span class="fmx-nsn">' + _esc(n) + '</span>' + right +
-            '<button class="fmx-nsx" data-nsdel="' + _esc(n) + '" title="Отписаться"><i class="ti ti-x"></i></button></div>';
+            '<button class="fmx-nsx" data-nsdel="' + _esc(n) + '" title="' + L('Отписаться') + '"><i class="ti ti-x"></i></button></div>';
     }
 
     function renderNsBody() {
@@ -5227,7 +5227,7 @@
             : '<div style="font-size:11px;color:#8990a8;line-height:1.6;margin-bottom:4px;">' + L('Подписок пока нет. Ниша твоего оффера подписывается автоматически при публикации.') + '</div>';
         box.innerHTML = chips +
             '<span class="fmx-lbl fmx-mt2">' + L('Добавить нишу') + '</span>' +
-            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="например, Криптовалюты" style="flex:1;">' +
+            '<div style="display:flex;gap:8px;"><input class="fmx-inp" id="fmx-ns-inp" maxlength="64" placeholder="' + L('например, Криптовалюты') + '" style="flex:1;">' +
             '<button class="fmx-btn" id="fmx-ns-add" style="flex:0 0 auto;padding:0 16px;background:#818cf8;color:#fff;border-color:transparent;"><i class="ti ti-plus"></i></button></div>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:10px;">' + L('CPM — медиана по нише за сегодня. Сообщим в @ForgeMetricsBot, когда он сдвинется больше чем на') + ' ' + Math.round(_nsThr) + L('% за неделю, и когда рекламодатель будет искать каналы этой ниши.') + '</div>';
         var addFn = function () {
@@ -5352,11 +5352,11 @@
     }
     function _alHead(title, sub, withBack) {
         return '<div class="grip"></div><div class="fmx-alhd">' +
-            (withBack ? '<button class="fmx-alback" id="fmx-al-back" title="Назад"><i class="ti ti-arrow-left"></i></button>'
+            (withBack ? '<button class="fmx-alback" id="fmx-al-back" title="' + L('Назад') + '"><i class="ti ti-arrow-left"></i></button>'
                 : '<span class="fmx-alic"><i class="ti ti-bell"></i></span>') +
             '<div style="min-width:0;flex:1;"><h3 style="margin:0;">' + title + '</h3>' +
             '<div class="fmx-alsub">' + sub + '</div></div>' +
-            '<button class="fmx-alx" id="fmx-al-close" title="Закрыть"><i class="ti ti-x"></i></button></div>';
+            '<button class="fmx-alx" id="fmx-al-close" title="' + L('Закрыть') + '"><i class="ti ti-x"></i></button></div>';
     }
     function _alBindHead(onBack) {
         var b = el('fmx-al-back'); if (b) b.addEventListener('click', function () { _haptic('light'); onBack(); });
@@ -5424,7 +5424,7 @@
         var rangesHtml = _AL_RANGES.map(function (r) {
             var v = (_aEdit.f[r[2]] || {})[r[0]]; v = (v != null ? v : '');
             return '<div class="fmx-bfcell"><span class="fmx-lbl">' + r[1] + '</span>' +
-                '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="не важно" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
+                '<input class="fmx-inp" type="number" inputmode="numeric" min="0" placeholder="' + L('не важно') + '" value="' + v + '" data-rng="' + r[0] + '" data-bnd="' + r[2] + '"></div>';
         }).join('');
         var sh = _alSheet(_alHead((_aEdit.id ? L('Изменить уведомление') : L('Новое уведомление')), L('Условия закупки'), true) +
             '<div class="fmx-ae-sec">' + L('Название') + '</div><input class="fmx-inp" id="fmx-ae-name" maxlength="60" value="' + _esc(_aEdit.name) + '">' +
@@ -6519,9 +6519,9 @@
             '<span class="fmx-hnd rot" data-hr="' + i + '"></span>' +
             '<span class="fmx-hnd del" data-hd="' + i + '"><i class="ti ti-x"></i></span>' +
             '<span class="fmx-tmodes">' +
-            '<button class="fmx-tmd' + (!e.m ? ' on' : '') + '" data-tm="" title="Обычный"><i></i></button>' +
-            '<button class="fmx-tmd' + (e.m === 'b' ? ' on' : '') + '" data-tm="b" title="Слияние"><i></i></button>' +
-            '<button class="fmx-tmd' + (e.m === 't' ? ' on' : '') + '" data-tm="t" title="Поверх"><i></i></button>' +
+            '<button class="fmx-tmd' + (!e.m ? ' on' : '') + '" data-tm="" title="' + L('Обычный') + '"><i></i></button>' +
+            '<button class="fmx-tmd' + (e.m === 'b' ? ' on' : '') + '" data-tm="b" title="' + L('Слияние') + '"><i></i></button>' +
+            '<button class="fmx-tmd' + (e.m === 't' ? ' on' : '') + '" data-tm="t" title="' + L('Поверх') + '"><i></i></button>' +
             '</span>';
     }
     function _tedMarkPick(box, v) {
@@ -7158,7 +7158,7 @@
         el('fmx-revBody').innerHTML =
             '<span class="fmx-lbl">' + L('Оценка') + '</span><div class="fmx-fxw" id="fmx-rev-r">' +
             [1, 2, 3, 4, 5].map(function (n) { return '<button class="fmx-fx" data-rv="' + n + '" style="font-size:15px;padding:8px 12px;">' + '★'.repeat(n) + '</button>'; }).join('') + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">' + L('Пара слов (необязательно)') + '</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="Как прошла сделка? Вышел ли пост вовремя, честные ли охваты."></textarea>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Пара слов (необязательно)') + '</span><textarea class="fmx-inp" id="fmx-rev-t" rows="3" maxlength="300" placeholder="' + L('Как прошла сделка? Вышел ли пост вовремя, честные ли охваты.') + '"></textarea>' +
             '<button class="fmx-save" id="fmx-rev-send" style="margin-top:14px;opacity:0.5;" disabled><i class="ti ti-send"></i> ' + L('Поставь оценку') + '</button>';
         qsa(el('fmx-rev-r'), '[data-rv]').forEach(function (b) { b.addEventListener('click', function () { sel.v = +b.getAttribute('data-rv'); qsa(el('fmx-rev-r'), '.fmx-fx').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); var sb = el('fmx-rev-send'); if (sb) { sb.disabled = false; sb.style.opacity = '1'; sb.innerHTML = '<i class="ti ti-send"></i> ' + L('Отправить отзыв'); } }); });
         el('fmx-rev-send').addEventListener('click', function () {
@@ -7177,10 +7177,10 @@
         try { uname = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) || ''; } catch (e) {}
         var fchips = Object.keys(REQ_FMT).map(function (k) { return '<button class="fmx-fx' + (k === 'any' ? ' on' : '') + '" data-rf="' + k + '">' + REQ_FMT[k] + '</button>'; }).join('');
         el('fmx-reqBody').innerHTML =
-            '<span class="fmx-lbl">' + L('Ниша каналов') + '</span><input class="fmx-inp" id="fmx-rq-niche" maxlength="64" placeholder="например, Биохакинг">' +
-            '<span class="fmx-lbl fmx-mt2">' + L('Бюджет, ₽ (необязательно)') + '</span><input class="fmx-inp" id="fmx-rq-budget" type="number" min="0" step="500" placeholder="например, 15000">' +
+            '<span class="fmx-lbl">' + L('Ниша каналов') + '</span><input class="fmx-inp" id="fmx-rq-niche" maxlength="64" placeholder="' + L('например, Биохакинг') + '">' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Бюджет, ₽ (необязательно)') + '</span><input class="fmx-inp" id="fmx-rq-budget" type="number" min="0" step="500" placeholder="' + L('например, 15000') + '">' +
             '<span class="fmx-lbl fmx-mt2">' + L('Формат размещения') + '</span><div class="fmx-fxw" id="fmx-rq-fmt">' + fchips + '</div>' +
-            '<span class="fmx-lbl fmx-mt2">' + L('Что рекламируем и требования') + '</span><textarea class="fmx-inp" id="fmx-rq-text" rows="4" maxlength="500" placeholder="Продукт, гео аудитории, пожелания к каналам. Минимум 20 символов."></textarea>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Что рекламируем и требования') + '</span><textarea class="fmx-inp" id="fmx-rq-text" rows="4" maxlength="500" placeholder="' + L('Продукт, гео аудитории, пожелания к каналам. Минимум 20 символов.') + '"></textarea>' +
             '<span class="fmx-lbl fmx-mt2">' + L('Контакт для связи') + '</span><div class="fmx-chbtn" style="cursor:text;"><span style="color:#8990a8;">@</span><input class="fmx-inp" id="fmx-rq-contact" style="border:none;background:transparent;padding:0 0 0 4px;flex:1;" maxlength="64" value="' + _esc(uname) + '" placeholder="username"></div>' +
             '<div style="font-size:10px;color:#565b73;line-height:1.5;margin-top:8px;">' + L('Заявка видна всем владельцам каналов — они напишут на указанный контакт. Максимум 3 активных заявки. Правила площадки действуют и здесь.') + '</div>' +
             '<button class="fmx-save" id="fmx-rq-send" style="margin-top:14px;"><i class="ti ti-send"></i> ' + L('Опубликовать заявку') + '</button>';
@@ -7466,7 +7466,7 @@
         var custom = !!_ss.coverGrad;
         var grads = '<div id="fmx-gradbox" style="' + (_ss.covType === 'grad' ? '' : 'display:none;') + '"><span class="fmx-lbl">' + L('Фон обложки') + '</span><div class="fmx-grads" id="fmx-grads">' +
             COVERS.map(function (g, i) { return '<div class="fmx-gd' + (!custom && i === _ss.cover ? ' on' : '') + '" data-g="' + i + '" style="background:' + g + '" title="' + COVER_NAMES[i] + '"></div>'; }).join('') +
-            '<div class="fmx-gd fmx-dot-rb' + (custom ? ' on' : '') + '" data-grb="1" title="Свой градиент"></div></div>' +
+            '<div class="fmx-gd fmx-dot-rb' + (custom ? ' on' : '') + '" data-grb="1" title="' + L('Свой градиент') + '"></div></div>' +
             '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
             mediaBoxHtml('cover', L('Картинка, GIF или видео до 30 секунд, до 64 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».')) + '</div>';
@@ -7571,7 +7571,7 @@
         var custom = COLORS.indexOf(cur) < 0;
         return '<div class="fmx-dots" id="' + idBase + '" data-cur="' + _esc(cur) + '">' +
             COLORS.map(function (c) { return '<div class="fmx-dot' + (c === cur ? ' on' : '') + '" data-cv="' + c + '" style="background:' + c + ';' + st + '"></div>'; }).join('') +
-            '<div class="fmx-dot fmx-dot-rb' + (custom ? ' on' : '') + '" data-rb="1" style="' + st + (custom ? 'box-shadow:0 0 0 2px ' + cur + ';' : '') + '" title="Свой цвет"></div></div>';
+            '<div class="fmx-dot fmx-dot-rb' + (custom ? ' on' : '') + '" data-rb="1" style="' + st + (custom ? 'box-shadow:0 0 0 2px ' + cur + ';' : '') + '" title="' + L('Свой цвет') + '"></div></div>';
     }
     function bindColorPick(idBase, set, title) {
         var box = el(idBase); if (!box) return;
@@ -7623,7 +7623,7 @@
         bg.id = 'fmx-cpBg'; bg.className = 'fmx-cfm';
         bg.innerHTML = '<div class="fmx-cfm-box" id="fmx-cp-box">' +
             '<div class="fmx-cp-head" id="fmx-cp-head"><div class="fmx-cp-pt">' + L('Цвет:') + ' <b>' + (title || L('Свой')) + '</b></div>' +
-            '<div style="display:flex;gap:6px;"><button class="fmx-cp-x" id="fmx-cp-mode" title="Стиль палитры">⇄</button><button class="fmx-cp-x" id="fmx-cp-close" aria-label="Закрыть">✕</button></div></div>' +
+            '<div style="display:flex;gap:6px;"><button class="fmx-cp-x" id="fmx-cp-mode" title="' + L('Стиль палитры') + '">⇄</button><button class="fmx-cp-x" id="fmx-cp-close" aria-label="' + L('Закрыть') + '">✕</button></div></div>' +
             '<div class="fmx-cp-sv" id="fmx-cp-sv"><canvas id="fmx-cp-cv" width="252" height="130"></canvas><div class="fmx-cp-dot" id="fmx-cp-dot"></div></div>' +
             '<div class="fmx-cp-cap" id="fmx-cp-huecap" style="text-align:left;margin:10px 0 3px;">' + L('Оттенок') + '</div>' +
             '<input type="range" class="fmx-cp-hue" id="fmx-cp-hue" min="0" max="359" step="1" style="margin-top:0;">' +
@@ -7899,8 +7899,8 @@
     }
 
     function paneText() {
-        return '<span class="fmx-lbl">' + L('О канале (видно при «Развернуть»)') + '</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="Чем хорош канал и какая аудитория…">' + _esc(_ss._desc || '') + '</textarea>' +
-            '<span class="fmx-lbl fmx-mt2">' + L('Теги (через запятую)') + '</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="ниша, тема, аудитория">';
+        return '<span class="fmx-lbl">' + L('О канале (видно при «Развернуть»)') + '</span><textarea class="fmx-inp" id="fmx-desc" maxlength="200" placeholder="' + L('Чем хорош канал и какая аудитория…') + '">' + _esc(_ss._desc || '') + '</textarea>' +
+            '<span class="fmx-lbl fmx-mt2">' + L('Теги (через запятую)') + '</span><input class="fmx-inp" id="fmx-tags" value="' + _esc(_ss._tags || '') + '" maxlength="60" placeholder="' + L('ниша, тема, аудитория') + '">';
     }
     function bindText() {
         el('fmx-desc').addEventListener('input', function () { _ss._desc = this.value; _heroDebounced(); });
@@ -8053,7 +8053,7 @@
         var modeDots = '<div class="fmx-stkmodes">' + [['blend', L('Слияние')], ['bg', L('Задний фон')]].map(function (m) {
             return '<button class="fmx-stkmd' + (dm === m[0] ? ' on' : '') + '" data-stkmd="' + m[0] + '" data-stkmdn="' + m[1] + '" title="' + m[1] + '"><i></i></button>';
         }).join('') + '</div>';
-        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="Перемещение, размер, поворот"><i class="fmx-stkh rot" title="Крутить"></i><i class="fmx-stkh rsz" title="Размер"></i><i class="ti ti-x fmx-stkh del" title="Убрать с оффера"></i>' + modeDots + '</div>';
+        return core + '<div class="fmx-stkGrab' + selCls + '" id="fmx-stkGrab" style="' + boxSt + '" title="' + L('Перемещение, размер, поворот') + '"><i class="fmx-stkh rot" title="' + L('Крутить') + '"></i><i class="fmx-stkh rsz" title="' + L('Размер') + '"></i><i class="ti ti-x fmx-stkh del" title="' + L('Убрать с оффера') + '"></i>' + modeDots + '</div>';
     }
     var _lotLibs = null;
     function _script(u) {
@@ -8127,7 +8127,7 @@
                     conf.map(function (d) {
                         if (!d.proof_status) {
                             return '<div class="fmx-plc"><div style="font-size:11.5px;color:#c9cbe0;">' + who(d) + ' ' + (window.t ? window.t('— отметь вышедший рекламный пост') : L('— отметь вышедший рекламный пост')) + '</div>' +
-                                '<div style="display:flex;gap:6px;margin-top:6px;"><input class="fmx-inp fmx-plc-in" placeholder="https://t.me/канал/123"><button class="fmx-btn fmx-plc-go" data-pdid="' + d.deal_id + '" style="padding:6px 11px;color:#5ab0e6;border-color:rgba(90,176,230,0.4);flex:0 0 auto;"><i class="ti ti-send"></i></button></div></div>';
+                                '<div style="display:flex;gap:6px;margin-top:6px;"><input class="fmx-inp fmx-plc-in" placeholder="' + L('https://t.me/канал/123') + '"><button class="fmx-btn fmx-plc-go" data-pdid="' + d.deal_id + '" style="padding:6px 11px;color:#5ab0e6;border-color:rgba(90,176,230,0.4);flex:0 0 auto;"><i class="ti ti-send"></i></button></div></div>';
                         }
                         var _lt = window.t || function (s) { return s; };
                         var rr = '';
@@ -8206,7 +8206,7 @@
                 var sel = s && s.sticker_id === st.id;
                 return '<div class="fmx-stkcell' + (sel ? ' on' : '') + '" data-sid="' + st.id + '">' + stkMedia(st, true) +
                     (st.kind === 'tgs' ? '<span class="fmx-stk-anim">' + L('аним.') + '</span>' : '') +
-                    '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="Удалить из коллекции">&times;</button></div>';
+                    '<button class="fmx-stkdel" data-sdel="' + st.id + '" title="' + L('Удалить из коллекции') + '">&times;</button></div>';
             }).join('') + '</div>' +
                 '<div style="font-size:10px;color:#565b73;margin-top:8px;">' + L('Пополнение — отправкой стикера боту в личных сообщениях.') + '<span> ' + _stickers.length + '/30</span></div>';
             if (s) {
@@ -8658,7 +8658,7 @@
         var dock = document.createElement('div');
         dock.id = 'fmx-cdDock';
         dock.innerHTML = '<div class="fmx-dkIn">' +
-            '<div id="fmx-cdPrev" class="fmx-cdTile" title="К карточке"><div class="fmx-cdScale"></div></div>' +
+            '<div id="fmx-cdPrev" class="fmx-cdTile" title="' + L('К карточке') + '"><div class="fmx-cdScale"></div></div>' +
             '<div class="fmx-dkCol"><div class="fmx-dkNav"></div></div></div>';
         env.dockParent.insertBefore(dock, env.wrap);
         var prevOA = env.scroll.style.overflowAnchor;
@@ -8823,7 +8823,7 @@
         _fmxEnsureDockCss();
         var dock = document.createElement('div');
         dock.id = 'fmx-psDock';
-        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="К постеру"></div><div class="fmx-dkCol"><div class="fmx-dkNav" id="fmx-dkNav"></div></div></div>';
+        dock.innerHTML = '<div class="fmx-dkIn"><div id="fmx-dkPrev" title="' + L('К постеру') + '"></div><div class="fmx-dkCol"><div class="fmx-dkNav" id="fmx-dkNav"></div></div></div>';
         env.dockParent.insertBefore(dock, env.wrap);
         var mini = null, miniWin = null, lastState = '', destroyed = false;
         function ensureMini() {
@@ -8982,7 +8982,7 @@
         bg.id = 'fmx-psBg'; bg.className = 'fmx-psFull';
         bg.innerHTML =
             '<div class="fmx-psTop"><div class="t"><i class="ti ti-photo-star"></i> ' + L('Промо-постер') + '</div>' +
-            '<button class="fmx-psX" id="fmx-ps-x" aria-label="Закрыть"><i class="ti ti-x"></i></button></div>' +
+            '<button class="fmx-psX" id="fmx-ps-x" aria-label="' + L('Закрыть') + '"><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-psScroll"><div id="fmx-psLoad" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;color:#8990a8;"><i class="ti ti-loader-2" style="font-size:26px;animation:fmxSpin 0.9s linear infinite;"></i><div style="font-size:12px;margin-top:10px;">' + L('Открываю редактор…') + '</div></div>' +
             '<div id="fmx-psWrap" style="width:100%;max-width:540px;margin:0 auto;overflow:hidden;">' +
             '<iframe id="fmx-psFrame" scrolling="no" src="poster_render.html?v=' + PS_GLUE_V + '" style="opacity:0;transition:opacity 0.25s;overflow:hidden;"></iframe></div></div>' +
@@ -9546,7 +9546,7 @@
     }
     function _shareBtn(l, style) {
         return '<button class="fmx-star fmx-shb" data-share="' + _esc(l.username || '') +
-            '" data-slid="' + (l.id || '') + '" aria-label="Поделиться"' +
+            '" data-slid="' + (l.id || '') + '" aria-label="' + L('Поделиться') + '"' +
             (style ? ' style="' + style + '"' : '') + '><i class="ti ti-share"></i></button>';
     }
     function _kmPill(tx, col) {
@@ -10597,13 +10597,13 @@
         var pickLabel = pickActive
             ? ((short ? '' : L('Ниша: ')) + _esc(s.length > 14 ? s.slice(0, 13) + '…' : s))
             : (short ? L('Ниша') : L('Выбрать нишу'));
-        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"' + (short ? ' title="Выбрать нишу"' : '') + '><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
+        return '<button class="fmx-nichebtn' + (pickActive ? ' on' : '') + '" data-sort="niche"' + (short ? ' title="' + L('Выбрать нишу') + '"' : '') + '><i class="ti ti-list-search"></i><span>' + pickLabel + '</span><i class="ti ti-chevron-right fmx-nichebtn-chev"></i></button>';
     }
     function _bellBtnHtml() {
-        return '<button class="fmx-bellbtn" data-alerts="1" title="Умные уведомления"><i class="ti ti-bell"></i></button>';
+        return '<button class="fmx-bellbtn" data-alerts="1" title="' + L('Умные уведомления') + '"><i class="ti ti-bell"></i></button>';
     }
     function _adpickBtnHtml() {
-        return '<button class="fmx-adpickbtn" data-adpick="1" title="Подбор каналов для рекламы"><i class="ti ti-target-arrow"></i></button>';
+        return '<button class="fmx-adpickbtn" data-adpick="1" title="' + L('Подбор каналов для рекламы') + '"><i class="ti ti-target-arrow"></i></button>';
     }
     function sortBarHtml() {
         return '<div class="fmx-picks">' + _nicheBtnHtml() + _adpickBtnHtml() + _bellBtnHtml() + '</div>' +
@@ -11549,7 +11549,7 @@
                 return '<div class="fmx-bmrow' + (it.frozen ? ' frz' : '') + '" data-open="' + _esc(u) + '" data-src="' + it.source + '" data-frz="' + (it.frozen ? 1 : 0) + '">' +
                     zw(listItem(l, false, it.source === 'base')) +
                     (it.frozen ? '<span class="fmx-frzTag"><i class="ti ti-snowflake"></i> ' + L('Заморожена') + '</span>' : '') +
-                    '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="Удалить из закладок (два нажатия)"><i class="ti ti-trash"></i></button></div>';
+                    '<button class="fmx-bmdel" data-del="' + _esc(u) + '" title="' + L('Удалить из закладок (два нажатия)') + '"><i class="ti ti-trash"></i></button></div>';
             }).join('');
             bindList(box);
             scaleCards(box);

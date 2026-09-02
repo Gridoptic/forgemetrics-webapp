@@ -1037,7 +1037,7 @@ function pwOpenPicker(pulse) {
     var sel = new Set(pwSelectedIds(pulse));
     var ov = document.createElement('div');
     ov.className = 'pw-sheet-ov';
-    ov.innerHTML = '<div class="pw-sheet" role="dialog" aria-label="Показатели канала">'
+    ov.innerHTML = '<div class="pw-sheet" role="dialog" aria-label="' + TR('Показатели канала') + '">'
         + '<div class="pw-sheet-grip"></div>'
         + '<div class="pw-sheet-h">' + t('Показатели канала') + '</div>'
         + '<div class="pw-sheet-sub">' + t('Выбери до') + ' ' + PW_MAX + ' ' + t('показателей для главной') + '</div>'
@@ -1155,7 +1155,7 @@ function renderPulse(pulse) {
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
-        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">${t('Показатели канала')}</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="Настроить показатели"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">${t('Показатели канала')}</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="' + TR('Настроить показатели') + '"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
         <div class="pw-mmini" id="pw-mmini" hidden></div>
         <div class="pw-mwrap" id="pw-mwrap"><div class="pw-mrows" id="pw-mgrid"></div></div>
       </div>
@@ -1203,7 +1203,7 @@ function renderPulseHook(trendPct, planMeasured, planActive) {
         + `<span class="pw-aih-ic"><i class="ti ti-calendar"></i></span>`
         + `<div class="pw-aih-tx">${tx}</div>`
         + `<div class="pw-aih-col">`
-        + `<button class="pw-aih-x" type="button" aria-label="Скрыть"><i class="ti ti-x"></i></button>`
+        + `<button class="pw-aih-x" type="button" aria-label="' + TR('Скрыть') + '"><i class="ti ti-x"></i></button>`
         + `<button class="pw-aih-go" type="button">${calibrated ? TR('К сборке') : TR('Собрать')} <i class="ti ti-arrow-right"></i></button>`
         + `</div></div>`;
     const go = hook.querySelector('.pw-aih-go');
@@ -2115,10 +2115,10 @@ async function openQueueSheet(channelId) {
                     ? `<span class="ap-st ok"><span>${TR('опубликован')}</span></span>`
                     : `<span class="ap-st er"><span>${TR('ошибка')}</span></span>`);
             const acts = p.status === 'queued'
-                ? `<button class="ap-qa" data-apmv="${p.id}" title="Перенести"><i class="ti ti-clock-edit"></i></button><button class="ap-qa" data-aprm="${p.id}" title="Убрать"><i class="ti ti-x"></i></button>`
+                ? `<button class="ap-qa" data-apmv="${p.id}" title="' + TR('Перенести') + '"><i class="ti ti-clock-edit"></i></button><button class="ap-qa" data-aprm="${p.id}" title="' + TR('Убрать') + '"><i class="ti ti-x"></i></button>`
                 : (p.status === 'failed'
-                    ? `<button class="ap-qa" data-aprt="${p.id}" title="Отправить сейчас"><i class="ti ti-refresh"></i></button>`
-                    : (p.published_url ? `<button class="ap-qa" data-apurl="${escapeHtml(p.published_url)}" title="Открыть"><i class="ti ti-external-link"></i></button>` : ''));
+                    ? `<button class="ap-qa" data-aprt="${p.id}" title="' + TR('Отправить сейчас') + '"><i class="ti ti-refresh"></i></button>`
+                    : (p.published_url ? `<button class="ap-qa" data-apurl="${escapeHtml(p.published_url)}" title="' + TR('Открыть') + '"><i class="ti ti-external-link"></i></button>` : ''));
             const err = p.status === 'failed' && p.last_error ? `<div class="ap-qerr">${escapeHtml(p.last_error)}</div>` : '';
             return `<div class="ap-qrow num"><div class="ap-qw">${when ? apFmtWhen(when) : '—'}</div>
                 <div class="ap-qtx">${src} ${escapeHtml(p.preview || '')}</div>${st}${acts}</div>${err}`;
@@ -2588,7 +2588,7 @@ function refCardHtml(r) {
     <div class="rf-lbl" style="margin-top:0">${TR('Твоя ссылка')}</div>
     <div class="rf-field">
       <span class="link" id="cab-link">${link}</span>
-      <button class="rf-fbtn" id="cab-linkcopy" aria-label="Копировать ссылку"><i class="ti ti-link"></i></button>
+      <button class="rf-fbtn" id="cab-linkcopy" aria-label="' + TR('Копировать ссылку') + '"><i class="ti ti-link"></i></button>
     </div>
 
     <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> ${TR('Поделиться ссылкой')}</button>
@@ -5518,7 +5518,7 @@ function renderSettingsExamplesSection(data) {
                 <textarea
                     id="cs-examples-text"
                     class="cs-examples-textarea"
-                    placeholder="Вставь сюда 3-5 своих постов как примеры стиля. Разделяй их пустой строкой или ---"
+                    placeholder="' + TR('Вставь сюда 3-5 своих постов как примеры стиля. Разделяй их пустой строкой или ---') + '"
                     maxlength="5000"
                 ></textarea>
                 <div class="cs-examples-footer">
@@ -5548,7 +5548,7 @@ function renderSettingsBehaviorSection(data) {
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
                         <span class="cs-toggle-title">Канал ${paused ? TR('на паузе') : TR('активен')}</span>
-                        <button class="cs-info-btn" data-info="paused" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                        <button class="cs-info-btn" data-info="paused" aria-label="' + TR('Что это значит') + '"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${paused ? TR('Генерация постов отключена') : TR('Можно генерировать посты')}</div>
                     <div class="cs-info-popup" id="cs-info-paused" style="display:none;">
@@ -5567,7 +5567,7 @@ function renderSettingsBehaviorSection(data) {
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
                         <span class="cs-toggle-title">${TR('Нецензурная лексика')}</span>
-                        <button class="cs-info-btn" data-info="profanity" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                        <button class="cs-info-btn" data-info="profanity" aria-label="' + TR('Что это значит') + '"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${profanity ? TR('Разрешена по умолчанию') : TR('Запрещена по умолчанию')}</div>
                     <div class="cs-info-popup" id="cs-info-profanity" style="display:none;">
@@ -5586,7 +5586,7 @@ function renderSettingsBehaviorSection(data) {
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
                         <span class="cs-toggle-title">${TR('Открытые опросы')}</span>
-                        <button class="cs-info-btn" data-info="polls" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                        <button class="cs-info-btn" data-info="polls" aria-label="' + TR('Что это значит') + '"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${openPolls ? TR('Разрешены вопросы в комментарии') : TR('Только анонимные опросы реакциями')}</div>
                     <div class="cs-info-popup" id="cs-info-polls" style="display:none;">
@@ -5605,7 +5605,7 @@ function renderSettingsBehaviorSection(data) {
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
                         <span class="cs-toggle-title">${TR('Ссылки на исследования')}</span>
-                        <button class="cs-info-btn" data-info="research" aria-label="Что это значит"><i class="ti ti-info-circle"></i></button>
+                        <button class="cs-info-btn" data-info="research" aria-label="' + TR('Что это значит') + '"><i class="ti ti-info-circle"></i></button>
                     </div>
                     <div class="cs-toggle-sub">${research ? TR('Включены — исследования добавляют 20 Forge к цене поста') : TR('Выключены — обычная цена поста')}</div>
                     <div class="cs-info-popup" id="cs-info-research" style="display:none;">
@@ -5629,7 +5629,7 @@ function renderVoicePickSection(data) {
     const col = (g, label) => {
         const rows = cat.filter(v => v.gender === g).map(v => `
             <div class="cs-vrow ${sel.has(v.name) ? 'on' : ''}" data-vname="${v.name}">
-                <button class="cs-vplay" data-vplay="1" data-src="${v.sample_url}" aria-label="Пример голоса"><i class="ti ti-player-play-filled"></i></button>
+                <button class="cs-vplay" data-vplay="1" data-src="${v.sample_url}" aria-label="' + TR('Пример голоса') + '"><i class="ti ti-player-play-filled"></i></button>
                 <span class="cs-vnm"><b>${escapeHtml(v.label)}</b><span>${escapeHtml(v.note)}</span></span>
                 <span class="cs-vchk"><i class="ti ti-check"></i></span>
             </div>`).join('');
@@ -6098,7 +6098,7 @@ function showVoiceEditorModal(currentText) {
                     <button class="cs-modal-close" data-action="close"><i class="ti ti-x"></i></button>
                 </div>
                 <div class="cs-modal-body">
-                    <textarea class="cs-modal-textarea" id="cs-modal-voice-text" maxlength="2000" placeholder="Описание стиля письма канала...">${escapeHtml(currentText)}</textarea>
+                    <textarea class="cs-modal-textarea" id="cs-modal-voice-text" maxlength="2000" placeholder="' + TR('Описание стиля письма канала...') + '">${escapeHtml(currentText)}</textarea>
                     <div class="cs-modal-counter" id="cs-modal-counter">${currentText.length} / 2000</div>
                 </div>
                 <div class="cs-modal-actions">

@@ -573,7 +573,7 @@
             '<div class="comp-manual">' +
                 '<div class="comp-manual-label">' + CT('Добавить своего конкурента') + '</div>' +
                 '<div class="comp-manual-row">' +
-                    '<input type="text" class="comp-manual-input" id="comp-manual-input" placeholder="@username канала" autocapitalize="off" autocorrect="off">' +
+                    '<input type="text" class="comp-manual-input" id="comp-manual-input" placeholder="' + CT('@username канала') + '" autocapitalize="off" autocorrect="off">' +
                     '<button class="comp-manual-add" id="comp-manual-add"><i class="ti ti-plus"></i></button>' +
                 '</div>' +
                 '<div class="comp-manual-err" id="comp-manual-err" style="display:none;"></div>' +
