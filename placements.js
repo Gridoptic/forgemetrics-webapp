@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var PL = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var _channels = null, _chId = null, _items = [], _right = null, _busy = false, _pollTimer = null;
     var _chPaused = false, _pausedNote = '', _openId = null;
     var _campaigns = [], _cands = [], _campId = null, _pendingItem = null, _campManual = null;

@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var AD = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var _channelId = null;
     var _entryMode = null;
     var _currentAuditId = null;
@@ -83,9 +85,9 @@
 
     function _priorityBadge(priority) {
         var p = (priority || '').toLowerCase();
-        if (p === 'critical') return '<span class="audit-pri audit-pri-critical">критично</span>';
-        if (p === 'important') return '<span class="audit-pri audit-pri-important">важно</span>';
-        if (p === 'minor') return '<span class="audit-pri audit-pri-minor">не срочно</span>';
+        if (p === 'critical') return '<span class="audit-pri audit-pri-critical">' + AD('критично') + '</span>';
+        if (p === 'important') return '<span class="audit-pri audit-pri-important">' + AD('важно') + '</span>';
+        if (p === 'minor') return '<span class="audit-pri audit-pri-minor">' + AD('не срочно') + '</span>';
         return '';
     }
 
@@ -195,7 +197,7 @@
             '<div class="audit-center">' +
                 '<div class="thinking-orb"><div class="thinking-orb-inner"></div><div class="thinking-orb-pulse"></div></div>' +
                 '<div class="thinking-text" id="audit-thinking-text">' + _esc(THINKING_TEXTS[0]) + '</div>' +
-                '<div class="audit-thinking-hint">Это занимает 20–40 секунд. Можно свернуть — аудит не прервётся.</div>' +
+                '<div class="audit-thinking-hint">' + AD('Это занимает 20–40 секунд. Можно свернуть — аудит не прервётся.') + '</div>' +
             '</div>';
         attachBack(host);
         startThinking();
@@ -230,7 +232,7 @@
         var host = ensureScreen();
         var actionBtn = '';
         if (opts.retry) {
-            actionBtn = '<button class="audit-primary-btn" id="audit-error-retry"><i class="ti ti-refresh"></i><span>Попробовать снова</span></button>';
+            actionBtn = '<button class="audit-primary-btn" id="audit-error-retry"><i class="ti ti-refresh"></i><span>' + AD('Попробовать снова') + '</span></button>';
         }
         host.innerHTML = headerHtml() +
             '<div class="audit-center">' +
@@ -253,14 +255,14 @@
 
         var right = '<span class="fw-inline-bal">' + fa(balance, 14) + '</span>';
         var note = enough
-            ? '<div class="fwb-note">Запуск спишет ' + fa(price, 12) + '</div>'
-            : '<div class="fwb-note fwb-low">Недостаточно средств: нужно ' + fa(price, 12) + ', на балансе ' + fa(balance, 12) + '</div>';
+            ? '<div class="fwb-note">' + AD('Запуск спишет') + ' ' + fa(price, 12) + '</div>'
+            : '<div class="fwb-note fwb-low">' + AD('Недостаточно средств: нужно') + ' ' + fa(price, 12) + ', на балансе ' + fa(balance, 12) + '</div>';
 
         return '' +
             '<div class="limit-row limit-row-purple' + (enough ? '' : ' limit-row-exhausted') + '">' +
                 '<div class="limit-row-head">' +
                     '<span class="limit-row-icon"><i class="ti ti-chart-dots"></i></span>' +
-                    '<span class="limit-row-label">AI-аудит</span>' +
+                    '<span class="limit-row-label">' + AD('AI-аудит') + '</span>' +
                     right +
                 '</div>' + note +
             '</div>';
@@ -282,18 +284,18 @@
         var btnHtml;
         if (!runnable) {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-topup"><i class="ti ti-bolt"></i>' +
-                '<span>Пополнить баланс</span></button>';
+                '<span>' + AD('Пополнить баланс') + '</span></button>';
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i>' +
-                '<span>Запустить аудит · ' + (window.forgeAmount || function (n) { return String(n); })(price, 12) + '</span></button>';
+                '<span>' + AD('Запустить аудит ·') + ' ' + (window.forgeAmount || function (n) { return String(n); })(price, 12) + '</span></button>';
         }
 
         host.innerHTML = headerHtml() +
             '<div class="audit-body">' +
                 '<div class="audit-intro-hero">' +
                     '<div class="audit-intro-icon"><i class="ti ti-chart-dots"></i></div>' +
-                    '<div class="audit-intro-title">Полный разбор канала</div>' +
-                    '<div class="audit-intro-sub">AI проанализирует последние посты, охваты и динамику — и выдаст честную оценку, главный инсайт, прогноз роста и план действий.</div>' +
+                    '<div class="audit-intro-title">' + AD('Полный разбор канала') + '</div>' +
+                    '<div class="audit-intro-sub">' + AD('AI проанализирует последние посты, охваты и динамику — и выдаст честную оценку, главный инсайт, прогноз роста и план действий.') + '</div>' +
                 '</div>' +
                 '<div class="audit-intro-feats">' +
                     introFeat('chart-arcs', 'Оценка и разбивка', 'Где сильно, где проседает') +
@@ -304,7 +306,7 @@
                 '</div>' +
                 limitBarHtml(limits) +
                 btnHtml +
-                '<div class="audit-intro-foot">Анализ занимает 20–40 секунд</div>' +
+                '<div class="audit-intro-foot">' + AD('Анализ занимает 20–40 секунд') + '</div>' +
             '</div>';
         attachBack(host);
 
@@ -330,26 +332,26 @@
         var ctaHtml;
         if (canDeep) {
             ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i>' +
-                '<span>Запустить коммерческий аудит · ' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 12) + '</span></button>';
+                '<span>' + AD('Запустить коммерческий аудит ·') + ' ' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 12) + '</span></button>';
         } else {
-            ctaHtml = '<div class="ca-ctarow"><span class="l">Списывается с баланса · отчёт сохраняется</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
-                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>Пополнить баланс</span></button>';
+            ctaHtml = '<div class="ca-ctarow"><span class="l">' + AD('Списывается с баланса · отчёт сохраняется') + '</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
+                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>' + AD('Пополнить баланс') + '</span></button>';
         }
         host.innerHTML = headerHtml('Коммерческий аудит') +
             '<div class="audit-body">' +
                 '<div class="ca-hero">' +
                     '<div class="ca-htop">' +
                         '<div class="ca-hico"><i class="ti ti-briefcase"></i></div>' +
-                        '<div><div class="ca-hname">Сколько стоит твоя площадка</div>' +
-                        '<div class="ca-hsub">Оценка канала как рекламной площадки — глазами рекламодателя</div></div>' +
+                        '<div><div class="ca-hname">' + AD('Сколько стоит твоя площадка') + '</div>' +
+                        '<div class="ca-hsub">' + AD('Оценка канала как рекламной площадки — глазами рекламодателя') + '</div></div>' +
                     '</div>' +
                     '<div class="ca-hprev">' +
-                        '<div class="l"><span>Пример: охват поста</span><b>топ-18% ниши</b></div>' +
+                        '<div class="l"><span>' + AD('Пример: охват поста') + '</span><b>' + AD('топ-18% ниши') + '</b></div>' +
                         '<div class="ca-hbar"><i></i></div>' +
-                        '<div class="cap">Так выглядит твоя позиция среди всех каналов ниши — эти цифры не видны ни в карточках Площадки, ни в обычном разборе</div>' +
+                        '<div class="cap">' + AD('Так выглядит твоя позиция среди всех каналов ниши — эти цифры не видны ни в карточках Площадки, ни в обычном разборе') + '</div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="ca-secl">Чего нет больше нигде</div>' +
+                '<div class="ca-secl">' + AD('Чего нет больше нигде') + '</div>' +
                 '<div class="ca-diff">' +
                     _caDiff('chart-bar', 'g', 'Позиция канала на рынке ниши',
                         'Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.') +
@@ -359,16 +361,16 @@
                         'Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.') +
                 '</div>' +
                 '<div class="ca-inc">' +
-                    '<div class="t">Также в отчёте</div>' +
+                    '<div class="t">' + AD('Также в отчёте') + '</div>' +
                     '<div class="ca-chips">' +
-                        '<span class="ca-chip"><i class="ti ti-users"></i> <span>Гео, пол и язык аудитории</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-layout-grid"></i> <span>Форматы, которые работают</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-clock"></i> <span>Пиковые часы охвата</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-list-check"></i> <span>План продаж на 30 дней</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-users"></i> <span>' + AD('Гео, пол и язык аудитории') + '</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-layout-grid"></i> <span>' + AD('Форматы, которые работают') + '</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-clock"></i> <span>' + AD('Пиковые часы охвата') + '</span></span>' +
+                        '<span class="ca-chip"><i class="ti ti-list-check"></i> <span>' + AD('План продаж на 30 дней') + '</span></span>' +
                     '</div>' +
                 '</div>' +
                 ctaHtml +
-                '<div class="audit-intro-foot">Отчёт формируется за 20–40 секунд и сохраняется в истории разборов</div>' +
+                '<div class="audit-intro-foot">' + AD('Отчёт формируется за 20–40 секунд и сохраняется в истории разборов') + '</div>' +
             '</div>';
         attachBack(host);
 
@@ -532,7 +534,7 @@
                 renderContentAnalysis(r) +
                 renderSections(r) +
                 renderDataQuality(r) +
-                '<button class="audit-secondary-btn" id="audit-rerun-btn"><i class="ti ti-refresh"></i><span>Запустить новый аудит</span></button>' +
+                '<button class="audit-secondary-btn" id="audit-rerun-btn"><i class="ti ti-refresh"></i><span>' + AD('Запустить новый аудит') + '</span></button>' +
                 '<div class="audit-rerun-note" id="audit-rerun-note"></div>' +
             '</div>';
         host.innerHTML = html;
@@ -584,10 +586,10 @@
                 '<span><b>' + _esc(d[1]) + ':</b> ' + _esc(d[2]) + '</span></div>';
         });
         return '<div class="da-hero">' +
-            '<span class="da-badge">◆ Коммерческий аудит</span>' +
+            '<span class="da-badge">' + AD('◆ Коммерческий аудит') + '</span>' +
             '<div class="da-herorow"><div class="da-herotxt">' +
-            '<div class="da-heroname">Коммерческий разбор площадки</div>' +
-            '<div class="da-herosub">позиция в нише · качество трафика · цены</div></div>' +
+            '<div class="da-heroname">' + AD('Коммерческий разбор площадки') + '</div>' +
+            '<div class="da-herosub">' + AD('позиция в нише · качество трафика · цены') + '</div></div>' +
             (score != null
                 ? '<div class="da-ring" style="background:conic-gradient(#f0b45a 0 ' + pctFill + '%,rgba(255,255,255,0.08) ' + pctFill + '% 100%)"><i>' + score + '</i></div>'
                 : '') +
@@ -604,7 +606,7 @@
         inner += _daPctRow('Охват поста', pct.reach, pct.reach != null && pct.reach >= 70);
         inner += _daPctRow('Вовлечённость (ER)', pct.er, pct.er != null && pct.er >= 70);
         inner += _daPctRow('Частота выхода постов', pct.freq, pct.freq != null && pct.freq >= 70);
-        if (!inner) inner = '<div class="da-empty">Недостаточно данных ниши для сравнения</div>';
+        if (!inner) inner = '<div class="da-empty">' + AD('Недостаточно данных ниши для сравнения') + '</div>';
         if (price.lo && price.hi) {
             var lo = price.min || Math.round(price.lo * 0.7);
             var hi = price.max || Math.round(price.hi * 1.25);
@@ -616,10 +618,10 @@
                     '<span class="da-you" style="left:' + x + '%"></span>';
             }
             inner += '<div class="da-pricebox">' +
-                '<div class="da-pt">Цена поста 1/24 против рыночной вилки ниши</div>' +
+                '<div class="da-pt">' + AD('Цена поста 1/24 против рыночной вилки ниши') + '</div>' +
                 '<div class="da-range">' + youHtml + '</div>' +
                 '<div class="da-rangel"><span>' + _daNum(lo) + ' ₽</span>' +
-                '<span>вилка ' + _daNum(price.lo) + '–' + _daNum(price.hi) + ' ₽</span>' +
+                '<span>' + AD('вилка') + ' ' + _daNum(price.lo) + '–' + _daNum(price.hi) + ' ₽</span>' +
                 '<span>' + _daNum(hi) + '+</span></div>' +
                 (_hasText(r.position_note) ? '<div class="da-note">' + _esc(r.position_note) + '</div>' : '') +
                 '</div>';
@@ -638,11 +640,11 @@
         if (!flag && !pts && !_hasText(r.traffic_note)) return '';
         var pill;
         if (flag === 'clean' || (!flag && pts)) {
-            pill = '<span class="da-pill da-pill-ok">● Трафик живой</span>';
+            pill = '<span class="da-pill da-pill-ok">' + AD('● Трафик живой') + '</span>';
         } else if (flag) {
-            pill = '<span class="da-pill da-pill-warn">● Есть признаки накрутки</span>';
+            pill = '<span class="da-pill da-pill-warn">' + AD('● Есть признаки накрутки') + '</span>';
         } else {
-            pill = '<span class="da-pill da-pill-mute">● Замеры кривой ещё копятся</span>';
+            pill = '<span class="da-pill da-pill-mute">' + AD('● Замеры кривой ещё копятся') + '</span>';
         }
         var svg = '';
         if (pts && typeof pts === 'object') {
@@ -661,8 +663,8 @@
                 }).join(' ');
                 svg = '<svg width="120" height="64" viewBox="0 0 120 64">' +
                     '<polyline points="4,56 ' + line + '" fill="none" stroke="#5DCAA5" stroke-width="2.5" stroke-linecap="round"/>' +
-                    '<text x="2" y="63" fill="#565b73" font-size="7">старт</text>' +
-                    '<text x="100" y="63" fill="#565b73" font-size="7">' + Math.round(maxH) + 'ч</text></svg>';
+                    '<text x="2" y="63" fill="#565b73" font-size="7">' + AD('старт') + '</text>' +
+                    '<text x="100" y="63" fill="#565b73" font-size="7">' + Math.round(maxH) + AD('ч') + '</text></svg>';
             }
         }
         var inner = '<div class="da-fraud">' + svg +
@@ -676,14 +678,14 @@
         var d = (r.data || {});
         var a = d.audience || {};
         var tiles = '';
-        if (a.geo) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.geo).toUpperCase()) + '</div><div class="l">ОСНОВНОЕ ГЕО</div></div>';
+        if (a.geo) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.geo).toUpperCase()) + '</div><div class="l">' + AD('ОСНОВНОЕ ГЕО') + '</div></div>';
         if (a.female_pct != null) {
             var male = 100 - a.female_pct;
-            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? 'М ' + male : 'Ж ' + a.female_pct) + '%</div><div class="l">ПОЛ АУДИТОРИИ</div></div>';
+            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? 'М ' + male : 'Ж ' + a.female_pct) + '%</div><div class="l">' + AD('ПОЛ АУДИТОРИИ') + '</div></div>';
         }
-        if (a.lang) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.lang).toUpperCase()) + '</div><div class="l">ЯЗЫК</div></div>';
+        if (a.lang) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.lang).toUpperCase()) + '</div><div class="l">' + AD('ЯЗЫК') + '</div></div>';
         if (!tiles && !_hasText(r.audience_note)) return '';
-        var inner = (tiles ? '<div class="da-demrow">' + tiles + '</div>' : '<div class="da-empty">Портрет аудитории ещё собирается</div>') +
+        var inner = (tiles ? '<div class="da-demrow">' + tiles + '</div>' : '<div class="da-empty">' + AD('Портрет аудитории ещё собирается') + '</div>') +
             (_hasText(r.audience_note) ? '<div class="da-insight">' + _esc(r.audience_note) + '</div>' : '');
         return _daSection('◉', 'Аудитория', 'гео · пол · язык', inner);
     }
@@ -693,12 +695,12 @@
         var d = (r.data || {});
         var rows = '';
         (c.top || []).slice(0, 3).forEach(function (f) {
-            rows += '<div class="da-fmt"><span class="da-tag da-tag-top">ТОП</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
+            rows += '<div class="da-fmt"><span class="da-tag da-tag-top">' + AD('ТОП') + '</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
                 (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#5DCAA5">' + _esc(f.metric) + '</span>' : '') + '</div>' +
                 (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
         });
         (c.weak || []).slice(0, 2).forEach(function (f) {
-            rows += '<div class="da-fmt"><span class="da-tag da-tag-weak">СЛАБО</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
+            rows += '<div class="da-fmt"><span class="da-tag da-tag-weak">' + AD('СЛАБО') + '</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
                 (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#f87171">' + _esc(f.metric) + '</span>' : '') + '</div>' +
                 (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
         });
@@ -711,7 +713,7 @@
                 cells += '<div class="da-h"><div class="da-hc" style="background:rgba(93,202,165,' + op.toFixed(2) + ')"></div>' + _esc(b.h) + '</div>';
             });
             hoursHtml = '<div class="da-hours">' + cells + '</div>' +
-                '<div class="da-hourslbl">относительный охват по времени выхода (UTC)</div>' +
+                '<div class="da-hourslbl">' + AD('относительный охват по времени выхода (UTC)') + '</div>' +
                 (_hasText(c.hours_note) ? '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>' : '');
         } else if (_hasText(c.hours_note)) {
             hoursHtml = '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>';
@@ -730,8 +732,8 @@
         });
         var fc = '';
         if (m.monthly_lo_rub && m.monthly_hi_rub) {
-            fc = '<div class="da-fc"><div class="t">Потенциал дохода</div>' +
-                '<div class="v">' + _daNum(m.monthly_lo_rub) + ' – ' + _daNum(m.monthly_hi_rub) + ' ₽/мес</div>' +
+            fc = '<div class="da-fc"><div class="t">' + AD('Потенциал дохода') + '</div>' +
+                '<div class="v">' + _daNum(m.monthly_lo_rub) + ' – ' + _daNum(m.monthly_hi_rub) + ' ' + AD('₽/мес') + '</div>' +
                 ((_hasText(m.note) || _hasText(m.stage))
                     ? '<div class="s">' + _esc(m.note || '') + (_hasText(m.stage) ? ' Стадия: ' + _esc(m.stage) + '.' : '') + '</div>'
                     : '') + '</div>';
@@ -858,11 +860,11 @@
                     '</svg>' +
                     '<div class="audit-ring-center">' +
                         '<div class="audit-ring-num" id="audit-ring-num">0</div>' +
-                        '<div class="audit-ring-cap">ИЗ 100</div>' +
+                        '<div class="audit-ring-cap">' + AD('ИЗ 100') + '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="audit-verdict-wrap" id="audit-verdict">' +
-                    '<div class="audit-zone-label">' + _esc(zone.label) + ' здоровья</div>' +
+                    '<div class="audit-zone-label">' + _esc(zone.label) + ' ' + AD('здоровья') + '</div>' +
                     (_hasText(verdict) ? '<div class="audit-verdict">' + _esc(verdict) + '</div>' : '') +
                 '</div>' +
                 benchHtml +
@@ -875,7 +877,7 @@
         if (!_hasText(k)) return '';
         return '' +
             '<div class="audit-killer">' +
-                '<div class="audit-killer-lbl"><i class="ti ti-bulb"></i>Главный инсайт</div>' +
+                '<div class="audit-killer-lbl"><i class="ti ti-bulb"></i>' + AD('Главный инсайт') + '</div>' +
                 '<div class="audit-killer-text">' + _esc(k) + '</div>' +
             '</div>';
     }
@@ -928,7 +930,7 @@
             var confHtml = '';
             if (isGrowth && _hasText(s.confidence)) {
                 var cmap = { high: 'высокая', medium: 'средняя', low: 'низкая' };
-                confHtml = '<div class="audit-scen-conf">уверенность: ' + _esc(cmap[s.confidence] || s.confidence) + '</div>';
+                confHtml = '<div class="audit-scen-conf">' + AD('уверенность:') + ' ' + _esc(cmap[s.confidence] || s.confidence) + '</div>';
             }
             return '' +
                 '<div class="audit-scen ' + cls + '">' +
@@ -942,7 +944,7 @@
         if (!_hasText(headline) && !scenHtml && !_hasText(goal)) return '';
 
         return '' +
-            '<div class="audit-block-label">Прогноз на 90 дней</div>' +
+            '<div class="audit-block-label">' + AD('Прогноз на 90 дней') + '</div>' +
             (_hasText(headline) ? '<div class="audit-forecast-headline">' + _esc(headline) + '</div>' : '') +
             scenHtml +
             (_hasText(goal) ? '<div class="audit-goal"><i class="ti ti-flag"></i>' + _esc(goal) + '</div>' : '');
@@ -981,7 +983,7 @@
         if (!_hasText(bt.finding) && !_hasText(bt.recommendation)) return '';
         return '' +
             '<div class="audit-card">' +
-                '<div class="audit-card-title"><i class="ti ti-clock-hour-4"></i>Лучшее время постинга</div>' +
+                '<div class="audit-card-title"><i class="ti ti-clock-hour-4"></i>' + AD('Лучшее время постинга') + '</div>' +
                 (_hasText(bt.finding) ? '<div class="audit-card-text">' + _esc(bt.finding) + '</div>' : '') +
                 (_hasText(bt.recommendation) ? '<div class="audit-card-accent">' + _esc(bt.recommendation) + '</div>' : '') +
             '</div>';
@@ -1002,9 +1004,9 @@
 
         return '' +
             '<div class="audit-card">' +
-                '<div class="audit-card-title"><i class="ti ti-chart-dots"></i>Анализ контента</div>' +
-                (worksHtml ? '<div class="audit-ca-sub audit-ca-sub-good">Заходит</div>' + worksHtml : '') +
-                (flopsHtml ? '<div class="audit-ca-sub audit-ca-sub-bad">Проваливается</div>' + flopsHtml : '') +
+                '<div class="audit-card-title"><i class="ti ti-chart-dots"></i>' + AD('Анализ контента') + '</div>' +
+                (worksHtml ? '<div class="audit-ca-sub audit-ca-sub-good">' + AD('Заходит') + '</div>' + worksHtml : '') +
+                (flopsHtml ? '<div class="audit-ca-sub audit-ca-sub-bad">' + AD('Проваливается') + '</div>' + flopsHtml : '') +
                 hook + len +
             '</div>';
     }
@@ -1044,7 +1046,7 @@
                 '</div>';
         }
         if (!html) return '';
-        return '<div class="audit-block-label">Разбор по направлениям</div>' + html;
+        return '<div class="audit-block-label">' + AD('Разбор по направлениям') + '</div>' + html;
     }
 
     function sectionFallbackTitle(id) {
@@ -1098,12 +1100,12 @@
 
         var priceHtml = '';
         if (priceMin != null || priceMax != null) {
-            priceHtml = '<div class="audit-money-row"><span class="audit-money-k">Цена рекламы</span><span class="audit-money-v">' +
+            priceHtml = '<div class="audit-money-row"><span class="audit-money-k">' + AD('Цена рекламы') + '</span><span class="audit-money-v">' +
                 rangeRub(priceMin, priceMax) + '</span></div>';
         }
         var potHtml = '';
         if (potMin != null || potMax != null) {
-            potHtml = '<div class="audit-money-row"><span class="audit-money-k">Потенциал в месяц</span><span class="audit-money-v">' +
+            potHtml = '<div class="audit-money-row"><span class="audit-money-k">' + AD('Потенциал в месяц') + '</span><span class="audit-money-v">' +
                 rangeRub(potMin, potMax) + '</span></div>';
         }
         if (!readyHtml && !reason && !priceHtml && !potHtml) return '';
@@ -1125,7 +1127,7 @@
         var rows = items.map(function (it) {
             if (!it || !_hasText(it.step)) return '';
             var dd = (it.deadline_days != null && !isNaN(Number(it.deadline_days)))
-                ? '<span class="audit-dd">' + Math.round(Number(it.deadline_days)) + ' дн.</span>' : '';
+                ? '<span class="audit-dd">' + Math.round(Number(it.deadline_days)) + ' ' + AD('дн.') + '</span>' : '';
             return '<div class="audit-item audit-step">' +
                 '<div class="audit-item-head">' + _priorityBadge(it.priority) + dd + '</div>' +
                 '<div class="audit-item-text">' + _esc(it.step) + '</div>' +

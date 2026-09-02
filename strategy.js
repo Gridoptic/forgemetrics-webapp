@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var SG = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var _state = null;
     var _pollTimer = null;
     var _genTimer = null;

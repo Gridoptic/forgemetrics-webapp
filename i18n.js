@@ -50,6 +50,8 @@
             var tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user;
             var code = (tg && tg.language_code ? String(tg.language_code) : '').slice(0, 2).toLowerCase();
             if (SUPPORTED.indexOf(code) >= 0) return code;
+            // язык Telegram известен, но мы его не ведём: английский понятнее русского
+            if (code) return 'en';
         } catch (e) {}
         return 'ru';
     }

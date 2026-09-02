@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var RW = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
+
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _tone = 'channel', _strip = true, _caption = false, _model = null, _limits = null;
     var _lastOriginal = '', _lastResult = '', _lastHooks = [], _lastMeta = null, _busy = false, _tab = 'res';
