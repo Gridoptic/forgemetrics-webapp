@@ -3661,12 +3661,13 @@ function resetPostState() {
 
 
 const ARCHIVE_PAGE = 20;
-const _arch = { items: [], total: 0, loading: false };
+const _arch = { items: [], total: 0, loading: false, back: 'dashboard' };
 
-function openPostsArchive() {
+function openPostsArchive(from) {
     hapticLight();
     _arch.items = [];
     _arch.total = 0;
+    _arch.back = from || 'dashboard';
     showScreen('postsArchive');
     _archSet('loading');
     archiveLoad(true);
@@ -7870,8 +7871,14 @@ function setupPostEventListeners() {
         els.postQuestionCustomSubmit.addEventListener('click', submitQuestionCustom);
     }
 
+    const _archOpen = document.getElementById('post-archive-btn');
+    if (_archOpen) _archOpen.addEventListener('click', () => { openPostsArchive('postCreate'); });
+
     const _archBack = document.getElementById('archive-back');
-    if (_archBack) _archBack.addEventListener('click', () => { hapticLight(); showScreen('dashboard'); });
+    if (_archBack) _archBack.addEventListener('click', () => {
+        hapticLight();
+        showScreen(_arch.back === 'postCreate' ? 'postCreate' : 'dashboard');
+    });
 
     const _archMore = document.getElementById('archive-more');
     if (_archMore) _archMore.addEventListener('click', () => { hapticLight(); archiveLoad(false); });
