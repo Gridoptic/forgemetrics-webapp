@@ -3925,7 +3925,7 @@
         if (p.publish_status === 'rolled_back' || !p.text) return '';
         var c = p.creative;
         var busy = _crvBusy[p.id];
-        var head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' + esc(T('Креатив для Shorts, Дзена и VK Клипов')) + '</b></div>';
+        var head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' + esc(T('Креатив для коротких видео')) + '</b></div>';
         if (busy || (c && (c.status === 'queued' || c.status === 'generating'))) {
             crvPoll();
             return '<div class="cp-crv">' + head +
@@ -3945,7 +3945,7 @@
                 '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
                 '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '</div></div>' +
-                '<div class="cp-note">' + esc(T('9:16, 1080×1920 — под YouTube Shorts, Дзен и VK Клипы. Описание для публикации — по кнопке.')) + '</div></div>';
+                '<div class="cp-note">' + esc(T('9:16, 1080×1920 — вертикальный формат для площадок коротких видео. Описание для публикации — по кнопке.')) + '</div></div>';
         }
         if (c && c.status === 'error') {
             return '<div class="cp-crv">' + head +

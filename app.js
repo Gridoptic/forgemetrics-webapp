@@ -6985,7 +6985,7 @@ function rsCreativeBtn(ctx) {
     if (!pid) return '';
     const c = ctx.creative;
     const head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' +
-        escapeHtml(TR('Креатив для Shorts, Дзена и VK Клипов')) + '</b></div>';
+        escapeHtml(TR('Креатив для коротких видео')) + '</b></div>';
     if (ctx.crvBusy || (c && (c.status === 'queued' || c.status === 'generating'))) {
         return '<div class="cp-crv">' + head +
             '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
