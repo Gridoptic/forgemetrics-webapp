@@ -2298,7 +2298,7 @@
                 (n.thin ? '<span class="fmx-t2thin">Мало данных</span>' : '') + '</span>' +
                 _tSpark((n.spark || []).slice(-_termSpark), col) +
                 '<span class="cpm"><b>' + (n.median_cpm != null ? _num(n.median_cpm) + ' ₽' : '—') + '</b>' +
-                (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : '·') + '</span>') + '</span></div>';
+                (n.delta7 != null ? _tFmtDelta(n.delta7, n.thin) : '<span class="fmx-tfl">' + (n.cpm_own === false ? 'оценка' : 'новая') + '</span>') + '</span></div>';
         }).join('') + '</div>';
         html += _tFoldOpen(_listHtml, 'list', 560);
 
