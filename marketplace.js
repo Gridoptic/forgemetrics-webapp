@@ -3417,12 +3417,14 @@
 
     var _CAT_PAGE = 1500;
     var _catTotal = null, _catMoreState = 'idle', _catSrvQ = '', _catSegOn = false;
+    var _nicheSrv = null;
     function loadCatalog() {
         _catState = 'loading';
         var url = '/api/v1/marketplace/base?limit=' + _CAT_PAGE;
         if (_catSrvQ) url += '&q=' + encodeURIComponent(_catSrvQ);
         apiGet(url).then(function (r) {
             _catalog = (r && r.channels) ? r.channels : []; _catState = 'ready';
+            _nicheSrv = (r && r.niche_counts && Object.keys(r.niche_counts).length) ? r.niche_counts : null;
             _adultOk = !!(r && r.adult_ok);
             _catTotal = (r && r.total != null) ? r.total : _catalog.length;
             _rvSeen = {}; _rvQueue = [];
@@ -4954,8 +4956,16 @@
         if (s.indexOf(n + ' · ') === 0) return true;
         return s.split(' · ').pop() === n.split(' · ').pop();
     }
-    function _nicheCounts(arr) {
+    function _nicheCounts(arr, srv) {
         var uniq = {};
+        if (srv) {
+            var keysS = Object.keys(srv);
+            return function countForSrv(match) {
+                var t = 0;
+                for (var i = 0; i < keysS.length; i++) if (_nicheHit(match, keysS[i])) t += srv[keysS[i]];
+                return t;
+            };
+        }
         (arr || []).forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn) uniq[nn] = (uniq[nn] || 0) + 1; });
         var keys = Object.keys(uniq);
         return function countFor(match) {
@@ -4966,16 +4976,19 @@
     }
     function openNichePick(onPick) {
         var arr = (_mainTab === 'catalog' ? _catalog : _feed) || [];
-        var countFor = _nicheCounts(arr);
+        var countFor = _nicheCounts(arr, _mainTab === 'catalog' ? _nicheSrv : null);
         var _taxSet = {};
         NICHE_TAX.forEach(function (g) { g[1].forEach(function (c) { _taxSet[String(_chipLM(c).m).toLowerCase().replace(/ё/g, 'е')] = 1; }); });
         var _extra = {};
-        (arr || []).forEach(function (l) {
+        var _src = (_mainTab === 'catalog' && _nicheSrv)
+            ? Object.keys(_nicheSrv).map(function (n) { return { niche: n, _n: _nicheSrv[n] }; })
+            : (arr || []);
+        _src.forEach(function (l) {
             var nn = l.niche && String(l.niche).trim(); if (!nn) return;
             var key = nn.toLowerCase().replace(/ё/g, 'е');
             var covered = !!_taxSet[key];
             if (!covered) { for (var t in _taxSet) { if (key.indexOf(t + ' · ') === 0) { covered = true; break; } } }
-            if (!covered) _extra[nn] = (_extra[nn] || 0) + 1;
+            if (!covered) _extra[nn] = (_extra[nn] || 0) + (l._n || 1);
         });
         var _extraNiches = Object.keys(_extra).sort(function (a, b) { return _extra[b] - _extra[a]; });
         var old = el('fmx-npBg'); if (old) old.remove();
