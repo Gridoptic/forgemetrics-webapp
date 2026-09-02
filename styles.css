@@ -6373,3 +6373,19 @@ html.cs-modal-open {
     font-size: 16px;
     color: var(--text-tertiary);
 }
+
+.ar-htx {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.ar-chan {
+    font-size: 11px;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

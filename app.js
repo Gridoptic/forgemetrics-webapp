@@ -3663,14 +3663,37 @@ function resetPostState() {
 const ARCHIVE_PAGE = 20;
 const _arch = { items: [], total: 0, loading: false, back: 'dashboard' };
 
-function openPostsArchive(from) {
+function archiveChannelParam() {
+    const ch = state.post && state.post.activeChannel;
+    return (ch && ch.id) ? ('&channel_id=' + ch.id) : '';
+}
+
+async function openPostsArchive(from) {
     hapticLight();
     _arch.items = [];
     _arch.total = 0;
     _arch.back = from || 'dashboard';
     showScreen('postsArchive');
     _archSet('loading');
+    try {
+        const d = await apiRequest('/api/v1/channels/active');
+        const ch = (d && (d.channels || []).find((c) => c.id === d.active_channel_id)) || null;
+        state.post.activeChannel = ch;
+    } catch (e) {}
+    archiveTitle();
     archiveLoad(true);
+}
+
+function archiveTitle() {
+    const el = document.querySelector('#posts-archive-screen .channels-header-title');
+    if (!el) return;
+    const ch = state.post && state.post.activeChannel;
+    el.textContent = TR('Архив постов');
+    const sub = document.getElementById('archive-chan');
+    if (!sub) return;
+    const name = ch ? (ch.username ? '@' + ch.username : (ch.title || '')) : '';
+    sub.textContent = name;
+    sub.style.display = name ? '' : 'none';
 }
 
 function _archSet(state) {
@@ -3686,7 +3709,8 @@ async function archiveLoad(reset) {
     _arch.loading = true;
     const offset = reset ? 0 : _arch.items.length;
     try {
-        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + ARCHIVE_PAGE + '&offset=' + offset);
+        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + ARCHIVE_PAGE
+            + '&offset=' + offset + archiveChannelParam());
         const items = (r && r.items) || [];
         _arch.total = (r && r.total) || 0;
         _arch.items = reset ? items : _arch.items.concat(items);
@@ -3829,7 +3853,8 @@ window.FMLive.register('postsArchive', 45000, function () {
 async function archiveRefreshSilent() {
     const want = Math.min(_arch.items.length || ARCHIVE_PAGE, 50);
     try {
-        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + want + '&offset=0');
+        const r = await apiRequest('/api/v1/post/recent?scope=all&limit=' + want
+            + '&offset=0' + archiveChannelParam());
         const fresh = (r && r.items) || [];
         if (!fresh.length) return;
         const byId = {};
