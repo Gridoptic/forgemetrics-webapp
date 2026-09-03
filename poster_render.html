@@ -228,8 +228,6 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
         </g>
         <path id="area" fill="url(#gArea)"/>
         <path id="line" fill="none" stroke="url(#gLine)" stroke-width="2.5" stroke-linecap="round"/>
-        <circle id="dotHalo" r="6" fill="#7be3c0" opacity="0.18"/>
-        <circle id="dot" r="3.2" fill="#7be3c0" stroke="#0d1420" stroke-width="1.2"/>
       </svg>
       <div class="cx"><span>2 913</span><span>4 407</span></div>
     </div>
@@ -2714,20 +2712,6 @@ if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
       }
       grid.innerHTML = gl;
     }
-    /* точка тем мельче, чем ниже карточка: на маленьких постерах крупный кружок забивает линию */
-    var rDot = Math.max(2.2, Math.min(3.6, H / 26));
-    var dotEl = document.getElementById('dot'), haloEl = document.getElementById('dotHalo');
-    var last = pts[pts.length - 1];
-    dotEl.setAttribute('r', rDot.toFixed(2));
-    haloEl.setAttribute('r', (rDot * 1.9).toFixed(2));
-    /* точка на самом краю обрезалась половиной — держим её внутри поля */
-    var edge = rDot * 1.9 + 1;
-    var dx = Math.min(Math.max(last[0], edge), W - edge);
-    var dy = Math.min(Math.max(last[1], edge), H - edge);
-    [dotEl, haloEl].forEach(function (e) {
-      e.setAttribute('cx', dx.toFixed(1));
-      e.setAttribute('cy', dy.toFixed(1));
-    });
     var lineEl = document.getElementById('line');
     lineEl.setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
   }
@@ -2757,11 +2741,51 @@ function applyHero() {
   }
 }
 
+function spreadFree() {
+  var priceEl = poster.querySelector('.price');
+  if (!priceEl) return;
+  var bottom = 0;
+  ORD.forEach(function (o) {
+    var e = o.el();
+    if (!e || e.classList.contains('hide') || e.offsetParent === null) return;
+    var b = e.getBoundingClientRect().bottom;
+    if (b > bottom) bottom = b;
+  });
+  if (!bottom) return;
+  var pr = priceEl.getBoundingClientRect();
+  var free = pr.top + (parseFloat(getComputedStyle(priceEl).paddingTop) || 0) - bottom - 8;
+  if (free <= 4) return;
+  var chartEl = document.getElementById('chart');
+  var svg = chartEl ? chartEl.querySelector('svg') : null;
+  if (svg && !chartEl.classList.contains('hide') && !poster.classList.contains('d4')) {
+    var h = svg.getBoundingClientRect().height;
+    var add = Math.min(free, 96 - h);
+    if (add > 0) { svg.style.height = (h + add) + 'px'; free -= add; }
+  }
+  if (free <= 4) return;
+  var grid = document.getElementById('mgrid');
+  if (!grid || grid.classList.contains('hide')) return;
+  var cells = Array.prototype.filter.call(grid.querySelectorAll('.mcell'), function (c) { return !c.classList.contains('hide'); });
+  var rows = Math.ceil(cells.length / 2);
+  if (!rows) return;
+  var per = Math.min(10, free / rows / 2);
+  cells.forEach(function (c) {
+    var cs = getComputedStyle(c);
+    c.style.paddingTop = ((parseFloat(cs.paddingTop) || 0) + per) + 'px';
+    c.style.paddingBottom = ((parseFloat(cs.paddingBottom) || 0) + per) + 'px';
+  });
+  void poster.offsetHeight;
+  if (inbox.scrollHeight > inbox.clientHeight + 2) {
+    cells.forEach(function (c) { c.style.paddingTop = ''; c.style.paddingBottom = ''; });
+  }
+}
+
 function relayout() {
   applyHero();
   var chartEl = document.getElementById('chart');
   var chartSvg = chartEl ? chartEl.querySelector('svg') : null;
   if (chartSvg) chartSvg.style.height = '';
+  poster.querySelectorAll('.mcell').forEach(function (c) { c.style.paddingTop = ''; c.style.paddingBottom = ''; });
   poster.classList.remove('d0', 'd1', 'd2', 'd3', 'd4');
   var steps = ['d0', 'd1', 'd2', 'd3', 'd4'];
   var applied = -1;
@@ -2788,6 +2812,7 @@ function relayout() {
       poster.classList.add(steps[applied]);
     }
   }
+  spreadFree();
   /* плотность d4 скрывает график — отражаем это на чипе пульта */
   var chartChip = document.getElementById('chartChip');
   if (chartChip) {
@@ -3086,8 +3111,6 @@ function applyColor(hex) {
     document.getElementById('gl1').setAttribute('stop-color', darken(hex, 0.15));
     document.getElementById('gl2').setAttribute('stop-color', lighten(hex, 0.25));
     document.getElementById('ga1').setAttribute('stop-color', hex);
-    document.getElementById('dot').setAttribute('fill', lighten(hex, 0.25));
-    document.getElementById('dotHalo').setAttribute('fill', lighten(hex, 0.25));
     document.getElementById('chartPct').style.color = hex;
   }
 }

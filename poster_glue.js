@@ -306,16 +306,6 @@
       el('line').setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
     }
     if (el('area')) el('area').setAttribute('d', d + ' L' + W + ',' + H + ' L0,' + H + ' Z');
-    var last = pts[pts.length - 1];
-    var rDot = Math.max(2.2, Math.min(3.6, H / 26));
-    var edge = rDot * 1.9 + 1;
-    ['dot', 'dotHalo'].forEach(function (id) {
-      var e = el(id); if (!e) return;
-      e.style.display = flat ? 'none' : '';
-      e.setAttribute('r', (id === 'dot' ? rDot : rDot * 1.9).toFixed(2));
-      e.setAttribute('cx', Math.min(Math.max(last[0], edge), W - edge).toFixed(1));
-      e.setAttribute('cy', Math.min(Math.max(last[1], edge), H - edge).toFixed(1));
-    });
     _watchChartSize();
     var pctEl = el('chartPct');
     if (pctEl) {
@@ -507,8 +497,6 @@
       if (el('gl1')) el('gl1').setAttribute('stop-color', darken(hex, 0.15));
       if (el('gl2')) el('gl2').setAttribute('stop-color', lighten(hex, 0.25));
       if (el('ga1')) el('ga1').setAttribute('stop-color', hex);
-      if (el('dot')) el('dot').setAttribute('fill', lighten(hex, 0.25));
-      if (el('dotHalo')) el('dotHalo').setAttribute('fill', lighten(hex, 0.25));
       if (el('chartPct')) el('chartPct').style.color = hex;
       C.chart = hex;
     } else if (kind.indexOf('cell:') === 0) {
@@ -815,8 +803,6 @@
     if (el('gl1')) el('gl1').setAttribute('stop-color', '#3fae88');
     if (el('gl2')) el('gl2').setAttribute('stop-color', '#7be3c0');
     if (el('ga1')) el('ga1').setAttribute('stop-color', '#5DCAA5');
-    if (el('dot')) el('dot').setAttribute('fill', '#7be3c0');
-    if (el('dotHalo')) el('dotHalo').setAttribute('fill', '#7be3c0');
     if (el('chartPct')) el('chartPct').style.color = '';
     document.querySelectorAll('.mcell').forEach(function (c) { delete c.dataset.hex; });
     window.COLORS = { tit: '#e8e8ed', niche: '#5DCAA5', pr: '#5DCAA5', chart: '#5DCAA5' };
