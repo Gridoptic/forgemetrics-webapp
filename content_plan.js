@@ -3948,6 +3948,17 @@
                 '</div></div>' +
                 '<div class="cp-note">' + esc(T('9:16, 1080×1920 — вертикальный формат для площадок коротких видео. Описание для публикации — по кнопке.')) + '</div></div>';
         }
+        if (c && c.status === 'ready' && !c.url && c.in_telegram) {
+            return '<div class="cp-crv">' + head +
+                '<div class="cp-crv-card">' +
+                (c.preview_url ? '<div class="cp-crv-prev as-img"><img src="' + esc(c.preview_url) + '" alt=""></div>' : '') +
+                '<div class="cp-crv-acts">' +
+                '<button class="cp-act ok" data-act="crvsend" data-id="' + c.id + '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' +
+                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
+                '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
+                '</div></div>' +
+                '<div class="cp-note">' + esc(T('Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать')) + '</div></div>';
+        }
         if (c && c.status === 'error') {
             return '<div class="cp-crv">' + head +
                 '<div class="cp-note fail">' + esc(T('Ролик не собрался — попробуй ещё раз.')) + '</div>' +

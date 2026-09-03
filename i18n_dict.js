@@ -5076,7 +5076,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "ወደ Telegram ላክ",
   "Отправляю ролик в чат с ботом — придёт через минуту": "ቪዲዮ ወደ ቦት ቻት እየላከ ነው — በደቂቃ ውስጥ ይደርሳል",
   "Подпись": "ፊርማ",
-  "Показывать подпись": "ፊርማ አሳይ"
+  "Показывать подпись": "ፊርማ አሳይ",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "ቪዲዮ በብጁ ጋር ባለው ውይይት ውስጥ ይከማቻል - ከዚህ ሊታይ እና ሊላክ ይችላል"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10155,7 +10156,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "إرسال إلى Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "جاري إرسال الفيديو إلى محادثة البوت — سيصل خلال دقيقة",
   "Подпись": "التوقيع",
-  "Показывать подпись": "عرض التوقيع"
+  "Показывать подпись": "عرض التوقيع",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "يتم تخزين الفيديو في الدردشة مع البوت — يمكنك مشاهدته وإعادة توجيهه من هناك"
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15234,7 +15236,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegramda göndər",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Videoyu bot söhbətinə göndərirəm — bir dəqiqə ərzində gələcək",
   "Подпись": "İmza",
-  "Показывать подпись": "İmzanı göstər"
+  "Показывать подпись": "İmzanı göstər",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video bot söhbətində saxlanılır — oradan onu izləyə və göndərə bilərsən"
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -20270,7 +20273,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Адправіць у Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Адпраўляю відэо ў чат з ботам — прыйдзе праз хвіліну",
   "Подпись": "Подпіс",
-  "Показывать подпись": "Паказваць подпіс"
+  "Показывать подпись": "Паказваць подпіс",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Відэа захоўваецца ў чаце з ботам — адтуль яе можна глядаць і перасылаць"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -25349,7 +25353,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegram-এ পাঠান",
   "Отправляю ролик в чат с ботом — придёт через минуту": "বটের সাথে চ্যাটে ভিডিও পাঠাচ্ছি — এক মিনিটের মধ্যে আসবে",
   "Подпись": "স্বাক্ষর",
-  "Показывать подпись": "স্বাক্ষর দেখান"
+  "Показывать подпись": "স্বাক্ষর দেখান",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "ভিডিওটি বটের সাথে চ্যাটে সংরক্ষিত থাকে — সেখান থেকে এটি দেখা এবং ফরওয়ার্ড করা যায়"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -30428,7 +30433,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "An Telegram senden",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Sende Video an Bot-Chat — kommt in einer Minute an",
   "Подпись": "Unterschrift",
-  "Показывать подпись": "Unterschrift anzeigen"
+  "Показывать подпись": "Unterschrift anzeigen",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Das Video wird im Chat mit dem Bot gespeichert — von dort aus kannst du es ansehen und weiterleiten"
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -35507,7 +35513,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Send to Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Sending video to bot chat — it will arrive in a minute",
   "Подпись": "Signature",
-  "Показывать подпись": "Show signature"
+  "Показывать подпись": "Show signature",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "The video is stored in the chat with the bot — you can view and forward it from there"
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -40586,7 +40593,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Enviar a Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Enviando el vídeo al chat del bot — llegará en un minuto",
   "Подпись": "Firma",
-  "Показывать подпись": "Mostrar firma"
+  "Показывать подпись": "Mostrar firma",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "El vídeo se almacena en el chat con el bot — desde allí puedes verlo y reenviarlo"
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -45665,7 +45673,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "ارسال به تلگرام",
   "Отправляю ролик в чат с ботом — придёт через минуту": "ارسال ویدیو به چت ربات — در حدود یک دقیقه دریافت خواهید کرد",
   "Подпись": "امضا",
-  "Показывать подпись": "نمایش امضا"
+  "Показывать подпись": "نمایش امضا",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "ویدیو در چت با ربات ذخیره شده است — می‌توانی آن را از آنجا مشاهده و ارسال مجدد کنی"
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -50744,7 +50753,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Envoyer sur Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Envoi de la vidéo au chat avec le bot — arrivera dans une minute",
   "Подпись": "Signature",
-  "Показывать подпись": "Afficher la signature"
+  "Показывать подпись": "Afficher la signature",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "La vidéo est stockée dans le chat avec le bot — tu peux la regarder et la transférer de là"
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -55823,7 +55833,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegram में भेजें",
   "Отправляю ролик в чат с ботом — придёт через минуту": "मैं चैट में वीडियो भेज रहा हूँ — यह एक मिनट में आ जाएगा",
   "Подпись": "हस्ताक्षर",
-  "Показывать подпись": "हस्ताक्षर दिखाएं"
+  "Показывать подпись": "हस्ताक्षर दिखाएं",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "वीडियो बॉट के साथ चैट में सहेजा जाता है — वहां से इसे देख सकते हो और आगे भेज सकते हो"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -60902,7 +60913,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Kirim ke Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Mengirim video ke chat bot — akan tiba dalam semenit",
   "Подпись": "Tanda tangan",
-  "Показывать подпись": "Tampilkan tanda tangan"
+  "Показывать подпись": "Tampilkan tanda tangan",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video disimpan di chat dengan bot — dari sana Anda dapat menonton dan meneruskannya"
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -65981,7 +65993,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Invia a Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Invio del video alla chat con il bot — arriverà tra un minuto",
   "Подпись": "Firma",
-  "Показывать подпись": "Mostra firma"
+  "Показывать подпись": "Mostra firma",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Il video è archiviato nella chat con il bot — da lì puoi visualizzarlo e inoltrarlo"
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -71042,7 +71055,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegram-ға жібер",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Видеоны бот чатына жібердім — бір минутта келеді",
   "Подпись": "Қолтаңба",
-  "Показывать подпись": "Қолтаңбаны көрсету"
+  "Показывать подпись": "Қолтаңбаны көрсету",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Видео сақталады бот чатында — осыдан оны көруге және жібере аласың"
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -76121,7 +76135,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Enviar para o Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Enviando o vídeo para o chat com o bot — chegará em um minuto",
   "Подпись": "Assinatura",
-  "Показывать подпись": "Mostrar assinatura"
+  "Показывать подпись": "Mostrar assinatura",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "O vídeo fica armazenado no chat com o bot — de lá é possível assistir e encaminhar"
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -81200,7 +81215,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Tuma kwenye Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Ninatuma video kwenye chat ya bot — itakuja baada ya dakika moja",
   "Подпись": "Saini",
-  "Показывать подпись": "Kuonyesha saini"
+  "Показывать подпись": "Kuonyesha saini",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video imehifadhiwa katika mazungumzo na bot — unaweza kuiangalia na kuikamatia kutoka huko"
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -86279,7 +86295,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegram'a gönder",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Video bot sohbetine gönderiliyor — bir dakika içinde gelecek",
   "Подпись": "İmza",
-  "Показывать подпись": "İmzayı göster"
+  "Показывать подпись": "İmzayı göster",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video, bot sohbetinde saklanır — oradan görüntüleyebilir ve iletebilirsin"
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -91358,7 +91375,8 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Telegramga yuborish",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Rolikni bot chatiga yuboryapman — bir minutdan keyin keladi",
   "Подпись": "Imzo",
-  "Показывать подпись": "Imzoni ko'rsatish"
+  "Показывать подпись": "Imzoni ko'rsatish",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video saqlangan bot chat'ida — u yerdan uni ko'rish va forwarding qilish mumkin"
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -96437,6 +96455,7 @@ window.__I18N_DICT = {
   "Отправить в Telegram": "Gửi sang Telegram",
   "Отправляю ролик в чат с ботом — придёт через минуту": "Đang gửi video sang chat với bot — sẽ đến trong một phút",
   "Подпись": "Chữ ký",
-  "Показывать подпись": "Hiển thị chữ ký"
+  "Показывать подпись": "Hiển thị chữ ký",
+  "Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать": "Video được lưu trữ trong chat với bot — từ đó bạn có thể xem và chuyển tiếp nó"
  }
 };

@@ -7131,6 +7131,7 @@ function rsBindCover(host, ctx) {
         else if (a === 'photo') rsMakeCover(ctx, host, 'photo');
         else if (a === 'creative') rsCreativeBuild(ctx, host);
         else if (a === 'crvopen') rsCrvOpen(b.getAttribute('data-url'));
+        else if (a === 'crvsend') rsCrvSend(+b.getAttribute('data-id'));
         else if (a === 'crvvariant') rsCrvVariant(ctx, host, +b.getAttribute('data-id'));
         else if (a === 'crvdesc') rsCrvDesc(+b.getAttribute('data-id'));
         else if (a === 'clear') { hapticLight(); rsClearCover(ctx, host); }
@@ -7195,6 +7196,8 @@ function rsCreativeBtn(ctx) {
             '<div class="cp-crv-acts">' +
             '<button class="cp-act ok" type="button" data-rc="crvopen" data-url="' + escapeHtml(c.url) +
             '"><i class="ti ti-download"></i> ' + escapeHtml(TR('Скачать MP4')) + '</button>' +
+            '<button class="cp-act" type="button" data-rc="crvsend" data-id="' + c.id +
+            '"><i class="ti ti-brand-telegram"></i> ' + escapeHtml(TR('Отправить в Telegram')) + '</button>' +
             '<button class="cp-act" type="button" data-rc="crvvariant" data-id="' + c.id +
             '"><i class="ti ti-refresh"></i> ' + escapeHtml(TR('Другой вариант')) + '</button>' +
             '<button class="cp-act" type="button" data-rc="crvdesc" data-id="' + c.id +
@@ -7258,6 +7261,17 @@ function rsCrvOpen(url) {
         }
     } catch (e) {}
     window.open(url, '_blank');
+}
+
+async function rsCrvSend(cid) {
+    hapticLight();
+    showToast(TR('Отправляю ролик в чат с ботом — придёт через минуту'), 'brand-telegram');
+    try {
+        const r = await apiRequest('/api/v1/creative/' + cid + '/send', { method: 'POST' });
+        if (!r || !r.ok) showToast(TR('Не удалось отправить ролик'), 'alert-triangle');
+    } catch (e) {
+        showToast(TR('Не удалось отправить ролик'), 'alert-triangle');
+    }
 }
 
 async function rsCrvVariant(ctx, host, cid) {
