@@ -573,7 +573,7 @@
         gb.addEventListener('click', function () { if (gtip) gtip.classList.add('show'); });
       } else {
         var genPool = [], genBusy = false;
-        if (gen.price_html) gb.innerHTML = PG('Сгенерировать текст (AI)') + ' ' + gen.price_html;
+        if (gen.price_html) gb.innerHTML = '<span>' + PG('Сгенерировать текст (AI)') + '</span><span class="gsep"></span>' + gen.price_html;
         var genPut = function (txt) {
           var inp = el('hookInp');
           if (!inp) return;

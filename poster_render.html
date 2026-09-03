@@ -160,7 +160,12 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
 .drop{border:1.5px dashed rgba(255,255,255,0.22);border-radius:12px;padding:12px;font-size:11.5px;color:#8990a8;text-align:center;margin-top:8px;line-height:1.5;cursor:pointer;}
 .drop.hot{border-color:#5DCAA5;color:#5DCAA5;background:rgba(93,202,165,0.07);}
 .note{font-size:10.5px;color:#5c637d;line-height:1.5;margin-top:8px;}
-.genbtn{width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#5c637d;font-size:13px;font-weight:600;padding:11px;border-radius:11px;cursor:pointer;font-family:inherit;}
+.genbtn{width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#5c637d;font-size:13px;font-weight:600;padding:11px;border-radius:11px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px;line-height:1;}
+.genbtn .gsep{width:1px;height:14px;background:rgba(255,255,255,0.16);}
+.forge-ico{display:inline-flex;vertical-align:-0.15em;color:#fbbf24;flex:0 0 auto;}
+.forge-ico svg{width:100%;height:100%;display:block;}
+.forge-price{display:inline-flex;align-items:center;font-variant-numeric:tabular-nums;white-space:nowrap;color:#e8e8ed;}
+.forge-price .forge-ico{margin-right:4px;}
 .gentip{display:none;margin-top:8px;background:rgba(245,191,79,0.08);border:1px solid rgba(245,191,79,0.3);border-radius:11px;padding:10px 12px;font-size:11px;color:#e8cf9a;line-height:1.55;}
 .gentip.show{display:block;}
 
@@ -2796,7 +2801,7 @@ window.psRenderChart = function (series, dates, svg) {
   var fmt = function (v) { return Number(v).toLocaleString('ru-RU').replace(/\u00a0/g, ' '); };
   if (peak) {
     var iMax = flat ? -1 : vals.indexOf(max);
-    if (iMax < 0 || iMax === items.length - 1) { peak.textContent = ''; }
+    if (iMax < 0 || iMax === items.length - 1 || pts[iMax][0] < AX + (W - AX) / 3) { peak.textContent = ''; }
     else {
       var px = pts[iMax][0], py = pts[iMax][1];
       var leftSide = px < (AX + W) / 2;
