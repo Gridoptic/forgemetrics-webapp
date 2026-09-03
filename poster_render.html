@@ -99,7 +99,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .poster.d1 .avw{width:80px;height:80px;}
 .poster.d1 .tit{font-size:24px;}
 .poster.d2 .hook{font-size:14.5px;}
-.poster.d2 .chart svg{height:48px;}
+.poster.d2 .chart svg{height:58px;}
 .poster.d2 .chart{padding:9px 12px 6px;margin-top:9px;}
 .poster.d2 .chart .cx{font-size:10px;}
 .poster.d2 .mcell .v{font-size:20px;}
@@ -111,7 +111,8 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .poster.d3 .tit{font-size:19px;}
 .poster.d3 .meta{font-size:11.5px;margin-top:3px;}
 .poster.d3 .hook{font-size:12.5px;margin-top:9px;}
-.poster.d3 .chart svg{height:36px;}
+.poster.d3 .chart svg{height:52px;}
+.poster.d3 .chart{padding:7px 10px 4px;margin-top:8px;}
 .poster.d3 .chart .cx{font-size:9.5px;}
 .poster.d3 .mgrid{gap:6px;margin-top:8px;}
 .poster.d3 .mcell{padding:6px 10px 5px;border-radius:10px;}
@@ -339,7 +340,7 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
   <div class="lbl">Текст</div>
   <input type="text" id="hookInp" maxlength="90" placeholder="Свой текст · до 90 символов">
   <button class="genbtn" id="genBtn">Сгенерировать текст (AI)</button>
-  <div class="gentip" id="genTip">Генерация текста доступна на тарифах <b>Pro и выше</b>. Готовый вариант вставляется в постер автоматически.</div>
+  <div class="gentip" id="genTip">Генерация текста сейчас недоступна — попробуй позже.</div>
 </div>
 
 <script>
@@ -2689,12 +2690,12 @@ if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
     var W = Math.max(120, Math.round(box.width || 452));
     var H = Math.max(48, Math.round(box.height || 96));
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    var pad = Math.max(5, Math.round(H * 0.09));
+    var padT = Math.max(5, Math.round(H * 0.10)), padB = Math.max(6, Math.round(H * 0.16));
     var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
     var range = max - min, denom = (data.length - 1) || 1;
     /* защита от деления на ноль: плоская серия — горизонтальная линия посередине */
     var pts = data.map(function (v, i) {
-      return [i * W / denom, range ? pad + (H - pad * 2) * (1 - (v - min) / range) : H / 2];
+      return [i * W / denom, range ? padT + (H - padT - padB) * (1 - (v - min) / range) : H / 2];
     });
     var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
     for (var i = 1; i < pts.length; i++) {
@@ -2776,7 +2777,7 @@ function relayout() {
     void poster.offsetHeight;
     var over = inbox.scrollHeight - inbox.clientHeight;
     var h0 = chartSvg.getBoundingClientRect().height;
-    if (over > 0 && h0 - over >= 28) {
+    if (over > 0 && h0 - over >= 52) {
       chartSvg.style.height = (h0 - over - 2) + 'px';
       void poster.offsetHeight;
       if (inbox.scrollHeight > inbox.clientHeight + 2) {

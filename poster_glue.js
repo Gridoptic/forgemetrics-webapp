@@ -286,13 +286,13 @@
     if (svgEl) {
       svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     }
-    var pad = Math.max(4, Math.round(H * 0.08));
+    var padT = Math.max(4, Math.round(H * 0.10)), padB = Math.max(6, Math.round(H * 0.16));
     var min = flat ? 0 : Math.min.apply(null, data), max = flat ? 1 : Math.max.apply(null, data);
     var range = max - min, denom = flat ? 1 : ((data.length - 1) || 1);
     var pts = flat
-      ? [[0, H - pad * 2], [W, H - pad * 2]]
+      ? [[0, H - padB], [W, H - padB]]
       : data.map(function (v, i) {
-          return [i * W / denom, range ? pad + (H - pad * 2) * (1 - (v - min) / range) : H / 2];
+          return [i * W / denom, range ? padT + (H - padT - padB) * (1 - (v - min) / range) : H / 2];
         });
     var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
     for (var i = 1; i < pts.length; i++) {
@@ -642,6 +642,7 @@
         gb.addEventListener('click', function () { if (gtip) gtip.classList.add('show'); });
       } else {
         var genPool = [], genBusy = false;
+        if (gen.price_html) gb.innerHTML = PG('Сгенерировать текст (AI)') + ' ' + gen.price_html;
         var genPut = function (txt) {
           var inp = el('hookInp');
           if (!inp) return;
@@ -652,14 +653,14 @@
           if (genBusy) return;
           if (genPool.length) { genPut(genPool.shift()); return; }
           genBusy = true;
-          var old = gb.textContent;
+          var old = gb.innerHTML;
           gb.textContent = PG('Генерирую…');
           Promise.resolve(gen.fetch(_psLang)).then(function (r) {
-            genBusy = false; gb.textContent = old;
+            genBusy = false; gb.innerHTML = old;
             var hooks = (r && r.hooks) || [];
             if (!r || r.ok === false || !hooks.length) {
-              var msg = (r && r.error === 'limit')
-                ? PG('Дневной лимит генераций исчерпан — попробуй завтра')
+              var msg = (r && r.error === 'no_forge')
+                ? PG('Не хватает Forge — пополни баланс')
                 : PG('Не удалось сгенерировать текст. Повтори попытку');
               if (window.__fmxPosterNotify) window.__fmxPosterNotify(msg);
               return;
@@ -667,7 +668,7 @@
             genPool = hooks.slice();
             genPut(genPool.shift());
           }).catch(function () {
-            genBusy = false; gb.textContent = old;
+            genBusy = false; gb.innerHTML = old;
             if (window.__fmxPosterNotify) window.__fmxPosterNotify(PG('Не удалось сгенерировать текст. Повтори попытку'));
           });
         });
@@ -712,6 +713,7 @@
     }
     st.niche = !(el('nicheEl') && el('nicheEl').classList.contains('hide'));
     st.chart = !(el('chart') && el('chart').classList.contains('hide'));
+    st.hook_on = !(el('hookText') && el('hookText').classList.contains('hide'));
     st.price = {
       on: !(el('prBox') && el('prBox').classList.contains('hide')),
       val: el('prInp') ? parseInt(el('prInp').value, 10) || 0 : 0,

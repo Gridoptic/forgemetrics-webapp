@@ -8607,7 +8607,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260820a';
+    var PS_GLUE_V = '20260903a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -9081,6 +9081,7 @@
             try {
                 win.__fmxPosterGen = {
                     ok: !!extra.gen_ok,
+                    price_html: (typeof forgeAmount === 'function') ? forgeAmount(extra.hook_price || 2, 12) : '',
                     fetch: function (lang) { return apiPost('/api/v1/marketplace/poster/hooks', { listing_id: base.id, lang: lang || 'ru' }); }
                 };
             } catch (e) {}
