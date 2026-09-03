@@ -3027,22 +3027,24 @@ const TFC_SHORT = {
     generate_proofs: TR('Пост с исследованиями'), generate_std_proofs: TR('Стандарт с исследованиями'),
     research_attach: TR('Исследования к посту'),
     modify: TR('Правка поста'), rewrite: TR('Рерайт поста'),
+    cover_own: TR('Обложка к посту'), creative_build: TR('Ролик из поста'),
     voice: TR('Настройка стиля'), adpick: TR('Подбор каналов'),
     channel_analyze: TR('AI-разбор'), audit: TR('AI-аудит'), deep_audit: TR('Коммерческий аудит'),
     competitors: TR('Анализ конкурентов'),
 };
 const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
+    cover_own: 400, creative_build: 100,
     generate_std_proofs: 100, research_attach: 100, rewrite: 100, modify: 200, voice: 20,
     adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20,
     promo_burst24: 30, promo_burst48: 30, promo_week: 20, promo_month: 12,
     ai_strategy: 3, strategy_renewal: 12 };
 const TFC_PRESETS = [
     { t: TR('Один канал'), ic: 'user', color: 'bl',
-      v: { generate: 20, generate_std: 10, modify: 15, voice: 1 } },
+      v: { generate: 20, generate_std: 10, modify: 15, cover_own: 10, creative_build: 2, voice: 1 } },
     { t: TR('Продаю рекламу'), ic: 'coin', color: 'pu',
-      v: { generate: 40, generate_std: 20, modify: 20, voice: 1, audit: 1, adpick: 1 } },
+      v: { generate: 40, generate_std: 20, modify: 20, cover_own: 20, creative_build: 4, voice: 1, audit: 1, adpick: 1 } },
     { t: TR('Сетка'), ic: 'sitemap', color: 'gr',
-      v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, voice: 3,
+      v: { generate: 120, generate_std: 80, rewrite: 20, modify: 60, cover_own: 60, creative_build: 12, voice: 3,
         audit: 3, adpick: 4, competitors: 2 } },
 ];
 

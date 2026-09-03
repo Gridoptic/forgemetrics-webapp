@@ -5561,9 +5561,21 @@ html.cs-modal-open {
 
 .tfc-tiers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 6px;
     margin-bottom: 12px;
+    padding: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+@media (max-width: 400px) {
+    .tfc-tiers {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .tfc-tier {
