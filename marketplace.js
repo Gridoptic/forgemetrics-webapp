@@ -2688,8 +2688,9 @@
         var bud = s.month_budget_usd || 0, sp = s.month_usd || 0;
         var pct = bud > 0 ? Math.min(100, Math.round(sp / bud * 100)) : 0;
         return '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>' + L('Оплачено за месяц') + '</span><b>' + _num(_mod.ov.revenue_month_rub) + ' ₽</b></div>' +
-            '<div class="fmx-mstatrow"><span>' + L('Расход на ИИ') + '</span><b>$' + sp.toFixed(2) + L(' из $') + bud + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Расход на ИИ · бесплатные') + '</span><b>$' + sp.toFixed(2) + L(' из $') + bud + '</b></div>' +
             '<div class="fmx-bar' + (pct >= 80 ? ' warn' : '') + '"><i style="width:' + Math.max(2, pct) + '%"></i></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Расход на ИИ · все пользователи') + '</span><b>$' + (s.month_all_usd || 0).toFixed(2) + '</b></div>' +
             '<div class="fmx-mstatrow"><span>' + L('За сегодня') + '</span><b>$' + (s.day_usd || 0).toFixed(2) + '</b></div>' +
             '<div class="fmx-mstatrow"><span>' + L('Приглашено по ссылкам') + '</span><b>' + _num(rf.total) + '</b></div>' +
             '<div class="fmx-mstatrow"><span>' + L('Из них оплатили') + '</span><b>' + _num(rf.paid) + '</b></div>';
