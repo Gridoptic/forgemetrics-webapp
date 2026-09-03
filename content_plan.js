@@ -34,8 +34,7 @@
         toast(T('Создатель канала не выдал тебе право менять контент-план'));
     }
     function forgeTag(n, s) {
-        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, s || 12);
-        return esc(String(n)) + ' Forge';
+        return window.forgeAmount(n, s || 12);
     }
     function plural3(n, one, few, many) {
         var a = n % 10, b = n % 100;
@@ -2195,7 +2194,7 @@
             '<div class="cp-lrn-sub">' +
             esc(T('Каждый пост замерен на 1, 12, 24 и 48 часах после выхода. Выводы ниже включены в новую сборку.')) +
             '</div>' + rows +
-            '<div class="cp-lrn-f"><i class="ti ti-bolt"></i><span>' +
+            '<div class="cp-lrn-f"><i class="ti ti-info-circle"></i><span>' +
             esc(T('Частота → сетка недели · окна → расписание публикаций · длина и первая строка → задание постов.')) +
             '</span></div></div>';
     }
@@ -3909,6 +3908,7 @@
 
 
     var _crvBusy = {};
+    var _crvNeedProduct = {};
     var _crvTimer = null;
     function crvPoll() {
         if (_crvTimer) clearTimeout(_crvTimer);
@@ -3964,26 +3964,56 @@
                 '<div class="cp-note fail">' + esc(T('Ролик не собрался — попробуй ещё раз.')) + '</div>' +
                 '<button class="cp-act" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Собрать заново')) + '</button></div>';
         }
+        if (_crvNeedProduct[p.id]) {
+            return '<div class="cp-crv">' + head +
+                '<div class="cp-crv-prod">' +
+                '<input class="cp-inp" id="crvprod' + p.id + '" type="text" maxlength="400" inputmode="url" autocomplete="off" placeholder="' + esc(T('Ссылка на товар или артикул Wildberries')) + '">' +
+                '<button class="cp-crv-go" data-act="crvbuildp" data-id="' + p.id + '"><i class="ti ti-movie"></i>' +
+                '<span class="tx"><b>' + esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
+                esc(T('Ролик соберётся из фото и данных карточки этого товара')) + '</em></span></button>' +
+                '</div></div>';
+        }
         return '<div class="cp-crv">' + head +
             '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-movie"></i>' +
             '<span class="tx"><b>' + esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
             esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button></div>';
     }
-    function crvBuild(pid) {
+    function crvBuild(pid, product) {
         if (_crvBusy[pid]) return;
         _crvBusy[pid] = true;
         haptic('medium');
         renderWeek();
-        apiRequest('/api/v1/creative/build', { method: 'POST',
-            body: JSON.stringify({ post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' }) })
+        var body = { post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' };
+        if (product) body.product = String(product).trim().slice(0, 400);
+        apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 delete _crvBusy[pid];
                 if (r && r.ok) {
+                    delete _crvNeedProduct[pid];
                     var p = post(pid);
                     if (p) p.creative = r.creative;
                     toast(T('Собираю ролик — сообщу, когда будет готов'));
                     renderWeek();
                     crvPoll();
+                } else if (r && r.error === 'product_required') {
+                    _crvNeedProduct[pid] = true;
+                    toast(T('Для товарного ролика нужен товар: вставь ссылку на карточку Wildberries или артикул'));
+                    renderWeek();
+                } else if (r && r.error === 'product_invalid') {
+                    _crvNeedProduct[pid] = true;
+                    toast(T('Это не ссылка на карточку Wildberries и не артикул'));
+                    renderWeek();
+                } else if (r && r.error === 'product_not_found') {
+                    _crvNeedProduct[pid] = true;
+                    toast(T('Товар с таким артикулом не найден на Wildberries'));
+                    renderWeek();
+                } else if (r && r.error === 'product_not_allowed') {
+                    delete _crvNeedProduct[pid];
+                    toast(T('Товар указывается только для каналов ниши товарки'));
+                    renderWeek();
+                } else if (r && r.error === 'product_limit') {
+                    toast(T('Дневной лимит проверок товаров исчерпан — попробуй завтра'));
+                    renderWeek();
                 } else { toast(cap(r)); renderWeek(); }
             })
             .catch(function (err) { delete _crvBusy[pid]; toast(apiErrText(err, T('Не удалось запустить сборку'))); renderWeek(); });
@@ -4568,6 +4598,13 @@
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'ownweek') { doOwnWeek(); return; }
         if (act === 'crvbuild') { crvBuild(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvbuildp') {
+            var _pid = +actEl.getAttribute('data-id');
+            var _inp = document.getElementById('crvprod' + _pid);
+            var _val = _inp ? _inp.value.trim() : '';
+            if (!_val) { toast(T('Вставь ссылку на товар или артикул')); return; }
+            crvBuild(_pid, _val); return;
+        }
         if (act === 'crvvariant') { crvVariant(+actEl.getAttribute('data-id')); return; }
         if (act === 'crvdesc') { crvDescription(+actEl.getAttribute('data-id')); return; }
         if (act === 'crvsend') { crvSend(+actEl.getAttribute('data-id')); return; }

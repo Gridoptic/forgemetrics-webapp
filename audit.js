@@ -283,7 +283,7 @@
 
         var btnHtml;
         if (!runnable) {
-            btnHtml = '<button class="audit-primary-btn" id="audit-intro-topup"><i class="ti ti-bolt"></i>' +
+            btnHtml = '<button class="audit-primary-btn" id="audit-intro-topup">' + window.forgeIco(13) +
                 '<span>' + AD('Пополнить баланс') + '</span></button>';
         } else {
             btnHtml = '<button class="audit-primary-btn" id="audit-intro-start"><i class="ti ti-sparkles"></i>' +
@@ -335,7 +335,7 @@
                 '<span>' + AD('Запустить коммерческий аудит ·') + ' ' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 12) + '</span></button>';
         } else {
             ctaHtml = '<div class="ca-ctarow"><span class="l">' + AD('Списывается с баланса · отчёт сохраняется') + '</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
-                '<button class="audit-deep-btn" id="ca-buy"><i class="ti ti-bolt"></i><span>' + AD('Пополнить баланс') + '</span></button>';
+                '<button class="audit-deep-btn" id="ca-buy">' + window.forgeIco(13) + '<span>' + AD('Пополнить баланс') + '</span></button>';
         }
         host.innerHTML = headerHtml(AD('Коммерческий аудит')) +
             '<div class="audit-body">' +

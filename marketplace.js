@@ -2311,7 +2311,7 @@
 
         var evs = _term.events || [];
         if (evs.length) {
-            html += '<div class="fmx-psec"><i class="ti ti-bolt" style="color:#f5bf4f;"></i> ' + L('События рынка') + '</div>';
+            html += '<div class="fmx-psec"><i class="ti ti-activity" style="color:#f5bf4f;"></i> ' + L('События рынка') + '</div>';
             html += evs.slice(0, 12).map(function (e, i) { e.__i = i; return _tEventHtml(e, i === 0); }).join('');
         }
 
@@ -3191,7 +3191,7 @@
             if (a.paid_users && a.paid_users.length) {
                 h += '<div class="fmx-mcard"><div class="fmx-meyebrow">' + L('Платящие') + '<em>' + _num(a.paid_users.length) + '</em></div><div class="fmx-plist">';
                 a.paid_users.forEach(function (p) {
-                    h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: _num(p.forge || 0) + ' Forge' });
+                    h += _pRow({ id: p.user_id, name: 'ID ' + p.user_id, meta: window.forgeAmount(p.forge || 0, 11) });
                 });
                 h += '</div></div>';
             }
@@ -11047,7 +11047,7 @@
             if (res && res.ok) {
                 _haptic('medium');
                 hideModal('fmx-promoBg');
-                toast(L('Продвижение запущено — списано ') + _num(res.spent) + ' Forge');
+                toast(L('Продвижение запущено'));
                 loadMyListings().then(function () { if (typeof renderMine === 'function') renderMine(); });
                 return;
             }
@@ -11064,13 +11064,13 @@
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
             if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Не удалось загрузить.') + '</div>'; return; }
             var opts = r.options || [], html = '';
-            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;"><i class="ti ti-bolt"></i> ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса, без кассы') + '</div>';
+            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;">' + window.forgeIco(13) + ' ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса, без кассы') + '</div>';
             opts.forEach(function (o) {
-                var ic = o.in_burst_cap ? 'ti-bolt' : 'ti-rocket';
-                var pr = '<b>' + _num(o.price) + '</b> <i class="ti ti-bolt" style="color:#f5bf4f;font-size:12px;"></i>';
+                var ic = o.in_burst_cap ? 'ti-flame' : 'ti-rocket';
+                var pr = window.forgeAmount(o.price, 12);
                 html += '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ' + ic + '" style="color:#818cf8;"></i> ' + _esc(o.label) + '</div><div class="fmx-po-pr">' + pr + '</div></div>' +
                     '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> ' + _esc(_PROMO_DESC[o.product] || '') + '</div>' +
-                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">Запустить — ' + _num(o.price) + ' Forge</button></div>';
+                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">' + L('Запустить') + ' — ' + window.forgeAmount(o.price, 12) + '</button></div>';
             });
             html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> ' + L('Всплески 24 и 48 ч вместе — не больше') + ' ' + (r.burst_cap || 3) + ' ' + L('раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.') + '</div>';
             body.innerHTML = html;

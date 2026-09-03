@@ -170,8 +170,7 @@
     }
 
     function fa(n, s) {
-        if (typeof window.forgeAmount === 'function') return window.forgeAmount(n, s || 12);
-        return esc(num(n)) + ' Forge';
+        return window.forgeAmount(n, s || 12);
     }
 
     function modelBlock() {

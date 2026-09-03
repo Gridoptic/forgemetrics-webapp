@@ -379,7 +379,7 @@
             var pr = ' · ' + (window.forgeAmount || function (n) { return String(n); })(Number((_limits && _limits.price) || 0), 12);
             btnHtml = '<button class="comp-primary-btn" id="comp-find-btn"><i class="ti ti-search"></i><span>' + CT('Найти конкурентов') + pr + '</span></button>';
         } else {
-            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn"><i class="ti ti-bolt"></i><span>' + CT('Пополнить баланс') + '</span></button>';
+            btnHtml = '<button class="comp-primary-btn" id="comp-buy-btn">' + window.forgeIco(13) + '<span>' + CT('Пополнить баланс') + '</span></button>';
         }
 
         setBody(

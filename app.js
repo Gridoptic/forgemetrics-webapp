@@ -2512,13 +2512,13 @@ async function openCabinet(scrollTo) {
 
 const RF_LEVEL_NAMES = { starter: 'Starter', member: 'Starter', connector: 'Connector', influencer: 'Influencer', ambassador: 'Ambassador', founders_circle: 'Founders Circle', stakeholder: 'Stakeholder', shareholder: 'Shareholder', majority_holder: 'Majority Holder' };
 const RF_PERK_TEXT = {
-    forge_200: TR('ежемесячное начисление 200 Forge'),
-    forge_550: TR('ежемесячное начисление 550 Forge'),
-    forge_900: TR('ежемесячное начисление 900 Forge'),
-    forge_1300: TR('ежемесячное начисление 1 300 Forge'),
-    forge_2000: TR('ежемесячное начисление 2 000 Forge'),
-    forge_3000: TR('ежемесячное начисление 3 000 Forge'),
-    forge_5000: TR('ежемесячное начисление 5 000 Forge'),
+    forge_200: TR('ежемесячное начисление') + ' ' + forgeAmount(200, 11),
+    forge_550: TR('ежемесячное начисление') + ' ' + forgeAmount(550, 11),
+    forge_900: TR('ежемесячное начисление') + ' ' + forgeAmount(900, 11),
+    forge_1300: TR('ежемесячное начисление') + ' ' + forgeAmount(1300, 11),
+    forge_2000: TR('ежемесячное начисление') + ' ' + forgeAmount(2000, 11),
+    forge_3000: TR('ежемесячное начисление') + ' ' + forgeAmount(3000, 11),
+    forge_5000: TR('ежемесячное начисление') + ' ' + forgeAmount(5000, 11),
     anim_sticker: TR('анимированные стикеры на оффере'),
     fx_glow: TR('оформление оффера «Свечение»'),
     fx_glass: TR('оформление «Стекло»'),
@@ -2537,6 +2537,12 @@ function cabRefLadder(r) {
         return `<div class="rf-step ${st}"><span class="rf-rail"></span><span class="rf-node"></span><div class="rf-txt"><div class="nm" style="display:flex;align-items:center;gap:8px;"><span style="flex:1;min-width:0;">${escapeHtml(RF_LEVEL_NAMES[x.key] || x.key)} <span class="need">· ${escapeHtml(need)}</span>${here}</span><b style="flex:0 0 auto;min-width:42px;text-align:right;font-size:13px;color:#c7cdff;font-variant-numeric:tabular-nums;">${x.rate_pct}%</b></div>${perks ? `<div class="perk">${escapeHtml(perks)}</div>` : ''}</div></div>`;
     }).join('');
     return `<div class="rf-ladder">${rows}</div>`;
+}
+
+function refPackAmounts() {
+    const packs = (state.dashboard && state.dashboard.forge && state.dashboard.forge.packs) || [];
+    const amounts = packs.map((p) => p.amount).filter((a) => a > 0);
+    return amounts.length ? amounts : [300, 900, 2500, 6000];
 }
 
 function refCardHtml(r) {
@@ -2567,9 +2573,9 @@ function refCardHtml(r) {
         <div class="rf-rate"><b>${rate}%</b><span>${TR('с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей')}</span></div>
         <div style="margin:9px 0 2px;border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;overflow:hidden;font-size:11.5px;">
           <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${TR('Приглашённый пополнил')}</span><span>${TR('Твоё начисление')}</span></div>
-          ${[300, 900, 2500, 6000].map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${cabNum(v)} Forge</span><b class="num" style="color:#5DCAA5;">+${cabNum(Math.round(v * rate / 100))} Forge</b></div>`).join('')}
+          ${refPackAmounts().map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${forgeAmount(v, 12)}</span><b class="num" style="color:#5DCAA5;">+${forgeAmount(Math.round(v * rate / 100), 12)}</b></div>`).join('')}
         </div>
-        <p style="margin-top:8px;">Начисление автоматически после оплаты. Приглашённый получает −${fDisc}% на первое пополнение и +${fBonus} Forge к стартовому запасу.</p>
+        <p style="margin-top:8px;">${TR('Начисление автоматически после оплаты. Приглашённый получает −{d}% на первое пополнение и {b} к стартовому запасу.').replace('{d}', fDisc).replace('{b}', '+' + forgeAmount(fBonus, 11))}</p>
       </div>
     </div>
     <div class="rf-bal">
@@ -3055,7 +3061,7 @@ function tfcDefaultPack(packs) {
 function tfcTier(d) {
     const packs = d.forge_packs || [];
     const p = packs.find((x) => x.amount === tfCalc.pack) || tfcDefaultPack(packs);
-    return p ? { key: p.amount, name: cabNum(p.amount) + ' Forge', forge: p.amount } : null;
+    return p ? { key: p.amount, name: forgeAmount(p.amount, 11), forge: p.amount } : null;
 }
 
 function tfcSpent(d) {
@@ -3131,7 +3137,7 @@ function tfCalculatorHtml(d) {
     const packsAll = d.forge_packs || [];
     const idx = packsAll.findIndex((p) => p.amount === t.key);
     const next = packsAll[idx + 1]
-        ? { name: cabNum(packsAll[idx + 1].amount) + ' Forge', forge: packsAll[idx + 1].amount } : null;
+        ? { name: forgeAmount(packsAll[idx + 1].amount, 11), forge: packsAll[idx + 1].amount } : null;
     const main = ops.filter((o) => TFC_MAIN.includes(o.key));
     const more = ops.filter((o) => !TFC_MAIN.includes(o.key));
 
@@ -3160,8 +3166,8 @@ function tfCalculatorHtml(d) {
         + '<span class="tfc-bt"><small>'
         + (rest === 0 ? TR('Запас распределён полностью') : TR('Осталось распределить')) + '</small>'
         + '<b>' + forgeAmount(rest, 15) + '</b>'
-        + '<i>' + TR('из пакета') + ' ' + escapeHtml(t.name)
-        + (next && next.forge ? TR(' · следующий пакет даст ') + cabNum(next.forge) : '')
+        + '<i>' + TR('из пакета') + ' ' + t.name
+        + (next && next.forge ? TR(' · следующий пакет даст ') + forgeAmount(next.forge, 11) : '')
         + '</i></span></div>'
         + '<div id="tfc-rows">' + main.map((o) => tfcRow(d, o)).join('') + '</div>'
         + '<button class="tfc-more" id="tfc-more"><i class="ti ti-'
@@ -3207,7 +3213,7 @@ function tfcRefresh(d) {
     const packsAll = d.forge_packs || [];
     const idx = packsAll.findIndex((p) => p.amount === t.key);
     const next = packsAll[idx + 1]
-        ? { name: cabNum(packsAll[idx + 1].amount) + ' Forge', forge: packsAll[idx + 1].amount } : null;
+        ? { name: forgeAmount(packsAll[idx + 1].amount, 11), forge: packsAll[idx + 1].amount } : null;
     box.classList.toggle('full', rest === 0);
     // строго внутри текстовой части: тег i снаружи — это иконка галочки
     const sm = box.querySelector('.tfc-bt small');
@@ -3216,8 +3222,8 @@ function tfcRefresh(d) {
     if (b) b.innerHTML = forgeAmount(rest, 15);
     const note = box.querySelector('.tfc-bt i');
     if (note) {
-        note.textContent = TR('из пакета ') + t.name
-            + (next && next.forge ? TR(' · следующий пакет даст ') + cabNum(next.forge) : '');
+        note.innerHTML = escapeHtml(TR('из пакета ')) + t.name
+            + (next && next.forge ? escapeHtml(TR(' · следующий пакет даст ')) + forgeAmount(next.forge, 11) : '');
     }
 }
 
@@ -3923,7 +3929,7 @@ async function openPostCreate() {
     if (els.postLimitBanner) {
         els.postLimitBanner.classList.remove('exhausted', 'warning');
         els.postLimitBanner.classList.add('plain');
-        els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + TR('Загружаю баланс...') + '</span>';
+        els.postLimitBanner.innerHTML = forgeIco(13) + '<span>' + TR('Загружаю баланс...') + '</span>';
     }
 
     state.post.useChannelStyle = true;
@@ -3952,7 +3958,7 @@ async function openPostCreate() {
     } catch (err) {
         console.error('Failed to load limits/channel:', err);
         if (els.postLimitBanner) {
-            els.postLimitBanner.innerHTML = '<i class="ti ti-bolt"></i><span>' + TR('Не удалось загрузить баланс') + '</span>';
+            els.postLimitBanner.innerHTML = forgeIco(13) + '<span>' + TR('Не удалось загрузить баланс') + '</span>';
             els.postLimitBanner.classList.add('exhausted', 'plain');
         }
     }

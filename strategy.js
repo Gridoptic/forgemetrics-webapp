@@ -201,7 +201,7 @@
             : accessChip();
         var inProgress = !locked && _state && _state.status === 'interview';
         var cta = locked
-            ? '<button class="stg-fcta" data-act="buy"><i class="ti ti-bolt"></i> ' + esc(T('Открыть доступ')) + ' · ' + forge(nprice) + '</button>'
+            ? '<button class="stg-fcta" data-act="buy">' + window.forgeIco(13) + ' ' + esc(T('Открыть доступ')) + ' · ' + forge(nprice) + '</button>'
             : (inProgress
                 ? '<button class="stg-fcta" data-act="continue"><i class="ti ti-message-circle"></i> ' + esc(T('Продолжить разговор со стратегом')) + '</button>' +
                   '<div class="stg-fnote">' + esc(T('Разговор начат — ответы сохранены. Начать заново можно внутри.')) + '</div>'
