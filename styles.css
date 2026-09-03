@@ -5179,7 +5179,7 @@ html.cs-modal-open {
 
 .fw-pack-d {
     position: absolute;
-    top: 8px;
+    bottom: 9px;
     right: 9px;
     font-size: 10px;
     font-weight: 700;
@@ -5561,7 +5561,7 @@ html.cs-modal-open {
 
 .tfc-tiers {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
     gap: 6px;
     margin-bottom: 12px;
 }

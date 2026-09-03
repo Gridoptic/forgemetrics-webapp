@@ -130,11 +130,8 @@ function openForgeSheet() {
             `<span class="fs-ico">${it.svg || `<i class="ti ti-${it.icon}"></i>`}</span>${body}</div>`;
     }).join('');
 
-    const baseRate = (f.packs && f.packs.length)
-        ? f.packs[0].price_rub / f.packs[0].amount : 0;
     const packs = (f.packs || []).map((p) => {
-        const disc = baseRate
-            ? Math.round((1 - (p.price_rub / p.amount) / baseRate) * 100) : 0;
+        const disc = p.discount_pct || 0;
         return `<button class="fw-pack" data-fspack="${p.amount}">` +
             `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
             `<span class="fw-pack-p">${cabNum(p.price_rub)} ₽</span>` +
@@ -3049,9 +3046,15 @@ function tfcOps(d) {
     return (d.forge_prices || []).filter((p) => TFC_MAX[p.key]);
 }
 
+const TFC_DEFAULT_PACK = 900;
+
+function tfcDefaultPack(packs) {
+    return packs.find((x) => x.amount === TFC_DEFAULT_PACK) || packs[0] || null;
+}
+
 function tfcTier(d) {
     const packs = d.forge_packs || [];
-    const p = packs.find((x) => x.amount === tfCalc.pack) || packs[1] || packs[0] || null;
+    const p = packs.find((x) => x.amount === tfCalc.pack) || tfcDefaultPack(packs);
     return p ? { key: p.amount, name: cabNum(p.amount) + ' Forge', forge: p.amount } : null;
 }
 
@@ -3112,7 +3115,7 @@ function tfCalculatorHtml(d) {
     if (!ops.length) return '';
     if (!tfCalc) {
         const packs = d.forge_packs || [];
-        const def = packs[1] || packs[0] || {};
+        const def = tfcDefaultPack(packs) || {};
         tfCalc = { pack: def.amount || 0, preset: 1, open: false,
                    shown: false, v: {}, want: { ...TFC_PRESETS[1].v } };
     }
@@ -3151,8 +3154,7 @@ function tfCalculatorHtml(d) {
         + '<div class="tfc-tiers">' + (d.forge_packs || []).map((p) =>
             '<button class="tfc-tier tp-am'
             + (p.amount === tfCalc.pack ? ' on' : '') + '" data-tfcpack="' + p.amount + '">'
-            + '<i class="ti ti-bolt"></i>'
-            + '<span>' + cabNum(p.amount) + '</span></button>').join('') + '</div>'
+            + forgeAmount(p.amount, 13) + '</button>').join('') + '</div>'
         + '<div class="tfc-budget' + (rest === 0 ? ' full' : '') + '">'
         + '<span class="tfc-bic"><i class="ti ti-circle-check"></i></span>'
         + '<span class="tfc-bt"><small>'
