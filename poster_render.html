@@ -48,7 +48,13 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .chart .ct{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;font-weight:600;letter-spacing:1.1px;color:#8990a8;text-transform:uppercase;}
 .chart .ct b{color:#5DCAA5;font-size:12.5px;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums;}
 .chart svg{display:block;width:100%;height:84px;overflow:visible;}
-.chart .cx{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:#7c84a0;font-variant-numeric:tabular-nums;margin-top:2px;}
+.chart .cxa{position:relative;height:14px;margin-top:3px;font-size:10.5px;font-weight:600;color:#7c84a0;font-variant-numeric:tabular-nums;}
+.chart .cxa span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;}
+.chart .cxa span.first{transform:none;}
+.chart .cxa span.last{transform:translateX(-100%);}
+.chart .pk{font-size:10.5px;font-weight:700;fill:#7be3c0;}
+.chart .pk.lo{text-anchor:end;}
+.chart .ax{font-size:9.5px;font-weight:600;fill:#7c84a0;}
 .chart.hide{display:none;}
 
 .mgrid{margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:9px;order:3;}
@@ -101,7 +107,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .poster.d2 .hook{font-size:14.5px;}
 .poster.d2 .chart svg{height:58px;}
 .poster.d2 .chart{padding:9px 12px 6px;margin-top:9px;}
-.poster.d2 .chart .cx{font-size:10px;}
+.poster.d2 .chart .cxa{font-size:10px;}
 .poster.d2 .mcell .v{font-size:20px;}
 .poster.d2 .mcell .l{font-size:8.5px;letter-spacing:0.6px;margin-top:4px;}
 .poster.d2 .mcell{padding:8px 11px 6px;border-radius:12px;}
@@ -113,7 +119,7 @@ body{margin:0;background:#0a0d18;color:#e8e8ed;font-family:'Inter','Noto Sans','
 .poster.d3 .hook{font-size:12.5px;margin-top:9px;}
 .poster.d3 .chart svg{height:52px;}
 .poster.d3 .chart{padding:7px 10px 4px;margin-top:8px;}
-.poster.d3 .chart .cx{font-size:9.5px;}
+.poster.d3 .chart .cxa{font-size:9.5px;}
 .poster.d3 .mgrid{gap:6px;margin-top:8px;}
 .poster.d3 .mcell{padding:6px 10px 5px;border-radius:10px;}
 .poster.d3 .mcell .v{font-size:16px;letter-spacing:-0.3px;}
@@ -227,9 +233,12 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
           <line x1="0" y1="24" x2="452" y2="24"/><line x1="0" y1="48" x2="452" y2="48"/><line x1="0" y1="72" x2="452" y2="72"/>
         </g>
         <path id="area" fill="url(#gArea)"/>
-        <path id="line" fill="none" stroke="url(#gLine)" stroke-width="2.5" stroke-linecap="round"/>
+        <path id="line" fill="none" stroke="url(#gLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="chartAxis"></g>
+        <text id="chartPeak" class="pk"></text>
+        <text id="chartLast" class="pk lo"></text>
       </svg>
-      <div class="cx"><span>2 913</span><span>4 407</span></div>
+      <div class="cxa" id="chartDates"></div>
     </div>
 
     <div class="mgrid" id="mgrid">
@@ -2678,56 +2687,153 @@ if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
   document.fonts.ready.then(applyPlaceholderAv).catch(function () {});
 }
 
-(function () {
-  var data = [2913, 3050, 2980, 3220, 3140, 3400, 3310, 3560, 3480, 3700, 3620, 3826, 3760, 3950, 3880, 4100, 4020, 4180, 4090, 4260, 4160, 4310, 4230, 4380, 4300, 4407];
-  if (data.length < 2) { document.getElementById('chart').classList.add('hide'); return; }
-  function drawChart() {
-    var svg = document.getElementById('chartSvg');
-    if (!svg) return;
-    var box = svg.getBoundingClientRect();
-    var W = Math.max(120, Math.round(box.width || 452));
-    var H = Math.max(48, Math.round(box.height || 96));
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    var padT = Math.max(5, Math.round(H * 0.10)), padB = Math.max(6, Math.round(H * 0.16));
-    var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
-    var range = max - min, denom = (data.length - 1) || 1;
-    /* защита от деления на ноль: плоская серия — горизонтальная линия посередине */
-    var pts = data.map(function (v, i) {
-      return [i * W / denom, range ? padT + (H - padT - padB) * (1 - (v - min) / range) : H / 2];
-    });
-    var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
-    for (var i = 1; i < pts.length; i++) {
-      var p0 = pts[i - 1], p1 = pts[i], cx = (p0[0] + p1[0]) / 2;
-      d += ' C' + cx.toFixed(1) + ',' + p0[1].toFixed(1) + ' ' + cx.toFixed(1) + ',' + p1[1].toFixed(1)
-        + ' ' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1);
+window.psRenderChart = function (series, dates, svg) {
+  if (!svg) return null;
+  var items = [];
+  if (dates && dates.length === series.length) {
+    var byDay = {}, order = [];
+    for (var i0 = 0; i0 < series.length; i0++) {
+      var v0 = series[i0];
+      if (typeof v0 !== 'number' || !isFinite(v0)) continue;
+      var k0 = String(dates[i0]);
+      if (!(k0 in byDay)) order.push(k0);
+      byDay[k0] = v0;
     }
-    document.getElementById('line').setAttribute('d', d);
-    document.getElementById('area').setAttribute('d', d + ' L' + W + ',' + H + ' L0,' + H + ' Z');
-    var grid = document.getElementById('chartGrid');
-    if (grid) {
-      var gl = '';
-      for (var g = 1; g <= 3; g++) {
-        var gy = (H * g / 4).toFixed(1);
-        gl += '<line x1="0" y1="' + gy + '" x2="' + W + '" y2="' + gy + '"/>';
-      }
-      grid.innerHTML = gl;
-    }
-    var lineEl = document.getElementById('line');
-    lineEl.setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
+    items = order.map(function (k) { return { d: k, v: byDay[k] }; });
+  } else {
+    items = series.filter(function (v) { return typeof v === 'number' && isFinite(v); })
+      .map(function (v) { return { d: null, v: v }; });
   }
+  var flat = items.length < 2;
+  var box = svg.getBoundingClientRect();
+  var W = Math.max(160, Math.round(box.width || 452));
+  var H = Math.max(44, Math.round(box.height || 96));
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  var AX = H < 60 ? 24 : 30;
+  var padT = Math.max(4, Math.round(H * 0.10)), padB = Math.max(6, Math.round(H * 0.16));
+  var vals = items.map(function (it) { return it.v; });
+  var min = flat ? 0 : Math.min.apply(null, vals), max = flat ? 1 : Math.max.apply(null, vals);
+  var range = max - min;
+  var yOf = function (v) { return range ? padT + (H - padT - padB) * (1 - (v - min) / range) : H / 2; };
+
+  var toDate = function (str) {
+    var m = /^(\d{1,2})\.(\d{1,2})$/.exec(String(str || ''));
+    return m ? { d: +m[1], m: +m[2] } : null;
+  };
+  var hasDates = !flat && items.every(function (it) { return toDate(it.d); });
+  var ords = [];
+  if (hasDates) {
+    var year = new Date().getFullYear(), prevM = -1, y = year;
+    items.forEach(function (it) {
+      var dm = toDate(it.d);
+      if (prevM >= 0 && dm.m < prevM) y += 1;
+      prevM = dm.m;
+      ords.push(new Date(y, dm.m - 1, dm.d).getTime() / 86400000);
+    });
+    if (ords[ords.length - 1] < ords[0]) hasDates = false;
+  }
+  var span = hasDates ? Math.max(1, ords[ords.length - 1] - ords[0]) : Math.max(1, items.length - 1);
+  var xOf = function (i) {
+    var t = hasDates ? (ords[i] - ords[0]) / span : (items.length > 1 ? i / (items.length - 1) : 0);
+    return AX + t * (W - AX);
+  };
+  var pts = flat ? [[AX, H - padB], [W, H - padB]] : items.map(function (it, i) { return [xOf(i), yOf(it.v)]; });
+  var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+  for (var i = 1; i < pts.length; i++) d += ' L' + pts[i][0].toFixed(1) + ',' + pts[i][1].toFixed(1);
+
+  var line = svg.querySelector('#line'), area = svg.querySelector('#area');
+  if (line) { line.setAttribute('d', d); line.setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2)); }
+  if (area) area.setAttribute('d', d + ' L' + W + ',' + H + ' L' + AX + ',' + H + ' Z');
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var mk = function (tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  var grid = svg.querySelector('#chartGrid');
+  var axis = svg.querySelector('#chartAxis');
+  if (grid) while (grid.firstChild) grid.removeChild(grid.firstChild);
+  if (axis) while (axis.firstChild) axis.removeChild(axis.firstChild);
+  var levels = flat ? [] : (H < 60 ? [max, min] : [max, Math.round((max + min) / 2), min]);
+  levels.forEach(function (lv) {
+    var yy = yOf(lv);
+    if (grid) grid.appendChild(mk('line', { x1: AX, y1: yy.toFixed(1), x2: W, y2: yy.toFixed(1) }));
+    if (axis) {
+      var t = mk('text', { x: 0, y: (yy + 3.5).toFixed(1), 'class': 'ax' });
+      t.textContent = Number(lv).toLocaleString('ru-RU').replace(/\u00a0/g, ' ');
+      axis.appendChild(t);
+    }
+  });
+  var ticks = [];
+  if (hasDates) {
+    var start = ords[0], end = ords[ords.length - 1];
+    for (var tt = start; tt <= end; tt += 7) ticks.push(tt);
+    if (ticks[ticks.length - 1] !== end) ticks.push(end);
+  } else if (!flat) {
+    ticks = [0.25, 0.5, 0.75].map(function (f) { return f; });
+  }
+  var tickX = function (t) { return hasDates ? AX + (t - ords[0]) / span * (W - AX) : AX + t * (W - AX); };
+  ticks.forEach(function (t, i) {
+    if (hasDates && (i === 0 || i === ticks.length - 1)) return;
+    var x = tickX(t).toFixed(1);
+    if (grid) grid.appendChild(mk('line', { x1: x, y1: 2, x2: x, y2: H - 2 }));
+  });
+
+  var host = document.getElementById('chartDates');
+  if (host) {
+    while (host.firstChild) host.removeChild(host.firstChild);
+    if (hasDates) {
+      ticks.forEach(function (t, i) {
+        var dt = new Date(t * 86400000);
+        var sp = document.createElement('span');
+        sp.textContent = ('0' + dt.getDate()).slice(-2) + '.' + ('0' + (dt.getMonth() + 1)).slice(-2);
+        sp.style.left = (tickX(t) / W * 100).toFixed(2) + '%';
+        if (i === 0) sp.className = 'first';
+        if (i === ticks.length - 1) sp.className = 'last';
+        host.appendChild(sp);
+      });
+    }
+  }
+
+  var peak = svg.querySelector('#chartPeak'), last = svg.querySelector('#chartLast');
+  var fmt = function (v) { return Number(v).toLocaleString('ru-RU').replace(/\u00a0/g, ' '); };
+  if (peak) {
+    var iMax = flat ? -1 : vals.indexOf(max);
+    if (iMax < 0 || iMax === items.length - 1) { peak.textContent = ''; }
+    else {
+      var px = pts[iMax][0], py = pts[iMax][1];
+      var leftSide = px < (AX + W) / 2;
+      peak.setAttribute('x', (leftSide ? px + 8 : px - 8).toFixed(1));
+      peak.setAttribute('y', Math.max(py + 4, 11).toFixed(1));
+      peak.setAttribute('text-anchor', leftSide ? 'start' : 'end');
+      peak.textContent = fmt(max);
+    }
+  }
+  if (last) {
+    if (flat) { last.textContent = ''; }
+    else {
+      var lp = pts[pts.length - 1];
+      last.setAttribute('x', (W - 2).toFixed(1));
+      last.setAttribute('y', (lp[1] > 16 ? lp[1] - 8 : lp[1] + 13).toFixed(1));
+      last.textContent = fmt(vals[vals.length - 1]);
+    }
+  }
+  return { flat: flat, first: flat ? null : vals[0], last: flat ? null : vals[vals.length - 1] };
+};
+
+(function () {
+  var data = [2913, 3050, 2980, 3220, 3140, 3400, 3310, 3560, 3480, 3700, 3620, 3826, 3760, 3950, 3880, 4100, 4020, 4180, 4090, 4260, 4407];
+  var days = 30, dates = [];
+  var today = new Date();
+  for (var i = 0; i < data.length; i++) {
+    var dt = new Date(today.getTime() - (data.length - 1 - i) * Math.round(days / (data.length - 1)) * 86400000);
+    dates.push(('0' + dt.getDate()).slice(-2) + '.' + ('0' + (dt.getMonth() + 1)).slice(-2));
+  }
+  function drawChart() { window.psRenderChart(data, dates, document.getElementById('chartSvg')); }
   window.__psDrawChart = drawChart;
   drawChart();
   if (window.ResizeObserver) {
     try { new ResizeObserver(drawChart).observe(document.getElementById('chartSvg')); } catch (e) {}
   }
-  /* процент и подписи осей вычисляются из данных, а не зашиты в HTML */
   var pct = data[0] ? Math.round((data[data.length - 1] - data[0]) / data[0] * 100) : 0;
   document.getElementById('chartPct').textContent = (pct >= 0 ? '▲ +' : '▼ ') + pct + '%';
-  var cx2 = document.querySelectorAll('#chart .cx span');
-  if (cx2.length >= 2) {
-    cx2[0].textContent = data[0].toLocaleString('ru-RU');
-    cx2[1].textContent = data[data.length - 1].toLocaleString('ru-RU');
-  }
 })();
 
 /* иерархия метрик: первые ДВЕ видимые плитки — «герои» (крупный шрифт).

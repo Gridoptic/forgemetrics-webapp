@@ -280,32 +280,7 @@
     var data = series.filter(function (v) { return typeof v === 'number' && isFinite(v); });
     var flat = data.length < 2;
     var svgEl = document.querySelector('#chart svg');
-    var sBox = svgEl ? svgEl.getBoundingClientRect() : null;
-    var W = Math.max(160, Math.round((sBox && sBox.width) || 452));
-    var H = Math.max(44, Math.round((sBox && sBox.height) || 96));
-    if (svgEl) {
-      svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    }
-    var padT = Math.max(4, Math.round(H * 0.10)), padB = Math.max(6, Math.round(H * 0.16));
-    var min = flat ? 0 : Math.min.apply(null, data), max = flat ? 1 : Math.max.apply(null, data);
-    var range = max - min, denom = flat ? 1 : ((data.length - 1) || 1);
-    var pts = flat
-      ? [[0, H - padB], [W, H - padB]]
-      : data.map(function (v, i) {
-          return [i * W / denom, range ? padT + (H - padT - padB) * (1 - (v - min) / range) : H / 2];
-        });
-    var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
-    for (var i = 1; i < pts.length; i++) {
-      var p0 = pts[i - 1], p1 = pts[i], cx = (p0[0] + p1[0]) / 2;
-      d += ' C' + cx.toFixed(1) + ',' + p0[1].toFixed(1) + ' ' + cx.toFixed(1) + ',' + p1[1].toFixed(1)
-        + ' ' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1);
-    }
-    if (el('line')) {
-      el('line').setAttribute('d', d);
-      /* тонкая линия на низкой карточке и обычная на высокой — иначе график заплывает */
-      el('line').setAttribute('stroke-width', Math.max(1.6, Math.min(2.6, H / 38)).toFixed(2));
-    }
-    if (el('area')) el('area').setAttribute('d', d + ' L' + W + ',' + H + ' L0,' + H + ' Z');
+    if (svgEl && window.psRenderChart) window.psRenderChart(series, dates, svgEl);
     _watchChartSize();
     var pctEl = el('chartPct');
     if (pctEl) {
@@ -314,38 +289,6 @@
     }
     var days = (chart && chart.days) || 30;
     var ct = document.querySelector('#chart .ct span'); if (ct) ct.textContent = (_psPack().chart || PG('Просмотры · 30 дней')).replace(/30/, String(days));
-    var svg = svgEl;
-    if (svg) {
-      var g = el('psGrid');
-      if (!g) {
-        g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.id = 'psGrid';
-        svg.insertBefore(g, svg.firstChild);
-      }
-      while (g.firstChild) g.removeChild(g.firstChild);
-      [0.25, 0.5, 0.75].forEach(function (f) {
-        var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ln.setAttribute('x1', (W * f).toFixed(1)); ln.setAttribute('x2', (W * f).toFixed(1));
-        ln.setAttribute('y1', '2'); ln.setAttribute('y2', String(H - 2));
-        ln.setAttribute('stroke', 'rgba(255,255,255,0.06)'); ln.setAttribute('stroke-width', '1');
-        ln.setAttribute('shape-rendering', 'crispEdges');
-        g.appendChild(ln);
-      });
-    }
-    var dFrom = (dates.length ? dates[0] : (chart && chart.from) || '');
-    var dTo = (dates.length ? dates[dates.length - 1] : (chart && chart.to) || '');
-    var dMid = dates.length > 2 ? dates[Math.floor((dates.length - 1) / 2)] : '';
-    var cxs = document.querySelectorAll('#chart .cx > span');
-    if (cxs.length >= 2) {
-      cxs[0].innerHTML = flat ? _psEsc(dFrom) : (data[0].toLocaleString('ru-RU') + ' <i style="font-style:normal;color:#565b73;">· ' + _psEsc(dFrom) + '</i>');
-      cxs[cxs.length - 1].innerHTML = flat ? _psEsc(dTo) : (data[data.length - 1].toLocaleString('ru-RU') + ' <i style="font-style:normal;color:#565b73;">· ' + _psEsc(dTo) + '</i>');
-      var midEl = el('psCxMid');
-      if (!midEl && cxs[0].parentNode) {
-        midEl = document.createElement('span'); midEl.id = 'psCxMid'; midEl.style.color = '#565b73';
-        cxs[0].parentNode.insertBefore(midEl, cxs[cxs.length - 1]);
-      }
-      if (midEl) midEl.textContent = dMid;
-    }
     if (box) box.classList.remove('hide');
     return true;
   }
