@@ -19,7 +19,7 @@
 .crv-sub { font-size: 12.5px; color: #8d93a8; margin: 0 0 14px 50px; line-height: 1.45; }
 
 .crv-screen .cp-act { min-height: 40px; }
-.crv-screen .cp-act.gen.wide { width: 100%; min-height: 50px; font-size: 14px; border-radius: 13px; box-shadow: 0 14px 30px -12px rgba(99, 102, 241, 0.8); }
+.crv-screen .cp-act.gen.wide { width: 100%; flex: 0 0 auto; min-height: 50px; max-height: 56px; font-size: 14px; border-radius: 13px; box-shadow: 0 14px 30px -12px rgba(99, 102, 241, 0.8); }
 .crv-screen .cp-act:disabled { opacity: .55; cursor: default; }
 .crv-screen .cp-chip { min-height: 40px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .crv-screen .cp-note { margin-top: 8px; }
@@ -144,3 +144,6 @@
 .crv-seg button.on { background: rgba(129, 140, 248, .18); color: #c7cbff; }
 .crv-go { margin-top: 16px; }
 .crv-go .forge-price { display: inline-flex; align-items: center; }
+
+.crv-screen .cp-act.crv-del { border-color: rgba(239, 68, 68, 0.35); color: #fca5a5; }
+.crv-screen .cp-act.crv-del i { color: #f87171; }

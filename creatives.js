@@ -138,7 +138,7 @@
 
     function statusHtml(c) {
         if (c.status === 'ready') return '<span class="crv-st ok"><i class="ti ti-check"></i>' + esc(T('готов')) + '</span>';
-        if (c.status === 'error') return '<span class="crv-st err"><i class="ti ti-alert-triangle"></i>' + esc(T('ошибка')) + '</span>';
+        if (c.status !== 'queued' && c.status !== 'generating') return '<span class="crv-st err"><i class="ti ti-alert-triangle"></i>' + esc(T('ошибка')) + '</span>';
         return '<span class="crv-st q"><span class="crv-spin sm"></span>' + esc(T('собирается')) + '</span>';
     }
     function previewHtml(c) {
@@ -157,11 +157,13 @@
             out += '<button class="cp-act" data-act="send" data-id="' + c.id + '"><i class="ti ti-brand-telegram"></i><span>' + esc(T('Отправить в Telegram')) + '</span></button>';
             if (c.url) out += '<button class="cp-act ok" data-act="open" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i><span>' + esc(T('Скачать MP4')) + '</span></button>';
             out += '<button class="cp-act" data-act="variant" data-id="' + c.id + '"><i class="ti ti-refresh"></i><span>' + esc(T('Другой вариант')) + '</span> ' + fa(basePrice(), 12) + '</button>';
+            out += '<button class="cp-act crv-del" data-act="del" data-id="' + c.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить')) + '</span></button>';
             out += '<button class="cp-act" data-act="desc" data-id="' + c.id + '"><i class="ti ti-copy"></i><span>' + esc(T('Текст для описания')) + '</span></button>';
             return out;
         }
-        if (c.status === 'error') return '<div class="cp-note fail">' + esc(T('Ролик не собрался — списание за сборку возвращено. Собери новый.')) + '</div>';
-        if (c.status === 'ready') return '<div class="cp-note">' + esc(T('Файл ролика недоступен')) + '</div>';
+        var del = '<button class="cp-act crv-del" data-act="del" data-id="' + c.id + '"><i class="ti ti-trash"></i><span>' + esc(T('Удалить')) + '</span></button>';
+        if (c.status === 'ready') return '<div class="cp-note">' + esc(T('Файл ролика недоступен')) + '</div>' + del;
+        if (c.status !== 'queued' && c.status !== 'generating') return '<div class="cp-note fail">' + esc(T('Ролик не собрался — списание за сборку возвращено. Собери новый.')) + '</div>' + del;
         return '<div class="cp-note">' + esc(T('Сценарий, кадры, озвучка, монтаж. Обычно 5–8 минут — можно уйти с экрана, ролик придёт в чат с ботом.')) + '</div>';
     }
     function itemHtml(c) {
@@ -362,6 +364,21 @@
             .then(function (r) { if (!r || !r.ok) toast(T('Не удалось отправить ролик'), 'alert-triangle'); })
             .catch(function () { toast(T('Не удалось отправить ролик'), 'alert-triangle'); });
     }
+    function remove(id) {
+        var go = function () {
+            apiRequest('/api/v1/creative/' + id, { method: 'DELETE' }).then(function (r) {
+                if (!r || !r.ok) { toast(T(r && r.error === 'in_progress' ? 'Ролик ещё собирается — удалить можно после' : 'Не удалось удалить ролик'), 'alert-triangle'); return; }
+                _items = (_items || []).filter(function (c) { return c.id !== id; });
+                renderList();
+                toast(T('Ролик удалён'), 'trash');
+            }).catch(function () { toast(T('Не удалось удалить ролик'), 'alert-triangle'); });
+        };
+        if (window.confirmDialog) {
+            var p = window.confirmDialog(T('Удалить ролик? Файл и запись исчезнут без возврата.'), T('Удалить'));
+            if (p && p.then) { p.then(function (ok) { if (ok) go(); }); return; }
+        }
+        go();
+    }
     function variant(cid) {
         haptic('medium');
         apiRequest('/api/v1/creative/variant', { method: 'POST', body: JSON.stringify({ id: cid }) })
@@ -429,6 +446,7 @@
         if (act === 'send') { send(+el.getAttribute('data-id')); return; }
         if (act === 'variant') { variant(+el.getAttribute('data-id')); return; }
         if (act === 'desc') { description(+el.getAttribute('data-id')); return; }
+        if (act === 'del') { remove(+el.getAttribute('data-id')); return; }
         if (act === 'upload') { toast(T('Скоро: загрузка своих файлов'), 'photo-plus'); return; }
         if (act === 'plat') { togglePlat(el.getAttribute('data-plat')); return; }
         if (act === 'chan') { _chId = +el.getAttribute('data-id'); haptic('light'); syncPlats(); return; }
