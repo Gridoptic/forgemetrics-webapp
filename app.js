@@ -2160,7 +2160,7 @@ function formatNumber(num) {
 }
 
 
-var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen';
+var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen, #creatives-screen';
 
 function fmAnyModalVisible() {
     var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active, ' + FM_FULLSCREENS);
@@ -2409,6 +2409,12 @@ function handleAction(actionId) {
         if (typeof window.__openContentPlan === 'function') {
             window.__openContentPlan();
         }
+        return;
+    }
+
+    if (actionId === 'creatives') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        openModuleSafe('creatives.js', '__openCreatives', TR('Креативы'));
         return;
     }
 
