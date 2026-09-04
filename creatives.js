@@ -64,10 +64,10 @@
     function plats() {
         return [
             ['telegram', 'Telegram', 'ti-brand-telegram', T('канал в кадре, ссылка в закрепе')],
-            ['vk', T('VK Клипы'), 'ti-brand-vk', T('ссылка в описании')],
-            ['shorts', 'YouTube Shorts', 'ti-brand-youtube', T('закреплённый комментарий')],
-            ['dzen', T('Дзен'), 'ti-letter-d', T('ссылка в описании')],
-            ['tiktok', 'TikTok, Reels', 'ti-brand-tiktok', T('ссылка в профиле')],
+            ['vk', T('VK Клипы'), 'ti-brand-vk', T('товар: ссылка в описании')],
+            ['shorts', 'YouTube Shorts', 'ti-brand-youtube', T('товар: закреплённый комментарий')],
+            ['dzen', T('Дзен'), 'ti-letter-d', T('товар: ссылка в описании')],
+            ['tiktok', 'TikTok, Reels', 'ti-brand-tiktok', T('товар: ссылка в профиле')],
             ['plain', T('Просто ролик'), 'ti-movie', T('без призыва')],
         ];
     }
