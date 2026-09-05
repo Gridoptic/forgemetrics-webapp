@@ -129,6 +129,15 @@
 .crv-ck { position: absolute; right: 8px; top: 8px; width: 16px; height: 16px; border-radius: 50%; background: #818cf8; color: #fff; display: none; align-items: center; justify-content: center; font-size: 10px; }
 .crv-tile.on .crv-ck { display: flex; }
 
+.crv-pgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 560px) { .crv-pgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.crv-ph { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 0; }
+.crv-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.crv-ph-x { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(10, 12, 20, .72); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; padding: 0; }
+.crv-ph.add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #c7cbff; border-style: dashed; border-color: rgba(129, 140, 248, 0.45); cursor: pointer; font-family: inherit; }
+.crv-ph.add i { font-size: 22px; }
+.crv-ph.add span { font-size: 11.5px; font-weight: 600; text-align: center; padding: 0 6px; overflow-wrap: anywhere; }
+
 .crv-plan { background: var(--bg-card, rgba(255, 255, 255, 0.03)); border: 1px solid rgba(129, 140, 248, .25); border-radius: 16px; padding: 15px; margin-top: 4px; }
 .crv-plan .pt { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .crv-plan .pt b { font-size: 15px; font-weight: 800; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; }

@@ -1974,6 +1974,8 @@
 .cp-crv-card { display: flex; gap: 10px; align-items: stretch; }
 .cp-crv-prev { position: relative; width: 84px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #05070f; border: 1px solid rgba(255, 255, 255, .08); padding: 0; cursor: pointer; aspect-ratio: 9 / 16; }
 .cp-crv-prev.as-img { cursor: default; }
+.cp-crv-prod { display: flex; flex-direction: column; gap: 8px; }
+.cp-crv-prod .cp-inp { width: 100%; min-height: 44px; box-sizing: border-box; }
 .cp-crv-prev img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .cp-crv-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: rgba(10, 13, 24, .72); border: 1px solid rgba(255, 255, 255, .25); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
 .cp-crv-dur { position: absolute; right: 5px; bottom: 5px; font-size: 9.5px; padding: 2px 5px; border-radius: 5px; background: rgba(10, 13, 24, .8); color: #e8eaf1; font-variant-numeric: tabular-nums; }

@@ -79,6 +79,7 @@
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
             host.addEventListener('keydown', onKey);
+            host.addEventListener('change', onChange);
         }
         if (!_open) return host;
         host.style.display = 'flex';
@@ -212,6 +213,7 @@
             });
     }
 
+    var MAX_PHOTOS = 8, MAX_PHOTO_MB = 8;
     function errMap() {
         return {
         no_channel: T('Подключи канал на главном экране — ролик поведёт на него'),
@@ -237,6 +239,9 @@
         blocked: T('Ролик по этому источнику собрать нельзя'),
         premium_soon: T('Премиум подключим в ближайшем обновлении'),
         not_found: T('Черновик не найден — начни заново'),
+        photos_required: T('Добавь хотя бы одно фото товара'),
+        photo_too_big: T('Фото больше 8 МБ — выбери другое'),
+        upload_not_needed: T('Для этого товара фото не нужны'),
         };
     }
     function errText(r, fb) {
@@ -299,6 +304,21 @@
         var h = headHtml(s.type === 'plan' ? T('План ролика') : T('Новый ролик'), 'back') + chipsHtml();
         if (s.type === 'vertical') {
             h += bubble(T('Что будем рекламировать?')) + optionsHtml(s.options, 'vertical');
+        } else if (s.type === 'question' && s.input === 'photos') {
+            var ph = A.sub && A.sub.photos ? A.sub.photos : null;
+            if (!ph) { ph = { files: [], urls: [], done: s.photos || 0 }; A.sub = { photos: ph }; }
+            h += bubble(s.title, s.hint);
+            if (ph.done && !ph.files.length) {
+                h += '<div class="crv-block sm"><b>' + esc(T('Фото загружены')) + ': ' + ph.done + '</b>' + esc(T('Можно продолжить с ними или заменить')) + '</div>' +
+                    '<button class="cp-act gen wide crv-go" data-act="photos-next">' + esc(T('Далее')) + ' <i class="ti ti-arrow-right"></i></button>' +
+                    '<button class="cp-act crv-ghost wide" data-act="photos-replace">' + esc(T('Заменить фото')) + '</button>';
+            } else {
+                h += '<div class="crv-pgrid">' + ph.urls.map(function (u, i) {
+                    return '<div class="crv-ph"><img src="' + u + '" alt=""><button class="crv-ph-x" data-act="photos-rm" data-i="' + i + '"><i class="ti ti-x"></i></button></div>';
+                }).join('') + (ph.files.length < MAX_PHOTOS ? '<button class="crv-ph add" data-act="photos-pick"><i class="ti ti-plus"></i><span>' + esc(T('Из галереи')) + '</span></button>' : '') + '</div>' +
+                    '<input type="file" id="crv-file" accept="image/*" multiple hidden>' +
+                    '<button class="cp-act gen wide crv-go" data-act="photos-go"' + (ph.files.length ? '' : ' disabled') + '>' + esc(T('Готово')) + (ph.files.length ? ' · ' + ph.files.length : '') + '</button>';
+            }
         } else if (s.type === 'question') {
             var opts = (s.options || []).slice();
             if (s.last) opts.unshift({ value: s.last, label: T('Как в прошлый раз') + ': ' + s.last });
@@ -358,7 +378,7 @@
             '<div class="row"><div class="k">' + esc(T('Сцены')) + '</div><div class="v"><ol>' + scenes + '</ol></div></div>' +
             '<div class="row"><div class="k">' + esc(T('Финал')) + '</div><div class="v">' + esc((p.final || {}).screen || '') + '<em>' + esc((p.final || {}).voice || '') + '</em></div></div>' +
             (music ? '<div class="row"><div class="k">' + esc(T('Музыка')) + '</div><div class="v">' + esc(music) + '</div></div>' : '') +
-            (notes ? '<div class="notes">' + esc(notes) + '</div>' : '') +
+            '<div class="notes">' + esc(notes ? notes + ' · ' : '') + esc(T('План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться')) + '</div>' +
             (s.notice ? '<div class="crv-block sm">' + esc(s.notice) + '</div>' : '') + '</div>' +
             (left > 0 ? '<button class="cp-act crv-ghost wide" data-act="edit">' + esc(T('Поправить план')) + ' · ' + fa(editPrice(), 13) + ' <span class="crv-dim">· ' + esc(T('осталось')) + ' ' + left + '</span></button>'
                 : '<div class="cp-note crv-centered">' + esc(T('Правок больше нет — собери ролик или начни заново')) + '</div>') +
@@ -398,6 +418,7 @@
         if (kind === 'link') return [T('Читаю карточку...'), T('Смотрю фото и характеристики...')];
         if (kind === 'channel') return [T('Читаю канал...'), T('Смотрю посты...')];
         if (kind === 'edit') return [T('Применяю правку...'), T('Пересобираю план...')];
+        if (kind === 'upload') return [T('Загружаю фото...'), T('Готовлю карточку товара...')];
         return [T('Секунду...')];
     }
     function call(patch, wait) {
@@ -465,6 +486,70 @@
         haptic('light');
         var kind = s.input === 'link' ? 'link' : 'x';
         call({ answer: { key: s.key, value: v.slice(0, s.input === 'link' ? 500 : 200) } }, kind);
+    }
+    function photosState() {
+        if (!A.sub || !A.sub.photos) A.sub = { photos: { files: [], urls: [], done: 0 } };
+        return A.sub.photos;
+    }
+    function photosAdd(list) {
+        var ph = photosState();
+        var skipped = 0;
+        for (var i = 0; i < list.length; i++) {
+            var fl = list[i];
+            if (ph.files.length >= MAX_PHOTOS) { skipped++; continue; }
+            if ((fl.type && !/^image\//.test(fl.type)) || fl.size > MAX_PHOTO_MB * 1024 * 1024) { skipped++; continue; }
+            ph.files.push(fl);
+            var u = '';
+            try { u = URL.createObjectURL(fl); } catch (e) {}
+            ph.urls.push(u);
+        }
+        if (skipped) toast(T('Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук'), 'alert-triangle');
+        renderStep();
+    }
+    function photosRemove(i) {
+        var ph = photosState();
+        if (i < 0 || i >= ph.files.length) return;
+        try { if (ph.urls[i]) URL.revokeObjectURL(ph.urls[i]); } catch (e) {}
+        ph.files.splice(i, 1);
+        ph.urls.splice(i, 1);
+        haptic('light');
+        renderStep();
+    }
+    function photosUpload() {
+        var ph = photosState();
+        if (!ph.files.length) { toast(errMap().photos_required, 'alert-triangle'); return; }
+        if (A.busy || !A.id) return;
+        A.busy = true;
+        haptic('light');
+        var fd = new FormData();
+        fd.append('id', String(A.id));
+        for (var i = 0; i < ph.files.length; i++) fd.append('files', ph.files[i], ph.files[i].name || ('photo' + i + '.jpg'));
+        renderWait(waitTexts('upload'));
+        apiRequest('/api/v1/creative/upload', { method: 'POST', body: fd, timeoutMs: 240000 })
+            .then(function (r) {
+                A.busy = false;
+                if (!_open) return;
+                if (!r || !r.ok) {
+                    renderStep();
+                    toast(errText(r, T('Не удалось загрузить фото')), 'alert-triangle');
+                    return;
+                }
+                for (var j = 0; j < ph.urls.length; j++) { try { if (ph.urls[j]) URL.revokeObjectURL(ph.urls[j]); } catch (e) {} }
+                A.sub = { photos: { files: [], urls: [], done: r.photos || ph.files.length } };
+                call({}, 'x');
+            })
+            .catch(function (err) {
+                A.busy = false;
+                if (!_open) return;
+                renderStep();
+                toast(apiErrText(err, T('Не удалось загрузить фото')), 'alert-triangle');
+            });
+    }
+    function onChange(e) {
+        if (!e.target || e.target.id !== 'crv-file') return;
+        var list = e.target.files ? Array.prototype.slice.call(e.target.files) : [];
+        e.target.value = '';
+        if (list.length) photosAdd(list);
     }
     function chip(key) {
         if (key === 'vertical') { startAssist(); return; }
@@ -607,6 +692,11 @@
         if (act === 'vertical') { haptic('light'); call({ vertical: el.getAttribute('data-val') }, el.getAttribute('data-val') === 'channel' ? 'channel' : 'x'); return; }
         if (act === 'answer') { answer(el.getAttribute('data-val')); return; }
         if (act === 'answer-custom') { var inp = document.getElementById('crv-in'); answer(inp ? inp.value : ''); return; }
+        if (act === 'photos-pick') { var fi = document.getElementById('crv-file'); if (fi) fi.click(); return; }
+        if (act === 'photos-rm') { photosRemove(+el.getAttribute('data-i')); return; }
+        if (act === 'photos-go') { photosUpload(); return; }
+        if (act === 'photos-next') { haptic('light'); call({}, 'x'); return; }
+        if (act === 'photos-replace') { haptic('light'); if (A.sub && A.sub.photos) A.sub.photos.done = 0; renderStep(); return; }
         if (act === 'plat') {
             if (el.getAttribute('data-off')) { toast(platName(el.getAttribute('data-plat')) + ': ' + T(el.getAttribute('data-off')), 'alert-triangle'); return; }
             var k = el.getAttribute('data-plat');
