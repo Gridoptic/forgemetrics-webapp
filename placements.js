@@ -166,13 +166,6 @@
             '.pl-glink{font-size:11px;color:#818cf8;font-weight:700;cursor:pointer;margin-bottom:10px;display:inline-block;padding:2px 0;}',
             '.pl-src{background:rgba(23,29,48,0.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.10);border-radius:18px;margin-bottom:10px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 10px 30px rgba(0,0,0,0.35);}',
             '.pl-srow{display:flex;align-items:center;gap:12px;padding:13px 14px;}',
-            '.pl-sic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:inset 0 0 0 0.5px rgba(255,255,255,0.14);}',
-            '.pl-sic svg{width:22px;height:22px;display:block;}',
-            '.pl-sic.yt{background:linear-gradient(140deg,rgba(255,0,0,0.28),rgba(255,0,0,0.10));}',
-            '.pl-sic.vk{background:linear-gradient(140deg,rgba(0,119,255,0.30),rgba(0,119,255,0.10));}',
-            '.pl-sic.dz{background:linear-gradient(140deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06));}',
-            '.pl-sic.tt{background:linear-gradient(140deg,rgba(37,244,238,0.16),rgba(254,44,85,0.16));}',
-            '.pl-sic.ig{background:linear-gradient(140deg,rgba(221,42,123,0.26),rgba(129,52,175,0.16));}',
             '.pl-snm{flex:1;min-width:0;}',
             '.pl-snm b{display:flex;align-items:center;gap:6px;font-size:14.5px;font-weight:700;min-width:0;}',
             '.pl-snm b u{text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
@@ -931,13 +924,8 @@
         }
     }
 
-    var SRC_PLATS = {
-        shorts: { n: 'YouTube Shorts', c: 'yt', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path d="M10 9l6 3-6 3z" fill="#fff"/></svg>' },
-        vk: { n: PL('VK Клипы'), c: 'vk', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="#0077FF"/><path d="M6.5 8h2.1c.2 2.4 1.1 4.3 2.4 4.9V8h2v3.1c1.2-.3 2.2-1.7 2.6-3.1h2c-.4 1.9-1.5 3.3-2.6 3.9 1.3.6 2.6 2 3 4.1h-2.2c-.4-1.6-1.5-2.9-2.8-3.2V16h-.3C9.5 16 6.8 12.7 6.5 8z" fill="#fff"/></svg>' },
-        dzen: { n: PL('Дзен'), c: 'dz', svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 2c.2 5.5 4.3 9.6 9.8 9.8v.4c-5.5.2-9.6 4.3-9.8 9.8h-.4c-.2-5.5-4.3-9.6-9.8-9.8v-.4C7.3 11.6 11.4 7.5 11.6 2z" fill="#0a0d18"/></svg>' },
-        tiktok: { n: 'TikTok', c: 'tt', svg: '<svg viewBox="0 0 24 24"><path d="M16 3c.4 2.3 1.9 3.8 4 4v3c-1.6 0-3-.5-4-1.3V15a5.5 5.5 0 1 1-5.5-5.5c.3 0 .7 0 1 .1v3.1a2.5 2.5 0 1 0 1.5 2.3V3z" fill="#25F4EE"/><path d="M17 4c.4 2.3 1.9 3.8 4 4v2c-1.6 0-3-.5-4-1.3z" fill="#FE2C55"/></svg>' },
-        reels: { n: 'Instagram Reels', c: 'ig', svg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#E1306C" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.4" fill="#E1306C"/></svg>' }
-    };
+    var TRACK_PLATS = ['shorts', 'vk', 'dzen', 'tiktok', 'reels'];
+    function platOf(k) { return (window.FM_PLATFORMS || {})[k] || { n: k, c: 'dz', svg: '' }; }
     var _srcHint = {};
 
     function isChPrivate() {
@@ -955,7 +943,7 @@
     }
 
     function srcCard(x, best) {
-        var pl = SRC_PLATS[x.platform_key] || { n: x.platform_key, c: 'dz', svg: '' };
+        var pl = platOf(x.platform_key);
         var pub = !isChPrivate();
         var slink = srcLink(x);
         var cpf = null;
@@ -1073,10 +1061,10 @@
     function openSrcAddSheet() {
         var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
         if (!sh || !bg) return;
-        var opts = Object.keys(SRC_PLATS).map(function (k) {
+        var opts = TRACK_PLATS.map(function (k) {
             return '<div class="pl-src" style="margin-bottom:8px;cursor:pointer;" data-act="src-add-pick" data-key="' + k + '">' +
-                '<div class="pl-srow"><div class="pl-sic ' + SRC_PLATS[k].c + '">' + SRC_PLATS[k].svg + '</div>' +
-                '<div class="pl-snm"><b><u>' + esc(SRC_PLATS[k].n) + '</u></b></div>' +
+                '<div class="pl-srow">' + window.fmPlatIcon(k) +
+                '<div class="pl-snm"><b><u>' + esc(platOf(k).n) + '</u></b></div>' +
                 '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div></div>';
         }).join('');
         sh.innerHTML = '<div class="pl-grip"></div>' +
