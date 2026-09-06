@@ -5236,7 +5236,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "ፕላን — ምሪት: ሙሉ ሞዴል ሁኔታ ይጽፋል፣ በ ቪዲዮ ውስጥ ቃላቶች ሊለያዩ ይችላሉ",
   "Фото больше 8 МБ — выбери другое": "ፎቶ 8 MB ያነሰ ነው — ሌላ ምረጥ",
   "Фото загружены": "ፎቶ ተሰኝቷል",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "ንግግር ፋይሎች ተዘለዋል: 8 MB ድረስ ፎቶ ብቻ, 8 ያነሰ ወይም እኩል ስብስብ"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "ንግግር ፋይሎች ተዘለዋል: 8 MB ድረስ ፎቶ ብቻ, 8 ያነሰ ወይም እኩል ስብስብ",
+  "Правки включены в план": "ማስተካከያዎች በእቅዱ ውስጥ ተካትተዋል",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "ዒላማው በመጨረሻው ካርድ ላይ በክፈፉ ውስጥ ይታያል። ከዚያ በኋላ - የቪዲዮ ዕቅድ እና ሁለት ማስተካከያዎች ለ"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10475,7 +10477,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "الخطة — دليل توجيهي: يكتب النموذج الكامل السيناريو، قد تختلف الصيغ في الفيديو",
   "Фото больше 8 МБ — выбери другое": "الصورة أكبر من 8 ميجابايت — اختر صورة أخرى",
   "Фото загружены": "تم تحميل الصور",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "تم تخطي بعض الملفات: صور فقط حتى 8 ميجابايت، بحد أقصى 8 صور"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "تم تخطي بعض الملفات: صور فقط حتى 8 ميجابايت، بحد أقصى 8 صور",
+  "Правки включены в план": "تم تضمين التعديلات في الخطة",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "يتم عرض الهدف في الإطار على البطاقة النهائية. بعد ذلك — خطة الفيديو وتعديلان مقابل"
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15714,7 +15718,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan — istiqamət: ssenari tam model tərəfindən yazılır, videodakı formulalaşdırmalar fərqli ola bilər",
   "Фото больше 8 МБ — выбери другое": "Foto 8 MB-dan çoxdur — başqasını seç",
   "Фото загружены": "Fotolar yükləndi",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Bəzi fayllar keçildi: yalnız 8 MB-a qədər fotolar, 8-dən çox olmayan"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Bəzi fayllar keçildi: yalnız 8 MB-a qədər fotolar, 8-dən çox olmayan",
+  "Правки включены в план": "Düzəlişlər plana daxil edildi",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Məqsəd son kartda çərçivədə göstərilir. Sonra — video planu və iki düzəliş üçün"
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -20917,7 +20923,9 @@ window.__I18N_DICT = {
   "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Частка файлаў прапушчана: толькі фото да 8 МБ, не больш за 8 штук",
   "готов": "готова",
   "охват базы · пост": "ахоп базы · пост",
-  "услуга": "сервіс"
+  "услуга": "сервіс",
+  "Правки включены в план": "Правкі ўключаны ў план",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Мета паказваецца ў кадры на завяршальнай карцы. Далей — план відэа і дзве правкі за"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26156,7 +26164,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "পরিকল্পনা — নির্দেশিকা: সম্পূর্ণ মডেল দ্বারা লিখিত, ভিডিওতে শব্দচয়ন ভিন্ন হতে পারে",
   "Фото больше 8 МБ — выбери другое": "ছবি 8 MB এর বেশি — অন্য একটি নির্বাচন করুন",
   "Фото загружены": "ছবি আপলোড করা হয়েছে",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "কিছু ফাইল বাদ দেওয়া হয়েছে: শুধুমাত্র 8 MB পর্যন্ত ছবি, 8 টির বেশি নয়"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "কিছু ফাইল বাদ দেওয়া হয়েছে: শুধুমাত্র 8 MB পর্যন্ত ছবি, 8 টির বেশি নয়",
+  "Правки включены в план": "সংশোধনগুলি পরিকল্পনায় অন্তর্ভুক্ত করা হয়েছে",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "লক্ষ্য চূড়ান্ত কার্ডে ফ্রেমে প্রদর্শিত হয়। তারপর — ভিডিও পরিকল্পনা এবং দুটি সংশোধন"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31395,7 +31405,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan — Orientierungshilfe: Das vollständige Modell schreibt das Szenario, die Formulierungen im Video können abweichen",
   "Фото больше 8 МБ — выбери другое": "Foto größer als 8 MB — wähle ein anderes",
   "Фото загружены": "Fotos hochgeladen",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Einige Dateien übersprungen: nur Fotos bis 8 MB, maximal 8 Stück"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Einige Dateien übersprungen: nur Fotos bis 8 MB, maximal 8 Stück",
+  "Правки включены в план": "Änderungen im Plan enthalten",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Das Ziel wird im Frame der finalen Karte angezeigt. Dann — der Videoplan und zwei Änderungen für"
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36634,7 +36646,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan is a reference: the full model writes the script, phrasing in the video may differ",
   "Фото больше 8 МБ — выбери другое": "Photo exceeds 8 MB — select another",
   "Фото загружены": "Photos uploaded",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Some files skipped: only photos up to 8 MB, maximum 8 files"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Some files skipped: only photos up to 8 MB, maximum 8 files",
+  "Правки включены в план": "Edits included in the plan",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "The target is shown in the frame on the final card. Next — video plan and two edits for"
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -41873,7 +41887,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan — referencia: el modelo completo escribe el guion, las formulaciones en el video pueden variar",
   "Фото больше 8 МБ — выбери другое": "Foto superior a 8 MB — elige otra",
   "Фото загружены": "Fotos cargadas",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Parte de los archivos omitidos: solo fotos hasta 8 MB, máximo 8 archivos"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Parte de los archivos omitidos: solo fotos hasta 8 MB, máximo 8 archivos",
+  "Правки включены в план": "Las correcciones están incluidas en el plan",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "El objetivo se muestra en el fotograma de la tarjeta final. Luego, el plan del video y dos correcciones por"
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47112,7 +47128,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "پلن — راهنما: سناریو توسط مدل کامل نوشته می‌شود، فرمولاسیون‌های ویدیو ممکن است متفاوت باشد",
   "Фото больше 8 МБ — выбери другое": "عکس بیشتر از 8 مگابایت است — عکس دیگری انتخاب کن",
   "Фото загружены": "عکس‌ها بارگذاری شدند",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "بخشی از فایل‌ها نادیده گرفته شد: تنها عکس‌های تا 8 مگابایت، حداکثر 8 عکس"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "بخشی از فایل‌ها نادیده گرفته شد: تنها عکس‌های تا 8 مگابایت، حداکثر 8 عکس",
+  "Правки включены в план": "ویرایش‌ها در طرح گنجانده شده‌اند",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "هدف در فریم کارت نهایی نمایش داده می‌شود. سپس — طرح ویدیو و دو ویرایش برای"
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52351,7 +52369,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan — repère : le scénario est rédigé par le modèle complet, les formulations dans la vidéo peuvent différer",
   "Фото больше 8 МБ — выбери другое": "Photo supérieure à 8 MB — choisis-en une autre",
   "Фото загружены": "Photos téléchargées",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Certains fichiers ignorés : uniquement les photos jusqu'à 8 MB, maximum 8 fichiers"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Certains fichiers ignorés : uniquement les photos jusqu'à 8 MB, maximum 8 fichiers",
+  "Правки включены в план": "Les modifications sont incluses dans le plan",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "L'objectif s'affiche dans le cadre de la carte finale. Ensuite — le plan de la vidéo et deux modifications pour"
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57590,7 +57610,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "योजना एक दिशानिर्देश है: पूर्ण मॉडल परिदृश्य लिखता है, वीडियो में शब्दावली भिन्न हो सकती है",
   "Фото больше 8 МБ — выбери другое": "फ़ोटो 8 एमबी से अधिक है — दूसरा चुनें",
   "Фото загружены": "फ़ोटो अपलोड किए गए",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "कुछ फ़ाइलें छोड़ी गईं: केवल 8 एमबी तक की फ़ोटो, 8 से अधिक नहीं"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "कुछ फ़ाइलें छोड़ी गईं: केवल 8 एमबी तक की फ़ोटो, 8 से अधिक नहीं",
+  "Правки включены в план": "संपादन योजना में शामिल हैं",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "लक्ष्य अंतिम कार्ड पर फ्रेम में दिखाया जाता है। आगे — रोल योजना और दो संपादन"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -62829,7 +62851,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Rencana — panduan: model lengkap menulis skenario, formulasi dalam video mungkin berbeda",
   "Фото больше 8 МБ — выбери другое": "Foto lebih besar dari 8 MB — pilih yang lain",
   "Фото загружены": "Foto berhasil diunggah",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Beberapa file dilewati: hanya foto hingga 8 MB, maksimal 8 file"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Beberapa file dilewati: hanya foto hingga 8 MB, maksimal 8 file",
+  "Правки включены в план": "Revisi disertakan dalam paket",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Target ditampilkan dalam frame pada kartu final. Selanjutnya — rencana video dan dua revisi untuk"
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -68068,7 +68092,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Piano — guida: lo script è scritto dal modello completo, le formulazioni nel video possono differire",
   "Фото больше 8 МБ — выбери другое": "Foto superiore a 8 MB — seleziona un'altra",
   "Фото загружены": "Foto caricate",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Alcuni file ignorati: solo foto fino a 8 MB, massimo 8 file"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Alcuni file ignorati: solo foto fino a 8 MB, massimo 8 file",
+  "Правки включены в план": "Modifiche incluse nel piano",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "L'obiettivo viene visualizzato nel fotogramma sulla scheda finale. Dopo — il piano del video e due modifiche per"
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73286,7 +73312,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "План — ориентир: сценарий толық модель жазады, видеодағы құрылымдар өзгеше болуы мүмкін",
   "Фото больше 8 МБ — выбери другое": "Сурет 8 МБ-тан жоғары — басқасын таңдаңыз",
   "Фото загружены": "Суреттер жүктелді",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Кейбір файлдар өткізіліп қойылды: тек 8 МБ-ға дейінгі суреттер, 8-ден артық емес"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Кейбір файлдар өткізіліп қойылды: тек 8 МБ-ға дейінгі суреттер, 8-ден артық емес",
+  "Правки включены в план": "Өндеулер жоспарға қосылған",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Мақсат соңғы карточкада кадрда көрсетіледі. Әрі — ролик жоспары және екі өндеу"
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -78525,7 +78553,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plano — referência: o modelo completo escreve o roteiro, as formulações no vídeo podem diferir",
   "Фото больше 8 МБ — выбери другое": "Foto maior que 8 MB — escolha outra",
   "Фото загружены": "Fotos carregadas",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Alguns arquivos foram ignorados: apenas fotos até 8 MB, máximo 8 arquivos"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Alguns arquivos foram ignorados: apenas fotos até 8 MB, máximo 8 arquivos",
+  "Правки включены в план": "Edições incluídas no plano",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "O objetivo é exibido no frame do card final. Depois — plano do vídeo e duas edições por"
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -83764,7 +83794,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Mpango — mwongozo: muundo kamili unaandika sehemu, maneno katika video yanaweza kuwa tofauti",
   "Фото больше 8 МБ — выбери другое": "Picha zaidi ya 8 MB — chagua ingine",
   "Фото загружены": "Picha zimelaadishwa",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Baadhi ya faili ziliruhusiwa: picha tu hadi 8 MB, si zaidi ya 8"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Baadhi ya faili ziliruhusiwa: picha tu hadi 8 MB, si zaidi ya 8",
+  "Правки включены в план": "Marekebishaji yamejumuishwa katika mpango",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Lengo linaonyeshwa katika fremu kwenye kadi ya mwisho. Baadaye — mpango wa video na marekebishaji mawili kwa"
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -89003,7 +89035,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Plan — kılavuz: tam model senaryoyu yazar, videodaki formülasyonlar farklı olabilir",
   "Фото больше 8 МБ — выбери другое": "Fotoğraf 8 MB'den büyük — başka birini seç",
   "Фото загружены": "Fotoğraflar yüklendi",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Bazı dosyalar atlandı: yalnızca 8 MB'ye kadar fotoğraflar, en fazla 8 adet"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Bazı dosyalar atlandı: yalnızca 8 MB'ye kadar fotoğraflar, en fazla 8 adet",
+  "Правки включены в план": "Düzenlemeler plana dahil edildi",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Hedef son kartta karede gösterilir. Sonra — video planı ve iki düzenleme"
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94242,7 +94276,9 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Rejani yo'riqnoma sifatida qabul qiling: stsenariy to'liq model yozadi, videodagi formulalar farq qilishi mumkin",
   "Фото больше 8 МБ — выбери другое": "Fotosurrat 8 MB dan ortiq — boshqasini tanlang",
   "Фото загружены": "Fotosurratlar yuklandi",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Ba'zi fayllar o'tkazib yuborildi: faqat 8 MB gacha bo'lgan fotosurratlar, 8 tadan ko'p emas"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Ba'zi fayllar o'tkazib yuborildi: faqat 8 MB gacha bo'lgan fotosurratlar, 8 tadan ko'p emas",
+  "Правки включены в план": "O'zgartirishlar rejaga kiritildi",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Maqsad yakuniy kartochkada kadrda ko'rsatiladi. Keyin — rolik rejasi va ikkita o'zgartirish uchun"
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -99481,6 +99517,8 @@ window.__I18N_DICT = {
   "План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться": "Kế hoạch — hướng dẫn: mô hình đầy đủ viết kịch bản, các cách diễn đạt trong video có thể khác",
   "Фото больше 8 МБ — выбери другое": "Ảnh lớn hơn 8 MB — chọn ảnh khác",
   "Фото загружены": "Ảnh đã được tải",
-  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Một số tệp bị bỏ qua: chỉ ảnh dưới 8 MB, không quá 8 tệp"
+  "Часть файлов пропущена: только фото до 8 МБ, не больше 8 штук": "Một số tệp bị bỏ qua: chỉ ảnh dưới 8 MB, không quá 8 tệp",
+  "Правки включены в план": "Các chỉnh sửa đã được bao gồm trong kế hoạch",
+  "Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за": "Mục tiêu được hiển thị trong khung trên thẻ cuối cùng. Tiếp theo — kế hoạch video và hai chỉnh sửa cho"
  }
 };

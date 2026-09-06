@@ -47,7 +47,7 @@
     function basePrice() { return priceOf('creative_build', 70); }
     function premiumPrice() { return priceOf('creative_premium', 200); }
     function planPrice() { return priceOf('creative_plan', 5); }
-    function editPrice() { return priceOf('creative_plan_edit', 5); }
+    function editPrice() { return priceOf('creative_plan_edit', 0); }
     function fmtDate(iso) {
         if (!iso) return '';
         var d = new Date(iso);
@@ -324,7 +324,7 @@
             if (s.last) opts.unshift({ value: s.last, label: T('Как в прошлый раз') + ': ' + s.last });
             h += bubble(s.title, s.hint);
             if (opts.length) h += optionsHtml(opts, 'answer');
-            if (s.input || s.allow_text !== false) h += customHtml(s.placeholder || (s.input === 'link' ? T('Вставь ссылку') : T('Напиши ответ')), 'answer-custom', s.input === 'link' ? 500 : 200, !!opts.length && !s.input);
+            if (s.input || s.allow_text !== false) h += customHtml(s.placeholder || (s.input === 'link' ? T('Вставь ссылку') : T('Напиши ответ')), 'answer-custom', s.input === 'link' ? 500 : 200, !!opts.length);
         } else if (s.type === 'platforms') {
             var sel = A.sub && A.sub.plats ? A.sub.plats : null;
             if (!sel) { sel = (s.last && s.last.length ? s.last.slice() : (s.preselect || []).slice()); A.sub = { plats: sel }; }
@@ -340,7 +340,7 @@
         } else if (s.type === 'cta') {
             var labels = s.labels || {};
             var subs = { article: s.article ? (T('Артикул') + ' ' + s.article) : '', channel: s.channel || '', domain: s.name || '' };
-            h += bubble(T('Чем закончить ролик?'), '', esc(T('Цель показывается в кадре на финальной карточке. Дальше — план ролика за')) + ' ' + fa(planPrice(), 12)) +
+            h += bubble(T('Чем закончить ролик?'), '', esc(T('Цель показывается в кадре на финальной карточке. Дальше — план ролика и две правки за')) + ' ' + fa(planPrice(), 12)) +
                 optionsHtml((s.kinds || []).map(function (k) { return { value: k, label: T(labels[k] || k), hint: subs[k] || '' }; }), 'cta');
         } else if (s.type === 'ctaval') {
             h += bubble(s.title, s.hint) + customHtml(s.placeholder, 'cta-val', s.max || 80, false);
@@ -354,9 +354,9 @@
         } else if (s.type === 'plan') {
             h += planHtml(s);
         } else if (s.type === 'editing') {
-            h += bubble(T('Что изменить в плане?'), '', esc(T('Одна правка')) + ' — ' + fa(editPrice(), 12) + '. ' + esc(T('Осталось')) + ': ' + (A.editsLeft || 0)) +
+            h += bubble(T('Что изменить в плане?'), '', (editPrice() ? esc(T('Одна правка')) + ' — ' + fa(editPrice(), 12) + '. ' : esc(T('Правки включены в план')) + '. ') + esc(T('Осталось')) + ': ' + (A.editsLeft || 0)) +
                 '<textarea class="cp-inp crv-ta" id="crv-rev" rows="3" maxlength="300" placeholder="' + esc(T('Например: короче, упор на цену, без сцены про сборку')) + '"></textarea>' +
-                '<button class="cp-act gen wide crv-go" data-act="apply-edit">' + esc(T('Применить')) + ' · ' + fa(editPrice(), 14) + '</button>';
+                '<button class="cp-act gen wide crv-go" data-act="apply-edit">' + esc(T('Применить')) + (editPrice() ? ' · ' + fa(editPrice(), 14) : '') + '</button>';
         }
         setView(h);
         var inp = document.getElementById('crv-in');
@@ -380,7 +380,7 @@
             (music ? '<div class="row"><div class="k">' + esc(T('Музыка')) + '</div><div class="v">' + esc(music) + '</div></div>' : '') +
             '<div class="notes">' + esc(notes ? notes + ' · ' : '') + esc(T('План — ориентир: сценарий пишет полная модель, формулировки в ролике могут отличаться')) + '</div>' +
             (s.notice ? '<div class="crv-block sm">' + esc(s.notice) + '</div>' : '') + '</div>' +
-            (left > 0 ? '<button class="cp-act crv-ghost wide" data-act="edit">' + esc(T('Поправить план')) + ' · ' + fa(editPrice(), 13) + ' <span class="crv-dim">· ' + esc(T('осталось')) + ' ' + left + '</span></button>'
+            (left > 0 ? '<button class="cp-act crv-ghost wide" data-act="edit">' + esc(T('Поправить план')) + (editPrice() ? ' · ' + fa(editPrice(), 13) : '') + ' <span class="crv-dim">· ' + esc(T('осталось')) + ' ' + left + '</span></button>'
                 : '<div class="cp-note crv-centered">' + esc(T('Правок больше нет — собери ролик или начни заново')) + '</div>') +
             '<div class="crv-sec"><div class="crv-lbl">' + esc(T('Голос')) + '</div>' +
             '<div class="crv-seg" id="crv-seg"><button class="' + (A.gender === 'male' ? 'on' : '') + '" data-act="gender" data-gender="male"><span>' + esc(T('Мужской')) + '</span></button>' +
