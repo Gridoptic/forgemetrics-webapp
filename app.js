@@ -8089,7 +8089,8 @@ function setupPostEventListeners() {
 var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js',
     'content_plan.js', 'content_plan.css', 'audit.js', 'audit.css',
     'strategy.js', 'strategy.css', 'rewrite.js', 'rewrite.css',
-    'cover_core.js', 'placements.js', 'competitors.js', 'competitors.css', 'fonts.css'];
+    'cover_core.js', 'placements.js', 'competitors.js', 'competitors.css', 'fonts.css',
+    'creatives.js', 'creatives.css', 'platform_icons.js'];
 var _fmHasPack = false;
 function _fmVerFromDom() {
     var sig = _FM_ASSETS.map(function (f) {
