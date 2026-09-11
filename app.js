@@ -2160,7 +2160,7 @@ function formatNumber(num) {
 }
 
 
-var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen, #creatives-screen';
+var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen';
 
 function fmAnyModalVisible() {
     var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active, ' + FM_FULLSCREENS);
@@ -2409,12 +2409,6 @@ function handleAction(actionId) {
         if (typeof window.__openContentPlan === 'function') {
             window.__openContentPlan();
         }
-        return;
-    }
-
-    if (actionId === 'creatives') {
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        openModuleSafe('creatives.js', '__openCreatives', TR('Креативы'));
         return;
     }
 
@@ -8089,8 +8083,7 @@ function setupPostEventListeners() {
 var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js',
     'content_plan.js', 'content_plan.css', 'audit.js', 'audit.css',
     'strategy.js', 'strategy.css', 'rewrite.js', 'rewrite.css',
-    'cover_core.js', 'placements.js', 'competitors.js', 'competitors.css', 'fonts.css',
-    'creatives.js', 'creatives.css', 'platform_icons.js'];
+    'cover_core.js', 'placements.js', 'competitors.js', 'competitors.css', 'fonts.css'];
 var _fmHasPack = false;
 function _fmVerFromDom() {
     var sig = _FM_ASSETS.map(function (f) {
