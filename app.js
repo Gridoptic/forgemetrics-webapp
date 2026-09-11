@@ -1152,7 +1152,7 @@ function renderPulse(pulse) {
       </div>
       <div class="pw-chart" id="pw-chart"></div>
       <div class="pw-msec">
-        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">${t('Показатели канала')}</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="' + TR('Настроить показатели') + '"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="pw-mhead" id="pw-mhead"><span class="pw-mtitle">${t('Показатели канала')}</span><button class="pw-mgear" id="pw-mgear" type="button" aria-label="${TR('Настроить показатели')}"><i class="ti ti-settings"></i></button><span class="pw-mchev" id="pw-mchev"><i class="ti ti-chevron-down"></i></span></div>
         <div class="pw-mmini" id="pw-mmini" hidden></div>
         <div class="pw-mwrap" id="pw-mwrap"><div class="pw-mrows" id="pw-mgrid"></div></div>
       </div>
