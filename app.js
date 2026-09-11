@@ -700,7 +700,7 @@ function renderChannelSelector(data) {
     const host = document.getElementById('channel-selector');
     if (!host) return;
     const ch = data.channel;
-    try { window.__fmActiveChannelId = ch ? ch.id : null; } catch (e) {}
+    try { window.__fmActiveChannelId = ch ? ch.id : null; window.__fmActiveNiche = (ch && ch.niche) ? String(ch.niche) : ''; } catch (e) {}
     const csig = JSON.stringify([ch && ch.id, ch && ch.title, ch && ch.username, ch && ch.is_paused, ch && ch.has_avatar,
         data.pulse && data.pulse.niche, data.total_channels]);
     if (csig === _chselSig && host.firstChild) return;

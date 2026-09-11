@@ -6919,6 +6919,9 @@
         var sh = el('fmx-writeSheet');
         var niches = [];
         var seen = {};
+        var mine = '';
+        try { mine = String(window.__fmActiveNiche || '').trim(); } catch (e) {}
+        if (mine) { seen[mine.toLowerCase()] = 1; niches.push(mine); }
         (_feed || []).forEach(function (l) { var nn = l.niche && String(l.niche).trim(); if (nn && !seen[nn.toLowerCase()]) { seen[nn.toLowerCase()] = 1; niches.push(nn); } });
         _sheetOwn('campaign');
         sh.innerHTML = '<div class="grip"></div><h3>' + L('Собрать кампанию под бюджет') + '</h3>' +
