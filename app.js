@@ -5622,7 +5622,7 @@ function renderChannelSettingsScreen(data) {
             </div>
         </div>
 
-        ${renderSettingsLimitsBar(data.voice_refresh_limits)}
+        ${renderSettingsLimitsBar(data.voice_refresh_limits, data.voice_status)}
         ${renderSettingsVoiceSection(data)}
         ${renderSettingsExamplesSection(data)}
         ${renderSettingsBehaviorSection(data)}
@@ -5638,7 +5638,7 @@ function renderChannelSettingsScreen(data) {
 }
 
 
-function renderSettingsLimitsBar(limits) {
+function renderSettingsLimitsBar(limits, status) {
     const price = Number((limits && limits.price) || 0);
     if (!price) return '';
     const balance = Number(limits.balance || 0);
@@ -5656,6 +5656,7 @@ function renderSettingsLimitsBar(limits) {
                 <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
             </div>
             <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
+            ${status === 'collecting' ? '' : `<div class="cs-voice-actions"><button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Обновить стиль письма')}</button></div>`}
         </div>
     `;
 }
@@ -5688,7 +5689,6 @@ function renderSettingsVoiceSection(data) {
                 <div class="cs-voice-text" id="cs-voice-text">${escapeHtml(data.voice_summary)}</div>
                 <div class="cs-voice-actions">
                     <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> ${TR('Изменить')}</button>
-                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Обновить стиль письма')}</button>
                 </div>
             </div>
         `;
@@ -5766,7 +5766,7 @@ function renderSettingsExamplesSection(data) {
                 <textarea
                     id="cs-examples-text"
                     class="cs-examples-textarea"
-                    placeholder="' + TR('Вставь сюда 3-5 своих постов как примеры стиля. Разделяй их пустой строкой или ---') + '"
+                    placeholder="${TR('Вставь сюда 3-5 своих постов как примеры стиля. Разделяй их пустой строкой или ---')}"
                     maxlength="5000"
                 ></textarea>
                 <div class="cs-examples-footer">
