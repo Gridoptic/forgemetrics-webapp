@@ -5638,29 +5638,44 @@ function renderChannelSettingsScreen(data) {
 }
 
 
+function capFirst(text) {
+    const t = String(text || '');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+
 function renderSettingsLimitsBar(limits, status) {
     const price = Number((limits && limits.price) || 0);
     if (!price) return '';
     const balance = Number(limits.balance || 0);
     const enough = balance >= price;
     const left = Math.floor(balance / price);
-    const note = enough
-        ? `Баланса хватит на ${left} ${plural3(left, TR('обновление'), TR('обновления'), TR('обновлений'))}`
+    const busy = status === 'collecting';
+    const sub = enough
+        ? `${capFirst(TR('по последним постам'))} · ${forgeAmount(price, 12)}`
         : `Не хватает Forge: нужно ${price}, на балансе ${balance}`;
-
+    const btn = busy ? '' : (enough
+        ? `<button class="cs-style-btn" id="cs-voice-refresh">${TR('Обновить стиль')}</button>`
+        : `<button class="cs-style-btn cs-style-btn-muted" id="cs-style-topup">${TR('Пополнить')}</button>`);
+    const foot = enough
+        ? `<div class="cs-style-sub">
+               <span>${TR('Хватит на')} ${left} ${plural3(left, TR('обновление'), TR('обновления'), TR('обновлений'))}</span>
+               <span class="cs-style-bal">${forgeAmount(balance, 14)} ${TR('на балансе')}</span>
+           </div>`
+        : '';
     return `
-        <div class="cs-limits-bar limit-row limit-row-green${enough ? '' : ' limit-row-exhausted'}">
-            <div class="limit-row-head">
-                <span class="limit-row-icon"><i class="ti ti-refresh"></i></span>
-                <span class="limit-row-label">${TR('Обновление стиля')}<span class="cs-limit-price">${forgeAmount(price, 12)}</span></span>
-                <span class="fw-inline-bal">${forgeAmount(balance, 14)}</span>
+        <div class="cs-limits-bar cs-style-bar${enough ? '' : ' cs-style-bar-low'}">
+            <div class="cs-style-top">
+                <div class="cs-style-title">
+                    <div class="cs-style-h"><i class="ti ti-refresh"></i>${TR('Стиль письма')}</div>
+                    <div class="cs-style-s">${sub}</div>
+                </div>
+                ${btn}
             </div>
-            <div class="fwb-note${enough ? '' : ' fwb-low'}">${note}</div>
-            ${status === 'collecting' ? '' : `<div class="cs-voice-actions"><button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Обновить стиль письма')}</button></div>`}
+            ${foot}
         </div>
     `;
 }
-
 
 function renderSettingsVoiceSection(data) {
     const status = data.voice_status || 'idle';
@@ -6223,6 +6238,8 @@ function attachSettingsHandlers() {
 
     const refreshBtn = document.getElementById('cs-voice-refresh');
     if (refreshBtn) refreshBtn.addEventListener('click', handleRefreshVoiceFromSettings);
+    const topupBtn = document.getElementById('cs-style-topup');
+    if (topupBtn) topupBtn.addEventListener('click', () => { hapticLight(); openTariffs(); });
 
     document.querySelectorAll('.cs-toggle-switch').forEach(sw => {
         sw.addEventListener('click', async () => {
