@@ -4815,9 +4815,7 @@ function renderDeletedChannels(deleted, intoEmpty) {
 
 window.__channelMenu = async function (channelId, title) {
     const action = await showChannelMenuPopup(title);
-    if (action === 'refresh_voice') {
-        window.__refreshVoice(channelId, title);
-    } else if (action === 'delete') {
+    if (action === 'delete') {
         const confirmed = await confirmDialog(
             `Удалить канал «${title}»?\n\nКанал переедет в «Недавно удалённые», данные сохранятся 7 дней. Переподключить можно в любой момент.`
         );
@@ -4884,8 +4882,6 @@ function showChannelMenuPopup(title) {
         title: title,
         message: TR('Что сделать с каналом?'),
         actions: [
-            { id: 'refresh_voice', text: TR('Обновить стиль письма'), icon: 'refresh',
-              sub: TR('Перечитать последние посты и обновить манеру') },
             { id: 'delete', text: TR('Удалить канал'), icon: 'trash', style: 'danger',
               sub: TR('Переедет в «Недавно удалённые» на 7 дней') },
             { id: 'cancel', text: TR('Отмена'), style: 'cancel' },
@@ -4947,26 +4943,6 @@ function _voicePriceCoin() {
         || 15;
     return (typeof window.forgeAmount === 'function') ? window.forgeAmount(p, 12) : String(p);
 }
-
-window.__refreshVoice = async function (channelId, title) {
-    const confirmed = await confirmDialogHtml(
-        TR('Пересобрать стиль'),
-        `Стиль канала «${escapeHtml(title || '')}» будет заменён свежим. Спишется ${_voicePriceCoin()}.`,
-        TR('Списать и пересобрать')
-    );
-    if (!confirmed) return;
-    try {
-        await apiRequest(`/api/v1/channels/${channelId}/voice/refresh`, { method: 'POST' });
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred?.('success');
-        await openChannels();
-        startVoicePollingIfNeeded();
-    } catch (e) {
-        const msg = (e?.message || '').includes('429')
-            ? TR('Не хватает Forge на обновление стиля. Пополни баланс в кабинете.')
-            : TR('Не удалось обновить стиль. Попробуй позже.');
-        await alertDialog(msg);
-    }
-};
 
 
 function renderAddMoreOrLimit(data) {
@@ -5712,7 +5688,7 @@ function renderSettingsVoiceSection(data) {
                 <div class="cs-voice-text" id="cs-voice-text">${escapeHtml(data.voice_summary)}</div>
                 <div class="cs-voice-actions">
                     <button class="cs-btn-ghost" id="cs-voice-edit"><i class="ti ti-edit"></i> ${TR('Изменить')}</button>
-                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Пересобрать')}</button>
+                    <button class="cs-btn-accent-ghost" id="cs-voice-refresh"><i class="ti ti-refresh"></i> ${TR('Обновить стиль письма')}</button>
                 </div>
             </div>
         `;
