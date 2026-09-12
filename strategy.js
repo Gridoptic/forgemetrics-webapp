@@ -179,7 +179,7 @@
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
                 '<div class="stg-fprice"><b>' + forge(rprice) + '</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
-                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i> ' + esc(T('Продлить ведение')) + ' · ' + forge(rprice) + '</button>' +
+                '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i>' + esc(T('Продлить ведение')) + '<span class="pm-btn-price">' + forge(rprice) + '</span></button>' +
                 '</div></div>');
             return;
         }
@@ -201,7 +201,7 @@
             : accessChip();
         var inProgress = !locked && _state && _state.status === 'interview';
         var cta = locked
-            ? '<button class="stg-fcta" data-act="buy">' + window.forgeIco(13) + ' ' + esc(T('Открыть доступ')) + ' · ' + forge(nprice) + '</button>'
+            ? '<button class="stg-fcta" data-act="buy">' + esc(T('Открыть доступ')) + '<span class="pm-btn-price">' + forge(nprice) + '</span></button>'
             : (inProgress
                 ? '<button class="stg-fcta" data-act="continue"><i class="ti ti-message-circle"></i> ' + esc(T('Продолжить разговор со стратегом')) + '</button>' +
                   '<div class="stg-fnote">' + esc(T('Разговор начат — ответы сохранены. Начать заново можно внутри.')) + '</div>'
