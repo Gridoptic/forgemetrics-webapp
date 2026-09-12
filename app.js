@@ -7202,7 +7202,7 @@ function rsCoverRender(host, ctx) {
         '<button class="cp-add2 own" data-rc="cover" type="button"><i class="ti ti-photo"></i><span class="tx"><b>' +
         TR('Рисованная обложка') + '</b><em>' + TR('Фраза из текста, палитра канала') + '</em></span><span class="pr">' + price + '</span></button>' +
         '<button class="cp-add2 own" data-rc="photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
-        TR('Фото-обложка') + '</b><em>' + TR('Эффектный кадр из фотобанка и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
+        TR('Фото-обложка') + '</b><em>' + TR('Эффектный кадр и заголовок') + '</em></span><span class="pr">' + price + '</span></button></div>';
     rsAppendCreative(host, ctx);
 }
 
@@ -7280,7 +7280,7 @@ function rsCreativeBtn(ctx) {
     if (ctx.crvBusy || (c && (c.status === 'queued' || c.status === 'generating'))) {
         return '<div class="cp-crv">' + head +
             '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-            escapeHtml(TR('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) +
+            escapeHtml(TR('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) +
             '</span></div></div>';
     }
     if (c && c.status === 'ready' && c.url) {
@@ -7436,11 +7436,11 @@ async function rsCrvDesc(cid) {
 }
 
 function rsCrvCredits(c) {
-    const parts = [];
-    if (c && c.credits && c.credits.length) parts.push(TR('Видео') + ': ' + c.credits.join(', '));
-    if (c && c.music_credit) parts.push(TR('Музыка') + ': ' + c.music_credit);
-    if (!parts.length) return '';
-    return '<div class="cp-crv-cred"><span>' + escapeHtml(parts.join(' · ')) + '</span></div>';
+    // лицензия трека требует назвать автора там, где ролик публикуется; больше ничего о сборке
+    // ролика интерфейс не сообщает
+    if (!c || !c.music_credit) return '';
+    return '<div class="cp-crv-cred"><span>' + escapeHtml(TR('Музыка') + ': ' + c.music_credit) +
+        '</span></div>';
 }
 
 function rsCreativePrice() {

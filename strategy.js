@@ -1493,7 +1493,6 @@
             var ch = (_tr && _tr.channel) || {};
             if (pick && (pick.invite_link || pick.click_url)) lines.push(pick.invite_link || pick.click_url);
             else if (ch.username) lines.push('https://t.me/' + ch.username);
-            if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
             if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
             trCopy(lines.join('\n'), T('Описание скопировано'));
         }).catch(function () { toast(T('Не удалось получить описание')); });

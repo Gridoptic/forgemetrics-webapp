@@ -1729,7 +1729,7 @@
                 esc(T('Рисованная обложка')) + '</b><em>' + esc(T('Если своей картинки нет: фраза из текста, палитра канала')) +
                 '</em></span><span class="pr">' + forgeTag(coverPrice('cover_own')) + '</span></button>' +
                 '<button class="cp-add2 own" data-oa="cover_photo" type="button"><i class="ti ti-camera"></i><span class="tx"><b>' +
-                esc(T('Фото-обложка')) + '</b><em>' + esc(T('Эффектный кадр из фотобанка и заголовок')) +
+                esc(T('Фото-обложка')) + '</b><em>' + esc(T('Эффектный кадр и заголовок')) +
                 '</em></span><span class="pr">' + forgeTag(coverPrice('cover_own')) + '</span></button></div>';
         };
         var drawTime = function () {
@@ -3930,7 +3930,7 @@
             crvPoll();
             return '<div class="cp-crv">' + head +
                 '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Собираю ролик: сценарий, кадры из стоков, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) + '</span></div></div>';
+                esc(T('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) + '</span></div></div>';
         }
         if (c && c.status === 'ready' && c.url) {
             var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
@@ -4047,7 +4047,6 @@
                 if (c.cta_text) lines.push(c.cta_text);
                 var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
                 if (ch && ch.username) lines.push('https://t.me/' + ch.username);
-                if (c.credits && c.credits.length) lines.push(T('Видео') + ': Pexels — ' + c.credits.join(', '));
                 if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
                 var text = lines.join('\n');
                 var run = (typeof copyText === 'function') ? copyText(text) : Promise.reject();
@@ -4209,7 +4208,7 @@
             ['cover_auto', 'ti-palette', T('Рисованная обложка'),
              T('фраза из текста, палитра и орнамент канала')],
             ['photo', 'ti-camera', T('Фото-обложка'),
-             T('эффектный кадр из фотобанка и подпись')],
+             T('эффектный кадр и подпись')],
         ];
         host.innerHTML = '<div class="cp-dsheet">' +
             '<div class="cp-dsgrab"></div>' +
