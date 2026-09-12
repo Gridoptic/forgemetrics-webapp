@@ -3,6 +3,7 @@
 
     var MAX_TOPIC = 3000, MAX_PHOTOS = 4, MAX_VIDEOS = 3;
     var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
+    var _keepDays = 7, _open = {};
     var _topic = '', _niche = '', _url = '', _voice = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
 
@@ -154,10 +155,37 @@
         return '';
     }
 
+    function keepLeft(c) {
+        if (!c.expires_at) return '';
+        var left = Math.ceil((new Date(c.expires_at) - Date.now()) / 86400000);
+        if (!isFinite(left)) return '';
+        if (left <= 0) return T('удаляется сегодня');
+        return T('хранится ещё') + ' ' + left + ' ' + plural(left, T('день'), T('дня'), T('дней'));
+    }
+
+    function plural(n, one, few, many) {
+        var a = Math.abs(n) % 100, b = a % 10;
+        if (a > 10 && a < 20) return many;
+        if (b > 1 && b < 5) return few;
+        if (b === 1) return one;
+        return many;
+    }
+
     function card(c) {
         var title = (c.title || (c.brief && c.brief.topic) || T('Ролик')).slice(0, 120);
         var src = (c.source_kind === 'brief') ? T('По теме') : T('Из поста');
         var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
+        var live = c.status === 'queued' || c.status === 'generating';
+        var open = !!_open[c.id] || live;
+        var thumb = (c.preview_url && c.status === 'ready')
+            ? '<span class="vd-thumb"><img src="' + esc(c.preview_url) + '" alt=""></span>'
+            : '<span class="vd-thumb ph"><i class="ti ti-' + (live ? 'loader-2' : (c.status === 'error' ? 'alert-triangle' : 'movie')) + '"></i></span>';
+        var meta = [src, dur, (c.status === 'ready' ? keepLeft(c) : '')].filter(Boolean).join(' · ');
+        var head = '<button type="button" class="vd-row" data-va="toggle" data-id="' + c.id + '">' +
+            thumb + '<span class="vd-row-tx"><b>' + esc(title) + '</b><em>' + esc(meta) + '</em></span>' +
+            '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + ' vd-row-ch"></i></button>';
+        if (!open) return '<div class="vd-item">' + head + '</div>';
+
         var body = statusRow(c);
         if (c.status === 'ready' && c.url) {
             body = '<button class="cp-crv-prev" type="button" data-va="open" data-url="' + esc(c.url) + '">' +
@@ -173,11 +201,15 @@
                 '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) +
                 '<span class="pm-btn-price">' + fa(_price, 12) + '</span></button>' +
                 '<button class="cp-act" type="button" data-va="desc" data-id="' + c.id +
-                '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button></div>' +
+                '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
+                '<button class="cp-act vd-del" type="button" data-va="del" data-id="' + c.id +
+                '"><i class="ti ti-trash"></i> ' + esc(T('Удалить')) + '</button></div>' +
                 ((typeof rsCrvCredits === 'function') ? rsCrvCredits(c) : '');
+        } else if (c.status === 'error') {
+            body += '<div class="cp-crv-acts"><button class="cp-act vd-del" type="button" data-va="del" data-id="' +
+                c.id + '"><i class="ti ti-trash"></i> ' + esc(T('Удалить')) + '</button></div>';
         }
-        return '<div class="vd-item"><div class="vd-item-h"><b>' + esc(title) + '</b>' +
-            '<span class="vd-tag">' + esc(src) + '</span></div>' + body + '</div>';
+        return '<div class="vd-item open">' + head + body + '</div>';
     }
 
     function list() {
@@ -185,7 +217,10 @@
         if (!_items.length) {
             return '<div class="vd-empty">' + esc(T('Роликов пока нет. Опиши тему и собери первый.')) + '</div>';
         }
-        return '<div class="vd-list">' + _items.map(card).join('') + '</div>';
+        return '<div class="vd-keep">' + esc(T('Готовые ролики хранятся') + ' ' + _keepDays + ' ' +
+            plural(_keepDays, T('день'), T('дня'), T('дней')) +
+            T(', затем удаляются автоматически. Скачай файл или отправь в Telegram, чтобы сохранить.')) +
+            '</div><div class="vd-list">' + _items.map(card).join('') + '</div>';
     }
 
     function render() {
@@ -265,6 +300,14 @@
             return;
         }
         if (a === 'variant') { variant(+b.getAttribute('data-id')); return; }
+        if (a === 'toggle') {
+            var tid = +b.getAttribute('data-id');
+            _open[tid] = !_open[tid];
+            haptic();
+            render();
+            return;
+        }
+        if (a === 'del') { removeOne(+b.getAttribute('data-id')); return; }
     }
 
     function pickPhoto() {
@@ -355,6 +398,32 @@
             .catch(function () { toast(T('Сборка не запустилась'), 'alert-triangle'); });
     }
 
+    function removeOne(cid) {
+        var item = null;
+        for (var i = 0; i < _items.length; i++) if (_items[i].id === cid) item = _items[i];
+        var name = (item && (item.title || (item.brief && item.brief.topic))) || T('Ролик');
+        var ask = (typeof confirmDialogHtml === 'function')
+            ? confirmDialogHtml(T('Удалить ролик?'),
+                '<div style="font-size:13px;line-height:1.5;">' + esc(name) + '<br><span style="color:#8d93a8;">' +
+                esc(T('Файл сразу удалится с наших серверов и восстановить его будет нельзя.')) + '</span></div>',
+                T('Удалить'))
+            : Promise.resolve(true);
+        Promise.resolve(ask).then(function (ok) {
+            if (!ok) return;
+            apiRequest('/api/v1/creative/' + cid, { method: 'DELETE' })
+                .then(function (r) {
+                    if (r && r.ok) {
+                        _items = _items.filter(function (x) { return x.id !== cid; });
+                        delete _open[cid];
+                        haptic('medium');
+                        toast(T('Ролик удалён'), 'trash');
+                        render();
+                    } else toast((r && r.message) || T('Не удалось удалить ролик'), 'alert-triangle');
+                })
+                .catch(function () { toast(T('Не удалось удалить ролик'), 'alert-triangle'); });
+        });
+    }
+
     function refreshBalance() {
         try { if (typeof refreshDashboardSilent === 'function') refreshDashboardSilent(); } catch (e) {}
     }
@@ -366,6 +435,7 @@
                 _items = r.items || [];
                 if (r.price) _price = r.price;
                 if (r.parallel) _parallel = r.parallel;
+                if (r.keep_days) _keepDays = r.keep_days;
                 if (r.niches && r.niches.length) _niches = r.niches;
                 _loaded = true;
                 render();
