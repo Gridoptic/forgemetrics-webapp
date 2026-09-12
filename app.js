@@ -818,13 +818,16 @@ var PW_FMT_META = {
 function pwPricePanel(pulse) {
     var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
     var hasOwn = pulse.formats.some(f => f.price != null);
+    var hasEst = pulse.formats.some(f => f.est != null);
     var PW_PST = { market: [_tp(TR('в рынке')), '#5DCAA5'], above: [_tp(TR('выше рынка')), '#f5bf4f'],
                    below: [_tp(TR('ниже рынка')), '#f5bf4f'], out: [_tp(TR('вне рынка')), '#ef8080'] };
     var rows = pulse.formats.map(f => {
         var meta = PW_FMT_META[f.k];
         if (!meta) return '';
         var right;
-        if (f.price != null) {
+        if (f.price != null && f.est == null) {
+            right = '<b>' + escapeHtml(pwRub(f.price) + ' ₽') + '</b>';
+        } else if (f.price != null) {
             var st = PW_PST[f.st];
             var tail = '';
             if (st) {
@@ -842,7 +845,9 @@ function pwPricePanel(pulse) {
             '<em>' + escapeHtml(_tp(meta[1])) + '</em></span>' +
             '<span class="fp">' + right + '</span></div>';
     }).join('');
-    var foot = hasOwn
+    var foot = !hasEst
+        ? _tp(TR('Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.'))
+        : hasOwn
         ? _tp(TR('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.'))
         : _tp(TR('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.'));
     return '<div class="pw-hintbox big' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
@@ -920,8 +925,7 @@ function pwRenderMetrics(pulse) {
             _pwNumPrev[id + ':' + _dch] = v;
             valTx = `<span class="pw-num" data-to="${v}"${_mp != null ? ` data-from="${_mp}"` : ''}${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
-        var _pfm = (id === 'price' && pulse.price_kind === 'estimate' &&
-                    pulse.formats && pulse.formats.length) ? pulse.formats : null;
+        var _pfm = (id === 'price' && pulse.formats && pulse.formats.length) ? pulse.formats : null;
         var nameTx = escapeHtml(m.label) +
             (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '') +
             (_pfm ? ` <i class="ti ti-chevron-down pw-pch${pwPriceOpen ? ' up' : ''}"></i>` : '');

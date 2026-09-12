@@ -5269,7 +5269,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "ተወልደበት ፍሪጅ",
   "Задачи недели {n}": "የ{n} ሳምንት ተግባራት",
   "Закрыл за тебя": "ሙሉ ልክ ሐዋይ",
-  "каналы для бартера подобраны из Радара": "ባርተር ላሉ ሰርጦች ከራዳር ተመርጠዋል"
+  "каналы для бартера подобраны из Радара": "ባርተር ላሉ ሰርጦች ከራዳር ተመርጠዋል",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "የእንደዚህ ዓይነት ዋጋዎች በExchangeላይ ከተሰጡ ዋጋዎች ተወስደዋል፤ እዚያ ላይ ይለወጣሉ። የገበያ ግምት የሚገኘው የአያያዝ ቻነልዎ በ100 views ሲበልጥ ነው።"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10541,7 +10542,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge غير كافي",
   "Задачи недели {n}": "مهام الأسبوع {n}",
   "Закрыл за тебя": "أغلقتها لك",
-  "каналы для бартера подобраны из Радара": "تم اختيار القنوات للمقايضة من Radar"
+  "каналы для бартера подобраны из Радара": "تم اختيار القنوات للمقايضة من Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "أسعارك من العرض في البورصة، وتتغير هناك أيضًا. سيظهر التقييم السوقي عندما يتجاوز نطاق القناة 100 مشاهدة."
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15813,7 +15815,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge çatışmır",
   "Задачи недели {n}": "{n} həftəsinin tapşırıqları",
   "Закрыл за тебя": "Sən üçün bağladı",
-  "каналы для бартера подобраны из Радара": "Barter kanalları Radar-dan seçilmişdir"
+  "каналы для бартера подобраны из Радара": "Barter kanalları Radar-dan seçilmişdir",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sənin qiymətlərin Birjədə təklif edilənlərdən gəlir, orada dəyişirlər. Bazar qiymətləndirmələri kanal reachı 100 görüntüləni keçəndə görünəcək."
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -21051,7 +21054,9 @@ window.__I18N_DICT = {
   "не хватает Forge": "не хапае Forge",
   "Задачи недели {n}": "Задачы тыдня {n}",
   "Закрыл за тебя": "Закрыў за табе",
-  "каналы для бартера подобраны из Радара": "каналы для бартера подабраны з Радара"
+  "каналы для бартера подобраны из Радара": "каналы для бартера подабраны з Радара",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Твае цаны — з офера на Бірцы, там жа яны меняюцца. Рынкавая оцэнка паявіцца, калі охват канала перавышыць 100 прагляды.",
+  "дат": "дата"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26323,7 +26328,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge অপর্যাপ্ত",
   "Задачи недели {n}": "সপ্তাহ {n} এর কাজ",
   "Закрыл за тебя": "আপনার জন্য বন্ধ করেছি",
-  "каналы для бартера подобраны из Радара": "বার্টার চ্যানেলগুলি রাডার থেকে নির্বাচিত"
+  "каналы для бартера подобраны из Радара": "বার্টার চ্যানেলগুলি রাডার থেকে নির্বাচিত",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "আপনার মূল্য বিনিময় থেকে আসে, সেখানেই সেগুলি পরিবর্তিত হয়। বাজার মূল্যায়ন প্রদর্শিত হবে যখন চ্যানেলের রিচ 100 ভিউ অতিক্রম করে।"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31595,7 +31601,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge reicht nicht aus",
   "Задачи недели {n}": "Aufgaben der Woche {n}",
   "Закрыл за тебя": "Für dich geschlossen",
-  "каналы для бартера подобраны из Радара": "Kanäle für Tausch wurden aus dem Radar ausgewählt"
+  "каналы для бартера подобраны из Радара": "Kanäle für Tausch wurden aus dem Radar ausgewählt",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Deine Preise stammen aus dem Angebot auf der Börse, dort werden sie auch angepasst. Die Marktbewertung erscheint, wenn die Reichweite des Kanals 100 Aufrufe übersteigt."
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36867,7 +36874,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "insufficient Forge",
   "Задачи недели {n}": "Week {n} tasks",
   "Закрыл за тебя": "Closed for you",
-  "каналы для бартера подобраны из Радара": "channels for barter selected from Radar"
+  "каналы для бартера подобраны из Радара": "channels for barter selected from Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Your prices come from the offer on the Exchange, and they change there as well. Market valuation will appear once your channel reach exceeds 100 views."
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -42139,7 +42147,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge insuficiente",
   "Задачи недели {n}": "Tareas de la semana {n}",
   "Закрыл за тебя": "Lo cerré por ti",
-  "каналы для бартера подобраны из Радара": "canales para canje seleccionados del Radar"
+  "каналы для бартера подобраны из Радара": "canales para canje seleccionados del Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tus precios proceden de la oferta en el Exchange, donde también se actualizan. La valoración de mercado aparecerá cuando el alcance del canal supere 100 visualizaciones."
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47411,7 +47420,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge ناکافی است",
   "Задачи недели {n}": "وظایف هفته {n}",
   "Закрыл за тебя": "برای تو بستم",
-  "каналы для бартера подобраны из Радара": "کانال‌های تبادلی از Radar انتخاب شدند"
+  "каналы для бартера подобраны из Радара": "کانال‌های تبادلی از Radar انتخاب شدند",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "قیمت‌های تو از پیشنهادهای بازار هستند، آن‌جا هم تغییر می‌کنند. ارزیابی بازار زمانی ظاهر می‌شود که رسانه‌ای کانال از 100 بازدید بیشتر شود."
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52683,7 +52693,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge insuffisant",
   "Задачи недели {n}": "Tâches de la semaine {n}",
   "Закрыл за тебя": "J'ai fermé pour toi",
-  "каналы для бартера подобраны из Радара": "les canaux pour l'échange sélectionnés du Radar"
+  "каналы для бартера подобраны из Радара": "les canaux pour l'échange sélectionnés du Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tes prix proviennent de l'offre sur la Bourse, c'est là qu'ils changent. L'évaluation de marché apparaîtra quand la portée du canal dépassera 100 vues."
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57955,7 +57966,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge अपर्याप्त है",
   "Задачи недели {n}": "सप्ताह {n} के कार्य",
   "Закрыл за тебя": "मैंने तुम्हारे लिए बंद कर दिया",
-  "каналы для бартера подобраны из Радара": "बार्टर के लिए चैनलों को रडार से चुना गया"
+  "каналы для бартера подобраны из Радара": "बार्टर के लिए चैनलों को रडार से चुना गया",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "तुम्हारी कीमतें Exchange के ऑफर से हैं, वहीं बदलती भी हैं। बाजार मूल्यांकन दिखेगा जब चैनल की पहुंच 100 व्यूज से अधिक हो जाएगी।"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -63227,7 +63239,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "tidak cukup Forge",
   "Задачи недели {n}": "Tugas minggu {n}",
   "Закрыл за тебя": "Saya tutup untuk Anda",
-  "каналы для бартера подобраны из Радара": "saluran untuk barter dipilih dari Radar"
+  "каналы для бартера подобраны из Радара": "saluran untuk barter dipilih dari Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Hargamu berasal dari penawaran di Bursa, dan dapat berubah di sana. Penilaian pasar akan muncul ketika jangkauan saluran melebihi 100 tayangan."
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -68499,7 +68512,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge insufficiente",
   "Задачи недели {n}": "Compiti della settimana {n}",
   "Закрыл за тебя": "L'ho chiuso per te",
-  "каналы для бартера подобраны из Радара": "i canali per il baratto sono stati selezionati da Radar"
+  "каналы для бартера подобраны из Радара": "i canali per il baratto sono stati selezionati da Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "I tuoi prezzi provengono dall'offerta su Borsa, e cambiano lì. La valutazione di mercato apparirà quando la portata del canale supererà 100 visualizzazioni."
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73752,7 +73766,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge жетіспейді",
   "Задачи недели {n}": "{n} аптасының тапсырмалары",
   "Закрыл за тебя": "Сен үшін жаптым",
-  "каналы для бартера подобраны из Радара": "барлау арналары Радардан таңдалды"
+  "каналы для бартера подобраны из Радара": "барлау арналары Радардан таңдалды",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Сенің баға-лары — Биржадағы ұсынысынан алынады, онда да өзгеріп отырады. Нарықтық бағалау арнайыңның қарауы 100 қараудан асқанда пайда болады."
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -79024,7 +79039,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge insuficiente",
   "Задачи недели {n}": "Tarefas da semana {n}",
   "Закрыл за тебя": "Fechei para você",
-  "каналы для бартера подобраны из Радара": "canais para troca selecionados do Radar"
+  "каналы для бартера подобраны из Радара": "canais para troca selecionados do Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Seus preços vêm da oferta na Bolsa, lá eles mudam. A avaliação de mercado aparecerá quando o alcance do canal exceder 100 visualizações."
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -84296,7 +84312,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge haikufa",
   "Задачи недели {n}": "Kazi za wiki {n}",
   "Закрыл за тебя": "Nilifunga kwa ajili yako",
-  "каналы для бартера подобраны из Радара": "njia za kubadilisha zimechaguliwa kutoka Radar"
+  "каналы для бартера подобраны из Радара": "njia za kubadilisha zimechaguliwa kutoka Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Bei zako ni kutoka kwa ofa ya Soko, hupo hupo pia zinabadilika. Tathmini ya soko itaonekana wakati wastani wa mwonekano wa kituo kinazidi maoni 100."
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -89568,7 +89585,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge yetersiz",
   "Задачи недели {n}": "{n}. haftanın görevleri",
   "Закрыл за тебя": "Senin için kapattım",
-  "каналы для бартера подобраны из Радара": "takas için kanallar Radar'dan seçildi"
+  "каналы для бартера подобраны из Радара": "takas için kanallar Radar'dan seçildi",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Fiyatlarınız Borsadaki tekliften alınmıştır, orada da değiştirilir. Pazar değerlendirmesi kanal erişimi 100 görüntülemeyi aştığında görünecektir."
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94840,7 +94858,8 @@ window.__I18N_DICT = {
   "не хватает Forge": "Forge yetarli emas",
   "Задачи недели {n}": "{n} haftasining vazifalar",
   "Закрыл за тебя": "Sening o'rniga yopildi",
-  "каналы для бартера подобраны из Радара": "Radar-dan savdo kanallari tanlandi"
+  "каналы для бартера подобраны из Радара": "Radar-dan savdo kanallari tanlandi",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sening narxlari Birjadagi ofertadan olingan, u yerda ular o'zgaradi. Bozor bahosi kanal qo'limining 100 ko'rishni oshganda paydo bo'ladi."
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -100112,6 +100131,7 @@ window.__I18N_DICT = {
   "не хватает Forge": "không đủ Forge",
   "Задачи недели {n}": "Nhiệm vụ tuần {n}",
   "Закрыл за тебя": "Tôi đã đóng cho bạn",
-  "каналы для бартера подобраны из Радара": "các kênh để trao đổi được chọn từ Radar"
+  "каналы для бартера подобраны из Радара": "các kênh để trao đổi được chọn từ Radar",
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Giá của bạn được lấy từ danh sách trên Sàn giao dịch, chúng thay đổi ở đó. Định giá thị trường sẽ xuất hiện khi lượt xem kênh vượt quá 100."
  }
 };
