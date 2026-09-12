@@ -4395,7 +4395,27 @@ function renderLimitBanner(limits) {
     updateCtaHint();
 }
 
+function updateEditBtnPrices() {
+    const l = (state.post && state.post.limits) || {};
+    const price = Number(l.price_modify || 0);
+    [['post-emoji-btn', price], ['post-result-custom-submit', price],
+     ['post-regenerate-btn', postModelPrice(l, postActiveModel(l))]].forEach(([id, p]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        let tag = el.querySelector('.pm-btn-price');
+        if (!p) { if (tag) tag.remove(); return; }
+        if (!tag) {
+            tag = document.createElement('span');
+            tag.className = 'pm-btn-price';
+            el.appendChild(tag);
+        }
+        tag.innerHTML = forgeAmount(p, 13);
+    });
+}
+
+
 function updateGenerateBtnPrice() {
+    updateEditBtnPrices();
     if (!els.postGenerateBtn) return;
     const l = (state.post && state.post.limits) || {};
     const tag = els.postGenerateBtn.querySelector('.pm-btn-price');
