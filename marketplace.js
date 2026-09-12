@@ -4052,7 +4052,7 @@
                 ? '<div class="fmx-minerej">' + L('Причина:') + ' ' + _esc(l.reject_reason) + ' ' + L('— исправь и сохрани, оффер уйдёт на повторную проверку.') + '</div>' : '') +
             '<div class="fmx-minemet" id="fmx-mst-' + l.id + '">За 7 дней: считаем…</div>' +
             (can('edit') ? '<div style="margin-top:11px;padding-top:11px;border-top:0.5px solid rgba(255,255,255,0.06);">' +
-            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">' + L('Календарь занятости · 45 дней') + '</div>' +
+            '<div style="font-size:10px;color:#565b73;text-transform:uppercase;letter-spacing:0.3px;font-weight:700;margin-bottom:6px;">' + L('Календарь занятости · ближайшие 45 дней') + '</div>' +
             '<div class="fmx-d14 num" id="fmx-strip-' + l.id + '"></div>' +
             '<div style="display:flex;align-items:center;gap:8px;margin-top:7px;">' +
             '<span style="font-size:10px;color:#565b73;flex:1;line-height:1.4;">' + L('Тап по дню — занято/свободно. Точка — спрос на дату') + '</span>' +
@@ -5675,6 +5675,7 @@
                     var rd = _calData[l.id]; if (rd) rd.open_months = rr.open_months;
                     toast(!monthOpen ? L('Месяц открыт — покупатели видят свободные дни') : (L('Месяц закрыт — покупатели его не видят') + (rr.removed_hot_days ? L('. Сняты точечные скидки: ') + rr.removed_hot_days : '')));
                     calDraw(box, l, 'edit');
+                    _mineStrip(l);
                 }).catch(function () { _haptic('error'); uiAlert(L('Не удалось изменить месяц')); });
             });
             qsa(box, '#fmx-calMode [data-cm]').forEach(function (b) {
@@ -5751,6 +5752,7 @@
             if (rr.busy) { r.busy.push(iso); } else { r.busy = r.busy.filter(function (x) { return x !== iso; }); }
             r.slots_updated_at = new Date().toISOString();
             calDraw(box, l, 'edit');
+            _mineStrip(l);
             var _jc = box.querySelector('[data-cd="' + iso + '"]'); if (_jc) _jc.classList.add('just');
             toast(L('Календарь обновлён — закупщики уже видят новые даты'));
         }).catch(function () { uiAlert(L('Не удалось. Повтори попытку.')); });
@@ -5994,6 +5996,7 @@
         });
     }
     function _refreshOwnerExtra(box, l) {
+        _mineStrip(l);
         var ex = box.querySelector('#fmx-ownerExtra');
         if (!ex) { calDraw(box, l, 'edit'); return; }
         var r = _calData[l.id];
@@ -6131,14 +6134,35 @@
         }).catch(function () {});
     }
 
-    function loadCal(box, l, mode, done) {
+    function _calFail(box, l, mode, done) {
+        box.innerHTML = '<div style="padding:18px 6px;text-align:center;font-size:12px;color:#8990a8;line-height:1.5;">' +
+            L('Календарь не загрузился — связь с сервером прервалась.') +
+            '<div style="margin-top:12px;"><button class="fmx-seg" data-calretry="1" style="min-height:36px;padding:7px 16px;">' +
+            L('Повторить') + '</button></div></div>';
+        var b = box.querySelector('[data-calretry]');
+        if (b) b.addEventListener('click', function () {
+            box.innerHTML = loadHtml();
+            loadCal(box, l, mode, done);
+        });
+    }
+
+    function loadCal(box, l, mode, done, retried) {
         if (!box || !l.id) return;
+        var slow = setTimeout(function () {
+            var n = box.querySelector('.fmx-load div');
+            if (n) n.textContent = L('Сервер отвечает медленно — календарь появится, как только придут данные');
+        }, 10000);
         apiGet('/api/v1/marketplace/listings/' + l.id + '/slots').then(function (r) {
-            if (!r || !r.ok) { box.innerHTML = ''; return; }
+            clearTimeout(slow);
+            if (!r || !r.ok) { _calFail(box, l, mode, done); return; }
             _calData[l.id] = r;
             calDraw(box, l, mode);
             if (done) done(r);
-        }).catch(function () { box.innerHTML = ''; });
+        }).catch(function () {
+            clearTimeout(slow);
+            if (!retried) { loadCal(box, l, mode, done, 1); return; }
+            _calFail(box, l, mode, done);
+        });
     }
     function renderSlotsBox(l, boxEl) { loadCal(boxEl || el('fmx-slotsBox'), l, 'edit'); }
 
