@@ -85,6 +85,7 @@
     text-overflow: ellipsis; white-space: nowrap; }
 .vd-row-ch { flex: 0 0 auto; color: #6f7695; font-size: 15px; }
 .vd-keep { font-size: 10.5px; color: #7d839a; line-height: 1.45; padding: 0 2px 2px; }
+.vd-gone { font-size: 11.5px; color: #8d93a8; line-height: 1.5; padding: 2px 2px 4px; }
 .vd-del { color: #ef8080; }
 .vd-del i { color: #ef8080; }
 .vd-empty { padding: 18px 14px; border-radius: 16px; font-size: 12.5px; color: #8d93a8; text-align: center;

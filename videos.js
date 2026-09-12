@@ -155,12 +155,16 @@
         return '';
     }
 
+    var MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+        'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
     function keepLeft(c) {
         if (!c.expires_at) return '';
-        var left = Math.ceil((new Date(c.expires_at) - Date.now()) / 86400000);
-        if (!isFinite(left)) return '';
-        if (left <= 0) return T('удаляется сегодня');
-        return T('хранится ещё') + ' ' + left + ' ' + plural(left, T('день'), T('дня'), T('дней'));
+        var d = new Date(c.expires_at);
+        if (isNaN(d.getTime())) return '';
+        var left = Math.ceil((d - Date.now()) / 86400000);
+        if (left <= 0) return T('удаляем сегодня');
+        return T('удаляем') + ' ' + d.getDate() + ' ' + T(MONTHS_GEN[d.getMonth()]);
     }
 
     function plural(n, one, few, many) {
@@ -180,7 +184,9 @@
         var thumb = (c.preview_url && c.status === 'ready')
             ? '<span class="vd-thumb"><img src="' + esc(c.preview_url) + '" alt=""></span>'
             : '<span class="vd-thumb ph"><i class="ti ti-' + (live ? 'loader-2' : (c.status === 'error' ? 'alert-triangle' : 'movie')) + '"></i></span>';
-        var meta = [src, dur, (c.status === 'ready' ? keepLeft(c) : '')].filter(Boolean).join(' · ');
+        var gone = c.status === 'ready' && !c.url;
+        var meta = [src, dur, (gone ? T('файла нет') : (c.status === 'ready' ? keepLeft(c) : ''))]
+            .filter(Boolean).join(' · ');
         var head = '<button type="button" class="vd-row" data-va="toggle" data-id="' + c.id + '">' +
             thumb + '<span class="vd-row-tx"><b>' + esc(title) + '</b><em>' + esc(meta) + '</em></span>' +
             '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + ' vd-row-ch"></i></button>';
@@ -208,6 +214,19 @@
         } else if (c.status === 'error') {
             body += '<div class="cp-crv-acts"><button class="cp-act vd-del" type="button" data-va="del" data-id="' +
                 c.id + '"><i class="ti ti-trash"></i> ' + esc(T('Удалить')) + '</button></div>';
+        } else if (c.status === 'ready') {
+            body = '<div class="vd-gone">' +
+                esc(c.in_telegram
+                    ? T('Файл снят с наших серверов по сроку хранения. Ролик остался в чате с ботом — пришлём повторно.')
+                    : T('Файл снят с наших серверов по сроку хранения. Собери другой вариант этого ролика.')) +
+                '</div><div class="cp-crv-acts">' +
+                (c.in_telegram ? '<button class="cp-act" type="button" data-va="send" data-id="' + c.id +
+                    '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' : '') +
+                '<button class="cp-act" type="button" data-va="variant" data-id="' + c.id +
+                '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) +
+                '<span class="pm-btn-price">' + fa(_price, 12) + '</span></button>' +
+                '<button class="cp-act vd-del" type="button" data-va="del" data-id="' + c.id +
+                '"><i class="ti ti-trash"></i> ' + esc(T('Удалить')) + '</button></div>';
         }
         return '<div class="vd-item open">' + head + body + '</div>';
     }
