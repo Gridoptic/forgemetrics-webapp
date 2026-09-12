@@ -334,8 +334,8 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
 
   <div class="lbl">Блок цены</div>
   <div class="chips" style="margin-bottom:8px;"><button class="chip on" id="prChip">Показывать блок цены</button></div>
-  <input type="number" id="prInp" value="5500" min="0" max="999999" step="100" placeholder="Цена, ₽ (до 999 999)">
-  <input type="text" id="prFmtInp" maxlength="40" placeholder="Формат размещения, до 40 символов (необязательно)" style="margin-top:8px;">
+  <input type="number" id="prInp" value="5500" autocomplete="off" min="0" max="999999" step="100" placeholder="Цена, ₽ (до 999 999)">
+  <input type="text" id="prFmtInp" maxlength="40" autocomplete="off" spellcheck="false" placeholder="Формат размещения, до 40 символов (необязательно)" style="margin-top:8px;">
 
   <div class="lbl">QR-коды · второй ведёт в ваш оффер на Площадке</div>
   <div class="chips" id="qrChips">
@@ -350,7 +350,7 @@ select,input[type=text],input[type=number]{width:100%;background:rgba(255,255,25
   <div class="note">Редактирование — на постере: рамка, угол — размер, верхняя точка — поворот, крестик — удалить, три точки — режим (поверх · слияние · задний фон). В продукте — ваша коллекция из бота (до 30).</div>
 
   <div class="lbl">Текст</div>
-  <input type="text" id="hookInp" maxlength="90" placeholder="Свой текст · до 90 символов">
+  <input type="text" id="hookInp" maxlength="90" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="Свой текст · до 90 символов">
   <button class="genbtn" id="genBtn">Сгенерировать текст (AI)</button>
   <div class="gentip" id="genTip">Генерация текста сейчас недоступна — попробуй позже.</div>
 </div>

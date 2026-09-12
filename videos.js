@@ -128,7 +128,7 @@
             '<div class="vd-f">' +
             '<div class="vd-lbl">' + esc(T('Тема ролика')) + '</div>' +
             '<div class="vd-hint">' + esc(T('Опиши, о чём ролик. Можно вставить свой текст — он станет основой сценария.')) + '</div>' +
-            '<textarea class="vd-ta" id="vd-topic" rows="5" maxlength="' + MAX_TOPIC + '" placeholder="' +
+            '<textarea class="vd-ta" id="vd-topic" rows="5" autocomplete="off" maxlength="' + MAX_TOPIC + '" placeholder="' +
             esc(T('Например: как выбрать робот-пылесос для квартиры с животными')) + '">' + esc(_topic) + '</textarea>' +
             '<div class="vd-cnt">' + esc(T('Осталось символов')) + ': ' + left + '</div></div>' +
             nicheField() +

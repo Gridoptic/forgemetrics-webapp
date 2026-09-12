@@ -5060,7 +5060,7 @@
             '<div class="fmx-mhead"><h2><i class="ti ti-list-search" style="color:#818cf8;"></i> ' + L('Ниши') + '</h2>' +
             '<button class="fmx-mclose" data-no><i class="ti ti-x"></i></button></div>' +
             '<div class="fmx-mbody">' +
-            '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" placeholder="' + L('Найти нишу — «нутра», «тендер», «казино»…') + '"></div>' +
+            '<div class="fmx-search" style="margin-bottom:12px;"><i class="ti ti-search"></i><input id="fmx-nq" autocomplete="off" spellcheck="false" placeholder="' + _esc(L('Найти нишу — «нутра», «тендер», «казино»…')) + '"></div>' +
             '<div id="fmx-nlist"></div></div>' +
             ((_nicheSel && !onPick) ? '<div class="fmx-mfoot"><button class="fmx-btn" data-clear>' + L('Сбросить фильтр') + '</button></div>' : '') +
             '</div>';
@@ -8678,7 +8678,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260913a';
+    var PS_GLUE_V = '20260913b';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -10728,7 +10728,7 @@
             _regionChipHtml() +
             '</div>';
     }
-    function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input placeholder="' + ph + '"></div>'; }
+    function searchHtml(ph) { return '<div class="fmx-search"><i class="ti ti-search"></i><input autocomplete="off" spellcheck="false" placeholder="' + _esc(ph) + '"></div>'; }
     function vtogHtml() {
         return '<div class="fmx-vtog"><button class="fmx-vt' + (_curView() === 'cards' ? ' on' : '') + '" data-view="cards"><i class="ti ti-layout-grid"></i></button>' +
             '<button class="fmx-vt' + (_curView() === 'list' ? ' on' : '') + '" data-view="list"><i class="ti ti-list"></i></button></div>';
