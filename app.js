@@ -7290,10 +7290,12 @@ function rsCreativeBtn(ctx) {
             '<button class="cp-act" type="button" data-rc="crvsend" data-id="' + c.id +
             '"><i class="ti ti-brand-telegram"></i> ' + escapeHtml(TR('Отправить в Telegram')) + '</button>' +
             '<button class="cp-act" type="button" data-rc="crvvariant" data-id="' + c.id +
-            '"><i class="ti ti-refresh"></i> ' + escapeHtml(TR('Другой вариант')) + '</button>' +
+            '"><i class="ti ti-refresh"></i> ' + escapeHtml(TR('Другой вариант')) +
+            '<span class="pm-btn-price">' + ((typeof forgeAmount === 'function')
+                ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice()) + '</span></button>' +
             '<button class="cp-act" type="button" data-rc="crvdesc" data-id="' + c.id +
             '"><i class="ti ti-copy"></i> ' + escapeHtml(TR('Описание для ролика')) + '</button>' +
-            '</div></div></div>';
+            '</div>' + rsCrvCredits(c) + '</div></div>';
     }
     const cost = (typeof forgeAmount === 'function') ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice();
     const again = (c && c.status === 'error');
@@ -7391,13 +7393,19 @@ async function rsCrvDesc(cid) {
         if (c.cta_text) lines.push(c.cta_text);
         const pi = state.post && state.post.placeInfo;
         if (pi && pi.channel_username) lines.push('https://t.me/' + pi.channel_username);
-        if (c.credits && c.credits.length) lines.push(TR('Видео') + ': Pexels — ' + c.credits.join(', '));
-        if (c.music_credit) lines.push(TR('Музыка') + ': ' + c.music_credit);
         await copyText(lines.join('\n'));
         showToast(TR('Описание скопировано'), 'copy');
     } catch (e) {
         showToast(TR('Не удалось получить описание'), 'alert-triangle');
     }
+}
+
+function rsCrvCredits(c) {
+    const parts = [];
+    if (c && c.credits && c.credits.length) parts.push(TR('Видео') + ': ' + c.credits.join(', '));
+    if (c && c.music_credit) parts.push(TR('Музыка') + ': ' + c.music_credit);
+    if (!parts.length) return '';
+    return '<div class="cp-crv-cred"><span>' + escapeHtml(parts.join(' · ')) + '</span></div>';
 }
 
 function rsCreativePrice() {

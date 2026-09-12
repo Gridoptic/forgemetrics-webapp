@@ -6516,3 +6516,17 @@ html.cs-modal-open {
 .pl-sic.tt { background: linear-gradient(140deg, rgba(37, 244, 238, 0.16), rgba(254, 44, 85, 0.16)); }
 .pl-sic.ig { background: linear-gradient(140deg, rgba(221, 42, 123, 0.26), rgba(129, 52, 175, 0.16)); }
 .pl-sic.tg { background: linear-gradient(140deg, rgba(42, 171, 238, 0.30), rgba(42, 171, 238, 0.10)); }
+
+.cp-crv-cred {
+    margin-top: 8px;
+    font-size: 9.5px;
+    line-height: 1.45;
+    color: #565b73;
+}
+
+.cp-crv-cred span {
+    display: block;
+    margin-top: 2px;
+    color: #6b7185;
+    overflow-wrap: anywhere;
+}
