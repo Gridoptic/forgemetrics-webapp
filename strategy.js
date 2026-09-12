@@ -731,7 +731,28 @@
             '<div style="margin-top:8px;">' + inner + '</div>' +
             (_state && _state.channel_id ? '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>' : '') + '</div>';
     }
+    function latestReview() {
+        var revs = (_state && _state.reviews || []).filter(function (r) { return r && r.v === 2 && r.week >= 1; });
+        if (!revs.length) return null;
+        return revs.reduce(function (a, b) { return (b.week || 0) > (a.week || 0) ? b : a; });
+    }
+    function weekTasksHtml(r) {
+        var prog = (_state && _state.progress) || {};
+        var tasks = r.tasks || [];
+        var done = tasks.filter(function (t) { return !!prog[t.key]; }).length;
+        var t = { done: done, total: tasks.length, pct: tasks.length ? Math.round(done * 100 / tasks.length) : 0 };
+        var range = done + ' ' + T('из') + ' ' + tasks.length + ' ' + T('шагов выполнено');
+        var auto = (r.auto_closed || []).map(function (a) {
+            return '<div class="stg-rv-row"><span class="dot ok"></span><span>' + esc(tx(a, 'tpl', 'params', 'text')) + '</span></div>';
+        }).join('');
+        return '<div class="stg-sec" data-sec="week1"><div class="stg-dochead">' + ringHtml(t) +
+            '<div class="t"><b>' + esc(T('Задачи недели {n}').replace('{n}', r.week + 1)) + '</b><span id="stg-doc-sub" data-count="1">' + range + '</span></div></div>' +
+            '<div style="margin-top:6px;">' + tasks.map(function (t) { return rvTask(t, r.week); }).join('') + '</div>' +
+            (auto ? '<div class="stg-rv-rows" style="margin-top:8px;">' + auto + '</div>' : '') + '</div>';
+    }
     function tasksHtml() {
+        var last = latestReview();
+        if (last && (last.tasks || []).length) return weekTasksHtml(last);
         var sec = docSection('week1');
         if (!sec || !(sec.steps || []).length) return '';
         var days = sec.days || [];
@@ -808,8 +829,16 @@
         var line = iso
             ? T('каждую неделю, день — {weekday}. Следующая — {date}, {time}').replace('{weekday}', fmtWeekday(iso)).replace('{date}', fmtDate(iso)).replace('{time}', fmtTime(iso))
             : T('дата появится после сборки стратегии');
+        var last = latestReview();
+        var lastTx = '';
+        if (last) {
+            var hl = last.headline_tpl ? tx(last.headline_tpl, 'tpl', 'params', 'text') : (last.headline || '');
+            var why = (last.changes || []).length ? '' : (last.no_changes_reason ? tx(last.no_changes_reason, 'tpl', 'params', 'text') : '');
+            lastTx = '<div class="stg-note" style="margin-top:8px;"><b>' + esc(T('Сверка {n}').replace('{n}', last.week)) + ':</b> ' + esc(hl) +
+                (why ? '<br>' + esc(why) : '') + '</div>';
+        }
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-clock"></i></span> ' + esc(T('Месяц ведения')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом и предложит правки сетки.')) + '</div></div>';
+            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом и предложит правки сетки.')) + '</div>' + lastTx + '</div>';
     }
     var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
     function accSecHtml(key) {
@@ -996,7 +1025,12 @@
                 var ct = tx(c, 'tpl', 'params', 'title'), cs = tx(c, 'sub_tpl', 'sub_params', 'sub');
                 return '<div class="stg-rv-ch"><span class="ico ' + esc(c.icon || '') + '">' + ic + '</span><span><b>' + esc(ct) + '</b>' + (cs ? '<small>' + esc(cs) + '</small>' : '') + '</span></div>';
             }).join('') + '</div>' + (ch.some(function (c) { return c.applied; }) ? '<div class="stg-rv-auto">' + esc(T('Применено автоматически: сетка канала переписана, следующая неделя соберётся по ней. Идущая неделя не тронута.')) + '</div>' : '')
-            : '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сетка без изменений: данных для решений пока мало — рубрики и часы оцениваются от 3 постов.')) + '</div>') + '</div>';
+            : '<div class="stg-note" style="margin-top:8px;">' + esc(r.no_changes_reason ? tx(r.no_changes_reason, 'tpl', 'params', 'text') : T('Сетка без изменений: данных для решений пока мало — рубрики и часы оцениваются от 3 постов.')) + '</div>') + '</div>';
+        var auto = r.auto_closed || [];
+        if (auto.length) {
+            html += '<div class="stg-sec"><div class="stg-eyebrow ok"><span class="tile"><i class="ti ti-circle-check"></i></span> ' + esc(T('Закрыл за тебя')) + '</div>' +
+                '<div class="stg-rv-rows">' + auto.map(function (a) { return '<div class="stg-rv-row"><span class="dot ok"></span><span>' + esc(tx(a, 'tpl', 'params', 'text')) + '</span></div>'; }).join('') + '</div></div>';
+        }
         var tasks = r.tasks || [];
         html += '<div class="stg-sec"><div class="stg-eyebrow act"><span class="tile">4</span> ' + esc(T('Что сделать тебе')) + '</div>' +
             (tasks.length ? '<div style="margin-top:6px;">' + tasks.map(function (t) { return rvTask(t, r.week); }).join('') + '</div>'
@@ -1158,6 +1192,11 @@
         if (!_state.progress) _state.progress = {};
         _state.progress[key] = done;
         var t = docTotals();
+        var wk = cb.closest ? cb.closest('[data-sec="week1"]') : null;
+        if (wk && wk.querySelector('.stg-rv-task')) {
+            var wkAll = wk.querySelectorAll('.stg-rv-task .stg-cb').length, wkDone = wk.querySelectorAll('.stg-rv-task .stg-cb.done').length;
+            t = { done: wkDone, total: wkAll, pct: wkAll ? Math.round(wkDone * 100 / wkAll) : 0 };
+        }
         var ring = document.querySelector('#strategy-screen .stg-ring');
         if (ring) {
             ring.style.background = 'conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)';
