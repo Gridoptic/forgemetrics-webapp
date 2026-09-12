@@ -5273,7 +5273,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "መጀመሪያ ሮቦቱን ጀምር — እሱ እድሎቹን ያሳያል እና ስቴርቴር ሪዛርভ Forge ያሰጥዋል።",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge በቂ አይደለም። በሥራ ቤትህ ውስጥ ሚዛንህን እንደገና ሙላ።",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "ሰርቪስ AI አሁን ከመጠን በላይ ተጭነው ነው — ቆይቶ እንደገና ሞክር።",
-  "Слишком часто — подожди несколько секунд и повтори.": "በጣም ብዙ ጊዜ — ጥቂት ሰከንዶችን ጠብቅ እና ድግም።"
+  "Слишком часто — подожди несколько секунд и повтори.": "በጣም ብዙ ጊዜ — ጥቂት ሰከንዶችን ጠብቅ እና ድግም።",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "ቪዲዮ አልተሰበሰበም — Forge ወደ ሚዛን ተመለሰ፣ እንደገና ሞክር።"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10549,7 +10550,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "شغّل البوت أولاً — سيعرض لك الإمكانيات وينسب لك رصيد Forge الأولي.",
   "Не хватает Forge. Пополни баланс в кабинете.": "لا يوجد رصيد Forge كافٍ. أضف رصيد في لوحة التحكم.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "خدمة الذكاء الاصطناعي مثقلة الآن — حاول لاحقاً.",
-  "Слишком часто — подожди несколько секунд и повтори.": "بتكرار مفرط — انتظر بضع ثواٍ وحاول مجدداً."
+  "Слишком часто — подожди несколько секунд и повтори.": "بتكرار مفرط — انتظر بضع ثواٍ وحاول مجدداً.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "لم يتم تجميع الفيديو — أعادت Forge الأموال إلى الرصيد، حاول مرة أخرى."
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15825,7 +15827,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Əvvəlcə botu işə sal — o, imkanları göstərəcək və startap Forge hissəsini hesablayacaq.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge balansı yetersiz. Kabinedə balansı artır.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Süni intellekt xidməti hazırda yüklü. Sonra cəhd et.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Çox tez-tez. Bir neçə saniyə gözlə və yenidən cəhd et."
+  "Слишком часто — подожди несколько секунд и повтори.": "Çox tez-tez. Bir neçə saniyə gözlə və yenidən cəhd et.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Video qurulmadı — Forge balansa qaytarıldı, yenidən cəhd et."
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -21069,7 +21072,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Спачатку запусці бота — ён паказа магчымасці і начыслі стартавы запас Forge.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Не хватае Forge. Папоўні баланс у кабінеце.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Сервіс ІІ зараз перагружаны — спрабуй пазней.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Зашмат часта — пачакай некалькі секунд і паўтары."
+  "Слишком часто — подожди несколько секунд и повтори.": "Зашмат часта — пачакай некалькі секунд і паўтары.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Ролик не собрался — Forge вярнулiся на баланс, паспрабуй яшчэ раз."
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26345,7 +26349,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "প্রথমে বট চালু করো — এটি সম্ভাবনা দেখাবে এবং স্টার্টআপ Forge বরাদ্দ করবে।",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge অপর্যাপ্ত। ক্যাবিনেটে ব্যালেন্স পূরণ করুন।",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "AI সার্ভিস এখন অপারগ — পরে চেষ্টা করুন।",
-  "Слишком часто — подожди несколько секунд и повтори.": "অত্যন্ত ঘন ঘন — কয়েক সেকেন্ড অপেক্ষা করুন এবং পুনরায় চেষ্টা করুন।"
+  "Слишком часто — подожди несколько секунд и повтори.": "অত্যন্ত ঘন ঘন — কয়েক সেকেন্ড অপেক্ষা করুন এবং পুনরায় চেষ্টা করুন।",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "ভিডিও তৈরি হয়নি — Forge ব্যালেন্সে ফেরত দেওয়া হয়েছে, আবার চেষ্টা করুন।"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31621,7 +31626,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Starten Sie zunächst den Bot — er zeigt die Möglichkeiten und schreibt einen Startsatz Forge gut.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge-Guthaben reicht nicht. Fülle dein Konto auf.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "KI-Service ist überlastet — versuche es später.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Zu häufig — warte einige Sekunden und versuche erneut."
+  "Слишком часто — подожди несколько секунд и повтори.": "Zu häufig — warte einige Sekunden und versuche erneut.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Video konnte nicht zusammengestellt werden — Forge wurden auf das Guthaben zurückgebucht, versuche es erneut."
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36897,7 +36903,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "First run the bot — it shows capabilities and credits your Forge startup balance.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Insufficient Forge. Top up your balance in the account.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "AI service is overloaded — try again later.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Too frequent — wait a few seconds and retry."
+  "Слишком часто — подожди несколько секунд и повтори.": "Too frequent — wait a few seconds and retry.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "The video failed to compile — Forge credits have been returned to your balance, try again."
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -42173,7 +42180,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primero inicia el bot — mostrará las posibilidades y acreditará el reserve inicial de Forge.",
   "Не хватает Forge. Пополни баланс в кабинете.": "No hay suficiente Forge. Recarga el saldo en tu cuenta.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "El servicio de IA está sobrecargado — intenta más tarde.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Demasiado frecuente — espera unos segundos e intenta de nuevo."
+  "Слишком часто — подожди несколько секунд и повтори.": "Demasiado frecuente — espera unos segundos e intenta de nuevo.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "El vídeo no se compiló — Forge se devolvió al saldo, intenta de nuevo."
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47449,7 +47457,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "ابتدا ربات را راه‌اندازی کن — امکانات را نشان می‌دهد و ذخیره شروع Forge را محاسبه می‌کند.",
   "Не хватает Forge. Пополни баланс в кабинете.": "موجودی Forge کافی نیست. در پنل خود را شارژ کن.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "سرویس AI اکنون بار زیادی دارد — بعداً دوباره تلاش کن.",
-  "Слишком часто — подожди несколько секунд и повтори.": "خیلی بار — چند ثانیه صبر کن و دوباره تلاش کن."
+  "Слишком часто — подожди несколько секунд и повтори.": "خیلی بار — چند ثانیه صبر کن و دوباره تلاش کن.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "ویدیو تشکیل نشد — Forge به حساب برگردانده شد، دوباره تلاش کن."
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52725,7 +52734,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "D'abord lance le bot — il affichera les capacités et créditera une réserve Forge initiale.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Solde Forge insuffisant. Recharge ton compte dans le cabinet.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Le service IA est actuellement surchargé — essaie plus tard.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Trop fréquent — attends quelques secondes et réessaie."
+  "Слишком часто — подожди несколько секунд и повтори.": "Trop fréquent — attends quelques secondes et réessaie.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "La vidéo n'a pas pu être créée — Forge a été recrédité sur ton solde, réessaye."
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -58001,7 +58011,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "पहले बॉट को लॉन्च करो — यह संभावनाएं दिखाएगा और स्टार्टअप Forge запас जमा करेगा।",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge अपर्याप्त है। कैबिनेट में बैलेंस जमा करो।",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "AI सेवा अभी ओवरलोडेड है — बाद में कोशिश करो।",
-  "Слишком часто — подожди несколько секунд и повтори.": "बहुत बार — कुछ सेकंड प्रतीक्षा करो और दोहराओ।"
+  "Слишком часто — подожди несколько секунд и повтори.": "बहुत बार — कुछ सेकंड प्रतीक्षा करो और दोहराओ।",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "वीडियो तैयार नहीं हुआ — Forge बैलेंस पर लौट गया है, फिर से कोशिश करें।"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -63277,7 +63288,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Luncurkan bot terlebih dahulu — akan menunjukkan kemampuan dan accrual cadangan awal Forge.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Saldo Forge tidak cukup. Isi ulang saldo di panel.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Layanan AI sedang kelebihan beban — coba lagi nanti.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Terlalu sering — tunggu beberapa detik dan coba lagi."
+  "Слишком часто — подожди несколько секунд и повтори.": "Terlalu sering — tunggu beberapa detik dan coba lagi.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Video gagal dikompilasi — Forge dikembalikan ke saldo, coba lagi."
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -68553,7 +68565,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Prima avvia il bot — mostrerà le possibilità e accrediterà la riserva iniziale di Forge.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Non hai abbastanza Forge. Ricarica il saldo in cabinet.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Il servizio IA è attualmente sovraccarico — riprova più tardi.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Troppo frequente — attendi alcuni secondi e riprova."
+  "Слишком часто — подожди несколько секунд и повтори.": "Troppo frequente — attendi alcuni secondi e riprova.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Il video non è stato creato — Forge sono stati restituiti al saldo, riprova."
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73812,7 +73825,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Алдымен ботты іске қос — ол мүмкіндіктерді көрсетеді және стартты Forge резервін есепке өтеді.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge жеткіліксіз. Кабинетте балансты толықта.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "АИ қызметі қазір перегружен — кейінірек спробай.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Тым жиі — бірнеше секунд күте және қайта көшіл."
+  "Слишком часто — подожди несколько секунд и повтори.": "Тым жиі — бірнеше секунд күте және қайта көшіл.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Видео жинақталмады — Forge балансқа қайта түсті, қайтадан көпей."
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -79088,7 +79102,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primeiro inicia o bot — ele mostrará as funcionalidades e creditará o Forge inicial.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Saldo insuficiente de Forge. Recarregue o saldo no painel.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Serviço de IA sobrecarregado — tente novamente mais tarde.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Muitas solicitações — aguarde alguns segundos e tente novamente."
+  "Слишком часто — подожди несколько секунд и повтори.": "Muitas solicitações — aguarde alguns segundos e tente novamente.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Vídeo não foi montado — Forge retornou ao saldo, tente novamente."
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -84364,7 +84379,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Kwanza endesha bot — itaonyesha uwezekano na kuongeza akiba ya kuanza ya Forge.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Hakuna Forge. Jaza salio katika dashibodi.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Huduma ya AI sasa ina mzigo mwingi — jaribu baadaye.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Mara nyingi sana — subiri sekunde chache na jaribu tena."
+  "Слишком часто — подожди несколько секунд и повтори.": "Mara nyingi sana — subiri sekunde chache na jaribu tena.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Klipu haikutengenezwa — Forge imerudishwa kwenye salio, jaribu tena."
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -89640,7 +89656,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Önce botu başlat — olanaklarını gösterir ve başlangıç Forge kredisini yükler.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge yetersiz. Panelden bakiyeni yükselt.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Yapay zeka hizmeti şu anda aşırı yüklenmiş — daha sonra dene.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Çok sık — birkaç saniye bekle ve tekrar dene."
+  "Слишком часто — подожди несколько секунд и повтори.": "Çok sık — birkaç saniye bekle ve tekrar dene.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Video derlenemedi — Forge bakiyeye iade edildi, tekrar dene."
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94916,7 +94933,8 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Avval botni ishga tushir — u imkoniyatlarni ko'rsatadi va Forge boshlash zaxirasini hisoblaydi.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Forge yetishmaydi. Kabinettada balansni to'ldirmoq.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "AI xizmati hozir overload. Keyinroq urinib ko'ring.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Juda tez-tez. Bir necha soniya kuting va qayta urinmoq."
+  "Слишком часто — подожди несколько секунд и повтори.": "Juda tez-tez. Bir necha soniya kuting va qayta urinmoq.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Rolик to'planmadi — Forge balansga qaytarildi, yana bir marta sinab ko'ring."
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -100192,6 +100210,7 @@ window.__I18N_DICT = {
   "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Trước tiên hãy khởi động bot — nó sẽ hiển thị khả năng và tính toán khoảng Forge khởi động.",
   "Не хватает Forge. Пополни баланс в кабинете.": "Không đủ Forge. Nạp tiền vào tài khoản.",
   "Сервис ИИ сейчас перегружен — попробуй позже.": "Dịch vụ AI hiện bị quá tải — hãy thử lại sau.",
-  "Слишком часто — подожди несколько секунд и повтори.": "Quá thường xuyên — chờ vài giây rồi thử lại."
+  "Слишком часто — подожди несколько секунд и повтори.": "Quá thường xuyên — chờ vài giây rồi thử lại.",
+  "Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.": "Video không được tạo — Forge đã được hoàn lại vào số dư, hãy thử lại."
  }
 };

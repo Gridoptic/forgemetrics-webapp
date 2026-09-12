@@ -7059,7 +7059,7 @@ function rsErr(code) {
         no_channel: TR('Сначала подключи канал — публиковать некуда'),
         no_text: TR('Сначала нужен текст — фраза на обложку берётся из него'),
         bad_type: TR('Такой формат не подойдёт: нужна картинка, GIF или видео'),
-        crv_failed: TR('Ролик не собрался — попробуй ещё раз.'),
+        crv_failed: TR('Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.'),
         crv_start: TR('Не удалось запустить сборку'),
     };
     return t(M[code] || TR('Не получилось — попробуй ещё раз'));
@@ -7278,7 +7278,7 @@ function rsCreativeBtn(ctx) {
     const cost = (typeof forgeAmount === 'function') ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice();
     const again = (c && c.status === 'error');
     return '<div class="cp-crv">' + head +
-        (again ? '<div class="cp-note fail">' + escapeHtml(TR('Ролик не собрался — попробуй ещё раз.')) + '</div>' : '') +
+        (again ? '<div class="cp-note fail">' + escapeHtml(TR('Ролик не собрался — Forge вернулись на баланс, попробуй ещё раз.')) + '</div>' : '') +
         '<button type="button" class="cp-crv-go" data-rc="creative">' +
         '<i class="ti ti-movie"></i><span class="tx"><b>' + escapeHtml(TR('Собрать креатив')) + ' ' + cost +
         '</b><em>' + escapeHtml(TR('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) +
