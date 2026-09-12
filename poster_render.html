@@ -2926,7 +2926,7 @@ function relayout() {
   spreadFree();
   /* плотность d4 скрывает график — отражаем это на чипе пульта */
   var chartChip = document.getElementById('chartChip');
-  if (chartChip) {
+  if (chartChip && window.__psHasChart !== false) {
     var d4 = poster.classList.contains('d4');
     chartChip.style.opacity = d4 ? '0.5' : '';
     chartChip.title = d4 ? 'Скрыт из-за плотной компоновки' : '';
@@ -2989,7 +2989,10 @@ on('bgChips', 'click', function (e) {
 });
 on('chartChip', 'click', function () {
   this.classList.toggle('on');
-  document.getElementById('chart').classList.toggle('hide', !this.classList.contains('on'));
+  var on = this.classList.contains('on');
+  var box = document.getElementById('chart');
+  box.classList.toggle('hide', !on);
+  box.dataset.psUser = on ? '1' : '0';
   relayout();
 });
 on('mChips', 'click', function (e) {

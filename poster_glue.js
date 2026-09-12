@@ -272,25 +272,39 @@
   }
 
   var _lastChart = null;
+  function _chartOff(reason) {
+    var box = el('chart'); if (box) box.classList.add('hide');
+    var chip = el('chartChip');
+    if (chip) {
+      chip.classList.remove('on');
+      chip.style.opacity = '0.4';
+      chip.style.pointerEvents = 'none';
+      chip.title = reason || '';
+    }
+  }
   function drawChart(chart) {
     if (chart) _lastChart = chart;
     var box = el('chart');
     var series = (chart && chart.series) || [];
     var dates = (chart && chart.dates) || [];
-    var data = series.filter(function (v) { return typeof v === 'number' && isFinite(v); });
-    var flat = data.length < 2;
     var svgEl = document.querySelector('#chart svg');
-    if (svgEl && window.psRenderChart) window.psRenderChart(series, dates, svgEl);
+    var res = (svgEl && window.psRenderChart) ? window.psRenderChart(series, dates, svgEl) : null;
+    var enough = !!(res && !res.flat && res.first);
+    window.__psHasChart = enough;
     _watchChartSize();
     var pctEl = el('chartPct');
     if (pctEl) {
-      if (flat || !data[0]) pctEl.textContent = '';
-      else { var pct = Math.round((data[data.length - 1] - data[0]) / data[0] * 100); pctEl.textContent = (pct >= 0 ? '▲ +' : '▼ ') + pct + '%'; }
+      if (!enough) pctEl.textContent = '';
+      else {
+        var pct = Math.round((res.last - res.first) / res.first * 100);
+        pctEl.textContent = (pct >= 0 ? '▲ +' : '▼ ') + pct + '%';
+      }
     }
     var days = (chart && chart.days) || 30;
     var ct = document.querySelector('#chart .ct span'); if (ct) ct.textContent = (_psPack().chart || PG('Просмотры · 30 дней')).replace(/30/, String(days));
-    if (box) box.classList.remove('hide');
-    return true;
+    if (!enough) _chartOff(PG('Замеров пока мало — график появится позже'));
+    else if (box && box.dataset.psUser !== '0') box.classList.remove('hide');
+    return enough;
   }
   var _chartRO = null;
   function _watchChartSize() {
@@ -298,7 +312,11 @@
     var svg = document.querySelector('#chart svg');
     if (!svg) return;
     try {
-      _chartRO = new ResizeObserver(function () { if (_lastChart) drawChart(_lastChart); });
+      _chartRO = new ResizeObserver(function () {
+        var box = el('chart');
+        if (!_lastChart || (box && box.classList.contains('hide'))) return;
+        drawChart(_lastChart);
+      });
       _chartRO.observe(svg);
     } catch (e) { _chartRO = null; }
   }
@@ -308,7 +326,10 @@
     if (key === 'subs') return d.subscribers ? fmt(d.subscribers) : null;
     if (key === 'reach') return d.avg_views ? '~' + fmt(d.avg_views) : null;
     if (key === 'er') return (d.er != null && isFinite(d.er)) ? (Math.round(d.er * 10) / 10) + '%' : null;
-    if (key === 'cpm') return (d.min_price && d.avg_views) ? fmt(d.min_price * 1000 / d.avg_views) + ' ₽' : null;
+    if (key === 'cpm') {
+      if (!d.min_price || !d.avg_views || d.avg_views < CPM_MIN_REACH) return null;
+      return fmt(d.min_price * 1000 / d.avg_views) + ' ₽';
+    }
     if (key === 'err') { var rr = (d.reach_rate != null) ? d.reach_rate : (d.er != null ? d.er : null); if (rr == null || !isFinite(rr)) return null; return (rr > 100 ? '⚠ ' : '') + Math.round(rr) + '%'; }
     if (key === 'grow') return (d.grow != null && isFinite(d.grow)) ? (d.grow >= 0 ? '+' : '') + fmt(d.grow) : null;
     if (key === 'freq') return (d.freq != null && isFinite(d.freq)) ? (Math.round(d.freq * 10) / 10) + (_psU().wk || PG('/нед')) : null;
@@ -317,11 +338,13 @@
   }
   function _psU() { return POSTER_L[_psLang] || POSTER_L.ru; }
   function _psFillMetrics(data) {
+    window.__psNoData = {};
     METRIC_KEYS.forEach(function (key) {
       var cell = document.querySelector('.mcell[data-m="' + key + '"]');
       var chip = document.querySelector('#mChips .chip[data-m="' + key + '"]');
       var val = metricValue(key, data);
       var _no = (val == null);
+      window.__psNoData[key] = _no;
       if (cell) {
         var v = cell.querySelector('.v');
         if (v) v.textContent = (_no ? '—' : val);
@@ -337,6 +360,9 @@
     });
   }
   var METRIC_KEYS = ['subs', 'reach', 'er', 'cpm', 'err', 'grow', 'freq', 'age'];
+  // Ниже этого охвата цена тысячи показов считается по двум-трём просмотрам и перестаёт быть
+  // ценой: тот же порог стоит в пульсе канала.
+  var CPM_MIN_REACH = 100;
   var _uname = '';
   function relabelQr(mode) {
     var spans = document.querySelectorAll('#qrs .qrt span');
@@ -419,11 +445,10 @@
     renderQrsSafe(qmode);
     var qc = el('qrChips');
     if (qc && !qc.__fmxRelabel) { qc.__fmxRelabel = 1; qc.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('.chip') : null; if (b) setTimeout(function () { relabelQr(b.getAttribute('data-qr')); }, 0); }); }
-    window.__psHasChart = !!data.chart;
-    if (window.__psHasChart) { drawChart(data.chart); }
+    if (data.chart) drawChart(data.chart);
     else {
-      var _ch = el('chart'); if (_ch) _ch.classList.add('hide');
-      var _cc = el('chartChip'); if (_cc) _cc.classList.add('hide');
+      window.__psHasChart = false;
+      _chartOff(PG('Замеров пока мало — график появится позже'));
     }
     if (typeof window.relayout === 'function') window.relayout();
     _psEnsurePriceHooks(); _psEnsureLangUI(); _psApplyLabels(); _psFit();
@@ -705,16 +730,24 @@
     if (el('nicheEl')) el('nicheEl').classList.toggle('hide', !showN);
     if (el('nicheSep')) el('nicheSep').classList.toggle('hide', !showN);
     var nch = el('nicheChip'); if (nch) nch.classList.toggle('on', showN);
-    if (el('chart') && state.chart != null) el('chart').classList.toggle('hide', !state.chart || window.__psHasChart === false);
-    var cch = el('chartChip'); if (cch) cch.classList.toggle('on', state.chart !== false);
+    if (el('chart') && state.chart != null) {
+      var _want = state.chart !== false && window.__psHasChart !== false;
+      el('chart').classList.toggle('hide', !_want);
+      el('chart').dataset.psUser = state.chart === false ? '0' : '1';
+    }
+    var cch = el('chartChip');
+    if (cch) cch.classList.toggle('on', state.chart !== false && window.__psHasChart !== false);
     var showHook = state.hook_on !== false;
     if (el('hookText')) el('hookText').classList.toggle('hide', !showHook);
     var hch = el('hookChip'); if (hch) hch.classList.toggle('on', showHook);
     if (state.metrics) METRIC_KEYS.forEach(function (k) {
       if (!(k in state.metrics)) return;
+      // метрика без данных на постер не возвращается: иначе в ячейке остаётся прочерк
+      var none = !!(window.__psNoData && window.__psNoData[k]);
+      var show = !!state.metrics[k] && !none;
       var cell = document.querySelector('.mcell[data-m="' + k + '"]');
-      if (cell) cell.classList.toggle('hide', !state.metrics[k]);
-      var chip = document.querySelector('#mChips .chip[data-m="' + k + '"]'); if (chip) chip.classList.toggle('on', !!state.metrics[k]);
+      if (cell) cell.classList.toggle('hide', !show);
+      var chip = document.querySelector('#mChips .chip[data-m="' + k + '"]'); if (chip) chip.classList.toggle('on', show);
     });
     if (state.price) {
       if (el('prBox')) el('prBox').classList.toggle('hide', !state.price.on);
