@@ -1,9 +1,10 @@
 (function () {
     'use strict';
 
-    var MAX_TOPIC = 3000, MAX_PHOTOS = 4;
-    var _niches = [], _price = 70, _cap = 7, _items = [], _loaded = false;
-    var _topic = '', _niche = '', _url = '', _voice = '', _photos = [], _busy = false, _pick = false;
+    var MAX_TOPIC = 3000, MAX_PHOTOS = 4, MAX_VIDEOS = 3;
+    var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
+    var _topic = '', _niche = '', _url = '', _voice = '', _photos = [], _videos = [],
+        _busy = false, _pick = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -89,14 +90,19 @@
             return '<div class="vd-ph"><img src="' + esc(p.url) + '" alt="">' +
                 '<button type="button" class="vd-ph-x" data-va="unphoto" data-i="' + i +
                 '"><i class="ti ti-x"></i></button></div>';
+        }).join('') + _videos.map(function (v, i) {
+            return '<div class="vd-ph vid"><video src="' + esc(v.url) + '" muted playsinline preload="metadata"></video>' +
+                '<span class="vd-ph-t">' + esc(String(v.duration || '') + ' ' + T('с')) + '</span>' +
+                '<button type="button" class="vd-ph-x" data-va="unvideo" data-i="' + i +
+                '"><i class="ti ti-x"></i></button></div>';
         }).join('');
-        var add = _photos.length < MAX_PHOTOS
+        var add = (_photos.length < MAX_PHOTOS || _videos.length < MAX_VIDEOS)
             ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-camera-plus"></i>' +
               '<span>' + esc(T('Добавить')) + '</span></button>'
             : '';
         return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Фото')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('До 4 файлов, JPG или PNG. Если фото есть, кадры ролика берутся из них, а не из фотобанка.')) + '</div>' +
+            '<div class="vd-lbl">' + esc(T('Свои материалы')) + '</div>' +
+            '<div class="vd-hint">' + esc(T('До 4 фотографий и 3 видео, файл до 60 МБ. Кадры ролика берутся из твоих материалов, а не из фотобанка.')) + '</div>' +
             '<div class="vd-phs">' + thumbs + add + '</div></div>';
     }
 
@@ -132,7 +138,8 @@
             esc(_url) + '" placeholder="https://www.wildberries.ru/catalog/...">' + '</div>' +
             photosField() + voiceField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
-            ' ' + esc(T('Лимит в сутки')) + ': ' + _cap + '.</div>' + go + '</div>';
+            ' ' + esc(T('Одновременно собираются два ролика, число роликов в сутки не ограничено.')) +
+            '</div>' + go + '</div>';
     }
 
     function statusRow(c) {
@@ -238,6 +245,12 @@
             render();
             return;
         }
+        if (a === 'unvideo') {
+            _videos.splice(+b.getAttribute('data-i'), 1);
+            haptic();
+            render();
+            return;
+        }
         if (a === 'build') { build(); return; }
         if (a === 'open') {
             if (typeof rsCrvOpen === 'function') rsCrvOpen(b.getAttribute('data-url'));
@@ -260,34 +273,43 @@
             inp = document.createElement('input');
             inp.type = 'file';
             inp.id = 'vd-file';
-            inp.accept = 'image/jpeg,image/png,image/webp';
             inp.style.display = 'none';
             document.body.appendChild(inp);
         }
+        inp.accept = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm';
         inp.onchange = function () {
             var f = inp.files && inp.files[0];
             inp.value = '';
             if (!f) return;
-            if (f.size > 8 * 1048576) { toast(T('Файл больше 8 МБ'), 'alert-triangle'); return; }
+            var isVideo = /^video\//.test(f.type || '');
+            if (isVideo && _videos.length >= MAX_VIDEOS) { toast(T('Больше трёх видео не нужно'), 'alert-triangle'); return; }
+            if (!isVideo && _photos.length >= MAX_PHOTOS) { toast(T('Больше четырёх фотографий не нужно'), 'alert-triangle'); return; }
+            var limit = isVideo ? 60 : 8;
+            if (f.size > limit * 1048576) {
+                toast(T('Файл больше') + ' ' + limit + ' ' + T('МБ'), 'alert-triangle');
+                return;
+            }
             var fd = new FormData();
             fd.append('file', f);
-            fd.append('slot', String(_photos.length));
-            toast(T('Загружаю фото'), 'loader');
-            apiRequest('/api/v1/creative/brief/photo', { method: 'POST', body: fd })
+            fd.append('slot', String(isVideo ? _videos.length : _photos.length));
+            toast(isVideo ? T('Загружаю видео') : T('Загружаю фото'), 'loader');
+            apiRequest('/api/v1/creative/brief/' + (isVideo ? 'video' : 'photo'), { method: 'POST', body: fd })
                 .then(function (r) {
                     if (r && r.ok) {
-                        _photos.push({ path: r.path, url: r.url });
+                        if (isVideo) _videos.push({ path: r.path, url: r.url, duration: r.duration });
+                        else _photos.push({ path: r.path, url: r.url });
                         haptic();
                         render();
-                    } else toast((r && r.message) || T('Фото не загрузилось'), 'alert-triangle');
+                    } else toast((r && r.message) || T('Файл не загрузился'), 'alert-triangle');
                 })
-                .catch(function () { toast(T('Фото не загрузилось'), 'alert-triangle'); });
+                .catch(function () { toast(T('Файл не загрузился'), 'alert-triangle'); });
         };
         inp.click();
     }
 
     function build() {
         if (_busy) return;
+        if (_parallel < 1) _parallel = 2;
         var topic = (_topic || '').trim();
         if (topic.length < 12) { toast(T('Опиши тему ролика: минимум одно предложение.'), 'alert-triangle'); return; }
         _busy = true;
@@ -295,7 +317,8 @@
         render();
         var body = {
             topic: topic, niche: (_niche || '').trim(), product_url: (_url || '').trim(),
-            photos: _photos.map(function (p) { return p.path; }), voice: _voice,
+            photos: _photos.map(function (p) { return p.path; }),
+            videos: _videos.map(function (v) { return v.path; }), voice: _voice,
             lang: (window.__fmLang || 'ru')
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })
@@ -342,7 +365,7 @@
                 if (!r || !r.ok) return;
                 _items = r.items || [];
                 if (r.price) _price = r.price;
-                if (r.daily_cap) _cap = r.daily_cap;
+                if (r.parallel) _parallel = r.parallel;
                 if (r.niches && r.niches.length) _niches = r.niches;
                 _loaded = true;
                 render();
