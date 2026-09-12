@@ -1416,6 +1416,9 @@
             '.fmx-calguide b{color:#c2c6d2;}',
             '.fmx-mineacts .fmx-btn{min-height:44px;font-size:11.5px;background:rgba(255,255,255,0.035);border-color:rgba(255,255,255,0.09);border-radius:11px;color:#d9dbe6;gap:7px;}',
             '.fmx-mineacts .fmx-btn:active{background:rgba(255,255,255,0.07);}',
+            '.fmx-mineacts .fmx-btn.off{color:#6b7189;border-color:rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}',
+            '.fmx-mineacts .fmx-btn.off i{color:#5a6078;}',
+            '.fmx-mineacts .fmx-btn.off .fmx-lockic{font-size:12px;margin-left:2px;opacity:0.8;}',
             '.fmx-hotbtn{width:100%;margin-top:9px;display:flex;align-items:center;gap:10px;padding:8px 10px;min-height:46px;border-radius:11px;border:0.5px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.035);cursor:pointer;text-align:left;color:#e8e8ed;font-family:inherit;transition:background .15s;}',
             '.fmx-hotbtn:active{background:rgba(255,255,255,0.07);}',
             '.fmx-hott{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.3);color:#fbbf24;font-size:16px;}',
@@ -4060,15 +4063,47 @@
             (l.hot_manual ? '<span class="fmx-hoton">' + L('вкл') + '</span>' : '') +
             '</button></div>' : '') +
             '<div class="fmx-mineacts">' +
-            (can('edit') ? '<button class="fmx-btn" data-medit="' + l.id + '"><i class="ti ti-pencil" style="color:#818cf8;"></i>' + L('Редактировать') + '</button>' : '') +
-            '<button class="fmx-btn" data-mstat="' + l.id + '"><i class="ti ti-chart-bar" style="color:#60a5fa;"></i>' + L('Статистика') + '</button>' +
-            (can('edit') ? '<button class="fmx-btn" data-mtablo="' + l.id + '"><i class="ti ti-layout-collage" style="color:#a78bfa;"></i>' + L('Витрина') + '</button>' : '') +
-            '<button class="fmx-btn" data-mshare="' + l.id + '"><i class="ti ti-share" style="color:#5DCAA5;"></i>' + L('Поделиться') + '</button>' +
-            (can('edit') ? '<button class="fmx-btn" data-mposter="' + l.id + '"><i class="ti ti-photo-star" style="color:#f472b6;"></i>' + L('Постер') + '</button>' : '') +
-            (own && l.status === 'published' ? '<button class="fmx-btn" data-mpromo="' + l.id + '"><i class="ti ti-speakerphone" style="color:#f5bf4f;"></i>' + L('Продвинуть') + '</button>' : '') +
-            (can('pub') ? '<button class="fmx-btn" data-mpause="' + l.id + '">' + (frozen ? '<i class="ti ti-player-play" style="color:#7dd3fc;"></i>' + L('Возобновить') : '<i class="ti ti-snowflake" style="color:#7dd3fc;"></i>' + L('Заморозить')) + '</button>' : '') +
-            (can('del') ? '<button class="fmx-btn" data-mdel="' + l.id + '" style="grid-column:1/-1;color:#ef8080;"><i class="ti ti-trash"></i>' + L('Удалить оффер') + '</button>' : '') +
+            _act(can('edit'), _noRight(l, 'edit'), 'medit', l.id, 'pencil', '#818cf8', L('Редактировать')) +
+            _act(true, '', 'mstat', l.id, 'chart-bar', '#60a5fa', L('Статистика')) +
+            _act(can('edit'), _noRight(l, 'edit'), 'mtablo', l.id, 'layout-collage', '#a78bfa', L('Витрина')) +
+            _act(true, '', 'mshare', l.id, 'share', '#5DCAA5', L('Поделиться')) +
+            _act(can('edit'), _noRight(l, 'edit'), 'mposter', l.id, 'photo-star', '#f472b6', L('Постер')) +
+            _act(own && l.status === 'published', _promoWhy(l, own), 'mpromo', l.id, 'speakerphone', '#f5bf4f', L('Продвинуть')) +
+            _act(can('pub'), _noRight(l, 'pub'), 'mpause', l.id, (frozen ? 'player-play' : 'snowflake'), '#7dd3fc',
+                 (frozen ? L('Возобновить') : L('Заморозить'))) +
+            _act(can('del'), _noRight(l, 'del'), 'mdel', l.id, 'trash', '#ef8080', L('Удалить оффер'),
+                 { wide: true, danger: true }) +
             '</div></div>';
+    }
+
+    function _act(allowed, why, attr, id, icon, color, label, opts) {
+        opts = opts || {};
+        var css = opts.wide ? 'grid-column:1/-1;' : '';
+        if (allowed && opts.danger) css += 'color:#ef8080;';
+        var st = css ? ' style="' + css + '"' : '';
+        if (allowed) {
+            return '<button class="fmx-btn" data-' + attr + '="' + id + '"' + st + '>' +
+                '<i class="ti ti-' + icon + '" style="color:' + color + ';"></i>' + label + '</button>';
+        }
+        return '<button class="fmx-btn off" data-locked="' + _esc(why) + '"' + st + '>' +
+            '<i class="ti ti-' + icon + '"></i>' + label +
+            '<i class="ti ti-lock fmx-lockic"></i></button>';
+    }
+
+    function _roleTail(l) {
+        var r = l && l.team_role ? (_TEAM_ROLE_RU[l.team_role] || l.team_role) : '';
+        return r ? ' ' + L('Твоя роль в команде оффера:') + ' ' + r + '.' : '';
+    }
+
+    function _noRight(l, kind) {
+        if (kind === 'pub') return L('Публикацию и заморозку оффера делает владелец или управляющий.') + _roleTail(l);
+        if (kind === 'del') return L('Удалить оффер может владелец или доверенный.') + _roleTail(l);
+        return L('Оформление и календарь меняет владелец, управляющий или редактор.') + _roleTail(l);
+    }
+
+    function _promoWhy(l, own) {
+        if (!own) return L('Продвижение покупает владелец оффера.') + _roleTail(l);
+        return L('Продвижение работает на опубликованном оффере — сначала возобнови показ.');
     }
 
     function _mineById(id) { for (var i = 0; i < _myListings.length; i++) if (_myListings[i].id === id) return _myListings[i]; return null; }
@@ -4150,6 +4185,12 @@
                 var ch = _mineChannelOf(l);
                 if (!ch) { _haptic('error'); uiAlert(L('Канал этого оффера не найден в приложении — проверь список каналов.')); return; }
                 _haptic('light'); _mineEditCh = ch.id; _backTo = 'mine'; setSubTab('create');
+            });
+        });
+        qsa(sub, '[data-locked]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                _haptic('light');
+                toast(b.getAttribute('data-locked') || L('Действие недоступно'));
             });
         });
         qsa(sub, '[data-mstat]').forEach(function (b) {
