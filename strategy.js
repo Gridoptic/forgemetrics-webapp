@@ -752,7 +752,7 @@
     }
     function tasksHtml() {
         var last = latestReview();
-        if (last && (last.tasks || []).length) return weekTasksHtml(last);
+        if (last && ('auto_closed' in last) && (last.tasks || []).length) return weekTasksHtml(last);
         var sec = docSection('week1');
         if (!sec || !(sec.steps || []).length) return '';
         var days = sec.days || [];
