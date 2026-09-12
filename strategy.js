@@ -178,7 +178,7 @@
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
                 '<div class="stg-fsub">' + esc(T('Стратегия и прогресс сохранены — продление откроет их с той же точки')) + '</div></div></div>' +
-                '<div class="stg-fprice"><b>' + forge(rprice) + '</b><span>' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</span></div>' +
+                '<div class="stg-fpnote" style="margin-top:12px;">' + esc(T('ещё 30 дней ведения: разборы недели, гайды и чат')) + '</div>' +
                 '<button class="stg-fcta" data-act="renew"><i class="ti ti-refresh"></i>' + esc(T('Продлить ведение')) + '<span class="pm-btn-price">' + forge(rprice) + '</span></button>' +
                 '</div></div>');
             return;
