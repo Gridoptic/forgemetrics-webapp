@@ -2165,7 +2165,7 @@ function formatNumber(num) {
 }
 
 
-var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen';
+var FM_FULLSCREENS = '#audit-screen, #channel-settings-screen, #strategy-screen, #content-plan-screen, #rewrite-screen, #videos-screen';
 
 function fmAnyModalVisible() {
     var list = document.querySelectorAll('.pw-sheet-ov.show, .lang-ov.show, .bs-overlay.visible, .modal-overlay, .cs-modal-overlay, .drawer.active, ' + FM_FULLSCREENS);
@@ -2207,7 +2207,8 @@ function fmUnstick() {
 
 function fmModalOpen() {
     var sels = ['.pw-sheet-ov.show', '.lang-ov.show', '.bs-overlay.visible', '.modal-overlay', '.cs-modal-overlay', '.drawer.active', '.fmx-mbg.fmx-show', '.fmx-cfm.solid', '#fmx-listBg.fmx-show', '.fmx-psFull',
-                '#audit-screen', '#channel-settings-screen', '#strategy-screen', '#content-plan-screen', '#rewrite-screen'];
+                '#audit-screen', '#channel-settings-screen', '#strategy-screen', '#content-plan-screen', '#rewrite-screen',
+                '#videos-screen'];
     for (var s = 0; s < sels.length; s++) {
         var nodes = document.querySelectorAll(sels[s]);
         for (var i = 0; i < nodes.length; i++) {
@@ -2414,6 +2415,12 @@ function handleAction(actionId) {
         if (typeof window.__openContentPlan === 'function') {
             window.__openContentPlan();
         }
+        return;
+    }
+
+    if (actionId === 'videos') {
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        openModuleSafe('videos.js', '__openVideos', TR('Креативы'));
         return;
     }
 
@@ -8200,7 +8207,8 @@ function setupPostEventListeners() {
 var _FM_ASSETS = ['app.js', 'styles.css', 'marketplace.js', 'i18n.js',
     'content_plan.js', 'content_plan.css', 'audit.js', 'audit.css',
     'strategy.js', 'strategy.css', 'rewrite.js', 'rewrite.css',
-    'cover_core.js', 'placements.js', 'platform_icons.js', 'competitors.js', 'competitors.css', 'fonts.css'];
+    'cover_core.js', 'placements.js', 'platform_icons.js', 'competitors.js', 'competitors.css', 'fonts.css',
+    'videos.js', 'videos.css'];
 var _fmHasPack = false;
 function _fmVerFromDom() {
     var sig = _FM_ASSETS.map(function (f) {

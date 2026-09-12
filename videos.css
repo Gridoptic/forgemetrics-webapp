@@ -1,0 +1,82 @@
+.vd-screen {
+    position: fixed; inset: 0; background: #0a0d18;
+    background-image:
+        radial-gradient(circle at 12% 6%, rgba(99,102,241,0.10), transparent 42%),
+        radial-gradient(circle at 88% 94%, rgba(93,202,165,0.05), transparent 42%);
+    z-index: 9999; overflow-y: auto; overflow-x: hidden; padding: 16px 14px 44px;
+    display: none; flex-direction: column; -webkit-overflow-scrolling: touch;
+    color: #e8eaf1; font-size: 14px; line-height: 1.5; overflow-wrap: break-word;
+}
+.vd-screen > * { flex: 0 0 auto; }
+.vd-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.vd-back { width: 36px; height: 36px; border-radius: 10px; flex: 0 0 auto; padding: 0; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.08);
+    color: #818cf8; display: flex; align-items: center; justify-content: center; }
+.vd-back:active { background: rgba(255,255,255,0.08); }
+.vd-title { font-size: 16px; font-weight: 800; min-width: 0; overflow-wrap: break-word; }
+
+.vd-body { display: flex; flex-direction: column; gap: 12px; max-width: 620px; width: 100%; margin: 0 auto; }
+.vd-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
+    padding: 15px; display: flex; flex-direction: column; gap: 14px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
+.vd-f { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.vd-lbl { font-size: 12.5px; font-weight: 700; color: #cfd3e6; }
+.vd-hint { font-size: 11px; color: #8d93a8; line-height: 1.45; }
+.vd-cnt { font-size: 10.5px; color: #7d839a; text-align: right; }
+
+.vd-ta { width: 100%; min-height: 112px; resize: vertical; padding: 12px; border-radius: 12px; font-size: 13px;
+    line-height: 1.5; font-family: inherit; background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.09); color: #e8eaf1; outline: none; }
+.vd-inp { width: 100%; padding: 11px 12px; border-radius: 12px; font-size: 13px; font-family: inherit;
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.09); color: #e8eaf1; outline: none; }
+.vd-ta:focus, .vd-inp:focus { border-color: rgba(129,140,248,0.5); }
+
+.vd-nlist { max-height: 210px; overflow-y: auto; border-radius: 12px; border: 1px solid rgba(129,140,248,0.4);
+    background: rgba(14,17,28,0.85); }
+.vd-nrow { display: block; width: 100%; text-align: left; padding: 10px 12px; font-size: 13px; cursor: pointer;
+    background: none; border: 0; border-top: 1px solid rgba(255,255,255,0.05); color: #e8eaf1; font-family: inherit; }
+.vd-nrow:first-child { border-top: 0; }
+.vd-nrow:active { background: rgba(129,140,248,0.12); }
+.vd-nempty { padding: 12px; font-size: 12px; color: #8d93a8; }
+
+.vd-phs { display: flex; flex-wrap: wrap; gap: 8px; }
+.vd-ph { position: relative; width: 72px; height: 72px; border-radius: 12px; overflow: hidden; flex: 0 0 auto;
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.35); }
+.vd-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vd-ph-x { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 7px; padding: 0;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px;
+    background: rgba(10,13,24,0.78); border: 1px solid rgba(255,255,255,0.14); color: #e8eaf1; }
+.vd-ph-add { min-width: 108px; height: 72px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px;
+    align-items: center; justify-content: center; cursor: pointer; font-size: 11px; font-family: inherit;
+    background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.18); color: #aeb6cf; padding: 0 10px; }
+.vd-ph-add i { font-size: 18px; color: #818cf8; }
+.vd-ph-add:active { background: rgba(255,255,255,0.07); }
+
+.vd-seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.vd-sg { flex: 1 1 92px; min-height: 40px; border-radius: 11px; font-size: 12.5px; font-family: inherit; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #cfd3e6; padding: 0 10px; }
+.vd-sg.on { background: rgba(129,140,248,0.16); border-color: rgba(129,140,248,0.55); color: #e8eaf1; font-weight: 700; }
+
+.vd-note { font-size: 11.5px; color: #8d93a8; line-height: 1.5; }
+.vd-go { width: 100%; min-height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; color: #fff; padding: 0 14px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5); border: 0; }
+.vd-go[disabled] { opacity: 0.65; cursor: default; }
+.vd-go i { font-size: 17px; }
+
+.vd-sec { font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #9aa0f5;
+    margin: 6px 2px 0; }
+.vd-list { display: flex; flex-direction: column; gap: 10px; }
+.vd-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
+    padding: 13px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.vd-item-h { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; min-width: 0; }
+.vd-item-h b { flex: 1; min-width: 0; font-weight: 700; overflow-wrap: break-word; }
+.vd-tag { flex: 0 0 auto; font-size: 10.5px; padding: 3px 8px; border-radius: 8px; color: #aeb6cf;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.vd-empty { padding: 18px 14px; border-radius: 16px; font-size: 12.5px; color: #8d93a8; text-align: center;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+.vd-load { display: flex; justify-content: center; padding: 20px; }
+
+@media (min-width: 600px) {
+    .vd-screen { padding: 20px 20px 48px; }
+}
