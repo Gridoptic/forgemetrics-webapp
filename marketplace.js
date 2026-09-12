@@ -10756,7 +10756,7 @@
                 : 'https://t.me/ForgeMetricsBot?startapp=ch_' + String(username || '').replace(/[^A-Za-z0-9_]/g, '');
             if (!listingId && !username) return;
             var text = _t(L('Оффер канала на ForgeMetrics: реальные метрики и цена размещения.')) + (username ? ' @' + username : '');
-            if (_myPromo) text += '\n' + _t(L('Бонус по приглашению — скидка на первый месяц и расширенный триал:')) + ' https://t.me/ForgeMetricsBot?start=' + _myPromo;
+            if (_myPromo) text += '\n' + _t(L('Бонус по приглашению — Forge на старт:')) + ' https://t.me/ForgeMetricsBot?start=' + _myPromo;
             var url = 'https://t.me/share/url?url=' + encodeURIComponent(cardLink) + '&text=' + encodeURIComponent(text);
             try { if (typeof tg !== 'undefined' && tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); }
         };

@@ -566,7 +566,7 @@ function openModuleSafe(file, fnName, label) {
 function showStartBotScreen() {
     els.errorMessage.innerHTML = `
         <div style="margin-bottom: 16px; line-height: 1.6;">
-            ${t('Сначала запусти бота — он покажет возможности. За подключение живого канала начислится стартовый запас 300 Forge.')}
+            ${t('Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.')}
         </div>
     `;
 
@@ -2552,7 +2552,6 @@ function refPackAmounts() {
 function refCardHtml(r) {
     r = r || {};
     const rate = r.rate_pct || 30;
-    const fDisc = r.friend_discount_pct || 15;
     const fBonus = r.friend_welcome_bonus || 100;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
     const nextLine = r.next_level_display
@@ -2579,7 +2578,7 @@ function refCardHtml(r) {
           <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${TR('Приглашённый пополнил')}</span><span>${TR('Твоё начисление')}</span></div>
           ${refPackAmounts().map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${forgeAmount(v, 12)}</span><b class="num" style="color:#5DCAA5;">+${forgeAmount(Math.round(v * rate / 100), 12)}</b></div>`).join('')}
         </div>
-        <p style="margin-top:8px;">${TR('Начисление автоматически после оплаты. Приглашённый получает −{d}% на первое пополнение и {b} к стартовому запасу.').replace('{d}', fDisc).replace('{b}', '+' + forgeAmount(fBonus, 11))}</p>
+        <p style="margin-top:8px;">${TR('Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.').replace('{b}', '+' + forgeAmount(fBonus, 11))}</p>
       </div>
     </div>
     <div class="rf-bal">
@@ -2611,7 +2610,7 @@ function refCardHtml(r) {
   <div class="rf-how">
     <span class="rf-eyebrow">${TR('Как это работает')}</span>
     <div class="rf-hrow"><span class="rf-hnum">1</span><p>${TR('Передай ссылку админам каналов — лично или в своих постах.')}</p></div>
-    <div class="rf-hrow"><span class="rf-hnum">2</span><p>Приглашённый регистрируется по ней и получает −${fDisc}% на первое пополнение Forge и +${fBonus} Forge к стартовому запасу.</p></div>
+    <div class="rf-hrow"><span class="rf-hnum">2</span><p>${TR('Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.').replace('{b}', fBonus)}</p></div>
     <div class="rf-hrow"><span class="rf-hnum">3</span><p>${TR('С каждого его пополнения тебе начисляется процент в Forge. Ставка растёт с уровнем — от 30% до 50%.')}</p></div>
     <div class="rf-hrow"><span class="rf-hnum">4</span><p>${TR('Достигнутый уровень фиксируется навсегда — ставка не снижается.')}</p></div>
   </div>
@@ -2889,7 +2888,7 @@ function wireReferral(d) {
     on('cab-share', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:');
+        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка даёт дополнительные Forge на старт при первом запуске:');
         const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
         if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
     });
@@ -2901,7 +2900,7 @@ function wireReferral(d) {
     on('cab-invite-copy', () => {
         hapticLight();
         const link = (d.referral && d.referral.referral_link) || '';
-        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка активирует расширенный стартовый набор при первом запуске:') + '\n' + link;
+        const text = TR('Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\n\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\n\nСсылка даёт дополнительные Forge на старт при первом запуске:') + '\n' + link;
         const b = document.getElementById('cab-invite-copy');
         copyText(text).then(() => { cabToast(TR('Текст приглашения скопирован')); if (b) { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1400); } });
     });
@@ -3486,7 +3485,6 @@ async function coPay(opts) {
         if (!_coCtx || _coCtx.sheet !== sheet) return;
         if (res && res.ok && res.confirmation_url) {
             const paid = [];
-            if (res.discount_rub) paid.push(`скидка −${cabNum(res.discount_rub)} ₽`);
             if (res.credits_used_rub) paid.push(`кредиты −${cabNum(res.credits_used_rub)} ₽`);
             const note = paid.length ? ` Учтено: ${paid.join(', ')}.` : '';
             coPayPending(sheet, TR('Ожидаем оплату'),
