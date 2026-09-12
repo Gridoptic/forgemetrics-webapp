@@ -5270,7 +5270,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "የ{n} ሳምንት ተግባራት",
   "Закрыл за тебя": "ሙሉ ልክ ሐዋይ",
   "каналы для бартера подобраны из Радара": "ባርተር ላሉ ሰርጦች ከራዳር ተመርጠዋል",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "የእንደዚህ ዓይነት ዋጋዎች በExchangeላይ ከተሰጡ ዋጋዎች ተወስደዋል፤ እዚያ ላይ ይለወጣሉ። የገበያ ግምት የሚገኘው የአያያዝ ቻነልዎ በ100 views ሲበልጥ ነው።"
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "የእንደዚህ ዓይነት ዋጋዎች በExchangeላይ ከተሰጡ ዋጋዎች ተወስደዋል፤ እዚያ ላይ ይለወጣሉ። የገበያ ግምት የሚገኘው የአያያዝ ቻነልዎ በ100 views ሲበልጥ ነው።",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "የደንበኛ ዋጋ አይቆጠርም: የልጥፎች ደርሳት ከ100 ምልከታ ያነሰ ነው — ማንኛውም ግምገማ ሐሰት ይሆናል።",
+  "охват меньше 100 просмотров": "ደርሳት ከ100 ምልከታ ያነሰ"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10543,7 +10545,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "مهام الأسبوع {n}",
   "Закрыл за тебя": "أغلقتها لك",
   "каналы для бартера подобраны из Радара": "تم اختيار القنوات للمقايضة من Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "أسعارك من العرض في البورصة، وتتغير هناك أيضًا. سيظهر التقييم السوقي عندما يتجاوز نطاق القناة 100 مشاهدة."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "أسعارك من العرض في البورصة، وتتغير هناك أيضًا. سيظهر التقييم السوقي عندما يتجاوز نطاق القناة 100 مشاهدة.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "سعر المشترك لا يُحسب: نطاق المنشورات أقل من 100 مشاهدة — أي تقدير سيكون تخمينياً.",
+  "охват меньше 100 просмотров": "نطاق أقل من 100 مشاهدة"
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15816,7 +15820,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "{n} həftəsinin tapşırıqları",
   "Закрыл за тебя": "Sən üçün bağladı",
   "каналы для бартера подобраны из Радара": "Barter kanalları Radar-dan seçilmişdir",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sənin qiymətlərin Birjədə təklif edilənlərdən gəlir, orada dəyişirlər. Bazar qiymətləndirmələri kanal reachı 100 görüntüləni keçəndə görünəcək."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sənin qiymətlərin Birjədə təklif edilənlərdən gəlir, orada dəyişirlər. Bazar qiymətləndirmələri kanal reachı 100 görüntüləni keçəndə görünəcək.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Abonent qiyməti hesablanmır: postu əhatə etməsi 100 baxışdan az — istənilən qiymətləndirmə uydurmaca olacaq.",
+  "охват меньше 100 просмотров": "əhatə 100 baxışdan az"
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -21056,7 +21062,10 @@ window.__I18N_DICT = {
   "Закрыл за тебя": "Закрыў за табе",
   "каналы для бартера подобраны из Радара": "каналы для бартера подабраны з Радара",
   "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Твае цаны — з офера на Бірцы, там жа яны меняюцца. Рынкавая оцэнка паявіцца, калі охват канала перавышыць 100 прагляды.",
-  "дат": "дата"
+  "дат": "дата",
+  "Муж": "Чалавек",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Цена подписчика не лічыцца: охват постаў менш 100 просмотраў — любая оценка будзе выдумкай.",
+  "охват меньше 100 просмотров": "ахоп менш за 100 праглядаў"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26329,7 +26338,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "সপ্তাহ {n} এর কাজ",
   "Закрыл за тебя": "আপনার জন্য বন্ধ করেছি",
   "каналы для бартера подобраны из Радара": "বার্টার চ্যানেলগুলি রাডার থেকে নির্বাচিত",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "আপনার মূল্য বিনিময় থেকে আসে, সেখানেই সেগুলি পরিবর্তিত হয়। বাজার মূল্যায়ন প্রদর্শিত হবে যখন চ্যানেলের রিচ 100 ভিউ অতিক্রম করে।"
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "আপনার মূল্য বিনিময় থেকে আসে, সেখানেই সেগুলি পরিবর্তিত হয়। বাজার মূল্যায়ন প্রদর্শিত হবে যখন চ্যানেলের রিচ 100 ভিউ অতিক্রম করে।",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "সাবস্ক্রাইবার মূল্য গণনা করা হয় না: পোস্টের রিচ ১০০ ভিউয়ের কম — যেকোনো মূল্যায়ন অনুমান হবে।",
+  "охват меньше 100 просмотров": "রিচ ১০০ ভিউয়ের কম"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31602,7 +31613,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Aufgaben der Woche {n}",
   "Закрыл за тебя": "Für dich geschlossen",
   "каналы для бартера подобраны из Радара": "Kanäle für Tausch wurden aus dem Radar ausgewählt",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Deine Preise stammen aus dem Angebot auf der Börse, dort werden sie auch angepasst. Die Marktbewertung erscheint, wenn die Reichweite des Kanals 100 Aufrufe übersteigt."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Deine Preise stammen aus dem Angebot auf der Börse, dort werden sie auch angepasst. Die Marktbewertung erscheint, wenn die Reichweite des Kanals 100 Aufrufe übersteigt.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Abonnentenpreis wird nicht berechnet: Reichweite der Posts unter 100 Aufrufe — jede Bewertung wäre Spekulation.",
+  "охват меньше 100 просмотров": "Reichweite unter 100 Aufrufe"
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36875,7 +36888,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Week {n} tasks",
   "Закрыл за тебя": "Closed for you",
   "каналы для бартера подобраны из Радара": "channels for barter selected from Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Your prices come from the offer on the Exchange, and they change there as well. Market valuation will appear once your channel reach exceeds 100 views."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Your prices come from the offer on the Exchange, and they change there as well. Market valuation will appear once your channel reach exceeds 100 views.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Subscriber price is not calculated: post reach is below 100 views — any estimate would be unreliable.",
+  "охват меньше 100 просмотров": "reach below 100 views"
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -42148,7 +42163,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Tareas de la semana {n}",
   "Закрыл за тебя": "Lo cerré por ti",
   "каналы для бартера подобраны из Радара": "canales para canje seleccionados del Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tus precios proceden de la oferta en el Exchange, donde también se actualizan. La valoración de mercado aparecerá cuando el alcance del canal supere 100 visualizaciones."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tus precios proceden de la oferta en el Exchange, donde también se actualizan. La valoración de mercado aparecerá cuando el alcance del canal supere 100 visualizaciones.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "El precio por suscriptor no se calcula: el alcance de posts es menor a 100 visualizaciones — cualquier valoración sería especulativa.",
+  "охват меньше 100 просмотров": "alcance menor a 100 visualizaciones"
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47421,7 +47438,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "وظایف هفته {n}",
   "Закрыл за тебя": "برای تو بستم",
   "каналы для бартера подобраны из Радара": "کانال‌های تبادلی از Radar انتخاب شدند",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "قیمت‌های تو از پیشنهادهای بازار هستند، آن‌جا هم تغییر می‌کنند. ارزیابی بازار زمانی ظاهر می‌شود که رسانه‌ای کانال از 100 بازدید بیشتر شود."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "قیمت‌های تو از پیشنهادهای بازار هستند، آن‌جا هم تغییر می‌کنند. ارزیابی بازار زمانی ظاهر می‌شود که رسانه‌ای کانال از 100 بازدید بیشتر شود.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "قیمت مشترک محاسبه نمی‌شود: رسانه پست کمتر از 100 بازدید است — هر ارزیابی حدس خواهد بود.",
+  "охват меньше 100 просмотров": "رسانه کمتر از 100 بازدید"
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52694,7 +52713,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Tâches de la semaine {n}",
   "Закрыл за тебя": "J'ai fermé pour toi",
   "каналы для бартера подобраны из Радара": "les canaux pour l'échange sélectionnés du Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tes prix proviennent de l'offre sur la Bourse, c'est là qu'ils changent. L'évaluation de marché apparaîtra quand la portée du canal dépassera 100 vues."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Tes prix proviennent de l'offre sur la Bourse, c'est là qu'ils changent. L'évaluation de marché apparaîtra quand la portée du canal dépassera 100 vues.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Le prix par abonné ne se calcule pas : la portée des posts est inférieure à 100 vues — toute estimation serait fictive.",
+  "охват меньше 100 просмотров": "portée inférieure à 100 vues"
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57967,7 +57988,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "सप्ताह {n} के कार्य",
   "Закрыл за тебя": "मैंने तुम्हारे लिए बंद कर दिया",
   "каналы для бартера подобраны из Радара": "बार्टर के लिए चैनलों को रडार से चुना गया",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "तुम्हारी कीमतें Exchange के ऑफर से हैं, वहीं बदलती भी हैं। बाजार मूल्यांकन दिखेगा जब चैनल की पहुंच 100 व्यूज से अधिक हो जाएगी।"
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "तुम्हारी कीमतें Exchange के ऑफर से हैं, वहीं बदलती भी हैं। बाजार मूल्यांकन दिखेगा जब चैनल की पहुंच 100 व्यूज से अधिक हो जाएगी।",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "सब्सक्राइबर मूल्य की गणना नहीं की जाती: पोस्ट रीच 100 व्यूज से कम है — कोई भी मूल्यांकन अनुमानित होगा।",
+  "охват меньше 100 просмотров": "रीच 100 व्यूज से कम है"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -63240,7 +63263,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Tugas minggu {n}",
   "Закрыл за тебя": "Saya tutup untuk Anda",
   "каналы для бартера подобраны из Радара": "saluran untuk barter dipilih dari Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Hargamu berasal dari penawaran di Bursa, dan dapat berubah di sana. Penilaian pasar akan muncul ketika jangkauan saluran melebihi 100 tayangan."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Hargamu berasal dari penawaran di Bursa, dan dapat berubah di sana. Penilaian pasar akan muncul ketika jangkauan saluran melebihi 100 tayangan.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Harga pelanggan tidak dihitung: jangkauan posting kurang dari 100 tayangan — estimasi apa pun akan menjadi spekulasi.",
+  "охват меньше 100 просмотров": "jangkauan kurang dari 100 tayangan"
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -68513,7 +68538,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Compiti della settimana {n}",
   "Закрыл за тебя": "L'ho chiuso per te",
   "каналы для бартера подобраны из Радара": "i canali per il baratto sono stati selezionati da Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "I tuoi prezzi provengono dall'offerta su Borsa, e cambiano lì. La valutazione di mercato apparirà quando la portata del canale supererà 100 visualizzazioni."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "I tuoi prezzi provengono dall'offerta su Borsa, e cambiano lì. La valutazione di mercato apparirà quando la portata del canale supererà 100 visualizzazioni.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Il prezzo per iscritto non viene calcolato: la portata dei post è inferiore a 100 visualizzazioni — qualsiasi valutazione sarebbe fittizia.",
+  "охват меньше 100 просмотров": "portata inferiore a 100 visualizzazioni"
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73767,7 +73794,10 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "{n} аптасының тапсырмалары",
   "Закрыл за тебя": "Сен үшін жаптым",
   "каналы для бартера подобраны из Радара": "барлау арналары Радардан таңдалды",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Сенің баға-лары — Биржадағы ұсынысынан алынады, онда да өзгеріп отырады. Нарықтық бағалау арнайыңның қарауы 100 қараудан асқанда пайда болады."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Сенің баға-лары — Биржадағы ұсынысынан алынады, онда да өзгеріп отырады. Нарықтық бағалау арнайыңның қарауы 100 қараудан асқанда пайда болады.",
+  "ОК": "Құрылы",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Жазылушы бағасы есептелмейді: посттың аудиториясы 100 көріністен төмен — кез келген баға болжам болады.",
+  "охват меньше 100 просмотров": "қамту 100 қараудан аз"
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -79040,7 +79070,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Tarefas da semana {n}",
   "Закрыл за тебя": "Fechei para você",
   "каналы для бартера подобраны из Радара": "canais para troca selecionados do Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Seus preços vêm da oferta na Bolsa, lá eles mudam. A avaliação de mercado aparecerá quando o alcance do canal exceder 100 visualizações."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Seus preços vêm da oferta na Bolsa, lá eles mudam. A avaliação de mercado aparecerá quando o alcance do canal exceder 100 visualizações.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Preço por inscritor não é calculado: alcance de posts menor que 100 visualizações — qualquer avaliação seria especulação.",
+  "охват меньше 100 просмотров": "alcance menor que 100 visualizações"
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -84313,7 +84345,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Kazi za wiki {n}",
   "Закрыл за тебя": "Nilifunga kwa ajili yako",
   "каналы для бартера подобраны из Радара": "njia za kubadilisha zimechaguliwa kutoka Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Bei zako ni kutoka kwa ofa ya Soko, hupo hupo pia zinabadilika. Tathmini ya soko itaonekana wakati wastani wa mwonekano wa kituo kinazidi maoni 100."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Bei zako ni kutoka kwa ofa ya Soko, hupo hupo pia zinabadilika. Tathmini ya soko itaonekana wakati wastani wa mwonekano wa kituo kinazidi maoni 100.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Bei ya wahusika haiwezekani kuhesabu: ufahamaji wa machapisho ni chini ya maoni 100 — tathmini yoyote itakuwa uwongo.",
+  "охват меньше 100 просмотров": "ufahamaji chini ya maoni 100"
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -89586,7 +89620,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "{n}. haftanın görevleri",
   "Закрыл за тебя": "Senin için kapattım",
   "каналы для бартера подобраны из Радара": "takas için kanallar Radar'dan seçildi",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Fiyatlarınız Borsadaki tekliften alınmıştır, orada da değiştirilir. Pazar değerlendirmesi kanal erişimi 100 görüntülemeyi aştığında görünecektir."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Fiyatlarınız Borsadaki tekliften alınmıştır, orada da değiştirilir. Pazar değerlendirmesi kanal erişimi 100 görüntülemeyi aştığında görünecektir.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Abone fiyatı hesaplanmıyor: gönderi erişimi 100 görüntüyü aşmıyor — her değerlendirme tahmin olur.",
+  "охват меньше 100 просмотров": "erişim 100 görüntüyü aşmıyor"
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94859,7 +94895,9 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "{n} haftasining vazifalar",
   "Закрыл за тебя": "Sening o'rniga yopildi",
   "каналы для бартера подобраны из Радара": "Radar-dan savdo kanallari tanlandi",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sening narxlari Birjadagi ofertadan olingan, u yerda ular o'zgaradi. Bozor bahosi kanal qo'limining 100 ko'rishni oshganda paydo bo'ladi."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Sening narxlari Birjadagi ofertadan olingan, u yerda ular o'zgaradi. Bozor bahosi kanal qo'limining 100 ko'rishni oshganda paydo bo'ladi.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Obunachi narxI hisoblanmaydi: postlar qamrovi 100 ko'rinishdan kam — har qanday baholash taxmin bo'ladi.",
+  "охват меньше 100 просмотров": "qamrovi 100 ko'rinishdan kam"
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -100132,6 +100170,8 @@ window.__I18N_DICT = {
   "Задачи недели {n}": "Nhiệm vụ tuần {n}",
   "Закрыл за тебя": "Tôi đã đóng cho bạn",
   "каналы для бартера подобраны из Радара": "các kênh để trao đổi được chọn từ Radar",
-  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Giá của bạn được lấy từ danh sách trên Sàn giao dịch, chúng thay đổi ở đó. Định giá thị trường sẽ xuất hiện khi lượt xem kênh vượt quá 100."
+  "Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.": "Giá của bạn được lấy từ danh sách trên Sàn giao dịch, chúng thay đổi ở đó. Định giá thị trường sẽ xuất hiện khi lượt xem kênh vượt quá 100.",
+  "Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.": "Giá theo người theo dõi không được tính: nếu lượt xem bài đăng dưới 100 — bất kỳ đánh giá nào cũng là phỏng đoán.",
+  "охват меньше 100 просмотров": "lượt xem dưới 100"
  }
 };

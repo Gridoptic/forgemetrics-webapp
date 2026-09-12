@@ -281,7 +281,9 @@
         return _minPrice(l);
     }
     function _reach(l) { return (typeof l.ad_reach_24h === 'number' && l.ad_reach_24h > 0) ? l.ad_reach_24h : l.avg_views; }
-    function _cpm(l) { var v = _reach(l), p = _basePrice(l); if (!p || !v) return null; return Math.round(p / v * 1000); }
+    var MX_MIN_VIEWS = 100;
+    function _thinReach(l) { var v = _reach(l); return !v || v < MX_MIN_VIEWS; }
+    function _cpm(l) { var v = _reach(l), p = _basePrice(l); if (!p || !v || _thinReach(l)) return null; return Math.round(p / v * 1000); }
     var _nicheMap = null;
     function loadNicheMap() {
         if (_nicheMap !== null) return;
@@ -840,9 +842,6 @@
             '.fmx-eridb{flex:1;min-width:0;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:#8990a8;font-family:inherit;font-size:11px;font-weight:700;padding:10px 5px;border-radius:11px;cursor:pointer;line-height:1.25;transition:all .15s;}',
             '.fmx-eridb.on{background:rgba(129,140,248,0.14);border-color:rgba(129,140,248,0.4);color:#c7cdff;}',
             '.fmx-tog{display:flex;align-items:center;gap:10px;padding:11px;border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:9px;cursor:pointer;}',
-            '.fmx-sw{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,0.12);position:relative;transition:background 180ms;flex-shrink:0;}',
-            '.fmx-sw i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left 180ms;}',
-            '.fmx-tog.on .fmx-sw{background:#5DCAA5;}.fmx-tog.on .fmx-sw i{left:18px;}',
             '.fmx-save{width:100%;border:none;background:linear-gradient(135deg,#5DCAA5,#34d399);color:#04342c;border-radius:14px;padding:15px;font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 22px rgba(93,202,165,0.35);display:flex;align-items:center;justify-content:center;gap:7px;transition:transform 140ms;}',
             '.fmx-save:active{transform:scale(0.98);}.fmx-save:disabled{opacity:0.6;}',
             '.fmx-savenote{font-size:10.5px;color:#565b73;line-height:1.5;text-align:center;margin-top:10px;}',
@@ -7509,7 +7508,7 @@
             '<div class="fmx-huerow" id="fmx-grads-hue" style="' + (custom ? '' : 'display:none;') + '"><input type="range" min="0" max="359" step="1" value="200"><div class="fmx-hueprev" style="background:' + (_ss.coverGrad || COVERS[0]) + ';"></div></div></div>';
         var upl = '<div id="fmx-uplbox" style="' + (_ss.covType === 'grad' ? 'display:none;' : '') + '">' +
             mediaBoxHtml('cover', L('Картинка, GIF или видео до 30 секунд, до 64 МБ. Лучше всего смотрится от 1600×800 — подгонишь кадрированием. Что нельзя использовать — в Справке, раздел «Правила».')) + '</div>';
-        var noHead = '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><div class="fmx-sw"><i></i></div><span style="font-size:12.5px;">' + L('Карточка без шапки') + '</span></div>' +
+        var noHead = '<div class="fmx-tog' + (_ss.fullBg ? ' on' : '') + '" id="fmx-fullbg" style="margin-top:12px;"><button type="button" tabindex="-1" class="fmx-sw sm' + (_ss.fullBg ? ' on' : '') + '" role="switch" aria-checked="' + (_ss.fullBg ? 'true' : 'false') + '"><span></span></button><span style="font-size:12.5px;">' + L('Карточка без шапки') + '</span></div>' +
             '<div class="fmx-fxlock" style="margin:6px 0 0;color:#8990a8;">' + L('Обложка скрывается — карточка начинается с названия и метрик, звёздочка закладки встаёт под индекс. Если загружен фон оффера, он занимает всю карточку. Доступно всем.') + '</div>';
         return seg + grads + upl + noHead;
     }
@@ -7522,7 +7521,11 @@
         if (grb) grb.addEventListener('click', function () { if (!ghue) return; var open = ghue.style.display !== 'none'; ghue.style.display = open ? 'none' : 'flex'; if (!open && gsl) { _ss.coverGrad = gradOf(+gsl.value); qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); grb.classList.add('on'); if (gprev) gprev.style.background = _ss.coverGrad; renderHero(); } });
         if (gsl) gsl.addEventListener('input', function () { _ss.coverGrad = gradOf(+this.value); if (gprev) gprev.style.background = _ss.coverGrad; qsa(gr, '.fmx-gd').forEach(function (x) { x.classList.remove('on'); }); if (grb) grb.classList.add('on'); _liveCover(_ss.coverGrad); _heroDebounced(); });
         var _fbEl = el('fmx-fullbg'); if (_fbEl) _fbEl.addEventListener('click', function () {
-            _ss.fullBg = !_ss.fullBg; this.classList.toggle('on'); _haptic('light'); renderHero();
+            _ss.fullBg = !_ss.fullBg;
+            this.classList.toggle('on', _ss.fullBg);
+            var _fsw = this.querySelector('.fmx-sw');
+            if (_fsw) { _fsw.classList.toggle('on', _ss.fullBg); _fsw.setAttribute('aria-checked', _ss.fullBg ? 'true' : 'false'); }
+            _haptic('light'); renderHero();
         });
         bindMediaBox(qsa(el('fmx-main'), '[data-ac="cover"]')[0]);
     }
@@ -9543,7 +9546,10 @@
                 '<div class="fmr-info" data-finfo="ad">' + L('Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов. Цена названа владельцем оффера — точные условия и другие форматы смотри в развороте.') + '</div>';
         }
         var flow = '';
-        if (pp && av && !dead) {
+        if (pp && av && !dead && _thinReach(l)) {
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>' + L('Перелив · набрать подписчиков') + '</div>' +
+                '<div class="fmr-sub">' + L('Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.') + '</div>';
+        } else if (pp && av && !dead) {
             var cpfHead;
             if (l.cpf_conv_fact) {
                 conv = l.cpf_conv_fact;
@@ -9666,7 +9672,7 @@
             (e24 ? _kmRow('ERR24', _kmSub(L('за первые сутки'), ''), e24 + '%', '#e8e8ed') : '') +
             _kmRow('ER', erRight, ervTxt, erCol) +
             _kmRow('CPM, ₽',
-                _kmSub(dead ? L('нет охвата') : (l.price_floored ? L('охват мал') : (isOwner ? L('от цены владельца') : L('ориентир ниши'))), ''),
+                _kmSub(dead ? L('нет охвата') : (_thinReach(l) ? L('охват меньше 100 просмотров') : (isOwner ? L('от цены владельца') : L('ориентир ниши'))), ''),
                 (!dead && cpm != null && !l.price_floored) ? _num(cpm) : '—', '#e8e8ed') +
             _kmRow(priceLabel, _kmSub(priceSub, ''), priceVal, priceCol, true);
         return '<div class="fmx-kmh"><span>' + L('Ключевые метрики') + '</span><span style="color:' + (l.owner_price || mode === 'market' ? '#5DCAA5' : '#565b73') + ';">' + (l.owner_price || mode === 'market' ? L('цена владельца') : L('оценка')) + '</span></div>' +
@@ -9945,7 +9951,10 @@
                 '<div class="fmr-info" data-finfo="ad">' + L('Формат 1/24 — стандартное размещение: пост час висит закреплённым сверху канала, потом сутки живёт в общей ленте. Первые цифры — часы: сколько в топе / сколько в ленте. Закреп, кружок, сторис, нативный — отдельные форматы со своими ценами (выбираются в конструкторе оффера и видны в развороте). CPM = цена ÷ показы (просмотры поста) × 1000, для сравнения каналов.') + (est ? L(' Цена и CPM здесь — расчётный ориентир по нише, охвату и вовлечённости канала, а не названная владельцем цена. Это ВЕРХНИЙ ориентир: считаем от охвата поста (рекламного за 24 ч, если он известен, иначе среднего). Реальная цена сделки обычно ниже. Точные условия — у владельца.') : L(' Эту цену назвал сам владелец канала (перенесено с Площадки) — это его прайс, а не наш расчёт по нише. CPM посчитан от этой реальной цены.')) + (l.price_negotiable ? L(' В этой нише сделки договорные — открытых прайсов нет, вилка ориентировочная.') : '') + '</div>';
         }
         var flow = '';
-        if (pp && av && !dead) {
+        if (pp && av && !dead && _thinReach(l)) {
+            flow = '<div class="fmr-sec num"><span class="kn">3</span>' + L('Перелив · набрать подписчиков') + '</div>' +
+                '<div class="fmr-sub">' + L('Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.') + '</div>';
+        } else if (pp && av && !dead) {
             var cpfHead;
             if (l.cpf_conv_fact) {
                 conv = l.cpf_conv_fact;
@@ -11276,6 +11285,10 @@
     function _flowBlock(l) {
         var pp = _basePrice(l), av = l.avg_views;
         if (!pp || !av || l.activity === 'none') return '';
+        if (_thinReach(l)) {
+            return '<div class="fmx-lssect">' + L('Перелив · набрать подписчиков') + '</div>' +
+                '<div class="fmx-terms"><div class="fmr-sub">' + L('Цена подписчика не считается: охват постов меньше 100 просмотров — любая оценка будет выдумкой.') + '</div></div>';
+        }
         var conv = 0.5, _grw = av * conv / 100, gained = Math.round(_grw), cps = Math.round(pp / Math.max(0.01, _grw));
         return '<div class="fmx-lssect">' + L('Перелив · набрать подписчиков') + '</div>' +
             '<div class="fmx-terms" id="fmx-flowBox">' +
@@ -11361,7 +11374,7 @@
             '<div class="fmx-chmn">' + (dead ? L('канал не публикует') : (ad ? L('замер рекламных постов') : L('медиана за 30 дней'))) + '</div></div>' +
             '<div class="fmx-chmbig"><div class="fmx-chml">CPM</div>' +
             '<div class="fmx-chmv num">' + (cpm != null ? _num(cpm) + ' ₽' : '—') + '</div>' +
-            '<div class="fmx-chmn">' + (cpm == null ? (dead ? L('нет охвата') : L('цена не указана')) : (_nicheBand(l) || L('за 1000 просмотров'))) + '</div></div>' +
+            '<div class="fmx-chmn">' + (cpm == null ? (dead ? L('нет охвата') : (_thinReach(l) ? L('охват меньше 100 просмотров') : L('цена не указана'))) : (_nicheBand(l) || L('за 1000 просмотров'))) + '</div></div>' +
             '</div>' +
             '<div class="pw-spark" id="fmx-pwspark"></div>' +
             '<div class="fmx-chmrows">' +
