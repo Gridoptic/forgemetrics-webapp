@@ -7065,6 +7065,14 @@ function rsErr(code) {
     return t(M[code] || TR('Не получилось — попробуй ещё раз'));
 }
 
+function apiFailText(e) {
+    var code = (e && e.status) || 0;
+    if (code === 402) return TR('Не хватает Forge. Пополни баланс в кабинете.');
+    if (code === 429) return TR('Слишком часто — подожди несколько секунд и повтори.');
+    if (code === 503) return TR('Сервис ИИ сейчас перегружен — попробуй позже.');
+    return '';
+}
+
 function rsDateLabel(iso, withWeekday) {
     if (!iso) return '';
     try {
@@ -7403,7 +7411,7 @@ async function rsCreativeBuild(ctx, host) {
         showToast(rsErr((r && r.error) || 'crv_failed'), 'alert-triangle');
     } catch (e) {
         ctx.crvBusy = false;
-        showToast(rsErr('crv_failed'), 'alert-triangle');
+        showToast(apiFailText(e) || rsErr('crv_failed'), 'alert-triangle');
     }
     rsCoverRender(host, ctx);
 }

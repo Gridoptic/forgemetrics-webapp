@@ -5270,7 +5270,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Telegram ቻናልህን በቁም ነገር ካሰራህ — ForgeMetrics ተመልከት። ይህ ስትራቴጂስት እና አርታኢ በአንድ ላይ ነው:\\n\\n— ልጥፎች እና ርዕሰ ጉዳዮች በቻናልህ ዘይቤ፣ ሳምንት ይዘት በሁለት ሞተ ጠቅታ ውስጥ;\\n— ግል ስትራቴጂ: ምን ለውጥ፣ የት እንደ ማድረግ፣ ቻናልህን ገቢ ለማስገባት;\\n— ከመሸጥ ስር ማስታወሻ በፊት — ትክክለኛ መድረስ፣ የመሸጥ ትግሪት ጠቋሚዎች እና AI-ትንቢት ወለድ ከመክፈል በፊት።\\n\\nሊንክ ለመጀመሪያ ስጀመር ተጨማሪ Forge ይሰጣል:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "ክሬዲት ከመክፈል በኋላ በራስ ሰር ይወጃል። ተጠርጣሪው {b} በመመዝገብ ጊዜ ወዲያውኑ ይቀበላል።",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "ተጠርጣሪው በእሱ ይመዝገባል እና {b} Forge ወዲያውኑ ወደ ሚዛን ያገኛል።",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "መጀመሪያ ሮቦቱን ጀምር — እሱ እድሎቹን ያሳያል እና ስቴርቴር ሪዛርভ Forge ያሰጥዋል።"
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "መጀመሪያ ሮቦቱን ጀምር — እሱ እድሎቹን ያሳያል እና ስቴርቴር ሪዛርভ Forge ያሰጥዋል።",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge በቂ አይደለም። በሥራ ቤትህ ውስጥ ሚዛንህን እንደገና ሙላ።",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "ሰርቪስ AI አሁን ከመጠን በላይ ተጭነው ነው — ቆይቶ እንደገና ሞክር።",
+  "Слишком часто — подожди несколько секунд и повтори.": "በጣም ብዙ ጊዜ — ጥቂት ሰከንዶችን ጠብቅ እና ድግም።"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10543,7 +10546,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "إذا كنت تدير قناة Telegram بجدية — جرب ForgeMetrics. إنها استراتيجية ومحرر في واحد:\n\n— منشورات وموضوعات بأسلوب قناتك تحديداً، أسبوع محتوى في نقرات معدودة؛\n— استراتيجية شخصية: ما الذي تغيره، أين تنمو، كيف تحقق دخلاً من القناة؛\n— قبل شراء إعلانات — وصول حقيقي، علامات التضخيم وتنبؤ AI بالعائد قبل الدفع.\n\nالرابط يعطيك Forge إضافياً للبداية عند التشغيل الأول:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "الحسم تلقائياً بعد الدفع. المُحال يحصل على {b} مباشرة عند التسجيل.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "المُحال يسجل عبرها ويحصل على {b} Forge في الرصيد فوراً.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "شغّل البوت أولاً — سيعرض لك الإمكانيات وينسب لك رصيد Forge الأولي."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "شغّل البوت أولاً — سيعرض لك الإمكانيات وينسب لك رصيد Forge الأولي.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "لا يوجد رصيد Forge كافٍ. أضف رصيد في لوحة التحكم.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "خدمة الذكاء الاصطناعي مثقلة الآن — حاول لاحقاً.",
+  "Слишком часто — подожди несколько секунд и повтори.": "بتكرار مفرط — انتظر بضع ثواٍ وحاول مجدداً."
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15816,7 +15822,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Telegram kanalını ciddi şəkildə işlədirsən — ForgeMetrics-ə bax. Bu bir strategist və redaktordur:\\n\\n— postlar və mövzular tam sənin kanalın üslubunda, bir neçə kliklə bir həftənin kontenti;\\n— şəxsi strategiya: nə dəyişmək, hara böyümək, kanalı gəlirə çəkmək necə;\\n— reklam almamışdan əvvəl — real reach, bot işarələri və ödəniş əvvəlində AI-proqnozu.\\n\\nLinkdən ilk işə salmada əlavə Forge alırsən:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Ödənişdən sonra avtomatik hesablanır. Dəvət olunan {b} qeydiyyatdan dərhal alır.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Dəvət olunan burada qeydiyyat keçir və {b} Forge balansa dərhal alır.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Əvvəlcə botu işə sal — o, imkanları göstərəcək və startap Forge hissəsini hesablayacaq."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Əvvəlcə botu işə sal — o, imkanları göstərəcək və startap Forge hissəsini hesablayacaq.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge balansı yetersiz. Kabinedə balansı artır.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Süni intellekt xidməti hazırda yüklü. Sonra cəhd et.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Çox tez-tez. Bir neçə saniyə gözlə və yenidən cəhd et."
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -21057,7 +21066,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Калі вядзеш Telegram-канал сур'ёзна — паглядзі ForgeMetrics. Гэта стратэг і рэдактар у адным:\\n\\n— посты і тэмы ў манеры имена твайго канала, тыдзень контэнту ў пару кліків;\\n— персанальная стратэгія: што менаць, дзе расці, як вывесці канал на даход;\\n— перад закупкай рэкламы — сапраўдны охоп, прыметы накруткі і AI-прагноз аддачы яшчэ да аплаты.\\n\\nСсылка дае дадатковыя Forge на старт пры першым запуску:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Начисленне аўтаматычна пасля аплаты. Запрошаны атрымлівае {b} адразу пры рэгістрацыі.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Запрошаны рэгіструецца па ёй і адразу атрымлівае {b} Forge на баланс.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Спачатку запусці бота — ён паказа магчымасці і начыслі стартавы запас Forge."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Спачатку запусці бота — ён паказа магчымасці і начыслі стартавы запас Forge.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Не хватае Forge. Папоўні баланс у кабінеце.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Сервіс ІІ зараз перагружаны — спрабуй пазней.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Зашмат часта — пачакай некалькі секунд і паўтары."
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26330,7 +26342,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "যদি Telegram-চ্যানেল গুরুত্বের সাথে পরিচালনা করো — ForgeMetrics দেখো। এটি কৌশলবিদ এবং সম্পাদক একসাথে:\n\n— পোস্ট এবং থিম তোমার চ্যানেলের শৈলীতে, এক সপ্তাহের কন্টেন্ট দুই ক্লিকে;\n— ব্যক্তিগত কৌশল: কী পরিবর্তন করবে, কোথায় বৃদ্ধি পাবে, চ্যানেল থেকে আয় কীভাবে পাবে;\n— বিজ্ঞাপন ক্রয়ের আগে — প্রকৃত রিচ, ফেইক চিহ্ন এবং পেমেন্টের আগেই AI-পূর্বাভাস।\n\nলিঙ্ক প্রথম লঞ্চে অতিরিক্ত Forge স্টার্টআপ দেয়:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "পেমেন্টের পরে স্বয়ংক্রিয় জমা হয়। আমন্ত্রিত রেজিস্ট্রেশনের সময় {b} পায়।",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "আমন্ত্রিত এই লিঙ্ক দিয়ে রেজিস্ট্রেশন করে তৎক্ষণাৎ {b} Forge ব্যালেন্স পায়।",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "প্রথমে বট চালু করো — এটি সম্ভাবনা দেখাবে এবং স্টার্টআপ Forge বরাদ্দ করবে।"
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "প্রথমে বট চালু করো — এটি সম্ভাবনা দেখাবে এবং স্টার্টআপ Forge বরাদ্দ করবে।",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge অপর্যাপ্ত। ক্যাবিনেটে ব্যালেন্স পূরণ করুন।",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "AI সার্ভিস এখন অপারগ — পরে চেষ্টা করুন।",
+  "Слишком часто — подожди несколько секунд и повтори.": "অত্যন্ত ঘন ঘন — কয়েক সেকেন্ড অপেক্ষা করুন এবং পুনরায় চেষ্টা করুন।"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31603,7 +31618,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Wenn du deinen Telegram-Kanal ernsthaft betreibst — schau dir ForgeMetrics an. Das ist Stratege und Editor in einem:\\n\\n— Posts und Themen im Stil deines Kanals, eine Woche Content in wenigen Klicks;\\n— persönliche Strategie: was ändern, wo wachsen, wie du den Kanal zu Einnahmen führst;\\n— vor Werbukauf — echte Reichweite, Anzeichen von Manipulation und KI-Prognose der Rentabilität vor Zahlung.\\n\\nDer Link gibt zusätzliche Forge zum Start beim ersten Start:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Automatische Gutschrift nach Zahlung. Der Eingeladene erhält {b} sofort bei der Registrierung.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Der Eingeladene registriert sich über den Link und erhält sofort {b} Forge auf sein Guthaben.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Starten Sie zunächst den Bot — er zeigt die Möglichkeiten und schreibt einen Startsatz Forge gut."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Starten Sie zunächst den Bot — er zeigt die Möglichkeiten und schreibt einen Startsatz Forge gut.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge-Guthaben reicht nicht. Fülle dein Konto auf.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "KI-Service ist überlastet — versuche es später.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Zu häufig — warte einige Sekunden und versuche erneut."
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36876,7 +36894,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "If you run a Telegram channel seriously — check ForgeMetrics. Strategy and editor in one:\n\n— posts and topics in your channel's style, a week of content in a few clicks;\n— personal strategy: what to change, where to grow, how to monetize your channel;\n— before buying ads — real reach, signs of inflation, and AI forecast of returns before payment.\n\nThe link gives extra Forge at launch on first run:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Credited automatically after payment. Invitee receives {b} immediately upon registration.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Invitee registers via it and gets {b} Forge on balance right away.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "First run the bot — it shows capabilities and credits your Forge startup balance."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "First run the bot — it shows capabilities and credits your Forge startup balance.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Insufficient Forge. Top up your balance in the account.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "AI service is overloaded — try again later.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Too frequent — wait a few seconds and retry."
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -42149,7 +42170,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Si administras un canal de Telegram en serio — conoce ForgeMetrics. Es estratega y editor en uno:\\n\\n— posts y temas en el estilo exacto de tu canal, una semana de contenido en un par de clics;\\n— estrategia personal: qué cambiar, dónde crecer, cómo monetizar el canal;\\n— antes de comprar publicidad — alcance real, señales de inflado e pronóstico AI de rentabilidad antes del pago.\\n\\nEl enlace da Forge adicionales al inicio en el primer lanzamiento:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Acreditación automática después del pago. El invitado recibe {b} inmediatamente al registrarse.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "El invitado se registra por el enlace y recibe {b} Forge en la cuenta al instante.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primero inicia el bot — mostrará las posibilidades y acreditará el reserve inicial de Forge."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primero inicia el bot — mostrará las posibilidades y acreditará el reserve inicial de Forge.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "No hay suficiente Forge. Recarga el saldo en tu cuenta.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "El servicio de IA está sobrecargado — intenta más tarde.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Demasiado frecuente — espera unos segundos e intenta de nuevo."
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47422,7 +47446,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "اگر کانال تلگرام خود را جدی می‌گیری — ForgeMetrics را ببین. استراتژیست و ویرایشگر در یک جا:\n\n— پست‌ها و موضوعات به سبک کانال تو، یک هفته محتوا در چند کلیک;\n— استراتژی شخصی: چه تغییری دهیم، کجا رشد کنیم، چگونه کانال را به درآمد برسانیم;\n— قبل از خرید تبلیغات — دسترسی واقعی، نشانه‌های افزایش مصنوعی و پیش‌بینی AI برای بازگشت سرمایه قبل از پرداخت.\n\nلینک Forge اضافی برای شروع را هنگام راه‌اندازی اول می‌دهد:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "محاسبه خودکار پس از پرداخت. دعوت‌شده {b} را فوراً در ثبت‌نام دریافت می‌کند.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "دعوت‌شده از طریق آن ثبت‌نام می‌کند و فوراً {b} Forge در موجودی دریافت می‌کند.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "ابتدا ربات را راه‌اندازی کن — امکانات را نشان می‌دهد و ذخیره شروع Forge را محاسبه می‌کند."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "ابتدا ربات را راه‌اندازی کن — امکانات را نشان می‌دهد و ذخیره شروع Forge را محاسبه می‌کند.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "موجودی Forge کافی نیست. در پنل خود را شارژ کن.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "سرویس AI اکنون بار زیادی دارد — بعداً دوباره تلاش کن.",
+  "Слишком часто — подожди несколько секунд и повтори.": "خیلی بار — چند ثانیه صبر کن و دوباره تلاش کن."
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52695,7 +52722,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Si tu gères une chaîne Telegram sérieusement — découvre ForgeMetrics. C'est un stratège et un éditeur en un:\\n\\n— posts et sujets dans le style exactement de ta chaîne, une semaine de contenu en quelques clics;\\n— stratégie personnalisée: quoi modifier, où croître, comment monétiser ta chaîne;\\n— avant d'acheter de la publicité — véritable portée, signes de faux engagement et prévision AI du ROI avant le paiement.\\n\\nLe lien t'accorde des Forge supplémentaires au démarrage lors du premier lancement:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Crédité automatiquement après le paiement. L'utilisateur invité reçoit {b} immédiatement à l'inscription.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "L'utilisateur invité s'inscrit via ce lien et reçoit immédiatement {b} Forge sur son compte.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "D'abord lance le bot — il affichera les capacités et créditera une réserve Forge initiale."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "D'abord lance le bot — il affichera les capacités et créditera une réserve Forge initiale.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Solde Forge insuffisant. Recharge ton compte dans le cabinet.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Le service IA est actuellement surchargé — essaie plus tard.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Trop fréquent — attends quelques secondes et réessaie."
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57968,7 +57998,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "अगर तुम Telegram चैनल को गंभीरता से चलाते हो — ForgeMetrics देखो। यह रणनीतिकार और संपादक एक साथ है:\n\n— पोस्ट और विषय तुम्हारे चैनल के तरीके में, एक सप्ताह की सामग्री कुछ क्लिकों में;\n— व्यक्तिगत रणनीति: क्या बदलना है, कहां बढ़ना है, चैनल को आय में कैसे लाना है;\n— विज्ञापन खरीदने से पहले — वास्तविक पहुंच, फुलाए गए संकेत और AI-पूर्वानुमान अभी भी भुगतान से पहले।\n\nलिंक पहली लॉन्च पर अतिरिक्त Forge स्टार्टअप देता है:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "भुगतान के बाद स्वचालित रूप से जमा होता है। आमंत्रित व्यक्ति को पंजीकरण पर तुरंत {b} मिलता है।",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "आमंत्रित व्यक्ति इसके द्वारा पंजीकरण करता है और तुरंत बैलेंस पर {b} Forge प्राप्त करता है।",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "पहले बॉट को लॉन्च करो — यह संभावनाएं दिखाएगा और स्टार्टअप Forge запас जमा करेगा।"
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "पहले बॉट को लॉन्च करो — यह संभावनाएं दिखाएगा और स्टार्टअप Forge запас जमा करेगा।",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge अपर्याप्त है। कैबिनेट में बैलेंस जमा करो।",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "AI सेवा अभी ओवरलोडेड है — बाद में कोशिश करो।",
+  "Слишком часто — подожди несколько секунд и повтори.": "बहुत बार — कुछ सेकंड प्रतीक्षा करो और दोहराओ।"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -63241,7 +63274,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Jika mengelola saluran Telegram dengan serius — lihat ForgeMetrics. Ini strategi dan editor dalam satu:\n\n— posting dan topik sesuai gaya saluranmu, seminggu konten dalam beberapa klik;\n— strategi personal: apa yang diubah, di mana tumbuh, cara menghasilkan dari saluran;\n— sebelum membeli iklan — jangkauan sebenarnya, tanda inflasi dan prakiraan AI ROI sebelum pembayaran.\n\nTautan memberikan Forge tambahan untuk memulai saat peluncuran pertama:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Accrual otomatis setelah pembayaran. Pengguna diundang menerima {b} langsung saat registrasi.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Pengguna diundang mendaftar melalui tautan dan langsung menerima {b} Forge di saldo.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Luncurkan bot terlebih dahulu — akan menunjukkan kemampuan dan accrual cadangan awal Forge."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Luncurkan bot terlebih dahulu — akan menunjukkan kemampuan dan accrual cadangan awal Forge.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Saldo Forge tidak cukup. Isi ulang saldo di panel.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Layanan AI sedang kelebihan beban — coba lagi nanti.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Terlalu sering — tunggu beberapa detik dan coba lagi."
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -68514,7 +68550,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Se gestisci un canale Telegram sul serio — guarda ForgeMetrics. È strategist e editor in uno:\\n\\n— post e topic nello stile del tuo canale, una settimana di contenuti in pochi click;\\n— strategia personale: cosa modificare, dove crescere, come portare il canale al reddito;\\n— prima di comprare pubblicità — reach reale, segni di gonfiamento e previsione AI del risultato ancora prima del pagamento.\\n\\nIl link ti dà Forge aggiuntivi per iniziare al primo avvio:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Accredito automatico dopo il pagamento. L'invitato riceve {b} subito alla registrazione.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "L'invitato si registra tramite il link e riceve {b} Forge sul saldo subito.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Prima avvia il bot — mostrerà le possibilità e accrediterà la riserva iniziale di Forge."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Prima avvia il bot — mostrerà le possibilità e accrediterà la riserva iniziale di Forge.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Non hai abbastanza Forge. Ricarica il saldo in cabinet.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Il servizio IA è attualmente sovraccarico — riprova più tardi.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Troppo frequente — attendi alcuni secondi e riprova."
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73770,7 +73809,10 @@ window.__I18N_DICT = {
   "Кабинет": "Личный кабинет",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Төлемнен кейін автоматты түрде есепке өтеді. Ынамданған ұпайшы тіркелгеннің ілесінде {b} алады.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Ынамданған түрі бойынша тіркелінеді және балансына бірден {b} Forge алады.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Алдымен ботты іске қос — ол мүмкіндіктерді көрсетеді және стартты Forge резервін есепке өтеді."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Алдымен ботты іске қос — ол мүмкіндіктерді көрсетеді және стартты Forge резервін есепке өтеді.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge жеткіліксіз. Кабинетте балансты толықта.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "АИ қызметі қазір перегружен — кейінірек спробай.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Тым жиі — бірнеше секунд күте және қайта көшіл."
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -79043,7 +79085,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Se administras um canal Telegram a sério — confira ForgeMetrics. Estrategista e editor em um:\\n\\n— posts e tópicos no estilo do teu canal, uma semana de conteúdo em poucos cliques;\\n— estratégia personalizada: o que mudar, onde crescer, como gerar receita no canal;\\n— antes de comprar publicidade — alcance real, sinais de inflação e previsão AI de retorno antes do pagamento.\\n\\nO link oferece Forge adicional para começar no primeiro uso:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Crédito automático após pagamento. O convidado recebe {b} imediatamente no registro.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "O convidado se registra através dele e recebe {b} Forge no saldo instantaneamente.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primeiro inicia o bot — ele mostrará as funcionalidades e creditará o Forge inicial."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Primeiro inicia o bot — ele mostrará as funcionalidades e creditará o Forge inicial.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Saldo insuficiente de Forge. Recarregue o saldo no painel.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Serviço de IA sobrecarregado — tente novamente mais tarde.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Muitas solicitações — aguarde alguns segundos e tente novamente."
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -84316,7 +84361,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Ikiwa unaendesha chaneli ya Telegram kwa karibu — tazama ForgeMetrics. Ni mkakati na mhariri katika moja:\\n\\n— machapisho na mada kwa mtindo wa chaneli yako yenyewe, wiki ya maudhui katika mikakweza kadhaa;\\n— mkakati wa kibinafsi: nini cha kubadilisha, wapi pa kukua, jinsi ya kuleta chaneli kwa mapato;\\n— kabla ya kununua tangazo — upeo wa kweli, dalili za kuongeza bandia na AI-tabia ya kurudi kabla ya malipo.\\n\\nKiungo kinapeana Forge ya ziada kwa kuanza kwa uendeshaji wa kwanza:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Zinageuzwa kiotomatiki baada ya kulipa. Mwaliko anayokamatia {b} mara moja akijiandikisha.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Mwaliko anajisajili kwa kiungo na kupokea {b} Forge kwenye akaunti mara moja.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Kwanza endesha bot — itaonyesha uwezekano na kuongeza akiba ya kuanza ya Forge."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Kwanza endesha bot — itaonyesha uwezekano na kuongeza akiba ya kuanza ya Forge.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Hakuna Forge. Jaza salio katika dashibodi.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Huduma ya AI sasa ina mzigo mwingi — jaribu baadaye.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Mara nyingi sana — subiri sekunde chache na jaribu tena."
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -89589,7 +89637,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Telegram kanalını ciddi yönetiyorsan — ForgeMetrics'e bak. Bir stratejist ve editör işlevini birleştiriyor:\n\n— kanalının üslubunda yazılar ve temalar, bir haftalık içerik birkaç tıkla;\n— kişisel strateji: ne değiştireceksin, nerede büyüyeceksin, kanalı nasıl gelir getirsin;\n— reklam satın almadan önce — gerçek erişim, büyütme işaretleri ve ödeme öncesinde AI tarafından tahmin edilen verim.\n\nLink ilk başlatmada ek Forge başlangıç kredisi verir:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Ödeme sonrasında otomatik hesaplanır. Davet edilen kişi kaydolduğunda {b} Forge'u anında alır.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Davet edilen kişi bağlantı üzerinden kaydolur ve {b} Forge'u hemen bakiyeye alır.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Önce botu başlat — olanaklarını gösterir ve başlangıç Forge kredisini yükler."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Önce botu başlat — olanaklarını gösterir ve başlangıç Forge kredisini yükler.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge yetersiz. Panelden bakiyeni yükselt.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Yapay zeka hizmeti şu anda aşırı yüklenmiş — daha sonra dene.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Çok sık — birkaç saniye bekle ve tekrar dene."
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94862,7 +94913,10 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Agar Telegram-kanalini jiddiy yondashtyorsan — ForgeMetrics ni ko'rib chiq. Bu strategist va muharrir bitta\\n\\n— postlar va mavzular aniqan senin kanalning uslubida, bir haftalik kontent bir necha klik;\\n— shaxsiy strategiya: nima o'zgartirish, qayerda o'sish, kanaldan daromad qanday olish;\\n— reklama sotib olishdan oldin — haqiqiy auditoriya, soxtalikni aniqlash va AI prognozi to'lashdan oldin\\n\\nHavolada birinchi ishga tushirilganda qo'shimcha Forge boshlash uchun beriladi:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "To'lashdan so'ng avtomatik tarzda hisoblangan. Taklif qilingan foydalanuvchi ro'yxatdan o'tgach {b} oladi.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Taklif qilingan foydalanuvchi uning orqali ro'yxatdan o'tadi va {b} Forge balansga oladi.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Avval botni ishga tushir — u imkoniyatlarni ko'rsatadi va Forge boshlash zaxirasini hisoblaydi."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Avval botni ishga tushir — u imkoniyatlarni ko'rsatadi va Forge boshlash zaxirasini hisoblaydi.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Forge yetishmaydi. Kabinettada balansni to'ldirmoq.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "AI xizmati hozir overload. Keyinroq urinib ko'ring.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Juda tez-tez. Bir necha soniya kuting va qayta urinmoq."
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -100135,6 +100189,9 @@ window.__I18N_DICT = {
   "Если ведёшь Telegram-канал всерьёз — посмотри ForgeMetrics. Это стратег и редактор в одном:\\n\\n— посты и темы в манере именно твоего канала, неделя контента в пару кликов;\\n— персональная стратегия: что менять, где расти, как вывести канал на доход;\\n— перед закупкой рекламы — настоящий охват, признаки накрутки и AI-прогноз отдачи ещё до оплаты.\\n\\nСсылка даёт дополнительные Forge на старт при первом запуске:": "Nếu điều hành kênh Telegram nghiêm túc — xem ForgeMetrics. Đây là chiến lược gia và biên tập viên trong một:\\n\\n— bài viết và chủ đề theo phong cách kênh của riêng bạn, một tuần nội dung trong vài cú nhấp;\\n— chiến lược cá nhân: những gì thay đổi, nơi phát triển, cách đưa kênh đến doanh thu;\\n— trước khi mua quảng cáo — phạm vi thực tế, dấu hiệu tăng giả tạo và AI dự báo ROI trước khi thanh toán.\\n\\nLinh được áp dụng thêm Forge để bắt đầu khi khởi động lần đầu:",
   "Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.": "Tính toán tự động sau khi thanh toán. Người được mời nhận {b} ngay khi đăng ký.",
   "Приглашённый регистрируется по ней и сразу получает {b} Forge на баланс.": "Người được mời đăng ký qua nó và nhận ngay {b} Forge vào số dư.",
-  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Trước tiên hãy khởi động bot — nó sẽ hiển thị khả năng và tính toán khoảng Forge khởi động."
+  "Сначала запусти бота — он покажет возможности и начислит стартовый запас Forge.": "Trước tiên hãy khởi động bot — nó sẽ hiển thị khả năng và tính toán khoảng Forge khởi động.",
+  "Не хватает Forge. Пополни баланс в кабинете.": "Không đủ Forge. Nạp tiền vào tài khoản.",
+  "Сервис ИИ сейчас перегружен — попробуй позже.": "Dịch vụ AI hiện bị quá tải — hãy thử lại sau.",
+  "Слишком часто — подожди несколько секунд и повтори.": "Quá thường xuyên — chờ vài giây rồi thử lại."
  }
 };
