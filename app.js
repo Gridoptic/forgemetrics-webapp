@@ -5799,6 +5799,8 @@ function renderSettingsBehaviorSection(data) {
     const profanity = !!data.use_profanity_default;
     const openPolls = !!data.open_polls;
     const research = !!data.research_links;
+    const coverBrand = data.cover_brand !== false;
+    const creativeBrand = data.creative_brand !== false;
 
     return `
         <div class="cs-section">
@@ -5876,6 +5878,44 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${research ? 'on' : ''}" data-toggle-target="research">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="cover_brand">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-photo" style="color: ${coverBrand ? '#5DCAA5' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">${TR('Подпись канала на картинках')}</span>
+                        <button class="cs-info-btn" data-info="cover_brand" aria-label="${TR('Что это значит')}"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${coverBrand ? TR('Включена — аватар и название на обложках и фото к постам') : TR('Выключена — обложки и фото без подписи')}</div>
+                    <div class="cs-info-popup" id="cs-info-cover_brand" style="display:none;">
+                        ${TR('Аватар и название канала в углу обложек и фото к постам. Выключи, если картинки должны быть без подписи — например, для перепостов в другие каналы.')}
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${coverBrand ? 'on' : ''}" data-toggle-target="cover_brand">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="creative_brand">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-video" style="color: ${creativeBrand ? '#5DCAA5' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">${TR('Подпись канала в роликах')}</span>
+                        <button class="cs-info-btn" data-info="creative_brand" aria-label="${TR('Что это значит')}"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${creativeBrand ? TR('Включена — аватар и название канала в финале ролика') : TR('Выключена — ролик без аватара и названия канала')}</div>
+                    <div class="cs-info-popup" id="cs-info-creative_brand" style="display:none;">
+                        ${TR('Аватар, название и адрес канала в финале ролика. Выключи, если ролик пойдёт без привязки к каналу.')}
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${creativeBrand ? 'on' : ''}" data-toggle-target="creative_brand">
                     <span class="cs-toggle-knob"></span>
                 </button>
             </div>
@@ -6469,12 +6509,16 @@ async function handleToggleSwitch(target, newValue) {
     if (target === 'profanity') payload.use_profanity_default = newValue;
     if (target === 'polls') payload.open_polls = newValue;
     if (target === 'research') payload.research_links = newValue;
+    if (target === 'cover_brand') payload.cover_brand = newValue;
+    if (target === 'creative_brand') payload.creative_brand = newValue;
 
     if (_settingsState.data) {
         if (target === 'paused') _settingsState.data.is_paused = !newValue;
         if (target === 'profanity') _settingsState.data.use_profanity_default = newValue;
         if (target === 'polls') _settingsState.data.open_polls = newValue;
         if (target === 'research') _settingsState.data.research_links = newValue;
+        if (target === 'cover_brand') _settingsState.data.cover_brand = newValue;
+        if (target === 'creative_brand') _settingsState.data.creative_brand = newValue;
         updateToggleVisual(target, newValue);
     }
 
@@ -6492,6 +6536,8 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'profanity') _settingsState.data.use_profanity_default = !newValue;
             if (target === 'polls') _settingsState.data.open_polls = !newValue;
             if (target === 'research') _settingsState.data.research_links = !newValue;
+            if (target === 'cover_brand') _settingsState.data.cover_brand = !newValue;
+            if (target === 'creative_brand') _settingsState.data.creative_brand = !newValue;
             updateToggleVisual(target, !newValue);
         }
         await alertDialog(TR('Не удалось сохранить изменение.'));
@@ -6542,6 +6588,17 @@ function updateToggleVisual(target, isOn) {
         if (iconWrap) iconWrap.style.color = paused ? 'rgba(255,255,255,0.4)' : '#5DCAA5';
         if (titleEl) titleEl.textContent = `Канал ${paused ? TR('на паузе') : TR('активен')}`;
         if (subEl) subEl.textContent = paused ? TR('Генерация постов отключена') : TR('Можно генерировать посты');
+    }
+
+    if (target === 'cover_brand' || target === 'creative_brand') {
+        const iconWrap = document.querySelector(`[data-toggle="${target}"] .cs-toggle-icon-wrap i`);
+        const subEl = document.querySelector(`[data-toggle="${target}"] .cs-toggle-sub`);
+        if (iconWrap) iconWrap.style.color = isOn ? '#5DCAA5' : 'rgba(255,255,255,0.4)';
+        if (subEl) {
+            subEl.textContent = target === 'cover_brand'
+                ? (isOn ? TR('Включена — аватар и название на обложках и фото к постам') : TR('Выключена — обложки и фото без подписи'))
+                : (isOn ? TR('Включена — аватар и название канала в финале ролика') : TR('Выключена — ролик без аватара и названия канала'));
+        }
     }
 
     if (target === 'profanity') {
