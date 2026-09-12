@@ -361,6 +361,10 @@ button:active {
     margin-right: 4px;
 }
 
+.forge-price .forge-sign {
+    margin-right: 3px;
+}
+
 .metrics {
     display: grid;
     grid-template-columns: 1fr 1fr;

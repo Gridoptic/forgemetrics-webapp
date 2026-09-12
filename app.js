@@ -50,9 +50,10 @@ function forgeIco(size) {
     return `<span class="forge-ico" style="width:${size || 14}px;height:${size || 14}px;">${FORGE_SVG}</span>`;
 }
 
-function forgeAmount(n, size) {
+function forgeAmount(n, size, sign) {
     const val = Number(n || 0).toLocaleString('ru-RU').replace(/ /g, ' ');
-    return `<span class="forge-price">${forgeIco(size)}${val}</span>`;
+    const pre = sign ? `<span class="forge-sign">${sign}</span>` : '';
+    return `<span class="forge-price">${pre}${forgeIco(size)}${val}</span>`;
 }
 
 const ANALYZE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
@@ -2576,9 +2577,9 @@ function refCardHtml(r) {
         <div class="rf-rate"><b>${rate}%</b><span>${TR('с каждого пополнения приглашённого — в Forge, без ограничения срока и числа платежей')}</span></div>
         <div style="margin:9px 0 2px;border:0.5px solid rgba(255,255,255,0.09);border-radius:11px;overflow:hidden;font-size:11.5px;">
           <div style="display:flex;justify-content:space-between;padding:6px 11px;background:rgba(255,255,255,0.04);color:#8990a8;font-size:10px;"><span>${TR('Приглашённый пополнил')}</span><span>${TR('Твоё начисление')}</span></div>
-          ${refPackAmounts().map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${forgeAmount(v, 12)}</span><b class="num" style="color:#5DCAA5;">+${forgeAmount(Math.round(v * rate / 100), 12)}</b></div>`).join('')}
+          ${refPackAmounts().map((v) => `<div style="display:flex;justify-content:space-between;padding:6px 11px;border-top:0.5px solid rgba(255,255,255,0.05);"><span class="num" style="color:#a9aec0;">${forgeAmount(v, 12)}</span><b class="num" style="color:#5DCAA5;">${forgeAmount(Math.round(v * rate / 100), 12, '+')}</b></div>`).join('')}
         </div>
-        <p style="margin-top:8px;">${TR('Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.').replace('{b}', '+' + forgeAmount(fBonus, 11))}</p>
+        <p style="margin-top:8px;">${TR('Начисление автоматически после оплаты. Приглашённый получает {b} сразу при регистрации.').replace('{b}', forgeAmount(fBonus, 11, '+'))}</p>
       </div>
     </div>
     <div class="rf-bal">
