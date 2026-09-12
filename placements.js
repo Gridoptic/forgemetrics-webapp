@@ -926,6 +926,7 @@
 
     var TRACK_PLATS = ['shorts', 'vk', 'dzen', 'tiktok', 'reels'];
     function platOf(k) { return (window.FM_PLATFORMS || {})[k] || { n: k, c: 'dz', svg: '' }; }
+    function platIcon(k) { return (typeof window.fmPlatIcon === 'function') ? window.fmPlatIcon(k) : '<div class="pl-sic dz"></div>'; }
     var _srcHint = {};
 
     function isChPrivate() {
@@ -1063,7 +1064,7 @@
         if (!sh || !bg) return;
         var opts = TRACK_PLATS.map(function (k) {
             return '<div class="pl-src" style="margin-bottom:8px;cursor:pointer;" data-act="src-add-pick" data-key="' + k + '">' +
-                '<div class="pl-srow">' + window.fmPlatIcon(k) +
+                '<div class="pl-srow">' + platIcon(k) +
                 '<div class="pl-snm"><b><u>' + esc(platOf(k).n) + '</u></b></div>' +
                 '<i class="ti ti-chevron-right" style="color:#565b73;"></i></div></div>';
         }).join('');
