@@ -4106,7 +4106,9 @@
                 esc(T('Пост опубликован — вложение и обложка закрыты')) + '</div>';
         if (p.publish_status === 'queued')
             return '<div class="cp-mfoot"><i class="ti ti-clock"></i> ' +
-                esc(T('Пост в очереди — чтобы менять, сними его с очереди')) + '</div>';
+                esc(T('Пост в очереди — чтобы менять, сними его с очереди')) + '</div>' +
+                '<button class="cp-mrepl" data-act="canceld" data-id="' + p.id + '">' +
+                '<i class="ti ti-calendar-off"></i>' + esc(T('Снять с очереди')) + '</button>';
         return '<div class="cp-mrow">' +
             '<button class="cp-mrepl" data-act="mediapick" data-id="' + p.id + '"><i class="ti ti-upload"></i>' +
             esc(T(p.media_url ? T('Заменить файлом') : T('Файл с устройства'))) + '</button>' +
