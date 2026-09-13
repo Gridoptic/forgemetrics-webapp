@@ -48,7 +48,7 @@
     function close() {
         var host = document.getElementById('videos-screen');
         if (host) host.style.display = 'none';
-        try { if (typeof window.stopVoiceSample === 'function') window.stopVoiceSample(); } catch (e) {}
+        stopSample();
         document.documentElement.classList.remove('cs-modal-open');
         document.body.classList.remove('cs-modal-open');
         try {
@@ -301,6 +301,39 @@
             '</div><div class="vd-list">' + _items.map(card).join('') + '</div>';
     }
 
+    var _sample = null, _sampleBtn = null;
+
+    function stopSample() {
+        if (_sample) {
+            try { _sample.pause(); } catch (e) {}
+            _sample = null;
+        }
+        if (_sampleBtn) {
+            _sampleBtn.innerHTML = '<i class="ti ti-player-play-filled"></i>';
+            _sampleBtn.classList.remove('act');
+            _sampleBtn = null;
+        }
+    }
+
+    function playSample(btn) {
+        if (_sampleBtn === btn) { stopSample(); return; }
+        stopSample();
+        var src = btn.getAttribute('data-src') || '';
+        if (!src) { toast(T('Пример голоса недоступен'), 'alert-triangle'); return; }
+        var a = new Audio(src);
+        _sample = a;
+        _sampleBtn = btn;
+        btn.innerHTML = '<i class="ti ti-player-stop-filled"></i>';
+        btn.classList.add('act');
+        a.onended = stopSample;
+        a.onerror = function () { stopSample(); toast(T('Пример голоса не открылся'), 'alert-triangle'); };
+        haptic();
+        var p = a.play();
+        if (p && typeof p.catch === 'function') {
+            p.catch(function () { stopSample(); toast(T('Пример голоса не открылся'), 'alert-triangle'); });
+        }
+    }
+
     function markVoice(el, on) {
         var row = el.classList.contains('cs-vrow') ? el : el.closest('.cs-vrow');
         if (!row) return;
@@ -337,6 +370,7 @@
         var focus = document.activeElement;
         var fid = focus && focus.id && /^vd-(topic|niche|url)$/.test(focus.id) ? focus.id : '';
         var pos = fid ? focus.selectionStart : 0;
+        stopSample();
         host.innerHTML = head() + '<div class="vd-body">' + form() +
             '<div class="vd-sec">' + esc(T('Мои ролики')) + '</div>' + list() + '</div>';
         if (fid) {
@@ -386,7 +420,7 @@
         }
         if (a === 'vplay') {
             e.stopPropagation();
-            if (typeof window.playVoiceSample === 'function') window.playVoiceSample(b);
+            playSample(b);
             return;
         }
         if (a === 'vname') { markVoice(b, null); return; }
