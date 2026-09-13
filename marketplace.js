@@ -9546,7 +9546,6 @@
     }
     function _alertsRow(l, promoHtml) {
         var out = [];
-        if (l.activity === 'rare' || l.activity === 'low' || l.activity === 'none') out.push(_actBadge(l));
         if ((l.badges || []).indexOf('risk') >= 0 || l.antifraud === 'suspect') out.push('<span class="fmx-bdg fmx-b-dead"><i class="ti ti-alert-triangle"></i>' + L('Требует проверки') + '</span>');
         if (l.hot_discount_pct) out.push('<span class="fmx-bdg" style="color:#f5bf4f;border-color:rgba(245,191,79,0.45);background:rgba(245,191,79,0.1);"><i class="ti ti-discount-2"></i>' + L('Горящие даты до −') + l.hot_discount_pct + '%</span>');
         if (promoHtml) out.push(promoHtml);
@@ -9557,7 +9556,7 @@
         var h = _hlInfo(l);
         if (h.cls !== 'none') out.push('<span class="fmr-pill" style="color:' + h.color + ';"><i style="width:6px;height:6px;border-radius:50%;background:' + h.color + ';display:inline-block;"></i><span style="color:#c2c6d2;">' + h.word + '</span></span>');
         var a = _actInfo(l);
-        if (a && (l.activity === 'high' || l.activity === 'mid')) out.push('<span class="fmr-pill" style="color:' + a[1] + ';">' + _pulseSvg(13, a[1]) + '<span style="color:#c2c6d2;">' + a[2] + '</span></span>');
+        if (a) out.push('<span class="fmr-pill" style="color:' + a[1] + ';">' + _pulseSvg(13, a[1]) + '<span style="color:#c2c6d2;">' + a[2] + '</span></span>');
         if (l.antifraud === 'clean') out.push('<span class="fmr-pill" style="color:#5DCAA5;"><i class="ti ti-shield-check"></i><span style="color:#c2c6d2;">' + L('Фрод-контроль пройден') + '</span></span>');
         if (l.rkn_url) out.push(rknPill(l.rkn_url, 'radar'));
         if (l.owner_verified) out.push('<span class="fmr-pill" style="color:#5ab0e6;"><i class="ti ti-user-check"></i><span style="color:#c2c6d2;">' + L('Владелец') + '</span></span>');
