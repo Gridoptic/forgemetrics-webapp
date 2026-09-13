@@ -1315,6 +1315,7 @@
             '.fmx-macat b{color:#c5c8d6;font-weight:600;}',
             '.fmx-mstatrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#8990a8;padding:6px 0;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:6px;}',
             '.fmx-mstatrow b{color:#e8e8ed;font-weight:700;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;}',
+            '.fmx-mstatsub{font-size:10.5px;color:#7d839a;line-height:1.5;margin-top:9px;}',
             '.fmx-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px;}',
             '.fmx-meyebrow{font-size:9.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6b7088;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}',
             '.fmx-meyebrow em{font-style:normal;color:#8990a8;font-weight:600;letter-spacing:0;text-transform:none;font-size:10.5px;}',
@@ -2496,6 +2497,13 @@
         }).catch(function () { if (stale()) return; _mod.err.ov = true; _modPaintLamps(); _modPaintSections(); });
 
         if (_isOwner()) {
+            apiGet('/api/v1/admin/tax').then(function (r) {
+                if (stale()) return;
+                _mod.err.tax = !r || r.ok === false;
+                if (!_mod.err.tax) _mod.tax = r;
+                _modPaintSections();
+            }).catch(function () { if (stale()) return; _mod.err.tax = true; _modPaintSections(); });
+
             apiGet('/api/v1/admin/controls').then(function (r) {
                 if (stale()) return;
                 _mod.err.ctrl = !r || r.ok === false;
@@ -2698,6 +2706,35 @@
             '<div class="fmx-mstatrow"><span>' + L('Из них оплатили') + '</span><b>' + _num(rf.paid) + '</b></div>';
     }
 
+    var _MONTHS_NOM = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль',
+        'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+
+    function _modTaxBody() {
+        if (_mod.err.tax) return '<div class="fmx-mstatrow"><span>' + L('Нет связи с сервером') + '</span></div>';
+        var t = _mod.tax;
+        if (!t) return '<div class="fmx-mstatrow"><span>' + L('Загружаю') + '…</span></div>';
+        if (!t.connected) {
+            return '<div class="fmx-mstatrow"><span>' + L('Кабинет «Мой налог» не подключён') + '</span></div>';
+        }
+        var cur = t.current || {}, prev = t.previous || {};
+        var mNow = _MONTHS_NOM[(t.month || 1) - 1], mPrev = _MONTHS_NOM[((t.month || 1) + 10) % 12];
+        var rows = '<div class="fmx-mstatrow" style="border-top:0;margin-top:11px;padding-top:0;"><span>' +
+            L('Доход') + ' · ' + L(mNow) + '</span><b>' + _num(cur.income_rub) + ' ₽</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Налог') + ' ' + (t.rate_pct || 4) + '%</span><b>' +
+            _num(cur.tax_rub) + ' ₽</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Чеков выдано') + '</span><b>' + _num(cur.receipts) + '</b></div>' +
+            '<div class="fmx-mstatrow"><span>' + L('Доход') + ' · ' + L(mPrev) + '</span><b>' +
+            _num(prev.income_rub) + ' ₽ · ' + L('налог') + ' ' + _num(prev.tax_rub) + ' ₽</b></div>';
+        rows += t.waiting
+            ? '<div class="fmx-mstatrow"><span>' + L('Ждут отправки в ФНС') + '</span><b>' + _num(t.waiting) +
+              ' · ' + L('срок до') + ' ' + t.deadline_day + ' ' + L('числа') + '</b></div>'
+            : '<div class="fmx-mstatrow"><span>' + L('Чеки ФНС') + '</span><b>' + L('все сформированы') + '</b></div>';
+        rows += '<div class="fmx-mstatrow"><span>' + L('Кабинет') + '</span><b>' +
+            (t.cabinet_ok ? L('на связи') : L('нет связи')) + '</b></div>';
+        rows += '<div class="fmx-mstatsub">' + L('Ставка 4% для оплат от физических лиц, без учёта вычета 10 000 ₽; точную сумму начисляет ФНС. Предел дохода на этом режиме — 2,4 млн ₽ в год.') + '</div>';
+        return rows;
+    }
+
     function _modPeopleBody() {
         if (_mod.err.ov) return '<div class="fmx-mmeta" style="padding-top:11px;">' + L('Не загрузилось — панель повторит попытку.') + '</div>';
         if (!_mod.ov) return loadHtml();
@@ -2785,6 +2822,11 @@
         var h = _modSec('money', 'ti-coin', 'green', L('Деньги'), L('выручка · расход на ИИ'), money, money ? L('за месяц') : '', _modMoneyBody());
         h += _modSec('people', 'ti-users', 'vio', L('Люди'), L('кто пользуется и кто платит'),
             _mod.ov ? _num(u.total) : '', _mod.ov ? (_num(u.paid) + L(' с покупками')) : '', _modPeopleBody());
+        if (_isOwner()) {
+            var tv = (_mod.tax && _mod.tax.connected) ? (_num(_mod.tax.current.tax_rub) + ' ₽') : '';
+            h += _modSec('tax', 'ti-receipt-tax', 'green', L('Налоги'), L('доход · чеки ФНС · налог к уплате'),
+                tv, tv ? L('за месяц') : '', _modTaxBody());
+        }
         h += _modSec('access', 'ti-adjustments', '', L('Управление'),
             _isOwner() ? L('проверка офферов · модераторы · тестеры') : L('ручное продвижение оффера'), '', '', _modAccessBody());
         box.innerHTML = h;
