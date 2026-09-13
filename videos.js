@@ -163,8 +163,8 @@
         var d = new Date(c.expires_at);
         if (isNaN(d.getTime())) return '';
         var left = Math.ceil((d - Date.now()) / 86400000);
-        if (left <= 0) return T('удаляем сегодня');
-        return T('удаляем') + ' ' + d.getDate() + ' ' + T(MONTHS_GEN[d.getMonth()]);
+        if (left <= 0) return T('последний день хранения');
+        return T('хранение до') + ' ' + d.getDate() + ' ' + T(MONTHS_GEN[d.getMonth()]);
     }
 
     function plural(n, one, few, many) {
@@ -236,9 +236,9 @@
         if (!_items.length) {
             return '<div class="vd-empty">' + esc(T('Роликов пока нет. Опиши тему и собери первый.')) + '</div>';
         }
-        return '<div class="vd-keep">' + esc(T('Готовые ролики хранятся') + ' ' + _keepDays + ' ' +
+        return '<div class="vd-keep">' + esc(T('Срок хранения готового ролика —') + ' ' + _keepDays + ' ' +
             plural(_keepDays, T('день'), T('дня'), T('дней')) +
-            T(', затем удаляются автоматически. Скачай файл или отправь в Telegram, чтобы сохранить.')) +
+            T('. Скачай файл или отправь его в Telegram, чтобы оставить у себя.')) +
             '</div><div class="vd-list">' + _items.map(card).join('') + '</div>';
     }
 
