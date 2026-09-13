@@ -4,7 +4,8 @@
     var MAX_TOPIC = 3000, MAX_PHOTOS = 4, MAX_VIDEOS = 3;
     var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
     var _keepDays = 7, _open = {};
-    var _topic = '', _niche = '', _url = '', _voice = '', _photos = [], _videos = [],
+    var _voices = [], _channels = [], _voiceName = '', _brandCh = 0;
+    var _topic = '', _niche = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -108,12 +109,35 @@
     }
 
     function voiceField() {
-        var rows = [['', T('Авто')], ['male', T('Мужской')], ['female', T('Женский')]];
+        var cells = [{ name: '', label: T('Авто'), note: T('подбор по теме') }].concat(_voices);
         return '<div class="vd-f">' +
             '<div class="vd-lbl">' + esc(T('Голос')) + '</div>' +
-            '<div class="vd-seg">' + rows.map(function (o) {
-                return '<button type="button" class="vd-sg' + (_voice === o[0] ? ' on' : '') +
-                    '" data-va="voice" data-v="' + esc(o[0]) + '">' + esc(o[1]) + '</button>';
+            '<div class="vd-hint">' + esc(T('Диктор, который прочитает сценарий. При автоподборе голос выбирается под тему ролика.')) + '</div>' +
+            '<div class="vd-vlist">' + cells.map(function (v) {
+                return '<button type="button" class="vd-vrow' + (_voiceName === v.name ? ' on' : '') +
+                    '" data-va="vname" data-v="' + esc(v.name) + '"><b>' + esc(v.label) + '</b>' +
+                    '<em>' + esc(v.note || '') + '</em></button>';
+            }).join('') + '</div></div>';
+    }
+
+    function endingField() {
+        if (!_channels.length) {
+            return '<div class="vd-f">' +
+                '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' +
+                '<div class="vd-hint">' + esc(T('Канал не подключён: финал будет нейтральным — без призыва подписаться и без упоминания площадок.')) + '</div></div>';
+        }
+        var cells = [{ id: 0, title: T('Нейтральная'), note: T('без упоминания канала') }].concat(
+            _channels.map(function (c) {
+                return { id: c.id, title: c.title || ('@' + c.username),
+                         note: c.username ? ('@' + c.username) : T('подпись канала в финале') };
+            }));
+        return '<div class="vd-f">' +
+            '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' +
+            '<div class="vd-hint">' + esc(T('С каналом в финале появится его аватар и название, а диктор позовёт в канал. Без канала финал зовёт к самому предмету ролика.')) + '</div>' +
+            '<div class="vd-vlist">' + cells.map(function (c) {
+                return '<button type="button" class="vd-vrow' + (_brandCh === c.id ? ' on' : '') +
+                    '" data-va="brand" data-v="' + c.id + '"><b>' + esc(c.title) + '</b>' +
+                    '<em>' + esc(c.note) + '</em></button>';
             }).join('') + '</div></div>';
     }
 
@@ -137,7 +161,7 @@
             '<div class="vd-hint">' + esc(T('Для Wildberries кадры берутся из карточки товара. Ozon и AliExpress закрыты защитой — для них загрузи свои фотографии.')) + '</div>' +
             '<input class="vd-inp" id="vd-url" type="url" inputmode="url" autocomplete="off" value="' +
             esc(_url) + '" placeholder="https://www.wildberries.ru/catalog/...">' + '</div>' +
-            photosField() + voiceField() +
+            photosField() + voiceField() + endingField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
             ' ' + esc(T('Одновременно собираются два ролика, число роликов в сутки не ограничено.')) +
             '</div>' + go + '</div>';
@@ -291,7 +315,8 @@
             render();
             return;
         }
-        if (a === 'voice') { _voice = b.getAttribute('data-v') || ''; haptic(); render(); return; }
+        if (a === 'vname') { _voiceName = b.getAttribute('data-v') || ''; haptic(); render(); return; }
+        if (a === 'brand') { _brandCh = +(b.getAttribute('data-v') || 0); haptic(); render(); return; }
         if (a === 'photo') { pickPhoto(); return; }
         if (a === 'unphoto') {
             _photos.splice(+b.getAttribute('data-i'), 1);
@@ -380,7 +405,8 @@
         var body = {
             topic: topic, niche: (_niche || '').trim(), product_url: (_url || '').trim(),
             photos: _photos.map(function (p) { return p.path; }),
-            videos: _videos.map(function (v) { return v.path; }), voice: _voice,
+            videos: _videos.map(function (v) { return v.path; }),
+            voice_name: _voiceName, channel_id: _brandCh || null,
             lang: (window.__fmLang || 'ru')
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })
@@ -455,6 +481,8 @@
                 if (r.price) _price = r.price;
                 if (r.parallel) _parallel = r.parallel;
                 if (r.keep_days) _keepDays = r.keep_days;
+                if (r.voices) _voices = r.voices;
+                if (r.channels) _channels = r.channels;
                 if (r.niches && r.niches.length) _niches = r.niches;
                 _loaded = true;
                 render();
