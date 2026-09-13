@@ -5937,12 +5937,12 @@ function renderSettingsBehaviorSection(data) {
                 </div>
                 <div class="cs-toggle-info">
                     <div class="cs-toggle-title-row">
-                        <span class="cs-toggle-title">${TR('Подпись канала в роликах')}</span>
+                        <span class="cs-toggle-title">${TR('Подпись канала в роликах из постов')}</span>
                         <button class="cs-info-btn" data-info="creative_brand" aria-label="${TR('Что это значит')}"><i class="ti ti-info-circle"></i></button>
                     </div>
-                    <div class="cs-toggle-sub">${creativeBrand ? TR('Включена — аватар и название канала в финале ролика') : TR('Выключена — ролик без аватара и названия канала')}</div>
+                    <div class="cs-toggle-sub">${creativeBrand ? TR('Включена — аватар и название канала в финале ролика из поста') : TR('Выключена — ролик из поста без аватара и названия канала')}</div>
                     <div class="cs-info-popup" id="cs-info-creative_brand" style="display:none;">
-                        ${TR('Аватар, название и адрес канала в финале ролика. Выключи, если ролик пойдёт без привязки к каналу.')}
+                        ${TR('Аватар, название и адрес канала в финале ролика, собранного из поста этого канала. У роликов раздела «Креативы» концовка выбирается при создании, эта настройка на них не влияет.')}
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${creativeBrand ? 'on' : ''}" data-toggle-target="creative_brand">
@@ -5970,9 +5970,10 @@ function renderVoicePickSection(data) {
     };
     return `
         <div class="cs-section" id="cs-voice-sec">
-            <div class="cs-section-title">${TR('Озвучка роликов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? TR('выбрано ') + sel.size : TR('по рассказчику поста')}</span></div>
+            <div class="cs-section-title">${TR('Озвучка роликов из постов')} <span class="cs-vsum" id="cs-vsum">${sel.size ? TR('выбрано ') + sel.size : TR('по рассказчику поста')}</span></div>
             <div class="cs-vcols">${col('male', TR('Мужские'))}${col('female', TR('Женские'))}</div>
-            <div class="cs-vfoot">${TR('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}</div>
+            <div class="cs-vfoot">${TR('Отмеченные голоса читают ролики по очереди, без повтора подряд: «Другой вариант» всегда получает другой голос. Если не отмечено ничего — голос подбирается по рассказчику поста: мужской род — Антон, женский — Марина, без явного рода — Антон; варианты чередуют голоса того же пола.')}
+                <br>${TR('Настройка действует на ролики, собранные из постов этого канала. В разделе «Креативы» голос и концовка выбираются при создании ролика.')}</div>
         </div>`;
 }
 
