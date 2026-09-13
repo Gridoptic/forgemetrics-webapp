@@ -375,7 +375,7 @@
             items: _channels.map(function (c) {
                 return { id: c.id, title: c.title || ('@' + c.username),
                          subtitle: c.username ? '@' + c.username : '',
-                         has_avatar: c.has_avatar, is_private: c.is_private };
+                         has_avatar: c.has_avatar, is_private: c.is_private, paused: c.paused };
             }),
             activeId: _brandCh,
             onSelect: function (id) { _brandCh = +id; _brandOn = true; render(); }
