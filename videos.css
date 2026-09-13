@@ -36,6 +36,17 @@
     background: transparent; border: 0; color: #e8eaf1; outline: none; }
 .vd-ta::placeholder, .vd-inp::placeholder { color: rgba(255,255,255,0.35); }
 
+#vd-voice-sec .cs-vcols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#vd-voice-sec .cs-vcol { min-width: 0; }
+#vd-voice-sec .cs-vrow { gap: 7px; padding: 8px 8px; }
+#vd-voice-sec .cs-vplay { width: 26px; height: 26px; }
+@media (max-width: 359px) {
+    #vd-voice-sec .cs-vrow { gap: 6px; padding: 7px 6px; min-height: 44px; }
+    #vd-voice-sec .cs-vplay { width: 22px; height: 22px; font-size: 9px; }
+    #vd-voice-sec .cs-vchk { width: 16px; height: 16px; }
+    #vd-voice-sec .cs-vnm span { display: none; }
+}
+
 .vd-nlist { max-height: 255px; overflow-y: auto; padding-right: 2px; }
 .vd-nlist .cs-vrow { min-height: 44px; }
 .vd-nempty { padding: 12px; font-size: 12px; color: #8d93a8; }
