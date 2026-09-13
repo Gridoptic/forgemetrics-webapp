@@ -10051,7 +10051,9 @@
                 (l.owner_price && l.mkt_low ? '<div class="fmr-line" style="margin-top:1px;color:#9aa0b8;">' + L('Рыночная оценка') + ' <b style="color:#c2c6d2;">≈' + _num(l.mkt_low) + (l.mkt_high ? '–' + _num(l.mkt_high) : '') + ' ₽</b> <span style="font-size:10px;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:6px;padding:1px 6px;white-space:nowrap;">' + L('≈ оценка ниши') + '</span></div>' : '') +
                 '<div class="fmr-sub"><b>' + L('1 час в топе') + '</b> ' + L('канала, потом') + ' <b>' + L('сутки в ленте') + '</b> ' + L('· формат 1/24') + '</div>' +
                 (l.price_floored
-                    ? '<div class="fmr-sub" style="color:#f59e0b;">' + L('Это минимальный чек ниши, а не расчёт от охвата: при') + ' ' + _num(av) + ' ' + L('просмотрах размещение по нише дешевле не продают. CPM здесь неинформативен.') + '</div>'
+                    ? '<div class="fmr-sub" style="color:#f59e0b;">' + (l.subscribers >= 5000
+                        ? L('Это минимальная ставка для канала такого размера, а не расчёт от охвата: дешевле размещение обычно не продают. CPM здесь неинформативен.')
+                        : L('Это минимальный чек ниши, а не расчёт от охвата: при') + ' ' + _num(av) + ' ' + L('просмотрах размещение по нише дешевле не продают. CPM здесь неинформативен.')) + '</div>'
                     : (!dead && cpm ? '<div class="fmr-sub">CPM ≈' + _num(cpm) + (cpmHi ? '–' + _num(cpmHi) : '') + L(' ₽ за 1000 просмотров') + (est ? L(' · ориентир ниши') : '') + '</div>' : '') +
                       '') +
                 ((l.formats && l.formats.length) ? '<div class="fmx-fchips" style="margin:7px 0 0;">' + l.formats.slice(0, 4).map(function (ff) { return '<span>' + _esc(ff.label || ff.format) + '</span>'; }).join('') + '</div>' : '') +
