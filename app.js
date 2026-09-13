@@ -1482,6 +1482,13 @@ function drawReachChart(host, DATA, dates, days, endLabel, muted, FR, FRD, FRL, 
 
 
 
+function actionSub(action) {
+    let sub = t(action.subtitle || '');
+    const vars = action.vars || null;
+    if (vars) Object.keys(vars).forEach((k) => { sub = sub.split('{' + k + '}').join(String(vars[k])); });
+    return sub;
+}
+
 function renderActions(actions) {
     var _asig = JSON.stringify(actions || []);
     if (_asig === _actSig && els.actionsList.firstChild) return;
@@ -1507,7 +1514,7 @@ function renderActions(actions) {
                 </div>
                 <div class="action-card-text">
                     <div class="action-card-title">${escapeHtml(action.title)}</div>
-                    <div class="action-card-subtitle ${subtitleClass}">${escapeHtml(action.subtitle)}</div>
+                    <div class="action-card-subtitle ${subtitleClass}">${escapeHtml(actionSub(action))}</div>
                 </div>
             </div>
             <i class="ti ti-arrow-right action-card-arrow"></i>
