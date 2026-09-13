@@ -2211,10 +2211,22 @@ function fmClearFreeze() {
     } catch (e) {}
 }
 
+function fmOrphanSheets() {
+    try {
+        if (!document.querySelector('.bs-overlay.visible')) return;
+        if (document.querySelector('.bs-sheet.visible, .ap-confirm, .bs-overlay.visible .fmx-cfm')) return;
+        document.querySelectorAll('.bs-overlay.visible').forEach(function (n) {
+            if (n && n.parentNode) n.parentNode.removeChild(n);
+        });
+        fmClientLog('unstick: снят оверлей шторки без самой шторки');
+    } catch (e) {}
+}
+
 function fmUnstick() {
     try {
         document.querySelectorAll('.pw-sheet-ov:not(.show), .lang-ov:not(.show), .bs-overlay:not(.visible), .bs-sheet:not(.visible)')
             .forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+        fmOrphanSheets();
         if (!fmAnyModalVisible()) {
             document.documentElement.classList.remove('cs-modal-open');
             document.body.classList.remove('cs-modal-open');
@@ -2248,6 +2260,7 @@ function fmModalOpen() {
 
 document.addEventListener('pointerdown', function () {
     try {
+        fmOrphanSheets();
         var b = document.body;
         if ((b.classList.contains('fmx-bgfreeze') || b.classList.contains('cs-modal-open')) && !fmModalOpen()) {
             fmClientLog('watchdog: pointerdown снял cs-modal-open');
