@@ -5,7 +5,7 @@
     var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
     var _keepDays = 7, _open = {};
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
-    var _topic = '', _niche = '', _url = '', _photos = [], _videos = [],
+    var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -71,21 +71,55 @@
             '</div>';
     }
 
+    function secTitle(text, extra) {
+        return '<div class="cs-section-title">' + esc(text) + (extra || '') + '</div>';
+    }
+
+    function secHint(text) {
+        return '<div class="cs-section-hint">' + esc(text) + '</div>';
+    }
+
+    function topicField() {
+        var left = MAX_TOPIC - (_topic || '').length;
+        return '<div class="vd-f">' + secTitle(T('Тема ролика')) +
+            secHint(T('Опиши, о чём ролик. Можно вставить свой текст — он станет основой сценария.')) +
+            '<div class="vd-box"><textarea class="vd-ta" id="vd-topic" rows="5" autocomplete="off" maxlength="' +
+            MAX_TOPIC + '" placeholder="' +
+            esc(T('Например: как выбрать робот-пылесос для квартиры с животными')) + '">' + esc(_topic) + '</textarea>' +
+            '<div class="vd-cnt">' + esc(T('Осталось символов')) + ': ' + left + '</div></div></div>';
+    }
+
     function nicheField() {
-        var rows = '';
-        if (_pick) {
-            var q = (_niche || '').trim().toLowerCase();
-            var list = _niches.filter(function (n) { return !q || n.indexOf(q) >= 0; }).slice(0, 40);
-            rows = '<div class="vd-nlist">' + (list.length ? list.map(function (n) {
-                return '<button type="button" class="vd-nrow" data-va="niche" data-v="' + esc(n) + '">' +
-                    esc(n) + '</button>';
+        var head = '<button type="button" class="cs-toggle-row vd-row" data-va="nopen">' +
+            '<div class="cs-toggle-icon-wrap"><i class="ti ti-category-2" style="color: #818cf8;"></i></div>' +
+            '<div class="cs-toggle-info"><div class="cs-toggle-title-row">' +
+            '<span class="cs-toggle-title">' + esc(T('Ниша ролика')) + '</span></div>' +
+            '<div class="cs-toggle-sub">' + esc(T('Задаёт подачу, музыку и темп ролика')) + '</div></div>' +
+            '<span class="cs-tz-val">' + esc(_niche || T('по теме')) + '</span>' +
+            '<i class="ti ti-chevron-' + (_pick ? 'up' : 'right') + ' cs-tz-ch"></i></button>';
+        if (!_pick) return '<div class="vd-f">' + secTitle(T('Ниша')) + head + '</div>';
+        var q = (_nq || '').trim().toLowerCase();
+        var list = _niches.filter(function (n) { return !q || n.indexOf(q) >= 0; }).slice(0, 40);
+        var rows = [{ v: '', label: T('По теме ролика'), note: T('ниша определится сама') }].concat(
+            list.map(function (n) { return { v: n, label: n, note: '' }; }));
+        var body = '<div class="vd-box vd-search"><i class="ti ti-search"></i>' +
+            '<input class="vd-inp" id="vd-niche" type="text" autocomplete="off" value="' + esc(_nq) +
+            '" placeholder="' + esc(T('Найти нишу')) + '"></div>' +
+            '<div class="vd-nlist">' + (rows.length ? rows.map(function (r) {
+                return '<div class="cs-vrow' + (_niche === r.v ? ' on' : '') +
+                    '" data-va="niche" data-v="' + esc(r.v) + '">' +
+                    '<span class="cs-vnm"><b>' + esc(r.label) + '</b>' +
+                    (r.note ? '<span>' + esc(r.note) + '</span>' : '') + '</span>' +
+                    '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
             }).join('') : '<div class="vd-nempty">' + esc(T('Ничего не найдено')) + '</div>') + '</div>';
-        }
-        return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Ниша')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('Задаёт подачу, музыку и темп ролика')) + '</div>' +
-            '<input class="vd-inp" id="vd-niche" type="text" autocomplete="off" value="' + esc(_niche) +
-            '" placeholder="' + esc(T('Начни вводить нишу')) + '">' + rows + '</div>';
+        return '<div class="vd-f">' + secTitle(T('Ниша')) + head + body + '</div>';
+    }
+
+    function urlField() {
+        return '<div class="vd-f">' + secTitle(T('Ссылка на товар')) +
+            secHint(T('Для Wildberries кадры берутся из карточки товара. Ozon и AliExpress закрыты защитой — для них загрузи свои фотографии.')) +
+            '<div class="vd-box"><input class="vd-inp" id="vd-url" type="url" inputmode="url" autocomplete="off" value="' +
+            esc(_url) + '" placeholder="https://www.wildberries.ru/catalog/..."></div></div>';
     }
 
     function photosField() {
@@ -103,9 +137,8 @@
             ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-camera-plus"></i>' +
               '<span>' + esc(T('Добавить')) + '</span></button>'
             : '';
-        return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Свои материалы')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('До 4 фотографий и 3 видео, файл до 60 МБ. Если материалы есть, кадры ролика собираются из них. Файлы удаляются вместе с роликом, а неиспользованные — в течение суток.')) + '</div>' +
+        return '<div class="vd-f">' + secTitle(T('Свои материалы')) +
+            secHint(T('До 4 фотографий и 3 видео, файл до 60 МБ. Если материалы есть, кадры ролика собираются из них. Файлы удаляются вместе с роликом, а неиспользованные — в течение суток.')) +
             '<div class="vd-phs">' + thumbs + add + '</div></div>';
     }
 
@@ -129,8 +162,7 @@
     function voiceField() {
         if (!_voices.length) return '';
         return '<div class="vd-f" id="vd-voice-sec">' +
-            '<div class="vd-lbl">' + esc(T('Озвучка')) +
-            ' <span class="cs-vsum" id="vd-vsum">' + esc(voiceSum()) + '</span></div>' +
+            secTitle(T('Озвучка'), ' <span class="cs-vsum" id="vd-vsum">' + esc(voiceSum()) + '</span>') +
             '<div class="cs-vcols">' + voiceCol('male', T('Мужские')) + voiceCol('female', T('Женские')) + '</div>' +
             '<div class="cs-vfoot">' + esc(T('Отмеченные голоса читают ролики по очереди, без повтора подряд. Если не отмечено ничего — голос подбирается по теме ролика.')) +
             '</div></div>';
@@ -145,10 +177,9 @@
 
     function endingField() {
         if (!_channels.length) {
-            return '<div class="vd-f">' +
-                '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' +
-                '<div class="vd-hint">' + esc(T('Канал не подключён: финал будет нейтральным — без призыва подписаться и без упоминания площадок.')) +
-                '</div></div>';
+            return '<div class="vd-f">' + secTitle(T('Концовка')) +
+                secHint(T('Канал не подключён: финал будет нейтральным — без призыва подписаться и без упоминания площадок.')) +
+                '</div>';
         }
         var ch = brandChannel();
         var row = '<div class="cs-toggle-row" data-va="brandtog">' +
@@ -172,30 +203,17 @@
                 '<div class="pw-chnb">' + esc(sub) + '</div></div>' +
                 '<div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>';
         }
-        return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' + row + pick + '</div>';
+        return '<div class="vd-f">' + secTitle(T('Концовка')) + row + pick + '</div>';
     }
 
     function form() {
-        var left = MAX_TOPIC - (_topic || '').length;
         var go = _busy
             ? '<button type="button" class="vd-go" disabled><span class="cp-spin sm"></span>' +
               esc(T('Запускаю сборку')) + '</button>'
             : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
               esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>';
         return '<div class="vd-card">' +
-            '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Тема ролика')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('Опиши, о чём ролик. Можно вставить свой текст — он станет основой сценария.')) + '</div>' +
-            '<textarea class="vd-ta" id="vd-topic" rows="5" autocomplete="off" maxlength="' + MAX_TOPIC + '" placeholder="' +
-            esc(T('Например: как выбрать робот-пылесос для квартиры с животными')) + '">' + esc(_topic) + '</textarea>' +
-            '<div class="vd-cnt">' + esc(T('Осталось символов')) + ': ' + left + '</div></div>' +
-            nicheField() +
-            '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Ссылка на товар')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('Для Wildberries кадры берутся из карточки товара. Ozon и AliExpress закрыты защитой — для них загрузи свои фотографии.')) + '</div>' +
-            '<input class="vd-inp" id="vd-url" type="url" inputmode="url" autocomplete="off" value="' +
-            esc(_url) + '" placeholder="https://www.wildberries.ru/catalog/...">' + '</div>' +
+            topicField() + nicheField() + urlField() +
             photosField() + voiceField() + endingField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
             ' ' + esc(T('Одновременно собираются два ролика, число роликов в сутки не ограничено.')) +
@@ -397,8 +415,7 @@
         }
         if (el.id === 'vd-url') { _url = el.value.trim(); return; }
         if (el.id === 'vd-niche') {
-            _niche = el.value;
-            _pick = true;
+            _nq = el.value;
             render();
         }
     }
@@ -411,9 +428,11 @@
         }
         var a = b.getAttribute('data-va');
         if (a === 'close') { haptic(); close(); return; }
+        if (a === 'nopen') { _pick = !_pick; _nq = ''; haptic(); render(); return; }
         if (a === 'niche') {
             _niche = b.getAttribute('data-v') || '';
             _pick = false;
+            _nq = '';
             haptic();
             render();
             return;

@@ -20,23 +20,24 @@
     padding: 15px; display: flex; flex-direction: column; gap: 14px;
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
 .vd-f { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-.vd-lbl { font-size: 12.5px; font-weight: 700; color: #cfd3e6; }
-.vd-hint { font-size: 11px; color: #8d93a8; line-height: 1.45; }
-.vd-cnt { font-size: 10.5px; color: #7d839a; text-align: right; }
+.vd-cnt { font-size: 10.5px; color: #7d839a; text-align: right; margin-top: 6px; }
 
-.vd-ta { width: 100%; min-height: 112px; resize: vertical; padding: 12px; border-radius: 12px; font-size: 13px;
-    line-height: 1.5; font-family: inherit; background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.09); color: #e8eaf1; outline: none; }
-.vd-inp { width: 100%; padding: 11px 12px; border-radius: 12px; font-size: 13px; font-family: inherit;
-    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.09); color: #e8eaf1; outline: none; }
-.vd-ta:focus, .vd-inp:focus { border-color: rgba(129,140,248,0.5); }
+.vd-box { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 11px; padding: 11px 12px; }
+.vd-box:focus-within { border-color: rgba(129,140,248,0.55); }
+.vd-row { width: 100%; align-items: center; border: 1px solid rgba(255,255,255,0.08); color: inherit;
+    font-family: inherit; text-align: left; cursor: pointer; padding: 11px 12px; }
+.vd-search { display: flex; align-items: center; gap: 8px; }
+.vd-search i { font-size: 14px; color: #7d839a; flex: 0 0 auto; }
 
-.vd-nlist { max-height: 210px; overflow-y: auto; border-radius: 12px; border: 1px solid rgba(129,140,248,0.4);
-    background: rgba(14,17,28,0.85); }
-.vd-nrow { display: block; width: 100%; text-align: left; padding: 10px 12px; font-size: 13px; cursor: pointer;
-    background: none; border: 0; border-top: 1px solid rgba(255,255,255,0.05); color: #e8eaf1; font-family: inherit; }
-.vd-nrow:first-child { border-top: 0; }
-.vd-nrow:active { background: rgba(129,140,248,0.12); }
+.vd-ta { width: 100%; min-height: 96px; resize: vertical; padding: 0; font-size: 13px;
+    line-height: 1.5; font-family: inherit; background: transparent; border: 0; color: #e8eaf1; outline: none; }
+.vd-inp { width: 100%; padding: 0; font-size: 13px; font-family: inherit; min-width: 0;
+    background: transparent; border: 0; color: #e8eaf1; outline: none; }
+.vd-ta::placeholder, .vd-inp::placeholder { color: rgba(255,255,255,0.35); }
+
+.vd-nlist { max-height: 255px; overflow-y: auto; padding-right: 2px; }
+.vd-nlist .cs-vrow { min-height: 44px; }
 .vd-nempty { padding: 12px; font-size: 12px; color: #8d93a8; }
 
 .vd-phs { display: flex; flex-wrap: wrap; gap: 8px; }
