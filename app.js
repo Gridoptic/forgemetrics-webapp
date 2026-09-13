@@ -1520,9 +1520,15 @@ function renderActions(actions) {
 
 let _hcCtx = null;
 let _hcDragMoved = false;
+let _hcTimer = null;
 
 function closeHomeConfig() {
     if (!_hcCtx) return;
+    if (_hcTimer) {
+        clearTimeout(_hcTimer);
+        _hcTimer = null;
+        hcPush({ actions: hcActions() }, false);
+    }
     const { overlay, sheet } = _hcCtx;
     document.documentElement.classList.remove('cs-modal-open');
     document.body.classList.remove('cs-modal-open');
@@ -1561,7 +1567,6 @@ function openHomeConfig() {
         <div class="hc-title">${t('Главный экран')}</div>
         <div class="hc-hint">${t('Включай нужные функции и расставляй в своём порядке — перетаскивай за ручку.')}</div>
         <div class="hc-list" id="hc-list">${rowsHtml}</div>
-        <button class="co-pay" id="hc-save"><i class="ti ti-check"></i> ${t('Сохранить')}</button>
         <button class="co-close" id="hc-reset">${t('Вернуть стандартный набор')}</button>
     `;
     document.body.appendChild(overlay);
@@ -1580,10 +1585,13 @@ function openHomeConfig() {
         row.classList.toggle('off');
         const sw = row.querySelector('.hc-sw');
         if (sw) sw.classList.toggle('on', !row.classList.contains('off'));
+        hcTouch();
     });
     bindHcDrag(list);
-    sheet.querySelector('#hc-save').addEventListener('click', () => { hcSave(false); });
-    sheet.querySelector('#hc-reset').addEventListener('click', () => { hcSave(true); });
+    sheet.querySelector('#hc-reset').addEventListener('click', () => {
+        if (_hcTimer) { clearTimeout(_hcTimer); _hcTimer = null; }
+        hcPush({ reset: true }, true);
+    });
 }
 
 function bindHcDrag(list) {
@@ -1684,22 +1692,32 @@ function bindHcDrag(list) {
             d.row.classList.remove('hc-hole');
         }, 170);
         hapticLight();
+        hcTouch();
         setTimeout(() => { _hcDragMoved = false; }, 0);
     };
     list.addEventListener('pointerup', end);
     list.addEventListener('pointercancel', end);
 }
 
-async function hcSave(reset) {
+function hcActions() {
+    if (!_hcCtx) return [];
+    return Array.from(_hcCtx.sheet.querySelectorAll('.hc-row[data-id]:not(.off)')).map(r => r.dataset.id);
+}
+
+function hcTouch() {
     if (!_hcCtx) return;
-    const body = reset ? { reset: true } : {
-        actions: Array.from(_hcCtx.sheet.querySelectorAll('.hc-row[data-id]:not(.off)')).map(r => r.dataset.id),
-    };
+    if (_hcTimer) clearTimeout(_hcTimer);
+    _hcTimer = setTimeout(() => {
+        _hcTimer = null;
+        hcPush({ actions: hcActions() }, false);
+    }, 500);
+}
+
+async function hcPush(body, closeAfter) {
     try {
         const r = await apiRequest('/api/v1/user/home-actions', { method: 'POST', body: JSON.stringify(body) });
         if (r && r.ok) {
-            showToast(t('Сохранено'), 'check');
-            closeHomeConfig();
+            if (closeAfter) closeHomeConfig();
             loadDashboard();
             return;
         }
