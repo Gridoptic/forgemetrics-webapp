@@ -1157,20 +1157,20 @@
             '.fmx-tnbtn .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;}',
             '.fmx-bmrow{position:relative;margin-bottom:9px;cursor:pointer;}',
             '.fmx-bmrow.frz .fmx-zw{filter:grayscale(1);opacity:0.5;pointer-events:none;}',
-            '.fmx-frzTag{position:absolute;top:8px;right:56px;font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
-            '.fmx-bmdel{position:absolute;top:50%;transform:translateY(-50%);right:7px;width:40px;height:40px;border-radius:11px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;transition:background 140ms,border-color 140ms,color 140ms,transform 140ms;}',
+            '.fmx-frzTag{position:absolute;top:8px;right:max(56px,calc(50% - 119px));font-size:9px;font-weight:700;color:#8fb6ff;background:rgba(99,140,255,0.14);border:0.5px solid rgba(99,140,255,0.3);padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:4px;z-index:3;}',
+            '.fmx-bmdel{position:absolute;top:50%;transform:translateY(-50%);right:max(7px,calc(50% - 168px));width:40px;height:40px;border-radius:11px;background:rgba(10,13,24,0.6);border:0.5px solid rgba(239,68,68,0.3);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;transition:background 140ms,border-color 140ms,color 140ms,transform 140ms;}',
             '.fmx-bmdel.arm{background:#ef4444;border-color:#ef4444;color:#fff;transform:translateY(-50%) scale(1.1);}',
             '.fmx-bmrow .fmx-lrow{padding-right:52px;}',
             '.fmx-bmrow .fmx-lchev{display:none;}',
             '@media (max-width:375px){' +
             '.fmx-bmrow .fmx-lrow{padding-right:44px;padding-left:10px;gap:8px;}' +
             '.fmx-bmrow .fmx-lmet{gap:5px;}' +
-            '.fmx-bmdel{width:36px;height:36px;right:5px;}' +
+            '.fmx-bmdel{width:36px;height:36px;right:max(5px,calc(50% - 170px));}' +
             '}',
             '@media (max-width:330px){' +
             '.fmx-bmrow .fmx-lrow{padding-right:40px;padding-left:9px;}' +
             '.fmx-bmrow .fmx-lmet .fmx-lm:first-child i{display:none;}' +
-            '.fmx-bmdel{width:34px;height:34px;right:4px;}' +
+            '.fmx-bmdel{width:34px;height:34px;right:max(4px,calc(50% - 171px));}' +
             '}',
             '.fmx-b-deal{color:#f59e0b;background:rgba(245,158,11,0.1);}',
             '.fmx-dealline{font-size:11px;color:#8990a8;margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center;}',
