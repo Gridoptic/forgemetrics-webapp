@@ -4,7 +4,7 @@
     var MAX_TOPIC = 3000, MAX_PHOTOS = 4, MAX_VIDEOS = 3;
     var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
     var _keepDays = 7, _open = {};
-    var _voices = [], _channels = [], _voiceName = '', _brandCh = 0;
+    var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
 
@@ -48,6 +48,7 @@
     function close() {
         var host = document.getElementById('videos-screen');
         if (host) host.style.display = 'none';
+        try { if (typeof window.stopVoiceSample === 'function') window.stopVoiceSample(); } catch (e) {}
         document.documentElement.classList.remove('cs-modal-open');
         document.body.classList.remove('cs-modal-open');
         try {
@@ -108,37 +109,71 @@
             '<div class="vd-phs">' + thumbs + add + '</div></div>';
     }
 
+    function voiceSum() {
+        return _voiceNames.length ? (T('выбрано ') + _voiceNames.length) : T('по теме ролика');
+    }
+
+    function voiceCol(gender, label) {
+        var rows = _voices.filter(function (v) { return v.gender === gender; }).map(function (v) {
+            return '<div class="cs-vrow' + (_voiceNames.indexOf(v.name) >= 0 ? ' on' : '') +
+                '" data-va="vname" data-v="' + esc(v.name) + '">' +
+                '<button class="cs-vplay" type="button" data-va="vplay" data-src="' + esc(v.sample_url || '') +
+                '" aria-label="' + esc(T('Пример голоса')) + '"><i class="ti ti-player-play-filled"></i></button>' +
+                '<span class="cs-vnm"><b>' + esc(v.label) + '</b><span>' + esc(v.note || '') + '</span></span>' +
+                '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
+        }).join('');
+        return '<div class="cs-vcol"><div class="cs-vcolh"><s>' + esc(label) + '</s>' +
+            '<u data-va="vall" data-v="' + gender + '">' + esc(T('все')) + '</u></div>' + rows + '</div>';
+    }
+
     function voiceField() {
-        var cells = [{ name: '', label: T('Авто'), note: T('подбор по теме') }].concat(_voices);
-        return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Голос')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('Диктор, который прочитает сценарий. При автоподборе голос выбирается под тему ролика.')) + '</div>' +
-            '<div class="vd-vlist">' + cells.map(function (v) {
-                return '<button type="button" class="vd-vrow' + (_voiceName === v.name ? ' on' : '') +
-                    '" data-va="vname" data-v="' + esc(v.name) + '"><b>' + esc(v.label) + '</b>' +
-                    '<em>' + esc(v.note || '') + '</em></button>';
-            }).join('') + '</div></div>';
+        if (!_voices.length) return '';
+        return '<div class="vd-f" id="vd-voice-sec">' +
+            '<div class="vd-lbl">' + esc(T('Озвучка')) +
+            ' <span class="cs-vsum" id="vd-vsum">' + esc(voiceSum()) + '</span></div>' +
+            '<div class="cs-vcols">' + voiceCol('male', T('Мужские')) + voiceCol('female', T('Женские')) + '</div>' +
+            '<div class="cs-vfoot">' + esc(T('Отмеченные голоса читают ролики по очереди, без повтора подряд. Если не отмечено ничего — голос подбирается по теме ролика.')) +
+            '</div></div>';
+    }
+
+    function brandChannel() {
+        for (var i = 0; i < _channels.length; i++) {
+            if (_channels[i].id === _brandCh) return _channels[i];
+        }
+        return null;
     }
 
     function endingField() {
         if (!_channels.length) {
             return '<div class="vd-f">' +
                 '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' +
-                '<div class="vd-hint">' + esc(T('Канал не подключён: финал будет нейтральным — без призыва подписаться и без упоминания площадок.')) + '</div></div>';
+                '<div class="vd-hint">' + esc(T('Канал не подключён: финал будет нейтральным — без призыва подписаться и без упоминания площадок.')) +
+                '</div></div>';
         }
-        var cells = [{ id: 0, title: T('Нейтральная'), note: T('без упоминания канала') }].concat(
-            _channels.map(function (c) {
-                return { id: c.id, title: c.title || ('@' + c.username),
-                         note: c.username ? ('@' + c.username) : T('подпись канала в финале') };
-            }));
+        var ch = brandChannel();
+        var row = '<div class="cs-toggle-row" data-va="brandtog">' +
+            '<div class="cs-toggle-icon-wrap"><i class="ti ti-video" style="color: ' +
+            (_brandOn ? '#5DCAA5' : 'rgba(255,255,255,0.4)') + ';"></i></div>' +
+            '<div class="cs-toggle-info"><div class="cs-toggle-title-row">' +
+            '<span class="cs-toggle-title">' + esc(T('Подпись канала в финале')) + '</span></div>' +
+            '<div class="cs-toggle-sub">' + esc(_brandOn
+                ? T('Включена — аватар и название канала в финале ролика')
+                : T('Выключена — финал зовёт к предмету ролика, без упоминания канала')) + '</div></div>' +
+            '<button class="cs-toggle-switch' + (_brandOn ? ' on' : '') +
+            '" type="button"><span class="cs-toggle-knob"></span></button></div>';
+        var pick = '';
+        if (_brandOn) {
+            var title = ch ? (ch.title || ('@' + ch.username)) : T('Выбери канал');
+            var sub = ch ? (ch.username ? '@' + ch.username : T('нажми, чтобы сменить канал')) : T('нажми, чтобы выбрать');
+            pick = '<button class="pw-chansel" type="button" data-va="chpick" style="margin:8px 0 0;">' +
+                '<div class="pw-chav" id="vd-chav">' + esc((title || 'K').trim().charAt(0).toUpperCase()) + '</div>' +
+                '<div class="pw-chinfo"><div class="pw-chn"><span class="pw-chn-t">' + esc(title) + '</span>' +
+                (_channels.length > 1 ? '<span class="pw-badge">' + esc(T('в финале')) + '</span>' : '') + '</div>' +
+                '<div class="pw-chnb">' + esc(sub) + '</div></div>' +
+                '<div class="pw-chchev"><i class="ti ti-chevron-down"></i></div></button>';
+        }
         return '<div class="vd-f">' +
-            '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' +
-            '<div class="vd-hint">' + esc(T('С каналом в финале появится его аватар и название, а диктор позовёт в канал. Без канала финал зовёт к самому предмету ролика.')) + '</div>' +
-            '<div class="vd-vlist">' + cells.map(function (c) {
-                return '<button type="button" class="vd-vrow' + (_brandCh === c.id ? ' on' : '') +
-                    '" data-va="brand" data-v="' + c.id + '"><b>' + esc(c.title) + '</b>' +
-                    '<em>' + esc(c.note) + '</em></button>';
-            }).join('') + '</div></div>';
+            '<div class="vd-lbl">' + esc(T('Концовка')) + '</div>' + row + pick + '</div>';
     }
 
     function form() {
@@ -266,6 +301,36 @@
             '</div><div class="vd-list">' + _items.map(card).join('') + '</div>';
     }
 
+    function markVoice(el, on) {
+        var row = el.classList.contains('cs-vrow') ? el : el.closest('.cs-vrow');
+        if (!row) return;
+        var name = row.getAttribute('data-v');
+        var want = (on === null || on === undefined) ? !row.classList.contains('on') : on;
+        row.classList.toggle('on', want);
+        var i = _voiceNames.indexOf(name);
+        if (want && i < 0) _voiceNames.push(name);
+        if (!want && i >= 0) _voiceNames.splice(i, 1);
+        var sum = document.getElementById('vd-vsum');
+        if (sum) sum.textContent = voiceSum();
+        haptic();
+    }
+
+    function pickChannel() {
+        haptic();
+        if (typeof window.showBottomSheet !== 'function') return;
+        window.showBottomSheet({
+            title: T('Какой канал показать в финале?'),
+            subtitle: T('Аватар, название и адрес канала в последнем кадре ролика'),
+            items: _channels.map(function (c) {
+                return { id: c.id, title: c.title || ('@' + c.username),
+                         subtitle: c.username ? '@' + c.username : '',
+                         has_avatar: c.has_avatar, is_private: c.is_private };
+            }),
+            activeId: _brandCh,
+            onSelect: function (id) { _brandCh = +id; _brandOn = true; render(); }
+        });
+    }
+
     function render() {
         var host = document.getElementById('videos-screen');
         if (!host) return;
@@ -280,6 +345,10 @@
                 el.focus();
                 try { el.setSelectionRange(pos, pos); } catch (e) {}
             }
+        }
+        var ch = brandChannel(), av = document.getElementById('vd-chav');
+        if (ch && ch.has_avatar && av && typeof window.loadChannelAvatar === 'function') {
+            window.loadChannelAvatar(ch.id, av);
         }
     }
 
@@ -315,8 +384,33 @@
             render();
             return;
         }
-        if (a === 'vname') { _voiceName = b.getAttribute('data-v') || ''; haptic(); render(); return; }
-        if (a === 'brand') { _brandCh = +(b.getAttribute('data-v') || 0); haptic(); render(); return; }
+        if (a === 'vplay') {
+            e.stopPropagation();
+            if (typeof window.playVoiceSample === 'function') window.playVoiceSample(b);
+            return;
+        }
+        if (a === 'vname') { markVoice(b, null); return; }
+        if (a === 'vall') {
+            e.stopPropagation();
+            var col = b.parentNode.parentNode;
+            [].slice.call(col.querySelectorAll('.cs-vrow')).forEach(function (r, i, all) {
+                markVoice(r, !all.every(function (x) { return x.classList.contains('on'); }));
+            });
+            return;
+        }
+        if (a === 'brandtog') {
+            _brandOn = !_brandOn;
+            if (_brandOn && !brandChannel()) {
+                var act = null;
+                try { act = window.__fmActiveChannelId || null; } catch (e2) { act = null; }
+                var byAct = _channels.filter(function (c) { return c.id === act; })[0];
+                _brandCh = (byAct || _channels[0]).id;
+            }
+            haptic();
+            render();
+            return;
+        }
+        if (a === 'chpick') { pickChannel(); return; }
         if (a === 'photo') { pickPhoto(); return; }
         if (a === 'unphoto') {
             _photos.splice(+b.getAttribute('data-i'), 1);
@@ -406,7 +500,7 @@
             topic: topic, niche: (_niche || '').trim(), product_url: (_url || '').trim(),
             photos: _photos.map(function (p) { return p.path; }),
             videos: _videos.map(function (v) { return v.path; }),
-            voice_name: _voiceName, channel_id: _brandCh || null,
+            voice_names: _voiceNames, channel_id: (_brandOn && _brandCh) ? _brandCh : null,
             lang: (window.__fmLang || 'ru')
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })

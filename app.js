@@ -5524,6 +5524,9 @@ function setupBottomSheetSwipeToClose(sheet) {
 }
 
 
+window.playVoiceSample = function (btn) { toggleVoiceSample(btn); };
+window.stopVoiceSample = function () { stopVoiceSample(); };
+
 window.loadChannelAvatar = function (channelId, node) {
     return loadBottomSheetAvatar(channelId, node);
 };
