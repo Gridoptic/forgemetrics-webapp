@@ -2648,14 +2648,12 @@ function renderCabinet(d) {
         const chN = u.channels_count || 0, liN = u.listings_count || 0, dN = u.member_days || 0;
         const chPaused = u.channels_paused || 0;
         const chActive = (u.channels_active != null) ? u.channels_active : chN;
-        const chLim = (u.channels_limit && u.channels_limit < 999999) ? u.channels_limit : null;
         const chMain = chPaused > 0 ? chActive : chN;
-        const chOf = chLim ? ` <s><span>${TR('из')}</span> ${cabNum(chLim)}</s>` : '';
         const chLabel = chPaused > 0
             ? `${plural3(chMain, TR('канал'), TR('канала'), TR('каналов'))} · ${cabNum(chPaused)} на паузе`
             : plural3(chMain, TR('канал'), TR('канала'), TR('каналов'));
         return `<div class="cab-pstats num">` +
-            `<div class="cab-ps"><div class="v">${cabNum(chMain)}${chOf}</div><div class="l">${chLabel}</div></div>` +
+            `<div class="cab-ps"><div class="v">${cabNum(chMain)}</div><div class="l">${chLabel}</div></div>` +
             `<div class="cab-ps"><div class="v">${cabNum(liN)}</div><div class="l">${plural3(liN, TR('оффер'), TR('оффера'), TR('офферов'))}</div></div>` +
             (dN ? `<div class="cab-ps"><div class="v">${cabNum(dN)}</div><div class="l">${plural3(dN, TR('день с нами'), TR('дня с нами'), TR('дней с нами'))}</div></div>` : '') +
             `</div>`;
@@ -3202,7 +3200,7 @@ function renderTariffs(d) {
             `<div class="fw-bal">${forgeAmount(balH, 22)}</div>` +
             (grantH > 0 ? `<div class="fw-sub">Начисляем ${cabNum(grantH)} бесплатно каждый месяц</div>` : '') +
         `</div></div>`;
-    html += '<div class="tf-note"><b>' + TR('Без тарифов и подписок') + '</b> — <span>' + TR('Площадка, Радар, аналитика и до 100 каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.') + '</span></div>';
+    html += '<div class="tf-note"><b>' + TR('Без тарифов и подписок') + '</b> — <span>' + TR('Площадка, Радар, аналитика и подключение каналов открыты всем. Forge тратится только на работу ИИ и продвижение; 30 Forge приходят бесплатно каждый месяц.') + '</span></div>';
     const packs = (d.forge_packs || []).map((p) =>
         `<button class="fw-pack" data-tfpack="${p.amount}">` +
         `<span class="fw-pack-a">${forgeAmount(p.amount, 15)}</span>` +
@@ -3498,6 +3496,10 @@ function setupEventListeners() {
 
     if (els.channelsAddMore) {
         els.channelsAddMore.addEventListener('click', () => {
+            if (state.channels && state.channels.can_add_more === false) {
+                alertDialogHtml(TR('Достигнут лимит подключений'), escapeHtml(TR('Отключи один из каналов, чтобы добавить новый.')));
+                return;
+            }
             const ins = document.getElementById('channels-instruction-list');
             if (ins) {
                 const vis = ins.style.display !== 'none';
@@ -4627,7 +4629,6 @@ function renderChannels(data) {
             .join('');
     }
 
-    renderAddMoreOrLimit(data);
     renderDeletedChannels(deleted, false);
     loadChannelAvatars();
 
@@ -4857,39 +4858,6 @@ function _voicePriceCoin() {
         || (state.channels && state.channels.voice_refresh_limits && state.channels.voice_refresh_limits.price)
         || 15;
     return (typeof window.forgeAmount === 'function') ? window.forgeAmount(p, 12) : String(p);
-}
-
-
-function renderAddMoreOrLimit(data) {
-    const btn = els.channelsAddMore;
-    if (!btn) return;
-
-    const limit = data.channel_limit || 100;
-    const used = data.channels_used != null ? data.channels_used : (data.channels || []).length;
-    const canAdd = data.can_add_more !== false;
-
-    let limitBox = document.getElementById('channels-limit-box');
-    if (!limitBox) {
-        limitBox = document.createElement('div');
-        limitBox.id = 'channels-limit-box';
-        limitBox.className = 'channels-limit-box';
-        btn.parentNode.insertBefore(limitBox, btn.nextSibling);
-    }
-
-    if (canAdd) {
-        btn.style.display = '';
-        limitBox.innerHTML = `<div class="channels-limit-sub" style="text-align:center;">Каналов подключено: ${used} из ${limit}</div>`;
-        limitBox.style.display = '';
-        return;
-    }
-
-    btn.style.display = 'none';
-    limitBox.innerHTML = `
-        <div class="channels-limit-icon"><i class="ti ti-lock"></i></div>
-        <div class="channels-limit-title">Каналов подключено: ${used} из ${limit}</div>
-        <div class="channels-limit-sub">${TR('Достигнут предел подключений. Отключи один из каналов, чтобы добавить новый.')}</div>
-    `;
-    limitBox.style.display = '';
 }
 
 

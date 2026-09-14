@@ -4312,7 +4312,7 @@
         });
     }
 
-    var _net = { ch: [], my: [], chLim: null, lim: null, used: null, mode: false, sel: {}, filter: 'all', busy: false };
+    var _net = { ch: [], my: [], lim: null, used: null, mode: false, sel: {}, filter: 'all', busy: false };
 
     function netShort(n) {
         if (n == null || isNaN(n)) return '—';
@@ -4374,7 +4374,6 @@
             if (!el('fmx-netBody')) return;
             var chR = rr[0] || {}, myR = rr[1] || {};
             _net.ch = chR.channels || [];
-            _net.chLim = chR.channel_limit != null ? chR.channel_limit : null;
             _net.my = myR.listings || [];
             _net.lim = myR.limit != null ? myR.limit : null;
             _net.used = myR.used != null ? myR.used : _net.my.length;
@@ -4422,7 +4421,7 @@
                 '</div>';
         }
         var tiles = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
-            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', L('Каналы'), _num(chPaused > 0 ? chActive : _net.ch.length) + (_net.chLim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.chLim) + '</span>' : ''), chPaused > 0 ? (chPaused + L(' на паузе')) : '') +
+            tile('ti-broadcast', '#818cf8', 'rgba(129,140,248,0.15)', L('Каналы'), _num(chPaused > 0 ? chActive : _net.ch.length), chPaused > 0 ? (chPaused + L(' на паузе')) : '') +
             tile('ti-eye', '#60a5fa', 'rgba(59,130,246,0.15)', L('Суммарный охват'), netShort(reach), '') +
             tile('ti-activity', '#5DCAA5', 'rgba(93,202,165,0.15)', L('Средний ERR'), err != null ? String(err).replace('.', ',') + '%' : '—', '') +
             tile('ti-briefcase', '#f5bf4f', 'rgba(245,191,79,0.15)', L('Офферы'), _num(_net.used) + (_net.lim != null ? ' <span style="font-size:11px;font-weight:600;color:#565b73;">/ ' + _num(_net.lim) + '</span>' : ''),
