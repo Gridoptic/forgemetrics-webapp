@@ -11063,7 +11063,7 @@
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
             if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Не удалось загрузить.') + '</div>'; return; }
             var opts = r.options || [], html = '', open = r.open !== false;
-            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;">' + window.forgeIco(13) + ' ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса, без кассы') + '</div>';
+            html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;">' + window.forgeIco(13) + ' ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса') + '</div>';
             opts.forEach(function (o) {
                 var ic = o.in_burst_cap ? 'ti-flame' : 'ti-rocket';
                 var pr = window.forgeAmount(o.price, 12);

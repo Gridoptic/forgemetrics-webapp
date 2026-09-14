@@ -307,7 +307,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge እና ግዢዎች",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge ለማመንጨት፣ ለምርመራ፣ ለምርጫ እና ለተፎካካሪ ትንተና ይውላል",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge የተግባራት ውስጣዊ ገንዘብ ነው። ተግባር ሲጀመር ይቀነሳል፤ ካልተሳካ በራስ-ሰር ይመለሳል። ሁሉም ዋጋዎች በካቢኔ ውስጥ «ተግባራት ስንት ያስከፍላሉ» ክፍል ውስጥ ናቸው።",
-  "Forge — списание с баланса, без кассы": "Forge — ሚዛን ከስሌት፣ ሳትሪ ያህል",
   "ForgeMetrics · живые заявки": "ForgeMetrics · ቀጥታ ማመልከቻዎች",
   "ForgeMetrics · живые офферы": "ForgeMetrics · ライভ オファー",
   "ID оффера": "ID የ ጽናት",
@@ -3201,7 +3200,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "የአስተዳዳሪዎች ዝርዝር እና ፈቃዶች ከቴሌግራም ጋር በራስ-ሰር ይመሳሰላሉ፦ አንድ ሰው ከቻናሉ አስተዳዳሪዎች ከተነሳ፣ በመተግበሪያው ያለው መዳረሻውም ይጠፋል።",
   "Спишется": "ይቀነሳል",
   "Спишется при переписывании · при сбое вернём автоматически": "በዳግም መጻፍ ይቀነሳል · ችግር ቢፈጠር በራስ-ሰር ይመለሳል",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "ከForge ቀሪ ይቀነሳል — ያለ ካሳ። እቅዱ እና የአንድ ወር መሪነት ወዲያውኑ ይከፈታሉ።",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "ከForge ቀሪ ሂሳብ ይቀነሳል። ለ30 ቀናት መዳረሻ፦ ከስትራቴጂስቱ ጋር ውይይት፣ በእቅዱ ውስጥ የሳምንት ፍርግርግ፣ የመጀመሪያ ሳምንት፣ ተግባራት እና ማረጋገጫዎች።",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "ከForge ቀሪ ሂሳብ ይቀነሳል። ተጨማሪ 30 ቀናት አስተዳደር፦ የሳምንት ትንታኔዎች፣ መመሪያዎች እና ውይይት።",
   "Спорт": "ስፖርት",
@@ -5228,7 +5226,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "አገልግሎቱን የማያውቅ ሰው መጀመሪያ ቦቱ ምን እንደሚችል ያያል፣ ከዚያ በኋላ ብቻ ወደ Telegram ይሄዳል። ቀጥተኛ አገናኝ ያለ ማብራሪያ በቀጥታ ወደ ቦቱ ይወስደዋል።",
   "Её легко набрать.": "ለመጻፍ ቀላል ነው።",
   "Продвижение пока недоступно": "ማስተዋወቅ ገና አይገኝም",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "በገበያው ላይ ገና ጥቂት ማስታወቂያዎች ናቸው፤ የሚከፈልበት ማሳደግ አሁን የሚወጣውን Forge አይመልስም። ገበያው እንደተሞላ ማስተዋወቅ ይከፈታል።"
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "በገበያው ላይ ገና ጥቂት ማስታወቂያዎች ናቸው፤ የሚከፈልበት ማሳደግ አሁን የሚወጣውን Forge አይመልስም። ገበያው እንደተሞላ ማስተዋወቅ ይከፈታል።",
+  "Forge — списание с баланса": "Forge — ከሒሳብዎ ይቀነሳል"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -5538,7 +5537,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge والمشتريات",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "تُنفق Forge على التوليد والتدقيق والاختيار وتحليل المنافسين",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge هي العملة الداخلية للوظائف. تُخصم عند بدء العملية؛ وإذا فشلت تُعاد تلقائيًا. جميع الأسعار في الحساب، قسم «كم تكلف الإجراءات».",
-  "Forge — списание с баланса, без кассы": "Forge — خصم من الرصيد، بدون صندوق",
   "ForgeMetrics · живые заявки": "ForgeMetrics · طلبات حية",
   "ForgeMetrics · живые офферы": "ForgeMetrics · عروض مباشرة",
   "ID оффера": "معرّف العرض",
@@ -8432,7 +8430,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "قائمة المشرفين والصلاحيات تتزامن مع تيليجرام تلقائياً: إذا أُزيل أحد من مشرفي القناة، يختفي وصوله في التطبيق أيضاً.",
   "Спишется": "سيُخصم",
   "Спишется при переписывании · при сбое вернём автоматически": "يُخصم عند إعادة الكتابة · يُسترد تلقائيًا عند الفشل",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "يُخصم من رصيد Forge — بلا صندوق دفع. تُفتح الخطة وشهر المتابعة فوراً.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "سيُخصم من رصيد Forge. وصول لمدة 30 يومًا: حوار مع الاستراتيجي، شبكة الأسبوع في الخطة، الأسبوع الأول، المهام والمراجعات.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "سيُخصم من رصيد Forge. 30 يومًا إضافية من الإدارة: تحليلات الأسبوع، الأدلة والدردشة.",
   "Спорт": "الرياضة",
@@ -10459,7 +10456,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "من لا يعرف الخدمة يرى أولًا ما يستطيع البوت فعله، ثم ينتقل إلى Telegram. أما الرابط المباشر فينقله إلى البوت فورًا دون أي شرح.",
   "Её легко набрать.": "سهل الكتابة.",
   "Продвижение пока недоступно": "الترويج غير متاح بعد",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "لا تزال الإعلانات في السوق قليلة، لذلك لن يعوّض الرفع المدفوع رصيد Forge الذي تنفقه الآن. سيُفتح الترويج بمجرد امتلاء السوق."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "لا تزال الإعلانات في السوق قليلة، لذلك لن يعوّض الرفع المدفوع رصيد Forge الذي تنفقه الآن. سيُفتح الترويج بمجرد امتلاء السوق.",
+  "Forge — списание с баланса": "Forge — يُخصم من الرصيد"
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -10769,7 +10767,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge və alışlar",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge generasiya, auditlər, seçim və rəqib təhlilinə xərclənir",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge — funksiyaların daxili valyutasıdır. Əməliyyat başlayanda çıxılır; alınmasa — avtomatik qaytarılır. Bütün qiymətlər kabinetdə, «Əməliyyatlar nə qədərdir» bölməsində.",
-  "Forge — списание с баланса, без кассы": "Forge — balansdan çıxılması, kassasız",
   "ForgeMetrics · живые заявки": "ForgeMetrics · canlı sifarişlər",
   "ForgeMetrics · живые офферы": "ForgeMetrics · canlı ofertalar",
   "ID оффера": "Offer ID",
@@ -13663,7 +13660,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin siyahısı və icazələr Telegram ilə avtomatik sinxronlaşır: kimsə kanal adminlərindən çıxarılsa, tətbiqdəki girişi də itir.",
   "Спишется": "Silinəcək",
   "Спишется при переписывании · при сбое вернём автоматически": "Yenidən yazanda çıxılır · xəta olsa avtomatik qaytarılır",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge balansından çıxılır — kassasız. Plan və bir aylıq aparıcılıq dərhal açılır.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge balansından silinəcək. 30 günlük giriş: strateqlə söhbət, planda həftə cədvəli, ilk həftə, tapşırıqlar və yoxlamalar.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge balansından silinəcək. Daha 30 gün aparma: həftə təhlilləri, bələdçilər və çat.",
   "Спорт": "Idman",
@@ -15690,7 +15686,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xidməti tanımayan şəxs əvvəlcə botun nələr bacardığını görür və yalnız sonra Telegram-a keçir. Birbaşa link onu heç bir izahat olmadan dərhal bota aparır.",
   "Её легко набрать.": "Yazmaq asandır.",
   "Продвижение пока недоступно": "Təşviq hələ əlçatan deyil",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Meydançada hələ az yerləşdirmə var — ödənişli qaldırma indi xərclənən Forge-u ödəməyəcək. Meydança dolan kimi təşviq açılacaq."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Meydançada hələ az yerləşdirmə var — ödənişli qaldırma indi xərclənən Forge-u ödəməyəcək. Meydança dolan kimi təşviq açılacaq.",
+  "Forge — списание с баланса": "Forge — balansdan çıxılır"
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -15999,7 +15996,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge і пакупкі",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge траціцца на генерацыю, аудыты, падбор і аналіз канкурэнтаў",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge — унутраная валюта функцый. Спісваецца пры запуску аперацыі; калі аперацыя не ўдалася — вяртаецца аўтаматычна. Усе кошты — у кабінеце, раздзел «Колькі каштуюць дзеянні».",
-  "Forge — списание с баланса, без кассы": "Forge — пісанне з баланса, без касы",
   "ForgeMetrics · живые заявки": "ForgeMetrics · жывыя заяўкі",
   "ForgeMetrics · живые офферы": "ForgeMetrics · жывыя офэры",
   "ID оффера": "ID офера",
@@ -18871,7 +18867,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Спіс адмінаў і правы звяраюцца з Telegram аўтаматычна: калі чалавека знялі з адміністратараў канала — доступ у прыкладанні знікне сам.",
   "Спишется": "Спішацца",
   "Спишется при переписывании · при сбое вернём автоматически": "Спішацца пры перапісванні · пры збоі вернем аўтаматычна",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Спішацца з балансу Forge — без касы. План і месяц вядзення адкрыюцца адразу.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Спішацца з балансу Forge. Доступ на 30 дзён: размова са стратэгам, сетка тыдня ў плане, першы тыдзень, задачы і зверкі.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Спішацца з балансу Forge. Яшчэ 30 дзён вядзення: разборы тыдня, гайды і чат.",
   "Спорт": "Sport",
@@ -20924,7 +20919,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Чалавек, які не ведае сэрвіс, спачатку бачыць, што ўмее бот, і толькі потым трапляе ў Telegram. Прамая спасылка адразу вядзе яго ў бота без тлумачэнняў.",
   "Её легко набрать.": "Яе лёгка набраць.",
   "Продвижение пока недоступно": "Прасоўванне пакуль недаступнае",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "На Пляцоўцы яшчэ мала размяшчэнняў — платны пад'ём зараз не акупіць укладзеныя Forge. Як толькі пляцоўка напоўніцца, прасоўванне адкрыецца."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "На Пляцоўцы яшчэ мала размяшчэнняў — платны пад'ём зараз не акупіць укладзеныя Forge. Як толькі пляцоўка напоўніцца, прасоўванне адкрыецца.",
+  "Forge — списание с баланса": "Forge — спісанне з баланса"
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -21234,7 +21230,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge ও কেনাকাটা",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge জেনারেশন, অডিট, বাছাই ও প্রতিযোগী বিশ্লেষণে খরচ হয়",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge হলো ফিচারের অভ্যন্তরীণ মুদ্রা। অপারেশন শুরুতে কাটা হয়; ব্যর্থ হলে স্বয়ংক্রিয়ভাবে ফেরত যায়। সব দাম কেবিনেটে, «কাজের দাম» অংশে।",
-  "Forge — списание с баланса, без кассы": "Forge — ব্যালেন্স থেকে ছাড়, নগদ ছাড়া",
   "ForgeMetrics · живые заявки": "ForgeMetrics · লাইভ লিস্টিং",
   "ForgeMetrics · живые офферы": "ForgeMetrics · লাইভ অফার",
   "ID оффера": "অফার ID",
@@ -24128,7 +24123,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "অ্যাডমিনদের তালিকা এবং অনুমতিগুলি Telegram এর সাথে স্বয়ংক্রিয়ভাবে যাচাই করা হয়: যদি কোনো ব্যক্তিকে চ্যানেল প্রশাসক থেকে সরানো হয়, অ্যাপ্লিকেশনে অ্যাক্সেস স্বয়ংক্রিয়ভাবে বন্ধ হবে।",
   "Спишется": "কাটা হবে",
   "Спишется при переписывании · при сбое вернём автоматически": "রিরাইটে কাটা হবে · ব্যর্থ হলে স্বয়ংক্রিয় ফেরত",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge ব্যালেন্স থেকে কাটা হবে — কোনো চেকআউট নেই। প্ল্যান ও এক মাসের গাইডেন্স সঙ্গে সঙ্গে খুলবে।",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge ব্যালেন্স থেকে কাটা হবে। 30 দিনের অ্যাক্সেস: স্ট্র্যাটেজিস্টের সাথে কথোপকথন, প্ল্যানে সপ্তাহের গ্রিড, প্রথম সপ্তাহ, কাজ ও যাচাই।",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge ব্যালেন্স থেকে কাটা হবে। আরও 30 দিনের পরিচালনা: সপ্তাহের বিশ্লেষণ, গাইড ও চ্যাট।",
   "Спорт": "খেলাধুলা",
@@ -26155,7 +26149,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "যে ব্যক্তি সেবাটি চেনে না, সে প্রথমে দেখে বট কী করতে পারে, তারপর Telegram-এ যায়। সরাসরি লিংক কোনো ব্যাখ্যা ছাড়াই তাকে সোজা বটে নিয়ে যায়।",
   "Её легко набрать.": "এটি টাইপ করা সহজ।",
   "Продвижение пока недоступно": "প্রোমোশন এখনও উপলব্ধ নয়",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "মার্কেটপ্লেসে এখনও খুব কম প্লেসমেন্ট আছে — পেইড বুস্ট এখন খরচ করা Forge ফেরত আনবে না। মার্কেটপ্লেস পূর্ণ হলেই প্রোমোশন খুলে যাবে।"
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "মার্কেটপ্লেসে এখনও খুব কম প্লেসমেন্ট আছে — পেইড বুস্ট এখন খরচ করা Forge ফেরত আনবে না। মার্কেটপ্লেস পূর্ণ হলেই প্রোমোশন খুলে যাবে।",
+  "Forge — списание с баланса": "Forge — ব্যালেন্স থেকে কাটা হয়"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -26465,7 +26460,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge & Käufe",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge wird für Generierung, Audits, Auswahl und Konkurrenzanalyse verwendet",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge ist die interne Währung für Funktionen. Sie wird beim Start einer Operation abgebucht; schlägt sie fehl, gibt es automatisch eine Erstattung. Alle Preise stehen im Kabinett, Abschnitt „Was Aktionen kosten“.",
-  "Forge — списание с баланса, без кассы": "Forge — Abschrift vom Saldo, ohne Kasse",
   "ForgeMetrics · живые заявки": "ForgeMetrics · Live-Angebote",
   "ForgeMetrics · живые офферы": "ForgeMetrics · Live-Angebote",
   "ID оффера": "Angebots-ID",
@@ -29359,7 +29353,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminliste und Rechte werden automatisch mit Telegram abgeglichen: wird jemand aus den Kanal-Admins entfernt, verschwindet sein Zugriff auch in der App.",
   "Спишется": "Wird abgebucht",
   "Спишется при переписывании · при сбое вернём автоматически": "Wird beim Umschreiben abgebucht · bei Fehler automatisch erstattet",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Wird vom Forge-Guthaben abgebucht — ohne Kasse. Plan und ein Monat Betreuung öffnen sich sofort.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Wird vom Forge-Guthaben abgebucht. Zugang für 30 Tage: Gespräch mit dem Strategen, Wochenraster im Plan, erste Woche, Aufgaben und Abgleiche.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Wird vom Forge-Guthaben abgebucht. Weitere 30 Tage Betreuung: Wochenauswertungen, Leitfäden und Chat.",
   "Спорт": "Sport",
@@ -31386,7 +31379,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Wer den Dienst nicht kennt, sieht zuerst, was der Bot kann, und gelangt erst dann zu Telegram. Ein direkter Link führt ohne jede Erklärung sofort zum Bot.",
   "Её легко набрать.": "Er lässt sich leicht eintippen.",
   "Продвижение пока недоступно": "Werbung ist noch nicht verfügbar",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Auf dem Marktplatz gibt es noch wenige Platzierungen — ein bezahlter Push würde die eingesetzten Forge jetzt nicht wieder einbringen. Sobald sich der Marktplatz füllt, wird die Werbung freigeschaltet."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Auf dem Marktplatz gibt es noch wenige Platzierungen — ein bezahlter Push würde die eingesetzten Forge jetzt nicht wieder einbringen. Sobald sich der Marktplatz füllt, wird die Werbung freigeschaltet.",
+  "Forge — списание с баланса": "Forge — Abbuchung vom Guthaben"
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -31696,7 +31690,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge & purchases",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge is spent on generation, audits, matching and competitor analysis",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge is the in-app currency for features. It is charged when an operation starts; if the operation fails, it is refunded automatically. All prices are in the cabinet, section “What actions cost”.",
-  "Forge — списание с баланса, без кассы": "Forge — balance debit, without cash register",
   "ForgeMetrics · живые заявки": "ForgeMetrics · live listings",
   "ForgeMetrics · живые офферы": "ForgeMetrics · live offers",
   "ID оффера": "Offer ID",
@@ -34590,7 +34583,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "The admin list and permissions sync with Telegram automatically: if someone is removed from the channel's admins, their access in the app disappears too.",
   "Спишется": "Will be charged",
   "Спишется при переписывании · при сбое вернём автоматически": "Charged on rewrite · refunded automatically on failure",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Charged from your Forge balance — no checkout. The plan and a month of guidance unlock right away.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Charged from your Forge balance. Access for 30 days: a conversation with the strategist, the weekly grid in the plan, the first week, tasks and reviews.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Charged from your Forge balance. Another 30 days of guidance: weekly reviews, guides and chat.",
   "Спорт": "Sport",
@@ -36617,7 +36609,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Someone unfamiliar with the service first sees what the bot can do and only then goes to Telegram. A direct link takes them straight to the bot without any explanation.",
   "Её легко набрать.": "It is easy to type.",
   "Продвижение пока недоступно": "Promotion is not available yet",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "There are still few placements on the Marketplace, so a paid boost would not pay back the Forge spent. Promotion will open as soon as the marketplace fills up."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "There are still few placements on the Marketplace, so a paid boost would not pay back the Forge spent. Promotion will open as soon as the marketplace fills up.",
+  "Forge — списание с баланса": "Forge — charged to your balance"
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -36927,7 +36920,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge y compras",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge se gasta en generación, auditorías, selección y análisis de competidores",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge es la moneda interna de las funciones. Se cobra al iniciar la operación; si falla, se devuelve automáticamente. Todos los precios están en el gabinete, sección «Cuánto cuestan las acciones».",
-  "Forge — списание с баланса, без кассы": "Forge — débito del saldo, sin caja",
   "ForgeMetrics · живые заявки": "ForgeMetrics · solicitudes en vivo",
   "ForgeMetrics · живые офферы": "ForgeMetrics · ofertas en vivo",
   "ID оффера": "ID de oferta",
@@ -39821,7 +39813,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La lista de admins y los permisos se sincronizan con Telegram automáticamente: si quitan a alguien de los admins del canal, su acceso en la aplicación también desaparece.",
   "Спишется": "Se cobrará",
   "Спишется при переписывании · при сбое вернём автоматически": "Se cobra al reescribir · se devuelve automáticamente si falla",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Se descuenta del saldo de Forge, sin caja. El plan y un mes de acompañamiento se abren al instante.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Se cobrará del saldo Forge. Acceso por 30 días: conversación con el estratega, cuadrícula semanal en el plan, primera semana, tareas y revisiones.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Se cobrará del saldo Forge. 30 días más de acompañamiento: análisis semanales, guías y chat.",
   "Спорт": "Deporte",
@@ -41848,7 +41839,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quien no conoce el servicio ve primero lo que hace el bot y solo después pasa a Telegram. Un enlace directo lo lleva al bot sin ninguna explicación.",
   "Её легко набрать.": "Es fácil de escribir.",
   "Продвижение пока недоступно": "La promoción aún no está disponible",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "En la Plataforma todavía hay pocas colocaciones: un impulso de pago ahora no recuperaría los Forge invertidos. En cuanto la plataforma se llene, la promoción se abrirá."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "En la Plataforma todavía hay pocas colocaciones: un impulso de pago ahora no recuperaría los Forge invertidos. En cuanto la plataforma se llene, la promoción se abrirá.",
+  "Forge — списание с баланса": "Forge — se descuenta del saldo"
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -42158,7 +42150,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge و خریدها",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge صرف تولید، ممیزی، انتخاب و تحلیل رقبا می‌شود",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge ارز داخلی امکانات است. با شروع عملیات کسر می‌شود؛ اگر ناموفق باشد خودکار بازمی‌گردد. همه قیمت‌ها در کابینت، بخش «هزینه اقدامات» است.",
-  "Forge — списание с баланса, без кассы": "Forge — کسر از موجودی، بدون کش",
   "ForgeMetrics · живые заявки": "ForgeMetrics · آگهی‌های زنده",
   "ForgeMetrics · живые офферы": "ForgeMetrics · پیشنهادهای زنده",
   "ID оффера": "ID پیشنهاد",
@@ -45052,7 +45043,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "فهرست ادمین‌ها و دسترسی‌ها خودکار با تلگرام همگام می‌شود: اگر کسی از ادمین‌های کانال برداشته شود، دسترسی‌اش در اپلیکیشن هم می‌رود.",
   "Спишется": "کسر می‌شود",
   "Спишется при переписывании · при сбое вернём автоматически": "هنگام بازنویسی کسر می‌شود · در صورت خطا خودکار بازمی‌گردد",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "از موجودی Forge کسر می‌شود — بدون صندوق. برنامه و یک ماه همراهی بلافاصله باز می‌شوند.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "از موجودی Forge کسر می‌شود. دسترسی ۳۰ روزه: گفتگو با استراتژیست، شبکه هفته در برنامه، هفته اول، وظایف و بازبینی‌ها.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "از موجودی Forge کسر می‌شود. ۳۰ روز دیگر همراهی: تحلیل‌های هفته، راهنماها و چت.",
   "Спорт": "ورزش",
@@ -47079,7 +47069,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "کسی که سرویس را نمی‌شناسد، ابتدا می‌بیند ربات چه کارهایی انجام می‌دهد و فقط بعد وارد Telegram می‌شود. لینک مستقیم او را بدون هیچ توضیحی یک‌راست به ربات می‌برد.",
   "Её легко набрать.": "تایپ آن آسان است.",
   "Продвижение пока недоступно": "پروموشن هنوز در دسترس نیست",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "در مارکت‌پلیس هنوز جایگاه‌های تبلیغاتی کمی وجود دارد و ارتقای پولی اکنون Forge صرف‌شده را جبران نمی‌کند. به‌محض پر شدن مارکت‌پلیس، پروموشن باز می‌شود."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "در مارکت‌پلیس هنوز جایگاه‌های تبلیغاتی کمی وجود دارد و ارتقای پولی اکنون Forge صرف‌شده را جبران نمی‌کند. به‌محض پر شدن مارکت‌پلیس، پروموشن باز می‌شود.",
+  "Forge — списание с баланса": "Forge — از موجودی کسر می‌شود"
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -47389,7 +47380,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge et achats",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge sert à la génération, aux audits, à la sélection et à l'analyse des concurrents",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge est la monnaie interne des fonctions. Débitée au lancement de l'opération ; en cas d'échec, remboursée automatiquement. Tous les prix sont dans le cabinet, section « Combien coûtent les actions ».",
-  "Forge — списание с баланса, без кассы": "Forge — débitement du solde, sans caisse",
   "ForgeMetrics · живые заявки": "ForgeMetrics · annonces en direct",
   "ForgeMetrics · живые офферы": "ForgeMetrics · offres en direct",
   "ID оффера": "ID de l'offre",
@@ -50283,7 +50273,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "La liste des admins et les droits se synchronisent automatiquement avec Telegram : si quelqu'un est retiré des admins de la chaîne, son accès dans l'appli disparaît aussi.",
   "Спишется": "Sera débité",
   "Спишется при переписывании · при сбое вернём автоматически": "Débité à la réécriture · remboursé automatiquement en cas d’échec",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Débité du solde Forge — sans caisse. Le plan et un mois d'accompagnement s'ouvrent aussitôt.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Débité du solde Forge. Accès pour 30 jours : conversation avec le stratège, grille de la semaine dans le plan, première semaine, tâches et contrôles.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Débité du solde Forge. 30 jours de suivi supplémentaires : bilans de la semaine, guides et chat.",
   "Спорт": "Sport",
@@ -52310,7 +52299,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Une personne qui ne connaît pas le service voit d'abord ce que fait le bot et n'arrive qu'ensuite sur Telegram. Un lien direct l'envoie immédiatement vers le bot sans aucune explication.",
   "Её легко набрать.": "Il est facile à saisir.",
   "Продвижение пока недоступно": "La promotion n'est pas encore disponible",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Il y a encore peu d'emplacements sur la Place de marché : une mise en avant payante ne rentabiliserait pas les Forge dépensés. La promotion s'ouvrira dès que la place de marché sera plus fournie."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Il y a encore peu d'emplacements sur la Place de marché : une mise en avant payante ne rentabiliserait pas les Forge dépensés. La promotion s'ouvrira dès que la place de marché sera plus fournie.",
+  "Forge — списание с баланса": "Forge — débités du solde"
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -52620,7 +52610,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge और खरीदारी",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge जनरेशन, ऑडिट, चयन और प्रतिस्पर्धी विश्लेषण पर खर्च होता है",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge फ़ीचर्स की आंतरिक मुद्रा है। ऑपरेशन शुरू होते ही कटती है; विफल होने पर अपने आप वापस होती है। सभी क़ीमतें कैबिनेट में, «क्रियाओं की क़ीमत» खंड में।",
-  "Forge — списание с баланса, без кассы": "Forge — बैलेंस से डेबिट, कैशलेस",
   "ForgeMetrics · живые заявки": "ForgeMetrics · लाइव लिस्टिंग",
   "ForgeMetrics · живые офферы": "ForgeMetrics · लाइव ऑफर",
   "ID оффера": "ऑफर ID",
@@ -55514,7 +55503,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "एडमिन सूची और अधिकार Telegram से अपने आप सिंक होते हैं: अगर किसी को चैनल के एडमिन से हटाया गया, तो ऐप में उसकी पहुँच भी चली जाती है।",
   "Спишется": "कटेगा",
   "Спишется при переписывании · при сбое вернём автоматически": "री-राइट पर कटेगा · विफलता पर स्वतः वापसी",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge बैलेंस से कटेगा — बिना चेकआउट। प्लान और एक महीने की गाइडेंस तुरंत खुल जाएगी।",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge बैलेंस से कटेगा। 30 दिनों का एक्सेस: रणनीतिकार से बातचीत, प्लान में सप्ताह की ग्रिड, पहला सप्ताह, कार्य और जाँच।",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge बैलेंस से कटेगा। संचालन के 30 दिन और: सप्ताह का विश्लेषण, गाइड और चैट।",
   "Спорт": "खेल",
@@ -57541,7 +57529,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "जो व्यक्ति सेवा को नहीं जानता, वह पहले देखता है कि बॉट क्या कर सकता है, और उसके बाद ही Telegram में जाता है। सीधा लिंक उसे बिना किसी जानकारी के तुरंत बॉट में ले जाता है।",
   "Её легко набрать.": "इसे टाइप करना आसान है।",
   "Продвижение пока недоступно": "प्रमोशन अभी उपलब्ध नहीं है",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "मार्केटप्लेस पर अभी बहुत कम प्लेसमेंट हैं — पेड बूस्ट अभी खर्च किए गए Forge की भरपाई नहीं करेगा। मार्केटप्लेस भरते ही प्रमोशन खुल जाएगा।"
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "मार्केटप्लेस पर अभी बहुत कम प्लेसमेंट हैं — पेड बूस्ट अभी खर्च किए गए Forge की भरपाई नहीं करेगा। मार्केटप्लेस भरते ही प्रमोशन खुल जाएगा।",
+  "Forge — списание с баланса": "Forge — बैलेंस से कटेगा"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -57851,7 +57840,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge & pembelian",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge digunakan untuk generasi, audit, seleksi, dan analisis pesaing",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge adalah mata uang internal fitur. Dipotong saat operasi dimulai; jika gagal, dikembalikan otomatis. Semua harga ada di kabinet, bagian «Berapa biaya tindakan».",
-  "Forge — списание с баланса, без кассы": "Forge — debit dari saldo, tanpa kasir",
   "ForgeMetrics · живые заявки": "ForgeMetrics · listing live",
   "ForgeMetrics · живые офферы": "ForgeMetrics · penawaran langsung",
   "ID оффера": "ID penawaran",
@@ -60745,7 +60733,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Daftar admin dan izin tersinkron otomatis dengan Telegram: jika seseorang dicabut dari admin channel, aksesnya di aplikasi juga hilang.",
   "Спишется": "Akan dipotong",
   "Спишется при переписывании · при сбое вернём автоматически": "Dipotong saat penulisan ulang · dikembalikan otomatis jika gagal",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Dipotong dari saldo Forge — tanpa kasir. Rencana dan sebulan pendampingan langsung terbuka.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Dipotong dari saldo Forge. Akses 30 hari: percakapan dengan ahli strategi, jadwal mingguan dalam rencana, minggu pertama, tugas, dan pengecekan.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Dipotong dari saldo Forge. 30 hari pendampingan lagi: ulasan mingguan, panduan, dan chat.",
   "Спорт": "Olahraga",
@@ -62772,7 +62759,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Orang yang belum mengenal layanan ini lebih dulu melihat apa yang bisa dilakukan bot, baru kemudian masuk ke Telegram. Tautan langsung membawanya ke bot tanpa penjelasan apa pun.",
   "Её легко набрать.": "Mudah diketik.",
   "Продвижение пока недоступно": "Promosi belum tersedia",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Penempatan di Marketplace masih sedikit — peningkatan berbayar sekarang tidak akan menutup Forge yang dikeluarkan. Promosi akan dibuka begitu marketplace terisi."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Penempatan di Marketplace masih sedikit — peningkatan berbayar sekarang tidak akan menutup Forge yang dikeluarkan. Promosi akan dibuka begitu marketplace terisi.",
+  "Forge — списание с баланса": "Forge — dipotong dari saldo"
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -63082,7 +63070,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge e acquisti",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge si spende per generazione, audit, selezione e analisi dei concorrenti",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge è la valuta interna delle funzioni. Viene addebitata all'avvio dell'operazione; se fallisce, viene rimborsata automaticamente. Tutti i prezzi sono nel gabinetto, sezione «Quanto costano le azioni».",
-  "Forge — списание с баланса, без кассы": "Forge — prelievo dal saldo, senza cassa",
   "ForgeMetrics · живые заявки": "ForgeMetrics · richieste live",
   "ForgeMetrics · живые офферы": "ForgeMetrics · offerte live",
   "ID оффера": "ID dell'offerta",
@@ -65976,7 +65963,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "L'elenco degli admin e i permessi si sincronizzano automaticamente con Telegram: se qualcuno viene rimosso dagli admin del canale, il suo accesso nell'app sparisce.",
   "Спишется": "Verrà addebitato",
   "Спишется при переписывании · при сбое вернём автоматически": "Addebitato alla riscrittura · rimborsato automaticamente in caso di errore",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Scalato dal saldo Forge — senza cassa. Il piano e un mese di guida si aprono subito.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Verrà addebitato dal saldo Forge. Accesso per 30 giorni: dialogo con lo stratega, griglia settimanale nel piano, prima settimana, attività e verifiche.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Verrà addebitato dal saldo Forge. Altri 30 giorni di gestione: analisi settimanali, guide e chat.",
   "Спорт": "Sport",
@@ -68003,7 +67989,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Chi non conosce il servizio vede prima cosa sa fare il bot e solo dopo arriva su Telegram. Un link diretto lo porta subito al bot senza alcuna spiegazione.",
   "Её легко набрать.": "È facile da digitare.",
   "Продвижение пока недоступно": "La promozione non è ancora disponibile",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Sul Marketplace ci sono ancora pochi posizionamenti: una spinta a pagamento ora non ripagherebbe i Forge spesi. La promozione si aprirà non appena il marketplace si riempirà."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Sul Marketplace ci sono ancora pochi posizionamenti: una spinta a pagamento ora non ripagherebbe i Forge spesi. La promozione si aprirà non appena il marketplace si riempirà.",
+  "Forge — списание с баланса": "Forge — addebito sul saldo"
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -68313,7 +68300,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge және сатып алулар",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge генерацияға, аудиттерге, іріктеуге және бәсекелестерді талдауға жұмсалады",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge — функциялардың ішкі валютасы. Операция басталғанда есептен шығарылады; сәтсіз болса — автоматты қайтарылады. Барлық бағалар кабинетте, «Әрекеттер қанша тұрады» бөлімінде.",
-  "Forge — списание с баланса, без кассы": "Forge — балансты пайдалану, касса жоқ",
   "ForgeMetrics · живые заявки": "ForgeMetrics · тірі өтінімдер",
   "ForgeMetrics · живые офферы": "ForgeMetrics · тікелей ұсынымдар",
   "ID оффера": "Ұсынымның ID",
@@ -71193,7 +71179,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Әкімшілер тізімі мен құқықтар Telegram-мен автоматты сәйкестендіріледі: адам арна әкімшілерінен алынса, қосымшадағы қатынасы да жоғалады.",
   "Спишется": "Шегеріледі",
   "Спишется при переписывании · при сбое вернём автоматически": "Қайта жазғанда шегеріледі · сәтсіздікте автоматты қайтарылады",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge балансынан есептеледі — кассасыз. Жоспар мен бір айлық жетекшілік бірден ашылады.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge балансынан шегеріледі. 30 күнге қолжетімділік: стратегпен әңгіме, жоспардағы апта торы, бірінші апта, тапсырмалар мен салыстырулар.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge балансынан шегеріледі. Тағы 30 күн жүргізу: апта талдаулары, гайдтар және чат.",
   "Спорт": "Sport",
@@ -73234,7 +73219,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Сервисті білмейтін адам алдымен боттың не істей алатынын көреді, содан кейін ғана Telegram-ға өтеді. Тікелей сілтеме оны ешқандай түсініктемесіз бірден ботқа апарады.",
   "Её легко набрать.": "Оны теру оңай.",
   "Продвижение пока недоступно": "Жылжыту әзірге қолжетімсіз",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Алаңда әлі орналастырулар аз — ақылы көтеру қазір жұмсалған Forge-ды ақтамайды. Алаң толысымен жылжыту ашылады."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Алаңда әлі орналастырулар аз — ақылы көтеру қазір жұмсалған Forge-ды ақтамайды. Алаң толысымен жылжыту ашылады.",
+  "Forge — списание с баланса": "Forge — баланстан шегеріледі"
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -73544,7 +73530,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge e compras",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge é gasto em geração, auditorias, seleção e análise de concorrentes",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge é a moeda interna das funções. É debitada ao iniciar a operação; se falhar, é devolvida automaticamente. Todos os preços estão no gabinete, seção «Quanto custam as ações».",
-  "Forge — списание с баланса, без кассы": "Forge — débito do saldo, sem caixa",
   "ForgeMetrics · живые заявки": "ForgeMetrics · anúncios ativos",
   "ForgeMetrics · живые офферы": "ForgeMetrics · ofertas em tempo real",
   "ID оффера": "ID da oferta",
@@ -76438,7 +76423,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "A lista de admins e as permissões sincronizam automaticamente com o Telegram: se alguém for removido dos admins do canal, o acesso dele no aplicativo some também.",
   "Спишется": "Será debitado",
   "Спишется при переписывании · при сбое вернём автоматически": "Cobrado na reescrita · devolvido automaticamente em falha",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Descontado do saldo Forge — sem caixa. O plano e um mês de acompanhamento abrem na hora.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Será debitado do saldo Forge. Acesso por 30 dias: conversa com o estrategista, grade da semana no plano, primeira semana, tarefas e verificações.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Será debitado do saldo Forge. Mais 30 dias de acompanhamento: análises da semana, guias e chat.",
   "Спорт": "Esporte",
@@ -78465,7 +78449,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quem não conhece o serviço vê primeiro o que o bot faz e só depois chega ao Telegram. Um link direto leva a pessoa ao bot sem nenhuma explicação.",
   "Её легко набрать.": "É fácil de digitar.",
   "Продвижение пока недоступно": "A promoção ainda não está disponível",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Ainda há poucos anúncios no Marketplace — um impulso pago agora não compensaria os Forge investidos. A promoção será liberada assim que o marketplace estiver mais cheio."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Ainda há poucos anúncios no Marketplace — um impulso pago agora não compensaria os Forge investidos. A promoção será liberada assim que o marketplace estiver mais cheio.",
+  "Forge — списание с баланса": "Forge — debitado do saldo"
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -78775,7 +78760,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge na manunuzi",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge hutumika kwa uzalishaji, ukaguzi, uteuzi na uchambuzi wa washindani",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge ni sarafu ya ndani ya vipengele. Hukatwa operesheni inapoanza; ikishindikana hurejeshwa kiotomatiki. Bei zote ziko kwenye kabati, sehemu ya «Vitendo vinagharimu kiasi gani».",
-  "Forge — списание с баланса, без кассы": "Forge — debiti kutoka kwa balanse, bila cashier",
   "ForgeMetrics · живые заявки": "ForgeMetrics · matangazo hai",
   "ForgeMetrics · живые офферы": "ForgeMetrics · ofa zinazomtendeka",
   "ID оффера": "ID ya ofa",
@@ -81669,7 +81653,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Orodha ya maadmin na ruhusa husawazishwa na Telegram kiotomatiki: mtu akiondolewa kwenye maadmin wa channel, ufikiaji wake kwenye programu pia hupotea.",
   "Спишется": "Itatozwa",
   "Спишется при переписывании · при сбое вернём автоматически": "Hukatwa wakati wa kuandika upya · hurejeshwa kiotomatiki ikishindikana",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Hukatwa kwenye salio la Forge — bila malipo ya nje. Mpango na mwezi wa uongozaji hufunguka mara moja.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Itatozwa kutoka salio la Forge. Ufikiaji kwa siku 30: mazungumzo na mtaalamu wa mkakati, gridi ya wiki kwenye mpango, wiki ya kwanza, kazi na ukaguzi.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Itatozwa kutoka salio la Forge. Siku 30 zaidi za usimamizi: uchambuzi wa wiki, miongozo na gumzo.",
   "Спорт": "Michezo",
@@ -83696,7 +83679,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Mtu asiyeifahamu huduma kwanza huona bot inaweza kufanya nini, kisha tu huingia Telegram. Kiungo cha moja kwa moja humpeleka kwenye bot mara moja bila maelezo yoyote.",
   "Её легко набрать.": "Ni rahisi kukiandika.",
   "Продвижение пока недоступно": "Ukuzaji bado haupatikani",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Bado kuna matangazo machache Sokoni — kuinua kwa malipo sasa hakutarudisha Forge utakazotumia. Ukuzaji utafunguliwa mara soko litakapojaa."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Bado kuna matangazo machache Sokoni — kuinua kwa malipo sasa hakutarudisha Forge utakazotumia. Ukuzaji utafunguliwa mara soko litakapojaa.",
+  "Forge — списание с баланса": "Forge — hukatwa kutoka salio"
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -84006,7 +83990,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge ve satın almalar",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge üretim, denetimler, seçim ve rakip analizine harcanır",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge, özelliklerin iç para birimidir. İşlem başlarken düşülür; başarısız olursa otomatik iade edilir. Tüm fiyatlar kabinde, «İşlemler ne kadar» bölümünde.",
-  "Forge — списание с баланса, без кассы": "Forge — bakiyeden düşülür, kasa olmaksızın",
   "ForgeMetrics · живые заявки": "ForgeMetrics · canlı ilanlar",
   "ForgeMetrics · живые офферы": "ForgeMetrics · canlı teklifler",
   "ID оффера": "Offer ID",
@@ -86900,7 +86883,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Admin listesi ve yetkiler Telegram ile otomatik eşitlenir: biri kanal adminlerinden çıkarılırsa uygulamadaki erişimi de kaybolur.",
   "Спишется": "Düşülecek",
   "Спишется при переписывании · при сбое вернём автоматически": "Yeniden yazımda düşülür · hata olursa otomatik iade edilir",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge bakiyesinden düşülür — kasasız. Plan ve bir aylık yürütme hemen açılır.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge bakiyesinden tahsil edilir. 30 günlük erişim: stratejistle görüşme, planda hafta takvimi, ilk hafta, görevler ve kontroller.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge bakiyesinden tahsil edilir. 30 gün daha yönetim: hafta analizleri, rehberler ve sohbet.",
   "Спорт": "Spor",
@@ -88927,7 +88909,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Hizmeti tanımayan kişi önce botun neler yapabildiğini görür, ancak ondan sonra Telegram'a geçer. Doğrudan bağlantı onu hiçbir açıklama olmadan hemen bota götürür.",
   "Её легко набрать.": "Yazması kolaydır.",
   "Продвижение пока недоступно": "Tanıtım henüz kullanılamıyor",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Pazar Yeri'nde henüz az yerleşim var; ücretli öne çıkarma şu an harcanan Forge'u karşılamaz. Pazar yeri doldukça tanıtım açılacak."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Pazar Yeri'nde henüz az yerleşim var; ücretli öne çıkarma şu an harcanan Forge'u karşılamaz. Pazar yeri doldukça tanıtım açılacak.",
+  "Forge — списание с баланса": "Forge — bakiyeden düşülür"
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -89237,7 +89220,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge va xaridlar",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge generatsiya, auditlar, tanlov va raqobatchilar tahliliga sarflanadi",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge — funksiyalarning ichki valyutasi. Operatsiya boshlanganda yechiladi; muvaffaqiyatsiz bo'lsa — avtomatik qaytariladi. Barcha narxlar kabinetda, «Amallar qancha turadi» bo'limida.",
-  "Forge — списание с баланса, без кассы": "Forge — balansdan yechib olish, kassasiz",
   "ForgeMetrics · живые заявки": "ForgeMetrics · jonli arizalar",
   "ForgeMetrics · живые офферы": "ForgeMetrics · jonli ofertalar",
   "ID оффера": "Oferta ID",
@@ -92131,7 +92113,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Adminlar ro'yxati va huquqlar Telegram bilan avtomatik sinxronlanadi: kimdir kanal adminlaridan olinsa, ilovadagi kirishi ham yo'qoladi.",
   "Спишется": "Yechiladi",
   "Спишется при переписывании · при сбое вернём автоматически": "Qayta yozishda yechiladi · xatoda avtomatik qaytariladi",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Forge balansidan yechiladi — kassasiz. Reja va bir oylik yuritish darhol ochiladi.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Forge balansidan yechiladi. 30 kunlik kirish: strateg bilan suhbat, rejadagi hafta jadvali, birinchi hafta, vazifalar va tekshiruvlar.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Forge balansidan yechiladi. Yana 30 kun yuritish: hafta tahlillari, qo‘llanmalar va chat.",
   "Спорт": "Sport",
@@ -94158,7 +94139,8 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xizmatni bilmaydigan odam avval bot nimalar qila olishini ko'radi va shundan keyingina Telegram'ga o'tadi. To'g'ridan-to'g'ri havola uni hech qanday tushuntirishsiz darhol botga olib boradi.",
   "Её легко набрать.": "Uni yozish oson.",
   "Продвижение пока недоступно": "Targ'ib qilish hozircha mavjud emas",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Maydonda hali joylashuvlar kam — pullik ko'tarish hozir sarflangan Forge'ni qoplamaydi. Maydon to'lishi bilan targ'ib qilish ochiladi."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Maydonda hali joylashuvlar kam — pullik ko'tarish hozir sarflangan Forge'ni qoplamaydi. Maydon to'lishi bilan targ'ib qilish ochiladi.",
+  "Forge — списание с баланса": "Forge — balansdan yechiladi"
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -94468,7 +94450,6 @@ window.__I18N_DICT = {
   "Forge и покупки": "Forge & giao dịch mua",
   "Forge тратятся на генерацию, аудиты, подбор и анализ конкурентов": "Forge dùng cho tạo nội dung, kiểm toán, chọn kênh và phân tích đối thủ",
   "Forge — внутренняя валюта функций. Списывается при запуске операции; если операция не удалась — возвращается автоматически. Все цены — в кабинете, раздел «Сколько стоят действия».": "Forge là tiền tệ nội bộ của các tính năng. Bị trừ khi bắt đầu thao tác; nếu thất bại sẽ tự động hoàn lại. Mọi giá ở trong cabinet, mục «Chi phí các thao tác».",
-  "Forge — списание с баланса, без кассы": "Forge — trừ từ số dư, không qua quỹ",
   "ForgeMetrics · живые заявки": "ForgeMetrics · tin đăng thật",
   "ForgeMetrics · живые офферы": "ForgeMetrics · các offer trực tiếp",
   "ID оффера": "ID offer",
@@ -97362,7 +97343,6 @@ window.__I18N_DICT = {
   "Список админов и права сверяются с Telegram автоматически: если человека сняли с администраторов канала — доступ в приложении пропадёт сам.": "Danh sách admin và quyền tự động đồng bộ với Telegram: nếu ai đó bị gỡ khỏi admin của kênh, quyền trong ứng dụng cũng mất.",
   "Спишется": "Sẽ trừ",
   "Спишется при переписывании · при сбое вернём автоматически": "Trừ khi viết lại · tự hoàn nếu lỗi",
-  "Спишется с баланса Forge — без кассы. План и месяц ведения откроются сразу.": "Trừ từ số dư Forge — không qua thanh toán. Kế hoạch và một tháng dẫn dắt mở ngay.",
   "Спишется с баланса Forge. Доступ на 30 дней: разговор со стратегом, сетка недели в плане, первая неделя, задачи и сверки.": "Sẽ trừ từ số dư Forge. Truy cập 30 ngày: trò chuyện với chiến lược gia, lưới tuần trong kế hoạch, tuần đầu tiên, nhiệm vụ và đối chiếu.",
   "Спишется с баланса Forge. Ещё 30 дней ведения: разборы недели, гайды и чат.": "Sẽ trừ từ số dư Forge. Thêm 30 ngày theo dõi: phân tích tuần, hướng dẫn và chat.",
   "Спорт": "The thao",
@@ -99389,6 +99369,7 @@ window.__I18N_DICT = {
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Người chưa biết dịch vụ sẽ thấy trước bot làm được gì, rồi mới chuyển sang Telegram. Liên kết trực tiếp đưa họ vào bot ngay mà không có lời giải thích nào.",
   "Её легко набрать.": "Dễ gõ.",
   "Продвижение пока недоступно": "Tính năng quảng bá chưa khả dụng",
-  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Trên Sàn hiện còn ít vị trí đăng — đẩy tin trả phí lúc này sẽ không bù lại số Forge đã chi. Quảng bá sẽ mở ngay khi sàn đông hơn."
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Trên Sàn hiện còn ít vị trí đăng — đẩy tin trả phí lúc này sẽ không bù lại số Forge đã chi. Quảng bá sẽ mở ngay khi sàn đông hơn.",
+  "Forge — списание с баланса": "Forge — trừ vào số dư"
  }
 };
