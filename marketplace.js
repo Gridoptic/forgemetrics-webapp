@@ -8698,7 +8698,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260913b';
+    var PS_GLUE_V = '20260914a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';
@@ -8974,7 +8974,7 @@
                 } catch (e) {}
             });
         }
-        var NAV = [['fmxPsLang', L('Язык')], ['ordBox', L('Блоки')], ['bgChips', L('Фон')], ['mChips', L('Метрики')], ['prInp', L('Цена')], ['eChips', L('Стикеры')], ['hookInp', L('Текст')]];
+        var NAV = [].concat(window.I18N && I18N.enabled ? [['fmxPsLang', L('Язык')]] : [], [['ordBox', L('Блоки')], ['bgChips', L('Фон')], ['mChips', L('Метрики')], ['prInp', L('Цена')], ['eChips', L('Стикеры')], ['hookInp', L('Текст')]]);
         var nav = dock.querySelector('#fmx-dkNav');
         NAV.forEach(function (nv) {
             var a = document.createElement('button'); a.type = 'button'; a.className = 'fmx-dkChip';

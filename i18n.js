@@ -56,18 +56,20 @@
         return 'ru';
     }
 
-    var LANG = detect();
+    var ENABLED = false;
+    var LANG = ENABLED ? detect() : 'ru';
     var DICT = window.__I18N_DICT || {};
 
-    window.I18N = { supported: SUPPORTED, names: NAMES, flags: FLAGS, flagSvg: FLAG_SVG };
+    window.I18N = { enabled: ENABLED, supported: SUPPORTED, names: NAMES, flags: FLAGS, flagSvg: FLAG_SVG };
     window.getLang = function () { return LANG; };
     window.setLang = function (l) {
-        if (SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
+        if (!ENABLED || SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
         LANG = l;
         try { localStorage.setItem('fm_lang', l); } catch (e) {}
         return true;
     };
     window.applyServerLang = function (l) {
+        if (!ENABLED) return false;
         try { if (localStorage.getItem('fm_lang')) return false; } catch (e) {}
         if (!l || SUPPORTED.indexOf(l) < 0 || l === LANG) return false;
         try { localStorage.setItem('fm_lang_srv', l); } catch (e) { return false; }

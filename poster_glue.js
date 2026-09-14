@@ -179,8 +179,9 @@
     if (pi) pi.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
     if (pf) pf.addEventListener('input', function () { _psLocalizePrice(); _psFit(); });
   }
+  function _psLangOn() { return !!(window.I18N && window.I18N.enabled); }
   function _psEnsureLangUI() {
-    if (document.getElementById('fmxPsLang')) return;
+    if (!_psLangOn() || document.getElementById('fmxPsLang')) return;
     var panel = document.querySelector('.panel'); if (!panel) return;
     var anchor = panel.querySelector('.sub') || panel.querySelector('h2'); if (!anchor) return;
     var codes = [['ru', 'RU'], ['en', 'EN'], ['ar', 'AR'], ['hi', 'HI'], ['id', 'ID'], ['pt', 'PT'], ['es', 'ES'], ['fr', 'FR'], ['de', 'DE'], [PG('it'), 'IT'], ['tr', 'TR'], ['fa', 'FA'], ['vi', 'VI'], ['bn', 'BN'], ['kk', 'KK'], ['uz', 'UZ'], ['be', 'BE'], ['az', 'AZ'], ['am', 'AM'], ['sw', 'SW']];
@@ -207,7 +208,7 @@
     c.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-pl') === _psLang); });
   }
   window.__fmxPosterSetLang = function (lang) {
-    if (lang && POSTER_L[lang]) _psLang = lang;
+    if (_psLangOn() && lang && POSTER_L[lang]) _psLang = lang;
     if (window.__psData) _psFillMetrics(window.__psData);
     _psApplyLabels(); _psFit(); _psMarkLangChips();
   };
@@ -708,7 +709,7 @@
 
   window.__fmxPosterApply = function (state) {
     if (!state) return;
-    if (state.lang && POSTER_L[state.lang]) _psLang = state.lang;
+    if (_psLangOn() && state.lang && POSTER_L[state.lang]) _psLang = state.lang;
     var poster = el('poster');
     _anims = [];
     if (state.bg) {
