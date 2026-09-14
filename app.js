@@ -77,8 +77,6 @@ const FORGE_SHEET_ITEMS = [
       short: TR('AI-разбор канала'), svg: ANALYZE_SVG },
     { key: 'audit', one: TR('AI-аудит канала'), few: TR('AI-аудита канала'), many: TR('AI-аудитов канала'),
       short: TR('AI-аудит канала'), icon: 'chart-dots' },
-    { key: 'deep_audit', one: TR('коммерческий аудит'), few: TR('коммерческих аудита'), many: TR('коммерческих аудитов'),
-      short: TR('Коммерческий аудит'), icon: 'briefcase' },
     { key: 'competitors', one: TR('анализ конкурентов'), few: TR('анализа конкурентов'), many: TR('анализов конкурентов'),
       short: TR('Анализ конкурентов'), icon: 'search' },
     { key: 'promo_burst24', one: TR('всплеск продвижения на сутки'), few: TR('всплеска продвижения на сутки'), many: TR('всплесков продвижения на сутки'),
@@ -754,17 +752,9 @@ var PW_CATALOG = [
     { id: 'rr', label: 'ERR', sub: '', get: p => p.reach_rate, o: { suf: '%' } },
     { id: 'err24', label: 'ERR24', sub: TR('за первые сутки'), get: p => p.err24, o: { suf: '%', dec: 1 } },
     { id: 'er', label: 'ER', sub: TR('реакции к охвату'), get: p => p.engagement_percent, o: { suf: '%', dec: 1 } },
-    { id: 'price', label: TR('Цена поста'), sub: '', get: p => p.price_low, o: {} },
-    { id: 'cpm', label: 'CPM', sub: TR('за 1000 просмотров'), get: p => p.cpm, o: { sep: true, suf: ' ₽' } },
-    { id: 'cpf', label: 'CPF', sub: TR('при конверсии 0,3–1,5%'), get: p => p.cpf_low, o: {} },
 ];
 var PW_MAX = 8;
 
-function pwRub(n) { return Math.round(n).toLocaleString('ru-RU'); }
-function pwRangeTx(lo, hi) {
-    if (lo == null) return null;
-    return (hi != null && hi > lo) ? pwRub(lo) + '–' + pwRub(hi) + ' ₽' : pwRub(lo) + ' ₽';
-}
 var PW_LS = 'fm_pulse_metrics_v3';
 
 var PW_DORM_LS = 'fm_pulse_dormant_v1';
@@ -788,7 +778,7 @@ function pwSelectedIds(pulse) {
         var ok = saved.filter(id => PW_CATALOG.some(m => m.id === id));
         if (ok.length) return ok.slice(0, PW_MAX);
     }
-    var order = ['subs', 'reach', 'rr', 'err24', 'er', 'price'];
+    var order = ['subs', 'reach', 'rr', 'err24', 'er'];
     var withData = order.filter(id => { var m = PW_CATALOG.find(x => x.id === id); return m && m.get(pulse) != null; });
     return (withData.length ? withData : ['subs']).slice(0, PW_MAX);
 }
@@ -799,60 +789,6 @@ function pwPreview(v, o) {
     if (o.sep) return Math.round(v).toLocaleString('ru-RU') + (o.suf || '');
     if (o.dec) return v.toFixed(o.dec) + (o.suf || '');
     return String(Math.round(v)) + (o.suf || '');
-}
-
-var pwCpfHintOpen = false;
-var pwPriceOpen = false;
-
-var PW_FMT_META = {
-    h1_24: ['1/24', TR('1 ч в топе · 24 ч в ленте')],
-    h2_48: ['2/48', TR('2 ч в топе · 48 ч в ленте')],
-    h3_72: ['3/72', TR('3 ч в топе · 72 ч в ленте')],
-    d7: [TR('7 дней'), TR('3 ч в топе · 7 дней в ленте')],
-    perm: [TR('Без удаления'), TR('остаётся 30 дней или навсегда')],
-    native: [TR('Нативный'), TR('автор пишет сам по ТЗ')],
-    repost: [TR('Репост'), TR('пересылка вашего поста')],
-    circle: [TR('Кружок'), TR('видеосообщение внутри поста')],
-    stories: [TR('Сторис'), TR('формат сторис канала')],
-};
-
-function pwPricePanel(pulse) {
-    var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
-    var hasOwn = pulse.formats.some(f => f.price != null);
-    var hasEst = pulse.formats.some(f => f.est != null);
-    var PW_PST = { market: [_tp(TR('в рынке')), '#5DCAA5'], above: [_tp(TR('выше рынка')), '#f5bf4f'],
-                   below: [_tp(TR('ниже рынка')), '#f5bf4f'], out: [_tp(TR('вне рынка')), '#ef8080'] };
-    var rows = pulse.formats.map(f => {
-        var meta = PW_FMT_META[f.k];
-        if (!meta) return '';
-        var right;
-        if (f.price != null && f.est == null) {
-            right = '<b>' + escapeHtml(pwRub(f.price) + ' ₽') + '</b>';
-        } else if (f.price != null) {
-            var st = PW_PST[f.st];
-            var tail = '';
-            if (st) {
-                var pctTx = (f.st === 'above' || f.st === 'below')
-                    ? ' ' + (f.pct > 0 ? '+' : '−') + Math.abs(f.pct) + '%' : '';
-                tail = ' · <i style="color:' + st[1] + ';">' + escapeHtml(st[0] + pctTx) + '</i>';
-            }
-            right = '<b>' + escapeHtml(pwRub(f.price) + ' ₽') + '</b><em>' +
-                escapeHtml(_tp(TR('оценка')) + ' ' + pwRub(f.est) + ' ₽') + tail + '</em>';
-        } else {
-            right = '<b>' + escapeHtml('≈' + pwRub(f.est) + ' ₽') + '</b><em>' +
-                escapeHtml(_tp(TR('оценка'))) + '</em>';
-        }
-        return '<div class="pw-fr"><span class="ft"><b>' + escapeHtml(_tp(meta[0])) + '</b>' +
-            '<em>' + escapeHtml(_tp(meta[1])) + '</em></span>' +
-            '<span class="fp">' + right + '</span></div>';
-    }).join('');
-    var foot = !hasEst
-        ? _tp(TR('Твои цены — из оффера на Бирже, там же они меняются. Рыночная оценка появится, когда охват канала превысит 100 просмотров.'))
-        : hasOwn
-        ? _tp(TR('Оценка — расчёт по замерам канала и рынку его ниши, обновляется сама. Твои цены — из оффера на Бирже, там же они меняются.'))
-        : _tp(TR('Это расчётные ориентиры по рынку ниши. Назначить свои цены — создай оффер на Бирже.'));
-    return '<div class="pw-hintbox big' + (pwPriceOpen ? ' open' : '') + '" id="pw-price-box"><div class="in">' +
-        rows + '<div class="pw-pfoot">' + escapeHtml(foot) + '</div></div></div>';
 }
 
 function pwRenderMetrics(pulse) {
@@ -880,84 +816,18 @@ function pwRenderMetrics(pulse) {
                 vcls = warn ? ' warn' : ' bad';
             }
         }
-        if (id === 'price' && v != null) {
-            var _tp = (typeof window.t === 'function') ? window.t : function (x) { return x; };
-            if (pulse.price_kind === 'estimate') {
-                var pill = '';
-                if (pulse.own_price) {
-                    var PW_PST = { market: [_tp(TR('в рынке')), ''], above: [_tp(TR('выше рынка')), 'warn'],
-                                   below: [_tp(TR('ниже рынка')), 'warn'], out: [_tp(TR('вне рынка')), 'bad'] };
-                    var _ps = PW_PST[pulse.own_status];
-                    if (_ps) {
-                        var _pctTx = (pulse.own_status === 'above' || pulse.own_status === 'below')
-                            ? ' ' + (pulse.own_pct > 0 ? '+' : '−') + Math.abs(pulse.own_pct) + '%' : '';
-                        pill = `<span class="pw-rpill ${_ps[1] || 'ok'}">${escapeHtml(_ps[0] + _pctTx)}</span>`;
-                    }
-                    sub = pill + `<span class="s fx">1/24</span>`;
-                } else {
-                    sub = `<span class="pw-rpill mut">${escapeHtml(_tp(TR('цена не задана')))}</span>`;
-                }
-            } else {
-                sub = `<span class="s">${escapeHtml(_tp(TR('твоя цена')) + ' · 1/24')}</span>`;
-            }
-        }
         var o = m.o;
         var valTx;
         if (v == null) {
             valTx = '—';
-        } else if (id === 'price') {
-            valTx = escapeHtml(pulse.price_kind === 'owner'
-                ? TR('от ') + pwRub(pulse.price_low) + ' ₽'
-                : (pwRangeTx(pulse.price_low, pulse.price_high) || '—'));
-        } else if (id === 'cpf') {
-            if (pulse.cpf_fact != null) {
-                valTx = escapeHtml('≈' + pwRub(pulse.cpf_fact) + ' ₽');
-                sub = '<span class="s" style="color:#5DCAA5;">' + t('по замерам сделок') + '</span>';
-            } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
-                valTx = escapeHtml('≈' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' ₽');
-                var _tpR = (typeof window.t === 'function') ? window.t : function (x) { return x; };
-                sub = '<span class="s">' + escapeHtml(_tpR(TR('разброс')) + ' ' +
-                    pwRub(pulse.cpf_low) + '–' + pwRub(pulse.cpf_high) + ' ₽') + '</span>';
-            } else {
-                valTx = '—';
-            }
         } else {
             var _mp = _pwNumPrev[id + ':' + _dch];
             _pwNumPrev[id + ':' + _dch] = v;
             valTx = `<span class="pw-num" data-to="${v}"${_mp != null ? ` data-from="${_mp}"` : ''}${o.sep ? ' data-sep="1"' : ''}${o.k ? ' data-k="1"' : ''}${o.suf ? ` data-suf="${o.suf}"` : ''}${o.dec ? ` data-dec="${o.dec}"` : ''}>0</span>`;
         }
-        var _pfm = (id === 'price' && pulse.formats && pulse.formats.length) ? pulse.formats : null;
-        var nameTx = escapeHtml(m.label) +
-            (id === 'cpf' ? ` <span id="pw-cpf-i" class="pw-hintq${pwCpfHintOpen ? ' on' : ''}">?</span>` : '') +
-            (_pfm ? ` <i class="ti ti-chevron-down pw-pch${pwPriceOpen ? ' up' : ''}"></i>` : '');
-        var rowTx = `<div class="pw-r${_pfm ? ' pw-tap' : ''}${id === 'cpf' ? ' pw-nline' : ''}"${_pfm ? ' id="pw-price-row"' : ''}><span class="n">${nameTx}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
-        if (_pfm) rowTx += pwPricePanel(pulse);
-        if (id === 'cpf') {
-            var _th = (typeof window.t === 'function') ? window.t : function (x) { return x; };
-            rowTx += `<div class="pw-hintbox${pwCpfHintOpen ? ' open' : ''}" id="pw-cpf-hint"><div class="in">` +
-                escapeHtml(_th(TR('Точный CPF считается по замерам сделок: при размещении рекламы подключай ссылку отслеживания — подписки атрибутируются автоматически.'))) +
-                `</div></div>`;
-        }
-        return rowTx;
+        return `<div class="pw-r"><span class="n">${escapeHtml(m.label)}</span><span class="rv">${sub}<span class="v${vcls}">${valTx}</span></span></div>`;
     }).join('');
     pwCountUp(grid);
-    var cpfI = document.getElementById('pw-cpf-i');
-    if (cpfI) cpfI.onclick = () => {
-        hapticLight();
-        pwCpfHintOpen = !pwCpfHintOpen;
-        cpfI.classList.toggle('on', pwCpfHintOpen);
-        var hb = document.getElementById('pw-cpf-hint');
-        if (hb) hb.classList.toggle('open', pwCpfHintOpen);
-    };
-    var prow = document.getElementById('pw-price-row');
-    if (prow) prow.onclick = () => {
-        hapticLight();
-        pwPriceOpen = !pwPriceOpen;
-        var bx = document.getElementById('pw-price-box');
-        if (bx) bx.classList.toggle('open', pwPriceOpen);
-        var ch = prow.querySelector('.pw-pch');
-        if (ch) ch.classList.toggle('up', pwPriceOpen);
-    };
     var gear = document.getElementById('pw-mgear');
     if (gear) gear.onclick = (e) => { e.stopPropagation(); hapticLight(); pwOpenPicker(pulse); };
     pwRenderMini(pulse);
@@ -1021,14 +891,6 @@ function pwRenderMini(pulse) {
         chips.push('<span class="chip"><b class="num" style="color:' + col + ';">' + pulse.reach_rate + '%</b>' +
             '<span>ERR</span></span>');
     }
-    if (pulse.cpm != null) {
-        chips.push('<span class="chip"><b class="num">' + pwRub(pulse.cpm) + ' \u20bd</b><span>CPM</span></span>');
-    }
-    if (pulse.cpf_fact != null) {
-        chips.push('<span class="chip"><b class="num">\u2248' + pwRub(pulse.cpf_fact) + ' \u20bd</b><span>CPF</span></span>');
-    } else if (pulse.cpf_low != null && pulse.cpf_high != null) {
-        chips.push('<span class="chip"><b class="num">\u2248' + pwRub(Math.sqrt(pulse.cpf_low * pulse.cpf_high)) + ' \u20bd</b><span>CPF</span></span>');
-    }
     if (!chips.length && pulse.subscribers != null) {
         chips.push('<span class="chip"><b class="num">' + pulse.subscribers.toLocaleString('ru-RU') + '</b><span>' + escapeHtml(_tm(TR('Подписчики'))) + '</span></span>');
     }
@@ -1046,12 +908,7 @@ function pwOpenPicker(pulse) {
         + '<div class="pw-sheet-list">'
         + PW_CATALOG.map(m => {
             var v = m.get(pulse), has = v != null, on = sel.has(m.id);
-            var prev = '';
-            if (has) {
-                if (m.id === 'price') prev = pwRangeTx(pulse.price_low, pulse.price_high) || '';
-                else if (m.id === 'cpf') prev = pwRangeTx(pulse.cpf_low, pulse.cpf_high) || '';
-                else prev = pwPreview(v, m.o);
-            }
+            var prev = has ? pwPreview(v, m.o) : '';
             return '<button class="pw-opt' + (on ? ' on' : '') + (has ? '' : ' nodata') + '" data-id="' + m.id + '" type="button">'
                 + '<span class="pw-opt-tx"><span class="pw-opt-l">' + escapeHtml(m.label) + '</span>'
                 + '<span class="pw-opt-v">' + (has ? escapeHtml(prev) : TR('нет данных')) + '</span></span>'
@@ -2364,7 +2221,6 @@ const PLACEHOLDER_CONFIG = {
     content_plan: { title: TR('Контент-план'), text: TR('AI составит план постов на неделю. Скоро запустим.'), icon: 'calendar' },
     ai_audit: { title: TR('AI-аудит канала'), text: TR('Полный разбор: что работает, что нет, план роста на 30 дней. Скоро запустим.'), icon: 'target' },
     competitor_analysis: { title: TR('Анализ конкурентов'), text: TR('Что у них набирает охват и почему. Функция готовится к запуску.'), icon: 'search' },
-    post_price: { title: TR('Цена поста'), text: TR('Калькулятор справедливой цены по реальным метрикам канала. Скоро готово.'), icon: 'calculator' },
     negotiation_templates: { title: TR('Шаблоны переговоров'), text: TR('3 варианта ответа рекламодателю: деловой, дружелюбный, твёрдый. Скоро запустим.'), icon: 'message-circle' },
     profile: { title: TR('Forge и покупки'), text: TR('Баланс Forge, пакеты пополнения, история. Скоро запустим.'), icon: 'user-circle' },
     voice_settings: { title: TR('Стиль канала'), text: TR('Настрой как AI пишет под твой стиль: загрузи 3-5 постов или опиши канал. Скоро готово.'), icon: 'microphone' },
@@ -2398,14 +2254,6 @@ function handleAction(actionId) {
         if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         if (typeof window.__openAudit === 'function') {
             window.__openAudit();
-        }
-        return;
-    }
-
-    if (actionId === 'commercial_audit') {
-        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        if (typeof window.__openAudit === 'function') {
-            window.__openAudit(null, 'deep');
         }
         return;
     }
@@ -2751,10 +2599,9 @@ const FW_PRICE_EXPLAIN = {
     modify: TR('Точечная доработка готового поста по инструкции: сменить тон, сократить, расширить, переписать фрагмент. Пост не пересобирается с нуля — правится только указанное.'),
     rewrite: TR('Переработка чужого поста в уникальный текст под стиль твоего канала: смысл и факты сохраняются, структура и формулировки — новые.'),
     voice: TR('Анализ опубликованных постов канала и настройка профиля стиля: тон, лексика, структура, оформление. Профиль применяется ко всем последующим генерациям.'),
-    channel_analyze: TR('Оценка чужого канала перед покупкой рекламы: вердикт с баллом доверия, реальный охват против заявленного, портрет аудитории, красные флаги, справедливая цена размещения и прогноз отдачи. Готовая позиция для переговоров с продавцом.'),
+    channel_analyze: TR('Оценка чужого канала перед покупкой рекламы: вердикт с баллом доверия, реальный охват против заявленного, портрет аудитории, красные флаги и прогноз отдачи. Готовый список того, что оговорить с продавцом до оплаты.'),
     adpick: TR('Подбор площадок под закуп рекламы: сбор кандидатов с проверенными метриками — охват, вовлечённость, доля рекламы в ленте, динамика подписчиков — и ранжирование лучших с оценкой совпадения аудитории и обоснованием по цифрам.'),
-    audit: TR('Полный аудит твоего канала: балл по контенту, охвату, регулярности и монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места с оценкой потерь, прогноз развития и пошаговый план с дедлайнами.'),
-    deep_audit: TR('Коммерческий аудит канала как рекламной площадки: позиция среди каналов ниши, цена размещения против рыночной вилки, качество трафика с проверкой на накрутку, аудитория как аргумент в продаже, рекомендованные цены форматов и потенциал дохода в месяц.'),
+    audit: TR('Полный аудит твоего канала: балл по контенту, охвату, регулярности и готовности к монетизации; разбор лучшего и худшего поста, работающие и проваливающиеся темы, лучшее время публикаций, слабые места, прогноз развития и пошаговый план с дедлайнами.'),
     competitors: TR('Поиск и разбор каналов-конкурентов: карта ниши, сравнение с каждым по охвату, частоте и подписчикам, приёмы, которые приносят им результат, твои пробелы и план действий, чтобы их закрыть.'),
     promo_burst24: TR('Кратковременный подъём твоего оффера в платной полосе ленты Площадки на сутки. Открывает стиль «Свечение» на время продвижения. Покупается на оффере: Площадка → Мои офферы → «Продвинуть».'),
     promo_burst48: TR('Подъём оффера в платной полосе ленты на двое суток. Открывает стиль «Свечение» на время продвижения. Всплесков 24 и 48 ч вместе — не больше 3 в месяц.'),
@@ -3078,13 +2925,13 @@ const TFC_SHORT = {
     modify: TR('Правка поста'), rewrite: TR('Рерайт поста'),
     cover_own: TR('Обложка к посту'), creative_build: TR('Ролик из поста'),
     voice: TR('Настройка стиля'), adpick: TR('Подбор каналов'),
-    channel_analyze: TR('AI-разбор'), audit: TR('AI-аудит'), deep_audit: TR('Коммерческий аудит'),
+    channel_analyze: TR('AI-разбор'), audit: TR('AI-аудит'),
     competitors: TR('Анализ конкурентов'),
 };
 const TFC_MAX = { generate: 300, generate_std: 400, generate_proofs: 100,
     cover_own: 400, creative_build: 100,
     generate_std_proofs: 100, research_attach: 100, rewrite: 100, modify: 200, voice: 20,
-    adpick: 45, channel_analyze: 45, audit: 30, deep_audit: 20, competitors: 20,
+    adpick: 45, channel_analyze: 45, audit: 30, competitors: 20,
     promo_burst24: 30, promo_burst48: 30, promo_week: 20, promo_month: 12,
     ai_strategy: 3, strategy_renewal: 12 };
 const TFC_PRESETS = [

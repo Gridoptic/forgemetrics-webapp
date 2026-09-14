@@ -4,7 +4,6 @@
     var AD = function (s) { return (typeof window.t === 'function') ? window.t(s) : s; };
 
     var _channelId = null;
-    var _entryMode = null;
     var _currentAuditId = null;
     var _pollTimer = null;
     var _pollAttempts = 0;
@@ -59,15 +58,6 @@
         if (n >= 10000) return Math.floor(n / 1000) + AD('к');
         if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + AD('к');
         return String(Math.round(n));
-    }
-
-    function _rub(n) {
-        if (n == null || isNaN(n)) return null;
-        try {
-            return Number(n).toLocaleString('ru-RU') + ' ₽';
-        } catch (e) {
-            return Math.round(Number(n)) + ' ₽';
-        }
     }
 
     function _zone(score) {
@@ -167,7 +157,7 @@
     }
 
     function headerHtml(title) {
-        var t = title || (_entryMode === 'deep' ? AD('Коммерческий аудит') : AD('AI-аудит канала'));
+        var t = title || AD('AI-аудит канала');
         return '' +
             '<div class="audit-header">' +
                 '<button class="audit-back" id="audit-back-btn"><i class="ti ti-arrow-left"></i></button>' +
@@ -301,7 +291,7 @@
                     introFeat('chart-arcs', AD('Оценка и разбивка'), AD('Где сильно, где проседает')) +
                     introFeat('bulb', AD('Главный инсайт'), AD('То, что ты сам не видишь')) +
                     introFeat('trending-up', AD('Прогноз на 90 дней'), AD('Что будет, если менять и если нет')) +
-                    introFeat('coin', AD('Деньги'), AD('Цена рекламы и потенциал')) +
+                    introFeat('coin', AD('Монетизация'), AD('Готовность канала к продаже рекламы')) +
                     introFeat('list-check', AD('План роста'), AD('Конкретные шаги с дедлайнами')) +
                 '</div>' +
                 limitBarHtml(limits) +
@@ -320,70 +310,6 @@
         });
     }
 
-    function _caDiff(icon, cls, title, text) {
-        return '<div class="ca-dr"><div class="ca-dico ' + cls + '"><i class="ti ti-' + icon + '"></i></div>' +
-            '<div><b>' + _esc(title) + '</b><p>' + _esc(text) + '</p></div></div>';
-    }
-
-    function renderCommercialIntro(limits) {
-        var host = ensureScreen();
-        var canDeep = limits && (limits.can_run_deep || limits.is_tester);
-        var priceDeep = limits ? Number(limits.price_deep || 0) : 0;
-        var ctaHtml;
-        if (canDeep) {
-            ctaHtml = '<button class="audit-deep-btn" id="ca-start"><i class="ti ti-briefcase"></i>' +
-                '<span>' + AD('Запустить коммерческий аудит ·') + ' ' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 12) + '</span></button>';
-        } else {
-            ctaHtml = '<div class="ca-ctarow"><span class="l">' + AD('Списывается с баланса · отчёт сохраняется') + '</span><b>' + (window.forgeAmount || function (n) { return String(n); })(priceDeep, 13) + '</b></div>' +
-                '<button class="audit-deep-btn" id="ca-buy">' + window.forgeIco(13) + '<span>' + AD('Пополнить баланс') + '</span></button>';
-        }
-        host.innerHTML = headerHtml(AD('Коммерческий аудит')) +
-            '<div class="audit-body">' +
-                '<div class="ca-hero">' +
-                    '<div class="ca-htop">' +
-                        '<div class="ca-hico"><i class="ti ti-briefcase"></i></div>' +
-                        '<div><div class="ca-hname">' + AD('Сколько стоит твоя площадка') + '</div>' +
-                        '<div class="ca-hsub">' + AD('Оценка канала как рекламной площадки — глазами рекламодателя') + '</div></div>' +
-                    '</div>' +
-                    '<div class="ca-hprev">' +
-                        '<div class="l"><span>' + AD('Пример: охват поста') + '</span><b>' + AD('топ-18% ниши') + '</b></div>' +
-                        '<div class="ca-hbar"><i></i></div>' +
-                        '<div class="cap">' + AD('Так выглядит твоя позиция среди всех каналов ниши — эти цифры не видны ни в карточках Площадки, ни в обычном разборе') + '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="ca-secl">' + AD('Чего нет больше нигде') + '</div>' +
-                '<div class="ca-diff">' +
-                    _caDiff('chart-bar', 'g', AD('Позиция канала на рынке ниши'),
-                        AD('Место по охвату, вовлечённости и цене среди всех каналов ниши — в формате «охват в топ-18%». Карточки Площадки показывают чужие метрики — здесь видно положение собственной площадки на их фоне.')) +
-                    _caDiff('wallet', 'a', AD('Аудит прайса и упущенный доход'),
-                        AD('Рыночная вилка стоимости размещения под фактический охват, рекомендованная цена каждого формата и оценка недополученного дохода за месяц при текущем прайсе.')) +
-                    _caDiff('shield-check', 'v', AD('Верификация качества трафика'),
-                        AD('Кривая набора просмотров с вердиктом о накрутке — объективный аргумент в переговорах, закрывающий главное возражение рекламодателя.')) +
-                '</div>' +
-                '<div class="ca-inc">' +
-                    '<div class="t">' + AD('Также в отчёте') + '</div>' +
-                    '<div class="ca-chips">' +
-                        '<span class="ca-chip"><i class="ti ti-users"></i> <span>' + AD('Гео, пол и язык аудитории') + '</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-layout-grid"></i> <span>' + AD('Форматы, которые работают') + '</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-clock"></i> <span>' + AD('Пиковые часы охвата') + '</span></span>' +
-                        '<span class="ca-chip"><i class="ti ti-list-check"></i> <span>' + AD('План продаж на 30 дней') + '</span></span>' +
-                    '</div>' +
-                '</div>' +
-                ctaHtml +
-                '<div class="audit-intro-foot">' + AD('Отчёт формируется за 20–40 секунд и сохраняется в истории разборов') + '</div>' +
-            '</div>';
-        attachBack(host);
-
-        var s = host.querySelector('#ca-start');
-        if (s) s.addEventListener('click', function () { _haptic('medium'); startAudit(true); });
-        var b = host.querySelector('#ca-buy');
-        if (b) b.addEventListener('click', function () {
-            _haptic('medium');
-            closeAudit();
-            if (typeof openCabinet === 'function') openCabinet('forge');
-        });
-    }
-
     function introFeat(icon, title, sub) {
         return '' +
             '<div class="audit-intro-feat">' +
@@ -395,10 +321,10 @@
             '</div>';
     }
 
-    function startAudit(deep) {
+    function startAudit() {
         if (!_channelId) return;
         showThinking();
-        apiRequest('/api/v1/channels/' + _channelId + '/audit/start' + (deep ? '?deep=1' : ''), { method: 'POST' })
+        apiRequest('/api/v1/channels/' + _channelId + '/audit/start', { method: 'POST' })
             .then(function (res) {
                 _currentAuditId = res && res.audit_id;
                 if (!_currentAuditId) {
@@ -519,7 +445,6 @@
     function renderReport(audit) {
         var host = ensureScreen();
         var r = (audit && audit.report) || {};
-        if (r.deep) { renderDeepReport(audit, r); return; }
         var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
         var zone = _zone(score);
 
@@ -549,232 +474,6 @@
         attachAccordion(host);
         animateScore(score, zone, r);
         loadRerunNote();
-    }
-
-    function _daNum(n) {
-        if (n == null) return '';
-        try { return Number(n).toLocaleString('ru-RU'); } catch (e) { return String(n); }
-    }
-
-    function _daSection(icon, title, hint, inner) {
-        return '<div class="audit-card da-card">' +
-            '<div class="da-sechead"><span class="da-ic">' + icon + '</span><b>' + _esc(title) + '</b>' +
-            (hint ? '<span class="da-hint">' + _esc(hint) + '</span>' : '') + '</div>' + inner + '</div>';
-    }
-
-    function _daPctRow(label, pct, accent) {
-        if (pct == null) return '';
-        var top = Math.max(1, 100 - pct);
-        var col = accent ? 'linear-gradient(90deg,#2b8f6f,#5DCAA5)' : 'linear-gradient(90deg,#4649b8,#6366f1)';
-        return '<div class="da-pctrow"><div class="da-pctlbl"><span>' + _esc(label) + '</span>' +
-            '<span' + (accent ? ' style="color:#5DCAA5"' : '') + '>топ-' + top + '%</span></div>' +
-            '<div class="da-bar"><i style="width:' + pct + '%;background:' + col + '"></i></div></div>';
-    }
-
-    function renderDeepHero(r, score) {
-        var v = _g(r, 'verdict', {}) || {};
-        var pctFill = (score != null) ? Math.max(0, Math.min(100, score)) : 0;
-        var rows = '';
-        var defs = [
-            ['#5DCAA5', AD('Сильное'), v.strong],
-            ['#ef4444', AD('Слабое'), v.weak],
-            ['#f0b45a', AD('Главное действие'), v.action],
-        ];
-        defs.forEach(function (d) {
-            if (!_hasText(d[2])) return;
-            rows += '<div class="da-vrow"><span class="da-vdot" style="background:' + d[0] + '"></span>' +
-                '<span><b>' + _esc(d[1]) + ':</b> ' + _esc(d[2]) + '</span></div>';
-        });
-        return '<div class="da-hero">' +
-            '<span class="da-badge">' + AD('◆ Коммерческий аудит') + '</span>' +
-            '<div class="da-herorow"><div class="da-herotxt">' +
-            '<div class="da-heroname">' + AD('Коммерческий разбор площадки') + '</div>' +
-            '<div class="da-herosub">' + AD('позиция в нише · качество трафика · цены') + '</div></div>' +
-            (score != null
-                ? '<div class="da-ring" style="background:conic-gradient(#f0b45a 0 ' + pctFill + '%,rgba(255,255,255,0.08) ' + pctFill + '% 100%)"><i>' + score + '</i></div>'
-                : '') +
-            '</div>' +
-            (rows ? '<div class="da-vrd">' + rows + '</div>' : '') +
-            '</div>';
-    }
-
-    function renderDeepPosition(r) {
-        var d = (r.data || {});
-        var pct = d.pct || {};
-        var price = d.price || {};
-        var inner = '';
-        inner += _daPctRow(AD('Охват поста'), pct.reach, pct.reach != null && pct.reach >= 70);
-        inner += _daPctRow(AD('Вовлечённость (ER)'), pct.er, pct.er != null && pct.er >= 70);
-        inner += _daPctRow(AD('Частота выхода постов'), pct.freq, pct.freq != null && pct.freq >= 70);
-        if (!inner) inner = '<div class="da-empty">' + AD('Недостаточно данных ниши для сравнения') + '</div>';
-        if (price.lo && price.hi) {
-            var lo = price.min || Math.round(price.lo * 0.7);
-            var hi = price.max || Math.round(price.hi * 1.25);
-            var span = Math.max(1, hi - lo);
-            var youHtml = '';
-            if (price.now) {
-                var x = Math.max(2, Math.min(98, Math.round((price.now - lo) * 100 / span)));
-                youHtml = '<span class="da-youl" style="left:' + x + '%">ты · ' + _daNum(price.now) + ' ₽</span>' +
-                    '<span class="da-you" style="left:' + x + '%"></span>';
-            }
-            inner += '<div class="da-pricebox">' +
-                '<div class="da-pt">' + AD('Цена поста 1/24 против рыночной вилки ниши') + '</div>' +
-                '<div class="da-range">' + youHtml + '</div>' +
-                '<div class="da-rangel"><span>' + _daNum(lo) + ' ₽</span>' +
-                '<span>' + AD('вилка') + ' ' + _daNum(price.lo) + '–' + _daNum(price.hi) + ' ₽</span>' +
-                '<span>' + _daNum(hi) + '+</span></div>' +
-                (_hasText(r.position_note) ? '<div class="da-note">' + _esc(r.position_note) + '</div>' : '') +
-                '</div>';
-        } else if (_hasText(r.position_note)) {
-            inner += '<div class="da-note" style="margin-top:10px">' + _esc(r.position_note) + '</div>';
-        }
-        var pool = d.pool ? ((d.pool_wide ? AD('вся база · ') : '') + d.pool + AD(' каналов')) : '';
-        return _daSection('▦', AD('Позиция в нише'), pool, inner);
-    }
-
-    function renderDeepTraffic(r) {
-        var d = (r.data || {});
-        var curve = (d.curve || {});
-        var flag = curve.flag;
-        var pts = curve.points || null;
-        if (!flag && !pts && !_hasText(r.traffic_note)) return '';
-        var pill;
-        if (flag === 'clean' || (!flag && pts)) {
-            pill = '<span class="da-pill da-pill-ok">' + AD('● Трафик живой') + '</span>';
-        } else if (flag) {
-            pill = '<span class="da-pill da-pill-warn">' + AD('● Есть признаки накрутки') + '</span>';
-        } else {
-            pill = '<span class="da-pill da-pill-mute">' + AD('● Замеры кривой ещё копятся') + '</span>';
-        }
-        var svg = '';
-        if (pts && typeof pts === 'object') {
-            var arr = [];
-            Object.keys(pts).forEach(function (k) {
-                var h = parseFloat(k);
-                if (!isNaN(h) && typeof pts[k] === 'number') arr.push([h, pts[k]]);
-            });
-            arr.sort(function (a, b) { return a[0] - b[0]; });
-            if (arr.length >= 3) {
-                var maxH = arr[arr.length - 1][0];
-                var line = arr.map(function (p) {
-                    var x = Math.round(4 + (Math.sqrt(p[0]) / Math.sqrt(maxH)) * 112);
-                    var y = Math.round(56 - (Math.min(100, p[1]) / 100) * 50);
-                    return x + ',' + y;
-                }).join(' ');
-                svg = '<svg width="120" height="64" viewBox="0 0 120 64">' +
-                    '<polyline points="4,56 ' + line + '" fill="none" stroke="#5DCAA5" stroke-width="2.5" stroke-linecap="round"/>' +
-                    '<text x="2" y="63" fill="#565b73" font-size="7">' + AD('старт') + '</text>' +
-                    '<text x="100" y="63" fill="#565b73" font-size="7">' + Math.round(maxH) + AD('ч') + '</text></svg>';
-            }
-        }
-        var inner = '<div class="da-fraud">' + svg +
-            '<div class="da-fraudtxt">' + pill +
-            (_hasText(r.traffic_note) ? '<div class="da-note" style="margin-top:6px">' + _esc(r.traffic_note) + '</div>' : '') +
-            '</div></div>';
-        return _daSection('✓', AD('Проверка трафика'), AD('кривая набора просмотров'), inner);
-    }
-
-    function renderDeepAudience(r) {
-        var d = (r.data || {});
-        var a = d.audience || {};
-        var tiles = '';
-        if (a.geo) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.geo).toUpperCase()) + '</div><div class="l">' + AD('ОСНОВНОЕ ГЕО') + '</div></div>';
-        if (a.female_pct != null) {
-            var male = 100 - a.female_pct;
-            tiles += '<div class="da-demtile"><div class="v">' + (male >= 50 ? AD('М ') + male : AD('Ж ') + a.female_pct) + '%</div><div class="l">' + AD('ПОЛ АУДИТОРИИ') + '</div></div>';
-        }
-        if (a.lang) tiles += '<div class="da-demtile"><div class="v">' + _esc(String(a.lang).toUpperCase()) + '</div><div class="l">' + AD('ЯЗЫК') + '</div></div>';
-        if (!tiles && !_hasText(r.audience_note)) return '';
-        var inner = (tiles ? '<div class="da-demrow">' + tiles + '</div>' : '<div class="da-empty">' + AD('Портрет аудитории ещё собирается') + '</div>') +
-            (_hasText(r.audience_note) ? '<div class="da-insight">' + _esc(r.audience_note) + '</div>' : '');
-        return _daSection('◉', AD('Аудитория'), AD('гео · пол · язык'), inner);
-    }
-
-    function renderDeepContent(r) {
-        var c = _g(r, 'content', {}) || {};
-        var d = (r.data || {});
-        var rows = '';
-        (c.top || []).slice(0, 3).forEach(function (f) {
-            rows += '<div class="da-fmt"><span class="da-tag da-tag-top">' + AD('ТОП') + '</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
-                (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#5DCAA5">' + _esc(f.metric) + '</span>' : '') + '</div>' +
-                (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
-        });
-        (c.weak || []).slice(0, 2).forEach(function (f) {
-            rows += '<div class="da-fmt"><span class="da-tag da-tag-weak">' + AD('СЛАБО') + '</span><span class="da-fmtl">' + _esc(f.label || '') + '</span>' +
-                (_hasText(f.metric) ? '<span class="da-fmtm" style="color:#f87171">' + _esc(f.metric) + '</span>' : '') + '</div>' +
-                (_hasText(f.note) ? '<div class="da-fmtnote">' + _esc(f.note) + '</div>' : '');
-        });
-        var hoursHtml = '';
-        var hrs = d.hours || [];
-        if (hrs.length) {
-            var cells = '';
-            hrs.forEach(function (b) {
-                var op = Math.max(0.05, Math.min(0.85, (b.w || 0) * 0.85));
-                cells += '<div class="da-h"><div class="da-hc" style="background:rgba(93,202,165,' + op.toFixed(2) + ')"></div>' + _esc(b.h) + '</div>';
-            });
-            hoursHtml = '<div class="da-hours">' + cells + '</div>' +
-                '<div class="da-hourslbl">' + AD('относительный охват по времени выхода (UTC)') + '</div>' +
-                (_hasText(c.hours_note) ? '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>' : '');
-        } else if (_hasText(c.hours_note)) {
-            hoursHtml = '<div class="da-note" style="margin-top:7px">' + _esc(c.hours_note) + '</div>';
-        }
-        if (!rows && !hoursHtml) return '';
-        return _daSection('▤', AD('Контент: что работает'), AD('по последним постам'), rows + hoursHtml);
-    }
-
-    function renderDeepMonetize(r) {
-        var m = _g(r, 'monetize', {}) || {};
-        var rows = '';
-        (m.formats || []).slice(0, 4).forEach(function (f) {
-            rows += '<div class="da-mon"><span>' + _esc(f.label || '') + '</span><span class="da-monp">' +
-                (f.price_now_rub ? '<s>' + _daNum(f.price_now_rub) + '</s> ' : '') +
-                _daNum(f.price_reco_rub) + ' ₽</span></div>';
-        });
-        var fc = '';
-        if (m.monthly_lo_rub && m.monthly_hi_rub) {
-            fc = '<div class="da-fc"><div class="t">' + AD('Потенциал дохода') + '</div>' +
-                '<div class="v">' + _daNum(m.monthly_lo_rub) + ' – ' + _daNum(m.monthly_hi_rub) + ' ' + AD('₽/мес') + '</div>' +
-                ((_hasText(m.note) || _hasText(m.stage))
-                    ? '<div class="s">' + _esc(m.note || '') + (_hasText(m.stage) ? AD(' Стадия: ') + _esc(m.stage) + '.' : '') + '</div>'
-                    : '') + '</div>';
-        } else if (_hasText(m.note)) {
-            fc = '<div class="da-note" style="margin-top:9px">' + _esc(m.note) + '</div>';
-        }
-        if (!rows && !fc) return '';
-        return _daSection('₽', AD('Монетизация'), AD('честные цены форматов'), rows + fc);
-    }
-
-    function renderDeepPlan(r) {
-        var plan = _g(r, 'plan', []) || [];
-        if (!plan.length) return '';
-        var pmap = { critical: [AD('критично'), 'da-pri-c'], important: [AD('важно'), 'da-pri-i'], minor: [AD('не срочно'), 'da-pri-m'] };
-        var rows = '';
-        plan.slice(0, 7).forEach(function (p, i) {
-            var pri = pmap[p.pri] || null;
-            rows += '<div class="da-plan"><span class="da-plann">' + (i + 1) + '</span><span>' + _esc(p.text || '') +
-                (pri ? '<span class="da-pri ' + pri[1] + '">' + pri[0] + '</span>' : '') + '</span></div>';
-        });
-        return _daSection('➤', AD('План на 30 дней'), '', rows);
-    }
-
-    function renderDeepReport(audit, r) {
-        var host = ensureScreen();
-        var score = (audit && audit.score != null) ? audit.score : _g(r, 'score', null);
-        var dq = _g(r, 'data_quality', {}) || {};
-        var html = headerHtml(AD('Коммерческий аудит')) +
-            '<div class="audit-body" id="audit-report-body">' +
-                renderDeepHero(r, score) +
-                renderDeepPosition(r) +
-                renderDeepTraffic(r) +
-                renderDeepAudience(r) +
-                renderDeepContent(r) +
-                renderDeepMonetize(r) +
-                renderDeepPlan(r) +
-                (_hasText(dq.confidence_note)
-                    ? '<div class="da-foot">' + _esc(dq.confidence_note) + '</div>' : '') +
-            '</div>';
-        host.innerHTML = html;
-        attachBack(host);
     }
 
     function confirmRerun() {
@@ -1077,11 +776,9 @@
         var items = Array.isArray(sec.items) ? sec.items : [];
         var rows = items.map(function (it) {
             if (!it || !_hasText(it.text)) return '';
-            var money = _hasText(it.money_lost_rub) ? '<div class="audit-item-money"><i class="ti ti-cash-banknote"></i>' + _esc(it.money_lost_rub) + '</div>' : '';
             return '<div class="audit-item">' +
                 '<div class="audit-item-head">' + _priorityBadge(it.priority) + '<span class="audit-item-text">' + _esc(it.text) + '</span></div>' +
                 (_hasText(it.impact) ? '<div class="audit-item-ev">' + _esc(it.impact) + '</div>' : '') +
-                money +
                 '</div>';
         }).join('');
         return rows || '';
@@ -1092,34 +789,8 @@
         var rd = readyMap[sec.ready];
         var readyHtml = rd ? '<div class="audit-money-ready audit-money-' + rd.c + '">' + _esc(rd.t) + '</div>' : '';
         var reason = _hasText(sec.reason) ? '<div class="audit-item-ev">' + _esc(sec.reason) + '</div>' : '';
-
-        var priceMin = _g(sec, 'ad_price_range_rub.min', null);
-        var priceMax = _g(sec, 'ad_price_range_rub.max', null);
-        var potMin = _g(sec, 'monthly_potential_rub.min', null);
-        var potMax = _g(sec, 'monthly_potential_rub.max', null);
-
-        var priceHtml = '';
-        if (priceMin != null || priceMax != null) {
-            priceHtml = '<div class="audit-money-row"><span class="audit-money-k">' + AD('Цена рекламы') + '</span><span class="audit-money-v">' +
-                rangeRub(priceMin, priceMax) + '</span></div>';
-        }
-        var potHtml = '';
-        if (potMin != null || potMax != null) {
-            potHtml = '<div class="audit-money-row"><span class="audit-money-k">' + AD('Потенциал в месяц') + '</span><span class="audit-money-v">' +
-                rangeRub(potMin, potMax) + '</span></div>';
-        }
-        if (!readyHtml && !reason && !priceHtml && !potHtml) return '';
-        return readyHtml + reason + priceHtml + potHtml;
-    }
-
-    function rangeRub(min, max) {
-        var a = _rub(min);
-        var b = _rub(max);
-        if (a && b) {
-            if (min === max) return _esc(a);
-            return _esc((Number(min)).toLocaleString('ru-RU') + '–' + b);
-        }
-        return _esc(a || b || '—');
+        if (!readyHtml && !reason) return '';
+        return readyHtml + reason;
     }
 
     function actionPlanBody(sec) {
@@ -1239,12 +910,11 @@
             });
     }
 
-    window.__openAudit = function (channelId, mode) {
-        _entryMode = mode || null;
+    window.__openAudit = function (channelId) {
         if (channelId != null) {
             _channelId = channelId;
             showLoading(AD('Загружаю аудит...'));
-            loadEntry(_channelId, mode);
+            loadEntry(_channelId);
             return;
         }
         showLoading(AD('Загружаю аудит...'));
@@ -1257,25 +927,20 @@
                     return;
                 }
                 _channelId = id;
-                loadEntry(id, mode);
+                loadEntry(id);
             })
             .catch(function () {
                 showFatalError(AD('Не удалось определить канал. Попробуй из «Мои каналы».'), { icon: 'ti-alert-triangle' });
             });
     };
 
-    function loadEntry(channelId, mode) {
+    function loadEntry(channelId) {
         var limitsP = apiRequest('/api/v1/audits/limits').catch(function () { return null; });
         var latestP = apiRequest('/api/v1/channels/' + channelId + '/audit/latest').catch(function () { return null; });
         Promise.all([limitsP, latestP]).then(function (res) {
             var limits = res[0];
             var latest = res[1];
             var hasReport = latest && latest.found && latest.audit && latest.audit.report;
-            if (mode === 'deep') {
-                if (hasReport && latest.audit.report.deep) renderReport(latest.audit);
-                else renderCommercialIntro(limits);
-                return;
-            }
             if (hasReport) {
                 renderReport(latest.audit);
             } else {

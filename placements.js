@@ -127,10 +127,6 @@
             '.pl-cpfcap{font-size:10px;color:#8990a8;margin-top:4px;}',
             '.pl-heror{margin-left:auto;text-align:right;min-width:0;}',
             '.pl-heror .v{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}',
-            '.pl-btrack{position:relative;height:7px;border-radius:4px;background:linear-gradient(90deg,rgba(93,202,165,0.55),rgba(245,158,11,0.5),rgba(239,68,68,0.5));margin-top:13px;}',
-            '.pl-bmark{position:absolute;top:-3.5px;width:3px;height:14px;border-radius:2px;background:#fff;box-shadow:0 0 0 2.5px rgba(255,255,255,0.18);}',
-            '.pl-blabs{display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#565b73;margin-top:5px;}',
-            '.pl-blabs span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
             '.pl-f4g{display:grid;gap:1px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;margin-top:13px;}',
             '.pl-f4g.n2{grid-template-columns:repeat(2,1fr);}',
             '.pl-f4g.n3{grid-template-columns:repeat(3,1fr);}',
@@ -642,25 +638,6 @@
         }
     }
 
-    function cpfBand(l) {
-        var joinedN = l.joined || 0;
-        var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
-        var imp = effImp(l);
-        if (l.cpf == null || !(imp > 0) || !joinedN || badImp) return null;
-        var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
-        var fk = { post: 1, pin: 1.5, story: 0.7, circle: 0.7, repost: 0.5, other: 1 }[l.placement_format] || 1;
-        var lo = Math.max(1, Math.round(imp / 1000 * bandLo * fk / joinedN));
-        var hi = Math.max(lo + 1, Math.round(imp / 1000 * bandHi * fk / joinedN));
-        return { lo: lo, hi: hi, hasBand: !!(l.cpm_lo && l.cpm_hi) };
-    }
-
-    function cpfColor(l) {
-        var b = cpfBand(l);
-        if (!b || l.cpf == null) return '#e8e8ed';
-        if (l.cpf <= (b.lo + b.hi) / 2) return '#5DCAA5';
-        return l.cpf <= b.hi * 4 / 3 ? '#f5bf4f' : '#ef4444';
-    }
-
     function attrWin(l) {
         if (!l.attribution_until) return '';
         var end = new Date(l.attribution_until);
@@ -709,7 +686,7 @@
         var priceLn = l.price_rub
             ? '<u>' + num(l.price_rub) + ' ₽</u><s>' + esc(T('Цена')) + '</s>' : '';
         var right = l.cpf != null
-            ? '<div class="pl-ecpf"><b style="color:' + (active ? cpfColor(l) : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em>' + priceLn + '</div>'
+            ? '<div class="pl-ecpf"><b style="color:' + (active ? '#e8e8ed' : '#8990a8') + ';">' + rub(l.cpf) + '</b><em>CPF</em>' + priceLn + '</div>'
             : '<div class="pl-ecpf"><b style="color:' + (active ? '#5DCAA5' : '#8990a8') + ';">' + (joinedN ? '+' + num(joinedN) : '0') + '</b><em>' + esc(T('Подписки')) + '</em>' + priceLn + '</div>';
         return '<div class="pl-acc' + (open ? ' open' : '') + '" data-id="' + l.id + '">' +
             '<div class="pl-acch" data-act="exp" data-id="' + l.id + '">' +
@@ -725,22 +702,13 @@
         var active = l.status === 'active';
         var joinedN = l.joined || 0, retN = l.retained_now || 0, leftN = Math.max(0, joinedN - retN);
         var badImp = l.impressions != null && l.clicks != null && l.impressions < l.clicks;
-        var hasBandRaw = !!(l.cpm_lo && l.cpm_hi);
         var needPrice = !l.price_rub;
         var h = '';
         var heroCap = T('цена подписчика') + ' · CPF' + (l.cpf == null && needPrice ? ' · ' + T('нужна цена') : '');
-        h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + (l.cpf != null ? cpfColor(l) : '#565b73') + ';">' + (l.cpf != null ? rub(l.cpf) : '—') + '</div>' +
+        h += '<div class="pl-hero"><div><div class="pl-cpfbig" style="color:' + (l.cpf != null ? '#e8e8ed' : '#565b73') + ';">' + (l.cpf != null ? rub(l.cpf) : '—') + '</div>' +
             '<div class="pl-cpfcap">' + esc(heroCap) + '</div></div>' +
             '<div class="pl-heror"><div class="pl-cpfcap">' + esc(T('Подписались')) + '</div>' +
             '<div class="v" style="color:#5DCAA5;" data-cnt="hjoin' + l.id + '" data-v="' + joinedN + '" data-pre="' + (joinedN ? '+' : '') + '">' + (joinedN ? '+' + num(joinedN) : '0') + '</div></div></div>';
-        var band = cpfBand(l);
-        if (band) {
-            var pos = Math.max(0, Math.min(1, (l.cpf - band.lo) / (band.hi - band.lo)));
-            h += '<div class="pl-btrack"><div class="pl-bmark" style="left:' + (3 + Math.round(pos * 94)) + '%;"></div></div>' +
-                '<div class="pl-blabs"><span>' + num(band.lo) + ' ₽ · ' + esc(T('дешевле нормы')) + '</span>' +
-                '<span>' + esc(T(band.hasBand ? PL('вилка ниши') : PL('рыночный ориентир'))) + '</span>' +
-                '<span>' + num(band.hi) + ' ₽ · ' + esc(T('дороже')) + '</span></div>';
-        }
         var impEff = effImp(l);
         var src = impSrc(l);
         var impEst = src === 'est';
@@ -771,18 +739,8 @@
                 (x.c ? '<div class="c">' + esc(x.c) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
         var mets = [];
-        var cpmWarn = '';
         if (impEff >= 100 && l.price_rub && !badImp) {
-            var cpmV = Math.round(l.price_rub / impEff * 1000);
-            var bandLo = l.cpm_lo || 300, bandHi = l.cpm_hi || 1500;
-            var cpmMid = (bandLo + bandHi) / 2, cpmBad = bandHi * 4 / 3;
-            var cpmCol = cpmV <= cpmMid ? '#5DCAA5' : (cpmV <= cpmBad ? '#f5bf4f' : '#ef4444');
-            mets.push({ k: 'CPM', v: (softEst ? '≈' : '') + rub(cpmV), col: cpmCol });
-            if (cpmV > cpmBad && !softEst) {
-                cpmWarn = '<div class="pl-qwarn">' + esc(hasBandRaw
-                    ? T('CPM этого размещения заметно выше рыночной вилки этой ниши — похоже на переплату.')
-                    : T('CPM этого размещения сильно выше рыночного ориентира (обычно 300–1500 ₽ за 1000 показов) — похоже на переплату.')) + '</div>';
-            }
+            mets.push({ k: 'CPM', v: (softEst ? '≈' : '') + rub(Math.round(l.price_rub / impEff * 1000)) });
         } else {
             mets.push({ k: 'CPM', v: '—', dim: 1,
                         c: (needPrice && !impEff) ? T('нужны цена и показы')
@@ -809,7 +767,6 @@
             '<div><b>' + esc(T('Цена оставшегося')) + '</b> — ' + esc(T('цена ÷ те, кто ещё в канале. Показывает, сколько трафика слилось.')) + '</div>' +
             '<div><b>' + esc(T('Удержание 7 дней')) + '</b> — ' + esc(T('сколько из вступивших остаются в канале через неделю.')) + '</div>' +
             '</div>';
-        h += cpmWarn;
         if (badImp) {
             h += '<div class="pl-qwarn">' + esc(T('Показы меньше числа переходов — похоже на опечатку. Проверь значение в «Показы поста», CPM и CTR пока не считаются.')) + '</div>';
         }

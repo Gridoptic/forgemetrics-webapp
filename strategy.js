@@ -1331,7 +1331,7 @@
     }
     function renderTraffic() {
         var d = _tr || {}, ch = d.channel || {}, g = d.goal || {}, pl = d.platforms || {}, cv = d.conveyor || {},
-            pd = d.paid || {}, dn = d.donors || {}, lk = d.links || {}, rv = d.review || {};
+            dn = d.donors || {}, lk = d.links || {}, rv = d.review || {};
         var growth = (g.growth_30d === null || g.growth_30d === undefined) ? null : g.growth_30d;
         var html = '<div class="stg-trchan"><b>' + esc(ch.title || ('@' + (ch.username || ''))) + '</b>' + (ch.username ? '<span>@' + esc(ch.username) + '</span>' : '') + '</div>';
 
@@ -1391,17 +1391,6 @@
         }
         html += '</div>';
 
-        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-coin"></i></span> ' + esc(T('Платный перелив')) + '</div>' +
-            '<div class="stg-trform" style="margin-top:8px;"><label class="stg-trlab" for="stg-trbudget-inp">' + esc(T('Бюджет, ₽')) + '</label>' +
-            '<input class="stg-inp stg-trinp" id="stg-trbudget-inp" type="number" inputmode="numeric" min="0" step="500" value="' + (pd.budget || 0) + '">' +
-            '<button class="stg-trbtn" data-act="trbudget">' + esc(T('Пересчитать')) + '</button></div>' +
-            '<div class="stg-trbig"><span class="v">≈ ' + num(pd.est_lo || 0) + '–' + num(pd.est_hi || 0) + '</span><span class="u">' + esc(T('подписчиков за')) + ' ' + num(pd.budget || 0) + ' ₽</span></div>' +
-            '<div class="stg-trkv"><span>' + esc(T('CPM ниши')) + '</span><b>' + num(pd.cpm_lo || 0) + '–' + num(pd.cpm_hi || 0) + ' ₽</b>' +
-            '<span>' + esc(T('Цена подписчика')) + '</span><b>' + num(pd.cpf_lo || 0) + '–' + num(pd.cpf_hi || 0) + ' ₽</b>' +
-            '<span>' + esc(T('Конверсия')) + '</span><b>' + trPct(pd.conv_lo) + '–' + trPct(pd.conv_hi) + '% · ' + esc(pd.conv_source === 'deals' ? T('по замерам сделок') : T('норма рынка')) + '</b>' +
-            (pd.placements ? '<span>' + esc(T('Размещений')) + '</span><b>≈ ' + num(pd.placements) + ' · ' + esc(T('медиана цены доноров')) + ' ' + num(pd.donor_median_price) + ' ₽</b>' : '') + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Расчёт: бюджет ÷ цена подписчика. Цена подписчика = CPM ниши ÷ 1000 ÷ конверсия из охвата в подписку.')) + '</div></div>';
-
         var picking = dn.status === 'running' || dn.status === 'analyzing';
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-radar"></i></span> ' + esc(T('Доноры из Радара')) + '</div>';
         if (picking) {
@@ -1409,15 +1398,14 @@
         } else if (dn.picks && dn.picks.length) {
             dn.picks.forEach(function (p) {
                 html += '<div class="stg-trrow"><div class="tx"><b>@' + esc(p.username || '') + '</b><em>' + num(p.subscribers || 0) + ' ' + esc(T('подп.')) +
-                    (p.er ? ' · ER ' + trPct(p.er) + '%' : (p.err ? ' · ERR ' + Math.round(p.err) + '%' : '')) +
-                    (p.price ? ' · ' + num(p.price) + ' ₽' : '') + (p.cpm ? ' · CPM ' + num(p.cpm) : '') + '</em></div>' +
+                    (p.er ? ' · ER ' + trPct(p.er) + '%' : (p.err ? ' · ERR ' + Math.round(p.err) + '%' : '')) + '</em></div>' +
                     (p.match ? '<span class="stg-trchip">' + p.match + '%</span>' : '') + '</div>';
             });
             if (dn.total > dn.picks.length) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ещё')) + ' ' + num(dn.total - dn.picks.length) + ' ' + esc(T('в отчёте подбора')) + '</div>';
         } else if (dn.status === 'empty') {
             html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('В прошлый раз подходящих каналов не нашлось — Радар пополняется, попробуй снова.')) + '</div>';
         } else {
-            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Подбор смотрит каналы твоей ниши в Радаре: живые, без накрутки и рекламного шума, с ценой и CPM.')) + '</div>';
+            html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Подбор смотрит каналы твоей ниши в Радаре: активные, с ровными просмотрами и низкой долей рекламы.')) + '</div>';
         }
         if (!picking) html += '<button class="stg-trbtn wide" data-act="trpick">' + esc(dn.picks && dn.picks.length ? T('Подобрать заново') : T('Подобрать доноров')) + ' · ' + trForge(dn.price || 0) + '</button>';
         html += '</div>';
@@ -1446,7 +1434,7 @@
         } else {
             html += '<div class="stg-note" style="margin-top:8px;">' + esc(T('Сверка появится, когда по ссылкам площадок и размещений пойдут переходы.')) + '</div>';
         }
-        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Стратег сверяет расчёт с фактом раз в неделю и перераспределяет бюджет и задачи.')) + '</div></div>';
+        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Стратег сверяет расчёт с фактом раз в неделю и обновляет задачи.')) + '</div></div>';
 
         setView(html, trHead());
         trPoll();
@@ -1454,7 +1442,6 @@
     function trSave(body) {
         body.channel_id = _trChan;
         if (body.target_add !== undefined && !(body.target_add > 0)) { toast(T('Укажи число')); return; }
-        if (body.budget !== undefined && !(body.budget >= 0)) { toast(T('Укажи число')); return; }
         apiRequest('/api/v1/strategy/traffic', { method: 'POST', body: JSON.stringify(body) }).then(function (r) {
             if (r && r.ok) { haptic('light'); toast(T('Сохранено')); loadTraffic(true); }
             else toast(trErrText(r));
@@ -1540,7 +1527,6 @@
             return true;
         }
         if (act === 'trgoalsave') { trSave({ target_add: parseInt((document.getElementById('stg-trgoal-inp') || {}).value, 10) }); return true; }
-        if (act === 'trbudget') { trSave({ budget: parseInt((document.getElementById('stg-trbudget-inp') || {}).value, 10) }); return true; }
         if (act === 'trvoicecab') {
             haptic('light');
             var vcid = _trChan || (_state && _state.channel_id) || null;
