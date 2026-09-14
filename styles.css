@@ -4950,6 +4950,11 @@ html.cs-modal-open {
 .rf-pbtn:disabled{opacity:.45;cursor:default;}
 .rf-fbtn.ok{color:#34d39e;border-color:rgba(52,211,158,0.4);}
 .rf-fbtn i{font-size:17px;}
+.rf-alt-note{font-size:12px;line-height:1.5;color:var(--rfx2);margin:9px 2px 0;}
+.rf-alt-h{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--rfx3);margin:14px 2px 6px;}
+.rf-alt-list{margin:0;padding:0 2px 0 18px;display:flex;flex-direction:column;gap:8px;font-size:12px;line-height:1.55;color:var(--rfx2);}
+.rf-alt-list b{font-weight:600;color:var(--text-primary);}
+.rf-alt-url{color:var(--text-primary);overflow-wrap:anywhere;word-break:break-word;}
 .rf-cta{position:relative;width:100%;height:50px;border-radius:14px;margin-top:16px;cursor:pointer;font-size:14.5px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;gap:9px;color:var(--acc);background:linear-gradient(160deg,rgba(236,72,153,0.15),rgba(236,72,153,0.05));border:1px solid var(--pinkbd);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 30px -20px var(--glow),0 1px 0 rgba(255,255,255,0.05) inset;transition:.18s;}
 .rf-cta:active{transform:translateY(1px);}
 .rf-cta i{font-size:19px;}

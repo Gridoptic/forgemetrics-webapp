@@ -2424,6 +2424,19 @@ function refCardHtml(r) {
     const rate = r.rate_pct || 30;
     const fBonus = r.friend_welcome_bonus || 100;
     const link = escapeHtml((r.referral_link || '').replace(/^https?:\/\//, ''));
+    const short = escapeHtml((r.short_link || '').replace(/^https?:\/\//, ''));
+    const altBlock = short ? `
+    <div class="rf-lbl">${TR('Альтернативная ссылка')}</div>
+    <div class="rf-field">
+      <span class="link" id="cab-short">${short}</span>
+      <button class="rf-fbtn" id="cab-shortcopy" aria-label="${TR('Копировать ссылку')}"><i class="ti ti-link"></i></button>
+    </div>
+    <p class="rf-alt-note">${TR('Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.')}</p>
+    <div class="rf-alt-h">${TR('Когда она удобнее')}</div>
+    <ul class="rf-alt-list">
+      <li><b>${TR('Её легко набрать.')}</b> ${TR('В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.').replace('{short}', () => `<span class="rf-alt-url">${short}</span>`).replace('{link}', () => `<span class="rf-alt-url">${link}</span>`)}</li>
+      <li><b>${TR('Сначала открывается лендинг.')}</b> ${TR('Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.')}</li>
+    </ul>` : '';
     const nextLine = r.next_level_display
         ? `${TR('до')} <b>${escapeHtml(r.next_level_display)}</b> ${TR('· ещё')} <b>${cabNum(r.needed_for_next)}</b> ${TR('оплативших')}`
         : TR('высший уровень');
@@ -2472,7 +2485,7 @@ function refCardHtml(r) {
       <span class="link" id="cab-link">${link}</span>
       <button class="rf-fbtn" id="cab-linkcopy" aria-label="${TR('Копировать ссылку')}"><i class="ti ti-link"></i></button>
     </div>
-
+${altBlock}
     <button class="rf-cta" id="cab-share"><i class="ti ti-send"></i> ${TR('Поделиться ссылкой')}</button>
     <button class="rf-cta ghost" id="cab-invite-copy"><i class="ti ti-copy"></i> ${TR('Скопировать текст приглашения')}</button>
   </div>
@@ -2762,6 +2775,11 @@ function wireReferral(d) {
     on('cab-linkcopy', () => {
         const link = (d.referral && d.referral.referral_link) || '';
         const b = document.getElementById('cab-linkcopy');
+        copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast(TR('Ссылка скопирована')); });
+    });
+    on('cab-shortcopy', () => {
+        const link = (d.referral && d.referral.short_link) || '';
+        const b = document.getElementById('cab-shortcopy');
         copyText(link).then(() => { if (b) { b.classList.add('ok'); b.innerHTML = '<i class="ti ti-check"></i>'; setTimeout(() => { b.classList.remove('ok'); b.innerHTML = '<i class="ti ti-link"></i>'; }, 1600); } cabToast(TR('Ссылка скопирована')); });
     });
     on('cab-invite-copy', () => {

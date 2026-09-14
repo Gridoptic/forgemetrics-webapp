@@ -5220,7 +5220,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "ከራዳር የለጋሽ ቻናሎች፣ ለማስቀመጫዎች የክትትል አገናኞች።",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "ከሳምንቱ ልጥፎች ለመድረኮች ቪዲዮዎች፣ ከራዳር የለጋሽ ቻናሎች፣ ለማስቀመጫዎች የክትትል አገናኞች።",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "ኒሽ፣ የፊድ ድካም፣ ተደራሽነት፣ ያልተለመዱ እይታዎች — ያለ AI፣ ማስኬጃ ገና አልተቀነሰም",
-  "Страна — для точных советов по площадкам и рекламодателям": "አገር — ስለ መድረኮች እና አስተዋዋቂዎች ትክክለኛ ምክር ለመስጠት"
+  "Страна — для точных советов по площадкам и рекламодателям": "አገር — ስለ መድረኮች እና አስተዋዋቂዎች ትክክለኛ ምክር ለመስጠት",
+  "Альтернативная ссылка": "አማራጭ አገናኝ",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "ወደ ቦቱ የእንኳን ደህና መጡ ገጽ የሚወስድ የሪፈራል አገናኝህ አማራጭ ስሪት። የተጋበዘው ሰው ተመሳሳይ የመነሻ Forge ያገኛል።",
+  "Когда она удобнее": "መቼ የበለጠ ምቹ ነው",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "በTikTok፣ Instagram እና YouTube Shorts የቪዲዮ መግለጫዎች ውስጥ አገናኞች ሊጫኑ አይችሉም፤ ተመልካቹ አድራሻውን በእጅ ይጽፋል። {short} ከ{link} ይልቅ ለመጻፍ ቀላል ነው።",
+  "Сначала открывается лендинг.": "መጀመሪያ የማረፊያ ገጹ ይከፈታል።",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "አገልግሎቱን የማያውቅ ሰው መጀመሪያ ቦቱ ምን እንደሚችል ያያል፣ ከዚያ በኋላ ብቻ ወደ Telegram ይሄዳል። ቀጥተኛ አገናኝ ያለ ማብራሪያ በቀጥታ ወደ ቦቱ ይወስደዋል።",
+  "Её легко набрать.": "ለመጻፍ ቀላል ነው።"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10443,7 +10450,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "قنوات مانحة من الرادار، روابط تتبع للإعلانات.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "مقاطع للمنصات من منشورات الأسبوع، قنوات مانحة من الرادار، روابط تتبع للإعلانات.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "المجال، تشبّع الخلاصة، الوصول، شذوذ المشاهدات — بلا ذكاء اصطناعي، لم يُخصم التشغيل بعد",
-  "Страна — для точных советов по площадкам и рекламодателям": "البلد — لنصائح دقيقة عن المنصات والمعلنين"
+  "Страна — для точных советов по площадкам и рекламодателям": "البلد — لنصائح دقيقة عن المنصات والمعلنين",
+  "Альтернативная ссылка": "رابط بديل",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "نسخة بديلة من رابط الإحالة الخاص بك تفتح صفحة الترحيب بالبوت. يحصل المدعو على رصيد Forge الابتدائي نفسه.",
+  "Когда она удобнее": "متى يكون أنسب",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "في أوصاف الفيديوهات على TikTok وInstagram وYouTube Shorts لا تكون الروابط قابلة للنقر، فيكتب المشاهد العنوان يدويًا. كتابة {short} أسهل من {link}.",
+  "Сначала открывается лендинг.": "تُفتح صفحة الترحيب أولًا.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "من لا يعرف الخدمة يرى أولًا ما يستطيع البوت فعله، ثم ينتقل إلى Telegram. أما الرابط المباشر فينقله إلى البوت فورًا دون أي شرح.",
+  "Её легко набрать.": "سهل الكتابة."
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15666,7 +15680,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Radardan donor kanallar, yerləşdirmələr üçün izləmə linkləri.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Həftənin postlarından platformalar üçün kliplər, Radardan donor kanallar, yerləşdirmələr üçün izləmə linkləri.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niş, lentin yorğunluğu, əhatə, baxış anomaliyaları — AI-siz, işə salma hələ silinməyib",
-  "Страна — для точных советов по площадкам и рекламодателям": "Ölkə — platformalar və reklamverənlər üzrə dəqiq tövsiyələr üçün"
+  "Страна — для точных советов по площадкам и рекламодателям": "Ölkə — platformalar və reklamverənlər üzrə dəqiq tövsiyələr üçün",
+  "Альтернативная ссылка": "Alternativ link",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Referal linkinin botun salamlama səhifəsinə aparan alternativ variantı. Dəvət olunan eyni başlanğıc Forge-u alır.",
+  "Когда она удобнее": "Nə vaxt daha rahatdır",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram və YouTube Shorts-da video açıqlamalarındakı linklərə klikləmək olmur, izləyici ünvanı əl ilə yazır. {short} yazmaq {link} yazmaqdan asandır.",
+  "Сначала открывается лендинг.": "Əvvəlcə salamlama səhifəsi açılır.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xidməti tanımayan şəxs əvvəlcə botun nələr bacardığını görür və yalnız sonra Telegram-a keçir. Birbaşa link onu heç bir izahat olmadan dərhal bota aparır.",
+  "Её легко набрать.": "Yazmaq asandır."
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -20892,7 +20913,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "донары з Радара, спасылкі адсочвання на размяшчэнні.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Ролікі для пляцовак з пастоў тыдня, донары з Радара, спасылкі адсочвання на размяшчэнні.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Ніша, выгаранне стужкі, ахоп, анамаліі праглядаў — без ШІ, запуск яшчэ не спісаны",
-  "Страна — для точных советов по площадкам и рекламодателям": "Краіна — для дакладных парад па пляцоўках і рэкламадаўцах"
+  "Страна — для точных советов по площадкам и рекламодателям": "Краіна — для дакладных парад па пляцоўках і рэкламадаўцах",
+  "Альтернативная ссылка": "Альтэрнатыўная спасылка",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Альтэрнатыўны варыянт тваёй рэферальнай спасылкі з пераходам на прывітальны лэндынг бота. Запрошаны атрымлівае тыя ж стартавыя Forge.",
+  "Когда она удобнее": "Калі яна зручнейшая",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "У подпісах да ролікаў у TikTok, Instagram і YouTube Shorts спасылкі не націскаюцца, глядач уводзіць адрас уручную. {short} набраць прасцей, чым {link}.",
+  "Сначала открывается лендинг.": "Спачатку адкрываецца лэндынг.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Чалавек, які не ведае сэрвіс, спачатку бачыць, што ўмее бот, і толькі потым трапляе ў Telegram. Прамая спасылка адразу вядзе яго ў бота без тлумачэнняў.",
+  "Её легко набрать.": "Яе лёгка набраць."
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26115,7 +26143,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "রাডার থেকে ডোনর চ্যানেল, প্লেসমেন্টের জন্য ট্র্যাকিং লিঙ্ক।",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "সপ্তাহের পোস্ট থেকে প্ল্যাটফর্মের জন্য ভিডিও, রাডার থেকে ডোনর চ্যানেল, প্লেসমেন্টের জন্য ট্র্যাকিং লিঙ্ক।",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "নিশ, ফিড ক্লান্তি, রিচ, ভিউয়ের অস্বাভাবিকতা — AI ছাড়া, রান এখনও কাটা হয়নি",
-  "Страна — для точных советов по площадкам и рекламодателям": "দেশ — প্ল্যাটফর্ম ও বিজ্ঞাপনদাতা নিয়ে সঠিক পরামর্শের জন্য"
+  "Страна — для точных советов по площадкам и рекламодателям": "দেশ — প্ল্যাটফর্ম ও বিজ্ঞাপনদাতা নিয়ে সঠিক পরামর্শের জন্য",
+  "Альтернативная ссылка": "বিকল্প লিংক",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "তোমার রেফারেল লিংকের বিকল্প সংস্করণ, যা বটের স্বাগত ল্যান্ডিং পেজ খোলে। আমন্ত্রিত ব্যক্তি একই শুরুর Forge পায়।",
+  "Когда она удобнее": "কখন এটি বেশি সুবিধাজনক",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram ও YouTube Shorts-এর ভিডিও ক্যাপশনে লিংকে ক্লিক করা যায় না, দর্শক ঠিকানাটি নিজে টাইপ করে। {link}-এর চেয়ে {short} টাইপ করা সহজ।",
+  "Сначала открывается лендинг.": "প্রথমে ল্যান্ডিং পেজ খোলে।",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "যে ব্যক্তি সেবাটি চেনে না, সে প্রথমে দেখে বট কী করতে পারে, তারপর Telegram-এ যায়। সরাসরি লিংক কোনো ব্যাখ্যা ছাড়াই তাকে সোজা বটে নিয়ে যায়।",
+  "Её легко набрать.": "এটি টাইপ করা সহজ।"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31338,7 +31373,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Donor-Kanäle aus dem Radar, Tracking-Links für Platzierungen.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Clips für Plattformen aus den Posts der Woche, Donor-Kanäle aus dem Radar, Tracking-Links für Platzierungen.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Nische, Feed-Sättigung, Reichweite, Auffälligkeiten bei Aufrufen — ohne KI, noch nicht abgebucht",
-  "Страна — для точных советов по площадкам и рекламодателям": "Land – für genaue Empfehlungen zu Plattformen und Werbekunden"
+  "Страна — для точных советов по площадкам и рекламодателям": "Land – für genaue Empfehlungen zu Plattformen und Werbekunden",
+  "Альтернативная ссылка": "Alternativer Link",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Eine alternative Version deines Empfehlungslinks, die zur Begrüßungsseite des Bots führt. Eingeladene erhalten dieselben Start-Forge.",
+  "Когда она удобнее": "Wann er praktischer ist",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "In Videobeschreibungen auf TikTok, Instagram und YouTube Shorts sind Links nicht anklickbar, Zuschauer geben die Adresse von Hand ein. {short} ist leichter einzutippen als {link}.",
+  "Сначала открывается лендинг.": "Zuerst öffnet sich die Begrüßungsseite.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Wer den Dienst nicht kennt, sieht zuerst, was der Bot kann, und gelangt erst dann zu Telegram. Ein direkter Link führt ohne jede Erklärung sofort zum Bot.",
+  "Её легко набрать.": "Er lässt sich leicht eintippen."
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36561,7 +36603,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "donor channels from Radar, tracking links for placements.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Platform clips from the week's posts, donor channels from Radar, tracking links for placements.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niche, feed burnout, reach, view anomalies — no AI, run not charged yet",
-  "Страна — для точных советов по площадкам и рекламодателям": "Country — for precise advice on platforms and advertisers"
+  "Страна — для точных советов по площадкам и рекламодателям": "Country — for precise advice on platforms and advertisers",
+  "Альтернативная ссылка": "Alternative link",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "An alternative version of your referral link that opens the bot's welcome landing page. The invited user receives the same starting Forge.",
+  "Когда она удобнее": "When it is more convenient",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "In video captions on TikTok, Instagram and YouTube Shorts, links are not clickable, so viewers type the address manually. {short} is easier to type than {link}.",
+  "Сначала открывается лендинг.": "A landing page opens first.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Someone unfamiliar with the service first sees what the bot can do and only then goes to Telegram. A direct link takes them straight to the bot without any explanation.",
+  "Её легко набрать.": "It is easy to type."
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -41784,7 +41833,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "canales donantes del Radar, enlaces de seguimiento para las inserciones.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Vídeos para plataformas a partir de los posts de la semana, canales donantes del Radar, enlaces de seguimiento para las inserciones.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Nicho, saturación del feed, alcance, anomalías de visualizaciones — sin IA, aún no se cobra",
-  "Страна — для точных советов по площадкам и рекламодателям": "País: para consejos precisos sobre plataformas y anunciantes"
+  "Страна — для точных советов по площадкам и рекламодателям": "País: para consejos precisos sobre plataformas y anunciantes",
+  "Альтернативная ссылка": "Enlace alternativo",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Una versión alternativa de tu enlace de referido que abre la página de bienvenida del bot. El invitado recibe los mismos Forge de inicio.",
+  "Когда она удобнее": "Cuándo es más práctico",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "En las descripciones de los vídeos de TikTok, Instagram y YouTube Shorts los enlaces no son clicables, así que el espectador escribe la dirección a mano. {short} es más fácil de escribir que {link}.",
+  "Сначала открывается лендинг.": "Primero se abre la página de bienvenida.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quien no conoce el servicio ve primero lo que hace el bot y solo después pasa a Telegram. Un enlace directo lo lleva al bot sin ninguna explicación.",
+  "Её легко набрать.": "Es fácil de escribir."
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47007,7 +47063,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "کانال‌های دونور از رادار، لینک‌های ردیابی برای درج‌ها.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "ویدیوها برای پلتفرم‌ها از پست‌های هفته، کانال‌های دونور از رادار، لینک‌های ردیابی برای درج‌ها.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "حوزه، اشباع فید، دسترسی، ناهنجاری بازدیدها — بدون هوش مصنوعی، اجرا هنوز کسر نشده",
-  "Страна — для точных советов по площадкам и рекламодателям": "کشور — برای توصیه‌های دقیق درباره پلتفرم‌ها و تبلیغ‌دهندگان"
+  "Страна — для точных советов по площадкам и рекламодателям": "کشور — برای توصیه‌های دقیق درباره پلتفرم‌ها و تبلیغ‌دهندگان",
+  "Альтернативная ссылка": "لینک جایگزین",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "نسخه جایگزین لینک معرفی تو که صفحه خوش‌آمدگویی ربات را باز می‌کند. دعوت‌شده همان Forge اولیه را دریافت می‌کند.",
+  "Когда она удобнее": "چه زمانی راحت‌تر است",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "در توضیحات ویدیوها در TikTok، Instagram و YouTube Shorts لینک‌ها قابل کلیک نیستند و بیننده آدرس را دستی وارد می‌کند. تایپ {short} از {link} ساده‌تر است.",
+  "Сначала открывается лендинг.": "ابتدا صفحه خوش‌آمدگویی باز می‌شود.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "کسی که سرویس را نمی‌شناسد، ابتدا می‌بیند ربات چه کارهایی انجام می‌دهد و فقط بعد وارد Telegram می‌شود. لینک مستقیم او را بدون هیچ توضیحی یک‌راست به ربات می‌برد.",
+  "Её легко набрать.": "تایپ آن آسان است."
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52230,7 +52293,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "chaînes donneuses du Radar, liens de suivi des placements.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Clips pour les plateformes à partir des posts de la semaine, chaînes donneuses du Radar, liens de suivi des placements.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niche, saturation du fil, portée, anomalies de vues — sans IA, lancement pas encore débité",
-  "Страна — для точных советов по площадкам и рекламодателям": "Pays — pour des conseils précis sur les plateformes et les annonceurs"
+  "Страна — для точных советов по площадкам и рекламодателям": "Pays — pour des conseils précis sur les plateformes et les annonceurs",
+  "Альтернативная ссылка": "Lien alternatif",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Une version alternative de ton lien de parrainage qui ouvre la page d'accueil du bot. La personne invitée reçoit les mêmes Forge de départ.",
+  "Когда она удобнее": "Quand il est plus pratique",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Dans les descriptions de vidéos sur TikTok, Instagram et YouTube Shorts, les liens ne sont pas cliquables : le spectateur saisit l'adresse à la main. {short} est plus simple à saisir que {link}.",
+  "Сначала открывается лендинг.": "La page d'accueil s'ouvre d'abord.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Une personne qui ne connaît pas le service voit d'abord ce que fait le bot et n'arrive qu'ensuite sur Telegram. Un lien direct l'envoie immédiatement vers le bot sans aucune explication.",
+  "Её легко набрать.": "Il est facile à saisir."
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57453,7 +57523,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Radar से डोनर चैनल, प्लेसमेंट के लिए ट्रैकिंग लिंक।",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "हफ़्ते की पोस्ट से प्लेटफ़ॉर्म के लिए वीडियो, Radar से डोनर चैनल, प्लेसमेंट के लिए ट्रैकिंग लिंक।",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "निश, फ़ीड थकान, रीच, व्यूज़ में असामान्यता — बिना AI, रन अभी कटा नहीं",
-  "Страна — для точных советов по площадкам и рекламодателям": "देश — प्लेटफ़ॉर्म और विज्ञापनदाताओं पर सटीक सलाह के लिए"
+  "Страна — для точных советов по площадкам и рекламодателям": "देश — प्लेटफ़ॉर्म और विज्ञापनदाताओं पर सटीक सलाह के लिए",
+  "Альтернативная ссылка": "वैकल्पिक लिंक",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "आपके रेफ़रल लिंक का वैकल्पिक रूप, जो बॉट का स्वागत लैंडिंग पेज खोलता है। आमंत्रित व्यक्ति को वही शुरुआती Forge मिलते हैं।",
+  "Когда она удобнее": "यह कब अधिक सुविधाजनक है",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram और YouTube Shorts में वीडियो के कैप्शन में लिंक क्लिक नहीं होते, दर्शक पता खुद टाइप करता है। {short} टाइप करना {link} से आसान है।",
+  "Сначала открывается лендинг.": "पहले लैंडिंग पेज खुलता है।",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "जो व्यक्ति सेवा को नहीं जानता, वह पहले देखता है कि बॉट क्या कर सकता है, और उसके बाद ही Telegram में जाता है। सीधा लिंक उसे बिना किसी जानकारी के तुरंत बॉट में ले जाता है।",
+  "Её легко набрать.": "इसे टाइप करना आसान है।"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -62676,7 +62753,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "kanal donor dari Radar, tautan pelacakan untuk penempatan.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Klip untuk platform dari postingan minggu ini, kanal donor dari Radar, tautan pelacakan untuk penempatan.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niche, kejenuhan feed, jangkauan, anomali tayangan — tanpa AI, jatah belum dipotong",
-  "Страна — для точных советов по площадкам и рекламодателям": "Negara — untuk saran yang akurat tentang platform dan pengiklan"
+  "Страна — для точных советов по площадкам и рекламодателям": "Negara — untuk saran yang akurat tentang platform dan pengiklan",
+  "Альтернативная ссылка": "Tautan alternatif",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Versi alternatif tautan referalmu yang membuka halaman sambutan bot. Pengguna yang diundang menerima Forge awal yang sama.",
+  "Когда она удобнее": "Kapan tautan ini lebih praktis",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Di keterangan video TikTok, Instagram, dan YouTube Shorts, tautan tidak bisa diklik, jadi penonton mengetik alamatnya sendiri. {short} lebih mudah diketik daripada {link}.",
+  "Сначала открывается лендинг.": "Halaman sambutan terbuka lebih dulu.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Orang yang belum mengenal layanan ini lebih dulu melihat apa yang bisa dilakukan bot, baru kemudian masuk ke Telegram. Tautan langsung membawanya ke bot tanpa penjelasan apa pun.",
+  "Её легко набрать.": "Mudah diketik."
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -67899,7 +67983,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "canali donatori dal Radar, link di tracciamento per le inserzioni.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Clip per le piattaforme dai post della settimana, canali donatori dal Radar, link di tracciamento per le inserzioni.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Nicchia, saturazione del feed, copertura, anomalie delle visualizzazioni — senza IA, esecuzione non ancora addebitata",
-  "Страна — для точных советов по площадкам и рекламодателям": "Paese: per consigli precisi su piattaforme e inserzionisti"
+  "Страна — для точных советов по площадкам и рекламодателям": "Paese: per consigli precisi su piattaforme e inserzionisti",
+  "Альтернативная ссылка": "Link alternativo",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Una versione alternativa del tuo link di invito che apre la pagina di benvenuto del bot. L'invitato riceve gli stessi Forge iniziali.",
+  "Когда она удобнее": "Quando è più comodo",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Nelle descrizioni dei video su TikTok, Instagram e YouTube Shorts i link non sono cliccabili, quindi lo spettatore digita l'indirizzo a mano. {short} è più facile da digitare di {link}.",
+  "Сначала открывается лендинг.": "Prima si apre la pagina di benvenuto.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Chi non conosce il servizio vede prima cosa sa fare il bot e solo dopo arriva su Telegram. Un link diretto lo porta subito al bot senza alcuna spiegazione.",
+  "Её легко набрать.": "È facile da digitare."
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73122,7 +73213,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Радардан донор арналар, орналастыруларға бақылау сілтемелері.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Апта посттарынан алаңдарға арналған роликтер, Радардан донор арналар, орналастыруларға бақылау сілтемелері.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Ниша, лента шаршауы, қамту, қаралым ауытқулары — ЖИ-сіз, іске қосу әлі есептен шығарылмаған",
-  "Страна — для точных советов по площадкам и рекламодателям": "Ел — алаңдар мен жарнама берушілер бойынша нақты кеңестер үшін"
+  "Страна — для точных советов по площадкам и рекламодателям": "Ел — алаңдар мен жарнама берушілер бойынша нақты кеңестер үшін",
+  "Альтернативная ссылка": "Балама сілтеме",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Боттың сәлемдесу лендингіне апаратын реферал сілтемеңнің балама нұсқасы. Шақырылған адам дәл сондай бастапқы Forge алады.",
+  "Когда она удобнее": "Ол қашан ыңғайлырақ",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram және YouTube Shorts бейнелерінің сипаттамаларында сілтемелер басылмайды, көрермен мекенжайды қолмен енгізеді. {short} мекенжайын теру {link} мекенжайынан оңай.",
+  "Сначала открывается лендинг.": "Алдымен лендинг ашылады.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Сервисті білмейтін адам алдымен боттың не істей алатынын көреді, содан кейін ғана Telegram-ға өтеді. Тікелей сілтеме оны ешқандай түсініктемесіз бірден ботқа апарады.",
+  "Её легко набрать.": "Оны теру оңай."
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -78345,7 +78443,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "canais doadores do Radar, links de rastreamento para as inserções.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Clipes para plataformas a partir dos posts da semana, canais doadores do Radar, links de rastreamento para as inserções.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Nicho, saturação do feed, alcance, anomalias de visualizações — sem IA, execução ainda não cobrada",
-  "Страна — для точных советов по площадкам и рекламодателям": "País — para recomendações precisas de plataformas e anunciantes"
+  "Страна — для точных советов по площадкам и рекламодателям": "País — para recomendações precisas de plataformas e anunciantes",
+  "Альтернативная ссылка": "Link alternativo",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Uma versão alternativa do seu link de indicação que abre a página de boas-vindas do bot. O convidado recebe os mesmos Forge iniciais.",
+  "Когда она удобнее": "Quando ele é mais prático",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Nas legendas de vídeos no TikTok, Instagram e YouTube Shorts os links não são clicáveis, e o espectador digita o endereço manualmente. {short} é mais fácil de digitar do que {link}.",
+  "Сначала открывается лендинг.": "Primeiro abre a página de boas-vindas.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quem não conhece o serviço vê primeiro o que o bot faz e só depois chega ao Telegram. Um link direto leva a pessoa ao bot sem nenhuma explicação.",
+  "Её легко набрать.": "É fácil de digitar."
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -83568,7 +83673,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "chaneli wafadhili kutoka Rada, viungo vya ufuatiliaji kwa matangazo.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Video za majukwaa kutoka machapisho ya wiki, chaneli wafadhili kutoka Rada, viungo vya ufuatiliaji kwa matangazo.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niche, uchovu wa mkondo, ufikiaji, hitilafu za mitazamo — bila AI, nafasi bado haijakatwa",
-  "Страна — для точных советов по площадкам и рекламодателям": "Nchi — kwa ushauri sahihi kuhusu majukwaa na watangazaji"
+  "Страна — для точных советов по площадкам и рекламодателям": "Nchi — kwa ushauri sahihi kuhusu majukwaa na watangazaji",
+  "Альтернативная ссылка": "Kiungo mbadala",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Toleo mbadala la kiungo chako cha rufaa kinachofungua ukurasa wa kukaribisha wa bot. Aliyealikwa anapokea Forge zilezile za kuanzia.",
+  "Когда она удобнее": "Wakati kinafaa zaidi",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Katika maelezo ya video kwenye TikTok, Instagram na YouTube Shorts viungo haviwezi kubofywa, mtazamaji huandika anwani mwenyewe. {short} ni rahisi kuandika kuliko {link}.",
+  "Сначала открывается лендинг.": "Ukurasa wa kukaribisha hufunguka kwanza.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Mtu asiyeifahamu huduma kwanza huona bot inaweza kufanya nini, kisha tu huingia Telegram. Kiungo cha moja kwa moja humpeleka kwenye bot mara moja bila maelezo yoyote.",
+  "Её легко набрать.": "Ni rahisi kukiandika."
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -88791,7 +88903,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Radar'dan donör kanallar, yerleşimler için takip bağlantıları.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Haftanın gönderilerinden platform klipleri, Radar'dan donör kanallar, yerleşimler için takip bağlantıları.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Niş, akış yıpranması, erişim, görüntüleme anormallikleri — yapay zekâsız, hak henüz düşülmedi",
-  "Страна — для точных советов по площадкам и рекламодателям": "Ülke — platformlar ve reklamverenler için doğru öneriler"
+  "Страна — для точных советов по площадкам и рекламодателям": "Ülke — platformlar ve reklamverenler için doğru öneriler",
+  "Альтернативная ссылка": "Alternatif bağlantı",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Referans bağlantının, botun karşılama sayfasını açan alternatif sürümü. Davet edilen kişi aynı başlangıç Forge'unu alır.",
+  "Когда она удобнее": "Ne zaman daha kullanışlı",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram ve YouTube Shorts'taki video açıklamalarında bağlantılar tıklanamaz, izleyici adresi elle yazar. {short} yazmak {link} yazmaktan daha kolaydır.",
+  "Сначала открывается лендинг.": "Önce karşılama sayfası açılır.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Hizmeti tanımayan kişi önce botun neler yapabildiğini görür, ancak ondan sonra Telegram'a geçer. Doğrudan bağlantı onu hiçbir açıklama olmadan hemen bota götürür.",
+  "Её легко набрать.": "Yazması kolaydır."
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94014,7 +94133,14 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "Radardan donor kanallar, joylashtirishlar uchun kuzatuv havolalari.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Hafta postlaridan platformalar uchun roliklar, Radardan donor kanallar, joylashtirishlar uchun kuzatuv havolalari.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Nisha, lenta charchashi, qamrov, ko'rishlardagi anomaliyalar — AIsiz, ishga tushirish hali hisobdan chiqarilmagan",
-  "Страна — для точных советов по площадкам и рекламодателям": "Mamlakat — platformalar va reklama beruvchilar bo'yicha aniq maslahatlar uchun"
+  "Страна — для точных советов по площадкам и рекламодателям": "Mamlakat — platformalar va reklama beruvchilar bo'yicha aniq maslahatlar uchun",
+  "Альтернативная ссылка": "Muqobil havola",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Referal havolangning botning salomlashuv sahifasiga olib boradigan muqobil varianti. Taklif qilingan foydalanuvchi xuddi shunday boshlang'ich Forge oladi.",
+  "Когда она удобнее": "Qachon qulayroq",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram va YouTube Shorts'dagi video tavsiflarida havolalar bosilmaydi, tomoshabin manzilni qo'lda kiritadi. {short} ni yozish {link} ni yozishdan osonroq.",
+  "Сначала открывается лендинг.": "Avval salomlashuv sahifasi ochiladi.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xizmatni bilmaydigan odam avval bot nimalar qila olishini ko'radi va shundan keyingina Telegram'ga o'tadi. To'g'ridan-to'g'ri havola uni hech qanday tushuntirishsiz darhol botga olib boradi.",
+  "Её легко набрать.": "Uni yozish oson."
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -99237,6 +99363,13 @@ window.__I18N_DICT = {
   "доноры из Радара, ссылки отслеживания на размещения.": "kênh donor từ Radar, liên kết theo dõi cho các lần đăng.",
   "Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.": "Clip cho các nền tảng từ bài đăng trong tuần, kênh donor từ Radar, liên kết theo dõi cho các lần đăng.",
   "Ниша, выгорание ленты, охват, аномалии просмотров — без ИИ, запуск ещё не списан": "Ngách, độ bão hòa feed, tiếp cận, bất thường lượt xem — không dùng AI, chưa trừ lượt",
-  "Страна — для точных советов по площадкам и рекламодателям": "Quốc gia — để có lời khuyên chính xác về nền tảng và nhà quảng cáo"
+  "Страна — для точных советов по площадкам и рекламодателям": "Quốc gia — để có lời khuyên chính xác về nền tảng và nhà quảng cáo",
+  "Альтернативная ссылка": "Liên kết thay thế",
+  "Альтернативный вариант твоей реферальной ссылки с переходом на приветственный лендинг бота. Приглашённый получает те же стартовые Forge.": "Phiên bản thay thế cho liên kết giới thiệu của bạn, mở trang chào mừng của bot. Người được mời nhận cùng số Forge khởi đầu.",
+  "Когда она удобнее": "Khi nào liên kết này tiện hơn",
+  "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Trong phần mô tả video trên TikTok, Instagram và YouTube Shorts, liên kết không bấm được, người xem phải tự gõ địa chỉ. Gõ {short} dễ hơn gõ {link}.",
+  "Сначала открывается лендинг.": "Trang chào mừng mở ra trước.",
+  "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Người chưa biết dịch vụ sẽ thấy trước bot làm được gì, rồi mới chuyển sang Telegram. Liên kết trực tiếp đưa họ vào bot ngay mà không có lời giải thích nào.",
+  "Её легко набрать.": "Dễ gõ."
  }
 };
