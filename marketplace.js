@@ -873,6 +873,7 @@
             '.fmx-po-li.gold i{color:#f5bf4f;}',
             '.fmx-po-buy{width:100%;margin-top:10px;border:none;border-radius:10px;padding:12px;font-size:12.5px;font-weight:700;cursor:pointer;color:#fff;background:rgba(99,102,241,0.85);}',
             '.fmx-po-buy.gold{background:linear-gradient(135deg,#f5bf4f,#d4a017);color:#231600;}',
+            '.fmx-po-buy.off{background:rgba(99,102,241,0.2);color:rgba(232,234,241,0.5);cursor:default;}',
             '.fmx-limit{font-size:11px;color:#f5bf4f;background:rgba(245,191,79,0.08);border:0.5px solid rgba(245,191,79,0.25);border-radius:9px;padding:9px 11px;margin-bottom:11px;display:flex;gap:7px;align-items:flex-start;line-height:1.5;}',
             '.fmx-limit i{flex-shrink:0;margin-top:1px;}',
             '.fmx-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:rgba(20,24,40,0.96);border:0.5px solid rgba(93,202,165,0.3);color:#5DCAA5;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:all 300ms;backdrop-filter:blur(10px);z-index:100030;display:flex;align-items:center;gap:8px;pointer-events:none;}',
@@ -11027,6 +11028,12 @@
         month: L('Присутствие 30 дней — выгоднее за день, чем недельное. Эксклюзив: золотое свечение и тег «Продвигается» — их даёт только это продвижение.')
     };
     var _promoListingId = null;
+    function _promoWarming() {
+        var title = L('Продвижение пока недоступно');
+        var text = L('На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.');
+        if (typeof window.alertDialogHtml === 'function') window.alertDialogHtml(title, _esc(text));
+        else uiAlert(text);
+    }
 
     function _buyPromo(btn, product) {
         var old = btn.innerHTML;
@@ -11043,6 +11050,7 @@
                 return;
             }
             btn.disabled = false; btn.innerHTML = old;
+            if (res && res.error === 'market_warming') { _promoWarming(); return; }
             uiAlert((res && res.message) || L('Не удалось запустить продвижение.'));
         }).catch(function () { btn.disabled = false; btn.innerHTML = old; toast(L('Не удалось запустить продвижение')); });
     }
@@ -11054,20 +11062,21 @@
         showModal('fmx-promoBg');
         apiGet('/api/v1/marketplace/promo-options').then(function (r) {
             if (!r || !r.ok) { body.innerHTML = '<div style="text-align:center;color:var(--fmx-dim,#8d92a8);padding:28px 0;">' + L('Не удалось загрузить.') + '</div>'; return; }
-            var opts = r.options || [], html = '';
+            var opts = r.options || [], html = '', open = r.open !== false;
             html += '<div class="fmx-limit" style="border-color:rgba(245,191,79,.35);color:#f5bf4f;">' + window.forgeIco(13) + ' ' + L('На балансе:') + ' ' + _num(r.balance || 0) + ' ' + L('Forge — списание с баланса, без кассы') + '</div>';
             opts.forEach(function (o) {
                 var ic = o.in_burst_cap ? 'ti-flame' : 'ti-rocket';
                 var pr = window.forgeAmount(o.price, 12);
                 html += '<div class="fmx-po"><div class="fmx-po-top"><div class="fmx-po-nm"><i class="ti ' + ic + '" style="color:#818cf8;"></i> ' + _esc(o.label) + '</div><div class="fmx-po-pr">' + pr + '</div></div>' +
                     '<div class="fmx-po-li"><i class="ti ti-arrow-up"></i> ' + _esc(_PROMO_DESC[o.product] || '') + '</div>' +
-                    '<button class="fmx-po-buy" data-buy="' + _esc(o.product) + '">' + L('Запустить') + ' — ' + window.forgeAmount(o.price, 12) + '</button></div>';
+                    '<button class="fmx-po-buy' + (open ? '' : ' off') + '" data-buy="' + _esc(o.product) + '">' + (open ? '' : '<i class="ti ti-lock"></i> ') + L('Запустить') + ' — ' + window.forgeAmount(o.price, 12) + '</button></div>';
             });
             html += '<div class="fmx-limit"><i class="ti ti-info-circle"></i> ' + L('Всплески 24 и 48 ч вместе — не больше') + ' ' + (r.burst_cap || 3) + ' ' + L('раз в месяц. Платные офферы занимают не более 20% ленты — органику не топит.') + '</div>';
             body.innerHTML = html;
             qsa(body, '[data-buy]').forEach(function (b) {
                 b.addEventListener('click', function () {
                     _haptic('light');
+                    if (!open) { _promoWarming(); return; }
                     if (!_promoListingId) { uiAlert(L('Открой продвижение из своего оффера: «Мои офферы» → «Продвинуть».')); return; }
                     _buyPromo(b, b.getAttribute('data-buy'));
                 });

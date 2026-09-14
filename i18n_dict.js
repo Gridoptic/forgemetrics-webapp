@@ -5226,7 +5226,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "በTikTok፣ Instagram እና YouTube Shorts የቪዲዮ መግለጫዎች ውስጥ አገናኞች ሊጫኑ አይችሉም፤ ተመልካቹ አድራሻውን በእጅ ይጽፋል። {short} ከ{link} ይልቅ ለመጻፍ ቀላል ነው።",
   "Сначала открывается лендинг.": "መጀመሪያ የማረፊያ ገጹ ይከፈታል።",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "አገልግሎቱን የማያውቅ ሰው መጀመሪያ ቦቱ ምን እንደሚችል ያያል፣ ከዚያ በኋላ ብቻ ወደ Telegram ይሄዳል። ቀጥተኛ አገናኝ ያለ ማብራሪያ በቀጥታ ወደ ቦቱ ይወስደዋል።",
-  "Её легко набрать.": "ለመጻፍ ቀላል ነው።"
+  "Её легко набрать.": "ለመጻፍ ቀላል ነው።",
+  "Продвижение пока недоступно": "ማስተዋወቅ ገና አይገኝም",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "በገበያው ላይ ገና ጥቂት ማስታወቂያዎች ናቸው፤ የሚከፈልበት ማሳደግ አሁን የሚወጣውን Forge አይመልስም። ገበያው እንደተሞላ ማስተዋወቅ ይከፈታል።"
  },
  "ar": {
   " (на части дат действует скидка — итог уточним)": "(يسري الخصم على أجزاء من التواريخ — سنوضح الإجمالي)",
@@ -10455,7 +10457,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "في أوصاف الفيديوهات على TikTok وInstagram وYouTube Shorts لا تكون الروابط قابلة للنقر، فيكتب المشاهد العنوان يدويًا. كتابة {short} أسهل من {link}.",
   "Сначала открывается лендинг.": "تُفتح صفحة الترحيب أولًا.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "من لا يعرف الخدمة يرى أولًا ما يستطيع البوت فعله، ثم ينتقل إلى Telegram. أما الرابط المباشر فينقله إلى البوت فورًا دون أي شرح.",
-  "Её легко набрать.": "سهل الكتابة."
+  "Её легко набрать.": "سهل الكتابة.",
+  "Продвижение пока недоступно": "الترويج غير متاح بعد",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "لا تزال الإعلانات في السوق قليلة، لذلك لن يعوّض الرفع المدفوع رصيد Forge الذي تنفقه الآن. سيُفتح الترويج بمجرد امتلاء السوق."
  },
  "az": {
   " (на части дат действует скидка — итог уточним)": "(bəzi tarixlərə endirim tətbiq olunur — cəmi təsdiq ediləcək)",
@@ -15684,7 +15688,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram və YouTube Shorts-da video açıqlamalarındakı linklərə klikləmək olmur, izləyici ünvanı əl ilə yazır. {short} yazmaq {link} yazmaqdan asandır.",
   "Сначала открывается лендинг.": "Əvvəlcə salamlama səhifəsi açılır.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xidməti tanımayan şəxs əvvəlcə botun nələr bacardığını görür və yalnız sonra Telegram-a keçir. Birbaşa link onu heç bir izahat olmadan dərhal bota aparır.",
-  "Её легко набрать.": "Yazmaq asandır."
+  "Её легко набрать.": "Yazmaq asandır.",
+  "Продвижение пока недоступно": "Təşviq hələ əlçatan deyil",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Meydançada hələ az yerləşdirmə var — ödənişli qaldırma indi xərclənən Forge-u ödəməyəcək. Meydança dolan kimi təşviq açılacaq."
  },
  "be": {
   " (на части дат действует скидка — итог уточним)": "(на частку дат дзейнічае скідка — вынік уточнім)",
@@ -20916,7 +20922,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "У подпісах да ролікаў у TikTok, Instagram і YouTube Shorts спасылкі не націскаюцца, глядач уводзіць адрас уручную. {short} набраць прасцей, чым {link}.",
   "Сначала открывается лендинг.": "Спачатку адкрываецца лэндынг.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Чалавек, які не ведае сэрвіс, спачатку бачыць, што ўмее бот, і толькі потым трапляе ў Telegram. Прамая спасылка адразу вядзе яго ў бота без тлумачэнняў.",
-  "Её легко набрать.": "Яе лёгка набраць."
+  "Её легко набрать.": "Яе лёгка набраць.",
+  "Продвижение пока недоступно": "Прасоўванне пакуль недаступнае",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "На Пляцоўцы яшчэ мала размяшчэнняў — платны пад'ём зараз не акупіць укладзеныя Forge. Як толькі пляцоўка напоўніцца, прасоўванне адкрыецца."
  },
  "bn": {
   " (на части дат действует скидка — итог уточним)": "(কিছু তারিখে ছাড় প্রযোজ্য — চূড়ান্ত মূল্য স্পষ্ট করা হবে)",
@@ -26145,7 +26153,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram ও YouTube Shorts-এর ভিডিও ক্যাপশনে লিংকে ক্লিক করা যায় না, দর্শক ঠিকানাটি নিজে টাইপ করে। {link}-এর চেয়ে {short} টাইপ করা সহজ।",
   "Сначала открывается лендинг.": "প্রথমে ল্যান্ডিং পেজ খোলে।",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "যে ব্যক্তি সেবাটি চেনে না, সে প্রথমে দেখে বট কী করতে পারে, তারপর Telegram-এ যায়। সরাসরি লিংক কোনো ব্যাখ্যা ছাড়াই তাকে সোজা বটে নিয়ে যায়।",
-  "Её легко набрать.": "এটি টাইপ করা সহজ।"
+  "Её легко набрать.": "এটি টাইপ করা সহজ।",
+  "Продвижение пока недоступно": "প্রোমোশন এখনও উপলব্ধ নয়",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "মার্কেটপ্লেসে এখনও খুব কম প্লেসমেন্ট আছে — পেইড বুস্ট এখন খরচ করা Forge ফেরত আনবে না। মার্কেটপ্লেস পূর্ণ হলেই প্রোমোশন খুলে যাবে।"
  },
  "de": {
   " (на части дат действует скидка — итог уточним)": "(auf einzelne Daten gilt Rabatt — Summe wird geklärt)",
@@ -31374,7 +31384,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "In Videobeschreibungen auf TikTok, Instagram und YouTube Shorts sind Links nicht anklickbar, Zuschauer geben die Adresse von Hand ein. {short} ist leichter einzutippen als {link}.",
   "Сначала открывается лендинг.": "Zuerst öffnet sich die Begrüßungsseite.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Wer den Dienst nicht kennt, sieht zuerst, was der Bot kann, und gelangt erst dann zu Telegram. Ein direkter Link führt ohne jede Erklärung sofort zum Bot.",
-  "Её легко набрать.": "Er lässt sich leicht eintippen."
+  "Её легко набрать.": "Er lässt sich leicht eintippen.",
+  "Продвижение пока недоступно": "Werbung ist noch nicht verfügbar",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Auf dem Marktplatz gibt es noch wenige Platzierungen — ein bezahlter Push würde die eingesetzten Forge jetzt nicht wieder einbringen. Sobald sich der Marktplatz füllt, wird die Werbung freigeschaltet."
  },
  "en": {
   " (на части дат действует скидка — итог уточним)": "(discount applies to certain dates — total will be clarified)",
@@ -36603,7 +36615,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "In video captions on TikTok, Instagram and YouTube Shorts, links are not clickable, so viewers type the address manually. {short} is easier to type than {link}.",
   "Сначала открывается лендинг.": "A landing page opens first.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Someone unfamiliar with the service first sees what the bot can do and only then goes to Telegram. A direct link takes them straight to the bot without any explanation.",
-  "Её легко набрать.": "It is easy to type."
+  "Её легко набрать.": "It is easy to type.",
+  "Продвижение пока недоступно": "Promotion is not available yet",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "There are still few placements on the Marketplace, so a paid boost would not pay back the Forge spent. Promotion will open as soon as the marketplace fills up."
  },
  "es": {
   " (на части дат действует скидка — итог уточним)": "(en algunas fechas aplica descuento — total se aclarará)",
@@ -41832,7 +41846,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "En las descripciones de los vídeos de TikTok, Instagram y YouTube Shorts los enlaces no son clicables, así que el espectador escribe la dirección a mano. {short} es más fácil de escribir que {link}.",
   "Сначала открывается лендинг.": "Primero se abre la página de bienvenida.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quien no conoce el servicio ve primero lo que hace el bot y solo después pasa a Telegram. Un enlace directo lo lleva al bot sin ninguna explicación.",
-  "Её легко набрать.": "Es fácil de escribir."
+  "Её легко набрать.": "Es fácil de escribir.",
+  "Продвижение пока недоступно": "La promoción aún no está disponible",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "En la Plataforma todavía hay pocas colocaciones: un impulso de pago ahora no recuperaría los Forge invertidos. En cuanto la plataforma se llene, la promoción se abrirá."
  },
  "fa": {
   " (на части дат действует скидка — итог уточним)": "(تخفیف بر بخشی از تاریخ‌ها اعمال می‌شود — نتیجه نهایی را تصحیح خواهیم کرد)",
@@ -47061,7 +47077,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "در توضیحات ویدیوها در TikTok، Instagram و YouTube Shorts لینک‌ها قابل کلیک نیستند و بیننده آدرس را دستی وارد می‌کند. تایپ {short} از {link} ساده‌تر است.",
   "Сначала открывается лендинг.": "ابتدا صفحه خوش‌آمدگویی باز می‌شود.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "کسی که سرویس را نمی‌شناسد، ابتدا می‌بیند ربات چه کارهایی انجام می‌دهد و فقط بعد وارد Telegram می‌شود. لینک مستقیم او را بدون هیچ توضیحی یک‌راست به ربات می‌برد.",
-  "Её легко набрать.": "تایپ آن آسان است."
+  "Её легко набрать.": "تایپ آن آسان است.",
+  "Продвижение пока недоступно": "پروموشن هنوز در دسترس نیست",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "در مارکت‌پلیس هنوز جایگاه‌های تبلیغاتی کمی وجود دارد و ارتقای پولی اکنون Forge صرف‌شده را جبران نمی‌کند. به‌محض پر شدن مارکت‌پلیس، پروموشن باز می‌شود."
  },
  "fr": {
   " (на части дат действует скидка — итог уточним)": "(une réduction s'applique à certaines périodes — montant final à confirmer)",
@@ -52290,7 +52308,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Dans les descriptions de vidéos sur TikTok, Instagram et YouTube Shorts, les liens ne sont pas cliquables : le spectateur saisit l'adresse à la main. {short} est plus simple à saisir que {link}.",
   "Сначала открывается лендинг.": "La page d'accueil s'ouvre d'abord.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Une personne qui ne connaît pas le service voit d'abord ce que fait le bot et n'arrive qu'ensuite sur Telegram. Un lien direct l'envoie immédiatement vers le bot sans aucune explication.",
-  "Её легко набрать.": "Il est facile à saisir."
+  "Её легко набрать.": "Il est facile à saisir.",
+  "Продвижение пока недоступно": "La promotion n'est pas encore disponible",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Il y a encore peu d'emplacements sur la Place de marché : une mise en avant payante ne rentabiliserait pas les Forge dépensés. La promotion s'ouvrira dès que la place de marché sera plus fournie."
  },
  "hi": {
   " (на части дат действует скидка — итог уточним)": "(कुछ तारीखों पर छूट लागू है — कुल राशि स्पष्ट करेंगे)",
@@ -57519,7 +57539,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram और YouTube Shorts में वीडियो के कैप्शन में लिंक क्लिक नहीं होते, दर्शक पता खुद टाइप करता है। {short} टाइप करना {link} से आसान है।",
   "Сначала открывается лендинг.": "पहले लैंडिंग पेज खुलता है।",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "जो व्यक्ति सेवा को नहीं जानता, वह पहले देखता है कि बॉट क्या कर सकता है, और उसके बाद ही Telegram में जाता है। सीधा लिंक उसे बिना किसी जानकारी के तुरंत बॉट में ले जाता है।",
-  "Её легко набрать.": "इसे टाइप करना आसान है।"
+  "Её легко набрать.": "इसे टाइप करना आसान है।",
+  "Продвижение пока недоступно": "प्रमोशन अभी उपलब्ध नहीं है",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "मार्केटप्लेस पर अभी बहुत कम प्लेसमेंट हैं — पेड बूस्ट अभी खर्च किए गए Forge की भरपाई नहीं करेगा। मार्केटप्लेस भरते ही प्रमोशन खुल जाएगा।"
  },
  "id": {
   " (на части дат действует скидка — итог уточним)": "(diskon berlaku untuk bagian tanggal — total akan dikonfirmasi)",
@@ -62748,7 +62770,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Di keterangan video TikTok, Instagram, dan YouTube Shorts, tautan tidak bisa diklik, jadi penonton mengetik alamatnya sendiri. {short} lebih mudah diketik daripada {link}.",
   "Сначала открывается лендинг.": "Halaman sambutan terbuka lebih dulu.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Orang yang belum mengenal layanan ini lebih dulu melihat apa yang bisa dilakukan bot, baru kemudian masuk ke Telegram. Tautan langsung membawanya ke bot tanpa penjelasan apa pun.",
-  "Её легко набрать.": "Mudah diketik."
+  "Её легко набрать.": "Mudah diketik.",
+  "Продвижение пока недоступно": "Promosi belum tersedia",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Penempatan di Marketplace masih sedikit — peningkatan berbayar sekarang tidak akan menutup Forge yang dikeluarkan. Promosi akan dibuka begitu marketplace terisi."
  },
  "it": {
   " (на части дат действует скидка — итог уточним)": "(su alcune date è applicabile uno sconto — il totale sarà confermato)",
@@ -67977,7 +68001,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Nelle descrizioni dei video su TikTok, Instagram e YouTube Shorts i link non sono cliccabili, quindi lo spettatore digita l'indirizzo a mano. {short} è più facile da digitare di {link}.",
   "Сначала открывается лендинг.": "Prima si apre la pagina di benvenuto.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Chi non conosce il servizio vede prima cosa sa fare il bot e solo dopo arriva su Telegram. Un link diretto lo porta subito al bot senza alcuna spiegazione.",
-  "Её легко набрать.": "È facile da digitare."
+  "Её легко набрать.": "È facile da digitare.",
+  "Продвижение пока недоступно": "La promozione non è ancora disponibile",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Sul Marketplace ci sono ancora pochi posizionamenti: una spinta a pagamento ora non ripagherebbe i Forge spesi. La promozione si aprirà non appena il marketplace si riempirà."
  },
  "kk": {
   " (на части дат действует скидка — итог уточним)": "(бөлік даталарына ынамдылық беріледі — нәтиже нақтыланады)",
@@ -73206,7 +73232,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram және YouTube Shorts бейнелерінің сипаттамаларында сілтемелер басылмайды, көрермен мекенжайды қолмен енгізеді. {short} мекенжайын теру {link} мекенжайынан оңай.",
   "Сначала открывается лендинг.": "Алдымен лендинг ашылады.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Сервисті білмейтін адам алдымен боттың не істей алатынын көреді, содан кейін ғана Telegram-ға өтеді. Тікелей сілтеме оны ешқандай түсініктемесіз бірден ботқа апарады.",
-  "Её легко набрать.": "Оны теру оңай."
+  "Её легко набрать.": "Оны теру оңай.",
+  "Продвижение пока недоступно": "Жылжыту әзірге қолжетімсіз",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Алаңда әлі орналастырулар аз — ақылы көтеру қазір жұмсалған Forge-ды ақтамайды. Алаң толысымен жылжыту ашылады."
  },
  "pt": {
   " (на части дат действует скидка — итог уточним)": "(desconto válido em partes das datas — total será confirmado)",
@@ -78435,7 +78463,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Nas legendas de vídeos no TikTok, Instagram e YouTube Shorts os links não são clicáveis, e o espectador digita o endereço manualmente. {short} é mais fácil de digitar do que {link}.",
   "Сначала открывается лендинг.": "Primeiro abre a página de boas-vindas.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Quem não conhece o serviço vê primeiro o que o bot faz e só depois chega ao Telegram. Um link direto leva a pessoa ao bot sem nenhuma explicação.",
-  "Её легко набрать.": "É fácil de digitar."
+  "Её легко набрать.": "É fácil de digitar.",
+  "Продвижение пока недоступно": "A promoção ainda não está disponível",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Ainda há poucos anúncios no Marketplace — um impulso pago agora não compensaria os Forge investidos. A promoção será liberada assim que o marketplace estiver mais cheio."
  },
  "sw": {
   " (на части дат действует скидка — итог уточним)": "(haba kutumia wastani wa bei kwa sehemu za tarehe — jumla tutajifunza)",
@@ -83664,7 +83694,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Katika maelezo ya video kwenye TikTok, Instagram na YouTube Shorts viungo haviwezi kubofywa, mtazamaji huandika anwani mwenyewe. {short} ni rahisi kuandika kuliko {link}.",
   "Сначала открывается лендинг.": "Ukurasa wa kukaribisha hufunguka kwanza.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Mtu asiyeifahamu huduma kwanza huona bot inaweza kufanya nini, kisha tu huingia Telegram. Kiungo cha moja kwa moja humpeleka kwenye bot mara moja bila maelezo yoyote.",
-  "Её легко набрать.": "Ni rahisi kukiandika."
+  "Её легко набрать.": "Ni rahisi kukiandika.",
+  "Продвижение пока недоступно": "Ukuzaji bado haupatikani",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Bado kuna matangazo machache Sokoni — kuinua kwa malipo sasa hakutarudisha Forge utakazotumia. Ukuzaji utafunguliwa mara soko litakapojaa."
  },
  "tr": {
   " (на части дат действует скидка — итог уточним)": "(bazı tarih aralıklarında indirim geçerli — sonuç netleştireceğiz)",
@@ -88893,7 +88925,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram ve YouTube Shorts'taki video açıklamalarında bağlantılar tıklanamaz, izleyici adresi elle yazar. {short} yazmak {link} yazmaktan daha kolaydır.",
   "Сначала открывается лендинг.": "Önce karşılama sayfası açılır.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Hizmeti tanımayan kişi önce botun neler yapabildiğini görür, ancak ondan sonra Telegram'a geçer. Doğrudan bağlantı onu hiçbir açıklama olmadan hemen bota götürür.",
-  "Её легко набрать.": "Yazması kolaydır."
+  "Её легко набрать.": "Yazması kolaydır.",
+  "Продвижение пока недоступно": "Tanıtım henüz kullanılamıyor",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Pazar Yeri'nde henüz az yerleşim var; ücretli öne çıkarma şu an harcanan Forge'u karşılamaz. Pazar yeri doldukça tanıtım açılacak."
  },
  "uz": {
   " (на части дат действует скидка — итог уточним)": "(ba'zi sanalarda chegirma qo'llaniladi — umumiy narx aniqlanadi)",
@@ -94122,7 +94156,9 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "TikTok, Instagram va YouTube Shorts'dagi video tavsiflarida havolalar bosilmaydi, tomoshabin manzilni qo'lda kiritadi. {short} ni yozish {link} ni yozishdan osonroq.",
   "Сначала открывается лендинг.": "Avval salomlashuv sahifasi ochiladi.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Xizmatni bilmaydigan odam avval bot nimalar qila olishini ko'radi va shundan keyingina Telegram'ga o'tadi. To'g'ridan-to'g'ri havola uni hech qanday tushuntirishsiz darhol botga olib boradi.",
-  "Её легко набрать.": "Uni yozish oson."
+  "Её легко набрать.": "Uni yozish oson.",
+  "Продвижение пока недоступно": "Targ'ib qilish hozircha mavjud emas",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Maydonda hali joylashuvlar kam — pullik ko'tarish hozir sarflangan Forge'ni qoplamaydi. Maydon to'lishi bilan targ'ib qilish ochiladi."
  },
  "vi": {
   " (на части дат действует скидка — итог уточним)": "(chiết khấu áp dụng cho một số ngày — chúng tôi sẽ xác nhận tổng cộng)",
@@ -99351,6 +99387,8 @@ window.__I18N_DICT = {
   "В подписях к роликам в TikTok, Instagram и YouTube Shorts ссылки не кликаются, зритель вводит адрес вручную. {short} набрать проще, чем {link}.": "Trong phần mô tả video trên TikTok, Instagram và YouTube Shorts, liên kết không bấm được, người xem phải tự gõ địa chỉ. Gõ {short} dễ hơn gõ {link}.",
   "Сначала открывается лендинг.": "Trang chào mừng mở ra trước.",
   "Человек, который не знает сервис, сначала видит, что умеет бот, и только потом попадает в Telegram. Прямая ссылка сразу бросает его в бота без объяснений.": "Người chưa biết dịch vụ sẽ thấy trước bot làm được gì, rồi mới chuyển sang Telegram. Liên kết trực tiếp đưa họ vào bot ngay mà không có lời giải thích nào.",
-  "Её легко набрать.": "Dễ gõ."
+  "Её легко набрать.": "Dễ gõ.",
+  "Продвижение пока недоступно": "Tính năng quảng bá chưa khả dụng",
+  "На Площадке ещё мало размещений — платный подъём сейчас не окупит вложенные Forge. Как только площадка наполнится, продвижение откроется.": "Trên Sàn hiện còn ít vị trí đăng — đẩy tin trả phí lúc này sẽ không bù lại số Forge đã chi. Quảng bá sẽ mở ngay khi sàn đông hơn."
  }
 };
