@@ -195,7 +195,8 @@
     }
 
     function voiceSum() {
-        return _voiceNames.length ? (T('выбрано ') + _voiceNames.length) : T('по теме ролика');
+        var v = _voices.filter(function (x) { return x.name === _voiceNames[0]; })[0];
+        return v ? v.label : T('по сценарию');
     }
 
     function voiceCol(gender, label) {
@@ -207,8 +208,7 @@
                 '<span class="cs-vnm"><b>' + esc(v.label) + '</b><span>' + esc(v.note || '') + '</span></span>' +
                 '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
         }).join('');
-        return '<div class="cs-vcol"><div class="cs-vcolh"><s>' + esc(label) + '</s>' +
-            '<u data-va="vall" data-v="' + gender + '">' + esc(T('все')) + '</u></div>' + rows + '</div>';
+        return '<div class="cs-vcol"><div class="cs-vcolh"><s>' + esc(label) + '</s></div>' + rows + '</div>';
     }
 
     function voiceField() {
@@ -220,7 +220,7 @@
             secTitle(T('Озвучка'), ' <span class="cs-vsum" id="vd-vsum">' + esc(voiceSum()) + '</span>') +
             silentRow() +
             '<div class="cs-vcols">' + voiceCol('male', T('Мужские')) + voiceCol('female', T('Женские')) + '</div>' +
-            '<div class="cs-vfoot">' + esc(T('Отмеченные голоса читают ролики по очереди, без повтора подряд. Если не отмечено ничего — голос подбирается по теме ролика. Настройки канала на ролики этого раздела не влияют.')) +
+            '<div class="cs-vfoot">' + esc(T('Выбранный голос читает ролик. Если голос не выбран — он подбирается по полу рассказчика в сценарии. Настройки канала на ролики этого раздела не влияют.')) +
             '</div></div>';
     }
 
@@ -413,15 +413,15 @@
         }
     }
 
-    function markVoice(el, on) {
+    function markVoice(el) {
         var row = el.classList.contains('cs-vrow') ? el : el.closest('.cs-vrow');
         if (!row) return;
         var name = row.getAttribute('data-v');
-        var want = (on === null || on === undefined) ? !row.classList.contains('on') : on;
+        var want = !row.classList.contains('on');
+        var sec = row.closest('#vd-voice-sec') || document;
+        [].slice.call(sec.querySelectorAll('.cs-vrow.on')).forEach(function (r) { r.classList.remove('on'); });
         row.classList.toggle('on', want);
-        var i = _voiceNames.indexOf(name);
-        if (want && i < 0) _voiceNames.push(name);
-        if (!want && i >= 0) _voiceNames.splice(i, 1);
+        _voiceNames = want ? [name] : [];
         var sum = document.getElementById('vd-vsum');
         if (sum) sum.textContent = voiceSum();
         haptic();
@@ -511,15 +511,7 @@
             playSample(b);
             return;
         }
-        if (a === 'vname') { markVoice(b, null); return; }
-        if (a === 'vall') {
-            e.stopPropagation();
-            var col = b.parentNode.parentNode;
-            [].slice.call(col.querySelectorAll('.cs-vrow')).forEach(function (r, i, all) {
-                markVoice(r, !all.every(function (x) { return x.classList.contains('on'); }));
-            });
-            return;
-        }
+        if (a === 'vname') { markVoice(b); return; }
         if (a === 'brandtog') {
             _brandOn = !_brandOn;
             if (_brandOn && !brandChannel()) {
