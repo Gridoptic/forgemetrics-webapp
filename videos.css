@@ -20,6 +20,10 @@
     padding: 15px; display: flex; flex-direction: column; gap: 14px;
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
 .vd-f { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.vd-modes { display: flex; gap: 8px; }
+.vd-mode { flex: 1; min-height: 44px; padding: 8px 10px; border-radius: 12px; font: 600 13px/1.2 inherit; font-family: inherit;
+  color: #aab0c4; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+.vd-mode.on { color: #fff; background: rgba(129,140,248,0.22); border-color: rgba(129,140,248,0.6); }
 .vd-cnt { font-size: 10.5px; color: #7d839a; text-align: right; margin-top: 6px; }
 
 .vd-box { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);

@@ -7,6 +7,8 @@
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
+    var _mode = 'topic', _silent = false, _address = '', _finalLine = '';
+    var MAX_ADDRESS = 40, MAX_FINAL = 120;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -79,14 +81,64 @@
         return '<div class="cs-section-hint">' + esc(text) + '</div>';
     }
 
+    function modeField() {
+        var chip = function (v, label) {
+            return '<button type="button" class="vd-mode' + (_mode === v ? ' on' : '') + '" data-va="mode" data-v="' + v + '">' +
+                esc(label) + '</button>';
+        };
+        return '<div class="vd-f"><div class="vd-modes">' + chip('topic', T('Ролик по теме')) +
+            chip('ad', T('Реклама своего продукта')) + '</div></div>';
+    }
+
     function topicField() {
         var left = MAX_TOPIC - (_topic || '').length;
-        return '<div class="vd-f">' + secTitle(T('Тема ролика')) +
-            secHint(T('Опиши, о чём ролик. Можно вставить свой текст — он станет основой сценария.')) +
+        var ad = _mode === 'ad';
+        return '<div class="vd-f">' + secTitle(ad ? T('История') : T('Тема ролика')) +
+            secHint(ad ? T('Своими словами: что это за продукт, какая была боль и что изменилось. Сценарий напишется от первого лица, без перечисления функций в лоб.')
+                : T('Опиши, о чём ролик. Можно вставить свой текст — он станет основой сценария.')) +
             '<div class="vd-box"><textarea class="vd-ta" id="vd-topic" rows="5" autocomplete="off" maxlength="' +
             MAX_TOPIC + '" placeholder="' +
-            esc(T('Например: как выбрать робот-пылесос для квартиры с животными')) + '">' + esc(_topic) + '</textarea>' +
+            esc(ad ? T('Например: бросал свой канал — не хватало сил на посты и ролики. Теперь бот собирает контент-план на неделю, а я только утверждаю.')
+                : T('Например: как выбрать робот-пылесос для квартиры с животными')) + '">' + esc(_topic) + '</textarea>' +
             '<div class="vd-cnt">' + esc(T('Осталось символов')) + ': ' + left + '</div></div></div>';
+    }
+
+    function recordingsField() {
+        var thumbs = _videos.map(function (v, i) {
+            return '<div class="vd-ph vid"><video src="' + esc(v.url) + '" muted playsinline preload="metadata"></video>' +
+                '<span class="vd-ph-t">' + esc(String(v.duration || '') + ' ' + T('с')) + '</span>' +
+                '<button type="button" class="vd-ph-x" data-va="unvideo" data-i="' + i +
+                '"><i class="ti ti-x"></i></button></div>';
+        }).join('');
+        var add = _videos.length < MAX_VIDEOS
+            ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-video-plus"></i>' +
+              '<span>' + esc(T('Добавить видео')) + '</span></button>'
+            : '';
+        return '<div class="vd-f">' + secTitle(T('Записи экрана')) +
+            secHint(T('До 3 видео до 60 МБ. Бот сам прочитает, что на каждой записи, и поставит её под нужную фразу — мельком, аккуратной карточкой.')) +
+            '<div class="vd-phs">' + thumbs + add + '</div></div>';
+    }
+
+    function finalField() {
+        return '<div class="vd-f">' + secTitle(T('Финал')) +
+            secHint(T('Адрес крупно на последнем кадре и последняя фраза.')) +
+            '<div class="vd-box"><input class="vd-inp" id="vd-addr" type="text" autocomplete="off" maxlength="' + MAX_ADDRESS +
+            '" value="' + esc(_address) + '" placeholder="' + esc(T('Адрес на экране')) + '"></div>' +
+            '<div class="vd-box"><input class="vd-inp" id="vd-fline" type="text" autocomplete="off" maxlength="' + MAX_FINAL +
+            '" value="' + esc(_finalLine) + '" placeholder="' + esc(T('Последняя фраза')) + '"></div></div>';
+    }
+
+    function silentRow() {
+        return '<div class="cs-toggle-row" data-va="silent" style="margin-bottom:10px">' +
+            '<div class="cs-toggle-icon-wrap"><i class="ti ti-volume-off" style="color: ' +
+            (_silent ? '#5DCAA5' : 'rgba(255,255,255,0.4)') + ';"></i></div>' +
+            '<div class="cs-toggle-info"><div class="cs-toggle-title-row">' +
+            '<span class="cs-toggle-title">' + esc(T('Без озвучки')) + '</span></div>' +
+            '<div class="cs-toggle-sub">' + esc(_silent
+                ? T('Включено — диктора нет, ролик держится на надписях и музыке')
+                : T('Выключено — диктор читает ролик. Включи, чтобы оставить только надписи и музыку')) + '</div></div>' +
+            '<button class="cs-toggle-switch' + (_silent ? ' on' : '') +
+            '" type="button"><span class="cs-toggle-knob"></span></button></div>';
     }
 
     function nicheField() {
@@ -161,8 +213,12 @@
 
     function voiceField() {
         if (!_voices.length) return '';
+        if (_silent) {
+            return '<div class="vd-f" id="vd-voice-sec">' + secTitle(T('Озвучка')) + silentRow() + '</div>';
+        }
         return '<div class="vd-f" id="vd-voice-sec">' +
             secTitle(T('Озвучка'), ' <span class="cs-vsum" id="vd-vsum">' + esc(voiceSum()) + '</span>') +
+            silentRow() +
             '<div class="cs-vcols">' + voiceCol('male', T('Мужские')) + voiceCol('female', T('Женские')) + '</div>' +
             '<div class="cs-vfoot">' + esc(T('Отмеченные голоса читают ролики по очереди, без повтора подряд. Если не отмечено ничего — голос подбирается по теме ролика. Настройки канала на ролики этого раздела не влияют.')) +
             '</div></div>';
@@ -212,7 +268,12 @@
               esc(T('Запускаю сборку')) + '</button>'
             : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
               esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>';
-        return '<div class="vd-card">' +
+        if (_mode === 'ad') {
+            return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() +
+                '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, записи экрана карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
+                '</div>' + go + '</div>';
+        }
+        return '<div class="vd-card">' + modeField() +
             topicField() + nicheField() + urlField() +
             photosField() + voiceField() + endingField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
@@ -386,7 +447,7 @@
         var host = document.getElementById('videos-screen');
         if (!host) return;
         var focus = document.activeElement;
-        var fid = focus && focus.id && /^vd-(topic|niche|url)$/.test(focus.id) ? focus.id : '';
+        var fid = focus && focus.id && /^vd-(topic|niche|url|addr|fline)$/.test(focus.id) ? focus.id : '';
         var pos = fid ? focus.selectionStart : 0;
         stopSample();
         host.innerHTML = head() + '<div class="vd-body">' + form() +
@@ -414,6 +475,8 @@
             return;
         }
         if (el.id === 'vd-url') { _url = el.value.trim(); return; }
+        if (el.id === 'vd-addr') { _address = el.value.slice(0, MAX_ADDRESS); return; }
+        if (el.id === 'vd-fline') { _finalLine = el.value.slice(0, MAX_FINAL); return; }
         if (el.id === 'vd-niche') {
             _nq = el.value;
             render();
@@ -428,6 +491,12 @@
         }
         var a = b.getAttribute('data-va');
         if (a === 'close') { haptic(); close(); return; }
+        if (a === 'mode') {
+            var nm = b.getAttribute('data-v') === 'ad' ? 'ad' : 'topic';
+            if (nm !== _mode) { _mode = nm; _pick = false; haptic(); render(); }
+            return;
+        }
+        if (a === 'silent') { _silent = !_silent; haptic(); render(); return; }
         if (a === 'nopen') { _pick = !_pick; _nq = ''; haptic(); render(); return; }
         if (a === 'niche') {
             _niche = b.getAttribute('data-v') || '';
@@ -510,12 +579,14 @@
             inp.style.display = 'none';
             document.body.appendChild(inp);
         }
-        inp.accept = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm';
+        inp.accept = _mode === 'ad' ? 'video/mp4,video/quicktime,video/webm'
+            : 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm';
         inp.onchange = function () {
             var f = inp.files && inp.files[0];
             inp.value = '';
             if (!f) return;
             var isVideo = /^video\//.test(f.type || '');
+            if (_mode === 'ad' && !isVideo) { toast(T('Сюда нужны записи экрана — видео MP4, MOV или WebM'), 'alert-triangle'); return; }
             if (isVideo && _videos.length >= MAX_VIDEOS) { toast(T('Больше трёх видео не нужно'), 'alert-triangle'); return; }
             if (!isVideo && _photos.length >= MAX_PHOTOS) { toast(T('Больше четырёх фотографий не нужно'), 'alert-triangle'); return; }
             var limit = isVideo ? 60 : 8;
@@ -545,16 +616,22 @@
         if (_busy) return;
         if (_parallel < 1) _parallel = 2;
         var topic = (_topic || '').trim();
-        if (topic.length < 12) { toast(T('Опиши тему ролика: минимум одно предложение.'), 'alert-triangle'); return; }
+        if (topic.length < 12) {
+            toast(_mode === 'ad' ? T('Опиши историю: минимум одно предложение.') : T('Опиши тему ролика: минимум одно предложение.'), 'alert-triangle');
+            return;
+        }
+        var ad = _mode === 'ad';
         _busy = true;
         haptic('medium');
         render();
         var body = {
-            topic: topic, niche: (_niche || '').trim(), product_url: (_url || '').trim(),
-            photos: _photos.map(function (p) { return p.path; }),
+            topic: topic, niche: ad ? '' : (_niche || '').trim(), product_url: ad ? '' : (_url || '').trim(),
+            photos: ad ? [] : _photos.map(function (p) { return p.path; }),
             videos: _videos.map(function (v) { return v.path; }),
-            voice_names: _voiceNames, channel_id: (_brandOn && _brandCh) ? _brandCh : null,
-            lang: (window.__fmLang || 'ru')
+            voice_names: _silent ? [] : _voiceNames, channel_id: (!ad && _brandOn && _brandCh) ? _brandCh : null,
+            lang: (window.__fmLang || 'ru'),
+            mode: _mode, silent: _silent,
+            final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : ''
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
