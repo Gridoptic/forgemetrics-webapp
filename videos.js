@@ -9,6 +9,7 @@
         _busy = false, _pick = false;
     var _mode = 'topic', _silent = false, _address = '', _finalLine = '', _logo = null;
     var MAX_ADDRESS = 40, MAX_FINAL = 120;
+    var UPLOAD_VIDEO_MS = 600000, UPLOAD_PHOTO_MS = 180000;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
     function esc(s) {
@@ -33,6 +34,11 @@
             (document.getElementById('app') || document.body).appendChild(host);
             host.addEventListener('click', onClick);
             host.addEventListener('input', onInput);
+            host.addEventListener('contextmenu', function (e) {
+                if (e.target && e.target.closest && e.target.closest('img, video, .vd-ph, .vd-thumb, .cp-crv-prev, .vd-lp-frame')) {
+                    e.preventDefault();
+                }
+            });
         }
         host.style.display = 'flex';
         document.documentElement.classList.add('cs-modal-open');
@@ -126,6 +132,21 @@
             materialThumbs() + '</div>';
     }
 
+    function fitPreview() {
+        var line = document.getElementById('vd-lp-line');
+        var addr = document.getElementById('vd-lp-addr');
+        if (addr) {
+            var a = 96;
+            addr.style.fontSize = a + 'px';
+            while (a > 36 && addr.scrollWidth > addr.clientWidth + 1) { a -= 4; addr.style.fontSize = a + 'px'; }
+        }
+        if (line) {
+            var l = 72;
+            line.style.fontSize = l + 'px';
+            while (l > 40 && line.scrollHeight > 300) { l -= 4; line.style.fontSize = l + 'px'; }
+        }
+    }
+
     function logoRow() {
         if (!_logo) {
             return '<div class="vd-logo-row"><button type="button" class="vd-ph-add" data-va="logo"><i class="ti ti-photo-plus"></i>' +
@@ -137,8 +158,10 @@
             '<div class="vd-logo-note"><div class="vd-logo-t">' +
             esc(_logo.removed ? T('Фон убран автоматически') : T('Фон неоднородный — логотип встанет как есть')) + '</div>' +
             '<div class="vd-logo-s">' + esc(T('Эмблема встанет крупно по центру финального кадра, адрес и фраза — над и под ней.')) + '</div></div></div>' +
-            '<div class="vd-lp"><div class="vd-lp-frame"><div class="vd-lp-line" id="vd-lp-line">' + esc(_finalLine) + '</div>' +
-            '<img src="' + esc(_logo.url) + '" alt=""><div class="vd-lp-addr" id="vd-lp-addr">' + esc(_address) + '</div></div>' +
+            '<div class="vd-lp"><div class="vd-lp-frame"><div class="vd-lp-stage">' +
+            '<div class="vd-lp-line" id="vd-lp-line">' + esc(_finalLine) + '</div>' +
+            '<div class="vd-lp-logo"><img src="' + esc(_logo.url) + '" alt=""></div>' +
+            '<div class="vd-lp-addr" id="vd-lp-addr">' + esc(_address) + '</div></div></div>' +
             '<div class="vd-lp-t">' + esc(T('Так будет выглядеть последний кадр ролика')) + '</div></div>';
     }
 
@@ -461,6 +484,7 @@
         stopSample();
         host.innerHTML = head() + '<div class="vd-body">' + form() +
             '<div class="vd-sec">' + esc(T('Мои ролики')) + '</div>' + list() + '</div>';
+        fitPreview();
         if (fid) {
             var el = document.getElementById(fid);
             if (el) {
@@ -487,13 +511,13 @@
         if (el.id === 'vd-addr') {
             _address = el.value.slice(0, MAX_ADDRESS);
             var la = document.getElementById('vd-lp-addr');
-            if (la) la.textContent = _address;
+            if (la) { la.textContent = _address; fitPreview(); }
             return;
         }
         if (el.id === 'vd-fline') {
             _finalLine = el.value.slice(0, MAX_FINAL);
             var ll = document.getElementById('vd-lp-line');
-            if (ll) ll.textContent = _finalLine;
+            if (ll) { ll.textContent = _finalLine; fitPreview(); }
             return;
         }
         if (el.id === 'vd-niche') {
@@ -609,7 +633,8 @@
             fd.append('file', f);
             fd.append('slot', String(isVideo ? _videos.length : _photos.length));
             toast(isVideo ? T('Загружаю видео') : T('Загружаю фото'), 'loader');
-            apiRequest('/api/v1/creative/brief/' + (isVideo ? 'video' : 'photo'), { method: 'POST', body: fd })
+            apiRequest('/api/v1/creative/brief/' + (isVideo ? 'video' : 'photo'),
+                { method: 'POST', body: fd, timeoutMs: isVideo ? UPLOAD_VIDEO_MS : UPLOAD_PHOTO_MS })
                 .then(function (r) {
                     if (r && r.ok) {
                         if (isVideo) _videos.push({ path: r.path, url: r.url, duration: r.duration });
@@ -642,7 +667,7 @@
             var fd = new FormData();
             fd.append('file', f);
             toast(T('Загружаю логотип'), 'loader');
-            apiRequest('/api/v1/creative/brief/logo', { method: 'POST', body: fd })
+            apiRequest('/api/v1/creative/brief/logo', { method: 'POST', body: fd, timeoutMs: UPLOAD_PHOTO_MS })
                 .then(function (r) {
                     if (r && r.ok) {
                         _logo = { path: r.path, url: r.url, removed: !!r.removed };
