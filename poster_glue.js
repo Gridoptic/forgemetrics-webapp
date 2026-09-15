@@ -483,7 +483,7 @@
     if (_lot) return _lot;
     _lot = Promise.all([
       (typeof pako !== 'undefined') ? Promise.resolve() : _loadScript('https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js'),
-      (typeof lottie !== 'undefined') ? Promise.resolve() : _loadScript('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js')
+      (typeof lottie !== 'undefined') ? Promise.resolve() : _loadScript('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie_light.min.js')
     ]);
     return _lot;
   }

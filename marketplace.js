@@ -2760,20 +2760,9 @@
     }
 
     function _modAccessBody() {
-        if (!_isOwner()) return '<div class="fmx-ctrl" style="margin-top:12px;">' + _modBoostCard() + '</div>';
         if (_mod.err.ctrl) return '<div class="fmx-mmeta" style="padding-top:11px;">' + L('Не загрузилось — панель повторит попытку.') + '</div>';
         if (!_mod.ctrl) return loadHtml();
         var r = _mod.ctrl, on = !!r.moderation_enabled;
-        var rows = (r.moderators || []).map(function (m) {
-            var who = _esc(m.name || ('ID ' + m.user_id));
-            var un = m.username ? '@' + _esc(m.username) : 'ID ' + m.user_id;
-            var tag = m.source === 'owner' ? '<span class="fmx-mdtag own">' + L('владелец') + '</span>'
-                : (m.source === 'env' ? '<span class="fmx-mdtag">' + L('из настроек сервера') + '</span>' : '');
-            var del = (m.source === 'db')
-                ? '<button class="fmx-mdel" data-modrm="' + m.user_id + '" aria-label="' + L('Снять права') + '"><i class="ti ti-x"></i></button>' : '';
-            return '<div class="fmx-mdrow"><div class="fmx-mdinfo"><div class="fmx-mdname">' + who + ' ' + tag + '</div>' +
-                '<div class="fmx-mdsub">' + un + '</div></div>' + del + '</div>';
-        }).join('');
         return '<div class="fmx-ctrl" style="margin-top:12px;">' +
             '<div class="fmx-ctrlcard">' +
             '<div class="fmx-ctrltop"><div><div class="fmx-ctrlt">' + L('Проверка офферов') + '</div>' +
@@ -2785,14 +2774,6 @@
             (on ? '' : '<div class="fmx-ctrlwarn"><i class="ti ti-alert-triangle"></i>' +
                 L('Пока выключено, на витрину может попасть запрещённый контент — ответственность за площадку на тебе. ') +
                 L('Включай обратно после разбора очереди.') + '</div>') +
-            '</div>' +
-            '<div class="fmx-ctrlcard">' +
-            '<div class="fmx-ctrlt">' + L('Модераторы') + '</div>' +
-            '<div class="fmx-ctrls" style="margin-bottom:10px;">' + L('Видят очередь, сводку и карточку пользователя. Управление и состав — только у владельца.') + '</div>' +
-            '<div class="fmx-mdlist">' + (rows || '<div class="fmx-mdsub">' + L('Пока никого') + '</div>') + '</div>' +
-            '<div class="fmx-mdadd"><input class="fmx-mdinp" id="fmx-mdq" placeholder="' + L('@username или ID') + '" autocomplete="off" spellcheck="false">' +
-            '<button class="fmx-mdbtn" id="fmx-mdadd">' + L('Выдать права') + '</button></div>' +
-            '<div class="fmx-mdsub" style="margin-top:8px;">' + L('Человек должен хотя бы раз открыть приложение — иначе его не найти.') + '</div>' +
             '</div>' +
             _ctrlTestersHtml(r) +
             _modBoostCard() + '</div>';
@@ -2816,7 +2797,7 @@
                 tv, tv ? L('за месяц') : '', _modTaxBody());
         }
         h += _modSec('access', 'ti-adjustments', '', L('Управление'),
-            _isOwner() ? L('проверка офферов · модераторы · тестеры') : L('ручное продвижение оффера'), '', '', _modAccessBody());
+            L('проверка офферов · тестеры'), '', '', _modAccessBody());
         box.innerHTML = h;
         qsa(box, '[data-sectg]').forEach(function (b) {
             b.addEventListener('click', function () { _haptic('light'); _modOpenSec(b.getAttribute('data-sectg')); });
@@ -2947,32 +2928,6 @@
                     toast(next ? L('Проверка офферов включена') : L('Проверка офферов выключена'));
                     _modReloadCtrl();
                 }).catch(function () { uiAlert(L('Не удалось изменить')); });
-            });
-        });
-        var addBtn = el('fmx-mdadd');
-        if (addBtn) addBtn.addEventListener('click', function () {
-            var inp = el('fmx-mdq'); if (!inp) return;
-            var q = (inp.value || '').trim();
-            if (q.length < 2) { uiAlert(L('Укажи @username или числовой ID')); return; }
-            addBtn.disabled = true;
-            apiPost('/api/v1/admin/moderators', { query: q }).then(function (res) {
-                addBtn.disabled = false;
-                if (!res || res.ok === false) { _haptic('error'); uiAlert((res && res.message) || L('Не удалось')); return; }
-                _haptic('success'); toast(res.message || L('Права выданы'));
-                inp.value = '';
-                _modReloadCtrl();
-            }).catch(function () { addBtn.disabled = false; uiAlert(L('Не удалось')); });
-        });
-        qsa(box, '[data-modrm]').forEach(function (b) {
-            b.addEventListener('click', function () {
-                var uid = b.getAttribute('data-modrm');
-                uiConfirm(L('Снять права модератора?'), function () {
-                    apiRequest('/api/v1/admin/moderators/' + uid, { method: 'DELETE' }).then(function (res) {
-                        if (!res || res.ok === false) { uiAlert((res && res.message) || L('Не удалось')); return; }
-                        _haptic('success'); toast(res.message || L('Права сняты'));
-                        _modReloadCtrl();
-                    }).catch(function () { uiAlert(L('Не удалось')); });
-                });
             });
         });
         var boost = el('fmx-mboostgo');
@@ -8195,7 +8150,7 @@
         if (_lotLibs) return _lotLibs;
         _lotLibs = Promise.all([
             (typeof pako !== 'undefined') ? Promise.resolve() : _script('https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js'),
-            (typeof lottie !== 'undefined') ? Promise.resolve() : _script('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js')
+            (typeof lottie !== 'undefined') ? Promise.resolve() : _script('https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie_light.min.js')
         ]);
         return _lotLibs;
     }
@@ -8699,7 +8654,7 @@
         }
         hydrateTgs(hero);
     }
-    var PS_GLUE_V = '20260914a';
+    var PS_GLUE_V = '20260916a';
     function _psInjectStyle() {
         if (el('fmx-ps-style')) return;
         var s = document.createElement('style'); s.id = 'fmx-ps-style';

@@ -4169,7 +4169,7 @@
                     toast(ownErr(r.error));
                     rerender();
                 } else {
-                    toast(T('Файл не загрузился'));
+                    toast((r && r.message) || T('Файл не загрузился'));
                     rerender();
                 }
             })
