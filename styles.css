@@ -5770,14 +5770,14 @@ html.cs-modal-open {
 
 .tfc-op.ok .tfc-ctl input[type=range]::-webkit-slider-runnable-track {
     background: linear-gradient(90deg,
-        rgba(93, 202, 165, 0.55) calc(9px + (100% - 18px) * var(--p, 0)),
-        rgba(93, 202, 165, 0.17) 0 calc(9px + (100% - 18px) * var(--r, 0)),
+        rgba(93, 202, 165, 0.55) calc(9px + (100% - 9px) * var(--p, 0)),
+        rgba(93, 202, 165, 0.17) 0 calc(9px + (100% - 9px) * var(--r, 0)),
         rgba(255, 255, 255, 0.07) 0);
 }
 
 .tfc-op.stop .tfc-ctl input[type=range]::-webkit-slider-runnable-track {
     background: linear-gradient(90deg,
-        rgba(245, 158, 11, 0.6) calc(9px + (100% - 18px) * var(--p, 0)),
+        rgba(245, 158, 11, 0.6) calc(9px + (100% - 9px) * var(--p, 0)),
         rgba(245, 158, 11, 0.16) 0);
 }
 

@@ -2906,14 +2906,13 @@ function flipToggle(owner, toggle, open, fadeSel) {
 }
 
 const TFC_LIST = [
-    ['generate', 300], ['generate_std', 400], ['cover_own', 400], ['creative_build', 100],
-    ['modify', 200], ['modify_std', 300], ['generate_proofs', 100], ['generate_std_proofs', 100],
-    ['research_attach', 100], ['rewrite', 100], ['rewrite_std', 100], ['voice', 20],
-    ['poster_hook', 100], ['plan_reskeleton', 30], ['channel_analyze', 45], ['adpick', 45],
-    ['audit', 30], ['competitors', 20], ['ai_strategy', 3], ['strategy_renewal', 12],
-    ['promo_burst24', 30], ['promo_burst48', 30], ['promo_week', 20], ['promo_month', 12],
+    'generate', 'generate_std', 'cover_own', 'creative_build',
+    'modify', 'modify_std', 'generate_proofs', 'generate_std_proofs',
+    'research_attach', 'rewrite', 'rewrite_std', 'voice',
+    'poster_hook', 'plan_reskeleton', 'channel_analyze', 'adpick',
+    'audit', 'competitors', 'ai_strategy', 'strategy_renewal',
+    'promo_burst24', 'promo_burst48', 'promo_week', 'promo_month',
 ];
-const TFC_MAX = Object.fromEntries(TFC_LIST);
 const TFC_MAIN = ['generate', 'generate_std', 'cover_own', 'creative_build'];
 const TFC_SHORT = {
     generate: TR('Премиум-пост'), generate_std: TR('Стандартный пост'),
@@ -2937,7 +2936,7 @@ let tfCalc = null;
 function tfcOps(d) {
     const by = {};
     (d.forge_prices || []).forEach((p) => { if (p && p.price > 0) by[p.key] = p; });
-    return TFC_LIST.filter(([k]) => by[k] && !(d.promo_open === false && k.startsWith('promo_'))).map(([k]) => by[k]);
+    return TFC_LIST.filter((k) => by[k] && !(d.promo_open === false && k.startsWith('promo_'))).map((k) => by[k]);
 }
 
 function tfcDefaultPack(packs) {
@@ -2964,7 +2963,7 @@ function tfcLeft(d) {
 }
 
 function tfcScale(d, o) {
-    return Math.min(TFC_MAX[o.key], Math.floor(tfcBudget(d) / o.price));
+    return Math.floor(tfcBudget(d) / o.price);
 }
 
 function tfcReach(d, o) {
@@ -2974,7 +2973,7 @@ function tfcReach(d, o) {
 function tfcFit(d) {
     let free = tfcBudget(d);
     tfcOps(d).forEach((o) => {
-        const n = Math.max(0, Math.min(tfCalc.v[o.key] || 0, TFC_MAX[o.key], Math.floor(free / o.price)));
+        const n = Math.max(0, Math.min(tfCalc.v[o.key] || 0, Math.floor(free / o.price)));
         tfCalc.v[o.key] = n;
         free -= n * o.price;
     });
@@ -2985,16 +2984,14 @@ function tfcState(d, o) {
     const scale = tfcScale(d, o);
     const reach = tfcReach(d, o);
     const left = tfcLeft(d);
-    const capped = val > 0 && val >= TFC_MAX[o.key] && left >= o.price;
     let hint;
     if (reach > val) hint = TR('можно добрать ещё ') + cabNum(reach - val);
     else if (o.price > tfcBudget(d)) hint = TR('дороже выбранного пакета');
-    else if (capped) hint = TR('предел шкалы калькулятора');
     else if (val > 0) hint = TR('предел запаса · освободи ') + cabNum(o.price - left) + TR(', чтобы добавить ещё');
     else hint = TR('нужно ещё ') + cabNum(o.price - left) + TR(' Forge, чтобы взять одну');
     return {
         val, scale, reach, hint,
-        cls: (reach > val || capped) ? 'ok' : (val > 0 ? 'stop' : 'off'),
+        cls: reach > val ? 'ok' : (val > 0 ? 'stop' : 'off'),
         p: scale > 0 ? (val / scale).toFixed(4) : '0',
         r: scale > 0 ? (reach / scale).toFixed(4) : '0',
     };
@@ -3016,11 +3013,7 @@ function tfcRow(d, o) {
 }
 
 function tfcBudgetNote(d) {
-    const t = tfcTier(d);
-    const packs = d.forge_packs || [];
-    const next = packs[packs.findIndex((p) => p.amount === t.key) + 1];
-    return escapeHtml(TR('из пакета') + ' ') + t.name
-        + (next ? escapeHtml(TR(' · следующий пакет даст ')) + forgeAmount(next.amount, 11) : '');
+    return escapeHtml(TR('из пакета') + ' ') + tfcTier(d).name;
 }
 
 function tfCalculatorHtml(d) {
