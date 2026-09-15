@@ -132,19 +132,59 @@
             materialThumbs() + '</div>';
     }
 
+    var FIN_W = 960, ADDR_MAX = 96, ADDR_ONE_MIN = 72, ADDR_TWO_MAX = 72, LINE_MAX = 72, LINE_MIN = 40, LINE_H = 300, LINE_CAP = 320;
+    var BREAKS = '/.-_@: ';
+    function textWidth(el, text, size) {
+      var c = textWidth.ctx || (textWidth.ctx = document.createElement('canvas').getContext('2d'));
+      var cs = getComputedStyle(el);
+      c.font = cs.fontWeight + ' ' + size + 'px ' + cs.fontFamily;
+      return c.measureText(text).width;
+    }
+    function escText(t) {
+      return String(t).replace(/[&<>"]/g, function (ch) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]; });
+    }
+    function layoutAddress(el, text) {
+      text = String(text || '').trim();
+      if (!text) { el.innerHTML = ''; return; }
+      var unit = textWidth(el, text, 100) / 100;
+      var one = Math.min(ADDR_MAX, FIN_W / Math.max(1, unit));
+      if (one >= ADDR_ONE_MIN) {
+        el.innerHTML = '<span class="al">' + escText(text) + '</span>';
+        el.style.fontSize = one.toFixed(1) + 'px';
+        return;
+      }
+      var best = -1, bestW = Infinity, anyBest = -1, anyW = Infinity;
+      for (var i = 1; i < text.length; i++) {
+        var w = Math.max(textWidth(el, text.slice(0, i), 100), textWidth(el, text.slice(i).replace(/^ /, ''), 100)) / 100;
+        if (w < anyW) { anyW = w; anyBest = i; }
+        if (BREAKS.indexOf(text.charAt(i - 1)) >= 0 && w < bestW) { bestW = w; best = i; }
+      }
+      var cut = (best > 0 && bestW <= unit * 0.72) ? best : anyBest;
+      var widest = best > 0 && cut === best ? bestW : anyW;
+      el.innerHTML = '<span class="al">' + escText(text.slice(0, cut)) + '</span><span class="al">' +
+        escText(text.slice(cut).replace(/^ /, '')) + '</span>';
+      el.style.fontSize = Math.min(ADDR_TWO_MAX, FIN_W / Math.max(1, widest)).toFixed(1) + 'px';
+    }
+    function layoutLine(el, text) {
+      var len = Math.max(1, String(text || '').trim().length);
+      var size = Math.max(LINE_MIN, Math.min(LINE_MAX, Math.sqrt(0.8 * LINE_H * FIN_W / (0.62 * len))));
+      var probe = el.cloneNode(true);
+      probe.removeAttribute('id');
+      probe.style.transition = 'none';
+      probe.style.visibility = 'hidden';
+      probe.style.fontSize = size.toFixed(1) + 'px';
+      el.parentNode.appendChild(probe);
+      var h = probe.scrollHeight;
+      el.parentNode.removeChild(probe);
+      if (h > LINE_CAP) size = Math.max(LINE_MIN, size * LINE_CAP / h);
+      el.style.fontSize = size.toFixed(1) + 'px';
+    }
+
     function fitPreview() {
         var line = document.getElementById('vd-lp-line');
         var addr = document.getElementById('vd-lp-addr');
-        if (addr) {
-            var a = 96;
-            addr.style.fontSize = a + 'px';
-            while (a > 36 && addr.scrollWidth > addr.clientWidth + 1) { a -= 4; addr.style.fontSize = a + 'px'; }
-        }
-        if (line) {
-            var l = 72;
-            line.style.fontSize = l + 'px';
-            while (l > 40 && line.scrollHeight > 300) { l -= 4; line.style.fontSize = l + 'px'; }
-        }
+        if (addr) layoutAddress(addr, _address);
+        if (line) layoutLine(line, _finalLine);
     }
 
     function logoRow() {
@@ -511,7 +551,7 @@
         if (el.id === 'vd-addr') {
             _address = el.value.slice(0, MAX_ADDRESS);
             var la = document.getElementById('vd-lp-addr');
-            if (la) { la.textContent = _address; fitPreview(); }
+            if (la) fitPreview();
             return;
         }
         if (el.id === 'vd-fline') {
