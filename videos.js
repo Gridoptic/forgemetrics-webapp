@@ -2,7 +2,7 @@
     'use strict';
 
     var MAX_TOPIC = 3000, MAX_PHOTOS = 4, MAX_VIDEOS = 3;
-    var _niches = [], _price = 70, _parallel = 2, _items = [], _loaded = false;
+    var _niches = [], _price = 50, _parallel = 2, _items = [], _loaded = false;
     var _keepDays = 7, _open = {};
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],

@@ -3549,7 +3549,7 @@
 
     function creativePrice() {
         var w = wallet();
-        return (w.prices && w.prices.creative_build) || 70;
+        return (w.prices && w.prices.creative_build) || 50;
     }
 
     function regenCover(id, kind) {

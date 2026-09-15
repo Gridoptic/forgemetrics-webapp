@@ -44,7 +44,7 @@
         } catch (e) {}
         return fb;
     }
-    function basePrice() { return priceOf('creative_build', 70); }
+    function basePrice() { return priceOf('creative_build', 50); }
     function premiumPrice() { return priceOf('creative_premium', 200); }
     function planPrice() { return priceOf('creative_plan', 5); }
     function editPrice() { return priceOf('creative_plan_edit', 0); }
