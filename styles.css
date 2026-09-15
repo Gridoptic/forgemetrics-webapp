@@ -5545,71 +5545,16 @@ html.cs-modal-open {
     margin: -4px 0 11px;
 }
 
-.tfc-presets {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin-bottom: 8px;
-}
-
-.tfc-chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    min-height: 60px;
-    padding: 8px 6px;
-    border-radius: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text-secondary);
-    font-family: inherit;
-    font-size: 11px;
-    line-height: 1.2;
-    text-align: center;
-    cursor: pointer;
-    transition: background .18s ease, border-color .18s ease, color .18s ease;
-}
-
-.tfc-chip i {
-    font-size: 17px;
-    color: rgba(var(--tp-rgb), 0.55);
-    transition: color .18s ease;
-}
-
-.tfc-chip.on {
-    background: rgba(var(--tp-rgb), 0.16);
-    border-color: rgba(var(--tp-rgb), 0.5);
-    color: var(--tp-a);
-}
-
-.tfc-chip.on i {
-    color: var(--tp-a);
-}
-
-.tfc-chip.on {
-    background: rgba(129, 140, 248, 0.16);
-    border-color: rgba(129, 140, 248, 0.5);
-    color: #a5adff;
-}
-
 .tfc-tiers {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
     margin-bottom: 12px;
-    padding: 8px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
-@media (max-width: 400px) {
+@media (max-width: 370px) {
     .tfc-tiers {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -5617,37 +5562,44 @@ html.cs-modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 40px;
-    padding: 0 6px;
-    border-radius: 11px;
-    border: 1px solid rgba(var(--tp-rgb), 0.22);
-    background: linear-gradient(160deg, rgba(var(--tp-rgb), 0.10), rgba(var(--tp-rgb), 0.03));
+    gap: 5px;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.035);
     color: var(--text-secondary);
     font-family: inherit;
     font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    cursor: pointer;
     transition: background .18s ease, border-color .18s ease,
                 color .18s ease, box-shadow .18s ease;
 }
 
-.tfc-tier i {
-    font-size: 15px;
-    color: var(--tp-a);
-    transition: color .18s ease;
+.tfc-tier .forge-ico {
+    flex: 0 0 auto;
+    vertical-align: 0;
+    opacity: .7;
+    transition: opacity .18s ease;
+}
+
+.tfc-tier:active {
+    background: rgba(255, 255, 255, 0.07);
 }
 
 .tfc-tier.on {
-    background: linear-gradient(160deg, rgba(var(--tp-rgb), 0.26), rgba(var(--tp-rgb), 0.10));
-    border-color: rgba(var(--tp-rgb), 0.6);
-    color: var(--tp-a);
-    box-shadow: 0 6px 18px -8px rgba(var(--tp-rgb), 0.6);
+    background: linear-gradient(160deg, rgba(245, 158, 11, 0.22), rgba(245, 158, 11, 0.07));
+    border-color: rgba(245, 158, 11, 0.55);
+    color: #fcd34d;
+    box-shadow: 0 6px 16px -9px rgba(245, 158, 11, 0.6);
 }
 
-.tfc-tier.on i {
-    color: var(--tp-a);
+.tfc-tier.on .forge-ico {
+    opacity: 1;
 }
 
 .tfc-budget {
@@ -5817,11 +5769,16 @@ html.cs-modal-open {
 }
 
 .tfc-op.ok .tfc-ctl input[type=range]::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, rgba(93, 202, 165, 0.5) var(--p, 0%), rgba(255, 255, 255, 0.09) var(--p, 0%));
+    background: linear-gradient(90deg,
+        rgba(93, 202, 165, 0.55) calc(9px + (100% - 18px) * var(--p, 0)),
+        rgba(93, 202, 165, 0.17) 0 calc(9px + (100% - 18px) * var(--r, 0)),
+        rgba(255, 255, 255, 0.07) 0);
 }
 
 .tfc-op.stop .tfc-ctl input[type=range]::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.6) var(--p, 0%), rgba(245, 158, 11, 0.16) var(--p, 0%));
+    background: linear-gradient(90deg,
+        rgba(245, 158, 11, 0.6) calc(9px + (100% - 18px) * var(--p, 0)),
+        rgba(245, 158, 11, 0.16) 0);
 }
 
 .tfc-op.off .tfc-ctl input[type=range]::-webkit-slider-runnable-track {
