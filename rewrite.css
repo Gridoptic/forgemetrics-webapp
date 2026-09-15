@@ -16,7 +16,7 @@
 .rw-head .t { font-size: 16px; font-weight: 800; }
 
 .rw-sec { position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 16px; padding: 15px; margin-top: 12px;
+    border-radius: 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 15px; margin-top: 12px;
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
 .rw-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
     letter-spacing: .09em; text-transform: uppercase; color: #9aa0f5; margin-bottom: 10px; }
