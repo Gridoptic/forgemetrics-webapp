@@ -103,20 +103,27 @@
             '<div class="vd-cnt">' + esc(T('Осталось символов')) + ': ' + left + '</div></div></div>';
     }
 
-    function recordingsField() {
-        var thumbs = _videos.map(function (v, i) {
+    function materialThumbs() {
+        var add = (_photos.length < MAX_PHOTOS || _videos.length < MAX_VIDEOS)
+            ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-camera-plus"></i>' +
+              '<span>' + esc(T('Добавить')) + '</span></button>'
+            : '';
+        return '<div class="vd-phs">' + _photos.map(function (p, i) {
+            return '<div class="vd-ph"><img src="' + esc(p.url) + '" alt="">' +
+                '<button type="button" class="vd-ph-x" data-va="unphoto" data-i="' + i +
+                '"><i class="ti ti-x"></i></button></div>';
+        }).join('') + _videos.map(function (v, i) {
             return '<div class="vd-ph vid"><video src="' + esc(v.url) + '" muted playsinline preload="metadata"></video>' +
                 '<span class="vd-ph-t">' + esc(String(v.duration || '') + ' ' + T('с')) + '</span>' +
                 '<button type="button" class="vd-ph-x" data-va="unvideo" data-i="' + i +
                 '"><i class="ti ti-x"></i></button></div>';
-        }).join('');
-        var add = _videos.length < MAX_VIDEOS
-            ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-video-plus"></i>' +
-              '<span>' + esc(T('Добавить видео')) + '</span></button>'
-            : '';
-        return '<div class="vd-f">' + secTitle(T('Записи экрана')) +
-            secHint(T('До 3 видео до 60 МБ. Бот сам прочитает, что на каждой записи, и поставит её под нужную фразу — мельком, аккуратной карточкой.')) +
-            '<div class="vd-phs">' + thumbs + add + '</div></div>';
+        }).join('') + add + '</div>';
+    }
+
+    function recordingsField() {
+        return '<div class="vd-f">' + secTitle(T('Фото и видео продукта')) +
+            secHint(T('До 4 фото и 3 видео, файл до 60 МБ. Бот сам поймёт, что на каждом, и поставит под нужную фразу — аккуратной карточкой.')) +
+            materialThumbs() + '</div>';
     }
 
     function logoRow() {
@@ -191,23 +198,9 @@
     }
 
     function photosField() {
-        var thumbs = _photos.map(function (p, i) {
-            return '<div class="vd-ph"><img src="' + esc(p.url) + '" alt="">' +
-                '<button type="button" class="vd-ph-x" data-va="unphoto" data-i="' + i +
-                '"><i class="ti ti-x"></i></button></div>';
-        }).join('') + _videos.map(function (v, i) {
-            return '<div class="vd-ph vid"><video src="' + esc(v.url) + '" muted playsinline preload="metadata"></video>' +
-                '<span class="vd-ph-t">' + esc(String(v.duration || '') + ' ' + T('с')) + '</span>' +
-                '<button type="button" class="vd-ph-x" data-va="unvideo" data-i="' + i +
-                '"><i class="ti ti-x"></i></button></div>';
-        }).join('');
-        var add = (_photos.length < MAX_PHOTOS || _videos.length < MAX_VIDEOS)
-            ? '<button type="button" class="vd-ph-add" data-va="photo"><i class="ti ti-camera-plus"></i>' +
-              '<span>' + esc(T('Добавить')) + '</span></button>'
-            : '';
         return '<div class="vd-f">' + secTitle(T('Свои материалы')) +
             secHint(T('До 4 фотографий и 3 видео, файл до 60 МБ. Если материалы есть, кадры ролика собираются из них. Файлы удаляются вместе с роликом, а неиспользованные — в течение суток.')) +
-            '<div class="vd-phs">' + thumbs + add + '</div></div>';
+            materialThumbs() + '</div>';
     }
 
     function voiceSum() {
@@ -286,7 +279,7 @@
               esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>';
         if (_mode === 'ad') {
             return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() +
-                '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, записи экрана карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
+                '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, фото и видео продукта карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
                 '</div>' + go + '</div>';
         }
         return '<div class="vd-card">' + modeField() +
@@ -599,14 +592,12 @@
             inp.style.display = 'none';
             document.body.appendChild(inp);
         }
-        inp.accept = _mode === 'ad' ? 'video/mp4,video/quicktime,video/webm'
-            : 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm';
+        inp.accept = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm';
         inp.onchange = function () {
             var f = inp.files && inp.files[0];
             inp.value = '';
             if (!f) return;
             var isVideo = /^video\//.test(f.type || '');
-            if (_mode === 'ad' && !isVideo) { toast(T('Сюда нужны записи экрана — видео MP4, MOV или WebM'), 'alert-triangle'); return; }
             if (isVideo && _videos.length >= MAX_VIDEOS) { toast(T('Больше трёх видео не нужно'), 'alert-triangle'); return; }
             if (!isVideo && _photos.length >= MAX_PHOTOS) { toast(T('Больше четырёх фотографий не нужно'), 'alert-triangle'); return; }
             var limit = isVideo ? 60 : 8;
@@ -678,7 +669,7 @@
         render();
         var body = {
             topic: topic, niche: ad ? '' : (_niche || '').trim(), product_url: ad ? '' : (_url || '').trim(),
-            photos: ad ? [] : _photos.map(function (p) { return p.path; }),
+            photos: _photos.map(function (p) { return p.path; }),
             videos: _videos.map(function (v) { return v.path; }),
             voice_names: _silent ? [] : _voiceNames, channel_id: (!ad && _brandOn && _brandCh) ? _brandCh : null,
             lang: (window.__fmLang || 'ru'),
