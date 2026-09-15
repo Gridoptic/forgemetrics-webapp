@@ -369,7 +369,6 @@
     function _coverBg(l) { if (l.cover_type && l.cover_type !== 'grad' && l.cover_url) return "url('" + mediaAbs(l.cover_url) + "')"; if (l.cover_gradient) return l.cover_gradient; return COVERS[Math.abs(_hash(l.username || '')) % COVERS.length]; }
     function _accent(l) { return l.accent_color || '#818cf8'; }
     function _isTop(l) { if (l.is_vip || l.is_top) return true; if (l.top_until && new Date(l.top_until) > new Date()) return true; return false; }
-    function _isMod() { try { return !!window.__fmIsMod; } catch (e) { return false; } }
     function _isBoost(l) { return !!(l.boost_until && new Date(l.boost_until) > new Date()); }
     function _priceFrom(l) { var p = _basePrice(l); return p ? _num(p) + ' ₽' : L('по запросу'); }
 
@@ -1817,6 +1816,7 @@
     }
 
     function setMainTab(t, force) {
+        if ((t === 'pulse' || t === 'mod') && !_isOwner()) t = 'enter';
         if (!force && t === _mainTab) return;
         _mainTab = t;
         try { if (window.__fmTrack) window.__fmTrack('mx_' + t); } catch (e) {}
@@ -2436,7 +2436,7 @@
             '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Площадка ForgeMetrics') + ' <span class="fmx-enttag" style="background:rgba(93,202,165,0.18);color:#5DCAA5;">' + L('живые офферы') + '</span></div>' +
             '<div class="fmx-entd">' + L('Закуп по готовым офферам: владельцы каналов сами указали цены и форматы, метрики проверены площадкой, рейтинг и подтверждённые сделки открыты. Собственный оффер размещается в этом же разделе.') + '</div></div>' +
             '<i class="ti ti-chevron-right" style="color:#565b73;font-size:20px;"></i></div>';
-        if (_isMod()) {
+        if (_isOwner()) {
             host.insertAdjacentHTML('beforeend',
                 '<div class="fmx-ent" data-go="pulse"><div class="fmx-entic" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05));border:1px solid rgba(56,189,248,0.32);color:#38bdf8;"><i class="ti ti-chart-histogram"></i></div>' +
                 '<div style="flex:1;min-width:0;"><div class="fmx-entn">' + L('Рыночный терминал') + ' <span class="fmx-enttag" style="background:rgba(56,189,248,0.18);color:#38bdf8;">' + L('только владелец') + '</span></div>' +
@@ -10818,7 +10818,7 @@
         qsa(rv, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-revBg'); }); });
 
         var ns = document.createElement('div'); ns.className = 'fmx-mbg'; ns.id = 'fmx-nsBg';
-        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> ' + L('Отслеживание ниш') + '</h2><p>' + (_isMod() ? L('CPM ниши и заявки рекламодателей — в бота') : L('Заявки рекламодателей по нише — в бота')) + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
+        ns.innerHTML = '<div class="fmx-modal"><div class="fmx-mhead"><div style="flex:1;"><h2><i class="ti ti-bell" style="color:#f59e0b;"></i> ' + L('Отслеживание ниш') + '</h2><p>' + (_isOwner() ? L('CPM ниши и заявки рекламодателей — в бота') : L('Заявки рекламодателей по нише — в бота')) + '</p></div><button class="fmx-mclose" data-c><i class="ti ti-x"></i></button></div><div class="fmx-mbody" id="fmx-nsBody"></div></div>';
         document.body.appendChild(ns);
         ns.addEventListener('click', function (e) { if (e.target === ns) hideModal('fmx-nsBg'); });
         qsa(ns, '[data-c]').forEach(function (b) { b.addEventListener('click', function () { hideModal('fmx-nsBg'); }); });
@@ -11791,6 +11791,6 @@
 
     window.__openMarketplace = function (cid) { loadNicheMap(); return _open0(cid); };
     window.__openRadar = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('catalog'); } catch (e) {} }, 220); };
-    window.__openTerminal = function (cid) { loadNicheMap(); _open0(cid); if (!_isMod()) return; setTimeout(function () { try { setMainTab('pulse'); } catch (e) {} }, 220); };
+    window.__openTerminal = function (cid) { loadNicheMap(); _open0(cid); if (!_isOwner()) return; setTimeout(function () { try { setMainTab('pulse'); } catch (e) {} }, 220); };
     window.__openMarket = function (cid) { loadNicheMap(); _open0(cid); setTimeout(function () { try { setMainTab('market'); } catch (e) {} }, 220); };
 })();

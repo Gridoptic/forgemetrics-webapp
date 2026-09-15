@@ -680,7 +680,7 @@ function renderDashboard(data) {
     setForgeBalance(data.forge_balance);
     if (data.forge) window.__fmForgeData = data.forge;
 
-    try { window.__fmIsMod = !!data.is_moderator; window.__fmIsOwner = !!data.is_owner; } catch (e) {}
+    try { window.__fmIsOwner = !!data.is_owner; } catch (e) {}
 
     renderChannelSelector(data);
     renderPulse(data.pulse);
