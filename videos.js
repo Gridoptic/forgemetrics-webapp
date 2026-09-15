@@ -7,7 +7,7 @@
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
-    var _mode = 'topic', _silent = false, _address = '', _finalLine = '';
+    var _mode = 'topic', _silent = false, _address = '', _finalLine = '', _logo = null;
     var MAX_ADDRESS = 40, MAX_FINAL = 120;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -119,9 +119,25 @@
             '<div class="vd-phs">' + thumbs + add + '</div></div>';
     }
 
+    function logoRow() {
+        if (!_logo) {
+            return '<div class="vd-logo-row"><button type="button" class="vd-ph-add" data-va="logo"><i class="ti ti-photo-plus"></i>' +
+                '<span>' + esc(T('Добавить логотип')) + '</span></button>' +
+                '<div class="vd-logo-s">' + esc(T('PNG или JPG до 10 МБ. Тёмный или однотонный фон вокруг эмблемы бот уберёт сам.')) + '</div></div>';
+        }
+        return '<div class="vd-logo-row"><div class="vd-ph vd-logo-tile"><img src="' + esc(_logo.url) + '" alt="">' +
+            '<button type="button" class="vd-ph-x" data-va="unlogo"><i class="ti ti-x"></i></button></div>' +
+            '<div class="vd-logo-note"><div class="vd-logo-t">' +
+            esc(_logo.removed ? T('Фон убран автоматически') : T('Фон неоднородный — логотип встанет как есть')) + '</div>' +
+            '<div class="vd-logo-s">' + esc(T('Эмблема встанет крупно по центру финального кадра, адрес и фраза — над и под ней.')) + '</div></div></div>' +
+            '<div class="vd-lp"><div class="vd-lp-frame"><div class="vd-lp-line" id="vd-lp-line">' + esc(_finalLine) + '</div>' +
+            '<img src="' + esc(_logo.url) + '" alt=""><div class="vd-lp-addr" id="vd-lp-addr">' + esc(_address) + '</div></div>' +
+            '<div class="vd-lp-t">' + esc(T('Так будет выглядеть последний кадр ролика')) + '</div></div>';
+    }
+
     function finalField() {
         return '<div class="vd-f">' + secTitle(T('Финал')) +
-            secHint(T('Адрес крупно на последнем кадре и последняя фраза.')) +
+            secHint(T('Логотип, адрес крупно на последнем кадре и последняя фраза.')) + logoRow() +
             '<div class="vd-box"><input class="vd-inp" id="vd-addr" type="text" autocomplete="off" maxlength="' + MAX_ADDRESS +
             '" value="' + esc(_address) + '" placeholder="' + esc(T('Адрес на экране')) + '"></div>' +
             '<div class="vd-box"><input class="vd-inp" id="vd-fline" type="text" autocomplete="off" maxlength="' + MAX_FINAL +
@@ -475,8 +491,18 @@
             return;
         }
         if (el.id === 'vd-url') { _url = el.value.trim(); return; }
-        if (el.id === 'vd-addr') { _address = el.value.slice(0, MAX_ADDRESS); return; }
-        if (el.id === 'vd-fline') { _finalLine = el.value.slice(0, MAX_FINAL); return; }
+        if (el.id === 'vd-addr') {
+            _address = el.value.slice(0, MAX_ADDRESS);
+            var la = document.getElementById('vd-lp-addr');
+            if (la) la.textContent = _address;
+            return;
+        }
+        if (el.id === 'vd-fline') {
+            _finalLine = el.value.slice(0, MAX_FINAL);
+            var ll = document.getElementById('vd-lp-line');
+            if (ll) ll.textContent = _finalLine;
+            return;
+        }
         if (el.id === 'vd-niche') {
             _nq = el.value;
             render();
@@ -526,6 +552,8 @@
         }
         if (a === 'chpick') { pickChannel(); return; }
         if (a === 'photo') { pickPhoto(); return; }
+        if (a === 'logo') { pickLogo(); return; }
+        if (a === 'unlogo') { _logo = null; haptic(); render(); return; }
         if (a === 'unphoto') {
             _photos.splice(+b.getAttribute('data-i'), 1);
             haptic();
@@ -604,6 +632,38 @@
         inp.click();
     }
 
+    function pickLogo() {
+        var inp = document.getElementById('vd-logo-file');
+        if (!inp) {
+            inp = document.createElement('input');
+            inp.type = 'file';
+            inp.id = 'vd-logo-file';
+            inp.style.display = 'none';
+            inp.accept = 'image/png,image/jpeg,image/webp';
+            document.body.appendChild(inp);
+        }
+        inp.onchange = function () {
+            var f = inp.files && inp.files[0];
+            inp.value = '';
+            if (!f) return;
+            if (!/^image\/(png|jpeg|webp)$/.test(f.type || '')) { toast(T('Подойдёт PNG, JPG или WebP'), 'alert-triangle'); return; }
+            if (f.size > 10 * 1048576) { toast(T('Файл больше') + ' 10 ' + T('МБ'), 'alert-triangle'); return; }
+            var fd = new FormData();
+            fd.append('file', f);
+            toast(T('Загружаю логотип'), 'loader');
+            apiRequest('/api/v1/creative/brief/logo', { method: 'POST', body: fd })
+                .then(function (r) {
+                    if (r && r.ok) {
+                        _logo = { path: r.path, url: r.url, removed: !!r.removed };
+                        haptic();
+                        render();
+                    } else toast((r && r.message) || T('Файл не загрузился'), 'alert-triangle');
+                })
+                .catch(function () { toast(T('Файл не загрузился'), 'alert-triangle'); });
+        };
+        inp.click();
+    }
+
     function build() {
         if (_busy) return;
         if (_parallel < 1) _parallel = 2;
@@ -623,7 +683,8 @@
             voice_names: _silent ? [] : _voiceNames, channel_id: (!ad && _brandOn && _brandCh) ? _brandCh : null,
             lang: (window.__fmLang || 'ru'),
             mode: _mode, silent: _silent,
-            final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : ''
+            final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
+            logo: (ad && _logo) ? _logo.path : ''
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
