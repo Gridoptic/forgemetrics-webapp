@@ -74,8 +74,7 @@
 .stg-fcta.booked { background: rgba(93,202,165,0.14); color: #5DCAA5; border: 1px solid rgba(93,202,165,0.45); box-shadow: none; }
 .stg-fnote { text-align: center; font-size: 10.5px; color: #565b73; margin-top: 8px; }
 
-.stg-sec { position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 15px; margin-top: 12px; overflow: hidden;
+.stg-sec { position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 15px; margin-top: 12px; overflow: hidden;
     box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 20px 46px -28px rgba(0,0,0,0.85); }
 .stg-sec::before { content: ""; position: absolute; top: -1px; left: 12%; right: 12%; height: 90px; pointer-events: none;
     background: radial-gradient(80% 100% at 50% 0%,rgba(129,140,248,0.13) 0%,transparent 70%); }
