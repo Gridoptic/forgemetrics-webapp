@@ -105,24 +105,12 @@
             '<i class="ti ti-arrow-left"></i></button><div class="t">' + T('AI-стратегия') + '</div></div>';
     }
 
-    function fitGlow() {
-        var host = document.getElementById('strategy-screen');
-        var flag = host && host.querySelector('.stg-flag');
-        var glow = flag && flag.querySelector('.glow');
-        if (!glow) return;
-        var r = flag.getBoundingClientRect();
-        if (r.width) glow.style.width = Math.ceil(Math.sqrt(r.width * r.width + r.height * r.height)) + 12 + 'px';
-    }
-    window.addEventListener('resize', fitGlow);
-
     function setView(html, head) {
         var host = ensureScreen();
         stopTimers();
         _trOpen = !!head;
         host.innerHTML = (head || headHtml()) + html;
         host.scrollTop = 0;
-        fitGlow();
-        setTimeout(fitGlow, 400);
         return host;
     }
 
