@@ -105,12 +105,24 @@
             '<i class="ti ti-arrow-left"></i></button><div class="t">' + T('AI-стратегия') + '</div></div>';
     }
 
+    function fitGlow() {
+        var host = document.getElementById('strategy-screen');
+        var flag = host && host.querySelector('.stg-flag');
+        var glow = flag && flag.querySelector('.glow');
+        if (!glow) return;
+        var r = flag.getBoundingClientRect();
+        if (r.width) glow.style.width = Math.ceil(Math.sqrt(r.width * r.width + r.height * r.height)) + 12 + 'px';
+    }
+    window.addEventListener('resize', fitGlow);
+
     function setView(html, head) {
         var host = ensureScreen();
         stopTimers();
         _trOpen = !!head;
         host.innerHTML = (head || headHtml()) + html;
         host.scrollTop = 0;
+        fitGlow();
+        setTimeout(fitGlow, 400);
         return host;
     }
 
@@ -173,7 +185,7 @@
         var nprice = prices.new || 3990, rprice = prices.renewal || 1990;
         if (_state && _state.access === 'expired') {
             setView(
-                '<div class="stg-flag">' +
+                '<div class="stg-flag"><div class="glow"></div>' +
                 '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
@@ -208,7 +220,7 @@
                 : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
                   '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>');
         setView(
-            '<div class="stg-flag">' +
+            '<div class="stg-flag"><div class="glow"></div>' +
             '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
             '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +
