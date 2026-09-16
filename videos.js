@@ -7,7 +7,7 @@
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
-    var _mode = 'topic', _silent = false, _address = '', _finalLine = '', _logo = null;
+    var _mode = 'topic', _silent = false, _noMusic = false, _address = '', _finalLine = '', _logo = null;
     var MAX_ADDRESS = 40, MAX_FINAL = 120;
     var UPLOAD_VIDEO_MS = 600000, UPLOAD_PHOTO_MS = 180000;
 
@@ -227,6 +227,20 @@
             '" type="button"><span class="cs-toggle-knob"></span></button></div>';
     }
 
+    function musicField() {
+        return '<div class="vd-f">' + secTitle(T('Музыка')) +
+            '<div class="cs-toggle-row" data-va="nomusic">' +
+            '<div class="cs-toggle-icon-wrap"><i class="ti ti-music-off" style="color: ' +
+            (_noMusic ? '#5DCAA5' : 'rgba(255,255,255,0.4)') + ';"></i></div>' +
+            '<div class="cs-toggle-info"><div class="cs-toggle-title-row">' +
+            '<span class="cs-toggle-title">' + esc(T('Без фоновой музыки')) + '</span></div>' +
+            '<div class="cs-toggle-sub">' + esc(_noMusic
+                ? T('Включено — ролик без музыки, свою добавишь при публикации')
+                : T('Выключено — музыка подбирается под ролик. Включи, чтобы добавить свою')) + '</div></div>' +
+            '<button class="cs-toggle-switch' + (_noMusic ? ' on' : '') +
+            '" type="button"><span class="cs-toggle-knob"></span></button></div></div>';
+    }
+
     function nicheField() {
         var head = '<button type="button" class="cs-toggle-row vd-row" data-va="nopen">' +
             '<div class="cs-toggle-icon-wrap"><i class="ti ti-category-2" style="color: #818cf8;"></i></div>' +
@@ -341,13 +355,13 @@
             : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
               esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>';
         if (_mode === 'ad') {
-            return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() +
+            return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() + musicField() +
                 '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, фото и видео продукта карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
                 '</div>' + go + '</div>';
         }
         return '<div class="vd-card">' + modeField() +
             topicField() + nicheField() + urlField() +
-            photosField() + voiceField() + endingField() +
+            photosField() + voiceField() + musicField() + endingField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
             ' ' + esc(T('Одновременно собираются два ролика, число роликов в сутки не ограничено.')) +
             '</div>' + go + '</div>';
@@ -580,6 +594,7 @@
             return;
         }
         if (a === 'silent') { _silent = !_silent; haptic(); render(); return; }
+        if (a === 'nomusic') { _noMusic = !_noMusic; haptic(); render(); return; }
         if (a === 'nopen') { _pick = !_pick; _nq = ''; haptic(); render(); return; }
         if (a === 'niche') {
             _niche = b.getAttribute('data-v') || '';
@@ -738,7 +753,7 @@
             videos: _videos.map(function (v) { return v.path; }),
             voice_names: _silent ? [] : _voiceNames, channel_id: (!ad && _brandOn && _brandCh) ? _brandCh : null,
             lang: (window.__fmLang || 'ru'),
-            mode: _mode, silent: _silent,
+            mode: _mode, silent: _silent, no_music: _noMusic,
             final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
             logo: (ad && _logo) ? _logo.path : ''
         };

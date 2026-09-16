@@ -5661,6 +5661,7 @@ function renderSettingsBehaviorSection(data) {
     const research = !!data.research_links;
     const coverBrand = data.cover_brand !== false;
     const creativeBrand = data.creative_brand !== false;
+    const creativeMusic = data.creative_music !== false;
 
     return `
         <div class="cs-section">
@@ -5776,6 +5777,25 @@ function renderSettingsBehaviorSection(data) {
                     </div>
                 </div>
                 <button class="cs-toggle-switch ${creativeBrand ? 'on' : ''}" data-toggle-target="creative_brand">
+                    <span class="cs-toggle-knob"></span>
+                </button>
+            </div>
+
+            <div class="cs-toggle-row" data-toggle="creative_music">
+                <div class="cs-toggle-icon-wrap">
+                    <i class="ti ti-music" style="color: ${creativeMusic ? '#5DCAA5' : 'rgba(255,255,255,0.4)'};"></i>
+                </div>
+                <div class="cs-toggle-info">
+                    <div class="cs-toggle-title-row">
+                        <span class="cs-toggle-title">${TR('Фоновая музыка в роликах из постов')}</span>
+                        <button class="cs-info-btn" data-info="creative_music" aria-label="${TR('Что это значит')}"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                    <div class="cs-toggle-sub">${creativeMusic ? TR('Включена — музыка подбирается под каждый ролик из поста') : TR('Выключена — ролики из постов без музыки, свою можно добавить при публикации')}</div>
+                    <div class="cs-info-popup" id="cs-info-creative_music" style="display:none;">
+                        ${TR('Фоновая музыка в роликах, собранных из постов этого канала. Выключи, если добавляешь свою музыку при публикации. У роликов раздела «Создать видео» музыка выбирается при создании, эта настройка на них не влияет.')}
+                    </div>
+                </div>
+                <button class="cs-toggle-switch ${creativeMusic ? 'on' : ''}" data-toggle-target="creative_music">
                     <span class="cs-toggle-knob"></span>
                 </button>
             </div>
@@ -6372,6 +6392,7 @@ async function handleToggleSwitch(target, newValue) {
     if (target === 'research') payload.research_links = newValue;
     if (target === 'cover_brand') payload.cover_brand = newValue;
     if (target === 'creative_brand') payload.creative_brand = newValue;
+    if (target === 'creative_music') payload.creative_music = newValue;
 
     if (_settingsState.data) {
         if (target === 'paused') _settingsState.data.is_paused = !newValue;
@@ -6380,6 +6401,7 @@ async function handleToggleSwitch(target, newValue) {
         if (target === 'research') _settingsState.data.research_links = newValue;
         if (target === 'cover_brand') _settingsState.data.cover_brand = newValue;
         if (target === 'creative_brand') _settingsState.data.creative_brand = newValue;
+        if (target === 'creative_music') _settingsState.data.creative_music = newValue;
         updateToggleVisual(target, newValue);
     }
 
@@ -6399,6 +6421,7 @@ async function handleToggleSwitch(target, newValue) {
             if (target === 'research') _settingsState.data.research_links = !newValue;
             if (target === 'cover_brand') _settingsState.data.cover_brand = !newValue;
             if (target === 'creative_brand') _settingsState.data.creative_brand = !newValue;
+            if (target === 'creative_music') _settingsState.data.creative_music = !newValue;
             updateToggleVisual(target, !newValue);
         }
         await alertDialog(TR('Не удалось сохранить изменение.'));
@@ -6460,6 +6483,13 @@ function updateToggleVisual(target, isOn) {
                 ? (isOn ? TR('Включена — аватар и название на обложках и фото к постам') : TR('Выключена — обложки и фото без подписи'))
                 : (isOn ? TR('Включена — аватар и название канала в финале ролика') : TR('Выключена — ролик без аватара и названия канала'));
         }
+    }
+
+    if (target === 'creative_music') {
+        const iconWrap = document.querySelector('[data-toggle="creative_music"] .cs-toggle-icon-wrap i');
+        const subEl = document.querySelector('[data-toggle="creative_music"] .cs-toggle-sub');
+        if (iconWrap) iconWrap.style.color = isOn ? '#5DCAA5' : 'rgba(255,255,255,0.4)';
+        if (subEl) subEl.textContent = isOn ? TR('Включена — музыка подбирается под каждый ролик из поста') : TR('Выключена — ролики из постов без музыки, свою можно добавить при публикации');
     }
 
     if (target === 'profanity') {
