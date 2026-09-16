@@ -187,16 +187,7 @@
             '.pl-skind i{font-size:12px;}',
             '.pl-skind.cl{background:rgba(74,222,128,0.12);color:#4ade80;border:0.5px solid rgba(74,222,128,0.28);}',
             '.pl-skind.op{background:rgba(240,163,94,0.10);color:#f0a35e;border:0.5px solid rgba(240,163,94,0.32);}',
-            '.pl-skind.nm{background:rgba(141,147,168,0.10);color:#8990a8;border:0.5px solid rgba(141,147,168,0.25);}',
             '.pl-schip.fmtr{border-color:rgba(240,163,94,0.32);background:rgba(240,163,94,0.08);}',
-            '.pl-mopt{border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:12px 13px;margin-bottom:9px;cursor:pointer;position:relative;}',
-            '.pl-mopt b{display:block;font-size:13.5px;font-weight:700;margin-bottom:3px;padding-right:92px;}',
-            '.pl-mopt p{margin:0 0 4px;display:flex;gap:7px;font-size:11.5px;line-height:1.5;color:#8990a8;}',
-            '.pl-mopt p:last-child{margin:0;}',
-            '.pl-mopt p i{font-style:normal;font-weight:800;flex:0 0 auto;width:10px;}',
-            '.pl-mopt p.g i{color:#4ade80;}.pl-mopt p.r i{color:#f87171;}',
-            '.pl-mtag{position:absolute;top:12px;right:13px;font-size:9px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;}',
-            '.pl-mtag.g{background:rgba(74,222,128,0.14);color:#4ade80;}.pl-mtag.o{background:rgba(240,163,94,0.10);color:#f0a35e;}',
             '.pl-sadd{display:flex;align-items:center;justify-content:center;gap:8px;border:1px dashed rgba(255,255,255,0.14);border-radius:14px;padding:11px;color:#8990a8;font-size:12.5px;font-weight:600;margin-bottom:10px;cursor:pointer;width:100%;background:transparent;}',
             '.pl-sbest{position:relative;overflow:visible;}',
             '.pl-sbest:before{content:\"\";position:absolute;inset:0;border-radius:18px;pointer-events:none;border:1px solid rgba(74,222,128,0.45);}',
@@ -915,8 +906,7 @@
             : '<b>+ ' + esc(T('расход')) + '</b><span>' + esc(T('не указан')) + '</span>';
         var kind;
         if (!pub) kind = '<span class="pl-skind cl"><i class="ti ti-lock"></i>' + esc(T('Закрытый канал · точный учёт')) + '</span>';
-        else if (x.click_code) kind = '<span class="pl-skind op"><i class="ti ti-click"></i>' + esc(T('Публичный канал · замер по переходу')) + '</span>';
-        else kind = '<span class="pl-skind nm"><i class="ti ti-unlink"></i>' + esc(T('Публичный канал · без замера')) + '</span>';
+        else kind = '<span class="pl-skind op"><i class="ti ti-click"></i>' + esc(T('Публичный канал · замер по переходу')) + '</span>';
         var tile1;
         if (x.click_code) {
             tile1 = '<div class="pl-tile"><b>' + num(x.clicks || 0) +
@@ -984,9 +974,9 @@
         sh.classList.add('on'); bg.classList.add('on');
     }
 
-    function srcCreate(spk, meas) {
+    function srcCreate(spk) {
         apiRequest('/api/v1/placements/sources',
-                   { method: 'POST', body: JSON.stringify({ channel_id: _chId, platform_key: spk, measure: !!meas }) })
+                   { method: 'POST', body: JSON.stringify({ channel_id: _chId, platform_key: spk }) })
             .then(function (r) {
                 if (r && r.ok) {
                     haptic('light'); closeSheet(); load();
@@ -994,26 +984,6 @@
                     if (su) copyText(su, T('Источник создан, ссылка скопирована — размести её на площадке'));
                 } else toast((r && r.message) || T('Не удалось. Повтори попытку.'));
             }).catch(function () { toast(T('Не удалось. Повтори попытку.')); });
-    }
-
-    function openSrcMeasureSheet(key) {
-        var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
-        if (!sh || !bg) return;
-        sh.innerHTML = '<div class="pl-grip"></div>' +
-            '<div class="pl-ht" style="font-size:15px;">' + esc(T('Как замерять источник')) + '</div>' +
-            '<div style="font-size:12.5px;color:#8990a8;margin:4px 0 10px;">' + esc(T('Канал публичный. Выбери, что важнее.')) + '</div>' +
-            '<div class="pl-mopt" data-act="src-add-go" data-key="' + esc(key) + '" data-meas="1">' +
-            '<span class="pl-mtag g">' + esc(T('точный замер')) + '</span>' +
-            '<b>' + esc(T('Ссылка со счётчиком fmtr')) + '</b>' +
-            '<p class="g"><i>+</i><span>' + esc(T('Единственный способ замера на публичном канале: каждый переход фиксируется, подписчики привязываются к источнику.')) + '</span></p>' +
-            '<p class="g"><i>+</i><span>' + esc(T('Видно и переходы, и подписчиков — по ним считается цена подписчика с площадки.')) + '</span></p>' +
-            '<p class="r"><i>\u2212</i><span>' + esc(T('Один промежуточный шаг в доли секунды: часть аудитории может отсеяться, конверсия перехода немного ниже, чем у прямой ссылки.')) + '</span></p></div>' +
-            '<div class="pl-mopt" data-act="src-add-go" data-key="' + esc(key) + '" data-meas="0">' +
-            '<span class="pl-mtag o">' + esc(T('без замера')) + '</span>' +
-            '<b>' + esc(T('Прямая ссылка t.me')) + '</b>' +
-            '<p class="g"><i>+</i><span>' + esc(T('Максимальная конверсия: человек попадает в Telegram сразу, без промежуточных шагов.')) + '</span></p>' +
-            '<p class="r"><i>\u2212</i><span>' + esc(T('На публичном канале замер не работает: Telegram не сообщает, по какой ссылке человек вступил, — карточка источника останется без данных.')) + '</span></p></div>';
-        sh.classList.add('on'); bg.classList.add('on');
     }
 
     function openSrcAddSheet() {
@@ -1544,13 +1514,7 @@
         }
         if (act === 'src-add') { haptic('light'); openSrcAddSheet(); return; }
         if (act === 'src-add-pick') {
-            var spk = b.getAttribute('data-key');
-            if (!isChPrivate()) { haptic('light'); openSrcMeasureSheet(spk); return; }
-            srcCreate(spk, true);
-            return;
-        }
-        if (act === 'src-add-go') {
-            srcCreate(b.getAttribute('data-key'), b.getAttribute('data-meas') === '1');
+            srcCreate(b.getAttribute('data-key'));
             return;
         }
         if (act === 'price') { haptic('light'); openPriceSheet(parseInt(b.getAttribute('data-id'), 10)); return; }
