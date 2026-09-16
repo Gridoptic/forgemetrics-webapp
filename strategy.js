@@ -48,15 +48,6 @@
             function (m) { var r = DAYS_EN[m.toLowerCase()]; return r ? T(r) : m; });
     }
 
-    var SEC_ICON = {
-        niche: '<i class="ti ti-target"></i>', audience: '<i class="ti ti-users"></i>',
-        content: '<i class="ti ti-list-details"></i>', traffic_free: '<i class="ti ti-rocket"></i>',
-        traffic_paid: '<i class="ti ti-speakerphone"></i>', monetize: '<i class="ti ti-coin"></i>',
-        offer: '<i class="ti ti-building-store"></i>', metrics: '<i class="ti ti-chart-bar"></i>',
-        week1: '<i class="ti ti-checklist"></i>' };
-    var DIFF = { easy: { c: '#5DCAA5', l: SG('Просто') }, medium: { c: '#f5bf4f', l: SG('Средне') }, hard: { c: '#ef8080', l: SG('Сложно') } };
-
-
     function ensureScreen() {
         var host = document.getElementById('strategy-screen');
         if (!host) {
@@ -126,16 +117,6 @@
         });
     }
 
-    function normalizeDoc(d) {
-        var doc = d && d.doc;
-        if (!doc || !doc.sections) return;
-        doc.sections.forEach(function (sec) {
-            if (sec.key === 'metrics' || sec.key === 'niche') {
-                (sec.steps || []).forEach(function (st) { st.checkable = false; st.has_guide = false; });
-            }
-        });
-    }
-
     function route(d) {
         if (!d || !d.ok) { renderCenter('⚠️', T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); return; }
         _state = d;
@@ -185,11 +166,11 @@
         }
         var locked = !_state || _state.access !== 'full';
         var rows = [
-            [SG('Ниша и точка старта.'), SG('Есть канал — стратег оценит его по реальным данным и скажет, что усилить. Нет канала — подберёт 3 ниши на пересечении твоего интереса, спроса рекламодателей и невысокой конкуренции')],
+            [SG('Ниша и точка старта.'), SG('Есть канал — стратег оценит его по реальным данным и скажет, что усилить. Нет канала или он пустой — разберёт выбранную тобой тему или подберёт нишу под твой опыт: размер лидеров, доля растущих каналов, темп публикаций и чем выделиться — по каналам каталога ForgeMetrics')],
             [SG('Контент-план на весь месяц.'), SG('Рубрики по дням и частота записываются в контент-план; все недели месяца собираются по сетке стратегии. Стратег каждую неделю правит сетку по факту')],
-            [SG('Креативы под ленты рекомендаций.'), SG('Из каждого поста — вертикальный ролик 9:16 под площадку: VK Клипы, Дзен Ролики, YouTube Shorts, TikTok, Instagram Reels. Сценарий с хуком, стоковые кадры, голос диктора, музыка, текст на экране, финал с каналом — готовый файл через 5 минут плюс описание со ссылкой отслеживания — под каждый пост месяца. Для Дзена — ещё посты и статьи под ленту; ссылка на канал в профиле, публикации самодостаточные, без «продолжение в Telegram». Съёмка и монтаж не нужны')],
-            [SG('Трафик под твой регион.'), SG('Площадки ранжируются по отдаче в твоей стране: где публикация без ограничений, где через VPN или обходы — с пометкой, но без запретов. Доноры из Радара и ссылка отслеживания на каждый источник: видно, что дало приток, а что нет')],
-            [SG('Все модели заработка.'), SG('Реклама в канале, перелив трафика, партнёрки, свой продукт. По каждой: с какого размера канала включать, от чего зависит доход и что подготовить заранее')],
+            [SG('Креативы под ленты рекомендаций.'), SG('Из каждого поста — вертикальный ролик 9:16 под площадку: VK Клипы, Дзен Ролики, YouTube Shorts, TikTok, Instagram Reels. Сценарий с хуком, стоковые кадры, голос диктора, музыка, текст на экране, финал с каналом — готовый файл через 5 минут плюс описание к ролику — под каждый пост месяца. Для Дзена — ещё посты и статьи под ленту; ссылка на канал в профиле, публикации самодостаточные, без «продолжение в Telegram». Съёмка и монтаж не нужны')],
+            [SG('Площадки без догадок.'), SG('Дзен, VK Клипы, YouTube Shorts и TikTok: готовое оформление профиля, прогрев нового аккаунта, сколько и когда публиковать, из-за чего площадка режет показы — по правилам самих площадок. Плюс рост внутри Telegram и закупка рекламы, если есть бюджет')],
+            [SG('Все модели заработка.'), SG('Реклама в канале, партнёрские программы под нишу, перелив трафика, свой продукт. По каждой: с какого размера канала включать, какие условия у программ и что подготовить заранее')],
             [SG('Месяц ведения за руку.'), SG('Каждую неделю стратег сам сверяет план с фактом по данным твоего канала: что сработало, где отстаёшь, что делать дальше. Плюс чат — задавай вопросы в любой момент')],
         ];
         var what = rows.map(function (r) {
@@ -206,7 +187,7 @@
                 ? '<button class="stg-fcta" data-act="continue"><i class="ti ti-message-circle"></i> ' + esc(T('Продолжить разговор со стратегом')) + '</button>' +
                   '<div class="stg-fnote">' + esc(T('Разговор начат — ответы сохранены. Начать заново можно внутри.')) + '</div>'
                 : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
-                  '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>');
+                  '<div class="stg-fnote">' + esc(T('≈ 10 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>');
         setView(
             '<div class="stg-flag"><div class="glow"></div>' +
             '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
@@ -343,7 +324,7 @@
                     return '<span class="stg-tchip"><small>' + esc(T(c.label)) + '</small>' + esc(c.value) + '</span>';
                 }).join('') + '</div>' : ''));
         } else if (!d.has_channel) {
-            html += talkBubble('a', esc(T('Канал ещё не подключён — начнём с подбора ниши: интерес, спрос рекламодателей и конкуренция.')));
+            html += talkBubble('a', esc(T('Канал ещё не подключён — начнём с темы, опыта и цели. Вопросов около двадцати: чем точнее ответы, тем точнее стратегия.')));
         }
         (d.messages || []).forEach(function (m) { html += talkBubble(m.role === 'user' ? 'user' : 'a', esc(m.text || '')); });
         if (q) {
@@ -362,7 +343,7 @@
         } else if (d.done) {
             html += talkBubble('a', '<div class="stg-tq">' + esc(T('Мне всё ясно. Собираю стратегию: сетка недели и первая неделя появятся в контент-плане, трафик и заработок — разделами.')) + '</div>' +
                 '<button class="stg-next" data-act="tbuild"><i class="ti ti-sparkles"></i> ' + esc(T('Собрать стратегию')) + '</button>' +
-                '<div class="stg-fnote">' + esc(T('Обычно 2–4 минуты. Можно закрыть — стратегия соберётся сама')) + '</div>');
+                '<div class="stg-fnote">' + esc(T('Обычно 5–8 минут. Можно закрыть — стратегия соберётся сама')) + '</div>');
         }
         html += '</div>';
         var host = setView(html, talkHead());
@@ -421,19 +402,19 @@
 
     var GEN_TEXTS = [
         SG('Изучаю твои ответы и данные канала...'),
-        SG('Подбираю нишу: интерес × спрос × конкуренция...'),
-        SG('Считаю площадки твоего региона...'),
-        SG('Собираю контент-план и пишу первые посты...'),
-        SG('Строю план трафика: бесплатный и платный...'),
-        SG('Собираю лестницу монетизации...'),
-        SG('Финальная сборка документа...'),
+        SG('Сверяю нишу с каналами каталога: лидеры, рост, темп публикаций...'),
+        SG('Определяю, чем выделиться, и портрет читателя...'),
+        SG('Собираю рубрики и оформление канала...'),
+        SG('Готовлю площадки: профиль, прогрев, ритм публикаций...'),
+        SG('Подбираю партнёрские программы и лестницу дохода...'),
+        SG('Расписываю первую неделю по дням...'),
     ];
 
     function renderGenerating() {
         setView('<div class="stg-center"><div class="stg-fic" style="width:64px;height:64px;border-radius:18px;">' + STG_ICON + '</div>' +
             '<div class="stg-spin"></div>' +
             '<div class="m" id="stg-gen-text">' + esc(T(GEN_TEXTS[0])) + '</div>' +
-            '<div class="m" style="font-size:11px;color:#565b73;">' + esc(T('Обычно это занимает 2–4 минуты. Можно закрыть — стратегия соберётся сама')) + '</div></div>');
+            '<div class="m" style="font-size:11px;color:#565b73;">' + esc(T('Обычно это занимает 5–8 минут. Можно закрыть — стратегия соберётся сама')) + '</div></div>');
         var i = 0;
         _genTimer = setInterval(function () {
             var el = document.getElementById('stg-gen-text');
@@ -442,7 +423,7 @@
                 i++;
                 el.textContent = T(GEN_TEXTS[i]);
             }
-        }, 26000);
+        }, 55000);
     }
 
     function startPoll() {
@@ -450,7 +431,7 @@
         var ticks = 0;
         _pollTimer = setInterval(function () {
             ticks++;
-            if (ticks === 60) {
+            if (ticks === 90) {
                 var el = document.getElementById('stg-gen-text');
                 if (el) el.textContent = T('Собираю особенно тщательно — ещё чуть-чуть...');
             }
@@ -481,185 +462,6 @@
     }
 
 
-    function docTotals() {
-        var total = 0, done = 0;
-        var prog = _state.progress || {};
-        var secs = _state.doc.sections || [];
-        var w1 = secs.filter(function (x) { return x.key === 'week1' && (x.steps || []).length; });
-        (w1.length ? w1 : secs).forEach(function (sec) {
-            (sec.steps || []).forEach(function (s) {
-                if (s.checkable === false) return;
-                total++;
-                if (prog[s.key]) done++;
-            });
-        });
-        return { total: total, done: done, pct: total ? Math.round(done / total * 100) : 0 };
-    }
-
-    function ringHtml(t) {
-        return '<div class="stg-ring" style="background:conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)"><span>' + t.done + '/' + t.total + '</span></div>';
-    }
-
-    function _isWordChar(ch) { return ch != null && /[0-9A-Za-z\u00C0-\u024F\u0400-\u04FF]/.test(ch); }
-
-    function termWrap(text) {
-        var terms = (_state && _state.doc && _state.doc.terms) || {};
-        var plain = String(text || '');
-        var low = plain.toLowerCase();
-        var found = [];
-        for (var k in terms) {
-            if (!terms.hasOwnProperty(k) || k.length < 2 || k.length > 34) continue;
-            var idx = low.indexOf(k.toLowerCase());
-            if (idx >= 0 && !_isWordChar(plain[idx - 1]) && !_isWordChar(plain[idx + k.length])) {
-                found.push({ i: idx, len: k.length, key: k });
-            }
-        }
-        found.sort(function (a, b) { return a.i - b.i; });
-        var picked = [], end = -1;
-        for (var j = 0; j < found.length && picked.length < 3; j++) {
-            if (found[j].i >= end) { picked.push(found[j]); end = found[j].i + found[j].len; }
-        }
-        if (!picked.length) return esc(plain);
-        var out = '', pos = 0;
-        picked.forEach(function (m) {
-            out += esc(plain.slice(pos, m.i));
-            out += '<span class="stg-term" data-term="' + esc(m.key) + '">' + esc(plain.substr(m.i, m.len)) + '</span>';
-            pos = m.i + m.len;
-        });
-        return out + esc(plain.slice(pos));
-    }
-
-    function bodyHtml(text, asNote) {
-        var t = String(text || '');
-        var long = t.length > (asNote ? 600 : 480);
-        var cls = asNote ? 'stg-body stg-note' : 'stg-body';
-        var wrap = asNote ? 'div' : 'span';
-        return '<' + wrap + ' class="' + cls + (long ? ' clamp' : '') + '" style="margin-top:9px;">' + termWrap(t) + '</' + wrap + '>' +
-            (long ? '<span class="stg-more" data-act="more">' + esc(T('развернуть')) + '</span>' : '');
-    }
-
-    var _taskOpen = {};
-    function taskStruct(s) {
-        if (s.do && s.do.length) {
-            return { do: s.do.slice(), why: s.why || '', avoid: s.avoid || '' };
-        }
-        var t = String(s.body || '').trim();
-        if (!t) return { do: [], why: '', avoid: '' };
-        var marks = [];
-        [['do', /(?:Что делать|Сделай|What to do)\s*:\s*/g],
-         ['why', /(?:Зачем|Почему|Why)\s*:\s*/g],
-         ['avoid', /(?:Чего избегать|Не делай|Избегай|Avoid|What to avoid)\s*:\s*/g]].forEach(function (m) {
-            var x;
-            while ((x = m[1].exec(t))) marks.push({ k: m[0], i: x.index, e: x.index + x[0].length });
-        });
-        if (!marks.length) return { do: t, why: '', avoid: '' };
-        marks.sort(function (a, b) { return a.i - b.i; });
-        var out = { do: '', why: '', avoid: '' };
-        marks.forEach(function (m, j) {
-            var end = j + 1 < marks.length ? marks[j + 1].i : t.length;
-            var seg = t.slice(m.e, end).trim();
-            if (seg && !out[m.k]) out[m.k] = seg.charAt(0).toUpperCase() + seg.slice(1);
-        });
-        var head = t.slice(0, marks[0].i).trim();
-        if (head) out.do = (head + (out.do ? ' ' + out.do : ''));
-        return out;
-    }
-    function taskSub(st) {
-        var d = Array.isArray(st.do) ? st.do.join(' · ') : String(st.do || '');
-        return d || String(st.why || '');
-    }
-    function taskCard(s) {
-        var done = !!(_state.progress || {})[s.key];
-        var open = !!_taskOpen[s.key];
-        var st = taskStruct(s);
-        var mark = (s.checkable === false || !canManage())
-            ? '<span class="stg-cb' + (done ? ' done' : '') + ' ro"></span>'
-            : '<span class="stg-cb' + (done ? ' done' : '') + '" data-act="cb" data-key="' + esc(s.key) + '"></span>';
-        if (s.checkable === false && !done) mark = '<span class="stg-dot"></span>';
-        var min = s.minutes ? '<span class="stg-tkmin">◔ ' + s.minutes + ' ' + esc(T('мин')) + '</span>' : '';
-        var row = '<div class="row">' + mark +
-            '<span class="t"><b>' + esc(fixDays(s.title)) + '</b>' +
-            (open ? '' : '<em>' + esc(fixDays(taskSub(st))) + '</em>') + '</span>' + min +
-            '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + ' chev"></i></div>';
-        var body = '';
-        if (open) {
-            var kv = '';
-            if (Array.isArray(st.do) && st.do.length) {
-                kv += '<div class="k do"><i>1</i>' + esc(T('Сделай')) + '</div><ul>' +
-                    st.do.map(function (x) { return '<li>' + esc(fixDays(x)) + '</li>'; }).join('') + '</ul>';
-            } else if (st.do) {
-                kv += '<div class="k do"><i>1</i>' + esc(T('Сделай')) + '</div><p>' + termWrap(fixDays(st.do)) + '</p>';
-            }
-            if (st.why) kv += '<div class="k why"><i>?</i>' + esc(T('Зачем')) + '</div><p>' + termWrap(fixDays(st.why)) + '</p>';
-            if (st.avoid) kv += '<div class="k no"><i>✕</i>' + esc(T('Не делай')) + '</div><p>' + termWrap(fixDays(st.avoid)) + '</p>';
-            if (s.ready) {
-                kv += '<div class="k rdy"><i>✓</i>' + esc(T('Готовый текст — скопируй и вставь')) + '</div>' +
-                    '<div class="stg-tkready">' + esc(s.ready) + '</div>';
-            }
-            var acts = '';
-            if (s.ready) {
-                acts += '<button class="stg-tkbtn pri" data-act="tkcopy" data-key="' + esc(s.key) + '">' + esc(T('Скопировать текст')) + '</button>';
-            }
-            if (s.link === 'market') {
-                acts += '<button class="stg-tkbtn' + (s.ready ? '' : ' pri') + '" data-act="tkradar">' + esc(T('Открыть Радар')) + '</button>';
-            } else if (s.link === 'traffic') {
-                acts += '<button class="stg-tkbtn' + (s.ready ? '' : ' pri') + '" data-act="trmod">' + esc(T('Открыть модуль')) + '</button>';
-            }
-            if (s.has_guide && _state.access === 'full' && canManage()) {
-                acts += '<button class="stg-tkbtn' + (s.ready || s.link ? '' : ' pri') + '" data-act="how" data-key="' + esc(s.key) + '">' + esc(T('Пошаговый план')) + '</button>';
-            }
-            if (canManage()) {
-                acts += '<button class="stg-tkbtn" data-act="ask" data-t="' + esc(s.title || '') + '">' + esc(T('Спросить стратега')) + '</button>';
-            }
-            body = '<div class="stg-tkv">' + kv + '<div class="acts">' + acts + '</div></div>';
-        }
-        return '<div class="stg-tk' + (open ? ' open' : '') + (done && s.checkable !== false ? ' on' : '') +
-            '" data-act="tkopen" data-key="' + esc(s.key) + '">' + row + body + '</div>';
-    }
-    function stepHtml(s) {
-        return taskCard(s) + '<div class="stg-gslot" data-slot="' + esc(s.key) + '"></div>';
-    }
-    function secTotals(key) {
-        var sec = docSection(key) || {};
-        var prog = _state.progress || {};
-        var total = 0, done = 0;
-        (sec.steps || []).forEach(function (s) {
-            if (s.checkable === false) return;
-            total++;
-            if (prog[s.key]) done++;
-        });
-        return { total: total, done: done };
-    }
-
-    function shortCost(c) {
-        var t = String(c == null ? '' : c).trim();
-        if (!t || t === '—' || t === '-') return '';
-        t = t.split(/[(,;]/)[0].trim().replace(/[·—-]\s*$/, '').trim();
-        if (t.length > 26) t = t.slice(0, 25).replace(/\s+\S*$/, '') + '…';
-        return t;
-    }
-
-    function _pct(v) { var x = parseInt(v, 10); return isNaN(x) ? 0 : Math.max(0, Math.min(100, x)); }
-
-    function chartHtml(chart) {
-        if (!chart || !chart.bars || !chart.bars.length) return '';
-        var bars = chart.bars.filter(function (b) { return _pct(b.pct) > 0; });
-        if (!bars.length) return '';
-        var max = 1;
-        bars.forEach(function (b) { if (_pct(b.pct) > max) max = _pct(b.pct); });
-        var rows = bars.slice().sort(function (a, b) { return _pct(b.pct) - _pct(a.pct); }).map(function (b) {
-            var d = DIFF[b.difficulty] || DIFF.medium;
-            var w = Math.max(8, Math.round(_pct(b.pct) / max * 88));
-            var cost = shortCost(b.cost);
-            return '<div class="stg-bar-row"><div class="stg-bar-l"><b>' + esc(b.name) + '</b>' +
-                '<span class="stg-dif"><i style="background:' + d.c + '"></i>' + esc(T(d.l)) + (cost ? ' · ' + esc(cost) : '') + '</span></div>' +
-                '<div class="stg-bar-tr"><div class="stg-bar-f" style="width:' + w + '%"></div><span class="stg-bar-v">' + _pct(b.pct) + '%</span></div></div>';
-        }).join('');
-        var advice = chart.advice
-            ? '<div class="stg-note" style="margin-top:10px;"><b>' + esc(T('Совет стратега:')) + '</b> ' + termWrap(fixDays(chart.advice)) + '</div>' : '';
-        return rows + advice;
-    }
-
     function docSection(key) {
         var doc = (_state && _state.doc) || {};
         return ((doc.sections || []).filter(function (x) { return x.key === key; })[0]) || null;
@@ -671,140 +473,10 @@
             return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
         } catch (e) { return String(iso).slice(0, 10); }
     }
-    function gridMonday() {
-        var ap = (_state && _state.apply) || null;
-        if (!ap || !ap.from) return null;
-        var iso = String(ap.from).slice(0, 10);
-        if (ap.mode === 'partial' && _state.plan && _state.plan.week_start) {
-            iso = String(_state.plan.week_start).slice(0, 10);
-        }
-        var d = new Date(iso + 'T12:00:00');
-        return isNaN(d.getTime()) ? null : d;
-    }
-    function weekGridHtml() {
-        var sec = docSection('content') || {};
-        var grid = sec.grid || [];
-        if (!grid.length) return '';
-        var byDay = {};
-        grid.forEach(function (g) { byDay[g.day_index] = g; });
-        var monday = gridMonday();
-        var cells = TR_DAYS.map(function (d, i) {
-            var g = byDay[i];
-            var dt = '';
-            if (monday) dt = '<i>' + new Date(monday.getTime() + i * 86400000).getDate() + '</i>';
-            return '<div class="stg-wd' + (g ? ' on' : '') + '"><span class="d">' + esc(T(d)) + dt + '</span>' +
-                '<span class="r' + (g ? '' : ' off') + '">' + (g ? esc(g.rubric) : '—') + '</span></div>';
-        }).join('');
-        var per = sec.per_week || grid.length;
-        var start = monday ? '<b>' + esc(T('с {date}').replace('{date}', fmtDate(monday.toISOString().slice(0, 10) + 'T12:00:00'))) + '</b> · ' : '';
-        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-circle-check"></i></span> ' + esc(T('Стратегия применена к контент-плану')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + start + esc(T('постов в неделю:')) + ' <b>' + per + '</b> · ' + esc(T('дни и рубрики выбрал стратег')) + '</div>' +
-            '<div class="stg-week">' + cells + '</div></div>';
-    }
-    function applyTail(ap) {
-        if (!ap) return '';
-        if (ap.autopilot === 'enabled') return ' ' + esc(T('Следующие недели автопилот соберёт сам — посты будут ждать утверждения.'));
-        if (ap.autopilot === 'stopped') return ' ' + esc(T('Автопилот у канала выключен тобой — следующие недели собирай кнопкой «Собрать неделю» в контент-плане.'));
-        return '';
-    }
-    function firstWeekHtml() {
-        var p = _state && _state.plan;
-        var ap = (_state && _state.apply) || null;
-        var own = ap && p && ap.plan_id && p.id === ap.plan_id;
-        var when = ap && ap.from ? fmtDate(ap.from + 'T12:00:00') : '';
-        var inner;
-        if (!_state || !_state.channel_id) {
-            inner = '<div class="stg-note">' + esc(T('Канал не подключён: сетка недели записана, первая неделя соберётся, когда подключишь канал.')) + '</div>';
-        } else if (ap && ap.mode === 'next_week') {
-            inner = '<div class="stg-note">' + esc(T('Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.').replace('{when}', when)) + applyTail(ap) + '</div>';
-        } else if (!p || (ap && ap.plan_id && !own)) {
-            inner = '<div class="stg-note">' + esc(T('Первая неделя собирается по сетке стратегии — появится в контент-плане через несколько минут.')) + '</div>';
-        } else if (p.status === 'generating' || (p.with_text < p.posts)) {
-            inner = '<div class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю первую неделю')) + ' · ' + p.with_text + ' / ' + p.posts + '</div>';
-        } else {
-            var lead = '';
-            if (ap && ap.mode === 'partial') lead = esc(T('Остаток недели с {when} собран по сетке стратегии.').replace('{when}', when)) + ' ';
-            else if (ap && ap.mode === 'week') lead = esc(T('Неделя с понедельника, {when}, собрана по сетке стратегии.').replace('{when}', when)) + ' ';
-            inner = '<div class="stg-note">' + lead + '<b>' + p.posts + '</b> ' + esc(T('постов с датами и временем ждут утверждения в контент-плане')) + (p.published ? ' · ' + esc(T('вышло')) + ' ' + p.published : '') + applyTail(ap) + '</div>';
-        }
-        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-calendar-event"></i></span> ' + esc(T('Первая неделя')) + '</div>' +
-            '<div style="margin-top:8px;">' + inner + '</div>' +
-            (_state && _state.channel_id ? '<button class="stg-trbtn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>' : '') + '</div>';
-    }
     function latestReview() {
         var revs = (_state && _state.reviews || []).filter(function (r) { return r && r.v === 2 && r.week >= 1; });
         if (!revs.length) return null;
         return revs.reduce(function (a, b) { return (b.week || 0) > (a.week || 0) ? b : a; });
-    }
-    function weekTasksHtml(r) {
-        var prog = (_state && _state.progress) || {};
-        var tasks = r.tasks || [];
-        var done = tasks.filter(function (t) { return !!prog[t.key]; }).length;
-        var t = { done: done, total: tasks.length, pct: tasks.length ? Math.round(done * 100 / tasks.length) : 0 };
-        var range = done + ' ' + T('из') + ' ' + tasks.length + ' ' + T('шагов выполнено');
-        var auto = (r.auto_closed || []).map(function (a) {
-            return '<div class="stg-rv-row"><span class="dot ok"></span><span>' + esc(tx(a, 'tpl', 'params', 'text')) + '</span></div>';
-        }).join('');
-        return '<div class="stg-sec" data-sec="week1"><div class="stg-dochead">' + ringHtml(t) +
-            '<div class="t"><b>' + esc(T('Задачи недели {n}').replace('{n}', r.week + 1)) + '</b><span id="stg-doc-sub" data-count="1">' + range + '</span></div></div>' +
-            '<div style="margin-top:6px;">' + tasks.map(function (t) { return rvTask(t, r.week); }).join('') + '</div>' +
-            (auto ? '<div class="stg-rv-rows" style="margin-top:8px;">' + auto + '</div>' : '') + '</div>';
-    }
-    function tasksHtml() {
-        var last = latestReview();
-        if (last && ('auto_closed' in last) && (last.tasks || []).length) return weekTasksHtml(last);
-        var sec = docSection('week1');
-        if (!sec || !(sec.steps || []).length) return '';
-        var days = sec.days || [];
-        var t = docTotals();
-        var ap = _state && _state.apply;
-        var start = null;
-        if (ap && ap.at) {
-            var sd = new Date(String(ap.at).slice(0, 10) + 'T12:00:00');
-            if (!isNaN(sd.getTime())) start = sd;
-        }
-        var known = days.filter(function (d) { return d !== null && d !== undefined; });
-        var minDay = known.length ? Math.min.apply(null, known) : 0;
-        var groups = [], byKey = {};
-        sec.steps.forEach(function (s, i) {
-            var d = (days[i] !== null && days[i] !== undefined) ? days[i] : null;
-            var date = (start && d !== null) ? new Date(start.getTime() + (d - minDay) * 86400000) : null;
-            var gk = date ? date.toISOString().slice(0, 10) : 'd' + (d === null ? 'x' + i : d);
-            if (!byKey[gk]) { byKey[gk] = { key: gk, date: date, day: d, items: [] }; groups.push(byKey[gk]); }
-            byKey[gk].items.push(s);
-        });
-        var tn = new Date(); tn.setHours(12, 0, 0, 0);
-        var todayKey = tn.toISOString().slice(0, 10);
-        var prog = _state.progress || {};
-        var rows = groups.map(function (g) {
-            var allDone = g.items.every(function (s) { return s.checkable === false || prog[s.key]; });
-            var gk = g.date ? g.key : '';
-            var cls = '', chip = '';
-            if (allDone && g.items.some(function (s) { return s.checkable !== false; })) cls = ' done';
-            else if (gk && gk === todayKey) { cls = ' today'; chip = '<span class="now">' + esc(T('Сегодня')) + '</span>'; }
-            else if (gk && gk < todayKey) { cls = ' past'; chip = '<span class="move">' + esc(T('не сделано → сегодня')) + '</span>'; }
-            var cap = '';
-            if (g.date) {
-                var iso = gk + 'T12:00:00';
-                cap = '<div class="stg-dcap"><b>' + esc(fmtWeekday(iso)) + '</b><span>' + esc(fmtDate(iso)) + '</span>' + chip + '</div>';
-            } else if (g.day !== null && TR_DAYS[g.day]) {
-                cap = '<div class="stg-dcap"><b>' + esc(T(TR_DAYS[g.day])) + '</b></div>';
-            }
-            return '<div class="stg-tday' + cls + '" data-day-group="' + gk + '">' + cap +
-                g.items.map(stepHtml).join('') + '</div>';
-        }).join('');
-        var range, counted = 0;
-        if (start && groups.length && groups[0].date && groups[groups.length - 1].date) {
-            range = esc(T('идут от старта стратегии')) + ' · ' +
-                esc(fmtDate(groups[0].key + 'T12:00:00')) + ' — ' +
-                esc(fmtDate(groups[groups.length - 1].key + 'T12:00:00'));
-        } else {
-            range = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
-            counted = 1;
-        }
-        return '<div class="stg-sec" data-sec="week1"><div class="stg-dochead">' + ringHtml(t) +
-            '<div class="t"><b>' + esc(T('Задачи первой недели')) + '</b><span id="stg-doc-sub" data-count="' + counted + '">' + range + '</span></div></div>' +
-            '<div class="stg-tl">' + rows + '</div></div>';
     }
     function fmtWeekday(iso) {
         if (!iso) return '';
@@ -820,55 +492,6 @@
             return new Date(iso).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
         } catch (e) { return ''; }
     }
-    function reviewCardHtml() {
-        var iso = _state && _state.next_review_at;
-        var week = (_state && _state.week) || 1;
-        var head = week <= 4
-            ? T('Сверка {n} из 4').replace('{n}', week)
-            : T('Сверка {n}').replace('{n}', week);
-        var line = iso
-            ? T('каждую неделю, день — {weekday}. Следующая — {date}, {time}').replace('{weekday}', fmtWeekday(iso)).replace('{date}', fmtDate(iso)).replace('{time}', fmtTime(iso))
-            : T('дата появится после сборки стратегии');
-        var last = latestReview();
-        var lastTx = '';
-        if (last) {
-            var hl = last.headline_tpl ? tx(last.headline_tpl, 'tpl', 'params', 'text') : (last.headline || '');
-            var why = (last.changes || []).length ? '' : (last.no_changes_reason ? tx(last.no_changes_reason, 'tpl', 'params', 'text') : '');
-            lastTx = '<div class="stg-note" style="margin-top:8px;"><b>' + esc(T('Сверка {n}').replace('{n}', last.week)) + ':</b> ' + esc(hl) +
-                (why ? '<br>' + esc(why) : '') + '</div>';
-        }
-        return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-clock"></i></span> ' + esc(T('Месяц ведения')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;"><b>' + esc(head) + '</b> — ' + esc(line) + '. ' + esc(T('Стратег сверит план с фактом и предложит правки сетки.')) + '</div>' + lastTx + '</div>';
-    }
-    var DOC_ORDER = ['niche', 'audience', 'monetize', 'offer', 'metrics'];
-    function accSecHtml(key) {
-        var doc = (_state && _state.doc) || {};
-        var sec = docSection(key);
-        if (!sec) return '';
-        var hasContent = (sec.intro && sec.intro.trim()) || (sec.steps && sec.steps.length) ||
-            (sec.chart && sec.chart.bars && sec.chart.bars.length);
-        if (!hasContent) return '';
-        var open = !!_secOpen[key];
-        var st = secTotals(key);
-        var cnt = st.total
-            ? '<span class="stg-acc-cnt' + (st.done === st.total ? ' all' : '') + '" data-cnt="' + esc(key) + '">' + st.done + ' / ' + st.total + '</span>'
-            : '';
-        var head = '<div class="stg-acc-head" data-act="secacc" data-sec="' + esc(key) + '">' +
-            '<span class="tile">' + (SEC_ICON[sec.key] || '<i class="ti ti-pin"></i>') + '</span>' +
-            '<b>' + esc(T(sec.title || sec.key)) + '</b>' + cnt +
-            '<i class="ti ti-chevron-' + (open ? 'up' : 'down') + '"></i></div>';
-        var inner = '';
-        if (open) {
-            if (sec.key === 'niche' && sec.chosen && sec.chosen !== (doc.niche || '')) {
-                inner += '<div class="stg-tip" style="margin-top:10px;"><b>' + esc(T('Рекомендация стратега:')) + '</b> ' + esc(sec.chosen) + '</div>';
-            }
-            if (sec.intro && sec.intro.trim()) inner += bodyHtml(fixDays(sec.intro), true);
-            inner += chartHtml(sec.chart);
-            if (sec.steps && sec.steps.length) inner += '<div style="margin-top:6px;">' + sec.steps.map(stepHtml).join('') + '</div>';
-        }
-        return '<div class="stg-sec stg-acc' + (open ? ' open' : '') + '" data-sec="' + esc(sec.key) + '">' + head +
-            (inner ? '<div class="stg-acc-body">' + inner + '</div>' : '') + '</div>';
-    }
     function findStep(key) {
         var secs = (_state && _state.doc && _state.doc.sections) || [];
         for (var i = 0; i < secs.length; i++) {
@@ -879,47 +502,459 @@
         }
         return null;
     }
-    function renderDoc() {
-        normalizeDoc(_state);
-        var doc = _state.doc || {};
-        var iv = _state.interview || {};
-        var week = _state.week || 1;
-        var html = '<div class="stg-sec stg-dochead-sec"><div class="stg-dochead"><div class="stg-fic" style="width:44px;height:44px;">' + STG_ICON + '</div>' +
-            '<div class="t"><b>' + esc(T('Стратегия:')) + ' «' + esc(doc.niche || '—') + '»</b>' +
-            '<span>' + (channelLine() ? esc(channelLine()) + ' · ' : '') + esc(T('неделя')) + ' ' + week + (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + (iv.audience_geo ? ' · ' + esc(T(iv.audience_geo)) : '') + '</span></div></div></div>';
-        if (!canManage()) {
-            html += '<div class="stg-sec stg-ro"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-eye"></i></span> ' + esc(T('Только просмотр')) + '</div>' +
-                '<div class="stg-note" style="margin-top:8px;">' + esc(T('Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».')) + '</div></div>';
+    var _tab = 'today', _curKey = null, _plat = null, _optOpen = false, _readyOpen = {};
+    var TABS = [
+        ['today', SG('Сегодня'), 'ti-clock-hour-4'],
+        ['plan', SG('План'), 'ti-list-details'],
+        ['plat', SG('Площадки'), 'ti-device-mobile'],
+        ['money', SG('Доход'), 'ti-coin'],
+        ['chat', SG('Чат'), 'ti-message-circle']
+    ];
+    var DAY_FULL = [SG('понедельник'), SG('вторник'), SG('среда'), SG('четверг'), SG('пятница'), SG('суббота'), SG('воскресенье')];
+    var VERDICT = { now: SG('сейчас'), later: SG('позже'), skip: SG('не сейчас') };
+    var SUM_ICON = { niche: 'ti-target', reader: 'ti-user', growth: 'ti-trending-up', money: 'ti-coin' };
+    var SUM_LABEL = { niche: SG('Ниша'), reader: SG('Читатель'), growth: SG('Рост'), money: SG('Доход') };
+    var CHAT_SUG = [SG('Что написать в первом посте?'), SG('С какой площадки начать?'), SG('Когда подключать первую партнёрку?')];
+
+    function prog() { return (_state && _state.progress) || {}; }
+
+    function weekTasks() {
+        var last = latestReview();
+        if (last && ('auto_closed' in last) && (last.tasks || []).length) {
+            return { week: (last.week || 0) + 1, items: last.tasks.map(function (t) {
+                return { key: t.key, title: tx(t, 'tpl', 'params', 'title'), sub: tx(t, 'sub_tpl', 'sub_params', 'sub'),
+                         minutes: t.minutes, link: t.link || '', day: null, do: [], guide: false };
+            }) };
+        }
+        var sec = docSection('week1') || {};
+        var days = sec.days || [];
+        var items = (sec.steps || []).map(function (s, i) {
+            var d = days[i];
+            return { key: s.key, title: s.title, do: s.do || [], why: s.why || '', mistake: s.mistake || '',
+                     minutes: s.minutes, ready: s.ready || '', link: s.link || '', guide: !!s.has_guide,
+                     day: (d === null || d === undefined) ? null : d };
+        });
+        items.sort(function (a, b) { return (a.day === null ? 9 : a.day) - (b.day === null ? 9 : b.day); });
+        return { week: 1, items: items };
+    }
+
+    function currentTask(w) {
+        var p = prog();
+        var cur = w.items.filter(function (x) { return x.key === _curKey; })[0];
+        return cur || w.items.filter(function (x) { return !p[x.key]; })[0] || null;
+    }
+
+    function platFromTitle(t) {
+        var s = String(t || '').toLowerCase();
+        if (s.indexOf('дзен') >= 0) return 'dzen';
+        if (s.indexOf('tiktok') >= 0) return 'tiktok';
+        if (s.indexOf('youtube') >= 0 || s.indexOf('shorts') >= 0) return 'shorts';
+        if (s.indexOf('vk') >= 0 || s.indexOf('вк') >= 0) return 'vk';
+        return '';
+    }
+
+    function linkBtn(it, pri) {
+        var c = 'stg-btn' + (pri ? ' pri' : '');
+        if (it.link === 'platforms') return '<button class="' + c + '" data-act="tab" data-tab="plat" data-plat="' + esc(platFromTitle(it.title)) + '">' + esc(T('Открыть площадку')) + '</button>';
+        if (it.link === 'market') return '<button class="' + c + '" data-act="tkradar">' + esc(T('Открыть Радар')) + '</button>';
+        if (it.link === 'traffic' && _state.channel_id) return '<button class="' + c + '" data-act="trmod">' + esc(T('Открыть «Трафик»')) + '</button>';
+        if (it.link === 'plan' && _state.channel_id) return '<button class="' + c + '" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>';
+        return '';
+    }
+
+    function roNote() {
+        return '<div class="stg-sec stg-ro"><div class="stg-eb">' + esc(T('Только просмотр')) + '</div>' +
+            '<div class="stg-txt">' + esc(T('Стратегию канала ведёт владелец и доверенный администратор. Тебе доступны план, задачи, сверки и модуль «Трафик».')) + '</div></div>';
+    }
+
+    function nowCard(it) {
+        var isDone = !!prog()[it.key];
+        var eb = [T('Сейчас')];
+        if (it.day !== null) eb.push(T(DAY_FULL[it.day]));
+        if (it.minutes) eb.push(it.minutes + ' ' + T('мин'));
+        var html = '<div class="stg-sec stg-now"><div class="stg-eb">' + esc(eb.join(' · ')) + '</div>' +
+            '<div class="stg-h1' + (isDone ? ' done' : '') + '">' + esc(fixDays(it.title)) + '</div>';
+        if (it.sub) html += '<div class="stg-txt">' + esc(it.sub) + '</div>';
+        if (it.do.length) html += '<ol class="stg-steps">' + it.do.map(function (x) { return '<li>' + esc(fixDays(x)) + '</li>'; }).join('') + '</ol>';
+        if (it.ready) {
+            var open = !!_readyOpen[it.key];
+            html += '<div class="stg-ready"><div class="k">' + esc(T('Готовый текст')) + '</div><div class="v' + (open ? ' full' : '') + '">' + esc(it.ready) + '</div>' +
+                (open ? '' : '<button class="stg-more" data-act="rmore" data-key="' + esc(it.key) + '">' + esc(T('Показать полностью')) + '</button>') + '</div>';
+        }
+        if (it.why) html += '<div class="stg-why">' + esc(fixDays(it.why)) + '</div>';
+        if (it.mistake) html += '<div class="stg-trap"><i class="ti ti-alert-triangle"></i><span>' + esc(fixDays(it.mistake)) + '</span></div>';
+        var acts = '';
+        if (it.ready) acts += '<button class="stg-btn pri" data-act="tkcopy" data-key="' + esc(it.key) + '">' + esc(T('Скопировать текст')) + '</button>';
+        acts += linkBtn(it, !it.ready);
+        if (canManage()) acts += '<button class="stg-btn ok" data-act="tkdone" data-key="' + esc(it.key) + '">' + esc(isDone ? T('Вернуть в работу') : T('Готово')) + '</button>';
+        if (acts) html += '<div class="stg-acts">' + acts + '</div>';
+        var lnks = '';
+        if (it.guide && _state.access === 'full' && canManage()) lnks += '<button class="stg-lnk" data-act="how" data-key="' + esc(it.key) + '"><i class="ti ti-list-numbers"></i>' + esc(T('Пошаговый план')) + '</button>';
+        if (canManage()) lnks += '<button class="stg-lnk" data-act="ask" data-t="' + esc(it.title) + '"><i class="ti ti-message-circle"></i>' + esc(T('Спросить стратега')) + '</button>';
+        if (lnks) html += '<div class="stg-lnks">' + lnks + '</div>';
+        return html + '<div class="stg-gslot" data-slot="' + esc(it.key) + '"></div></div>';
+    }
+
+    function allDoneCard() {
+        var iso = _state.next_review_at;
+        return '<div class="stg-sec stg-now"><div class="stg-eb">' + esc(T('Все задачи недели выполнены')) + '</div><div class="stg-txt">' +
+            esc(iso ? T('Следующие задачи стратег поставит на сверке — {weekday}, {date}.').replace('{weekday}', fmtWeekday(iso)).replace('{date}', fmtDate(iso))
+                : T('Следующие задачи стратег поставит на сверке.')) + '</div></div>';
+    }
+
+    function doneRow(ok, html) {
+        return '<div class="stg-done"><i class="ti ' + (ok ? 'ti-circle-check ok' : 'ti-clock wait') + '"></i><span>' + html + '</span></div>';
+    }
+
+    function doneCard() {
+        var sec = docSection('content') || {};
+        var per = sec.per_week || (sec.grid || []).length;
+        var head = '<div class="stg-sec"><div class="stg-eb">' + esc(T('Стратег уже сделал')) + '</div>';
+        var rows = '';
+        if (!_state.channel_id) {
+            rows += doneRow(true, '<b>' + esc(T('Сетка недели')) + '</b> ' + esc(T('готова, постов в неделю:')) + ' ' + per);
+            rows += doneRow(true, '<b>' + esc(T('Описание, закреп и профили площадок')) + '</b> ' + esc(T('— готовые тексты в задачах недели')));
+            rows += doneRow(false, '<b>' + esc(T('Посты, стиль канала и ролики')) + '</b> ' + esc(T('начнут собираться, когда привяжешь канал к стратегии')));
+            return head + rows + (canManage() ? '<button class="stg-btn pri wide" data-act="attach">' + esc(T('Привязать канал')) + '</button>' : '') + '</div>';
+        }
+        var ap = _state.apply, p = _state.plan, tb = _state.traffic_brief;
+        rows += ap ? doneRow(true, '<b>' + esc(T('Рубрики и сетка недели')) + '</b> ' + esc(T('записаны в контент-план, постов в неделю:')) + ' ' + per)
+            : doneRow(false, '<b>' + esc(T('Рубрики и сетка недели')) + '</b> ' + esc(T('записываются в контент-план')));
+        if (ap && ap.mode === 'next_week' && ap.from) {
+            rows += doneRow(true, esc(T('Текущая неделя идёт по твоему плану и не изменена. С понедельника, {when}, недели собираются по сетке стратегии.').replace('{when}', fmtDate(ap.from + 'T12:00:00'))));
+        } else if (p && (p.status === 'generating' || p.with_text < p.posts)) {
+            rows += doneRow(false, '<b>' + esc(T('Посты недели')) + '</b> ' + esc(T('собираются')) + ' · ' + p.with_text + ' / ' + p.posts);
+        } else if (p && p.posts) {
+            rows += doneRow(true, '<b>' + esc(T('Посты недели')) + '</b> ' + esc(T('ждут утверждения в контент-плане')) + ' · ' + p.posts +
+                (p.published ? ' · ' + esc(T('вышло')) + ' ' + p.published : ''));
+        }
+        if (ap && ap.voice_set) rows += doneRow(true, '<b>' + esc(T('Стиль канала')) + '</b> ' + esc(T('настроен — посты пишутся в нём')));
+        if (tb && tb.building) rows += doneRow(false, '<b>' + esc(T('Ролики из постов')) + '</b> ' + esc(T('собираются')) + ' · ' + tb.ready + ' / ' + tb.posts);
+        else if (tb && tb.posts) rows += doneRow(tb.ready >= tb.posts, '<b>' + esc(T('Ролики из постов')) + '</b> ' + esc(T('готово {a} из {b}').replace('{a}', tb.ready).replace('{b}', tb.posts)));
+        if (ap && ap.autopilot === 'enabled') rows += doneRow(true, '<b>' + esc(T('Автопилот')) + '</b> ' + esc(T('соберёт следующие недели сам — посты будут ждать утверждения')));
+        var iso = _state.next_review_at;
+        if (iso) rows += doneRow(true, '<b>' + esc(T('Сверка')) + '</b> — ' + esc(fmtWeekday(iso)) + ', ' + esc(fmtDate(iso)) + ', ' + esc(fmtTime(iso)));
+        return head + rows + '<button class="stg-btn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button></div>';
+    }
+
+    function paneToday() {
+        var w = weekTasks(), p = prog(), html = '';
+        if (!canManage()) html += roNote();
+        if (!w.items.length) {
+            html += '<div class="stg-sec"><div class="stg-txt">' + esc(T('На эту неделю задач нет — всё идёт по плану.')) + '</div></div>';
+        } else {
+            var done = w.items.filter(function (x) { return p[x.key]; }).length;
+            html += '<div class="stg-top"><span class="dot"></span>' + esc(w.week === 1 ? T('Первая неделя') : T('Неделя {n}').replace('{n}', w.week)) +
+                ' · ' + esc(T('сделано {a} из {b}').replace('{a}', done).replace('{b}', w.items.length)) + '</div>';
+            var cur = currentTask(w);
+            html += cur ? nowCard(cur) : allDoneCard();
+            var rest = w.items.filter(function (x) { return !cur || x.key !== cur.key; });
+            if (rest.length) {
+                html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Дальше на этой неделе')) + '</div>' + rest.map(function (x) {
+                    return '<div class="stg-row' + (p[x.key] ? ' done' : '') + '" data-act="tkpick" data-key="' + esc(x.key) + '">' +
+                        '<span class="stg-day">' + (x.day !== null ? esc(T(TR_DAYS[x.day])) : '<i class="ti ti-point"></i>') + '</span>' +
+                        '<span class="tx">' + esc(fixDays(x.title)) + '</span>' +
+                        (p[x.key] ? '<i class="ti ti-check stg-rowok"></i>' : (x.minutes ? '<span class="stg-pill">' + x.minutes + ' ' + esc(T('мин')) + '</span>' : '')) +
+                        '</div>';
+                }).join('') + '</div>';
+            }
+        }
+        html += doneCard();
+        var last = latestReview();
+        if (last) {
+            var hl = last.headline_tpl ? tx(last.headline_tpl, 'tpl', 'params', 'text') : (last.headline || '');
+            html += '<div class="stg-sec stg-go" data-act="tab" data-tab="plan" data-to="reviews"><div class="stg-eb">' + esc(T('Сверка {n}').replace('{n}', last.week)) + '</div>' +
+                '<div class="stg-txt">' + esc(hl) + '</div><div class="stg-golink">' + esc(T('Открыть сверку')) + ' <i class="ti ti-chevron-right"></i></div></div>';
+        }
+        return html;
+    }
+
+    function num1(v) { return String(v).replace('.', ','); }
+
+    function shortNum(n) {
+        n = Number(n || 0);
+        if (n >= 1e6) return num1(Math.round(n / 1e5) / 10) + ' ' + T('млн');
+        if (n >= 1e4) return Math.round(n / 1e3) + ' ' + T('тыс.');
+        return num(n);
+    }
+
+    function statBox(v, l) {
+        return '<div class="stg-stat"><div class="v">' + esc(v) + '</div><div class="l">' + esc(l) + '</div></div>';
+    }
+
+    function marketStats(d) {
+        if (!d) return '';
+        var cells = statBox(num(d.channels), T('каналов темы в каталоге'));
+        if (d.leader_subscribers) cells += statBox(shortNum(d.leader_subscribers), T('подписчиков у лидера'));
+        if (d.growing_share_pct !== null && d.growing_share_pct !== undefined) cells += statBox(d.growing_share_pct + '%', T('каналов растут за 30 дней'));
+        if (d.median_posts_per_week) cells += statBox(num1(d.median_posts_per_week), T('постов в неделю у типичного канала'));
+        return '<div class="stg-stats">' + cells + '</div><div class="stg-src">' + esc(T('По каналам каталога ForgeMetrics от 1 000 подписчиков')) + '</div>';
+    }
+
+    function weekGridHtml() {
+        var sec = docSection('content') || {};
+        var grid = sec.grid || [];
+        if (!grid.length) return '';
+        var byDay = {};
+        grid.forEach(function (g) { byDay[g.day_index] = g; });
+        var cells = TR_DAYS.map(function (d, i) {
+            var g = byDay[i];
+            return '<div class="stg-wd' + (g ? ' on' : '') + '"><span class="d">' + esc(T(d)) + '</span>' +
+                '<span class="r' + (g ? '' : ' off') + '">' + (g ? esc(g.rubric) : '—') + '</span></div>';
+        }).join('');
+        return '<div class="stg-sec"><div class="stg-eb">' + esc(T('Сетка недели')) + ' · ' + esc(T('постов в неделю:')) + ' ' + (sec.per_week || grid.length) + '</div>' +
+            '<div class="stg-week">' + cells + '</div>' +
+            (_state.channel_id ? '<button class="stg-btn wide" data-act="trplan">' + esc(T('Открыть контент-план')) + '</button>' : '') + '</div>';
+    }
+
+    function panePlan() {
+        var doc = _state.doc || {}, html = '';
+        var sm = (docSection('summary') || {}).lines || [];
+        if (sm.length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Стратегия в четырёх строках')) + '</div><div class="stg-sum">' + sm.map(function (l) {
+                return '<i class="ti ' + (SUM_ICON[l.k] || 'ti-point') + '"></i><div><b>' + esc(T(SUM_LABEL[l.k] || '')) + '</b>' + esc(l.text) + '</div>';
+            }).join('') + '</div></div>';
+        }
+        var n = docSection('niche') || {};
+        html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Ниша')) + (n.mode === 'choose' ? ' · ' + esc(T('выбрал стратег')) : '') + '</div>' +
+            '<div class="stg-nname">' + esc(n.chosen || doc.niche || '') + '</div>' +
+            (n.angle ? '<div class="stg-angle">' + esc(n.angle) + '</div>' : '') + marketStats(n.data) +
+            (n.intro ? '<div class="stg-txt">' + esc(n.intro) + '</div>' : '') +
+            (doc.metric_note ? '<div class="stg-txt mut">' + esc(doc.metric_note) + '</div>' : '');
+        if ((n.risks || []).length) {
+            html += '<div class="stg-sub">' + esc(T('Риски и что с ними делать')) + '</div>' + n.risks.map(function (r) {
+                return '<div class="stg-item"><b>' + esc(r.risk) + '</b>' + esc(r.handle) + '</div>';
+            }).join('');
+        }
+        var others = (n.options || []).filter(function (o) { return o.name !== n.chosen; });
+        if (others.length) {
+            html += '<button class="stg-lnk" data-act="optmore"><i class="ti ti-chevron-' + (_optOpen ? 'up' : 'down') + '"></i>' + esc(T('Другие варианты ниши')) + ' · ' + others.length + '</button>';
+            if (_optOpen) {
+                html += others.map(function (o) {
+                    return '<div class="stg-opt"><b>' + esc(o.name) + '</b>' + (o.why_you ? '<p>' + esc(o.why_you) + '</p>' : '') +
+                        (o.market ? '<p>' + esc(o.market) + '</p>' : '') + (o.angle ? '<p>' + esc(o.angle) + '</p>' : '') + '</div>';
+                }).join('');
+            }
+        }
+        html += '</div>';
+        var a = docSection('audience') || {};
+        if (a.intro) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Читатель')) + '</div><div class="stg-txt">' + esc(a.intro) + '</div>' +
+                (a.hooks || []).map(function (h) { return '<div class="stg-hook">' + esc(h) + '</div>'; }).join('') + '</div>';
         }
         html += weekGridHtml();
-        html += firstWeekHtml();
-        html += tasksHtml();
-        html += reviewCardHtml();
-        html += trafficCard();
-        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Спросить стратега')) + '</div>' +
-            '<div class="stg-note" style="margin-top:8px;">' + esc(T('Разделы плана ниже — ниша, аудитория, заработок, оффер, метрики — и чат в конце.')) + '</div>' +
-            '<button class="stg-trbtn wide" data-act="jump" data-to="chat">' + esc(T('Задать вопрос')) + '</button></div>';
-        DOC_ORDER.forEach(function (key) { html += accSecHtml(key); });
-        html += reviewHtml();
-        html += '<div data-sec="chat">' + chatHtml() + '</div>';
-        if (canManage()) {
-            html += '<button class="stg-prev" data-act="restart" style="margin-top:14px;">' + esc(T('Начать новую стратегию')) + '</button>';
+        if (doc.budget_plan) html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Бюджет')) + '</div><div class="stg-txt">' + esc(doc.budget_plan) + '</div></div>';
+        var ms = (docSection('milestones') || {}).steps || [];
+        if (ms.length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Дальше')) + '</div><div class="stg-mss">' + ms.map(function (m) {
+                return '<div class="stg-ms">' + (m.when ? '<div class="w">' + esc(m.when) + '</div>' : '') + '<b>' + esc(m.title) + '</b>' +
+                    (m.body ? '<p>' + esc(m.body) + '</p>' : '') + '</div>';
+            }).join('') + '</div></div>';
         }
+        html += '<div data-sec="reviews">' + reviewHtml() + '</div>';
+        if (canManage()) html += '<button class="stg-prev" data-act="restart">' + esc(T('Начать новую стратегию')) + '</button>';
+        return html;
+    }
+
+    function copyRow(label, text, k, f) {
+        return '<div class="stg-copyrow"><div class="tx"><small>' + esc(label) + '</small>' + esc(text) + '</div>' +
+            '<button class="stg-cp" data-act="pfcopy" data-k="' + esc(k) + '" data-f="' + f + '">' + esc(T('Копировать')) + '</button></div>';
+    }
+
+    function platItems() { return (docSection('platforms') || {}).items || []; }
+
+    function panePlat() {
+        var sec = docSection('platforms') || {}, items = platItems(), p = prog(), html = '';
+        if (!items.length) return '<div class="stg-sec"><div class="stg-txt">' + esc(T('Площадки появятся после новой сборки стратегии.')) + '</div></div>';
+        if (!items.some(function (x) { return x.key === _plat; })) _plat = items[0].key;
+        html += '<div class="stg-chips">' + items.map(function (x) {
+            return '<button class="stg-ch' + (x.key === _plat ? ' on' : '') + '" data-act="plat" data-k="' + esc(x.key) + '"><i class="stg-vd ' + esc(x.verdict) + '"></i>' + esc(x.name) + '</button>';
+        }).join('') + '</div>';
+        var it = items.filter(function (x) { return x.key === _plat; })[0];
+        html += '<div class="stg-sec"><div class="stg-pf"><span class="n">' + esc(it.name) + '</span><span class="stg-verd ' + esc(it.verdict) + '">' + esc(T(VERDICT[it.verdict] || '')) + '</span></div>' +
+            (it.why ? '<div class="stg-txt">' + esc(it.why) + '</div>' : '') + '</div>';
+        var pf = it.profile || {};
+        if (pf.name || pf.bio) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Профиль — скопируй и вставь')) + '</div>' +
+                (pf.name ? copyRow(T('Название'), pf.name, it.key, 'name') : '') + (pf.bio ? copyRow(T('Описание'), pf.bio, it.key, 'bio') : '') +
+                (pf.link ? '<div class="stg-small">' + esc(pf.link) + '</div>' : '') + '</div>';
+        }
+        if ((it.warmup || []).length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Прогрев и первые шаги')) + '</div>' + it.warmup.map(function (w) {
+                var on = !!(w.key && p[w.key]);
+                var act = (w.key && canManage()) ? ' data-act="warm" data-key="' + esc(w.key) + '"' : '';
+                return '<div class="stg-chk' + (on ? ' on' : '') + '"' + act + '><span class="stg-box">' + (on ? '<i class="ti ti-check"></i>' : '') + '</span>' +
+                    '<span class="tx">' + (w.when ? '<small>' + esc(w.when) + '</small>' : '') + esc(w.text) + '</span></div>';
+            }).join('') + '</div>';
+        }
+        var r = it.rhythm || {};
+        if (r.per_week || r.when) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Ритм публикаций')) + '</div><div class="stg-rh">' +
+                (r.per_week ? '<span class="v">' + r.per_week + '</span><span class="l">' + esc(T('роликов в неделю')) + (r.when ? ' · ' + esc(r.when) : '') + '</span>'
+                    : '<span class="l">' + esc(r.when) + '</span>') + '</div>' + (r.note ? '<div class="stg-txt">' + esc(r.note) + '</div>' : '') + '</div>';
+        }
+        if ((it.nuances || []).length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Что важно знать')) + '</div>' + it.nuances.map(function (x) {
+                return '<div class="stg-nu"><i class="ti ti-info-circle"></i><span>' + esc(x) + '</span></div>';
+            }).join('') + '</div>';
+        }
+        if (it.expect) html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Чего ждать в первые недели')) + '</div><div class="stg-txt">' + esc(it.expect) + '</div></div>';
+        if (_state.channel_id) html += '<button class="stg-btn pri wide" data-act="trmod">' + esc(T('Готовые ролики — модуль «Трафик»')) + '</button>';
+        if ((sec.telegram || []).length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Рост внутри Telegram')) + '</div>' + sec.telegram.map(function (x) {
+                return '<div class="stg-item"><b>' + esc(x.title) + '</b>' + esc(x.body) + '</div>';
+            }).join('') + '</div>';
+        }
+        if (sec.paid && (sec.paid.steps || []).length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Закупка рекламы')) + '</div>' + sec.paid.steps.map(function (x) {
+                return '<div class="stg-item"><b>' + esc(x.title) + '</b>' + esc(x.body) + '</div>';
+            }).join('') + '<button class="stg-btn wide" data-act="tkradar">' + esc(T('Открыть Радар')) + '</button></div>';
+        }
+        return html;
+    }
+
+    function paneMoney() {
+        var m = docSection('money') || {}, html = '';
+        var subs = (_state.channel && _state.channel.subscribers) || 0;
+        var lad = m.ladder || [], here = 0;
+        lad.forEach(function (x, i) { if (subs >= (x.from || 0)) here = i; });
+        if (lad.length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Лестница дохода')) + '</div><div class="stg-lad">' + lad.map(function (x, i) {
+                var w = x.from ? T('от {n} подписчиков').replace('{n}', num(x.from)) : T('с нуля');
+                return '<div class="stg-st' + (i === here ? ' here' : '') + '"><div class="w">' + esc(w) + (i === here ? '<span class="tag">' + esc(T('ты здесь')) + '</span>' : '') + '</div>' +
+                    '<b>' + esc(x.title) + '</b>' + (x.body ? '<p>' + esc(x.body) + '</p>' : '') + '</div>';
+            }).join('') + '</div></div>';
+        }
+        if ((m.partners || []).length) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Партнёрские программы под нишу')) + '</div>' + m.partners.map(function (x) {
+                return '<div class="stg-pt"><div class="top"><b>' + esc(x.name) + '</b></div>' + (x.requires ? '<div class="req">' + esc(x.requires) + '</div>' : '') +
+                    (x.fit ? '<p>' + esc(x.fit) + '</p>' : '') +
+                    '<details><summary>' + esc(T('Как подключить и встроить в канал')) + '</summary>' + (x.how ? '<p>' + esc(x.how) + '</p>' : '') +
+                    (x.content ? '<p>' + esc(x.content) + '</p>' : '') + '</details></div>';
+            }).join('') + '</div>';
+        }
+        if (m.offer && m.offer.body) {
+            html += '<div class="stg-sec"><div class="stg-eb">' + esc(T('Оффер на Площадке')) + '</div><div class="stg-ready"><div class="k">' + esc(T('Готовый текст')) + '</div>' +
+                '<div class="v full">' + esc(m.offer.body) + '</div></div><div class="stg-acts"><button class="stg-btn pri" data-act="offcopy">' + esc(T('Скопировать текст')) + '</button>' +
+                '<button class="stg-btn" data-act="market">' + esc(T('Открыть Площадку')) + '</button></div></div>';
+        }
+        if (m.marking) html += '<div class="stg-small stg-mark">' + esc(m.marking) + '</div>';
+        return html || '<div class="stg-sec"><div class="stg-txt">' + esc(T('План дохода появится после новой сборки стратегии.')) + '</div></div>';
+    }
+
+    function paneChat() {
+        var sug = canManage() ? '<div class="stg-chips">' + CHAT_SUG.map(function (q) {
+            return '<button class="stg-ch" data-act="sug" data-q="' + esc(T(q)) + '">' + esc(T(q)) + '</button>';
+        }).join('') + '</div>' : '';
+        return sug + chatHtml();
+    }
+
+    function legacyHtml() {
+        return '<div class="stg-sec stg-now"><div class="stg-eb">' + esc(T('Стратегия в прежнем формате')) + '</div>' +
+            '<div class="stg-txt">' + esc(T('Эта стратегия собрана до обновления стратега. План по дням, площадки с готовыми профилями и партнёрские программы под нишу появятся после новой сборки: разговор со стратегом займёт около 10 минут.')) + '</div>' +
+            (canManage() ? '<button class="stg-btn pri wide" data-act="restart">' + esc(T('Начать новую стратегию')) + '</button>' : '') + '</div>';
+    }
+
+    function docHead() {
+        var week = _state.week || 1;
+        var line = channelLine() || T('канал не привязан');
+        return '<div class="stg-head"><button class="stg-back" data-act="close" aria-label="' + esc(T('Назад')) + '"><i class="ti ti-arrow-left"></i></button>' +
+            '<div style="min-width:0"><div class="t">' + esc(T('AI-стратегия')) + '</div><div class="s">' + esc(line) + ' · ' + esc(T('неделя')) + ' ' + week +
+            (week <= 4 ? ' ' + esc(T('из')) + ' 4' : '') + '</div></div></div>';
+    }
+
+    function tabsHtml() {
+        return '<div class="stg-tabs" role="tablist">' + TABS.map(function (t) {
+            var on = _tab === t[0];
+            return '<button class="stg-tab' + (on ? ' on' : '') + '" role="tab" aria-selected="' + on + '" data-act="tab" data-tab="' + t[0] + '">' +
+                '<i class="ti ' + t[2] + '"></i><span>' + esc(T(t[1])) + '</span></button>';
+        }).join('') + '</div>';
+    }
+
+    function paneHtml() {
+        return ({ today: paneToday, plan: panePlan, plat: panePlat, money: paneMoney, chat: paneChat }[_tab] || paneToday)();
+    }
+
+    function renderDoc() {
+        var doc = (_state && _state.doc) || {};
         var host0 = document.getElementById('strategy-screen');
-        var keepScroll = (host0 && host0.querySelector('.stg-dochead-sec')) ? host0.scrollTop : null;
-        var chatDraftEl = document.getElementById('stg-chat-inp');
-        var chatDraft = chatDraftEl ? chatDraftEl.value : '';
-        var host = setView(html);
-        if (keepScroll !== null) host.scrollTop = keepScroll;
-        if (chatDraft) {
-            var ndr = document.getElementById('stg-chat-inp');
-            if (ndr) ndr.value = chatDraft;
+        var keepScroll = (host0 && host0.querySelector('.stg-tabs')) ? host0.scrollTop : null;
+        var draftEl = document.getElementById('stg-chat-inp');
+        var draft = draftEl ? draftEl.value : '';
+        if (doc.v !== 3) {
+            setView(legacyHtml(), docHead());
+            return;
         }
-        unclampSmall(host);
-        var chatBox = document.getElementById('stg-chat-msgs');
-        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        var host = setView(tabsHtml() + '<div class="stg-pane">' + paneHtml() + '</div>', docHead());
+        if (keepScroll !== null) host.scrollTop = keepScroll;
+        else if (_tab === 'chat') host.scrollTop = host.scrollHeight;
+        if (draft) {
+            var nd = document.getElementById('stg-chat-inp');
+            if (nd) nd.value = draft;
+        }
         docPoll();
     }
+
+    function rerenderPane(toTop) {
+        var host = document.getElementById('strategy-screen');
+        var pane = host && host.querySelector('.stg-pane');
+        if (!pane) { renderDoc(); return; }
+        pane.innerHTML = paneHtml();
+        var tabs = host.querySelector('.stg-tabs');
+        if (toTop && tabs) host.scrollTop = Math.min(host.scrollTop, tabs.offsetTop);
+    }
+
+    function switchTab(tab, to) {
+        _tab = tab;
+        var host = document.getElementById('strategy-screen');
+        if (!host || !host.querySelector('.stg-tabs')) { renderDoc(); return; }
+        host.querySelectorAll('.stg-tab').forEach(function (b) {
+            var on = b.getAttribute('data-tab') === tab;
+            b.classList.toggle('on', on);
+            b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        rerenderPane(true);
+        if (tab === 'chat') { host.scrollTop = host.scrollHeight; return; }
+        var target = to ? host.querySelector('[data-sec="' + to + '"]') : null;
+        if (target) host.scrollTop = Math.max(0, target.offsetTop - host.querySelector('.stg-tabs').offsetHeight - 8);
+    }
+
+    function setProgress(key, done) {
+        if (!_state.progress) _state.progress = {};
+        _state.progress[key] = done;
+        apiRequest('/api/v1/strategy/step', { method: 'POST', body: JSON.stringify({ key: key, done: done }) }).catch(function () {});
+    }
+
+    function attachFlow() {
+        haptic('light');
+        apiRequest('/api/v1/channels/active').then(function (d) {
+            var chans = (d && d.channels) || [];
+            if (!chans.length) {
+                toast(T('Сначала подключи канал — затем вернись и привяжи его к стратегии'));
+                closeStrategy();
+                if (typeof openChannels === 'function') openChannels();
+                return;
+            }
+            var go = function (id) {
+                apiRequest('/api/v1/strategy/attach', { method: 'POST', body: JSON.stringify({ channel_id: id }) }).then(function (r) {
+                    if (r && r.ok) { haptic('medium'); toast(T('Канал привязан — стратег записывает сетку недели и собирает посты')); load(); }
+                    else toast((r && r.message) || T('Не удалось привязать канал'));
+                }).catch(function () { toast(T('Не удалось привязать канал')); });
+            };
+            if (typeof window.showBottomSheet !== 'function') { go(chans[0].id); return; }
+            window.showBottomSheet({
+                title: T('Какой канал привязать к стратегии?'),
+                subtitle: T('Сетка недели, посты, стиль и сверки — для этого канала'),
+                items: chans.map(function (c) {
+                    return { id: c.id, title: c.title || (c.username ? '@' + c.username : T('Канал')),
+                             subtitle: c.username ? '@' + c.username : '', has_avatar: c.has_avatar, is_private: c.is_private };
+                }),
+                activeId: d.active_channel_id || chans[0].id,
+                onSelect: go
+            });
+        }).catch(function () { toast(T('Не удалось загрузить. Проверь соединение и попробуй ещё раз.')); });
+    }
+
     var _docTimer = null;
     function docPoll() {
         if (_docTimer) clearTimeout(_docTimer);
@@ -949,21 +984,7 @@
         }, busy ? 20000 : 60000);
     }
 
-    function unclampSmall(host) {
-        try {
-            host.querySelectorAll('.stg-body.clamp').forEach(function (b) {
-                if (b.scrollHeight - b.clientHeight < 28) {
-                    b.classList.remove('clamp');
-                    var m = b.parentElement.querySelector('.stg-more');
-                    if (m) m.remove();
-                }
-            });
-        } catch (e) {}
-    }
-
-
     var _rvOpen = {};
-    var _secOpen = {};
     function canManage() { return !_state || _state.can_manage !== false; }
     function denyManage() { toast(T('Стратегию канала ведёт владелец и доверенный администратор — тебе доступен просмотр')); }
     function tx(o, tplKey, paramsKey, textKey) {
@@ -1059,17 +1080,22 @@
             return '<div class="stg-msg ' + (m.role === 'user' ? 'u' : 'a') + '">' + esc(m.text) + '</div>';
         }).join('');
         var used = (_state.chat && _state.chat.used) || 0;
-        var quota = (_state.chat && _state.chat.quota) || 30;
+        var quota = (_state.chat && _state.chat.quota) || 100;
         var tail = canManage()
             ? '<div class="stg-chatrow"><input class="stg-inp" id="stg-chat-inp" maxlength="1000" placeholder="' + esc(T('Спроси о своём канале, нише или шаге плана')) + '">' +
-              '<button class="stg-send" data-act="send"><i class="ti ti-send"></i></button></div>' +
+              '<button class="stg-send" data-act="send" aria-label="' + esc(T('Отправить')) + '"><i class="ti ti-send"></i></button></div>' +
               '<div class="stg-quota" id="stg-quota">' + esc(T('Осталось')) + ' ' + Math.max(0, quota - used) + ' ' + esc(T('из')) + ' ' + quota + ' ' + esc(T('вопросов на этой неделе')) + '</div>'
             : '<div class="stg-note" style="margin-top:8px;">' + esc(T('Вопросы стратегу задаёт тот, кто ведёт стратегию канала.')) + '</div>';
         return '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-message-circle"></i></span> ' + esc(T('Вопрос стратегу')) + '</div>' +
-            '<div id="stg-chat-msgs" style="max-height:300px;overflow-y:auto;">' + rows + '</div>' + tail + '</div>';
+            '<div id="stg-chat-msgs">' + rows + '</div>' + tail + '</div>';
     }
 
     var _chatBusy = false;
+
+    function chatBottom() {
+        var host = document.getElementById('strategy-screen');
+        if (host) host.scrollTop = host.scrollHeight;
+    }
 
     function sendChat() {
         if (_chatBusy) return;
@@ -1086,7 +1112,7 @@
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg u">' + esc(q) + '</div>');
         box.insertAdjacentHTML('beforeend', '<div class="stg-msg a stg-typing">…</div>');
         var typing = box.lastElementChild;
-        box.scrollTop = box.scrollHeight;
+        chatBottom();
         function done() { _chatBusy = false; if (btn) btn.disabled = false; }
         apiRequest('/api/v1/strategy/chat', { method: 'POST', body: JSON.stringify({ text: q }) })
             .then(function (r) {
@@ -1097,7 +1123,7 @@
                     if (_state.chat) {
                         _state.chat.used = (_state.chat.used || 0) + 1;
                         var qEl = document.getElementById('stg-quota');
-                        if (qEl) qEl.textContent = T('Осталось') + ' ' + Math.max(0, (_state.chat.quota || 30) - _state.chat.used) + ' ' + T('из') + ' ' + (_state.chat.quota || 30) + ' ' + T('вопросов на этой неделе');
+                        if (qEl) qEl.textContent = T('Осталось') + ' ' + Math.max(0, (_state.chat.quota || 100) - _state.chat.used) + ' ' + T('из') + ' ' + (_state.chat.quota || 100) + ' ' + T('вопросов на этой неделе');
                     }
                 } else if (r && r.error === 'quota') {
                     typing.classList.remove('stg-typing');
@@ -1106,7 +1132,7 @@
                     typing.classList.remove('stg-typing');
                     typing.textContent = T('Стратег не ответил — попробуй ещё раз.');
                 }
-                box.scrollTop = box.scrollHeight;
+                chatBottom();
             })
             .catch(function () {
                 done();
@@ -1182,83 +1208,8 @@
             .catch(function () { slot.innerHTML = ''; toast(T('Гайд не собрался — попробуй ещё раз')); });
     }
 
-    function toggleStep(cb) {
-        var key = cb.getAttribute('data-key');
-        var done = !cb.classList.contains('done');
-        haptic('light');
-        cb.classList.toggle('done', done);
-        var row = cb.closest ? cb.closest('.stg-tk') : null;
-        if (row) row.classList.toggle('on', done);
-        if (!_state.progress) _state.progress = {};
-        _state.progress[key] = done;
-        var t = docTotals();
-        var wk = cb.closest ? cb.closest('[data-sec="week1"]') : null;
-        if (wk && wk.querySelector('.stg-rv-task')) {
-            var wkAll = wk.querySelectorAll('.stg-rv-task .stg-cb').length, wkDone = wk.querySelectorAll('.stg-rv-task .stg-cb.done').length;
-            t = { done: wkDone, total: wkAll, pct: wkAll ? Math.round(wkDone * 100 / wkAll) : 0 };
-        }
-        var ring = document.querySelector('#strategy-screen .stg-ring');
-        if (ring) {
-            ring.style.background = 'conic-gradient(#5DCAA5 0 ' + t.pct + '%, rgba(255,255,255,0.08) ' + t.pct + '% 100%)';
-            ring.querySelector('span').textContent = t.done + '/' + t.total;
-        }
-        var sub = document.getElementById('stg-doc-sub');
-        if (sub && sub.getAttribute('data-count') === '1') {
-            sub.textContent = t.done + ' ' + T('из') + ' ' + t.total + ' ' + T('шагов выполнено');
-        }
-        var dayEl = cb.closest ? cb.closest('.stg-tday') : null;
-        if (dayEl) {
-            var cbs = dayEl.querySelectorAll('.stg-cb');
-            var all = cbs.length && Array.prototype.every.call(cbs, function (x) { return x.classList.contains('done'); });
-            var gk = dayEl.getAttribute('data-day-group') || '';
-            var tn2 = new Date(); tn2.setHours(12, 0, 0, 0);
-            var tk2 = tn2.toISOString().slice(0, 10);
-            var isDate = /^\d{4}-/.test(gk);
-            dayEl.classList.toggle('done', !!all);
-            dayEl.classList.toggle('today', !all && isDate && gk === tk2);
-            dayEl.classList.toggle('past', !all && isDate && gk < tk2);
-            var mv = dayEl.querySelector('.stg-dcap .move');
-            if (mv) mv.style.display = (!all && isDate && gk < tk2) ? '' : 'none';
-            var nw = dayEl.querySelector('.stg-dcap .now');
-            if (nw) nw.style.display = (!all && isDate && gk === tk2) ? '' : 'none';
-        }
-        var secKey = (key.indexOf(':') > 0) ? key.split(':')[0] : '';
-        var cnt = secKey ? document.querySelector('#strategy-screen .stg-acc-cnt[data-cnt="' + secKey + '"]') : null;
-        if (cnt) {
-            var st = secTotals(secKey);
-            cnt.textContent = st.done + ' / ' + st.total;
-            cnt.classList.toggle('all', st.total > 0 && st.done === st.total);
-        }
-        apiRequest('/api/v1/strategy/step', { method: 'POST', body: JSON.stringify({ key: key, done: done }) }).catch(function () {});
-    }
-
-    function toggleTerm(elm) {
-        var key = elm.getAttribute('data-term');
-        var terms = (_state && _state.doc && _state.doc.terms) || {};
-        var def = terms[key];
-        if (!def) return;
-        haptic('light');
-        var nxt = elm.nextElementSibling;
-        if (nxt && nxt.classList && nxt.classList.contains('stg-tip')) { nxt.remove(); return; }
-        var sec = elm.closest('.stg-sec');
-        if (sec) sec.querySelectorAll('.stg-tip[data-tip-for]').forEach(function (t) { t.remove(); });
-        var body = elm.closest('.stg-body');
-        if (body && body.classList.contains('clamp')) {
-            body.classList.remove('clamp');
-            var m = body.parentElement.querySelector('.stg-more');
-            if (m) m.remove();
-        }
-        var tip = document.createElement('span');
-        tip.className = 'stg-tip';
-        tip.style.display = 'block';
-        tip.setAttribute('data-tip-for', key);
-        tip.innerHTML = '<b>' + esc(key) + '</b> — ' + esc(def);
-        elm.insertAdjacentElement('afterend', tip);
-    }
-
     var _tr = null, _trTimer = null, _trChan = null, _trOpen = false, _trBusy = {};
     var TR_DAYS = [SG('Пн'), SG('Вт'), SG('Ср'), SG('Чт'), SG('Пт'), SG('Сб'), SG('Вс')];
-    var TR_GEO = { ru: SG('Россия'), by: SG('Беларусь'), kz: SG('Казахстан'), uz: SG('Узбекистан'), kg: SG('Кыргызстан'), tj: SG('Таджикистан'), az: SG('Азербайджан'), ua: SG('Украина') };
 
     function trForge(n) {
         return (typeof window.forgeAmount === 'function') ? window.forgeAmount(n, 12) : num(n);
@@ -1266,21 +1217,6 @@
     function trPct(x) {
         var s = String(x == null ? '' : x);
         return ((typeof window.getLang === 'function' ? window.getLang() : 'ru') === 'en') ? s : s.replace('.', ',');
-    }
-    function trafficCard() {
-        var tb = (_state && _state.traffic_brief) || null;
-        var line;
-        if (tb && tb.building) {
-            line = '<span class="stg-trwait"><span class="stg-spin sm"></span>' + esc(T('Собираю ролики из постов недели')) + ' · ' + tb.ready + ' / ' + tb.posts + '</span>';
-        } else if (tb && tb.posts) {
-            line = esc(T('Готовые ролики из постов недели:')) + ' <b>' + tb.ready + ' / ' + tb.posts + '</b> · ' +
-                esc(T('доноры из Радара, ссылки отслеживания на размещения.'));
-        } else {
-            line = esc(T('Ролики для площадок из постов недели, доноры из Радара, ссылки отслеживания на размещения.'));
-        }
-        return '<div class="stg-sec stg-trcard" data-act="traffic"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-rocket"></i></span> ' + esc(T('Трафик — двигатель роста')) + '</div>' +
-            '<div class="stg-note" style="margin-top:9px;">' + line + '</div>' +
-            '<div class="stg-trgo">' + esc(T('Открыть модуль')) + ' <i class="ti ti-chevron-right"></i></div></div>';
     }
     function trHead() {
         return '<div class="stg-head"><button class="stg-back" data-act="trback"><i class="ti ti-arrow-left"></i></button><div class="t">' + esc(T('Трафик')) + '</div></div>';
@@ -1345,22 +1281,19 @@
             (g.is_default ? '<div class="stg-note" style="margin-top:8px;">' + esc(T('Цель по умолчанию — +10% за месяц. Поставь свою.')) + '</div>' : '') +
             '<div class="stg-note" style="margin-top:6px;">' + esc(T('Постами это не сделать — нужен приток: креативы на площадках и платный перелив.')) + '</div></div>';
 
-        var geoName = pl.geo ? (TR_GEO[pl.geo] ? T(TR_GEO[pl.geo]) : String(pl.geo).toUpperCase()) : T('страна не определена');
-        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-player-play"></i></span> ' + esc(T('УБТ · площадки')) + ' · ' + esc(geoName) + '</div>';
-        var NOTE = { ok: T('без ограничений'), vpn: T('через VPN'), upload_limited: T('публикация — обходами'), blocked: T('недоступна в регионе') };
+        html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-player-play"></i></span> ' + esc(T('Площадки коротких роликов')) + '</div>';
         (pl.use || []).forEach(function (p) {
             var link = lk.platforms && lk.platforms[p.key];
             var url = link ? (link.invite_link || link.click_url || '') : '';
-            var sub = p.text ? T('ролики, посты и статьи · ссылка на канал — в профиле') : (NOTE[p.note] || '');
-            html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + (p.note && p.note !== 'ok' ? ' <span class="stg-trnote">' + esc(NOTE[p.note] || '') + '</span>' : '') + '</b>' +
+            var sub = p.text ? T('ролики, посты и статьи · ссылка на канал — в профиле') : '';
+            html += '<div class="stg-trrow"><div class="tx"><b>' + esc(p.name) + '</b>' +
                 (link ? '<em><span class="stg-trlink" data-act="trcopy" data-text="' + esc(url) + '">' + esc(url.replace(/^https?:\/\//, '')) + '</span> · +' + num(link.joined || 0) + ' ' + esc(T('вступили')) +
                     (link.clicks ? ' · ' + num(link.clicks) + ' ' + esc(T('переходов')) : '') + '</em>'
-                    : '<em>' + esc(sub) + (sub ? ' · ' : '') + esc(T('ссылка для описания ещё не создана')) + '</em>') + '</div>' +
+                    : '<em>' + esc(sub) + (sub ? ' · ' : '') + esc(T('ссылка отслеживания не создана')) + '</em>') + '</div>' +
                 (link ? '' : '<button class="stg-trbtn" data-act="trplink" data-key="' + esc(p.key) + '"' + (ch.connected ? '' : ' disabled') + '>' + esc(T('Создать ссылку')) + '</button>') + '</div>';
         });
         if (!ch.connected) html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылки создаёт бот — подключи его к каналу в настройках канала.')) + '</div>';
-        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('Ссылка площадки ставится в описание ролика: сверка увидит, сколько подписчиков дала каждая площадка.')) + ' ' +
-            esc(T('Это обычная телеграм-ссылка (t.me): люди видят знакомый домен, а площадки не считают её сторонним редиректом.')) + '</div></div>';
+        html += '<div class="stg-note" style="margin-top:6px;">' + esc(T('По желанию: ссылка отслеживания в профиле площадки покажет, сколько подписчиков она приводит. Обычная ссылка на канал тоже работает.')) + '</div></div>';
 
         html += '<div class="stg-sec"><div class="stg-eyebrow"><span class="tile"><i class="ti ti-movie"></i></span> ' + esc(T('Конвейер креативов из постов недели')) +
             (cv.per_week ? '<span class="stg-trchip">' + num(cv.ready || 0) + ' / ' + num(cv.per_week) + '</span>' : '') + '</div>' +
@@ -1472,18 +1405,11 @@
     function trDescription(cid) {
         apiRequest('/api/v1/creative/' + cid).then(function (r) {
             var c = r && r.creative;
-            if (!c) { toast(T('Не удалось получить описание')); return; }
-            var lines = [];
-            if (c.cta_text) lines.push(c.cta_text);
-            var pls = (_tr && _tr.links && _tr.links.platforms) || {};
-            var pick = pls.shorts || pls.dzen || pls.vk || pls.tiktok || pls.reels;
-            var ch = (_tr && _tr.channel) || {};
-            if (pick && (pick.invite_link || pick.click_url)) lines.push(pick.invite_link || pick.click_url);
-            else if (ch.username) lines.push('https://t.me/' + ch.username);
-            if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
-            trCopy(lines.join('\n'), T('Описание скопировано'));
+            if (!c || !c.description) { toast(T('Не удалось получить описание')); return; }
+            trCopy(c.description, T('Описание скопировано'));
         }).catch(function () { toast(T('Не удалось получить описание')); });
     }
+
     function trPlatformLink(key, btn) {
         if (btn) btn.disabled = true;
         haptic('medium');
@@ -1550,17 +1476,25 @@
     window.__stgDocForCheck = function (state) { _state = state; ensureScreen(); renderDoc(); };
 
     var MANAGE_ACTS = {
-        cb: 1, how: 1, send: 1, ask: 1, restart: 1, regen: 1, tnext: 1, tbuild: 1, start: 1,
-        continue: 1, buy: 1, renew: 1, trbuild: 1, trplink: 1, trpick: 1, trgoal: 1,
-        trgoalsave: 1, trbudget: 1,
+        cb: 1, warm: 1, tkdone: 1, how: 1, send: 1, ask: 1, sug: 1, attach: 1, restart: 1, regen: 1, tnext: 1, tbuild: 1,
+        start: 1, continue: 1, buy: 1, renew: 1, trbuild: 1, trplink: 1, trpick: 1, trgoal: 1, trgoalsave: 1,
     };
+
+    function fillChat(text) {
+        var inp = document.getElementById('stg-chat-inp');
+        if (!inp) return;
+        inp.value = text;
+        inp.focus();
+        var host = document.getElementById('strategy-screen');
+        if (host) host.scrollTop = host.scrollHeight;
+    }
 
     function onScreenClick(ev) {
         var t = ev.target;
         var actEl = t.closest ? t.closest('[data-act]') : null;
-        if (t.closest && t.closest('.stg-term')) { toggleTerm(t.closest('.stg-term')); return; }
         if (!actEl) return;
         var act = actEl.getAttribute('data-act');
+        var key = actEl.getAttribute('data-key');
         if (MANAGE_ACTS[act] && !canManage()) { denyManage(); return; }
         if (trAction(act, actEl)) return;
         if (act === 'close') { haptic('light'); closeStrategy(); return; }
@@ -1572,16 +1506,49 @@
         if (act === 'tbuild') { talkBuild(actEl); return; }
         if (act === 'regen') { regen(actEl); return; }
         if (act === 'restart') { restartFlow(actEl); return; }
-        if (act === 'jump') {
-            var to = actEl.getAttribute('data-to');
-            var tgt = document.querySelector('#strategy-screen [data-sec="' + to + '"]');
-            if (tgt) { haptic('light'); tgt.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (act === 'tab') {
+            haptic('light');
+            var pl = actEl.getAttribute('data-plat');
+            if (pl) _plat = pl;
+            switchTab(actEl.getAttribute('data-tab'), actEl.getAttribute('data-to'));
             return;
         }
-        if (act === 'cb') { toggleStep(actEl); return; }
+        if (act === 'tkpick') { haptic('light'); _curKey = key; rerenderPane(true); return; }
+        if (act === 'tkdone') {
+            var nowDone = !prog()[key];
+            setProgress(key, nowDone);
+            haptic(nowDone ? 'medium' : 'light');
+            if (nowDone && _curKey === key) _curKey = null;
+            if (!nowDone) _curKey = key;
+            rerenderPane(true);
+            return;
+        }
+        if (act === 'cb' || act === 'warm') { haptic('light'); setProgress(key, !prog()[key]); rerenderPane(false); return; }
+        if (act === 'rmore') { _readyOpen[key] = true; rerenderPane(false); return; }
         if (act === 'tkcopy') {
-            var cps = findStep(actEl.getAttribute('data-key'));
+            var cps = findStep(key);
             if (cps && cps.ready) trCopy(cps.ready, T('Текст скопирован'));
+            return;
+        }
+        if (act === 'offcopy') {
+            var off = (docSection('money') || {}).offer;
+            if (off && off.body) trCopy(off.body, T('Текст скопирован'));
+            return;
+        }
+        if (act === 'pfcopy') {
+            var pit = platItems().filter(function (x) { return x.key === actEl.getAttribute('data-k'); })[0];
+            var val = pit && pit.profile ? pit.profile[actEl.getAttribute('data-f')] : '';
+            if (val) trCopy(val, T('Текст скопирован'));
+            return;
+        }
+        if (act === 'plat') { haptic('light'); _plat = actEl.getAttribute('data-k'); rerenderPane(false); return; }
+        if (act === 'optmore') { haptic('light'); _optOpen = !_optOpen; rerenderPane(false); return; }
+        if (act === 'attach') { attachFlow(); return; }
+        if (act === 'sug') { haptic('light'); fillChat(actEl.getAttribute('data-q') || ''); return; }
+        if (act === 'ask') {
+            haptic('light');
+            switchTab('chat');
+            fillChat(T('Вопрос по шагу') + ' «' + (actEl.getAttribute('data-t') || '') + '»: ');
             return;
         }
         if (act === 'tkradar') {
@@ -1590,48 +1557,11 @@
             if (typeof window.__openRadar === 'function') window.__openRadar();
             return;
         }
-        if (act === 'tkopen') {
-            if (t.closest && t.closest('.stg-tkv')) return;
-            haptic('light');
-            var tkk = actEl.getAttribute('data-key');
-            _taskOpen[tkk] = !_taskOpen[tkk];
-            if (!_taskOpen[tkk]) {
-                var gsl = document.querySelector('#strategy-screen [data-slot="' + tkk + '"]');
-                if (gsl) gsl.innerHTML = '';
-            }
-            var tks = findStep(tkk);
-            if (tks) actEl.outerHTML = taskCard(tks); else renderDoc();
-            return;
-        }
-        if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; renderDoc(); return; }
-        if (act === 'secacc') {
-            haptic('light');
-            var sk = actEl.getAttribute('data-sec');
-            _secOpen[sk] = !_secOpen[sk];
-            var accEl = actEl.closest ? actEl.closest('.stg-acc') : null;
-            var accHtml = accSecHtml(sk);
-            if (accEl && accHtml) accEl.outerHTML = accHtml; else renderDoc();
-            return;
-        }
+        if (act === 'rvopen') { haptic('light'); var wk = parseInt(actEl.getAttribute('data-week'), 10); _rvOpen[wk] = !_rvOpen[wk]; rerenderPane(false); return; }
         if (act === 'trmod') { haptic('light'); openTraffic(); return; }
         if (act === 'market') { haptic('light'); closeStrategy(); if (typeof window.__openMarket === 'function') window.__openMarket(); return; }
         if (act === 'how') { openGuide(actEl); return; }
-        if (act === 'more') {
-            var b = actEl.parentElement.querySelector('.stg-body');
-            if (b) b.classList.remove('clamp');
-            actEl.remove();
-            return;
-        }
         if (act === 'send') { sendChat(); return; }
-        if (act === 'ask') {
-            var inp = document.getElementById('stg-chat-inp');
-            if (inp) {
-                inp.value = T('Вопрос по шагу') + ' «' + (actEl.getAttribute('data-t') || '') + '»: ';
-                inp.focus();
-                if (inp.scrollIntoView) inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            return;
-        }
     }
 
     document.addEventListener('click', function (ev) {
