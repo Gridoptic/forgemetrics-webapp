@@ -173,7 +173,7 @@
         var nprice = prices.new || 3990, rprice = prices.renewal || 1990;
         if (_state && _state.access === 'expired') {
             setView(
-                '<div class="stg-flag"><div class="glow"></div>' +
+                '<div class="stg-flag">' +
                 '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
                 '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
                 '<div><div class="stg-fname">' + esc(T('Срок ведения истёк')) + '</div>' +
@@ -208,7 +208,7 @@
                 : '<button class="stg-fcta" data-act="start"><i class="ti ti-message-circle"></i> ' + esc(T('Поговорить со стратегом')) + '</button>' +
                   '<div class="stg-fnote">' + esc(T('≈ 5 минут разговора — сетка недели и первая неделя появятся в контент-плане')) + '</div>');
         setView(
-            '<div class="stg-flag"><div class="glow"></div>' +
+            '<div class="stg-flag">' +
             '<div class="inner"><span class="stg-ribbon">' + esc(T('Личный стратег')) + '</span>' +
             '<div class="stg-fhead"><div class="stg-fic">' + STG_ICON + '</div>' +
             '<div><div class="stg-fname">' + esc(T('AI-стратегия канала')) + '</div>' +

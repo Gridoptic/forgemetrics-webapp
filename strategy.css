@@ -39,10 +39,12 @@
 .stg-spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(129,140,248,0.2); border-top-color: #818cf8; animation: stgSpin 0.9s linear infinite; }
 
 @keyframes stgRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.stg-flag { position: relative; border-radius: 20px; overflow: hidden; animation: stgRise .5s cubic-bezier(.2,.8,.2,1) both;
+@property --stg-ring { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes stgRing { to { --stg-ring: 360deg; } }
+.stg-flag { position: relative; border-radius: 20px; overflow: hidden; isolation: isolate;
+    background: conic-gradient(from var(--stg-ring),#6366f1,#8b5cf6,#5DCAA5,#a78bfa,#6366f1);
+    animation: stgRise .5s cubic-bezier(.2,.8,.2,1) both, stgRing 6s linear infinite;
     box-shadow: 0 22px 48px -22px rgba(99,102,241,0.6); max-width: 480px; margin-left: auto; margin-right: auto; }
-.stg-flag .glow { position: absolute; inset: -45%; background: conic-gradient(from 0deg,#6366f1,#8b5cf6,#5DCAA5,#a78bfa,#6366f1);
-    animation: stgSpin 6s linear infinite; }
 .stg-flag .inner { position: relative; margin: 1.6px; border-radius: 18.5px; padding: 17px;
     border: 1px solid rgba(99,102,241,0.25); background: linear-gradient(160deg,rgba(20,22,34,0.97),rgba(12,14,23,0.99)); }
 .stg-flag .inner::before { content: ""; position: absolute; top: -40px; right: -30px; width: 160px; height: 160px;
