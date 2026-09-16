@@ -75,7 +75,7 @@
     function head() {
         return '<div class="vd-head">' +
             '<button class="vd-back" type="button" data-va="close"><i class="ti ti-arrow-left"></i></button>' +
-            '<div class="vd-title">' + esc(T('Креативы')) + '</div>' +
+            '<div class="vd-title">' + esc(T('Создать видео')) + '</div>' +
             '</div>';
     }
 
