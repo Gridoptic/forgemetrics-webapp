@@ -4045,6 +4045,7 @@
                 if (!c) { toast(T('Не удалось получить описание')); return; }
                 var lines = [];
                 if (c.cta_text) lines.push(c.cta_text);
+                if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
                 var tags = (typeof window.rsCrvHashtags === 'function') ? window.rsCrvHashtags(c) : [];
                 if (tags.length) lines.push(tags.join(' '));
                 var text = lines.join('\n');

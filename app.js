@@ -7255,6 +7255,7 @@ async function rsCrvDesc(cid) {
         if (!c) { showToast(TR('Не удалось получить описание'), 'alert-triangle'); return; }
         const lines = [];
         if (c.cta_text) lines.push(c.cta_text);
+        if (c.music_credit) lines.push(TR('Музыка') + ': ' + c.music_credit);
         const tags = rsCrvHashtags(c);
         if (tags.length) lines.push(tags.join(' '));
         await copyText(lines.join('\n'));
