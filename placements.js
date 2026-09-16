@@ -1125,6 +1125,7 @@
 
     function openCreateSheet() {
         var ch = curChannel();
+        var pub = !isChPrivate();
         var sh = document.getElementById('pl-sheet'), bg = document.getElementById('pl-sheetbg');
         if (!sh || !bg) return;
         sh.innerHTML = '<div class="pl-grip"></div>' +
@@ -1141,11 +1142,12 @@
             '<input class="pl-inp" id="pl-name" maxlength="80" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="' + esc(T('Реклама у @канал')) + '" value="" style="margin-bottom:8px;"></div>' +
             '<div class="pl-flabel">' + esc(T('Цена размещения, ₽ — для расчёта CPF')) + '</div>' +
             '<input class="pl-inp" id="pl-price" type="number" inputmode="numeric" min="0" autocomplete="off" placeholder="' + esc(T('не обязательно')) + '">' +
+            (pub ? '' :
             '<div class="pl-flabel">' + esc(T('Тип ссылки')) + '</div>' +
             '<div class="pl-ltopt sel" data-act="ltype"><b>' + esc(T('Прямая ссылка Telegram')) + '</b>' +
             '<span>' + esc(T('Привычный t.me — считает подписавшихся и качество трафика.')) + '</span></div>' +
             '<div class="pl-ltopt" data-act="ltype" data-track="1"><b>' + esc(T('Ссылка с учётом переходов')) + '</b>' +
-            '<span>' + esc(T('Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.')) + '</span></div>' +
+            '<span>' + esc(T('Считает ещё и клики: добавятся CTR и CPC — видно, где теряются люди между показом и подпиской.')) + '</span></div>') +
             '<div class="pl-flabel">' + esc(T('Формат размещения')) + '</div>' +
             '<div class="pl-fmtrow">' + [['post',PL('пост')],['pin',PL('закреп')],['story',PL('сторис')],['circle',PL('кружок')],['repost',PL('репост')],['other',PL('другое')]].map(function (f, i) {
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="fmt" data-fmt="' + f[0] + '">' + esc(T(f[1])) + '</span>';
@@ -1155,7 +1157,9 @@
             '<div class="pl-fmtrow">' + [['24', PL('24 ч')], ['48', PL('48 ч')], ['72', PL('72 ч')], ['0', PL('без удаления')]].map(function (a, i) {
                 return '<span class="pl-fmt' + (i === 0 ? ' sel' : '') + '" data-act="alv" data-alv="' + a[0] + '">' + esc(T(a[1])) + '</span>';
             }).join('') + '</div>' +
-            '<div class="pl-note">' + esc(T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
+            '<div class="pl-note">' + esc(pub
+                ? T('Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.')
+                : T('Читатель нажимает по ссылке «Подать заявку» — бот одобряет её мгновенно, задержка меньше секунды. Окно атрибуции — 7 дней: вступления позже учитываются отдельно и в CPF не входят. Ссылку можно отозвать в любой момент.')) + '</div>' +
             '<button class="pl-new" style="margin:13px 0 0;" data-act="create">' + esc(T('Создать ссылку')) + '</button>';
         bg.classList.add('on');
         sh.classList.add('on');
@@ -1243,7 +1247,7 @@
         }
         var seller = _resolvedSeller || (mch ? mch[1] : null);
         var selOpt = document.querySelector('#pl-sheet .pl-ltopt.sel');
-        var track = !!(selOpt && selOpt.getAttribute('data-track'));
+        var track = !isChPrivate() || !!(selOpt && selOpt.getAttribute('data-track'));
         _busy = true;
         apiRequest('/api/v1/placements/links', {
             method: 'POST',

@@ -1,5 +1,6 @@
 window.__I18N_DICT = {
  "am": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "ቻናሉ ይፋዊ ስለሆነ አገናኙ በ fmtr.click በኩል ያልፋል፤ ሽግግሩ ወዲያውኑ ይቆጠራል፣ ተመዝጋቢውም ከሽግግሩ በኋላ በ15 ደቂቃ ውስጥ ከተቀላቀለ ከማስታወቂያው ጋር ይያያዛል። የመለያ ጊዜ — 7 ቀናት። አገናኙን በማንኛውም ጊዜ መሻር ይቻላል።",
   "Стандартная правка": "መደበኛ ማስተካከያ",
   "Стандартный рерайт": "መደበኛ ዳግም ጽሑፍ",
   "Пересборка плана недели": "የሳምንቱን እቅድ እንደገና መገንባት",
@@ -5249,6 +5250,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "የቅናሾች ምርመራ · ሞካሪዎች"
  },
  "ar": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "القناة عامة، لذلك يمر الرابط عبر fmtr.click: تُحتسب النقرة فورًا، ويُنسب المشترك إلى الإعلان إذا انضم خلال 15 دقيقة بعد النقر. نافذة الإسناد — 7 أيام. يمكن إلغاء الرابط في أي وقت.",
   "Стандартная правка": "تعديل قياسي",
   "Стандартный рерайт": "إعادة صياغة قياسية",
   "Пересборка плана недели": "إعادة بناء خطة الأسبوع",
@@ -10498,6 +10500,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "فحص العروض · المختبرون"
  },
  "az": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kanal açıqdır, ona görə keçid fmtr.click üzərindən gedir: keçid dərhal sayılır, abunəçi isə keçiddən sonra 15 dəqiqə ərzində qoşulubsa, yerləşdirməyə bağlanır. Atribusiya pəncərəsi — 7 gün. Keçidi istənilən vaxt ləğv etmək olar.",
   "Стандартная правка": "Standart düzəliş",
   "Стандартный рерайт": "Standart rerrayt",
   "Пересборка плана недели": "Həftəlik planın yenidən qurulması",
@@ -15747,6 +15750,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "offerlər yoxlanması · test edənlər"
  },
  "be": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Канал публічны, таму спасылка ідзе праз fmtr.click: пераход залічваецца адразу, а падпісчык прывязваецца да размяшчэння, калі ўступіў на працягу 15 хвілін пасля пераходу. Акно атрыбуцыі — 7 дзён. Спасылку можна адклікаць у любы момант.",
   "Стандартная правка": "Стандартная праўка",
   "Стандартный рерайт": "Стандартны рэрайт",
   "Пересборка плана недели": "Перабудова плана тыдня",
@@ -20999,6 +21003,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "праверка офераў · тэстары"
  },
  "bn": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "চ্যানেলটি পাবলিক, তাই লিংকটি fmtr.click হয়ে যায়: ক্লিক সঙ্গে সঙ্গে গোনা হয়, আর ক্লিকের পর 15 মিনিটের মধ্যে যোগ দিলে গ্রাহককে বিজ্ঞাপনের সাথে যুক্ত করা হয়। অ্যাট্রিবিউশন সময় — 7 দিন। লিংকটি যেকোনো সময় বাতিল করা যায়।",
   "Стандартная правка": "স্ট্যান্ডার্ড সম্পাদনা",
   "Стандартный рерайт": "স্ট্যান্ডার্ড রিরাইট",
   "Пересборка плана недели": "সাপ্তাহিক পরিকল্পনা পুনর্গঠন",
@@ -26248,6 +26253,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "অফার পরীক্ষা · টেস্টার"
  },
  "de": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Der Kanal ist öffentlich, daher läuft der Link über fmtr.click: Der Klick wird sofort gezählt, und ein Abonnent wird der Platzierung zugeordnet, wenn er innerhalb von 15 Minuten nach dem Klick beitritt. Zuordnungsfenster — 7 Tage. Der Link kann jederzeit widerrufen werden.",
   "Стандартная правка": "Standard-Bearbeitung",
   "Стандартный рерайт": "Standard-Rewrite",
   "Пересборка плана недели": "Wochenplan neu aufbauen",
@@ -31497,6 +31503,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "Offer-Überprüfung · Tester"
  },
  "en": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "The channel is public, so the link goes through fmtr.click: the click is counted immediately, and a subscriber is attributed to the placement if they join within 15 minutes after clicking. Attribution window — 7 days. The link can be revoked at any time.",
   "Стандартная правка": "Standard edit",
   "Стандартный рерайт": "Standard rewrite",
   "Пересборка плана недели": "Weekly plan rebuild",
@@ -36746,6 +36753,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "offer verification · testers"
  },
  "es": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "El canal es público, por eso el enlace pasa por fmtr.click: el clic se cuenta al instante y el suscriptor se atribuye a la colocación si se une dentro de los 15 minutos posteriores al clic. Ventana de atribución: 7 días. El enlace se puede revocar en cualquier momento.",
   "Стандартная правка": "Edición estándar",
   "Стандартный рерайт": "Reescritura estándar",
   "Пересборка плана недели": "Reconstrucción del plan semanal",
@@ -41995,6 +42003,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "verificación de ofertas · probadores"
  },
  "fa": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "کانال عمومی است، بنابراین لینک از طریق fmtr.click عبور می‌کند: کلیک بلافاصله شمرده می‌شود و اگر مشترک ظرف ۱۵ دقیقه پس از کلیک عضو شود، به تبلیغ نسبت داده می‌شود. بازه انتساب — ۷ روز. لینک را هر زمان می‌توان باطل کرد.",
   "Стандартная правка": "ویرایش استاندارد",
   "Стандартный рерайт": "بازنویسی استاندارد",
   "Пересборка плана недели": "بازسازی برنامه هفته",
@@ -47244,6 +47253,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "بررسی آفرها · تستر‌ها"
  },
  "fr": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "La chaîne est publique, le lien passe donc par fmtr.click : le clic est compté immédiatement, et l'abonné est attribué au placement s'il rejoint dans les 15 minutes suivant le clic. Fenêtre d'attribution — 7 jours. Le lien peut être révoqué à tout moment.",
   "Стандартная правка": "Modification standard",
   "Стандартный рерайт": "Réécriture standard",
   "Пересборка плана недели": "Refonte du plan de la semaine",
@@ -52493,6 +52503,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "vérification des offres · testeurs"
  },
  "hi": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "चैनल सार्वजनिक है, इसलिए लिंक fmtr.click से होकर जाता है: क्लिक तुरंत गिना जाता है, और अगर सब्सक्राइबर क्लिक के 15 मिनट के भीतर जुड़ता है तो उसे प्लेसमेंट से जोड़ा जाता है। एट्रिब्यूशन अवधि — 7 दिन। लिंक को कभी भी रद्द किया जा सकता है।",
   "Стандартная правка": "मानक संपादन",
   "Стандартный рерайт": "मानक रीराइट",
   "Пересборка плана недели": "साप्ताहिक योजना का पुनर्निर्माण",
@@ -57742,6 +57753,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "ऑफर जांच · परीक्षक"
  },
  "id": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kanal ini publik, jadi tautan melewati fmtr.click: klik langsung dihitung, dan pelanggan dikaitkan dengan penempatan jika bergabung dalam 15 menit setelah klik. Jendela atribusi — 7 hari. Tautan dapat dicabut kapan saja.",
   "Стандартная правка": "Edit standar",
   "Стандартный рерайт": "Rewrite standar",
   "Пересборка плана недели": "Susun ulang rencana mingguan",
@@ -62991,6 +63003,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "verifikasi penawaran · penguji"
  },
  "it": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Il canale è pubblico, quindi il link passa da fmtr.click: il clic viene contato subito e l'iscritto viene attribuito al posizionamento se si iscrive entro 15 minuti dal clic. Finestra di attribuzione — 7 giorni. Il link può essere revocato in qualsiasi momento.",
   "Стандартная правка": "Modifica standard",
   "Стандартный рерайт": "Rewrite standard",
   "Пересборка плана недели": "Ricostruzione del piano settimanale",
@@ -68240,6 +68253,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "verifica offerte · tester"
  },
  "kk": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Арна ашық, сондықтан сілтеме fmtr.click арқылы өтеді: өту бірден есептеледі, ал жазылушы өтуден кейін 15 минут ішінде қосылса, орналастыруға байланады. Атрибуция терезесі — 7 күн. Сілтемені кез келген уақытта қайтарып алуға болады.",
   "Стандартная правка": "Стандартты өңдеу",
   "Стандартный рерайт": "Стандартты қайта жазу",
   "Пересборка плана недели": "Апта жоспарын қайта құру",
@@ -73489,6 +73503,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "оферлерді тексеру · сынаушылар"
  },
  "pt": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "O canal é público, por isso o link passa pelo fmtr.click: o clique é contado na hora e o inscrito é atribuído ao anúncio se entrar em até 15 minutos após o clique. Janela de atribuição — 7 dias. O link pode ser revogado a qualquer momento.",
   "Стандартная правка": "Edição padrão",
   "Стандартный рерайт": "Reescrita padrão",
   "Пересборка плана недели": "Reconstrução do plano semanal",
@@ -78738,6 +78753,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "verificação de ofertas · testadores"
  },
  "sw": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kituo ni cha umma, kwa hivyo kiungo kinapita kupitia fmtr.click: bofya linahesabiwa mara moja, na mfuatiliaji anahusishwa na tangazo ikiwa atajiunga ndani ya dakika 15 baada ya kubofya. Muda wa uhusishaji — siku 7. Kiungo kinaweza kufutwa wakati wowote.",
   "Стандартная правка": "Marekebisho ya kawaida",
   "Стандартный рерайт": "Kuandika upya kwa kawaida",
   "Пересборка плана недели": "Kupanga upya mpango wa wiki",
@@ -83987,6 +84003,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "ukaguzi wa ofa · wajaribuji"
  },
  "tr": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kanal herkese açık, bu yüzden bağlantı fmtr.click üzerinden gider: tıklama hemen sayılır, abone tıklamadan sonraki 15 dakika içinde katılırsa yerleşime atfedilir. Atıf penceresi — 7 gün. Bağlantı istediğin zaman iptal edilebilir.",
   "Стандартная правка": "Standart düzeltme",
   "Стандартный рерайт": "Standart yeniden yazım",
   "Пересборка плана недели": "Haftalık planı yeniden kurma",
@@ -89236,6 +89253,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "offer kontrolü · test edenler"
  },
  "uz": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kanal ochiq, shuning uchun havola fmtr.click orqali o'tadi: o'tish darhol hisoblanadi, obunachi esa o'tishdan keyin 15 daqiqa ichida qo'shilsa, joylashtirishga bog'lanadi. Atributsiya oynasi — 7 kun. Havolani istalgan vaqtda bekor qilish mumkin.",
   "Стандартная правка": "Standart tahrir",
   "Стандартный рерайт": "Standart qayta yozish",
   "Пересборка плана недели": "Haftalik rejani qayta tuzish",
@@ -94485,6 +94503,7 @@ window.__I18N_DICT = {
   "проверка офферов · тестеры": "offerlar tekshiruvi · testchilar"
  },
  "vi": {
+  "Канал публичный, поэтому ссылка идёт через fmtr.click: переход засчитывается сразу, а подписчик привязывается к размещению, если вступил в течение 15 минут после перехода. Окно атрибуции — 7 дней. Ссылку можно отозвать в любой момент.": "Kênh là công khai, nên liên kết đi qua fmtr.click: lượt nhấp được tính ngay, và người theo dõi được gán cho vị trí quảng cáo nếu tham gia trong vòng 15 phút sau khi nhấp. Khung ghi nhận — 7 ngày. Có thể thu hồi liên kết bất cứ lúc nào.",
   "Стандартная правка": "Chỉnh sửa tiêu chuẩn",
   "Стандартный рерайт": "Viết lại tiêu chuẩn",
   "Пересборка плана недели": "Dựng lại kế hoạch tuần",
