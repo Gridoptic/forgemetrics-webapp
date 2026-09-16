@@ -4045,9 +4045,8 @@
                 if (!c) { toast(T('Не удалось получить описание')); return; }
                 var lines = [];
                 if (c.cta_text) lines.push(c.cta_text);
-                var ch = (_channels || []).filter(function (x) { return x.id === _chId; })[0];
-                if (ch && ch.username) lines.push('https://t.me/' + ch.username);
-                if (c.music_credit) lines.push(T('Музыка') + ': ' + c.music_credit);
+                var tags = (typeof window.rsCrvHashtags === 'function') ? window.rsCrvHashtags(c) : [];
+                if (tags.length) lines.push(tags.join(' '));
                 var text = lines.join('\n');
                 var run = (typeof copyText === 'function') ? copyText(text) : Promise.reject();
                 Promise.resolve(run).then(function () { toast(T('Описание скопировано')); }).catch(function () { toast(text); });

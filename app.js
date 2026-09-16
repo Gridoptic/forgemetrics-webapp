@@ -7255,8 +7255,6 @@ async function rsCrvDesc(cid) {
         if (!c) { showToast(TR('Не удалось получить описание'), 'alert-triangle'); return; }
         const lines = [];
         if (c.cta_text) lines.push(c.cta_text);
-        const pi = state.post && state.post.placeInfo;
-        if (pi && pi.channel_username) lines.push('https://t.me/' + pi.channel_username);
         const tags = rsCrvHashtags(c);
         if (tags.length) lines.push(tags.join(' '));
         await copyText(lines.join('\n'));
