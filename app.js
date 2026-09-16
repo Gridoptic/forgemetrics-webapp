@@ -7222,43 +7222,12 @@ async function rsCrvVariant(ctx, host, cid) {
     }
 }
 
-var RS_TAG_STOP = ['этот', 'этого', 'который', 'которые', 'чтобы', 'просто', 'самый', 'самые',
-    'нужно', 'надо', 'может', 'можно', 'будет', 'когда', 'после', 'перед', 'через', 'своих', 'своими',
-    'почему', 'зачем', 'сколько', 'лучше', 'больше', 'меньше', 'всегда', 'никогда', 'очень'];
-
-function rsCrvHashtags(c) {
-    const words = [];
-    const push = (raw) => {
-        const w = String(raw || '').toLowerCase()
-            .replace(/[^0-9a-zа-яё]+/gi, '')
-            .replace(/^ё/, 'е');
-        if (w.length < 4 || w.length > 22) return;
-        if (RS_TAG_STOP.indexOf(w) >= 0) return;
-        if (words.indexOf(w) >= 0) return;
-        words.push(w);
-    };
-    const niche = (window.__fmActiveNiche || '').trim();
-    niche.split(/[\s,/]+/).forEach(push);
-    // подписи сцен — уже существительные в именительном («Глицинат», «Панировка»),
-    // из заголовка слова идут в падежах, поэтому они в резерве
-    ((c && c.scenes) || []).forEach((sc) => {
-        if (sc && sc.label) push(sc.label);
-    });
-    String((c && c.title) || '').split(/[\s,.;:!?()«»"'—–-]+/).forEach(push);
-    return words.slice(0, 5).map((w) => '#' + w);
-}
-
 async function rsCrvDesc(cid) {
     try {
         const r = await apiRequest('/api/v1/creative/' + cid);
         const c = r && r.creative;
-        if (!c) { showToast(TR('Не удалось получить описание'), 'alert-triangle'); return; }
-        const lines = [];
-        if (c.cta_text) lines.push(c.cta_text);
-        if (c.music_credit) lines.push(TR('Музыка') + ': ' + c.music_credit);
-        const tags = rsCrvHashtags(c);
-        if (tags.length) lines.push(tags.join(' '));
-        await copyText(lines.join('\n'));
+        if (!c || !c.description) { showToast(TR('Не удалось получить описание'), 'alert-triangle'); return; }
+        await copyText(c.description);
         showToast(TR('Описание скопировано'), 'copy');
     } catch (e) {
         showToast(TR('Не удалось получить описание'), 'alert-triangle');
