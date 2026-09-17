@@ -7,8 +7,8 @@
     var _voices = [], _channels = [], _voiceNames = [], _brandOn = false, _brandCh = 0;
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
-    var _mode = 'topic', _silent = false, _noMusic = false, _address = '', _finalLine = '', _logo = null;
-    var MAX_ADDRESS = 40, MAX_FINAL = 120;
+    var _mode = 'topic', _silent = false, _noMusic = false, _address = '', _finalLine = '', _finalNote = '', _logo = null;
+    var MAX_ADDRESS = 40, MAX_FINAL = 120, MAX_NOTE = 60;
     var UPLOAD_VIDEO_MS = 600000, UPLOAD_PHOTO_MS = 180000;
 
     function T(s) { return (typeof window.t === 'function') ? window.t(s) : s; }
@@ -185,6 +185,8 @@
         var addr = document.getElementById('vd-lp-addr');
         if (addr) layoutAddress(addr, _address);
         if (line) layoutLine(line, _finalLine);
+        var note = document.getElementById('vd-lp-note');
+        if (note && addr) note.style.top = Math.round(addr.offsetTop + addr.offsetHeight + 26) + 'px';
     }
 
     function logoRow() {
@@ -201,15 +203,18 @@
             '<div class="vd-lp"><div class="vd-lp-frame"><div class="vd-lp-stage">' +
             '<div class="vd-lp-line" id="vd-lp-line">' + esc(_finalLine) + '</div>' +
             '<div class="vd-lp-logo"><img src="' + esc(_logo.url) + '" alt=""></div>' +
-            '<div class="vd-lp-addr" id="vd-lp-addr">' + esc(_address) + '</div></div></div>' +
+            '<div class="vd-lp-addr" id="vd-lp-addr">' + esc(_address) + '</div>' +
+            '<div class="vd-lp-note" id="vd-lp-note">' + esc(_finalNote) + '</div></div></div>' +
             '<div class="vd-lp-t">' + esc(T('Так будет выглядеть последний кадр ролика')) + '</div></div>';
     }
 
     function finalField() {
         return '<div class="vd-f">' + secTitle(T('Финал')) +
-            secHint(T('Логотип, адрес крупно на последнем кадре и последняя фраза.')) + logoRow() +
+            secHint(T('Логотип, адрес крупно на последнем кадре, подпись под адресом и последняя фраза.')) + logoRow() +
             '<div class="vd-box"><input class="vd-inp" id="vd-addr" type="text" autocomplete="off" maxlength="' + MAX_ADDRESS +
             '" value="' + esc(_address) + '" placeholder="' + esc(T('Адрес на экране')) + '"></div>' +
+            '<div class="vd-box"><input class="vd-inp" id="vd-fnote" type="text" autocomplete="off" maxlength="' + MAX_NOTE +
+            '" value="' + esc(_finalNote) + '" placeholder="' + esc(T('Подпись под адресом — например, «первый ролик через 5 минут»')) + '"></div>' +
             '<div class="vd-box"><input class="vd-inp" id="vd-fline" type="text" autocomplete="off" maxlength="' + MAX_FINAL +
             '" value="' + esc(_finalLine) + '" placeholder="' + esc(T('Последняя фраза')) + '"></div></div>';
     }
@@ -568,6 +573,12 @@
             if (la) fitPreview();
             return;
         }
+        if (el.id === 'vd-fnote') {
+            _finalNote = el.value.slice(0, MAX_NOTE);
+            var ln = document.getElementById('vd-lp-note');
+            if (ln) { ln.textContent = _finalNote; fitPreview(); }
+            return;
+        }
         if (el.id === 'vd-fline') {
             _finalLine = el.value.slice(0, MAX_FINAL);
             var ll = document.getElementById('vd-lp-line');
@@ -755,6 +766,7 @@
             lang: (window.__fmLang || 'ru'),
             mode: _mode, silent: _silent, no_music: _noMusic,
             final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
+            final_note: ad ? (_finalNote || '').trim() : '',
             logo: (ad && _logo) ? _logo.path : ''
         };
         apiRequest('/api/v1/creative/brief', { method: 'POST', body: JSON.stringify(body) })

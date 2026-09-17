@@ -90,6 +90,8 @@
 .vd-lp-addr { position: absolute; left: 60px; right: 60px; top: 1330px; font-size: 96px; font-weight: 800; line-height: 1.05;
   color: #5DCAA5; text-align: center; white-space: nowrap; transition: font-size 0.15s ease-out; }
 .vd-lp-addr .al { display: block; }
+.vd-lp-note { position: absolute; left: 60px; right: 60px; top: 1500px; font-size: 46px; font-weight: 600; line-height: 1.2;
+  color: rgba(255,255,255,0.82); text-align: center; overflow-wrap: anywhere; }
 .vd-lp-t { font-size: 12px; line-height: 1.4; color: #aab0c4; min-width: 0; }
 
 .vd-note { font-size: 11.5px; color: #8d93a8; line-height: 1.5; }
