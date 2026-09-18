@@ -2906,17 +2906,17 @@ function flipToggle(owner, toggle, open, fadeSel) {
 }
 
 const TFC_LIST = [
-    'generate', 'generate_std', 'cover_own', 'creative_build',
+    'generate', 'generate_std', 'cover_own', 'creative_build', 'creative_premium',
     'modify', 'modify_std', 'generate_proofs', 'generate_std_proofs',
     'research_attach', 'rewrite', 'rewrite_std', 'voice',
     'poster_hook', 'plan_reskeleton', 'channel_analyze', 'adpick',
     'audit', 'competitors', 'ai_strategy', 'strategy_renewal',
     'promo_burst24', 'promo_burst48', 'promo_week', 'promo_month',
 ];
-const TFC_MAIN = ['generate', 'generate_std', 'cover_own', 'creative_build'];
+const TFC_MAIN = ['generate', 'generate_std', 'cover_own', 'creative_build', 'creative_premium'];
 const TFC_SHORT = {
     generate: TR('Премиум-пост'), generate_std: TR('Стандартный пост'),
-    cover_own: TR('Обложка к посту'), creative_build: TR('Ролик'),
+    cover_own: TR('Обложка к посту'), creative_build: TR('Ролик'), creative_premium: TR('Премиум-ролик'),
     modify: TR('Правка поста'), modify_std: TR('Стандартная правка'),
     generate_proofs: TR('Пост с исследованиями'), generate_std_proofs: TR('Стандарт с исследованиями'),
     research_attach: TR('Исследования к посту'),
@@ -7089,6 +7089,10 @@ function rsBindCover(host, ctx) {
         else if (a === 'cover') rsMakeCover(ctx, host, 'draw');
         else if (a === 'photo') rsMakeCover(ctx, host, 'photo');
         else if (a === 'creative') rsCreativeBuild(ctx, host);
+        else if (a === 'creativepro') {
+            if (rsPremium().locked) showToast(TR('Премиум-ролик доступен после первого пополнения Forge.'), 'lock');
+            else rsCreativeBuild(ctx, host, 'premium');
+        }
         else if (a === 'crvopen') rsCrvOpen(b.getAttribute('data-url'));
         else if (a === 'crvsend') rsCrvSend(+b.getAttribute('data-id'));
         else if (a === 'crvvariant') rsCrvVariant(ctx, host, +b.getAttribute('data-id'));
@@ -7139,9 +7143,12 @@ function rsCreativeBtn(ctx) {
     const head = '<div class="cp-crv-h"><i class="ti ti-movie"></i><b>' +
         escapeHtml(TR('Креатив для коротких видео')) + '</b></div>';
     if (ctx.crvBusy || (c && (c.status === 'queued' || c.status === 'generating'))) {
+        const pro = ctx.crvBusy === 'premium' || (c && c.tier === 'premium');
         return '<div class="cp-crv">' + head +
             '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-            escapeHtml(TR('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) +
+            escapeHtml(pro
+                ? TR('Собираю премиум-ролик: сценарий, кадры, голос, музыка, монтаж. Это около 10 минут — можно уйти с экрана.')
+                : TR('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) +
             '</span></div></div>';
     }
     if (c && c.status === 'ready' && c.url) {
@@ -7160,7 +7167,8 @@ function rsCreativeBtn(ctx) {
             '<button class="cp-act" type="button" data-rc="crvvariant" data-id="' + c.id +
             '"><i class="ti ti-refresh"></i> ' + escapeHtml(TR('Другой вариант')) +
             '<span class="pm-btn-price">' + ((typeof forgeAmount === 'function')
-                ? forgeAmount(rsCreativePrice(), 12) : rsCreativePrice()) + '</span></button>' +
+                ? forgeAmount(c.tier === 'premium' ? rsPremiumPrice() : rsCreativePrice(), 12)
+                : (c.tier === 'premium' ? rsPremiumPrice() : rsCreativePrice())) + '</span></button>' +
             '<button class="cp-act" type="button" data-rc="crvdesc" data-id="' + c.id +
             '"><i class="ti ti-copy"></i> ' + escapeHtml(TR('Описание для ролика')) + '</button>' +
             '</div>' + rsCrvCredits(c) + '</div></div>';
@@ -7172,7 +7180,16 @@ function rsCreativeBtn(ctx) {
         '<button type="button" class="cp-crv-go" data-rc="creative">' +
         '<i class="ti ti-movie"></i><span class="tx"><b>' + escapeHtml(TR('Собрать креатив')) + ' ' + cost +
         '</b><em>' + escapeHtml(TR('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) +
-        '</em></span></button></div>';
+        '</em></span></button>' + rsPremiumBtn() + '</div>';
+}
+
+function rsPremiumBtn() {
+    if (!rsPremium().enabled) return '';
+    const cost = (typeof forgeAmount === 'function') ? forgeAmount(rsPremiumPrice(), 12) : rsPremiumPrice();
+    return '<button type="button" class="cp-crv-go pro" data-rc="creativepro">' +
+        '<i class="ti ti-sparkles"></i><span class="tx"><b>' + escapeHtml(TR('Премиум-ролик')) + ' ' + cost +
+        '</b><em>' + escapeHtml(TR('Сюжетный ролик из этого поста: уникальные кадры в едином стиле, выразительная озвучка, своя музыка и оформление — примерно через 10 минут')) +
+        '</em></span></button>';
 }
 
 function rsCrvLoad(ctx, host) {
@@ -7272,35 +7289,52 @@ function rsCrvCredits(c) {
         '</span></div>';
 }
 
-function rsCreativePrice() {
-    const p = (state.dashboard && state.dashboard.forge_prices) || null;
-    if (Array.isArray(p)) {
-        const row = p.find((x) => x && x.key === 'creative_build');
-        if (row && row.price) return row.price;
-    }
-    return 70;
+function rsForge() {
+    return (state.dashboard && state.dashboard.forge) || {};
 }
 
-async function rsCreativeBuild(ctx, host) {
+function rsPriceOf(key, fallback) {
+    const p = rsForge().prices;
+    if (Array.isArray(p)) {
+        const row = p.find((x) => x && x.key === key);
+        if (row && row.price) return row.price;
+    }
+    return fallback;
+}
+
+function rsCreativePrice() {
+    return rsPriceOf('creative_build', 50);
+}
+
+function rsPremiumPrice() {
+    return rsPriceOf('creative_premium', 160);
+}
+
+function rsPremium() {
+    return rsForge().premium_video || {};
+}
+
+async function rsCreativeBuild(ctx, host, tier) {
     const pid = ctx && ctx.currentPostId;
     if (!pid || ctx.crvBusy) return;
+    const pro = tier === 'premium';
     hapticMed();
-    ctx.crvBusy = true;
+    ctx.crvBusy = pro ? 'premium' : true;
     rsCoverRender(host, ctx);
     try {
-        const r = await apiRequest('/api/v1/creative/build', {
-            method: 'POST',
-            body: JSON.stringify({ post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' }),
-        });
+        const body = { post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' };
+        if (pro) body.tier = 'premium';
+        const r = await apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify(body) });
         ctx.crvBusy = false;
         if (r && r.ok) {
             ctx.creative = r.creative;
-            showToast(TR('Собираю ролик — сообщу, когда будет готов'), 'movie');
+            showToast(pro ? TR('Собираю премиум-ролик — сообщу, когда будет готов') : TR('Собираю ролик — сообщу, когда будет готов'),
+                pro ? 'sparkles' : 'movie');
             rsCoverRender(host, ctx);
             rsCrvPoll(ctx, host);
             return;
         }
-        showToast(rsErr((r && r.error) || 'crv_failed'), 'alert-triangle');
+        showToast((r && r.message) || rsErr((r && r.error) || 'crv_failed'), 'alert-triangle');
     } catch (e) {
         ctx.crvBusy = false;
         showToast(apiFailText(e) || rsErr('crv_failed'), 'alert-triangle');

@@ -1974,6 +1974,8 @@
     border: 1px solid rgba(129, 140, 248, .5); color: #e8eaf1; font-family: inherit; cursor: pointer;
 }
 .cp-crv-go > i { width: 30px; height: 30px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; background: rgba(129, 140, 248, .18); color: #c7cbff; font-size: 15px; flex-shrink: 0; }
+.cp-crv-go.pro { margin-top: 8px; background: linear-gradient(135deg, rgba(245, 196, 107, .16), rgba(99, 102, 241, .12)); border-color: rgba(245, 196, 107, .5); }
+.cp-crv-go.pro > i { background: rgba(245, 196, 107, .18); color: #f5c46b; }
 .cp-crv-go .tx { flex: 1; min-width: 0; }
 .cp-crv-go b { display: block; font-size: 12.5px; font-weight: 700; }
 .cp-crv-go em { display: block; font-style: normal; font-size: 10.5px; color: #8d93a8; line-height: 1.4; margin-top: 2px; }

@@ -1316,10 +1316,13 @@
                 } else if (c && c.status === 'error') {
                     right = '<button class="stg-trbtn" data-act="trbuild" data-id="' + p.id + '">' + esc(T('Собрать заново')) + '</button>';
                 } else {
-                    right = '<button class="stg-trbtn pri" data-act="trbuild" data-id="' + p.id + '">' + esc(T('Собрать креатив')) + '</button>';
+                    right = '<button class="stg-trbtn pri" data-act="trbuild" data-id="' + p.id + '">' + esc(T('Собрать креатив')) + '</button>' +
+                        (trPremium().enabled ? '<button class="stg-trbtn pro" data-act="trbuildpro" data-id="' + p.id + '"><i class="ti ti-sparkles"></i>' +
+                            esc(T('Премиум')) + '</button>' : '');
                 }
                 html += '<div class="stg-trrow"><div class="day">' + esc(T(TR_DAYS[p.day_index] || '')) + '</div><div class="tx"><b>' + esc(p.title || p.rubric || '') + '</b>' +
-                    (p.published ? '<em>' + esc(T('пост вышел')) + '</em>' : '') + '</div><div class="acts">' + right + '</div></div>';
+                    (p.published ? '<em>' + esc(T('пост вышел')) + '</em>' : '') + '</div><div class="acts' +
+                    (right.indexOf('trbuildpro') >= 0 ? ' two' : '') + '">' + right + '</div></div>';
             });
         }
         html += '</div>';
@@ -1380,15 +1383,26 @@
             else toast(trErrText(r));
         }).catch(function () { toast(T('Не удалось сохранить')); });
     }
-    function trBuild(pid) {
+    function trPremium() {
+        try {
+            return (typeof state !== 'undefined' && state && state.dashboard && state.dashboard.forge &&
+                    state.dashboard.forge.premium_video) || {};
+        } catch (e) { return {}; }
+    }
+    function trBuild(pid, tier) {
         if (_trBusy[pid]) return;
         _trBusy[pid] = true;
         haptic('medium');
         renderTraffic();
         var lang = (typeof window.getLang === 'function' ? window.getLang() : 'ru') || 'ru';
-        apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify({ post_id: pid, lang: lang }) }).then(function (r) {
+        var body = { post_id: pid, lang: lang };
+        if (tier === 'premium') body.tier = 'premium';
+        apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify(body) }).then(function (r) {
             delete _trBusy[pid];
-            if (r && r.ok) { toast(T('Собираю ролик — сообщу, когда будет готов')); loadTraffic(true).then(trPoll); }
+            if (r && r.ok) {
+                toast(tier === 'premium' ? T('Собираю премиум-ролик — сообщу, когда будет готов') : T('Собираю ролик — сообщу, когда будет готов'));
+                loadTraffic(true).then(trPoll);
+            }
             else { toast((r && (r.message || r.error)) || T('Не удалось запустить сборку')); renderTraffic(); }
         }).catch(function (err) { delete _trBusy[pid]; toast((err && err.message) || T('Не удалось запустить сборку')); renderTraffic(); });
     }
@@ -1460,6 +1474,11 @@
             return true;
         }
         if (act === 'trbuild') { trBuild(parseInt(el.getAttribute('data-id'), 10)); return true; }
+        if (act === 'trbuildpro') {
+            if (trPremium().locked) { toast(T('Премиум-ролик доступен после первого пополнения Forge.')); return true; }
+            trBuild(parseInt(el.getAttribute('data-id'), 10), 'premium');
+            return true;
+        }
         if (act === 'tropen') { haptic('light'); trOpenUrl(el.getAttribute('data-url')); return true; }
         if (act === 'trdesc') { trDescription(parseInt(el.getAttribute('data-id'), 10)); return true; }
         if (act === 'trplink') { trPlatformLink(el.getAttribute('data-key'), el); return true; }
@@ -1477,7 +1496,7 @@
 
     var MANAGE_ACTS = {
         cb: 1, warm: 1, tkdone: 1, how: 1, send: 1, ask: 1, sug: 1, attach: 1, restart: 1, regen: 1, tnext: 1, tbuild: 1,
-        start: 1, continue: 1, buy: 1, renew: 1, trbuild: 1, trplink: 1, trpick: 1, trgoal: 1, trgoalsave: 1,
+        start: 1, continue: 1, buy: 1, renew: 1, trbuild: 1, trbuildpro: 1, trplink: 1, trpick: 1, trgoal: 1, trgoalsave: 1,
     };
 
     function fillChat(text) {

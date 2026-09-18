@@ -1775,7 +1775,8 @@
                     ? '<button type="button" class="cp-crv-go" style="margin-top:10px;" data-act="crvbuild" data-id="' +
                       _own.postId + '"><i class="ti ti-movie"></i><span class="tx"><b>' +
                       esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
-                      esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button>'
+                      esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button>' +
+                      premiumBtn(_own.postId)
                     : '');
         };
         var setBusy = function (text, media) {
@@ -3552,6 +3553,21 @@
         return (w.prices && w.prices.creative_build) || 50;
     }
 
+    function premiumVideo() { return wallet().premium_video || {}; }
+
+    function premiumPrice() {
+        var w = wallet();
+        return (w.prices && w.prices.creative_premium) || 160;
+    }
+
+    function premiumBtn(pid) {
+        if (!premiumVideo().enabled) return '';
+        return '<button type="button" class="cp-crv-go pro" data-act="crvbuildpro" data-id="' + pid + '"><i class="ti ti-sparkles"></i>' +
+            '<span class="tx"><b>' + esc(T('Премиум-ролик')) + ' ' + forgeTag(premiumPrice()) + '</b><em>' +
+            esc(T('Сюжетный ролик из этого поста: уникальные кадры в едином стиле, выразительная озвучка, своя музыка и оформление — примерно через 10 минут')) +
+            '</em></span></button>';
+    }
+
     function regenCover(id, kind) {
         if (_mediaBusy[id]) return;
         _mediaBusy[id] = kind === 'photo' ? T('Подбираю фото...') : T('Рисую обложку...');
@@ -3930,7 +3946,9 @@
             crvPoll();
             return '<div class="cp-crv">' + head +
                 '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) + '</span></div></div>';
+                esc((c && c.tier === 'premium') || busy === 'premium'
+                    ? T('Собираю премиум-ролик: сценарий, кадры, голос, музыка, монтаж. Это около 10 минут — можно уйти с экрана.')
+                    : T('Собираю ролик: сценарий, кадры, озвучка, монтаж. Обычно около 5 минут — можно уйти с экрана.')) + '</span></div></div>';
         }
         if (c && c.status === 'ready' && c.url) {
             var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
@@ -3943,7 +3961,7 @@
                 '<div class="cp-crv-acts">' +
                 '<button class="cp-act ok" data-act="crvopen" data-url="' + esc(c.url) + '"><i class="ti ti-download"></i> ' + esc(T('Скачать MP4')) + '</button>' +
                 '<button class="cp-act" data-act="crvsend" data-id="' + c.id + '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' +
-                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
+                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(c.tier === 'premium' ? premiumPrice() : creativePrice()) + '</button>' +
                 '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '</div></div>' +
                 '<div class="cp-note">' + esc(T('9:16, 1080×1920 — вертикальный формат для площадок коротких видео. Описание для публикации — по кнопке.')) + '</div></div>';
@@ -3954,7 +3972,7 @@
                 (c.preview_url ? '<div class="cp-crv-prev as-img"><img src="' + esc(c.preview_url) + '" alt=""></div>' : '') +
                 '<div class="cp-crv-acts">' +
                 '<button class="cp-act ok" data-act="crvsend" data-id="' + c.id + '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' +
-                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(creativePrice()) + '</button>' +
+                '<button class="cp-act" data-act="crvvariant" data-id="' + c.id + '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) + ' ' + forgeTag(c.tier === 'premium' ? premiumPrice() : creativePrice()) + '</button>' +
                 '<button class="cp-act" data-act="crvdesc" data-id="' + c.id + '" data-pid="' + p.id + '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '</div></div>' +
                 '<div class="cp-note">' + esc(T('Ролик хранится в чате с ботом — оттуда его можно смотреть и пересылать')) + '</div></div>';
@@ -3976,15 +3994,17 @@
         return '<div class="cp-crv">' + head +
             '<button class="cp-crv-go" data-act="crvbuild" data-id="' + p.id + '"><i class="ti ti-movie"></i>' +
             '<span class="tx"><b>' + esc(T('Собрать креатив')) + ' ' + forgeTag(creativePrice()) + '</b><em>' +
-            esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button></div>';
+            esc(T('Ролик 9:16 из этого поста: сценарий, кадры, озвучка, монтаж — готовый файл примерно через 5 минут')) + '</em></span></button>' +
+            premiumBtn(p.id) + '</div>';
     }
-    function crvBuild(pid, product) {
+    function crvBuild(pid, product, tier) {
         if (_crvBusy[pid]) return;
-        _crvBusy[pid] = true;
+        _crvBusy[pid] = tier === 'premium' ? 'premium' : true;
         haptic('medium');
         renderWeek();
         var body = { post_id: pid, lang: (window.getLang ? window.getLang() : 'ru') || 'ru' };
         if (product) body.product = String(product).trim().slice(0, 400);
+        if (tier === 'premium') body.tier = 'premium';
         apiRequest('/api/v1/creative/build', { method: 'POST', body: JSON.stringify(body) })
             .then(function (r) {
                 delete _crvBusy[pid];
@@ -3992,7 +4012,7 @@
                     delete _crvNeedProduct[pid];
                     var p = post(pid);
                     if (p) p.creative = r.creative;
-                    toast(T('Собираю ролик — сообщу, когда будет готов'));
+                    toast(tier === 'premium' ? T('Собираю премиум-ролик — сообщу, когда будет готов') : T('Собираю ролик — сообщу, когда будет готов'));
                     renderWeek();
                     crvPoll();
                 } else if (r && r.error === 'product_required') {
@@ -4595,6 +4615,11 @@
         if (act === 'mediapick') { haptic('light'); pickFile(+actEl.getAttribute('data-id')); return; }
         if (act === 'ownweek') { doOwnWeek(); return; }
         if (act === 'crvbuild') { crvBuild(+actEl.getAttribute('data-id')); return; }
+        if (act === 'crvbuildpro') {
+            if (premiumVideo().locked) { toast(T('Премиум-ролик доступен после первого пополнения Forge.')); return; }
+            crvBuild(+actEl.getAttribute('data-id'), null, 'premium');
+            return;
+        }
         if (act === 'crvbuildp') {
             var _pid = +actEl.getAttribute('data-id');
             var _inp = document.getElementById('crvprod' + _pid);

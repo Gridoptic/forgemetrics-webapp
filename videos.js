@@ -8,6 +8,7 @@
     var _topic = '', _niche = '', _nq = '', _url = '', _photos = [], _videos = [],
         _busy = false, _pick = false;
     var _mode = 'topic', _silent = false, _noMusic = false, _address = '', _finalLine = '', _finalNote = '', _logo = null;
+    var _tier = 'base', _premium = null, _pVoice = '';
     var MAX_ADDRESS = 40, MAX_FINAL = 120, MAX_NOTE = 60;
     var UPLOAD_VIDEO_MS = 600000, UPLOAD_PHOTO_MS = 180000;
 
@@ -353,18 +354,71 @@
         return '<div class="vd-f">' + secTitle(T('Концовка')) + row + pick + '</div>';
     }
 
+    function isPro() {
+        return _tier === 'premium' && !!(_premium && _premium.enabled) && _mode === 'topic';
+    }
+
+    function proPrice() {
+        return (_premium && _premium.price) || 160;
+    }
+
+    function tierField() {
+        if (!_premium || !_premium.enabled || _mode !== 'topic') return '';
+        var opt = function (v, icon, title, price, note) {
+            return '<button type="button" class="vd-qo' + (v === 'premium' ? ' pro' : '') + (_tier === v ? ' on' : '') +
+                '" data-va="tier" data-v="' + v + '"><span class="qh"><b><i class="ti ti-' + icon + '"></i>' + esc(title) +
+                '</b>' + fa(price, 12) + '</span><em>' + esc(note) + '</em></button>';
+        };
+        return '<div class="vd-f">' + secTitle(T('Уровень ролика')) + '<div class="vd-q">' +
+            opt('base', 'movie', T('Обычный'), _price, T('Сценарий, кадры по смыслу, озвучка, музыка и субтитры')) +
+            opt('premium', 'sparkles', T('Премиум'), proPrice(),
+                T('Уникальные кадры в едином стиле, выразительная озвучка, своя музыка и оформление')) +
+            '</div></div>';
+    }
+
+    function proVoiceCol(gender, label) {
+        var rows = ((_premium && _premium.voices) || []).filter(function (v) { return v.gender === gender; }).map(function (v) {
+            return '<div class="cs-vrow' + (_pVoice === v.name ? ' on' : '') + '" data-va="pvname" data-v="' + esc(v.name) + '">' +
+                '<button class="cs-vplay" type="button" data-va="vplay" data-src="' + esc(v.sample_url || '') +
+                '" aria-label="' + esc(T('Пример голоса')) + '"><i class="ti ti-player-play-filled"></i></button>' +
+                '<span class="cs-vnm"><b>' + esc(v.label) + '</b><span>' + esc(v.note || '') + '</span></span>' +
+                '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
+        }).join('');
+        return '<div class="cs-vcol"><div class="cs-vcolh"><s>' + esc(label) + '</s></div>' + rows + '</div>';
+    }
+
+    function proVoiceField() {
+        var auto = '<div class="cs-vrow vd-vauto' + (!_pVoice ? ' on' : '') + '" data-va="pvname" data-v="">' +
+            '<span class="cs-vplay" aria-hidden="true"><i class="ti ti-sparkles"></i></span>' +
+            '<span class="cs-vnm"><b>' + esc(T('Подобрать под тему')) + '</b><span>' +
+            esc(T('голос и подача под смысл ролика')) + '</span></span>' +
+            '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
+        return '<div class="vd-f" id="vd-pvoice-sec">' + secTitle(T('Голос рассказчика')) + auto +
+            '<div class="cs-vcols">' + proVoiceCol('male', T('Мужские')) + proVoiceCol('female', T('Женские')) + '</div>' +
+            '<div class="cs-vfoot">' + esc(T('Подача, музыка и оформление подбираются под тему ролика.')) + '</div></div>';
+    }
+
     function form() {
+        var pro = isPro();
         var go = _busy
-            ? '<button type="button" class="vd-go" disabled><span class="cp-spin sm"></span>' +
+            ? '<button type="button" class="vd-go' + (pro ? ' pro' : '') + '" disabled><span class="cp-spin sm"></span>' +
               esc(T('Запускаю сборку')) + '</button>'
-            : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
-              esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>';
+            : (pro
+                ? '<button type="button" class="vd-go pro" data-va="build"><i class="ti ti-sparkles"></i>' +
+                  esc(T('Собрать премиум-ролик')) + '<span class="pm-btn-price">' + fa(proPrice(), 13) + '</span></button>'
+                : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
+                  esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>');
         if (_mode === 'ad') {
             return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() + musicField() +
                 '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, фото и видео продукта карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
                 '</div>' + go + '</div>';
         }
-        return '<div class="vd-card">' + modeField() +
+        if (pro) {
+            return '<div class="vd-card">' + modeField() + tierField() + topicField() + nicheField() + proVoiceField() +
+                '<div class="vd-note">' + esc(T('Сюжетный ролик 9:16: уникальные кадры в едином стиле, созданные под эту тему, выразительная озвучка, собственная музыка и оформление, которое не повторяется от ролика к ролику. Готовый файл примерно через 10 минут.')) +
+                '</div>' + go + '</div>';
+        }
+        return '<div class="vd-card">' + modeField() + tierField() +
             topicField() + nicheField() + urlField() +
             photosField() + voiceField() + musicField() + endingField() +
             '<div class="vd-note">' + esc(T('Ролик 9:16 со сценарием, кадрами, озвучкой и музыкой. Готовый файл примерно через 5 минут.')) +
@@ -375,7 +429,9 @@
     function statusRow(c) {
         if (c.status === 'queued' || c.status === 'generating') {
             return '<div class="cp-crv-wait"><div class="cp-spin sm"></div><span>' +
-                esc(T('Собираю ролик: сценарий, кадры, озвучка, монтаж. Можно уйти с экрана.')) + '</span></div>';
+                esc(c.tier === 'premium'
+                    ? T('Собираю премиум-ролик: сценарий, кадры, голос, музыка, монтаж. Это около 10 минут, можно уйти с экрана.')
+                    : T('Собираю ролик: сценарий, кадры, озвучка, монтаж. Можно уйти с экрана.')) + '</span></div>';
         }
         if (c.status === 'error') {
             return '<div class="cp-note fail">' +
@@ -406,7 +462,8 @@
 
     function card(c) {
         var title = (c.title || (c.brief && c.brief.topic) || T('Ролик')).slice(0, 120);
-        var src = (c.source_kind === 'brief') ? T('По теме') : T('Из поста');
+        var src = (c.tier === 'premium' ? T('Премиум') + ' · ' : '') + ((c.source_kind === 'brief') ? T('По теме') : T('Из поста'));
+        var vprice = c.tier === 'premium' ? proPrice() : _price;
         var dur = c.duration_s ? Math.round(c.duration_s) + ' ' + T('с') : '';
         var live = c.status === 'queued' || c.status === 'generating';
         var open = !!_open[c.id] || live;
@@ -434,7 +491,7 @@
                 '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' +
                 '<button class="cp-act" type="button" data-va="variant" data-id="' + c.id +
                 '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) +
-                '<span class="pm-btn-price">' + fa(_price, 12) + '</span></button>' +
+                '<span class="pm-btn-price">' + fa(vprice, 12) + '</span></button>' +
                 '<button class="cp-act" type="button" data-va="desc" data-id="' + c.id +
                 '"><i class="ti ti-copy"></i> ' + esc(T('Описание для ролика')) + '</button>' +
                 '<button class="cp-act vd-del" type="button" data-va="del" data-id="' + c.id +
@@ -453,7 +510,7 @@
                     '"><i class="ti ti-brand-telegram"></i> ' + esc(T('Отправить в Telegram')) + '</button>' : '') +
                 '<button class="cp-act" type="button" data-va="variant" data-id="' + c.id +
                 '"><i class="ti ti-refresh"></i> ' + esc(T('Другой вариант')) +
-                '<span class="pm-btn-price">' + fa(_price, 12) + '</span></button>' +
+                '<span class="pm-btn-price">' + fa(vprice, 12) + '</span></button>' +
                 '<button class="cp-act vd-del" type="button" data-va="del" data-id="' + c.id +
                 '"><i class="ti ti-trash"></i> ' + esc(T('Удалить')) + '</button></div>';
         }
@@ -621,6 +678,16 @@
             return;
         }
         if (a === 'vname') { markVoice(b); return; }
+        if (a === 'pvname') { _pVoice = b.getAttribute('data-v') || ''; haptic(); render(); return; }
+        if (a === 'tier') {
+            var nt = b.getAttribute('data-v') === 'premium' ? 'premium' : 'base';
+            if (nt === 'premium' && _premium && _premium.locked) {
+                toast(T('Премиум-ролик доступен после первого пополнения Forge.'), 'lock');
+                return;
+            }
+            if (nt !== _tier) { _tier = nt; haptic(); render(); }
+            return;
+        }
         if (a === 'brandtog') {
             _brandOn = !_brandOn;
             if (_brandOn && !brandChannel()) {
@@ -755,14 +822,17 @@
             return;
         }
         var ad = _mode === 'ad';
+        var pro = isPro();
         _busy = true;
         haptic('medium');
         render();
         var body = {
-            topic: topic, niche: ad ? '' : (_niche || '').trim(), product_url: ad ? '' : (_url || '').trim(),
-            photos: _photos.map(function (p) { return p.path; }),
-            videos: _videos.map(function (v) { return v.path; }),
-            voice_names: _silent ? [] : _voiceNames, channel_id: (!ad && _brandOn && _brandCh) ? _brandCh : null,
+            topic: topic, niche: ad ? '' : (_niche || '').trim(), product_url: (ad || pro) ? '' : (_url || '').trim(),
+            photos: pro ? [] : _photos.map(function (p) { return p.path; }),
+            videos: pro ? [] : _videos.map(function (v) { return v.path; }),
+            voice_names: (_silent || pro) ? [] : _voiceNames,
+            channel_id: (!ad && !pro && _brandOn && _brandCh) ? _brandCh : null,
+            tier: pro ? 'premium' : 'base', premium_voice: pro ? _pVoice : '',
             lang: (window.__fmLang || 'ru'),
             mode: _mode, silent: _silent, no_music: _noMusic,
             final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
@@ -774,7 +844,7 @@
                 _busy = false;
                 if (r && r.ok && r.creative) {
                     _items.unshift(r.creative);
-                    toast(T('Собираю ролик'), 'movie');
+                    toast(pro ? T('Собираю премиум-ролик') : T('Собираю ролик'), pro ? 'sparkles' : 'movie');
                     render();
                     refreshBalance();
                 } else {
@@ -842,6 +912,8 @@
                 if (r.parallel) _parallel = r.parallel;
                 if (r.keep_days) _keepDays = r.keep_days;
                 if (r.voices) _voices = r.voices;
+                _premium = r.premium || null;
+                if (!(_premium && _premium.enabled)) _tier = 'base';
                 if (r.channels) _channels = r.channels;
                 if (r.niches && r.niches.length) _niches = r.niches;
                 _loaded = true;

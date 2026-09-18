@@ -166,6 +166,8 @@
 .stg-trbtn { min-height: 40px; padding: 8px 12px; border-radius: 11px; border: 1px solid rgba(129,140,248,0.45); background: rgba(129,140,248,0.08); color: #c7cbff; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 0 0 auto; white-space: nowrap; }
 .stg-trbtn.pri { background: linear-gradient(135deg, rgba(99,102,241,0.45), rgba(99,102,241,0.18)); color: #fff; }
 .stg-trbtn.ok { border-color: rgba(52,211,153,0.45); background: rgba(52,211,153,0.1); color: #5DCAA5; }
+.stg-trbtn.pro { border-color: rgba(245,196,107,0.5); background: rgba(245,196,107,0.1); color: #f5c46b; }
+.stg-trrow .acts.two { flex-direction: column; align-items: stretch; }
 .stg-trbtn.wide { width: 100%; margin-top: 10px; white-space: normal; }
 .stg-trbtn[disabled] { opacity: .45; cursor: default; }
 .stg-trchip { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: rgba(129,140,248,0.14); color: #c7cbff; font-variant-numeric: tabular-nums; flex: 0 0 auto; }
