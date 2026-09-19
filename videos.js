@@ -357,7 +357,7 @@
     }
 
     function isPro() {
-        return _tier === 'premium' && !!(_premium && _premium.enabled) && _mode === 'topic';
+        return _tier === 'premium' && !!(_premium && _premium.enabled);
     }
 
     function proPrice() {
@@ -365,16 +365,20 @@
     }
 
     function tierField() {
-        if (!_premium || !_premium.enabled || _mode !== 'topic') return '';
+        if (!_premium || !_premium.enabled) return '';
+        var ad = _mode === 'ad';
+        var baseNote = ad ? T('История от первого лица, живые сцены, карточки товара, адрес в финале')
+                          : T('Сценарий, кадры по смыслу, озвучка, музыка и субтитры');
+        var proNote = ad ? T('Кадры под твой товар в едином стиле вокруг твоих фото и видео, выразительная озвучка и своя музыка')
+                         : T('Уникальные кадры в едином стиле, выразительная озвучка, своя музыка и оформление');
         var opt = function (v, icon, title, price, note) {
             return '<button type="button" class="vd-qo' + (v === 'premium' ? ' pro' : '') + (_tier === v ? ' on' : '') +
                 '" data-va="tier" data-v="' + v + '"><span class="qh"><b><i class="ti ti-' + icon + '"></i>' + esc(title) +
                 '</b>' + fa(price, 12) + '</span><em>' + esc(note) + '</em></button>';
         };
         return '<div class="vd-f">' + secTitle(T('Уровень ролика')) + '<div class="vd-q">' +
-            opt('base', 'movie', T('Обычный'), _price, T('Сценарий, кадры по смыслу, озвучка, музыка и субтитры')) +
-            opt('premium', 'sparkles', T('Премиум'), proPrice(),
-                T('Уникальные кадры в едином стиле, выразительная озвучка, своя музыка и оформление')) +
+            opt('base', 'movie', T('Обычный'), _price, baseNote) +
+            opt('premium', 'sparkles', T('Премиум'), proPrice(), proNote) +
             '</div></div>';
     }
 
@@ -456,8 +460,14 @@
                   esc(T('Собрать премиум-ролик')) + '<span class="pm-btn-price">' + fa(proPrice(), 13) + '</span></button>'
                 : '<button type="button" class="vd-go" data-va="build"><i class="ti ti-movie"></i>' +
                   esc(T('Собрать креатив')) + '<span class="pm-btn-price">' + fa(_price, 13) + '</span></button>');
+        if (_mode === 'ad' && pro) {
+            return '<div class="vd-card">' + modeField() + tierField() + topicField() + recordingsField() + finalField() +
+                langField() + proVoiceField() +
+                '<div class="vd-note">' + esc(T('Сюжетный ролик 9:16: твой товар — с твоих фото и видео, вокруг него кадры в едином стиле, выразительная озвучка, собственная музыка и оформление. Готовый файл примерно через 10 минут.')) +
+                '</div>' + go + '</div>';
+        }
         if (_mode === 'ad') {
-            return '<div class="vd-card">' + modeField() + topicField() + recordingsField() + finalField() + voiceField() + musicField() +
+            return '<div class="vd-card">' + modeField() + tierField() + topicField() + recordingsField() + finalField() + voiceField() + musicField() +
                 '<div class="vd-note">' + esc(T('Ролик 9:16: история от первого лица, живые сцены под эмоцию фраз, фото и видео продукта карточками, адрес в финале. Готовый файл примерно через 5 минут.')) +
                 '</div>' + go + '</div>';
         }
@@ -890,13 +900,13 @@
         render();
         var body = {
             topic: topic, niche: ad ? '' : (_niche || '').trim(), product_url: (ad || pro) ? '' : (_url || '').trim(),
-            photos: pro ? [] : _photos.map(function (p) { return p.path; }),
-            videos: pro ? [] : _videos.map(function (v) { return v.path; }),
+            photos: (pro && !ad) ? [] : _photos.map(function (p) { return p.path; }),
+            videos: (pro && !ad) ? [] : _videos.map(function (v) { return v.path; }),
             voice_names: (_silent || pro) ? [] : _voiceNames,
             channel_id: (!ad && !pro && _brandOn && _brandCh) ? _brandCh : null,
             tier: pro ? 'premium' : 'base', premium_voice: pro ? _pVoice : '',
             lang: pro ? _lang : (window.__fmLang || 'ru'),
-            mode: _mode, silent: _silent, no_music: _noMusic,
+            mode: _mode, silent: pro ? false : _silent, no_music: pro ? false : _noMusic,
             final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
             final_note: ad ? (_finalNote || '').trim() : '',
             logo: (ad && _logo) ? _logo.path : ''
