@@ -9,6 +9,8 @@
         _busy = false, _pick = false;
     var _mode = 'topic', _silent = false, _noMusic = false, _address = '', _finalLine = '', _finalNote = '', _logo = null;
     var _tier = 'base', _premium = null, _pVoice = '';
+    var _lang = 'ru', _langOpen = false, _langQ = '';
+    var FLAG_CDN = 'https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/flags/4x3/';
     var MAX_ADDRESS = 40, MAX_FINAL = 120, MAX_NOTE = 60;
     var UPLOAD_VIDEO_MS = 600000, UPLOAD_PHOTO_MS = 180000;
 
@@ -376,6 +378,52 @@
             '</div></div>';
     }
 
+    function langs() {
+        return (_premium && _premium.languages) || [];
+    }
+
+    function langOf(code) {
+        var all = langs();
+        for (var i = 0; i < all.length; i++) if (all[i].code === code) return all[i];
+        return all[0] || { code: 'ru', abbr: 'RU', flag: 'ru', label: 'Русский' };
+    }
+
+    function flagImg(code) {
+        return '<img class="vd-flag" src="' + FLAG_CDN + esc(code) + '.svg" alt="" loading="lazy">';
+    }
+
+    function langRow(v) {
+        return '<div class="cs-vrow' + (_lang === v.code ? ' on' : '') + '" data-va="langsel" data-v="' + esc(v.code) + '">' +
+            '<span class="vd-abbr">' + esc(v.abbr) + '</span>' + flagImg(v.flag) +
+            '<span class="cs-vnm"><b>' + esc(v.label) + '</b></span>' +
+            '<span class="cs-vchk"><i class="ti ti-check"></i></span></div>';
+    }
+
+    function langField() {
+        if (!langs().length) return '';
+        var cur = langOf(_lang);
+        if (!_langOpen) {
+            return '<div class="vd-f"><div class="cs-section-title">' + esc(T('Язык ролика')) + '</div>' +
+                '<button type="button" class="vd-box vd-row vd-langcur" data-va="langopen">' +
+                '<span class="vd-langcur-l"><span class="vd-abbr">' + esc(cur.abbr) + '</span>' + flagImg(cur.flag) +
+                '<b>' + esc(cur.label) + '</b></span>' +
+                '<span class="vd-langcur-r">' + esc(T('сменить')) + '<i class="ti ti-chevron-down"></i></span></button>' +
+                '<div class="cs-section-hint">' + esc(T('Озвучка и подписи будут на этом языке. Тему можно писать по-русски.')) +
+                '</div></div>';
+        }
+        var q = (_langQ || '').trim().toLowerCase();
+        var rows = langs().filter(function (v) {
+            return !q || v.label.toLowerCase().indexOf(q) >= 0 || v.abbr.toLowerCase().indexOf(q) >= 0 ||
+                v.code.indexOf(q) >= 0;
+        }).map(langRow).join('');
+        return '<div class="vd-f"><div class="cs-section-title">' + esc(T('Язык ролика')) + '</div>' +
+            '<div class="vd-box vd-search" style="margin-bottom:8px;"><i class="ti ti-search"></i>' +
+            '<input class="vd-inp" id="vd-langq" type="text" autocomplete="off" placeholder="' +
+            esc(T('Найти язык')) + '" value="' + esc(_langQ) + '"></div>' +
+            '<div class="vd-nlist">' + (rows || '<div class="vd-nempty">' + esc(T('Ничего не найдено')) + '</div>') +
+            '</div></div>';
+    }
+
     function proVoiceCol(gender, label) {
         var rows = ((_premium && _premium.voices) || []).filter(function (v) { return v.gender === gender; }).map(function (v) {
             return '<div class="cs-vrow' + (_pVoice === v.name ? ' on' : '') + '" data-va="pvname" data-v="' + esc(v.name) + '">' +
@@ -414,7 +462,7 @@
                 '</div>' + go + '</div>';
         }
         if (pro) {
-            return '<div class="vd-card">' + modeField() + tierField() + topicField() + nicheField() + proVoiceField() +
+            return '<div class="vd-card">' + modeField() + tierField() + topicField() + nicheField() + langField() + proVoiceField() +
                 '<div class="vd-note">' + esc(T('Сюжетный ролик 9:16: уникальные кадры в едином стиле, созданные под эту тему, выразительная озвучка, собственная музыка и оформление, которое не повторяется от ролика к ролику. Готовый файл примерно через 10 минут.')) +
                 '</div>' + go + '</div>';
         }
@@ -595,7 +643,7 @@
         var host = document.getElementById('videos-screen');
         if (!host) return;
         var focus = document.activeElement;
-        var fid = focus && focus.id && /^vd-(topic|niche|url|addr|fline)$/.test(focus.id) ? focus.id : '';
+        var fid = focus && focus.id && /^vd-(topic|niche|url|addr|fline|langq)$/.test(focus.id) ? focus.id : '';
         var pos = fid ? focus.selectionStart : 0;
         stopSample();
         host.innerHTML = head() + '<div class="vd-body">' + form() +
@@ -642,6 +690,11 @@
             if (ll) { ll.textContent = _finalLine; fitPreview(); }
             return;
         }
+        if (el.id === 'vd-langq') {
+            _langQ = el.value;
+            render();
+            return;
+        }
         if (el.id === 'vd-niche') {
             _nq = el.value;
             render();
@@ -679,6 +732,15 @@
         }
         if (a === 'vname') { markVoice(b); return; }
         if (a === 'pvname') { _pVoice = b.getAttribute('data-v') || ''; haptic(); render(); return; }
+        if (a === 'langopen') { _langOpen = true; _langQ = ''; haptic(); render(); return; }
+        if (a === 'langsel') {
+            _lang = b.getAttribute('data-v') || 'ru';
+            _langOpen = false;
+            _langQ = '';
+            haptic();
+            render();
+            return;
+        }
         if (a === 'tier') {
             var nt = b.getAttribute('data-v') === 'premium' ? 'premium' : 'base';
             if (nt === 'premium' && _premium && _premium.locked) {
@@ -833,7 +895,7 @@
             voice_names: (_silent || pro) ? [] : _voiceNames,
             channel_id: (!ad && !pro && _brandOn && _brandCh) ? _brandCh : null,
             tier: pro ? 'premium' : 'base', premium_voice: pro ? _pVoice : '',
-            lang: (window.__fmLang || 'ru'),
+            lang: pro ? _lang : (window.__fmLang || 'ru'),
             mode: _mode, silent: _silent, no_music: _noMusic,
             final_address: ad ? (_address || '').trim() : '', final_line: ad ? (_finalLine || '').trim() : '',
             final_note: ad ? (_finalNote || '').trim() : '',
@@ -914,6 +976,7 @@
                 if (r.voices) _voices = r.voices;
                 _premium = r.premium || null;
                 if (!(_premium && _premium.enabled)) _tier = 'base';
+                if (_premium && !langOf(_lang)) _lang = 'ru';
                 if (r.channels) _channels = r.channels;
                 if (r.niches && r.niches.length) _niches = r.niches;
                 _loaded = true;
