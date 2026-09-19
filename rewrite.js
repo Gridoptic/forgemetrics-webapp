@@ -6,6 +6,7 @@
     var _channels = null, _chId = null, _emoji = 'few', _length = 'same', _improve = true;
     var _tone = 'channel', _strip = true, _caption = false, _model = null, _limits = null;
     var _lastOriginal = '', _lastResult = '', _lastHooks = [], _lastMeta = null, _busy = false, _tab = 'res';
+    var _draft = '';
     var _ctx = null;
     var _avCache = {};
 
@@ -47,6 +48,8 @@
         return host;
     }
     function close() {
+        var inp = document.getElementById('rw-input');
+        if (inp) _draft = inp.value || '';
         var host = document.getElementById('rewrite-screen');
         if (host) host.style.display = 'none';
         document.documentElement.classList.remove('cs-modal-open');
@@ -86,6 +89,7 @@
         renderResult();
     };
     window.__openRewrite = function () {
+        if (_busy) { renderWaiting(); return; }
         setView('<div class="rw-center"><div class="rw-spin"></div><div class="m">' + esc(T('Секунду...')) + '</div></div>');
         var chP = apiRequest('/api/v1/channels/active').catch(function () { return null; });
         var limP = apiRequest('/api/v1/post/limits').catch(function () { return null; });
@@ -200,7 +204,7 @@
 
         setView(
             '<div class="rw-sec"><div class="rw-eyebrow"><span class="tile"><i class="ti ti-clipboard-text"></i></span> ' + esc(T('Исходный пост')) + '</div>' +
-            '<textarea class="rw-ta" id="rw-input" maxlength="8000" placeholder="' + esc(T('Вставь текст чужого поста или ссылку t.me/канал/123 — я сам вытащу пост')) + '"></textarea>' +
+            '<textarea class="rw-ta" id="rw-input" maxlength="8000" placeholder="' + esc(T('Вставь текст чужого поста или ссылку t.me/канал/123 — я сам вытащу пост')) + '">' + esc(_draft) + '</textarea>' +
             '<div class="rw-tafoot"><div class="rw-link-note" id="rw-linknote"><i class="ti ti-link"></i> ' + esc(T('Похоже на ссылку — вытащу текст поста сам при переписывании')) + '</div>' +
             '<div class="rw-count" id="rw-count">0 / 8 000</div></div>' +
             '<div class="rw-hint">' + esc(T('Факты сохраню, слова и подача будут оригинальные — не копия, бан за плагиат не грозит.')) + '</div></div>' +
@@ -222,6 +226,34 @@
             '<div class="rw-gonote">' + esc(T('Спишется при переписывании · при сбое вернём автоматически')) + '</div>' +
             '<div id="rw-result"></div>');
         rwLoadAvatars();
+        if (_draft) {
+            var cnt0 = document.getElementById('rw-count');
+            if (cnt0) cnt0.textContent = num(_draft.length) + ' / 8 000';
+            var note0 = document.getElementById('rw-linknote');
+            if (note0) note0.classList.toggle('on', /t\.me\/[^\s]+/.test(_draft) && _draft.trim().length < 200);
+            updateLenSize();
+        }
+        if (_lastMeta && _lastResult) showResult();
+    }
+
+    function renderWaiting() {
+        setView('<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div>' +
+            '<div class="m">' + esc(T('Переписываю в стиле твоего канала...')) + '</div></div></div>' +
+            '<div class="rw-gonote">' + esc(T('Экран можно закрыть — результат сохранится и откроется здесь')) + '</div>');
+    }
+
+    function showResult() {
+        ensureScreen();
+        if (!document.getElementById('rw-result')) {
+            var h = document.getElementById('rewrite-screen');
+            h.insertAdjacentHTML('beforeend', '<div id="rw-result"></div>');
+        }
+        renderResult();
+    }
+
+    function unlockGo() {
+        var b = document.querySelector('#rewrite-screen [data-act="go"]');
+        if (b) b.disabled = false;
     }
 
     function onInput(ev) {
@@ -232,6 +264,7 @@
             if (note) note.classList.toggle('on', looksLink);
             var cnt = document.getElementById('rw-count');
             if (cnt) cnt.textContent = num(v.length) + ' / 8 000';
+            _draft = v;
             updateLenSize();
         }
     }
@@ -265,6 +298,7 @@
         var inp = document.getElementById('rw-input');
         var val = inp ? (inp.value || '').trim() : (variant ? _lastOriginal : '');
         if (!variant && val.length < 20 && !/t\.me\//.test(val)) { toast(T('Вставь текст поста (хотя бы пару предложений) или ссылку t.me')); return; }
+        if (!variant) _draft = val;
         _busy = true; haptic('medium');
         var isLink = /^https?:\/\/t\.me\/\S+$/.test(val) || (/t\.me\//.test(val) && val.length < 200);
         var body = {
@@ -280,24 +314,35 @@
         var res = document.getElementById('rw-result');
         var goBtn = document.querySelector('#rewrite-screen [data-act="go"]');
         if (goBtn) goBtn.disabled = true;
-        if (res) res.innerHTML = '<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div><div class="m">' + esc(T('Переписываю в стиле твоего канала...')) + '</div></div></div>';
+        if (res) res.innerHTML = '<div class="rw-sec"><div class="rw-center" style="padding:26px 10px;"><div class="rw-spin"></div><div class="m">' + esc(T('Переписываю в стиле твоего канала...')) + '</div></div>' +
+            '<div class="rw-gonote">' + esc(T('Экран можно закрыть — результат сохранится и откроется здесь')) + '</div></div>';
 
         apiRequest('/api/v1/post/rewrite', { method: 'POST', timeoutMs: 240000, body: JSON.stringify(body) })
             .then(function (r) {
-                _busy = false; if (goBtn) goBtn.disabled = false;
-                if (!r || !r.text) { if (res) res.innerHTML = ''; toast((r && r.detail) || T('Не получилось переписать — попробуй ещё раз')); return; }
+                _busy = false;
+                if (!r || !r.text) {
+                    if (!document.getElementById('rw-input')) renderForm(); else unlockGo();
+                    var stale = document.getElementById('rw-result');
+                    if (stale) stale.innerHTML = '';
+                    toast((r && r.detail) || T('Не получилось переписать — попробуй ещё раз'));
+                    return;
+                }
                 _lastOriginal = r.original || _lastOriginal || val;
                 _lastResult = r.text; _tab = 'res';
                 _lastHooks = r.hooks || [];
                 _lastMeta = r;
                 _ctx = { currentPostId: r.post_id || null, media: null, mediaBusy: '', placeInfo: null, placed: null, onPlaced: renderResult };
+                if (!document.getElementById('rw-input')) renderForm();
+                unlockGo();
                 setBalance(r.balance);
-                renderResult();
+                showResult();
                 if (_ctx.currentPostId && r.channel && window.FMPostTools) window.FMPostTools.loadPlaceInfo(_ctx);
             })
             .catch(function (e) {
-                _busy = false; if (goBtn) goBtn.disabled = false;
-                if (res) res.innerHTML = '';
+                _busy = false;
+                if (!document.getElementById('rw-input')) renderForm(); else unlockGo();
+                var box = document.getElementById('rw-result');
+                if (box && !(_lastMeta && _lastResult)) box.innerHTML = '';
                 var msg = (e && e.message) ? e.message : T('Не получилось переписать — попробуй ещё раз');
                 toast(msg);
             });
